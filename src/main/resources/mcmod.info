@@ -1,0 +1,16 @@
+[
+{
+  "modid": "mo",
+  "name": "Matter Overdrive",
+  "description": "A mod that dwells within matter, energy.",
+  "version": "0.1",
+  "mcversion": "1.7.10",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Simeon Radivoev"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,21 @@
+{
+    
+    "phaser_fire_burst_0": {"category": "player","sounds": [{"name": "phaser/phaser_fire_burst_0", "stream": false}]},
+    "phaser_fire_burst_1": {"category": "player","sounds": [{"name": "phaser/phaser_fire_burst_1", "stream": false}]},
+    "phaser_fire_burst_2": {"category": "player","sounds": [{"name": "phaser/phaser_fire_burst_2", "stream": false}]},
+    "phaser_fire_burst_3": {"category": "player","sounds": [{"name": "phaser/phaser_fire_burst_3", "stream": false}]},
+    "phaser_fire_burst_4": {"category": "player","sounds": [{"name": "phaser/phaser_fire_burst_4", "stream": false}]},
+    "phaser_switch_mode": {"category": "player","sounds": [{"name": "phaser/phaser_switch_mode", "stream": false}]},
+    "scanner_beep": {"category": "player","sounds": [{"name": "matter_scanner/scanner_beep", "stream": false}]},
+    "scanner_success": {"category": "player","sounds": [{"name": "matter_scanner/scanner_success", "stream": false}]},
+    "scanner_fail": {"category": "player","sounds": [{"name": "matter_scanner/scanner_fail", "stream": false}]},
+    "scanner_scanning": {"category": "player","sounds": [{"name": "scanner_scanning", "stream": false}]},
+    "matter_scanner_scan_0": {"category": "player","sounds": [{"name": "matter_scanner/matter_scanner_scan_0", "stream": false}]},
+    "matter_scanner_scan_1": {"category": "player","sounds": [{"name": "matter_scanner/matter_scanner_scan_1", "stream": false}]},
+    "matter_scanner_scan_2": {"category": "player","sounds": [{"name": "matter_scanner/matter_scanner_scan_2", "stream": false}]},
+    "matter_scanner_scan_3": {"category": "player","sounds": [{"name": "matter_scanner/matter_scanner_scan_3", "stream": false}]},
+    "replicate_success": {"category": "master","sounds": [{"name": "replicator/replicate_success", "stream": false}]},
+    "analyzer": {"category": "master","sounds": [{"name": "blocks/analyzer", "stream": false}]},
+    "decomposer": {"category": "master","sounds": [{"name": "blocks/decomposer", "stream": false}]},
+    "machine": {"category": "master","sounds": [{"name": "blocks/machine", "stream": false}]}
+}
