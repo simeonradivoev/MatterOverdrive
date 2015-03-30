@@ -2,9 +2,11 @@ package com.MO.MatterOverdrive.tile;
 
 import cofh.api.energy.IEnergyStorage;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.Slot;
+import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
@@ -100,10 +102,11 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public boolean isAnalyzing()
     {
         return inventory.getStackInSlot(database_slot) != null
-                && MatterHelper.isDatabaseItem(inventory.getStackInSlot(database_slot))
+                && MatterHelper.isMatterScanner(inventory.getStackInSlot(database_slot))
+                && MatterScanner.getLink(worldObj,inventory.getStackInSlot(database_slot)) != null
                 && inventory.getStackInSlot(input_slot) != null
                 && MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(input_slot)) > 0
-                && MatterDatabaseHelper.GetItemProgress(inventory.getStackInSlot(database_slot),inventory.getStackInSlot(input_slot)) < MatterDatabaseHelper.MAX_ITEM_PROGRESS;
+                && MatterDatabaseHelper.GetItemProgress(inventory.getStackInSlot(database_slot), inventory.getStackInSlot(input_slot)) < MatterDatabaseHelper.MAX_ITEM_PROGRESS;
     }
 
     @Override
@@ -130,7 +133,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
                 MatterDatabaseHelper.IncreaseProgress(tagCompound,10);
             }
 
-            MatterDatabaseHelper.SetSelectedItem(scanner,itemStack);
+            MatterScanner.setSelectedIndex(scanner,itemStack.getItem().getUnlocalizedName());
             this.decrStackSize(input_slot,1);
             worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
         }

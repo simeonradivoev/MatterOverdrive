@@ -16,7 +16,6 @@ import net.minecraft.item.Item;
  */
 public class GuiMatterAnalyzer extends MOGuiBase
 {
-    private static final String ANALYZE_PROGRESS_TEXTURE_PATH = Reference.PATH_ELEMENTS + "Progress_Arrow_Right.png";
     ElementEnergyStored energyElement;
     ElementSlotsList slotsList;
     ElementPlayerSlots playerSlots;

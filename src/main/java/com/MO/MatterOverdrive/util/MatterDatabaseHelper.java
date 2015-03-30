@@ -1,31 +1,19 @@
 package com.MO.MatterOverdrive.util;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
+import com.MO.MatterOverdrive.api.matter.IMatterPatternStorage;
 
 import cofh.lib.util.helpers.MathHelper;
-import scala.actors.threadpool.Arrays;
-import scala.util.parsing.json.JSONArray;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.world.World;
 
 public class MatterDatabaseHelper 
 {
 	public static final int MAX_ITEM_PROGRESS = 100;
 	public static final String PROGRESS_TAG_NAME = "scan_progress";
-	public static final String SELECTED_TAG_NAME = "lastScanIndex";
 	public static final String ITEMS_TAG_NAME = "items";
 	
 	
@@ -34,11 +22,11 @@ public class MatterDatabaseHelper
 		
 	}
 	
-	public static boolean Register(ItemStack scanner,ItemStack item,int progress)
+	public static boolean Register(ItemStack storage,ItemStack item,int progress)
 	{
-		if(!HasItemOrCantScan(scanner,item))
+		if(MatterHelper.isMatterPatternStorage(storage) && CanRegister(storage, item))
 		{
-			writeToNBT(scanner,item,progress);
+			writeToNBT(storage,item,progress);
 			return true;
 		}
 		
@@ -68,73 +56,8 @@ public class MatterDatabaseHelper
 	public static boolean Register(ItemStack scanner,Block block,int progress)
 	{
 		ItemStack item = new ItemStack(block);
-		return Register(scanner,item,progress);
+		return Register(scanner, item, progress);
 	}
-	
-	/** This is used to get the index of the item in the TagList, not the ID of the item
-	 * @param database the database item to get the selected item index from
-	 * @return the index of the seleced item, in the items tag list
-	 *  */
-	public static int GetSelectedIndex(ItemStack database)
-	{
-		if(database != null && database.hasTagCompound() && database.getTagCompound().hasKey(SELECTED_TAG_NAME,2))
-			return database.getTagCompound().getShort(SELECTED_TAG_NAME);
-		else
-			return -1;
-	}
-
-    /** This is used to get the selected item
-     * @param database the database item to get the selected item from
-     * @return the selected item. Returns null if no item is selected
-     *  */
-    public static ItemStack GetSelectedItem(ItemStack database)
-    {
-        int index = MatterDatabaseHelper.GetSelectedIndex(database);
-        if(index >= 0)
-        {
-            NBTTagCompound tag = MatterDatabaseHelper.GetItemAsNBTAt(database, index);
-            return MatterDatabaseHelper.GetItemStackFromNBT(tag);
-        }
-        return null;
-    }
-
-    /** This is used to get the matter for the selected item in the database
-     * return 0 if no items is selected
-     * @param database the database item to get the selected item index from
-     * @return the amount of matter for the selected item
-     *  */
-    public static int GetMatterFromSelected(ItemStack database)
-    {
-        return MatterHelper.getMatterAmountFromItem(GetSelectedItem(database));
-    }
-	
-	/** This is used to set the index of the item in the TagList, not the ID of the item 
-	 * @param database the database item to set the selected item index to
-	 * */
-	public static void SetSelectedIndex(ItemStack database,int id)
-	{
-		database.getTagCompound().setShort(SELECTED_TAG_NAME,(short)id);
-	}
-
-    /** This is used to check if item is in tagList and if so set it as the selected index
-     * @param database the database item to set the selected item index to
-     * */
-    public static void SetSelectedItem(ItemStack database,ItemStack itemStack)
-    {
-        if(database.hasTagCompound())
-        {
-            NBTTagList itemList = database.getTagCompound().getTagList(ITEMS_TAG_NAME, 10);
-
-            for(int i = 0;i < itemList.tagCount();i++)
-            {
-                if(areEqual(GetItemStackFromNBT(itemList.getCompoundTagAt(i)), itemStack))
-                {
-                    database.getTagCompound().setShort(SELECTED_TAG_NAME,(short)i);
-                    return;
-                }
-            }
-        }
-    }
 	
 	public static Item GetItem(World world,int x,int y,int z)
 	{
@@ -149,7 +72,7 @@ public class MatterDatabaseHelper
 	
 	public static boolean HasItem(ItemStack scanner,ItemStack item)
 	{
-		return HasItem(scanner.getTagCompound(),Item.getIdFromItem(item.getItem()));
+		return HasItem(scanner.getTagCompound(), item);
 	}
 	public static boolean HasItem(NBTTagCompound tagcompound, ItemStack item)
 	{
@@ -171,6 +94,32 @@ public class MatterDatabaseHelper
 			}
 		}
 		
+		return false;
+	}
+	public static boolean HasItem(ItemStack scanner,String id)
+	{
+		return HasItem(scanner.getTagCompound(), id);
+	}
+	public static boolean HasItem(NBTTagCompound tagcompound, String id)
+	{
+		if(tagcompound != null)
+		{
+			NBTTagCompound items = tagcompound;
+
+			if(items != null)
+			{
+				NBTTagList itemList = items.getTagList(ITEMS_TAG_NAME, 10);
+
+				for(int i = 0;i < itemList.tagCount();i++)
+				{
+					if(GetItemStackFromNBT(itemList.getCompoundTagAt(i)).getUnlocalizedName() == id)
+					{
+						return true;
+					}
+				}
+			}
+		}
+
 		return false;
 	}
 	public static boolean HasItem(ItemStack database, int id) 
@@ -198,41 +147,45 @@ public class MatterDatabaseHelper
 		return false;
 	}
 	
-	public static boolean HasItemOrCantScan(ItemStack scanner, ItemStack item)
+	public static boolean CanRegister(ItemStack storage, ItemStack item)
 	{
-		int itemProgress = GetItemProgress(scanner,item);
-		
-		if(!MatterHelper.CanScan(item) || !MatterHelper.isRegistered(item))
-			return true;
-		
-		if(itemProgress >= 0)
+		IMatterPatternStorage patterStorage = (IMatterPatternStorage)storage.getItem();
+
+		if(patterStorage != null)
 		{
-			if(itemProgress < 100)
+			int itemProgress = GetItemProgress(storage, item);
+
+			if(itemProgress < MAX_ITEM_PROGRESS && patterStorage.getItemsAsNBT(storage).tagCount() < patterStorage.getCapacity(storage) && MatterHelper.CanScan(item))
 			{
-				return false;
+				return true;
 			}
-			return true;
 		}
-		
+
 		return false;
 	}
 	
-	public static int IncreaseProgress(NBTTagCompound itemNBT,int amount)
+	public static boolean IncreaseProgress(NBTTagCompound itemNBT,int amount)
 	{
 		int lastProgress = itemNBT.getByte(PROGRESS_TAG_NAME);
-		int newProgress = MathHelper.clampI(lastProgress + amount, 0, 100);
-		itemNBT.setByte(PROGRESS_TAG_NAME, (byte)newProgress);
-		return newProgress;
+		if(lastProgress < MAX_ITEM_PROGRESS)
+		{
+			int newProgress = MathHelper.clampI(lastProgress + amount, 0, 100);
+			itemNBT.setByte(PROGRESS_TAG_NAME, (byte) newProgress);
+			return true;
+		}
+		return false;
 	}
 	
 	public static int GetProgressFromNBT(NBTTagCompound itemNBT)
 	{
-		return itemNBT.getByte(PROGRESS_TAG_NAME);
+		if(itemNBT != null)
+			return itemNBT.getByte(PROGRESS_TAG_NAME);
+		return 0;
 	}
 	
-	public static int GetItemProgress(ItemStack scanner, ItemStack item)
+	public static int GetItemProgress(ItemStack storage, ItemStack item)
 	{
-		NBTTagCompound tag = GetItemAsNBT(scanner,item);
+		NBTTagCompound tag = GetItemAsNBT(storage,item);
 		
 		if(tag != null && tag.hasKey(PROGRESS_TAG_NAME))
 		{
@@ -242,18 +195,23 @@ public class MatterDatabaseHelper
 		return -1;
 	}
 	
-	public static void writeToNBT(ItemStack scanner,ItemStack item,int progress) {
+	public static void writeToNBT(ItemStack scanner,ItemStack item,int progress)
+	{
         if (!scanner.hasTagCompound()) {
             InitItemListTagCompound(scanner);
         }
+
         NBTTagCompound itemNBT = GetItemAsNBT(scanner, item);
 
-        if (itemNBT != null) {
+        if (itemNBT != null)
+		{
             int lastProgress = itemNBT.getByte(PROGRESS_TAG_NAME);
-            int newProgress = MathHelper.clampI(lastProgress + progress, 0, 100);
+            int newProgress = MathHelper.clampI(lastProgress + progress, 0, MAX_ITEM_PROGRESS);
             itemNBT.setByte(PROGRESS_TAG_NAME, (byte) newProgress);
             System.out.println("Item in list");
-        } else {
+        }
+		else
+		{
             NBTTagList itemList = GetItemsTagList(scanner);
             NBTTagCompound nbttagcompound1 = new NBTTagCompound();
             nbttagcompound1.setByte(PROGRESS_TAG_NAME, (byte) progress);
@@ -267,8 +225,8 @@ public class MatterDatabaseHelper
         if(itemStack != null && tagCompound != null)
         {
             itemStack.writeToNBT(tagCompound);
-            tagCompound.setByte("Count",(byte)1);
-        }
+			tagCompound.setByte("Count", (byte) 1);
+		}
     }
 	
 	public static ItemStack GetItemWithInfo(ItemStack scanner, int id)
@@ -289,6 +247,10 @@ public class MatterDatabaseHelper
 		return GetItemStackFromNBT(GetItemAsNBT(scanner,item));
 	}
 	public static ItemStack GetItem(ItemStack scanner, int id)
+	{
+		return GetItemStackFromNBT(GetItemAsNBT(scanner,id));
+	}
+	public static ItemStack GetItem(ItemStack scanner, String id)
 	{
 		return GetItemStackFromNBT(GetItemAsNBT(scanner,id));
 	}
@@ -334,8 +296,23 @@ public class MatterDatabaseHelper
 		
 		return null;
 	}
-	
-	public static NBTTagCompound GetItemAsNBTAt(ItemStack scanner, int index)
+	public static NBTTagCompound GetItemAsNBT(ItemStack scanner, String id)
+	{
+		if(scanner.hasTagCompound())
+		{
+			NBTTagList itemList = GetItemsTagList(scanner);
+
+			for(int i = 0;i < itemList.tagCount();i++)
+			{
+				if(GetItemStackFromNBT(itemList.getCompoundTagAt(i)).getUnlocalizedName() == id)
+					return GetItemAsNBTAt(scanner,i);
+			}
+		}
+
+		return null;
+	}
+
+	private static NBTTagCompound GetItemAsNBTAt(ItemStack scanner, int index)
 	{
 		if(scanner.hasTagCompound())
 		{

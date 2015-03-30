@@ -1,8 +1,7 @@
 package com.MO.MatterOverdrive.data.inventory;
 
-import cofh.lib.gui.slot.SlotRemoveOnly;
 import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.gui.slot.SlotMatter;
+import com.MO.MatterOverdrive.container.slot.SlotMatter;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;

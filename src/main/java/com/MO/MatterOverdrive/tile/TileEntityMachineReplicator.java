@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
+import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
@@ -9,6 +10,7 @@ import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
 import com.MO.MatterOverdrive.fx.ReplicatorParticle;
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
+import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
@@ -111,7 +113,9 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 		{
 			if(this.isReplicating())
 			{
-                NBTTagCompound itemAsNBT = MatterDatabaseHelper.GetItemAsNBTAt(getStackInSlot(DATABASE_SLOT_ID),MatterDatabaseHelper.GetSelectedIndex(getStackInSlot(DATABASE_SLOT_ID)));
+                IMatterDatabase database = MatterScanner.getLink(worldObj,getStackInSlot(DATABASE_SLOT_ID));
+
+                NBTTagCompound itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedIndex(getStackInSlot(DATABASE_SLOT_ID)));
                 ItemStack newItem = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
 
                 int matter = MatterHelper.getMatterAmountFromItem(newItem);
@@ -252,10 +256,19 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 		if(getStackInSlot(DATABASE_SLOT_ID) == null)
 			return false;
 
-		NBTTagCompound itemAsNBT =  MatterDatabaseHelper.GetItemAsNBTAt(getStackInSlot(DATABASE_SLOT_ID), MatterDatabaseHelper.GetSelectedIndex(getStackInSlot(DATABASE_SLOT_ID)));
-		ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
+        IMatterDatabase database = MatterScanner.getLink(worldObj,getStackInSlot(DATABASE_SLOT_ID));
+
+        NBTTagCompound itemAsNBT = null;
+
+        if(database != null)
+        {
+            itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedIndex(getStackInSlot(DATABASE_SLOT_ID)));
+        }
+        ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
+
 		
-		return MatterDatabaseHelper.GetSelectedIndex(getStackInSlot(DATABASE_SLOT_ID)) >= 0
+		return itemAsNBT != null
+                && item != null
 				&& MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) > 0
 				&& this.getMatterStored() >= MatterHelper.getMatterAmountFromItem(item)
 				&& canReplicateIntoOutput()
@@ -322,7 +335,13 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
     private boolean canReplicateIntoSecoundOutput()
     {
-        NBTTagCompound itemAsNBT =  MatterDatabaseHelper.GetItemAsNBTAt(getStackInSlot(DATABASE_SLOT_ID), MatterDatabaseHelper.GetSelectedIndex(getStackInSlot(DATABASE_SLOT_ID)));
+        IMatterDatabase database = MatterScanner.getLink(worldObj, getStackInSlot(DATABASE_SLOT_ID));
+        NBTTagCompound itemAsNBT = null;
+
+        if(database != null)
+        {
+            itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedIndex(getStackInSlot(DATABASE_SLOT_ID)));
+        }
         ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
 
         if(getStackInSlot(SECOUND_OUTPUT_SLOT_ID) == null)
