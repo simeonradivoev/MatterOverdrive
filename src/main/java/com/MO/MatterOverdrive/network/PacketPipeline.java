@@ -85,7 +85,6 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket,Abstrac
         registerPacket(OpenGuiPacket.class);
         registerPacket(TileEntityUpdatePacket.class);
         registerPacket(PacketMatterPipeUpdate.class);
-        registerPacket(PacketPipeUpdate.class);
         registerPacket(PacketMatterScannerUpdate.class);
     }
 

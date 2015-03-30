@@ -3,8 +3,10 @@ package com.MO.MatterOverdrive.client.render;
 import javax.vecmath.*;
 
 import cofh.lib.render.RenderHelper;
+import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.IIcon;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
@@ -19,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.lwjgl.opengl.GL12;
 
 public class TileEntityRendererPipe extends TileEntitySpecialRenderer {
 	
@@ -39,21 +42,20 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer {
 	
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x,
-			double y, double z, float f) 
+			double y, double z, float f)
 	{
 
 		if(tileentity instanceof TileEntityPipe)
         {
             TileEntityPipe pipe = (TileEntityPipe) tileentity;
             GL11.glPushMatrix();
-            GL11.glTranslated(x, y, z);
-            //GL11.glDisable(GL11.GL_LIGHTING);
+
+			GL11.glTranslated(x, y, z);
             if(texture != null)
                 this.bindTexture(texture);
 
-            drawCore(pipe,x,y,z,f,DrawSides(pipe,x,y,z,f));
+            drawCore(pipe,x,y,z,f,DrawSides(pipe, x, y, z, f));
 
-            //GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
         }
 	}

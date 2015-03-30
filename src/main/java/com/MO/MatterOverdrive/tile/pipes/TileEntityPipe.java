@@ -4,22 +4,41 @@ import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.MOTileEntity;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
+import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityPipe<T> extends MOTileEntity implements IMOTileEntity
+public class TileEntityPipe<T> extends MOTileEntity
 {
     Class<T> connectionType;
     private boolean needsUpdate = true;
-    public ForgeDirection[] connections = new ForgeDirection[6];
+    public int connections = 0;
 
     public TileEntityPipe(Class<T> cType)
     {
         connectionType = cType;
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+    {
+        connections = pkt.func_148857_g().getInteger("Connections");
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound tagCompound = new NBTTagCompound();
+        tagCompound.setInteger("Connections",connections);
+        return new S35PacketUpdateTileEntity(xCoord,yCoord,zCoord,2,tagCompound);
     }
 
     @Override
@@ -34,18 +53,19 @@ public class TileEntityPipe<T> extends MOTileEntity implements IMOTileEntity
 
     public void updateSides()
 	{
+        connections = 0;
+
         for(int i = 0;i < 6;i++)
         {
             TileEntity t = this.worldObj.getTileEntity(ForgeDirection.values()[i].offsetX + this.xCoord,ForgeDirection.values()[i].offsetY + this.yCoord,ForgeDirection.values()[i].offsetZ + this.zCoord);
 
             if(connectionType.isInstance(t))
             {
-                connections[i] = ForgeDirection.values()[i];
-            }else
-            {
-                connections[i] = null;
+                connections |= ForgeDirection.values()[i].flag;
             }
         }
+
+        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
 	}
 
     public void queueUpdate()
@@ -55,11 +75,7 @@ public class TileEntityPipe<T> extends MOTileEntity implements IMOTileEntity
 
     public  boolean isConnectableSide(ForgeDirection dir)
     {
-        if(connections != null && connections[dir.ordinal()] != null)
-        {
-            return  true;
-        }
-        return  false;
+        return  MOMathHelper.getBoolean(connections,dir.ordinal());
     }
 
     @SideOnly(Side.CLIENT)
@@ -72,6 +88,6 @@ public class TileEntityPipe<T> extends MOTileEntity implements IMOTileEntity
     @Override
     public void onNeighborBlockChange()
     {
-        needsUpdate = true;
+        queueUpdate();
     }
 }

@@ -61,6 +61,15 @@ public class MOBlock extends Block
             tileEntity.onAdded();
     }
 
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
+    {
+        super.onNeighborBlockChange(world, x, y, z, block);
+        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x,y,z);
+        if(tileEntity != null)
+            tileEntity.onNeighborBlockChange();
+    }
+
     private void SetDefaultRotation(World world, int x, int y, int z)
     {
         if (!world.isRemote)

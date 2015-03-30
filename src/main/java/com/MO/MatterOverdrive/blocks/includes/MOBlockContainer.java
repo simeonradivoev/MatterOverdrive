@@ -51,15 +51,4 @@ public abstract class MOBlockContainer extends MOBlock implements ITileEntityPro
         if(tileEntity != null)
             tileEntity.onDestroyed();
     }
-
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
-    {
-        super.onNeighborBlockChange(world, x, y, z, block);
-        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x,y,z);
-        if(tileEntity != null)
-            tileEntity.onNeighborBlockChange();
-    }
-
-
 }

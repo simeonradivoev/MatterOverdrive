@@ -37,7 +37,8 @@ public class BlockPipe extends MOBlockContainer
         
         //this.setBlockBounds(xMin, yMin, zMin, xMax, yMax, zMax);
 	}
-	
+
+    @Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB bb, List list, Entity e)
     {
 		float size = 0.34375f;
@@ -129,21 +130,18 @@ public class BlockPipe extends MOBlockContainer
     }
 
     @Override
-    public void onBlockAdded(World world, int x, int y, int z)
-    {
-        super.onBlockAdded(world,x,y,z);
-    }
-	
 	public int getRenderType()
 	{
 		return -1;
 	}
-	
+
+    @Override
 	public boolean isOpaqueCube()
 	{
 		return false;
 	}
-	
+
+    @Override
 	public boolean renderAsNormalBlock()
 	{
 		return false;
