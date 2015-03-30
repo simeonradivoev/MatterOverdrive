@@ -21,7 +21,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public static final int ENERGY_CAPACITY = 64000;
     public static final int ENERGY_TRANSFER = 128;
     public int input_slot;
-    int[] pattern_storage_slots;
+    public int[] pattern_storage_slots;
 
     public TileEntityMachinePatternStorage()
     {

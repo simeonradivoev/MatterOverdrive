@@ -5,6 +5,7 @@ import com.MO.MatterOverdrive.handler.KeyHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
+import com.MO.MatterOverdrive.tile.TileEntityMachinePatternStorage;
 import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityMatterPipe;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityNetworkPipe;
@@ -31,13 +32,15 @@ public class ClientProxy extends CommonProxy
         TileEntityRendererMatterPipe matter_pipeRenderer = new TileEntityRendererMatterPipe();
         TileEntityRendererNetworkPipe network_pipeRenderer = new TileEntityRendererNetworkPipe();
         TileEntityRendererReplicator replicator_renderer = new TileEntityRendererReplicator();
+        TileEntityRendererPatterStorage pattern_storage_renderer = new TileEntityRendererPatterStorage();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, pipeRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMatterPipe.class, matter_pipeRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityNetworkPipe.class, network_pipeRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineReplicator.class,replicator_renderer);
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.matter_pipe),new ItemRendererPipe(matter_pipeRenderer,new TileEntityMatterPipe(),2));
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternStorage.class,pattern_storage_renderer);
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.matter_pipe), new ItemRendererPipe(matter_pipeRenderer, new TileEntityMatterPipe(), 2));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.network_pipe),new ItemRendererPipe(network_pipeRenderer,new TileEntityNetworkPipe(),2));
-        MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser,new ItemRendererPhaser());
+        MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser, new ItemRendererPhaser());
         RenderingRegistry.registerBlockHandler(new BlockRendererReplicator());
 	}
 
