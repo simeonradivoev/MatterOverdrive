@@ -1,23 +1,15 @@
 package com.MO.MatterOverdrive.util;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.List;
 
-import cofh.api.tileentity.ISecurable;
-
-import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.matter.*;
 import com.MO.MatterOverdrive.handler.IMatterEntry;
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
 
-import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
-import com.MO.MatterOverdrive.tile.pipes.MatterTransfer;
-import cpw.mods.fml.common.registry.GameRegistry;
+import com.MO.MatterOverdrive.items.MatterScanner;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -26,11 +18,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class MatterHelper 
@@ -114,7 +104,7 @@ public class MatterHelper
     {
         ForgeDirection oposite = MatterHelper.opposite(toDir);
         int extract = from.extractMatter(toDir,amount,true);
-        int recived = to.receiveMatter(oposite,extract,false);
+        int recived = to.receiveMatter(oposite, extract, false);
         from.extractMatter(toDir,recived,false);
         return  recived;
     }
@@ -145,16 +135,26 @@ public class MatterHelper
 		return MatterRegistry.hasEntry(item);
 	}
 	
-	public static boolean isDatabaseItem(ItemStack item)
+	public static boolean isMatterScanner(ItemStack item)
 	{
         if(item != null && item.getItem() != null)
-		    return item.getItem() instanceof IMatterDatabase;
+		    return item.getItem() instanceof MatterScanner;
         return false;
 	}
+
+    public static boolean isMatterPatternStorage(ItemStack item)
+    {
+        if(item != null && item.getItem() != null)
+            return item.getItem() instanceof IMatterPatternStorage;
+        return false;
+    }
 	
 	
 	public static boolean CanScan(ItemStack stack)
 	{
+        if(MatterHelper.getMatterAmountFromItem(stack) <= 0)
+            return false;
+
 		Item item = stack.getItem();
 		
 		if(item instanceof ItemBlock)

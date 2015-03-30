@@ -2,6 +2,9 @@ package com.MO.MatterOverdrive.gui.element;
 
 import java.util.List;
 
+import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
+import com.MO.MatterOverdrive.handler.IMatterEntry;
+import com.MO.MatterOverdrive.items.MatterScanner;
 import org.lwjgl.opengl.GL11;
 
 import com.MO.MatterOverdrive.gui.MOGuiBase;
@@ -17,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class MatterDatabaseListBox extends MOElementListBox
 {
-	public ItemStack database;
+	public ItemStack scanner;
 	public ResourceLocation background;
 	public String filter = "";
 	
@@ -25,7 +28,7 @@ public class MatterDatabaseListBox extends MOElementListBox
 	public MatterDatabaseListBox(MOGuiBase gui,int x,int y,int width,int height, ItemStack database)
 	{
 		super(gui,x,y,width,height);
-		this.database = database;
+		this.scanner = database;
 		updateList(this.filter);
 	}
 	
@@ -122,23 +125,24 @@ public class MatterDatabaseListBox extends MOElementListBox
 	{
 		//System.out.println("List Updated");
 		this.clear();
-		NBTTagCompound comp = database.getTagCompound();
-		NBTTagList itemList = MatterDatabaseHelper.GetItemsTagList(database);
-		int selectedIndex = MatterDatabaseHelper.GetSelectedIndex(database);
-		
-		if(itemList != null)
-		{
-			for(int i = 0;i < itemList.tagCount();i++)
-			{
-				int itemId = itemList.getCompoundTagAt(i).getShort("id");
-				
-				if(filter == "" ||  ItemStack.loadItemStackFromNBT(itemList.getCompoundTagAt(i)).getDisplayName().toLowerCase().contains(filter.toLowerCase()))
-				{
-					MatterDatabaseEntry selected = new MatterDatabaseEntry(itemList.getCompoundTagAt(i),i,selectedIndex == i);
-					this.add(selected);
-					
-					if(selectedIndex == i)
-						this.setSelectedIndex(this.getElementCount() - 1);
+
+		IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld, scanner);
+
+		if(database != null) {
+			NBTTagList itemList = database.getItemsAsNBT();
+			String selectedIndex = MatterScanner.getSelectedIndex(scanner);
+
+			if (itemList != null) {
+				for (int i = 0; i < itemList.tagCount(); i++) {
+					int itemId = itemList.getCompoundTagAt(i).getShort("id");
+
+					if (filter == "" || ItemStack.loadItemStackFromNBT(itemList.getCompoundTagAt(i)).getDisplayName().toLowerCase().contains(filter.toLowerCase())) {
+						MatterDatabaseEntry selected = new MatterDatabaseEntry(itemList.getCompoundTagAt(i), i, selectedIndex == MatterDatabaseHelper.GetItemStackFromNBT(itemList.getCompoundTagAt(i)).getItem().getUnlocalizedName());
+						this.add(selected);
+
+						if (selectedIndex == MatterDatabaseHelper.GetItemStackFromNBT(itemList.getCompoundTagAt(i)).getItem().getUnlocalizedName())
+							this.setSelectedIndex(this.getElementCount() - 1);
+					}
 				}
 			}
 		}
@@ -149,7 +153,9 @@ public class MatterDatabaseListBox extends MOElementListBox
 	@Override
 	protected void onSelectionChanged(int newIndex, IMOListBoxElement newElement) 
 	{
-		MatterDatabaseHelper.SetSelectedIndex(database, ((MatterDatabaseEntry) newElement).listID);
+		MatterDatabaseEntry entry = (MatterDatabaseEntry) newElement;
+
+		MatterScanner.setSelectedIndex(scanner,MatterDatabaseHelper.GetItemStackFromNBT(entry.itemComp).getItem().getUnlocalizedName());
 		updateList(this.filter);
 		gui.handleElementButtonClick(this.name,((MatterDatabaseEntry) newElement).listID);
 	}

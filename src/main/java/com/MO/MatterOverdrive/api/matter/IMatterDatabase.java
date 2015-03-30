@@ -4,13 +4,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-public interface IMatterDatabase 
+public interface IMatterDatabase
 {
-	ItemStack[] getItems(ItemStack database);
-	NBTTagList getItemNBTCompounds(ItemStack database);
-	boolean hasItem(ItemStack database,int id);
-	boolean hasItem(ItemStack database,ItemStack item);
-	ItemStack getItem(ItemStack database,int id);
-	ItemStack getItem(ItemStack database,ItemStack item);
-	NBTTagCompound getItemAsNBT(ItemStack database,int id);
+	boolean hasItem(int id);
+	boolean hasItem(String id);
+	boolean hasItem(ItemStack item);
+	NBTTagList getItemsAsNBT();
+	ItemStack[] getItems();
+	boolean addItem(ItemStack itemStack);
+	NBTTagCompound getItemAsNBT(ItemStack item);
+	NBTTagCompound getItemAsNBT(String index);
+	boolean increaseProgress(ItemStack item,int amount);
 }

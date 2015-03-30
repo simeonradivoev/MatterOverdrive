@@ -11,7 +11,7 @@ import cofh.lib.gui.slot.SlotEnergy;
 import cofh.lib.gui.slot.SlotRemoveOnly;
 import cofh.lib.util.helpers.EnergyHelper;
 
-import com.MO.MatterOverdrive.gui.slot.SlotMatter;
+import com.MO.MatterOverdrive.container.slot.SlotMatter;
 import com.MO.MatterOverdrive.tile.TileEntityMachineDecomposer;
 import com.MO.MatterOverdrive.util.MatterHelper;
 

@@ -3,7 +3,9 @@ package com.MO.MatterOverdrive.gui;
 import java.util.List;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.gui.element.*;
+import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.network.packet.PacketMatterScannerUpdate;
 
 import cofh.lib.gui.GuiColor;
@@ -20,6 +22,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiMatterScanner extends MOGuiBase
@@ -33,7 +36,7 @@ public class GuiMatterScanner extends MOGuiBase
 	public static final ResourceLocation background = new ResourceLocation(Reference.PATH_GUI + "matter_scanner.png");
 	private static FontRenderer   fontRenderer = Minecraft.getMinecraft().fontRenderer;
 	private static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-    int lastSelectedIndex;
+    String lastSelectedIndex;
 	
 	MatterDatabaseListBox list;
 	MOElementTextField searchField;
@@ -82,7 +85,7 @@ public class GuiMatterScanner extends MOGuiBase
 		scan_info_graph = new ElementScanProgress(this,87,44);
 		itemPreview = new ElementItemPreview(this,45,44,null);
         this.databaseSlot = slot;
-        lastSelectedIndex = MatterDatabaseHelper.GetSelectedIndex(database);
+        lastSelectedIndex = MatterScanner.getSelectedIndex(database);
 	}
 	
 	@Override
@@ -98,11 +101,12 @@ public class GuiMatterScanner extends MOGuiBase
 	
 	void DrawSelectedInfo()
 	{
-		int selected = MatterDatabaseHelper.GetSelectedIndex(database);
+		String selected = MatterScanner.getSelectedIndex(database);
+		IMatterDatabase databaseTile = MatterScanner.getLink(Minecraft.getMinecraft().theWorld,database);
 		
-		if(selected >= 0)
+		if(databaseTile != null && selected != null)
 		{
-			NBTTagCompound itemNBT = MatterDatabaseHelper.GetItemAsNBTAt(database, selected);
+			NBTTagCompound itemNBT = databaseTile.getItemAsNBT(selected);
 			ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemNBT);
 			
 			if(itemNBT != null)
@@ -149,7 +153,7 @@ public class GuiMatterScanner extends MOGuiBase
     public void onGuiClosed()
     {
         super.onGuiClosed();
-        if(lastSelectedIndex != MatterDatabaseHelper.GetSelectedIndex(database))
+        if(lastSelectedIndex != MatterScanner.getSelectedIndex(database))
             MatterOverdrive.packetPipeline.sendToServer(new PacketMatterScannerUpdate(database, (short) databaseSlot));
     }
 }

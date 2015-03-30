@@ -41,6 +41,7 @@ public class MatterOverdrive
     public static final byte guiIDMatterScanner = 2;
     public static final byte guiNetworkController = 3;
     public static final byte guiMatterAnalyzer = 4;
+	public static final byte guiPatternStorage = 5;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)

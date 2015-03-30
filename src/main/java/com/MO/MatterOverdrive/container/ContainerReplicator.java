@@ -11,7 +11,7 @@ import cofh.lib.gui.slot.SlotEnergy;
 import cofh.lib.gui.slot.SlotRemoveOnly;
 import cofh.lib.util.helpers.EnergyHelper;
 
-import com.MO.MatterOverdrive.gui.slot.SlotDatabase;
+import com.MO.MatterOverdrive.container.slot.SlotDatabase;
 import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 import com.MO.MatterOverdrive.util.MatterHelper;
 
@@ -100,7 +100,7 @@ public class ContainerReplicator extends MOBaseContainer
 					{
 						return null;
 					}
-				}else if(MatterHelper.isDatabaseItem(itemstack1))
+				}else if(MatterHelper.isMatterScanner(itemstack1))
 				{
 					if(!this.mergeItemStack(itemstack1, replicator.DATABASE_SLOT_ID, replicator.DATABASE_SLOT_ID+1, false))
 					{

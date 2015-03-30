@@ -1,15 +1,9 @@
 package com.MO.MatterOverdrive.handler;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
-import com.MO.MatterOverdrive.container.ContainerDecomposer;
-import com.MO.MatterOverdrive.container.ContainerMatterAnalyzer;
-import com.MO.MatterOverdrive.container.ContainerNetworkController;
-import com.MO.MatterOverdrive.container.ContainerReplicator;
+import com.MO.MatterOverdrive.container.*;
 import com.MO.MatterOverdrive.gui.*;
-import com.MO.MatterOverdrive.tile.TileEntityMachineDecomposer;
-import com.MO.MatterOverdrive.tile.TileEntityMachineMatterAnalyzer;
-import com.MO.MatterOverdrive.tile.TileEntityMachineNetworkController;
-import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
+import com.MO.MatterOverdrive.tile.*;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -55,6 +49,13 @@ public class GuiHandler implements IGuiHandler
                     return new ContainerMatterAnalyzer(player.inventory,(TileEntityMachineMatterAnalyzer)entity);
                 }
                 break;
+            case MatterOverdrive.guiPatternStorage:
+                if(entity instanceof TileEntityMachinePatternStorage)
+                {
+                    return new ContainerPatternStorage(player.inventory,(TileEntityMachinePatternStorage)entity);
+
+                }
+                break;
 			}
 		}
 		return null;
@@ -92,6 +93,12 @@ public class GuiHandler implements IGuiHandler
                     {
                         return new GuiMatterAnalyzer(player.inventory,(TileEntityMachineMatterAnalyzer)entity);
                     }
+                    case MatterOverdrive.guiPatternStorage:
+                        if(entity instanceof TileEntityMachinePatternStorage)
+                        {
+                            return new GuiPatternStorage(player.inventory,(TileEntityMachinePatternStorage)entity);
+                        }
+                        break;
 			}
 		}
 		return null;

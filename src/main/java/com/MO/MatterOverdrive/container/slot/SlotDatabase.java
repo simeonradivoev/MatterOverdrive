@@ -1,6 +1,5 @@
-package com.MO.MatterOverdrive.gui.slot;
+package com.MO.MatterOverdrive.container.slot;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -17,6 +16,6 @@ public class SlotDatabase extends Slot
 	@Override
 	public boolean isItemValid(ItemStack stack) {
 
-		return MatterHelper.isDatabaseItem(stack);
+		return MatterHelper.isMatterScanner(stack);
 	}
 }

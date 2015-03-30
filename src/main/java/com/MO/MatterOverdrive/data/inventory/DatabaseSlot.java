@@ -1,9 +1,7 @@
 package com.MO.MatterOverdrive.data.inventory;
 
-import cofh.lib.gui.slot.SlotRemoveOnly;
 import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.gui.slot.SlotDatabase;
-import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
+import com.MO.MatterOverdrive.container.slot.SlotDatabase;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -18,7 +16,7 @@ public class DatabaseSlot extends Slot
     @Override
     public boolean isValidForSlot(ItemStack itemStack)
     {
-        return MatterHelper.isDatabaseItem(itemStack);
+        return MatterHelper.isMatterScanner(itemStack);
     }
 
     @Override

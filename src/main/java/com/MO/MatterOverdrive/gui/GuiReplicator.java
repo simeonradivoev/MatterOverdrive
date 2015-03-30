@@ -1,11 +1,14 @@
 package com.MO.MatterOverdrive.gui;
 
+import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.data.inventory.Slot;
 import com.MO.MatterOverdrive.gui.element.ElementPlayerSlots;
 import com.MO.MatterOverdrive.gui.element.ElementSlot;
 import com.MO.MatterOverdrive.gui.element.ElementSlotsList;
+import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -89,12 +92,16 @@ public class GuiReplicator extends MOGuiBase
         }
 
         ItemStack itemStack = stack;
-        if(MatterHelper.isDatabaseItem(stack))
+        if(MatterHelper.isMatterScanner(stack))
         {
-            itemStack = MatterDatabaseHelper.GetSelectedItem(stack);
+            IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld,stack);
+            if(database != null)
+            {
+                itemStack = MatterDatabaseHelper.GetItemStackFromNBT(database.getItemAsNBT(MatterScanner.getSelectedIndex(stack)));
+            }
         }
 
-        MatterHelper.DrawMatterInfoTooltip(itemStack,TileEntityMachineReplicator.REPLICATE_SPEED_PER_MATTER,TileEntityMachineReplicator.REPLICATE_ENERGY_PER_TICK,list);
+        MatterHelper.DrawMatterInfoTooltip(itemStack, TileEntityMachineReplicator.REPLICATE_SPEED_PER_MATTER, TileEntityMachineReplicator.REPLICATE_ENERGY_PER_TICK, list);
 
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
@@ -114,10 +121,13 @@ public class GuiReplicator extends MOGuiBase
 
         if(scanner != null)
         {
-            NBTTagCompound tag = MatterDatabaseHelper.GetItemAsNBTAt(scanner,MatterDatabaseHelper.GetSelectedIndex(scanner));
-            ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(tag);
-
-            matterElement.setDrain(-MatterHelper.getMatterAmountFromItem(item));
+            IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld, scanner);
+            if(database != null)
+            {
+                NBTTagCompound tag = database.getItemAsNBT(MatterScanner.getSelectedIndex(scanner));
+                ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(tag);
+                matterElement.setDrain(-MatterHelper.getMatterAmountFromItem(item));
+            }
         }
         else
         {

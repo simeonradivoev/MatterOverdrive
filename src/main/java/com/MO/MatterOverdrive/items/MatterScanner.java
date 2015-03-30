@@ -3,15 +3,19 @@ package com.MO.MatterOverdrive.items;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.helpers.StringHelper;
@@ -28,12 +32,14 @@ import com.MO.MatterOverdrive.util.MatterHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class MatterScanner extends MOBaseItem implements IMatterDatabase
+public class MatterScanner extends MOBaseItem
 {
+	public static final String SELECTED_TAG_NAME = "lastScanIndex";
 	public static final int PROGRESS_PER_ITEM = 10;
 	public static final int SCAN_SPEED = 10;
 
-	public MatterScanner(String name) {
+	public MatterScanner(String name)
+	{
 		super(name);
 	}
 
@@ -54,15 +60,78 @@ public class MatterScanner extends MOBaseItem implements IMatterDatabase
 
 	 public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
 	 {
-		 NBTTagCompound lastItem = GetLastItemAsNBT(itemstack);
-
-		 if(lastItem != null)
+		 IMatterDatabase database = getLink(player.worldObj, itemstack);
+		 if(database != null)
 		 {
-			 infos.add("Scan Progress: " + lastItem.getByte(MatterDatabaseHelper.PROGRESS_TAG_NAME) + " / " + 100);
-			 infos.add("Current Block: " + MatterDatabaseHelper.GetItemStackFromNBT(lastItem).getDisplayName());
+			 NBTTagCompound lastItem = database.getItemAsNBT(getSelectedIndex(itemstack));
+
+			 if(itemstack.hasTagCompound())
+			 {
+				 int x = itemstack.getTagCompound().getInteger("link_x");
+				 int y = itemstack.getTagCompound().getInteger("link_y");
+				 int z = itemstack.getTagCompound().getInteger("link_z");
+
+				 infos.add(ChatFormatting.RED + "Linked at: " + x + "," + y + "," + z);
+			 }
+
+			 if (lastItem != null)
+			 {
+				 infos.add("Scan Progress: " + lastItem.getByte(MatterDatabaseHelper.PROGRESS_TAG_NAME) + " / " + 100);
+				 infos.add("Current Block: " + MatterDatabaseHelper.GetItemStackFromNBT(lastItem).getDisplayName());
+			 }
+		 }
+		 else
+		 {
+			 infos.add(ChatFormatting.RED + "Unlinked");
 		 }
 	 }
 
+	public static IMatterDatabase getLink(World world,ItemStack scanner)
+	{
+		if(scanner.getItem() instanceof MatterScanner)
+		{
+			if(scanner.hasTagCompound())
+			{
+				if(scanner.getTagCompound().getBoolean("isLinked"))
+				{
+					int x = scanner.getTagCompound().getInteger("link_x");
+					int y = scanner.getTagCompound().getInteger("link_y");
+					int z = scanner.getTagCompound().getInteger("link_z");
+
+					TileEntity e = world.getTileEntity(x, y, z);
+					if (e instanceof IMatterDatabase)
+						return (IMatterDatabase) e;
+					else
+						unLink(world,scanner);
+				}
+			}
+		}
+		return null;
+	}
+
+	public static void unLink(World world,ItemStack scanner)
+	{
+		if(scanner.hasTagCompound())
+		{
+			scanner.getTagCompound().setBoolean("isLinked",false);
+		}
+	}
+
+	public static void link(World world, int xCoord, int yCoord, int zCoord,ItemStack scanner)
+	{
+		if(scanner.getItem() instanceof MatterScanner)
+		{
+			((MatterScanner)scanner.getItem()).TagCompountCheck(scanner);
+		}
+
+		if(scanner.hasTagCompound())
+		{
+			scanner.getTagCompound().setBoolean("isLinked",true);
+			scanner.getTagCompound().setInteger("link_x", xCoord);
+			scanner.getTagCompound().setInteger("link_y", yCoord);
+			scanner.getTagCompound().setInteger("link_z", zCoord);
+		}
+	}
 
 	public int getItemStackLimit(ItemStack item)
 	{
@@ -75,36 +144,6 @@ public class MatterScanner extends MOBaseItem implements IMatterDatabase
         return 72000;
     }
 
-    public NBTTagCompound GetLastItemAsNBT(ItemStack item)
-	{
-		if(item.hasTagCompound())
-		{
-			int lastItemIndex = MatterDatabaseHelper.GetSelectedIndex(item);
-
-			if(lastItemIndex >= 0)
-				return MatterDatabaseHelper.GetItemAsNBTAt(item, lastItemIndex);
-		}
-
-		return null;
-	}
-
-	public ItemStack GetLastItem(ItemStack item)
-	{
-		if(item.hasTagCompound())
-		{
-            return MatterDatabaseHelper.GetItemAt(item, MatterDatabaseHelper.GetSelectedIndex(item));
-		}
-
-		return null;
-	}
-
-	public void SetLastItemIndex(ItemStack item,int id)
-	{
-		if(item.hasTagCompound())
-		{
-			MatterDatabaseHelper.SetSelectedIndex(item, id);
-		}
-	}
 
 	private void increaseScanProgress(ItemStack item)
 	{
@@ -138,60 +177,81 @@ public class MatterScanner extends MOBaseItem implements IMatterDatabase
 		if(!world.isRemote)
 		{
 			ItemStack item = MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z);
-			if(!MatterDatabaseHelper.HasItemOrCantScan(scanner, item))
-			{
-				return world.func_147480_a(x, y, z, false);
-			}
+			return world.func_147480_a(x, y, z, false);
 		}
 
 		return false;
+	}
+
+	public static void setSelectedIndex(ItemStack scanner,String index)
+	{
+		if(scanner.hasTagCompound())
+		{
+			scanner.getTagCompound().setString(SELECTED_TAG_NAME, index);
+		}
+	}
+
+	public static String getSelectedIndex(ItemStack scanner)
+	{
+		if(scanner.hasTagCompound())
+		{
+			return scanner.getTagCompound().getString(SELECTED_TAG_NAME);
+		}
+		return null;
 	}
 
 	@Override
 	public boolean onItemUse(ItemStack scanner, EntityPlayer player, World world, int x, int y, int z, int p_77648_7_, float p_77648_8_, float p_77648_9_, float p_77648_10_)
     {
         this.TagCompountCheck(scanner);
-        System.out.println("Selected index is: " + MatterDatabaseHelper.GetSelectedIndex(scanner));
 
-        NBTTagCompound itemAsNBT = GetLastItemAsNBT(scanner);
-        ItemStack lastItem = GetLastItem(scanner);
-        ItemStack worldBlock = MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z);
+			IMatterDatabase database = getLink(world, scanner);
+			ItemStack worldBlock = MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z);
 
-        if (lastItem != null && itemAsNBT != null)
-        {
-            if (!ItemStack.areItemStacksEqual(lastItem, worldBlock))
-            {
-                resetScanProgress(scanner);
-                ChangeScanTarget(scanner, world, player, x, y, z);
-            } else {
-                if (MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) < MatterDatabaseHelper.MAX_ITEM_PROGRESS) {
-                    if (getScanProgress(scanner) < SCAN_SPEED)
-                    {
-                        //scanner is scanning
-                        System.out.println("Scanning... :" + this.getScanProgress(scanner));
-                        increaseScanProgress(scanner);
-                        SoundHandler.PlaySoundAt(world, "scanner_beep", player, 0.4f);
-                    } else {
-                        //scanner has finished scanning
-                        resetScanProgress(scanner);
-                        if (this.HarvestBlock(scanner, player, world, x, y, z)) {
-                            if (MatterDatabaseHelper.IncreaseProgress(itemAsNBT, PROGRESS_PER_ITEM) <= 100 - PROGRESS_PER_ITEM) {
-                                SoundHandler.PlaySoundAt(world, "scanner_scanning", player);
-                            } else {
-                                SoundHandler.PlaySoundAt(world, "scanner_success", player);
-                            }
-                        }
-                    }
+			if (database != null)
+			{
+				if (database.hasItem(worldBlock))
+				{
+					String lastSelectedIndex = getSelectedIndex(scanner);
+					String newSelectedIndex = worldBlock.getItem().getUnlocalizedName();
+					if (!lastSelectedIndex.equalsIgnoreCase(newSelectedIndex))
+					{
+						//reset scan progress when targets changed
+						resetScanProgress(scanner);
+					}
+					this.setSelectedIndex(scanner, newSelectedIndex);
 
-                    return true;
-                } else {
-                    //the item is fully reserched
-                    return false;
-                }
-            }
-        } else {
-            ChangeScanTarget(scanner, world, player, x, y, z);
-        }
+					if (getScanProgress(scanner) < SCAN_SPEED)
+					{
+						//scanning
+						System.out.println("Scanning... :" + this.getScanProgress(scanner));
+						increaseScanProgress(scanner);
+						SoundHandler.PlaySoundAt(world, "scanner_beep", player, 0.4f);
+						return true;
+					}
+					else
+					{
+						//finished scanning
+						resetScanProgress(scanner);
+
+						if (database.increaseProgress(worldBlock, PROGRESS_PER_ITEM)) {
+							//scan successful
+							SoundHandler.PlaySoundAt(world, "scanner_scanning", player);
+							HarvestBlock(scanner, player, world, x, y, z);
+							//SoundHandler.PlaySoundAt(world, "scanner_success", player);
+							return true;
+						} else {
+							//scan fail
+							SoundHandler.PlaySoundAt(world, "scanner_fail", player);
+							return false;
+						}
+					}
+				} else
+				{
+					return database.addItem(worldBlock);
+				}
+			}
+
         return false;
     }
 
@@ -201,28 +261,12 @@ public class MatterScanner extends MOBaseItem implements IMatterDatabase
 	{
         MatterDatabaseHelper.InitTagCompound(stack);
 	}
-	
-	void ChangeScanTarget(ItemStack item, World world,EntityPlayer player, int x,int y, int z)
-	{
-		if(MatterDatabaseHelper.Register(item, world,x,y,z, 0))
-		{
-			//register new selected item
-			System.out.println("new item registered. Item id is:" + Block.getIdFromBlock(world.getBlock(x, y, z)) + ":" + world.getBlockMetadata(x, y, z));
-			SetLastItemIndex(item,MatterDatabaseHelper.GetIndexOfItem(item, world,x,y,z));
-		}
-		else
-		{
-			//failed to register new item
-			//SoundHandler.PlaySoundAt(world, "scanner_fail", player);
-			System.out.println("Could not register "+MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z).getUnlocalizedName()+". Item is unscannable");
-		}
-	}
 
     public static void DisplayGuiScreen()
     {
         if(Minecraft.getMinecraft().theWorld.isRemote)
         {
-            if(MatterHelper.isDatabaseItem(Minecraft.getMinecraft().thePlayer.getHeldItem()))
+            if(MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem()))
             {
                 //Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem(),Minecraft.getMinecraft().thePlayer.getHeldItem().));
                // return;
@@ -230,7 +274,7 @@ public class MatterScanner extends MOBaseItem implements IMatterDatabase
 
             for (int i = 0; i < Minecraft.getMinecraft().thePlayer.inventory.getSizeInventory(); i++)
             {
-                if (MatterHelper.isDatabaseItem(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i)))
+                if (MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i)))
                 {
                     Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i),i));
                     return;
@@ -238,53 +282,4 @@ public class MatterScanner extends MOBaseItem implements IMatterDatabase
             }
         }
     }
-
-	@Override
-	public ItemStack[] getItems(ItemStack database) 
-	{
-		List<ItemStack> items = new ArrayList<ItemStack>();
-		NBTTagList itmemTagCompounds = getItemNBTCompounds(database);
-		for(int i = 0;i < itmemTagCompounds.tagCount();i++)
-		{
-			ItemStack item = ItemStack.loadItemStackFromNBT(itmemTagCompounds.getCompoundTagAt(i));
-			items.add(item);
-		}
-		
-		return items.toArray(new ItemStack[items.size()]);
-	}
-
-	@Override
-	public NBTTagList getItemNBTCompounds(ItemStack database) 
-	{
-		return MatterDatabaseHelper.GetItemsTagList(database);
-	}
-
-	@Override
-	public boolean hasItem(ItemStack database,int id)
-	{
-		return MatterDatabaseHelper.HasItem(database, id);
-	}
-
-	@Override
-	public ItemStack getItem(ItemStack database,int id)
-	{
-		return MatterDatabaseHelper.GetItem(database, id);
-	}
-
-	@Override
-	public NBTTagCompound getItemAsNBT(ItemStack database, int id) {
-		return MatterDatabaseHelper.GetItemAsNBT(database, id);
-	}
-
-	@Override
-	public boolean hasItem(ItemStack database, ItemStack item) 
-	{
-		return MatterDatabaseHelper.HasItem(database, item);
-	}
-
-	@Override
-	public ItemStack getItem(ItemStack database, ItemStack item) 
-	{
-		return MatterDatabaseHelper.GetItem(database, item);
-	}
 }
