@@ -5,6 +5,7 @@ import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.matter.IMatterHandler;
 import com.MO.MatterOverdrive.data.MatterStorage;
 import com.MO.MatterOverdrive.util.MatterHelper;
+import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
@@ -78,17 +79,20 @@ public class TileEntityMatterPipe extends  TileEntityPipe<IMatterConnection> imp
 
     private List<WeightedDirection> getWeightedValidSides(ForgeDirection transferDir)
     {
-        List<WeightedDirection> validSides = new ArrayList<WeightedDirection>(connections.length);
+        List<WeightedDirection> validSides = new ArrayList<WeightedDirection>(6);
         ForgeDirection transferDirOp = MatterHelper.opposite(transferDir);
 
-        for (int i = 0; i < connections.length; i++) {
-            if (connections[i] != null) {
-                if (connections[i] == transferDir) {
-                    validSides.add(new WeightedDirection(connections[i], 2.0f));
-                } else if (connections[i] == transferDirOp) {
-                    validSides.add(new WeightedDirection(connections[i], 0.0f));
+        for (int i = 0; i < 6; i++)
+        {
+            if (MOMathHelper.getBoolean(connections,i))
+            {
+                if (ForgeDirection.values()[i] == transferDir)
+                {
+                    validSides.add(new WeightedDirection(ForgeDirection.values()[i], 2.0f));
+                } else if (ForgeDirection.values()[i] == transferDirOp) {
+                    validSides.add(new WeightedDirection(ForgeDirection.values()[i], 0.0f));
                 } else {
-                    validSides.add(new WeightedDirection(connections[i], 0.5f + rand.nextFloat()));
+                    validSides.add(new WeightedDirection(ForgeDirection.values()[i], 0.5f + rand.nextFloat()));
                 }
             }
         }
@@ -100,9 +104,9 @@ public class TileEntityMatterPipe extends  TileEntityPipe<IMatterConnection> imp
     }
 
     @Override
-    public void  writeToNBT(NBTTagCompound comp)
+    public void writeCustomNBT(NBTTagCompound comp)
     {
-        super.writeToNBT(comp);
+        super.writeCustomNBT(comp);
         if(!worldObj.isRemote)
         {
             storage.writeToNBT(comp);
@@ -111,9 +115,9 @@ public class TileEntityMatterPipe extends  TileEntityPipe<IMatterConnection> imp
     }
 
     @Override
-    public  void  readFromNBT(NBTTagCompound comp)
+    public  void  readCustomNBT(NBTTagCompound comp)
     {
-        super.readFromNBT(comp);
+        super.readCustomNBT(comp);
         storage.readFromNBT(comp);
         if (comp.hasKey("transfer_dir"))
         {
@@ -184,7 +188,8 @@ public class TileEntityMatterPipe extends  TileEntityPipe<IMatterConnection> imp
     @Override
     public Packet getDescriptionPacket()
     {
-        NBTTagCompound connections = new NBTTagCompound();
+        S35PacketUpdateTileEntity packet = (S35PacketUpdateTileEntity)super.getDescriptionPacket();
+        NBTTagCompound connections = packet.func_148857_g();
         connections.setBoolean("matterVisible",getMatterStored() > 0);
         return new S35PacketUpdateTileEntity(xCoord,yCoord,zCoord,1,connections);
     }
@@ -192,6 +197,7 @@ public class TileEntityMatterPipe extends  TileEntityPipe<IMatterConnection> imp
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
     {
+        super.onDataPacket(net,pkt);
         if(worldObj.isRemote) {
             this.setMatterVisible(pkt.func_148857_g().getBoolean("matterVisible"));
         }
