@@ -390,7 +390,7 @@ public class MatterDatabaseHelper
 	{
 		Block b = world.getBlock(x, y, z);
 		
-		if(Item.getItemFromBlock(b).getHasSubtypes())
+		if(b != null && Item.getItemFromBlock(b) != null &&Item.getItemFromBlock(b).getHasSubtypes())
 		{
 			//Item bi = Item.getItemFromBlock(b);
 			//List subBlocks = new ArrayList();

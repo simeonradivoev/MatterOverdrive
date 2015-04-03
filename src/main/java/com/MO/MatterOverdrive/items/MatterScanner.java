@@ -2,12 +2,20 @@ package com.MO.MatterOverdrive.items;
 
 import java.util.List;
 
+import cofh.lib.util.TimeTracker;
+import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.sound.MachineSound;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ITickableSound;
+import net.minecraft.client.audio.SoundManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import cofh.lib.util.helpers.MathHelper;
 
@@ -22,27 +30,13 @@ public class MatterScanner extends MOBaseItem
 {
 	public static final String SELECTED_TAG_NAME = "lastSelected";
 	public static final int PROGRESS_PER_ITEM = 10;
-	public static final int SCAN_SPEED = 10;
+	public static final int SCAN_TIME = 40;
+	public static MachineSound scanningSound;
 
 	public MatterScanner(String name)
 	{
 		super(name);
 	}
-
-	@Override
-	public boolean isDamageable() {
-		return true;
-	}
-
-	 public int getDamage(ItemStack stack)
-	 {
-		 return getScanProgress(stack);
-	 }
-
-	 public int getMaxDamage()
-	 {
-		 return SCAN_SPEED+1;
-	 }
 
 	 public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
 	 {
@@ -99,7 +93,7 @@ public class MatterScanner extends MOBaseItem
 	{
 		if(scanner.hasTagCompound())
 		{
-			scanner.getTagCompound().setBoolean("isLinked",false);
+			scanner.getTagCompound().setBoolean("isLinked", false);
 		}
 	}
 
@@ -125,18 +119,13 @@ public class MatterScanner extends MOBaseItem
 	}
 
 
-    public int getMaxItemUseDuration(ItemStack item)
-    {
-        return 72000;
-    }
-
 
 	private void increaseScanProgress(ItemStack item)
 	{
 		if(item.hasTagCompound())
 		{
 			int lastScanProgress = item.getTagCompound().getInteger(MatterDatabaseHelper.PROGRESS_TAG_NAME);
-			item.getTagCompound().setInteger(MatterDatabaseHelper.PROGRESS_TAG_NAME, MathHelper.clampI(lastScanProgress + 1, 0, SCAN_SPEED));
+			item.getTagCompound().setInteger(MatterDatabaseHelper.PROGRESS_TAG_NAME, MathHelper.clampI(lastScanProgress + 1, 0, 1));
 		}
 	}
 
@@ -175,7 +164,7 @@ public class MatterScanner extends MOBaseItem
 		{
 			NBTTagCompound tagCompound = new NBTTagCompound();
 			itemStack.writeToNBT(tagCompound);
-			setSelected(scanner,tagCompound);
+			setSelected(scanner, tagCompound);
 		}
 	}
 
@@ -205,63 +194,6 @@ public class MatterScanner extends MOBaseItem
 		return null;
 	}
 
-	@Override
-	public boolean onItemUse(ItemStack scanner, EntityPlayer player, World world, int x, int y, int z, int p_77648_7_, float p_77648_8_, float p_77648_9_, float p_77648_10_)
-    {
-        this.TagCompountCheck(scanner);
-
-			IMatterDatabase database = getLink(world, scanner);
-			ItemStack worldBlock = MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z);
-
-			if (database != null)
-			{
-				if (database.hasItem(worldBlock))
-				{
-					NBTTagCompound lastSelected = getSelectedAsNBT(scanner);
-					NBTTagCompound newSelected = new NBTTagCompound();
-					MatterDatabaseHelper.GetItemStackFromWorld(world,x,y,z).writeToNBT(newSelected);
-
-					if (MatterDatabaseHelper.areEqual(lastSelected,newSelected))
-					{
-						//reset scan progress when targets changed
-						resetScanProgress(scanner);
-					}
-					this.setSelected(scanner, newSelected);
-
-					if (getScanProgress(scanner) < SCAN_SPEED)
-					{
-						//scanning
-						System.out.println("Scanning... :" + this.getScanProgress(scanner));
-						increaseScanProgress(scanner);
-						SoundHandler.PlaySoundAt(world, "scanner_beep", player, 0.4f);
-						return true;
-					}
-					else
-					{
-						//finished scanning
-						resetScanProgress(scanner);
-
-						if (database.increaseProgress(worldBlock, PROGRESS_PER_ITEM)) {
-							//scan successful
-							SoundHandler.PlaySoundAt(world, "scanner_scanning", player);
-							HarvestBlock(scanner, player, world, x, y, z);
-							//SoundHandler.PlaySoundAt(world, "scanner_success", player);
-							return true;
-						} else {
-							//scan fail
-							SoundHandler.PlaySoundAt(world, "scanner_fail", player);
-							return false;
-						}
-					}
-				} else
-				{
-					return database.addItem(worldBlock);
-				}
-			}
-
-        return false;
-    }
-
 	
 	@Override
 	public void InitTagCompount(ItemStack stack)
@@ -289,4 +221,133 @@ public class MatterScanner extends MOBaseItem
             }
         }
     }
+
+	public static int getLastPage(ItemStack scanner)
+	{
+		if(scanner.hasTagCompound())
+		{
+			return scanner.getTagCompound().getInteger("LastPage");
+		}
+		return 0;
+	}
+
+	public static void setLastPage(ItemStack scanner,int page)
+	{
+		if(scanner.hasTagCompound())
+		{
+			scanner.getTagCompound().setInteger("LastPage", page);
+		}
+	}
+
+	/**
+	 * returns the action that specifies what animation to play when the items is being used
+	 */
+	public EnumAction getItemUseAction(ItemStack p_77661_1_)
+	{
+		return EnumAction.block;
+	}
+
+	/**
+	 * How long it takes to use or consume an item
+	 */
+	public int getMaxItemUseDuration(ItemStack p_77626_1_)
+	{
+		return SCAN_TIME;
+	}
+
+	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+	{
+		System.out.println("Right Click");
+		entityplayer.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
+		return itemstack;
+	}
+
+	public ItemStack onEaten(ItemStack scanner, World world, EntityPlayer player)
+	{
+		if(world.isRemote)
+		{
+			stopScanSounds();
+			return scanner;
+		}
+
+		Minecraft mc = Minecraft.getMinecraft();
+		int x = mc.renderViewEntity.rayTrace(200, 1.0F).blockX;
+		int y = mc.renderViewEntity.rayTrace(200, 1.0F).blockY;
+		int z = mc.renderViewEntity.rayTrace(200, 1.0F).blockZ;
+		ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(Minecraft.getMinecraft().theWorld, x, y, z);
+
+		//finished scanning
+		Scan(world, scanner, player, worldItem, x, y, z);
+		return scanner;
+	}
+
+	@Override
+	public void onUsingTick(ItemStack scanner, EntityPlayer player, int count)
+	{
+		Minecraft mc = Minecraft.getMinecraft();
+		int x = mc.renderViewEntity.rayTrace(200, 1.0F).blockX;
+		int y = mc.renderViewEntity.rayTrace(200, 1.0F).blockY;
+		int z = mc.renderViewEntity.rayTrace(200, 1.0F).blockZ;
+		ItemStack lastSelected = getSelectedAsItem(scanner);
+		ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(Minecraft.getMinecraft().theWorld, x, y, z);
+
+		if(!MatterDatabaseHelper.areEqual(lastSelected,worldItem))
+		{
+			setSelected(scanner,worldItem);
+			player.stopUsingItem();
+			stopScanSounds();
+			return;
+		}
+
+		if(scanningSound == null)
+		{
+			scanningSound = new MachineSound(new ResourceLocation(Reference.MOD_ID + ":" +"scanner_scanning"),(float)player.posX,(float)player.posY,(float)player.posZ,0.6f,1);
+			Minecraft.getMinecraft().getSoundHandler().playSound(scanningSound);
+		}
+	}
+
+	public void onPlayerStoppedUsing(ItemStack scanner, World world, EntityPlayer player, int count)
+	{
+		stopScanSounds();
+	}
+
+	private void stopScanSounds()
+	{
+		if(scanningSound != null)
+		{
+			scanningSound.stopPlaying();
+			scanningSound = null;
+		}
+	}
+
+	public boolean Scan(World world,ItemStack scanner,EntityPlayer player,ItemStack worldBlock,int x,int y,int z)
+	{
+		this.TagCompountCheck(scanner);
+
+		IMatterDatabase database = getLink(world, scanner);
+
+		if (database != null)
+		{
+			if (database.hasItem(worldBlock))
+			{
+				resetScanProgress(scanner);
+
+				if (database.increaseProgress(worldBlock, PROGRESS_PER_ITEM)) {
+					//scan successful
+					SoundHandler.PlaySoundAt(world, "scanner_success", player);
+					return HarvestBlock(scanner, player, world, x, y, z);
+				} else
+				{
+					//scan fail
+					SoundHandler.PlaySoundAt(world, "scanner_fail", player);
+					return false;
+				}
+			} else
+			{
+				return database.addItem(worldBlock);
+			}
+		}
+
+		return false;
+	}
 }

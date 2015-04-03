@@ -70,7 +70,7 @@ public class MatterDatabaseListBox extends MOElementListBox
 			
 			if(this.active)
 			{
-				listBox.drawTexturedModalRect(x, y, 0, 198, 39, 22);
+				listBox.drawTexturedModalRect(x - 39, y, 39, 198, 128, 22);
 				
 			}
 			else
