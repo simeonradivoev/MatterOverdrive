@@ -1,10 +1,13 @@
 package com.MO.MatterOverdrive.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import cofh.lib.gui.element.ElementBase;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.gui.element.*;
+import com.MO.MatterOverdrive.gui.pages.PageScanInfo;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.network.packet.PacketMatterScannerUpdate;
 
@@ -23,6 +26,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class GuiMatterScanner extends MOGuiBase
 {
@@ -31,10 +35,13 @@ public class GuiMatterScanner extends MOGuiBase
 	private static final String SCROLL_DOWN_BUTTON_NAME = "scroll_down";
 	private static final String SCROLL_UP_BUTTON_NAME = "scroll_up";
 	private static final String LIST_ELEMENT_NAME = "list";
-	public static final String backgroundPath = Reference.PATH_GUI + "matter_scanner.png";
+
 	public static final ResourceLocation background = new ResourceLocation(Reference.PATH_GUI + "matter_scanner.png");
-	private static FontRenderer   fontRenderer = Minecraft.getMinecraft().fontRenderer;
-	private static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
+	public static final String backgroundPath = Reference.PATH_GUI + "matter_scanner.png";
+
+	int lastPage;
+	private List<ElementBase> pages;
+	PageScanInfo pageScanInfo;
 
 	NBTTagCompound lastSelected;
 	
@@ -42,9 +49,6 @@ public class GuiMatterScanner extends MOGuiBase
 	MOElementTextField searchField;
 	ElementButton scrollButtonUp;
 	ElementButton scrollButtonDown;
-	ElementProgress scan_progress;
-	ElementScanProgress scan_info_graph;
-	ElementItemPreview itemPreview;
 	
 	int xStart = 0,yStart = 0;
 	
@@ -55,40 +59,44 @@ public class GuiMatterScanner extends MOGuiBase
 		list.background = this.background;
 		list.setName(LIST_ELEMENT_NAME);
 		searchField = new MOElementTextField(this,41,26);
-		scan_progress.setTexture(backgroundPath, 256, 256);
-		scan_progress.setMaxValue(MatterDatabaseHelper.MAX_ITEM_PROGRESS);
-		scan_progress.SetTextPostition(18, 5);
-		scan_progress.setTextColor(new GuiColor(255, 255, 255).getColor());
-		scan_info_graph.setProgress(1);
 		list.setFilter("");
 		list.updateList("");
-		//set selected item in list, as active object
-		SetSelected((NBTTagCompound)list.getSelectedElement().getValue());
 
-		this.addElement(list);
+		//set selected item in list, as active object
+		if(list.getSelectedElement() != null)
+			SetSelected((NBTTagCompound) list.getSelectedElement().getValue());
+
+
 		this.addElement(searchField);
 		this.addElement(scrollButtonUp);
 		this.addElement(scrollButtonDown);
-		this.addElement(scan_progress);
-		this.addElement(scan_info_graph);
-		this.addElement(itemPreview);
+		this.addElement(list);
 	}
 	
 	public GuiMatterScanner(ItemStack scanner,int slot)
 	{
 		super(new ContainerFalse());
+		pages = new ArrayList<ElementBase>();
 		this.scanner = scanner;
 		//this.texture = background;
 		//this.xSize = 216;
 		//this.ySize = 176;
 		list = new MatterDatabaseListBox(this,3,39,37,100,scanner);
-		scan_progress = new ElementProgress(this,46 + 35,146 + 2,46,146,39,202,62,188,105,14,142,18);
 		scrollButtonUp = new ElementButton(this,11,27,SCROLL_UP_BUTTON_NAME,22,188,32,188,10,10,backgroundPath);
 		scrollButtonDown = new ElementButton(this,11,142,SCROLL_DOWN_BUTTON_NAME,42,188,52,188,10,10,backgroundPath);
-		scan_info_graph = new ElementScanProgress(this,87,44);
-		itemPreview = new ElementItemPreview(this,45,44,null);
         this.databaseSlot = slot;
 		lastSelected = MatterScanner.getSelectedAsNBT(scanner);
+		lastPage = MatterScanner.getLastPage(scanner);
+
+		pageScanInfo = new PageScanInfo(this,0,0,"Scan Process",lastSelected);
+		pages.add(pageScanInfo);
+	}
+
+	@Override
+	public void drawScreen(int x, int y, float partialTick) {
+
+		super.drawScreen(x,y,partialTick);
+		pages.get(lastPage).update();
 	}
 	
 	@Override
@@ -98,8 +106,20 @@ public class GuiMatterScanner extends MOGuiBase
 			this.list.setFilter(searchField.getText());
 		}
 		DrawSelectedInfo();
+		this.pages.get(lastPage).drawForeground(mouseX,mouseY);
 		drawElements(0, true);
 		drawTabs(0, true);
+	}
+
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float partialTick, int x, int y) {
+
+		super.drawGuiContainerBackgroundLayer(partialTick, x, y);
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(guiLeft, guiTop, 0.0F);
+		this.pages.get(lastPage).drawBackground(mouseX, mouseY, partialTick);
+		GL11.glPopMatrix();
 	}
 	
 	void DrawSelectedInfo()
@@ -119,17 +139,13 @@ public class GuiMatterScanner extends MOGuiBase
 				List infos = item.getTooltip(null, false);
 				infos.add(Matter);
 				RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 32, new GuiColor(255, 255, 255).getColor());
-				scan_progress.setValue(MatterDatabaseHelper.GetProgressFromNBT(itemNBT));
-				scan_progress.setText(String.valueOf((int) (((float) MatterDatabaseHelper.GetProgressFromNBT(itemNBT) / (float) 100) * 100)) + "%");
-
-				scan_progress.setVisible(true);
-				scan_info_graph.setVisible(true);
+				pageScanInfo.setItemNBT(itemNBT);
 				return;
 			}
 		}
 
-		scan_progress.setVisible(false);
-		scan_info_graph.setVisible(false);
+		//scan_progress.setVisible(false);
+		//scan_info_graph.setVisible(false);
 	}
 
 	@Override
@@ -155,11 +171,9 @@ public class GuiMatterScanner extends MOGuiBase
 		if(tagCompound != null)
 		{
 			lastSelected = tagCompound;
-			scan_info_graph.setSeed(tagCompound.getShort("id"));
-			itemPreview.setItemStack(ItemStack.loadItemStackFromNBT(tagCompound));
+			pageScanInfo.setItemNBT(tagCompound);
 		}
 	}
-	
 	
 	void DrawBlocks(ItemStack scanner,float gameTicks)
 	{
