@@ -97,7 +97,7 @@ public class GuiReplicator extends MOGuiBase
             IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld,stack);
             if(database != null)
             {
-                itemStack = MatterDatabaseHelper.GetItemStackFromNBT(database.getItemAsNBT(MatterScanner.getSelectedIndex(stack)));
+                itemStack = MatterDatabaseHelper.GetItemStackFromNBT(database.getItemAsNBT(MatterScanner.getSelectedAsItem(stack)));
             }
         }
 
@@ -124,7 +124,7 @@ public class GuiReplicator extends MOGuiBase
             IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld, scanner);
             if(database != null)
             {
-                NBTTagCompound tag = database.getItemAsNBT(MatterScanner.getSelectedIndex(scanner));
+                NBTTagCompound tag = database.getItemAsNBT(MatterScanner.getSelectedAsItem(scanner));
                 ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(tag);
                 matterElement.setDrain(-MatterHelper.getMatterAmountFromItem(item));
             }

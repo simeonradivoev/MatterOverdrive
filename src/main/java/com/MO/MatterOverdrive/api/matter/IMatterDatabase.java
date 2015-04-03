@@ -13,6 +13,5 @@ public interface IMatterDatabase
 	ItemStack[] getItems();
 	boolean addItem(ItemStack itemStack);
 	NBTTagCompound getItemAsNBT(ItemStack item);
-	NBTTagCompound getItemAsNBT(String index);
 	boolean increaseProgress(ItemStack item,int amount);
 }

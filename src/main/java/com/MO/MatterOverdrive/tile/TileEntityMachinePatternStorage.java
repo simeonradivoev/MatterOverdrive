@@ -195,21 +195,6 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public NBTTagCompound getItemAsNBT(String index)
-    {
-        for (int i = 0;i < pattern_storage_slots.length;i++)
-        {
-            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(pattern_storage_slots[i])))
-            {
-                NBTTagCompound hasItem = MatterDatabaseHelper.GetItemAsNBT(inventory.getStackInSlot(pattern_storage_slots[i]), index);
-                if(hasItem != null)
-                    return hasItem;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public boolean increaseProgress(ItemStack item, int amount)
     {
         for (int i = 0;i < pattern_storage_slots.length;i++)

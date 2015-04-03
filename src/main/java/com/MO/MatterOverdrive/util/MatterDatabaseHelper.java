@@ -304,7 +304,7 @@ public class MatterDatabaseHelper
 
 			for(int i = 0;i < itemList.tagCount();i++)
 			{
-				if(GetItemStackFromNBT(itemList.getCompoundTagAt(i)).getUnlocalizedName() == id)
+				if(GetItemStackFromNBT(itemList.getCompoundTagAt(i)).getUnlocalizedName().equalsIgnoreCase(id))
 					return GetItemAsNBTAt(scanner,i);
 			}
 		}
@@ -351,8 +351,8 @@ public class MatterDatabaseHelper
 		
 		return -1;
 	}
-	
-	private static boolean areEqual(ItemStack one,ItemStack two)
+
+	public static boolean areEqual(ItemStack one,ItemStack two)
 	{
         if(one != null && two != null)
         {
@@ -372,6 +372,11 @@ public class MatterDatabaseHelper
             }
         }
 		return false;
+	}
+
+	public static boolean areEqual(NBTTagCompound one,NBTTagCompound two)
+	{
+		return areEqual(ItemStack.loadItemStackFromNBT(one),ItemStack.loadItemStackFromNBT(two));
 	}
 	
 	public static NBTTagList GetItemsTagList(ItemStack scanner)

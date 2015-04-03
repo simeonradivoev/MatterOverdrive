@@ -22,9 +22,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -115,7 +112,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 			{
                 IMatterDatabase database = MatterScanner.getLink(worldObj,getStackInSlot(DATABASE_SLOT_ID));
 
-                NBTTagCompound itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedIndex(getStackInSlot(DATABASE_SLOT_ID)));
+                NBTTagCompound itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedAsItem(getStackInSlot(DATABASE_SLOT_ID)));
                 ItemStack newItem = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
 
                 int matter = MatterHelper.getMatterAmountFromItem(newItem);
@@ -262,7 +259,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
         if(database != null)
         {
-            itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedIndex(getStackInSlot(DATABASE_SLOT_ID)));
+            itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedAsItem(getStackInSlot(DATABASE_SLOT_ID)));
         }
         ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
 
@@ -340,7 +337,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
         if(database != null)
         {
-            itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedIndex(getStackInSlot(DATABASE_SLOT_ID)));
+            itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedAsItem(getStackInSlot(DATABASE_SLOT_ID)));
         }
         ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
 

@@ -3,10 +3,12 @@ package com.MO.MatterOverdrive.network.packet;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.CharSet;
 import org.lwjgl.Sys;
 
@@ -17,7 +19,7 @@ import java.nio.charset.Charset;
  */
 public class PacketMatterScannerUpdate extends AbstractPacket
 {
-    private String selectedIndex;
+    private NBTTagCompound selected;
     private short slot;
 
     public PacketMatterScannerUpdate()
@@ -27,24 +29,21 @@ public class PacketMatterScannerUpdate extends AbstractPacket
 
     public PacketMatterScannerUpdate(ItemStack scanner,short slot)
     {
-        selectedIndex = MatterScanner.getSelectedIndex(scanner);
+        selected = MatterScanner.getSelectedAsNBT(scanner);
         this.slot = slot;
     }
 
     @Override
     public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
     {
-        byte[] bytes = selectedIndex.getBytes(Charset.forName("UTF-8"));
-        buffer.writeInt(bytes.length);
-        buffer.writeBytes(bytes);
+        ByteBufUtils.writeTag(buffer, selected);
         buffer.writeShort(slot);
     }
 
     @Override
     public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
     {
-        int bytesLength = buffer.readInt();
-        this.selectedIndex = buffer.readBytes(bytesLength).toString(Charset.forName("UTF-8"));
+        this.selected = ByteBufUtils.readTag(buffer);
         this.slot = buffer.readShort();
     }
 
@@ -59,7 +58,7 @@ public class PacketMatterScannerUpdate extends AbstractPacket
         ItemStack scanner = player.inventory.getStackInSlot(slot);
         if(MatterHelper.isMatterScanner(scanner))
         {
-            MatterScanner.setSelectedIndex(scanner, selectedIndex);
+            MatterScanner.setSelected(scanner, selected);
         }
     }
 }

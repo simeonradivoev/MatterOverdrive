@@ -22,12 +22,11 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiMatterScanner extends MOGuiBase
 {
-	public ItemStack database;
+	public ItemStack scanner;
     public int databaseSlot;
 	private static final String SCROLL_DOWN_BUTTON_NAME = "scroll_down";
 	private static final String SCROLL_UP_BUTTON_NAME = "scroll_up";
@@ -36,7 +35,8 @@ public class GuiMatterScanner extends MOGuiBase
 	public static final ResourceLocation background = new ResourceLocation(Reference.PATH_GUI + "matter_scanner.png");
 	private static FontRenderer   fontRenderer = Minecraft.getMinecraft().fontRenderer;
 	private static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-    String lastSelectedIndex;
+
+	NBTTagCompound lastSelected;
 	
 	MatterDatabaseListBox list;
 	MOElementTextField searchField;
@@ -58,10 +58,13 @@ public class GuiMatterScanner extends MOGuiBase
 		scan_progress.setTexture(backgroundPath, 256, 256);
 		scan_progress.setMaxValue(MatterDatabaseHelper.MAX_ITEM_PROGRESS);
 		scan_progress.SetTextPostition(18, 5);
-		scan_progress.setTextColor(new GuiColor(255, 255,255).getColor());
+		scan_progress.setTextColor(new GuiColor(255, 255, 255).getColor());
 		scan_info_graph.setProgress(1);
 		list.setFilter("");
 		list.updateList("");
+		//set selected item in list, as active object
+		SetSelected((NBTTagCompound)list.getSelectedElement().getValue());
+
 		this.addElement(list);
 		this.addElement(searchField);
 		this.addElement(scrollButtonUp);
@@ -71,21 +74,21 @@ public class GuiMatterScanner extends MOGuiBase
 		this.addElement(itemPreview);
 	}
 	
-	public GuiMatterScanner(ItemStack database,int slot)
+	public GuiMatterScanner(ItemStack scanner,int slot)
 	{
 		super(new ContainerFalse());
-		this.database = database;
+		this.scanner = scanner;
 		//this.texture = background;
 		//this.xSize = 216;
 		//this.ySize = 176;
-		list = new MatterDatabaseListBox(this,3,39,37,100,database);
+		list = new MatterDatabaseListBox(this,3,39,37,100,scanner);
 		scan_progress = new ElementProgress(this,46 + 35,146 + 2,46,146,39,202,62,188,105,14,142,18);
 		scrollButtonUp = new ElementButton(this,11,27,SCROLL_UP_BUTTON_NAME,22,188,32,188,10,10,backgroundPath);
 		scrollButtonDown = new ElementButton(this,11,142,SCROLL_DOWN_BUTTON_NAME,42,188,52,188,10,10,backgroundPath);
 		scan_info_graph = new ElementScanProgress(this,87,44);
 		itemPreview = new ElementItemPreview(this,45,44,null);
         this.databaseSlot = slot;
-        lastSelectedIndex = MatterScanner.getSelectedIndex(database);
+		lastSelected = MatterScanner.getSelectedAsNBT(scanner);
 	}
 	
 	@Override
@@ -101,12 +104,11 @@ public class GuiMatterScanner extends MOGuiBase
 	
 	void DrawSelectedInfo()
 	{
-		String selected = MatterScanner.getSelectedIndex(database);
-		IMatterDatabase databaseTile = MatterScanner.getLink(Minecraft.getMinecraft().theWorld,database);
+		IMatterDatabase databaseTile = MatterScanner.getLink(Minecraft.getMinecraft().theWorld,scanner);
 		
-		if(databaseTile != null && selected != null)
+		if(databaseTile != null && lastSelected != null)
 		{
-			NBTTagCompound itemNBT = databaseTile.getItemAsNBT(selected);
+			NBTTagCompound itemNBT = lastSelected;
 			ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemNBT);
 			
 			if(itemNBT != null)
@@ -116,11 +118,18 @@ public class GuiMatterScanner extends MOGuiBase
 				
 				List infos = item.getTooltip(null, false);
 				infos.add(Matter);
-				RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 32, new GuiColor(255,255,255).getColor());
+				RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 32, new GuiColor(255, 255, 255).getColor());
 				scan_progress.setValue(MatterDatabaseHelper.GetProgressFromNBT(itemNBT));
-				scan_progress.setText(String.valueOf((int)(((float)MatterDatabaseHelper.GetProgressFromNBT(itemNBT) / (float)100) * 100)) + "%");
+				scan_progress.setText(String.valueOf((int) (((float) MatterDatabaseHelper.GetProgressFromNBT(itemNBT) / (float) 100) * 100)) + "%");
+
+				scan_progress.setVisible(true);
+				scan_info_graph.setVisible(true);
+				return;
 			}
 		}
+
+		scan_progress.setVisible(false);
+		scan_info_graph.setVisible(false);
 	}
 
 	@Override
@@ -137,8 +146,17 @@ public class GuiMatterScanner extends MOGuiBase
 		else if (buttonName == LIST_ELEMENT_NAME)
 		{
 			NBTTagCompound elementTag = (NBTTagCompound)list.getElement(mouseButton).getValue();
-			itemPreview.setItemStack(ItemStack.loadItemStackFromNBT(elementTag));
-			scan_info_graph.setSeed(elementTag.getShort("id"));
+			SetSelected(elementTag);
+		}
+	}
+
+	void SetSelected(NBTTagCompound tagCompound)
+	{
+		if(tagCompound != null)
+		{
+			lastSelected = tagCompound;
+			scan_info_graph.setSeed(tagCompound.getShort("id"));
+			itemPreview.setItemStack(ItemStack.loadItemStackFromNBT(tagCompound));
 		}
 	}
 	
@@ -153,7 +171,7 @@ public class GuiMatterScanner extends MOGuiBase
     public void onGuiClosed()
     {
         super.onGuiClosed();
-        if(lastSelectedIndex != MatterScanner.getSelectedIndex(database))
-            MatterOverdrive.packetPipeline.sendToServer(new PacketMatterScannerUpdate(database, (short) databaseSlot));
+        if(MatterDatabaseHelper.areEqual(MatterScanner.getSelectedAsNBT(scanner),lastSelected))
+            MatterOverdrive.packetPipeline.sendToServer(new PacketMatterScannerUpdate(scanner, (short) databaseSlot));
     }
 }

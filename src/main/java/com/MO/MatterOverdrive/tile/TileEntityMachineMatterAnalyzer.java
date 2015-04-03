@@ -133,7 +133,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
                 MatterDatabaseHelper.IncreaseProgress(tagCompound,10);
             }
 
-            MatterScanner.setSelectedIndex(scanner,itemStack.getItem().getUnlocalizedName());
+            MatterScanner.setSelected(scanner,itemStack);
             this.decrStackSize(input_slot,1);
             worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
         }

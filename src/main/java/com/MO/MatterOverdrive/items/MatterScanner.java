@@ -1,27 +1,16 @@
 package com.MO.MatterOverdrive.items;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 import com.mojang.realmsclient.gui.ChatFormatting;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cofh.lib.util.helpers.MathHelper;
-import cofh.lib.util.helpers.StringHelper;
 
-import com.MO.MatterOverdrive.MatterOverdrive;
-import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.gui.GuiMatterScanner;
 import com.MO.MatterOverdrive.handler.SoundHandler;
@@ -29,12 +18,9 @@ import com.MO.MatterOverdrive.items.includes.MOBaseItem;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 public class MatterScanner extends MOBaseItem
 {
-	public static final String SELECTED_TAG_NAME = "lastScanIndex";
+	public static final String SELECTED_TAG_NAME = "lastSelected";
 	public static final int PROGRESS_PER_ITEM = 10;
 	public static final int SCAN_SPEED = 10;
 
@@ -63,7 +49,7 @@ public class MatterScanner extends MOBaseItem
 		 IMatterDatabase database = getLink(player.worldObj, itemstack);
 		 if(database != null)
 		 {
-			 NBTTagCompound lastItem = database.getItemAsNBT(getSelectedIndex(itemstack));
+			 NBTTagCompound lastItem = database.getItemAsNBT(ItemStack.loadItemStackFromNBT(getSelectedAsNBT(itemstack)));
 
 			 if(itemstack.hasTagCompound())
 			 {
@@ -183,19 +169,38 @@ public class MatterScanner extends MOBaseItem
 		return false;
 	}
 
-	public static void setSelectedIndex(ItemStack scanner,String index)
+	public static void setSelected(ItemStack scanner,ItemStack itemStack)
 	{
 		if(scanner.hasTagCompound())
 		{
-			scanner.getTagCompound().setString(SELECTED_TAG_NAME, index);
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			itemStack.writeToNBT(tagCompound);
+			setSelected(scanner,tagCompound);
 		}
 	}
 
-	public static String getSelectedIndex(ItemStack scanner)
+	public static void setSelected(ItemStack scanner,NBTTagCompound tagCompound)
 	{
 		if(scanner.hasTagCompound())
 		{
-			return scanner.getTagCompound().getString(SELECTED_TAG_NAME);
+			scanner.getTagCompound().setTag(SELECTED_TAG_NAME, tagCompound);
+		}
+	}
+
+	public static NBTTagCompound getSelectedAsNBT(ItemStack scanner)
+	{
+		if(scanner.hasTagCompound())
+		{
+			return scanner.getTagCompound().getCompoundTag(SELECTED_TAG_NAME);
+		}
+		return null;
+	}
+
+	public static ItemStack getSelectedAsItem(ItemStack scanner)
+	{
+		if(scanner.hasTagCompound())
+		{
+			return ItemStack.loadItemStackFromNBT(scanner.getTagCompound().getCompoundTag(SELECTED_TAG_NAME));
 		}
 		return null;
 	}
@@ -212,14 +217,16 @@ public class MatterScanner extends MOBaseItem
 			{
 				if (database.hasItem(worldBlock))
 				{
-					String lastSelectedIndex = getSelectedIndex(scanner);
-					String newSelectedIndex = worldBlock.getItem().getUnlocalizedName();
-					if (!lastSelectedIndex.equalsIgnoreCase(newSelectedIndex))
+					NBTTagCompound lastSelected = getSelectedAsNBT(scanner);
+					NBTTagCompound newSelected = new NBTTagCompound();
+					MatterDatabaseHelper.GetItemStackFromWorld(world,x,y,z).writeToNBT(newSelected);
+
+					if (MatterDatabaseHelper.areEqual(lastSelected,newSelected))
 					{
 						//reset scan progress when targets changed
 						resetScanProgress(scanner);
 					}
-					this.setSelectedIndex(scanner, newSelectedIndex);
+					this.setSelected(scanner, newSelected);
 
 					if (getScanProgress(scanner) < SCAN_SPEED)
 					{
