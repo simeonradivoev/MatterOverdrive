@@ -14,6 +14,8 @@ public class BlockNetworkPipe extends BlockPipe
     public BlockNetworkPipe(Material material, String name)
     {
         super(material, name);
+        setHardness(1.0F);
+        this.setResistance(9.0f);
     }
 
     @Override

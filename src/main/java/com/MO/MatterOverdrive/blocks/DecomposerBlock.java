@@ -1,5 +1,7 @@
 package com.MO.MatterOverdrive.blocks;
 
+import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
+import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -27,7 +29,9 @@ public class DecomposerBlock extends MOMatterEnergyStorageBlock
 	public DecomposerBlock(Material material, String name) 
 	{
 		super(material, name, true, true);
-        this.blockHardness = 2;
+        setHardness(2.0F);
+        this.setResistance(9.0f);
+        this.setHarvestLevel("pickaxe",2);
 	}
 
 	
@@ -46,13 +50,24 @@ public class DecomposerBlock extends MOMatterEnergyStorageBlock
     {
         int metadata = world.getBlockMetadata(x, y, z);
 
+        if(side == metadata)
+        {
+            return GetIconBasedOnMatter(world,x,y,z);
+        }
+
+        return getIcon(side,metadata);
+    }
+
+    @Override
+    public IIcon getIcon(int side,int metadata)
+    {
         if(side == 1)
         {
             return this.iconTop;
         }
         else if(side == metadata)
         {
-            return GetIconBasedOnMatter(world,x,y,z);
+            return MatterOverdriveIcons.Matter_tank_empty;
         }
 
         return this.blockIcon;
@@ -95,5 +110,11 @@ public class DecomposerBlock extends MOMatterEnergyStorageBlock
 		{
 			return new TileEntityMachineDecomposer();
 		}
+
+    @Override
+    public int getRenderType()
+    {
+        return BlockRendererReplicator.renderID;
+    }
 
 }

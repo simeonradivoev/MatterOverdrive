@@ -22,7 +22,9 @@ public class TransporterBlock extends MOBlockContainer
 	public TransporterBlock(Material material, String name) 
 	{
 		super(material, name);
-		// TODO Auto-generated constructor stub
+		setHardness(2.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe",2);
 	}
 	
 	@SideOnly(Side.CLIENT)

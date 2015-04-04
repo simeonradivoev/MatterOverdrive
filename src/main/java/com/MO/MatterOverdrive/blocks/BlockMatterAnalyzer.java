@@ -4,6 +4,7 @@ import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
+import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.TileEntityMachineMatterAnalyzer;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
@@ -28,7 +29,9 @@ public class BlockMatterAnalyzer extends MOBlockContainer
     public BlockMatterAnalyzer(Material material, String name)
     {
         super(material, name);
-
+        setHardness(2.0F);
+        this.setResistance(5.0f);
+        this.setHarvestLevel("pickaxe",2);
     }
 
     @Override
@@ -76,5 +79,11 @@ public class BlockMatterAnalyzer extends MOBlockContainer
         }
 
         return this.blockIcon;
+    }
+
+    @Override
+    public int getRenderType()
+    {
+        return BlockRendererReplicator.renderID;
     }
 }

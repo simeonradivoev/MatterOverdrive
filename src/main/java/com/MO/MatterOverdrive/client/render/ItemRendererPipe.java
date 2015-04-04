@@ -40,8 +40,6 @@ public class ItemRendererPipe implements IItemRenderer
     	 {
     		 GL11.glTranslatef(0.0F, size * -0.1f, 0);
     	 }
-    	 
-    	 
 
         if(type == ItemRenderType.EQUIPPED)
         {

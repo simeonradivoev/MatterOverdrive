@@ -14,6 +14,8 @@ public class BlockMatterPipe extends BlockPipe
     public BlockMatterPipe(Material material, String name)
     {
         super(material, name);
+        setHardness(1.0F);
+        this.setResistance(5.0f);
     }
 
     @Override

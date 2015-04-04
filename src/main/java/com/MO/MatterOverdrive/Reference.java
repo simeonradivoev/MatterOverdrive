@@ -25,6 +25,7 @@ public class Reference
     public static final String PATH_MODEL_BLOCKS = PATH_MODEL + "block/";
     public static final String PATH_SOUNDS = "mo:sounds/";
     public static final String PATH_SOUNDS_BLOCKS = PATH_SOUNDS + "blocks/";
+	public static final String PATH_INFO = "mo:info/";
 
     /* GUI Textures */
     public static final String TEXTURE_ARROW_PROGRESS = Reference.PATH_ELEMENTS + "Progress_Arrow_Right.png";

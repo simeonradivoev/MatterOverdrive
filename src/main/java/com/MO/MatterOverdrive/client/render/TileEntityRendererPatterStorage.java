@@ -67,23 +67,20 @@ public class TileEntityRendererPatterStorage extends TileEntitySpecialRenderer
 
     private void rotate(World world,int x,int y,int z)
     {
-        int metadata = world.getBlockMetadata(x,y,z);
-        
-        ForgeDirection direction = ForgeDirection.values()[metadata];
+        if(world != null) {
+            int metadata = world.getBlockMetadata(x, y, z);
 
-        if(direction == ForgeDirection.WEST)
-        {
-        	GL11.glRotated(-90, 0, 1, 0);
+            ForgeDirection direction = ForgeDirection.values()[metadata];
+
+            if (direction == ForgeDirection.WEST) {
+                GL11.glRotated(-90, 0, 1, 0);
+            }
+            if (direction == ForgeDirection.EAST) {
+                GL11.glRotated(90, 0, 1, 0);
+            }
+            if (direction == ForgeDirection.NORTH) {
+                GL11.glRotated(-180, 0, 1, 0);
+            }
         }
-        if(direction == ForgeDirection.EAST)
-        {
-        	GL11.glRotated(90, 0, 1, 0);
-        }
-        if(direction == ForgeDirection.NORTH)
-        {
-        	GL11.glRotated(-180, 0, 1, 0);
-        }
-        
-        //System.out.println("Metadata " + metadata + "at [" + x +","+ y +","+ z + "]");
     }
 }

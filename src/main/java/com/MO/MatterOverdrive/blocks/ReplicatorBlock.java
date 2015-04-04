@@ -32,7 +32,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ReplicatorBlock extends MOMatterEnergyStorageBlock
 {
-
 	@SideOnly(Side.CLIENT)
 	private IIcon iconFront;
 	
@@ -41,6 +40,9 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
 	public ReplicatorBlock(Material material,String name)
 	{
 		super(material,name,true,true);
+		setHardness(2.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -183,6 +185,6 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
     @Override
     public int getRenderType()
     {
-        return BlockRendererReplicator.renderID;
+        return -1;
     }
 }

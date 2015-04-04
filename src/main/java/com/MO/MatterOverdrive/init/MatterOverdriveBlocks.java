@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.util.ResourceLocation;
 
 public class MatterOverdriveBlocks 
 {
@@ -46,7 +47,13 @@ public class MatterOverdriveBlocks
         tritaniumOre.setHarvestLevel("pickaxe", 2);
         tritaniumOre.setStepSound(Block.soundTypePiston);
         tritanium_block = new MOBlock(Material.iron,"tritanium_block");
+        tritanium_block.setHardness(5.0F);
+        tritanium_block.setResistance(10.0F);
+        tritanium_block.setHarvestLevel("pickaxe", 2);
         machine_hull = new MOBlock(Material.iron,"machine_hull");
+        machine_hull.setHardness(3.0F);
+        machine_hull.setResistance(8.0F);
+        machine_hull.setHarvestLevel("pickaxe", 2);
         machine_hull.setBlockTextureName(Reference.MOD_ID + ":" + "base");
         pattern_storage = new BlockPatternStorage(Material.iron,"pattern_storage");
 	}
@@ -54,15 +61,18 @@ public class MatterOverdriveBlocks
 	public static void register()
 	{
 		replicator.Register();
-        MatterOverdriveQuide.Register(replicator,"The Replicator, is a machine, that transforms Matter Pattern Data into Physical Matter, by rearranging the quantum particles of Matter Plasma. In short, it replicates items and blocks, since it’s name The Replicator. Before being able to replicate any sort of items, the player must use the Matter Scanner or the Matter Analyzer, /p to scan and process the Matter Pattern for each item. Unfortunately the scanning process destroys the item, but every time the item is scanned the progress will increase.");
+        MatterOverdriveQuide.Register(replicator);
 		transporter.Register();
 		decomposer.Register();
+        MatterOverdriveQuide.Register(decomposer);
 		matter_pipe.Register();
         network_pipe.Register();
         network_controller.Register();
         matter_analyzer.Register();
         dilithiumOre.Register();
+        MatterOverdriveQuide.Register(dilithiumOre);
         tritaniumOre.Register();
+        MatterOverdriveQuide.Register(tritaniumOre);
         tritanium_block.Register();
         machine_hull.Register();
         pattern_storage.Register();

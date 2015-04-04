@@ -4,6 +4,7 @@ import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.MathHelper;
 
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 
 import net.minecraft.block.Block;
@@ -30,12 +31,14 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
     private IModelCustom model;
     private ResourceLocation texture;
     private ResourceLocation ventTexture;
+    private ResourceLocation baseTexture;
     EntityItem itemEntity;
 
     public TileEntityRendererReplicator()
     {
         texture = new ResourceLocation(Reference.PATH_BLOCKS + "replicator.png");
         ventTexture = new ResourceLocation(Reference.PATH_BLOCKS + "vent.png");
+        baseTexture = new ResourceLocation(Reference.PATH_BLOCKS + "base.png");
         model = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL_PATH));
     }
 
@@ -65,27 +68,28 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
             model.renderPart("Inside");
             bindTexture(ventTexture);
             model.renderPart("Vents");
+            bindTexture(baseTexture);
+            model.renderPart("Shell");
             GL11.glPopMatrix();
         }
     }
 
     private void rotate(World world,int x,int y,int z)
     {
-        int metadata = world.getBlockMetadata(x,y,z);
-        
-        ForgeDirection direction = ForgeDirection.values()[metadata];
+        if(world != null) {
+            int metadata = world.getBlockMetadata(x, y, z);
 
-        if(direction == ForgeDirection.WEST)
-        {
-        	GL11.glRotated(-90, 0, 1, 0);
-        }
-        if(direction == ForgeDirection.EAST)
-        {
-        	GL11.glRotated(90, 0, 1, 0);
-        }
-        if(direction == ForgeDirection.NORTH)
-        {
-        	GL11.glRotated(-180, 0, 1, 0);
+            ForgeDirection direction = ForgeDirection.values()[metadata];
+
+            if (direction == ForgeDirection.WEST) {
+                GL11.glRotated(-90, 0, 1, 0);
+            }
+            if (direction == ForgeDirection.EAST) {
+                GL11.glRotated(90, 0, 1, 0);
+            }
+            if (direction == ForgeDirection.NORTH) {
+                GL11.glRotated(-180, 0, 1, 0);
+            }
         }
         
         //System.out.println("Metadata " + metadata + "at [" + x +","+ y +","+ z + "]");
