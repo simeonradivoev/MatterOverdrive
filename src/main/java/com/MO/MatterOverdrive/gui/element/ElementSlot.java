@@ -13,8 +13,8 @@ import org.lwjgl.opengl.GL11;
 public class ElementSlot extends ElementBase
 {
     private boolean big;
-    protected static final ResourceLocation slot_big = new ResourceLocation(Reference.PATH_ELEMENTS + "side_slot_bg.png");
-    protected static final ResourceLocation slot_small = new ResourceLocation(Reference.PATH_ELEMENTS + "slot_bg.png");
+    public static final ResourceLocation slot_big = new ResourceLocation(Reference.PATH_ELEMENTS + "side_slot_bg.png");
+    public static final ResourceLocation slot_small = new ResourceLocation(Reference.PATH_ELEMENTS + "slot_bg.png");
 
     public ElementSlot(GuiBase gui, int posX, int posY,boolean big) {
         super(gui, posX, posY);

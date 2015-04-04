@@ -1,10 +1,15 @@
 package com.MO.MatterOverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
+import cofh.lib.gui.element.ElementBase;
 import cofh.lib.gui.element.ElementButton;
 import cofh.lib.render.RenderHelper;
 import com.MO.MatterOverdrive.Reference;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Simeon on 3/13/2015.
@@ -33,7 +38,7 @@ public class SidePannel extends ElementButton
     }
 
     @Override
-    public void drawBackground(int x, int y, float ticks)
+    public void drawBackground(int mouseX, int mouseY, float ticks)
     {
         if(isOpen)
         {
@@ -47,6 +52,15 @@ public class SidePannel extends ElementButton
             this.posX = originalX;
         }
 
-        super.drawBackground(x,y,ticks);
+        super.drawBackground(mouseX, mouseY, ticks);
+    }
+
+    public boolean IsOpen()
+    {
+        return this.isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        this.isOpen = open;
     }
 }

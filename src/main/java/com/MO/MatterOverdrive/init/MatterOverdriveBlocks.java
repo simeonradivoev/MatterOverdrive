@@ -4,6 +4,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.*;
 import com.MO.MatterOverdrive.blocks.includes.MOBlock;
 import com.MO.MatterOverdrive.blocks.world.DilithiumOre;
+import com.MO.MatterOverdrive.guide.MatterOverdriveQuide;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -53,6 +54,7 @@ public class MatterOverdriveBlocks
 	public static void register()
 	{
 		replicator.Register();
+        MatterOverdriveQuide.Register(replicator,"The Replicator, is a machine, that transforms Matter Pattern Data into Physical Matter, by rearranging the quantum particles of Matter Plasma. In short, it replicates items and blocks, since it’s name The Replicator. Before being able to replicate any sort of items, the player must use the Matter Scanner or the Matter Analyzer, /p to scan and process the Matter Pattern for each item. Unfortunately the scanning process destroys the item, but every time the item is scanned the progress will increase.");
 		transporter.Register();
 		decomposer.Register();
 		matter_pipe.Register();

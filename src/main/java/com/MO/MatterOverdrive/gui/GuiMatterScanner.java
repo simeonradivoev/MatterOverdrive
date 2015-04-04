@@ -7,6 +7,7 @@ import cofh.lib.gui.element.ElementBase;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.gui.element.*;
+import com.MO.MatterOverdrive.gui.pages.PageInfo;
 import com.MO.MatterOverdrive.gui.pages.PageScanInfo;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.network.packet.PacketMatterScannerUpdate;
@@ -32,137 +33,147 @@ public class GuiMatterScanner extends MOGuiBase
 {
 	public ItemStack scanner;
     public int databaseSlot;
-	private static final String SCROLL_DOWN_BUTTON_NAME = "scroll_down";
-	private static final String SCROLL_UP_BUTTON_NAME = "scroll_up";
-	private static final String LIST_ELEMENT_NAME = "list";
+	public static boolean panelOpen;
+
+	private static final String INFO_PAGE_BUTTON_NAME = "InfoPageButton";
+	private static final String SCAN_PAGE_BUTTON_NAME = "ScanPageButton";
+	public static final String QUIDE_ELEMENTS_NAME = "QuideList";
 
 	public static final ResourceLocation background = new ResourceLocation(Reference.PATH_GUI + "matter_scanner.png");
 	public static final String backgroundPath = Reference.PATH_GUI + "matter_scanner.png";
 
 	int lastPage;
-	private List<ElementBase> pages;
 	PageScanInfo pageScanInfo;
+	PageInfo pageInfo;
 
 	NBTTagCompound lastSelected;
-	
-	MatterDatabaseListBox list;
-	MOElementTextField searchField;
-	ElementButton scrollButtonUp;
-	ElementButton scrollButtonDown;
+
+	ElementButton infoPageButton;
+	ElementButton scanPageButton;
 	
 	int xStart = 0,yStart = 0;
+
+	public GuiMatterScanner(ItemStack scanner,int slot)
+	{
+		super(new ContainerFalse());
+		this.scanner = scanner;
+		//this.texture = background;
+		//this.xSize = 216;
+		//this.ySize = 176;
+
+		this.databaseSlot = slot;
+		lastSelected = MatterScanner.getSelectedAsNBT(scanner);
+		lastPage = MatterScanner.getLastPage(scanner);
+
+		pageScanInfo = new PageScanInfo(this,0,0,"Scan Process",lastSelected,scanner);
+		pageScanInfo.setSize(this.xSize, this.ySize);
+		pageInfo = new PageInfo(this,0,0,"Matter Overdrive");
+		pageInfo.setSize(this.xSize,this.ySize);
+
+		scanPageButton = new ElementButton(this,sidePannel.getPosX() + 6,sidePannel.getPosY() + 8,SCAN_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
+		scanPageButton.setTexture(Reference.PATH_GUI_ITEM + "search54.png", 44, 22);
+		infoPageButton = new ElementButton(this,sidePannel.getPosX() + 6,sidePannel.getPosY() + 28 + 8,INFO_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
+		infoPageButton.setTexture(Reference.PATH_GUI_ITEM + "info20.png", 44, 22);
+	}
 	
 	@Override
 	public void initGui() 
 	{
 		super.initGui();
-		list.background = this.background;
-		list.setName(LIST_ELEMENT_NAME);
-		searchField = new MOElementTextField(this,41,26);
-		list.setFilter("");
-		list.updateList("");
 
 		//set selected item in list, as active object
-		if(list.getSelectedElement() != null)
-			SetSelected((NBTTagCompound) list.getSelectedElement().getValue());
+		if(pageScanInfo.list.getSelectedElement() != null)
+			SetSelected((NBTTagCompound) pageScanInfo.list.getSelectedElement().getValue());
 
+		this.addElement(scanPageButton);
+		this.addElement(infoPageButton);
+		this.addElement(pageScanInfo);
+		this.addElement(pageInfo);
 
-		this.addElement(searchField);
-		this.addElement(scrollButtonUp);
-		this.addElement(scrollButtonDown);
-		this.addElement(list);
-	}
-	
-	public GuiMatterScanner(ItemStack scanner,int slot)
-	{
-		super(new ContainerFalse());
-		pages = new ArrayList<ElementBase>();
-		this.scanner = scanner;
-		//this.texture = background;
-		//this.xSize = 216;
-		//this.ySize = 176;
-		list = new MatterDatabaseListBox(this,3,39,37,100,scanner);
-		scrollButtonUp = new ElementButton(this,11,27,SCROLL_UP_BUTTON_NAME,22,188,32,188,10,10,backgroundPath);
-		scrollButtonDown = new ElementButton(this,11,142,SCROLL_DOWN_BUTTON_NAME,42,188,52,188,10,10,backgroundPath);
-        this.databaseSlot = slot;
-		lastSelected = MatterScanner.getSelectedAsNBT(scanner);
-		lastPage = MatterScanner.getLastPage(scanner);
-
-		pageScanInfo = new PageScanInfo(this,0,0,"Scan Process",lastSelected);
-		pages.add(pageScanInfo);
-	}
-
-	@Override
-	public void drawScreen(int x, int y, float partialTick) {
-
-		super.drawScreen(x,y,partialTick);
-		pages.get(lastPage).update();
+		if(scanner.hasTagCompound()) {
+			setPage(scanner.getTagCompound().getByte(MatterScanner.PAGE_TAG_NAME));
+			setPanelOpen(panelOpen);
+		}
 	}
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		if(searchField != null)
-		{
-			this.list.setFilter(searchField.getText());
-		}
-		DrawSelectedInfo();
-		this.pages.get(lastPage).drawForeground(mouseX,mouseY);
+
 		drawElements(0, true);
 		drawTabs(0, true);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTick, int x, int y) {
-
-		super.drawGuiContainerBackgroundLayer(partialTick, x, y);
-
-		GL11.glPushMatrix();
-		GL11.glTranslatef(guiLeft, guiTop, 0.0F);
-		this.pages.get(lastPage).drawBackground(mouseX, mouseY, partialTick);
-		GL11.glPopMatrix();
-	}
-	
-	void DrawSelectedInfo()
+	public void OnPanelOpen(boolean isOpen)
 	{
-		IMatterDatabase databaseTile = MatterScanner.getLink(Minecraft.getMinecraft().theWorld,scanner);
-		
-		if(databaseTile != null && lastSelected != null)
-		{
-			NBTTagCompound itemNBT = lastSelected;
-			ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemNBT);
-			
-			if(itemNBT != null)
-			{
-				String Name = item.getDisplayName();
-				String Matter = "Matter: " + String.valueOf(MatterHelper.getMatterAmountFromItem(item)) + MatterHelper.MATTER_UNIT;
-				
-				List infos = item.getTooltip(null, false);
-				infos.add(Matter);
-				RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 32, new GuiColor(255, 255, 255).getColor());
-				pageScanInfo.setItemNBT(itemNBT);
-				return;
-			}
-		}
-
-		//scan_progress.setVisible(false);
-		//scan_info_graph.setVisible(false);
+		infoPageButton.setVisible(isOpen);
+		scanPageButton.setVisible(isOpen);
+		panelOpen = isOpen;
 	}
 
 	@Override
 	public void handleElementButtonClick(String buttonName, int mouseButton) 
 	{
-		if(buttonName == SCROLL_UP_BUTTON_NAME)
+		super.handleElementButtonClick(buttonName, mouseButton);
+
+		if(buttonName == PageScanInfo.SCROLL_UP_BUTTON_NAME)
 		{
-			list.scrollUp();
+			pageScanInfo.list.scrollUp();
 		}
-		else if(buttonName == SCROLL_DOWN_BUTTON_NAME)
+		else if(buttonName == PageScanInfo.SCROLL_DOWN_BUTTON_NAME)
 		{
-			list.scrollDown();
+			pageScanInfo.list.scrollDown();
 		}
-		else if (buttonName == LIST_ELEMENT_NAME)
+		else if (buttonName == PageScanInfo.LIST_ELEMENT_NAME)
 		{
-			NBTTagCompound elementTag = (NBTTagCompound)list.getElement(mouseButton).getValue();
+			NBTTagCompound elementTag = (NBTTagCompound)pageScanInfo.list.getElement(mouseButton).getValue();
 			SetSelected(elementTag);
+		}
+		else if(buttonName == INFO_PAGE_BUTTON_NAME)
+		{
+			setPage(1);
+		}
+		else if(buttonName == SCAN_PAGE_BUTTON_NAME)
+		{
+			setPage(0);
+		}
+	}
+
+	@Override
+	public void handleListChange(String listName, int mouseButton,int element)
+	{
+		if(listName == QUIDE_ELEMENTS_NAME)
+		{
+			pageInfo.OpenQuide(element);
+		}
+	}
+
+	void setPage(int page)
+	{
+		if(scanner.hasTagCompound())
+		{
+			scanner.getTagCompound().setShort(MatterScanner.PAGE_TAG_NAME, (short) page);
+		}
+
+		//pages
+		pageScanInfo.setVisible(false);
+		pageInfo.setVisible(false);
+
+		//buttons
+		scanPageButton.setEnabled(true);
+		infoPageButton.setEnabled(true);
+
+		lastPage = page;
+
+		if(page == 0)
+		{
+			scanPageButton.setEnabled(false);
+			pageScanInfo.setVisible(true);
+		}
+		else
+		{
+			infoPageButton.setEnabled(false);
+			pageInfo.setVisible(true);
 		}
 	}
 
@@ -173,12 +184,6 @@ public class GuiMatterScanner extends MOGuiBase
 			lastSelected = tagCompound;
 			pageScanInfo.setItemNBT(tagCompound);
 		}
-	}
-	
-	void DrawBlocks(ItemStack scanner,float gameTicks)
-	{
-		list.drawBackground(this.mouseX, this.mouseY, gameTicks);
-		list.drawForeground(this.mouseX, this.mouseY);
 	}
 
     @Override

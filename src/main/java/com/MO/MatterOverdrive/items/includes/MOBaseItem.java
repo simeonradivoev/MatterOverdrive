@@ -12,6 +12,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MOBaseItem extends Item
 {
+	private String description;
+
 	public MOBaseItem(String name)
 	{
 		this.init(name);
@@ -45,5 +47,15 @@ public class MOBaseItem extends Item
 		{
 			InitTagCompount(stack);
 		}
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	public String getDescription()
+	{
+		return description;
 	}
 }

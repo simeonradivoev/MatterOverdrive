@@ -20,6 +20,7 @@ public class Reference
 	public static final String PATH_ELEMENTS = PATH_GUI + "elements/";
 	public static final String PATH_ICON = PATH_GUI + "icons/";
     public static final String PATH_ITEM = PATH_GFX + "items/";
+	public static final String PATH_GUI_ITEM = PATH_GUI + "items/";
     public static final String PATH_MODEL = "mo:models/";
     public static final String PATH_MODEL_BLOCKS = PATH_MODEL + "block/";
     public static final String PATH_SOUNDS = "mo:sounds/";

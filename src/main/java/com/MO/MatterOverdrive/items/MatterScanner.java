@@ -29,6 +29,8 @@ import com.MO.MatterOverdrive.util.MatterHelper;
 public class MatterScanner extends MOBaseItem
 {
 	public static final String SELECTED_TAG_NAME = "lastSelected";
+	public static final String PAGE_TAG_NAME = "page";
+	public static final String PANEL_OPEN_TAG_NAME = "panelOpen";
 	public static final int PROGRESS_PER_ITEM = 10;
 	public static final int SCAN_TIME = 40;
 	public static MachineSound scanningSound;
@@ -293,7 +295,7 @@ public class MatterScanner extends MOBaseItem
 
 		if(!MatterDatabaseHelper.areEqual(lastSelected,worldItem))
 		{
-			setSelected(scanner,worldItem);
+			setSelected(scanner, worldItem);
 			player.stopUsingItem();
 			stopScanSounds();
 			return;
