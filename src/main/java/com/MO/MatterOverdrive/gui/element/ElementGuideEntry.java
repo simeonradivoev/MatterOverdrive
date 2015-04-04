@@ -1,8 +1,10 @@
 package com.MO.MatterOverdrive.gui.element;
 
 import cofh.lib.gui.element.ElementBase;
+import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.gui.MOGuiBase;
 import com.MO.MatterOverdrive.guide.MOGuideEntry;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
@@ -11,6 +13,7 @@ import java.util.List;
  */
 public class ElementGuideEntry extends ElementBase
 {
+    public static final ResourceLocation BG = new ResourceLocation(Reference.PATH_ELEMENTS + "quide_element_bg.png");
     private MOGuideEntry entry;
     int id;
 
@@ -31,7 +34,7 @@ public class ElementGuideEntry extends ElementBase
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        gui.bindTexture(ElementSlot.slot_big);
+        gui.bindTexture(BG);
         gui.drawSizedTexturedModalRect(this.posX,this.posY,0,0,22,22,22,22);
     }
 

@@ -13,7 +13,10 @@ import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
+import java.sql.Ref;
 import java.util.List;
 
 /**
@@ -27,6 +30,7 @@ public class PageScanInfo extends ElementBaseGroup
     public static final String SCROLL_DOWN_BUTTON_NAME = "scroll_down";
 
     NBTTagCompound itemNBT;
+
     public MatterDatabaseListBox list;
     ElementProgress scan_progress;
     ElementScanProgress scan_info_graph;
@@ -74,7 +78,7 @@ public class PageScanInfo extends ElementBaseGroup
     @Override
     public void drawForeground(int mouseX, int mouseY)
     {
-        super.drawForeground(mouseX,mouseY);
+        super.drawForeground(mouseX, mouseY);
 
         if(searchField != null)
         {
@@ -82,21 +86,32 @@ public class PageScanInfo extends ElementBaseGroup
         }
 
         ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemNBT);
-        String Matter = "Matter: " + String.valueOf(MatterHelper.getMatterAmountFromItem(item)) + MatterHelper.MATTER_UNIT;
+        if(item != null)
+        {
+            String Matter = "Matter: " + String.valueOf(MatterHelper.getMatterAmountFromItem(item)) + MatterHelper.MATTER_UNIT;
 
-        List infos = item.getTooltip(null, false);
-        infos.add(Matter);
-        RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 32, new GuiColor(255, 255, 255).getColor());
-        //pageScanInfo.setItemNBT(itemNBT);
+            List infos = item.getTooltip(null, false);
+            infos.add(Matter);
+            RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 32, new GuiColor(255, 255, 255).getColor());
+        }
     }
 
     public void setItemNBT(NBTTagCompound tagCompound)
     {
         itemNBT = tagCompound;
-        scan_progress.setValue(MatterDatabaseHelper.GetProgressFromNBT(itemNBT));
-        scan_progress.setText(String.valueOf((int) (((float) MatterDatabaseHelper.GetProgressFromNBT(itemNBT) / (float) 100) * 100)) + "%");
 
-        scan_info_graph.setSeed(tagCompound.getShort("id"));
-        itemPreview.setItemStack(ItemStack.loadItemStackFromNBT(tagCompound));
+        scan_progress.setVisible(itemNBT != null);
+        scan_info_graph.setVisible(itemNBT != null);
+        itemPreview.setVisible(itemNBT != null);
+
+        if (tagCompound != null)
+        {
+            scan_progress.setValue(MatterDatabaseHelper.GetProgressFromNBT(itemNBT));
+            scan_progress.setText(String.valueOf((int) (((float) MatterDatabaseHelper.GetProgressFromNBT(itemNBT) / (float) 100) * 100)) + "%");
+
+
+            scan_info_graph.setSeed(tagCompound.getShort("id"));
+            itemPreview.setItemStack(ItemStack.loadItemStackFromNBT(tagCompound));
+        }
     }
 }

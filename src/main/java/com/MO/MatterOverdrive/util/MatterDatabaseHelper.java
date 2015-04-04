@@ -376,6 +376,9 @@ public class MatterDatabaseHelper
 
 	public static boolean areEqual(NBTTagCompound one,NBTTagCompound two)
 	{
+		if(one == null || two == null)
+			return false;
+
 		return areEqual(ItemStack.loadItemStackFromNBT(one),ItemStack.loadItemStackFromNBT(two));
 	}
 	

@@ -28,7 +28,8 @@ public class ElementBaseGroup extends ElementBase
         }
     }
 
-    protected ElementBase getElementAtPosition(int mX, int mY) {
+    protected ElementBase getElementAtPosition(int mX, int mY)
+    {
 
         for (int i = getElements().size(); i-- > 0;) {
             ElementBase element = getElements().get(i);
@@ -40,11 +41,13 @@ public class ElementBaseGroup extends ElementBase
     }
 
     @Override
-    public void drawBackground(int mouseX, int mouseY, float gameTicks) {
+    public void drawBackground(int mouseX, int mouseY, float gameTicks)
+    {
         for (int i = getElements().size(); i-- > 0;)
         {
             ElementBase c = getElements().get(i);
-            c.drawBackground(mouseX,mouseY,gameTicks);
+            if(c.isVisible())
+                c.drawBackground(mouseX,mouseY,gameTicks);
         }
     }
 
@@ -54,7 +57,8 @@ public class ElementBaseGroup extends ElementBase
         for (int i = getElements().size(); i-- > 0;)
         {
             ElementBase c = getElements().get(i);
-            c.drawForeground(mouseX, mouseY);
+            if(c.isVisible())
+                c.drawForeground(mouseX, mouseY);
         }
     }
 
@@ -127,6 +131,11 @@ public class ElementBaseGroup extends ElementBase
             }
         }
         return false;
+    }
+
+    public void handleElementButtonClick(String buttonName, int mouseButton)
+    {
+
     }
 
     public List<? extends ElementBase> getElements()

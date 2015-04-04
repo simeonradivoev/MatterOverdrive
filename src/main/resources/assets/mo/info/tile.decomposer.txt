@@ -1,0 +1,1 @@
+The Decomposer is used for braking down items and blocks, into Matter Plasma. Every Items has a specific amount of Matter in them. When the player is in the GUI of the decomposer, each item will have information on how much matter it, contains.

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cofh.lib.gui.element.ElementBase;
+import cofh.lib.util.TimeTracker;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.gui.element.*;
@@ -28,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import scala.collection.parallel.ParIterableLike;
 
 public class GuiMatterScanner extends MOGuiBase
 {
@@ -35,6 +37,7 @@ public class GuiMatterScanner extends MOGuiBase
     public int databaseSlot;
 	public static boolean panelOpen;
 
+	private static final int REFRESH_DEPLAY = 200;
 	private static final String INFO_PAGE_BUTTON_NAME = "InfoPageButton";
 	private static final String SCAN_PAGE_BUTTON_NAME = "ScanPageButton";
 	public static final String QUIDE_ELEMENTS_NAME = "QuideList";
@@ -45,7 +48,7 @@ public class GuiMatterScanner extends MOGuiBase
 	int lastPage;
 	PageScanInfo pageScanInfo;
 	PageInfo pageInfo;
-
+	TimeTracker refreshTimeTracker;
 	NBTTagCompound lastSelected;
 
 	ElementButton infoPageButton;
@@ -60,12 +63,12 @@ public class GuiMatterScanner extends MOGuiBase
 		//this.texture = background;
 		//this.xSize = 216;
 		//this.ySize = 176;
-
+		refreshTimeTracker = new TimeTracker();
 		this.databaseSlot = slot;
-		lastSelected = MatterScanner.getSelectedAsNBT(scanner);
 		lastPage = MatterScanner.getLastPage(scanner);
 
-		pageScanInfo = new PageScanInfo(this,0,0,"Scan Process",lastSelected,scanner);
+		pageScanInfo = new PageScanInfo(this,0,0,"Scan Process",null,scanner);
+		updateSelected(scanner);
 		pageScanInfo.setSize(this.xSize, this.ySize);
 		pageInfo = new PageInfo(this,0,0,"Matter Overdrive");
 		pageInfo.setSize(this.xSize,this.ySize);
@@ -94,6 +97,30 @@ public class GuiMatterScanner extends MOGuiBase
 			setPage(scanner.getTagCompound().getByte(MatterScanner.PAGE_TAG_NAME));
 			setPanelOpen(panelOpen);
 		}
+	}
+
+	@Override
+	protected void updateElementInformation()
+	{
+		if(refreshTimeTracker.hasDelayPassed(Minecraft.getMinecraft().theWorld,REFRESH_DEPLAY))
+		{
+			System.out.println("Refreshed");
+			updateSelected(scanner);
+		}
+	}
+
+	private NBTTagCompound getSelectedFromDatabase(ItemStack scanner)
+	{
+		IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld,scanner);
+		if(database != null)
+			return database.getItemAsNBT(MatterDatabaseHelper.GetItemStackFromNBT(MatterScanner.getSelectedAsNBT(scanner)));
+		return null;
+	}
+
+	private void updateSelected(ItemStack scanner)
+	{
+		lastSelected = getSelectedFromDatabase(scanner);
+		pageScanInfo.setItemNBT(lastSelected);
 	}
 	
 	@Override
@@ -137,6 +164,9 @@ public class GuiMatterScanner extends MOGuiBase
 		{
 			setPage(0);
 		}
+
+		pageInfo.handleElementButtonClick(buttonName,mouseButton);
+		pageScanInfo.handleElementButtonClick(buttonName,mouseButton);
 	}
 
 	@Override

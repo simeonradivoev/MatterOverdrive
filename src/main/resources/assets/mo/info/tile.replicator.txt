@@ -1,0 +1,2 @@
+The Replicator, is a machine, that transforms Matter Pattern Data into Physical Matter, by rearranging the quantum particles of Matter Plasma. In short, it replicates items and blocks, since it’s name The Replicator. Before being able to replicate any sort of items, the player must use the Matter Scanner or the Matter Analyzer,to scan and process the Matter Pattern for each item.
+Unfortunately the scanning process destroys the item, but every time the item is scanned the progress will increase.

@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.guide;
 
 import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
@@ -11,11 +12,11 @@ import java.util.List;
 public class MOGuideEntry
 {
     public ItemStack itemStack;
-    public List<String> description;
+    public ResourceLocation description;
     public String name;
     public List tooltip;
 
-    public MOGuideEntry(ItemStack itemStack,List<String> description,String name)
+    public MOGuideEntry(ItemStack itemStack,ResourceLocation description,String name)
     {
         this.itemStack = itemStack;
         this.description = description;
