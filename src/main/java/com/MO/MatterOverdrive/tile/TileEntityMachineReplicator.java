@@ -1,6 +1,8 @@
 package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
+import cofh.lib.util.helpers.InventoryHelper;
+import cofh.lib.util.helpers.ItemHelper;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
@@ -272,7 +274,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                 && item != null
 				&& MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) > 0
 				&& this.getMatterStored() >= MatterHelper.getMatterAmountFromItem(item)
-				&& canReplicateIntoOutput()
+				&& canReplicateIntoOutput(item)
                 && canReplicateIntoSecoundOutput()
                 && redstoneState;
 	}
@@ -332,15 +334,20 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         return 0;
     }
 
-	private boolean canReplicateIntoOutput()
+	private boolean canReplicateIntoOutput(ItemStack itemStack)
 	{
+        if (itemStack == null)
+            return false;
+
 		if(getStackInSlot(OUTPUT_SLOT_ID) == null)
 		{
 			return true;
 		}
 		else
 		{
-			if(getStackInSlot(OUTPUT_SLOT_ID).stackSize < getStackInSlot(OUTPUT_SLOT_ID).getMaxStackSize())
+			if(itemStack.isItemEqual(getStackInSlot(OUTPUT_SLOT_ID))
+                    && ItemStack.areItemStackTagsEqual(itemStack,getStackInSlot(OUTPUT_SLOT_ID))
+                    && getStackInSlot(OUTPUT_SLOT_ID).stackSize < getStackInSlot(OUTPUT_SLOT_ID).getMaxStackSize())
 			{
 				return true;
 			}
