@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.container;
 
+import com.MO.MatterOverdrive.container.slot.SlotShielding;
 import com.MO.MatterOverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -32,7 +33,8 @@ public class ContainerReplicator extends MOBaseContainer
 		this.addSlotToContainer(new SlotRemoveOnly(tileentity,replicator.OUTPUT_SLOT_ID,70,52));
         this.addSlotToContainer(new SlotRemoveOnly(tileentity,replicator.SECOUND_OUTPUT_SLOT_ID,96,52));
 		this.addSlotToContainer(new SlotDatabase(tileentity,replicator.DATABASE_SLOT_ID,8,52));
-		this.addSlotToContainer(new SlotEnergy(tileentity,this.replicator.getEnergySlotID(),8,79));
+		this.addSlotToContainer(new SlotShielding(tileentity,this.replicator.SHIELDING_SLOT_ID,8,79));
+		this.addSlotToContainer(new SlotEnergy(tileentity,this.replicator.getEnergySlotID(),8,106));
 
         MOContainerHelper.AddPlayerSlots(inventory,this,45,92);
 	}

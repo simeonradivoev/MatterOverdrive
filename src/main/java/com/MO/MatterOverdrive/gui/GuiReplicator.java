@@ -50,6 +50,7 @@ public class GuiReplicator extends MOGuiBase
         playerSlots = new ElementPlayerSlots(this,44,91);
         slotsList = new ElementSlotsList(this,5,49,new ArrayList<Slot>(0),0);
         slotsList.AddSlot(replicator.getInventory().getSlot(replicator.DATABASE_SLOT_ID));
+        slotsList.AddSlot(replicator.getInventory().getSlot(replicator.SHIELDING_SLOT_ID));
         slotsList.AddSlot(replicator.getInventory().getSlot(replicator.getEnergySlotID()));
         outputSlot = new ElementSlot(this,true,this.inventorySlots.getSlot(replicator.OUTPUT_SLOT_ID));
         seccoundOutputSlot = new ElementSlot(this,true,this.inventorySlots.getSlot(replicator.SECOUND_OUTPUT_SLOT_ID));

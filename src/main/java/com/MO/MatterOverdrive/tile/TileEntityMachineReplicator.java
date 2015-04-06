@@ -7,6 +7,8 @@ import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
+import com.MO.MatterOverdrive.data.inventory.ShieldingSlot;
+import com.MO.MatterOverdrive.data.inventory.Slot;
 import com.MO.MatterOverdrive.fx.ReplicatorParticle;
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
@@ -38,6 +40,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public int OUTPUT_SLOT_ID = 0;
     public int SECOUND_OUTPUT_SLOT_ID = 1;
     public int DATABASE_SLOT_ID = 2;
+    public int SHIELDING_SLOT_ID = 3;
 
     public static final int REPLICATE_SPEED_PER_MATTER = 120;
 	public static final int REPLICATE_ENERGY_PER_TICK = 160;
@@ -52,7 +55,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 	
 	public TileEntityMachineReplicator()
 	{
-        super(3);
+        super(4);
         this.energyStorage.setCapacity(ENERGY_STORAGE);
         this.energyStorage.setMaxExtract(ENERGY_STORAGE);
         this.energyStorage.setMaxReceive(ENERGY_STORAGE);
@@ -67,6 +70,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot());
         SECOUND_OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot());
         DATABASE_SLOT_ID = inventory.AddSlot(new DatabaseSlot());
+        SHIELDING_SLOT_ID = inventory.AddSlot(new ShieldingSlot());
     }
 
     @Override
@@ -279,7 +283,13 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         return this.isReplicating() && energyStorage.getEnergyStored() >= REPLICATE_ENERGY_PER_TICK;
     }
 
-    public void manageRadiation() {
+    public void manageRadiation()
+    {
+        int shielding = getShielding();
+
+        if(shielding >= 5)
+            return;             //has full shielding
+
         AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(xCoord - RADIATION_RANGE,yCoord - RADIATION_RANGE,zCoord - RADIATION_RANGE,xCoord + RADIATION_RANGE,yCoord + RADIATION_RANGE,zCoord + RADIATION_RANGE);
         List entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class,bb);
         for (Object e : entities)
@@ -291,7 +301,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                 double distance = l.getDistance(xCoord,yCoord,zCoord) / RADIATION_RANGE;
                 distance = net.minecraft.util.MathHelper.clamp_double(distance,0,1);
                 distance = 1.0 - distance;
-                distance *= 5;
+                distance *= 5 - shielding;
 
                 int value = 0;
                 PotionEffect[] effects = new PotionEffect[4];
@@ -312,7 +322,16 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             }
         }
     }
-	
+
+    private int getShielding()
+    {
+        if(getStackInSlot(SHIELDING_SLOT_ID) != null && getStackInSlot(SHIELDING_SLOT_ID).getItem() == MatterOverdriveItems.tritanium_plate)
+        {
+            return getStackInSlot(SHIELDING_SLOT_ID).stackSize;
+        }
+        return 0;
+    }
+
 	private boolean canReplicateIntoOutput()
 	{
 		if(getStackInSlot(OUTPUT_SLOT_ID) == null)
