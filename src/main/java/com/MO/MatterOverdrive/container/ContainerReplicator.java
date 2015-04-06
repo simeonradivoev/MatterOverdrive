@@ -94,7 +94,8 @@ public class ContainerReplicator extends MOBaseContainer
 				}
 				
 				slot.onSlotChange(itemstack1, itemstack);
-			}else if(slotID > this.replicator.getEnergySlotID())
+			}
+			else if(slotID > last)
 			{
 				if(EnergyHelper.isEnergyContainerItem(itemstack1))
 				{
@@ -108,7 +109,14 @@ public class ContainerReplicator extends MOBaseContainer
 					{
 						return null;
 					}
-				}else if (slotID >= last+1 && slotID < last+28)
+				}else if (getSlot(replicator.SHIELDING_SLOT_ID).isItemValid(itemstack))
+				{
+					if(!this.mergeItemStack(itemstack1, replicator.SHIELDING_SLOT_ID, replicator.SHIELDING_SLOT_ID+1, false))
+					{
+						return null;
+					}
+				}
+				else if (slotID >= last+1 && slotID < last+28)
 				{
 					if (!this.mergeItemStack(itemstack1, last+28, last+37, false))
 					{

@@ -171,6 +171,8 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 
                 energyStorage.writeToNBT(itemStack.getTagCompound());
                 itemStack.getTagCompound().setInteger("MaxEnergy",energyStorage.getMaxEnergyStored());
+                itemStack.getTagCompound().setInteger("PowerSend",energyStorage.getMaxExtract());
+                itemStack.getTagCompound().setInteger("PowerReceive",energyStorage.getMaxReceive());
             }
         }
     }

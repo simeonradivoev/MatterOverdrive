@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.items;
 import java.util.*;
 
 import com.MO.MatterOverdrive.util.MOEnergyHelper;
+import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,6 +11,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
@@ -38,9 +40,15 @@ public class Phaser extends MOItemEnergyContainer {
     }
 
     @Override
-    public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean moreInfo)
+    public boolean hasDetails(ItemStack itemStack)
     {
-        super.addInformation(itemstack,player,infos,moreInfo);
+        return true;
+    }
+
+    @Override
+    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+    {
+        super.addDetails(itemstack,player,infos);
 
         infos.add(EnumChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(GetEneryUse(itemstack)));
         infos.add(EnumChatFormatting.DARK_GREEN + "Damage: " + GetPhaserDamage(itemstack));

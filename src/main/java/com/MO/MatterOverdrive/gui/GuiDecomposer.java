@@ -82,6 +82,7 @@ public class GuiDecomposer extends MOGuiBase
         }
 
         MatterHelper.DrawMatterInfoTooltip(stack,TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER,TileEntityMachineDecomposer.DECOMPOSE_ENERGY_PER_TICK,list);
+		list.add("Test");
 
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));

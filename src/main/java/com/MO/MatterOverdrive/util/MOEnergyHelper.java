@@ -8,13 +8,11 @@ public class MOEnergyHelper
 
 	public static String formatEnergy(int energy,int capacity)
 	{
-		DecimalFormat formatter = new DecimalFormat("#,###");
-		return "Power: " + formatter.format(energy) + "/" + formatter.format(capacity) + ENERGY_UNIT;
+		return MOStringHelper.formatNUmber(energy) + " / " + MOStringHelper.formatNUmber(capacity) + ENERGY_UNIT;
 	}
 
     public static String formatEnergy(int energy)
     {
-        DecimalFormat formatter = new DecimalFormat("#,###");
-        return "Power: " + formatter.format(energy) + ENERGY_UNIT;
+        return "Charge: " + MOStringHelper.formatNUmber(energy) + ENERGY_UNIT;
     }
 }

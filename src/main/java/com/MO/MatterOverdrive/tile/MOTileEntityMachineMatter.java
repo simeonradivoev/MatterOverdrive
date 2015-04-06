@@ -142,6 +142,8 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 
 				matterStorage.writeToNBT(itemStack.getTagCompound());
 				itemStack.getTagCompound().setInteger("MaxMatter", matterStorage.getCapacity());
+				itemStack.getTagCompound().setInteger("MatterSend", matterStorage.getMaxExtract());
+				itemStack.getTagCompound().setInteger("MatterReceive",matterStorage.getMaxReceive());
 			}
 		}
 	}

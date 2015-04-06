@@ -19,12 +19,14 @@ public class ElementBaseGroup extends ElementBase
     }
 
     @Override
-    public void addTooltip(List<String> list) {
-        ElementBase element = getElementAtPosition(gui.getMouseX() + this.posX, gui.getMouseY() + this.posY);
-
-        if (element != null) {
-            if (element.isVisible())
-                element.addTooltip(list);
+    public void addTooltip(List<String> list)
+    {
+        if(this.isVisible()) {
+            ElementBase element = getElementAtPosition(gui.getMouseX() + this.posX, gui.getMouseY() + this.posY);
+            if (element != null) {
+                if (element.isVisible())
+                    element.addTooltip(list);
+            }
         }
     }
 

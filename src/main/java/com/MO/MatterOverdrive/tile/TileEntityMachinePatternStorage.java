@@ -214,4 +214,25 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         return false;
     }
     //endregion
+
+    //region Invetory Functions
+    @Override
+    public int[] getAccessibleSlotsFromSide(int side)
+    {
+        if(side == 1)
+        {
+            return new int[]{input_slot};
+        }
+        else
+        {
+            return pattern_storage_slots;
+        }
+    }
+
+    @Override
+    public boolean canExtractItem(int slot, ItemStack item, int side)
+    {
+        return true;
+    }
+    //endregion
 }

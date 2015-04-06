@@ -27,7 +27,6 @@ public class ContainerPatternStorage extends MOBaseContainer
     public ContainerPatternStorage(InventoryPlayer inventoryPlayer,TileEntityMachinePatternStorage patternStorage)
     {
         this.addSlotToContainer(new SlotDatabase(patternStorage,patternStorage.input_slot,8,52));
-        this.addSlotToContainer(new SlotEnergy(patternStorage,patternStorage.getEnergySlotID(),8,79));
 
         for (int x = 0; x < 3;x++)
         {
@@ -37,6 +36,8 @@ public class ContainerPatternStorage extends MOBaseContainer
         {
             this.addSlotToContainer(new SlotPatternStorage(patternStorage,patternStorage.input_slot + 1 + x + 3,x * 24 + 77,24 + 37));
         }
+
+        this.addSlotToContainer(new SlotEnergy(patternStorage,patternStorage.getEnergySlotID(),8,79));
 
         MOContainerHelper.AddPlayerSlots(inventoryPlayer,this,45, 92);
         this.patternStorage = patternStorage;
@@ -111,7 +112,7 @@ public class ContainerPatternStorage extends MOBaseContainer
                     }
                 }else if(MatterHelper.isMatterPatternStorage(itemstack1))
                 {
-                    if(!this.mergeItemStack(itemstack1, this.patternStorage.input_slot+1, this.patternStorage.getEnergySlotID(), false))
+                    if(!this.mergeItemStack(itemstack1, this.patternStorage.input_slot+1, this.patternStorage.input_slot+1, false))
                     {
                         return null;
                     }

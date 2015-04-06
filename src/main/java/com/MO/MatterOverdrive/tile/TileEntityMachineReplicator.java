@@ -86,7 +86,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public void writeCustomNBT(NBTTagCompound nbt)
     {
         super.writeCustomNBT(nbt);
-        nbt.setShort("ReplicateTime",(short)this.replicateTime);
+        nbt.setShort("ReplicateTime", (short) this.replicateTime);
     }
 	
 	@Override
@@ -389,10 +389,25 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
     //endregion
 
+    //region Inventory Functions
     @Override
-    public int[] getAccessibleSlotsFromSide(int var1)
+    public int[] getAccessibleSlotsFromSide(int side)
     {
-        return var1 == 0 ? new int[]{this.energySlotID,DATABASE_SLOT_ID} : new int[]{OUTPUT_SLOT_ID,SECOUND_OUTPUT_SLOT_ID};
+        if(side == 1)
+        {
+            //top
+            return new int[]{DATABASE_SLOT_ID};
+        }
+        else
+        {
+            return new int[]{OUTPUT_SLOT_ID,SECOUND_OUTPUT_SLOT_ID};
+        }
+    }
+
+    @Override
+    public boolean canExtractItem(int slot, ItemStack item, int side)
+    {
+        return true;
     }
     //endregion
 }

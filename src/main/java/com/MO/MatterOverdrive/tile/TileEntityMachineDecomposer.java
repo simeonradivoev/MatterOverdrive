@@ -220,7 +220,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) 
 	{
-		return side == 0 ? new int[]{this.energySlotID,OUTPUT_SLOT_ID} : (side == 1 ? new int[]{INPUT_SLOT_ID} : new int[0]);
+        return new int[]{INPUT_SLOT_ID,OUTPUT_SLOT_ID};
 	}
 
 	@Override

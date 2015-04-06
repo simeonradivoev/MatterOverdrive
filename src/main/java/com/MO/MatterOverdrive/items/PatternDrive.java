@@ -25,7 +25,13 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     }
 
     @Override
-    public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
+    public boolean hasDetails(ItemStack itemStack)
+    {
+        return true;
+    }
+
+    @Override
+    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
         if(itemstack.hasTagCompound())
         {

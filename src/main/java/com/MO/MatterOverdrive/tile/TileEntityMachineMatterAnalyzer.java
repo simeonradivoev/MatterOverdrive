@@ -161,25 +161,20 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     @Override
     public int[] getAccessibleSlotsFromSide(int side)
     {
-        if(side == 0)
+        if(side == 1)
         {
-            return new int[]{this.getEnergySlotID(),database_slot};
+            return new int[]{input_slot,database_slot};
         }
         else
         {
             return new int[]{input_slot};
         }
-
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack item)
+    public boolean canExtractItem(int slot, ItemStack item, int side)
     {
-        return this.inventory.isItemValidForSlot(slot,item);
-    }
-
-    public Inventory getInventory() {
-        return inventory;
+        return true;
     }
 
     @Override

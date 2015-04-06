@@ -71,11 +71,17 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
     }
 	
 	@Override
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
 	 {
 		this.TagCompountCheck(itemstack);
 		infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(this.getEnergyStored(itemstack), capacity));
 	 }
+
+	@Override
+	public boolean hasDetails(ItemStack itemStack)
+	{
+		return true;
+	}
 
 	public MOItemEnergyContainer setCapacity(int capacity) {
 

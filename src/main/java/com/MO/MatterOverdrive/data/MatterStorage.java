@@ -9,7 +9,8 @@ public class MatterStorage implements IMatterStorage
 {
 	protected int matter;
 	protected int capacity;
-    protected int maxExtract;
+
+	protected int maxExtract;
     protected int maxReceive;
 	
 	public MatterStorage()
@@ -103,4 +104,12 @@ public class MatterStorage implements IMatterStorage
     public void setMaxExtract(int maxExtract) {
         this.maxExtract = maxExtract;
     }
+
+	public int getMaxExtract() {
+		return maxExtract;
+	}
+
+	public int getMaxReceive() {
+		return maxReceive;
+	}
 }

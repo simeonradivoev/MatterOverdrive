@@ -41,48 +41,8 @@ public class MatterHelper
 	{
         if(item != null) {
             IMatterEntry matter = MatterRegistry.getEntry(item);
-
-            if (matter != null) {
-                if (matter.getMatter() > 0) {
-                    return matter.getMatter();
-                } else {
-                    IRecipe recipe = GetRecipeOf(item);
-                    if (recipe != null) {
-                        return getMatterFromRecipe(recipe);
-                    }
-
-                }
-            }
+            return matter.getMatter();
         }
-		return 0;
-	}
-	
-	private static int getMatterFromRecipe(IRecipe recipe)
-	{
-		int matter = 0;
-		ItemStack[] items = null;
-		
-		if(recipe instanceof ShapedRecipes)
-		{
-			items = ((ShapedRecipes)recipe).recipeItems;
-		}
-		
-		if(items != null)
-		{
-			for(int i = 0;i < items.length;i++)
-			{
-				int matterFromItem = getMatterAmountFromItem(items[i]);
-				
-				if(matterFromItem == 0)
-				{
-					return 0;
-				}else
-				{
-					matter += matterFromItem;
-				}
-			}
-		}
-		
 		return 0;
 	}
 
@@ -172,8 +132,12 @@ public class MatterHelper
 
     public static String formatMatter(int matter)
     {
-        DecimalFormat formatter = new DecimalFormat("#,###");
-        return formatter.format(matter) + MATTER_UNIT;
+        return MOStringHelper.formatNUmber(matter) + MATTER_UNIT;
+    }
+
+    public static String formatMatter(int matter,int capacity)
+    {
+        return MOStringHelper.formatNUmber(matter) + " / " + MOStringHelper.formatNUmber(capacity) + MATTER_UNIT;
     }
 
     public static boolean DropInventory(World world,IInventory inventory,int x,int y,int z)

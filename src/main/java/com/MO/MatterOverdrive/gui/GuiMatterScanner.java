@@ -45,7 +45,7 @@ public class GuiMatterScanner extends MOGuiBase
 	public static final ResourceLocation background = new ResourceLocation(Reference.PATH_GUI + "matter_scanner.png");
 	public static final String backgroundPath = Reference.PATH_GUI + "matter_scanner.png";
 
-	int lastPage;
+	int lastPage = 0;
 	PageScanInfo pageScanInfo;
 	PageInfo pageInfo;
 	TimeTracker refreshTimeTracker;
@@ -93,10 +93,8 @@ public class GuiMatterScanner extends MOGuiBase
 		this.addElement(pageScanInfo);
 		this.addElement(pageInfo);
 
-		if(scanner.hasTagCompound()) {
-			setPage(scanner.getTagCompound().getByte(MatterScanner.PAGE_TAG_NAME));
-			setPanelOpen(panelOpen);
-		}
+		setPage(MatterScanner.getLastPage(scanner));
+		setPanelOpen(panelOpen);
 	}
 
 	@Override
@@ -165,8 +163,10 @@ public class GuiMatterScanner extends MOGuiBase
 			setPage(0);
 		}
 
-		pageInfo.handleElementButtonClick(buttonName,mouseButton);
-		pageScanInfo.handleElementButtonClick(buttonName,mouseButton);
+		if(pageInfo != null)
+			pageInfo.handleElementButtonClick(buttonName,mouseButton);
+		if(pageScanInfo != null)
+			pageScanInfo.handleElementButtonClick(buttonName,mouseButton);
 	}
 
 	@Override
@@ -194,6 +194,7 @@ public class GuiMatterScanner extends MOGuiBase
 		infoPageButton.setEnabled(true);
 
 		lastPage = page;
+		MatterScanner.setLastPage(scanner, page);
 
 		if(page == 0)
 		{

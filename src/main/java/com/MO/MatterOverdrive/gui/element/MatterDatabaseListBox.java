@@ -152,7 +152,18 @@ public class MatterDatabaseListBox extends MOElementListBox
 	}
 
 	public void updateList(){this.updateList(this.filter);}
-	
+
+	public void setSelectedIndex(int index)
+	{
+		super.setSelectedIndex(index);
+
+		NBTTagCompound selectedNBT = MatterScanner.getSelectedAsNBT(scanner);
+		if(index >= 0 && index < getElementCount() && selectedNBT == null)
+		{
+			onSelectionChanged(index,getElement(index));
+		}
+	}
+
 	@Override
 	protected void onSelectionChanged(int newIndex, IMOListBoxElement newElement) 
 	{
