@@ -107,29 +107,35 @@ public class Inventory implements IInventory
     @Override
     public ItemStack decrStackSize(int slot, int size)
     {
-        if(this.slots.get(slot) != null)
+        if (this.slots.get(slot) != null && this.slots.get(slot).getItem() != null)
         {
             ItemStack itemstack;
 
-            if(this.slots.get(slot).getItem().stackSize <= size)
+            if (this.slots.get(slot).getItem().stackSize <= size)
             {
                 itemstack = this.slots.get(slot).getItem();
                 this.slots.get(slot).setItem(null);
-                return itemstack;
-            }else
-            {
-                this.slots.get(slot).getItem().splitStack(size);
 
-                if(this.slots.get(slot).getItem().stackSize == 0)
+                entity.updateContainingBlockInfo();
+                return itemstack;
+            }
+            else
+            {
+                itemstack = this.slots.get(slot).getItem().splitStack(size);
+
+                if (this.slots.get(slot).getItem().stackSize == 0)
                 {
                     this.slots.get(slot).setItem(null);
                 }
+
+                entity.updateContainingBlockInfo();
+                return itemstack;
             }
         }
-
-        entity.updateContainingBlockInfo();
-
-        return null;
+        else
+        {
+            return null;
+        }
     }
 
     @Override
