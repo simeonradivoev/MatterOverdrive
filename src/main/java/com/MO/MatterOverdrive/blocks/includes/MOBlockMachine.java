@@ -45,6 +45,8 @@ public class MOBlockMachine extends MOBlockContainer
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
     {
+        super.onBlockPlacedBy(world,x,y,z,entityLiving,itemStack);
+
         try
         {
             IMOTileEntity entity = (IMOTileEntity)world.getTileEntity(x,y,z);
