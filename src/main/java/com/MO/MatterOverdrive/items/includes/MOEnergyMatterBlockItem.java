@@ -25,9 +25,16 @@ public class MOEnergyMatterBlockItem extends ItemBlock
 	@Override
     public void addInformation(ItemStack stack, EntityPlayer p_77624_2_, List infos, boolean p_77624_4_) 
 	{
-		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy"))
+		if(stack.hasTagCompound())
 		{
-			infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("MaxEnergy")));
+			if(stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy"))
+			{
+				infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("MaxEnergy")));
+			}
+			if(stack.getTagCompound().hasKey("Matter") && stack.getTagCompound().hasKey("MaxMatter"))
+			{
+				infos.add(EnumChatFormatting.BLUE + MOEnergyHelper.formatEnergy(stack.getTagCompound().getInteger("Matter"), stack.getTagCompound().getInteger("MaxMatter")));
+			}
 		}
 		
 	}
@@ -37,7 +44,7 @@ public class MOEnergyMatterBlockItem extends ItemBlock
 	 {
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy"))
 		{
-			return stack.getTagCompound().getInteger("MaxEnergy") - stack.getTagCompound().getInteger("Energy");
+			return stack.getTagCompound().getInteger("MaxEnergy") - stack.getTagCompound().getInteger("Energy") + 1;
 		}
 		return 0;
 	 }

@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.tile;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
@@ -50,6 +51,18 @@ public class MOTileEntity extends TileEntity implements IMOTileEntity
 
     @Override
     public void onNeighborBlockChange()
+    {
+
+    }
+
+    @Override
+    public void writeToDropItem(ItemStack itemStack)
+    {
+
+    }
+
+    @Override
+    public void readFromPlaceItem(ItemStack itemStack)
     {
 
     }

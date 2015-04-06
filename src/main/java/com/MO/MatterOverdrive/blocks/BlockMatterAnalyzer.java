@@ -4,6 +4,7 @@ import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
+import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.TileEntityMachineMatterAnalyzer;
@@ -20,9 +21,8 @@ import net.minecraft.world.World;
 /**
  * Created by Simeon on 3/16/2015.
  */
-public class BlockMatterAnalyzer extends MOBlockContainer
+public class BlockMatterAnalyzer extends MOBlockMachine
 {
-
     private IIcon iconTop;
     private IIcon iconFront;
 
@@ -35,7 +35,8 @@ public class BlockMatterAnalyzer extends MOBlockContainer
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+    {
         return new TileEntityMachineMatterAnalyzer();
     }
 

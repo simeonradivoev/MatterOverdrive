@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.blocks;
 import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
+import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternStorage;
@@ -19,7 +20,7 @@ import net.minecraft.world.World;
 /**
  * Created by Simeon on 3/27/2015.
  */
-public class BlockPatternStorage extends MOBlockContainer
+public class BlockPatternStorage extends MOBlockMachine
 {
 
     public BlockPatternStorage(Material material, String name)

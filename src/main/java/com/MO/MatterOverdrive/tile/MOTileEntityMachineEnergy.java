@@ -8,6 +8,7 @@ import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.EnergySlot;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -15,17 +16,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 3/18/2015.
  */
-public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler,ISidedInventory
+public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler
 {
 
     protected EnergyStorage energyStorage;
     protected int energySlotID;
-    protected Inventory inventory;
 
 
     public MOTileEntityMachineEnergy(int slotCount)
@@ -37,7 +38,8 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt) {
+    public void writeCustomNBT(NBTTagCompound nbt)
+    {
         super.writeCustomNBT(nbt);
         energyStorage.writeToNBT(nbt);
         inventory.writeToNBT(nbt);
@@ -142,90 +144,34 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 
     }
 
-    //region Inventory Methods
-    public boolean isItemValidForSlot(int slot, ItemStack item)
+    @Override
+    public void readFromPlaceItem(ItemStack itemStack)
     {
-        return inventory.isItemValidForSlot(slot,item);
+        super.readFromPlaceItem(itemStack);
+
+        if(itemStack != null)
+        {
+            if(itemStack.hasTagCompound())
+            {
+                energyStorage.readFromNBT(itemStack.getTagCompound());
+            }
+        }
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide(int side)
+    public void writeToDropItem(ItemStack itemStack)
     {
-        return new int[0];
+        super.writeToDropItem(itemStack);
+
+        if(itemStack != null)
+        {
+            if(energyStorage.getEnergyStored() > 0) {
+                if (!itemStack.hasTagCompound())
+                    itemStack.setTagCompound(new NBTTagCompound());
+
+                energyStorage.writeToNBT(itemStack.getTagCompound());
+                itemStack.getTagCompound().setInteger("MaxEnergy",energyStorage.getMaxEnergyStored());
+            }
+        }
     }
-
-    @Override
-    public boolean canInsertItem(int slot, ItemStack item, int side)
-    {
-        return isItemValidForSlot(slot,item);
-    }
-
-    @Override
-    public boolean canExtractItem(int slot, ItemStack item, int side)
-    {
-        return false;
-    }
-
-    //region Inventory Methods
-    @Override
-    public int getSizeInventory()
-    {
-        return inventory.getSizeInventory();
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return inventory.getStackInSlot(slot);
-    }
-
-    @Override
-    public ItemStack decrStackSize(int slot, int size) {
-        return inventory.decrStackSize(slot,size);
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int slot) {
-        return inventory.getStackInSlotOnClosing(slot);
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack itemStack) {
-        inventory.setInventorySlotContents(slot,itemStack);
-    }
-
-    @Override
-    public String getInventoryName() {
-        return inventory.getInventoryName();
-    }
-
-    @Override
-    public boolean hasCustomInventoryName() {
-        return inventory.hasCustomInventoryName();
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return inventory.getInventoryStackLimit();
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return inventory.isUseableByPlayer(player);
-    }
-
-    @Override
-    public void openInventory() {
-
-    }
-
-    @Override
-    public void closeInventory() {
-
-    }
-
-    public Inventory getInventory()
-    {
-        return inventory;
-    }
-    //endregion
 }

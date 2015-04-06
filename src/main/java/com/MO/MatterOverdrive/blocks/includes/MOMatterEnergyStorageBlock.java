@@ -16,7 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract class MOMatterEnergyStorageBlock extends MOBlockContainer
+public abstract class MOMatterEnergyStorageBlock extends MOBlockMachine
 {
 	private boolean keepsMatter;
 	private boolean keepsEnergy;
@@ -28,12 +28,6 @@ public abstract class MOMatterEnergyStorageBlock extends MOBlockContainer
 		this.keepsEnergy = keepsEnergy;
 		this.keepsMatter = keepsMatter;
 	}
-
-	@Override
-	protected void RegisterBlock()
-    {
-        GameRegistry.registerBlock(this,MOEnergyMatterBlockItem.class,this.getUnlocalizedName().substring(5));
-    }
 
     protected IIcon GetIconBasedOnMatter(IBlockAccess world, int x, int y, int z)
     {
@@ -64,7 +58,7 @@ public abstract class MOMatterEnergyStorageBlock extends MOBlockContainer
 			}
 	    }
 
-    @Override
+    /*@Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
     {
         if(dropsItself)
@@ -95,6 +89,6 @@ public abstract class MOMatterEnergyStorageBlock extends MOBlockContainer
             }
         }
         return super.removedByPlayer(world,player,x,y,z);
-    }
+    }*/
 
 }

@@ -10,6 +10,7 @@ public class Slot
 {
     private ItemStack item;
     private int id;
+    private boolean drops = true;
     public boolean isValidForSlot(ItemStack item)
     {
         return true;
@@ -38,5 +39,13 @@ public class Slot
     boolean isEqual(net.minecraft.inventory.Slot slot)
     {
         return true;
+    }
+
+    public boolean drops() {
+        return drops;
+    }
+
+    public void setDrops(boolean drops) {
+        this.drops = drops;
     }
 }

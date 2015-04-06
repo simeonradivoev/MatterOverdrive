@@ -127,7 +127,6 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
             if (!simulate) {
                 energy -= energyExtracted;
                 container.stackTagCompound.setInteger("Energy", energy);
-                System.out.println("trying to extract " + maxExtract + " from " + this.getUnlocalizedName() + ". New Energy " + (energy - energyExtracted));
             }
             return energyExtracted;
         }

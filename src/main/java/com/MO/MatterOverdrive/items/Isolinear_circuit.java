@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.items;
 
+import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.items.includes.MOBaseItem;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -35,10 +36,10 @@ public class Isolinear_circuit extends MOBaseItem
     public void Register(String name)
     {
         super.Register(name);
-        GameRegistry.addRecipe(new ItemStack(this,1,0),new Object[]{"II ","RR ","GG ",'G', Item.getItemFromBlock(Blocks.glass),'R', Items.redstone,'I',Items.iron_ingot});
+        GameRegistry.addRecipe(new ItemStack(this, 1, 0), new Object[]{"II ", "RR ", "GG ", 'G', Item.getItemFromBlock(Blocks.glass), 'R', Items.redstone, 'I', Items.iron_ingot});
         GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 1), new Object[]{new ItemStack(this, 1, 0), Items.gold_ingot, Items.gold_ingot});
         GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 2), new Object[]{new ItemStack(this, 1, 1), Items.diamond, Items.diamond});
-        GameRegistry.addShapelessRecipe(new ItemStack(this,1,3),new Object[]{new ItemStack(this,1,2),Items.emerald,Items.emerald});
+        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 3), new Object[]{new ItemStack(this, 1, 2), Items.emerald, Items.emerald});
     }
 
     @SideOnly(Side.CLIENT)
@@ -77,7 +78,9 @@ public class Isolinear_circuit extends MOBaseItem
 
         for (int i = 0; i < subItemNames.length; ++i)
         {
-            this.icons[i] = iconRegister.registerIcon(this.getIconString() + "_" + subItemNames[i]);
+            this.icons[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + getUnlocalizedName().substring(5) + "_" + subItemNames[i]);
         }
+
+        this.itemIcon = this.icons[0];
     }
 }

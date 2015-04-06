@@ -34,3 +34,5 @@ tile.tritanium_block.name=Tritanium Block
 tile.pattern_storage.name=Pattern Storage
 tile.machine_hull.name=Machine Hull
 container.replicator.name=Replicator
+machine.tooltip.matter=Matter
+machine.tooltip.energy=Charged

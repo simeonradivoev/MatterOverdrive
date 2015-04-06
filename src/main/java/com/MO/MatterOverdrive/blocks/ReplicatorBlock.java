@@ -5,6 +5,8 @@ import java.util.Random;
 import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
+import com.MO.MatterOverdrive.items.includes.MOEnergyMatterBlockItem;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -39,7 +41,7 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
 	
 	public ReplicatorBlock(Material material,String name)
 	{
-		super(material,name,true,true);
+		super(material, name, true, true);
 		setHardness(2.0F);
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);
@@ -74,62 +76,6 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
         }
 
         return this.blockIcon;
-    }
-    
-    public Item getItemDropped(int metadata, Random rand, int fortune)
-    {
-        return Item.getItemFromBlock(MatterOverdriveBlocks.replicator);
-    }
-    
-    public void breakBlock(World world, int x, int y, int z, Block block, int p_149749_6_)
-    {
-    	this.dropsItself = !keepInventory;
-    	
-    	if(!keepInventory)
-    	{
-	    	TileEntityMachineReplicator tileentityReplicator = (TileEntityMachineReplicator)world.getTileEntity(x, y, z);
-	    	
-	    	if(tileentityReplicator != null)
-	    	{
-	    		for (int i1 = 0; i1 < tileentityReplicator.getSizeInventory(); ++i1)
-	            {
-	                ItemStack itemstack = tileentityReplicator.getStackInSlot(i1);
-	
-	                if (itemstack != null)
-	                {
-	                    float f = world.rand.nextFloat() * 0.8F + 0.1F;
-	                    float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
-	                    float f2 = world.rand.nextFloat() * 0.8F + 0.1F;
-	
-	                    while (itemstack.stackSize > 0)
-	                    {
-	                        int j1 = world.rand.nextInt(21) + 10;
-	
-	                        if (j1 > itemstack.stackSize)
-	                        {
-	                            j1 = itemstack.stackSize;
-	                        }
-	
-	                        itemstack.stackSize -= j1;
-	                        EntityItem entityitem = new EntityItem(world, (double)((float)x + f), (double)((float)y + f1), (double)((float)z + f2), new ItemStack(itemstack.getItem(), j1, itemstack.getItemDamage()));
-	
-	                        if (itemstack.hasTagCompound())
-	                        {
-	                            entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
-	                        }
-	
-	                        float f3 = 0.05F;
-	                        entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);
-	                        entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);
-	                        entityitem.motionZ = (double)((float)world.rand.nextGaussian() * f3);
-	                        world.spawnEntityInWorld(entityitem);
-	                    }
-	                }
-	            }
-	            world.func_147453_f(x, y, z, block);
-	    	}
-    	}
-    	super.breakBlock(world, x, y, z, block, p_149749_6_);
     }
     
     @Override

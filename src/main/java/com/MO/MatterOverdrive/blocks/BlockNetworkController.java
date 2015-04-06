@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.blocks;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
+import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.tile.TileEntityMachineNetworkController;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraft.block.material.Material;
@@ -12,7 +13,7 @@ import net.minecraft.world.World;
 /**
  * Created by Simeon on 3/11/2015.
  */
-public class BlockNetworkController extends MOBlockContainer
+public class BlockNetworkController extends MOBlockMachine
 {
 
     public BlockNetworkController(Material material, String name)

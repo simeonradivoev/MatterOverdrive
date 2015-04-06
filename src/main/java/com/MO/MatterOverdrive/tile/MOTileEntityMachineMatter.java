@@ -1,5 +1,7 @@
 package com.MO.MatterOverdrive.tile;
 
+import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -95,7 +97,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 
     public void onMatterEmpty()
     {
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     public void onMatterFilled()
@@ -112,4 +114,35 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
     {
         return lastMatter == 0 && newMatter > 0;
     }
+
+	@Override
+	public void readFromPlaceItem(ItemStack itemStack)
+	{
+		super.readFromPlaceItem(itemStack);
+
+		if(itemStack != null)
+		{
+			if(itemStack.hasTagCompound())
+			{
+				matterStorage.readFromNBT(itemStack.getTagCompound());
+			}
+		}
+	}
+
+	@Override
+	public void writeToDropItem(ItemStack itemStack)
+	{
+		super.writeToDropItem(itemStack);
+
+		if(itemStack != null)
+		{
+			if(matterStorage.getMatterStored() > 0) {
+				if (!itemStack.hasTagCompound())
+					itemStack.setTagCompound(new NBTTagCompound());
+
+				matterStorage.writeToNBT(itemStack.getTagCompound());
+				itemStack.getTagCompound().setInteger("MaxMatter", matterStorage.getCapacity());
+			}
+		}
+	}
 }

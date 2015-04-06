@@ -79,6 +79,10 @@ public class MatterStorage implements IMatterStorage
 	
 	public void writeToNBT(NBTTagCompound nbt)
 	{
+		if(this.matter < 0)
+		{
+			this.matter = 0;
+		}
 		nbt.setInteger("Matter", this.matter);
 	}
 	

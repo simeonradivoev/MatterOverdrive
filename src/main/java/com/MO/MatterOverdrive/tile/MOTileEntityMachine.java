@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.tile;
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
+import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.MatterNetwork;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
@@ -10,6 +11,9 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -20,7 +24,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by Simeon on 3/11/2015.
  */
-public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTileEntity, IMatterNetworkConnection
+public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTileEntity, IMatterNetworkConnection, ISidedInventory
 {
     //client syncs
     protected boolean lastActive;
@@ -33,6 +37,8 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     protected boolean redstoneStateDirty = true;
 
     protected boolean forceClientUpdate;
+
+    protected Inventory inventory;
 
     public MOTileEntityMachine()
     {
@@ -199,4 +205,90 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         return Block.getIdFromBlock(this.getBlockType());
     }
+
+    //region Inventory Methods
+    public boolean isItemValidForSlot(int slot, ItemStack item)
+    {
+        return inventory.isItemValidForSlot(slot,item);
+    }
+
+    @Override
+    public int[] getAccessibleSlotsFromSide(int side)
+    {
+        return new int[0];
+    }
+
+    @Override
+    public boolean canInsertItem(int slot, ItemStack item, int side)
+    {
+        return isItemValidForSlot(slot,item);
+    }
+
+    @Override
+    public boolean canExtractItem(int slot, ItemStack item, int side)
+    {
+        return false;
+    }
+
+    @Override
+    public int getSizeInventory()
+    {
+        return inventory.getSizeInventory();
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return inventory.getStackInSlot(slot);
+    }
+
+    @Override
+    public ItemStack decrStackSize(int slot, int size) {
+        return inventory.decrStackSize(slot,size);
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int slot) {
+        return inventory.getStackInSlotOnClosing(slot);
+    }
+
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack itemStack) {
+        inventory.setInventorySlotContents(slot,itemStack);
+    }
+
+    @Override
+    public String getInventoryName() {
+        return inventory.getInventoryName();
+    }
+
+    @Override
+    public boolean hasCustomInventoryName() {
+        return inventory.hasCustomInventoryName();
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return inventory.getInventoryStackLimit();
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return inventory.isUseableByPlayer(player);
+    }
+
+    @Override
+    public void openInventory() {
+
+    }
+
+    @Override
+    public void closeInventory() {
+
+    }
+
+    public Inventory getInventory()
+    {
+        return inventory;
+    }
+    //endregion
 }

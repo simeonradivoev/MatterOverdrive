@@ -29,7 +29,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.List;
 import java.util.Random;
 
-public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements ISidedInventory, IMatterConnection, IMatterNetworkConnection
+public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkConnection
 {
 	public static final int MATTER_STORAGE = 256;
 	public static final int ENERGY_STORAGE = 512000;

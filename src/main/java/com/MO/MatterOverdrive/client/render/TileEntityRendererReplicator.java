@@ -42,6 +42,8 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
         model = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL_PATH));
     }
 
+
+
     @Override
     public void renderTileEntityAt(TileEntity entity, double x, double y, double z, float ticks)
     {
