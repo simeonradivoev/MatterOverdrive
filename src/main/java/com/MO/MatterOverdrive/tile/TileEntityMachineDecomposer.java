@@ -25,6 +25,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 {
 	public static final int MATTER_STORAGE = 256;
 	public static final int ENERGY_STORAGE = 512000;
+    public  static final  int MATTER_TRANSFER = 1;
     public  static final  int MATTER_EXTRACT = 1;
     public  static  final  int MATTER_EXTRACT_SPEED = 100;
     public  static  final float MATTER_DECOMPOSE_FAIL_CHANGE = 0.1f;
@@ -48,8 +49,8 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         this.energyStorage.setMaxReceive(ENERGY_STORAGE);
 
         this.matterStorage.setCapacity(MATTER_STORAGE);
-        this.matterStorage.setMaxReceive(MATTER_STORAGE);
-        this.matterStorage.setMaxExtract(MATTER_STORAGE);
+        this.matterStorage.setMaxReceive(MATTER_TRANSFER);
+        this.matterStorage.setMaxExtract(MATTER_TRANSFER);
         time = new TimeTracker();
         network = null;
 	}
@@ -195,7 +196,9 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
             }
             else
             {
-                this.matterStorage.receiveMatter(ForgeDirection.EAST, MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID)), false);
+                int matterAmount = MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
+                int matter = this.matterStorage.getMatterStored();
+                this.matterStorage.setMatterStored(matterAmount + matter);
             }
 
             this.decrStackSize(0, 1);

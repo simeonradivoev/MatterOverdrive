@@ -36,3 +36,4 @@ tile.machine_hull.name=Machine Hull
 container.replicator.name=Replicator
 machine.tooltip.matter=Matter
 machine.tooltip.energy=Charged
+itemGroup.tabMatterOverdrive=Matter Overdrive

@@ -52,16 +52,7 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
         {
             GL11.glPushMatrix();
 
-            ItemStack stack = replicator.getStackInSlot(replicator.OUTPUT_SLOT_ID);
-            if(stack != null)
-            {
-                if(itemEntity == null || !itemEntity.getEntityItem().isItemEqual(stack))
-                {
-                    itemEntity = new EntityItem(entity.getWorldObj(),x,y,z,stack);
-                }
-
-                RenderManager.instance.renderEntityWithPosYaw(itemEntity,x + 0.5,y + 0.5,z + 0.5,0,0);
-            }
+            renderItem(replicator,x,y,z);
 
             GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
             rotate(replicator.getWorldObj(), replicator.xCoord, replicator.yCoord, replicator.zCoord);
@@ -95,5 +86,19 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
         }
         
         //System.out.println("Metadata " + metadata + "at [" + x +","+ y +","+ z + "]");
+    }
+
+    private void renderItem(TileEntityMachineReplicator replicator,double x,double y,double z)
+    {
+        ItemStack stack = replicator.getStackInSlot(replicator.OUTPUT_SLOT_ID);
+        if(stack != null)
+        {
+            if(itemEntity == null || !itemEntity.getEntityItem().isItemEqual(stack))
+            {
+                itemEntity = new EntityItem(replicator.getWorldObj(),x,y,z,stack);
+            }
+
+            RenderManager.instance.renderEntityWithPosYaw(itemEntity,x + 0.5d,y + 0.5d,z + 0.5d,0,0);
+        }
     }
 }

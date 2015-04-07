@@ -1,9 +1,7 @@
 package com.MO.MatterOverdrive.gui;
 
 import com.MO.MatterOverdrive.data.inventory.Slot;
-import com.MO.MatterOverdrive.gui.element.ElementPlayerSlots;
-import com.MO.MatterOverdrive.gui.element.ElementSlot;
-import com.MO.MatterOverdrive.gui.element.ElementSlotsList;
+import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,7 +13,6 @@ import cofh.lib.util.helpers.MathHelper;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.ContainerDecomposer;
-import com.MO.MatterOverdrive.gui.element.ElementMatterStored;
 import com.MO.MatterOverdrive.tile.TileEntityMachineDecomposer;
 
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ import java.util.List;
 public class GuiDecomposer extends MOGuiBase
 {
 	public TileEntityMachineDecomposer decomposer;
-	ElementEnergyStored energyElement;
+	MOElementEnergy energyElement;
 	ElementMatterStored matterElement;
 	ElementDualScaled decompose_progress;
     ElementPlayerSlots playerSlots;
@@ -37,7 +34,7 @@ public class GuiDecomposer extends MOGuiBase
 
 		this.decomposer = entity;
 		matterElement = new ElementMatterStored(this,74,39,decomposer.getMatterStorage());
-		energyElement = new ElementEnergyStored(this,100,39,decomposer.getEnergyStorage());
+		energyElement = new MOElementEnergy(this,100,39,decomposer.getEnergyStorage());
 		decompose_progress = new ElementDualScaled(this,32,52);
         playerSlots = new ElementPlayerSlots(this,44,91);
         slotsList = new ElementSlotsList(this,5,49,new ArrayList<Slot>(0),0);
@@ -108,7 +105,24 @@ public class GuiDecomposer extends MOGuiBase
 		//}
 		
 		//docompose_progress.setQuantity(MathHelper.round(((float)this.replicator.decomposeTime / (float)this.replicator.DECEOPOSE_SPEED) * 24));
-        int matterAmount = MatterHelper.getMatterAmountFromItem(decomposer.getStackInSlot(decomposer.OUTPUT_SLOT_ID));
+
+
 		decompose_progress.setQuantity(MathHelper.round(((float)this.decomposer.decomposeProgress / 100f) * 24));
+		ManageReqiremnetsTooltips();
+	}
+
+	void ManageReqiremnetsTooltips()
+	{
+		if(decomposer.getStackInSlot(decomposer.INPUT_SLOT_ID) != null)
+		{
+			int matterAmount = MatterHelper.getMatterAmountFromItem(decomposer.getStackInSlot(decomposer.INPUT_SLOT_ID));
+			energyElement.setEnergyRequired(-(TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER * TileEntityMachineDecomposer.DECOMPOSE_ENERGY_PER_TICK * matterAmount));
+			matterElement.setDrain(matterAmount);
+		}
+		else
+		{
+			energyElement.setEnergyRequired(0);
+			matterElement.setDrain(0);
+		}
 	}
 }
