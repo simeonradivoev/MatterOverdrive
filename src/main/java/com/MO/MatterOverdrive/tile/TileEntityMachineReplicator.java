@@ -45,7 +45,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public int SHIELDING_SLOT_ID = 3;
 
     public static final int REPLICATE_SPEED_PER_MATTER = 120;
-	public static final int REPLICATE_ENERGY_PER_TICK = 160;
+	public static final int REPLICATE_ENERGY_PER_TICK = 260;
     public static final int RADIATION_DAMAGE_DELAY = 5;
     public static final int RADIATION_RANGE = 8;
     private static Random random = new Random();
@@ -161,18 +161,22 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 	{
 		if(isActive())
         {
+            int matterAmount = MatterHelper.getMatterAmountFromItem(newItem);
+
             if(random.nextFloat() < 1f - ((float) MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) / (float)MatterDatabaseHelper.MAX_ITEM_PROGRESS) )
             {
                 if(failReplicate(MatterHelper.getMatterAmountFromItem(newItem)))
                 {
-                    this.matterStorage.extractMatter(ForgeDirection.EAST, MatterHelper.getMatterAmountFromItem(newItem), false);
+                    int matter = this.matterStorage.getMatterStored();
+                    this.matterStorage.setMatterStored(matter - matterAmount);
                 }
             }
             else
             {
                 if(putInOutput(newItem))
                 {
-                    this.matterStorage.extractMatter(ForgeDirection.EAST, MatterHelper.getMatterAmountFromItem(newItem), false);
+                    int matter = this.matterStorage.getMatterStored();
+                    this.matterStorage.setMatterStored(matter - matterAmount);
                 }
             }
 
@@ -261,12 +265,10 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
         IMatterDatabase database = MatterScanner.getLink(worldObj,getStackInSlot(DATABASE_SLOT_ID));
 
-        NBTTagCompound itemAsNBT = null;
+        if(database == null)
+            return false;       //no database
 
-        if(database != null)
-        {
-            itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedAsItem(getStackInSlot(DATABASE_SLOT_ID)));
-        }
+        NBTTagCompound itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedAsItem(getStackInSlot(DATABASE_SLOT_ID)));
         ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
 
 		
