@@ -3,9 +3,11 @@ package com.MO.MatterOverdrive.tile;
 import cofh.api.energy.IEnergyStorage;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
+import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.Slot;
+import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
@@ -16,11 +18,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.List;
+
 /**
  * Created by Simeon on 3/16/2015.
  */
 public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory
 {
+    public static final int PROGRESS_AMOUNT_PER_ITEM = 20;
     public static final int ENERGY_STORAGE = 512000;
     public static final int ENERGY_TRANSFER = 512;
     public static final int ANALYZE_SPEED = 800;
@@ -29,6 +34,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public int input_slot = 0;
     public int database_slot = 1;
     public int analyzeTime;
+    private boolean isActive = false;
 
     public TileEntityMachineMatterAnalyzer()
     {
@@ -82,60 +88,135 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         if(!worldObj.isRemote)
         {
-            if (isAnalyzing() && this.energyStorage.getEnergyStored() >= POWER_DRAIN) {
-                if (analyzeTime < ANALYZE_SPEED) {
+            boolean isAnalyzing = isAnalyzing();
+
+            if (isAnalyzing && this.energyStorage.getEnergyStored() >= POWER_DRAIN)
+            {
+                this.energyStorage.extractEnergy(POWER_DRAIN,false);
+
+                if (analyzeTime < ANALYZE_SPEED)
+                {
                     analyzeTime++;
                 } else {
                     analyzeItem();
                     analyzeTime = 0;
                 }
-            }
-        }
 
-        if(!isAnalyzing())
-        {
-            analyzeTime = 0;
+                isActive = true;
+            }
+
+            if (!isAnalyzing)
+            {
+                isActive = false;
+                analyzeTime = 0;
+            }
         }
     }
 
 
     public boolean isAnalyzing()
     {
-        return inventory.getStackInSlot(database_slot) != null
-                && MatterHelper.isMatterScanner(inventory.getStackInSlot(database_slot))
-                && MatterScanner.getLink(worldObj,inventory.getStackInSlot(database_slot)) != null
-                && inventory.getStackInSlot(input_slot) != null
+        return  inventory.getStackInSlot(input_slot) != null
                 && MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(input_slot)) > 0
-                && MatterDatabaseHelper.GetItemProgress(inventory.getStackInSlot(database_slot), inventory.getStackInSlot(input_slot)) < MatterDatabaseHelper.MAX_ITEM_PROGRESS;
+                && hasConnectionToPatterns();
+    }
+
+    @Override
+    public void onActiveChange()
+    {
+        forceClientUpdate = true;
+    }
+
+    public boolean hasConnectionToPatterns()
+    {
+        if(inventory.getStackInSlot(database_slot) != null)
+        {
+            if(MatterHelper.isMatterScanner(inventory.getStackInSlot(database_slot)))
+            {
+                //the matter scanner pattern storage
+                IMatterDatabase database = MatterScanner.getLink(worldObj,inventory.getStackInSlot(database_slot));
+                if (database != null)
+                {
+                    if (database.hasItem(inventory.getStackInSlot(input_slot)))
+                    {
+                        NBTTagCompound itemAsNBT = database.getItemAsNBT(inventory.getStackInSlot(input_slot));
+                        if(itemAsNBT != null)
+                        {
+                            if (MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) < MatterDatabaseHelper.MAX_ITEM_PROGRESS)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    else if (MatterDatabaseHelper.getFirstFreePatternStorage(database) != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        else if(network != null)
+        {
+            List<IMatterNetworkConnection> connections = network.getConnections();
+            for (int i = 0;i < connections.size();i++)
+            {
+                if (connections.get(i) instanceof IMatterDatabase)
+                {
+                    IMatterDatabase database = (IMatterDatabase)connections.get(i);
+                    NBTTagCompound itemNBT = database.getItemAsNBT(inventory.getStackInSlot(input_slot));
+
+                    if (itemNBT != null)
+                    {
+                        if (MatterDatabaseHelper.GetProgressFromNBT(itemNBT) < MatterDatabaseHelper.MAX_ITEM_PROGRESS)
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (MatterDatabaseHelper.getFirstFreePatternStorage(database) != null)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
     public  boolean isActive()
     {
-        return isAnalyzing() && this.energyStorage.getEnergyStored() >= POWER_DRAIN;
+        return isActive;
     }
 
     public void analyzeItem()
     {
         ItemStack scanner = inventory.getStackInSlot(database_slot);
         ItemStack itemStack = inventory.getStackInSlot(input_slot);
+        IMatterDatabase database = null;
 
-        if(scanner != null)
+        //get the database from the scanner first
+        if(scanner != null && MatterHelper.isMatterScanner(scanner))
         {
-            NBTTagCompound tagCompound = MatterDatabaseHelper.GetItemAsNBT(scanner, itemStack);
+            database = MatterScanner.getLink(worldObj,scanner);
+        }
 
-            if(tagCompound == null)
-            {
-                MatterDatabaseHelper.Register(scanner,itemStack,10);
-            }
-            else
-            {
-                MatterDatabaseHelper.IncreaseProgress(tagCompound,10);
-            }
+        //get the first database on the network, if the scanner is offline
+        if (database == null)
+        {
+            database = network.getFirstMatterDatabase();
+        }
 
-            MatterScanner.setSelected(scanner,itemStack);
-            this.decrStackSize(input_slot,1);
-            worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+        if(database != null)
+        {
+            MatterDatabaseHelper.increaseProgress(database,itemStack,PROGRESS_AMOUNT_PER_ITEM);
+            SoundHandler.PlaySoundAt(worldObj,"scanner_success",xCoord,yCoord,zCoord);
+            decrStackSize(input_slot, 1);
+            forceClientUpdate = true;
+            markDirty();
         }
     }
 
@@ -144,13 +225,15 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         super.readCustomNBT(tagCompound);
         analyzeTime = tagCompound.getShort("AnalyzeTime");
+        isActive = tagCompound.getBoolean("IsActive");
     }
 
     @Override
     public void writeCustomNBT(NBTTagCompound tagCompound)
     {
         super.writeCustomNBT(tagCompound);
-        tagCompound.setShort("AnalyzeTime",(short)analyzeTime);
+        tagCompound.setShort("AnalyzeTime", (short) analyzeTime);
+        tagCompound.setBoolean("IsActive",isActive);
     }
 
     public IEnergyStorage getEnergyStorage() {

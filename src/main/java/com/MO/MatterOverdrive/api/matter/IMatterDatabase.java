@@ -11,7 +11,7 @@ public interface IMatterDatabase
 	boolean hasItem(ItemStack item);
 	NBTTagList getItemsAsNBT();
 	ItemStack[] getItems();
-	boolean addItem(ItemStack itemStack);
+	boolean addItem(ItemStack itemStack,int initialAmount);
 	NBTTagCompound getItemAsNBT(ItemStack item);
-	boolean increaseProgress(ItemStack item,int amount);
+	ItemStack[] getPatternStorageList();
 }

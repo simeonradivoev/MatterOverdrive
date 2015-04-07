@@ -66,7 +66,8 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 
         if(lastActive != isActive())
         {
-
+            onActiveChange();
+            lastActive = isActive();
         }
     }
 
@@ -162,6 +163,11 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         {
             manageSound();
         }
+    }
+
+    protected void onActiveChange()
+    {
+
     }
 
     @Override
@@ -291,4 +297,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         return inventory;
     }
     //endregion
+
+    public void ForceSync()
+    {
+        forceClientUpdate = true;
+    }
 }

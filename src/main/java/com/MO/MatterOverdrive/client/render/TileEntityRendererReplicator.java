@@ -98,7 +98,7 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
                 itemEntity = new EntityItem(replicator.getWorldObj(),x,y,z,stack);
             }
 
-            RenderManager.instance.renderEntityWithPosYaw(itemEntity,x + 0.5d,y + 0.5d,z + 0.5d,0,0);
+            RenderManager.instance.renderEntityWithPosYaw(itemEntity,x + 0.5d,y + 0.5,z + 0.5,0,0);
         }
     }
 }

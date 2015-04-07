@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.data;
 
+import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.tile.TileEntityMachineNetworkController;
 import net.minecraft.nbt.NBTTagCompound;
@@ -123,5 +124,17 @@ public class MatterNetwork
 
     public List<IMatterNetworkConnection> getConnections() {
         return this.connections;
+    }
+
+    public IMatterDatabase getFirstMatterDatabase()
+    {
+        for (int i = 0;i < connections.size();i++)
+        {
+            if (connections.get(i) instanceof IMatterDatabase)
+            {
+                return (IMatterDatabase)connections.get(i);
+            }
+        }
+        return null;
     }
 }

@@ -1,8 +1,11 @@
 package com.MO.MatterOverdrive.util;
 
+import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterPatternStorage;
 
 import cofh.lib.util.helpers.MathHelper;
+import com.MO.MatterOverdrive.tile.MOTileEntity;
+import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,6 +18,7 @@ public class MatterDatabaseHelper
 	public static final int MAX_ITEM_PROGRESS = 100;
 	public static final String PROGRESS_TAG_NAME = "scan_progress";
 	public static final String ITEMS_TAG_NAME = "items";
+	public static final String CAPACITY_TAG_NAME = "Capacity";
 	
 	
 	public void onDatabseChange()
@@ -69,6 +73,73 @@ public class MatterDatabaseHelper
 		NBTTagCompound comp = new NBTTagCompound();
 		return comp;
 	}
+
+	public static int GetPatternCapacity(ItemStack storage)
+	{
+		if(storage != null) {
+			return GetPatternCapacity(storage.getTagCompound());
+		}
+		return 0;
+	}
+	public static int GetPatternCapacity(NBTTagCompound storageCompund)
+	{
+		if (storageCompund != null)
+		{
+			return storageCompund.getShort(MatterDatabaseHelper.CAPACITY_TAG_NAME);
+		}
+		return 0;
+	}
+
+	public static boolean HasFreeSpace(ItemStack storage)
+	{
+		if (storage != null)
+		{
+			if(MatterHelper.isMatterPatternStorage(storage))
+			{
+				//chek to see if the storage has initialized it's NBT
+				if (storage.hasTagCompound())
+				{
+					return HasFreeSpace(storage.getTagCompound());
+				}
+				else
+				{
+					//the pattern storage NBT wasn't created so that means it has free space
+					return true;
+				}
+			}
+
+		}
+		return false;
+	}
+	public static boolean HasFreeSpace(NBTTagCompound storageCompund)
+	{
+		if(storageCompund != null)
+		{
+			NBTTagList itemList = storageCompund.getTagList(ITEMS_TAG_NAME, 10);
+			if (itemList.tagCount() < MatterDatabaseHelper.GetPatternCapacity(storageCompund))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static ItemStack getFirstFreePatternStorage(IMatterDatabase database)
+	{
+		ItemStack[] patternStorages = database.getPatternStorageList();
+
+		for (int i = 0;i < patternStorages.length;i++)
+		{
+			if (patternStorages[i] != null)
+			{
+				if (HasFreeSpace(patternStorages[i]))
+				{
+					return patternStorages[i];
+				}
+			}
+		}
+		return null;
+	}
 	
 	public static boolean HasItem(ItemStack scanner,ItemStack item)
 	{
@@ -76,13 +147,9 @@ public class MatterDatabaseHelper
 	}
 	public static boolean HasItem(NBTTagCompound tagcompound, ItemStack item)
 	{
-		if(tagcompound != null)
-		{
-			NBTTagCompound items = tagcompound;
-			
-			if(items != null)
+			if(tagcompound != null)
 			{
-				NBTTagList itemList = items.getTagList(ITEMS_TAG_NAME, 10);
+				NBTTagList itemList = tagcompound.getTagList(ITEMS_TAG_NAME, 10);
 				
 				for(int i = 0;i < itemList.tagCount();i++)
 				{
@@ -92,7 +159,6 @@ public class MatterDatabaseHelper
 					}
 				}
 			}
-		}
 		
 		return false;
 	}
@@ -163,15 +229,38 @@ public class MatterDatabaseHelper
 
 		return false;
 	}
-	
-	public static boolean IncreaseProgress(NBTTagCompound itemNBT,int amount)
+
+
+	public static boolean increaseProgress(IMatterDatabase database,ItemStack item, int amount)
 	{
-		int lastProgress = itemNBT.getByte(PROGRESS_TAG_NAME);
-		if(lastProgress < MAX_ITEM_PROGRESS)
+		if(database != null && item != null)
 		{
-			int newProgress = MathHelper.clampI(lastProgress + amount, 0, 100);
-			itemNBT.setByte(PROGRESS_TAG_NAME, (byte) newProgress);
-			return true;
+			ItemStack[] pattern_storages = database.getPatternStorageList();
+
+			for (int i = 0;i < pattern_storages.length;i++)
+			{
+				if (pattern_storages[i] != null && MatterHelper.isMatterPatternStorage(pattern_storages[i]))
+				{
+					NBTTagCompound hasItem = MatterDatabaseHelper.GetItemAsNBT(pattern_storages[i], item);
+
+					if (hasItem != null)
+					{
+						int progress = MatterDatabaseHelper.GetProgressFromNBT(hasItem);
+						if (progress < MAX_ITEM_PROGRESS)
+						{
+							progress = MathHelper.clampI(progress + amount,0,MAX_ITEM_PROGRESS);
+							SetProgressToNBT(hasItem,(byte)progress);
+							if (database instanceof MOTileEntityMachine)
+								((MOTileEntityMachine) database).ForceSync();
+
+							return true;
+						}
+					}
+					else {
+						return database.addItem(item,amount);
+					}
+				}
+			}
 		}
 		return false;
 	}
@@ -181,6 +270,12 @@ public class MatterDatabaseHelper
 		if(itemNBT != null)
 			return itemNBT.getByte(PROGRESS_TAG_NAME);
 		return 0;
+	}
+
+	public static void SetProgressToNBT(NBTTagCompound itemNBT,byte amount)
+	{
+		if(itemNBT != null)
+			 itemNBT.setByte(PROGRESS_TAG_NAME, amount);
 	}
 	
 	public static int GetItemProgress(ItemStack storage, ItemStack item)

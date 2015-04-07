@@ -388,23 +388,18 @@ public class MatterScanner extends MOBaseItem
 
 		if (database != null)
 		{
-			if (database.hasItem(worldBlock))
-			{
-				resetScanProgress(scanner);
+			resetScanProgress(scanner);
 
-				if (database.increaseProgress(worldBlock, PROGRESS_PER_ITEM)) {
-					//scan successful
-					SoundHandler.PlaySoundAt(world, "scanner_success", player);
-					return HarvestBlock(scanner, player, world, x, y, z);
-				} else
-				{
-					//scan fail
-					SoundHandler.PlaySoundAt(world, "scanner_fail", player);
-					return false;
-				}
-			} else
+			if (MatterDatabaseHelper.increaseProgress(database, worldBlock, PROGRESS_PER_ITEM)) {
+				//scan successful
+				SoundHandler.PlaySoundAt(world, "scanner_success", player);
+				return HarvestBlock(scanner, player, world, x, y, z);
+			}
+			else
 			{
-				return database.addItem(worldBlock);
+				//scan fail
+				SoundHandler.PlaySoundAt(world, "scanner_fail", player);
+				return false;
 			}
 		}
 

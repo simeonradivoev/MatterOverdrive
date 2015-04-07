@@ -48,7 +48,7 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     public void InitTagCompount(ItemStack stack)
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setShort("Capacity", (short) capacity);
+        tagCompound.setShort(MatterDatabaseHelper.CAPACITY_TAG_NAME, (short) capacity);
         NBTTagList itemList = new NBTTagList();
         tagCompound.setTag(MatterDatabaseHelper.ITEMS_TAG_NAME,itemList);
         stack.setTagCompound(tagCompound);
@@ -62,14 +62,14 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     }
 
     @Override
-    public boolean addItem(ItemStack storage, ItemStack itemStack)
+    public boolean addItem(ItemStack storage, ItemStack itemStack,int initialAmount)
     {
         TagCompountCheck(storage);
 
         NBTTagList itemList = getItemsAsNBT(storage);
         if(itemList.tagCount() < getCapacity(storage))
         {
-            return MatterDatabaseHelper.Register(storage,itemStack,0);
+            return MatterDatabaseHelper.Register(storage,itemStack,initialAmount);
         }
         return false;
     }
@@ -85,6 +85,6 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     public int getCapacity(ItemStack item)
     {
         TagCompountCheck(item);
-        return item.getTagCompound().getShort("Capacity");
+        return item.getTagCompound().getShort(MatterDatabaseHelper.CAPACITY_TAG_NAME);
     }
 }
