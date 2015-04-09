@@ -13,6 +13,10 @@ public class DatabaseSlot extends Slot
 {
     protected static final ResourceLocation Icon = new ResourceLocation(Reference.PATH_GUI + "items/scanner.png");
 
+    public DatabaseSlot(boolean isMainSlot) {
+        super(isMainSlot);
+    }
+
     @Override
     public boolean isValidForSlot(ItemStack itemStack)
     {

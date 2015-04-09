@@ -26,6 +26,7 @@ public class TileEntityMachineNetworkController extends MOTileEntityMachine impl
 
     public TileEntityMachineNetworkController()
     {
+        super(4);
         network = new MatterNetwork(this);
         timer = new TimeTracker();
     }

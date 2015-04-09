@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Simeon on 4/4/2015.
  */
-public class ElementGuideEntry extends ElementBase
+public class ElementGuideEntry extends MOElementBase
 {
     public static final ResourceLocation BG = new ResourceLocation(Reference.PATH_ELEMENTS + "quide_element_bg.png");
     private MOGuideEntry entry;

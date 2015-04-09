@@ -18,7 +18,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 3/18/2015.
  */
-public class ElementScanProgress extends ElementBase
+public class ElementScanProgress extends MOElementBase
 {
     Random random = new Random();
     int seed = 0;

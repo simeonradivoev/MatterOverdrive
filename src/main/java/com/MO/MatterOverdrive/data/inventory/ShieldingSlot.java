@@ -13,6 +13,10 @@ public class ShieldingSlot extends Slot
 {
     protected static final ResourceLocation Icon = new ResourceLocation(Reference.PATH_GUI + "items/shielding.png");
 
+    public ShieldingSlot(boolean isMainSlot) {
+        super(isMainSlot);
+    }
+
     @Override
     public boolean isValidForSlot(ItemStack itemStack)
     {

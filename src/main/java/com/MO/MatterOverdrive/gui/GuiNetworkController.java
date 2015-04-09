@@ -9,32 +9,30 @@ import net.minecraft.entity.player.InventoryPlayer;
 /**
  * Created by Simeon on 3/13/2015.
  */
-public class GuiNetworkController extends MOGuiBase
+public class GuiNetworkController extends MOGuiMachine<TileEntityMachineNetworkController>
 {
-
-    TileEntityMachineNetworkController controller;
     ElementGrid grid;
 
     public GuiNetworkController(InventoryPlayer inventoryPlayer,TileEntityMachineNetworkController entity)
     {
-        super(new ContainerNetworkController(inventoryPlayer,entity));
-        this.controller = entity;
-        grid = new ElementGrid(this,45,30,64,149,137);
+        super(new ContainerNetworkController(inventoryPlayer,entity),entity);
+        grid = new ElementGrid(this,45,30,168,100,168);
     }
 
     @Override
     public void initGui()
     {
         super.initGui();
-        this.addElement(grid);
-        grid.clear();
-        System.out.println("Size of network when GUI opened: " + controller.getNetwork().getConnections().size());
+        homePage.addElement(grid);
+        System.out.println("Size of network when GUI opened: " + machine.getNetwork().getConnections().size());
 
-        if(controller.connectionsInfoMap != null) {
-            for (int i : controller.connectionsInfoMap.keySet()) {
-                grid.add(new MatterConnectionElement(i, controller.connectionsInfoMap.get(i)));
+        if(machine.connectionsInfoMap != null) {
+            for (int i : machine.connectionsInfoMap.keySet()) {
+                grid.addElement(new MatterConnectionElement(this, i, machine.connectionsInfoMap.get(i)));
             }
         }
+
+        AddPlayerSlots(inventorySlots,this,false,true);
     }
 
     protected void drawGuiContainerForegroundLayer(int var1, int var2)

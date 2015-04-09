@@ -8,6 +8,7 @@ import com.MO.MatterOverdrive.data.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,14 @@ public class ElementSlotsList extends ElementSlot
     public ElementSlotsList(GuiBase gui, int posX, int posY, Inventory inventory,int main)
     {
         super(gui, posX, posY,true);
-        this.inventory = inventory.getSlots();
+        this.inventory = new ArrayList<Slot>();
+        for (int i = 0;i < inventory.getSizeInventory();i++)
+        {
+            if (inventory.getSlot(i).isMainSlot())
+            {
+                this.inventory.add(inventory.getSlot(i));
+            }
+        }
         this.main = main;
     }
 

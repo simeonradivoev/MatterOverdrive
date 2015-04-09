@@ -23,9 +23,9 @@ public class Inventory implements IInventory
     IUseableCondition useableCondition;
 
     //region Constructors
-    public Inventory(TileEntity entity,String name,int size)
+    public Inventory(TileEntity entity,String name)
     {
-        this(entity,name,new ArrayList<Slot>(size));
+        this(entity,name,new ArrayList<Slot>());
     }
 
     public Inventory(TileEntity entity,String name,Collection<Slot> slots)

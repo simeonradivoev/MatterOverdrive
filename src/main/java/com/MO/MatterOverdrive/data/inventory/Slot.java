@@ -11,6 +11,13 @@ public class Slot
     private ItemStack item;
     private int id;
     private boolean drops = true;
+    private boolean isMainSlot = false;
+
+    public Slot(boolean isMainSlot)
+    {
+        this.isMainSlot = isMainSlot;
+    }
+
     public boolean isValidForSlot(ItemStack item)
     {
         return true;
@@ -47,5 +54,14 @@ public class Slot
 
     public void setDrops(boolean drops) {
         this.drops = drops;
+    }
+
+    public boolean isMainSlot()
+    {
+        return isMainSlot;
+    }
+    public void setMainSlot(boolean mainSlot)
+    {
+        this.isMainSlot = mainSlot;
     }
 }

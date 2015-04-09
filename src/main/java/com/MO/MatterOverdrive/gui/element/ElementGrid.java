@@ -16,10 +16,9 @@ import java.util.List;
 /**
  * Created by Simeon on 3/13/2015.
  */
-public class ElementGrid extends ElementBase implements Collection<IGridElement>
+public class ElementGrid extends ElementBaseGroup
 {
     private int maxWidth;
-    private List<IGridElement> _elements = new LinkedList<IGridElement>();
     float scrollYSmooth = 0;
     int scrollX = 0;
     int scrollY = 0;
@@ -27,48 +26,34 @@ public class ElementGrid extends ElementBase implements Collection<IGridElement>
 
     public ElementGrid(GuiBase guiBase, int x, int y,int width,int height,int maxWidth)
     {
-        super(guiBase, x, y,width,height);
+        super(guiBase,x, y,width,height);
         this.maxWidth = maxWidth;
     }
 
     @Override
-    public void drawBackground(int z, int y, float ticks)
-    {
-
-    }
-
-    @Override
-    public void drawForeground(int x, int y)
+    public void update(int mouseX,int mouseY)
     {
         int widthCount = 0;
         int height = (int)scrollYSmooth;
         int maxTempHeigh = 0;
 
-        GL11.glPushMatrix();
-        GL11.glTranslatef(this.posX,this.posY,0);
-
-        for (IGridElement element : _elements)
+        for (ElementBase element : elements)
         {
             if(height < this.sizeY)
             {
-                element.draw(this, widthCount, height, 0, 0);
+                element.setPosition(widthCount,height);
+
                 maxTempHeigh = Math.max(maxTempHeigh, element.getHeight());
-                widthCount += element.getWidth();
-                GL11.glTranslatef(element.getWidth(),0,0);
+                widthCount += element.getWidth() + 3;
 
                 if (widthCount >= this.maxWidth)
                 {
                     height += maxTempHeigh;
-                    GL11.glTranslatef(-widthCount,height,0);
                     widthCount = 0;
                     maxTempHeigh = 0;
                 }
             }
         }
-
-        GL11.glPopMatrix();
-
-        manageDrag(height);
     }
 
     private void manageDrag(int maxHeight)
@@ -81,7 +66,7 @@ public class ElementGrid extends ElementBase implements Collection<IGridElement>
     {
         int rows = 1;
         int widthCount = 0;
-        for (int i = 0; i < _elements.size(); i++)
+        for (int i = 0; i < elements.size(); i++)
         {
             if(widthCount > this.maxWidth)
             {
@@ -90,7 +75,7 @@ public class ElementGrid extends ElementBase implements Collection<IGridElement>
             }
             else
             {
-                widthCount += _elements.get(i).getWidth();
+                widthCount += elements.get(i).getWidth();
             }
         }
         return rows;
@@ -102,7 +87,7 @@ public class ElementGrid extends ElementBase implements Collection<IGridElement>
         int height = 0;
         int maxTempHeigh = 0;
 
-        for (int i = 0; i < _elements.size(); i++)
+        for (int i = 0; i < elements.size(); i++)
         {
             if(widthCount > this.maxWidth)
             {
@@ -112,8 +97,8 @@ public class ElementGrid extends ElementBase implements Collection<IGridElement>
             }
             else
             {
-                widthCount += _elements.get(i).getWidth();
-                maxTempHeigh = Math.max(maxTempHeigh,_elements.get(i).getHeight());
+                widthCount += elements.get(i).getWidth();
+                maxTempHeigh = Math.max(maxTempHeigh,elements.get(i).getHeight());
             }
         }
         return height;
@@ -163,71 +148,4 @@ public class ElementGrid extends ElementBase implements Collection<IGridElement>
 
         gui.drawSizedTexturedModalRect(x, y, u, v, width, height, texWidth, texHeight);
     }
-
-    //region Collection methods
-    @Override
-    public int size() {
-        return _elements.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return _elements.isEmpty();
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return _elements.contains(o);
-    }
-
-    @Override
-    public Iterator<IGridElement> iterator() {
-        return _elements.iterator();
-    }
-
-    @Override
-    public Object[] toArray() {
-        return _elements.toArray();
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        return _elements.toArray(a);
-    }
-
-    @Override
-    public boolean add(IGridElement element) {
-        return _elements.add(element);
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        return remove(o);
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        return _elements.containsAll(c);
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends IGridElement> c) {
-        return _elements.addAll(c);
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        return _elements.retainAll(c);
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        return this._elements.retainAll(c);
-    }
-
-    @Override
-    public void clear() {
-        _elements.clear();
-    }
-    //endregion
 }

@@ -10,8 +10,9 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by Simeon on 3/20/2015.
  */
-public class ElementSlot extends ElementBase
+public class ElementSlot extends MOElementBase
 {
+    com.MO.MatterOverdrive.data.inventory.Slot inventorySlot;
     private boolean big;
     public static final ResourceLocation slot_big = new ResourceLocation(Reference.PATH_ELEMENTS + "side_slot_bg.png");
     public static final ResourceLocation slot_small = new ResourceLocation(Reference.PATH_ELEMENTS + "slot_bg.png");
@@ -39,12 +40,15 @@ public class ElementSlot extends ElementBase
         else
         {
             gui.bindTexture(slot_small);
-            gui.drawSizedTexturedModalRect(this.posX - 2,this.posY - 2,0,0,18,18,18,18);
+            gui.drawSizedTexturedModalRect(this.posX - 1,this.posY - 1,0,0,18,18,18,18);
         }
+
+        drawSlotIcon(inventorySlot,this.posX,this.posY);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
+    public void drawForeground(int mouseX, int mouseY)
+    {
 
     }
 
@@ -58,5 +62,15 @@ public class ElementSlot extends ElementBase
             gui.drawSizedTexturedModalRect(x, y,0,0,16,16,16,16);
             GL11.glDisable(GL11.GL_BLEND);
         }
+    }
+
+    public boolean isBig()
+    {
+        return big;
+    }
+
+    public void setInventorySlot(Slot slot)
+    {
+        inventorySlot = slot;
     }
 }

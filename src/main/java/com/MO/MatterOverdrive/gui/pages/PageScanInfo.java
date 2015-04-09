@@ -11,6 +11,7 @@ import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.RenderUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -48,7 +49,7 @@ public class PageScanInfo extends ElementBaseGroup
 
         scan_info_graph = new ElementScanProgress(gui,87,44);
         itemPreview = new ElementItemPreview(gui,45,44,null);
-        scan_progress = new ElementProgress(gui,46 + 35,146 + 2,46,146,39,202,62,188,105,14,142,18);
+        scan_progress = new ElementProgress(gui,53 + 35,149 + 2,53,149,39,202,62,188,105,14,142,18);
         searchField = new MOElementTextField(gui,41,26);
         list = new MatterDatabaseListBox(gui,3,39,37,100,scanner);
         scrollButtonUp = new ElementButton(gui,11,27,SCROLL_UP_BUTTON_NAME,22,188,32,188,10,10,backgroundPath);
@@ -93,6 +94,11 @@ public class PageScanInfo extends ElementBaseGroup
             List infos = item.getTooltip(null, false);
             infos.add(Matter);
             RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 32, new GuiColor(255, 255, 255).getColor());
+        }
+        else
+        {
+            String Matter = "Matter: " + String.valueOf(MatterHelper.getMatterAmountFromItem(item)) + MatterHelper.MATTER_UNIT;
+            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("No Item Selected!",80,90,new GuiColor(255,150,50).getColor());
         }
     }
 

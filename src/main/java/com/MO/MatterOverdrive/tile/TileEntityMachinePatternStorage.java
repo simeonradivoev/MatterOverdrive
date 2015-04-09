@@ -25,7 +25,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
     public TileEntityMachinePatternStorage()
     {
-        super(8);
+        super(4);
         this.energyStorage.setCapacity(ENERGY_CAPACITY);
         this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
@@ -47,12 +47,14 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     protected void RegisterSlots(Inventory inventory)
     {
         pattern_storage_slots = new int[6];
-        input_slot = inventory.AddSlot(new DatabaseSlot());
+        input_slot = inventory.AddSlot(new DatabaseSlot(true));
 
         for (int i = 0;i < pattern_storage_slots.length;i++)
         {
-            pattern_storage_slots[i] = inventory.AddSlot(new PatternStorageSlot());
+            pattern_storage_slots[i] = inventory.AddSlot(new PatternStorageSlot(false));
         }
+
+        super.RegisterSlots(inventory);
     }
 
     protected void manageLinking()

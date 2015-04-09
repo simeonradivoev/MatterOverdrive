@@ -13,7 +13,7 @@ import java.util.List;
 
 import net.minecraft.util.MathHelper;
 
-public class MOElementListBox extends ElementBase {
+public class MOElementListBox extends MOElementBase {
 
 	public int borderColor = new GuiColor(120, 120, 120, 255).getColor();
 	public int backgroundColor = new GuiColor(0, 0, 0, 255).getColor();

@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by Simeon on 3/26/2015.
  */
-public class ElementItemPreview extends ElementBase
+public class ElementItemPreview extends MOElementBase
 {
     ItemStack itemStack;
     float itemSize = 2;

@@ -8,6 +8,10 @@ import net.minecraft.item.ItemStack;
  */
 public class PatternStorageSlot extends Slot
 {
+    public PatternStorageSlot(boolean isMainSlot) {
+        super(isMainSlot);
+    }
+
     public boolean isValidForSlot(ItemStack item)
     {
         return item.getItem() instanceof IMatterPatternStorage;

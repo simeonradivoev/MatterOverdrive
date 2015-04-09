@@ -43,7 +43,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 	
 	public TileEntityMachineDecomposer()
 	{
-		super(2);
+		super(4);
         this.energyStorage.setCapacity(ENERGY_STORAGE);
         this.energyStorage.setMaxExtract(ENERGY_STORAGE);
         this.energyStorage.setMaxReceive(ENERGY_STORAGE);
@@ -58,8 +58,9 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     @Override
     protected void RegisterSlots(Inventory inventory)
     {
-        INPUT_SLOT_ID = inventory.AddSlot(new MatterSlot());
-        OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot());
+        INPUT_SLOT_ID = inventory.AddSlot(new MatterSlot(true));
+        OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
+        super.RegisterSlots(inventory);
     }
 	
 	@Override

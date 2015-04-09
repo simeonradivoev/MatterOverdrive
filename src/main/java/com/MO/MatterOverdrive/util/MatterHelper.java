@@ -41,7 +41,8 @@ public class MatterHelper
 	{
         if(item != null) {
             IMatterEntry matter = MatterRegistry.getEntry(item);
-            return matter.getMatter();
+            if(matter != null)
+                return matter.getMatter();
         }
 		return 0;
 	}
@@ -108,7 +109,11 @@ public class MatterHelper
             return item.getItem() instanceof IMatterPatternStorage;
         return false;
     }
-	
+
+    public static boolean isUpgrade(ItemStack itemStack)
+    {
+        return false;
+    }
 	
 	public static boolean CanScan(ItemStack stack)
 	{

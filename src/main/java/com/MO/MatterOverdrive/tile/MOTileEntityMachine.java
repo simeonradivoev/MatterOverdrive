@@ -5,6 +5,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.MatterNetwork;
+import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -39,10 +40,16 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     protected boolean forceClientUpdate;
 
     protected Inventory inventory;
+    private int upgradeSlotCount;
+    private int[] upgrade_slots;
 
-    public MOTileEntityMachine()
+    public MOTileEntityMachine(int upgradeGount)
     {
         soundRes = getSoundFor(getSound());
+        this.upgradeSlotCount = upgradeGount;
+        upgrade_slots = new int[upgradeGount];
+        inventory = new Inventory(this,"");
+        RegisterSlots(inventory);
     }
 
     @Override
@@ -68,6 +75,14 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         {
             onActiveChange();
             lastActive = isActive();
+        }
+    }
+
+    protected void RegisterSlots(Inventory inventory)
+    {
+        for (int i = 0;i < upgrade_slots.length; i++)
+        {
+            upgrade_slots[i] = inventory.AddSlot(new UpgradeSlot(false));
         }
     }
 
@@ -179,7 +194,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public void onDestroyed()
     {
-        MatterNetworkHelper.disconnectFromNetwork(worldObj,this,true);
+        MatterNetworkHelper.disconnectFromNetwork(worldObj, this, true);
     }
 
     @Override
@@ -215,7 +230,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     //region Inventory Methods
     public boolean isItemValidForSlot(int slot, ItemStack item)
     {
-        return inventory.isItemValidForSlot(slot,item);
+        return inventory.isItemValidForSlot(slot, item);
     }
 
     @Override
@@ -249,7 +264,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 
     @Override
     public ItemStack decrStackSize(int slot, int size) {
-        return inventory.decrStackSize(slot,size);
+        return inventory.decrStackSize(slot, size);
     }
 
     @Override

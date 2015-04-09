@@ -38,7 +38,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     public TileEntityMachineMatterAnalyzer()
     {
-        super(3);
+        super(4);
         this.energyStorage.setCapacity(ENERGY_STORAGE);
         this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
@@ -47,8 +47,10 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     @Override
     public void RegisterSlots(Inventory inventory)
     {
-        input_slot = inventory.AddSlot(new Slot());
-        database_slot = inventory.AddSlot(new DatabaseSlot());
+        input_slot = inventory.AddSlot(new Slot(true));
+        database_slot = inventory.AddSlot(new DatabaseSlot(true));
+
+        super.RegisterSlots(inventory);
     }
 
     public int getAnalyzeTimeFromScanner()

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Simeon on 4/6/2015.
  */
-public class SlotShielding extends Slot
+public class SlotShielding extends MOSlot
 {
     public SlotShielding(IInventory inventory, int index, int x, int y) {
 
@@ -16,7 +16,7 @@ public class SlotShielding extends Slot
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack)
+    public boolean isValid(ItemStack stack)
     {
         return stack.getItem() == MatterOverdriveItems.tritanium_plate;
     }

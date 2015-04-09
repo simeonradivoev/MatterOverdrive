@@ -16,9 +16,9 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 {
 	protected MatterStorage matterStorage;
 	
-	public MOTileEntityMachineMatter(int slotCount)
+	public MOTileEntityMachineMatter(int upgradesCount)
 	{
-        super(slotCount);
+        super(upgradesCount);
 		matterStorage = new MatterStorage();
 	}
 	

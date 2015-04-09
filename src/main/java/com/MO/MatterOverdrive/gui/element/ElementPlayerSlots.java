@@ -8,7 +8,7 @@ import net.minecraft.inventory.Slot;
 /**
  * Created by Simeon on 3/16/2015.
  */
-public class ElementPlayerSlots extends ElementBase
+public class ElementPlayerSlots extends MOElementBase
 {
     public ElementPlayerSlots(GuiBase gui, int posX, int posY)
     {

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Simeon on 3/27/2015.
  */
-public class SlotPatternStorage extends Slot
+public class SlotPatternStorage extends MOSlot
 {
     public SlotPatternStorage(IInventory inventory, int index, int x, int y) {
 
@@ -16,7 +16,7 @@ public class SlotPatternStorage extends Slot
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack) {
+    public boolean isValid(ItemStack stack) {
 
         return MatterHelper.isMatterPatternStorage(stack);
     }

@@ -14,6 +14,10 @@ public class EnergySlot extends Slot
 {
     protected static final ResourceLocation Icon = new ResourceLocation(Reference.PATH_GUI + "items/energy.png");
 
+    public EnergySlot(boolean isMainSlot) {
+        super(isMainSlot);
+    }
+
     @Override
     public boolean isValidForSlot(ItemStack itemStack)
     {

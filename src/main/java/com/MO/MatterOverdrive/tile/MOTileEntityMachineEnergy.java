@@ -29,12 +29,17 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     protected int energySlotID;
 
 
-    public MOTileEntityMachineEnergy(int slotCount)
+    public MOTileEntityMachineEnergy(int upgradeCount)
     {
+        super(upgradeCount);
         this.energyStorage = new EnergyStorage(512);
-        inventory = new Inventory(this,"",slotCount);
-        RegisterSlots(inventory);
-        energySlotID = inventory.AddSlot(new EnergySlot());
+    }
+
+    @Override
+    protected void RegisterSlots(Inventory inventory)
+    {
+        energySlotID = inventory.AddSlot(new EnergySlot(true));
+        super.RegisterSlots(inventory);
     }
 
     @Override
@@ -87,11 +92,6 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     public int getEnergySlotID()
     {
         return this.energySlotID;
-    }
-
-    protected void RegisterSlots(Inventory inventory)
-    {
-
     }
 
     @Override

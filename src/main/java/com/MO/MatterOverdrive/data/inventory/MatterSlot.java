@@ -11,7 +11,12 @@ import net.minecraft.util.ResourceLocation;
  */
 public class MatterSlot extends Slot
 {
+
     protected static final ResourceLocation Icon = new ResourceLocation(Reference.PATH_GUI + "items/decompose.png");
+
+    public MatterSlot(boolean isMainSlot) {
+        super(isMainSlot);
+    }
 
     @Override
     public boolean isValidForSlot(ItemStack itemStack)

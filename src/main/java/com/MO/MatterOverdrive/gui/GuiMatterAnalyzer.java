@@ -14,33 +14,28 @@ import net.minecraft.item.Item;
 /**
  * Created by Simeon on 3/16/2015.
  */
-public class GuiMatterAnalyzer extends MOGuiBase
+public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnalyzer>
 {
     ElementEnergyStored energyElement;
-    ElementSlotsList slotsList;
-    ElementPlayerSlots playerSlots;
-    TileEntityMachineMatterAnalyzer analyzer;
     ElementScanProgress scanProgress;
 
     public GuiMatterAnalyzer(InventoryPlayer playerInventory,TileEntityMachineMatterAnalyzer analyzer)
     {
-        super(new ContainerMatterAnalyzer(playerInventory,analyzer));
+        super(new ContainerMatterAnalyzer(playerInventory,analyzer),analyzer);
         energyElement = new ElementEnergyStored(this,176,39,analyzer.getEnergyStorage());
-        slotsList = new ElementSlotsList(this,5,49,analyzer.getInventory(),0);
-        playerSlots = new ElementPlayerSlots(this,44,91);
         scanProgress = new ElementScanProgress(this,49,36);
-        this.analyzer = analyzer;
     }
 
     @Override
     public void initGui()
     {
         super.initGui();
-        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER,32,64);
-        this.addElement(energyElement);
-        this.addElement(slotsList);
-        this.addElement(playerSlots);
-        this.addElement(scanProgress);
+        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
+        homePage.addElement(energyElement);
+        homePage.addElement(scanProgress);
+
+        AddPlayerSlots(inventorySlots, homePage, true, false);
+        AddPlayerSlots(inventorySlots,this,false,true);
     }
 
     @Override
@@ -49,9 +44,9 @@ public class GuiMatterAnalyzer extends MOGuiBase
     {
         super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
 
-        scanProgress.setProgress(((float) this.analyzer.analyzeTime / (float) this.analyzer.ANALYZE_SPEED));
+        scanProgress.setProgress(((float) this.machine.analyzeTime / (float) this.machine.ANALYZE_SPEED));
         
-        if(this.analyzer.getStackInSlot(analyzer.input_slot) != null)
-        	scanProgress.setSeed(Item.getIdFromItem(this.analyzer.getStackInSlot(analyzer.input_slot).getItem()));
+        if(this.machine.getStackInSlot(machine.input_slot) != null)
+        	scanProgress.setSeed(Item.getIdFromItem(this.machine.getStackInSlot(machine.input_slot).getItem()));
     }
 }

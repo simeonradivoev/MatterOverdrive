@@ -1,41 +1,29 @@
 package com.MO.MatterOverdrive.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cofh.lib.gui.element.ElementBase;
 import cofh.lib.util.TimeTracker;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
-import com.MO.MatterOverdrive.gui.element.*;
+import com.MO.MatterOverdrive.gui.element.MOElementButton;
 import com.MO.MatterOverdrive.gui.pages.PageInfo;
 import com.MO.MatterOverdrive.gui.pages.PageScanInfo;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.network.packet.PacketMatterScannerUpdate;
 
-import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.container.ContainerFalse;
 import cofh.lib.gui.element.ElementButton;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
-import com.MO.MatterOverdrive.util.MatterHelper;
-import com.MO.MatterOverdrive.util.RenderUtils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import scala.collection.parallel.ParIterableLike;
 
 public class GuiMatterScanner extends MOGuiBase
 {
 	public ItemStack scanner;
     public int databaseSlot;
-	public static boolean panelOpen;
 
 	private static final int REFRESH_DEPLAY = 200;
 	private static final String INFO_PAGE_BUTTON_NAME = "InfoPageButton";
@@ -51,8 +39,8 @@ public class GuiMatterScanner extends MOGuiBase
 	TimeTracker refreshTimeTracker;
 	NBTTagCompound lastSelected;
 
-	ElementButton infoPageButton;
-	ElementButton scanPageButton;
+	MOElementButton infoPageButton;
+	MOElementButton scanPageButton;
 	
 	int xStart = 0,yStart = 0;
 
@@ -71,12 +59,15 @@ public class GuiMatterScanner extends MOGuiBase
 		updateSelected(scanner);
 		pageScanInfo.setSize(this.xSize, this.ySize);
 		pageInfo = new PageInfo(this,0,0,"Matter Overdrive");
-		pageInfo.setSize(this.xSize,this.ySize);
+		pageInfo.setSize(this.xSize, this.ySize);
 
-		scanPageButton = new ElementButton(this,sidePannel.getPosX() + 6,sidePannel.getPosY() + 8,SCAN_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
+		scanPageButton = new MOElementButton(this,this,6,8,SCAN_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
 		scanPageButton.setTexture(Reference.PATH_GUI_ITEM + "search54.png", 44, 22);
-		infoPageButton = new ElementButton(this,sidePannel.getPosX() + 6,sidePannel.getPosY() + 28 + 8,INFO_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
+		scanPageButton.setToolTip("Scan Info");
+
+		infoPageButton = new MOElementButton(this,this,6,28 + 8,INFO_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
 		infoPageButton.setTexture(Reference.PATH_GUI_ITEM + "info20.png", 44, 22);
+		scanPageButton.setToolTip("Quide Database");
 	}
 	
 	@Override
@@ -87,19 +78,21 @@ public class GuiMatterScanner extends MOGuiBase
 		//set selected item in list, as active object
 		if(pageScanInfo.list.getSelectedElement() != null)
 			SetSelected((NBTTagCompound) pageScanInfo.list.getSelectedElement().getValue());
+		else
+			SetSelected(null);
 
-		this.addElement(scanPageButton);
-		this.addElement(infoPageButton);
+		this.sidePannel.addElement(scanPageButton);
+		this.sidePannel.addElement(infoPageButton);
 		this.addElement(pageScanInfo);
 		this.addElement(pageInfo);
 
 		setPage(MatterScanner.getLastPage(scanner));
-		setPanelOpen(panelOpen);
 	}
 
 	@Override
 	protected void updateElementInformation()
 	{
+		super.updateElementInformation();
 		if(refreshTimeTracker.hasDelayPassed(Minecraft.getMinecraft().theWorld,REFRESH_DEPLAY))
 		{
 			System.out.println("Refreshed");
@@ -129,14 +122,6 @@ public class GuiMatterScanner extends MOGuiBase
 	}
 
 	@Override
-	public void OnPanelOpen(boolean isOpen)
-	{
-		infoPageButton.setVisible(isOpen);
-		scanPageButton.setVisible(isOpen);
-		panelOpen = isOpen;
-	}
-
-	@Override
 	public void handleElementButtonClick(String buttonName, int mouseButton) 
 	{
 		super.handleElementButtonClick(buttonName, mouseButton);
@@ -162,11 +147,6 @@ public class GuiMatterScanner extends MOGuiBase
 		{
 			setPage(0);
 		}
-
-		if(pageInfo != null)
-			pageInfo.handleElementButtonClick(buttonName,mouseButton);
-		if(pageScanInfo != null)
-			pageScanInfo.handleElementButtonClick(buttonName,mouseButton);
 	}
 
 	@Override
@@ -186,8 +166,8 @@ public class GuiMatterScanner extends MOGuiBase
 		}
 
 		//pages
-		pageScanInfo.setVisible(false);
-		pageInfo.setVisible(false);
+		pageScanInfo.setGroupVisible(false);
+		pageInfo.setGroupVisible(false);
 
 		//buttons
 		scanPageButton.setEnabled(true);
@@ -199,22 +179,19 @@ public class GuiMatterScanner extends MOGuiBase
 		if(page == 0)
 		{
 			scanPageButton.setEnabled(false);
-			pageScanInfo.setVisible(true);
+			pageScanInfo.setGroupVisible(true);
 		}
 		else
 		{
 			infoPageButton.setEnabled(false);
-			pageInfo.setVisible(true);
+			pageInfo.setGroupVisible(true);
 		}
 	}
 
 	void SetSelected(NBTTagCompound tagCompound)
 	{
-		if(tagCompound != null)
-		{
-			lastSelected = tagCompound;
-			pageScanInfo.setItemNBT(tagCompound);
-		}
+		lastSelected = tagCompound;
+		pageScanInfo.setItemNBT(tagCompound);
 	}
 
     @Override

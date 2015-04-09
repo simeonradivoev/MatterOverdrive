@@ -15,7 +15,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 
-public class ElementMatterStored extends ElementBase
+public class ElementMatterStored extends MOElementBase
 {
 	public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(Reference.PATH_ELEMENTS + "Matter.png");
 	public static final int DEFAULT_SCALE = 42;

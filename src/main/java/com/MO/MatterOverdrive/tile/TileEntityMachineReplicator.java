@@ -69,10 +69,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
     protected void RegisterSlots(Inventory inventory)
     {
-        OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot());
-        SECOUND_OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot());
-        DATABASE_SLOT_ID = inventory.AddSlot(new DatabaseSlot());
-        SHIELDING_SLOT_ID = inventory.AddSlot(new ShieldingSlot());
+        OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
+        SECOUND_OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
+        DATABASE_SLOT_ID = inventory.AddSlot(new DatabaseSlot(true));
+        SHIELDING_SLOT_ID = inventory.AddSlot(new ShieldingSlot(true));
+        super.RegisterSlots(inventory);
     }
 
     @Override

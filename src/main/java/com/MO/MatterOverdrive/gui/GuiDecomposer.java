@@ -18,29 +18,21 @@ import com.MO.MatterOverdrive.tile.TileEntityMachineDecomposer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiDecomposer extends MOGuiBase
+public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 {
-	public TileEntityMachineDecomposer decomposer;
 	MOElementEnergy energyElement;
 	ElementMatterStored matterElement;
 	ElementDualScaled decompose_progress;
-    ElementPlayerSlots playerSlots;
-    ElementSlotsList slotsList;
     ElementSlot outputSlot;
 
 	public GuiDecomposer(InventoryPlayer inventoryPlayer,TileEntityMachineDecomposer entity)
 	{
-		super(new ContainerDecomposer(inventoryPlayer,entity));
+		super(new ContainerDecomposer(inventoryPlayer,entity),entity);
 
-		this.decomposer = entity;
-		matterElement = new ElementMatterStored(this,74,39,decomposer.getMatterStorage());
-		energyElement = new MOElementEnergy(this,100,39,decomposer.getEnergyStorage());
+		matterElement = new ElementMatterStored(this,74,39,machine.getMatterStorage());
+		energyElement = new MOElementEnergy(this,100,39,machine.getEnergyStorage());
 		decompose_progress = new ElementDualScaled(this,32,52);
-        playerSlots = new ElementPlayerSlots(this,44,91);
-        slotsList = new ElementSlotsList(this,5,49,new ArrayList<Slot>(0),0);
-        slotsList.AddSlot(decomposer.getInventory().getSlot(decomposer.INPUT_SLOT_ID));
-        slotsList.AddSlot(decomposer.getInventory().getSlot(decomposer.getEnergySlotID()));
-        outputSlot = new ElementSlot(this,true,inventorySlots.getSlot(decomposer.OUTPUT_SLOT_ID));
+        outputSlot = new ElementInventorySlot(this,getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),true);
 	}
 	
 	@Override
@@ -48,15 +40,17 @@ public class GuiDecomposer extends MOGuiBase
 	{
 		super.initGui();
 		decompose_progress.setMode(1);
-		decompose_progress.setSize(24,16);
+		decompose_progress.setSize(24, 16);
 		decompose_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
-        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER,32,64);
-        this.addElement(playerSlots);
-        this.addElement(slotsList);
-        this.addElement(outputSlot);
-		this.addElement(energyElement);
-		this.addElement(matterElement);
-        this.addElement(decompose_progress);
+		energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
+		homePage.addElement(outputSlot);
+		homePage.addElement(energyElement);
+		homePage.addElement(matterElement);
+		this.addElement(decompose_progress);
+
+		AddPlayerSlots(this.inventorySlots, homePage, true, false);
+		AddPlayerSlots(this.inventorySlots,this,false,true);
+
 	}
 
     @Override
@@ -106,15 +100,15 @@ public class GuiDecomposer extends MOGuiBase
 		//docompose_progress.setQuantity(MathHelper.round(((float)this.replicator.decomposeTime / (float)this.replicator.DECEOPOSE_SPEED) * 24));
 
 
-		decompose_progress.setQuantity(MathHelper.round(((float)this.decomposer.decomposeProgress / 100f) * 24));
+		decompose_progress.setQuantity(MathHelper.round(((float)this.machine.decomposeProgress / 100f) * 24));
 		ManageReqiremnetsTooltips();
 	}
 
 	void ManageReqiremnetsTooltips()
 	{
-		if(decomposer.getStackInSlot(decomposer.INPUT_SLOT_ID) != null)
+		if(machine.getStackInSlot(machine.INPUT_SLOT_ID) != null)
 		{
-			int matterAmount = MatterHelper.getMatterAmountFromItem(decomposer.getStackInSlot(decomposer.INPUT_SLOT_ID));
+			int matterAmount = MatterHelper.getMatterAmountFromItem(machine.getStackInSlot(machine.INPUT_SLOT_ID));
 			energyElement.setEnergyRequired(-(TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER * TileEntityMachineDecomposer.DECOMPOSE_ENERGY_PER_TICK * matterAmount));
 			matterElement.setDrain(matterAmount);
 		}

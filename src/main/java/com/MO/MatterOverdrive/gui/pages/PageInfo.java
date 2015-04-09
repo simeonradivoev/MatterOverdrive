@@ -9,6 +9,7 @@ import com.MO.MatterOverdrive.gui.GuiMatterScanner;
 import com.MO.MatterOverdrive.gui.MOGuiBase;
 import com.MO.MatterOverdrive.gui.element.ElementBaseGroup;
 import com.MO.MatterOverdrive.gui.element.ElementGuideEntry;
+import com.MO.MatterOverdrive.gui.element.MOElementButton;
 import com.MO.MatterOverdrive.guide.MOGuideEntry;
 import com.MO.MatterOverdrive.guide.MatterOverdriveQuide;
 import net.minecraft.client.Minecraft;
@@ -34,7 +35,7 @@ public class PageInfo extends ElementBaseGroup
     public static int guideID = -1;
     public static int tabID;
     public static int scroll;
-    List<ElementGuideEntry> guideEntries;
+    List<ElementBase> guideEntries;
     List<String> description;
     ElementButton bt_scroll_right;
     ElementButton bt_scroll_left;
@@ -45,7 +46,7 @@ public class PageInfo extends ElementBaseGroup
         super(gui, posX, posY);
         this.setName(name);
 
-        guideEntries = new ArrayList<ElementGuideEntry>(MatterOverdriveQuide.getQuides().size());
+        guideEntries = new ArrayList<ElementBase>(MatterOverdriveQuide.getQuides().size());
         description = new ArrayList<String>();
 
         for (int i = 0 ; i < MatterOverdriveQuide.getQuides().size();i++)
@@ -55,11 +56,11 @@ public class PageInfo extends ElementBaseGroup
             guideEntries.add(entry);
         }
 
-        bt_scroll_right = new ElementButton(gui,190,154,SCROLL_RIGHT_ELEMENT_NAME,0,0,10,0,10,10,"");
+        bt_scroll_right = new MOElementButton(gui,this,190,154,SCROLL_RIGHT_ELEMENT_NAME,0,0,10,0,10,10,"");
         bt_scroll_right.setTexture(Reference.PATH_ELEMENTS + "scroll_right.png",20,10);
-        bt_scroll_left = new ElementButton(gui,50,154,SCROLL_LEFT_ELEMENT_NAME,0,0,10,0,10,10,"");
+        bt_scroll_left = new MOElementButton(gui,this,50,154,SCROLL_LEFT_ELEMENT_NAME,0,0,10,0,10,10,"");
         bt_scroll_left.setTexture(Reference.PATH_ELEMENTS + "scroll_left.png",20,10);
-        bt_return = new ElementButton(gui,118,154,RETURN_ELEMENT_NAME,0,0,11,0,11,11,"");
+        bt_return = new MOElementButton(gui,this,118,154,RETURN_ELEMENT_NAME,0,0,11,0,11,11,"");
         bt_return.setTexture(Reference.PATH_ELEMENTS + "return_arrow.png", 22, 11);
 
         elements.add(bt_scroll_left);
@@ -117,7 +118,7 @@ public class PageInfo extends ElementBaseGroup
         if (scroll < description.size() && scroll >= 0)
         {
             Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(true);
-            Minecraft.getMinecraft().fontRenderer.drawSplitString(description.get(scroll), 48, 42, 140, new GuiColor(255, 255, 255).getColor());
+            Minecraft.getMinecraft().fontRenderer.drawSplitString(description.get(scroll), 48, 33, 140, new GuiColor(255, 255, 255).getColor());
         }
 
         handleScrollButtons();
@@ -190,7 +191,7 @@ public class PageInfo extends ElementBaseGroup
     }
 
     @Override
-    public List<? extends ElementBase> getElements()
+    public List<ElementBase> getElements()
     {
         if(guideID < 0)
             return guideEntries;

@@ -13,7 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 
 import cofh.lib.gui.element.ElementDualScaled;
-import cofh.lib.gui.element.ElementEnergyStored;
 import cofh.lib.util.helpers.MathHelper;
 
 import com.MO.MatterOverdrive.Reference;
@@ -25,49 +24,42 @@ import net.minecraft.entity.player.InventoryPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiReplicator extends MOGuiBase
+public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 {
-	public TileEntityMachineReplicator replicator;
 	MOElementEnergy energyElement;
 	ElementMatterStored matterElement;
 	ElementDualScaled replicate_progress;
-    ElementPlayerSlots playerSlots;
-    ElementSlotsList slotsList;
     ElementSlot outputSlot;
     ElementSlot seccoundOutputSlot;
 
 	public GuiReplicator(InventoryPlayer inventoryPlayer,TileEntityMachineReplicator entity)
     {
-		super(new ContainerReplicator(inventoryPlayer,entity));
-
-		this.replicator = entity;
-		matterElement = new ElementMatterStored(this,141,39,replicator.getMatterStorage());
-		energyElement = new MOElementEnergy(this,167,39,replicator.getEnergyStorage());
+		super(new ContainerReplicator(inventoryPlayer, entity),entity);
+		matterElement = new ElementMatterStored(this,141,39,machine.getMatterStorage());
+		energyElement = new MOElementEnergy(this,167,39,machine.getEnergyStorage());
 		replicate_progress = new ElementDualScaled(this,32,52);
-        playerSlots = new ElementPlayerSlots(this,44,91);
-        slotsList = new ElementSlotsList(this,5,49,new ArrayList<Slot>(0),0);
-        slotsList.AddSlot(replicator.getInventory().getSlot(replicator.DATABASE_SLOT_ID));
-        slotsList.AddSlot(replicator.getInventory().getSlot(replicator.SHIELDING_SLOT_ID));
-        slotsList.AddSlot(replicator.getInventory().getSlot(replicator.getEnergySlotID()));
-        outputSlot = new ElementSlot(this,true,this.inventorySlots.getSlot(replicator.OUTPUT_SLOT_ID));
-        seccoundOutputSlot = new ElementSlot(this,true,this.inventorySlots.getSlot(replicator.SECOUND_OUTPUT_SLOT_ID));
+        outputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),true);
+        seccoundOutputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.SECOUND_OUTPUT_SLOT_ID),true);
 	}
 	
 	@Override
 	public void initGui()
 	{
 		super.initGui();
+
 		replicate_progress.setMode(1);
-		replicate_progress.setSize(24,16);
+		replicate_progress.setSize(24, 16);
 		replicate_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
-        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER,32,64);
-        this.addElement(playerSlots);
-        this.addElement(slotsList);
-		this.addElement(energyElement);
-		this.addElement(matterElement);
+        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
 		this.addElement(replicate_progress);
-        this.addElement(outputSlot);
-        this.addElement(seccoundOutputSlot);
+
+        homePage.addElement(outputSlot);
+        homePage.addElement(seccoundOutputSlot);
+        homePage.addElement(matterElement);
+        homePage.addElement(energyElement);
+
+        AddPlayerSlots(inventorySlots, homePage, true, false);
+        AddPlayerSlots(inventorySlots, this, false,true);
 	}
 
     @Override
@@ -115,7 +107,7 @@ public class GuiReplicator extends MOGuiBase
 
     void ManageReqiremnetsTooltips()
     {
-        ItemStack scanner = replicator.getStackInSlot(replicator.DATABASE_SLOT_ID);
+        ItemStack scanner = machine.getStackInSlot(machine.DATABASE_SLOT_ID);
 
         if(scanner != null)
         {
@@ -145,7 +137,7 @@ public class GuiReplicator extends MOGuiBase
 	{
 		super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
 
-		replicate_progress.setQuantity(MathHelper.round(((float)this.replicator.replicateProgress / 100f) * 24));
+		replicate_progress.setQuantity(MathHelper.round(((float)this.machine.replicateProgress / 100f) * 24));
 	}
 	
 }

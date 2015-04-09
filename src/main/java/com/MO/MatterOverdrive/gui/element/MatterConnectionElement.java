@@ -1,53 +1,61 @@
 package com.MO.MatterOverdrive.gui.element;
 
+import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.GuiColor;
 import cofh.lib.render.RenderHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.util.RenderUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 3/14/2015.
  */
-public class MatterConnectionElement implements IGridElement
+public class MatterConnectionElement extends MOElementBase
 {
     public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ELEMENTS + "side_slot_bg.png");
 
     int id;
     int count;
 
-    public  MatterConnectionElement(int id,int count)
+    @Override
+    public void addTooltip(List<String> list)
     {
+        list.add(StatCollector.translateToLocal(Item.getItemById(id).getUnlocalizedName() + ".name") + " [" + count + "]");
+    }
+
+    public MatterConnectionElement(GuiBase gui,int id,int count)
+    {
+        this(gui, 22, 22, id, count);
+    }
+
+    public MatterConnectionElement(GuiBase gui, int width, int height,int id,int count) {
+        super(gui,0,0, width, height);
+
         this.id = id;
         this.count = count;
     }
 
     @Override
-    public int getHeight() {
-        return 32;
-    }
-
-    @Override
-    public int getWidth() {
-        return 32;
-    }
-
-    @Override
-    public Object getValue() {
-        return null;
-    }
-
-    @Override
-    public void draw(ElementGrid listBox, int x, int y, int backColor, int textColor)
+    public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        GL11.glColor3f(1,1,1);
+        GL11.glColor3f(1, 1, 1);
         RenderHelper.bindTexture(texture);
-        listBox.drawTexturedModalRect(0, 0, 0, 0, 22, 22, 22, 22);
-        RenderUtils.renderStack(2,2,new ItemStack(Item.getItemById(id)));
-        listBox.getFontRenderer().drawStringWithShadow(Integer.toString(count),10, 22, 0xFFFFFF);
+        gui.drawSizedTexturedModalRect(posX, posY, 0, 0, 22, 22, 22, 22);
+    }
+
+    @Override
+    public void drawForeground(int mouseX, int mouseY)
+    {
+        RenderUtils.renderStack(posX + 2,posY + 2,new ItemStack(Item.getItemById(id)));
+        gui.getFontRenderer().drawStringWithShadow(Integer.toString(count),posX + 8,posY + 24, 0xFFFFFF);
     }
 }

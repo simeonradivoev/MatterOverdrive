@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 
 import com.MO.MatterOverdrive.util.MatterHelper;
 
-public class SlotDatabase extends Slot
+public class SlotDatabase extends MOSlot
 {
 	public SlotDatabase(IInventory inventory, int index, int x, int y) {
 
@@ -14,7 +14,7 @@ public class SlotDatabase extends Slot
     }
 
 	@Override
-	public boolean isItemValid(ItemStack stack) {
+	public boolean isValid(ItemStack stack) {
 
 		return MatterHelper.isMatterScanner(stack);
 	}

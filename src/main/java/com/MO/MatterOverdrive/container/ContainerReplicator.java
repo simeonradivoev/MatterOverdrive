@@ -1,5 +1,7 @@
 package com.MO.MatterOverdrive.container;
 
+import com.MO.MatterOverdrive.container.slot.SlotEnergy;
+import com.MO.MatterOverdrive.container.slot.SlotRemoveOnly;
 import com.MO.MatterOverdrive.container.slot.SlotShielding;
 import com.MO.MatterOverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,8 +10,6 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.lib.gui.slot.SlotEnergy;
-import cofh.lib.gui.slot.SlotRemoveOnly;
 import cofh.lib.util.helpers.EnergyHelper;
 
 import com.MO.MatterOverdrive.container.slot.SlotDatabase;
@@ -19,32 +19,36 @@ import com.MO.MatterOverdrive.util.MatterHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ContainerReplicator extends MOBaseContainer
+public class ContainerReplicator extends ContainerMachine<TileEntityMachineReplicator>
 {
-	private TileEntityMachineReplicator replicator;
 	private int lastReplicateProgress;
 	private int lastMatter;
 	private int lastEnergy;
-	
+
 	public ContainerReplicator(InventoryPlayer inventory,TileEntityMachineReplicator tileentity)
 	{
-		this.replicator = tileentity;
-		
-		this.addSlotToContainer(new SlotRemoveOnly(tileentity,replicator.OUTPUT_SLOT_ID,70,52));
-        this.addSlotToContainer(new SlotRemoveOnly(tileentity,replicator.SECOUND_OUTPUT_SLOT_ID,96,52));
-		this.addSlotToContainer(new SlotDatabase(tileentity,replicator.DATABASE_SLOT_ID,8,52));
-		this.addSlotToContainer(new SlotShielding(tileentity,this.replicator.SHIELDING_SLOT_ID,8,79));
-		this.addSlotToContainer(new SlotEnergy(tileentity,this.replicator.getEnergySlotID(),8,106));
+		super(inventory, tileentity);
+	}
 
-        MOContainerHelper.AddPlayerSlots(inventory,this,45,92);
+	@Override
+	public void init(InventoryPlayer inventory)
+	{
+		this.addSlotToContainer(new SlotRemoveOnly(machine,machine.OUTPUT_SLOT_ID,70,52));
+		this.addSlotToContainer(new SlotRemoveOnly(machine,machine.SECOUND_OUTPUT_SLOT_ID,96,52));
+		this.addSlotToContainer(new SlotDatabase(machine, machine.DATABASE_SLOT_ID,8,52));
+		this.addSlotToContainer(new SlotShielding(machine, this.machine.SHIELDING_SLOT_ID,8,79));
+		this.addSlotToContainer(new SlotEnergy(machine, this.machine.getEnergySlotID(),8,106));
+
+		super.init(inventory);
+		MOContainerHelper.AddPlayerSlots(inventory, this,45,89,true,true);
 	}
 	
-	public void addCrafingToCrafters(ICrafting icrafting)
+	public void addCraftingToCrafters(ICrafting icrafting)
 	{
 		super.addCraftingToCrafters(icrafting);
-		icrafting.sendProgressBarUpdate(this, 0, this.replicator.replicateTime);
-		icrafting.sendProgressBarUpdate(this, 1, this.replicator.getMatterStored());
-		icrafting.sendProgressBarUpdate(this, 2, this.replicator.getEnergyStored(ForgeDirection.DOWN));
+		icrafting.sendProgressBarUpdate(this, 0, this.machine.replicateTime);
+		icrafting.sendProgressBarUpdate(this, 1, this.machine.getMatterStored());
+		icrafting.sendProgressBarUpdate(this, 2, this.machine.getEnergyStored(ForgeDirection.DOWN));
 	}
 	
 	public void detectAndSendChanges()
@@ -54,45 +58,45 @@ public class ContainerReplicator extends MOBaseContainer
 		{
 			ICrafting icrafting = (ICrafting)this.crafters.get(i);
 			
-			if(this.lastReplicateProgress != this.replicator.replicateProgress)
+			if(this.lastReplicateProgress != this.machine.replicateProgress)
 			{
-				icrafting.sendProgressBarUpdate(this, 0, this.replicator.replicateProgress);
+				icrafting.sendProgressBarUpdate(this, 0, this.machine.replicateProgress);
 			}
 			
-			if(this.lastMatter != this.replicator.getMatterStored())
+			if(this.lastMatter != this.machine.getMatterStored())
 			{
-				icrafting.sendProgressBarUpdate(this, 1, this.replicator.getMatterStored());
+				icrafting.sendProgressBarUpdate(this, 1, this.machine.getMatterStored());
 			}
 			
-			if(this.lastEnergy != this.replicator.getEnergyStored(ForgeDirection.DOWN))
+			if(this.lastEnergy != this.machine.getEnergyStored(ForgeDirection.DOWN))
 			{
-				icrafting.sendProgressBarUpdate(this, 2, this.replicator.getEnergyStored(ForgeDirection.DOWN));
+				icrafting.sendProgressBarUpdate(this, 2, this.machine.getEnergyStored(ForgeDirection.DOWN));
 			}
 
-			this.lastReplicateProgress = this.replicator.replicateProgress;
-			this.lastMatter = this.replicator.getMatterStored();
-			this.lastEnergy = this.replicator.getEnergyStored(ForgeDirection.DOWN);
+			this.lastReplicateProgress = this.machine.replicateProgress;
+			this.lastMatter = this.machine.getMatterStored();
+			this.lastEnergy = this.machine.getEnergyStored(ForgeDirection.DOWN);
 		}
 	}
-	
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
+
+	/*public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
     {
 		ItemStack itemstack = null;
 		Slot slot = (Slot)this.inventorySlots.get(slotID);
         int last = this.replicator.getInventory().getLastSlotId();
-		
+
 		if(slot != null && slot.getHasStack())
 		{
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-			
+
 			if(slotID == replicator.OUTPUT_SLOT_ID || slotID == replicator.SECOUND_OUTPUT_SLOT_ID)
 			{
 				if (!this.mergeItemStack(itemstack1, last+1, last+36+1, true))
 				{
 					return null;
 				}
-				
+
 				slot.onSlotChange(itemstack1, itemstack);
 			}
 			else if(slotID > last)
@@ -131,7 +135,7 @@ public class ContainerReplicator extends MOBaseContainer
 			{
 				return null;
 			}
-			
+
 			if (itemstack1.stackSize == 0)
 			{
 				slot.putStack((ItemStack)null);
@@ -148,19 +152,19 @@ public class ContainerReplicator extends MOBaseContainer
 
 			slot.onPickupFromSlot(player, itemstack1);
 		}
-		
+
 		return itemstack;
-    }
+    }*/
 	
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int slot,int newValue)
 	{
 		if(slot == 0)
-			this.replicator.replicateProgress = newValue;
+			this.machine.replicateProgress = newValue;
 		if(slot == 1)
-			this.replicator.setMatterStored(newValue);
+			this.machine.setMatterStored(newValue);
 		if(slot == 2)
-			this.replicator.setEnergyStored(newValue);
+			this.machine.setEnergyStored(newValue);
 	}
 
 	@Override

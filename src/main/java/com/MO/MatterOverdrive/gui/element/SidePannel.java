@@ -14,27 +14,18 @@ import java.util.List;
 /**
  * Created by Simeon on 3/13/2015.
  */
-public class SidePannel extends ElementButton
+public class SidePannel extends ElementBaseGroup
 {
-    int originalX;
-    int originalY;
-    ResourceLocation panel_bg;
-    boolean isOpen;
+    MOElementButton button;
+    private static boolean isOpen;
 
-    public SidePannel(GuiBase gui, int posX, int posY, String name)
+    public SidePannel(GuiBase gui, int posX, int posY)
     {
-        super(gui, posX, posY, name, 0, 0, 16, 0, 16, 143,"");
-        originalX = this.posX;
-        originalY = this.posY;
-        this.setTexture(Reference.PATH_ELEMENTS + "right_side_bar.png", 32, 143);
-        panel_bg = new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png");
-    }
-
-    @Override
-    public boolean onMousePressed(int x, int y, int mouseButton)
-    {
-        isOpen = !isOpen;
-        return super.onMousePressed(x, y, mouseButton);
+        super(gui, posX, posY,37,143);
+        button = new MOElementButton(gui,this, 0, 0, "Toggle", 0, 0, 16, 0, 16, 143,"");
+        button.setTexture(Reference.PATH_ELEMENTS + "right_side_bar.png", 32, 143);
+        this.setTexture(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png",37,143);
+        elements.add(button);
     }
 
     @Override
@@ -42,14 +33,13 @@ public class SidePannel extends ElementButton
     {
         if(isOpen)
         {
-            RenderHelper.bindTexture(panel_bg);
-            this.gui.drawSizedTexturedModalRect(this.originalX, this.originalY, 0, 0, 37, 143, 37, 143);
-
-            this.posX = originalX + 32;
+            RenderHelper.bindTexture(texture);
+            this.gui.drawSizedTexturedModalRect(this.posX, this.posY, 0, 0, 37, 143, 37, 143);
+            button.setPosition(32,0);
         }
         else
         {
-            this.posX = originalX;
+            button.setPosition(0,0);
         }
 
         super.drawBackground(mouseX, mouseY, ticks);
@@ -62,5 +52,40 @@ public class SidePannel extends ElementButton
 
     public void setOpen(boolean open) {
         this.isOpen = open;
+    }
+
+    @Override
+    public void handleElementButtonClick(String buttonName, int mouseButton)
+    {
+        if (buttonName == "Toggle")
+        {
+            isOpen = !isOpen;
+        }
+    }
+
+    @Override
+    public void update()
+    {
+        if(isOpen)
+        {
+            button.setToolTip("Close Menu");
+            this.setSize(37 + 16,143);
+        }
+        else
+        {
+            button.setToolTip("Open Menu");
+            this.setSize(37,143);
+        }
+    }
+
+    @Override
+    public void updateInfo()
+    {
+        for (int i = 0;i < elements.size();i++)
+        {
+            elements.get(i).setVisible(isOpen);
+        }
+
+        button.setVisible(true);
     }
 }
