@@ -41,16 +41,11 @@ public class GuiMatterScanner extends MOGuiBase
 
 	MOElementButton infoPageButton;
 	MOElementButton scanPageButton;
-	
-	int xStart = 0,yStart = 0;
 
 	public GuiMatterScanner(ItemStack scanner,int slot)
 	{
 		super(new ContainerFalse());
 		this.scanner = scanner;
-		//this.texture = background;
-		//this.xSize = 216;
-		//this.ySize = 176;
 		refreshTimeTracker = new TimeTracker();
 		this.databaseSlot = slot;
 		lastPage = MatterScanner.getLastPage(scanner);

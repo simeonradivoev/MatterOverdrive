@@ -23,12 +23,24 @@ import java.util.Random;
 public class MOBlock extends Block
 {
 
+    private String details;
+
     public MOBlock(Material material, String name)
     {
         super(material);
         this.setBlockName(name);
         this.setBlockTextureName(Reference.MOD_ID + ":" + name);
         setCreativeTab(MatterOverdrive.tabMatterOverdrive);
+    }
+
+    public void setDetails(String details)
+    {
+        this.details = details;
+    }
+
+    public String getDetails()
+    {
+        return this.details;
     }
 
     public void Register()

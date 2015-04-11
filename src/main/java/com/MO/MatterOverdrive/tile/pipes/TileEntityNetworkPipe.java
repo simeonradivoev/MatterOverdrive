@@ -5,18 +5,28 @@ import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.data.MatterNetwork;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
 import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 3/15/2015.
  */
-public class TileEntityNetworkPipe extends TileEntityPipe<IMatterNetworkConnection> implements IMatterNetworkConnection
+public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetworkConnection
 {
     MatterNetwork network;
 
     public TileEntityNetworkPipe() {
-        super(IMatterNetworkConnection.class);
         network = null;
+    }
+
+    @Override
+    public boolean canConnectTo(TileEntity entity, ForgeDirection direction)
+    {
+        if (entity instanceof IMatterNetworkConnection)
+        {
+            return ((IMatterNetworkConnection) entity).canConnectToNetwork(direction);
+        }
+        return false;
     }
 
     @Override

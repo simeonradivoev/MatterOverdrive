@@ -150,7 +150,7 @@ public class BlockPipe extends MOBlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileEntityPipe(IMatterConnection.class);
+		return null;
 	}
 
 }

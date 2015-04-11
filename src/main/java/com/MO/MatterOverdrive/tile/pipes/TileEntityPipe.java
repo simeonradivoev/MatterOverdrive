@@ -16,15 +16,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityPipe<T> extends MOTileEntity
+public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
 {
-    Class<T> connectionType;
     private boolean needsUpdate = true;
     public int connections = 0;
 
-    public TileEntityPipe(Class<T> cType)
+    public TileEntityPipe()
     {
-        connectionType = cType;
+
     }
 
     @Override
@@ -59,7 +58,7 @@ public class TileEntityPipe<T> extends MOTileEntity
         {
             TileEntity t = this.worldObj.getTileEntity(ForgeDirection.values()[i].offsetX + this.xCoord,ForgeDirection.values()[i].offsetY + this.yCoord,ForgeDirection.values()[i].offsetZ + this.zCoord);
 
-            if(connectionType.isInstance(t))
+            if(canConnectTo(t,ForgeDirection.values()[i]))
             {
                 connections |= ForgeDirection.values()[i].flag;
             }
@@ -67,6 +66,8 @@ public class TileEntityPipe<T> extends MOTileEntity
 
         worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
 	}
+
+    public abstract boolean canConnectTo(TileEntity entity,ForgeDirection direction);
 
     public void queueUpdate()
     {

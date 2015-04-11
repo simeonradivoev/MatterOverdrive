@@ -34,7 +34,8 @@ public class MOBaseItem extends Item
 
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
 	{
-		if(hasDetails(itemstack)) {
+		if(hasDetails(itemstack))
+		{
 			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 			{
 				addDetails(itemstack,player,infos);

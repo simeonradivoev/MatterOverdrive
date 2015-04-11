@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.util;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import com.MO.MatterOverdrive.api.inventory.IUpgrade;
 import com.MO.MatterOverdrive.api.matter.*;
 import com.MO.MatterOverdrive.handler.IMatterEntry;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
@@ -112,6 +113,10 @@ public class MatterHelper
 
     public static boolean isUpgrade(ItemStack itemStack)
     {
+        if (itemStack != null)
+        {
+            return itemStack.getItem() instanceof IUpgrade;
+        }
         return false;
     }
 	

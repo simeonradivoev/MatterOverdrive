@@ -23,7 +23,6 @@ public class MatterOverdriveItems
 	public static MatterDust matter_dust;
 	public static MatterDust matter_dust_refined;
     public static Isolinear_circuit isolinear_circuit;
-    public static MOBaseItem base_upgrade;
     public static MOBaseItem h_compensator;
     public static MOBaseItem integration_matrix;
     public static MOBaseItem machine_casing;
@@ -33,6 +32,7 @@ public class MatterOverdriveItems
     public static MOBaseItem tritanium_dust;
     public static MOBaseItem tritanium_plate;
     public static PatternDrive pattern_drive;
+    public static ItemUpgrade item_upgrade;
 	
 	public static void init()
 	{
@@ -46,7 +46,7 @@ public class MatterOverdriveItems
 		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive).setTextureName("mo:emergency_ration");
 		me_conversion_matrix = new MOBaseItem("me_conversion_matrix");
         isolinear_circuit = new Isolinear_circuit("isolinear_circuit");
-        base_upgrade = new MOBaseItem("base_upgrade");
+        item_upgrade = new ItemUpgrade("upgrade");
         h_compensator = new MOBaseItem("h_compensator");
         integration_matrix = new MOBaseItem("integration_matrix");
         machine_casing = new MOBaseItem("machine_casing");
@@ -60,7 +60,6 @@ public class MatterOverdriveItems
 	
 	public static void register()
 	{
-		
 		GameRegistry.registerItem(emergency_ration, emergency_ration.getUnlocalizedName().substring(5));
 		matter_dust_refined.Register();
 		matter_dust.Register();
@@ -70,7 +69,7 @@ public class MatterOverdriveItems
 		phaser.Register();
 		battery.Register();
         isolinear_circuit.Register();
-        base_upgrade.Register();
+        item_upgrade.Register();
         h_compensator.Register();
         integration_matrix.Register();
         machine_casing.Register();
@@ -87,7 +86,6 @@ public class MatterOverdriveItems
 
 		GameRegistry.addRecipe(new ItemStack(battery), new Object[]{" R ", "TGT", "TDT", 'T', tritanium_ingot, 'D', MatterOverdriveItems.dilithium_ctystal, 'R', Items.redstone, 'G', Items.gold_ingot});
 		GameRegistry.addRecipe(new ItemStack(matter_scanner), new Object[]{"III","GDG","IRI", 'I',Items.iron_ingot, 'D',new ItemStack(isolinear_circuit,1,2),'R',Items.redstone,'G',Items.gold_ingot});
-        GameRegistry.addRecipe(new ItemStack(base_upgrade),new Object[]{" R "," C "," T ",'G', Blocks.glass,'R',Items.redstone,'T',tritanium_plate,'C',new ItemStack(isolinear_circuit,1,0)});
         GameRegistry.addRecipe(new ItemStack(h_compensator),new Object[]{" M ","CPC","DED",'D', MatterOverdriveItems.dilithium_ctystal,'M',machine_casing,'I',Items.iron_ingot,'C',new ItemStack(isolinear_circuit,1,0),'P',new ItemStack(isolinear_circuit,1,1),'E',Items.ender_pearl});
         GameRegistry.addRecipe(new ItemStack(integration_matrix),new Object[]{" M ","GPG","DED",'G', Blocks.glass,'M',machine_casing,'I',Items.iron_ingot,'P',new ItemStack(isolinear_circuit,1,1),'E',Items.ender_pearl,'D',MatterOverdriveItems.dilithium_ctystal});
         GameRegistry.addRecipe(new ItemStack(machine_casing),new Object[]{" T ","I I","GRG",'G', Items.gold_ingot,'T',tritanium_plate,'I',tritanium_ingot,'R',Items.redstone});

@@ -22,7 +22,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 3/7/2015.
  */
-public class TileEntityMatterPipe extends  TileEntityPipe<IMatterConnection> implements IMatterConnection, IMatterHandler
+public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConnection, IMatterHandler
 {
     public  static  final int MATTER_EXTRACT = 1;
     public  static  final int MATTER_INPUT = 1;
@@ -37,7 +37,7 @@ public class TileEntityMatterPipe extends  TileEntityPipe<IMatterConnection> imp
 
     public TileEntityMatterPipe()
     {
-        super(IMatterConnection.class);
+        super();
         t = new TimeTracker();
         storage = new MatterStorage(1,MATTER_EXTRACT,MATTER_INPUT);
     }
@@ -53,6 +53,16 @@ public class TileEntityMatterPipe extends  TileEntityPipe<IMatterConnection> imp
                 Transfer();
             }
         }
+    }
+
+    @Override
+    public boolean canConnectTo(TileEntity entity,ForgeDirection direction)
+    {
+        if (entity instanceof IMatterConnection)
+        {
+            return ((IMatterConnection) entity).canConnectFrom(direction);
+        }
+        return false;
     }
 
     public  void  Transfer()

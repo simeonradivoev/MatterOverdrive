@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.handler;
 
+import cofh.lib.gui.container.ContainerFalse;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.container.*;
 import com.MO.MatterOverdrive.gui.*;
@@ -56,6 +57,12 @@ public class GuiHandler implements IGuiHandler
 
                 }
                 break;
+            case MatterOverdrive.guiSolarPanel:
+                if (entity instanceof TileEntityMachineSolarPanel)
+                {
+                    return new ContainerSolarPanel(player.inventory,(TileEntityMachineSolarPanel)entity);
+                }
+                break;
 			}
 		}
 		return null;
@@ -93,12 +100,18 @@ public class GuiHandler implements IGuiHandler
                     {
                         return new GuiMatterAnalyzer(player.inventory,(TileEntityMachineMatterAnalyzer)entity);
                     }
-                    case MatterOverdrive.guiPatternStorage:
-                        if(entity instanceof TileEntityMachinePatternStorage)
-                        {
-                            return new GuiPatternStorage(player.inventory,(TileEntityMachinePatternStorage)entity);
-                        }
-                        break;
+                case MatterOverdrive.guiPatternStorage:
+                    if(entity instanceof TileEntityMachinePatternStorage)
+                    {
+                        return new GuiPatternStorage(player.inventory,(TileEntityMachinePatternStorage)entity);
+                    }
+                    break;
+                case MatterOverdrive.guiSolarPanel:
+                    if (entity instanceof TileEntityMachineSolarPanel)
+                    {
+                        return new GuiSolarPanel(player.inventory,(TileEntityMachineSolarPanel)entity);
+                    }
+                    break;
 			}
 		}
 		return null;

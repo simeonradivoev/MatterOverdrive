@@ -11,6 +11,7 @@ import com.MO.MatterOverdrive.gui.element.ElementBaseGroup;
 import com.MO.MatterOverdrive.gui.element.ElementInventorySlot;
 import com.MO.MatterOverdrive.gui.element.ElementSlotsList;
 import com.MO.MatterOverdrive.gui.element.MOElementButton;
+import com.MO.MatterOverdrive.gui.pages.PageUpgrades;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import net.minecraft.inventory.Container;
 
@@ -26,7 +27,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     protected List<ElementBaseGroup> pages;
     protected ElementBaseGroup homePage;
     protected ElementBaseGroup configPage;
-    protected ElementBaseGroup upgradesPage;
+    protected PageUpgrades upgradesPage;
 
     MOElementButton homePageButton;
     MOElementButton configPageButton;
@@ -43,7 +44,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         homePage.setName("Home");
         configPage = new ElementBaseGroup(this,0,0,xSize,ySize);
         configPage.setName("Configurations");
-        upgradesPage = new ElementBaseGroup(this,0,0,xSize,ySize);
+        upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container,machine.getInventory());
 
         pages.add(homePage);
         pages.add(configPage);
@@ -79,8 +80,6 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         sidePannel.addElement(homePageButton);
         sidePannel.addElement(configPageButton);
         sidePannel.addElement(upgradesPageButton);
-
-        AddUpgradeSlots(inventorySlots,machine.getInventory(),upgradesPage);
     }
 
     @Override
@@ -127,19 +126,6 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         for (int i = 0;i < pages.size();i++)
         {
             pages.get(i).setVisible(false);
-        }
-    }
-
-    public void AddUpgradeSlots(Container container,Inventory inventory,GuiElementList list)
-    {
-        for (int i = 0;i < container.inventorySlots.size();i++)
-        {
-            if(container.inventorySlots.get(i) instanceof SlotUpgrade)
-            {
-                ElementInventorySlot slotElement = new ElementInventorySlot(this, (MOSlot) container.inventorySlots.get(i), true);
-                slotElement.setInventorySlot(inventory.getSlot(i));
-                list.addElement(slotElement);
-            }
         }
     }
 }

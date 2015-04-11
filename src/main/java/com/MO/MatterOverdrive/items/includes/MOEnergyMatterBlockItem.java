@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.items.includes;
 
 import java.util.List;
 
+import com.MO.MatterOverdrive.blocks.includes.MOBlock;
 import com.MO.MatterOverdrive.util.MOEnergyHelper;
 
 import com.MO.MatterOverdrive.util.MOStringHelper;
@@ -17,20 +18,37 @@ import org.lwjgl.input.Keyboard;
 
 public class MOEnergyMatterBlockItem extends ItemBlock
 {
+	protected String details;
 
-	public MOEnergyMatterBlockItem(Block p_i45328_1_) 
+	public MOEnergyMatterBlockItem(Block block)
 	{
-		super(p_i45328_1_);
-		// TODO Auto-generated constructor stub
+		super(block);
+		if (block instanceof MOBlock)
+		{
+			this.details = ((MOBlock) block).getDetails();
+		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
-    public void addInformation(ItemStack stack, EntityPlayer p_77624_2_, List infos, boolean p_77624_4_) 
+	public void addInformation(ItemStack stack, EntityPlayer player, List infos, boolean p_77624_4_)
 	{
+		if(details != null && !details.isEmpty())
+		{
+			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+			{
+				infos.add(EnumChatFormatting.GRAY + details);
+			}
+			else
+			{
+				infos.add(MOStringHelper.MORE_INFO);
+			}
+		}
+
 		if(stack.hasTagCompound())
 		{
-			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+			{
 				if (stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy")) {
 					infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("MaxEnergy")));
 					if (stack.getTagCompound().hasKey("PowerSend") && stack.getTagCompound().hasKey("PowerReceive")) {
@@ -44,12 +62,8 @@ public class MOEnergyMatterBlockItem extends ItemBlock
 						infos.add(EnumChatFormatting.DARK_BLUE + "Send/Receive: " + MOStringHelper.formatNUmber(stack.getTagCompound().getInteger("MatterSend")) + "/" + MOStringHelper.formatNUmber(stack.getTagCompound().getInteger("MatterReceive")) + MatterHelper.MATTER_UNIT + "/t");
 					}
 				}
-			}else
-			{
-				infos.add(MOStringHelper.MORE_INFO);
 			}
 		}
-		
 	}
 	
 	@Override

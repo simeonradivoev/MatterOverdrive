@@ -50,6 +50,24 @@ public class RenderUtils
 			
 		}
 	}
+
+	public static void DrawMultilineInfoCentered(List infos,int x,int y, int maxLines,int maxLineWidth,int color)
+	{
+		try
+		{
+			for(int i = 0;i < Math.min(maxLines, infos.size());i++)
+			{
+				String info = infos.get(i).toString();
+				info = info.substring(0, Math.min(maxLineWidth, info.length()));
+				int width = fontRenderer.getStringWidth(info);
+				fontRenderer.drawStringWithShadow(info, x - (width/2), y + i * 10, color);
+			}
+		}
+		catch(Exception e)
+		{
+
+		}
+	}
 	
 	public static void enable3DRender() {
 		 GL11.glEnable(GL11.GL_LIGHTING);
