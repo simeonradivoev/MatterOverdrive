@@ -16,6 +16,7 @@ public class GuiSolarPanel extends MOGuiMachine<TileEntityMachineSolarPanel>
     public GuiSolarPanel(InventoryPlayer inventoryPlayer,TileEntityMachineSolarPanel solarPanel)
     {
         super(new ContainerSolarPanel(inventoryPlayer,solarPanel),solarPanel);
+        name = "solar_panel";
         energy = new MOElementEnergy(this,117,35,solarPanel.getEnergyStorage());
         energy.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
     }

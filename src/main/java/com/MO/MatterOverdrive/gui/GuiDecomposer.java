@@ -28,7 +28,7 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 	public GuiDecomposer(InventoryPlayer inventoryPlayer,TileEntityMachineDecomposer entity)
 	{
 		super(new ContainerDecomposer(inventoryPlayer,entity),entity);
-
+		name = "decomposer";
 		matterElement = new ElementMatterStored(this,74,39,machine.getMatterStorage());
 		energyElement = new MOElementEnergy(this,100,39,machine.getEnergyStorage());
 		decompose_progress = new ElementDualScaled(this,32,52);
@@ -72,19 +72,11 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
             }
         }
 
-        MatterHelper.DrawMatterInfoTooltip(stack,TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER,TileEntityMachineDecomposer.DECOMPOSE_ENERGY_PER_TICK,list);
+        //MatterHelper.DrawMatterInfoTooltip(stack,TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER,machine.getEnergyDrainMax()		,list);
 
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
     }
-	
-	@Override
-	public void drawGuiContainerForegroundLayer(int part1,int part2)
-	{
-		
-		drawElements(0, true);
-		drawTabs(0, true);
-	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
@@ -109,13 +101,15 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 		if(machine.getStackInSlot(machine.INPUT_SLOT_ID) != null)
 		{
 			int matterAmount = MatterHelper.getMatterAmountFromItem(machine.getStackInSlot(machine.INPUT_SLOT_ID));
-			energyElement.setEnergyRequired(-(TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER * TileEntityMachineDecomposer.DECOMPOSE_ENERGY_PER_TICK * matterAmount));
+			energyElement.setEnergyRequired(-(machine.getEnergyDrainMax()));
 			matterElement.setDrain(matterAmount);
+			energyElement.setEnergyRequiredPerTick(-machine.getEnergyDrainPerTick());
 		}
 		else
 		{
 			energyElement.setEnergyRequired(0);
 			matterElement.setDrain(0);
+			energyElement.setEnergyRequiredPerTick(0);
 		}
 	}
 }

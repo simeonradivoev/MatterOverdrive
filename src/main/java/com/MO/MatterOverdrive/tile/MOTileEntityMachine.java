@@ -2,11 +2,14 @@ package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.inventory.IUpgrade;
+import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.MatterNetwork;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.sound.MachineSound;
+import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -21,6 +24,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.Map;
 
 /**
  * Created by Simeon on 3/11/2015.
@@ -316,5 +321,27 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     public void ForceSync()
     {
         forceClientUpdate = true;
+    }
+
+    public double getUpgradeMultiply(UpgradeTypes type)
+    {
+        double multiply = 1;
+
+        for (int i = 0;i < inventory.getSizeInventory();i++)
+        {
+            if (inventory.getSlot(i) instanceof UpgradeSlot)
+            {
+                ItemStack upgradeItem = inventory.getStackInSlot(i);
+                if (upgradeItem != null && MatterHelper.isUpgrade(upgradeItem))
+                {
+                    Map<UpgradeTypes,Double> upgrades = ((IUpgrade)upgradeItem.getItem()).getUpgrades(upgradeItem);
+                    if (upgrades.containsKey(type)) {
+                        multiply *= upgrades.get(type);
+                    }
+                }
+            }
+        }
+
+        return multiply;
     }
 }

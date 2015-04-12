@@ -1,7 +1,9 @@
 package com.MO.MatterOverdrive.tile;
 
 import cofh.api.energy.IEnergyStorage;
+import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.data.Inventory;
@@ -29,7 +31,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public static final int ENERGY_STORAGE = 512000;
     public static final int ENERGY_TRANSFER = 512;
     public static final int ANALYZE_SPEED = 800;
-    public static final int POWER_DRAIN = 64;
+    public static final int ENERGY_DRAIN_PER_ITEM = 64000;
 
     public int input_slot = 0;
     public int database_slot = 1;
@@ -51,18 +53,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         database_slot = inventory.AddSlot(new DatabaseSlot(true));
 
         super.RegisterSlots(inventory);
-    }
-
-    public int getAnalyzeTimeFromScanner()
-    {
-        ItemStack scanner = inventory.getStackInSlot(database_slot);
-        int progress = 0;
-
-        if(scanner != null && scanner.hasTagCompound()) {
-            progress = MatterDatabaseHelper.GetProgressFromNBT(scanner.getTagCompound());
-        }
-
-        return progress;
     }
 
     @Override
@@ -92,11 +82,11 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         {
             boolean isAnalyzing = isAnalyzing();
 
-            if (isAnalyzing && this.energyStorage.getEnergyStored() >= POWER_DRAIN)
+            if (isAnalyzing && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick())
             {
-                this.energyStorage.extractEnergy(POWER_DRAIN,false);
+                this.energyStorage.extractEnergy(getEnergyDrainPerTick(),false);
 
-                if (analyzeTime < ANALYZE_SPEED)
+                if (analyzeTime < getSpeed())
                 {
                     analyzeTime++;
                 } else {
@@ -220,6 +210,21 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
             forceClientUpdate = true;
             markDirty();
         }
+    }
+
+    public int getSpeed()
+    {
+        return MathHelper.round(ANALYZE_SPEED * getUpgradeMultiply(UpgradeTypes.Speed));
+    }
+
+    public int getEnergyDrainPerTick()
+    {
+        return getEnergyDrainMax() / getSpeed();
+    }
+
+    public int getEnergyDrainMax()
+    {
+        return MathHelper.round(ENERGY_DRAIN_PER_ITEM * getUpgradeMultiply(UpgradeTypes.PowerUsage));
     }
 
     @Override

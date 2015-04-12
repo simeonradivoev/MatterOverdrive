@@ -49,6 +49,8 @@ public class ElementSlotsList extends ElementSlot
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
+        GL11.glColor3f(1,1,1);
+
         for (int i = 0;i < inventory.size();i++)
         {
             int y = this.posY + i * 27;

@@ -14,6 +14,7 @@ import java.util.List;
 public class MOElementEnergy extends ElementEnergyStored
 {
     int energyRequired;
+    int energyRequiredPerTick;
 
     public MOElementEnergy(GuiBase gui, int posX, int posY, IEnergyStorage storage)
     {
@@ -32,15 +33,32 @@ public class MOElementEnergy extends ElementEnergyStored
         {
             list.add(EnumChatFormatting.RED +String.valueOf(energyRequired) + MOEnergyHelper.ENERGY_UNIT + EnumChatFormatting.RESET);
         }
+        if (energyRequiredPerTick > 0)
+        {
+            list.add(EnumChatFormatting.GREEN + "+" +String.valueOf(energyRequiredPerTick) + MOEnergyHelper.ENERGY_UNIT + "/t" + EnumChatFormatting.RESET);
+        }
+        else if(energyRequiredPerTick < 0)
+        {
+            list.add(EnumChatFormatting.RED + String.valueOf(energyRequiredPerTick) + MOEnergyHelper.ENERGY_UNIT + "/t" + EnumChatFormatting.RESET);
+        }
     }
 
     public int getEnergyRequired()
     {
         return energyRequired;
     }
+    public int getEnergyRequiredPerTick()
+    {
+        return energyRequiredPerTick;
+    }
 
     public void setEnergyRequired(int energyRequired)
     {
         this.energyRequired = energyRequired;
+    }
+
+    public void setEnergyRequiredPerTick(int energyRequired)
+    {
+        this.energyRequiredPerTick = energyRequired;
     }
 }

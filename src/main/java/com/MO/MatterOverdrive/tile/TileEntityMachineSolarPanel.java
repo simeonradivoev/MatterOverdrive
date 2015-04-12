@@ -57,8 +57,8 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
         if (!worldObj.provider.hasNoSky)
         {
             int i1 = worldObj.getSavedLightValue(EnumSkyBlock.Sky, xCoord, yCoord, zCoord) - worldObj.skylightSubtracted;
-
-            if(i1 >= 15)
+            float time = getTime();
+            if(i1 >= 15 && time > 0.5)
             {
                 return true;
             }
@@ -69,14 +69,15 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     public void manageExtract()
     {
         int energy = energyStorage.getEnergyStored();
+
         if (energy > 0)
         {
             for (int i = 0; i < 6; i++)
             {
-                int energyToTransfer = Math.min(energy,getChargeAmount());
+                int energyToTransfer = Math.min(energy,MAX_ENERGY_EXTRACT);
                 if (energyToTransfer > 0)
                 {
-                    energy -= EnergyHelper.insertEnergyIntoAdjacentEnergyReceiver(this, i, MAX_ENERGY_EXTRACT, false);
+                    energy -= EnergyHelper.insertEnergyIntoAdjacentEnergyReceiver(this, i, energyToTransfer, false);
                 }
             }
 
@@ -95,18 +96,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
 
                 if(i1 >= 15)
                 {
-                    f = worldObj.getCelestialAngleRadians(1.0F);
-
-                    if (f < (float)Math.PI)
-                    {
-                        f += (0.0F - f) * 0.2F;
-                    }
-                    else
-                    {
-                        f += (((float)Math.PI * 2F) - f) * 0.2F;
-                    }
-
-                    f = (float)Math.cos(f);
+                    f = getTime();
                 }
 
                 chargeAmount = (byte)Math.round(CHARGE_AMOUNT * f);
@@ -115,6 +105,22 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
                 chargeAmount = 0;
             }
         }
+    }
+
+    public float getTime()
+    {
+        float f = worldObj.getCelestialAngleRadians(1.0F);
+
+        if (f < (float)Math.PI)
+        {
+            f += (0.0F - f) * 0.2F;
+        }
+        else
+        {
+            f += (((float)Math.PI * 2F) - f) * 0.2F;
+        }
+
+        return (float)Math.cos(f);
     }
 
     public byte getChargeAmount()

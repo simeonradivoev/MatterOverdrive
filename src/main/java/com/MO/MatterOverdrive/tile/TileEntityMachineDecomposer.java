@@ -2,6 +2,8 @@ package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
 
+import cofh.lib.util.helpers.MathHelper;
+import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.matter.IMatterHandler;
 import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
@@ -9,6 +11,7 @@ import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.MatterSlot;
 import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
+import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -28,10 +31,10 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     public  static final  int MATTER_TRANSFER = 1;
     public  static final  int MATTER_EXTRACT = 1;
     public  static  final  int MATTER_EXTRACT_SPEED = 100;
-    public  static  final float MATTER_DECOMPOSE_FAIL_CHANGE = 0.1f;
+    public  static  final float FAIL_CHANGE = 0.1f;
 
     public static final int DECEOPOSE_SPEED_PER_MATTER = 80;
-    public static final int DECOMPOSE_ENERGY_PER_TICK= 120;
+    public static final int DECOMPOSE_ENERGY_PER_MATTER = 16000;
 
     public int INPUT_SLOT_ID = 0;
     public int OUTPUT_SLOT_ID = 1;
@@ -113,18 +116,18 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
             {
                 int itemMatter = MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
 
-                if(this.energyStorage.getEnergyStored() >= DECOMPOSE_ENERGY_PER_TICK)
+                if(this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick())
                 {
                     this.decomposeTime++;
-                    this.extractEnergy(ForgeDirection.DOWN, DECOMPOSE_ENERGY_PER_TICK, false);
+                    this.extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(), false);
 
-                    if (this.decomposeTime >= DECEOPOSE_SPEED_PER_MATTER * itemMatter)
+                    if (this.decomposeTime >= getSpeed())
                     {
                         this.decomposeTime = 0;
                         this.decomposeItem();
                     }
 
-                    decomposeProgress = Math.round(((float) (decomposeTime) / (float) (DECEOPOSE_SPEED_PER_MATTER * itemMatter)) * 100);
+                    decomposeProgress = Math.round(((float) (decomposeTime) / (float) getSpeed()) * 100);
                 }
             }
         }
@@ -147,9 +150,34 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     @Override
     public boolean isActive()
     {
-        return isDecomposing() && this.energyStorage.getEnergyStored() >= MatterHelper.getEnergyFromMatter(DECOMPOSE_ENERGY_PER_TICK,getStackInSlot(INPUT_SLOT_ID));
+        return isDecomposing() && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick();
     }
 
+    public double getFailChance()
+    {
+        double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.Fail);
+        //this does not nagate all fail chance if item is not fully scanned
+        return FAIL_CHANGE * upgradeMultiply * upgradeMultiply;
+    }
+
+    public int getSpeed()
+    {
+        int matter = MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(INPUT_SLOT_ID));
+        return MathHelper.round(DECEOPOSE_SPEED_PER_MATTER * matter * getUpgradeMultiply(UpgradeTypes.Speed));
+    }
+
+    public int getEnergyDrainPerTick()
+    {
+        int maxEnergy = getEnergyDrainMax();
+        return maxEnergy / getSpeed();
+    }
+
+    public int getEnergyDrainMax()
+    {
+        int matter = MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(INPUT_SLOT_ID));
+        double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.PowerUsage);
+        return MathHelper.round((matter * DECOMPOSE_ENERGY_PER_MATTER) * upgradeMultiply);
+    }
 
     private boolean canPutInOutput()
     {
@@ -191,7 +219,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 	{
 		if(getStackInSlot(INPUT_SLOT_ID) != null && canPutInOutput())
 		{
-            if(random.nextFloat() < MATTER_DECOMPOSE_FAIL_CHANGE)
+            if(random.nextFloat() < getFailChance())
             {
                 failDecompose();
             }

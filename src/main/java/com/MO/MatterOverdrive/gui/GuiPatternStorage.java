@@ -31,6 +31,7 @@ public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStor
     public GuiPatternStorage(InventoryPlayer playerInventory,TileEntityMachinePatternStorage patternStorage)
     {
         super(new ContainerPatternStorage(playerInventory,patternStorage),patternStorage);
+        name = "pattern_storage";
         energyElement = new ElementEnergyStored(this,176,39,patternStorage.getEnergyStorage());
     }
 

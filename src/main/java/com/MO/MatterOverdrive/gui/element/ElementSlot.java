@@ -32,6 +32,8 @@ public class ElementSlot extends MOElementBase
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
+        GL11.glColor3f(1,1,1);
+
         if(big)
         {
             gui.bindTexture(slot_big);

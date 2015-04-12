@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.tile;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.InventoryHelper;
 import cofh.lib.util.helpers.ItemHelper;
+import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
@@ -45,9 +46,10 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public int SHIELDING_SLOT_ID = 3;
 
     public static final int REPLICATE_SPEED_PER_MATTER = 120;
-	public static final int REPLICATE_ENERGY_PER_TICK = 260;
+	public static final int REPLICATE_ENERGY_PER_MATTER = 32000;
     public static final int RADIATION_DAMAGE_DELAY = 5;
     public static final int RADIATION_RANGE = 8;
+    public static final double FAIL_CHANGE = 0.05;
     private static Random random = new Random();
 	
 	public int replicateTime;
@@ -117,25 +119,26 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 		{
 			if(this.isReplicating())
 			{
-                IMatterDatabase database = MatterScanner.getLink(worldObj,getStackInSlot(DATABASE_SLOT_ID));
-
-                NBTTagCompound itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedAsItem(getStackInSlot(DATABASE_SLOT_ID)));
+                NBTTagCompound itemAsNBT = GetNewItemNBT();
                 ItemStack newItem = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
 
-                int matter = MatterHelper.getMatterAmountFromItem(newItem);
-                int lastTime = REPLICATE_SPEED_PER_MATTER * matter;
+                int time = getSpeed(newItem);
 
-                if(energyStorage.getEnergyStored() >= REPLICATE_ENERGY_PER_TICK) {
+                if(energyStorage.getEnergyStored() >= getEnergyDrainPerTick(newItem))
+                {
                     this.replicateTime++;
-                    this.extractEnergy(ForgeDirection.DOWN, REPLICATE_ENERGY_PER_TICK, false);
+                    this.extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(newItem), false);
 
-                    if (this.replicateTime >= lastTime) {
+                    if (this.replicateTime >= time)
+                    {
                         this.replicateTime = 0;
                         this.replicateItem(itemAsNBT, newItem);
 
-                    } else if (this.replicateTime >= lastTime - 60) {
-                        SpawnReplicateParticles(lastTime - 60,lastTime);
-                        if (this.replicateTime == lastTime - 30)
+                    }
+                    else if (this.replicateTime >= time - 60)
+                    {
+                        SpawnReplicateParticles(time - 60,time);
+                        if (this.replicateTime == time - 30)
                             SoundHandler.PlaySoundAt(worldObj, "replicate_success", this.xCoord, this.yCoord, this.zCoord, 0.25F, 1.0F, 0.2F, 0.8F);
 
                     }
@@ -145,7 +148,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                         manageRadiation();
                     }
 
-                    replicateProgress = (int)(((float)replicateTime / (float)lastTime) * 100f);
+                    replicateProgress = (int)(((float)replicateTime / (float)time) * 100f);
                 }
 			}
 		}
@@ -157,6 +160,45 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 		}
 		
 	}
+
+    public int getSpeed(ItemStack itemStack)
+    {
+        int matter = MatterHelper.getMatterAmountFromItem(itemStack);
+        return MathHelper.round(((REPLICATE_SPEED_PER_MATTER * matter) - 60) * getUpgradeMultiply(UpgradeTypes.Speed)) + 60;
+    }
+
+    public double getFailChance(NBTTagCompound itemAsNBT)
+    {
+        double progressChance = 1.0 - ((double) MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) / (double)MatterDatabaseHelper.MAX_ITEM_PROGRESS);
+        double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.Fail);
+        //this does not nagate all fail chance if item is not fully scanned
+        return FAIL_CHANGE * upgradeMultiply + progressChance * 0.5 + (progressChance * 0.5) * upgradeMultiply;
+    }
+
+    public int getEnergyDrainPerTick(ItemStack itemStack)
+    {
+        int maxEnergy = getEnergyDrainMax(itemStack);
+        return maxEnergy / getSpeed(itemStack);
+    }
+
+    public int getEnergyDrainMax(ItemStack itemStack)
+    {
+        int matter = MatterHelper.getMatterAmountFromItem(itemStack);
+        double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.PowerUsage);
+        return MathHelper.round((matter * REPLICATE_ENERGY_PER_MATTER) * upgradeMultiply);
+    }
+
+    public NBTTagCompound GetNewItemNBT()
+    {
+        IMatterDatabase database = MatterScanner.getLink(worldObj, getStackInSlot(DATABASE_SLOT_ID));
+
+        if (database != null)
+        {
+            NBTTagCompound itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedAsItem(getStackInSlot(DATABASE_SLOT_ID)));
+            return itemAsNBT;
+        }
+        return null;
+    }
 	
 	private void replicateItem(NBTTagCompound itemAsNBT,ItemStack newItem)
 	{
@@ -164,7 +206,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         {
             int matterAmount = MatterHelper.getMatterAmountFromItem(newItem);
 
-            if(random.nextFloat() < 1f - ((float) MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) / (float)MatterDatabaseHelper.MAX_ITEM_PROGRESS) )
+            if(random.nextFloat() <  getFailChance(itemAsNBT))
             {
                 if(failReplicate(MatterHelper.getMatterAmountFromItem(newItem)))
                 {
@@ -285,7 +327,9 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     public boolean isActive()
     {
-        return this.isReplicating() && energyStorage.getEnergyStored() >= REPLICATE_ENERGY_PER_TICK;
+        NBTTagCompound newItemNBT = GetNewItemNBT();
+        ItemStack newItem = MatterDatabaseHelper.GetItemStackFromNBT(newItemNBT);
+        return this.isReplicating() && energyStorage.getEnergyStored() >= getEnergyDrainPerTick(newItem);
     }
 
     public void manageRadiation()

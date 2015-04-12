@@ -114,12 +114,13 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
                 //the speed upgrade
                 upgrades.put(UpgradeTypes.Speed,0.75);
                 upgrades.put(UpgradeTypes.PowerUsage,1.5);
+                upgrades.put(UpgradeTypes.Fail,1.25);
                 break;
             case 2:
                 //less power upgrade
                 upgrades.put(UpgradeTypes.Speed,1.5);
-                upgrades.put(UpgradeTypes.PowerUsage,0.5);
-                upgrades.put(UpgradeTypes.Fail,1.25);
+                upgrades.put(UpgradeTypes.PowerUsage,0.75);
+                upgrades.put(UpgradeTypes.Fail,1.5);
                 break;
             case 3:
                 //less chance to fail upgrade

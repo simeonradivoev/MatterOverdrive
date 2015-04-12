@@ -1,19 +1,19 @@
 package com.MO.MatterOverdrive.gui;
 
+import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementBase;
+import cofh.lib.util.helpers.StringHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.slot.MOSlot;
 import com.MO.MatterOverdrive.container.slot.SlotPatternStorage;
 import com.MO.MatterOverdrive.container.slot.SlotUpgrade;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
-import com.MO.MatterOverdrive.gui.element.ElementBaseGroup;
-import com.MO.MatterOverdrive.gui.element.ElementInventorySlot;
-import com.MO.MatterOverdrive.gui.element.ElementSlotsList;
-import com.MO.MatterOverdrive.gui.element.MOElementButton;
+import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.pages.PageUpgrades;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.StatCollector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,8 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     MOElementButton configPageButton;
     MOElementButton upgradesPageButton;
     ElementSlotsList slotsList;
+    ElementIndicator indicator;
+
 
     public MOGuiMachine(Container container,T machine)
     {
@@ -45,6 +47,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         configPage = new ElementBaseGroup(this,0,0,xSize,ySize);
         configPage.setName("Configurations");
         upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container,machine.getInventory());
+        indicator = new ElementIndicator(this,6,159);
 
         pages.add(homePage);
         pages.add(configPage);
@@ -76,6 +79,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         this.addElement(configPage);
         this.addElement(upgradesPage);
         this.addElement(slotsList);
+        this.addElement(indicator);
 
         sidePannel.addElement(homePageButton);
         sidePannel.addElement(configPageButton);
@@ -90,6 +94,14 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         homePageButton.setEnabled(!homePage.isVisible());
         configPageButton.setEnabled(!configPage.isVisible());
         upgradesPageButton.setEnabled(!upgradesPage.isVisible());
+
+        if (machine.isActive())
+        {
+            indicator.setIndication(1);
+        }else
+        {
+            indicator.setIndication(0);
+        }
     }
 
     @Override
@@ -127,5 +139,17 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         {
             pages.get(i).setVisible(false);
         }
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int x, int y)
+    {
+        if(name != null && !name.isEmpty())
+        {
+            String n = StringHelper.localize("gui." + name + ".name");
+            fontRendererObj.drawString(n, 125 - (fontRendererObj.getStringWidth(n) / 2), 7, new GuiColor(44, 54, 52).getColor());
+        }
+        drawElements(0, true);
+        drawTabs(0, true);
     }
 }

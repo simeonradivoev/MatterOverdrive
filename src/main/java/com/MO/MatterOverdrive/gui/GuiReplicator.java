@@ -35,6 +35,7 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 	public GuiReplicator(InventoryPlayer inventoryPlayer,TileEntityMachineReplicator entity)
     {
 		super(new ContainerReplicator(inventoryPlayer, entity),entity);
+        name = "replicator";
 		matterElement = new ElementMatterStored(this,141,39,machine.getMatterStorage());
 		energyElement = new MOElementEnergy(this,167,39,machine.getEnergyStorage());
 		replicate_progress = new ElementDualScaled(this,32,52);
@@ -91,7 +92,7 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
             }
         }
 
-        MatterHelper.DrawMatterInfoTooltip(itemStack, TileEntityMachineReplicator.REPLICATE_SPEED_PER_MATTER, TileEntityMachineReplicator.REPLICATE_ENERGY_PER_TICK, list);
+        //MatterHelper.DrawMatterInfoTooltip(itemStack, TileEntityMachineReplicator.REPLICATE_SPEED_PER_MATTER, TileEntityMachineReplicator.REPLICATE_ENERGY_PER_TICK, list);
 
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
@@ -100,9 +101,8 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 	@Override
 	public void drawGuiContainerForegroundLayer(int part1,int part2)
 	{
+        super.drawGuiContainerForegroundLayer(part1,part2);
         ManageReqiremnetsTooltips();
-		drawElements(0, true);
-		drawTabs(0, true);
 	}
 
     void ManageReqiremnetsTooltips()
@@ -111,23 +111,22 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 
         if(scanner != null)
         {
-            IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld, scanner);
+            NBTTagCompound itemAsNBT = machine.GetNewItemNBT();
 
-            if(database != null)
+            if(itemAsNBT != null)
             {
-                NBTTagCompound tag = database.getItemAsNBT(MatterScanner.getSelectedAsItem(scanner));
-                if(tag != null) {
-                    ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(tag);
-                    int matterAmount = MatterHelper.getMatterAmountFromItem(item);
-                    matterElement.setDrain(-matterAmount);
-                    energyElement.setEnergyRequired(-(TileEntityMachineReplicator.REPLICATE_SPEED_PER_MATTER * TileEntityMachineReplicator.REPLICATE_ENERGY_PER_TICK * matterAmount));
-                }
+                ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
+                int matterAmount = MatterHelper.getMatterAmountFromItem(item);
+                matterElement.setDrain(-matterAmount);
+                energyElement.setEnergyRequired(-(machine.getEnergyDrainMax(item)));
+                energyElement.setEnergyRequiredPerTick(-machine.getEnergyDrainPerTick(item));
             }
         }
         else
         {
             matterElement.setDrain(0);
             energyElement.setEnergyRequired(0);
+            energyElement.setEnergyRequiredPerTick(0);
         }
     }
 

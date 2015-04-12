@@ -46,7 +46,7 @@ public class ContainerReplicator extends ContainerMachine<TileEntityMachineRepli
 	public void addCraftingToCrafters(ICrafting icrafting)
 	{
 		super.addCraftingToCrafters(icrafting);
-		icrafting.sendProgressBarUpdate(this, 0, this.machine.replicateTime);
+		icrafting.sendProgressBarUpdate(this, 0, this.machine.replicateProgress);
 		icrafting.sendProgressBarUpdate(this, 1, this.machine.getMatterStored());
 		icrafting.sendProgressBarUpdate(this, 2, this.machine.getEnergyStored(ForgeDirection.DOWN));
 	}

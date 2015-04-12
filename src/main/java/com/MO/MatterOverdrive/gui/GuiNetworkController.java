@@ -16,6 +16,7 @@ public class GuiNetworkController extends MOGuiMachine<TileEntityMachineNetworkC
     public GuiNetworkController(InventoryPlayer inventoryPlayer,TileEntityMachineNetworkController entity)
     {
         super(new ContainerNetworkController(inventoryPlayer,entity),entity);
+        name = "network_controller";
         grid = new ElementGrid(this,45,30,168,100,168);
     }
 
@@ -37,9 +38,8 @@ public class GuiNetworkController extends MOGuiMachine<TileEntityMachineNetworkC
 
     protected void drawGuiContainerForegroundLayer(int var1, int var2)
     {
+        super.drawGuiContainerForegroundLayer(var1,var2);
         drawConnections();
-        this.drawElements(0.0F, true);
-        this.drawTabs(0.0F, true);
     }
 
     protected void drawConnections()

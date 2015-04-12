@@ -45,7 +45,7 @@ public class ContainerDecomposer extends ContainerMachine<TileEntityMachineDecom
 	public void addCraftingToCrafters(ICrafting icrafting)
 	{
 		super.addCraftingToCrafters(icrafting);
-		icrafting.sendProgressBarUpdate(this, 0, this.machine.decomposeTime);
+		icrafting.sendProgressBarUpdate(this, 0, this.machine.decomposeProgress);
 		icrafting.sendProgressBarUpdate(this, 1, this.machine.getMatterStored());
 		icrafting.sendProgressBarUpdate(this, 2, this.machine.getEnergyStored(ForgeDirection.DOWN));
 	}

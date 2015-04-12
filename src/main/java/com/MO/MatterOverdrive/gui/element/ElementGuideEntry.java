@@ -5,6 +5,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.gui.MOGuiBase;
 import com.MO.MatterOverdrive.guide.MOGuideEntry;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class ElementGuideEntry extends MOElementBase
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
+        GL11.glColor3f(1, 1, 1);
         gui.bindTexture(BG);
         gui.drawSizedTexturedModalRect(this.posX,this.posY,0,0,22,22,22,22);
     }

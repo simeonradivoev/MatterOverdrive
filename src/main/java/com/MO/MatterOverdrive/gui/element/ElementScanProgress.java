@@ -80,6 +80,7 @@ public class ElementScanProgress extends MOElementBase
         }
 
         GL11.glPopMatrix();
+        GL11.glColor3f(1, 1, 1);
     }
 
     public void setSeed(int seed)

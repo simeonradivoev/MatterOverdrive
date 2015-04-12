@@ -128,7 +128,7 @@ public class MatterScanner extends MOBaseItem
 
 	public static IMatterDatabase getLink(World world,ItemStack scanner)
 	{
-		if(scanner.getItem() instanceof MatterScanner)
+		if(scanner != null && scanner.getItem() instanceof MatterScanner)
 		{
 			if(scanner.hasTagCompound())
 			{

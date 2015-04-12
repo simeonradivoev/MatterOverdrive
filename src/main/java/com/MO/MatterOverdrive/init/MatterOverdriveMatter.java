@@ -219,8 +219,9 @@ public class MatterOverdriveMatter
         reg(c,"record",4);
         reg(c,Items.chicken,3);
         reg(c,Items.cooked_chicken,3);
+        reg(c,Items.rotten_flesh,2);
 
-        MatterRegistry.register(MatterOverdriveItems.matter_dust,1);
+        MatterRegistry.register(MatterOverdriveItems.matter_dust_refined,1);
     }
 
     public static void registerRecipeItems(MOConfigurationHandler c)
