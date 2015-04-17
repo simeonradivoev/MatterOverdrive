@@ -9,6 +9,7 @@ import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
@@ -71,8 +72,8 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket,Abstrac
         Collections.sort(this.packets, new Comparator<Class<? extends AbstractPacket>>() {
             @Override
             public int compare(Class<? extends AbstractPacket> o1, Class<? extends AbstractPacket> o2) {
-                int com = String.CASE_INSENSITIVE_ORDER.compare(o1.getCanonicalName(),o2.getCanonicalName());
-                if(com == 0)
+                int com = String.CASE_INSENSITIVE_ORDER.compare(o1.getCanonicalName(), o2.getCanonicalName());
+                if (com == 0)
                     com = o1.getCanonicalName().compareTo(o2.getCanonicalName());
 
                 return com;
@@ -82,10 +83,9 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket,Abstrac
 
     public  void registerPackets()
     {
-        registerPacket(OpenGuiPacket.class);
         registerPacket(TileEntityUpdatePacket.class);
         registerPacket(PacketMatterPipeUpdate.class);
-        registerPacket(PacketMatterScannerUpdate.class);
+        registerPacket(PacketPhaserUpdate.class);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket,Abstrac
 
         byte discriminator = (byte) this.packets.indexOf(clazz);
         buffer.writeByte(discriminator);
-        msg.encodeInto(ctx,buffer);
+        msg.encodeInto(ctx, buffer);
 
         FMLProxyPacket proxyPacket = new FMLProxyPacket(buffer,ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get());
         out.add(proxyPacket);
@@ -120,24 +120,33 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket,Abstrac
         }
 
         AbstractPacket abstractPacket = clazz.newInstance();
-        abstractPacket.decodeInto(ctx,payload.slice());
+        abstractPacket.decodeInto(ctx, payload.slice());
 
-        EntityPlayer player;
         switch (FMLCommonHandler.instance().getEffectiveSide())
         {
             case CLIENT:
-                player = Minecraft.getMinecraft().thePlayer;
-                abstractPacket.handleClientSide(player);
+                decodePlayer(abstractPacket);
                 break;
             case SERVER:
-                INetHandler iNetHandler = ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
-                player = ((NetHandlerPlayServer)iNetHandler).playerEntity;
-                abstractPacket.handleServerSide(player);
+                decodeServer(abstractPacket,ctx);
                 break;
             default:
         }
 
         out.add(abstractPacket);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void decodePlayer(AbstractPacket packet)
+    {
+        packet.handleClientSide(Minecraft.getMinecraft().thePlayer);
+    }
+
+    @SideOnly(Side.SERVER)
+    private void decodeServer(AbstractPacket packet,ChannelHandlerContext ctx)
+    {
+        INetHandler iNetHandler = ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
+        packet.handleServerSide(((NetHandlerPlayServer)iNetHandler).playerEntity);
     }
 
     public void sendToServer(AbstractPacket msg)

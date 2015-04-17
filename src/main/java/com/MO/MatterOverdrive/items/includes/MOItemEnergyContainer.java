@@ -49,13 +49,13 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	@Override
 	public int getDamage(ItemStack stack)
 	 {
-		return capacity - this.getEnergyStored(stack) + 1;
+		return getMaxEnergyStored(stack) - getEnergyStored(stack) + 1;
 	 }
 	
 	@Override
 	public int getMaxDamage(ItemStack stack)
 	{
-		return capacity+2;
+		return getMaxEnergyStored(stack)+2;
 	}
 	
 	@Override
@@ -67,14 +67,14 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	@Override
 	public int getDisplayDamage(ItemStack stack)
     {
-        return this.getDamage(stack);
+        return getDamage(stack);
     }
 	
 	@Override
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
 	 {
 		this.TagCompountCheck(itemstack);
-		infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(this.getEnergyStored(itemstack), capacity));
+		infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(getEnergyStored(itemstack), getMaxEnergyStored(itemstack)));
 	 }
 
 	@Override

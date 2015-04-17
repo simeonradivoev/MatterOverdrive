@@ -1,0 +1,14 @@
+item.matter_scanner.name=Материален Скенер
+item.emergency_ration.name=Авариина Порция
+item.phaser.name=Фейзър
+item.battery.name=Батерия
+item.creative_battery.name=Безкрайна Батрия
+item.me_conversion_matrix.name=Енергиино-Материална Преобразуваща Матрица
+item.isolinear_circuit.mk1.name=Провоизмерна чип МК1
+item.isolinear_circuit.mk1.name=Провоизмерна чип МК2
+item.isolinear_circuit.mk1.name=Провоизмерна чип МК3
+item.isolinear_circuit.mk1.name=Провоизмерна чип МК4
+item.upgrade.base.name=Надстройващ Корпус
+item.upgrade.speed.name=Скоростно Подобряване
+item.upgrade.power.name=Електрическо Подобряване
+item.upgrade.failsafe.name=Провало-Подобряване

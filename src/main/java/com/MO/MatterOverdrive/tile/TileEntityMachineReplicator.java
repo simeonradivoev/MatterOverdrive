@@ -1,8 +1,6 @@
 package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
-import cofh.lib.util.helpers.InventoryHelper;
-import cofh.lib.util.helpers.ItemHelper;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
@@ -11,7 +9,6 @@ import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
 import com.MO.MatterOverdrive.data.inventory.ShieldingSlot;
-import com.MO.MatterOverdrive.data.inventory.Slot;
 import com.MO.MatterOverdrive.fx.ReplicatorParticle;
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
@@ -22,9 +19,10 @@ import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.Vector3;
 
 import cofh.lib.util.helpers.MathHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -267,10 +265,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         }
         return false;
     }
-	
+
+    @SideOnly(Side.CLIENT)
 	public void SpawnReplicateParticles(int startTime,int totalTime)
 	{
-		if(!this.worldObj.isRemote)
+		if(this.worldObj.isRemote)
 		{
 				double time = (double)(this.replicateTime - startTime) / (double)(totalTime - startTime);
 		    	double gravity = easeIn(time,0.02,0.2,1);

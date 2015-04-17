@@ -2,16 +2,32 @@ package com.MO.MatterOverdrive.items;
 
 import java.util.*;
 
+import cofh.api.energy.IEnergyContainerItem;
+import cofh.lib.util.helpers.EnergyHelper;
+import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.weapon.IWeapon;
+import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
+import com.MO.MatterOverdrive.api.weapon.WeaponStat;
+import com.MO.MatterOverdrive.network.PacketPipeline;
+import com.MO.MatterOverdrive.network.packet.PacketPhaserUpdate;
+import com.MO.MatterOverdrive.sound.PhaserSound;
+import com.MO.MatterOverdrive.util.EntityDamageSourcePhaser;
 import com.MO.MatterOverdrive.util.MOEnergyHelper;
-import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
+import com.MO.MatterOverdrive.util.MOStringHelper;
+import com.MO.MatterOverdrive.util.WeaponHelper;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
@@ -19,15 +35,20 @@ import net.minecraft.world.World;
 
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.items.includes.MOItemEnergyContainer;
+import org.lwjgl.util.vector.Vector2f;
 
-public class Phaser extends MOItemEnergyContainer {
+public class Phaser extends MOItemEnergyContainer implements IWeapon{
 
-	private static final float ENERGY_MULTIPLY = 2.5f;
-    private static final int COOLDOWN = 10;
-    private static final int MAX_LEVEL = 6;
+	private static final double ENERGY_MULTIPLY = 2.5;
+    private static final int MAX_USE_TIME = 80;
+    private static final int MIN_HEAT_FIRE = 40;
+    public static final int MAX_LEVEL = 6;
     private static final int KILL_MODE_LEVEL = 3;
     private static final float KILL_DAMAGE_MULTIPLY = 2.5f;
     private static final int STUN_SLEEP_MULTIPLY = 5;
+
+    @SideOnly(Side.CLIENT)
+    protected PhaserSound phaserSound;
 	
 	public Phaser(String name) {
 		super(name,32000,128,128);
@@ -40,46 +61,57 @@ public class Phaser extends MOItemEnergyContainer {
     }
 
     @Override
+    public int getDamage(ItemStack stack)
+    {
+        return 0;
+    }
+
+    @Override
+    public int getDisplayDamage(ItemStack stack)
+    {
+        return super.getDamage(stack);
+    }
+
+    @Override
     public boolean hasDetails(ItemStack itemStack)
     {
         return true;
     }
 
     @Override
+    public EnumAction getItemUseAction(ItemStack p_77661_1_)
+    {
+        return EnumAction.bow;
+    }
+
+    @Override
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
-        super.addDetails(itemstack,player,infos);
+        super.addDetails(itemstack, player, infos);
 
         infos.add(EnumChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(GetEneryUse(itemstack)));
         infos.add(EnumChatFormatting.DARK_GREEN + "Damage: " + GetPhaserDamage(itemstack));
+        infos.add(EnumChatFormatting.DARK_RED + "Heat: " + getHeat(itemstack,player.worldObj));
+        AddModuleDetails(itemstack, infos);
     }
 
-    @Override
-    public int getDamage(ItemStack stack)
+    private void AddModuleDetails(ItemStack weapon,List infos)
     {
-        if(!stack.hasTagCompound())
+        ItemStack module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BARREL, weapon);
+        if (module != null)
         {
-            stack.setTagCompound(new NBTTagCompound());
+            infos.add(EnumChatFormatting.GRAY + "");
+            infos.add(EnumChatFormatting.GRAY + "Barrel:");
+
+            Object statsObject = ((IWeaponModule)module.getItem()).getValue(module);
+            if (statsObject instanceof Map)
+            {
+                for (final Map.Entry<WeaponStat, Double> entry : ((Map<WeaponStat,Double>) statsObject).entrySet())
+                {
+                    infos.add("    " + MOStringHelper.toInfo(entry.getKey(),entry.getValue()));
+                }
+            }
         }
-        return MAX_LEVEL - 1 - stack.getTagCompound().getByte("power");
-    }
-
-    @Override
-    public int getMaxDamage(ItemStack stack)
-    {
-        return MAX_LEVEL;
-    }
-
-    @Override
-    public boolean showDurabilityBar(ItemStack stack)
-    {
-        return true;
-    }
-
-    @Override
-    public int getDisplayDamage(ItemStack stack)
-    {
-        return this.getDamage(stack);
     }
 
 	@Override
@@ -93,6 +125,35 @@ public class Phaser extends MOItemEnergyContainer {
 	{
 		super.onCreated(itemStack, world, player);
 	}
+
+    public boolean onEntityItemUpdate(EntityItem entityItem)
+    {
+        if (entityItem.worldObj.isRemote)
+        {
+            stopPhaserSounds();
+        }
+        return false;
+    }
+
+    @Override
+    public void onUpdate(ItemStack itemStack,World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
+    {
+        if (entity instanceof EntityPlayer)
+        {
+            EntityPlayer player = (EntityPlayer)entity;
+            if (player.worldObj.isRemote)
+            {
+                if (player.isUsingItem() && player.getItemInUse() == itemStack) {
+
+                }
+                else
+                {
+                    setFiring(itemStack, false);
+                    stopPhaserSounds();
+                }
+            }
+        }
+    }
 	
 	/**
      * How long it takes to use or consume an item
@@ -100,7 +161,7 @@ public class Phaser extends MOItemEnergyContainer {
 	@Override
     public int getMaxItemUseDuration(ItemStack item)
     {
-        return 100;
+        return MAX_USE_TIME;
     }
 	
 	public static boolean isKillMode(ItemStack item)
@@ -112,26 +173,11 @@ public class Phaser extends MOItemEnergyContainer {
 		return item.getTagCompound().getByte("power") >= KILL_MODE_LEVEL;
 	}
 	
-	@Override
-	public void onUpdate(ItemStack item, World w, Entity player, int slot, boolean onHotbar)
-	{
-        int cooldown = item.getTagCompound().getInteger("cooldown");
-
-		if(cooldown > 0)
-        {
-            cooldown--;
-            item.getTagCompound().setInteger("cooldown", cooldown);
-        }
-	}
-	
 	private void ManageShooting(ItemStack item, World w, EntityPlayer player)
 	{
 		if(!w.isRemote)
 		{
-            if(!inCooldown(item))
-            {
-                Shoot(item, w, player);
-            }
+            Shoot(item, w, player);
 		}
 	}
 	
@@ -157,27 +203,105 @@ public class Phaser extends MOItemEnergyContainer {
 		Vec3 direction = Vec3.createVectorHelper(f7 * d3, f6 * d3, f8 * d3);
 		direction.normalize();
 		
-		if(this.getEnergyStored(item) > 0)
+		if(getEnergyStored(item) >= GetEneryUse(item))
 		{
 			this.shoot(item,penetration, w, player, vec3, vec31, direction, d0, d1, d2);
 		}
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack item, World w, EntityPlayer p) 
+	public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer player)
 	{
 		this.TagCompountCheck(item);
 		
-		if(p.isSneaking())
+		if(player.isSneaking())
 		{
-			SwitchModes(w,p,item);
-		}else
-		{
-			ManageShooting(item,w,p);
+			SwitchModes(world,player,item);
+		}
+        else
+        {
+            if (getHeat(item,world) <= MIN_HEAT_FIRE && DrainEnergy(item,1,true))
+            {
+                if (world.isRemote)
+                {
+                    PlaySound(player.posX, player.posY, player.posZ);
+                    setFiring(item, true);
+                }
+
+                if (!world.isRemote)
+                {
+                    MatterOverdrive.packetPipeline.sendToAll(new PacketPhaserUpdate(player.inventory.currentItem, player.getEntityId(), true));
+                }
+
+                player.setItemInUse(item, getMaxItemUseDuration(item));
+            }
+            return item;
 		}
 		
 		return item;
 	}
+
+    @SideOnly(Side.CLIENT)
+    private void PlaySound(double x,double y,double z)
+    {
+        if(phaserSound == null)
+        {
+            phaserSound = new PhaserSound(new ResourceLocation(Reference.MOD_ID + ":" +"phaser_beam"),(float)x,(float)y,(float)z,itemRand.nextFloat() * 0.1f + 0.3f,1);
+            Minecraft.getMinecraft().getSoundHandler().playSound(phaserSound);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void stopPhaserSounds()
+    {
+        if(phaserSound != null)
+        {
+            phaserSound.stopPlaying();
+            phaserSound = null;
+        }
+    }
+
+    public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player)
+    {
+        if (world.isRemote) {
+            stopPhaserSounds();
+        }
+
+        setFiring(itemStack, false);
+        DrainEnergy(itemStack, getMaxItemUseDuration(itemStack), false);
+        setHeat(itemStack, world, getMaxItemUseDuration(itemStack) + 40);
+
+        return itemStack;
+    }
+
+    @Override
+    public void onUsingTick(ItemStack itemStack, EntityPlayer player, int count)
+    {
+        if (DrainEnergy(itemStack,getMaxItemUseDuration(itemStack) - count,true))
+        {
+            ManageShooting(itemStack, player.worldObj, player);
+        }
+        else {
+            DrainEnergy(itemStack, (getMaxItemUseDuration(itemStack) - count) - 1, false);
+            if (player.worldObj.isRemote)
+            {
+                stopPhaserSounds();
+            }
+            player.stopUsingItem();
+            setFiring(itemStack, false);
+        }
+    }
+
+    public void onPlayerStoppedUsing(ItemStack itemStack, World world, EntityPlayer player, int count)
+    {
+        if (world.isRemote)
+        {
+            stopPhaserSounds();
+        }
+        setHeat(itemStack, world, getMaxItemUseDuration(itemStack) - count);
+        DrainEnergy(itemStack, getMaxItemUseDuration(itemStack) - count, false);
+        setFiring(itemStack, false);
+    }
 	
 	private void SwitchModes(World world,EntityPlayer player,ItemStack item)
 	{
@@ -189,20 +313,14 @@ public class Phaser extends MOItemEnergyContainer {
         {
             level = 0;
         }
-		item.getTagCompound().setByte("power",level);
+		item.getTagCompound().setByte("power", level);
 	}
 	
 	
-	private void DrainEnergy(ItemStack item)
+	private boolean DrainEnergy(ItemStack item,int ticks,boolean simulate)
 	{
-		super.extractEnergy(item, GetEneryUse(item), false);
+        return MOEnergyHelper.extractExactAmount(this, item, GetEneryUse(item) * ticks,simulate);
 	}
-
-    @Override
-    public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
-
-        return 0;
-    }
 
     private int GetEneryUse(ItemStack item)
     {
@@ -233,15 +351,38 @@ public class Phaser extends MOItemEnergyContainer {
         return 0;
     }
 
-    private boolean inCooldown(ItemStack item)
+    public void setHeat(ItemStack item,World world,long amount)
     {
-        this.TagCompountCheck(item);
-        return item.getTagCompound().getInteger("cooldown") > 0;
+        if (item.hasTagCompound())
+        {
+            item.getTagCompound().setLong("heat",world.getTotalWorldTime() + amount);
+        }
     }
 
-    private void setCooldown(ItemStack item)
+    public long getHeat(ItemStack item,World world)
     {
-        item.getTagCompound().setInteger("cooldown", COOLDOWN);
+        if (item.hasTagCompound())
+        {
+            return Math.max(0,item.getTagCompound().getLong("heat") - world.getTotalWorldTime());
+        }
+        return 0;
+    }
+
+    public static void setFiring(ItemStack item,boolean firing)
+    {
+        if (item.hasTagCompound())
+        {
+            item.getTagCompound().setBoolean("firing",firing);
+        }
+    }
+
+    public static boolean getFiring(ItemStack item)
+    {
+        if (item.hasTagCompound())
+        {
+            return item.getTagCompound().getBoolean("firing");
+        }
+        return false;
     }
 
 	private void shoot(ItemStack item,float penetration, World w, EntityPlayer p, Vec3 vec3,
@@ -264,8 +405,7 @@ public class Phaser extends MOItemEnergyContainer {
         for (int l = 0; l < list.size(); ++l)
         {
             Entity entity1 = (Entity) list.get(l);
-            if (!entity1.isDead && entity1 != p
-                    && !(entity1 instanceof EntityItem)) {
+            if (!entity1.isDead && entity1 != p && !(entity1 instanceof EntityItem)) {
                 if (entity1.isEntityAlive()) {
                     // prevent killing / flying of mounts.
                     if (entity1.riddenByEntity == p)
@@ -273,14 +413,11 @@ public class Phaser extends MOItemEnergyContainer {
 
                     float f1 = 0.3F;
 
-                    AxisAlignedBB boundingBox = entity1.boundingBox.expand(
-                            f1, f1, f1);
-                    MovingObjectPosition movingObjectPosition = boundingBox
-                            .calculateIntercept(vec3, vec31);
+                    AxisAlignedBB boundingBox = entity1.boundingBox.expand(f1, f1, f1);
+                    MovingObjectPosition movingObjectPosition = boundingBox.calculateIntercept(vec3, vec31);
 
                     if (movingObjectPosition != null) {
-                        double nd = vec3
-                                .squareDistanceTo(movingObjectPosition.hitVec);
+                        double nd = vec3.squareDistanceTo(movingObjectPosition.hitVec);
 
                         if (nd < closest) {
                             entity = entity1;
@@ -291,8 +428,7 @@ public class Phaser extends MOItemEnergyContainer {
             }
         }
 
-        DamageSource damageInfo = DamageSource.causePlayerDamage(p);
-        damageInfo.damageType = "phaser";
+        DamageSource damageInfo = new EntityDamageSourcePhaser(p);
         float damage = GetPhaserDamage(item);
 
         MovingObjectPosition pos = w.rayTraceBlocks(vec3, vec31, true);
@@ -310,73 +446,136 @@ public class Phaser extends MOItemEnergyContainer {
             if (pos.entityHit instanceof EntityLivingBase)
             {
                 EntityLivingBase el = (EntityLivingBase) pos.entityHit;
-                if (el.attackEntityFrom(damageInfo, damage))
-                {
-                    DrainEnergy(item);
-                    setCooldown(item);
-                    SoundHandler.PlaySoundAt(w, "phaser_fire_burst_4", p,0.4f,0.6f);
-                    el.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, GetSleepTime(item), 10));
-                }
+                el.attackEntityFrom(damageInfo, damage);
+                el.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, GetSleepTime(item), 10));
+                el.addPotionEffect(new PotionEffect(Potion.digSlowdown.id,GetSleepTime(item),10));
+                el.addPotionEffect(new PotionEffect(Potion.jump.id,GetSleepTime(item),-10));
             }
         }
-
-		/*boolean hasDestroyedSomething = true;
-		
-		while (penetration > 0 && hasDestroyedSomething) {
-			AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(
-					Math.min(vec3.xCoord, vec31.xCoord),
-					Math.min(vec3.yCoord, vec31.yCoord),
-					Math.min(vec3.zCoord, vec31.zCoord),
-					Math.max(vec3.xCoord, vec31.xCoord),
-					Math.max(vec3.yCoord, vec31.yCoord),
-					Math.max(vec3.zCoord, vec31.zCoord)).expand(16, 16, 16);
-
-			Entity entity = null;
-			List list = w.getEntitiesWithinAABBExcludingEntity(p, bb);
-			double closest = 9999999.0D;
-			int l;
-
-			for (l = 0; l < list.size(); ++l)
-            {
-				Entity entity1 = (Entity) list.get(l);
-				if (!entity1.isDead && entity1 != p
-						&& !(entity1 instanceof EntityItem)) {
-					if (entity1.isEntityAlive()) {
-						// prevent killing / flying of mounts.
-						if (entity1.riddenByEntity == p)
-							continue;
-
-						float f1 = 0.3F;
-
-						AxisAlignedBB boundingBox = entity1.boundingBox.expand(
-								f1, f1, f1);
-						MovingObjectPosition movingObjectPosition = boundingBox
-								.calculateIntercept(vec3, vec31);
-
-						if (movingObjectPosition != null) {
-							double nd = vec3
-									.squareDistanceTo(movingObjectPosition.hitVec);
-
-							if (nd < closest) {
-								entity = entity1;
-								closest = nd;
-							}
-						}
-					}
-				}
-			}
-
-			Vec3 vec = Vec3.createVectorHelper(d0, d1, d2);
-			MovingObjectPosition pos = w.rayTraceBlocks(vec3, vec31, true);
-			
-			if (entity != null && pos != null
-					&& pos.hitVec.squareDistanceTo(vec) > closest) {
-				pos = new MovingObjectPosition(entity);
-			} else if (entity != null && pos == null) {
-				pos = new MovingObjectPosition(entity);
-			}
-
-
-		}*/
 	}
+
+    //region Energy Functions
+    @Override
+    public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
+
+        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
+        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
+        {
+            IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
+            int energy = e.receiveEnergy(energy_module,maxReceive,simulate);
+            if (!simulate)
+                WeaponHelper.setModuleAtSlot(Reference.MODULE_BATTERY,container,energy_module);
+            return energy;
+        }
+        else
+        {
+            return super.receiveEnergy(container,maxReceive,simulate);
+        }
+    }
+
+    @Override
+    public int extractEnergy(ItemStack container, int maxExtract, boolean simulate)
+    {
+
+        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
+        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
+        {
+            IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
+            int energy = e.extractEnergy(energy_module, maxReceive, simulate);
+            if (!simulate)
+                WeaponHelper.setModuleAtSlot(Reference.MODULE_BATTERY,container,energy_module);
+            return energy;
+        }
+        else
+        {
+            return super.extractEnergy(container, maxReceive, simulate);
+        }
+    }
+
+    @Override
+    protected void setEnergyStored(ItemStack container,int amount)
+    {
+        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
+        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
+        {
+            EnergyHelper.setDefaultEnergyTag(energy_module, amount);
+            WeaponHelper.setModuleAtSlot(Reference.MODULE_BATTERY,container,energy_module);
+        }
+        else
+        {
+            super.setEnergyStored(container,amount);
+        }
+
+    }
+
+    @Override
+    public int getEnergyStored(ItemStack container)
+    {
+        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
+        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
+        {
+            IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
+            return e.getEnergyStored(container);
+        }
+        else
+        {
+            return super.getEnergyStored(container);
+        }
+    }
+
+    @Override
+    public int getMaxEnergyStored(ItemStack container)
+    {
+        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
+        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
+        {
+            IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
+            return e.getMaxEnergyStored(energy_module);
+        }
+        else
+        {
+            return capacity;
+        }
+    }
+
+    //endregion
+
+    @Override
+    public Vector2f getSlotPosition(int slot, ItemStack weapon)
+    {
+        switch (slot)
+        {
+            case Reference.MODULE_BATTERY:
+                return new Vector2f(170,115);
+            case Reference.MODULE_COLOR:
+                return new Vector2f(60,45);
+            case Reference.MODULE_BARREL:
+                return new Vector2f(60,115);
+            case Reference.MODULE_OTHER:
+                return new Vector2f(200,45);
+        }
+        return new Vector2f(0,0);
+    }
+
+    @Override
+    public Vector2f getModuleScreenPosition(int slot, ItemStack weapon)
+    {
+        switch(slot)
+        {
+            case Reference.MODULE_BATTERY:
+                return new Vector2f(165,85);
+            case Reference.MODULE_COLOR:
+                return new Vector2f(100,80);
+            case Reference.MODULE_BARREL:
+                return new Vector2f(85,100);
+        }
+        return getSlotPosition(slot,weapon);
+    }
+
+    @Override
+    public boolean supportsModule(int slot,ItemStack weapon)
+    {
+        return slot != Reference.MODULE_SIGHTS;
+
+    }
 }

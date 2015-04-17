@@ -16,13 +16,13 @@ import java.util.List;
  */
 public class ElementSlotsList extends ElementSlot
 {
-    private static final ResourceLocation MAIN_SLOT_TEXTURE = new ResourceLocation(Reference.PATH_ELEMENTS + "side_slot_active_bg.png");
     List<Slot> inventory;
     int main;
+    boolean isDark = false;
 
     public ElementSlotsList(GuiBase gui, int posX, int posY, Inventory inventory,int main)
     {
-        super(gui, posX, posY,true);
+        super(gui, posX, posY,18,18,"small");
         this.inventory = new ArrayList<Slot>();
         for (int i = 0;i < inventory.getSizeInventory();i++)
         {
@@ -36,7 +36,7 @@ public class ElementSlotsList extends ElementSlot
 
     public ElementSlotsList(GuiBase gui, int posX, int posY, List<Slot> inventory,int main)
     {
-        super(gui, posX, posY,true);
+        super(gui, posX, posY,18,18,"small");
         this.inventory = inventory;
         this.main = main;
     }
@@ -56,17 +56,23 @@ public class ElementSlotsList extends ElementSlot
             int y = this.posY + i * 27;
             if(main == i)
             {
-                gui.bindTexture(MAIN_SLOT_TEXTURE);
+                if(isDark)
+                    type = "big_main_dark";
+                else
+                    type = "big_main";
+
+                gui.bindTexture(getTexture(type));
                 gui.drawSizedTexturedModalRect(this.posX,y,0,0,37,22,37,22);
 
             }
             else
             {
-                gui.bindTexture(slot_big);
+                type = "big";
+                gui.bindTexture(getTexture(type));
                 gui.drawSizedTexturedModalRect(this.posX, y, 0, 0, 22, 22, 22, 22);
             }
 
-            drawSlotIcon(inventory.get(i),this.posX + 3,y + 3);
+            drawSlotIcon(inventory.get(i).getTexture(),this.posX + 3,y + 3);
         }
     }
 
@@ -75,8 +81,18 @@ public class ElementSlotsList extends ElementSlot
         inventory.add(slot);
     }
 
+    public void RemoveSlot(Slot slot)
+    {
+        inventory.remove(slot);
+    }
+
     @Override
     public void drawForeground(int mouseX, int mouseY) {
 
+    }
+
+    public void setIsDark(boolean isDark)
+    {
+        this.isDark = isDark;
     }
 }

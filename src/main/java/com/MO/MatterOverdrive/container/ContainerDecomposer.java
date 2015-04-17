@@ -23,8 +23,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ContainerDecomposer extends ContainerMachine<TileEntityMachineDecomposer>
 {
 	private float lastDecomposeProgress;
-	private int lastMatter;
-	private int lastEnergy;
 	
 	public ContainerDecomposer(InventoryPlayer inventory,TileEntityMachineDecomposer tileentity)
 	{
@@ -46,8 +44,6 @@ public class ContainerDecomposer extends ContainerMachine<TileEntityMachineDecom
 	{
 		super.addCraftingToCrafters(icrafting);
 		icrafting.sendProgressBarUpdate(this, 0, this.machine.decomposeProgress);
-		icrafting.sendProgressBarUpdate(this, 1, this.machine.getMatterStored());
-		icrafting.sendProgressBarUpdate(this, 2, this.machine.getEnergyStored(ForgeDirection.DOWN));
 	}
 	
 	public void detectAndSendChanges()
@@ -61,21 +57,9 @@ public class ContainerDecomposer extends ContainerMachine<TileEntityMachineDecom
 			{
 				icrafting.sendProgressBarUpdate(this, 0, this.machine.decomposeProgress);
 			}
-			
-			if(this.lastMatter != this.machine.getMatterStored())
-			{
-				icrafting.sendProgressBarUpdate(this, 1, this.machine.getMatterStored());
-			}
-			
-			if(this.lastEnergy != this.machine.getEnergyStored(ForgeDirection.DOWN))
-			{
-				icrafting.sendProgressBarUpdate(this, 2, this.machine.getEnergyStored(ForgeDirection.DOWN));
-			}
-
-			this.lastDecomposeProgress = this.machine.decomposeProgress;
-			this.lastMatter = this.machine.getMatterStored();
-			this.lastEnergy = this.machine.getEnergyStored(ForgeDirection.DOWN);
 		}
+
+		lastDecomposeProgress = this.machine.decomposeProgress;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -83,10 +67,6 @@ public class ContainerDecomposer extends ContainerMachine<TileEntityMachineDecom
 	{
 		if(slot == 0)
 			this.machine.decomposeProgress = newValue;
-		if(slot == 1)
-			this.machine.setMatterStored(newValue);
-		if(slot == 2)
-			this.machine.setEnergyStored(newValue);
 	}
 
 	@Override

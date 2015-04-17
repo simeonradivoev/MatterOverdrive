@@ -18,26 +18,20 @@ import org.lwjgl.input.Keyboard;
 
 public class MOEnergyMatterBlockItem extends ItemBlock
 {
-	protected String details;
-
 	public MOEnergyMatterBlockItem(Block block)
 	{
 		super(block);
-		if (block instanceof MOBlock)
-		{
-			this.details = ((MOBlock) block).getDetails();
-		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List infos, boolean p_77624_4_)
 	{
-		if(details != null && !details.isEmpty())
+		if(MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
 		{
 			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 			{
-				infos.add(EnumChatFormatting.GRAY + details);
+				infos.add(EnumChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
 			}
 			else
 			{

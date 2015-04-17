@@ -63,6 +63,12 @@ public class GuiHandler implements IGuiHandler
                     return new ContainerSolarPanel(player.inventory,(TileEntityMachineSolarPanel)entity);
                 }
                 break;
+            case MatterOverdrive.guiWeaponStation:
+                if (entity instanceof TileEntityWeaponStation)
+                {
+                    return new ContainerWeaponStation(player.inventory,(TileEntityWeaponStation)entity);
+                }
+                break;
 			}
 		}
 		return null;
@@ -110,6 +116,12 @@ public class GuiHandler implements IGuiHandler
                     if (entity instanceof TileEntityMachineSolarPanel)
                     {
                         return new GuiSolarPanel(player.inventory,(TileEntityMachineSolarPanel)entity);
+                    }
+                    break;
+                case MatterOverdrive.guiWeaponStation:
+                    if (entity instanceof TileEntityWeaponStation)
+                    {
+                        return new GuiWeaponStation(player.inventory,(TileEntityWeaponStation)entity);
                     }
                     break;
 			}

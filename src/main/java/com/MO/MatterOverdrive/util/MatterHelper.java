@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.MO.MatterOverdrive.api.inventory.IUpgrade;
 import com.MO.MatterOverdrive.api.matter.*;
+import com.MO.MatterOverdrive.api.weapon.IWeapon;
+import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
 import com.MO.MatterOverdrive.handler.IMatterEntry;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
 
@@ -96,7 +98,25 @@ public class MatterHelper
 	{
 		return MatterRegistry.hasEntry(item);
 	}
-	
+
+    public static boolean isWeaponModule(ItemStack itemStack)
+    {
+        if (itemStack != null && itemStack.getItem() != null)
+        {
+            return itemStack.getItem() instanceof IWeaponModule;
+        }
+        return false;
+    }
+
+    public static boolean isWeapon(ItemStack itemStack)
+    {
+        if (itemStack != null && itemStack.getItem() != null)
+        {
+            return itemStack.getItem() instanceof IWeapon;
+        }
+        return false;
+    }
+
 	public static boolean isMatterScanner(ItemStack item)
 	{
         if(item != null && item.getItem() != null)

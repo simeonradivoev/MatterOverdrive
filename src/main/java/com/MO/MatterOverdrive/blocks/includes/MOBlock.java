@@ -5,12 +5,14 @@ import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.IMOTileEntity;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -22,25 +24,12 @@ import java.util.Random;
  */
 public class MOBlock extends Block
 {
-
-    private String details;
-
     public MOBlock(Material material, String name)
     {
         super(material);
         this.setBlockName(name);
         this.setBlockTextureName(Reference.MOD_ID + ":" + name);
         setCreativeTab(MatterOverdrive.tabMatterOverdrive);
-    }
-
-    public void setDetails(String details)
-    {
-        this.details = details;
-    }
-
-    public String getDetails()
-    {
-        return this.details;
     }
 
     public void Register()

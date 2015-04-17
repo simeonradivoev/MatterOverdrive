@@ -5,6 +5,7 @@ import java.util.List;
 import cofh.lib.util.TimeTracker;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.sound.MachineSound;
+import com.MO.MatterOverdrive.util.MOPhysicsHelper;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.relauncher.Side;
@@ -21,6 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import cofh.lib.util.helpers.MathHelper;
@@ -41,6 +43,7 @@ public class MatterScanner extends MOBaseItem
 	public static final String PANEL_OPEN_TAG_NAME = "panelOpen";
 	public static final int PROGRESS_PER_ITEM = 10;
 	public static final int SCAN_TIME = 40;
+	@SideOnly(Side.CLIENT)
 	public static MachineSound scanningSound;
 	public static IIcon offline_icon;
 
@@ -70,7 +73,8 @@ public class MatterScanner extends MOBaseItem
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
 	{
-		if(hasDetails(itemstack)) {
+		if(hasDetails(itemstack))
+		{
 			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 			{
 				addDetails(itemstack,player,infos);
@@ -261,25 +265,23 @@ public class MatterScanner extends MOBaseItem
         MatterDatabaseHelper.InitTagCompound(stack);
 	}
 
+	@SideOnly(Side.CLIENT)
     public static void DisplayGuiScreen()
     {
-        if(Minecraft.getMinecraft().theWorld.isRemote)
-        {
-            if(MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem()))
-            {
-                Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem(),Minecraft.getMinecraft().thePlayer.inventory.currentItem));
-               return;
-            }
+		if(MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem()))
+		{
+			Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem(),Minecraft.getMinecraft().thePlayer.inventory.currentItem));
+			return;
+		}
 
-            for (int i = 0; i < Minecraft.getMinecraft().thePlayer.inventory.getSizeInventory(); i++)
-            {
-                if (MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i)))
-                {
-                    Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i),i));
-                    return;
-                }
-            }
-        }
+		for (int i = 0; i < Minecraft.getMinecraft().thePlayer.inventory.getSizeInventory(); i++)
+		{
+			if (MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i)))
+			{
+				Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i),i));
+				return;
+			}
+		}
     }
 
 	public static int getLastPage(ItemStack scanner)
@@ -330,11 +332,11 @@ public class MatterScanner extends MOBaseItem
 			return scanner;
 		}
 
-		Minecraft mc = Minecraft.getMinecraft();
-		int x = mc.renderViewEntity.rayTrace(200, 1.0F).blockX;
-		int y = mc.renderViewEntity.rayTrace(200, 1.0F).blockY;
-		int z = mc.renderViewEntity.rayTrace(200, 1.0F).blockZ;
-		ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(Minecraft.getMinecraft().theWorld, x, y, z);
+		MovingObjectPosition position = this.getMovingObjectPositionFromPlayer(player.worldObj,player,true);
+		int x = position.blockX;
+		int y = position.blockY;
+		int z = position.blockZ;
+		ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z);
 
 		//finished scanning
 		Scan(world, scanner, player, worldItem, x, y, z);
@@ -344,33 +346,45 @@ public class MatterScanner extends MOBaseItem
 	@Override
 	public void onUsingTick(ItemStack scanner, EntityPlayer player, int count)
 	{
-		Minecraft mc = Minecraft.getMinecraft();
-		int x = mc.renderViewEntity.rayTrace(200, 1.0F).blockX;
-		int y = mc.renderViewEntity.rayTrace(200, 1.0F).blockY;
-		int z = mc.renderViewEntity.rayTrace(200, 1.0F).blockZ;
+		MovingObjectPosition position = this.getMovingObjectPositionFromPlayer(player.worldObj,player,true);
+		int x = position.blockX;
+		int y = position.blockY;
+		int z = position.blockZ;
 		ItemStack lastSelected = getSelectedAsItem(scanner);
-		ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(Minecraft.getMinecraft().theWorld, x, y, z);
+		ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(player.worldObj, x, y, z);
 
 		if(!MatterDatabaseHelper.areEqual(lastSelected,worldItem))
 		{
 			setSelected(scanner, worldItem);
 			player.stopUsingItem();
-			stopScanSounds();
+			if (player.worldObj.isRemote)
+			{
+				stopScanSounds();
+			}
 			return;
 		}
 
+		if (player.worldObj.isRemote)
+			playSound(player.posX,player.posY,player.posZ);
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void playSound(double x,double y,double z)
+	{
 		if(scanningSound == null)
 		{
-			scanningSound = new MachineSound(new ResourceLocation(Reference.MOD_ID + ":" +"scanner_scanning"),(float)player.posX,(float)player.posY,(float)player.posZ,0.6f,1);
+			scanningSound = new MachineSound(new ResourceLocation(Reference.MOD_ID + ":" +"scanner_scanning"),(float)x,(float)y,(float)z,0.6f,1);
 			Minecraft.getMinecraft().getSoundHandler().playSound(scanningSound);
 		}
 	}
 
 	public void onPlayerStoppedUsing(ItemStack scanner, World world, EntityPlayer player, int count)
 	{
-		stopScanSounds();
+		if (world.isRemote)
+			stopScanSounds();
 	}
 
+	@SideOnly(Side.CLIENT)
 	private void stopScanSounds()
 	{
 		if(scanningSound != null)

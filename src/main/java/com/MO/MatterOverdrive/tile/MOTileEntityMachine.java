@@ -123,6 +123,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         redstoneState = nbt.getBoolean("redstoneState");
         forceClientUpdate = nbt.getBoolean("forceClientUpdate");
+        inventory.readFromNBT(nbt);
     }
 
     @Override
@@ -131,12 +132,13 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         nbt.setBoolean("redstoneState",redstoneState);
         nbt.setBoolean("forceClientUpdate", forceClientUpdate);
         forceClientUpdate = false;
+        inventory.writeToNBT(nbt);
     }
 
     @Override
     public Packet getDescriptionPacket()
     {
-        System.out.println("Sending Packet To Client");
+        //System.out.println("Sending Packet To Client");
         NBTTagCompound syncData = new NBTTagCompound();
         writeCustomNBT(syncData);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);
@@ -145,7 +147,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
     {
-        System.out.println("Receiving Packet From Server");
+        //System.out.println("Receiving Packet From Server");
         NBTTagCompound syncData = pkt.func_148857_g();
         if(syncData != null)
         {

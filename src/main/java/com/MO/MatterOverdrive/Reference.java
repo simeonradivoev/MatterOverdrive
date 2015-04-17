@@ -1,6 +1,8 @@
 package com.MO.MatterOverdrive;
 
-public class Reference 
+import cofh.lib.gui.GuiColor;
+
+public class Reference
 {
 	public static final String MOD_ID = "mo";
 	public static final String MOD_NAME = "Matter Overdrive";
@@ -30,4 +32,15 @@ public class Reference
     /* GUI Textures */
     public static final String TEXTURE_ARROW_PROGRESS = Reference.PATH_ELEMENTS + "Progress_Arrow_Right.png";
     public static final String TEXTURE_ENERGY_METER = Reference.PATH_ELEMENTS + "Energy.png";
+
+	/* Colors */
+	public static final GuiColor COLOR_MATTER = new GuiColor(191,228,230);
+
+	/* Modules */
+	public static final int MODULE_BATTERY = 0;
+	public static final int MODULE_COLOR = 1;
+	public static final int MODULE_BARREL = 2;
+	public static final int MODULE_SIGHTS = 3;
+	public static final int MODULE_OTHER = 4;
+
 }

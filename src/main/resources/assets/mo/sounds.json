@@ -1,10 +1,6 @@
 {
     
-    "phaser_fire_burst_0": {"category": "player","sounds": [{"name": "phaser/phaser_fire_burst_0", "stream": false}]},
-    "phaser_fire_burst_1": {"category": "player","sounds": [{"name": "phaser/phaser_fire_burst_1", "stream": false}]},
-    "phaser_fire_burst_2": {"category": "player","sounds": [{"name": "phaser/phaser_fire_burst_2", "stream": false}]},
-    "phaser_fire_burst_3": {"category": "player","sounds": [{"name": "phaser/phaser_fire_burst_3", "stream": false}]},
-    "phaser_fire_burst_4": {"category": "player","sounds": [{"name": "phaser/phaser_fire_burst_4", "stream": false}]},
+    "phaser_beam": {"category": "player","sounds": [{"name": "phaser/phaser_beam", "stream": false}]},
     "phaser_switch_mode": {"category": "player","sounds": [{"name": "phaser/phaser_switch_mode", "stream": false}]},
     "scanner_beep": {"category": "player","sounds": [{"name": "matter_scanner/scanner_beep", "stream": false}]},
     "scanner_success": {"category": "player","sounds": [{"name": "matter_scanner/scanner_success_2", "stream": false}]},

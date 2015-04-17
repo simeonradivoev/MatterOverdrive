@@ -52,7 +52,7 @@ public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStor
         {
             if(container.inventorySlots.get(i) instanceof SlotPatternStorage)
             {
-                list.addElement(new ElementInventorySlot(this, (MOSlot)container.inventorySlots.get(i), true));
+                list.addElement(new ElementInventorySlot(this, (MOSlot)container.inventorySlots.get(i),22,22, "big"));
             }
         }
     }

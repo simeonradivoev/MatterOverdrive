@@ -34,6 +34,14 @@ public class ItemRendererTileEntityMachine implements IItemRenderer
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
-        renderer.renderTileEntityAt(tileEntity,0D,-0.1D,0D,0F);
+        if (type == ItemRenderType.EQUIPPED || type == ItemRenderType.EQUIPPED_FIRST_PERSON)
+        {
+            renderer.renderTileEntityAt(tileEntity,0,0,0,0);
+        }
+        else
+        {
+            renderer.renderTileEntityAt(tileEntity,-0.5D,-0.5D,-0.5D,-0.5F);
+        }
+
     }
 }

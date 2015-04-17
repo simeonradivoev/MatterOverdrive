@@ -23,7 +23,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class ContainerMatterAnalyzer extends ContainerMachine<TileEntityMachineMatterAnalyzer>
 {
     private int lastAnalyzeTime;
-    private int lastEnergy;
 
     public ContainerMatterAnalyzer(InventoryPlayer inventory,TileEntityMachineMatterAnalyzer analyzer)
     {
@@ -45,7 +44,6 @@ public class ContainerMatterAnalyzer extends ContainerMachine<TileEntityMachineM
     {
         super.addCraftingToCrafters(icrafting);
         icrafting.sendProgressBarUpdate(this, 0, this.machine.analyzeTime);
-        icrafting.sendProgressBarUpdate(this, 1, this.machine.getEnergyStored(ForgeDirection.DOWN));
     }
 
     public void detectAndSendChanges()
@@ -59,13 +57,8 @@ public class ContainerMatterAnalyzer extends ContainerMachine<TileEntityMachineM
             {
                 icrafting.sendProgressBarUpdate(this, 0, this.machine.analyzeTime);
             }
-            if(this.lastEnergy != this.machine.getEnergyStored(ForgeDirection.DOWN))
-            {
-                icrafting.sendProgressBarUpdate(this, 1, this.machine.getEnergyStored(ForgeDirection.DOWN));
-            }
 
             this.lastAnalyzeTime = this.machine.analyzeTime;
-            this.lastEnergy = this.machine.getEnergyStored(ForgeDirection.DOWN);
         }
     }
 
@@ -74,8 +67,6 @@ public class ContainerMatterAnalyzer extends ContainerMachine<TileEntityMachineM
     {
         if(slot == 0)
             this.machine.analyzeTime = newValue;
-        if (slot == 1)
-            this.machine.setEnergyStored(newValue);
     }
 
     @Override

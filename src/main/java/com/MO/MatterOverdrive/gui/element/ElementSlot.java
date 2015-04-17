@@ -2,50 +2,56 @@ package com.MO.MatterOverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.element.ElementBase;
+import cofh.lib.util.helpers.StringHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.data.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 3/20/2015.
  */
 public class ElementSlot extends MOElementBase
 {
-    com.MO.MatterOverdrive.data.inventory.Slot inventorySlot;
-    private boolean big;
-    public static final ResourceLocation slot_big = new ResourceLocation(Reference.PATH_ELEMENTS + "side_slot_bg.png");
-    public static final ResourceLocation slot_small = new ResourceLocation(Reference.PATH_ELEMENTS + "slot_bg.png");
+    protected ResourceLocation icon;
+    public String type = "small";
+    private int iconOffsetX;
+    private int iconOffsetY;
 
-    public ElementSlot(GuiBase gui, int posX, int posY,boolean big) {
-        super(gui, posX, posY);
-        this.texture = slot_big;
-        this.big = big;
+    protected String info = "";
+
+    public ElementSlot(GuiBase gui, int posX, int posY,int width,int height,String type,ResourceLocation icon)
+    {
+        super(gui, posX, posY,width,height);
+        iconOffsetX = ((sizeX - 16) / 2);
+        iconOffsetY = ((sizeX - 16) / 2);
+        this.type = type;
+        this.icon = icon;
     }
 
-    public ElementSlot(GuiBase gui,boolean big, net.minecraft.inventory.Slot containerSlot) {
-        super(gui, containerSlot.xDisplayPosition, containerSlot.yDisplayPosition);
-        this.texture = slot_big;
-        this.big = big;
+    public ElementSlot(GuiBase gui, int posX, int posY,int width,int height,String type)
+    {
+        this(gui,posX,posY,width,height,type,null);
+    }
+
+    public void addTooltip(List<String> list)
+    {
+        if (!info.isEmpty())
+        {
+            list.add(StringHelper.localize(info));
+        }
     }
 
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        GL11.glColor3f(1,1,1);
-
-        if(big)
-        {
-            gui.bindTexture(slot_big);
-            gui.drawSizedTexturedModalRect(this.posX - 3,this.posY - 3,0,0,22,22,22,22);
-        }
-        else
-        {
-            gui.bindTexture(slot_small);
-            gui.drawSizedTexturedModalRect(this.posX - 1,this.posY - 1,0,0,18,18,18,18);
-        }
-
-        drawSlotIcon(inventorySlot,this.posX,this.posY);
+        ApplyColor();
+        gui.bindTexture(getTexture(type));
+        gui.drawSizedTexturedModalRect(this.posX - iconOffsetX, this.posY - iconOffsetY, 0, 0, sizeX, sizeY, sizeX, sizeY);
+        drawSlotIcon(icon,posX,posY);
+        ResetColor();
     }
 
     @Override
@@ -54,25 +60,45 @@ public class ElementSlot extends MOElementBase
 
     }
 
-    public void drawSlotIcon(Slot slot,int x,int y)
+    public void drawSlotIcon(ResourceLocation icon,int x,int y)
     {
-        if(slot != null && slot.getTexture() != null)
+        if(icon != null)
         {
             GL11.glEnable(GL11.GL_BLEND);
+            ApplyColor();
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
-            gui.bindTexture(slot.getTexture());
+            gui.bindTexture(icon);
             gui.drawSizedTexturedModalRect(x, y,0,0,16,16,16,16);
             GL11.glDisable(GL11.GL_BLEND);
+            ResetColor();
         }
     }
 
-    public boolean isBig()
+    public void setItemOffset(int x,int y)
     {
-        return big;
+        this.iconOffsetX = x;
+        this.iconOffsetY = y;
     }
 
-    public void setInventorySlot(Slot slot)
+    public ResourceLocation getTexture(String type)
     {
-        inventorySlot = slot;
+        return new ResourceLocation(Reference.PATH_ELEMENTS + "slot_"+type+".png");
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info)
+    {
+        this.info = info;
+    }
+
+    public ResourceLocation getIcon() {
+        return icon;
+    }
+
+    public void setIcon(ResourceLocation icon) {
+        this.icon = icon;
     }
 }

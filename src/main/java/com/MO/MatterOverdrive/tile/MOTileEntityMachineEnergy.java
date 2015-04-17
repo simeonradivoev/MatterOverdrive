@@ -47,7 +47,6 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     {
         super.writeCustomNBT(nbt);
         energyStorage.writeToNBT(nbt);
-        inventory.writeToNBT(nbt);
     }
 
     @Override
@@ -55,7 +54,6 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     {
         super.readCustomNBT(nbt);
         energyStorage.readFromNBT(nbt);
-        inventory.readFromNBT(nbt);
     }
 
     @Override
@@ -102,15 +100,26 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive,
                              boolean simulate) {
-        return energyStorage.receiveEnergy(maxReceive, simulate);
+        int lastEnergy = energyStorage.getEnergyStored();
+        int received = energyStorage.receiveEnergy(maxReceive, simulate);
+        if (lastEnergy != energyStorage.getEnergyStored() && !simulate)
+        {
+            ForceSync();
+        }
+        return received;
     }
 
     @Override
     public int extractEnergy(ForgeDirection from, int maxExtract,
                              boolean simulate)
     {
-
-        return energyStorage.extractEnergy(maxExtract, simulate);
+        int lastEnergy = energyStorage.getEnergyStored();
+        int extracted = energyStorage.extractEnergy(maxExtract, simulate);
+        if (lastEnergy != energyStorage.getEnergyStored() && !simulate)
+        {
+            ForceSync();
+        }
+        return extracted;
     }
 
     @Override

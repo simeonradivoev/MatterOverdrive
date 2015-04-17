@@ -21,10 +21,4 @@ public class MatterDust extends MOBaseItem
 		return true;
 	}
 
-	@Override
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-	{
-		infos.add("Put in a furnace, to refine");
-	}
-
 }

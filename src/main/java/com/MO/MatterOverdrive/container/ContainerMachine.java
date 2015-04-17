@@ -17,6 +17,11 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 {
     protected T machine;
 
+    public ContainerMachine()
+    {
+
+    }
+
     public ContainerMachine(InventoryPlayer inventory,T machine)
     {
         this.machine = machine;

@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.items;
 
+import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.IUpgrade;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
@@ -38,6 +39,7 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
         this.setMaxStackSize(16);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
+        setCreativeTab(MatterOverdrive.tabMatterOverdrive_upgrades);
     }
 
     @Override
@@ -50,6 +52,7 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
     @Override
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
+        super.addDetails(itemstack,player,infos);
         Map<UpgradeTypes,Double> stats = getUpgrades(itemstack);
         for (final Map.Entry<UpgradeTypes, Double> entry : stats.entrySet())
         {

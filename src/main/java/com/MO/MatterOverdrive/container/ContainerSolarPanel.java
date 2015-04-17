@@ -14,7 +14,6 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolarPanel>
 {
-    int lastEnergy;
     int lastChargeAmount;
 
     public ContainerSolarPanel(InventoryPlayer inventory, TileEntityMachineSolarPanel machine)
@@ -42,17 +41,12 @@ public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolar
         for(int i = 0;i < this.crafters.size();i++)
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
-            if(this.lastEnergy != this.machine.getEnergyStored(ForgeDirection.DOWN))
-            {
-                icrafting.sendProgressBarUpdate(this, 0, this.machine.getEnergyStored(ForgeDirection.DOWN));
-            }
 
             if(this.lastChargeAmount != this.machine.getChargeAmount())
             {
-                icrafting.sendProgressBarUpdate(this, 1, this.machine.getChargeAmount());
+                icrafting.sendProgressBarUpdate(this, 0, this.machine.getChargeAmount());
             }
 
-            this.lastEnergy = this.machine.getEnergyStored(ForgeDirection.DOWN);
             this.lastChargeAmount = this.machine.getChargeAmount();
         }
     }
@@ -61,8 +55,6 @@ public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolar
     public void updateProgressBar(int slot,int newValue)
     {
         if(slot == 0)
-            this.machine.setEnergyStored(newValue);
-        else if(slot == 1)
             this.machine.setChargeAmount((byte)newValue);
     }
 

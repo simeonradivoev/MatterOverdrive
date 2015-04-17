@@ -7,14 +7,17 @@ import com.MO.MatterOverdrive.init.MatterOverdriveItems;
 
 public class MatterOverdriveTab extends CreativeTabs 
 {
-	public MatterOverdriveTab(String label) 
+	Item item;
+
+	public MatterOverdriveTab(String label)
 	{
 		super(label);
-		//this.setBackgroundImageName("matterOverdrive_cp.png");
 	}
 	
 	public Item getTabIconItem()
 	{
-		return MatterOverdriveItems.matter_scanner;
+		if (item == null)
+			return MatterOverdriveItems.matter_scanner;
+		return item;
 	}
 }

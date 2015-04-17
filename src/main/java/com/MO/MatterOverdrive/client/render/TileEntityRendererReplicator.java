@@ -7,6 +7,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 
+import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -55,7 +56,7 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
             renderItem(replicator,x,y,z);
 
             GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
-            rotate(replicator.getWorldObj(), replicator.xCoord, replicator.yCoord, replicator.zCoord);
+            RenderUtils.rotateFromBlock(replicator.getWorldObj(), replicator.xCoord, replicator.yCoord, replicator.zCoord);
             bindTexture(texture);
             model.renderPart("Front");
             model.renderPart("Inside");
@@ -65,27 +66,6 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
             model.renderPart("Shell");
             GL11.glPopMatrix();
         }
-    }
-
-    private void rotate(World world,int x,int y,int z)
-    {
-        if(world != null) {
-            int metadata = world.getBlockMetadata(x, y, z);
-
-            ForgeDirection direction = ForgeDirection.values()[metadata];
-
-            if (direction == ForgeDirection.WEST) {
-                GL11.glRotated(-90, 0, 1, 0);
-            }
-            if (direction == ForgeDirection.EAST) {
-                GL11.glRotated(90, 0, 1, 0);
-            }
-            if (direction == ForgeDirection.NORTH) {
-                GL11.glRotated(-180, 0, 1, 0);
-            }
-        }
-        
-        //System.out.println("Metadata " + metadata + "at [" + x +","+ y +","+ z + "]");
     }
 
     private void renderItem(TileEntityMachineReplicator replicator,double x,double y,double z)

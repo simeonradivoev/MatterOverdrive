@@ -32,7 +32,7 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 		matterElement = new ElementMatterStored(this,74,39,machine.getMatterStorage());
 		energyElement = new MOElementEnergy(this,100,39,machine.getEnergyStorage());
 		decompose_progress = new ElementDualScaled(this,32,52);
-        outputSlot = new ElementInventorySlot(this,getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),true);
+        outputSlot = new ElementInventorySlot(this,getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),22,22,"big");
 	}
 	
 	@Override

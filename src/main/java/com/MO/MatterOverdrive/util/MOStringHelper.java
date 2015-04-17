@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.util;
 
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
+import com.MO.MatterOverdrive.api.weapon.WeaponStat;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 
@@ -42,6 +43,8 @@ public class MOStringHelper
         }
     }
 
+    public static boolean hasTranslation(String string){return StatCollector.canTranslate(string);}
+
     public static String translateToLocal(String string)
     {
         return StatCollector.translateToLocal(string);
@@ -51,7 +54,26 @@ public class MOStringHelper
     {
         return StatCollector.translateToLocal("upgradetype." + type.name() + ".name");
     }
+    public static String translateToLocal(WeaponStat type)
+    {
+        return StatCollector.translateToLocal("weaponstat." + type.name() + ".name");
+    }
     public static String toInfo(UpgradeTypes type,double value,boolean good)
+    {
+        String info = "";
+        if (good)
+            info += EnumChatFormatting.GREEN;
+        else
+            info += EnumChatFormatting.RED;
+
+
+        DecimalFormat format = new DecimalFormat("##");
+        info += translateToLocal(type) + ": ";
+        info += format.format(value * 100);
+        return info + "%";
+    }
+
+    public static String toInfo(WeaponStat type,double value,boolean good)
     {
         String info = "";
         if (good)
@@ -71,6 +93,11 @@ public class MOStringHelper
         return toInfo(type,value,getGood(type,value));
     }
 
+    public static String toInfo(WeaponStat type,double value)
+    {
+        return toInfo(type,value,getGood(type,value));
+    }
+
     public static boolean getGood(UpgradeTypes type,double value)
     {
         switch (type)
@@ -79,11 +106,18 @@ public class MOStringHelper
                return value < 1;
             case PowerUsage:
                 return value < 1;
-            case Output:
-                return value > 1;
-            case SecondOutput:
-                return value > 1;
             case Fail:
+                return value < 1;
+            default:
+                return value > 1;
+        }
+    }
+
+    public static boolean getGood(WeaponStat type,double value)
+    {
+        switch (type)
+        {
+            case Reload:
                 return value < 1;
             default:
                 return value > 1;

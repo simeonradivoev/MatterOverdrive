@@ -1,14 +1,10 @@
 package com.MO.MatterOverdrive.handler;
 
-import com.MO.MatterOverdrive.MatterOverdrive;
-import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.items.MatterScanner;
-import com.MO.MatterOverdrive.network.packet.OpenGuiPacket;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;

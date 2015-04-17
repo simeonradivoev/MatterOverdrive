@@ -100,8 +100,8 @@ public class PageUpgrades extends ElementBaseGroup
         {
             if(container.inventorySlots.get(i) instanceof SlotUpgrade)
             {
-                ElementInventorySlot slotElement = new ElementInventorySlot(gui, (MOSlot) container.inventorySlots.get(i), true);
-                slotElement.setInventorySlot(inventory.getSlot(((MOSlot) container.inventorySlots.get(i)).getSlotIndex()));
+                ElementInventorySlot slotElement = new ElementInventorySlot(gui, (MOSlot) container.inventorySlots.get(i), 22,22,"big");
+                slotElement.setIcon(inventory.getSlot(((MOSlot) container.inventorySlots.get(i)).getSlotIndex()).getTexture());
                 this.addElement(slotElement);
             }
         }

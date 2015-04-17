@@ -49,35 +49,6 @@ public class ContainerPatternStorage extends ContainerMachine<TileEntityMachineP
         MOContainerHelper.AddPlayerSlots(inventoryPlayer, this, 45, 89,true,true);
     }
 
-    public void addCraftingToCrafters(ICrafting icrafting)
-    {
-        super.addCraftingToCrafters(icrafting);
-        icrafting.sendProgressBarUpdate(this, 0, this.machine.getEnergyStored(ForgeDirection.DOWN));
-    }
-
-    public void detectAndSendChanges()
-    {
-        super.detectAndSendChanges();
-        for(int i = 0;i < this.crafters.size();i++)
-        {
-            ICrafting icrafting = (ICrafting)this.crafters.get(i);
-
-            if(this.lastEnergy != this.machine.getEnergyStored(ForgeDirection.DOWN))
-            {
-                icrafting.sendProgressBarUpdate(this, 0, this.machine.getEnergyStored(ForgeDirection.DOWN));
-            }
-
-            this.lastEnergy = this.machine.getEnergyStored(ForgeDirection.DOWN);
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int slot,int newValue)
-    {
-        if (slot == 0)
-            this.machine.setEnergyStored(newValue);
-    }
-
     @Override
     public boolean canInteractWith(EntityPlayer p_75145_1_)
     {

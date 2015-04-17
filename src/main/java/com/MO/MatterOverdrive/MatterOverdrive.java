@@ -30,6 +30,9 @@ public class MatterOverdrive
 	public static CommonProxy proxy;
 	
 	public static final MatterOverdriveTab tabMatterOverdrive = new MatterOverdriveTab("tabMatterOverdrive");
+	public static final MatterOverdriveTab tabMatterOverdrive_modules = new MatterOverdriveTab("tabMatterOverdrive_modules");
+	public static final MatterOverdriveTab tabMatterOverdrive_upgrades = new MatterOverdriveTab("tabMatterOverdrive_upgrades");
+
 	public static MOConfigurationHandler configHandler;
     public static final PacketPipeline packetPipeline = new PacketPipeline();
 	@Instance(Reference.MOD_ID)
@@ -43,18 +46,20 @@ public class MatterOverdrive
     public static final byte guiMatterAnalyzer = 4;
 	public static final byte guiPatternStorage = 5;
 	public static final byte guiSolarPanel = 6;
+	public static final byte guiWeaponStation = 7;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		configHandler.init(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
-		MatterOverdriveBlocks.init();
-		MatterOverdriveItems.init();
+		MatterOverdriveBlocks.init(event);
+		MatterOverdriveItems.init(event);
         MatterOverdriveWorld.init();
-		MatterOverdriveBlocks.register();
-		MatterOverdriveItems.register();
+		MatterOverdriveBlocks.register(event);
+		MatterOverdriveItems.register(event);
         MatterOverdriveWorld.register();
         packetPipeline.init();
+		UpdateTabs();
 	}
 	
 	@EventHandler
@@ -62,6 +67,7 @@ public class MatterOverdrive
 	{
 		GameRegistry.registerTileEntity(TileEntityMachineReplicator.class, "Replicator");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+		MatterOverdriveItems.addToDungons();
 		proxy.registerProxies();
 	}
 	
@@ -72,6 +78,13 @@ public class MatterOverdrive
         MatterOverdriveMatter.registerBasic(configHandler);
         MatterOverdriveMatter.init(configHandler);
         MatterOverdriveMatter.registerComplex(configHandler);
+	}
+
+	private void UpdateTabs()
+	{
+		tabMatterOverdrive.item = MatterOverdriveItems.matter_scanner;
+		tabMatterOverdrive_modules.item = MatterOverdriveItems.weapon_module_color;
+		tabMatterOverdrive_upgrades.item = MatterOverdriveItems.item_upgrade;
 	}
 	
 }

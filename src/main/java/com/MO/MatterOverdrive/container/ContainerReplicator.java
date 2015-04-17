@@ -22,8 +22,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ContainerReplicator extends ContainerMachine<TileEntityMachineReplicator>
 {
 	private int lastReplicateProgress;
-	private int lastMatter;
-	private int lastEnergy;
 
 	public ContainerReplicator(InventoryPlayer inventory,TileEntityMachineReplicator tileentity)
 	{
@@ -42,15 +40,15 @@ public class ContainerReplicator extends ContainerMachine<TileEntityMachineRepli
 		super.init(inventory);
 		MOContainerHelper.AddPlayerSlots(inventory, this,45,89,true,true);
 	}
-	
+
+	@Override
 	public void addCraftingToCrafters(ICrafting icrafting)
 	{
 		super.addCraftingToCrafters(icrafting);
 		icrafting.sendProgressBarUpdate(this, 0, this.machine.replicateProgress);
-		icrafting.sendProgressBarUpdate(this, 1, this.machine.getMatterStored());
-		icrafting.sendProgressBarUpdate(this, 2, this.machine.getEnergyStored(ForgeDirection.DOWN));
 	}
-	
+
+	@Override
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
@@ -62,109 +60,16 @@ public class ContainerReplicator extends ContainerMachine<TileEntityMachineRepli
 			{
 				icrafting.sendProgressBarUpdate(this, 0, this.machine.replicateProgress);
 			}
-			
-			if(this.lastMatter != this.machine.getMatterStored())
-			{
-				icrafting.sendProgressBarUpdate(this, 1, this.machine.getMatterStored());
-			}
-			
-			if(this.lastEnergy != this.machine.getEnergyStored(ForgeDirection.DOWN))
-			{
-				icrafting.sendProgressBarUpdate(this, 2, this.machine.getEnergyStored(ForgeDirection.DOWN));
-			}
 
 			this.lastReplicateProgress = this.machine.replicateProgress;
-			this.lastMatter = this.machine.getMatterStored();
-			this.lastEnergy = this.machine.getEnergyStored(ForgeDirection.DOWN);
 		}
 	}
-
-	/*public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
-    {
-		ItemStack itemstack = null;
-		Slot slot = (Slot)this.inventorySlots.get(slotID);
-        int last = this.replicator.getInventory().getLastSlotId();
-
-		if(slot != null && slot.getHasStack())
-		{
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
-
-			if(slotID == replicator.OUTPUT_SLOT_ID || slotID == replicator.SECOUND_OUTPUT_SLOT_ID)
-			{
-				if (!this.mergeItemStack(itemstack1, last+1, last+36+1, true))
-				{
-					return null;
-				}
-
-				slot.onSlotChange(itemstack1, itemstack);
-			}
-			else if(slotID > last)
-			{
-				if(EnergyHelper.isEnergyContainerItem(itemstack1))
-				{
-					if(!this.mergeItemStack(itemstack1, this.replicator.getEnergySlotID(), this.replicator.getEnergySlotID()+1, false))
-					{
-						return null;
-					}
-				}else if(MatterHelper.isMatterScanner(itemstack1))
-				{
-					if(!this.mergeItemStack(itemstack1, replicator.DATABASE_SLOT_ID, replicator.DATABASE_SLOT_ID+1, false))
-					{
-						return null;
-					}
-				}else if (getSlot(replicator.SHIELDING_SLOT_ID).isItemValid(itemstack))
-				{
-					if(!this.mergeItemStack(itemstack1, replicator.SHIELDING_SLOT_ID, replicator.SHIELDING_SLOT_ID+1, false))
-					{
-						return null;
-					}
-				}
-				else if (slotID >= last+1 && slotID < last+28)
-				{
-					if (!this.mergeItemStack(itemstack1, last+28, last+37, false))
-					{
-						return null;
-					}
-				}else if (slotID >= last+28 && slotID < last+37 && !this.mergeItemStack(itemstack1, last+1, last+28, false))
-				{
-					return null;
-				}
-			}
-			else if (!this.mergeItemStack(itemstack1, last+1, last+37, false))
-			{
-				return null;
-			}
-
-			if (itemstack1.stackSize == 0)
-			{
-				slot.putStack((ItemStack)null);
-			}
-			else
-			{
-				slot.onSlotChanged();
-			}
-
-			if (itemstack1.stackSize == itemstack.stackSize)
-			{
-				return null;
-			}
-
-			slot.onPickupFromSlot(player, itemstack1);
-		}
-
-		return itemstack;
-    }*/
 	
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int slot,int newValue)
 	{
 		if(slot == 0)
 			this.machine.replicateProgress = newValue;
-		if(slot == 1)
-			this.machine.setMatterStored(newValue);
-		if(slot == 2)
-			this.machine.setEnergyStored(newValue);
 	}
 
 	@Override

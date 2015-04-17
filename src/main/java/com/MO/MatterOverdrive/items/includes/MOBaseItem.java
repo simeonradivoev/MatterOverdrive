@@ -18,8 +18,6 @@ import java.util.List;
 
 public class MOBaseItem extends Item
 {
-	private String description;
-
 	public MOBaseItem(String name)
 	{
 		this.init(name);
@@ -49,7 +47,10 @@ public class MOBaseItem extends Item
 
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
 	{
-
+		if (MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
+		{
+			infos.add(EnumChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
+		}
 	}
 	
 	public void Register(String name)
@@ -73,16 +74,6 @@ public class MOBaseItem extends Item
 		{
 			InitTagCompount(stack);
 		}
-	}
-
-	public void setDescription(String description)
-	{
-		this.description = description;
-	}
-
-	public String getDescription()
-	{
-		return description;
 	}
 
 	public boolean hasDetails(ItemStack damage){return false;}

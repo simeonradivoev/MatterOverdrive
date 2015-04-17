@@ -17,38 +17,86 @@ item.integration_matrix.name=Integration Matrix
 item.s_magnet.name=Superconductor Magnet
 item.matter_dust_refined.name=Refined Matter Dust
 item.matter_dust.name=Matter Dust
+item.matter_dust.details=Put in a furnace, to refine
 item.machine_casing.name=Machine Casing
 item.dilithium_crystal.name=Dilithium Crystal
 item.tritanium_ingot.name=Tritanium Ingot
 item.tritanium_plate.name=Tritanium Plate
 item.tritanium_dust.name=Tritanium Dust
 item.pattern_drive.name=Pattern Drive
+
+item.weapon_module_color.name=Color Module
+item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
+
 tile.replicator.name=Matter Replicator
+tile.replicator.details=Replicates Items and Blocks from Matter Plasma
 tile.replicator_active.name=Matter Replicator
 tile.decomposer.name=Matter Decomposer
+tile.decomposer.details=Decomposes Items into Matter Plasma
 tile.matter_pipe.name=Matter Transport Pipe
+tile.matter_pipe.details=Transports Matter Plasma
 tile.network_pipe.name=Matter Network Cable
+tile.network_pipe.details=Connects Devices to a Matter Network
 tile.network_controller.name=Matter Network Controller
+tile.network_controller.details=Hearth of the Matter Network
 tile.transporter.name=Transporter
 tile.matter_analyzer.name=Matter Analyzer
+tile.matter_analyzer.details=Analyzes Items Patterns
 tile.dilithium_ore.name=Dilithium Ore
 tile.tritanium_ore.name=Tritanium Ore
 tile.tritanium_block.name=Tritanium Block
 tile.pattern_storage.name=Pattern Storage
+tile.pattern_storage.details=Stores item patterns, for replication
 tile.machine_hull.name=Machine Hull
 tile.solar_panel.name=Solar Panel
+tile.solar_panel.details=Produces RF from Sunlight
+tile.weapon_station.name=Weapon Station
+tile.weapon_station.details=Used to upgrade and charge weapons
 container.replicator.name=Replicator
 machine.tooltip.matter=Matter
 machine.tooltip.energy=Charged
+
 itemGroup.tabMatterOverdrive=Matter Overdrive
+itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Modules
+itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Upgrades
+
 upgradetype.Speed.name=Time
 upgradetype.PowerUsage.name=Power Usage
 upgradetype.Output.name=Output
 upgradetype.SecondOutput.name=Secondary Output
 upgradetype.Fail.name=Failure
+
+weaponstat.Other.name=Other
+weaponstat.Damage.name=Damage
+weaponstat.Accuracy.name=Accuracy
+weaponstat.Reload.name=Reload Speed
+weaponstat.Reload.name=Fire Rate
+weaponstat.Stability.name=Stability
+weaponstat.Ammo.name=Ammo
+weaponstat.Effect.name=Effect
+
 gui.replicator.name=Pattern Replicator
 gui.decomposer.name=Matter Decomposer
 gui.matter_analyzer.name=Matter Analyzer
 gui.network_controller.name=Network Controller
 gui.pattern_storage.name=Pattern Storage
 gui.solar_panel.name=Solar Panel
+module.battery.name=Battery Module
+
+module.color.name=Color Module
+module.color.red=Red
+module.color.green=Green
+module.color.lime_green=Lime Green
+module.color.brown=Brown
+module.color.pink=Pink
+module.color.blue=Blue
+module.color.sky_blue=Sky Blue
+module.color.gold=Gold
+module.color.black=Black
+module.color.grey=Gray
+
+module.barrel.name=Barrel Module
+module.sights.name=Sights Module
+module.other.name=Other Module
+
+death.attack.phaser.item=%1$s was disintegrated by %2$s using %3$s

@@ -7,6 +7,7 @@ import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternStorage;
 import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
+import com.MO.MatterOverdrive.tile.TileEntityWeaponStation;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityMatterPipe;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityNetworkPipe;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityPipe;
@@ -14,30 +15,41 @@ import com.MO.MatterOverdrive.tile.pipes.TileEntityPipe;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy
 {
-    static protected boolean iconsBlocksRegistered = false;
-    static protected boolean iconsItemsRegistered = false;
+
+    public static TileEntityRendererPipe pipeRenderer;
+    public static TileEntityRendererMatterPipe matter_pipeRenderer;
+    public static TileEntityRendererNetworkPipe network_pipeRenderer;
+    public static TileEntityRendererReplicator replicator_renderer;
+    public static TileEntityRendererPatterStorage pattern_storage_renderer;
+    public static TileEntityRendererWeaponStation renderer_weapon_station;
 
 	public void registerProxies()
 	{
         FMLCommonHandler.instance().bus().register(new KeyHandler());
         MinecraftForge.EVENT_BUS.register(new MatterOverdriveIcons());
 
-        TileEntityRendererPipe pipeRenderer = new TileEntityRendererPipe();
-        TileEntityRendererMatterPipe matter_pipeRenderer = new TileEntityRendererMatterPipe();
-        TileEntityRendererNetworkPipe network_pipeRenderer = new TileEntityRendererNetworkPipe();
-        TileEntityRendererReplicator replicator_renderer = new TileEntityRendererReplicator();
-        TileEntityRendererPatterStorage pattern_storage_renderer = new TileEntityRendererPatterStorage();
+        pipeRenderer = new TileEntityRendererPipe();
+        matter_pipeRenderer = new TileEntityRendererMatterPipe();
+        network_pipeRenderer = new TileEntityRendererNetworkPipe();
+        replicator_renderer = new TileEntityRendererReplicator();
+        pattern_storage_renderer = new TileEntityRendererPatterStorage();
+        renderer_weapon_station = new TileEntityRendererWeaponStation();
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, pipeRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMatterPipe.class, matter_pipeRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityNetworkPipe.class, network_pipeRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineReplicator.class,replicator_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternStorage.class,pattern_storage_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeaponStation.class,renderer_weapon_station);
+
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.matter_pipe), new ItemRendererPipe(matter_pipeRenderer, new TileEntityMatterPipe(), 2));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.network_pipe),new ItemRendererPipe(network_pipeRenderer,new TileEntityNetworkPipe(),2));
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser, new ItemRendererPhaser());
@@ -45,6 +57,5 @@ public class ClientProxy extends CommonProxy
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.pattern_storage),new ItemRendererTileEntityMachine(pattern_storage_renderer,new TileEntityMachinePatternStorage()));
         RenderingRegistry.registerBlockHandler(new BlockRendererReplicator());
 	}
-
 
 }

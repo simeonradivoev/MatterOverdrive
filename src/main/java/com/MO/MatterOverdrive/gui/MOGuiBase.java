@@ -25,7 +25,7 @@ import org.lwjgl.opengl.GL11;
 public abstract class MOGuiBase extends GuiBase implements IButtonHandler, GuiElementList
 {
     protected SidePannel sidePannel;
-    private CloseButton closeButton;
+    protected CloseButton closeButton;
 
 	public MOGuiBase(Container container) 
 	{
@@ -91,11 +91,11 @@ public abstract class MOGuiBase extends GuiBase implements IButtonHandler, GuiEl
                 SlotPlayerInventory slot = (SlotPlayerInventory) container.inventorySlots.get(i);
                 if (main && !slot.isHotbar())
                 {
-                    elements.addElement(new ElementInventorySlot(this, slot, false));
+                    elements.addElement(new ElementInventorySlot(this, slot,18,18, "small"));
                 }
                 else if (hotbar && slot.isHotbar())
                 {
-                    elements.addElement(new ElementInventorySlot(this, slot, false));
+                    elements.addElement(new ElementInventorySlot(this, slot,18,18, "small"));
                 }
             }
         }
