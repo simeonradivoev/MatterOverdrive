@@ -1,7 +1,6 @@
 package com.MO.MatterOverdrive.util;
 
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
-import com.MO.MatterOverdrive.api.weapon.WeaponStat;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 
@@ -54,9 +53,9 @@ public class MOStringHelper
     {
         return StatCollector.translateToLocal("upgradetype." + type.name() + ".name");
     }
-    public static String translateToLocal(WeaponStat type)
+    public static String weaponStatTranslateToLocal(int type)
     {
-        return StatCollector.translateToLocal("weaponstat." + type.name() + ".name");
+        return StatCollector.translateToLocal("weaponstat." + type + ".name");
     }
     public static String toInfo(UpgradeTypes type,double value,boolean good)
     {
@@ -73,7 +72,7 @@ public class MOStringHelper
         return info + "%";
     }
 
-    public static String toInfo(WeaponStat type,double value,boolean good)
+    public static String weaponStatToInfo(int type,double value,boolean good)
     {
         String info = "";
         if (good)
@@ -83,7 +82,7 @@ public class MOStringHelper
 
 
         DecimalFormat format = new DecimalFormat("##");
-        info += translateToLocal(type) + ": ";
+        info += weaponStatTranslateToLocal(type) + ": ";
         info += format.format(value * 100);
         return info + "%";
     }
@@ -93,9 +92,9 @@ public class MOStringHelper
         return toInfo(type,value,getGood(type,value));
     }
 
-    public static String toInfo(WeaponStat type,double value)
+    public static String weaponStatToInfo(int type,double value)
     {
-        return toInfo(type,value,getGood(type,value));
+        return weaponStatToInfo(type, value, weaponStatGetGood(type,value));
     }
 
     public static boolean getGood(UpgradeTypes type,double value)
@@ -113,12 +112,10 @@ public class MOStringHelper
         }
     }
 
-    public static boolean getGood(WeaponStat type,double value)
+    public static boolean weaponStatGetGood(int type,double value)
     {
         switch (type)
         {
-            case Reload:
-                return value < 1;
             default:
                 return value > 1;
         }

@@ -1,6 +1,7 @@
 {
     
-    "phaser_beam": {"category": "player","sounds": [{"name": "phaser/phaser_beam", "stream": false}]},
+    "phaser_beam_0": {"category": "player","sounds": [{"name": "phaser/phaser_beam_0", "stream": false}]},
+    "phaser_beam_1": {"category": "player","sounds": [{"name": "phaser/phaser_beam_1", "stream": false}]},
     "phaser_switch_mode": {"category": "player","sounds": [{"name": "phaser/phaser_switch_mode", "stream": false}]},
     "scanner_beep": {"category": "player","sounds": [{"name": "matter_scanner/scanner_beep", "stream": false}]},
     "scanner_success": {"category": "player","sounds": [{"name": "matter_scanner/scanner_success_2", "stream": false}]},

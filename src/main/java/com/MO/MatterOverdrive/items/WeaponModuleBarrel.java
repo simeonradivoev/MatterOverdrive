@@ -1,9 +1,7 @@
 package com.MO.MatterOverdrive.items;
 
 import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
-import com.MO.MatterOverdrive.api.weapon.WeaponStat;
 import com.MO.MatterOverdrive.items.includes.MOBaseItem;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -47,10 +45,10 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
         super.addDetails(itemstack, player, infos);
-        Map<WeaponStat,Double> stats = (Map<WeaponStat,Double>)getValue(itemstack);
-        for (final Map.Entry<WeaponStat, Double> entry : stats.entrySet())
+        Map<Integer,Double> stats = (Map<Integer,Double>)getValue(itemstack);
+        for (final Map.Entry<Integer, Double> entry : stats.entrySet())
         {
-            infos.add(MOStringHelper.toInfo(entry.getKey(), entry.getValue()));
+            infos.add(MOStringHelper.weaponStatToInfo(entry.getKey(), entry.getValue()));
         }
     }
 
@@ -106,13 +104,13 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
     public Object getValue(ItemStack itemStack)
     {
         int damage = itemStack.getItemDamage();
-        Map<WeaponStat,Double> stats = new HashMap<WeaponStat, Double>();
+        Map<Integer,Double> stats = new HashMap<Integer, Double>();
         switch (damage)
         {
             case 0:
-                stats.put(WeaponStat.Damage,1.5);
-                stats.put(WeaponStat.Ammo,0.5);
-                stats.put(WeaponStat.Effect,0.5);
+                stats.put(Reference.WS_DAMAGE,1.5);
+                stats.put(Reference.WS_AMMO,0.5);
+                stats.put(Reference.WS_EFFECT,0.5);
                 break;
         }
         return stats;

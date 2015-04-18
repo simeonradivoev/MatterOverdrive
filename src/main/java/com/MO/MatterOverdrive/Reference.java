@@ -43,4 +43,11 @@ public class Reference
 	public static final int MODULE_SIGHTS = 3;
 	public static final int MODULE_OTHER = 4;
 
+	/* Weapon Stat*/
+	public static final int WS_DAMAGE = 0;
+	public static final int WS_AMMO = 1;
+	public static final int WS_EFFECT = 2;
+	public static final int WS_RANGE = 3;
+	public static final int WS_FIRE_DAMAGE = 4;
+	public static final int WS_BLOCK_DAMAGE = 5;
 }

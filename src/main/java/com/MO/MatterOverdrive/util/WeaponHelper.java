@@ -1,16 +1,10 @@
 package com.MO.MatterOverdrive.util;
 
 import cofh.lib.gui.GuiColor;
-import cofh.lib.gui.container.InventoryContainerItemWrapper;
-import cofh.lib.util.helpers.InventoryHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
-import com.MO.MatterOverdrive.api.weapon.WeaponStat;
-import com.MO.MatterOverdrive.data.ItemInventoryWrapper;
 import com.MO.MatterOverdrive.items.WeaponColorModule;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 import java.util.Map;
 
@@ -49,15 +43,16 @@ public class WeaponHelper
         return WeaponColorModule.defaultColor;
     }
 
-    public static double getStatMultiply(WeaponStat stat,ItemStack weapon)
+    public static double getStatMultiply(int stat,ItemStack weapon)
     {
         double multiply = 1;
 
         if (MatterHelper.isWeapon(weapon))
         {
-            Map<WeaponStat,Double> stats = getStatsFromModule(Reference.MODULE_BARREL, weapon);
-            for (ItemStack itemStack : MOInventoryHelper.getStacks(weapon))
+            Map<Integer,Double> stats;
+            for (ItemStack module : MOInventoryHelper.getStacks(weapon))
             {
+                stats = getStatsFromModule(module,weapon);
                 if (stats != null)
                 {
                     if (stats.containsKey(stat))
@@ -70,20 +65,20 @@ public class WeaponHelper
         return multiply;
     }
 
-    public static Map<WeaponStat,Double> getStatsFromModule(ItemStack module,ItemStack weapon)
+    public static Map<Integer,Double> getStatsFromModule(ItemStack module,ItemStack weapon)
     {
         if (weapon != null && module != null && MatterHelper.isWeapon(weapon) && MatterHelper.isWeaponModule(module))
         {
             Object mapObject = ((IWeaponModule)module.getItem()).getValue(module);
             if (mapObject instanceof Map)
             {
-                return (Map<WeaponStat,Double>)mapObject;
+                return (Map<Integer,Double>)mapObject;
             }
         }
         return null;
     }
 
-    public static Map<WeaponStat,Double> getStatsFromModule(int module,ItemStack weapon)
+    public static Map<Integer,Double> getStatsFromModule(int module,ItemStack weapon)
     {
         if (weapon != null && MatterHelper.isWeapon(weapon))
         {

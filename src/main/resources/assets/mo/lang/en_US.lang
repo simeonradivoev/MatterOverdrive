@@ -67,14 +67,12 @@ upgradetype.Output.name=Output
 upgradetype.SecondOutput.name=Secondary Output
 upgradetype.Fail.name=Failure
 
-weaponstat.Other.name=Other
-weaponstat.Damage.name=Damage
-weaponstat.Accuracy.name=Accuracy
-weaponstat.Reload.name=Reload Speed
-weaponstat.Reload.name=Fire Rate
-weaponstat.Stability.name=Stability
-weaponstat.Ammo.name=Ammo
-weaponstat.Effect.name=Effect
+weaponstat.0.name=Damage
+weaponstat.1.name=Ammo
+weaponstat.2.name=Effect
+weaponstat.3.name=Range
+weaponstat.4.name=Fire Damage
+weaponstat.5.name=Block Damage
 
 gui.replicator.name=Pattern Replicator
 gui.decomposer.name=Matter Decomposer

@@ -158,7 +158,7 @@ public class ItemRendererPhaser implements IItemRenderer
 
         if (Phaser.getFiring(item) && (renderType == ItemRenderType.EQUIPPED || renderType == ItemRenderType.EQUIPPED_FIRST_PERSON))
         {
-            renderBeam(item,color);
+            //renderBeam(item,color);
         }
 
         glDisable(GL_LIGHTING);

@@ -21,7 +21,6 @@ public class TileEntityMachineNetworkController extends MOTileEntityMachine impl
     public static final int REBUILD_UPDATE_DELAY = 50;
     private boolean needsRebuild = true;
     private TimeTracker timer;
-    @SideOnly(Side.CLIENT)
     public Map<Integer,Integer> connectionsInfoMap;
 
     public TileEntityMachineNetworkController()
