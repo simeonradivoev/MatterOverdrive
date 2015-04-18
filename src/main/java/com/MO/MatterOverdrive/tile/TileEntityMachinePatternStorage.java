@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.tile;
 
+import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterPatternStorage;
 import com.MO.MatterOverdrive.data.Inventory;
@@ -41,6 +42,12 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
                 manageLinking();
             }
         }
+        else
+        {
+            if (random.nextFloat() < 0.2f) {
+                SpawnVentParticles(0.03f, ForgeDirection.getOrientation(BlockHelper.getOppositeSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
+            }
+        }
     }
 
     @Override
@@ -64,6 +71,8 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
             MatterScanner.link(worldObj, xCoord, yCoord, zCoord, inventory.getStackInSlot(input_slot));
         }
     }
+
+
 
     @Override
     public String getSound() {

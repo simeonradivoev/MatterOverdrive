@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.util.math;
 import com.MO.MatterOverdrive.util.Vector3;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.Random;
 
@@ -21,6 +22,15 @@ public class MOMathHelper
     	   double y = y0 + (radius.getY() * Math.sin(phi) * Math.sin(theta));
     	   double z = z0 + (radius.getZ() * Math.cos(phi));
     	   return new Vector3(x,y,z);
+    }
+
+    public static Vector3f randomCirclePoint(float radius,Random rand)
+    {
+        double u = rand.nextDouble();
+        double theta = 2 * Math.PI * u;
+        double x = (radius * Math.sin(theta));
+        double z = (radius * Math.cos(theta));
+        return new Vector3f((float)x,0,(float)z);
     }
 	
 	public static boolean getBoolean(int number,int pos)

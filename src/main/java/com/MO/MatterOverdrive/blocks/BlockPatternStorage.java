@@ -45,14 +45,6 @@ public class BlockPatternStorage extends MOBlockMachine
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
-    {
-        super.registerBlockIcons(iconRegister);
-        this.blockIcon = MatterOverdriveIcons.Base;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metadata)
     {
         if(side == BlockHelper.getOppositeSide(metadata))
@@ -60,7 +52,7 @@ public class BlockPatternStorage extends MOBlockMachine
             return MatterOverdriveIcons.Vent;
         }
 
-        return this.blockIcon;
+        return MatterOverdriveIcons.Base;
     }
 
     @Override

@@ -52,6 +52,7 @@ tile.solar_panel.name=Solar Panel
 tile.solar_panel.details=Produces RF from Sunlight
 tile.weapon_station.name=Weapon Station
 tile.weapon_station.details=Used to upgrade and charge weapons
+tile.microwave.name=Microwave
 container.replicator.name=Replicator
 machine.tooltip.matter=Matter
 machine.tooltip.energy=Charged

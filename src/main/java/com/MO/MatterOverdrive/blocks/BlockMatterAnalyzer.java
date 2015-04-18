@@ -56,8 +56,6 @@ public class BlockMatterAnalyzer extends MOBlockMachine
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
-        super.registerBlockIcons(iconRegister);
-        this.blockIcon = MatterOverdriveIcons.Base;
         this.iconFront = iconRegister.registerIcon(Reference.MOD_ID + ":" + "analyzer_front");
         this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":" + "analyzer_top");
     }
@@ -79,7 +77,7 @@ public class BlockMatterAnalyzer extends MOBlockMachine
             return MatterOverdriveIcons.Vent;
         }
 
-        return this.blockIcon;
+        return MatterOverdriveIcons.Base;
     }
 
     @Override

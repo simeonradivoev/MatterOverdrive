@@ -1,7 +1,9 @@
 package com.MO.MatterOverdrive.proxy;
 
+import com.MO.MatterOverdrive.client.RenderHandler;
 import com.MO.MatterOverdrive.client.render.*;
 import com.MO.MatterOverdrive.handler.KeyHandler;
+import com.MO.MatterOverdrive.handler.TooltipHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
@@ -31,10 +33,13 @@ public class ClientProxy extends CommonProxy
     public static TileEntityRendererPatterStorage pattern_storage_renderer;
     public static TileEntityRendererWeaponStation renderer_weapon_station;
 
+
 	public void registerProxies()
 	{
         FMLCommonHandler.instance().bus().register(new KeyHandler());
         MinecraftForge.EVENT_BUS.register(new MatterOverdriveIcons());
+        MinecraftForge.EVENT_BUS.register(new RenderHandler());
+        MinecraftForge.EVENT_BUS.register(new TooltipHandler());
 
         pipeRenderer = new TileEntityRendererPipe();
         matter_pipeRenderer = new TileEntityRendererMatterPipe();

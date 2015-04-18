@@ -2,6 +2,8 @@ package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.helpers.MathHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -27,11 +29,13 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     @Override
     public void updateEntity()
     {
-        super.updateEntity();
-        if (!worldObj.isRemote) {
+        if (!worldObj.isRemote)
+        {
             manageExtract();
             manageChagrgeAmount();
         }
+
+        super.updateEntity();
     }
 
     @Override
@@ -45,6 +49,10 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
                 {
                     int energy = energyStorage.getEnergyStored();
                     energy = MathHelper.clampI(energy + getChargeAmount(),0,energyStorage.getMaxEnergyStored());
+                    if (energy != energyStorage.getEnergyStored())
+                    {
+                        ForceSync();
+                    }
                     energyStorage.setEnergyStored(energy);
                 }
             }

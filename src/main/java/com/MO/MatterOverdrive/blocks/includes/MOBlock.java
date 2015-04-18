@@ -40,7 +40,7 @@ public class MOBlock extends Block
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
-        MatterOverdriveIcons.init(iconRegister);
+        //MatterOverdriveIcons.init(iconRegister);
         super.registerBlockIcons(iconRegister);
     }
 
@@ -55,7 +55,7 @@ public class MOBlock extends Block
     public void onBlockAdded(World world, int x, int y, int z)
     {
         super.onBlockAdded(world, x, y, z);
-        this.SetDefaultRotation(world, x, y, z);
+        //this.SetDefaultRotation(world, x, y, z);
 
         IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x,y,z);
         if(tileEntity != null)

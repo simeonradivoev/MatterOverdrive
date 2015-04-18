@@ -31,8 +31,7 @@ public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolar
     public void addCraftingToCrafters(ICrafting icrafting)
     {
         super.addCraftingToCrafters(icrafting);
-        icrafting.sendProgressBarUpdate(this, 0, this.machine.getEnergyStored(ForgeDirection.DOWN));
-        icrafting.sendProgressBarUpdate(this, 1, this.machine.getChargeAmount());
+        icrafting.sendProgressBarUpdate(this, 0, this.machine.getChargeAmount());
     }
 
     public void detectAndSendChanges()

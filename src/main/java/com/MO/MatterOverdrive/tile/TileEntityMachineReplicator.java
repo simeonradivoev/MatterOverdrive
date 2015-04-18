@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
+import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
@@ -28,6 +29,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.List;
 import java.util.Random;
@@ -48,7 +50,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public static final int RADIATION_DAMAGE_DELAY = 5;
     public static final int RADIATION_RANGE = 8;
     public static final double FAIL_CHANGE = 0.05;
-    private static Random random = new Random();
 	
 	public int replicateTime;
     public int replicateProgress;
@@ -111,53 +112,54 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public float soundVolume() { return 1;}
 
 
-    protected void manageReplicate()
-	{
-		if(!this.worldObj.isRemote)
-		{
-			if(this.isReplicating())
-			{
-                NBTTagCompound itemAsNBT = GetNewItemNBT();
-                ItemStack newItem = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
+    protected void manageReplicate() {
 
-                int time = getSpeed(newItem);
+        if (this.isReplicating()) {
 
-                if(energyStorage.getEnergyStored() >= getEnergyDrainPerTick(newItem))
+            NBTTagCompound itemAsNBT = GetNewItemNBT();
+            ItemStack newItem = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
+            int time = getSpeed(newItem);
+
+            if (!worldObj.isRemote)
+            {
+                if (energyStorage.getEnergyStored() >= getEnergyDrainPerTick(newItem))
                 {
                     this.replicateTime++;
                     this.extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(newItem), false);
 
-                    if (this.replicateTime >= time)
-                    {
+                    if (this.replicateTime >= time) {
                         this.replicateTime = 0;
                         this.replicateItem(itemAsNBT, newItem);
 
-                    }
-                    else if (this.replicateTime >= time - 60)
-                    {
-                        SpawnReplicateParticles(time - 60,time);
-                        if (this.replicateTime == time - 30)
-                            SoundHandler.PlaySoundAt(worldObj, "replicate_success", this.xCoord, this.yCoord, this.zCoord, 0.25F, 1.0F, 0.2F, 0.8F);
-
-                    }
-
-                    if(timeTracker.hasDelayPassed(worldObj,RADIATION_DAMAGE_DELAY))
-                    {
-                        manageRadiation();
-                    }
-
-                    replicateProgress = (int)(((float)replicateTime / (float)time) * 100f);
+                    } else if (this.replicateTime == time - 30)
+                        SoundHandler.PlaySoundAt(worldObj, "replicate_success", this.xCoord, this.yCoord, this.zCoord, 0.25F, 1.0F, 0.2F, 0.8F);
                 }
-			}
-		}
-		
-		if(!this.isReplicating())
-        {
-			this.replicateTime = 0;
+
+                if (timeTracker.hasDelayPassed(worldObj, RADIATION_DAMAGE_DELAY)) {
+                    manageRadiation();
+                }
+
+                replicateProgress = (int) (((float) replicateTime / (float) time) * 100f);
+            }
+            else
+            {
+                SpawnVentParticles(0.05f, ForgeDirection.getOrientation(BlockHelper.getLeftSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
+                SpawnVentParticles(0.05f, ForgeDirection.getOrientation(BlockHelper.getRightSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
+
+                if (this.replicateTime >= time - 60) {
+                    if (worldObj.isRemote)
+                        SpawnReplicateParticles(time - 60, time);
+                }
+            }
+        }
+
+
+        if (!this.isReplicating()) {
+            this.replicateTime = 0;
             replicateProgress = 0;
-		}
-		
-	}
+        }
+
+    }
 
     public int getSpeed(ItemStack itemStack)
     {
@@ -269,29 +271,26 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @SideOnly(Side.CLIENT)
 	public void SpawnReplicateParticles(int startTime,int totalTime)
 	{
-		if(this.worldObj.isRemote)
-		{
-				double time = (double)(this.replicateTime - startTime) / (double)(totalTime - startTime);
-		    	double gravity = easeIn(time,0.02,0.2,1);
-		    	int age = (int)Math.round(easeIn(time,2,10,1));
-		    	int count = (int)Math.round(easeIn(time,1,20,1));
-			
-		    	for(int i = 0;i < count;i++)
-		    	{
-					double speed = 0.05D;
-			    	double sphereX = Math.sin(this.worldObj.rand.nextDouble());
-			    	double sphereY = Math.sin(this.worldObj.rand.nextDouble());
-			    	
-			    	Vector3 pos = MOMathHelper.randomSpherePoint(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D,new Vector3(0.5,0.5,0.5),this.worldObj.rand);
-			    	Vector3 dir = new Vector3(this.worldObj.rand.nextDouble() * 2 - 1,(this.worldObj.rand.nextDouble()* 2 - 1) * 0.05,this.worldObj.rand.nextDouble()* 2 - 1).scale(speed);
-			    	ReplicatorParticle replicatorParticle = new ReplicatorParticle(this.worldObj,pos.getX(),pos.getY() ,pos.getZ(),dir.getX(),dir.getY(),dir.getZ());
-			    	replicatorParticle.setCenter(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D);
-			    	
-			    	replicatorParticle.setParticleAge(age);
-			    	replicatorParticle.setPointGravityScale(gravity);
-			    	Minecraft.getMinecraft().effectRenderer.addEffect(replicatorParticle);
-		    	}
-		}
+        double time = (double)(this.replicateTime - startTime) / (double)(totalTime - startTime);
+        double gravity = easeIn(time,0.02,0.2,1);
+        int age = (int)Math.round(easeIn(time,2,10,1));
+        int count = (int)Math.round(easeIn(time,1,20,1));
+
+        for(int i = 0;i < count;i++)
+        {
+            double speed = 0.05D;
+            double sphereX = Math.sin(this.worldObj.rand.nextDouble());
+            double sphereY = Math.sin(this.worldObj.rand.nextDouble());
+
+            Vector3 pos = MOMathHelper.randomSpherePoint(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D,new Vector3(0.5,0.5,0.5),this.worldObj.rand);
+            Vector3 dir = new Vector3(this.worldObj.rand.nextDouble() * 2 - 1,(this.worldObj.rand.nextDouble()* 2 - 1) * 0.05,this.worldObj.rand.nextDouble()* 2 - 1).scale(speed);
+            ReplicatorParticle replicatorParticle = new ReplicatorParticle(this.worldObj,pos.getX(),pos.getY() ,pos.getZ(),dir.getX(),dir.getY(),dir.getZ());
+            replicatorParticle.setCenter(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D);
+
+            replicatorParticle.setParticleAge(age);
+            replicatorParticle.setPointGravityScale(gravity);
+            Minecraft.getMinecraft().effectRenderer.addEffect(replicatorParticle);
+        }
 	}
 	
 	public static double easeIn(double t,double b , double c, double d) 

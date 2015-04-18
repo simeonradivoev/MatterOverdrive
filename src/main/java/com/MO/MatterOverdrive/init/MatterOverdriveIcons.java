@@ -11,26 +11,30 @@ import net.minecraftforge.client.event.TextureStitchEvent;
  */
 public class MatterOverdriveIcons
 {
-    public static boolean isRegistered;
     public static IIcon Base;
     public static IIcon Vent;
     public static IIcon Matter_tank_full;
     public static IIcon Matter_tank_empty;
-    public static IIcon Test;
     public static IIcon Transperant;
 
+    public static IIcon particle_steam;
+
     @SubscribeEvent
-    public void registerTextures(TextureStitchEvent.Pre event)
+    public void registerTextures(TextureStitchEvent event)
     {
         System.out.println("Stiching textures");
 
-        if (event.map.getTextureType() == 0)
+        switch (event.map.getTextureType())
         {
-           MatterOverdriveIcons.init(event.map);
+            case 0:
+                initBlockIcons(event.map);
+                break;
+            case 1:
+
         }
     }
 
-    public static void init(IIconRegister r)
+    private void initBlockIcons(IIconRegister r)
     {
         Vent = register(r, "vent");
         Base = register(r, "base");
@@ -40,7 +44,13 @@ public class MatterOverdriveIcons
 
     }
 
-    public static void initItems(IIconRegister r)
+    private void initParticleIcons(IIconRegister r)
+    {
+        particle_steam = register(r,"particle_steam");
+
+    }
+
+    private void initItems(IIconRegister r)
     {
         register(r, "vent");
         register(r, "base");

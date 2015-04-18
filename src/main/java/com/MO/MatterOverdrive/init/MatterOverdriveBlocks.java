@@ -34,6 +34,7 @@ public class MatterOverdriveBlocks
     public static BlockPatternStorage pattern_storage;
     public static BlockSolarPanel solar_panel;
     public static BlockWeaponStation weapon_station;
+    public static BlockMicrowave microwave;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -62,6 +63,7 @@ public class MatterOverdriveBlocks
         pattern_storage = new BlockPatternStorage(Material.iron,"pattern_storage");
         solar_panel = new BlockSolarPanel(Material.iron,"solar_panel");
         weapon_station = new BlockWeaponStation(Material.iron,"weapon_station");
+        microwave = new BlockMicrowave(Material.iron,"microwave");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -80,6 +82,7 @@ public class MatterOverdriveBlocks
         pattern_storage.Register();
         solar_panel.Register();
         weapon_station.Register();
+        microwave.Register();
 
         if (event.getSide() == Side.CLIENT)
         {

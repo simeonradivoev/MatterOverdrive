@@ -54,8 +54,6 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
-        super.registerBlockIcons(iconRegister);
-        this.blockIcon = MatterOverdriveIcons.Base;
         this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":" + "solar_panel");
     }
 
@@ -68,7 +66,7 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock
             return this.iconTop;
         }
 
-        return this.blockIcon;
+        return MatterOverdriveIcons.Base;
     }
 
     public boolean isOpaqueCube()

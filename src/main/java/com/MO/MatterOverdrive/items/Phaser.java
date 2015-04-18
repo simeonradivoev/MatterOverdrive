@@ -12,10 +12,7 @@ import com.MO.MatterOverdrive.api.weapon.WeaponStat;
 import com.MO.MatterOverdrive.network.PacketPipeline;
 import com.MO.MatterOverdrive.network.packet.PacketPhaserUpdate;
 import com.MO.MatterOverdrive.sound.PhaserSound;
-import com.MO.MatterOverdrive.util.EntityDamageSourcePhaser;
-import com.MO.MatterOverdrive.util.MOEnergyHelper;
-import com.MO.MatterOverdrive.util.MOStringHelper;
-import com.MO.MatterOverdrive.util.WeaponHelper;
+import com.MO.MatterOverdrive.util.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -89,8 +86,9 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     {
         super.addDetails(itemstack, player, infos);
 
-        infos.add(EnumChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(GetEneryUse(itemstack)));
+        infos.add(EnumChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(GetEneryUse(itemstack)) + "/t");
         infos.add(EnumChatFormatting.DARK_GREEN + "Damage: " + GetPhaserDamage(itemstack));
+        infos.add(EnumChatFormatting.BLUE + "Stun: " + (GetSleepTime(itemstack) / 20f)+ "s");
         infos.add(EnumChatFormatting.DARK_RED + "Heat: " + getHeat(itemstack,player.worldObj));
         AddModuleDetails(itemstack, infos);
     }
@@ -277,16 +275,21 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     @Override
     public void onUsingTick(ItemStack itemStack, EntityPlayer player, int count)
     {
+        int duration = getMaxItemUseDuration(itemStack) - count;
+
         if (DrainEnergy(itemStack,getMaxItemUseDuration(itemStack) - count,true))
         {
-            ManageShooting(itemStack, player.worldObj, player);
+            if (duration % 5 == 2)
+                ManageShooting(itemStack, player.worldObj, player);
         }
-        else {
-            DrainEnergy(itemStack, (getMaxItemUseDuration(itemStack) - count) - 1, false);
+        else
+        {
             if (player.worldObj.isRemote)
             {
                 stopPhaserSounds();
             }
+
+            DrainEnergy(itemStack, duration - 1, false);
             player.stopUsingItem();
             setFiring(itemStack, false);
         }
@@ -326,19 +329,33 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     {
         this.TagCompountCheck(item);
         byte level = item.getTagCompound().getByte("power");
-        return (int)Math.floor(Math.pow(ENERGY_MULTIPLY,level + 1));
+        return (int)Math.floor(Math.pow(ENERGY_MULTIPLY,level + 1) / getPowerMultiply(item));
+    }
+
+    private double getPowerMultiply(ItemStack phaser)
+    {
+        return WeaponHelper.getStatMultiply(WeaponStat.Ammo,phaser);
     }
 	
 	private float GetPhaserDamage(ItemStack item)
 	{
+        float damage = 0;
         this.TagCompountCheck(item);
         byte level = item.getTagCompound().getByte("power");
         if(level >= KILL_MODE_LEVEL)
         {
-            return (float)Math.pow(KILL_DAMAGE_MULTIPLY,level - (KILL_MODE_LEVEL-1));
+            damage = (float)Math.pow(KILL_DAMAGE_MULTIPLY,level - (KILL_MODE_LEVEL-1));
         }
-        return 0;
+
+        damage *= getDamageMultiplay(item);
+
+        return damage;
 	}
+
+    private float getDamageMultiplay(ItemStack phaser)
+    {
+        return (float)WeaponHelper.getStatMultiply(WeaponStat.Damage,phaser);
+    }
 
     private int GetSleepTime(ItemStack item)
     {
@@ -346,9 +363,14 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         byte level = item.getTagCompound().getByte("power");
         if(level < KILL_MODE_LEVEL)
         {
-            return (int)Math.pow(level+1,STUN_SLEEP_MULTIPLY);
+            return (int)(Math.pow(level+1,STUN_SLEEP_MULTIPLY) * sleepTimeMultipy(item));
         }
         return 0;
+    }
+
+    private double sleepTimeMultipy(ItemStack phaser)
+    {
+        return WeaponHelper.getStatMultiply(WeaponStat.Effect,phaser);
     }
 
     public void setHeat(ItemStack item,World world,long amount)

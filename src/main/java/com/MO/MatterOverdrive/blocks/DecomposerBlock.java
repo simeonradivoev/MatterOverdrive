@@ -38,7 +38,6 @@ public class DecomposerBlock extends MOMatterEnergyStorageBlock
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
-        super.registerBlockIcons(iconRegister);
 		this.blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "decomposer_side");
 		this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":" + "decomposer_top");
 	}

@@ -8,13 +8,16 @@ import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.MatterNetwork;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
+import com.MO.MatterOverdrive.fx.VentParticle;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
+import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -24,14 +27,22 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by Simeon on 3/11/2015.
  */
 public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTileEntity, IMatterNetworkConnection, ISidedInventory
 {
+
+    protected static Random random = new Random();
+
     //client syncs
     protected boolean lastActive;
 
@@ -345,5 +356,53 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
 
         return multiply;
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void SpawnVentParticles(float speed,ForgeDirection side,int count)
+    {
+        for (int i = 0;i < count;i++)
+        {
+            Matrix4f rotation = new Matrix4f();
+            Vector3f offset = new Vector3f();
+
+            if (side == ForgeDirection.UP)
+            {
+                rotation.rotate((float) Math.PI / 2f, new Vector3f(0, 0, 1));
+                offset = new Vector3f(0.5f,0.7f,0.5f);
+            }
+            else if (side == ForgeDirection.WEST)
+            {
+                rotation.rotate((float) Math.PI / 2f, new Vector3f(0, 0, 1));
+                offset = new Vector3f(-0.2f,0.5f,0.5f);
+            }
+            else if (side == ForgeDirection.EAST)
+            {
+                rotation.rotate((float) Math.PI / 2f, new Vector3f(0, 0, -1));
+                offset = new Vector3f(1.2f,0.5f,0.5f);
+            }
+            else if (side == ForgeDirection.SOUTH)
+            {
+                rotation.rotate((float) Math.PI / 2f, new Vector3f(1, 0, 0));
+                offset = new Vector3f(0.5f,0.5f,1.2f);
+            }
+            else if (side == ForgeDirection.NORTH)
+            {
+                rotation.rotate((float) Math.PI / 2f, new Vector3f(-1, 0, 0));
+                offset = new Vector3f(0.5f,0.5f,-0.2f);
+            }
+
+
+            Vector3f circle = MOMathHelper.randomCirclePoint(random.nextFloat(), random);
+            circle.scale(0.4f);
+            Vector4f circleTransformed = new Vector4f(circle.x,circle.y,circle.z,1);
+            rotation.transform(rotation, circleTransformed, circleTransformed);
+
+            float scale = 3f;
+
+            VentParticle ventParticle = new VentParticle(this.worldObj,this.xCoord + offset.x + circleTransformed.x,this.yCoord + offset.y + circleTransformed.y,this.zCoord + offset.z + circleTransformed.z,side.offsetX * speed,side.offsetY * speed,side.offsetZ * speed,scale);
+            ventParticle.setAlphaF(0.05f);
+            Minecraft.getMinecraft().effectRenderer.addEffect(ventParticle);
+        }
     }
 }

@@ -34,9 +34,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ReplicatorBlock extends MOMatterEnergyStorageBlock
 {
-	@SideOnly(Side.CLIENT)
-	private IIcon iconFront;
-	
 	private static boolean keepInventory;
 	
 	public ReplicatorBlock(Material material,String name)
@@ -46,36 +43,12 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);
 	}
-	
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister)
-	{
-        super.registerBlockIcons(iconRegister);
-		this.iconFront = iconRegister.registerIcon(Reference.MOD_ID + ":" + "replicator_front");
-        this.blockIcon = MatterOverdriveIcons.Base;
-	}
 
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
     {
-        int metadata = world.getBlockMetadata(x, y, z);
-        //System.out.println("Metadata " + world.getBlockMetadata(x,y,z));
-
-        if(side == metadata)
-        {
-            return MatterOverdriveIcons.Transperant;
-        }
-        else if(side == BlockHelper.getOppositeSide(metadata))
-        {
-            return GetIconBasedOnMatter(world,x,y,z);
-        }
-        else if(side == BlockHelper.getLeftSide(metadata) || side == BlockHelper.getRightSide(metadata))
-        {
-            return MatterOverdriveIcons.Transperant;
-        }
-
-        return this.blockIcon;
+        return MatterOverdriveIcons.Base;
     }
     
     @Override

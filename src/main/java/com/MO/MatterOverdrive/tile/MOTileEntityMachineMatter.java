@@ -1,6 +1,13 @@
 package com.MO.MatterOverdrive.tile;
 
+import com.MO.MatterOverdrive.fx.ReplicatorParticle;
+import com.MO.MatterOverdrive.fx.VentParticle;
+import com.MO.MatterOverdrive.util.Vector3;
+import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -11,6 +18,9 @@ import com.MO.MatterOverdrive.api.matter.IMatterHandler;
 import com.MO.MatterOverdrive.api.matter.IMatterStorage;
 import com.MO.MatterOverdrive.data.MatterStorage;
 import cofh.lib.util.helpers.MathHelper;
+import org.lwjgl.util.vector.*;
+
+import java.util.Random;
 
 public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IMatterHandler
 {
@@ -143,7 +153,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 				matterStorage.writeToNBT(itemStack.getTagCompound());
 				itemStack.getTagCompound().setInteger("MaxMatter", matterStorage.getCapacity());
 				itemStack.getTagCompound().setInteger("MatterSend", matterStorage.getMaxExtract());
-				itemStack.getTagCompound().setInteger("MatterReceive",matterStorage.getMaxReceive());
+				itemStack.getTagCompound().setInteger("MatterReceive", matterStorage.getMaxReceive());
 			}
 		}
 	}
