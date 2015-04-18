@@ -143,8 +143,8 @@ public class MatterDatabaseListBox extends MOElementListBox
 						MatterDatabaseEntry selectedEntry = new MatterDatabaseEntry(itemList.getCompoundTagAt(i), i, isSelected);
 						this.add(selectedEntry);
 
-						if (isSelected)
-							this.setSelectedIndex(i);
+						//if (isSelected)
+							//this.setSelectedIndex(i);
 					}
 				}
 			}
@@ -157,8 +157,7 @@ public class MatterDatabaseListBox extends MOElementListBox
 	{
 		super.setSelectedIndex(index);
 
-		NBTTagCompound selectedNBT = MatterScanner.getSelectedAsNBT(scanner);
-		if(index >= 0 && index < getElementCount() && selectedNBT == null)
+		if(index >= 0 && index < getElementCount())
 		{
 			onSelectionChanged(index,getElement(index));
 		}

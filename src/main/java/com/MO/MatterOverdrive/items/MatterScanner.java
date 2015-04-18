@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
@@ -103,10 +104,6 @@ public class MatterScanner extends MOBaseItem
 		if (database != null)
 		{
 			if (itemstack.hasTagCompound()) {
-				int x = itemstack.getTagCompound().getInteger("link_x");
-				int y = itemstack.getTagCompound().getInteger("link_y");
-				int z = itemstack.getTagCompound().getInteger("link_z");
-
 				infos.add(ChatFormatting.GREEN + "Online");
 			}
 
@@ -319,9 +316,33 @@ public class MatterScanner extends MOBaseItem
 
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
 	{
-		System.out.println("Right Click");
-		entityplayer.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
+		if(this.getMovingObjectPositionFromPlayer(world,entityplayer,true) != null)
+		{
+			if (world.isRemote)
+				playSound(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
+
+			entityplayer.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
+		}
 		return itemstack;
+	}
+
+	@Override
+	public void onUpdate(ItemStack itemStack,World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
+	{
+		super.onUpdate(itemStack,world,entity,p_77663_4_,p_77663_5_);
+
+		if (world.isRemote) {
+			if (entity instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) entity;
+				if (player.isUsingItem() && player.getItemInUse() == itemStack)
+				{
+
+				} else
+				{
+					stopScanSounds();
+				}
+			}
+		}
 	}
 
 	public ItemStack onEaten(ItemStack scanner, World world, EntityPlayer player)
@@ -333,13 +354,17 @@ public class MatterScanner extends MOBaseItem
 		}
 
 		MovingObjectPosition position = this.getMovingObjectPositionFromPlayer(player.worldObj,player,true);
-		int x = position.blockX;
-		int y = position.blockY;
-		int z = position.blockZ;
-		ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z);
+		if (position != null) {
+			if (!world.isRemote) {
+				int x = position.blockX;
+				int y = position.blockY;
+				int z = position.blockZ;
+				ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z);
 
-		//finished scanning
-		Scan(world, scanner, player, worldItem, x, y, z);
+				//finished scanning
+				Scan(world, scanner, player, worldItem, x, y, z);
+			}
+		}
 		return scanner;
 	}
 
@@ -347,25 +372,34 @@ public class MatterScanner extends MOBaseItem
 	public void onUsingTick(ItemStack scanner, EntityPlayer player, int count)
 	{
 		MovingObjectPosition position = this.getMovingObjectPositionFromPlayer(player.worldObj,player,true);
-		int x = position.blockX;
-		int y = position.blockY;
-		int z = position.blockZ;
-		ItemStack lastSelected = getSelectedAsItem(scanner);
-		ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(player.worldObj, x, y, z);
+		if (position != null) {
 
-		if(!MatterDatabaseHelper.areEqual(lastSelected,worldItem))
+			if (!player.worldObj.isRemote) {
+				int x = position.blockX;
+				int y = position.blockY;
+				int z = position.blockZ;
+				ItemStack lastSelected = getSelectedAsItem(scanner);
+				ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(player.worldObj, x, y, z);
+
+				if (!MatterDatabaseHelper.areEqual(lastSelected, worldItem))
+				{
+					setSelected(scanner, worldItem);
+					player.stopUsingItem();
+					if (player.worldObj.isRemote)
+					{
+						stopScanSounds();
+					}
+				}
+			}
+		}
+		else
 		{
-			setSelected(scanner, worldItem);
-			player.stopUsingItem();
 			if (player.worldObj.isRemote)
 			{
 				stopScanSounds();
+				player.stopUsingItem();
 			}
-			return;
 		}
-
-		if (player.worldObj.isRemote)
-			playSound(player.posX,player.posY,player.posZ);
 	}
 
 	@SideOnly(Side.CLIENT)
