@@ -11,13 +11,8 @@ import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
 import com.MO.MatterOverdrive.network.packet.PacketPhaserUpdate;
 import com.MO.MatterOverdrive.sound.PhaserSound;
 import com.MO.MatterOverdrive.util.*;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
@@ -30,7 +25,6 @@ import net.minecraft.world.World;
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.items.includes.MOItemEnergyContainer;
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 public class Phaser extends MOItemEnergyContainer implements IWeapon{
 
@@ -43,12 +37,12 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     private static final int STUN_SLEEP_MULTIPLY = 5;
     public static final int RANGE = 24;
 
-    @SideOnly(Side.CLIENT)
-    protected PhaserSound phaserSound;
+    Map<EntityPlayer,PhaserSound> soundMap;
 	
 	public Phaser(String name) {
 		super(name,32000,128,128);
 		this.bFull3D = true;
+        soundMap = new HashMap<EntityPlayer, PhaserSound>();
 	}
 	
 	public void registerIcons(IIconRegister iconRegistry)
@@ -123,34 +117,6 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
 		super.onCreated(itemStack, world, player);
 	}
 
-    public boolean onEntityItemUpdate(EntityItem entityItem)
-    {
-        if (entityItem.worldObj.isRemote)
-        {
-            stopPhaserSounds();
-        }
-        return false;
-    }
-
-    @Override
-    public void onUpdate(ItemStack itemStack,World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
-    {
-        if (entity instanceof EntityPlayer)
-        {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.worldObj.isRemote)
-            {
-                if (player.isUsingItem() && player.getItemInUse() == itemStack) {
-
-                }
-                else
-                {
-                    setFiring(itemStack, false);
-                    stopPhaserSounds();
-                }
-            }
-        }
-    }
 	
 	/**
      * How long it takes to use or consume an item
@@ -186,7 +152,7 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
                 EntityLivingBase el = (EntityLivingBase) hit.entityHit;
                 el.attackEntityFrom(damageInfo, damage);
                 el.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, GetSleepTime(item), 10));
-                el.addPotionEffect(new PotionEffect(Potion.digSlowdown.id,GetSleepTime(item),10));
+                el.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, GetSleepTime(item), 10));
                 el.addPotionEffect(new PotionEffect(Potion.jump.id,GetSleepTime(item),-10));
             }
         }
@@ -205,12 +171,6 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         {
             if (getHeat(item,world) <= MIN_HEAT_FIRE && DrainEnergy(item,1,true))
             {
-                if (world.isRemote)
-                {
-                    PlaySound(player.posX, player.posY, player.posZ);
-                    setFiring(item, true);
-                }
-
                 if (!world.isRemote)
                 {
                     MatterOverdrive.packetPipeline.sendToAll(new PacketPhaserUpdate(player.inventory.currentItem, player.getEntityId(), true));
@@ -224,33 +184,8 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
 		return item;
 	}
 
-    @SideOnly(Side.CLIENT)
-    private void PlaySound(double x,double y,double z)
-    {
-        if(phaserSound == null)
-        {
-            phaserSound = new PhaserSound(new ResourceLocation(Reference.MOD_ID + ":" +"phaser_beam_1"),(float)x,(float)y,(float)z,itemRand.nextFloat() * 0.1f + 0.3f,1);
-            Minecraft.getMinecraft().getSoundHandler().playSound(phaserSound);
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void stopPhaserSounds()
-    {
-        if(phaserSound != null)
-        {
-            phaserSound.stopPlaying();
-            phaserSound = null;
-        }
-    }
-
     public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player)
     {
-        if (world.isRemote) {
-            stopPhaserSounds();
-        }
-
-        setFiring(itemStack, false);
         DrainEnergy(itemStack, getMaxItemUseDuration(itemStack), false);
         setHeat(itemStack, world, getMaxItemUseDuration(itemStack) + 40);
 
@@ -269,27 +204,15 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         }
         else
         {
-            if (player.worldObj.isRemote)
-            {
-                stopPhaserSounds();
-            }
-
             DrainEnergy(itemStack, duration - 1, false);
             player.stopUsingItem();
-            setFiring(itemStack, false);
         }
     }
 
     public void onPlayerStoppedUsing(ItemStack itemStack, World world, EntityPlayer player, int count)
     {
-        if (world.isRemote)
-        {
-            stopPhaserSounds();
-        }
-
         setHeat(itemStack, world, getMaxItemUseDuration(itemStack) - count);
         DrainEnergy(itemStack, getMaxItemUseDuration(itemStack) - count, false);
-        setFiring(itemStack, false);
     }
 	
 	private void SwitchModes(World world,EntityPlayer player,ItemStack item)
@@ -379,30 +302,11 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         }
     }
 
-    public long getHeat(ItemStack item,World world)
-    {
-        if (item.hasTagCompound())
-        {
+    public long getHeat(ItemStack item,World world) {
+        if (item.hasTagCompound()) {
             return Math.max(0,item.getTagCompound().getLong("heat") - world.getTotalWorldTime());
         }
         return 0;
-    }
-
-    public static void setFiring(ItemStack item,boolean firing)
-    {
-        if (item.hasTagCompound())
-        {
-            item.getTagCompound().setBoolean("firing",firing);
-        }
-    }
-
-    public static boolean getFiring(ItemStack item)
-    {
-        if (item.hasTagCompound())
-        {
-            return item.getTagCompound().getBoolean("firing");
-        }
-        return false;
     }
 
     //region Energy Functions

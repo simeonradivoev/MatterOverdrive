@@ -7,6 +7,7 @@ import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
 import com.MO.MatterOverdrive.client.render.ItemRendererPhaser;
 import com.MO.MatterOverdrive.items.Phaser;
 import com.MO.MatterOverdrive.items.WeaponColorModule;
+import com.MO.MatterOverdrive.sound.PhaserSound;
 import com.MO.MatterOverdrive.util.MOPhysicsHelper;
 import com.MO.MatterOverdrive.util.WeaponHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -14,14 +15,20 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.util.vector.Vector3f;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -30,6 +37,10 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class RenderHandler
 {
+    private static Random random = new Random();
+    public static ResourceLocation phaserSoundLocation = new ResourceLocation(Reference.MOD_ID + ":" +"phaser_beam_1");
+    Map<Entity,PhaserSound> soundMap = new HashMap<Entity, PhaserSound>();
+
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event)
     {
@@ -51,6 +62,11 @@ public class RenderHandler
                 if (playerMP.isUsingItem() && playerMP.getItemInUse().getItem() instanceof Phaser)
                 {
                     renderBeam(playerMP,playerMP.worldObj,new Vector3f(-0.23f, 0.2f, 0.7f),playerMP.getEyeHeight() - 0.5f,-0.3f);
+                    PlayPhaserSound(playerMP);
+                }
+                else
+                {
+                    StopPhaserSound(playerMP);
                 }
             }
         }
@@ -63,6 +79,11 @@ public class RenderHandler
         if (player.isUsingItem() && player.getItemInUse().getItem() instanceof Phaser)
         {
             renderBeam(player,player.worldObj,new Vector3f(-0.1f, -0.1f, 0.25f),0,0.25f);
+            PlayPhaserSound(player);
+        }
+        else
+        {
+            StopPhaserSound(player);
         }
     }
 
@@ -132,5 +153,36 @@ public class RenderHandler
             range = ((Phaser) phaserStack.getItem()).getRange(phaserStack);
         }
         return range;
+    }
+
+    private void PlayPhaserSound(Entity entity)
+    {
+        if (!soundMap.containsKey(entity))
+        {
+            PhaserSound sound = new PhaserSound(phaserSoundLocation,(float)entity.posX,(float)entity.posY,(float)entity.posZ,random.nextFloat() * 0.1f + 0.3f,1);
+            soundMap.put(entity,sound);
+            Minecraft.getMinecraft().getSoundHandler().playSound(sound);
+        }
+        else if (soundMap.get(entity).isDonePlaying())
+        {
+            StopPhaserSound(entity);
+            PlayPhaserSound(entity);
+        }
+        else
+        {
+            soundMap.get(entity).setPosition((float)entity.posX,(float)entity.posY,(float)entity.posZ);
+        }
+    }
+
+    private void StopPhaserSound(Entity entity)
+    {
+        if (soundMap.containsKey(entity))
+        {
+            PhaserSound sound = soundMap.get(entity);
+            sound.stopPlaying();
+            Minecraft.getMinecraft().getSoundHandler().stopSound(sound);
+            soundMap.remove(entity);
+
+        }
     }
 }

@@ -14,9 +14,7 @@ public class PhaserSound extends PositionedSound implements ITickableSound
     public PhaserSound(ResourceLocation sound,float x,float y,float z,float volume,float pitch)
     {
         super(sound);
-        super.xPosF = x;
-        super.yPosF = y;
-        super.zPosF = z;
+        setPosition(x,y,z);
         super.volume = volume;
         super.field_147663_c = pitch;
         super.repeat = false;
@@ -37,6 +35,13 @@ public class PhaserSound extends PositionedSound implements ITickableSound
     public void startPlaying()
     {
         donePlaying = false;
+    }
+
+    public void setPosition(float x,float y,float z)
+    {
+        this.xPosF = x;
+        this.yPosF = y;
+        this.zPosF = z;
     }
 
     @Override
