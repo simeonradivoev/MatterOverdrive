@@ -86,7 +86,7 @@ public class MatterRegistry
 
 	public static IMatterEntry getEntry(Block block)
 	{
-        IMatterEntry e = entries.getOrDefault(Block.blockRegistry.getNameForObject(block), null);
+        IMatterEntry e = entries.get(Block.blockRegistry.getNameForObject(block));
         if(e == null)
         {
             e = getOreDicionaryEntry(new ItemStack(block));
@@ -96,7 +96,7 @@ public class MatterRegistry
 
 	public static IMatterEntry getEntry(Item item)
 	{
-        IMatterEntry e = entries.getOrDefault(Item.itemRegistry.getNameForObject(item), null);
+        IMatterEntry e = entries.get(Item.itemRegistry.getNameForObject(item));
         if(e == null)
         {
             e = getOreDicionaryEntry(new ItemStack(item));
@@ -112,7 +112,7 @@ public class MatterRegistry
         for (int i = 0;i < ids.length;i++)
         {
             String entryName = OreDictionary.getOreName(ids[0]);
-            e = entries.getOrDefault(entryName, null);
+            e = entries.get(entryName);
 
             if(e != null)
                 return e;
@@ -130,13 +130,13 @@ public class MatterRegistry
 
 	public static IMatterEntry getEntry(String name)
 	{
-		IMatterEntry e = entries.getOrDefault(name, null);
+		IMatterEntry e = entries.get(name);
 
         if(e == null)
         {
             for (ItemStack itemStack : OreDictionary.getOres(name))
             {
-                e = entries.getOrDefault(Item.itemRegistry.getNameForObject(itemStack.getItem()), null);
+                e = entries.get(Item.itemRegistry.getNameForObject(itemStack.getItem()));
 
                 if(e != null)
                     return e;
