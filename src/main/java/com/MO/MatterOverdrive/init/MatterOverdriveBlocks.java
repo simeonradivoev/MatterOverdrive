@@ -101,5 +101,6 @@ public class MatterOverdriveBlocks
         GameRegistry.addRecipe(new ItemStack(tritanium_block), new Object[]{"TTT", "TTT", "TTT", 'T', MatterOverdriveItems.tritanium_ingot});
         GameRegistry.addRecipe(new ItemStack(machine_hull), new Object[]{" T ", "T T", " T ", 'T', MatterOverdriveItems.tritanium_plate});
         GameRegistry.addRecipe(new ItemStack(solar_panel), new Object[]{"C,G,C", "G,Q,G", "KMK", 'C', Items.coal, 'Q', Items.quartz, 'K', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'M', MatterOverdriveItems.machine_casing});
+        GameRegistry.addRecipe(new ItemStack(weapon_station), new Object[]{"","CBC","GMR"},'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'B',MatterOverdriveItems.battery,'G',Items.glowstone_dust,'R',Items.redstone,'M',MatterOverdriveItems.machine_casing);
     }
 }
