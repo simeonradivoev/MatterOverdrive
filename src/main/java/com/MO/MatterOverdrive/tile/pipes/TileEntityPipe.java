@@ -1,13 +1,9 @@
 package com.MO.MatterOverdrive.tile.pipes;
 
-import com.MO.MatterOverdrive.sound.MachineSound;
-import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.MOTileEntity;
-import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -19,9 +15,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
 {
     private boolean needsUpdate = true;
-    public int connections = 0;
+    private int connections = 0;
 
     public TileEntityPipe()
+    {
+
+    }
+
+    @Override
+    public void onAdded()
     {
 
     }
@@ -64,8 +66,22 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
             }
         }
 
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+        this.setConnections(connections,2);
 	}
+
+    public int getConnections()
+    {
+        return connections;
+    }
+
+    public void setConnections(int connections,int notify)
+    {
+        this.connections = connections;
+        if (worldObj != null) {
+            worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, connections, notify);
+            worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+        }
+    }
 
     public abstract boolean canConnectTo(TileEntity entity,ForgeDirection direction);
 
@@ -82,7 +98,6 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
-        Block type = getBlockType();
         return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord+1,yCoord+1,zCoord+1);
     }
 

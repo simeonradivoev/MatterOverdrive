@@ -2,14 +2,19 @@ package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.BlockHelper;
+import cofh.lib.util.position.BlockPosition;
+import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
-import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
+import com.MO.MatterOverdrive.api.network.*;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
 import com.MO.MatterOverdrive.data.inventory.ShieldingSlot;
+import com.MO.MatterOverdrive.data.network.MatterNetworkTaskPacket;
+import com.MO.MatterOverdrive.data.network.MatterNetworkTaskPacketQueue;
+import com.MO.MatterOverdrive.data.network.MatterNetworkTaskQueue;
 import com.MO.MatterOverdrive.fx.ReplicatorParticle;
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
@@ -29,12 +34,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.util.List;
-import java.util.Random;
 
-public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkConnection
+public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkConnectionProxy
 {
 	public static final int MATTER_STORAGE = 256;
 	public static final int ENERGY_STORAGE = 512000;
@@ -55,6 +58,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public int replicateProgress;
 
     TimeTracker timeTracker;
+    MatterNetworkTaskPacketQueue taskQueueProcessing;
 	
 	public TileEntityMachineReplicator()
 	{
@@ -66,6 +70,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         this.matterStorage.setMaxReceive(MATTER_TRANSFER);
         this.matterStorage.setMaxExtract(MATTER_TRANSFER);
         timeTracker = new TimeTracker();
+        taskQueueProcessing = new MatterNetworkTaskPacketQueue(this,1);
 	}
 
     protected void RegisterSlots(Inventory inventory)
@@ -82,6 +87,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         super.readCustomNBT(nbt);
         this.replicateTime = nbt.getShort("ReplicateTime");
+        taskQueueProcessing.readFromNBT(worldObj,nbt);
     }
 
     @Override
@@ -89,6 +95,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         super.writeCustomNBT(nbt);
         nbt.setShort("ReplicateTime", (short) this.replicateTime);
+        taskQueueProcessing.writeToNBT(worldObj,nbt);
     }
 	
 	@Override
@@ -211,7 +218,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                 if(failReplicate(MatterHelper.getMatterAmountFromItem(newItem)))
                 {
                     int matter = this.matterStorage.getMatterStored();
-                    this.matterStorage.setMatterStored(matter - matterAmount);
+                    setMatterStored(matter - matterAmount);
                 }
             }
             else
@@ -219,7 +226,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                 if(putInOutput(newItem))
                 {
                     int matter = this.matterStorage.getMatterStored();
-                    this.matterStorage.setMatterStored(matter - matterAmount);
+                    setMatterStored(matter - matterAmount);
                 }
             }
 
@@ -427,13 +434,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         return true;
     }
 
-    //region IMatterNetworkConnection
-    @Override
-    public boolean canConnectToNetwork(ForgeDirection direction) {
-        return true;
-    }
-    //endregion
-
     //region Inventory Functions
     @Override
     public int[] getAccessibleSlotsFromSide(int side)
@@ -453,6 +453,37 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public boolean canExtractItem(int slot, ItemStack item, int side)
     {
         return true;
+    }
+    //endregion
+
+    //region Matter Network functions
+    @Override
+    public boolean canPreform(MatterNetworkTaskPacket task)
+    {
+        return false;
+    }
+
+    @Override
+    public void queuePacket(MatterNetworkTaskPacket packet)
+    {
+        taskQueueProcessing.queuePacket(packet);
+    }
+
+    @Override
+    public BlockPosition getPosition() {
+        return new BlockPosition(this);
+    }
+
+    @Override
+    public boolean canConnectFromSide(ForgeDirection side)
+    {
+        return true;
+    }
+
+    @Override
+    public IMatterNetworkConnection getMatterNetworkConnection()
+    {
+        return this;
     }
     //endregion
 }

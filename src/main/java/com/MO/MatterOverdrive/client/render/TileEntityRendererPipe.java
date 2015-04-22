@@ -39,7 +39,7 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer {
     {
         texture = new ResourceLocation(Reference.PATH_BLOCKS + "pipe.png");
     }
-	
+
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x,
 			double y, double z, float f)
@@ -63,16 +63,15 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer {
     protected int DrawSides(TileEntityPipe pipe, double x,
                              double y, double z, float f)
     {
-        int sides = 0;
+		int connections = pipe.getConnections();
         for (int i = 0; i < 6; i++)
         {
-            if (pipe.isConnectableSide(ForgeDirection.values()[i]))
+            if (MOMathHelper.getBoolean(connections,i))
             {
-                sides |= ForgeDirection.values()[i].flag;
                 drawSide(pipe,ForgeDirection.values()[i]);
             }
         }
-        return sides;
+		return connections;
     }
 
     protected void drawCore(TileEntityPipe tile,double x,
@@ -153,18 +152,6 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer {
         drawPlane(new Vector3d(1, 0, 0), new AxisAngle4d(0, 1, 0, 270), size, uv, rot, pos);
     }
 	
-	short getConnections(ForgeDirection[] dirs)
-	{
-		int connections = 0;
-		
-		for(int i = 0;i < 0;i++)
-		{
-			connections |= dirs[i].flag;
-		}
-		
-		return (short)connections;
-	}
-	
 	void drawPlane(Vector3d pos,AxisAngle4d rot,double scale,Vector2f uv,AxisAngle4d globalRot,Vector3d globalPos)
 	{
 		Tessellator.instance.startDrawingQuads();
@@ -212,15 +199,6 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer {
         addNormal(normal);
 		Tessellator.instance.draw();
 		GL11.glPopMatrix();
-	}
-	
-	public void rotate(Vector2f vec,float n)
-	{
-		n *= MOMathHelper.degreesToRadians;
-	    float rx = (vec.x * MathHelper.cos(n)) - (vec.y * MathHelper.sin(n));
-	    float ry = (vec.x * MathHelper.sin(n)) + (vec.y * MathHelper.cos(n));
-	    vec.x = rx;
-	    vec.y = ry;
 	}
 	
 	void addVertexWithUV(Vector4d vec,float u,float v)

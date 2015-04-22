@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.gui;
 
 import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementBase;
+import cofh.lib.gui.element.ElementButtonManaged;
 import cofh.lib.util.helpers.StringHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.slot.MOSlot;
@@ -25,6 +26,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 {
     T machine;
     protected List<ElementBaseGroup> pages;
+    protected List<MOElementButton> pageButtons;
     protected ElementBaseGroup homePage;
     protected ElementBaseGroup configPage;
     protected PageUpgrades upgradesPage;
@@ -40,7 +42,8 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     {
         super(container);
         this.machine = machine;
-        pages = new ArrayList<ElementBaseGroup>(2);
+        pages = new ArrayList<ElementBaseGroup>(3);
+        pageButtons = new ArrayList<MOElementButton>(3);
 
         homePage = new ElementBaseGroup(this,0,0,xSize,ySize);
         homePage.setName("Home");
@@ -53,21 +56,22 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         pages.add(configPage);
         pages.add(upgradesPage);
 
-        homePageButton = new MOElementButton(this,this,6,8,"Home",0,0,22,0,22,0,22,22,"");
-        homePageButton.setTexture(Reference.PATH_GUI_ITEM + "home2.png", 44, 22);
+        homePageButton = new MOElementButton(this,this,6,8,"Home",0,0,24,0,24,0,24,24,"");
+        homePageButton.setTexture(Reference.PATH_GUI_ITEM + "home2.png", 48, 24);
         homePageButton.setToolTip("Home");
+        pageButtons.add(homePageButton);
 
-        configPageButton = new MOElementButton(this,this,6,28 + 8,"Config",0,0,22,0,22,0,22,22,"");
-        configPageButton.setTexture(Reference.PATH_GUI_ITEM + "config.png", 44, 22);
+        configPageButton = new MOElementButton(this,this,6,8,"Config",0,0,24,0,24,0,24,24,"");
+        configPageButton.setTexture(Reference.PATH_GUI_ITEM + "config.png", 48, 24);
         configPageButton.setToolTip("Configurations");
+        pageButtons.add(configPageButton);
 
-        upgradesPageButton = new MOElementButton(this,this,6,28 + 28 + 8,"Upgrades",0,0,22,0,22,0,22,22,"");
-        upgradesPageButton.setTexture(Reference.PATH_GUI_ITEM + "upgrades.png", 44, 22);
+        upgradesPageButton = new MOElementButton(this,this,6,8,"Upgrades",0,0,24,0,24,0,24,24,"");
+        upgradesPageButton.setTexture(Reference.PATH_GUI_ITEM + "upgrades.png", 48, 24);
         upgradesPageButton.setToolTip("Upgrades");
+        pageButtons.add(upgradesPageButton);
 
         slotsList = new ElementSlotsList(this,5,49,machine.getInventory(),0);
-
-        setPage(0);
     }
 
     @Override
@@ -75,15 +79,20 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     {
         super.initGui();
 
-        this.addElement(homePage);
-        this.addElement(configPage);
-        this.addElement(upgradesPage);
+        for (ElementBase page : pages)
+        {
+            this.addElement(page);
+        }
+
         this.addElement(slotsList);
         this.addElement(indicator);
 
-        sidePannel.addElement(homePageButton);
-        sidePannel.addElement(configPageButton);
-        sidePannel.addElement(upgradesPageButton);
+        for (MOElementButton button : pageButtons)
+        {
+            sidePannel.addElement(button);
+        }
+
+        setPage(0);
     }
 
     @Override
@@ -91,9 +100,10 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     {
         super.updateElementInformation();
 
-        homePageButton.setEnabled(!homePage.isVisible());
-        configPageButton.setEnabled(!configPage.isVisible());
-        upgradesPageButton.setEnabled(!upgradesPage.isVisible());
+        for (int i = 0; i < pageButtons.size();i++)
+        {
+            pageButtons.get(i).setPosition(6,8 + (pageButtons.get(i).getHeight() + 2) * i);
+        }
 
         if (machine.isActive())
         {
@@ -107,17 +117,15 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     @Override
     public void handleElementButtonClick(String buttonName, int mouseButton)
     {
-        if(buttonName == "Home")
+        for (int i = 0;i < pageButtons.size();i++)
         {
-            setPage(0);
-        }
-        else if (buttonName == "Config")
-        {
-            setPage(1);
-        }
-        else if (buttonName == "Upgrades")
-        {
-            setPage(2);
+            if (i < pages.size())
+            {
+                if (pageButtons.get(i).getName().equals(buttonName))
+                {
+                    setPage(i);
+                }
+            }
         }
 
         super.handleElementButtonClick(buttonName, mouseButton);
@@ -130,6 +138,10 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         if (page < pages.size())
         {
             pages.get(page).setVisible(true);
+            if (page < pageButtons.size())
+            {
+                pageButtons.get(page).setEnabled(false);
+            }
         }
     }
 
@@ -138,6 +150,11 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         for (int i = 0;i < pages.size();i++)
         {
             pages.get(i).setVisible(false);
+
+            if (i < pageButtons.size())
+            {
+                pageButtons.get(i).setEnabled(true);
+            }
         }
     }
 

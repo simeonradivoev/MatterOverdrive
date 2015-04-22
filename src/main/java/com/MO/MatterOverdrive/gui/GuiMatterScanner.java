@@ -7,10 +7,9 @@ import com.MO.MatterOverdrive.gui.element.MOElementButton;
 import com.MO.MatterOverdrive.gui.pages.PageInfo;
 import com.MO.MatterOverdrive.gui.pages.PageScanInfo;
 import com.MO.MatterOverdrive.items.MatterScanner;
-import com.MO.MatterOverdrive.network.packet.PacketMatterScannerUpdate;
+import com.MO.MatterOverdrive.network.packet.server.PacketMatterScannerUpdate;
 
 import cofh.lib.gui.container.ContainerFalse;
-import cofh.lib.gui.element.ElementButton;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;

@@ -1,73 +1,108 @@
 package com.MO.MatterOverdrive.tile.pipes;
 
 import cofh.lib.util.position.BlockPosition;
-import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
-import com.MO.MatterOverdrive.data.MatterNetwork;
+import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.network.*;
+import com.MO.MatterOverdrive.data.network.MatterNetworkTaskPacket;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
-import net.minecraft.block.Block;
+import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 3/15/2015.
  */
-public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetworkConnection
-{
-    MatterNetwork network;
+public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetworkCable, IMatterNetworkConnectionProxy {
 
     public TileEntityNetworkPipe() {
-        network = null;
+
     }
 
     @Override
     public boolean canConnectTo(TileEntity entity, ForgeDirection direction)
     {
-        if (entity instanceof IMatterNetworkConnection)
+        if (entity instanceof IMatterNetworkConnectionProxy)
         {
-            return ((IMatterNetworkConnection) entity).canConnectToNetwork(direction);
+            if (entity instanceof TileEntityNetworkPipe)
+            {
+                TileEntityNetworkPipe networkPipe = (TileEntityNetworkPipe)entity;
+                int pipeConnections = networkPipe.getConnections();
+                if (MOMathHelper.getBoolean(pipeConnections,direction.ordinal())) {
+                    return true;
+                }
+                else
+                {
+                    int pipeConnectionsCount = 0;
+                    for (int i = 0; i < 6; i++) {
+                        pipeConnectionsCount += ((pipeConnections >> i) & 1);
+                    }
+                    return pipeConnectionsCount < 2;
+                }
+            }
+            else
+            {
+                return ((IMatterNetworkConnectionProxy) entity).getMatterNetworkConnection().canConnectFromSide(direction.getOpposite());
+            }
         }
         return false;
     }
 
     @Override
-    public void onAdded()
-    {
+    public void onAdded() {
         super.onAdded();
-        MatterNetworkHelper.tryConnectToNetwork(this.worldObj, this, true);
+
     }
 
     @Override
-    public void onDestroyed()
-    {
+    public void onDestroyed() {
         super.onDestroyed();
-        MatterNetworkHelper.disconnectFromNetwork(worldObj,this,true);
     }
 
     @Override
-    public boolean canConnectToNetwork(ForgeDirection direction)
-    {
+    public boolean isValid() {
         return true;
+    }
+
+    @Override
+    public void broadcast(MatterNetworkTaskPacket task) {
+        if (isValid() && task.getTask(worldObj).getState() <= Reference.TASK_STATE_WAITING) {
+            for (int i = 0; i < 6; i++) {
+                MatterNetworkHelper.broadcastTaskInDirection(worldObj, task.addToPath(getMatterNetworkConnection()), this, ForgeDirection.getOrientation(i));
+            }
+        }
     }
 
     @Override
     public BlockPosition getPosition() {
-        return new BlockPosition(xCoord,yCoord,zCoord);
+        return new BlockPosition(this);
     }
 
     @Override
-    public MatterNetwork getNetwork() {
-        return network;
-    }
-
-    @Override
-    public boolean setNetwork(MatterNetwork network) {
-        this.network = network;
-        return true;
-    }
-
-    @Override
-    public int getID()
+    public boolean canConnectFromSide(ForgeDirection side)
     {
-        return Block.getIdFromBlock(getBlockType());
+        return MOMathHelper.getBoolean(getConnections(),side.ordinal());
+    }
+
+    public void updateSides()
+    {
+        int connections = 0;
+        int connectionCount = 0;
+
+        for (int i = 0; i < 6; i++) {
+            TileEntity t = this.worldObj.getTileEntity(ForgeDirection.values()[i].offsetX + this.xCoord, ForgeDirection.values()[i].offsetY + this.yCoord, ForgeDirection.values()[i].offsetZ + this.zCoord);
+
+            if (connectionCount < 2 && canConnectTo(t, ForgeDirection.getOrientation(ForgeDirection.OPPOSITES[i])))
+            {
+                connections |= ForgeDirection.values()[i].flag;
+                connectionCount++;
+            }
+        }
+
+        this.setConnections(connections, 2);
+    }
+
+    @Override
+    public IMatterNetworkConnection getMatterNetworkConnection() {
+        return this;
     }
 }

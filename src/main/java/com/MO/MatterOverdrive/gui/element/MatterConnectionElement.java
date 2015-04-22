@@ -1,13 +1,9 @@
 package com.MO.MatterOverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.GuiColor;
 import cofh.lib.render.RenderHelper;
 import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.util.RenderUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;

@@ -12,7 +12,7 @@ import java.util.List;
 public interface IMatterPatternStorage
 {
     NBTTagList getItemsAsNBT(ItemStack storage);
-    boolean addItem(ItemStack storage,ItemStack itemStack,int initialAmount);
+    boolean addItem(ItemStack storage,ItemStack itemStack,int initialAmount,boolean simulate);
     NBTTagCompound getItemAsNBT(ItemStack storage,ItemStack item);
     int getCapacity(ItemStack item);
 }

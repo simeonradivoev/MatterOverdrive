@@ -71,11 +71,6 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
         return 0;
     }
 
-    @Override
-    public boolean canConnectToNetwork(ForgeDirection direction) {
-        return false;
-    }
-
     //region Inventory Functions
     @Override
     public ItemStack getStackInSlot(int slot)

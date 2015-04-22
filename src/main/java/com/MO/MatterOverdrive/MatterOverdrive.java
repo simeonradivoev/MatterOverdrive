@@ -21,6 +21,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
@@ -34,7 +35,7 @@ public class MatterOverdrive
 	public static final MatterOverdriveTab tabMatterOverdrive_upgrades = new MatterOverdriveTab("tabMatterOverdrive_upgrades");
 
 	public static MOConfigurationHandler configHandler;
-    public static final PacketPipeline packetPipeline = new PacketPipeline();
+    public static PacketPipeline packetPipeline;
 	@Instance(Reference.MOD_ID)
 	public static MatterOverdrive instance;
 	
@@ -51,6 +52,7 @@ public class MatterOverdrive
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		packetPipeline = new PacketPipeline();
 		configHandler.init(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
 		MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
@@ -58,7 +60,7 @@ public class MatterOverdrive
 		MatterOverdriveBlocks.register(event);
 		MatterOverdriveItems.register(event);
         MatterOverdriveWorld.register();
-        packetPipeline.init();
+        packetPipeline.registerPackets();
 		UpdateTabs();
 	}
 	
@@ -74,7 +76,6 @@ public class MatterOverdrive
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-        packetPipeline.postInit();
         MatterOverdriveMatter.registerBasic(configHandler);
         MatterOverdriveMatter.init(configHandler);
         MatterOverdriveMatter.registerComplex(configHandler);

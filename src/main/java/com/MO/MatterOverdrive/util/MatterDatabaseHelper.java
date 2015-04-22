@@ -4,8 +4,6 @@ import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterPatternStorage;
 
 import cofh.lib.util.helpers.MathHelper;
-import com.MO.MatterOverdrive.tile.MOTileEntity;
-import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,23 +17,6 @@ public class MatterDatabaseHelper
 	public static final String PROGRESS_TAG_NAME = "scan_progress";
 	public static final String ITEMS_TAG_NAME = "items";
 	public static final String CAPACITY_TAG_NAME = "Capacity";
-	
-	
-	public void onDatabseChange()
-	{
-		
-	}
-	
-	public static boolean Register(ItemStack storage,ItemStack item,int progress)
-	{
-		if(MatterHelper.isMatterPatternStorage(storage) && CanRegister(storage, item))
-		{
-			writeToNBT(storage,item,progress);
-			return true;
-		}
-		
-		return false;
-	}
 
     public static void InitTagCompound(ItemStack scanner)
     {
@@ -49,18 +30,6 @@ public class MatterDatabaseHelper
 	{
 		NBTTagList items = new NBTTagList();
 		scanner.setTagInfo(ITEMS_TAG_NAME, items);
-	}
-	
-	public static boolean Register(ItemStack scanner,World world,int x,int y,int z,int progress)
-	{
-		ItemStack item = GetItemStackFromWorld(world,x,y,z);
-		return Register(scanner,item,progress);
-	}
-	
-	public static boolean Register(ItemStack scanner,Block block,int progress)
-	{
-		ItemStack item = new ItemStack(block);
-		return Register(scanner, item, progress);
 	}
 	
 	public static Item GetItem(World world,int x,int y,int z)
@@ -213,58 +182,6 @@ public class MatterDatabaseHelper
 		return false;
 	}
 	
-	public static boolean CanRegister(ItemStack storage, ItemStack item)
-	{
-		IMatterPatternStorage patterStorage = (IMatterPatternStorage)storage.getItem();
-
-		if(patterStorage != null)
-		{
-			int itemProgress = GetItemProgress(storage, item);
-
-			if(itemProgress < MAX_ITEM_PROGRESS && patterStorage.getItemsAsNBT(storage).tagCount() < patterStorage.getCapacity(storage) && MatterHelper.CanScan(item))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-
-	public static boolean increaseProgress(IMatterDatabase database,ItemStack item, int amount)
-	{
-		if(database != null && item != null)
-		{
-			ItemStack[] pattern_storages = database.getPatternStorageList();
-
-			for (int i = 0;i < pattern_storages.length;i++)
-			{
-				if (pattern_storages[i] != null && MatterHelper.isMatterPatternStorage(pattern_storages[i]))
-				{
-					NBTTagCompound hasItem = MatterDatabaseHelper.GetItemAsNBT(pattern_storages[i], item);
-
-					if (hasItem != null)
-					{
-						int progress = MatterDatabaseHelper.GetProgressFromNBT(hasItem);
-						if (progress < MAX_ITEM_PROGRESS)
-						{
-							progress = MathHelper.clampI(progress + amount,0,MAX_ITEM_PROGRESS);
-							SetProgressToNBT(hasItem,(byte)progress);
-							if (database instanceof MOTileEntityMachine)
-								((MOTileEntityMachine) database).ForceSync();
-
-							return true;
-						}
-					}
-					else {
-						return database.addItem(item,amount);
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
 	public static int GetProgressFromNBT(NBTTagCompound itemNBT)
 	{
 		if(itemNBT != null)
@@ -290,13 +207,13 @@ public class MatterDatabaseHelper
 		return -1;
 	}
 	
-	public static void writeToNBT(ItemStack scanner,ItemStack item,int progress)
+	public static void writeToNBT(ItemStack patternStorage,ItemStack item,int progress)
 	{
-        if (!scanner.hasTagCompound()) {
-            InitItemListTagCompound(scanner);
+        if (!patternStorage.hasTagCompound()) {
+            InitItemListTagCompound(patternStorage);
         }
 
-        NBTTagCompound itemNBT = GetItemAsNBT(scanner, item);
+        NBTTagCompound itemNBT = GetItemAsNBT(patternStorage, item);
 
         if (itemNBT != null)
 		{
@@ -307,7 +224,7 @@ public class MatterDatabaseHelper
         }
 		else
 		{
-            NBTTagList itemList = GetItemsTagList(scanner);
+            NBTTagList itemList = GetItemsTagList(patternStorage);
             NBTTagCompound nbttagcompound1 = new NBTTagCompound();
             nbttagcompound1.setByte(PROGRESS_TAG_NAME, (byte) progress);
             writeStackToNBT(item, nbttagcompound1);
@@ -361,16 +278,16 @@ public class MatterDatabaseHelper
 		return GetItemStackFromNBT(GetItemAsNBTAt(scanner,index));
 	}
 	
-	public static NBTTagCompound GetItemAsNBT(ItemStack scanner, ItemStack item)
+	public static NBTTagCompound GetItemAsNBT(ItemStack patternStorage, ItemStack item)
 	{
-		if(scanner.hasTagCompound())
+		if(patternStorage.hasTagCompound())
 		{
-				NBTTagList itemList = GetItemsTagList(scanner);
+				NBTTagList itemList = GetItemsTagList(patternStorage);
 				
 				for(int i = 0;i < itemList.tagCount();i++)
 				{
 					if(areEqual(item, GetItemStackFromNBT(itemList.getCompoundTagAt(i))))
-						return GetItemAsNBTAt(scanner,i);
+						return GetItemAsNBTAt(patternStorage,i);
 				}
 		}
 		
@@ -477,10 +394,10 @@ public class MatterDatabaseHelper
 		return areEqual(ItemStack.loadItemStackFromNBT(one),ItemStack.loadItemStackFromNBT(two));
 	}
 	
-	public static NBTTagList GetItemsTagList(ItemStack scanner)
+	public static NBTTagList GetItemsTagList(ItemStack patternStorage)
 	{
-		if(scanner.hasTagCompound())
-			return scanner.getTagCompound().getTagList(ITEMS_TAG_NAME, 10);
+		if(patternStorage.hasTagCompound())
+			return patternStorage.getTagCompound().getTagList(ITEMS_TAG_NAME, 10);
 		return null;
 	}
 	

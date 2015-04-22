@@ -1,22 +1,17 @@
 package com.MO.MatterOverdrive.tile;
 
-import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.IUpgrade;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
-import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.data.Inventory;
-import com.MO.MatterOverdrive.data.MatterNetwork;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.fx.VentParticle;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterHelper;
-import com.MO.MatterOverdrive.util.MatterNetworkHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -25,7 +20,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Matrix4f;
@@ -38,7 +32,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 3/11/2015.
  */
-public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTileEntity, IMatterNetworkConnection, ISidedInventory
+public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTileEntity, ISidedInventory
 {
 
     protected static Random random = new Random();
@@ -48,7 +42,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 
     protected MachineSound sound;
     private final ResourceLocation soundRes;
-    protected MatterNetwork network;
 
     protected boolean redstoneState;
     protected boolean redstoneStateDirty = true;
@@ -206,43 +199,19 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public void onAdded()
     {
-        MatterNetworkHelper.tryConnectToNetwork(this.worldObj, this, true);
+
     }
 
     @Override
     public void onDestroyed()
     {
-        MatterNetworkHelper.disconnectFromNetwork(worldObj, this, true);
+
     }
 
     @Override
     public void onNeighborBlockChange()
     {
         redstoneStateDirty = true;
-    }
-
-    @Override
-    public BlockPosition getPosition()
-    {
-        return new BlockPosition(xCoord,yCoord,zCoord);
-    }
-
-    @Override
-    public MatterNetwork getNetwork()
-    {
-        return network;
-    }
-
-    public boolean setNetwork(MatterNetwork network)
-    {
-        this.network = network;
-        return true;
-    }
-
-    @Override
-    public int getID()
-    {
-        return Block.getIdFromBlock(this.getBlockType());
     }
 
     //region Inventory Methods
@@ -348,6 +317,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                 if (upgradeItem != null && MatterHelper.isUpgrade(upgradeItem))
                 {
                     Map<UpgradeTypes,Double> upgrades = ((IUpgrade)upgradeItem.getItem()).getUpgrades(upgradeItem);
+
                     if (upgrades.containsKey(type)) {
                         multiply *= upgrades.get(type);
                     }

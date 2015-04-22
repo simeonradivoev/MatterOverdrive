@@ -4,10 +4,8 @@ import cofh.lib.gui.element.ElementEnergyStored;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.ContainerMatterAnalyzer;
-import com.MO.MatterOverdrive.gui.element.ElementPlayerSlots;
-import com.MO.MatterOverdrive.gui.element.ElementScanProgress;
-import com.MO.MatterOverdrive.gui.element.ElementSlotsList;
-import com.MO.MatterOverdrive.gui.element.MOElementEnergy;
+import com.MO.MatterOverdrive.gui.element.*;
+import com.MO.MatterOverdrive.gui.pages.PageTasks;
 import com.MO.MatterOverdrive.tile.TileEntityMachineMatterAnalyzer;
 
 import net.minecraft.entity.player.InventoryPlayer;
@@ -19,6 +17,8 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
 {
     MOElementEnergy energyElement;
     ElementScanProgress scanProgress;
+    PageTasks pageTasks;
+    MOElementButton tasksButton;
 
     public GuiMatterAnalyzer(InventoryPlayer playerInventory,TileEntityMachineMatterAnalyzer analyzer)
     {
@@ -26,6 +26,13 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
         name = "matter_analyzer";
         energyElement = new MOElementEnergy(this,176,39,analyzer.getEnergyStorage());
         scanProgress = new ElementScanProgress(this,49,36);
+        pageTasks = new PageTasks(this,0,0,xSize,ySize,analyzer.getQueue());
+        pages.add(pageTasks);
+
+        tasksButton = new MOElementButton(this,this,6,8,"Tasks",0,0,24,0,24,0,24,24,"");
+        tasksButton.setTexture(Reference.PATH_GUI_ITEM + "tasks.png", 48, 24);
+        tasksButton.setToolTip("Tasks");
+        pageButtons.add(tasksButton);
     }
 
     @Override

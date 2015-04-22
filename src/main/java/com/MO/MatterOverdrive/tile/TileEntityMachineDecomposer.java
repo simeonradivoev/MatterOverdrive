@@ -3,28 +3,26 @@ package com.MO.MatterOverdrive.tile;
 import cofh.lib.util.TimeTracker;
 
 import cofh.lib.util.helpers.MathHelper;
+import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.matter.IMatterHandler;
-import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
+import com.MO.MatterOverdrive.api.network.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.MatterSlot;
 import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
-import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
+import com.MO.MatterOverdrive.network.packet.client.PacketMatterUpdate;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
 
-public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter implements ISidedInventory, IMatterConnection, IMatterNetworkConnection
+public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter implements ISidedInventory, IMatterConnection
 {
 	public static final int MATTER_STORAGE = 256;
 	public static final int ENERGY_STORAGE = 512000;
@@ -55,7 +53,6 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         this.matterStorage.setMaxReceive(MATTER_TRANSFER);
         this.matterStorage.setMaxExtract(MATTER_TRANSFER);
         time = new TimeTracker();
-        network = null;
 	}
 
     @Override
@@ -99,7 +96,10 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
                     TileEntity e = worldObj.getTileEntity(this.xCoord + dir.offsetX,this.yCoord + dir.offsetY,this.zCoord + dir.offsetZ);
                     if(e instanceof IMatterHandler)
                     {
-                        MatterHelper.Transfer(dir,MATTER_EXTRACT,this,(IMatterHandler)e);
+                        if (MatterHelper.Transfer(dir,MATTER_EXTRACT,this,(IMatterHandler)e) != 0)
+                        {
+                            updateClientMatter();
+                        }
                     }
                 }
             }
@@ -119,7 +119,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
                 if(this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick())
                 {
                     this.decomposeTime++;
-                    this.extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(), false);
+                    extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(), false);
 
                     if (this.decomposeTime >= getSpeed())
                     {
@@ -228,6 +228,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
                 int matterAmount = MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
                 int matter = this.matterStorage.getMatterStored();
                 this.matterStorage.setMatterStored(matterAmount + matter);
+                updateClientMatter();
             }
 
             this.decrStackSize(0, 1);
@@ -272,11 +273,5 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     public int receiveMatter(ForgeDirection side, int amount, boolean simulate)
     {
         return 0;
-    }
-
-    @Override
-    public boolean canConnectToNetwork(ForgeDirection direction)
-    {
-        return true;
     }
 }

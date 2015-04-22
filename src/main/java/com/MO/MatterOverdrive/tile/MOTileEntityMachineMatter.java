@@ -1,7 +1,9 @@
 package com.MO.MatterOverdrive.tile;
 
+import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.fx.ReplicatorParticle;
 import com.MO.MatterOverdrive.fx.VentParticle;
+import com.MO.MatterOverdrive.network.packet.client.PacketMatterUpdate;
 import com.MO.MatterOverdrive.util.Vector3;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -61,15 +63,12 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	@Override
 	public int receiveMatter(ForgeDirection side, int amount, boolean simulate)
     {
-        int lastMatter = this.matterStorage.getMatterStored();
         int received = this.matterStorage.receiveMatter(side, amount, simulate);
-        if(!simulate) {
-            if (hasMatterEmptied(lastMatter, this.matterStorage.getMatterStored()))
-                onMatterEmpty();
-            else if (hasMatterFilled(lastMatter, this.matterStorage.getMatterStored()))
-                onMatterFilled();
-        }
-
+		if (!simulate && received != 0)
+		{
+			updateClientMatter();
+			worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+		}
         return received;
 	}
 
@@ -77,16 +76,11 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public int extractMatter(ForgeDirection direction, int amount,
 			boolean simulate)
     {
-        int lastMatter = this.matterStorage.getMatterStored();
-        int extracted = this.matterStorage.extractMatter(direction, amount, simulate);
-
-        if(!simulate) {
-            if (hasMatterEmptied(lastMatter, this.matterStorage.getMatterStored()))
-                onMatterEmpty();
-            else if (hasMatterFilled(lastMatter, this.matterStorage.getMatterStored()))
-                onMatterFilled();
-        }
-
+		int extracted = this.matterStorage.extractMatter(direction, amount, simulate);
+		if (!simulate && extracted != 0) {
+			updateClientMatter();
+			worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+		}
 		return extracted;
 	}
 	
@@ -97,33 +91,18 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 
 	public void setMatterStored(int matter)
 	{
-        if(hasMatterEmptied(this.matterStorage.getMatterStored(),matter))
-            onMatterEmpty();
-        else if(hasMatterEmptied(this.matterStorage.getMatterStored(),matter))
-            onMatterFilled();
-
-		this.matterStorage.setMatterStored(matter);
+		int lastMatter = getMatterStorage().getMatterStored();
+		getMatterStorage().setMatterStored(matter);
+		if (lastMatter != matter) {
+			ForceSync();
+			worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+		}
 	}
 
-    public void onMatterEmpty()
-    {
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-
-    public void onMatterFilled()
-    {
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
-    }
-
-    boolean hasMatterEmptied(int lastMatter, int newMatter)
-    {
-        return lastMatter > 0 && newMatter == 0;
-    }
-
-    boolean hasMatterFilled(int lastMatter,int newMatter)
-    {
-        return lastMatter == 0 && newMatter > 0;
-    }
+	public void updateClientMatter()
+	{
+		MatterOverdrive.packetPipeline.sendToAllAround(new PacketMatterUpdate(this),this,64);
+	}
 
 	@Override
 	public void readFromPlaceItem(ItemStack itemStack)

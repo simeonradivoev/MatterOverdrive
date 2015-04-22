@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.items;
 import java.util.List;
 
 import cofh.lib.util.TimeTracker;
+import cofh.lib.util.helpers.ColorHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MOPhysicsHelper;
@@ -21,10 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import cofh.lib.util.helpers.MathHelper;
 
@@ -438,19 +436,32 @@ public class MatterScanner extends MOBaseItem
 		{
 			resetScanProgress(scanner);
 
-			if (MatterDatabaseHelper.increaseProgress(database, worldBlock, PROGRESS_PER_ITEM)) {
+			StringBuilder scanInfo = new StringBuilder();
+			scanInfo.append(EnumChatFormatting.YELLOW + "[" + scanner.getDisplayName() + "] ");
+
+			if (database.addItem(worldBlock, PROGRESS_PER_ITEM,false,scanInfo)) {
 				//scan successful
 				SoundHandler.PlaySoundAt(world, "scanner_success", player);
+				DisplayInfo(player, scanInfo, EnumChatFormatting.GREEN);
 				return HarvestBlock(scanner, player, world, x, y, z);
 			}
 			else
 			{
 				//scan fail
+				DisplayInfo(player, scanInfo, EnumChatFormatting.RED);
 				SoundHandler.PlaySoundAt(world, "scanner_fail", player);
 				return false;
 			}
 		}
 
 		return false;
+	}
+
+	private void DisplayInfo(EntityPlayer player,StringBuilder scanInfo,EnumChatFormatting formatting)
+	{
+		if (player != null && !scanInfo.toString().isEmpty())
+		{
+			player.addChatMessage(new ChatComponentText(formatting + scanInfo.toString()));
+		}
 	}
 }

@@ -1,189 +1,106 @@
 package com.MO.MatterOverdrive.network;
 
 import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.network.packet.*;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.network.FMLEmbeddedChannel;
-import cpw.mods.fml.common.network.FMLOutboundHandler;
+import com.MO.MatterOverdrive.network.packet.AbstractBiPacketHandler;
+import com.MO.MatterOverdrive.network.packet.client.AbstractClientPacketHandler;
+import com.MO.MatterOverdrive.network.packet.client.PacketMatterUpdate;
+import com.MO.MatterOverdrive.network.packet.client.PacketPowerUpdate;
+import com.MO.MatterOverdrive.network.packet.server.PacketMatterScannerUpdate;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToMessageCodec;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.NetHandlerPlayServer;
-
-import java.util.*;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldProvider;
 
 /**
  * Created by Simeon on 3/5/2015.
  */
 @ChannelHandler.Sharable
-public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket,AbstractPacket>
+public class PacketPipeline
 {
-    private EnumMap<Side,FMLEmbeddedChannel> channels;
-    private LinkedList<Class<? extends AbstractPacket>> packets = new LinkedList<Class<? extends AbstractPacket>>();
-    private boolean isPostInitilized = false;
+    protected int packetID;
+    public SimpleNetworkWrapper dispatcher;
 
-    public boolean registerPacket(Class<? extends AbstractPacket> clazz)
+    public PacketPipeline()
     {
-        if(packets.size() > 256)
+        dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.CHANNEL_NAME);
+        packetID = 0;
+    }
+
+    public void registerPackets()
+    {
+        registerPacket(PacketMatterScannerUpdate.ServerHandler.class, PacketMatterScannerUpdate.class);
+        registerPacket(PacketPowerUpdate.ClientHandler.class, PacketPowerUpdate.class);
+        registerPacket(PacketMatterUpdate.ClientHandler.class, PacketMatterUpdate.class);
+    }
+
+    public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)
+    {
+        Side side = AbstractClientPacketHandler.class.isAssignableFrom(messageHandler) ? Side.CLIENT : Side.SERVER;
+        dispatcher.registerMessage(messageHandler, requestMessageType, packetID++, side);
+    }
+
+    public <REQ extends IMessage, REPLY extends IMessage> void registerBiPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)
+    {
+        if (AbstractBiPacketHandler.class.isAssignableFrom(messageHandler))
         {
-            FMLLog.severe("This packet has been registered");
-            return  false;
+            dispatcher.registerMessage(messageHandler,requestMessageType,packetID,Side.CLIENT);
+            dispatcher.registerMessage(messageHandler,requestMessageType,packetID++,Side.SERVER);
         }
-
-        if(this.packets.contains(clazz))
+        else
         {
-            FMLLog.severe("This packet has been registered");
-            return  false;
-        }
-
-        if (this.isPostInitilized)
-        {
-            FMLLog.severe("Packet registered too late!");
-            return false;
-        }
-
-        this.packets.add(clazz);
-        return  true;
-    }
-
-    public void init()
-    {
-        this.channels = NetworkRegistry.INSTANCE.newChannel(Reference.CHANNEL_NAME,this);
-        registerPackets();
-    }
-
-    public  void  postInit()
-    {
-        if(isPostInitilized)
-            return;
-
-        isPostInitilized = true;
-        Collections.sort(this.packets, new Comparator<Class<? extends AbstractPacket>>() {
-            @Override
-            public int compare(Class<? extends AbstractPacket> o1, Class<? extends AbstractPacket> o2) {
-                int com = String.CASE_INSENSITIVE_ORDER.compare(o1.getCanonicalName(), o2.getCanonicalName());
-                if (com == 0)
-                    com = o1.getCanonicalName().compareTo(o2.getCanonicalName());
-
-                return com;
-            }
-        });
-    }
-
-    public  void registerPackets()
-    {
-        registerPacket(TileEntityUpdatePacket.class);
-        registerPacket(PacketMatterPipeUpdate.class);
-        registerPacket(PacketPhaserUpdate.class);
-    }
-
-    @Override
-    protected void encode(ChannelHandlerContext ctx, AbstractPacket msg, List<Object> out) throws Exception
-    {
-        ByteBuf buffer = Unpooled.buffer();
-        Class<? extends AbstractPacket> clazz = msg.getClass();
-
-        if(!this.packets.contains(clazz))
-        {
-            throw new NullPointerException("This packet has never been registered: " + clazz.getCanonicalName());
-        }
-
-        byte discriminator = (byte) this.packets.indexOf(clazz);
-        buffer.writeByte(discriminator);
-        msg.encodeInto(ctx, buffer);
-
-        FMLProxyPacket proxyPacket = new FMLProxyPacket(buffer,ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get());
-        out.add(proxyPacket);
-    }
-
-    @Override
-    protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg, List<Object> out) throws Exception
-    {
-        ByteBuf payload = msg.payload();
-        byte discriminator = payload.readByte();
-
-        Class<? extends AbstractPacket> clazz = this.packets.get(discriminator);
-        if(clazz == null)
-        {
-            throw new NullPointerException("This packet has never been registered: " + msg);
-        }
-
-        AbstractPacket abstractPacket = clazz.newInstance();
-        abstractPacket.decodeInto(ctx, payload.slice());
-
-        switch (FMLCommonHandler.instance().getEffectiveSide())
-        {
-            case CLIENT:
-                decodePlayer(abstractPacket);
-                break;
-            case SERVER:
-                decodeServer(abstractPacket,ctx);
-                break;
-            default:
-        }
-
-        out.add(abstractPacket);
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void decodePlayer(AbstractPacket packet)
-    {
-        packet.handleClientSide(Minecraft.getMinecraft().thePlayer);
-    }
-
-    @SideOnly(Side.SERVER)
-    private void decodeServer(AbstractPacket packet,ChannelHandlerContext ctx)
-    {
-        INetHandler iNetHandler = ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
-        packet.handleServerSide(((NetHandlerPlayServer)iNetHandler).playerEntity);
-    }
-
-    public void sendToServer(AbstractPacket msg)
-    {
-        if(Minecraft.getMinecraft().theWorld.isRemote) {
-            this.channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
-            this.channels.get(Side.CLIENT).writeAndFlush(msg);
+            throw new IllegalArgumentException("Cannot register " + messageHandler.getName() + " on both sides - must extend AbstractBiMessageHandler!");
         }
     }
 
-    public void sendToAll(AbstractPacket msg)
+    //region Util functions
+    public void sendToServer(IMessage message)
     {
-        this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
-        this.channels.get(Side.SERVER).writeOutbound(msg);
+        dispatcher.sendToServer(message);
     }
 
-    public void sendTo(EntityPlayerMP player, AbstractPacket msg)
+    public void sendToAllAround(IMessage message,NetworkRegistry.TargetPoint point)
     {
-        if(!Minecraft.getMinecraft().theWorld.isRemote)
-        {
-            this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
-            this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
-            this.channels.get(Side.SERVER).writeOutbound(msg);
-        }
+        dispatcher.sendToAllAround(message, point);
     }
 
-    public void sendToAllAround(AbstractPacket msg, NetworkRegistry.TargetPoint point)
+    public void sendToAllAround(IMessage message,int dimention,double x,double y,double z,double range)
     {
-        this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
-        this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);
-        this.channels.get(Side.SERVER).writeOutbound(msg);
+        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(dimention, x, y, z, range));
     }
 
-    public void sendToDimension(AbstractPacket msg, int dimensionId)
+    public void sendToAllAround(IMessage message,EntityPlayer player,double range)
     {
-        this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
-        this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionId);
-        this.channels.get(Side.SERVER).writeOutbound(msg);
+        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(player.worldObj.provider.dimensionId,player.posX,player.posY,player.posZ,range));
     }
+
+    public void sendToAllAround(IMessage message,TileEntity tileEntity,double range)
+    {
+        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(tileEntity.getWorldObj().provider.dimensionId,tileEntity.xCoord,tileEntity.yCoord,tileEntity.zCoord,range));
+    }
+
+    public void sendTo(IMessage message,EntityPlayerMP player)
+    {
+        dispatcher.sendTo(message, player);
+    }
+
+    public void sendToDimention(IMessage message,int dimention)
+    {
+        dispatcher.sendToDimension(message, dimention);
+    }
+    public void sendToDimention(IMessage message,World world)
+    {
+        sendToDimention(message,world.provider);
+    }
+    public void sendToDimention(IMessage message,WorldProvider worldProvider)
+    {
+        dispatcher.sendToDimension(message, worldProvider.dimensionId);
+    }
+    //endregion
 }

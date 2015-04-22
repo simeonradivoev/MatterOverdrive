@@ -1,19 +1,24 @@
 package com.MO.MatterOverdrive.network.packet;
 
+import cofh.lib.util.position.BlockPosition;
+import com.MO.MatterOverdrive.network.packet.PacketAbstract;
 import com.MO.MatterOverdrive.tile.IMOTileEntity;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 3/6/2015.
  */
-public class TileEntityUpdatePacket extends AbstractPacket
+public class TileEntityUpdatePacket extends PacketAbstract
 {
-    int x;
-    int y;
-    int z;
+    public int x;
+    public int y;
+    public int z;
 
     public TileEntityUpdatePacket()
     {
@@ -27,31 +32,20 @@ public class TileEntityUpdatePacket extends AbstractPacket
         this.z = z;
     }
 
+
     @Override
-    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    public void fromBytes(ByteBuf buf)
     {
-        buffer.writeInt(this.x);
-        buffer.writeInt(this.y);
-        buffer.writeInt(this.z);
+        x = buf.readInt();
+        y = buf.readInt();
+        z = buf.readInt();
     }
 
     @Override
-    public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    public void toBytes(ByteBuf buf)
     {
-        this.x = buffer.readInt();
-        this.y = buffer.readInt();
-        this.z = buffer.readInt();
-    }
-
-    @Override
-    public void handleClientSide(EntityPlayer player)
-    {
-
-    }
-
-    @Override
-    public void handleServerSide(EntityPlayer player)
-    {
-
+        buf.writeInt(x);
+        buf.writeInt(y);
+        buf.writeInt(z);
     }
 }

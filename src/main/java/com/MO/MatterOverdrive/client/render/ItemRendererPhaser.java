@@ -156,35 +156,11 @@ public class ItemRendererPhaser implements IItemRenderer
         Minecraft.getMinecraft().renderEngine.bindTexture(phaserTextureColorMask);
         phaserModel.renderPart("phaser");
 
-        if (Phaser.getFiring(item) && (renderType == ItemRenderType.EQUIPPED || renderType == ItemRenderType.EQUIPPED_FIRST_PERSON))
-        {
-            //renderBeam(item,color);
-        }
-
         glDisable(GL_LIGHTING);
         RenderUtils.disableLightmap();
         renderLevelSlider(item);
         renderKillIndicator(item);
-        powerText(item);
         glEnable(GL_LIGHTING);
-    }
-
-    private void renderBeam(ItemStack item,GuiColor color)
-    {
-        Minecraft.getMinecraft().renderEngine.bindTexture(phaserTexture);
-
-        glPushMatrix();
-        glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), 0.2f);
-        glDisable(GL_CULL_FACE);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glDisable(GL_LIGHTING);
-        glTranslated(0, -0.03, 0.28);
-        glRotated(10, 1, 0, 0);
-        glScaled(2, 2, 450);
-        phaserModel.renderPart("beam");
-        glEnable(GL_LIGHTING);
-        glEnable(GL_CULL_FACE);
-        glPopMatrix();
     }
 
     private void renderLevelSlider(ItemStack item)
@@ -223,10 +199,5 @@ public class ItemRendererPhaser implements IItemRenderer
         {
             glColor3d(0, 1, 0);
         }
-    }
-
-    private void powerText(ItemStack item)
-    {
-        //Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("Test",0,0,0);
     }
 }

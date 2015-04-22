@@ -66,7 +66,7 @@ public class MatterHelper
 
     public static int Transfer(ForgeDirection toDir,int amount,IMatterProvider from,IMatterReceiver to)
     {
-        ForgeDirection oposite = MatterHelper.opposite(toDir);
+        ForgeDirection oposite = toDir.getOpposite();
         int extract = from.extractMatter(toDir,amount,true);
         int recived = to.receiveMatter(oposite, extract, false);
         from.extractMatter(toDir,recived,false);

@@ -6,17 +6,13 @@ import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyStorage;
 import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.helpers.MathHelper;
+import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.EnergySlot;
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
+import com.MO.MatterOverdrive.network.packet.client.PacketPowerUpdate;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -104,7 +100,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
         int received = energyStorage.receiveEnergy(maxReceive, simulate);
         if (lastEnergy != energyStorage.getEnergyStored() && !simulate)
         {
-            ForceSync();
+            UpdateClientPower();
         }
         return received;
     }
@@ -117,7 +113,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
         int extracted = energyStorage.extractEnergy(maxExtract, simulate);
         if (lastEnergy != energyStorage.getEnergyStored() && !simulate)
         {
-            ForceSync();
+            UpdateClientPower();
         }
         return extracted;
     }
@@ -151,6 +147,11 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     {
         this.energyStorage.setEnergyStored(storage);
 
+    }
+
+    public void UpdateClientPower()
+    {
+        MatterOverdrive.packetPipeline.sendToAllAround(new PacketPowerUpdate(this), new NetworkRegistry.TargetPoint(worldObj.provider.dimensionId,xCoord,yCoord,zCoord,64));
     }
 
     @Override

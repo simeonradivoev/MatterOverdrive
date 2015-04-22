@@ -1,32 +1,36 @@
 package com.MO.MatterOverdrive.tile;
 
 import cofh.api.energy.IEnergyStorage;
+import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.MathHelper;
+import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
-import com.MO.MatterOverdrive.api.matter.IMatterNetworkConnection;
+import com.MO.MatterOverdrive.api.network.*;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.Slot;
+import com.MO.MatterOverdrive.data.network.MatterNetworkTaskQueue;
+import com.MO.MatterOverdrive.data.network.MatterNetworkTaskStorePattern;
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.items.MatterScanner;
-import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
+import com.MO.MatterOverdrive.util.MatterNetworkHelper;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.List;
 
 /**
  * Created by Simeon on 3/16/2015.
  */
-public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory
+public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory, IMatterNetworkDispatcher, IMatterNetworkConnectionProxy
 {
+    public static final int BROADCAST_DELAY = 60;
+    public static final int BROADCAST_WEATING_DELAY = 120;
+
     public static final int PROGRESS_AMOUNT_PER_ITEM = 20;
     public static final int ENERGY_STORAGE = 512000;
     public static final int ENERGY_TRANSFER = 512;
@@ -37,6 +41,9 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public int database_slot = 1;
     public int analyzeTime;
     private boolean isActive = false;
+    private TimeTracker broadcastTracker;
+
+    private MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> taskQueueSending;
 
     public TileEntityMachineMatterAnalyzer()
     {
@@ -44,6 +51,8 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         this.energyStorage.setCapacity(ENERGY_STORAGE);
         this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
+        taskQueueSending = new MatterNetworkTaskQueue<MatterNetworkTaskStorePattern>(this,1,MatterNetworkTaskStorePattern.class);
+        broadcastTracker = new TimeTracker();
     }
 
     @Override
@@ -60,6 +69,40 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         super.updateEntity();
         manageAnalyze();
+        manageBroadcast();
+    }
+
+    private void manageBroadcast()
+    {
+        if (worldObj.isRemote)
+            return;
+
+        MatterNetworkTask task = taskQueueSending.peek();
+
+        if (task != null)
+        {
+            if (task.getState() == Reference.TASK_STATE_PROCESSING)
+            {
+
+            }
+            else if(task.getState() == Reference.TASK_STATE_FINISHED)
+            {
+                taskQueueSending.dequeueTask();
+                ForceSync();
+            }
+            else
+            {
+                if (broadcastTracker.hasDelayPassed(worldObj, task.getState() == Reference.TASK_STATE_WAITING ? BROADCAST_WEATING_DELAY : BROADCAST_DELAY))
+                {
+                    for (int i = 0; i < 6; i++)
+                    {
+                        MatterNetworkHelper.broadcastTaskInDirection(worldObj, taskQueueSending.getLastIndex(), this, ForgeDirection.getOrientation(i));
+                        task.setState(Reference.TASK_STATE_WAITING);
+                    }
+                }
+            }
+
+        }
     }
 
     @Override
@@ -97,7 +140,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
                 isActive = true;
             }
 
-            if (!isAnalyzing)
+            if (!isAnalyzing())
             {
                 isActive = false;
                 analyzeTime = 0;
@@ -108,9 +151,20 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     public boolean isAnalyzing()
     {
-        return  inventory.getStackInSlot(input_slot) != null
-                && MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(input_slot)) > 0
-                && hasConnectionToPatterns();
+        if (inventory.getSlot(input_slot).getItem() != null)
+        {
+            if (inventory.getSlot(database_slot).getItem() != null) {
+                return MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(input_slot)) > 0 && hasConnectionToPatterns();
+            }
+            else
+            {
+                if (taskQueueSending.remaintingCapacity() > 0)
+                {
+                    return  true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -121,56 +175,26 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     public boolean hasConnectionToPatterns()
     {
-        if(inventory.getStackInSlot(database_slot) != null)
+        if(MatterHelper.isMatterScanner(inventory.getStackInSlot(database_slot)))
         {
-            if(MatterHelper.isMatterScanner(inventory.getStackInSlot(database_slot)))
+            //the matter scanner pattern storage
+            IMatterDatabase database = MatterScanner.getLink(worldObj,inventory.getStackInSlot(database_slot));
+            if (database != null)
             {
-                //the matter scanner pattern storage
-                IMatterDatabase database = MatterScanner.getLink(worldObj,inventory.getStackInSlot(database_slot));
-                if (database != null)
+                if (database.hasItem(inventory.getStackInSlot(input_slot)))
                 {
-                    if (database.hasItem(inventory.getStackInSlot(input_slot)))
+                    NBTTagCompound itemAsNBT = database.getItemAsNBT(inventory.getStackInSlot(input_slot));
+                    if(itemAsNBT != null)
                     {
-                        NBTTagCompound itemAsNBT = database.getItemAsNBT(inventory.getStackInSlot(input_slot));
-                        if(itemAsNBT != null)
+                        if (MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) < MatterDatabaseHelper.MAX_ITEM_PROGRESS)
                         {
-                            if (MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) < MatterDatabaseHelper.MAX_ITEM_PROGRESS)
-                            {
-                                return true;
-                            }
+                            return true;
                         }
-                    }
-                    else if (MatterDatabaseHelper.getFirstFreePatternStorage(database) != null)
-                    {
-                        return true;
                     }
                 }
-            }
-        }
-        else if(network != null)
-        {
-            List<IMatterNetworkConnection> connections = network.getConnections();
-            for (int i = 0;i < connections.size();i++)
-            {
-                if (connections.get(i) instanceof IMatterDatabase)
+                else if (MatterDatabaseHelper.getFirstFreePatternStorage(database) != null)
                 {
-                    IMatterDatabase database = (IMatterDatabase)connections.get(i);
-                    NBTTagCompound itemNBT = database.getItemAsNBT(inventory.getStackInSlot(input_slot));
-
-                    if (itemNBT != null)
-                    {
-                        if (MatterDatabaseHelper.GetProgressFromNBT(itemNBT) < MatterDatabaseHelper.MAX_ITEM_PROGRESS)
-                        {
-                            return true;
-                        }
-                    }
-                    else
-                    {
-                        if (MatterDatabaseHelper.getFirstFreePatternStorage(database) != null)
-                        {
-                            return true;
-                        }
-                    }
+                    return true;
                 }
             }
         }
@@ -196,20 +220,29 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
             database = MatterScanner.getLink(worldObj,scanner);
         }
 
-        //get the first database on the network, if the scanner is offline
-        if (database == null)
-        {
-            database = network.getFirstMatterDatabase();
-        }
-
         if(database != null)
         {
-            MatterDatabaseHelper.increaseProgress(database,itemStack,PROGRESS_AMOUNT_PER_ITEM);
-            SoundHandler.PlaySoundAt(worldObj,"scanner_success",xCoord,yCoord,zCoord);
-            decrStackSize(input_slot, 1);
-            forceClientUpdate = true;
-            markDirty();
+            if (database.addItem(itemStack,PROGRESS_AMOUNT_PER_ITEM,false,null))
+            {
+                SoundHandler.PlaySoundAt(worldObj, "scanner_success", xCoord, yCoord, zCoord);
+            }
+            else
+            {
+                //if the scanner cannot take the item for some reason
+                //then just queue the analyzed item as a task
+                MatterNetworkTaskStorePattern storePattern = new MatterNetworkTaskStorePattern(this,itemStack,PROGRESS_AMOUNT_PER_ITEM);
+                taskQueueSending.queueTask(storePattern);
+            }
         }
+        else
+        {
+            MatterNetworkTaskStorePattern storePattern = new MatterNetworkTaskStorePattern(this,itemStack,PROGRESS_AMOUNT_PER_ITEM);
+            taskQueueSending.queueTask(storePattern);
+        }
+
+        decrStackSize(input_slot, 1);
+        forceClientUpdate = true;
+        markDirty();
     }
 
     public int getSpeed()
@@ -233,6 +266,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         super.readCustomNBT(tagCompound);
         analyzeTime = tagCompound.getShort("AnalyzeTime");
         isActive = tagCompound.getBoolean("IsActive");
+        taskQueueSending.readFromNBT(tagCompound);
     }
 
     @Override
@@ -240,7 +274,8 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         super.writeCustomNBT(tagCompound);
         tagCompound.setShort("AnalyzeTime", (short) analyzeTime);
-        tagCompound.setBoolean("IsActive",isActive);
+        tagCompound.setBoolean("IsActive", isActive);
+        taskQueueSending.writeToNBT(tagCompound);
     }
 
     public IEnergyStorage getEnergyStorage() {
@@ -248,6 +283,12 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     }
 
     //region Inventory Methods
+    @Override
+    public boolean canExtractItem(int slot, ItemStack item, int side)
+    {
+        return true;
+    }
+
     @Override
     public int[] getAccessibleSlotsFromSide(int side)
     {
@@ -260,16 +301,41 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
             return new int[]{input_slot};
         }
     }
+    //endregion
+
+    //region Matter Network Functions
 
     @Override
-    public boolean canExtractItem(int slot, ItemStack item, int side)
+    public BlockPosition getPosition()
     {
+        return new BlockPosition(this);
+    }
+
+    @Override
+    public boolean canConnectFromSide(ForgeDirection side) {
         return true;
     }
 
     @Override
-    public boolean canConnectToNetwork(ForgeDirection direction) {
-        return true;
+    public IMatterNetworkConnection getMatterNetworkConnection() {
+        return this;
+    }
+
+    @Override
+    public MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> getQueue()
+    {
+        return taskQueueSending;
+    }
+
+    @Override
+    public void onTaskChange(MatterNetworkTask task)
+    {
+        ForceSync();
+        if (task instanceof MatterNetworkTaskStorePattern) {
+            if (task.getState() == Reference.TASK_STATE_FINISHED || task.getState() <= Reference.TASK_STATE_UNKNOWN) {
+                taskQueueSending.remove((MatterNetworkTaskStorePattern)task);
+            }
+        }
     }
     //endregion
 }

@@ -4,11 +4,9 @@ import java.util.*;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.lib.util.helpers.*;
-import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.weapon.IWeapon;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
-import com.MO.MatterOverdrive.network.packet.PacketPhaserUpdate;
 import com.MO.MatterOverdrive.sound.PhaserSound;
 import com.MO.MatterOverdrive.util.*;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -152,6 +150,7 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
                 EntityLivingBase el = (EntityLivingBase) hit.entityHit;
                 el.attackEntityFrom(damageInfo, damage);
                 el.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, GetSleepTime(item), 10));
+                el.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, GetSleepTime(item), -10));
                 el.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, GetSleepTime(item), 10));
                 el.addPotionEffect(new PotionEffect(Potion.jump.id,GetSleepTime(item),-10));
             }
@@ -171,11 +170,6 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         {
             if (getHeat(item,world) <= MIN_HEAT_FIRE && DrainEnergy(item,1,true))
             {
-                if (!world.isRemote)
-                {
-                    MatterOverdrive.packetPipeline.sendToAll(new PacketPhaserUpdate(player.inventory.currentItem, player.getEntityId(), true));
-                }
-
                 player.setItemInUse(item, getMaxItemUseDuration(item));
             }
             return item;

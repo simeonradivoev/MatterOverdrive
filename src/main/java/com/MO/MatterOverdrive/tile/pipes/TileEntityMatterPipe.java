@@ -89,6 +89,7 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
 
     private List<WeightedDirection> getWeightedValidSides(ForgeDirection transferDir)
     {
+        int connections = getConnections();
         List<WeightedDirection> validSides = new ArrayList<WeightedDirection>(6);
         ForgeDirection transferDirOp = MatterHelper.opposite(transferDir);
 

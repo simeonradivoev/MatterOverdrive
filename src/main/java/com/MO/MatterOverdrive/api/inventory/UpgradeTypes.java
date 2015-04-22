@@ -9,5 +9,6 @@ public enum UpgradeTypes
     PowerUsage,
     Output,
     SecondOutput,
-    Fail
+    Fail,
+    Other
 }

@@ -51,7 +51,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
                     energy = MathHelper.clampI(energy + getChargeAmount(),0,energyStorage.getMaxEnergyStored());
                     if (energy != energyStorage.getEnergyStored())
                     {
-                        ForceSync();
+                        UpdateClientPower();
                     }
                     energyStorage.setEnergyStored(energy);
                 }
@@ -160,10 +160,5 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     @Override
     public float soundVolume() {
         return 0;
-    }
-
-    @Override
-    public boolean canConnectToNetwork(ForgeDirection direction) {
-        return false;
     }
 }

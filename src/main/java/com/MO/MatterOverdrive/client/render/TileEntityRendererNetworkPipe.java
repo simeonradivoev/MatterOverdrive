@@ -13,11 +13,10 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by Simeon on 3/7/2015.
  */
-public class TileEntityRendererNetworkPipe extends TileEntitySpecialRenderer
+public class TileEntityRendererNetworkPipe extends TileEntityRendererPipe
 {
     public static final String MODEL_PATH = Reference.PATH_MODEL_BLOCKS + "network_cable.obj";
     private IModelCustom model;
-    private ResourceLocation texture;
     private static final float SIZE = 0.2258f;
 
     public TileEntityRendererNetworkPipe()
@@ -27,42 +26,6 @@ public class TileEntityRendererNetworkPipe extends TileEntitySpecialRenderer
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileentity, double x,
-                                   double y, double z, float f)
-    {
-        if(tileentity instanceof TileEntityPipe)
-        {
-            TileEntityPipe pipe = (TileEntityPipe) tileentity;
-
-            GL11.glPushMatrix();
-            GL11.glTranslated(x, y, z);
-            if(texture != null)
-                this.bindTexture(texture);
-
-            drawCore(pipe, x, y, z, f, DrawSides(pipe, x, y, z, f));
-            
-
-            GL11.glPopMatrix();
-        }
-    }
-
-    protected int DrawSides(TileEntityPipe pipe, double x,
-                             double y, double z, float f)
-    {
-    	int sides = 0;
-    	
-        for (int i = 0; i < 6; i++)
-        {
-            if (pipe.isConnectableSide(ForgeDirection.values()[i]))
-            {
-            	sides |= ForgeDirection.values()[i].flag;
-                drawSide(pipe,ForgeDirection.values()[i],x,y,z);
-            }
-        }
-        
-        return sides;
-    }
-
     protected void drawCore(TileEntityPipe tile,double x,
                             double y, double z, float f,int sides)
     {
@@ -92,7 +55,8 @@ public class TileEntityRendererNetworkPipe extends TileEntitySpecialRenderer
         GL11.glPopMatrix();
     }
 
-    protected void drawSide(TileEntityPipe tile,ForgeDirection dir,double x,double y,double z)
+    @Override
+    protected void drawSide(TileEntityPipe tile,ForgeDirection dir)
     {
         GL11.glPushMatrix();
         GL11.glTranslatef(0.5f,0.5f,0.5f);

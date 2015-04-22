@@ -1,21 +1,20 @@
 package com.MO.MatterOverdrive.container;
 
 import cofh.lib.util.helpers.InventoryHelper;
-import com.MO.MatterOverdrive.tile.TileEntityMachineNetworkController;
+import com.MO.MatterOverdrive.tile.TileEntityMachineNetworkRouter;
 import com.MO.MatterOverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 
 /**
  * Created by Simeon on 3/13/2015.
  */
-public class ContainerNetworkController extends ContainerMachine<TileEntityMachineNetworkController>
+public class ContainerNetworkController extends ContainerMachine<TileEntityMachineNetworkRouter>
 {
-    TileEntityMachineNetworkController controller;
+    TileEntityMachineNetworkRouter controller;
 
-    public ContainerNetworkController(InventoryPlayer inventoryPlayer,TileEntityMachineNetworkController entity)
+    public ContainerNetworkController(InventoryPlayer inventoryPlayer,TileEntityMachineNetworkRouter entity)
     {
         super(inventoryPlayer,entity);
     }

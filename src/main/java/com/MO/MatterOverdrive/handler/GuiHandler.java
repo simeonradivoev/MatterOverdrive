@@ -1,6 +1,5 @@
 package com.MO.MatterOverdrive.handler;
 
-import cofh.lib.gui.container.ContainerFalse;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.container.*;
 import com.MO.MatterOverdrive.gui.*;
@@ -39,9 +38,9 @@ public class GuiHandler implements IGuiHandler
 				}
                 break;
             case MatterOverdrive.guiNetworkController:
-                if(entity instanceof TileEntityMachineNetworkController)
+                if(entity instanceof TileEntityMachineNetworkRouter)
                 {
-                    return new ContainerNetworkController(player.inventory,(TileEntityMachineNetworkController)entity);
+                    return new ContainerNetworkController(player.inventory,(TileEntityMachineNetworkRouter)entity);
                 }
                 break;
             case MatterOverdrive.guiMatterAnalyzer:
@@ -96,9 +95,9 @@ public class GuiHandler implements IGuiHandler
                     }
                     break;
                 case  MatterOverdrive.guiNetworkController:
-                    if(entity instanceof TileEntityMachineNetworkController)
+                    if(entity instanceof TileEntityMachineNetworkRouter)
                     {
-                        return new GuiNetworkController(player.inventory,(TileEntityMachineNetworkController)entity);
+                        return new GuiNetworkController(player.inventory,(TileEntityMachineNetworkRouter)entity);
                     }
                     break;
                 case MatterOverdrive.guiMatterAnalyzer:
