@@ -2,13 +2,17 @@ package com.MO.MatterOverdrive.items;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
+import com.MO.MatterOverdrive.init.MatterOverdriveItems;
 import com.MO.MatterOverdrive.items.includes.MOBaseItem;
 import com.MO.MatterOverdrive.util.MOStringHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -23,7 +27,7 @@ import java.util.Map;
 public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
 {
 
-    public static final String[] names = {"damage"};
+    public static final String[] names = {"damage","fire"};
     private IIcon[] icons;
 
     public WeaponModuleBarrel(String name)
@@ -33,6 +37,15 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(16);
+    }
+
+    public void Register()
+    {
+        super.Register();
+
+        //damage barrel
+        GameRegistry.addRecipe(new ItemStack(this,1,0)," G ","RDR"," T ",'T', MatterOverdriveItems.tritanium_plate,'D',MatterOverdriveItems.dilithium_ctystal,'R', Items.redstone,'G', Blocks.glass);
+        GameRegistry.addRecipe(new ItemStack(this,1,1)," G ","BFB"," T ",'T', MatterOverdriveItems.tritanium_plate,'F',Items.fire_charge,'B', Items.blaze_rod,'G', Blocks.glass);
     }
 
     @Override
@@ -112,6 +125,10 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
                 stats.put(Reference.WS_AMMO,0.5);
                 stats.put(Reference.WS_EFFECT,0.5);
                 break;
+            case 1:
+                stats.put(Reference.WS_AMMO,0.5);
+                stats.put(Reference.WS_FIRE_DAMAGE,1.0);
+
         }
         return stats;
     }

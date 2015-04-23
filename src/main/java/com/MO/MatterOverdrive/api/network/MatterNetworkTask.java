@@ -1,20 +1,14 @@
 package com.MO.MatterOverdrive.api.network;
 
-import cofh.lib.util.helpers.StringHelper;
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.data.network.MatterNetworkTaskPacket;
 import com.MO.MatterOverdrive.util.MOStringHelper;
-import com.google.common.collect.Lists;
-import com.sun.istack.internal.NotNull;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import scala.actors.threadpool.Arrays;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**

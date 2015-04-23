@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -109,13 +110,13 @@ public class RenderHandler
             Vec3 hitVector = hit.hitVec;
             distance = hitVector.distanceTo(viewer.getPosition(1.0f));
             Block b = world.getBlock(hit.blockX,hit.blockY,hit.blockZ);
-            if (b != null && b != Blocks.air)
-            {
-                viewer.worldObj.spawnParticle("smoke",hitVector.xCoord,hitVector.yCoord,hitVector.zCoord,0,0,0);
-            }
-            else if (hit.entityHit != null)
+            if (hit.entityHit != null && hit.entityHit instanceof EntityLivingBase)
             {
                 viewer.worldObj.spawnParticle("reddust",hitVector.xCoord,hitVector.yCoord,hitVector.zCoord,0,0,0);
+            }
+            else if(b != null && b != Blocks.air)
+            {
+                viewer.worldObj.spawnParticle("smoke",hitVector.xCoord,hitVector.yCoord,hitVector.zCoord,0,0,0);
             }
 
         }

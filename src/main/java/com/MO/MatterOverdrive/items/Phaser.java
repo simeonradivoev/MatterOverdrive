@@ -4,6 +4,7 @@ import java.util.*;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.lib.util.helpers.*;
+import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.weapon.IWeapon;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
@@ -148,11 +149,23 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
                 float damage = GetPhaserDamage(item);
 
                 EntityLivingBase el = (EntityLivingBase) hit.entityHit;
+                double motionX = el.motionX;
+                double motionY = el.motionY;
+                double moutionZ = el.motionZ;
                 el.attackEntityFrom(damageInfo, damage);
+                el.motionX = motionX;
+                el.motionY = motionY;
+                el.motionZ = moutionZ;
+
                 el.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, GetSleepTime(item), 10));
                 el.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, GetSleepTime(item), -10));
                 el.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, GetSleepTime(item), 10));
-                el.addPotionEffect(new PotionEffect(Potion.jump.id,GetSleepTime(item),-10));
+                el.addPotionEffect(new PotionEffect(Potion.jump.id, GetSleepTime(item), -10));
+
+                if (WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE,item) > 0)
+                {
+                    el.setFire(MathHelper.round(WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE,item) * item.getTagCompound().getByte("power")));
+                }
             }
         }
 	}

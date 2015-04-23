@@ -27,6 +27,7 @@ item.pattern_drive.name=Pattern Drive
 
 item.weapon_module_color.name=Color Module
 item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
+item.weapon_module_barrel.fire.name=Incendiary Filter
 
 tile.replicator.name=Matter Replicator
 tile.replicator.details=Replicates Items and Blocks from Matter Plasma
@@ -37,8 +38,8 @@ tile.matter_pipe.name=Matter Transport Pipe
 tile.matter_pipe.details=Transports Matter Plasma
 tile.network_pipe.name=Matter Network Cable
 tile.network_pipe.details=Connects Devices to a Matter Network
-tile.network_controller.name=Matter Network Controller
-tile.network_controller.details=Hearth of the Matter Network
+tile.network_router.name=Matter Network Router
+tile.network_router.details=Used to route Tasks from one Machine to the other, trough Network Cables
 tile.transporter.name=Transporter
 tile.matter_analyzer.name=Matter Analyzer
 tile.matter_analyzer.details=Analyzes Items Patterns
@@ -77,7 +78,7 @@ weaponstat.5.name=Block Damage
 gui.replicator.name=Pattern Replicator
 gui.decomposer.name=Matter Decomposer
 gui.matter_analyzer.name=Matter Analyzer
-gui.network_controller.name=Network Controller
+gui.network_controller.name=Network Router
 gui.pattern_storage.name=Pattern Storage
 gui.solar_panel.name=Solar Panel
 module.battery.name=Battery Module

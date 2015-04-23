@@ -26,7 +26,7 @@ public class EntityDamageSourcePhaser extends EntityDamageSource
 
     public Entity getEntity()
     {
-        return null;
+        return damageSourceEntity;
     }
 
     public IChatComponent func_151519_b(EntityLivingBase p_151519_1_)
