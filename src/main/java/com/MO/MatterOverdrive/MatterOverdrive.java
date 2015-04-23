@@ -67,7 +67,6 @@ public class MatterOverdrive
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		GameRegistry.registerTileEntity(TileEntityMachineReplicator.class, "Replicator");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		MatterOverdriveItems.addToDungons();
 		proxy.registerProxies();
