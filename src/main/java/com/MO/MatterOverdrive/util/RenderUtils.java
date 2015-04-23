@@ -79,7 +79,7 @@ public class RenderUtils
 		}
 		catch(Exception e)
 		{
-			
+			e.printStackTrace();
 		}
 	}
 

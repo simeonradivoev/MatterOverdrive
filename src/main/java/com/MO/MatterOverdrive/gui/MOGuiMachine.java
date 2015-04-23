@@ -133,27 +133,13 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 
     public void setPage(int page)
     {
-        hideAllPages();
-
-        if (page < pages.size())
-        {
-            pages.get(page).setVisible(true);
-            if (page < pageButtons.size())
-            {
-                pageButtons.get(page).setEnabled(false);
-            }
-        }
-    }
-
-    void hideAllPages()
-    {
         for (int i = 0;i < pages.size();i++)
         {
-            pages.get(i).setVisible(false);
+            pages.get(i).setVisible(i == page);
 
             if (i < pageButtons.size())
             {
-                pageButtons.get(i).setEnabled(true);
+                pageButtons.get(i).setEnabled(i != page);
             }
         }
     }
@@ -166,6 +152,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
             String n = StringHelper.localize("gui." + name + ".name");
             fontRendererObj.drawString(n, 125 - (fontRendererObj.getStringWidth(n) / 2), 7, new GuiColor(44, 54, 52).getColor());
         }
+
         drawElements(0, true);
         drawTabs(0, true);
     }

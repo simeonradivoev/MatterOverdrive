@@ -41,9 +41,9 @@ public class PageUpgrades extends ElementBaseGroup
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY)
+    public void drawBackground(int mouseX, int mouseY,float ticks)
     {
-        super.drawForeground(mouseX, mouseY);
+        super.drawBackground(mouseX, mouseY,ticks);
         DrawUpgradeStats();
     }
 
@@ -62,7 +62,15 @@ public class PageUpgrades extends ElementBaseGroup
                     Map<UpgradeTypes,Double> upgradeMap = upgrade.getUpgrades(upgradeItem);
                     for (final Map.Entry<UpgradeTypes, Double> entry : upgradeMap.entrySet())
                     {
-                        upgradesMap.compute(entry.getKey(),new UpgradeAdd(entry.getValue()));
+                        if (upgradesMap.containsKey(entry.getKey()))
+                        {
+                            double previusValue = upgradesMap.get(entry.getKey());
+                            upgradesMap.put(entry.getKey(),previusValue * entry.getValue());
+                        }
+                        else
+                        {
+                            upgradesMap.put(entry.getKey(),entry.getValue());
+                        }
                     }
                 }
             }
@@ -76,22 +84,6 @@ public class PageUpgrades extends ElementBaseGroup
         }
 
         RenderUtils.DrawMultilineInfo(infos,76,78,100,300,new GuiColor(255,255,255).getColor());
-    }
-
-    private class UpgradeAdd implements BiFunction<UpgradeTypes, Double, Double>
-    {
-        double value = 0;
-
-        public UpgradeAdd(double value)
-        {
-            this.value = value;
-        }
-
-        @Override
-        public Double apply(UpgradeTypes t, Double u)
-        {
-            return u == null ? value : u * value;
-        }
     }
 
     public void AddUpgradeSlots(Container container,Inventory inventory)
