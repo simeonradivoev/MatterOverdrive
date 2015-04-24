@@ -152,6 +152,7 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
                     {
                         MatterDatabaseHelper.writeToNBT(storage, itemStack, initialAmount);
                     }
+                    return true;
                 }
             }
         }

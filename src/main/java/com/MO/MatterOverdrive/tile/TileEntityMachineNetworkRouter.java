@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class TileEntityMachineNetworkRouter extends MOTileEntityMachine implements IMatterNetworkRouter, IMatterNetworkConnectionProxy
 {
-    public static final int BROADCAST_DELAY = 60;
+    public static final int BROADCAST_DELAY = 30;
     private TimeTracker broadcastTracker;
     private MatterNetworkTaskPacketQueue taskPacketQueue;
 
@@ -33,11 +33,15 @@ public class TileEntityMachineNetworkRouter extends MOTileEntityMachine implemen
     public void updateEntity()
     {
         super.updateEntity();
-        manageBroadcast();
+        if (!worldObj.isRemote) {
+            manageBroadcast();
+        }
     }
 
-    private void manageBroadcast() {
-        if (broadcastTracker.hasDelayPassed(worldObj, BROADCAST_DELAY)) {
+    private void manageBroadcast()
+    {
+        if (broadcastTracker.hasDelayPassed(worldObj, BROADCAST_DELAY))
+        {
             MatterNetworkTaskPacket taskPacket = taskPacketQueue.dequeuePacket();
 
             if (taskPacket != null && taskPacket.isValid(worldObj))

@@ -1,10 +1,12 @@
 package com.MO.MatterOverdrive.init;
 
+import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
 import com.MO.MatterOverdrive.items.*;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 
@@ -12,11 +14,14 @@ import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.items.includes.MOBaseItem;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraftforge.common.ChestGenHooks;
 
 public class MatterOverdriveItems 
 {
 	public static MOBaseItem matter_scanner;
 	public static ItemFood emergency_ration;
+    public static EarlGrayTea earl_gray_tea;
 	public static MOBaseItem me_conversion_matrix;
 	public static Phaser phaser;
 	public static MOBaseItem battery;
@@ -46,7 +51,8 @@ public class MatterOverdriveItems
 		creative_battery = new CreativeBattery("creative_battery",1048576);
 		phaser = new Phaser("phaser");
 		emergency_ration = new ItemFood(8,0.8F,false);
-		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive).setTextureName("mo:emergency_ration");
+		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive).setTextureName(Reference.MOD_ID + ":" + "emergency_ration");
+        earl_gray_tea = new EarlGrayTea("earl_gray_tea");
 		me_conversion_matrix = new MOBaseItem("me_conversion_matrix");
         isolinear_circuit = new Isolinear_circuit("isolinear_circuit");
         item_upgrade = new ItemUpgrade("upgrade");
@@ -61,11 +67,13 @@ public class MatterOverdriveItems
         pattern_drive = new PatternDrive("pattern_drive",2);
         weapon_module_color = new WeaponColorModule("weapon_module_color");
         weapon_module_barrel = new WeaponModuleBarrel("weapon_module_barrel");
+
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
 	{
 		GameRegistry.registerItem(emergency_ration, emergency_ration.getUnlocalizedName().substring(5));
+
 		matter_dust_refined.Register();
 		matter_dust.Register();
 		creative_battery.Register();
@@ -86,6 +94,7 @@ public class MatterOverdriveItems
         pattern_drive.Register();
         weapon_module_color.Register();
         weapon_module_barrel.Register();
+        earl_gray_tea.Register();
 
         GameRegistry.addSmelting(new ItemStack(matter_dust), new ItemStack(matter_dust_refined), 0);
         GameRegistry.addSmelting(new ItemStack(tritanium_dust),new ItemStack(tritanium_ingot),5);
@@ -101,11 +110,25 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new ItemStack(tritanium_plate),new Object[]{"TTT",'T',new ItemStack(tritanium_ingot)});
         GameRegistry.addRecipe(new ItemStack(phaser),new Object[]{"IGI","IDI","WCW",'I',Items.iron_ingot,'G',Blocks.glass,'D',dilithium_ctystal,'W',Blocks.wool,'C',new ItemStack(isolinear_circuit,1,3)});
         GameRegistry.addRecipe(new ItemStack(pattern_drive),new Object[]{" M ", "RER"," C ",'M',machine_casing,'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'R',Items.redstone});
+
         MatterRegistry.register(matter_dust_refined, 1);
+        MatterRegistry.register(emergency_ration,3);
+        MatterRegistry.register(earl_gray_tea,2);
 	}
 
     public static void addToDungons()
     {
         weapon_module_color.addToDunguns();
+        addToDungons(emergency_ration, 1, 8, 80);
+        addToDungons(earl_gray_tea,1,2,60);
+    }
+
+    private static void addToDungons(Item item,int min,int max,int chance)
+    {
+        ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
+        ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
+        ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
+        ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
+        ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
     }
 }

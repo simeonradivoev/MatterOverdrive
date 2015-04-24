@@ -26,7 +26,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy implements IMatterDatabase, IMatterNetworkClient,IMatterNetworkConnectionProxy
 {
-    public static final int TASK_PROCESS_DELAY = 80;
+    public static final int TASK_PROCESS_DELAY = 40;
     public static final int ENERGY_CAPACITY = 64000;
     public static final int ENERGY_TRANSFER = 128;
     public int input_slot;
