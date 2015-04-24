@@ -28,6 +28,7 @@ item.pattern_drive.name=Pattern Drive
 item.weapon_module_color.name=Color Module
 item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
 item.weapon_module_barrel.fire.name=Incendiary Filter
+item.weapon_module_barrel.explosion.name=Burst Inductive Drum
 
 tile.replicator.name=Matter Replicator
 tile.replicator.details=Replicates Items and Blocks from Matter Plasma
@@ -74,6 +75,8 @@ weaponstat.2.name=Effect
 weaponstat.3.name=Range
 weaponstat.4.name=Fire Damage
 weaponstat.5.name=Block Damage
+weaponstat.6.name=Explosion Damage
+weaponstat.7.name=Fire Rate
 
 gui.replicator.name=Pattern Replicator
 gui.decomposer.name=Matter Decomposer

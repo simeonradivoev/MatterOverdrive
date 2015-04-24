@@ -108,7 +108,7 @@ public class MOStringHelper
             case Fail:
                 return value < 1;
             default:
-                return value > 1;
+                return value >= 1;
         }
     }
 
@@ -117,7 +117,7 @@ public class MOStringHelper
         switch (type)
         {
             default:
-                return value > 1;
+                return value >= 1;
         }
     }
 

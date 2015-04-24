@@ -143,6 +143,8 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         MovingObjectPosition hit = MOPhysicsHelper.rayTrace(player, w, getRange(item), 0, Vec3.createVectorHelper(0, player.getEyeHeight(),0));
         if (hit != null)
         {
+            Vec3 hitVector = hit.hitVec;
+
             if (hit.entityHit != null && hit.entityHit instanceof EntityLivingBase)
             {
                 DamageSource damageInfo = new EntityDamageSourcePhaser(player);
@@ -157,14 +159,22 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
                 el.motionY = motionY;
                 el.motionZ = moutionZ;
 
-                el.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, GetSleepTime(item), 10));
-                el.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, GetSleepTime(item), -10));
-                el.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, GetSleepTime(item), 10));
+                el.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, GetSleepTime(item), 100));
+                //el.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, GetSleepTime(item), -10));
+                el.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, GetSleepTime(item), 100));
                 el.addPotionEffect(new PotionEffect(Potion.jump.id, GetSleepTime(item), -10));
 
-                if (WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE,item) > 0)
+                if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,item))
                 {
                     el.setFire(MathHelper.round(WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE,item) * item.getTagCompound().getByte("power")));
+                }
+            }
+
+            if (isKillMode(item))
+            {
+                if (WeaponHelper.hasStat(Reference.WS_EXPLOSION_DAMAGE, item))
+                {
+                    w.createExplosion(player, hitVector.xCoord, hitVector.yCoord, hitVector.zCoord, (float) WeaponHelper.getStatMultiply(Reference.WS_EXPLOSION_DAMAGE, item) * item.getTagCompound().getByte("power") - (MAX_LEVEL/2), true);
                 }
             }
         }
@@ -206,7 +216,9 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
 
         if (DrainEnergy(itemStack,getMaxItemUseDuration(itemStack) - count,true))
         {
-            if (duration % 5 == 2)
+            int fireRate = MathHelper.round(5 / WeaponHelper.getStatMultiply(Reference.WS_FIRE_RATE, itemStack));
+
+            if (duration %  fireRate == (fireRate/2))
                 ManageShooting(itemStack, player.worldObj, player);
         }
         else

@@ -27,7 +27,7 @@ import java.util.Map;
 public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
 {
 
-    public static final String[] names = {"damage","fire"};
+    public static final String[] names = {"damage","fire","explosion"};
     private IIcon[] icons;
 
     public WeaponModuleBarrel(String name)
@@ -46,6 +46,7 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
         //damage barrel
         GameRegistry.addRecipe(new ItemStack(this,1,0)," G ","RDR"," T ",'T', MatterOverdriveItems.tritanium_plate,'D',MatterOverdriveItems.dilithium_ctystal,'R', Items.redstone,'G', Blocks.glass);
         GameRegistry.addRecipe(new ItemStack(this,1,1)," G ","BFB"," T ",'T', MatterOverdriveItems.tritanium_plate,'F',Items.fire_charge,'B', Items.blaze_rod,'G', Blocks.glass);
+        GameRegistry.addRecipe(new ItemStack(this,1,2)," B ","BRB","DTD",'T', MatterOverdriveItems.tritanium_plate,'R',Items.blaze_rod,'B', Blocks.tnt,'G', Blocks.glass,'D',Items.diamond);
     }
 
     @Override
@@ -128,7 +129,13 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
             case 1:
                 stats.put(Reference.WS_AMMO,0.5);
                 stats.put(Reference.WS_FIRE_DAMAGE,1.0);
-
+                break;
+            case 2:
+                stats.put(Reference.WS_EXPLOSION_DAMAGE,1.0);
+                stats.put(Reference.WS_AMMO,0.2);
+                stats.put(Reference.WS_EFFECT,0.5);
+                stats.put(Reference.WS_FIRE_RATE,0.15);
+                break;
         }
         return stats;
     }

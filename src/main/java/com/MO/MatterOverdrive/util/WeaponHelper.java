@@ -65,6 +65,26 @@ public class WeaponHelper
         return multiply;
     }
 
+    public static boolean hasStat(int stat,ItemStack weapon)
+    {
+        if (MatterHelper.isWeapon(weapon))
+        {
+            Map<Integer,Double> stats;
+            for (ItemStack module : MOInventoryHelper.getStacks(weapon))
+            {
+                stats = getStatsFromModule(module,weapon);
+                if (stats != null)
+                {
+                    if (stats.containsKey(stat))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public static Map<Integer,Double> getStatsFromModule(ItemStack module,ItemStack weapon)
     {
         if (weapon != null && module != null && MatterHelper.isWeapon(weapon) && MatterHelper.isWeaponModule(module))
