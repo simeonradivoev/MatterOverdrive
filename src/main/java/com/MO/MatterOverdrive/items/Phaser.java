@@ -389,7 +389,7 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
         {
             IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
-            return e.getEnergyStored(container);
+            return e.getEnergyStored(energy_module);
         }
         else
         {
