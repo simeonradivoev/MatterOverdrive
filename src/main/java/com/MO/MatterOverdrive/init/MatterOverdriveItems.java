@@ -119,8 +119,8 @@ public class MatterOverdriveItems
     public static void addToDungons()
     {
         weapon_module_color.addToDunguns();
-        addToDungons(emergency_ration, 1, 8, 80);
-        addToDungons(earl_gray_tea,1,2,60);
+        addToDungons(emergency_ration, 1, 8, 20);
+        addToDungons(earl_gray_tea,1,2,10);
     }
 
     private static void addToDungons(Item item,int min,int max,int chance)
