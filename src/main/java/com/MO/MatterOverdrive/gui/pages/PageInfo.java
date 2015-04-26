@@ -5,6 +5,7 @@ import cofh.lib.gui.element.ElementBase;
 import cofh.lib.gui.element.ElementButton;
 import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.data.ScaleTexture;
 import com.MO.MatterOverdrive.gui.GuiMatterScanner;
 import com.MO.MatterOverdrive.gui.MOGuiBase;
 import com.MO.MatterOverdrive.gui.element.ElementBaseGroup;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public class PageInfo extends ElementBaseGroup
 {
-    public static final ResourceLocation GUIDES_BG = new ResourceLocation(Reference.PATH_ELEMENTS + "guides_bg.png");
+    public static final ScaleTexture GUIDES_BG = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "guides_bg.png"),166,142).setOffsets(80,80,72,69);
 
     public static final int MAX_GUIDES_PER_ROW = 3;
     public static final String SCROLL_RIGHT_ELEMENT_NAME = "scroll_right";
@@ -42,8 +43,8 @@ public class PageInfo extends ElementBaseGroup
     ElementButton bt_return;
 
 
-    public PageInfo(MOGuiBase gui, int posX, int posY,String name) {
-        super(gui, posX, posY);
+    public PageInfo(MOGuiBase gui, int posX, int posY,int width,int height,String name) {
+        super(gui, posX, posY,width,height);
         this.setName(name);
 
         guideEntries = new ArrayList<ElementBase>(MatterOverdriveQuide.getQuides().size());
@@ -56,11 +57,11 @@ public class PageInfo extends ElementBaseGroup
             guideEntries.add(entry);
         }
 
-        bt_scroll_right = new MOElementButton(gui,this,190,154,SCROLL_RIGHT_ELEMENT_NAME,0,0,10,0,10,10,"");
+        bt_scroll_right = new MOElementButton(gui,this,sizeX - 30,sizeY - 30,SCROLL_RIGHT_ELEMENT_NAME,0,0,10,0,10,10,"");
         bt_scroll_right.setTexture(Reference.PATH_ELEMENTS + "scroll_right.png",20,10);
-        bt_scroll_left = new MOElementButton(gui,this,50,154,SCROLL_LEFT_ELEMENT_NAME,0,0,10,0,10,10,"");
+        bt_scroll_left = new MOElementButton(gui,this,50,sizeY - 30,SCROLL_LEFT_ELEMENT_NAME,0,0,10,0,10,10,"");
         bt_scroll_left.setTexture(Reference.PATH_ELEMENTS + "scroll_left.png",20,10);
-        bt_return = new MOElementButton(gui,this,118,154,RETURN_ELEMENT_NAME,0,0,11,0,11,11,"");
+        bt_return = new MOElementButton(gui,this,150,sizeY - 30,RETURN_ELEMENT_NAME,0,0,11,0,11,11,"");
         bt_return.setTexture(Reference.PATH_ELEMENTS + "return_arrow.png", 22, 11);
 
         elements.add(bt_scroll_left);
@@ -73,12 +74,8 @@ public class PageInfo extends ElementBaseGroup
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        if(guideID < 0) {
-            GL11.glColor4f(1, 1, 1, 1);
-            gui.bindTexture(GUIDES_BG);
-            gui.drawSizedTexturedModalRect(42, 27, 0, 0, 166, 142, 166, 142);
-        }
-
+        GL11.glColor4f(1, 1, 1, 1);
+        GUIDES_BG.Render(41, 26, 244,198);
         super.drawBackground(mouseX, mouseY, gameTicks);
     }
 
@@ -118,7 +115,7 @@ public class PageInfo extends ElementBaseGroup
         if (scroll < description.size() && scroll >= 0)
         {
             Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(true);
-            Minecraft.getMinecraft().fontRenderer.drawSplitString(description.get(scroll), 48, 33, 140, new GuiColor(255, 255, 255).getColor());
+            Minecraft.getMinecraft().fontRenderer.drawSplitString(description.get(scroll), 56, 44, 210, Reference.COLOR_MATTER.getColor());
         }
 
         handleScrollButtons();

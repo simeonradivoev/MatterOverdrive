@@ -19,8 +19,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class MatterDatabaseListBox extends MOElementListBox
 {
+	private static final ResourceLocation ACTIVE_SLOT_BG = ElementSlot.getTexture("big_main_active");
+	private static final ResourceLocation SLOT_BG = ElementSlot.getTexture("big");
 	public ItemStack scanner;
-	public ResourceLocation background;
 	public String filter = "";
 	
 	
@@ -34,16 +35,20 @@ public class MatterDatabaseListBox extends MOElementListBox
 	class MatterDatabaseEntry implements IMOListBoxElement
 	{
 		NBTTagCompound itemComp;
-		int listID;
-		boolean active;
+		String name;
 		
-		public MatterDatabaseEntry(NBTTagCompound itemComp,int listID,boolean active)
+		public MatterDatabaseEntry(NBTTagCompound itemComp)
 		{
-			this.listID = listID;
 			this.itemComp = itemComp;
-			this.active = active;
+			this.name = ItemStack.loadItemStackFromNBT(itemComp).getDisplayName();
 		}
-		
+
+		@Override
+		public String getName()
+		{
+			return this.name;
+		}
+
 		@Override
 		public int getHeight() {
 			return 25;
@@ -61,24 +66,23 @@ public class MatterDatabaseListBox extends MOElementListBox
 		}
 
 		@Override
-		public void draw(MOElementListBox listBox, int x, int y, int backColor,
-				int textColor, boolean selected) 
+		public void draw(MOElementListBox listBox, int x, int y, int backColor,int textColor, boolean selected,boolean BG)
 		{
-			ItemStack itemStack = ItemStack.loadItemStackFromNBT(itemComp);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(background);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F,1.0F);
-			
-			if(this.active)
+
+			if (BG) {
+				if (selected) {
+					gui.bindTexture(ACTIVE_SLOT_BG);
+					gui.drawSizedTexturedModalRect(x, y, 0, 0, 38, 22, 38, 22);
+				} else {
+					gui.bindTexture(SLOT_BG);
+					gui.drawSizedTexturedModalRect(x, y, 0, 0, 22, 22, 22, 22);
+				}
+			}else
 			{
-				listBox.drawTexturedModalRect(x, y, 0, 198, 39, 22);
-				
+				ItemStack itemStack = ItemStack.loadItemStackFromNBT(itemComp);
+				RenderUtils.renderStack(3 + x, 3 + y, itemStack);
 			}
-			else
-			{
-				listBox.drawTexturedModalRect(x, y, 0, 176, 22, 22);
-			}
-			
-			RenderUtils.renderStack(3 + x,3 + y, itemStack);
 		}
 
 		
@@ -106,11 +110,11 @@ public class MatterDatabaseListBox extends MOElementListBox
 		}
 		this.filter = filter;
 	}
-	
+
 	@Override
-	public void drawBackground(int mouseX, int mouseY, float gameTicks) 
+	protected boolean shouldBeDisplayed(IMOListBoxElement element)
 	{
-		
+		return element.getName().toLowerCase().contains(filter.toLowerCase());
 	}
 	
 	public String getFilter()
@@ -127,7 +131,8 @@ public class MatterDatabaseListBox extends MOElementListBox
 
 		IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld, scanner);
 
-		if(database != null) {
+		if(database != null)
+		{
 			NBTTagList itemList = database.getItemsAsNBT();
 			NBTTagCompound selected = MatterScanner.getSelectedAsNBT(scanner);
 
@@ -135,31 +140,13 @@ public class MatterDatabaseListBox extends MOElementListBox
 			{
 				for (int i = 0; i < itemList.tagCount(); i++)
 				{
-					int itemId = itemList.getCompoundTagAt(i).getShort("id");
-					boolean isSelected = MatterDatabaseHelper.areEqual(selected,itemList.getCompoundTagAt(i));
+					if (MatterDatabaseHelper.areEqual(selected,itemList.getCompoundTagAt(i)))
+						_selectedIndex = i;
 
-					if (filter == "" || ItemStack.loadItemStackFromNBT(itemList.getCompoundTagAt(i)).getDisplayName().toLowerCase().contains(filter.toLowerCase()))
-					{
-						MatterDatabaseEntry selectedEntry = new MatterDatabaseEntry(itemList.getCompoundTagAt(i), i, isSelected);
-						this.add(selectedEntry);
-
-						//if (isSelected)
-							//this.setSelectedIndex(i);
-					}
+					MatterDatabaseEntry selectedEntry = new MatterDatabaseEntry(itemList.getCompoundTagAt(i));
+					this.add(selectedEntry);
 				}
 			}
-		}
-	}
-
-	public void updateList(){this.updateList(this.filter);}
-
-	public void setSelectedIndex(int index)
-	{
-		super.setSelectedIndex(index);
-
-		if(index >= 0 && index < getElementCount())
-		{
-			onSelectionChanged(index,getElement(index));
 		}
 	}
 
@@ -167,10 +154,9 @@ public class MatterDatabaseListBox extends MOElementListBox
 	protected void onSelectionChanged(int newIndex, IMOListBoxElement newElement) 
 	{
 		MatterDatabaseEntry entry = (MatterDatabaseEntry) newElement;
-
 		MatterScanner.setSelected(scanner, entry.itemComp);
-		updateList(this.filter);
-		gui.handleElementButtonClick(this.name,((MatterDatabaseEntry) newElement).listID);
+		//updateList(this.filter);
+		gui.handleElementButtonClick(this.name,newIndex);
 	}
 	
 }

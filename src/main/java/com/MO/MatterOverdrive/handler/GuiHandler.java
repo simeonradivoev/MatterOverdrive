@@ -97,7 +97,7 @@ public class GuiHandler implements IGuiHandler
                 case  MatterOverdrive.guiNetworkController:
                     if(entity instanceof TileEntityMachineNetworkRouter)
                     {
-                        return new GuiNetworkController(player.inventory,(TileEntityMachineNetworkRouter)entity);
+                        return new GuiNetworkRouter(player.inventory,(TileEntityMachineNetworkRouter)entity);
                     }
                     break;
                 case MatterOverdrive.guiMatterAnalyzer:

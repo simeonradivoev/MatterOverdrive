@@ -49,13 +49,12 @@ public class PageScanInfo extends ElementBaseGroup
 
         scan_info_graph = new ElementScanProgress(gui,87,44);
         itemPreview = new ElementItemPreview(gui,45,44,null);
-        scan_progress = new ElementProgress(gui,53 + 35,149 + 2,53,149,39,202,62,188,105,14,142,18);
-        searchField = new MOElementTextField(gui,41,26);
-        list = new MatterDatabaseListBox(gui,3,39,37,100,scanner);
+        scan_progress = new ElementProgress(gui,44 + 35,202 + 2,44,202,39,202,62,188,105,14,142,18);
+        searchField = new MOElementTextField(gui,41,26,241,14);
+        list = new MatterDatabaseListBox(gui,3,39,37,150,scanner);
         scrollButtonUp = new ElementButton(gui,11,27,SCROLL_UP_BUTTON_NAME,22,188,32,188,10,10,backgroundPath);
-        scrollButtonDown = new ElementButton(gui,11,142,SCROLL_DOWN_BUTTON_NAME,42,188,52,188,10,10,backgroundPath);
+        scrollButtonDown = new ElementButton(gui,11,190,SCROLL_DOWN_BUTTON_NAME,42,188,52,188,10,10,backgroundPath);
 
-        list.background = GuiMatterScanner.background;
         list.setName(LIST_ELEMENT_NAME);
 
         list.setFilter("");
@@ -81,10 +80,7 @@ public class PageScanInfo extends ElementBaseGroup
     {
         super.drawForeground(mouseX, mouseY);
 
-        if(searchField != null)
-        {
-            this.list.setFilter(searchField.getText());
-        }
+
 
         ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemNBT);
         if(item != null)
@@ -99,6 +95,17 @@ public class PageScanInfo extends ElementBaseGroup
         {
             String Matter = "Matter: " + String.valueOf(MatterHelper.getMatterAmountFromItem(item)) + MatterHelper.MATTER_UNIT;
             Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("No Item Selected!",80,90,new GuiColor(255,150,50).getColor());
+        }
+    }
+
+    @Override
+    public void update(int mouseX, int mouseY)
+    {
+        super.update(mouseX,mouseY);
+
+        if(searchField != null)
+        {
+            this.list.setFilter(searchField.getText());
         }
     }
 

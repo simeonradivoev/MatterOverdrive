@@ -5,6 +5,9 @@ import cofh.lib.gui.element.ElementBase;
 import cofh.lib.gui.element.ElementButton;
 import cofh.lib.render.RenderHelper;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.data.ScaleTexture;
+import com.MO.MatterOverdrive.gui.MOGuiBase;
+import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -17,12 +20,13 @@ import java.util.List;
 public class SidePannel extends ElementBaseGroup
 {
     MOElementButton button;
+    public static final ScaleTexture BACKGROUND_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png"),15,18).setOffsets(7,7,8,9);
     private static boolean isOpen;
 
-    public SidePannel(GuiBase gui, int posX, int posY)
+    public SidePannel(MOGuiBase gui, int posX, int posY,int height)
     {
-        super(gui, posX, posY,37,143);
-        button = new MOElementButton(gui,this, 0, 0, "Toggle", 0, 0, 16, 0, 16, 143,"");
+        super(gui, posX, posY,37,height);
+        button = new MOElementButtonVertical(gui,this, 0, 0, "Toggle", 0, 0, 16, 0, 16, height,"",9);
         button.setTexture(Reference.PATH_ELEMENTS + "right_side_bar.png", 32, 143);
         this.setTexture(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png",37,143);
         elements.add(button);
@@ -33,8 +37,7 @@ public class SidePannel extends ElementBaseGroup
     {
         if(isOpen)
         {
-            RenderHelper.bindTexture(texture);
-            this.gui.drawSizedTexturedModalRect(this.posX, this.posY, 0, 0, 37, 143, 37, 143);
+            BACKGROUND_TEXTURE.Render(posX,posY,37,sizeY);
             button.setPosition(32,0);
         }
         else
@@ -69,12 +72,12 @@ public class SidePannel extends ElementBaseGroup
         if(isOpen)
         {
             button.setToolTip("Close Menu");
-            this.setSize(37 + 16,143);
+            this.setSize(37 + 16, sizeY);
         }
         else
         {
             button.setToolTip("Open Menu");
-            this.setSize(37,143);
+            this.setSize(37, sizeY);
         }
     }
 

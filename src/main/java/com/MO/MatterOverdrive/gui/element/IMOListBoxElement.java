@@ -2,14 +2,16 @@ package com.MO.MatterOverdrive.gui.element;
 
 public interface IMOListBoxElement 
 {
-	public int getHeight();
+	String getName();
 
-	public int getWidth();
+	int getHeight();
 
-	public Object getValue();
+	int getWidth();
 
-	public void draw(MOElementListBox listBox, int x, int y, int backColor, int textColor, boolean selected);
+	Object getValue();
+
+	void draw(MOElementListBox listBox, int x, int y, int backColor, int textColor, boolean selected,boolean BG);
 	
-	public void drawToolTop(MOElementListBox listBox,int x,int y);
+	void drawToolTop(MOElementListBox listBox,int x,int y);
 
 }

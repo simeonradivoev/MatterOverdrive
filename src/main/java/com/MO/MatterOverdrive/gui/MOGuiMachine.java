@@ -40,7 +40,12 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 
     public MOGuiMachine(Container container,T machine)
     {
-        super(container);
+        this(container,machine,225,186);
+    }
+
+    public MOGuiMachine(Container container,T machine,int width,int height)
+    {
+        super(container,width,height);
         this.machine = machine;
         pages = new ArrayList<ElementBaseGroup>(3);
         pageButtons = new ArrayList<MOElementButton>(3);
@@ -50,7 +55,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         configPage = new ElementBaseGroup(this,0,0,xSize,ySize);
         configPage.setName("Configurations");
         upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container,machine.getInventory());
-        indicator = new ElementIndicator(this,6,159);
+        indicator = new ElementIndicator(this,6,ySize - 18);
 
         pages.add(homePage);
         pages.add(configPage);

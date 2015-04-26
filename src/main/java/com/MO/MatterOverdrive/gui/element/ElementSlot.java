@@ -80,7 +80,7 @@ public class ElementSlot extends MOElementBase
         this.iconOffsetY = y;
     }
 
-    public ResourceLocation getTexture(String type)
+    public static ResourceLocation getTexture(String type)
     {
         return new ResourceLocation(Reference.PATH_ELEMENTS + "slot_"+type+".png");
     }

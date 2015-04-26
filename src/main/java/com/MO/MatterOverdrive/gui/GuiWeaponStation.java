@@ -4,6 +4,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.weapon.IWeapon;
 import com.MO.MatterOverdrive.container.ContainerWeaponStation;
 import com.MO.MatterOverdrive.container.slot.MOSlot;
+import com.MO.MatterOverdrive.data.ScaleTexture;
 import com.MO.MatterOverdrive.gui.element.ElementInventorySlot;
 import com.MO.MatterOverdrive.gui.element.ElementModelPreview;
 import com.MO.MatterOverdrive.gui.element.ElementSlot;
@@ -24,21 +25,19 @@ import org.lwjgl.util.vector.Vector2f;
  */
 public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
 {
-    public static final ResourceLocation BG = new ResourceLocation(Reference.PATH_GUI + "weapon_station.png");
+    public static final ScaleTexture BG = new ScaleTexture(new ResourceLocation(Reference.PATH_GUI + "weapon_station.png"),255,141).setOffsets(141,34,42,94);
 
     ElementModelPreview weaponPreview;
     ElementSlot[] module_slots = new ElementSlot[5];
     String[] module_slots_info = {"battery","color","barrel","sights","other"};
 
-    ItemStack lastItem;
-    IInventory lastInventory;
-
     public GuiWeaponStation(InventoryPlayer inventoryPlayer, TileEntityWeaponStation machine)
     {
-        super(new ContainerWeaponStation(inventoryPlayer, machine), machine);
-        texture = BG;
-        xSize = 255;
-        ySize = 237;
+        super(new ContainerWeaponStation(inventoryPlayer, machine), machine,255,237);
+        texW = 255;
+        texH = 237;
+
+        background = BG;
         weaponPreview = new ElementModelPreview(this,130,90,xSize,ySize);
 
         for (int i = 0;i < module_slots.length;i++)
@@ -64,7 +63,8 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         }
 
         super.initGui();
-        AddPlayerSlots(inventorySlots, this, true, true);
+        AddMainPlayerSlots(inventorySlots, this);
+        AddHotbarPlayerSlots(inventorySlots, this);
     }
 
     @Override

@@ -111,71 +111,105 @@ public class MOElementListBox extends MOElementBase {
 	}
 
 	@Override
-	public void drawBackground(int mouseX, int mouseY, float gameTicks) {
-
-		drawModalRect(posX - 1, posY - 1, posX + sizeX + 1, posY + sizeY + 1, borderColor);
-		drawModalRect(posX, posY, posX + sizeX, posY + sizeY, backgroundColor);
-	}
-
-	@Override
-	public void drawForeground(int mouseX, int mouseY) {
+	public void drawBackground(int mouseX, int mouseY, float gameTicks)
+	{
 
 		int heightDrawn = 0;
 		int nextElement = _firstIndexDisplayed;
 
-		glDisable(GL_LIGHTING);
+		//glDisable(GL_LIGHTING);
 		glPushMatrix();
 
-		glEnable(GL_STENCIL_TEST);
-		glClear(GL_STENCIL_BUFFER_BIT);
-		drawStencil(getContentLeft(), getContentTop(), getContentRight(), getContentBottom(), 1);
+		//glEnable(GL_STENCIL_TEST);
+		//glClear(GL_STENCIL_BUFFER_BIT);
+		//drawStencil(getContentLeft(), getContentTop(), getContentRight(), getContentBottom(), 1);
 
 		glTranslated(-scrollHoriz, 0, 0);
 
 		int e = _elements.size();
-		while (nextElement < e && heightDrawn <= getContentHeight()) 
+		while (nextElement < e && heightDrawn <= getContentHeight())
 		{
-			if(this._selectedIndex == nextElement)
-			{
-				_elements.get(nextElement).draw(this, getContentLeft(), getContentTop() + heightDrawn, selectedLineColor, selectedTextColor, true);
+			if (shouldBeDisplayed(_elements.get(nextElement))) {
+				if (this._selectedIndex == nextElement) {
+					_elements.get(nextElement).draw(this, getContentLeft(), getContentTop() + heightDrawn, selectedLineColor, selectedTextColor, true, true);
+				} else {
+					_elements.get(nextElement).draw(this, getContentLeft(), getContentTop() + heightDrawn, selectedLineColor, this.textColor, false, true);
+				}
+				heightDrawn += _elements.get(nextElement).getHeight();
 			}
-			else
-			{
-				_elements.get(nextElement).draw(this, getContentLeft(), getContentTop() + heightDrawn, selectedLineColor, this.textColor, false);
-			}
-			
-			if (getContentTop() + heightDrawn <= mouseY && getContentTop() + heightDrawn + _elements.get(nextElement).getHeight() >= mouseY &&
-					mouseX >= getContentLeft() && mouseX <= getContentLeft() + _elements.get(nextElement).getWidth()) 
-			{
-				_elements.get(nextElement).drawToolTop(this, mouseX, mouseY);
-			}
-			heightDrawn += _elements.get(nextElement).getHeight();
 			nextElement++;
 		}
 
-		glDisable(GL_STENCIL_TEST);
+		//glDisable(GL_STENCIL_TEST);
 
 		glPopMatrix();
 	}
 
 	@Override
+	public void drawForeground(int mouseX, int mouseY)
+	{
+		int heightDrawn = 0;
+		int nextElement = _firstIndexDisplayed;
+
+		//glDisable(GL_LIGHTING);
+		glPushMatrix();
+
+		//glEnable(GL_STENCIL_TEST);
+		//glClear(GL_STENCIL_BUFFER_BIT);
+		//drawStencil(getContentLeft(), getContentTop(), getContentRight(), getContentBottom(), 1);
+
+		glTranslated(-scrollHoriz, 0, 0);
+
+		int e = _elements.size();
+		while (nextElement < e && heightDrawn <= getContentHeight())
+		{
+			if (shouldBeDisplayed(_elements.get(nextElement)))
+			{
+				if (this._selectedIndex == nextElement) {
+					_elements.get(nextElement).draw(this, getContentLeft(), getContentTop() + heightDrawn, selectedLineColor, selectedTextColor, true, false);
+				} else {
+					_elements.get(nextElement).draw(this, getContentLeft(), getContentTop() + heightDrawn, selectedLineColor, this.textColor, false, false);
+				}
+
+
+				if (getContentTop() + heightDrawn <= mouseY && getContentTop() + heightDrawn + _elements.get(nextElement).getHeight() >= mouseY &&
+						mouseX >= getContentLeft() && mouseX <= getContentLeft() + _elements.get(nextElement).getWidth()) {
+					_elements.get(nextElement).drawToolTop(this, mouseX, mouseY);
+				}
+				heightDrawn += _elements.get(nextElement).getHeight();
+			}
+			nextElement++;
+		}
+
+		//glDisable(GL_STENCIL_TEST);
+
+		glPopMatrix();
+	}
+
+	protected boolean shouldBeDisplayed(IMOListBoxElement element)
+	{
+		return true;
+	}
+
+	@Override
 	public boolean onMousePressed(int mouseX, int mouseY, int mouseButton) 
 	{
-
 		int heightChecked = 0;
 		for (int i = _firstIndexDisplayed; i < _elements.size(); i++) 
 		{
 			if (heightChecked > getContentHeight()) {
 				break;
 			}
-			int elementHeight = _elements.get(i).getHeight();
-			if (getContentTop() + heightChecked <= mouseY && getContentTop() + heightChecked + elementHeight >= mouseY) 
+			if (shouldBeDisplayed(_elements.get(i)))
 			{
-				setSelectedIndex(i);
-				onElementClicked(_elements.get(i));
-				break;
+				int elementHeight = _elements.get(i).getHeight();
+				if (getContentTop() + heightChecked <= mouseY && getContentTop() + heightChecked + elementHeight >= mouseY) {
+					setSelectedIndex(i);
+					onElementClicked(_elements.get(i));
+					break;
+				}
+				heightChecked += elementHeight;
 			}
-			heightChecked += elementHeight;
 		}
 		return true;
 	}

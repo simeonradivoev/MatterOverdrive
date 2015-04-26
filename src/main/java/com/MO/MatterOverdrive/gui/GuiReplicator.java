@@ -59,8 +59,8 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
         homePage.addElement(matterElement);
         homePage.addElement(energyElement);
 
-        AddPlayerSlots(inventorySlots, homePage, true, false);
-        AddPlayerSlots(inventorySlots, this, false,true);
+        AddMainPlayerSlots(inventorySlots, homePage);
+        AddHotbarPlayerSlots(inventorySlots, this);
 	}
 
     @Override

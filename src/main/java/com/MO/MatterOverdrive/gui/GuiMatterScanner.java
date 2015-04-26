@@ -29,9 +29,6 @@ public class GuiMatterScanner extends MOGuiBase
 	private static final String SCAN_PAGE_BUTTON_NAME = "ScanPageButton";
 	public static final String QUIDE_ELEMENTS_NAME = "QuideList";
 
-	public static final ResourceLocation background = new ResourceLocation(Reference.PATH_GUI + "matter_scanner.png");
-	public static final String backgroundPath = Reference.PATH_GUI + "matter_scanner.png";
-
 	int lastPage = 0;
 	PageScanInfo pageScanInfo;
 	PageInfo pageInfo;
@@ -43,7 +40,7 @@ public class GuiMatterScanner extends MOGuiBase
 
 	public GuiMatterScanner(ItemStack scanner,int slot)
 	{
-		super(new ContainerFalse());
+		super(new ContainerFalse(),300,230);
 		this.scanner = scanner;
 		refreshTimeTracker = new TimeTracker();
 		this.databaseSlot = slot;
@@ -52,8 +49,7 @@ public class GuiMatterScanner extends MOGuiBase
 		pageScanInfo = new PageScanInfo(this,0,0,"Scan Process",null,scanner);
 		updateSelected(scanner);
 		pageScanInfo.setSize(this.xSize, this.ySize);
-		pageInfo = new PageInfo(this,0,0,"Matter Overdrive");
-		pageInfo.setSize(this.xSize, this.ySize);
+		pageInfo = new PageInfo(this,0,0,xSize,ySize,"Matter Overdrive");
 
 		scanPageButton = new MOElementButton(this,this,6,8,SCAN_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
 		scanPageButton.setTexture(Reference.PATH_GUI_ITEM + "search54.png", 44, 22);

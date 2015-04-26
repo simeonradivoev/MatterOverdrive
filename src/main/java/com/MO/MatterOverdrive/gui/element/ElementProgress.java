@@ -1,5 +1,9 @@
 package com.MO.MatterOverdrive.gui.element;
 
+import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.data.ScaleTexture;
+import com.MO.MatterOverdrive.util.RenderUtils;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -9,6 +13,8 @@ import cofh.lib.render.RenderHelper;
 
 public class ElementProgress extends ElementBase
 {
+	public static final ScaleTexture FILL_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "progress_slider_fill.png"),9,9).setOffsets(3,6,4,4);
+
 	float value;
 	float maxValue;
 	boolean showText = true;
@@ -39,24 +45,23 @@ public class ElementProgress extends ElementBase
 	}
 	
 	@Override
-	public void drawBackground(int mouseX, int mouseY, float gameTicks) 
-	{
+	public void drawBackground(int mouseX, int mouseY, float gameTicks) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderHelper.bindTexture(texture);
-		drawTexturedModalRect(this.posX,this.posY,this.bgU,this.bgV,this.sizeX,this.sizeY);
+		drawTexturedModalRect(this.posX, this.posY, this.bgU, this.bgV, this.sizeX, this.sizeY);
+
+		FILL_TEXTURE.Render(this.fillX,this.fillY,this.Scale(this.fillSizeX),fillSizeY);
+		//drawTexturedModalRect(this.fillX,this.fillY,this.fillU,this.fillV,,this.fillSizeY);
+
+		if(this.isShowText())
+		{
+			this.drawCenteredString(Minecraft.getMinecraft().fontRenderer, this.text, this.posX + this.textX, this.posY + this.textY, this.textColor);
+		}
 	}
 
 	@Override
 	public void drawForeground(int mouseX, int mouseY) 
 	{
-		// TODO Auto-generated method stub
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderHelper.bindTexture(texture);
-		drawTexturedModalRect(this.fillX,this.fillY,this.fillU,this.fillV,this.Scale(this.fillSizeX),this.fillSizeY);
-		if(this.isShowText())
-		{
-			this.drawCenteredString(Minecraft.getMinecraft().fontRenderer, this.text, this.posX + this.textX, this.posY + this.textY, this.textColor);
-		}
 	}
 	
 	public void setValue(float value)

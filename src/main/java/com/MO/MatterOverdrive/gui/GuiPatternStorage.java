@@ -42,8 +42,8 @@ public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStor
         energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
         homePage.addElement(energyElement);
         AddPatternStorageSlots(inventorySlots, homePage);
-        AddPlayerSlots(inventorySlots, homePage, true, false);
-        AddPlayerSlots(inventorySlots,this,false,true);
+        AddMainPlayerSlots(inventorySlots, homePage);
+        AddHotbarPlayerSlots(inventorySlots, this);
     }
 
     public void AddPatternStorageSlots(Container container,GuiElementList list)

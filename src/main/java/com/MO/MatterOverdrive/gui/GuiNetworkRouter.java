@@ -7,12 +7,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 /**
  * Created by Simeon on 3/13/2015.
  */
-public class GuiNetworkController extends MOGuiMachine<TileEntityMachineNetworkRouter>
+public class GuiNetworkRouter extends MOGuiMachine<TileEntityMachineNetworkRouter>
 {
-    public GuiNetworkController(InventoryPlayer inventoryPlayer,TileEntityMachineNetworkRouter entity)
+    public GuiNetworkRouter(InventoryPlayer inventoryPlayer, TileEntityMachineNetworkRouter entity)
     {
         super(new ContainerNetworkController(inventoryPlayer,entity),entity);
-        name = "network_controller";
+        name = "network_router";
     }
 
     @Override
@@ -20,7 +20,7 @@ public class GuiNetworkController extends MOGuiMachine<TileEntityMachineNetworkR
     {
         super.initGui();
 
-        AddPlayerSlots(inventorySlots,this,false,true);
+        AddHotbarPlayerSlots(inventorySlots,this);
     }
 
     protected void drawGuiContainerForegroundLayer(int var1, int var2)

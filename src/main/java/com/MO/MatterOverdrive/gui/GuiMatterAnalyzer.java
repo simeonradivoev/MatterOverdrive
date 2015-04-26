@@ -43,8 +43,8 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
         homePage.addElement(energyElement);
         homePage.addElement(scanProgress);
 
-        AddPlayerSlots(inventorySlots, homePage, true, false);
-        AddPlayerSlots(inventorySlots,this,false,true);
+        AddMainPlayerSlots(inventorySlots, homePage);
+        AddHotbarPlayerSlots(inventorySlots,this);
     }
 
     @Override
