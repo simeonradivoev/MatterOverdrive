@@ -82,9 +82,10 @@ weaponstat.7.name=Fire Rate
 gui.replicator.name=Pattern Replicator
 gui.decomposer.name=Matter Decomposer
 gui.matter_analyzer.name=Matter Analyzer
-gui.network_controller.name=Network Router
+gui.network_router.name=Network Router
 gui.pattern_storage.name=Pattern Storage
 gui.solar_panel.name=Solar Panel
+gui.pattern_monitor.name=Network Pattern Monitor
 module.battery.name=Battery Module
 
 module.color.name=Color Module

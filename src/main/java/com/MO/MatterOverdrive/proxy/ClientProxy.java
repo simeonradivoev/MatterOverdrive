@@ -7,6 +7,7 @@ import com.MO.MatterOverdrive.handler.TooltipHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
+import com.MO.MatterOverdrive.tile.TileEntitiyMachinePatternMonitor;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternStorage;
 import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 import com.MO.MatterOverdrive.tile.TileEntityWeaponStation;
@@ -33,6 +34,7 @@ public class ClientProxy extends CommonProxy
     public static TileEntityRendererReplicator replicator_renderer;
     public static TileEntityRendererPatterStorage pattern_storage_renderer;
     public static TileEntityRendererWeaponStation renderer_weapon_station;
+    public static TileEntityRendererPatternMonitor pattern_monitor_renderer;
 
 
     @Override
@@ -50,6 +52,7 @@ public class ClientProxy extends CommonProxy
         replicator_renderer = new TileEntityRendererReplicator();
         pattern_storage_renderer = new TileEntityRendererPatterStorage();
         renderer_weapon_station = new TileEntityRendererWeaponStation();
+        pattern_monitor_renderer = new TileEntityRendererPatternMonitor();
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, pipeRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMatterPipe.class, matter_pipeRenderer);
@@ -57,6 +60,7 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineReplicator.class,replicator_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternStorage.class,pattern_storage_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeaponStation.class,renderer_weapon_station);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitiyMachinePatternMonitor.class,pattern_monitor_renderer);
 
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.matter_pipe), new ItemRendererPipe(matter_pipeRenderer, new TileEntityMatterPipe(), 2));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.network_pipe),new ItemRendererPipe(network_pipeRenderer,new TileEntityNetworkPipe(),2));

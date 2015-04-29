@@ -37,13 +37,6 @@ public class MOBlock extends Block
         RegisterBlock();
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
-    {
-        //MatterOverdriveIcons.init(iconRegister);
-        super.registerBlockIcons(iconRegister);
-    }
-
     protected void RegisterBlock()
     {
         GameRegistry.registerBlock(this, this.getUnlocalizedName().substring(5));

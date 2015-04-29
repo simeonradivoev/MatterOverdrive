@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.blocks;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
+import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.TileEntityMachineNetworkRouter;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -19,9 +20,6 @@ import net.minecraft.world.World;
  */
 public class BlockNetworkRouter extends MOBlockMachine
 {
-
-    private IIcon offline_icon;
-
     public BlockNetworkRouter(Material material, String name)
     {
         super(material, name);
@@ -35,7 +33,6 @@ public class BlockNetworkRouter extends MOBlockMachine
     public void registerBlockIcons(IIconRegister p_149651_1_)
     {
         this.blockIcon = p_149651_1_.registerIcon(this.getTextureName());
-        this.offline_icon = p_149651_1_.registerIcon(this.getTextureName()+"_offline");
     }
 
     @Override
@@ -50,7 +47,7 @@ public class BlockNetworkRouter extends MOBlockMachine
                 return blockIcon;
             }
         }
-        return offline_icon;
+        return MatterOverdriveIcons.Network_port_square;
     }
 
     @Override

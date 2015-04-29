@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
+import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
@@ -28,12 +29,14 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
 {
     public static final int BROADCAST_WEATING_DELAY = 80;
     public static final int SEARCH_DELAY = 120;
+    public static final int VALIDATE_DELAY = 120;
     public static final int TASK_QUEUE_SIZE = 16;
     HashSet<BlockPosition> databases;
     MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueue;
     boolean needsSearchRefresh = true;
     TimeTracker searchDelayTracker;
     TimeTracker broadcastTracker;
+    TimeTracker validateTracker;
 
     public TileEntitiyMachinePatternMonitor()
     {
@@ -42,6 +45,7 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
         databases = new HashSet<BlockPosition>();
         searchDelayTracker = new TimeTracker();
         broadcastTracker = new TimeTracker();
+        validateTracker = new TimeTracker();
     }
 
     @Override
@@ -81,13 +85,13 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
     @Override
     public int onNetworkTick(World world, TickEvent.Phase phase)
     {
+        manageDatabaseValidation(world);
         manageSearch(world, phase);
         return manageBroadcast(world,phase);
     }
 
     public void manageSearch(World world,TickEvent.Phase phase)
     {
-
         if (phase.equals(TickEvent.Phase.END)) {
             if (needsSearchRefresh) {
                 databases.clear();
@@ -98,6 +102,23 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
                     MatterNetworkHelper.broadcastTaskInDirection(world, packet, this, ForgeDirection.getOrientation(i));
                 }
                 needsSearchRefresh = false;
+            }
+        }
+    }
+
+    public void manageDatabaseValidation(World world)
+    {
+        if (validateTracker.hasDelayPassed(worldObj, VALIDATE_DELAY))
+        {
+            boolean hasChanged = false;
+
+            for (BlockPosition blockPosition : databases)
+            {
+                if (blockPosition.getBlock(world) == null || blockPosition.getTileEntity(world) == null || !(blockPosition.getTileEntity(world) instanceof IMatterDatabase))
+                {
+                    forceSearch(true);
+                    return;
+                }
             }
         }
     }
@@ -145,9 +166,14 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
             if(!databases.contains(from.getPosition()))
             {
                 databases.add(from.getPosition());
-                MatterOverdrive.packetPipeline.sendToAllAround(new PacketPatternMonitorSync(this),this,64);
+                SyncDatabasesWithClient();
             }
         }
+    }
+
+    public void SyncDatabasesWithClient()
+    {
+        MatterOverdrive.packetPipeline.sendToAllAround(new PacketPatternMonitorSync(this),this,64);
     }
 
     @Override
@@ -170,8 +196,10 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
     }
 
     @Override
-    public boolean canConnectFromSide(ForgeDirection side) {
-        return true;
+    public boolean canConnectFromSide(ForgeDirection side)
+    {
+        int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
+        return BlockHelper.getOppositeSide(meta) == side.ordinal();
     }
 
     public void queueRequest(int[] request)

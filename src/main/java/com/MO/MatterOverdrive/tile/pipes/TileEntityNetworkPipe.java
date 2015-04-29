@@ -44,7 +44,7 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
             }
             else
             {
-                return ((IMatterNetworkConnectionProxy) entity).getMatterNetworkConnection().canConnectFromSide(direction.getOpposite());
+                return ((IMatterNetworkConnectionProxy) entity).getMatterNetworkConnection().canConnectFromSide(direction);
             }
         }
         return false;

@@ -28,7 +28,7 @@ public class BlockMicrowave extends MOBlock
         super(material, name);
         setHardness(2.0F);
         this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe",2);
+        this.setHarvestLevel("pickaxe", 2);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class BlockMicrowave extends MOBlock
         }
         else
         {
-            setBlockBounds(0,0,0,1,1,1);
+            setBlockBounds(1 * pixel,0,3 * pixel,15 * pixel,10 * pixel,13 * pixel);
         }
     }
 }

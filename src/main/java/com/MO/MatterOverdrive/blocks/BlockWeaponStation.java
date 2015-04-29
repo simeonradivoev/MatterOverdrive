@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 public class BlockWeaponStation extends MOBlockContainer
 {
     private IIcon topIcon;
+    private IIcon bottomIcon;
 
     public BlockWeaponStation(Material material, String name)
     {
@@ -38,6 +39,7 @@ public class BlockWeaponStation extends MOBlockContainer
     {
         super.registerBlockIcons(iconRegister);
         topIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "weapon_station_top");
+        bottomIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "weapon_station_bottom");
         blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "weapon_station_side");
     }
 
@@ -51,7 +53,7 @@ public class BlockWeaponStation extends MOBlockContainer
         }
         else if (side == 0)
         {
-            return MatterOverdriveIcons.Base;
+            return bottomIcon;
         }
         else
         {

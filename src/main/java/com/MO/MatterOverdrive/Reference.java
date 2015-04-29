@@ -37,6 +37,7 @@ public class Reference
 
 	//region Colors
 	public static final GuiColor COLOR_MATTER = new GuiColor(191,228,230);
+    public static final GuiColor COLOR_HOLO = new GuiColor(169,226,251);
 	//endregion
 
 	//region Modules

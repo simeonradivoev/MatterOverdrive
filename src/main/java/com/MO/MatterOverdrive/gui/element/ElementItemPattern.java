@@ -56,11 +56,13 @@ public class ElementItemPattern extends ElementSlot
     @Override
     public void addTooltip(List<String> list)
     {
-        list.addAll(ItemStack.loadItemStackFromNBT(tagCompound).getTooltip(Minecraft.getMinecraft().thePlayer, false));
-        String name = list.get(0);
-        int progress = MatterDatabaseHelper.GetProgressFromNBT(tagCompound);
-        name = MatterDatabaseHelper.getPatternInfoColor(progress) + name + " [" + progress + "%]";
-        list.set(0, name);
+        if (tagCompound != null) {
+            list.addAll(ItemStack.loadItemStackFromNBT(tagCompound).getTooltip(Minecraft.getMinecraft().thePlayer, false));
+            String name = list.get(0);
+            int progress = MatterDatabaseHelper.GetProgressFromNBT(tagCompound);
+            name = MatterDatabaseHelper.getPatternInfoColor(progress) + name + " [" + progress + "%]";
+            list.set(0, name);
+        }
     }
 
     public NBTTagCompound getTagCompound()

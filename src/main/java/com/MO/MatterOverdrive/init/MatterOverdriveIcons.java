@@ -13,9 +13,11 @@ public class MatterOverdriveIcons
 {
     public static IIcon Base;
     public static IIcon Vent;
+    public static IIcon Vent2;
     public static IIcon Matter_tank_full;
     public static IIcon Matter_tank_empty;
     public static IIcon Transperant;
+    public static IIcon Network_port_square;
 
     public static IIcon particle_steam;
 
@@ -41,7 +43,8 @@ public class MatterOverdriveIcons
         Matter_tank_empty = register(r, "tank_empty");
         Matter_tank_full = register(r, "tank_full");
         Transperant = register(r, "transperant");
-
+        Network_port_square = register(r,"network_port");
+        Vent2 = register(r,"vent2");
     }
 
     private void initParticleIcons(IIconRegister r)

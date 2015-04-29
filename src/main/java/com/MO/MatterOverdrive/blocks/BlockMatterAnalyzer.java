@@ -74,7 +74,11 @@ public class BlockMatterAnalyzer extends MOBlockMachine
         }
         else if(side == BlockHelper.getOppositeSide(metadata))
         {
-            return MatterOverdriveIcons.Vent;
+            return MatterOverdriveIcons.Network_port_square;
+        }
+        else if (side == BlockHelper.getLeftSide(metadata) || side == BlockHelper.getRightSide(metadata))
+        {
+            return MatterOverdriveIcons.Vent2;
         }
 
         return MatterOverdriveIcons.Base;
