@@ -32,9 +32,11 @@ public class RenderUtils
 	
 	public static void renderStack(int x, int y, ItemStack stack)
 	{
-		RenderHelper.enableGUIStandardItemLighting();
-		renderItem.renderItemIntoGUI(fontRenderer, textureManager, stack, x, y);
-		RenderHelper.disableStandardItemLighting();
+		if (stack != null) {
+			RenderHelper.enableGUIStandardItemLighting();
+			renderItem.renderItemIntoGUI(fontRenderer, textureManager, stack, x, y);
+			RenderHelper.disableStandardItemLighting();
+		}
 	 }
 
 	public static void rotateFromBlock(World world,int x,int y,int z)
@@ -133,6 +135,26 @@ public class RenderUtils
 		tessellator.addVertexWithUV(x + width, y, zLevel, (u + widthU) * texU, v * texV);
 		tessellator.addVertexWithUV(x, y, zLevel, u * texU, v * texV);
 		tessellator.draw();
+	}
+
+	public static void beginStencil()
+	{
+		glEnable(GL_STENCIL_TEST);
+		glColorMask(false, false, false, false);
+		glDepthMask(false);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF); // Set any stencil to 1
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		glStencilMask(0xFF); // Write to stencil buffer
+		glClear(GL_STENCIL_BUFFER_BIT);
+	}
+
+	public static void endStencil()
+	{
+		glStencilFunc(GL_EQUAL, 1, 0xFF); // Pass test if stencil value is 1
+		glStencilMask(0x00); // Don't write anything to stencil buffer
+		glDepthMask(true); // Write to depth buffer
+		glColorMask(true, true, true, true);
+		glDisable(GL_STENCIL_TEST);
 	}
 
 	public static void drawSizeableBackground(int left,int top,int width,int height,int texW,int texH,ResourceLocation texture,float zLevel,int chunkSize)

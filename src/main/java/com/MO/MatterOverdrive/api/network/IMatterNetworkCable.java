@@ -1,7 +1,7 @@
 package com.MO.MatterOverdrive.api.network;
 
-import com.MO.MatterOverdrive.data.network.MatterNetworkTaskPacket;
-import net.minecraft.world.World;
+import matter_network.MatterNetworkPacket;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 4/19/2015.
@@ -9,5 +9,5 @@ import net.minecraft.world.World;
 public interface IMatterNetworkCable extends IMatterNetworkConnection
 {
     boolean isValid();
-    void broadcast(MatterNetworkTaskPacket task);
+    void broadcast(MatterNetworkPacket task,ForgeDirection from);
 }

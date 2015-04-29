@@ -103,6 +103,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     public abstract boolean hasSound();
     public abstract boolean isActive();
     public abstract float soundVolume();
+    public abstract void onContainerOpen();
 
     @SideOnly(Side.CLIENT)
     protected void manageSound()
@@ -285,8 +286,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @Override
-    public void openInventory() {
-
+    public void openInventory()
+    {
+        System.out.println("Inventory Open");
     }
 
     @Override
@@ -305,21 +307,22 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         forceClientUpdate = true;
     }
 
+    //region Upgrades
     public double getUpgradeMultiply(UpgradeTypes type)
     {
         double multiply = 1;
 
-        for (int i = 0;i < inventory.getSizeInventory();i++)
-        {
-            if (inventory.getSlot(i) instanceof UpgradeSlot)
-            {
-                ItemStack upgradeItem = inventory.getStackInSlot(i);
-                if (upgradeItem != null && MatterHelper.isUpgrade(upgradeItem))
-                {
-                    Map<UpgradeTypes,Double> upgrades = ((IUpgrade)upgradeItem.getItem()).getUpgrades(upgradeItem);
+        //check to see if the machine is affected by this type of Update
+        if (isAffectedBy(type)) {
+            for (int i = 0; i < inventory.getSizeInventory(); i++) {
+                if (inventory.getSlot(i) instanceof UpgradeSlot) {
+                    ItemStack upgradeItem = inventory.getStackInSlot(i);
+                    if (upgradeItem != null && MatterHelper.isUpgrade(upgradeItem)) {
+                        Map<UpgradeTypes, Double> upgrades = ((IUpgrade) upgradeItem.getItem()).getUpgrades(upgradeItem);
 
-                    if (upgrades.containsKey(type)) {
-                        multiply *= upgrades.get(type);
+                        if (upgrades.containsKey(type)) {
+                            multiply *= upgrades.get(type);
+                        }
                     }
                 }
             }
@@ -327,6 +330,11 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 
         return multiply;
     }
+    public boolean isAffectedBy(UpgradeTypes type)
+    {
+        return true;
+    }
+    //endregion
 
     @SideOnly(Side.CLIENT)
     protected void SpawnVentParticles(float speed,ForgeDirection side,int count)

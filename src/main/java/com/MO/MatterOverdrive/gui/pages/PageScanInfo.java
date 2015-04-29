@@ -47,11 +47,11 @@ public class PageScanInfo extends ElementBaseGroup
         this.setName(name);
         this.itemNBT = itemNBT;
 
-        scan_info_graph = new ElementScanProgress(gui,87,44);
+        scan_info_graph = new ElementScanProgress(gui,94,44);
         itemPreview = new ElementItemPreview(gui,45,44,null);
         scan_progress = new ElementProgress(gui,44 + 35,202 + 2,44,202,39,202,62,188,105,14,142,18);
-        searchField = new MOElementTextField(gui,41,26,241,14);
-        list = new MatterDatabaseListBox(gui,3,39,37,150,scanner);
+        searchField = new MOElementTextField(gui,41,26,242,14);
+        list = new MatterDatabaseListBox(gui,3,39,42,152,scanner);
         scrollButtonUp = new ElementButton(gui,11,27,SCROLL_UP_BUTTON_NAME,22,188,32,188,10,10,backgroundPath);
         scrollButtonDown = new ElementButton(gui,11,190,SCROLL_DOWN_BUTTON_NAME,42,188,52,188,10,10,backgroundPath);
 

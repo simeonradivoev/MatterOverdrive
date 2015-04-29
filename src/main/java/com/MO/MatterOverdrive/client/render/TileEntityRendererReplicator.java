@@ -73,12 +73,18 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
         ItemStack stack = replicator.getStackInSlot(replicator.OUTPUT_SLOT_ID);
         if(stack != null)
         {
-            if(itemEntity == null || !itemEntity.getEntityItem().isItemEqual(stack))
+            if(itemEntity == null)
             {
                 itemEntity = new EntityItem(replicator.getWorldObj(),x,y,z,stack);
             }
+            else if(!ItemStack.areItemStacksEqual(itemEntity.getEntityItem(), stack))
+            {
+                itemEntity.setEntityItemStack(stack);
+            }
 
-            RenderManager.instance.renderEntityWithPosYaw(itemEntity,x + 0.5d,y + 0.5,z + 0.5,0,0);
+            itemEntity.hoverStart = (float)(Math.PI / 2);
+
+            RenderManager.instance.renderEntityWithPosYaw(itemEntity,x + 0.5d,y + 0.25,z + 0.5,0,0);
         }
     }
 }

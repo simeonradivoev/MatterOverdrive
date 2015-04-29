@@ -33,9 +33,9 @@ public class ContainerReplicator extends ContainerMachine<TileEntityMachineRepli
 	{
 		this.addSlotToContainer(new SlotRemoveOnly(machine,machine.OUTPUT_SLOT_ID,70,52));
 		this.addSlotToContainer(new SlotRemoveOnly(machine,machine.SECOUND_OUTPUT_SLOT_ID,96,52));
-		this.addSlotToContainer(new SlotDatabase(machine, machine.DATABASE_SLOT_ID,8,52));
-		this.addSlotToContainer(new SlotShielding(machine, this.machine.SHIELDING_SLOT_ID,8,79));
-		this.addSlotToContainer(new SlotEnergy(machine, this.machine.getEnergySlotID(),8,106));
+		this.addSlotToContainer(new SlotDatabase(machine, machine.DATABASE_SLOT_ID,8,79));
+		this.addSlotToContainer(new SlotShielding(machine, this.machine.SHIELDING_SLOT_ID,8,106));
+		this.addSlotToContainer(new SlotEnergy(machine, this.machine.getEnergySlotID(),8,133));
 
 		super.init(inventory);
 		MOContainerHelper.AddPlayerSlots(inventory, this,45,89,true,true);

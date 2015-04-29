@@ -17,8 +17,8 @@ public class ElementSlot extends MOElementBase
 {
     protected ResourceLocation icon;
     public String type = "small";
-    private int iconOffsetX;
-    private int iconOffsetY;
+    protected int iconOffsetX;
+    protected int iconOffsetY;
 
     protected String info = "";
 
@@ -26,7 +26,7 @@ public class ElementSlot extends MOElementBase
     {
         super(gui, posX, posY,width,height);
         iconOffsetX = ((sizeX - 16) / 2);
-        iconOffsetY = ((sizeX - 16) / 2);
+        iconOffsetY = ((sizeY - 16) / 2);
         this.type = type;
         this.icon = icon;
     }
@@ -49,8 +49,8 @@ public class ElementSlot extends MOElementBase
     {
         ApplyColor();
         gui.bindTexture(getTexture(type));
-        gui.drawSizedTexturedModalRect(this.posX - iconOffsetX, this.posY - iconOffsetY, 0, 0, sizeX, sizeY, sizeX, sizeY);
-        drawSlotIcon(icon,posX,posY);
+        gui.drawSizedTexturedModalRect(this.posX, this.posY, 0, 0, sizeX, sizeY, sizeX, sizeY);
+        drawSlotIcon(icon,posX + iconOffsetX,posY + iconOffsetY);
         ResetColor();
     }
 

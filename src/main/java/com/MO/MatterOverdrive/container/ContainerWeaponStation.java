@@ -23,7 +23,7 @@ public class ContainerWeaponStation extends ContainerMachine<TileEntityWeaponSta
     @Override
     protected void init(InventoryPlayer inventory)
     {
-        addSlotToContainer(new MOSlot(machine, machine.INPUT_SLOT, 8, 52));
+        addSlotToContainer(new MOSlot(machine, machine.INPUT_SLOT, 8, 55));
         for (int i = 0;i < 5;i++)
         {
             addSlotToContainer(new SlotWeaponModule(machine, i,0,0, i));

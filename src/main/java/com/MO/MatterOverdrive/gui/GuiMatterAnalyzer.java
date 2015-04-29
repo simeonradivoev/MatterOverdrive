@@ -26,7 +26,7 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
         name = "matter_analyzer";
         energyElement = new MOElementEnergy(this,176,39,analyzer.getEnergyStorage());
         scanProgress = new ElementScanProgress(this,49,36);
-        pageTasks = new PageTasks(this,0,0,xSize,ySize,analyzer.getQueue());
+        pageTasks = new PageTasks(this,0,0,xSize,ySize,analyzer.getQueue((byte)0));
         pages.add(pageTasks);
 
         tasksButton = new MOElementButton(this,this,6,8,"Tasks",0,0,24,0,24,0,24,24,"");

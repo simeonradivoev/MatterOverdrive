@@ -1,14 +1,10 @@
-package com.MO.MatterOverdrive.data.network;
+package matter_network.tasks;
 
 import com.MO.MatterOverdrive.api.network.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.api.network.MatterNetworkTask;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.World;
-
-import java.util.List;
 
 /**
  * Created by Simeon on 4/20/2015.

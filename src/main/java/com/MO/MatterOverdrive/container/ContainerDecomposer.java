@@ -32,9 +32,9 @@ public class ContainerDecomposer extends ContainerMachine<TileEntityMachineDecom
 	@Override
 	public void init(InventoryPlayer inventory)
 	{
-		this.addSlotToContainer(new SlotMatter(machine,machine.INPUT_SLOT_ID,8,52));
-		this.addSlotToContainer(new SlotRemoveOnly(machine,machine.OUTPUT_SLOT_ID,129,52));
-		this.addSlotToContainer(new SlotEnergy(machine,this.machine.getEnergySlotID(),8,79));
+		this.addSlotToContainer(new SlotMatter(machine,machine.INPUT_SLOT_ID,8,55));
+		this.addSlotToContainer(new SlotRemoveOnly(machine,machine.OUTPUT_SLOT_ID,129,55));
+		this.addSlotToContainer(new SlotEnergy(machine,this.machine.getEnergySlotID(),8,82));
 
 		super.init(inventory);
 		MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89,true,true);

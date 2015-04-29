@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class MatterDatabaseHelper 
@@ -416,5 +417,25 @@ public class MatterDatabaseHelper
 		}
 		
 		return new ItemStack(b);
+	}
+
+	public static EnumChatFormatting getPatternInfoColor(int progress)
+	{
+		EnumChatFormatting color = EnumChatFormatting.GRAY;
+
+		if (progress > 0 && progress <= 20)
+			color = EnumChatFormatting.RED;
+		else if (progress > 20 && progress <= 40)
+			color = EnumChatFormatting.GOLD;
+		else if (progress > 40 && progress <= 60)
+			color = EnumChatFormatting.YELLOW;
+		else if (progress > 40 && progress <= 80)
+			color = EnumChatFormatting.AQUA;
+		else if (progress > 80 && progress <= 100)
+			color = EnumChatFormatting.GREEN;
+		else
+			color = EnumChatFormatting.GREEN;
+
+		return color;
 	}
 }

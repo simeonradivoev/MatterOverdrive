@@ -54,7 +54,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         homePage.setName("Home");
         configPage = new ElementBaseGroup(this,0,0,xSize,ySize);
         configPage.setName("Configurations");
-        upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container,machine.getInventory());
+        upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container,machine.getInventory(),machine);
         indicator = new ElementIndicator(this,6,ySize - 18);
 
         pages.add(homePage);
@@ -76,7 +76,8 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         upgradesPageButton.setToolTip("Upgrades");
         pageButtons.add(upgradesPageButton);
 
-        slotsList = new ElementSlotsList(this,5,49,machine.getInventory(),0);
+        slotsList = new ElementSlotsList(this,5,52,80,200,machine.getInventory(),0,false);
+        slotsList.setMargin(5);
     }
 
     @Override

@@ -199,6 +199,15 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         return elements;
     }
 
+    public ElementBase addElementAt(int i,ElementBase element)
+    {
+        if(element instanceof MOElementBase)
+            ((MOElementBase) element).parent = this;
+
+        elements.add(i,element);
+        return element;
+    }
+
     public ElementBase addElement(ElementBase element)
     {
         if(element instanceof MOElementBase)

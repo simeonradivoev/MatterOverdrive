@@ -1,10 +1,12 @@
-package com.MO.MatterOverdrive.data.network;
+package matter_network;
 
+import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.network.IMatterNetworkConnectionProxy;
 import com.MO.MatterOverdrive.api.network.MatterNetworkTask;
 import cpw.mods.fml.common.FMLLog;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ public class MatterNetworkTaskQueue<T extends MatterNetworkTask>
         {
             try
             {
-                tasks.add(tasks.size()-1,task);
+                tasks.add(tasks.size(),task);
                 return true;
             }
             catch (Exception e)
@@ -50,11 +52,51 @@ public class MatterNetworkTaskQueue<T extends MatterNetworkTask>
 
     }
 
+    public void drop()
+    {
+        for (T task : tasks)
+        {
+            task.setState(Reference.TASK_STATE_INVALID);
+        }
+
+        tasks.clear();
+    }
+
+    public T dropAt(int i)
+    {
+        if (i < tasks.size()) {
+            return tasks.remove(i);
+        }
+        return null;
+    }
+
+    public T dropWithID(long id)
+    {
+        for (int i = 0;i < tasks.size();i++)
+        {
+            if (tasks.get(i).getId() == id)
+            {
+                return tasks.remove(i);
+            }
+        }
+        return null;
+    }
+
+    public void tickAllAlive(World world,boolean alive)
+    {
+        for (int i = 0;i < tasks.size();i++)
+        {
+            if (tasks.get(i).isValid(world)) {
+                tasks.get(i).setAlive(alive);
+            }
+        }
+    }
+
     public T dequeueTask()
     {
         if (tasks.size() > 0)
         {
-            return tasks.remove(tasks.size() - 1);
+            return tasks.remove(0);
         }
         return null;
     }
@@ -82,6 +124,18 @@ public class MatterNetworkTaskQueue<T extends MatterNetworkTask>
         if (i >= 0 && i < tasks.size())
         {
             return tasks.get(i);
+        }
+        return null;
+    }
+
+    public T getWithID(long id)
+    {
+        for (int i = 0;i < tasks.size();i++)
+        {
+            if (tasks.get(i).getId() == id)
+            {
+                return tasks.get(i);
+            }
         }
         return null;
     }

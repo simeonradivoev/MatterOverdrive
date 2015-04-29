@@ -31,7 +31,10 @@ public class TileEntityUpdatePacket extends PacketAbstract
         this.y = y;
         this.z = z;
     }
-
+    public TileEntityUpdatePacket(TileEntity entity)
+    {
+        this(entity.xCoord,entity.yCoord,entity.zCoord);
+    }
 
     @Override
     public void fromBytes(ByteBuf buf)
@@ -47,5 +50,10 @@ public class TileEntityUpdatePacket extends PacketAbstract
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
+    }
+
+    public TileEntity getTileEntity(World world)
+    {
+        return world.getTileEntity(x,y,z);
     }
 }

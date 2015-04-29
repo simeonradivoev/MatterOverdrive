@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive;
 
 import java.io.File;
 
+import com.MO.MatterOverdrive.handler.TickHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveWorld;
 import com.MO.MatterOverdrive.network.PacketPipeline;
 
@@ -13,6 +14,7 @@ import com.MO.MatterOverdrive.init.MatterOverdriveMatter;
 import com.MO.MatterOverdrive.proxy.CommonProxy;
 import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -23,6 +25,9 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
+import matter_network.MatterNetworkRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 public class MatterOverdrive 
@@ -48,11 +53,13 @@ public class MatterOverdrive
 	public static final byte guiPatternStorage = 5;
 	public static final byte guiSolarPanel = 6;
 	public static final byte guiWeaponStation = 7;
+	public static final byte guiPatternMonitor = 8;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		packetPipeline = new PacketPipeline();
+		FMLCommonHandler.instance().bus().register(new TickHandler());
 		configHandler.init(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
 		MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
@@ -60,6 +67,7 @@ public class MatterOverdrive
 		MatterOverdriveBlocks.register(event);
 		MatterOverdriveItems.register(event);
         MatterOverdriveWorld.register();
+		MatterNetworkRegistry.register();
         packetPipeline.registerPackets();
 		UpdateTabs();
 	}

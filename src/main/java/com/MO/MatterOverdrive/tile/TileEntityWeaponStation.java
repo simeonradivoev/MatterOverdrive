@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.tile;
 
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.ItemInventoryWrapper;
 import com.MO.MatterOverdrive.data.inventory.ModuleSlot;
@@ -71,6 +72,11 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
         return 0;
     }
 
+    @Override
+    public void onContainerOpen() {
+
+    }
+
     //region Inventory Functions
     @Override
     public ItemStack getStackInSlot(int slot)
@@ -118,6 +124,14 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
         {
             super.setInventorySlotContents(slot,itemStack);
         }
+    }
+    //endregion
+
+    //region Upgrades
+    @Override
+    public boolean isAffectedBy(UpgradeTypes type)
+    {
+        return false;
     }
     //endregion
 }

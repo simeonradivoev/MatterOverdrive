@@ -1,7 +1,6 @@
-package com.MO.MatterOverdrive.data.network;
+package matter_network;
 
 import com.MO.MatterOverdrive.api.network.IMatterNetworkConnectionProxy;
-import com.MO.MatterOverdrive.api.network.MatterNetworkTask;
 import cpw.mods.fml.common.FMLLog;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -13,20 +12,20 @@ import java.util.List;
 /**
  * Created by Simeon on 4/21/2015.
  */
-public class MatterNetworkTaskPacketQueue
+public class MatterNetworkPacketQueue
 {
     IMatterNetworkConnectionProxy entity;
-    protected List<MatterNetworkTaskPacket> tasks;
+    protected List<MatterNetworkPacket> tasks;
     int capacity = 0;
 
-    public MatterNetworkTaskPacketQueue(IMatterNetworkConnectionProxy entity, int capacity)
+    public MatterNetworkPacketQueue(IMatterNetworkConnectionProxy entity, int capacity)
     {
         this.entity = entity;
-        tasks = new ArrayList<MatterNetworkTaskPacket>(capacity);
+        tasks = new ArrayList<MatterNetworkPacket>(capacity);
         this.capacity = capacity;
     }
 
-    public boolean queuePacket(MatterNetworkTaskPacket task)
+    public boolean queuePacket(MatterNetworkPacket task)
     {
         if (remaintingCapacity() > 0) {
             if (tasks.size() > 0) {
@@ -44,16 +43,35 @@ public class MatterNetworkTaskPacketQueue
         return false;
     }
 
-    public MatterNetworkTaskPacket dequeuePacket()
+    public void tickAllAlive(World world,boolean alive)
+    {
+        for (int i = 0;i < tasks.size();i++)
+        {
+            if (tasks.get(i).isValid(world)) {
+                //tasks.get(i).getTask(world).setAlive(alive);
+            }
+        }
+    }
+
+    public MatterNetworkPacket dequeuePacket()
     {
         if (tasks.size() > 0)
         {
-            return tasks.remove(tasks.size() - 1);
+            return tasks.remove(0);
         }
         return null;
     }
 
-    public MatterNetworkTaskPacket getAt(int i)
+    public MatterNetworkPacket peek()
+    {
+        if (tasks.size() > 0)
+        {
+            return tasks.get(0);
+        }
+        return null;
+    }
+
+    public MatterNetworkPacket getAt(int i)
     {
         if (i >= 0 && i < tasks.size())
         {
@@ -81,19 +99,28 @@ public class MatterNetworkTaskPacketQueue
         NBTTagList tagList = tagCompound.getTagList("TaskPackets",10);
         for (int i = 0; i < tagList.tagCount();i++)
         {
-            MatterNetworkTaskPacket packet = new MatterNetworkTaskPacket();
-            packet.readFromNBT(tagList.getCompoundTagAt(i));
-            tasks.add(packet);
+            MatterNetworkPacket packet = null;
+            try {
+                packet = MatterNetworkRegistry.getPacketClass(tagList.getCompoundTagAt(i).getInteger("Type")).newInstance();
+                packet.readFromNBT(tagList.getCompoundTagAt(i));
+                tasks.add(packet);
+
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void writeToNBT(World world, NBTTagCompound tagCompound)
     {
         NBTTagList taskList = new NBTTagList();
-        for (MatterNetworkTaskPacket packet : tasks)
+        for (MatterNetworkPacket packet : tasks)
         {
             NBTTagCompound task = new NBTTagCompound();
             packet.writeToNBT(task);
+            task.setInteger("Type",MatterNetworkRegistry.getPacketID(packet.getClass()));
             taskList.appendTag(task);
         }
         tagCompound.setTag("TaskPackets",taskList);

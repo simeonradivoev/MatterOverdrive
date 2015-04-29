@@ -71,6 +71,7 @@ public class MatterOverdriveMatter
         reg(c,"logWood", 16);
         reg(c,"sand", 6);
         reg(c,Blocks.gravel, 8);
+        reg(c,Blocks.sandstone,8);
         reg(c,Blocks.clay,12);
         reg(c,Blocks.cactus,10);
         reg(c,"plankWood",4);

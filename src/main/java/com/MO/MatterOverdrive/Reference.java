@@ -66,4 +66,15 @@ public class Reference
 	public static final byte TASK_STATE_PROCESSING = 3;
 	public static final byte TASK_STATE_FINISHED = 4;
 	//endregion
+
+	//region Request Packet Type
+    public static final int PACKET_REQUEST_CONNECTION = 0;
+	public static final int PACKET_REQUEST_PATTERN_SEARCH = 1;
+    //endregion
+
+    //region Packet Responce Type
+    public static final int PACKET_RESPONCE_ERROR = -1;
+    public static final int PACKET_RESPONCE_INVALID = 0;
+    public static final int PACKET_RESPONCE_VALID = 1;
+    //endregion
 }

@@ -50,6 +50,19 @@ public class MOMathHelper
 		}
 	}
 
+    public static int toInt(short leftShort,short rightShort)
+    {
+
+        int leftInt = leftShort;
+        int rightInt = rightShort;
+        return leftInt | (rightInt << 16);
+    }
+
+    public static short[] getShorts(int number)
+    {
+        return new short[]{(short)(number & 0xFFFFFF),(short)(number >> 16)};
+    }
+
     public static Vector2f Intersects(Vector2f a1, Vector2f a2, Vector2f b1, Vector2f b2)
     {
         Vector2f b = Vector2f.sub(a2,a1,null);
@@ -130,4 +143,16 @@ public class MOMathHelper
        138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
        };
        static { for (int i=0; i < 256 ; i++) p[256+i] = p[i] = permutation[i]; }
+
+    public static void shuffleArray(Random rnd,int[] ar)
+    {
+        for (int i = ar.length - 1; i > 0; i--)
+        {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            int a = ar[index];
+            ar[index] = ar[i];
+            ar[i] = a;
+        }
+    }
 }

@@ -32,9 +32,9 @@ public class ContainerMatterAnalyzer extends ContainerMachine<TileEntityMachineM
     @Override
     public  void init(InventoryPlayer inventory)
     {
-        this.addSlotToContainer(new SlotMatter(machine,machine.input_slot,8,52));
-        this.addSlotToContainer(new SlotDatabase(machine,machine.database_slot,8,79));
-        this.addSlotToContainer(new SlotEnergy(machine,machine.getEnergySlotID(),8,106));
+        this.addSlotToContainer(new SlotMatter(machine,machine.input_slot,8,55));
+        this.addSlotToContainer(new SlotDatabase(machine,machine.database_slot,8,82));
+        this.addSlotToContainer(new SlotEnergy(machine,machine.getEnergySlotID(),8,109));
 
         super.init(inventory);
         MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, true, true);

@@ -11,14 +11,21 @@ import com.MO.MatterOverdrive.api.network.*;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.PatternStorageSlot;
-import com.MO.MatterOverdrive.data.network.*;
+import matter_network.MatterNetworkPacket;
+import matter_network.packets.MatterNetworkRequestPacket;
+import matter_network.packets.MatterNetworkTaskPacket;
+import matter_network.MatterNetworkPacketQueue;
+import matter_network.tasks.MatterNetworkTaskStorePattern;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -31,7 +38,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public static final int ENERGY_TRANSFER = 128;
     public int input_slot;
     public int[] pattern_storage_slots;
-    private MatterNetworkTaskPacketQueue taskQueueProcessing;
+    private MatterNetworkPacketQueue taskQueueProcessing;
     private TimeTracker taskProcessingTracker;
 
     public TileEntityMachinePatternStorage()
@@ -40,7 +47,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         this.energyStorage.setCapacity(ENERGY_CAPACITY);
         this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
-        this.taskQueueProcessing = new MatterNetworkTaskPacketQueue(this,1);
+        this.taskQueueProcessing = new MatterNetworkPacketQueue(this,1);
         taskProcessingTracker = new TimeTracker();
     }
 
@@ -52,7 +59,6 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         if(!worldObj.isRemote) {
             if (energyStorage.getEnergyStored() > 0) {
                 manageLinking();
-                manageTasks();
             }
         }
         else
@@ -60,32 +66,6 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
             if (isActive() && random.nextFloat() < 0.2f)
             {
                 SpawnVentParticles(0.03f, ForgeDirection.getOrientation(BlockHelper.getOppositeSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
-            }
-        }
-    }
-
-    private void manageTasks()
-    {
-        MatterNetworkTaskPacket taskPacket = taskQueueProcessing.dequeuePacket();
-
-        if (taskPacket != null && taskPacket.isValid(worldObj)
-                && taskProcessingTracker.hasDelayPassed(worldObj,TASK_PROCESS_DELAY)
-                && taskPacket.getTask(worldObj).getState() <= Reference.TASK_STATE_QUEUED)
-        {
-            MatterNetworkTask task = taskPacket.getTask(worldObj);
-            if (task instanceof MatterNetworkTaskStorePattern)
-            {
-                if(addItem(((MatterNetworkTaskStorePattern) task).getItemStack(),((MatterNetworkTaskStorePattern) task).getProgress(),false,null))
-                {
-                    //if the task is finished and the item is in the database
-                    task.setStateWithNotify(worldObj, Reference.TASK_STATE_FINISHED);
-                }
-                else
-                {
-                    //if the item could not be added to the database for some reason, and has passed the canProcess check
-                    //then reset the task and set it to waiting
-                    task.setStateWithNotify(worldObj,Reference.TASK_STATE_WAITING);
-                }
             }
         }
     }
@@ -145,6 +125,11 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     public float soundVolume() {
         return 0;
+    }
+
+    @Override
+    public void onContainerOpen() {
+
     }
 
     //region Database functions
@@ -312,24 +297,68 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
     //region Matter Network Functions
     @Override
-    public boolean canPreform(MatterNetworkTaskPacket taskPacket)
+    public boolean canPreform(MatterNetworkPacket packet)
     {
-        if (taskPacket.getTask(worldObj) instanceof MatterNetworkTaskStorePattern)
+        if (packet instanceof MatterNetworkTaskPacket) {
+            if (((MatterNetworkTaskPacket) packet).getTask(worldObj) instanceof MatterNetworkTaskStorePattern) {
+                MatterNetworkTaskStorePattern task = (MatterNetworkTaskStorePattern) ((MatterNetworkTaskPacket) packet).getTask(worldObj);
+                return addItem(task.getItemStack(), task.getProgress(), true, null);
+            }
+        }
+        else if (packet instanceof MatterNetworkRequestPacket && ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_CONNECTION || ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH)
         {
-            MatterNetworkTaskStorePattern task = (MatterNetworkTaskStorePattern)taskPacket.getTask(worldObj);
-            return addItem(task.getItemStack(),task.getProgress(),true,null);
+            return true;
         }
         return false;
     }
 
     @Override
-    public void queuePacket(MatterNetworkTaskPacket task)
+    public void queuePacket(MatterNetworkPacket packet,ForgeDirection from)
     {
-        if (task.getTask(worldObj).getState() <= Reference.TASK_STATE_WAITING)
+        if (packet != null && packet.isValid(worldObj))
         {
-            if(taskQueueProcessing.queuePacket(task))
+            if (packet instanceof MatterNetworkTaskPacket) {
+                if (taskProcessingTracker.hasDelayPassed(worldObj, TASK_PROCESS_DELAY) && ((MatterNetworkTaskPacket) packet).getTask(worldObj).getState() <= Reference.TASK_STATE_QUEUED) {
+                    MatterNetworkTask task = ((MatterNetworkTaskPacket) packet).getTask(worldObj);
+                    if (task instanceof MatterNetworkTaskStorePattern) {
+                        if (addItem(((MatterNetworkTaskStorePattern) task).getItemStack(), ((MatterNetworkTaskStorePattern) task).getProgress(), false, null)) {
+                            //if the task is finished and the item is in the database
+                            task.setState(Reference.TASK_STATE_FINISHED);
+                        } else {
+                            //if the item could not be added to the database for some reason, and has passed the canProcess check
+                            //then reset the task and set it to waiting
+                            task.setState(Reference.TASK_STATE_WAITING);
+                        }
+                    }
+                }
+            }
+            else if (packet instanceof MatterNetworkRequestPacket)
             {
-                task.getTask(worldObj).setState(Reference.TASK_STATE_QUEUED);
+                MatterNetworkRequestPacket requestPacket = (MatterNetworkRequestPacket)packet;
+                if (requestPacket.getRequestType() == Reference.PACKET_REQUEST_CONNECTION)
+                {
+                    if (requestPacket.getRequest() instanceof Class)
+                    {
+                        if (getClass().isInstance(this))
+                        {
+                            requestPacket.getSender(worldObj).onResponce(this,requestPacket.getRequestType(),Reference.PACKET_RESPONCE_VALID,null);
+                        }
+                    }
+                    else
+                    {
+                        requestPacket.getSender(worldObj).onResponce(this,requestPacket.getRequestType(),Reference.PACKET_RESPONCE_VALID,null);
+                    }
+
+                }else if (requestPacket.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH)
+                {
+                    if (requestPacket.getRequest() instanceof int[])
+                    {
+                        int[] array = (int[])requestPacket.getRequest();
+                        NBTTagCompound tagCompound = getItemAsNBT(new ItemStack(Item.getItemById(array[0]),1,array[1]));
+                        if (tagCompound != null)
+                            requestPacket.getSender(worldObj).onResponce(this, requestPacket.getRequestType(), Reference.PACKET_RESPONCE_VALID,tagCompound);
+                    }
+                }
             }
         }
     }
@@ -349,6 +378,12 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public IMatterNetworkConnection getMatterNetworkConnection()
     {
         return this;
+    }
+
+    @Override
+    public int onNetworkTick(World world,TickEvent.Phase phase)
+    {
+        return 0;
     }
     //endregion
 }

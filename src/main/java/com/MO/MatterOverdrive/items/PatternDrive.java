@@ -92,31 +92,13 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
                 for (int i = 0;i < list.tagCount();i++)
                 {
                     int progress = MatterDatabaseHelper.GetProgressFromNBT(list.getCompoundTagAt(i));
-                    infos.add(getPatternInfoColor(progress) + MatterDatabaseHelper.GetItemStackFromNBT(list.getCompoundTagAt(i)).getDisplayName() + " [" + progress + "%]");
+                    infos.add(MatterDatabaseHelper.getPatternInfoColor(progress) + MatterDatabaseHelper.GetItemStackFromNBT(list.getCompoundTagAt(i)).getDisplayName() + " [" + progress + "%]");
                 }
             }
         }
     }
 
-    private EnumChatFormatting getPatternInfoColor(int progress)
-    {
-        EnumChatFormatting color = EnumChatFormatting.GRAY;
 
-        if (progress > 0 && progress <= 20)
-            color = EnumChatFormatting.RED;
-        else if (progress > 20 && progress <= 40)
-            color = EnumChatFormatting.GOLD;
-        else if (progress > 40 && progress <= 60)
-            color = EnumChatFormatting.YELLOW;
-        else if (progress > 40 && progress <= 80)
-            color = EnumChatFormatting.AQUA;
-        else if (progress > 80 && progress <= 100)
-            color = EnumChatFormatting.GREEN;
-        else
-            color = EnumChatFormatting.GREEN;
-
-        return color;
-    }
 
     public void InitTagCompount(ItemStack stack)
     {

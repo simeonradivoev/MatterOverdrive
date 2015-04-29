@@ -2,16 +2,12 @@ package com.MO.MatterOverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.element.ElementBase;
-import cofh.lib.gui.element.listbox.IListBoxElement;
+import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.helpers.StringHelper;
+import com.MO.MatterOverdrive.util.RenderUtils;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
-import net.minecraft.util.MathHelper;
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by Simeon on 3/13/2015.
@@ -23,6 +19,8 @@ public class ElementGrid extends ElementBaseGroup
     int scrollX = 0;
     int scrollY = 0;
     int scrollSpeed = 10;
+    int marginTop = 0;
+    int marginLeft = 0;
 
     public ElementGrid(GuiBase guiBase, int x, int y,int width,int height,int maxWidth)
     {
@@ -33,75 +31,65 @@ public class ElementGrid extends ElementBaseGroup
     @Override
     public void update(int mouseX,int mouseY)
     {
-        int widthCount = 0;
-        int height = (int)scrollYSmooth;
-        int maxTempHeigh = 0;
 
-        for (ElementBase element : elements)
-        {
-            if(height < this.sizeY)
-            {
-                element.setPosition(widthCount,height);
-
-                maxTempHeigh = Math.max(maxTempHeigh, element.getHeight());
-                widthCount += element.getWidth() + 3;
-
-                if (widthCount >= this.maxWidth)
-                {
-                    height += maxTempHeigh;
-                    widthCount = 0;
-                    maxTempHeigh = 0;
-                }
-            }
-        }
     }
 
     private void manageDrag(int maxHeight)
     {
-        scrollY = (int)Math.copySign(Math.min(Math.abs(scrollY), maxHeight - this.sizeY), scrollY);
+        scrollY = Math.max(scrollY, -maxHeight);
         scrollYSmooth = MOMathHelper.Lerp(scrollYSmooth,scrollY,0.1f);
     }
 
-    public int getRows()
+    @Override
+    public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        int rows = 1;
-        int widthCount = 0;
-        for (int i = 0; i < elements.size(); i++)
-        {
-            if(widthCount > this.maxWidth)
-            {
-                widthCount = 0;
-                rows++;
-            }
-            else
-            {
-                widthCount += elements.get(i).getWidth();
-            }
-        }
-        return rows;
-    }
-
-    public int getInternalHeight()
-    {
-        int widthCount = 0;
-        int height = 0;
+        int widthCount = marginLeft;
+        int height = marginTop;
         int maxTempHeigh = 0;
 
-        for (int i = 0; i < elements.size(); i++)
+        for (ElementBase element : elements)
         {
-            if(widthCount > this.maxWidth)
+            if (shouldBeDisplayed(element))
             {
-                height += maxTempHeigh;
-                maxTempHeigh = 0;
-                widthCount = 0;
-            }
-            else
+
+                if (widthCount > this.maxWidth - element.getWidth()) {
+                    height += maxTempHeigh;
+                    widthCount = marginLeft;
+                    maxTempHeigh = 0;
+                }
+
+
+                if (MathHelper.round(height + scrollYSmooth) < this.sizeY || maxTempHeigh == 0 && MathHelper.round(height + scrollYSmooth) > -maxTempHeigh) {
+                    element.setPosition(widthCount, MathHelper.round(height + scrollYSmooth));
+                    element.setVisible(true);
+                } else {
+                    element.setVisible(false);
+                }
+
+                maxTempHeigh = Math.max(maxTempHeigh, element.getHeight() + 2);
+                widthCount += element.getWidth() + 3;
+            }else
             {
-                widthCount += elements.get(i).getWidth();
-                maxTempHeigh = Math.max(maxTempHeigh,elements.get(i).getHeight());
+                element.setVisible(false);
             }
         }
-        return height;
+
+        manageDrag(height);
+
+
+        RenderUtils.beginStencil();
+        drawStencil(posX, posY, posX + sizeX, posY + sizeY, 1);
+        super.drawBackground(mouseX, mouseY, gameTicks);
+        RenderUtils.endStencil();
+    }
+
+    @Override
+    public void drawForeground(int mouseX, int mouseY)
+    {
+        RenderUtils.beginStencil();
+        drawStencil(posX, posY, sizeX + posX, sizeY + posX, 1);
+        super.drawForeground(mouseX, mouseY);
+        RenderUtils.endStencil();
     }
 
     @Override
@@ -126,6 +114,12 @@ public class ElementGrid extends ElementBaseGroup
 
     public void scrollDown()
     {
+        scrollY-=scrollSpeed;
+        onScrollV(scrollY);
+    }
+
+    public void scrollUp() {
+
         if(scrollY < 0)
         {
             scrollY = Math.min(scrollY + scrollSpeed,0);
@@ -133,19 +127,24 @@ public class ElementGrid extends ElementBaseGroup
         }
     }
 
-    public void scrollUp() {
-
-        scrollY-=scrollSpeed;
-        onScrollV(scrollY);
-    }
-
     protected void onScrollV(int newStartIndex)
     {
-
+        scrollY = newStartIndex;
     }
 
     public void drawTexturedModalRect(int x, int y, int u, int v, int width, int height,int texWidth,int texHeight) {
 
         gui.drawSizedTexturedModalRect(x, y, u, v, width, height, texWidth, texHeight);
+    }
+
+    public void setMargins(int left,int right,int top,int bottom)
+    {
+        marginTop = top;
+        marginLeft = left;
+    }
+
+    public boolean shouldBeDisplayed(ElementBase element)
+    {
+        return true;
     }
 }

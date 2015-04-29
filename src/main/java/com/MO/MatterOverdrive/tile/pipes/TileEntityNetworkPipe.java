@@ -3,10 +3,13 @@ package com.MO.MatterOverdrive.tile.pipes;
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.network.*;
-import com.MO.MatterOverdrive.data.network.MatterNetworkTaskPacket;
+import matter_network.MatterNetworkPacket;
+import matter_network.packets.MatterNetworkTaskPacket;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -64,10 +67,17 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     }
 
     @Override
-    public void broadcast(MatterNetworkTaskPacket task) {
-        if (isValid() && task.getTask(worldObj).getState() <= Reference.TASK_STATE_WAITING) {
-            for (int i = 0; i < 6; i++) {
-                MatterNetworkHelper.broadcastTaskInDirection(worldObj, task.addToPath(getMatterNetworkConnection()), this, ForgeDirection.getOrientation(i));
+    public void broadcast(MatterNetworkPacket task,ForgeDirection direction)
+    {
+        if (isValid())
+        {
+            if (task instanceof MatterNetworkTaskPacket && ((MatterNetworkTaskPacket) task).getTask(worldObj).getState() > Reference.TASK_STATE_WAITING)
+                return;
+
+            for (int i = 0; i < 6; i++)
+            {
+                if (direction.getOpposite().ordinal() != i)
+                    MatterNetworkHelper.broadcastTaskInDirection(worldObj, task, this, ForgeDirection.getOrientation(i));
             }
         }
     }
@@ -104,5 +114,11 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     @Override
     public IMatterNetworkConnection getMatterNetworkConnection() {
         return this;
+    }
+
+    @Override
+    public int onNetworkTick(World world, TickEvent.Phase phase)
+    {
+        return 0;
     }
 }

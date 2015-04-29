@@ -161,4 +161,9 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     public float soundVolume() {
         return 0;
     }
+
+    @Override
+    public void onContainerOpen() {
+
+    }
 }

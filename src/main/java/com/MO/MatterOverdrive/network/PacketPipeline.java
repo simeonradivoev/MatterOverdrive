@@ -2,10 +2,10 @@ package com.MO.MatterOverdrive.network;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.network.packet.AbstractBiPacketHandler;
-import com.MO.MatterOverdrive.network.packet.client.AbstractClientPacketHandler;
-import com.MO.MatterOverdrive.network.packet.client.PacketMatterUpdate;
-import com.MO.MatterOverdrive.network.packet.client.PacketPowerUpdate;
+import com.MO.MatterOverdrive.network.packet.client.*;
 import com.MO.MatterOverdrive.network.packet.server.PacketMatterScannerUpdate;
+import com.MO.MatterOverdrive.network.packet.server.PacketPatternMonitorCommands;
+import com.MO.MatterOverdrive.network.packet.server.PacketRemoveTask;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -38,6 +38,10 @@ public class PacketPipeline
         registerPacket(PacketMatterScannerUpdate.ServerHandler.class, PacketMatterScannerUpdate.class);
         registerPacket(PacketPowerUpdate.ClientHandler.class, PacketPowerUpdate.class);
         registerPacket(PacketMatterUpdate.ClientHandler.class, PacketMatterUpdate.class);
+        registerPacket(PacketPatternMonitorSync.ClientHandler.class,PacketPatternMonitorSync.class);
+        registerPacket(PacketPatternMonitorCommands.ServerHandler.class,PacketPatternMonitorCommands.class);
+        registerPacket(PacketReplicationComplete.ClientHandler.class,PacketReplicationComplete.class);
+        registerPacket(PacketRemoveTask.ServerHandler.class,PacketRemoveTask.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

@@ -21,8 +21,6 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class ContainerPatternStorage extends ContainerMachine<TileEntityMachinePatternStorage>
 {
-    private int lastEnergy;
-
     public ContainerPatternStorage(InventoryPlayer inventoryPlayer,TileEntityMachinePatternStorage patternStorage)
     {
         super(inventoryPlayer, patternStorage);
@@ -31,7 +29,7 @@ public class ContainerPatternStorage extends ContainerMachine<TileEntityMachineP
     @Override
     public void init(InventoryPlayer inventoryPlayer)
     {
-        this.addSlotToContainer(new SlotDatabase(machine, machine.input_slot, 8, 52));
+        this.addSlotToContainer(new SlotDatabase(machine, machine.input_slot, 8, 55));
 
         for (int x = 0; x < 3;x++)
         {
@@ -42,7 +40,7 @@ public class ContainerPatternStorage extends ContainerMachine<TileEntityMachineP
             this.addSlotToContainer(new SlotPatternStorage(machine,machine.input_slot + 1 + x + 3,x * 24 + 77,24 + 37));
         }
 
-        this.addSlotToContainer(new SlotEnergy(machine, machine.getEnergySlotID(),8,79));
+        this.addSlotToContainer(new SlotEnergy(machine, machine.getEnergySlotID(),8,82));
 
         super.init(inventoryPlayer);
 

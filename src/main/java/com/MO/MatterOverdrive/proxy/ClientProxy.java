@@ -35,12 +35,14 @@ public class ClientProxy extends CommonProxy
     public static TileEntityRendererWeaponStation renderer_weapon_station;
 
 
+    @Override
 	public void registerProxies()
 	{
         FMLCommonHandler.instance().bus().register(new KeyHandler());
         MinecraftForge.EVENT_BUS.register(new MatterOverdriveIcons());
         MinecraftForge.EVENT_BUS.register(new RenderHandler());
         MinecraftForge.EVENT_BUS.register(new TooltipHandler());
+
 
         pipeRenderer = new TileEntityRendererPipe();
         matter_pipeRenderer = new TileEntityRendererMatterPipe();

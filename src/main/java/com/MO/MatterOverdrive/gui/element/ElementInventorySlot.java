@@ -52,8 +52,8 @@ public class ElementInventorySlot extends ElementSlot
             slot.yDisplayPosition = Integer.MIN_VALUE;
         }
         else {
-            slot.xDisplayPosition = posX;
-            slot.yDisplayPosition = posY;
+            slot.xDisplayPosition = posX + iconOffsetX;
+            slot.yDisplayPosition = posY + iconOffsetY;
         }
 
         slot.setVisible(isVisible);

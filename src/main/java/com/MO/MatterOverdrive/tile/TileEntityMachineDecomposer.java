@@ -84,6 +84,11 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     @Override
     public float soundVolume() { return 1;}
 
+    @Override
+    public void onContainerOpen() {
+
+    }
+
     private void  manageExtract()
     {
         if(!worldObj.isRemote)

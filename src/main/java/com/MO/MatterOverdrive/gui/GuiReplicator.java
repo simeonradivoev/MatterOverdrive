@@ -1,11 +1,15 @@
 package com.MO.MatterOverdrive.gui;
 
+import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.data.inventory.Slot;
 import com.MO.MatterOverdrive.gui.element.*;
+import com.MO.MatterOverdrive.gui.pages.PageTasks;
 import com.MO.MatterOverdrive.items.MatterScanner;
+import com.MO.MatterOverdrive.network.packet.server.PacketRemoveTask;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
+import matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
@@ -31,6 +35,9 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 	ElementDualScaled replicate_progress;
     ElementSlot outputSlot;
     ElementSlot seccoundOutputSlot;
+    PageTasks pagePackets;
+    MOElementButton packetsButton;
+    ElementItemPattern itemPattern;
 
 	public GuiReplicator(InventoryPlayer inventoryPlayer,TileEntityMachineReplicator entity)
     {
@@ -41,6 +48,17 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 		replicate_progress = new ElementDualScaled(this,32,52);
         outputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),22,22,"big");
         seccoundOutputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.SECOUND_OUTPUT_SLOT_ID),22,22,"big");
+
+        pagePackets = new PageTasks(this,10,0,xSize,ySize,machine.getQueue((byte)0));
+        pages.add(pagePackets);
+
+        packetsButton = new MOElementButton(this,this,6,8,"Tasks",0,0,24,0,24,0,24,24,"");
+        packetsButton.setTexture(Reference.PATH_GUI_ITEM + "tasks.png", 48, 24);
+        packetsButton.setToolTip("Tasks");
+        pageButtons.add(packetsButton);
+
+        itemPattern = new ElementItemPattern(this, entity.getInternalPatternStorage(), "big_main", 37, 22);
+        slotsList.setPosition(5, 49);
 	}
 	
 	@Override
@@ -53,6 +71,7 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 		replicate_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
         energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
 		this.addElement(replicate_progress);
+        slotsList.addElementAt(0, itemPattern);
 
         homePage.addElement(outputSlot);
         homePage.addElement(seccoundOutputSlot);
@@ -111,7 +130,7 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 
         if(scanner != null)
         {
-            NBTTagCompound itemAsNBT = machine.GetNewItemNBT();
+            NBTTagCompound itemAsNBT = machine.getInternalPatternStorage();
 
             if(itemAsNBT != null)
             {
@@ -127,6 +146,41 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
             matterElement.setDrain(0);
             energyElement.setEnergyRequired(0);
             energyElement.setEnergyRequiredPerTick(0);
+        }
+    }
+
+    @Override
+    protected void updateElementInformation()
+    {
+        super.updateElementInformation();
+
+        MatterNetworkTaskReplicatePattern task = machine.getQueue((byte)0).peek();
+        if (task != null)
+        {
+            NBTTagCompound nbt = machine.getInternalPatternStorage();
+            itemPattern.setAmount(task.getAmount());
+            if (task.getItemID() == nbt.getShort("id") && task.getItemMetadata() == nbt.getShort("Damage"))
+            {
+                itemPattern.setTagCompound(nbt);
+            }
+            else
+            {
+                itemPattern.setTagCompound(null);
+            }
+        }
+        else
+            itemPattern.setAmount(0);
+    }
+
+    @Override
+    public void handleElementButtonClick(String buttonName, int mouseButton)
+    {
+        super.handleElementButtonClick(buttonName,mouseButton);
+        if (buttonName == "DropTask")
+        {
+            NBTTagCompound tagCompound = new NBTTagCompound();
+            tagCompound.setInteger("TaskID",mouseButton);
+            MatterOverdrive.packetPipeline.sendToServer(new PacketRemoveTask(machine,mouseButton,(byte)0,Reference.TASK_STATE_INVALID));
         }
     }
 

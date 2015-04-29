@@ -11,16 +11,18 @@ import com.MO.MatterOverdrive.api.network.*;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.Slot;
-import com.MO.MatterOverdrive.data.network.MatterNetworkTaskQueue;
-import com.MO.MatterOverdrive.data.network.MatterNetworkTaskStorePattern;
+import matter_network.MatterNetworkTaskQueue;
+import matter_network.tasks.MatterNetworkTaskStorePattern;
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -29,7 +31,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory, IMatterNetworkDispatcher, IMatterNetworkConnectionProxy
 {
     public static final int BROADCAST_DELAY = 60;
-    public static final int BROADCAST_WEATING_DELAY = 120;
+    public static final int BROADCAST_WEATING_DELAY = 180;
 
     public static final int PROGRESS_AMOUNT_PER_ITEM = 20;
     public static final int ENERGY_STORAGE = 512000;
@@ -69,40 +71,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         super.updateEntity();
         manageAnalyze();
-        manageBroadcast();
-    }
-
-    private void manageBroadcast()
-    {
-        if (worldObj.isRemote)
-            return;
-
-        MatterNetworkTask task = taskQueueSending.peek();
-
-        if (task != null)
-        {
-            if (task.getState() == Reference.TASK_STATE_PROCESSING)
-            {
-
-            }
-            else if(task.getState() == Reference.TASK_STATE_FINISHED)
-            {
-                taskQueueSending.dequeueTask();
-                ForceSync();
-            }
-            else
-            {
-                if (broadcastTracker.hasDelayPassed(worldObj, task.getState() == Reference.TASK_STATE_WAITING ? BROADCAST_WEATING_DELAY : BROADCAST_DELAY))
-                {
-                    for (int i = 0; i < 6; i++)
-                    {
-                        MatterNetworkHelper.broadcastTaskInDirection(worldObj, taskQueueSending.getLastIndex(), this, ForgeDirection.getOrientation(i));
-                        task.setState(Reference.TASK_STATE_WAITING);
-                    }
-                }
-            }
-
-        }
     }
 
     @Override
@@ -118,6 +86,11 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     @Override
     public float soundVolume() { return 0.3f;}
+
+    @Override
+    public void onContainerOpen() {
+
+    }
 
     protected void manageAnalyze()
     {
@@ -322,20 +295,59 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> getQueue()
+    public int onNetworkTick(World world,TickEvent.Phase phase)
+    {
+        if(phase.equals(TickEvent.Phase.START))
+        {
+            return manageBroadcast(world,taskQueueSending.peek());
+        }
+        return 0;
+    }
+
+    private int manageBroadcast(World world,MatterNetworkTask task)
+    {
+        int broadcastCount = 0;
+        if (task != null)
+        {
+            if (task.getState() == Reference.TASK_STATE_PROCESSING) {
+
+            } else if (task.getState() == Reference.TASK_STATE_FINISHED) {
+                taskQueueSending.dequeueTask();
+                ForceSync();
+            }
+            else
+            {
+                if (!task.isAlive() && broadcastTracker.hasDelayPassed(worldObj, task.getState() == Reference.TASK_STATE_WAITING ? BROADCAST_WEATING_DELAY : BROADCAST_DELAY))
+                {
+                    for (int i = 0; i < 6; i++)
+                    {
+                        if (MatterNetworkHelper.broadcastTaskInDirection(worldObj,(byte)0, task, this, ForgeDirection.getOrientation(i)))
+                        {
+                            task.setState(Reference.TASK_STATE_WAITING);
+                            broadcastCount++;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        taskQueueSending.tickAllAlive(world,false);
+        return broadcastCount;
+    }
+
+    @Override
+    public MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> getQueue(byte id)
     {
         return taskQueueSending;
     }
 
     @Override
-    public void onTaskChange(MatterNetworkTask task)
+    public void onResponce(IMatterNetworkConnection from,int requestType, int responceTye, Object responce)
     {
-        ForceSync();
-        if (task instanceof MatterNetworkTaskStorePattern) {
-            if (task.getState() == Reference.TASK_STATE_FINISHED || task.getState() <= Reference.TASK_STATE_UNKNOWN) {
-                taskQueueSending.remove((MatterNetworkTaskStorePattern)task);
-            }
-        }
+
     }
+
+
     //endregion
 }

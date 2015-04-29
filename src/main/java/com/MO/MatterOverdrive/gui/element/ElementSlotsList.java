@@ -14,85 +14,64 @@ import java.util.List;
 /**
  * Created by Simeon on 3/16/2015.
  */
-public class ElementSlotsList extends ElementSlot
+public class ElementSlotsList extends ElementBaseGroup
 {
-    List<Slot> inventory;
-    int main;
-    boolean isDark = false;
 
-    public ElementSlotsList(GuiBase gui, int posX, int posY, Inventory inventory,int main)
+    int margin = 0;
+
+    public ElementSlotsList(GuiBase gui, int posX, int posY,int width,int height, Inventory inventory,int main,boolean isDark)
     {
-        super(gui, posX, posY,18,18,"small");
-        this.inventory = new ArrayList<Slot>();
+        super(gui, posX, posY, width, height);
+        int index = 0;
         for (int i = 0;i < inventory.getSizeInventory();i++)
         {
             if (inventory.getSlot(i).isMainSlot())
             {
-                this.inventory.add(inventory.getSlot(i));
+                if (index == main)
+                {
+                    ElementSlot elementSlot = new ElementSlot(gui, 0, 0, 37, 22, isDark ? "big_main_dark" : "big_main", inventory.getSlot(i).getTexture());
+                    elementSlot.setItemOffset(3, 3);
+                    addElement(elementSlot);
+                }
+                else
+                    addElement(new ElementSlot(gui,0,0,22,22,"big",inventory.getSlot(i).getTexture()));
+
+                index++;
             }
         }
-        this.main = main;
     }
 
-    public ElementSlotsList(GuiBase gui, int posX, int posY, List<Slot> inventory,int main)
+    public ElementSlotsList(GuiBase gui, int posX, int posY,int width,int height, List<Slot> inventory,int main,boolean isDark)
     {
-        super(gui, posX, posY,18,18,"small");
-        this.inventory = inventory;
-        this.main = main;
-    }
-
-    void setMainSlot(int id)
-    {
-        this.main = id;
-    }
-
-    @Override
-    public void drawBackground(int mouseX, int mouseY, float gameTicks)
-    {
-        GL11.glColor3f(1,1,1);
-
+        super(gui, posX, posY, width, height);
         for (int i = 0;i < inventory.size();i++)
         {
-            int y = this.posY + i * 27;
-            if(main == i)
-            {
-                if(isDark)
-                    type = "big_main_dark";
-                else
-                    type = "big_main";
-
-                gui.bindTexture(getTexture(type));
-                gui.drawSizedTexturedModalRect(this.posX,y,0,0,37,22,37,22);
+            if (i == main) {
+                ElementSlot elementSlot = new ElementSlot(gui, 0, 0, 37, 22, isDark ? "big_main_dark" : "big_main", inventory.get(i).getTexture());
+                elementSlot.setItemOffset(5,5);
+                addElement(elementSlot);
 
             }
             else
-            {
-                type = "big";
-                gui.bindTexture(getTexture(type));
-                gui.drawSizedTexturedModalRect(this.posX, y, 0, 0, 22, 22, 22, 22);
-            }
-
-            drawSlotIcon(inventory.get(i).getTexture(),this.posX + 3,y + 3);
+                addElement(new ElementSlot(gui,0,0,22,22,"big",inventory.get(i).getTexture()));
         }
     }
 
-    public void AddSlot(Slot slot)
-    {
-        inventory.add(slot);
-    }
-
-    public void RemoveSlot(Slot slot)
-    {
-        inventory.remove(slot);
-    }
-
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
+    public void update(int mouseX, int mouseY)
+    {
+        super.update(mouseX, mouseY);
 
+        int height = 0;
+        for (int i = 0;i < elements.size();i++)
+        {
+            elements.get(i).setPosition(0,height);
+            height += elements.get(i).getHeight() + margin;
+        }
     }
 
-    public void setIsDark(boolean isDark)
+    public void setMargin(int margin)
     {
-        this.isDark = isDark;
+        this.margin = margin;
     }
 }

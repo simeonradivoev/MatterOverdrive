@@ -10,14 +10,17 @@ import net.minecraft.world.World;
 import scala.actors.threadpool.Arrays;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Simeon on 4/19/2015.
  */
 public abstract class MatterNetworkTask
 {
+    long id;
     String name;
     BlockPosition senderPos;
+    boolean isAlive;
 
     String unlocalizedName;
     byte state;
@@ -33,7 +36,7 @@ public abstract class MatterNetworkTask
     }
     protected void init()
     {
-
+        id = UUID.randomUUID().getMostSignificantBits();
     }
     public byte getState()
     {
@@ -42,13 +45,6 @@ public abstract class MatterNetworkTask
     public void setState(byte state)
     {
         this.state = state;
-    }
-    public void setStateWithNotify(World world,byte state)
-    {
-        IMatterNetworkDispatcher dispatcher = getSender(world);
-        if (dispatcher != null)
-            dispatcher.onTaskChange(this);
-        setState(state);
     }
     public boolean isValid(World world)
     {
@@ -60,6 +56,8 @@ public abstract class MatterNetworkTask
         if (compound != null) {
             this.senderPos = new BlockPosition(compound);
             this.state = compound.getByte("State");
+            this.isAlive = compound.getBoolean("isAlive");
+            this.id = compound.getLong("id");
         }
     }
     public void writeToNBT(NBTTagCompound compound)
@@ -68,6 +66,8 @@ public abstract class MatterNetworkTask
         {
             senderPos.writeToNBT(compound);
             compound.setInteger("State",state);
+            compound.setBoolean("isAlive",isAlive);
+            compound.setLong("id",id);
         }
     }
     public void addInfo(List<String> list)
@@ -120,7 +120,8 @@ public abstract class MatterNetworkTask
 
     public IMatterNetworkDispatcher getSender(World world)
     {
-        if (world != null) {
+        if (world != null && senderPos != null)
+        {
             TileEntity entity = senderPos.getTileEntity(world);
             if (entity instanceof IMatterNetworkConnectionProxy && ((IMatterNetworkConnectionProxy) entity).getMatterNetworkConnection() instanceof IMatterNetworkDispatcher) {
                 return (IMatterNetworkDispatcher) ((IMatterNetworkConnectionProxy) entity).getMatterNetworkConnection();
@@ -128,5 +129,13 @@ public abstract class MatterNetworkTask
         }
         return null;
     }
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean isAlive) {
+        this.isAlive = isAlive;
+    }
+    public long getId(){return id;}
     //endregion
 }

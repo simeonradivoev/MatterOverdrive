@@ -54,7 +54,6 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         sidePannel.setPosition(243, 33);
         closeButton.setPosition(237, 6);
         indicator.setPosition(6, 220);
-        slotsList.setIsDark(true);
         homePage.addElement(weaponPreview);
 
         for (int i = 0;i < module_slots.length;i++)
