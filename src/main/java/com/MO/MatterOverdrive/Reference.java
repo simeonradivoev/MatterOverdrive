@@ -71,11 +71,21 @@ public class Reference
 	//region Request Packet Type
     public static final int PACKET_REQUEST_CONNECTION = 0;
 	public static final int PACKET_REQUEST_PATTERN_SEARCH = 1;
+    public static final int PACKET_REQUEST_NEIGHBOR_CONNECTION = 2;
     //endregion
+
+	//region Broadcast Packet Type
+	public static final int PACKET_BROADCAST_CONNECTION = 0;
+	//endregion
 
     //region Packet Responce Type
     public static final int PACKET_RESPONCE_ERROR = -1;
     public static final int PACKET_RESPONCE_INVALID = 0;
     public static final int PACKET_RESPONCE_VALID = 1;
     //endregion
+
+	//region Config Options
+	public static final String CONFIG_WORLD_SPAWN_ORES = "spawn_ores";
+	public static final String CONFIG_WORLD_SPAWN = "spawn";
+	//endregion
 }

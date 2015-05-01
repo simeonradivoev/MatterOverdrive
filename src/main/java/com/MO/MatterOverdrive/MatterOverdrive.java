@@ -60,7 +60,7 @@ public class MatterOverdrive
 	{
 		packetPipeline = new PacketPipeline();
 		FMLCommonHandler.instance().bus().register(new TickHandler());
-		configHandler.init(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
+        configHandler = new MOConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
 		MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
         MatterOverdriveWorld.init();
@@ -75,6 +75,7 @@ public class MatterOverdrive
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+        configHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		MatterOverdriveItems.addToDungons();
 		proxy.registerProxies();

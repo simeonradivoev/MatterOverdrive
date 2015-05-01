@@ -1,10 +1,15 @@
 package com.MO.MatterOverdrive.world;
 
+import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 import java.util.Random;
 
@@ -45,27 +50,28 @@ public class MOWorldGen implements IWorldGenerator
 
     public void generateOverworld(World world,Random random,int chunkX, int chunkZ)
     {
-        for (int i = 0; i < DILITHIUM_VEINS_PER_CHUNK; i++)
-        {
-            int x = chunkX + random.nextInt(16);
-            int z = chunkZ + random.nextInt(16);
-            int y = random.nextInt(28) + 4;
+        if (shouldGenerate(MatterOverdriveBlocks.dilithiumOre.getUnlocalizedName())) {
+            for (int i = 0; i < DILITHIUM_VEINS_PER_CHUNK; i++) {
+                int x = chunkX + random.nextInt(16);
+                int z = chunkZ + random.nextInt(16);
+                int y = random.nextInt(28) + 4;
 
-            if(dilithiumGen.generate(world,random,x,y,z))
-            {
+                if (dilithiumGen.generate(world, random, x, y, z)) {
 
+                }
             }
         }
 
-        for (int i = 0; i < TRITANIUM_VEINS_PER_CHUNK; i++)
+        if (shouldGenerate(MatterOverdriveBlocks.tritaniumOre.getUnlocalizedName()))
         {
-            int x = chunkX + random.nextInt(16);
-            int z = chunkZ + random.nextInt(16);
-            int y = random.nextInt(60) + 4;
+            for (int i = 0; i < TRITANIUM_VEINS_PER_CHUNK; i++) {
+                int x = chunkX + random.nextInt(16);
+                int z = chunkZ + random.nextInt(16);
+                int y = random.nextInt(60) + 4;
 
-            if(tritaniumGen.generate(world,random,x,y,z))
-            {
+                if (tritaniumGen.generate(world, random, x, y, z)) {
 
+                }
             }
         }
     }
@@ -76,5 +82,15 @@ public class MOWorldGen implements IWorldGenerator
     public void generateEnd(World world,Random random,int chunkX, int chunkZ)
     {
 
+    }
+    private boolean shouldGenerate(String name)
+    {
+        Configuration configuration = MatterOverdrive.configHandler.config;
+        Property shouldGenerateOres = configuration.get(MOConfigurationHandler.WORLD_GEN_CATEGORY, Reference.CONFIG_WORLD_SPAWN_ORES,true);
+        if (shouldGenerateOres.getBoolean(true))
+        {
+            return configuration.get(MOConfigurationHandler.WORLD_GEN_CATEGORY,Reference.CONFIG_WORLD_SPAWN + "." + name,true).getBoolean(true);
+        }
+        return false;
     }
 }
