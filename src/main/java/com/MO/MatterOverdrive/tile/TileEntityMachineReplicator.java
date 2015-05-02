@@ -9,13 +9,14 @@ import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.network.*;
+import com.MO.MatterOverdrive.blocks.ReplicatorBlock;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
 import com.MO.MatterOverdrive.data.inventory.ShieldingSlot;
 import com.MO.MatterOverdrive.network.packet.client.PacketReplicationComplete;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
-import matter_network.MatterNetworkPacket;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkPacket;
 import com.MO.MatterOverdrive.fx.ReplicatorParticle;
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
@@ -29,10 +30,11 @@ import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matter_network.MatterNetworkTaskQueue;
-import matter_network.packets.MatterNetworkRequestPacket;
-import matter_network.packets.MatterNetworkTaskPacket;
-import matter_network.tasks.MatterNetworkTaskReplicatePattern;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkTaskQueue;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkRequestPacket;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkTaskPacket;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import com.MO.MatterOverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -145,11 +147,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     public float soundVolume() { return 1;}
 
-    @Override
-    public void onContainerOpen() {
-
-    }
-
     protected void manageReplicate() {
 
         if (this.isReplicating()) {
@@ -169,7 +166,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                         this.replicateTime = 0;
                         this.replicateItem(internalPatternStorage, newItem);
                         MatterOverdrive.packetPipeline.sendToAllAround(new PacketReplicationComplete(this), this, 64);
-                        SoundHandler.PlaySoundAt(worldObj, "replicate_success", this.xCoord, this.yCoord, this.zCoord, 0.25F, 1.0F, 0.2F, 0.8F);
+                        SoundHandler.PlaySoundAt(worldObj, "replicate_success", this.xCoord, this.yCoord, this.zCoord, 0.25F * getBlockType(ReplicatorBlock.class).replication_volume, 1.0F, 0.2F, 0.8F);
                     }
                     if (timeTracker.hasDelayPassed(worldObj, RADIATION_DAMAGE_DELAY)) {
                         manageRadiation();
@@ -180,8 +177,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             }
             else
             {
-                SpawnVentParticles(0.05f, ForgeDirection.getOrientation(BlockHelper.getLeftSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
-                SpawnVentParticles(0.05f, ForgeDirection.getOrientation(BlockHelper.getRightSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
+                if (getBlockType(ReplicatorBlock.class).hasVentParticles) {
+                    SpawnVentParticles(0.05f, ForgeDirection.getOrientation(BlockHelper.getLeftSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
+                    SpawnVentParticles(0.05f, ForgeDirection.getOrientation(BlockHelper.getRightSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
+                }
+
             }
         }
 
@@ -497,14 +497,17 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
     //region Matter Network functions
     @Override
-    public boolean canPreform(MatterNetworkPacket task)
+    public boolean canPreform(MatterNetworkPacket packet)
     {
-        if (task instanceof MatterNetworkTaskPacket)
+        if (packet instanceof MatterNetworkTaskPacket)
         {
-            if (((MatterNetworkTaskPacket) task).getTask(worldObj) instanceof MatterNetworkTaskReplicatePattern)
+            if (((MatterNetworkTaskPacket) packet).getTask(worldObj) instanceof MatterNetworkTaskReplicatePattern)
             {
                 return taskQueueProcessing.remaintingCapacity() > 0;
             }
+        }else if (packet instanceof MatterNetworkRequestPacket)
+        {
+            return ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_CONNECTION || ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
         }
         return false;
     }
@@ -525,6 +528,41 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                     ForceSync();
                 }
             }
+        }else if (packet instanceof MatterNetwrokResponcePacket)
+        {
+            manageResponces((MatterNetwrokResponcePacket)packet);
+        }
+        else if (packet instanceof MatterNetworkRequestPacket)
+        {
+            manageRequests((MatterNetworkRequestPacket)packet,from);
+        }
+    }
+
+    private void manageRequests(MatterNetworkRequestPacket packet,ForgeDirection direction)
+    {
+        MatterNetworkHelper.handleConnectionRequestPacket(worldObj, this, packet, direction);
+    }
+
+    private void manageResponces(MatterNetwrokResponcePacket packet)
+    {
+        if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH && packet.getResponceType() == Reference.PACKET_RESPONCE_VALID)
+        {
+            NBTTagCompound responceTag = packet.getResponce();
+            MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
+            if (responceTag != null && responceTag.getShort("id") == task.getItemID() && responceTag.getShort("Damage") == task.getItemMetadata())
+            {
+                if (internalPatternStorage != null)
+                {
+                    //if the previous tag is the same but has a higher progress, then continue
+                    if (internalPatternStorage.getShort("id") == responceTag.getShort("id") && internalPatternStorage.getShort("Damage") == responceTag.getShort("Damage") && MatterDatabaseHelper.GetProgressFromNBT(internalPatternStorage) > MatterDatabaseHelper.GetProgressFromNBT(responceTag))
+                    {
+                        return;
+                    }
+                }
+
+                internalPatternStorage = responceTag;
+                ForceSync();
+            }
         }
     }
 
@@ -536,7 +574,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     public boolean canConnectFromSide(ForgeDirection side)
     {
-        return true;
+        int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
+        return BlockHelper.getOppositeSide(meta) == side.ordinal();
     }
 
     @Override
@@ -563,8 +602,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
                 MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
             if (task != null) {
-                MatterNetworkRequestPacket requestPacket = new MatterNetworkRequestPacket(this, Reference.PACKET_REQUEST_PATTERN_SEARCH, new int[]{task.getItemID(), task.getItemMetadata()});
                 for (int i = 0; i < 6; i++) {
+                    MatterNetworkRequestPacket requestPacket = new MatterNetworkRequestPacket(this, Reference.PACKET_REQUEST_PATTERN_SEARCH,ForgeDirection.getOrientation(i), new int[]{task.getItemID(), task.getItemMetadata()});
                     if (MatterNetworkHelper.broadcastTaskInDirection(world, requestPacket, this, ForgeDirection.getOrientation(i))) {
                         broadcasts++;
                     }
@@ -575,37 +614,17 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
 
     @Override
-    public MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> getQueue(byte queueID)
+    protected void onAwake(Side side)
     {
-        return taskQueueProcessing;
+        if (side.isServer()) {
+            MatterNetworkHelper.broadcastConnection(worldObj, this);
+        }
     }
 
     @Override
-    public void onResponce(IMatterNetworkConnection from,int requestType, int responceType, Object responce)
+    public MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> getQueue(byte queueID)
     {
-        if (requestType == Reference.PACKET_REQUEST_PATTERN_SEARCH && responceType == Reference.PACKET_RESPONCE_VALID)
-        {
-            if (responce instanceof NBTTagCompound)
-            {
-                NBTTagCompound responceTag = (NBTTagCompound)responce;
-                MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
-                if (responceTag.getShort("id") == task.getItemID() && responceTag.getShort("Damage") == task.getItemMetadata())
-                {
-                    if (internalPatternStorage != null)
-                    {
-                        //if the previous tag is the same but has a higher progress, then continue
-                        if (internalPatternStorage.getShort("id") == responceTag.getShort("id") && internalPatternStorage.getShort("Damage") == responceTag.getShort("Damage") && MatterDatabaseHelper.GetProgressFromNBT(internalPatternStorage) > MatterDatabaseHelper.GetProgressFromNBT(responceTag))
-                        {
-                            return;
-                        }
-                    }
-
-                    internalPatternStorage = responceTag;
-                    ForceSync();
-                }
-            }
-
-        }
+        return taskQueueProcessing;
     }
     //endregion
 

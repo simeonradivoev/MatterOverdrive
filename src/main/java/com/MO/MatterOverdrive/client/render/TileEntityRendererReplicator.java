@@ -33,6 +33,7 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
     private ResourceLocation texture;
     private ResourceLocation ventTexture;
     private ResourceLocation baseTexture;
+    private ResourceLocation portTexture;
     EntityItem itemEntity;
 
     public TileEntityRendererReplicator()
@@ -40,6 +41,7 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
         texture = new ResourceLocation(Reference.PATH_BLOCKS + "replicator.png");
         ventTexture = new ResourceLocation(Reference.PATH_BLOCKS + "vent.png");
         baseTexture = new ResourceLocation(Reference.PATH_BLOCKS + "base.png");
+        portTexture = new ResourceLocation(Reference.PATH_BLOCKS + "network_port.png");
         model = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL_PATH));
     }
 
@@ -64,6 +66,8 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
             model.renderPart("Vents");
             bindTexture(baseTexture);
             model.renderPart("Shell");
+            bindTexture(portTexture);
+            model.renderPart("Back");
             GL11.glPopMatrix();
         }
     }

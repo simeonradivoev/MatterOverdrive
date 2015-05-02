@@ -10,9 +10,9 @@ public class TickHandler
 {
     private MatterNetworkTickHandler networkTick;
 
-    public TickHandler()
+    public TickHandler(MOConfigurationHandler configurationHandler)
     {
-        networkTick = new MatterNetworkTickHandler();
+        networkTick = new MatterNetworkTickHandler(configurationHandler);
     }
 
     //Called when a player ticks.

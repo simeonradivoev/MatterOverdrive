@@ -10,17 +10,13 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
 {
     private boolean needsUpdate = true;
     private int connections = 0;
-
-    public TileEntityPipe()
-    {
-
-    }
 
     @Override
     public void onAdded()

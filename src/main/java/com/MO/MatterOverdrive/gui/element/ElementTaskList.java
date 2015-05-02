@@ -1,17 +1,11 @@
 package com.MO.MatterOverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.network.MatterNetworkTask;
 import com.MO.MatterOverdrive.container.IButtonHandler;
 import com.MO.MatterOverdrive.gui.MOGuiBase;
-import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
-import com.MO.MatterOverdrive.util.MatterHelper;
-import matter_network.MatterNetworkTaskQueue;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkTaskQueue;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;

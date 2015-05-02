@@ -1,6 +1,6 @@
 package com.MO.MatterOverdrive.api.network;
 
-import matter_network.MatterNetworkPacket;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkPacket;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -9,5 +9,5 @@ import net.minecraftforge.common.util.ForgeDirection;
 public interface IMatterNetworkClient extends IMatterNetworkConnection
 {
     boolean canPreform(MatterNetworkPacket task);
-    void queuePacket(MatterNetworkPacket task,ForgeDirection from);
+    void queuePacket(MatterNetworkPacket packet,ForgeDirection from);
 }

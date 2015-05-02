@@ -19,6 +19,7 @@ public class ElementItemPattern extends ElementSlot
 {
     ScaleTexture texture;
     NBTTagCompound tagCompound;
+    ItemStack itemStack;
     int amount = 0;
 
     public ElementItemPattern(GuiBase gui,NBTTagCompound tagCompound,String bgType,int width,int height)
@@ -26,7 +27,11 @@ public class ElementItemPattern extends ElementSlot
         super(gui, 0, 0, width, height, bgType);
         this.texture = new ScaleTexture(getTexture(bgType),width,height).setOffsets(2,2,2,2);
         this.tagCompound = tagCompound;
-        this.name = MatterDatabaseHelper.GetItemStackFromNBT(tagCompound).getDisplayName();
+        itemStack = MatterDatabaseHelper.GetItemStackFromNBT(tagCompound);
+        if (tagCompound != null) {
+            if (itemStack != null)
+                this.name = itemStack.getDisplayName();
+        }
     }
 
     @Override
@@ -34,7 +39,6 @@ public class ElementItemPattern extends ElementSlot
     {
         if (tagCompound != null)
         {
-            ItemStack itemStack = ItemStack.loadItemStackFromNBT(tagCompound);
             RenderUtils.renderStack(posX + 3, posY + 3, itemStack);
 
             if (amount > 0) {
@@ -56,12 +60,15 @@ public class ElementItemPattern extends ElementSlot
     @Override
     public void addTooltip(List<String> list)
     {
-        if (tagCompound != null) {
-            list.addAll(ItemStack.loadItemStackFromNBT(tagCompound).getTooltip(Minecraft.getMinecraft().thePlayer, false));
-            String name = list.get(0);
-            int progress = MatterDatabaseHelper.GetProgressFromNBT(tagCompound);
-            name = MatterDatabaseHelper.getPatternInfoColor(progress) + name + " [" + progress + "%]";
-            list.set(0, name);
+        if (tagCompound != null)
+        {
+            if (itemStack != null) {
+                list.addAll(itemStack.getTooltip(Minecraft.getMinecraft().thePlayer, false));
+                String name = list.get(0);
+                int progress = MatterDatabaseHelper.GetProgressFromNBT(tagCompound);
+                name = MatterDatabaseHelper.getPatternInfoColor(progress) + name + " [" + progress + "%]";
+                list.set(0, name);
+            }
         }
     }
 
@@ -73,6 +80,7 @@ public class ElementItemPattern extends ElementSlot
     public void setTagCompound(NBTTagCompound tagCompound)
     {
         this.tagCompound = tagCompound;
+        itemStack = MatterDatabaseHelper.GetItemStackFromNBT(tagCompound);
     }
 
     public int getAmount() {

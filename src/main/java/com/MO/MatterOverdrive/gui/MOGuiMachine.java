@@ -5,6 +5,8 @@ import cofh.lib.gui.element.ElementBase;
 import cofh.lib.gui.element.ElementButtonManaged;
 import cofh.lib.util.helpers.StringHelper;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.container.ContainerMachine;
+import com.MO.MatterOverdrive.container.MOBaseContainer;
 import com.MO.MatterOverdrive.container.slot.MOSlot;
 import com.MO.MatterOverdrive.container.slot.SlotPatternStorage;
 import com.MO.MatterOverdrive.container.slot.SlotUpgrade;
@@ -24,6 +26,7 @@ import java.util.List;
  */
 public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 {
+    int currentPage;
     T machine;
     protected List<ElementBaseGroup> pages;
     protected List<MOElementButton> pageButtons;
@@ -38,12 +41,12 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     ElementIndicator indicator;
 
 
-    public MOGuiMachine(Container container,T machine)
+    public MOGuiMachine(ContainerMachine<T> container,T machine)
     {
         this(container,machine,225,186);
     }
 
-    public MOGuiMachine(Container container,T machine,int width,int height)
+    public MOGuiMachine(ContainerMachine<T> container,T machine,int width,int height)
     {
         super(container,width,height);
         this.machine = machine;
@@ -54,7 +57,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         homePage.setName("Home");
         configPage = new ElementBaseGroup(this,0,0,xSize,ySize);
         configPage.setName("Configurations");
-        upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container,machine.getInventory(),machine);
+        upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container,machine);
         indicator = new ElementIndicator(this,6,ySize - 18);
 
         pages.add(homePage);
@@ -78,6 +81,8 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 
         slotsList = new ElementSlotsList(this,5,52,80,200,machine.getInventory(),0,false);
         slotsList.setMargin(5);
+
+        setPage(currentPage);
     }
 
     @Override
@@ -85,8 +90,9 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     {
         super.initGui();
 
-        for (ElementBase page : pages)
+        for (ElementBaseGroup page : pages)
         {
+            page.init();
             this.addElement(page);
         }
 
@@ -98,7 +104,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
             sidePannel.addElement(button);
         }
 
-        setPage(0);
+        setPage(currentPage);
     }
 
     @Override
@@ -139,6 +145,8 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 
     public void setPage(int page)
     {
+        currentPage = page;
+
         for (int i = 0;i < pages.size();i++)
         {
             pages.get(i).setVisible(i == page);

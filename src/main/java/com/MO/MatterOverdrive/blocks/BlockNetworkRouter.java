@@ -2,7 +2,7 @@ package com.MO.MatterOverdrive.blocks;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
-import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
+import com.MO.MatterOverdrive.handler.GuiHandler;
 import com.MO.MatterOverdrive.tile.TileEntityMachineNetworkRouter;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -20,18 +20,22 @@ import net.minecraft.world.World;
  */
 public class BlockNetworkRouter extends MOBlockMachine
 {
+    IIcon activeIcon;
+
     public BlockNetworkRouter(Material material, String name)
     {
         super(material, name);
         setHardness(2.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
+        setHasGui(true);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister p_149651_1_)
     {
+        activeIcon = p_149651_1_.registerIcon(this.getTextureName() + "_active");
         this.blockIcon = p_149651_1_.registerIcon(this.getTextureName());
     }
 
@@ -44,21 +48,10 @@ public class BlockNetworkRouter extends MOBlockMachine
         {
             if (((TileEntityMachineNetworkRouter) entity).isActive())
             {
-                return blockIcon;
+                return activeIcon;
             }
         }
-        return MatterOverdriveIcons.Network_port_square;
-    }
-
-    @Override
-    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
-    {
-        if(!world.isRemote)
-        {
-            FMLNetworkHandler.openGui(player, MatterOverdrive.instance, MatterOverdrive.guiNetworkController, world, x, y, z);
-        }
-
-        return true;
+        return blockIcon;
     }
 
     @Override

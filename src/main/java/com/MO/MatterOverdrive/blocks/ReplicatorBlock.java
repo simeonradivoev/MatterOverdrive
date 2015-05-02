@@ -4,6 +4,8 @@ import java.util.Random;
 
 import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
+import com.MO.MatterOverdrive.handler.GuiHandler;
+import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.items.includes.MOEnergyMatterBlockItem;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -35,6 +37,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ReplicatorBlock extends MOMatterEnergyStorageBlock
 {
 	private static boolean keepInventory;
+	public float replication_volume;
+    public boolean hasVentParticles;
 	
 	public ReplicatorBlock(Material material,String name)
 	{
@@ -42,6 +46,7 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
 		setHardness(2.0F);
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);
+        setHasGui(true);
 	}
 
     @Override
@@ -49,29 +54,6 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
     {
         return MatterOverdriveIcons.Base;
-    }
-    
-    @Override
-    public void onBlockPlacedBy(World World, int x, int y, int z, EntityLivingBase player, ItemStack item)
-    {
-    	super.onBlockPlacedBy(World, x, y, z, player, item);
-    	TileEntityMachineReplicator rep = (TileEntityMachineReplicator)World.getTileEntity(x, y, z);
-    }
-    
-    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
-    {
-    	if(!world.isRemote)
-    	{
-    		FMLNetworkHandler.openGui(player, MatterOverdrive.instance, MatterOverdrive.guiIDReplicator, world, x, y, z);
-    	}
-    	
-    	return true;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(World world, int x, int y, int z, Random random) 
-    {
-    	
     }
 	 
 	 @Override
@@ -92,7 +74,7 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
 	 }
 	 
 	 @Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) 
+	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return new TileEntityMachineReplicator();
 	}
@@ -106,4 +88,12 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
     {
         return -1;
     }
+
+	@Override
+	public void loadConfigs(MOConfigurationHandler configurationHandler)
+	{
+		super.loadConfigs(configurationHandler);
+        replication_volume = configurationHandler.getMachineFloat(getUnlocalizedName() + ".volume.replicate",1f,0,2f,"The volume of the replication animation");
+        hasVentParticles = configurationHandler.getMachineBool(getUnlocalizedName() + ".particles", true, "Sould vent particles be displayed");
+	}
 }

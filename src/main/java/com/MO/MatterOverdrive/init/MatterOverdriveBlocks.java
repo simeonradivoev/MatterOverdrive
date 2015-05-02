@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.init;
 
+import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.*;
 import com.MO.MatterOverdrive.blocks.includes.MOBlock;
@@ -35,6 +36,7 @@ public class MatterOverdriveBlocks
     public static BlockWeaponStation weapon_station;
     public static BlockMicrowave microwave;
     public static BlockPatternMonitor pattern_monitor;
+    public static BlockNetworkSwitch network_switch;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -65,26 +67,37 @@ public class MatterOverdriveBlocks
         weapon_station = new BlockWeaponStation(Material.iron,"weapon_station");
         microwave = new BlockMicrowave(Material.iron,"microwave");
         pattern_monitor = new BlockPatternMonitor(Material.iron,"pattern_monitor");
+        network_switch = new BlockNetworkSwitch(Material.iron,"network_switch");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
 	{
+        MatterOverdrive.configHandler.load();
 		replicator.Register();
+        replicator.loadConfigs(MatterOverdrive.configHandler);
 		transporter.Register();
 		decomposer.Register();
+        decomposer.loadConfigs(MatterOverdrive.configHandler);
 		matter_pipe.Register();
         network_pipe.Register();
         network_router.Register();
         matter_analyzer.Register();
+        matter_analyzer.loadConfigs(MatterOverdrive.configHandler);
         dilithiumOre.Register();
         tritaniumOre.Register();
         tritanium_block.Register();
         machine_hull.Register();
         pattern_storage.Register();
+        pattern_storage.loadConfigs(MatterOverdrive.configHandler);
         solar_panel.Register();
+        solar_panel.loadConfigs(MatterOverdrive.configHandler);
         weapon_station.Register();
         microwave.Register();
         pattern_monitor.Register();
+        pattern_monitor.loadConfigs(MatterOverdrive.configHandler);
+        network_switch.Register();
+        network_switch.loadConfigs(MatterOverdrive.configHandler);
+        MatterOverdrive.configHandler.save();
 
         if (event.getSide() == Side.CLIENT)
         {
@@ -96,7 +109,8 @@ public class MatterOverdriveBlocks
 
         GameRegistry.addRecipe(new ItemStack(decomposer), new Object[]{"TCT", "I I", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'I', Items.iron_ingot, 'T', MatterOverdriveItems.tritanium_plate});
 		GameRegistry.addRecipe(new ItemStack(replicator), new Object[]{"TCT", "IHI", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'H', MatterOverdriveItems.h_compensator, 'I', Items.iron_ingot, 'N', MatterOverdriveItems.integration_matrix, 'T', MatterOverdriveItems.tritanium_plate});
-        GameRegistry.addRecipe(new ItemStack(network_router), new Object[]{"IGI", "CDC", "OMO", 'M', MatterOverdriveItems.machine_casing, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'D', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'I', Items.iron_ingot, 'G', Blocks.glass});
+        GameRegistry.addRecipe(new ItemStack(network_router), new Object[]{"IGI", "C C", "OMO", 'M', MatterOverdriveItems.machine_casing, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'I', Items.iron_ingot, 'G', Blocks.glass});
+        GameRegistry.addRecipe(new ItemStack(network_switch),new Object[]{" G ","CDC","OMO",'M',MatterOverdriveItems.machine_casing,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,0),'D',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'G',Blocks.glass});
         GameRegistry.addRecipe(new ItemStack(matter_pipe, 8), new Object[]{"IGI", "M M", "IGI", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'I', Items.iron_ingot});
         GameRegistry.addRecipe(new ItemStack(network_pipe, 4), new Object[]{"IGI", "BCB", "IGI", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'I', Items.iron_ingot, 'B', Items.gold_ingot, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0)});
         GameRegistry.addRecipe(new ItemStack(matter_analyzer), new Object[]{" C ", "IMI", "ONO", 'O', Blocks.iron_block, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'I', Items.iron_ingot});

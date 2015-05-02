@@ -14,10 +14,12 @@ import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
 import com.MO.MatterOverdrive.network.packet.client.PacketMatterUpdate;
 import com.MO.MatterOverdrive.util.MatterHelper;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
@@ -85,7 +87,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     public float soundVolume() { return 1;}
 
     @Override
-    public void onContainerOpen() {
+    public void onContainerOpen(Side side) {
 
     }
 

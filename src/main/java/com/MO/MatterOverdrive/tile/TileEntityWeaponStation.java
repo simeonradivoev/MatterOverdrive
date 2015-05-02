@@ -12,6 +12,7 @@ import com.MO.MatterOverdrive.util.MatterHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -70,11 +71,6 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
     @Override
     public float soundVolume() {
         return 0;
-    }
-
-    @Override
-    public void onContainerOpen() {
-
     }
 
     //region Inventory Functions

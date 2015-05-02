@@ -23,6 +23,11 @@ public abstract class MOElementBase extends ElementBase
 
     }
 
+    public void init()
+    {
+
+    }
+
     public GuiColor getColor() {
         return color;
     }
@@ -44,6 +49,28 @@ public abstract class MOElementBase extends ElementBase
 
     protected void ResetColor()
     {
-        GL11.glColor3f(1,1,1);
+        GL11.glColor3f(1, 1, 1);
+    }
+
+    protected int getGlobalX()
+    {
+        int x = posX;
+
+        if (parent != null)
+        {
+            x += parent.getGlobalX();
+        }
+        return x;
+    }
+
+    protected int getGlobalY()
+    {
+        int y = posY;
+
+        if (parent != null)
+        {
+            y += parent.getGlobalY();
+        }
+        return y;
     }
 }

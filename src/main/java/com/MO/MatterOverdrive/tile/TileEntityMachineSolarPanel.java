@@ -5,6 +5,7 @@ import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -160,10 +161,5 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     @Override
     public float soundVolume() {
         return 0;
-    }
-
-    @Override
-    public void onContainerOpen() {
-
     }
 }

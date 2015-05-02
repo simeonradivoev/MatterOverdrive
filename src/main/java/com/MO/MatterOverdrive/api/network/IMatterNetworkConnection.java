@@ -10,4 +10,5 @@ public interface IMatterNetworkConnection
 {
     BlockPosition getPosition();
     boolean canConnectFromSide(ForgeDirection side);
+
 }

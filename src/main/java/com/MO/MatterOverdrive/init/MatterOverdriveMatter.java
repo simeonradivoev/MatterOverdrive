@@ -12,13 +12,12 @@ import net.minecraftforge.common.config.Property;
 import com.MO.MatterOverdrive.handler.IMatterEntry;
 import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class MatterOverdriveMatter 
 {
 	public static void init(MOConfigurationHandler config)
 	{
-		Map<String,Property> map = config.config.getCategory(MOConfigurationHandler.MATTER_LIST_CATEGORY).getValues();
+		Map<String,Property> map = config.config.getCategory(MOConfigurationHandler.CATEGORY_MATTER_LIST).getValues();
 		
 		for (Property entry : map.values())
 		{
@@ -50,10 +49,10 @@ public class MatterOverdriveMatter
 	
 	public static void registerBasic(MOConfigurationHandler c)
 	{
-        MOConfigurationHandler.load();
+        MatterOverdrive.configHandler.load();
         registerBasicItems(c);
         registerBasicBlocks(c);
-        MOConfigurationHandler.save();
+        MatterOverdrive.configHandler.save();
 	}
 
     public static void registerComplex(MOConfigurationHandler c)
@@ -280,16 +279,16 @@ public class MatterOverdriveMatter
 
 	private static void reg(MOConfigurationHandler c,String name,int matter)
 	{
-		c.config.get(MOConfigurationHandler.MATTER_LIST_CATEGORY, name, matter);
+		c.config.get(MOConfigurationHandler.CATEGORY_MATTER_LIST, name, matter);
 	}
 
     private static void reg(MOConfigurationHandler c,Block block,int matter)
     {
-        c.config.get(MOConfigurationHandler.MATTER_LIST_CATEGORY, Block.blockRegistry.getNameForObject(block), matter);
+        c.config.get(MOConfigurationHandler.CATEGORY_MATTER_LIST, Block.blockRegistry.getNameForObject(block), matter);
     }
 
     private static void reg(MOConfigurationHandler c,Item item,int matter)
     {
-        c.config.get(MOConfigurationHandler.MATTER_LIST_CATEGORY, Item.itemRegistry.getNameForObject(item), matter);
+        c.config.get(MOConfigurationHandler.CATEGORY_MATTER_LIST, Item.itemRegistry.getNameForObject(item), matter);
     }
 }

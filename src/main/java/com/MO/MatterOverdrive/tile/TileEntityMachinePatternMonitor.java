@@ -6,16 +6,15 @@ import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
-import com.MO.MatterOverdrive.api.network.IMatterNetworkConnection;
-import com.MO.MatterOverdrive.api.network.IMatterNetworkConnectionProxy;
-import com.MO.MatterOverdrive.api.network.IMatterNetworkDispatcher;
-import com.MO.MatterOverdrive.api.network.MatterNetworkTask;
+import com.MO.MatterOverdrive.api.network.*;
 import com.MO.MatterOverdrive.network.packet.client.PacketPatternMonitorSync;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
-import matter_network.MatterNetworkTaskQueue;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkPacket;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkTaskQueue;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import matter_network.packets.MatterNetworkRequestPacket;
-import matter_network.tasks.MatterNetworkTaskReplicatePattern;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkRequestPacket;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import com.MO.MatterOverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -25,7 +24,7 @@ import java.util.HashSet;
 /**
  * Created by Simeon on 4/26/2015.
  */
-public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy implements IMatterNetworkConnectionProxy, IMatterNetworkDispatcher
+public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy implements IMatterNetworkConnectionProxy, IMatterNetworkDispatcher, IMatterNetworkClient
 {
     public static final int BROADCAST_WEATING_DELAY = 80;
     public static final int SEARCH_DELAY = 120;
@@ -38,7 +37,7 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
     TimeTracker broadcastTracker;
     TimeTracker validateTracker;
 
-    public TileEntitiyMachinePatternMonitor()
+    public TileEntityMachinePatternMonitor()
     {
         super(4);
         taskQueue = new MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern>(this,TASK_QUEUE_SIZE,MatterNetworkTaskReplicatePattern.class);
@@ -69,12 +68,6 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
         return 0;
     }
 
-    @Override
-    public void onContainerOpen()
-    {
-        //queueSearch();
-    }
-
     //region Matter Network Functions
     @Override
     public IMatterNetworkConnection getMatterNetworkConnection()
@@ -98,7 +91,7 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
                 MatterOverdrive.packetPipeline.sendToAllAround(new PacketPatternMonitorSync(this), this, 64);
 
                 for (int i = 0; i < 6; i++) {
-                    MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(this, Reference.PACKET_REQUEST_CONNECTION, IMatterDatabase.class);
+                    MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(this, Reference.PACKET_REQUEST_CONNECTION,ForgeDirection.getOrientation(i), IMatterDatabase.class);
                     MatterNetworkHelper.broadcastTaskInDirection(world, packet, this, ForgeDirection.getOrientation(i));
                 }
                 needsSearchRefresh = false;
@@ -158,22 +151,9 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
         return taskQueue;
     }
 
-    @Override
-    public void onResponce(IMatterNetworkConnection from,int requestType,int responceType, Object responce)
-    {
-        if (from instanceof IMatterDatabase && responceType == Reference.PACKET_RESPONCE_VALID && requestType == Reference.PACKET_REQUEST_CONNECTION)
-        {
-            if(!databases.contains(from.getPosition()))
-            {
-                databases.add(from.getPosition());
-                SyncDatabasesWithClient();
-            }
-        }
-    }
-
     public void SyncDatabasesWithClient()
     {
-        MatterOverdrive.packetPipeline.sendToAllAround(new PacketPatternMonitorSync(this),this,64);
+        MatterOverdrive.packetPipeline.sendToAllAround(new PacketPatternMonitorSync(this), this, 64);
     }
 
     @Override
@@ -200,18 +180,6 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
     {
         int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
         return BlockHelper.getOppositeSide(meta) == side.ordinal();
-    }
-
-    public void queueRequest(int[] request)
-    {
-        for (int i = 0;i < request.length;i+=3)
-        {
-            MatterNetworkTaskReplicatePattern task = new MatterNetworkTaskReplicatePattern(this, request[i], request[i + 1], request[i + 2]);
-            task.setState(Reference.TASK_STATE_WAITING);
-            if (taskQueue.queueTask(task));
-        }
-
-        ForceSync();
     }
 
     //endregion
@@ -242,5 +210,57 @@ public class TileEntitiyMachinePatternMonitor extends MOTileEntityMachineEnergy 
     public boolean needsRefresh()
     {
         return needsSearchRefresh;
+    }
+
+    @Override
+    public boolean canPreform(MatterNetworkPacket task)
+    {
+        if (task instanceof MatterNetwrokResponcePacket)
+        {
+            return true;
+        }
+        else if (task instanceof MatterNetworkRequestPacket)
+        {
+            return ((MatterNetworkRequestPacket) task).getRequestType() == Reference.PACKET_REQUEST_CONNECTION
+                    || ((MatterNetworkRequestPacket) task).getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
+        }
+        return false;
+    }
+
+    @Override
+    public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
+    {
+        if (packet instanceof MatterNetwrokResponcePacket)
+        {
+            MatterNetwrokResponcePacket responcePacket = (MatterNetwrokResponcePacket)packet;
+            if (responcePacket.getResponceType() == Reference.PACKET_RESPONCE_VALID && responcePacket.getRequestType() == Reference.PACKET_REQUEST_CONNECTION)
+            {
+                if(!databases.contains(responcePacket.getSender(worldObj).getPosition()))
+                {
+                    databases.add(responcePacket.getSender(worldObj).getPosition());
+                    SyncDatabasesWithClient();
+                }
+            }
+        }else if (packet instanceof MatterNetworkRequestPacket)
+        {
+            manageRequestPackets((MatterNetworkRequestPacket)packet,from);
+        }
+    }
+
+    public void manageRequestPackets(MatterNetworkRequestPacket packet,ForgeDirection direction)
+    {
+        MatterNetworkHelper.handleConnectionRequestPacket(worldObj,this,packet,direction);
+    }
+
+    public void queueRequest(int[] request)
+    {
+        for (int i = 0;i < request.length;i+=3)
+        {
+            MatterNetworkTaskReplicatePattern task = new MatterNetworkTaskReplicatePattern(this, request[i], request[i + 1], request[i + 2]);
+            task.setState(Reference.TASK_STATE_WAITING);
+            if (taskQueue.queueTask(task));
+        }
+
+        ForceSync();
     }
 }

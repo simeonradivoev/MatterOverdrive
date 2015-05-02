@@ -1,9 +1,8 @@
-package matter_network;
+package com.MO.MatterOverdrive.matter_network;
 
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.api.network.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.api.network.IMatterNetworkConnectionProxy;
-import com.MO.MatterOverdrive.api.network.IMatterNetworkDispatcher;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -17,13 +16,23 @@ import java.util.HashSet;
 public abstract class MatterNetworkPacket
 {
     protected BlockPosition senderPos;
+    protected BlockPosition receiverPos;
     protected HashSet<MatterNetworkPathNode> path;
 
+
     public MatterNetworkPacket(){path = new HashSet<MatterNetworkPathNode>();}
-    public MatterNetworkPacket(BlockPosition senderPos)
+    public MatterNetworkPacket(BlockPosition senderPos,ForgeDirection port)
     {
         this();
         this.senderPos = senderPos;
+        this.senderPos.setOrientation(port);
+    }
+    public MatterNetworkPacket(BlockPosition senderPos,ForgeDirection port,BlockPosition receiverPos)
+    {
+        this();
+        this.senderPos = senderPos;
+        this.senderPos.setOrientation(port);
+        this.receiverPos = receiverPos;
     }
 
     public MatterNetworkPacket addToPath(IMatterNetworkConnection connection,ForgeDirection recivedFrom)
@@ -41,13 +50,13 @@ public abstract class MatterNetworkPacket
         return path.contains(new MatterNetworkPathNode(connection.getPosition()));
     }
 
-    public IMatterNetworkDispatcher getSender(World world)
+    public IMatterNetworkConnection getSender(World world)
     {
         if (world != null)
         {
             TileEntity tileEntity = senderPos.getTileEntity(world);
-            if (tileEntity != null && tileEntity instanceof IMatterNetworkConnectionProxy && ((IMatterNetworkConnectionProxy) tileEntity).getMatterNetworkConnection() instanceof IMatterNetworkDispatcher)
-                return (IMatterNetworkDispatcher)((IMatterNetworkConnectionProxy) tileEntity).getMatterNetworkConnection();
+            if (tileEntity != null && tileEntity instanceof IMatterNetworkConnectionProxy)
+                return ((IMatterNetworkConnectionProxy) tileEntity).getMatterNetworkConnection();
         }
         return null;
     }
@@ -70,5 +79,14 @@ public abstract class MatterNetworkPacket
 
     public abstract boolean isValid(World world);
 
+    public boolean isGuided(){return receiverPos != null;}
+
+    public BlockPosition getReceiverPos(){return receiverPos;}
+
     public abstract String getName();
+
+    public ForgeDirection getSenderPort()
+    {
+        return senderPos.orientation;
+    }
 }

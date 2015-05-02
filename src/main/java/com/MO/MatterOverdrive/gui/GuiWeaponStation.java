@@ -46,14 +46,16 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
             module_slots[i].setColor(Reference.COLOR_MATTER.getIntR(),Reference.COLOR_MATTER.getIntG(),Reference.COLOR_MATTER.getIntB(),78);
             module_slots[i].setInfo("module." + module_slots_info[i] + ".name");
         }
+
+        sidePannel.setPosition(243, 33);
+        closeButton.setPosition(237, 6);
+        indicator.setPosition(6, 220);
     }
 
     @Override
     public void initGui()
     {
-        sidePannel.setPosition(243, 33);
-        closeButton.setPosition(237, 6);
-        indicator.setPosition(6, 220);
+        super.initGui();
         homePage.addElement(weaponPreview);
 
         for (int i = 0;i < module_slots.length;i++)
@@ -61,7 +63,6 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
             homePage.addElement(module_slots[i]);
         }
 
-        super.initGui();
         AddMainPlayerSlots(inventorySlots, this);
         AddHotbarPlayerSlots(inventorySlots, this);
     }

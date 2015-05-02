@@ -7,7 +7,7 @@ import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.pages.PageTasks;
 import com.MO.MatterOverdrive.network.packet.server.PacketPatternMonitorCommands;
 import com.MO.MatterOverdrive.network.packet.server.PacketRemoveTask;
-import com.MO.MatterOverdrive.tile.TileEntitiyMachinePatternMonitor;
+import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by Simeon on 4/26/2015.
  */
-public class GuiPatternMonitor extends MOGuiMachine<TileEntitiyMachinePatternMonitor>
+public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMonitor>
 {
     MOElementButton refreshButton;
     MOElementButton requestButton;
@@ -27,7 +27,7 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntitiyMachinePatternMon
     MOElementButton tasksButton;
     MOElementTextField searchField;
 
-    public GuiPatternMonitor(InventoryPlayer inventoryPlayer, TileEntitiyMachinePatternMonitor machine)
+    public GuiPatternMonitor(InventoryPlayer inventoryPlayer, TileEntityMachinePatternMonitor machine)
     {
         super(new ContainerPatternMonitor(inventoryPlayer, machine), machine);
         name = "pattern_monitor";

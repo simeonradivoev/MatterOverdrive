@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.blocks;
 
 import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
+import com.MO.MatterOverdrive.handler.GuiHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import net.minecraft.block.material.Material;
@@ -24,7 +25,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class DecomposerBlock extends MOMatterEnergyStorageBlock
 {
 	private IIcon iconTop;
-	private static boolean keepInventory;
 	
 	public DecomposerBlock(Material material, String name) 
 	{
@@ -32,6 +32,7 @@ public class DecomposerBlock extends MOMatterEnergyStorageBlock
         setHardness(2.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe",2);
+        setHasGui(true);
 	}
 
 	
@@ -71,27 +72,6 @@ public class DecomposerBlock extends MOMatterEnergyStorageBlock
 
         return this.blockIcon;
     }
-
-    @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
-    {
-        this.dropsItself = !keepInventory;
-        if(!keepInventory)
-        {
-            MatterHelper.DropInventory(world,(IInventory)world.getTileEntity(x, y, z),x,y,z);
-        }
-        return super.removedByPlayer(world,player,x,y,z);
-    }
-    
-    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
-    {
-    	if(!world.isRemote)
-    	{
-    		FMLNetworkHandler.openGui(player, MatterOverdrive.instance, MatterOverdrive.guiIDDecomposer, world, x, y, z);
-    	}
-    	
-    	return true;
-    }
     
     @Override
 	 public boolean canPlaceTorchOnTop(World world, int x, int y, int z)
@@ -105,7 +85,7 @@ public class DecomposerBlock extends MOMatterEnergyStorageBlock
 	 }
 	 
 	 @Override
-		public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) 
+		public TileEntity createNewTileEntity(World world, int meta)
 		{
 			return new TileEntityMachineDecomposer();
 		}

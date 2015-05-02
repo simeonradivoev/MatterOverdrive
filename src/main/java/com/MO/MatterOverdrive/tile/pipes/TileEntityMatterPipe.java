@@ -13,6 +13,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
 
     public TileEntityMatterPipe()
     {
-        super();
         t = new TimeTracker();
         storage = new MatterStorage(1,MATTER_EXTRACT,MATTER_INPUT);
     }

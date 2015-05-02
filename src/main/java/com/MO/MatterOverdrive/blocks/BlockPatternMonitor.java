@@ -5,8 +5,9 @@ import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
+import com.MO.MatterOverdrive.handler.GuiHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
-import com.MO.MatterOverdrive.tile.TileEntitiyMachinePatternMonitor;
+import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -34,6 +35,7 @@ public class BlockPatternMonitor extends MOBlockMachine
         this.setHarvestLevel("pickaxe", 2);
         setBlockBounds(0,0,0,1,1,5f * (1f/16f));
         lightValue = 10;
+        setHasGui(true);
     }
 
     @Override
@@ -85,18 +87,6 @@ public class BlockPatternMonitor extends MOBlockMachine
     }
 
     @Override
-    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
-    {
-        super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
-        if(!world.isRemote)
-        {
-            FMLNetworkHandler.openGui(player, MatterOverdrive.instance, MatterOverdrive.guiPatternMonitor, world, x, y, z);
-        }
-
-        return true;
-    }
-
-    @Override
     public boolean renderAsNormalBlock()
     {
         return false;
@@ -109,9 +99,9 @@ public class BlockPatternMonitor extends MOBlockMachine
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int p_149915_2_)
+    public TileEntity createNewTileEntity(World world, int meta)
     {
-        return new TileEntitiyMachinePatternMonitor();
+        return new TileEntityMachinePatternMonitor();
     }
 
     @Override

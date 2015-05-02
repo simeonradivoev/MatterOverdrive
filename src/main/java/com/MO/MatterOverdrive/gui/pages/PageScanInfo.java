@@ -65,6 +65,12 @@ public class PageScanInfo extends ElementBaseGroup
         scan_progress.SetTextPostition(18, 5);
         scan_progress.setTextColor(new GuiColor(255, 255, 255).getColor());
         scan_info_graph.setProgress(1);
+    }
+
+    @Override
+    public void init()
+    {
+        super.init();
 
         elements.add(scan_info_graph);
         elements.add(itemPreview);

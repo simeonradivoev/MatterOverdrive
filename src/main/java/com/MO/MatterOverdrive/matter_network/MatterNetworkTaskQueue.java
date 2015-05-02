@@ -1,4 +1,4 @@
-package matter_network;
+package com.MO.MatterOverdrive.matter_network;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.network.IMatterNetworkConnectionProxy;

@@ -1,19 +1,40 @@
 package com.MO.MatterOverdrive.tile;
 
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 3/21/2015.
  */
 public class MOTileEntity extends TileEntity implements IMOTileEntity
 {
+    private boolean isAwake = false;
+
+    public MOTileEntity(){super();}
+
+    public MOTileEntity(World world,int meta)
+    {
+        super();
+    }
+
     protected void updateBlock()
     {
         if(worldObj != null)
         {
             worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+        }
+    }
+
+    @Override
+    public void updateEntity()
+    {
+        if (!isAwake)
+        {
+            onAwake(worldObj.isRemote ? Side.CLIENT : Side.SERVER);
+            isAwake = true;
         }
     }
 
@@ -36,6 +57,10 @@ public class MOTileEntity extends TileEntity implements IMOTileEntity
 
     public void readCustomNBT(NBTTagCompound nbt)
     {
+
+    }
+
+    protected void onAwake(Side side) {
 
     }
 

@@ -13,6 +13,7 @@ import com.MO.MatterOverdrive.network.packet.client.PacketPowerUpdate;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**

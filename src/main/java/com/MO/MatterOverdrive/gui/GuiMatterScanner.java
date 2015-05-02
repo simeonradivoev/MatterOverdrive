@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.gui;
 import cofh.lib.util.TimeTracker;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
+import com.MO.MatterOverdrive.container.ContainerMatterScanner;
 import com.MO.MatterOverdrive.gui.element.MOElementButton;
 import com.MO.MatterOverdrive.gui.pages.PageInfo;
 import com.MO.MatterOverdrive.gui.pages.PageScanInfo;
@@ -40,7 +41,7 @@ public class GuiMatterScanner extends MOGuiBase
 
 	public GuiMatterScanner(ItemStack scanner,int slot)
 	{
-		super(new ContainerFalse(),300,230);
+		super(new ContainerMatterScanner(),300,230);
 		this.scanner = scanner;
 		refreshTimeTracker = new TimeTracker();
 		this.databaseSlot = slot;

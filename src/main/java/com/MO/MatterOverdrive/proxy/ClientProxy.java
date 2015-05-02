@@ -7,7 +7,7 @@ import com.MO.MatterOverdrive.handler.TooltipHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
-import com.MO.MatterOverdrive.tile.TileEntitiyMachinePatternMonitor;
+import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternStorage;
 import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 import com.MO.MatterOverdrive.tile.TileEntityWeaponStation;
@@ -60,7 +60,7 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineReplicator.class,replicator_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternStorage.class,pattern_storage_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeaponStation.class,renderer_weapon_station);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitiyMachinePatternMonitor.class,pattern_monitor_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternMonitor.class,pattern_monitor_renderer);
 
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.matter_pipe), new ItemRendererPipe(matter_pipeRenderer, new TileEntityMatterPipe(), 2));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.network_pipe),new ItemRendererPipe(network_pipeRenderer,new TileEntityNetworkPipe(),2));

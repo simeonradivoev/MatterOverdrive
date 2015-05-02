@@ -1,12 +1,11 @@
 package com.MO.MatterOverdrive.network.packet.server;
 
 import com.MO.MatterOverdrive.network.packet.TileEntityUpdatePacket;
-import com.MO.MatterOverdrive.tile.TileEntitiyMachinePatternMonitor;
+import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -22,7 +21,7 @@ public class PacketPatternMonitorCommands extends TileEntityUpdatePacket
     NBTTagCompound data;
 
     public PacketPatternMonitorCommands(){super();}
-    public PacketPatternMonitorCommands(TileEntitiyMachinePatternMonitor monitor,int command,NBTTagCompound data)
+    public PacketPatternMonitorCommands(TileEntityMachinePatternMonitor monitor,int command,NBTTagCompound data)
     {
         super(monitor);
         this.command = command;
@@ -52,9 +51,9 @@ public class PacketPatternMonitorCommands extends TileEntityUpdatePacket
         public IMessage handleServerMessage(EntityPlayer player, PacketPatternMonitorCommands message, MessageContext ctx)
         {
             TileEntity entity = message.getTileEntity(player.worldObj);
-            if (entity != null && entity instanceof TileEntitiyMachinePatternMonitor)
+            if (entity != null && entity instanceof TileEntityMachinePatternMonitor)
             {
-                TileEntitiyMachinePatternMonitor monitor = (TileEntitiyMachinePatternMonitor)entity;
+                TileEntityMachinePatternMonitor monitor = (TileEntityMachinePatternMonitor)entity;
 
                 if (message.command == COMMAND_SEARCH)
                 {

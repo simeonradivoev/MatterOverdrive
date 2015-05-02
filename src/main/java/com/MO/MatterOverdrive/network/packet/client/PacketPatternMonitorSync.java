@@ -2,16 +2,14 @@ package com.MO.MatterOverdrive.network.packet.client;
 
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.network.packet.TileEntityUpdatePacket;
-import com.MO.MatterOverdrive.tile.TileEntitiyMachinePatternMonitor;
+import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * Created by Simeon on 4/26/2015.
@@ -21,7 +19,7 @@ public class PacketPatternMonitorSync extends TileEntityUpdatePacket
     HashSet<BlockPosition> positions;
 
     public PacketPatternMonitorSync(){super();}
-    public PacketPatternMonitorSync(TileEntitiyMachinePatternMonitor monitor)
+    public PacketPatternMonitorSync(TileEntityMachinePatternMonitor monitor)
     {
         super(monitor);
         positions = monitor.getDatabases();
@@ -59,9 +57,9 @@ public class PacketPatternMonitorSync extends TileEntityUpdatePacket
         {
             TileEntity entity = message.getTileEntity(player.worldObj);
 
-            if (entity != null && entity instanceof TileEntitiyMachinePatternMonitor) {
+            if (entity != null && entity instanceof TileEntityMachinePatternMonitor) {
 
-                TileEntitiyMachinePatternMonitor monitor = (TileEntitiyMachinePatternMonitor)entity;
+                TileEntityMachinePatternMonitor monitor = (TileEntityMachinePatternMonitor)entity;
                 monitor.setDatabases(message.positions);
                 monitor.forceSearch(true);
             }

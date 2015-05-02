@@ -3,7 +3,9 @@ package com.MO.MatterOverdrive.blocks;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
+import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
+import com.MO.MatterOverdrive.handler.GuiHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.TileEntityWeaponStation;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
@@ -20,7 +22,7 @@ import net.minecraft.world.World;
 /**
  * Created by Simeon on 4/13/2015.
  */
-public class BlockWeaponStation extends MOBlockContainer
+public class BlockWeaponStation extends MOBlockMachine
 {
     private IIcon topIcon;
     private IIcon bottomIcon;
@@ -28,10 +30,11 @@ public class BlockWeaponStation extends MOBlockContainer
     public BlockWeaponStation(Material material, String name)
     {
         super(material, name);
-        setBlockBounds(0,0,0,1,9 * (1/16f),1);
+        setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
         setHardness(2.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
+        setHasGui(true);
     }
 
     @SideOnly(Side.CLIENT)
@@ -62,21 +65,9 @@ public class BlockWeaponStation extends MOBlockContainer
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+    public TileEntity createNewTileEntity(World world, int meta)
     {
         return new TileEntityWeaponStation();
-    }
-
-    @Override
-    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
-    {
-        super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
-        if(!world.isRemote)
-        {
-            FMLNetworkHandler.openGui(player, MatterOverdrive.instance, MatterOverdrive.guiWeaponStation, world, x, y, z);
-        }
-
-        return true;
     }
 
     @Override

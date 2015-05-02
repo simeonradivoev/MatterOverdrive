@@ -19,11 +19,12 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 
     public ContainerMachine()
     {
-
+        super();
     }
 
     public ContainerMachine(InventoryPlayer inventory,T machine)
     {
+        super(inventory);
         this.machine = machine;
         init(inventory);
     }

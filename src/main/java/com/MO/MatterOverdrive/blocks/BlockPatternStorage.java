@@ -5,6 +5,8 @@ import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
+import com.MO.MatterOverdrive.handler.GuiHandler;
+import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternStorage;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
@@ -22,6 +24,7 @@ import net.minecraft.world.World;
  */
 public class BlockPatternStorage extends MOBlockMachine
 {
+    public boolean hasVentParticles;
 
     public BlockPatternStorage(Material material, String name)
     {
@@ -29,18 +32,7 @@ public class BlockPatternStorage extends MOBlockMachine
         setHardness(2.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
-    }
-
-    @Override
-    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
-    {
-        super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
-        if(!world.isRemote)
-        {
-            FMLNetworkHandler.openGui(player, MatterOverdrive.instance, MatterOverdrive.guiPatternStorage, world, x, y, z);
-        }
-
-        return true;
+        setHasGui(true);
     }
 
     @Override
@@ -56,7 +48,7 @@ public class BlockPatternStorage extends MOBlockMachine
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
+    public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityMachinePatternStorage();
     }
 
@@ -70,5 +62,11 @@ public class BlockPatternStorage extends MOBlockMachine
     public boolean isOpaqueCube()
     {
         return false;
+    }
+
+    public void loadConfigs(MOConfigurationHandler configurationHandler)
+    {
+        super.loadConfigs(configurationHandler);
+        hasVentParticles = configurationHandler.getMachineBool(getUnlocalizedName() + ".particles", true, "Sould vent particles be displayed");
     }
 }

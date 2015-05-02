@@ -3,6 +3,8 @@ package com.MO.MatterOverdrive.tile;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.IUpgrade;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
+import com.MO.MatterOverdrive.blocks.includes.MOBlock;
+import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.fx.VentParticle;
@@ -12,6 +14,7 @@ import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -21,6 +24,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -64,6 +68,8 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public void updateEntity()
     {
+        super.updateEntity();
+
         if(worldObj.isRemote)
         {
             manageSound();
@@ -103,7 +109,10 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     public abstract boolean hasSound();
     public abstract boolean isActive();
     public abstract float soundVolume();
-    public abstract void onContainerOpen();
+    public void onContainerOpen(Side side)
+    {
+
+    }
 
     @SideOnly(Side.CLIENT)
     protected void manageSound()
@@ -112,7 +121,12 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         {
             if (isActive() && !isInvalid()) {
                 if (sound == null) {
-                    sound = new MachineSound(soundRes, xCoord, yCoord, zCoord, soundVolume(), 1);
+                    float soundMultiply = 1;
+                    if (getBlockType() instanceof MOBlockMachine)
+                    {
+                        soundMultiply = ((MOBlockMachine) getBlockType()).volume;
+                    }
+                    sound = new MachineSound(soundRes, xCoord, yCoord, zCoord, soundVolume() * soundMultiply, 1);
                     FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
 
                 }
@@ -383,4 +397,19 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             Minecraft.getMinecraft().effectRenderer.addEffect(ventParticle);
         }
     }
+
+    //region Getters and settrs
+    public <T extends MOBlock> T getBlockType(Class<T> type)
+    {
+        if (this.blockType == null)
+        {
+            this.blockType = this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord);
+        }
+        if (type.isInstance(this.blockType))
+        {
+            return type.cast(this.blockType);
+        }
+        return null;
+    }
+    //endregion
 }

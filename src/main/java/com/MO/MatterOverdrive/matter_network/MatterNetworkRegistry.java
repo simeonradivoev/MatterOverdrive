@@ -1,7 +1,9 @@
-package matter_network;
+package com.MO.MatterOverdrive.matter_network;
 
-import matter_network.packets.MatterNetworkRequestPacket;
-import matter_network.packets.MatterNetworkTaskPacket;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkRequestPacket;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkTaskPacket;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetwrokResponcePacket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ public class MatterNetworkRegistry
     {
         registerPacket(MatterNetworkTaskPacket.class);
         registerPacket(MatterNetworkRequestPacket.class);
+        registerPacket(MatterNetworkBroadcastPacket.class);
+        registerPacket(MatterNetwrokResponcePacket.class);
     }
 
     public static int getPacketID(Class<? extends MatterNetworkPacket> type)

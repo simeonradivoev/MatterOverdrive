@@ -8,14 +8,18 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterPatternStorage;
 import com.MO.MatterOverdrive.api.network.*;
+import com.MO.MatterOverdrive.blocks.BlockPatternStorage;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.PatternStorageSlot;
-import matter_network.MatterNetworkPacket;
-import matter_network.packets.MatterNetworkRequestPacket;
-import matter_network.packets.MatterNetworkTaskPacket;
-import matter_network.MatterNetworkPacketQueue;
-import matter_network.tasks.MatterNetworkTaskStorePattern;
+import com.MO.MatterOverdrive.util.MatterNetworkHelper;
+import cpw.mods.fml.relauncher.Side;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkPacket;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkRequestPacket;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkTaskPacket;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkPacketQueue;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import com.MO.MatterOverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
@@ -63,7 +67,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         }
         else
         {
-            if (isActive() && random.nextFloat() < 0.2f)
+            if (isActive() && random.nextFloat() < 0.2f && getBlockType(BlockPatternStorage.class).hasVentParticles)
             {
                 SpawnVentParticles(0.03f, ForgeDirection.getOrientation(BlockHelper.getOppositeSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
             }
@@ -96,14 +100,14 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public void writeCustomNBT(NBTTagCompound nbt)
     {
         super.writeCustomNBT(nbt);
-        taskQueueProcessing.writeToNBT(worldObj,nbt);
+        taskQueueProcessing.writeToNBT(worldObj, nbt);
     }
 
     @Override
     public void readCustomNBT(NBTTagCompound nbt)
     {
         super.readCustomNBT(nbt);
-        taskQueueProcessing.readFromNBT(worldObj,nbt);
+        taskQueueProcessing.readFromNBT(worldObj, nbt);
     }
 
     @Override
@@ -128,8 +132,11 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public void onContainerOpen() {
-
+    protected void onAwake(Side side)
+    {
+        if (side.isServer()) {
+            MatterNetworkHelper.broadcastConnection(worldObj, this);
+        }
     }
 
     //region Database functions
@@ -305,9 +312,12 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
                 return addItem(task.getItemStack(), task.getProgress(), true, null);
             }
         }
-        else if (packet instanceof MatterNetworkRequestPacket && ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_CONNECTION || ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH)
+        else if (packet instanceof MatterNetworkRequestPacket)
         {
-            return true;
+            MatterNetworkRequestPacket requestPacket = (MatterNetworkRequestPacket)packet;
+            return requestPacket.getRequestType() == Reference.PACKET_REQUEST_CONNECTION
+                    || requestPacket.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH
+                    || requestPacket.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
         }
         return false;
     }
@@ -334,32 +344,25 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
             }
             else if (packet instanceof MatterNetworkRequestPacket)
             {
-                MatterNetworkRequestPacket requestPacket = (MatterNetworkRequestPacket)packet;
-                if (requestPacket.getRequestType() == Reference.PACKET_REQUEST_CONNECTION)
-                {
-                    if (requestPacket.getRequest() instanceof Class)
-                    {
-                        if (getClass().isInstance(this))
-                        {
-                            requestPacket.getSender(worldObj).onResponce(this,requestPacket.getRequestType(),Reference.PACKET_RESPONCE_VALID,null);
-                        }
-                    }
-                    else
-                    {
-                        requestPacket.getSender(worldObj).onResponce(this,requestPacket.getRequestType(),Reference.PACKET_RESPONCE_VALID,null);
-                    }
+                manageRequests((MatterNetworkRequestPacket)packet,from);
+            }
+        }
+    }
 
-                }else if (requestPacket.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH)
-                {
-                    if (requestPacket.getRequest() instanceof int[])
-                    {
-                        int[] array = (int[])requestPacket.getRequest();
-                        NBTTagCompound tagCompound = getItemAsNBT(new ItemStack(Item.getItemById(array[0]),1,array[1]));
-                        if (tagCompound != null)
-                            requestPacket.getSender(worldObj).onResponce(this, requestPacket.getRequestType(), Reference.PACKET_RESPONCE_VALID,tagCompound);
-                    }
+    private void manageRequests(MatterNetworkRequestPacket packet,ForgeDirection from)
+    {
+        if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH)
+        {
+            if (packet.getRequest() instanceof int[]) {
+                int[] array = (int[]) packet.getRequest();
+                NBTTagCompound tagCompound = getItemAsNBT(new ItemStack(Item.getItemById(array[0]), 1, array[1]));
+                if (tagCompound != null && packet.getSender(worldObj) instanceof IMatterNetworkClient) {
+                    ((IMatterNetworkClient) packet.getSender(worldObj)).queuePacket(new MatterNetwrokResponcePacket(this, Reference.PACKET_RESPONCE_VALID,packet.getRequestType(), tagCompound,packet.getSenderPort()), ForgeDirection.UNKNOWN);
                 }
             }
+        }else if (packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION || packet.getRequestType() == Reference.PACKET_REQUEST_CONNECTION)
+        {
+            MatterNetworkHelper.handleConnectionRequestPacket(worldObj,this,packet,from);
         }
     }
 
@@ -371,7 +374,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
     @Override
     public boolean canConnectFromSide(ForgeDirection side) {
-        return true;
+        return side.ordinal() == worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
     }
 
     @Override

@@ -2,14 +2,13 @@ package com.MO.MatterOverdrive.gui;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
-import com.MO.MatterOverdrive.data.inventory.Slot;
 import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.pages.PageTasks;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.network.packet.server.PacketRemoveTask;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
-import matter_network.tasks.MatterNetworkTaskReplicatePattern;
+import com.MO.MatterOverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,6 @@ import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 
 import net.minecraft.entity.player.InventoryPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
@@ -49,7 +47,7 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
         outputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),22,22,"big");
         seccoundOutputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.SECOUND_OUTPUT_SLOT_ID),22,22,"big");
 
-        pagePackets = new PageTasks(this,10,0,xSize,ySize,machine.getQueue((byte)0));
+        pagePackets = new PageTasks(this,10,0,xSize,ySize,machine.getQueue((byte) 0));
         pages.add(pagePackets);
 
         packetsButton = new MOElementButton(this,this,6,8,"Tasks",0,0,24,0,24,0,24,24,"");
@@ -59,27 +57,24 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 
         itemPattern = new ElementItemPattern(this, entity.getInternalPatternStorage(), "big_main", 37, 22);
         slotsList.setPosition(5, 49);
+        slotsList.addElementAt(0, itemPattern);
+
+        replicate_progress.setMode(1);
+        replicate_progress.setSize(24, 16);
+        replicate_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
+        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
 	}
 	
 	@Override
-	public void initGui()
-	{
-		super.initGui();
-
-		replicate_progress.setMode(1);
-		replicate_progress.setSize(24, 16);
-		replicate_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
-        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
-		this.addElement(replicate_progress);
-        slotsList.addElementAt(0, itemPattern);
-
+	public void initGui() {
+        super.initGui();
         homePage.addElement(outputSlot);
         homePage.addElement(seccoundOutputSlot);
         homePage.addElement(matterElement);
         homePage.addElement(energyElement);
-
-        AddMainPlayerSlots(inventorySlots, homePage);
+		this.addElement(replicate_progress);
         AddHotbarPlayerSlots(inventorySlots, this);
+        AddMainPlayerSlots(inventorySlots, homePage);
 	}
 
     @Override

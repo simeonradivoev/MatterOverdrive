@@ -12,7 +12,6 @@ import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
 import com.MO.MatterOverdrive.init.MatterOverdriveMatter;
 import com.MO.MatterOverdrive.proxy.CommonProxy;
-import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -23,11 +22,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.GameRegistry;
-import matter_network.MatterNetworkRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.MinecraftForge;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 public class MatterOverdrive 
@@ -39,29 +34,23 @@ public class MatterOverdrive
 	public static final MatterOverdriveTab tabMatterOverdrive_modules = new MatterOverdriveTab("tabMatterOverdrive_modules");
 	public static final MatterOverdriveTab tabMatterOverdrive_upgrades = new MatterOverdriveTab("tabMatterOverdrive_upgrades");
 
+    public static TickHandler tickHandler;
 	public static MOConfigurationHandler configHandler;
+    public static GuiHandler guiHandler;
     public static PacketPipeline packetPipeline;
 	@Instance(Reference.MOD_ID)
 	public static MatterOverdrive instance;
-	
-	////////////////////// GUI ///////////////////////////////
-	public static final byte guiIDReplicator = 0;
-	public static final byte guiIDDecomposer = 1;
-    public static final byte guiIDMatterScanner = 2;
-    public static final byte guiNetworkController = 3;
-    public static final byte guiMatterAnalyzer = 4;
-	public static final byte guiPatternStorage = 5;
-	public static final byte guiSolarPanel = 6;
-	public static final byte guiWeaponStation = 7;
-	public static final byte guiPatternMonitor = 8;
+
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+        guiHandler = new GuiHandler();
 		packetPipeline = new PacketPipeline();
-		FMLCommonHandler.instance().bus().register(new TickHandler());
         configHandler = new MOConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
-		MatterOverdriveBlocks.init(event);
+        tickHandler = new TickHandler(configHandler);
+        FMLCommonHandler.instance().bus().register(tickHandler);
+        MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
         MatterOverdriveWorld.init();
 		MatterOverdriveBlocks.register(event);
@@ -76,7 +65,8 @@ public class MatterOverdrive
 	public void init(FMLInitializationEvent event)
 	{
         configHandler.init();
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+        guiHandler.register();
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 		MatterOverdriveItems.addToDungons();
 		proxy.registerProxies();
 	}

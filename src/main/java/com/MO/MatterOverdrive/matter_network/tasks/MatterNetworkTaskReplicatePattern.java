@@ -1,4 +1,4 @@
-package matter_network.tasks;
+package com.MO.MatterOverdrive.matter_network.tasks;
 
 import com.MO.MatterOverdrive.api.network.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.api.network.MatterNetworkTask;

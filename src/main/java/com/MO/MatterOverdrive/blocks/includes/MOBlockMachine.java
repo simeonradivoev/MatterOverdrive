@@ -1,25 +1,44 @@
 package com.MO.MatterOverdrive.blocks.includes;
 
+import cofh.api.block.IDismantleable;
+import cofh.lib.util.helpers.InventoryHelper;
+import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.handler.GuiHandler;
+import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.items.includes.MOEnergyMatterBlockItem;
 import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
+import com.MO.MatterOverdrive.util.MatterHelper;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.management.ItemInWorldManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Simeon on 4/5/2015.
  */
-public class MOBlockMachine extends MOBlockContainer
+public class MOBlockMachine extends MOBlockContainer implements IDismantleable
 {
+    public float volume;
+    public boolean hasGui;
+
     public MOBlockMachine(Material material, String name)
     {
         super(material, name);
@@ -45,7 +64,7 @@ public class MOBlockMachine extends MOBlockContainer
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
     {
-        super.onBlockPlacedBy(world,x,y,z,entityLiving,itemStack);
+        super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
 
         try
         {
@@ -62,47 +81,23 @@ public class MOBlockMachine extends MOBlockContainer
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int p_149749_6_)
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
-        try
-        {
-            if (!world.isRemote && !world.restoringBlockSnapshots) // do not drop items while restoring blockstates, prevents item dupe
-            {
-                //drops inventory
-                MOTileEntityMachine machine = (MOTileEntityMachine) world.getTileEntity(x, y, z);
-
-                if (machine != null && machine.getInventory() != null) {
-                    for (int i = 0; i < machine.getInventory().getSizeInventory(); i++) {
-                        if (machine.getInventory().getSlot(i) != null && machine.getInventory().getSlot(i).drops()) {
-                            if (machine.getInventory().getSlot(i).getItem() != null) {
-                                dropBlockAsItem(world, x, y, z, machine.getInventory().getSlot(i).getItem());
-                            }
-
-                        }
-                    }
-                }
-            }
-        }catch (Exception e)
-        {
-            FMLLog.severe("Could not drop Items from Machine", e);
-        }
-
-        ItemStack machineBlock = getNBTDrop(world,x,y,z,(IMOTileEntity)world.getTileEntity(x,y,z));
-        dropBlockAsItem(world, x, y, z, machineBlock);
-
-        super.breakBlock(world,x,y,z,block,p_149749_6_);
+        //drops inventory
+        MOTileEntityMachine machine = (MOTileEntityMachine) world.getTileEntity(x, y, z);
+        if (machine != null)
+            MatterHelper.DropInventory(world, (MOTileEntityMachine) world.getTileEntity(x, y, z), x, y, z);
     }
 
-    //drop and write to items from existing IMOTileEntity
     @Override
-    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
     {
-        /*if(doNormalDrops(world, x, y, z))
+        if(!world.isRemote && hasGui)
         {
-            return super.getDrops(world, x, y, z, metadata, fortune);
+            FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, x, y, z);
         }
-        return Lists.newArrayList(getNBTDrop(world, x, y, z, (IMOTileEntity) world.getTileEntity(x, y, z)));*/
-        return new ArrayList<ItemStack>();
+
+        return true;
     }
 
     public ItemStack getNBTDrop(World world, int x, int y, int z, IMOTileEntity te)
@@ -112,5 +107,53 @@ public class MOBlockMachine extends MOBlockContainer
         if(te != null)
             te.writeToDropItem(itemStack);
         return itemStack;
+    }
+
+    public void loadConfigs(MOConfigurationHandler configurationHandler)
+    {
+        volume = configurationHandler.getMachineFloat(getUnlocalizedName() + ".volume",1,0,2,"The volume of the Machine");
+    }
+
+    public boolean isHasGui() {
+        return hasGui;
+    }
+
+    public void setHasGui(boolean hasGui) {
+        this.hasGui = hasGui;
+    }
+
+    @Override
+    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops)
+    {
+        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+        ItemStack blockItem = getNBTDrop(world, x, y, z, (IMOTileEntity) world.getTileEntity(x, y, z));
+        items.add(blockItem);
+
+        Block block = world.getBlock(x, y, z);
+        int l = world.getBlockMetadata(x, y, z);
+        boolean flag = block.removedByPlayer(world, player, x, y, z, true);
+        block.breakBlock(world,x,y,z,block,l);
+
+        if (flag)
+        {
+            block.onBlockDestroyedByPlayer(world, x, y, z, l);
+        }
+
+        if (!returnDrops)
+        {
+            dropBlockAsItem(world, x, y, z, blockItem);
+        }
+        else
+        {
+            InventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
+        }
+
+        return items;
+    }
+
+    @Override
+    public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
+    {
+        return true;
     }
 }

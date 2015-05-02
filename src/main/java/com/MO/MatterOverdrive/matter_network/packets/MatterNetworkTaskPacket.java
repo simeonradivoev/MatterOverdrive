@@ -1,12 +1,12 @@
-package matter_network.packets;
+package com.MO.MatterOverdrive.matter_network.packets;
 
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.network.IMatterNetworkConnection;
 import com.MO.MatterOverdrive.api.network.IMatterNetworkDispatcher;
 import com.MO.MatterOverdrive.api.network.MatterNetworkTask;
-import matter_network.MatterNetworkPacket;
-import matter_network.MatterNetworkPathNode;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkPacket;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkPathNode;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -26,19 +26,19 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
         super();
     }
 
-    public MatterNetworkTaskPacket(IMatterNetworkDispatcher sender,long taskID,byte queueID)
+    public MatterNetworkTaskPacket(IMatterNetworkDispatcher sender,long taskID,byte queueID,ForgeDirection port)
     {
-        this(sender.getPosition(), taskID,queueID);
+        this(sender.getPosition(), taskID,queueID,port);
     }
 
-    public MatterNetworkTaskPacket(IMatterNetworkDispatcher sender,MatterNetworkTask task,byte queueID)
+    public MatterNetworkTaskPacket(IMatterNetworkDispatcher sender,MatterNetworkTask task,byte queueID,ForgeDirection port)
     {
-        this(sender.getPosition(), task.getId(),queueID);
+        this(sender.getPosition(), task.getId(),queueID,port);
     }
 
-    public MatterNetworkTaskPacket(BlockPosition sender,long taskID,byte queueID)
+    public MatterNetworkTaskPacket(BlockPosition sender,long taskID,byte queueID,ForgeDirection port)
     {
-        super(sender);
+        super(sender,port);
         this.taskID = taskID;
         this.queueID = queueID;
 
@@ -46,7 +46,7 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
 
     public MatterNetworkTaskPacket copy(IMatterNetworkConnection connection)
     {
-        MatterNetworkTaskPacket newPacket = new MatterNetworkTaskPacket(senderPos,taskID,queueID);
+        MatterNetworkTaskPacket newPacket = new MatterNetworkTaskPacket(senderPos,taskID,queueID,senderPos.orientation);
         newPacket.path = new HashSet<MatterNetworkPathNode>(path);
         addToPath(connection,ForgeDirection.UNKNOWN);
         return newPacket;
@@ -54,9 +54,9 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
 
     public MatterNetworkTask getTask(World world)
     {
-        IMatterNetworkDispatcher sender = getSender(world);
-        if (sender != null) {
-            return sender.getQueue(queueID).getWithID(taskID);
+        IMatterNetworkConnection sender = getSender(world);
+        if (sender != null && sender instanceof IMatterNetworkDispatcher) {
+            return ((IMatterNetworkDispatcher)(sender)).getQueue(queueID).getWithID(taskID);
         }
         return null;
     }

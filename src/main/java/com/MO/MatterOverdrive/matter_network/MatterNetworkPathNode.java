@@ -1,4 +1,4 @@
-package matter_network;
+package com.MO.MatterOverdrive.matter_network;
 
 import cofh.lib.util.position.BlockPosition;
 import net.minecraftforge.common.util.ForgeDirection;

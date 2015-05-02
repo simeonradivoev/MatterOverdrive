@@ -10,11 +10,9 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Simeon on 3/13/2015.
  */
-public class ContainerNetworkController extends ContainerMachine<TileEntityMachineNetworkRouter>
+public class ContainerNetworkRouter extends ContainerMachine<TileEntityMachineNetworkRouter>
 {
-    TileEntityMachineNetworkRouter controller;
-
-    public ContainerNetworkController(InventoryPlayer inventoryPlayer,TileEntityMachineNetworkRouter entity)
+    public ContainerNetworkRouter(InventoryPlayer inventoryPlayer, TileEntityMachineNetworkRouter entity)
     {
         super(inventoryPlayer,entity);
     }

@@ -30,17 +30,23 @@ public class PageUpgrades extends ElementBaseGroup
     Container container;
     MOTileEntityMachine machine;
 
-    public PageUpgrades(GuiBase gui, int posX, int posY,Container container,Inventory inventory,MOTileEntityMachine machine)
+    public PageUpgrades(GuiBase gui, int posX, int posY,Container container,MOTileEntityMachine machine)
     {
-        this(gui, posX, posY, 0, 0, container, inventory, machine);
+        this(gui, posX, posY, 0, 0, container, machine);
     }
 
-    public PageUpgrades(GuiBase gui, int posX, int posY, int width, int height,Container container,Inventory inventory,MOTileEntityMachine machine)
+    public PageUpgrades(GuiBase gui, int posX, int posY, int width, int height,Container container,MOTileEntityMachine machine)
     {
         super(gui, posX, posY, width, height);
         this.container = container;
         this.machine = machine;
-        AddUpgradeSlots(container, inventory);
+    }
+
+    @Override
+    public void init()
+    {
+        super.init();
+        AddUpgradeSlots(container, machine.getInventory());
     }
 
     @Override

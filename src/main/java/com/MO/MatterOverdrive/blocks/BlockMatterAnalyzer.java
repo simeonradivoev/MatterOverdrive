@@ -6,6 +6,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
+import com.MO.MatterOverdrive.handler.GuiHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.TileEntityMachineMatterAnalyzer;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
@@ -23,6 +24,7 @@ import net.minecraft.world.World;
  */
 public class BlockMatterAnalyzer extends MOBlockMachine
 {
+    public static float MACHINE_VOLUME;
     private IIcon iconTop;
     private IIcon iconFront;
 
@@ -31,25 +33,14 @@ public class BlockMatterAnalyzer extends MOBlockMachine
         super(material, name);
         setHardness(2.0F);
         this.setResistance(5.0f);
-        this.setHarvestLevel("pickaxe",2);
+        this.setHarvestLevel("pickaxe", 2);
+        setHasGui(true);
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+    public TileEntity createNewTileEntity(World world, int meta)
     {
         return new TileEntityMachineMatterAnalyzer();
-    }
-
-    @Override
-    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
-    {
-        super.onBlockActivated(world,x,y,z,player,side,hitX,hitY,hitZ);
-        if(!world.isRemote)
-        {
-            FMLNetworkHandler.openGui(player, MatterOverdrive.instance, MatterOverdrive.guiMatterAnalyzer, world, x, y, z);
-        }
-
-        return true;
     }
 
     @Override

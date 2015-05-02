@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.tile;
 
 import cofh.api.energy.IEnergyStorage;
 import cofh.lib.util.TimeTracker;
+import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
@@ -11,8 +12,8 @@ import com.MO.MatterOverdrive.api.network.*;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.Slot;
-import matter_network.MatterNetworkTaskQueue;
-import matter_network.tasks.MatterNetworkTaskStorePattern;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkTaskQueue;
+import com.MO.MatterOverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
@@ -86,11 +87,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     @Override
     public float soundVolume() { return 0.3f;}
-
-    @Override
-    public void onContainerOpen() {
-
-    }
 
     protected void manageAnalyze()
     {
@@ -286,7 +282,12 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     @Override
     public boolean canConnectFromSide(ForgeDirection side) {
-        return true;
+        int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
+        if (BlockHelper.getOppositeSide(meta) == side.ordinal())
+        {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -341,13 +342,5 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         return taskQueueSending;
     }
-
-    @Override
-    public void onResponce(IMatterNetworkConnection from,int requestType, int responceTye, Object responce)
-    {
-
-    }
-
-
     //endregion
 }

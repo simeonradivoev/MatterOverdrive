@@ -25,6 +25,7 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
         super(new ContainerMatterAnalyzer(playerInventory,analyzer),analyzer);
         name = "matter_analyzer";
         energyElement = new MOElementEnergy(this,176,39,analyzer.getEnergyStorage());
+        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
         scanProgress = new ElementScanProgress(this,49,36);
         pageTasks = new PageTasks(this,0,0,xSize,ySize,analyzer.getQueue((byte)0));
         pages.add(pageTasks);
@@ -39,7 +40,7 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
     public void initGui()
     {
         super.initGui();
-        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
+
         homePage.addElement(energyElement);
         homePage.addElement(scanProgress);
 

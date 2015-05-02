@@ -28,7 +28,14 @@ public class SidePannel extends ElementBaseGroup
         super(gui, posX, posY,37,height);
         button = new MOElementButtonVertical(gui,this, 0, 0, "Toggle", 0, 0, 16, 0, 16, height,"",9);
         button.setTexture(Reference.PATH_ELEMENTS + "right_side_bar.png", 32, 143);
-        this.setTexture(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png",37,143);
+        this.setTexture(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png", 37, 143);
+
+    }
+
+    @Override
+    public void init()
+    {
+        super.init();
         elements.add(button);
     }
 

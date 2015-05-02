@@ -1,6 +1,6 @@
 package com.MO.MatterOverdrive.api.network;
 
-import matter_network.MatterNetworkPacket;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkPacket;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**

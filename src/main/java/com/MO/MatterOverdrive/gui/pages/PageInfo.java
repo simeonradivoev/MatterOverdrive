@@ -60,10 +60,15 @@ public class PageInfo extends ElementBaseGroup
         bt_scroll_right = new MOElementButton(gui,this,sizeX - 30,sizeY - 30,SCROLL_RIGHT_ELEMENT_NAME,0,0,10,0,10,10,"");
         bt_scroll_right.setTexture(Reference.PATH_ELEMENTS + "scroll_right.png",20,10);
         bt_scroll_left = new MOElementButton(gui,this,50,sizeY - 30,SCROLL_LEFT_ELEMENT_NAME,0,0,10,0,10,10,"");
-        bt_scroll_left.setTexture(Reference.PATH_ELEMENTS + "scroll_left.png",20,10);
+        bt_scroll_left.setTexture(Reference.PATH_ELEMENTS + "scroll_left.png", 20, 10);
         bt_return = new MOElementButton(gui,this,150,sizeY - 30,RETURN_ELEMENT_NAME,0,0,11,0,11,11,"");
         bt_return.setTexture(Reference.PATH_ELEMENTS + "return_arrow.png", 22, 11);
+    }
 
+    @Override
+    public void init()
+    {
+        super.init();
         elements.add(bt_scroll_left);
         elements.add(bt_scroll_right);
         elements.add(bt_return);

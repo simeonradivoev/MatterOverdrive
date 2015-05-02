@@ -3,8 +3,8 @@ package com.MO.MatterOverdrive.tile.pipes;
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.network.*;
-import matter_network.MatterNetworkPacket;
-import matter_network.packets.MatterNetworkTaskPacket;
+import com.MO.MatterOverdrive.matter_network.MatterNetworkPacket;
+import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -16,10 +16,6 @@ import net.minecraftforge.common.util.ForgeDirection;
  * Created by Simeon on 3/15/2015.
  */
 public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetworkCable, IMatterNetworkConnectionProxy {
-
-    public TileEntityNetworkPipe() {
-
-    }
 
     @Override
     public boolean canConnectTo(TileEntity entity, ForgeDirection direction)

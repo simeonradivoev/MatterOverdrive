@@ -33,13 +33,13 @@ public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStor
         super(new ContainerPatternStorage(playerInventory,patternStorage),patternStorage);
         name = "pattern_storage";
         energyElement = new ElementEnergyStored(this,176,39,patternStorage.getEnergyStorage());
+        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
     }
 
     @Override
     public void initGui()
     {
         super.initGui();
-        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
         homePage.addElement(energyElement);
         AddPatternStorageSlots(inventorySlots, homePage);
         AddMainPlayerSlots(inventorySlots, homePage);
@@ -52,7 +52,7 @@ public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStor
         {
             if(container.inventorySlots.get(i) instanceof SlotPatternStorage)
             {
-                list.addElement(new ElementInventorySlot(this, (MOSlot)container.inventorySlots.get(i),22,22, "big"));
+                list.addElement(new ElementInventorySlot(this, (MOSlot)container.inventorySlots.get(i),22,22, "big",machine.getInventory().getSlot(i).getTexture()));
             }
         }
     }

@@ -27,13 +27,13 @@ public abstract class MOGuiBase extends GuiBase implements IButtonHandler, GuiEl
     int texW;
     int texH;
 
-	public MOGuiBase(Container container)
+	public MOGuiBase(MOBaseContainer container)
 	{
         this(container,225,186);
 
 	}
 
-    public MOGuiBase(Container container,int width,int height)
+    public MOGuiBase(MOBaseContainer container,int width,int height)
     {
         super(container);
         background = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "base_gui_hotbar.png"),92,77);
@@ -69,6 +69,7 @@ public abstract class MOGuiBase extends GuiBase implements IButtonHandler, GuiEl
     public void initGui()
     {
         super.initGui();
+        sidePannel.init();
         this.addElement(sidePannel);
         this.addElement(closeButton);
     }
@@ -91,6 +92,8 @@ public abstract class MOGuiBase extends GuiBase implements IButtonHandler, GuiEl
 	{
 		this.tooltip = tooltip;
 	}
+    public void addToTooltip(String string){this.tooltip.add(string);}
+    public List<String> getTooltips(){return tooltip;}
 
     public void handleListChange(String listName, int mouseButton,int element)
     {

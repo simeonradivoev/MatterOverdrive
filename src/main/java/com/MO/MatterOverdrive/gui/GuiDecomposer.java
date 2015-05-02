@@ -33,24 +33,25 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 		energyElement = new MOElementEnergy(this,100,39,machine.getEnergyStorage());
 		decompose_progress = new ElementDualScaled(this,32,52);
         outputSlot = new ElementInventorySlot(this,getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),22,22,"big");
+
+		decompose_progress.setMode(1);
+		decompose_progress.setSize(24, 16);
+		decompose_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
+		energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
 	}
 	
 	@Override
 	public void initGui()
 	{
 		super.initGui();
-		decompose_progress.setMode(1);
-		decompose_progress.setSize(24, 16);
-		decompose_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
-		energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
-		homePage.addElement(outputSlot);
-		homePage.addElement(energyElement);
-		homePage.addElement(matterElement);
-		this.addElement(decompose_progress);
 
-		AddMainPlayerSlots(this.inventorySlots, homePage);
+        homePage.addElement(outputSlot);
+        homePage.addElement(energyElement);
+        homePage.addElement(matterElement);
+        this.addElement(decompose_progress);
+
+        AddMainPlayerSlots(this.inventorySlots, homePage);
 		AddHotbarPlayerSlots(this.inventorySlots,this);
-
 	}
 
     @Override
