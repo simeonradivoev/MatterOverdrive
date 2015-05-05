@@ -119,22 +119,45 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         if(hasSound())
         {
-            if (isActive() && !isInvalid()) {
+            if (isActive() && !isInvalid())
+            {
                 if (sound == null) {
                     float soundMultiply = 1;
                     if (getBlockType() instanceof MOBlockMachine)
                     {
                         soundMultiply = ((MOBlockMachine) getBlockType()).volume;
                     }
-                    sound = new MachineSound(soundRes, xCoord, yCoord, zCoord, soundVolume() * soundMultiply, 1);
+                    sound = getSound(soundMultiply);
                     FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
-
                 }
-            } else if (sound != null) {
+            }
+            else if (sound != null)
+            {
                 sound.stopPlaying();
+                FMLClientHandler.instance().getClient().getSoundHandler().stopSound(sound);
                 sound = null;
             }
         }
+    }
+
+    @Override
+    public void onChunkUnload()
+    {
+        super.onChunkUnload();
+
+        if (sound != null)
+        {
+            sound.stopPlaying();
+            FMLClientHandler.instance().getClient().getSoundHandler().stopSound(sound);
+            sound = null;
+        }
+    }
+
+
+    @SideOnly(Side.CLIENT)
+    protected MachineSound getSound(float soundMultiply)
+    {
+        return new MachineSound(soundRes, xCoord, yCoord, zCoord, soundVolume() * soundMultiply, 1);
     }
 
     @Override
