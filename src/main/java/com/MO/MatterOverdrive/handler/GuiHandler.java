@@ -37,23 +37,44 @@ public class GuiHandler implements IGuiHandler
         containers = new HashMap<Class<? extends MOTileEntity>, Class<? extends MOBaseContainer>>();
     }
 
-    public void register()
+    public void register(Side side)
     {
-        register(TileEntityMachineReplicator.class,GuiReplicator.class,ContainerReplicator.class);
-        register(TileEntityMachineDecomposer.class,GuiDecomposer.class,ContainerDecomposer.class);
-        register(TileEntityMachineNetworkRouter.class,GuiNetworkRouter.class,ContainerNetworkRouter.class);
-        register(TileEntityMachineMatterAnalyzer.class,GuiMatterAnalyzer.class,ContainerMatterAnalyzer.class);
-        register(TileEntityMachinePatternStorage.class,GuiPatternStorage.class,ContainerPatternStorage.class);
-        register(TileEntityMachineSolarPanel.class,GuiSolarPanel.class,ContainerSolarPanel.class);
-        register(TileEntityWeaponStation.class, GuiWeaponStation.class, ContainerWeaponStation.class);
-        register(TileEntityMachinePatternMonitor.class, GuiPatternMonitor.class, ContainerPatternMonitor.class);
-        register(TileEntityMachineNetworkSwitch.class,GuiNetworkSwitch.class,ContainerNetworkSwitch.class);
+        if (side == Side.SERVER)
+        {
+            registerContainer(TileEntityMachineReplicator.class, ContainerReplicator.class);
+            registerContainer(TileEntityMachineDecomposer.class, ContainerDecomposer.class);
+            registerContainer(TileEntityMachineNetworkRouter.class, ContainerNetworkRouter.class);
+            registerContainer(TileEntityMachineMatterAnalyzer.class, ContainerMatterAnalyzer.class);
+            registerContainer(TileEntityMachinePatternStorage.class, ContainerPatternStorage.class);
+            registerContainer(TileEntityMachineSolarPanel.class, ContainerSolarPanel.class);
+            registerContainer(TileEntityWeaponStation.class, ContainerWeaponStation.class);
+            registerContainer(TileEntityMachinePatternMonitor.class, ContainerPatternMonitor.class);
+            registerContainer(TileEntityMachineNetworkSwitch.class, ContainerNetworkSwitch.class);
+            registerContainer(TileEntityMachineTransporter.class, ContainerTransporter.class);
+        }
+        else
+        {
+            registerGui(TileEntityMachineReplicator.class, GuiReplicator.class);
+            registerGui(TileEntityMachineDecomposer.class, GuiDecomposer.class);
+            registerGui(TileEntityMachineNetworkRouter.class, GuiNetworkRouter.class);
+            registerGui(TileEntityMachineMatterAnalyzer.class, GuiMatterAnalyzer.class);
+            registerGui(TileEntityMachinePatternStorage.class, GuiPatternStorage.class);
+            registerGui(TileEntityMachineSolarPanel.class, GuiSolarPanel.class);
+            registerGui(TileEntityWeaponStation.class, GuiWeaponStation.class);
+            registerGui(TileEntityMachinePatternMonitor.class, GuiPatternMonitor.class);
+            registerGui(TileEntityMachineNetworkSwitch.class, GuiNetworkSwitch.class);
+            registerGui(TileEntityMachineTransporter.class, GuiTransporter.class);
+        }
     }
 
-    public void register(Class<? extends MOTileEntity> tileEntity,Class<? extends MOGuiBase> gui,Class<? extends  MOBaseContainer> container)
+    public void registerContainer(Class<? extends MOTileEntity> tileEntity,Class<? extends  MOBaseContainer> container)
+    {
+        containers.put(tileEntity, container);
+    }
+
+    public void registerGui(Class<? extends MOTileEntity> tileEntity,Class<? extends MOGuiBase> gui)
     {
         guis.put(tileEntity,gui);
-        containers.put(tileEntity,container);
     }
 
 	@Override

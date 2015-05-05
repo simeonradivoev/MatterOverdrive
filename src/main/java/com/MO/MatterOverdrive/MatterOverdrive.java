@@ -65,7 +65,7 @@ public class MatterOverdrive
 	public void init(FMLInitializationEvent event)
 	{
         configHandler.init();
-        guiHandler.register();
+        guiHandler.register(event.getSide());
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 		MatterOverdriveItems.addToDungons();
 		proxy.registerProxies();
