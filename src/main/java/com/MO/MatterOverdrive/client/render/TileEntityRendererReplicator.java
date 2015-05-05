@@ -55,8 +55,9 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
         {
             GL11.glPushMatrix();
 
-            renderItem(replicator,x,y,z);
+            renderItem(replicator, x, y, z);
 
+            GL11.glColor3f(1,1,1);
             GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
             RenderUtils.rotateFromBlock(replicator.getWorldObj(), replicator.xCoord, replicator.yCoord, replicator.zCoord);
             bindTexture(texture);
