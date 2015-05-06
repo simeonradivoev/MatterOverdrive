@@ -10,5 +10,9 @@
     "replicate_success": {"category": "master","sounds": [{"name": "replicator/replicate_success", "stream": false}]},
     "analyzer": {"category": "master","sounds": [{"name": "blocks/analyzer", "stream": false}]},
     "decomposer": {"category": "master","sounds": [{"name": "blocks/decomposer", "stream": false}]},
-    "machine": {"category": "master","sounds": [{"name": "blocks/machine", "stream": false}]}
+    "machine": {"category": "master","sounds": [{"name": "blocks/machine", "stream": false}]},
+    "transporter": {"category": "master","sounds": [{"name": "transporter/transporter_0", "stream": false}]},
+    "transporter_0": {"category": "master","sounds": [{"name": "transporter/transporter_1", "stream": false}]},
+    "transporter_1": {"category": "master","sounds": [{"name": "transporter/transporter_2", "stream": false}]},
+    "transporter_2": {"category": "master","sounds": [{"name": "transporter/transporter_3", "stream": false}]}
 }

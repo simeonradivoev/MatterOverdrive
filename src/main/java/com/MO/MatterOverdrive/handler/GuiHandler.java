@@ -54,16 +54,16 @@ public class GuiHandler implements IGuiHandler
         }
         else
         {
-            registerGui(TileEntityMachineReplicator.class, GuiReplicator.class);
-            registerGui(TileEntityMachineDecomposer.class, GuiDecomposer.class);
-            registerGui(TileEntityMachineNetworkRouter.class, GuiNetworkRouter.class);
-            registerGui(TileEntityMachineMatterAnalyzer.class, GuiMatterAnalyzer.class);
-            registerGui(TileEntityMachinePatternStorage.class, GuiPatternStorage.class);
-            registerGui(TileEntityMachineSolarPanel.class, GuiSolarPanel.class);
-            registerGui(TileEntityWeaponStation.class, GuiWeaponStation.class);
-            registerGui(TileEntityMachinePatternMonitor.class, GuiPatternMonitor.class);
-            registerGui(TileEntityMachineNetworkSwitch.class, GuiNetworkSwitch.class);
-            registerGui(TileEntityMachineTransporter.class, GuiTransporter.class);
+            registerGuiAndContainer(TileEntityMachineReplicator.class, GuiReplicator.class,ContainerReplicator.class);
+            registerGuiAndContainer(TileEntityMachineDecomposer.class, GuiDecomposer.class,ContainerDecomposer.class);
+            registerGuiAndContainer(TileEntityMachineNetworkRouter.class, GuiNetworkRouter.class,ContainerNetworkRouter.class);
+            registerGuiAndContainer(TileEntityMachineMatterAnalyzer.class, GuiMatterAnalyzer.class,ContainerMatterAnalyzer.class);
+            registerGuiAndContainer(TileEntityMachinePatternStorage.class, GuiPatternStorage.class,ContainerPatternStorage.class);
+            registerGuiAndContainer(TileEntityMachineSolarPanel.class, GuiSolarPanel.class,ContainerSolarPanel.class);
+            registerGuiAndContainer(TileEntityWeaponStation.class, GuiWeaponStation.class,ContainerWeaponStation.class);
+            registerGuiAndContainer(TileEntityMachinePatternMonitor.class, GuiPatternMonitor.class,ContainerPatternMonitor.class);
+            registerGuiAndContainer(TileEntityMachineNetworkSwitch.class, GuiNetworkSwitch.class,ContainerNetworkSwitch.class);
+            registerGuiAndContainer(TileEntityMachineTransporter.class, GuiTransporter.class,ContainerTransporter.class);
         }
     }
 
@@ -72,8 +72,9 @@ public class GuiHandler implements IGuiHandler
         containers.put(tileEntity, container);
     }
 
-    public void registerGui(Class<? extends MOTileEntity> tileEntity,Class<? extends MOGuiBase> gui)
+    public void registerGuiAndContainer(Class<? extends MOTileEntity> tileEntity,Class<? extends MOGuiBase> gui,Class<? extends  MOBaseContainer> container)
     {
+        containers.put(tileEntity, container);
         guis.put(tileEntity,gui);
     }
 

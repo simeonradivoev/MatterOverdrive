@@ -67,7 +67,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         }
         else
         {
-            if (isActive() && random.nextFloat() < 0.2f && getBlockType(BlockPatternStorage.class).hasVentParticles)
+            if (isActive() && random.nextFloat() < 0.2f && getBlockType(BlockPatternStorage.class) != null && getBlockType(BlockPatternStorage.class).hasVentParticles)
             {
                 SpawnVentParticles(0.03f, ForgeDirection.getOrientation(BlockHelper.getOppositeSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
             }

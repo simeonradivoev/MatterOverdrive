@@ -4,6 +4,7 @@ import java.util.List;
 
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.ColorHelper;
+import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MOPhysicsHelper;
@@ -60,11 +61,8 @@ public class MatterScanner extends MOBaseItem
 	{
 		if (itemStack.hasTagCompound() && Minecraft.getMinecraft().theWorld != null)
 		{
-			IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld,itemStack);
-			if (database != null)
-			{
+			if (isLinked(itemStack))
 				return this.itemIcon;
-			}
 		}
 		return offline_icon;
 	}
@@ -140,12 +138,31 @@ public class MatterScanner extends MOBaseItem
 					TileEntity e = world.getTileEntity(x, y, z);
 					if (e instanceof IMatterDatabase)
 						return (IMatterDatabase) e;
-					else
-						unLink(world,scanner);
 				}
 			}
 		}
 		return null;
+	}
+
+	public static BlockPosition getLinkPosition(ItemStack scanner)
+	{
+		if(scanner != null && scanner.getItem() instanceof MatterScanner) {
+			if (scanner.hasTagCompound())
+			{
+				return new BlockPosition(scanner.getTagCompound().getInteger("link_x"),scanner.getTagCompound().getInteger("link_y"),scanner.getTagCompound().getInteger("link_z"));
+			}
+		}
+		return new BlockPosition(0,0,0);
+	}
+
+	public static boolean isLinked(ItemStack scanner)
+	{
+		if(scanner != null && scanner.getItem() instanceof MatterScanner) {
+			if (scanner.hasTagCompound()) {
+				return scanner.getTagCompound().getBoolean("isLinked");
+			}
+		}
+		return false;
 	}
 
 	public static void unLink(World world,ItemStack scanner)
@@ -332,7 +349,7 @@ public class MatterScanner extends MOBaseItem
 		if (world.isRemote) {
 			if (entity instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer) entity;
-				if (player.isUsingItem() && player.getItemInUse() == itemStack)
+				if (player.isUsingItem())
 				{
 
 				} else

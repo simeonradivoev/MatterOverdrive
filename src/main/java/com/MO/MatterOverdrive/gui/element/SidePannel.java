@@ -19,15 +19,16 @@ import java.util.List;
  */
 public class SidePannel extends ElementBaseGroup
 {
-    MOElementButton button;
+    MOElementButtonScaled button;
     public static final ScaleTexture BACKGROUND_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png"),15,18).setOffsets(7,7,8,9);
     private static boolean isOpen;
 
     public SidePannel(MOGuiBase gui, int posX, int posY,int height)
     {
         super(gui, posX, posY,37,height);
-        button = new MOElementButtonVertical(gui,this, 0, 0, "Toggle", 0, 0, 16, 0, 16, height,"",9);
-        button.setTexture(Reference.PATH_ELEMENTS + "right_side_bar.png", 32, 143);
+        button = new MOElementButtonScaled(gui,this, 0, 0, "Toggle", 16,height);
+        button.setNormalTexture(new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_normal.png"), 32, 143).setOffsets(0,0,42,100));
+        button.setOverTexture(new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_over.png"), 32, 143).setOffsets(0,0,42,100));
         this.setTexture(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png", 37, 143);
 
     }
@@ -44,6 +45,7 @@ public class SidePannel extends ElementBaseGroup
     {
         if(isOpen)
         {
+            GL11.glColor3f(1,1,1);
             BACKGROUND_TEXTURE.Render(posX,posY,37,sizeY);
             button.setPosition(32,0);
         }

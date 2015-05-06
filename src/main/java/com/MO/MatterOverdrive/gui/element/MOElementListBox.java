@@ -11,10 +11,14 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.MO.MatterOverdrive.gui.MOGuiBase;
+import com.MO.MatterOverdrive.gui.events.IListHandler;
 import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.util.MathHelper;
 
 public class MOElementListBox extends MOElementBase {
+
+    IListHandler listHandler;
 
 	public int borderColor = new GuiColor(120, 120, 120, 255).getColor();
 	public int backgroundColor = new GuiColor(0, 0, 0, 255).getColor();
@@ -33,10 +37,16 @@ public class MOElementListBox extends MOElementBase {
 	protected int _selectedIndex;
 	private int scrollHoriz;
 
-	public MOElementListBox(GuiBase containerScreen, int x, int y, int width, int height) {
+	public MOElementListBox(MOGuiBase containerScreen,IListHandler listHandler, int x, int y, int width, int height) {
 
 		super(containerScreen, x, y, width, height);
+        this.listHandler = listHandler;
 	}
+
+    public MOElementListBox(MOGuiBase containerScreen, int x, int y, int width, int height)
+    {
+        this(containerScreen,containerScreen,x,y,width,height);
+    }
 
 	public void add(IMOListBoxElement element) {
 
@@ -377,8 +387,9 @@ public class MOElementListBox extends MOElementBase {
 
 	}
 
-	protected void onSelectionChanged(int newIndex, IMOListBoxElement imoListBoxElement) {
-
+	protected void onSelectionChanged(int newIndex, IMOListBoxElement imoListBoxElement)
+	{
+        listHandler.ListSelectionChange(getName(),newIndex);
 	}
 	//endregion
 }

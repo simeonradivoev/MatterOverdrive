@@ -2,10 +2,12 @@ package com.MO.MatterOverdrive.network;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.network.packet.AbstractBiPacketHandler;
+import com.MO.MatterOverdrive.network.packet.bi.PacketGetDatabase;
 import com.MO.MatterOverdrive.network.packet.client.*;
 import com.MO.MatterOverdrive.network.packet.server.PacketMatterScannerUpdate;
 import com.MO.MatterOverdrive.network.packet.server.PacketPatternMonitorCommands;
 import com.MO.MatterOverdrive.network.packet.server.PacketRemoveTask;
+import com.MO.MatterOverdrive.network.packet.server.PacketTransporterCommands;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -42,12 +44,20 @@ public class PacketPipeline
         registerPacket(PacketPatternMonitorCommands.ServerHandler.class,PacketPatternMonitorCommands.class);
         registerPacket(PacketReplicationComplete.ClientHandler.class,PacketReplicationComplete.class);
         registerPacket(PacketRemoveTask.ServerHandler.class,PacketRemoveTask.class);
+        registerPacket(PacketTransporterCommands.ServerHandler.class, PacketTransporterCommands.class);
+        registerPacket(PacketSyncTransportProgress.ClientHandler.class,PacketSyncTransportProgress.class);
+        registerBiPacket(PacketGetDatabase.Handler.class,PacketGetDatabase.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)
     {
-        Side side = AbstractClientPacketHandler.class.isAssignableFrom(messageHandler) ? Side.CLIENT : Side.SERVER;
-        dispatcher.registerMessage(messageHandler, requestMessageType, packetID++, side);
+        try {
+            Side side = AbstractClientPacketHandler.class.isAssignableFrom(messageHandler) ? Side.CLIENT : Side.SERVER;
+            dispatcher.registerMessage(messageHandler, requestMessageType, packetID++, side);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerBiPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

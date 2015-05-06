@@ -8,23 +8,23 @@ import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.fx.VentParticle;
+
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -44,8 +44,10 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     //client syncs
     protected boolean lastActive;
 
+    @SideOnly(Side.CLIENT)
     protected MachineSound sound;
-    private final ResourceLocation soundRes;
+
+    protected ResourceLocation soundRes;
 
     protected boolean redstoneState;
     protected boolean redstoneStateDirty = true;
@@ -127,24 +129,20 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                     {
                         soundMultiply = ((MOBlockMachine) getBlockType()).volume;
                     }
-                    sound = getSound(soundMultiply);
+                    sound = new MachineSound(soundRes, xCoord, yCoord, zCoord, soundVolume() * soundMultiply, 1);
                     FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
                 }
             }
             else if (sound != null)
             {
-                sound.stopPlaying();
-                FMLClientHandler.instance().getClient().getSoundHandler().stopSound(sound);
-                sound = null;
+                stopSound();
             }
         }
     }
 
-    @Override
-    public void onChunkUnload()
+    @SideOnly(Side.CLIENT)
+    void stopSound()
     {
-        super.onChunkUnload();
-
         if (sound != null)
         {
             sound.stopPlaying();
@@ -153,11 +151,15 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
     }
 
-
-    @SideOnly(Side.CLIENT)
-    protected MachineSound getSound(float soundMultiply)
+    @Override
+    public void onChunkUnload()
     {
-        return new MachineSound(soundRes, xCoord, yCoord, zCoord, soundVolume() * soundMultiply, 1);
+        super.onChunkUnload();
+
+        if (worldObj.isRemote)
+        {
+            stopSound();
+        }
     }
 
     @Override
@@ -175,6 +177,44 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         nbt.setBoolean("forceClientUpdate", forceClientUpdate);
         forceClientUpdate = false;
         inventory.writeToNBT(nbt);
+    }
+
+    @Override
+    public void writeToDropItem(ItemStack itemStack)
+    {
+        super.writeToDropItem(itemStack);
+        if (!itemStack.hasTagCompound())
+            itemStack.setTagCompound(new NBTTagCompound());
+
+        NBTTagList upgrades = new NBTTagList();
+
+        for (int i = 0;i < inventory.getSizeInventory();i++)
+        {
+            if (inventory.getSlot(i) instanceof UpgradeSlot && inventory.getSlot(i).getItem() != null)
+            {
+                NBTTagCompound tagCompound = new NBTTagCompound();
+                tagCompound.setByte("Slot",(byte)i);
+                inventory.getSlot(i).getItem().writeToNBT(tagCompound);
+                upgrades.appendTag(tagCompound);
+            }
+        }
+        itemStack.getTagCompound().setTag("Upgrades", upgrades);
+    }
+
+    @Override
+    public void readFromPlaceItem(ItemStack itemStack)
+    {
+        super.readFromPlaceItem(itemStack);
+        NBTTagList upgrades = itemStack.getTagCompound().getTagList("Upgrades",10);
+        for (int i = 0;i < upgrades.tagCount();i++)
+        {
+            NBTTagCompound upgradeNBT = upgrades.getCompoundTagAt(i);
+            int slot = upgradeNBT.getByte("Slot");
+            if (slot < inventory.getSizeInventory() && slot >= 0)
+            {
+                inventory.getSlot(slot).setItem(ItemStack.loadItemStackFromNBT(upgradeNBT));
+            }
+        }
     }
 
     @Override

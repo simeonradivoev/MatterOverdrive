@@ -1,6 +1,8 @@
 package com.MO.MatterOverdrive.blocks;
 
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
+import com.MO.MatterOverdrive.blocks.includes.MOMatterEnergyStorageBlock;
+import com.MO.MatterOverdrive.tile.TileEntityMachineTransporter;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
@@ -13,7 +15,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.World;
 
-public class TransporterBlock extends MOBlockMachine
+public class TransporterBlock extends MOMatterEnergyStorageBlock
 {
 	@SideOnly(Side.CLIENT)
 	private IIcon iconTop;
@@ -22,10 +24,11 @@ public class TransporterBlock extends MOBlockMachine
 
 	public TransporterBlock(Material material, String name) 
 	{
-		super(material, name);
+		super(material, name,true,true);
 		setHardness(2.0F);
 		this.setResistance(9.0f);
-		this.setHarvestLevel("pickaxe",2);
+		this.setHarvestLevel("pickaxe", 2);
+		this.setHasGui(true);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -55,7 +58,8 @@ public class TransporterBlock extends MOBlockMachine
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-        return null;
+    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+    {
+        return new TileEntityMachineTransporter();
     }
 }

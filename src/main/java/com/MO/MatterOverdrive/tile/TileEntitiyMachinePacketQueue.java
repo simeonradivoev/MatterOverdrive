@@ -59,10 +59,11 @@ public class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implement
         {
             if (nbt.hasKey("Connection" + i)) {
                 BlockPosition position = new BlockPosition(nbt.getCompoundTag("Connection" + i));
-                TileEntity tileEntity = position.getTileEntity(worldObj);
-                if (tileEntity != null && tileEntity instanceof IMatterNetworkConnectionProxy)
-                {
-                    connections[i] = ((IMatterNetworkConnectionProxy) tileEntity).getMatterNetworkConnection().getPosition();
+                if (worldObj != null) {
+                    TileEntity tileEntity = position.getTileEntity(worldObj);
+                    if (tileEntity != null && tileEntity instanceof IMatterNetworkConnectionProxy) {
+                        connections[i] = ((IMatterNetworkConnectionProxy) tileEntity).getMatterNetworkConnection().getPosition();
+                    }
                 }
             }
         }

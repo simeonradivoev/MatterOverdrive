@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class ItemUpgrade extends MOBaseItem implements IUpgrade
 {
-    public static final String[] subItemNames = {"base","speed","power","failsafe"};
+    public static final String[] subItemNames = {"base","speed","power","failsafe","range","power_storage"};
     @SideOnly(Side.CLIENT)
     private IIcon[] icons;
 
@@ -130,6 +130,14 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
                 upgrades.put(UpgradeTypes.Fail,0.5);
                 upgrades.put(UpgradeTypes.Speed,1.25);
                 upgrades.put(UpgradeTypes.PowerUsage,1.25);
+                break;
+            case 4:
+                //range upgrade
+                upgrades.put(UpgradeTypes.Range,4d);
+                upgrades.put(UpgradeTypes.PowerUsage,1.5);
+                break;
+            case 5:
+                upgrades.put(UpgradeTypes.PowerStorage,2d);
                 break;
         }
         return upgrades;

@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.gui.element;
 import cofh.api.energy.IEnergyStorage;
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.element.ElementEnergyStored;
+import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.util.MOEnergyHelper;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -19,6 +20,7 @@ public class MOElementEnergy extends ElementEnergyStored
     public MOElementEnergy(GuiBase gui, int posX, int posY, IEnergyStorage storage)
     {
         super(gui, posX, posY, storage);
+        setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
     }
 
     @Override

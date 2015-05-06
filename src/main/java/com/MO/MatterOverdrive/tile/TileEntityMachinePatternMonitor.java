@@ -15,6 +15,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import com.MO.MatterOverdrive.matter_network.packets.MatterNetwrokResponcePacket;
 import com.MO.MatterOverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;

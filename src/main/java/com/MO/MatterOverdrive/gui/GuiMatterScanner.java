@@ -8,6 +8,7 @@ import com.MO.MatterOverdrive.gui.element.MOElementButton;
 import com.MO.MatterOverdrive.gui.pages.PageInfo;
 import com.MO.MatterOverdrive.gui.pages.PageScanInfo;
 import com.MO.MatterOverdrive.items.MatterScanner;
+import com.MO.MatterOverdrive.network.packet.bi.PacketGetDatabase;
 import com.MO.MatterOverdrive.network.packet.server.PacketMatterScannerUpdate;
 
 import cofh.lib.gui.container.ContainerFalse;
@@ -18,6 +19,7 @@ import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiMatterScanner extends MOGuiBase
@@ -51,14 +53,20 @@ public class GuiMatterScanner extends MOGuiBase
 		updateSelected(scanner);
 		pageScanInfo.setSize(this.xSize, this.ySize);
 		pageInfo = new PageInfo(this,0,0,xSize,ySize,"Matter Overdrive");
+        pages.add(pageScanInfo);
+        pages.add(pageInfo);
 
 		scanPageButton = new MOElementButton(this,this,6,8,SCAN_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
 		scanPageButton.setTexture(Reference.PATH_GUI_ITEM + "search54.png", 44, 22);
 		scanPageButton.setToolTip("Scan Info");
+        pageButtons.add(scanPageButton);
 
 		infoPageButton = new MOElementButton(this,this,6,28 + 8,INFO_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
 		infoPageButton.setTexture(Reference.PATH_GUI_ITEM + "info20.png", 44, 22);
 		scanPageButton.setToolTip("Quide Database");
+        pageButtons.add(infoPageButton);
+
+        MatterOverdrive.packetPipeline.sendToServer(new PacketGetDatabase(MatterScanner.getLinkPosition(scanner)));
 	}
 	
 	@Override
@@ -67,15 +75,15 @@ public class GuiMatterScanner extends MOGuiBase
 		super.initGui();
 
 		//set selected item in list, as active object
-		if(pageScanInfo.list.getSelectedElement() != null)
-			SetSelected((NBTTagCompound) pageScanInfo.list.getSelectedElement().getValue());
-		else
-			SetSelected(null);
+		//if(pageScanInfo.list.getSelectedElement() != null)
+			//SetSelected((NBTTagCompound) pageScanInfo.list.getSelectedElement().getValue());
+		//else
+			//SetSelected(null);
+
+        updateSelected(scanner);
 
 		this.sidePannel.addElement(scanPageButton);
 		this.sidePannel.addElement(infoPageButton);
-		this.addElement(pageScanInfo);
-		this.addElement(pageInfo);
 
 		setPage(MatterScanner.getLastPage(scanner));
 	}
@@ -91,12 +99,14 @@ public class GuiMatterScanner extends MOGuiBase
 		}
 	}
 
+    public void UpdatePatternList(NBTTagList list)
+    {
+        pageScanInfo.updateList(list);
+    }
+
 	private NBTTagCompound getSelectedFromDatabase(ItemStack scanner)
 	{
-		IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld,scanner);
-		if(database != null)
-			return database.getItemAsNBT(MatterDatabaseHelper.GetItemStackFromNBT(MatterScanner.getSelectedAsNBT(scanner)));
-		return null;
+		return MatterScanner.getSelectedAsNBT(scanner);
 	}
 
 	private void updateSelected(ItemStack scanner)
@@ -130,14 +140,6 @@ public class GuiMatterScanner extends MOGuiBase
 			NBTTagCompound elementTag = (NBTTagCompound)pageScanInfo.list.getElement(mouseButton).getValue();
 			SetSelected(elementTag);
 		}
-		else if(buttonName == INFO_PAGE_BUTTON_NAME)
-		{
-			setPage(1);
-		}
-		else if(buttonName == SCAN_PAGE_BUTTON_NAME)
-		{
-			setPage(0);
-		}
 	}
 
 	@Override
@@ -149,33 +151,12 @@ public class GuiMatterScanner extends MOGuiBase
 		}
 	}
 
-	void setPage(int page)
+    public void setPage(int page)
 	{
+        super.setPage(page);
 		if(scanner.hasTagCompound())
 		{
 			scanner.getTagCompound().setShort(MatterScanner.PAGE_TAG_NAME, (short) page);
-		}
-
-		//pages
-		pageScanInfo.setGroupVisible(false);
-		pageInfo.setGroupVisible(false);
-
-		//buttons
-		scanPageButton.setEnabled(true);
-		infoPageButton.setEnabled(true);
-
-		lastPage = page;
-		MatterScanner.setLastPage(scanner, page);
-
-		if(page == 0)
-		{
-			scanPageButton.setEnabled(false);
-			pageScanInfo.setGroupVisible(true);
-		}
-		else
-		{
-			infoPageButton.setEnabled(false);
-			pageInfo.setGroupVisible(true);
 		}
 	}
 
@@ -191,5 +172,17 @@ public class GuiMatterScanner extends MOGuiBase
         super.onGuiClosed();
         if(MatterDatabaseHelper.areEqual(MatterScanner.getSelectedAsNBT(scanner),lastSelected))
             MatterOverdrive.packetPipeline.sendToServer(new PacketMatterScannerUpdate(scanner, (short) databaseSlot));
+    }
+
+	@Override
+	public void textChanged(String elementName, String text, boolean typed)
+	{
+
+	}
+
+    @Override
+    public void ListSelectionChange(String name, int selected)
+    {
+
     }
 }

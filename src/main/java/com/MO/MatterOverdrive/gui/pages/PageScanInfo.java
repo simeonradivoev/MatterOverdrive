@@ -14,6 +14,7 @@ import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -58,7 +59,6 @@ public class PageScanInfo extends ElementBaseGroup
         list.setName(LIST_ELEMENT_NAME);
 
         list.setFilter("");
-        list.updateList("");
 
         scan_progress.setTexture(backgroundPath, 256, 256);
         scan_progress.setMaxValue(MatterDatabaseHelper.MAX_ITEM_PROGRESS);
@@ -89,6 +89,7 @@ public class PageScanInfo extends ElementBaseGroup
 
 
         ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemNBT);
+
         if(item != null)
         {
             String Matter = "Matter: " + String.valueOf(MatterHelper.getMatterAmountFromItem(item)) + MatterHelper.MATTER_UNIT;
@@ -107,12 +108,17 @@ public class PageScanInfo extends ElementBaseGroup
     @Override
     public void update(int mouseX, int mouseY)
     {
-        super.update(mouseX,mouseY);
+        super.update(mouseX, mouseY);
 
         if(searchField != null)
         {
             this.list.setFilter(searchField.getText());
         }
+    }
+
+    public void updateList(NBTTagList list)
+    {
+        this.list.updateList(list);
     }
 
     public void setItemNBT(NBTTagCompound tagCompound)

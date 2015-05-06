@@ -57,7 +57,8 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         mouseY -= this.getGlobalY();
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(this.posX,this.posY,0);
+        GL11.glTranslatef(this.posX, this.posY, 0);
+        GL11.glColor3f(1,1,1);
         for (int i = getElements().size(); i-- > 0;)
         {
             ElementBase c = getElements().get(i);
@@ -84,7 +85,8 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         mouseY -= this.getGlobalY();
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(this.posX,this.posY,0);
+        GL11.glTranslatef(this.posX, this.posY, 0);
+        GL11.glColor3f(1, 1, 1);
         for (int i = getElements().size(); i-- > 0;)
         {
             ElementBase c = getElements().get(i);

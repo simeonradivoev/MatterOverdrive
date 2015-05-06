@@ -10,5 +10,7 @@ public enum UpgradeTypes
     Output,
     SecondOutput,
     Fail,
+    Range,
+    PowerStorage,
     Other
 }

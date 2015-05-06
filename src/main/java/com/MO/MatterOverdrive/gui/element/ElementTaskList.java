@@ -20,12 +20,12 @@ public class ElementTaskList extends MOElementListBox
     List<String> lastTooltip;
     IButtonHandler buttonHandler;
 
-    public ElementTaskList(GuiBase gui,IButtonHandler buttonHandler, int posX, int posY,MatterNetworkTaskQueue<? extends MatterNetworkTask> taskQueue)
+    public ElementTaskList(MOGuiBase gui,IButtonHandler buttonHandler, int posX, int posY,MatterNetworkTaskQueue<? extends MatterNetworkTask> taskQueue)
     {
         this(gui,buttonHandler,posX,posY,0,0,taskQueue);
     }
 
-    public ElementTaskList(GuiBase gui,IButtonHandler buttonHandler, int posX, int posY, int width, int height,MatterNetworkTaskQueue<? extends MatterNetworkTask> taskQueue) {
+    public ElementTaskList(MOGuiBase gui,IButtonHandler buttonHandler, int posX, int posY, int width, int height,MatterNetworkTaskQueue<? extends MatterNetworkTask> taskQueue) {
         super(gui, posX, posY, width, height);
         this.taskQueue = taskQueue;
         lastTooltip = new ArrayList<String>();

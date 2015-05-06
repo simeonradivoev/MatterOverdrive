@@ -12,7 +12,7 @@ public class MOMathHelper
 	public static final double PI2 = Math.PI * 2;
 	public static double degreesToRadians = Math.PI / 180.0;
 
-	public static Vector3 randomSpherePoint(double x0,double y0,double z0,Vector3 radius,Random rand)
+	public static Vector3f randomSpherePoint(double x0,double y0,double z0,Vector3 radius,Random rand)
     {
     	   double u = rand.nextDouble();
     	   double v = rand.nextDouble();
@@ -21,7 +21,7 @@ public class MOMathHelper
     	   double x = x0 + (radius.getX() * Math.sin(phi) * Math.cos(theta));
     	   double y = y0 + (radius.getY() * Math.sin(phi) * Math.sin(theta));
     	   double z = z0 + (radius.getZ() * Math.cos(phi));
-    	   return new Vector3(x,y,z);
+    	   return new Vector3f((float)x,(float)y,(float)z);
     }
 
     public static Vector3f randomCirclePoint(float radius,Random rand)
@@ -38,6 +38,7 @@ public class MOMathHelper
 
         return ((number >> pos) & 1) == 1;
 	}
+
 	
 	public static int setBoolean(int number,int pos,boolean value)
 	{
@@ -49,6 +50,11 @@ public class MOMathHelper
 			return number & ~(1 << pos);
 		}
 	}
+
+    public static double easeIn(double t,double b , double c, double d)
+    {
+        return c*(t/=d)*t*t*t + b;
+    }
 
     public static int toInt(short leftShort,short rightShort)
     {

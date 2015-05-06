@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.gui;
 import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementBase;
 import cofh.lib.gui.element.ElementButtonManaged;
+import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.helpers.StringHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.ContainerMachine;
@@ -26,10 +27,7 @@ import java.util.List;
  */
 public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 {
-    int currentPage;
     T machine;
-    protected List<ElementBaseGroup> pages;
-    protected List<MOElementButton> pageButtons;
     protected ElementBaseGroup homePage;
     protected ElementBaseGroup configPage;
     protected PageUpgrades upgradesPage;
@@ -50,8 +48,6 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     {
         super(container,width,height);
         this.machine = machine;
-        pages = new ArrayList<ElementBaseGroup>(3);
-        pageButtons = new ArrayList<MOElementButton>(3);
 
         homePage = new ElementBaseGroup(this,0,0,xSize,ySize);
         homePage.setName("Home");
@@ -82,29 +78,15 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         slotsList = new ElementSlotsList(this,5,52,80,200,machine.getInventory(),0,false);
         slotsList.setMargin(5);
 
-        setPage(currentPage);
+        setPage(0);
     }
 
     @Override
     public void initGui()
     {
         super.initGui();
-
-        for (ElementBaseGroup page : pages)
-        {
-            page.init();
-            this.addElement(page);
-        }
-
         this.addElement(slotsList);
         this.addElement(indicator);
-
-        for (MOElementButton button : pageButtons)
-        {
-            sidePannel.addElement(button);
-        }
-
-        setPage(currentPage);
     }
 
     @Override
@@ -127,35 +109,15 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     }
 
     @Override
-    public void handleElementButtonClick(String buttonName, int mouseButton)
+    public void textChanged(String elementName, String text, boolean typed)
     {
-        for (int i = 0;i < pageButtons.size();i++)
-        {
-            if (i < pages.size())
-            {
-                if (pageButtons.get(i).getName().equals(buttonName))
-                {
-                    setPage(i);
-                }
-            }
-        }
 
-        super.handleElementButtonClick(buttonName, mouseButton);
     }
 
-    public void setPage(int page)
+    @Override
+    public  void ListSelectionChange(String name,int selected)
     {
-        currentPage = page;
 
-        for (int i = 0;i < pages.size();i++)
-        {
-            pages.get(i).setVisible(i == page);
-
-            if (i < pageButtons.size())
-            {
-                pageButtons.get(i).setEnabled(i != page);
-            }
-        }
     }
 
     @Override

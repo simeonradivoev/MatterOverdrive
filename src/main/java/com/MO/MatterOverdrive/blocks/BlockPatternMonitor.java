@@ -11,11 +11,15 @@ import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -33,7 +37,7 @@ public class BlockPatternMonitor extends MOBlockMachine
         setHardness(2.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
-        setBlockBounds(0,0,0,1,1,5f * (1f/16f));
+        setBlockBounds(0,0,0,1,1,1);
         lightValue = 10;
         setHasGui(true);
     }
@@ -61,29 +65,57 @@ public class BlockPatternMonitor extends MOBlockMachine
 
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
     {
-        ForgeDirection direction = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
+        int meta = world.getBlockMetadata(x, y, z);
+        ForgeDirection direction = ForgeDirection.getOrientation(meta);
         float pixel = 1f / 16f;
 
         if (direction == ForgeDirection.EAST)
         {
-           setBlockBounds(0,0,0,5 * pixel,1,1);
+            this.setBlockBounds(0, 0, 0, 5 * pixel, 1, 1);
         }
         else if (direction == ForgeDirection.WEST)
         {
-            setBlockBounds(1 - 5 * pixel,0,0,1,1,1);
+            this.setBlockBounds(1 - 5 * pixel, 0, 0, 1, 1, 1);
         }
         else if (direction == ForgeDirection.SOUTH)
         {
-            setBlockBounds(0,0,0,1,1,5 * pixel);
+            this.setBlockBounds(0, 0, 0, 1, 1, 5 * pixel);
         }
         else if (direction == ForgeDirection.NORTH)
         {
-            setBlockBounds(0,0,1 - 5 * pixel,1,1,1);
+            this.setBlockBounds(0, 0, 1 - 5 * pixel, 1, 1, 1);
         }
         else
         {
-            setBlockBounds(0,0,0,1,1,5 * pixel);
+            this.setBlockBounds(0, 0, 0, 1, 1, 5 * pixel);
         }
+    }
+
+    @Override
+    public void setBlockBoundsForItemRender() {
+        this.setBlockBounds(0,0,0,1,1,5 * (1f / 16f));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World p_149633_1_, int p_149633_2_, int p_149633_3_, int p_149633_4_)
+    {
+        this.setBlockBoundsBasedOnState(p_149633_1_, p_149633_2_, p_149633_3_, p_149633_4_);
+        return super.getSelectedBoundingBoxFromPool(p_149633_1_, p_149633_2_, p_149633_3_, p_149633_4_);
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_)
+    {
+        this.setBlockBoundsBasedOnState(p_149668_1_, p_149668_2_, p_149668_3_, p_149668_4_);
+        return super.getCollisionBoundingBoxFromPool(p_149668_1_, p_149668_2_, p_149668_3_, p_149668_4_);
+    }
+
+    @Override
+    public MovingObjectPosition collisionRayTrace(World p_149731_1_, int p_149731_2_, int p_149731_3_, int p_149731_4_, Vec3 p_149731_5_, Vec3 p_149731_6_)
+    {
+        this.setBlockBoundsBasedOnState(p_149731_1_, p_149731_2_, p_149731_3_, p_149731_4_);
+        return super.collisionRayTrace(p_149731_1_, p_149731_2_, p_149731_3_, p_149731_4_, p_149731_5_, p_149731_6_);
     }
 
     @Override

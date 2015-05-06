@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.init;
 
+import cofh.lib.util.OreDictionaryProxy;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.*;
@@ -17,12 +18,13 @@ import net.minecraft.item.ItemStack;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class MatterOverdriveBlocks 
 {
 	public static ReplicatorBlock replicator;
 	public static DecomposerBlock decomposer;
-	public static MOBlockContainer transporter;
+	public static TransporterBlock transporter;
 	public static BlockMatterPipe matter_pipe;
     public static BlockNetworkPipe network_pipe;
     public static BlockNetworkRouter network_router;
@@ -76,6 +78,7 @@ public class MatterOverdriveBlocks
 		replicator.Register();
         replicator.loadConfigs(MatterOverdrive.configHandler);
 		transporter.Register();
+        transporter.loadConfigs(MatterOverdrive.configHandler);
 		decomposer.Register();
         decomposer.loadConfigs(MatterOverdrive.configHandler);
 		matter_pipe.Register();
@@ -116,7 +119,7 @@ public class MatterOverdriveBlocks
         GameRegistry.addRecipe(new ItemStack(matter_analyzer), new Object[]{" C ", "IMI", "ONO", 'O', Blocks.iron_block, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'I', Items.iron_ingot});
         GameRegistry.addRecipe(new ItemStack(tritanium_block), new Object[]{"TTT", "TTT", "TTT", 'T', MatterOverdriveItems.tritanium_ingot});
         GameRegistry.addRecipe(new ItemStack(machine_hull), new Object[]{" T ", "T T", " T ", 'T', MatterOverdriveItems.tritanium_plate});
-        GameRegistry.addRecipe(new ItemStack(solar_panel), new Object[]{"CGC", "GQG", "KMK", 'C', Items.coal, 'Q', Items.quartz, 'K', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'M', MatterOverdriveItems.machine_casing});
+        GameRegistry.addRecipe(new ItemStack(solar_panel), new Object[]{"CGC", "GQG", "KMK", 'C', Items.coal, 'Q', Items.quartz, 'K', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'M', MatterOverdriveItems.machine_casing,'G', Blocks.glass});
         GameRegistry.addRecipe(new ItemStack(weapon_station), new Object[]{"   ","CBC","GMR",'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'B',MatterOverdriveItems.battery,'G',Items.glowstone_dust,'R',Items.redstone,'M',MatterOverdriveItems.machine_casing});
         GameRegistry.addRecipe(new ItemStack(pattern_storage),new Object[]{"B4B","T3T","2M1",'B',new ItemStack(Blocks.wool,1,15),'1',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,0),'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'4',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,3),'M',MatterOverdriveItems.machine_casing,'T',MatterOverdriveItems.tritanium_ingot});
     }

@@ -46,7 +46,6 @@ public class PacketPatternMonitorCommands extends TileEntityUpdatePacket
 
     public static class ServerHandler extends AbstractServerPacketHandler<PacketPatternMonitorCommands>
     {
-
         @Override
         public IMessage handleServerMessage(EntityPlayer player, PacketPatternMonitorCommands message, MessageContext ctx)
         {

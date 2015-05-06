@@ -16,6 +16,8 @@ public class MOElementButton extends ElementButton
     public static final ScaleTexture NORMAL_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_normal.png"),18,18).setOffsets(7,7,7,7);
     public static final ScaleTexture HOVER_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_over.png"),18,18).setOffsets(7,7,7,7);
     public static final ScaleTexture HOVER_TEXTURE_DARK = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_over_dark.png"),18,18).setOffsets(7,7,7,7);
+
+    protected String text;
     IButtonHandler buttonHandler;
 
     public MOElementButton(GuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int sizeX, int sizeY, String texture) {
@@ -47,5 +49,13 @@ public class MOElementButton extends ElementButton
         GL11.glEnable(GL11.GL_BLEND);
         super.drawBackground(mouseX, mouseY, gameTicks);
         GL11.glDisable(GL11.GL_BLEND);
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

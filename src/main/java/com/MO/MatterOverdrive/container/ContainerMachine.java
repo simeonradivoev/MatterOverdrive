@@ -95,7 +95,7 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 
     protected boolean putInPlayerInventory(ItemStack itemStack)
     {
-        return InventoryHelper.mergeItemStack(inventorySlots,itemStack,machine.getInventory().getSizeInventory(),36,false,true);
+        return InventoryHelper.mergeItemStack(inventorySlots,itemStack,machine.getInventory().getSizeInventory(),inventorySlots.size() - machine.getInventory().getSizeInventory(),true,true);
     }
 
     protected boolean tryAndPutInMachineSlots(ItemStack itemStack,Inventory inventory)

@@ -62,7 +62,6 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
         replicate_progress.setMode(1);
         replicate_progress.setSize(24, 16);
         replicate_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
-        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
 	}
 	
 	@Override
@@ -121,26 +120,16 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 
     void ManageReqiremnetsTooltips()
     {
-        ItemStack scanner = machine.getStackInSlot(machine.DATABASE_SLOT_ID);
+        NBTTagCompound itemAsNBT = machine.getInternalPatternStorage();
 
-        if(scanner != null)
+        if(itemAsNBT != null)
         {
-            NBTTagCompound itemAsNBT = machine.getInternalPatternStorage();
+            ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
 
-            if(itemAsNBT != null)
-            {
-                ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
-                int matterAmount = MatterHelper.getMatterAmountFromItem(item);
-                matterElement.setDrain(-matterAmount);
-                energyElement.setEnergyRequired(-(machine.getEnergyDrainMax(item)));
-                energyElement.setEnergyRequiredPerTick(-machine.getEnergyDrainPerTick(item));
-            }
-        }
-        else
-        {
-            matterElement.setDrain(0);
-            energyElement.setEnergyRequired(0);
-            energyElement.setEnergyRequiredPerTick(0);
+            int matterAmount = MatterHelper.getMatterAmountFromItem(item);
+            matterElement.setDrain(-matterAmount);
+            energyElement.setEnergyRequired(-(machine.getEnergyDrainMax()));
+            energyElement.setEnergyRequiredPerTick(-machine.getEnergyDrainPerTick());
         }
     }
 

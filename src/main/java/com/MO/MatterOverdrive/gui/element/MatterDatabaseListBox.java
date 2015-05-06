@@ -29,7 +29,6 @@ public class MatterDatabaseListBox extends MOElementListBox
 	{
 		super(gui,x,y,width,height);
 		this.scanner = scanner;
-		updateList(this.filter);
 	}
 	
 	class MatterDatabaseEntry implements IMOListBoxElement
@@ -104,10 +103,6 @@ public class MatterDatabaseListBox extends MOElementListBox
 
 	public void setFilter(String filter)
 	{
-		if(!this.filter.equals(filter))
-		{
-			updateList(filter);
-		}
 		this.filter = filter;
 	}
 
@@ -124,28 +119,18 @@ public class MatterDatabaseListBox extends MOElementListBox
 	
 	
 	
-	public void updateList(String filter)
-	{
+	public void updateList(NBTTagList itemList) {
 		//System.out.println("List Updated");
 		this.clear();
+		NBTTagCompound selected = MatterScanner.getSelectedAsNBT(scanner);
 
-		IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld, scanner);
+		if (itemList != null) {
+			for (int i = 0; i < itemList.tagCount(); i++) {
+				if (MatterDatabaseHelper.areEqual(selected, itemList.getCompoundTagAt(i)))
+					_selectedIndex = i;
 
-		if(database != null)
-		{
-			NBTTagList itemList = database.getItemsAsNBT();
-			NBTTagCompound selected = MatterScanner.getSelectedAsNBT(scanner);
-
-			if (itemList != null)
-			{
-				for (int i = 0; i < itemList.tagCount(); i++)
-				{
-					if (MatterDatabaseHelper.areEqual(selected,itemList.getCompoundTagAt(i)))
-						_selectedIndex = i;
-
-					MatterDatabaseEntry selectedEntry = new MatterDatabaseEntry(itemList.getCompoundTagAt(i));
-					this.add(selectedEntry);
-				}
+				MatterDatabaseEntry selectedEntry = new MatterDatabaseEntry(itemList.getCompoundTagAt(i));
+				this.add(selectedEntry);
 			}
 		}
 	}

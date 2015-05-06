@@ -1,42 +1,20 @@
 package com.MO.MatterOverdrive.blocks;
 
-import java.util.Random;
-
-import cofh.lib.util.helpers.BlockHelper;
-import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
-import com.MO.MatterOverdrive.handler.GuiHandler;
 import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
-import com.MO.MatterOverdrive.items.includes.MOEnergyMatterBlockItem;
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import com.MO.MatterOverdrive.MatterOverdrive;
-import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.includes.MOMatterEnergyStorageBlock;
-import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
-
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ReplicatorBlock extends MOMatterEnergyStorageBlock
 {
-	private static boolean keepInventory;
 	public float replication_volume;
     public boolean hasVentParticles;
 	

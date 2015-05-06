@@ -9,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
  */
 public class MachineSound extends PositionedSound implements ITickableSound
 {
-
     private boolean donePlaying;
 
     public MachineSound(ResourceLocation sound,float x,float y,float z,float volume,float pitch) {
@@ -37,6 +36,11 @@ public class MachineSound extends PositionedSound implements ITickableSound
     public void startPlaying()
     {
         donePlaying = false;
+    }
+
+    public void setRepeat(boolean repeat)
+    {
+        this.repeat = repeat;
     }
 
     @Override
