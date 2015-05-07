@@ -122,5 +122,6 @@ public class MatterOverdriveBlocks
         GameRegistry.addRecipe(new ItemStack(solar_panel), new Object[]{"CGC", "GQG", "KMK", 'C', Items.coal, 'Q', Items.quartz, 'K', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'M', MatterOverdriveItems.machine_casing,'G', Blocks.glass});
         GameRegistry.addRecipe(new ItemStack(weapon_station), new Object[]{"   ","CBC","GMR",'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'B',MatterOverdriveItems.battery,'G',Items.glowstone_dust,'R',Items.redstone,'M',MatterOverdriveItems.machine_casing});
         GameRegistry.addRecipe(new ItemStack(pattern_storage),new Object[]{"B4B","T3T","2M1",'B',new ItemStack(Blocks.wool,1,15),'1',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,0),'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'4',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,3),'M',MatterOverdriveItems.machine_casing,'T',MatterOverdriveItems.tritanium_ingot});
+        GameRegistry.addRecipe(new ItemStack(pattern_monitor),new Object[]{"GGG","SCS"," M ",'M',MatterOverdriveItems.machine_casing,'G',Blocks.glass,'S',Items.glowstone_dust,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2)});
     }
 }

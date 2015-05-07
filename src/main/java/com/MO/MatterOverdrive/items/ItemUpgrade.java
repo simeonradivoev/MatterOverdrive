@@ -65,6 +65,14 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
     {
         super.Register(name);
         GameRegistry.addRecipe(new ItemStack(this, 1, 0), new Object[]{" R ", " C ", " T ", 'G', Blocks.glass, 'R', Items.redstone, 'T', MatterOverdriveItems.tritanium_plate, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0)});
+        //speed
+        GameRegistry.addRecipe(new ItemStack(this,1,1),new Object[]{" R ","GUG"," E ",'U',new ItemStack(this,1,0),'G',Items.glowstone_dust,'R',Items.redstone,'E',Items.emerald});
+        //power
+        GameRegistry.addRecipe(new ItemStack(this,1,2),new Object[]{" B ","RUR"," C ",'U',new ItemStack(this,1,0),'B',MatterOverdriveItems.battery,'R',Items.redstone,'C',Items.quartz});
+        //failsafe
+        GameRegistry.addRecipe(new ItemStack(this,1,3),new Object[]{" D ","RUR"," G ",'U',new ItemStack(this,1,0),'D',Items.diamond,'R',Items.redstone,'G',Items.gold_ingot});
+        //range
+        GameRegistry.addRecipe(new ItemStack(this,1,4),new Object[]{" E ","RUR"," G ",'U',new ItemStack(this,1,0),'E',Items.ender_pearl,'R',Items.redstone,'G',Items.gold_ingot});
     }
 
     @Override

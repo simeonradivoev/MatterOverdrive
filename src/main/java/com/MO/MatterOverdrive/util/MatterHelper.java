@@ -93,11 +93,6 @@ public class MatterHelper
 		
 		return null;
 	}
-	
-	public static boolean isRegistered(ItemStack item)
-	{
-		return MatterRegistry.hasEntry(item);
-	}
 
     public static boolean isWeaponModule(ItemStack itemStack)
     {

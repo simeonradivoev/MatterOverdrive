@@ -88,9 +88,13 @@ public class MatterOverdriveItems
         machine_casing.Register();
         s_magnet.Register();
         dilithium_ctystal.Register();
+        MatterRegistry.addToBlacklist(dilithium_ctystal);
         tritanium_ingot.Register();
+        MatterRegistry.addToBlacklist(tritanium_ingot);
         tritanium_dust.Register();
+        MatterRegistry.addToBlacklist(tritanium_dust);
         tritanium_plate.Register();
+        MatterRegistry.addToBlacklist(tritanium_plate);
         pattern_drive.Register();
         weapon_module_color.Register();
         weapon_module_barrel.Register();

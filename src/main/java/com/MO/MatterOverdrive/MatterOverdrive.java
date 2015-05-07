@@ -50,6 +50,7 @@ public class MatterOverdrive
         configHandler = new MOConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
         tickHandler = new TickHandler(configHandler);
         FMLCommonHandler.instance().bus().register(tickHandler);
+
         MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
         MatterOverdriveWorld.init();
@@ -76,7 +77,8 @@ public class MatterOverdrive
 	{
         MatterOverdriveMatter.registerBasic(configHandler);
         MatterOverdriveMatter.init(configHandler);
-        MatterOverdriveMatter.registerComplex(configHandler);
+        MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);
+        MatterOverdriveMatter.registerFromConfig(configHandler);
 	}
 
 	private void UpdateTabs()

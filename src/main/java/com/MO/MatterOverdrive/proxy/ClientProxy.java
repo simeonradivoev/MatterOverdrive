@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.proxy;
 import com.MO.MatterOverdrive.client.RenderHandler;
 import com.MO.MatterOverdrive.client.render.*;
 import com.MO.MatterOverdrive.handler.KeyHandler;
+import com.MO.MatterOverdrive.handler.VersionCheckerHandler;
 import com.MO.MatterOverdrive.handler.TooltipHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
@@ -27,7 +28,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy
 {
-
     public static TileEntityRendererPipe pipeRenderer;
     public static TileEntityRendererMatterPipe matter_pipeRenderer;
     public static TileEntityRendererNetworkPipe network_pipeRenderer;
@@ -44,7 +44,6 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(new MatterOverdriveIcons());
         MinecraftForge.EVENT_BUS.register(new RenderHandler());
         MinecraftForge.EVENT_BUS.register(new TooltipHandler());
-
 
         pipeRenderer = new TileEntityRendererPipe();
         matter_pipeRenderer = new TileEntityRendererMatterPipe();

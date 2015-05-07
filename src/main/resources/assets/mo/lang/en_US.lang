@@ -134,3 +134,6 @@ task.store_pattern.state.3.description=Currently Storing Item Pattern.
 task.store_pattern.state.4.description=Item Pattern Successfully Stored.
 
 task.replicate_pattern.state.1.description=Searching for Available Replicators.
+
+info.mo.updater.download=download
+info.mo.updater.hover=Click to download the latest version.

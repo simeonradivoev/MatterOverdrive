@@ -3,31 +3,18 @@ package com.MO.MatterOverdrive.handler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class MatterEntry implements IMatterEntry
 {
 	byte type;
 	int matter;
     String name;
-	
-	public MatterEntry(Item item,int matter)
-	{
-		this.matter = matter;
-		this.name = Item.itemRegistry.getNameForObject(item);
-		this.type = 1;
-	}
-	
-	public MatterEntry(Block block,int matter)
-	{
-        this.name = Block.blockRegistry.getNameForObject(block);
-		this.type = 2;
-		this.matter = matter;
-	}
 
-    public MatterEntry(String entry,int matter)
+    public MatterEntry(String entry,int matter,byte type)
     {
         this.name = entry;
-        this.type = 0;
+        this.type = type;
         this.matter = matter;
     }
 	
