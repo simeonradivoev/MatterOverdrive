@@ -26,15 +26,15 @@ import java.util.Random;
 
 public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter implements ISidedInventory, IMatterConnection
 {
-	public static final int MATTER_STORAGE = 256;
+	public static final int MATTER_STORAGE = 1024;
 	public static final int ENERGY_STORAGE = 512000;
-    public  static final  int MATTER_TRANSFER = 1;
-    public  static final  int MATTER_EXTRACT = 1;
+    public  static final  int MATTER_TRANSFER = 2;
+    public  static final  int MATTER_EXTRACT = 2;
     public  static  final  int MATTER_EXTRACT_SPEED = 100;
     public  static  final float FAIL_CHANGE = 0.05f;
 
     public static final int DECEOPOSE_SPEED_PER_MATTER = 80;
-    public static final int DECOMPOSE_ENERGY_PER_MATTER = 16000;
+    public static final int DECOMPOSE_ENERGY_PER_MATTER = 8000;
 
     public int INPUT_SLOT_ID = 0;
     public int OUTPUT_SLOT_ID = 1;
@@ -53,7 +53,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 
         this.matterStorage.setCapacity(MATTER_STORAGE);
         this.matterStorage.setMaxReceive(MATTER_TRANSFER);
-        this.matterStorage.setMaxExtract(MATTER_TRANSFER);
+        this.matterStorage.setMaxExtract(MATTER_EXTRACT);
         time = new TimeTracker();
 	}
 

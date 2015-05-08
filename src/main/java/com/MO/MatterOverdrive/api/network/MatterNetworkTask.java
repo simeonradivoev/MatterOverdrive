@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-import scala.actors.threadpool.Arrays;
 
 import java.util.List;
 import java.util.UUID;
@@ -74,13 +73,19 @@ public abstract class MatterNetworkTask
     {
         list.add(getColorForState(state) + "[ " + MOStringHelper.translateToLocal("task.state." + getState() + ".name") + " ]");
         String descriptionUnlocilized = "task." + getUnlocalizedName() + ".state." + state + ".description";
+        String[] infos;
         if(MOStringHelper.hasTranslation(descriptionUnlocilized))
         {
-            list.addAll(Arrays.asList(MOStringHelper.translateToLocal(descriptionUnlocilized).split("\n")));
+            infos = MOStringHelper.translateToLocal(descriptionUnlocilized).split("\n");
         }
         else
         {
-            list.addAll(Arrays.asList(MOStringHelper.translateToLocal("task.state." + state + ".description").split("\n")));
+            infos = MOStringHelper.translateToLocal("task.state." + state + ".description").split("\n");
+        }
+
+        for (int i = 0;i < infos.length;i++)
+        {
+            list.add(infos[i]);
         }
     }
 

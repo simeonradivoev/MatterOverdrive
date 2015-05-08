@@ -50,9 +50,9 @@ import java.util.List;
 
 public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkConnectionProxy, IMatterNetworkDispatcher
 {
-	public static final int MATTER_STORAGE = 256;
+	public static final int MATTER_STORAGE = 1024;
 	public static final int ENERGY_STORAGE = 512000;
-	public  static final  int MATTER_TRANSFER = 1;
+	public  static final  int MATTER_TRANSFER = 2;
     public static final int PATTERN_SEARCH_DELAY = 60;
     public static final int REPLICATION_ANIMATION_TIME = 60;
 
@@ -62,7 +62,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public int SHIELDING_SLOT_ID = 3;
 
     public static final int REPLICATE_SPEED_PER_MATTER = 120;
-	public static final int REPLICATE_ENERGY_PER_MATTER = 32000;
+	public static final int REPLICATE_ENERGY_PER_MATTER = 16000;
     public static final int RADIATION_DAMAGE_DELAY = 5;
     public static final int RADIATION_RANGE = 8;
     public static final double FAIL_CHANCE = 0.05;

@@ -25,8 +25,7 @@ import java.util.Random;
  */
 public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConnection, IMatterHandler
 {
-    public  static  final int MATTER_EXTRACT = 1;
-    public  static  final int MATTER_INPUT = 1;
+    public  static  final int MATTER_STORAGE = 8;
     public  static  final int TRANSFER_SPEED = 20;
     public  ForgeDirection lastDir = ForgeDirection.WEST;
     private MatterStorage storage;
@@ -39,7 +38,7 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
     public TileEntityMatterPipe()
     {
         t = new TimeTracker();
-        storage = new MatterStorage(1,MATTER_EXTRACT,MATTER_INPUT);
+        storage = new MatterStorage(MATTER_STORAGE);
     }
 
     @Override
@@ -81,7 +80,7 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
                 if (e != null && e instanceof IMatterHandler)
                 {
                     IMatterHandler to = (IMatterHandler)e;
-                    int transferAmount = MatterHelper.Transfer(dir.dir,MATTER_EXTRACT,this,to);
+                    int transferAmount = MatterHelper.Transfer(dir.dir,MATTER_STORAGE,this,to);
                 }
             }
         }
