@@ -1,3 +1,4 @@
 {"versions":[
-    {"version":"0.2.4", "changes":"Lots of Matter Network Implementations, and a new Pattern Monitor", "type":"beta","date":"5.2,2015","url":"http://minecraft.curseforge.com/mc-mods/229694-matter-overdrive/files/2236431/download"},
+    {"version":"0.2.6", "changes":"Implemented the transporter and an automatic matter calculation.", "type":"beta","date":"8.2,2015","url":"http://minecraft.curseforge.com/mc-mods/229694-matter-overdrive/files/2237277"},
+    {"version":"0.2.4", "changes":"Lots of Matter Network Implementations, and a new Pattern Monitor", "type":"beta","date":"5.2,2015","url":"http://minecraft.curseforge.com/mc-mods/229694-matter-overdrive/files/2236431"},
 ]}
