@@ -46,7 +46,8 @@ public class PacketPipeline
         registerPacket(PacketRemoveTask.ServerHandler.class,PacketRemoveTask.class);
         registerPacket(PacketTransporterCommands.ServerHandler.class, PacketTransporterCommands.class);
         registerPacket(PacketSyncTransportProgress.ClientHandler.class,PacketSyncTransportProgress.class);
-        registerBiPacket(PacketGetDatabase.Handler.class,PacketGetDatabase.class);
+        registerBiPacket(PacketGetDatabase.Handler.class, PacketGetDatabase.class);
+        registerPacket(PacketUpdateMatterRegistry.ClientHandler.class,PacketUpdateMatterRegistry.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

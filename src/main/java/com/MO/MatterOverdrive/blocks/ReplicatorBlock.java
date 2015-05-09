@@ -68,10 +68,10 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
     }
 
 	@Override
-	public void loadConfigs(MOConfigurationHandler configurationHandler)
+	public void onConfigChanged(MOConfigurationHandler config)
 	{
-		super.loadConfigs(configurationHandler);
-        replication_volume = configurationHandler.getMachineFloat(getUnlocalizedName() + ".volume.replicate",1f,0,2f,"The volume of the replication animation");
-        hasVentParticles = configurationHandler.getMachineBool(getUnlocalizedName() + ".particles", true, "Sould vent particles be displayed");
+		super.onConfigChanged(config);
+		replication_volume = (float)config.getMachineDouble(getUnlocalizedName(),"volume.replicate", 1, "The volume of the replication animation");
+        hasVentParticles = config.getMachineBool(getUnlocalizedName(),"particles.vent",true, "Sould vent particles be displayed");
 	}
 }

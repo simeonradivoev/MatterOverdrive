@@ -1,14 +1,8 @@
 package com.MO.MatterOverdrive.handler;
 
-import com.MO.MatterOverdrive.handler.thread.CheckVersion;
-import com.MO.MatterOverdrive.handler.thread.RegisterItemsFromRecipes;
-import com.MO.MatterOverdrive.init.MatterOverdriveMatter;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
 /**
@@ -18,11 +12,13 @@ public class TickHandler
 {
     private MatterNetworkTickHandler networkTick;
     private VersionCheckerHandler versionCheckerHandler;
+    private PlayerEventHandler playerEventHandler;
     private boolean worldStartFired = false;
 
-    public TickHandler(MOConfigurationHandler configurationHandler)
+    public TickHandler(MOConfigurationHandler configurationHandler,PlayerEventHandler playerEventHandler)
     {
         networkTick = new MatterNetworkTickHandler(configurationHandler);
+        this.playerEventHandler = playerEventHandler;
         versionCheckerHandler = new VersionCheckerHandler();
     }
 
@@ -40,8 +36,9 @@ public class TickHandler
 
     //Called when the server ticks. Usually 20 ticks a second.
     @SubscribeEvent
-    public void onServerTick(TickEvent.ServerTickEvent event) {
-
+    public void onServerTick(TickEvent.ServerTickEvent event)
+    {
+        playerEventHandler.onServerTick(event);
     }
 
     //Called when a new frame is displayed (See fps)
@@ -64,7 +61,6 @@ public class TickHandler
 
     public void onWorldStart(Side side,World world)
     {
-        Thread registerItemsThread = new Thread(new RegisterItemsFromRecipes());
-        registerItemsThread.run();
+
     }
 }

@@ -11,16 +11,12 @@ import java.util.List;
  */
 public class MatterNetworkTickHandler
 {
-    public static final String MAX_BROADCASTS_KEY = "Max_Broadcasts_Per_Tick";
-
     private int max_broadcasts;
     int lastID = 0;
 
     public MatterNetworkTickHandler(MOConfigurationHandler configuration)
     {
-        configuration.load();
-        this.max_broadcasts = configuration.config.getInt(MAX_BROADCASTS_KEY,MOConfigurationHandler.CATEGORY_MATTER_NETWORK,128,0,1024,"The maximum amount of network packet broadcasts per tick.");
-        configuration.save();
+        this.max_broadcasts = configuration.getInt(MOConfigurationHandler.KEY_MAX_BROADCASTS,MOConfigurationHandler.CATEGORY_MATTER_NETWORK,128);
     }
 
     public MatterNetworkTickHandler(int max_broadcasts)

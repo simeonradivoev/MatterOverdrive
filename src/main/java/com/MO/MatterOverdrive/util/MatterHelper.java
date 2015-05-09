@@ -1,13 +1,12 @@
 package com.MO.MatterOverdrive.util;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import com.MO.MatterOverdrive.api.inventory.IUpgrade;
 import com.MO.MatterOverdrive.api.matter.*;
 import com.MO.MatterOverdrive.api.weapon.IWeapon;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
-import com.MO.MatterOverdrive.handler.IMatterEntry;
+import com.MO.MatterOverdrive.handler.MatterEntry;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
 
 import com.MO.MatterOverdrive.items.MatterScanner;
@@ -20,7 +19,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
@@ -43,7 +41,7 @@ public class MatterHelper
 	public static int getMatterAmountFromItem(ItemStack item)
 	{
         if(item != null) {
-            IMatterEntry matter = MatterRegistry.getEntry(item);
+            MatterEntry matter = MatterRegistry.getEntry(item);
             if(matter != null)
                 return matter.getMatter();
         }

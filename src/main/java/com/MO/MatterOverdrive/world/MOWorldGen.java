@@ -86,10 +86,10 @@ public class MOWorldGen implements IWorldGenerator
     private boolean shouldGenerate(String name)
     {
         Configuration configuration = MatterOverdrive.configHandler.config;
-        Property shouldGenerateOres = configuration.get(MOConfigurationHandler.CATEGORY_WORLD_GEN, Reference.CONFIG_WORLD_SPAWN_ORES,true);
+        Property shouldGenerateOres = configuration.get(MOConfigurationHandler.CATEGORY_WORLD_GEN, MOConfigurationHandler.CATEGORY_WORLD_SPAWN_ORES,true);
         if (shouldGenerateOres.getBoolean(true))
         {
-            return configuration.get(MOConfigurationHandler.CATEGORY_WORLD_GEN,Reference.CONFIG_WORLD_SPAWN + "." + name,true).getBoolean(true);
+            return configuration.get(MOConfigurationHandler.CATEGORY_WORLD_GEN,MOConfigurationHandler.CATEGORY_WORLD_SPAWN + "." + name,true).getBoolean(true);
         }
         return false;
     }

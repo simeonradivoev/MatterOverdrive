@@ -1,16 +1,12 @@
 package com.MO.MatterOverdrive.init;
 
-import java.util.Map;
-
 import com.MO.MatterOverdrive.MatterOverdrive;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Property;
 
-import com.MO.MatterOverdrive.handler.IMatterEntry;
 import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
 
@@ -23,7 +19,6 @@ public class MatterOverdriveMatter
 	
 	public static void registerBasic(MOConfigurationHandler c)
 	{
-        MatterOverdrive.configHandler.load();
         registerBasicItems(c);
         registerBasicBlocks(c);
 	}
@@ -56,7 +51,7 @@ public class MatterOverdriveMatter
         reg(c,Blocks.soul_sand,4);
         reg(c,Blocks.snow,2);
         reg(c,Blocks.pumpkin,2);
-        reg(c,Blocks.obsidian,64);
+        reg(c,Blocks.obsidian,16);
         reg(c,"treeLeaves",1);
         reg(c,Blocks.mycelium,5);
         reg(c,Blocks.ice,3);

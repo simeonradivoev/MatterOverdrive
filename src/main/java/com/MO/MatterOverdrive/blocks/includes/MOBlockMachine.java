@@ -10,6 +10,7 @@ import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.items.includes.MOEnergyMatterBlockItem;
 import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
+import com.MO.MatterOverdrive.util.IConfigSubscriber;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.FMLLog;
@@ -37,7 +38,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 4/5/2015.
  */
-public class MOBlockMachine extends MOBlockContainer implements IDismantleable
+public class MOBlockMachine extends MOBlockContainer implements IDismantleable, IConfigSubscriber
 {
     public float volume;
     public boolean hasGui;
@@ -112,11 +113,6 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable
         if(te != null)
             te.writeToDropItem(itemStack);
         return itemStack;
-    }
-
-    public void loadConfigs(MOConfigurationHandler configurationHandler)
-    {
-        volume = configurationHandler.getMachineFloat(getUnlocalizedName() + ".volume",1,0,2,"The volume of the Machine");
     }
 
     public boolean isHasGui() {
@@ -197,5 +193,12 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable
     public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
     {
         return true;
+    }
+
+    @Override
+    public void onConfigChanged(MOConfigurationHandler config)
+    {
+        config.initMachineCategory(getUnlocalizedName());
+        volume = (float)config.getMachineDouble(getUnlocalizedName(), "volume",1,"The volume of the Machine");
     }
 }

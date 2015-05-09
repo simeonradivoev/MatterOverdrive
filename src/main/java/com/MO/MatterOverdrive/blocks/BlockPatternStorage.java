@@ -64,9 +64,9 @@ public class BlockPatternStorage extends MOBlockMachine
         return false;
     }
 
-    public void loadConfigs(MOConfigurationHandler configurationHandler)
+    public void onConfigChanged(MOConfigurationHandler config)
     {
-        super.loadConfigs(configurationHandler);
-        hasVentParticles = configurationHandler.getMachineBool(getUnlocalizedName() + ".particles", true, "Sould vent particles be displayed");
+        super.onConfigChanged(config);
+        hasVentParticles = config.getMachineBool(getUnlocalizedName(),"particles.vent", true, "Sould vent particles be displayed");
     }
 }

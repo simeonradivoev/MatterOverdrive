@@ -2,7 +2,9 @@ package com.MO.MatterOverdrive;
 
 import java.io.File;
 
+import com.MO.MatterOverdrive.handler.PlayerEventHandler;
 import com.MO.MatterOverdrive.handler.TickHandler;
+import com.MO.MatterOverdrive.handler.thread.RegisterItemsFromRecipes;
 import com.MO.MatterOverdrive.init.MatterOverdriveWorld;
 import com.MO.MatterOverdrive.network.PacketPipeline;
 
@@ -13,6 +15,7 @@ import com.MO.MatterOverdrive.init.MatterOverdriveItems;
 import com.MO.MatterOverdrive.init.MatterOverdriveMatter;
 import com.MO.MatterOverdrive.proxy.CommonProxy;
 
+import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -21,10 +24,11 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import com.MO.MatterOverdrive.matter_network.MatterNetworkRegistry;
 
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, guiFactory  = Reference.GUI_FACTORY_CLASS)
 public class MatterOverdrive 
 {
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
@@ -35,6 +39,7 @@ public class MatterOverdrive
 	public static final MatterOverdriveTab tabMatterOverdrive_upgrades = new MatterOverdriveTab("tabMatterOverdrive_upgrades");
 
     public static TickHandler tickHandler;
+    public static PlayerEventHandler playerEventHandler;
 	public static MOConfigurationHandler configHandler;
     public static GuiHandler guiHandler;
     public static PacketPipeline packetPipeline;
@@ -46,11 +51,13 @@ public class MatterOverdrive
 	public void preInit(FMLPreInitializationEvent event)
 	{
         guiHandler = new GuiHandler();
+        playerEventHandler = new PlayerEventHandler();
 		packetPipeline = new PacketPipeline();
         configHandler = new MOConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
-        tickHandler = new TickHandler(configHandler);
+        tickHandler = new TickHandler(configHandler,playerEventHandler);
         FMLCommonHandler.instance().bus().register(tickHandler);
-
+        FMLCommonHandler.instance().bus().register(playerEventHandler);
+        FMLCommonHandler.instance().bus().register(configHandler);
         MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
         MatterOverdriveWorld.init();
@@ -80,6 +87,15 @@ public class MatterOverdrive
         MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);
         MatterOverdriveMatter.registerFromConfig(configHandler);
 	}
+
+    @EventHandler
+    public void serverStart(FMLServerStartedEvent event)
+    {
+        if (configHandler.getBool(MOConfigurationHandler.KEY_AUTOMATIC_RECIPE_CALCULATION,MOConfigurationHandler.CATEGORY_MATTER,true)) {
+            Thread registerItemsThread = new Thread(new RegisterItemsFromRecipes());
+            registerItemsThread.run();
+        }
+    }
 
 	private void UpdateTabs()
 	{

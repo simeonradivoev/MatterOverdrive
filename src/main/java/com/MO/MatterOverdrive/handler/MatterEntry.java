@@ -1,11 +1,12 @@
 package com.MO.MatterOverdrive.handler;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class MatterEntry implements IMatterEntry
+public class MatterEntry
 {
 	byte type;
 	int matter;
@@ -17,26 +18,27 @@ public class MatterEntry implements IMatterEntry
         this.type = type;
         this.matter = matter;
     }
-	
-	@Override
+
 	public int getMatter() 
 	{
 		return matter;
 	}
 
-	@Override
-	public boolean isBlock() 
+	public boolean isBlock()
 	{
 		return type == 2;
 	}
 
-	@Override
-	public boolean isItem() 
+	public boolean isItem()
 	{
 		return this.type == 1;
 	}
 
-	@Override
+	public byte getType()
+	{
+		return type;
+	}
+
 	public String getName()
 	{
 		return name;

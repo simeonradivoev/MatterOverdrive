@@ -35,6 +35,8 @@ item.weapon_module_barrel.fire.name=Incendiary Filter
 item.weapon_module_barrel.explosion.name=Burst Inductive Drum
 
 tile.replicator.name=Matter Replicator
+tile.replicator.config.volume.replicate=Replication Volume
+tile.replicator.config.particles.vent=Vent Particles
 tile.replicator.details=Replicates Items and Blocks from Matter Plasma
 tile.replicator_active.name=Matter Replicator
 tile.decomposer.name=Matter Decomposer
@@ -55,6 +57,7 @@ tile.tritanium_ore.name=Tritanium Ore
 tile.tritanium_block.name=Tritanium Block
 tile.pattern_storage.name=Pattern Storage
 tile.pattern_storage.details=Stores item patterns, for replication
+tile.pattern_storage.config.particles.vent=Vent Particles
 tile.machine_hull.name=Machine Hull
 tile.solar_panel.name=Solar Panel
 tile.solar_panel.details=Produces RF from Sunlight
@@ -137,3 +140,12 @@ task.replicate_pattern.state.1.description=Searching for Available Replicators.
 
 info.mo.updater.download=download
 info.mo.updater.hover=Click to download the latest version.
+
+config.machine_options.name=Machines
+config.world_gen.name=World Generation
+config.matter_network.name=Matter Network
+config.matter_registry.name=Matter Registry
+config.matter_registry.item_overrides.name=Override
+config.matter_registry.new_items.name=New
+config.matter_registry.item_blacklist.name=Blacklist
+config.spawn_ores.name=Spawn Ores

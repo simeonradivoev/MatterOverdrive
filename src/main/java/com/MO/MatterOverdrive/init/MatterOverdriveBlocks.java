@@ -74,33 +74,31 @@ public class MatterOverdriveBlocks
 	
 	public static void register(FMLPreInitializationEvent event)
 	{
-        MatterOverdrive.configHandler.load();
 		replicator.Register();
-        replicator.loadConfigs(MatterOverdrive.configHandler);
+        MatterOverdrive.configHandler.subscribe(replicator);
 		transporter.Register();
-        transporter.loadConfigs(MatterOverdrive.configHandler);
+        MatterOverdrive.configHandler.subscribe(transporter);
 		decomposer.Register();
-        decomposer.loadConfigs(MatterOverdrive.configHandler);
+        MatterOverdrive.configHandler.subscribe(decomposer);
 		matter_pipe.Register();
         network_pipe.Register();
         network_router.Register();
         matter_analyzer.Register();
-        matter_analyzer.loadConfigs(MatterOverdrive.configHandler);
+        MatterOverdrive.configHandler.subscribe(matter_analyzer);
         dilithiumOre.Register();
         tritaniumOre.Register();
         tritanium_block.Register();
         machine_hull.Register();
         pattern_storage.Register();
-        pattern_storage.loadConfigs(MatterOverdrive.configHandler);
+        MatterOverdrive.configHandler.subscribe(pattern_storage);
         solar_panel.Register();
-        solar_panel.loadConfigs(MatterOverdrive.configHandler);
+        MatterOverdrive.configHandler.subscribe(solar_panel);
         weapon_station.Register();
         microwave.Register();
         pattern_monitor.Register();
-        pattern_monitor.loadConfigs(MatterOverdrive.configHandler);
+        MatterOverdrive.configHandler.subscribe(pattern_monitor);
         network_switch.Register();
-        network_switch.loadConfigs(MatterOverdrive.configHandler);
-        MatterOverdrive.configHandler.save();
+        MatterOverdrive.configHandler.subscribe(network_switch);
 
         if (event.getSide() == Side.CLIENT)
         {

@@ -20,8 +20,6 @@ import java.util.List;
  */
 public class CheckVersion implements Runnable {
 
-    public static final String URL_MAIN = "http://simeon.co.vu/Mods/MatterOverdrive/Versions.txt";
-    public static final String URL_MIRROR = "https://raw.githubusercontent.com/simeonradivoev/MatterOverdrive/master/Versions.txt";
     EntityPlayer player;
 
     public CheckVersion(EntityPlayer player)
@@ -33,7 +31,7 @@ public class CheckVersion implements Runnable {
     public void run()
     {
         try {
-            readFromUrl(URL_MAIN);
+            readFromUrl(Reference.VERSIONS_FILE_URL);
         }
         catch (IOException e)
         {
@@ -41,7 +39,7 @@ public class CheckVersion implements Runnable {
             System.out.println("Trying to get versions from mirror");
 
             try {
-                readFromUrl(URL_MIRROR);
+                readFromUrl(Reference.VERSIONS_FILE_URL_MIRROR);
             }
             catch (IOException e1)
             {
@@ -74,7 +72,7 @@ public class CheckVersion implements Runnable {
     }
 
     private void readFromUrl(String url) throws IOException {
-        InputStream inputStream = new URL(URL_MAIN).openStream();
+        InputStream inputStream = new URL(url).openStream();
         BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
         String jsonText = readAll(rd);
         Gson gson = new Gson();
