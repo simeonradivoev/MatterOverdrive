@@ -26,6 +26,7 @@ public class MatterRegistry
 
 	public static MatterEntry register(MatterEntry entry)
 	{
+        System.out.println("Registered: " + entry.getName());
 		entries.put(entry.getName(), entry);
 		return entry;
 	}
@@ -246,12 +247,10 @@ public class MatterRegistry
         List<Property> category = c.getCategory(MOConfigurationHandler.CATEGORY_NEW_ITEMS).getOrderedValues();
         for (int i = 0; i < category.size();i++)
         {
-            if(category.get(i).isIntValue())
+            int value = category.get(i).getInt(0);
+            if (value > 0)
             {
-                if (category.get(i).getInt(0) > 0)
-                {
-                    register(category.get(i).getName(),category.get(i).getInt(0));
-                }
+                register(category.get(i).getName(),value);
             }
         }
     }
