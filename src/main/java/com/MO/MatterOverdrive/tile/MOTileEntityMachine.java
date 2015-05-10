@@ -9,6 +9,7 @@ import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.fx.VentParticle;
 
+import com.MO.MatterOverdrive.items.SecurityProtocol;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
@@ -48,11 +49,11 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     protected MachineSound sound;
 
     protected ResourceLocation soundRes;
-
     protected boolean redstoneState;
     protected boolean redstoneStateDirty = true;
-
+    protected byte redstoneMode;
     protected boolean forceClientUpdate;
+    protected String owner;
 
     protected Inventory inventory;
     private int upgradeSlotCount;
@@ -115,6 +116,17 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
 
     }
+    public boolean getRedstoneActive()
+    {
+        if (redstoneMode == Reference.MODE_REDSTONE_HIGH)
+        {
+            return redstoneState;
+        }else if (redstoneMode == Reference.MODE_REDSTONE_LOW)
+        {
+            return !redstoneState;
+        }
+        return true;
+    }
 
     @SideOnly(Side.CLIENT)
     protected void manageSound()
@@ -167,14 +179,19 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         redstoneState = nbt.getBoolean("redstoneState");
         forceClientUpdate = nbt.getBoolean("forceClientUpdate");
+        redstoneMode = nbt.getByte("redstoneMode");
+        owner = nbt.getString("Owner");
         inventory.readFromNBT(nbt);
     }
 
     @Override
     public void  writeCustomNBT(NBTTagCompound nbt)
     {
-        nbt.setBoolean("redstoneState",redstoneState);
+        nbt.setBoolean("redstoneState", redstoneState);
         nbt.setBoolean("forceClientUpdate", forceClientUpdate);
+        nbt.setByte("redstoneMode", redstoneMode);
+        if (owner != null)
+            nbt.setString("Owner",owner);
         forceClientUpdate = false;
         inventory.writeToNBT(nbt);
     }
@@ -199,6 +216,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             }
         }
         itemStack.getTagCompound().setTag("Upgrades", upgrades);
+        itemStack.getTagCompound().setByte("redstoneMode", redstoneMode);
+        if (hasOwner())
+            itemStack.getTagCompound().setString("Owner",owner);
     }
 
     @Override
@@ -214,6 +234,11 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             {
                 inventory.getSlot(slot).setItem(ItemStack.loadItemStackFromNBT(upgradeNBT));
             }
+        }
+        this.redstoneMode = itemStack.getTagCompound().getByte("redstoneMode");
+        if (itemStack.getTagCompound().hasKey("Owner", 8))
+        {
+            this.owner = itemStack.getTagCompound().getString("Owner");
         }
     }
 
@@ -307,7 +332,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public boolean canInsertItem(int slot, ItemStack item, int side)
     {
-        return isItemValidForSlot(slot,item);
+        return isItemValidForSlot(slot, item);
     }
 
     @Override
@@ -358,8 +383,33 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return inventory.isUseableByPlayer(player);
+    public boolean isUseableByPlayer(EntityPlayer player)
+    {
+        if (hasOwner())
+        {
+            if (player.getGameProfile().getName().equals(owner))
+            {
+                return true;
+            }else
+            {
+                for (int i = 0;i < player.inventory.getSizeInventory();i++)
+                {
+                    ItemStack itemStack = player.inventory.getStackInSlot(i);
+                    if (itemStack != null && itemStack.getItem() instanceof SecurityProtocol)
+                    {
+                        if (itemStack.hasTagCompound() && itemStack.getItemDamage() == 2 &&  itemStack.getTagCompound().getString("Owner").equals(owner))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }else
+        {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -473,6 +523,50 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             return type.cast(this.blockType);
         }
         return null;
+    }
+    public byte getRedstoneMode() {
+        return redstoneMode;
+    }
+
+    public void setRedstoneMode(byte redstoneMode) {
+        this.redstoneMode = redstoneMode;
+    }
+
+    public String getOwner()
+    {
+        return owner;
+    }
+
+    public boolean hasOwner()
+    {
+        return owner != null && !owner.isEmpty();
+    }
+
+    public boolean claim(ItemStack security_protocol)
+    {
+        if (owner == null || owner.isEmpty()) {
+            if (security_protocol.hasTagCompound() && security_protocol.getTagCompound().hasKey("Owner", 8)) {
+                String newOwner = security_protocol.getTagCompound().getString("Owner");
+                if (newOwner != null && !newOwner.isEmpty()) {
+                    owner = newOwner;
+                    ForceSync();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean unclaim(ItemStack security_protocol)
+    {
+        if (owner != null && !owner.isEmpty()) {
+            if (security_protocol.hasTagCompound() && security_protocol.getTagCompound().hasKey("Owner", 8) && owner.equals(security_protocol.getTagCompound().getString("Owner"))) {
+                owner = null;
+                ForceSync();
+                return true;
+            }
+        }
+        return false;
     }
     //endregion
 }

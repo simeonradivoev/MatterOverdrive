@@ -5,6 +5,7 @@ import cofh.lib.gui.element.ElementBase;
 import cofh.lib.gui.element.ElementButtonManaged;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.helpers.StringHelper;
+import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.ContainerMachine;
 import com.MO.MatterOverdrive.container.MOBaseContainer;
@@ -14,7 +15,9 @@ import com.MO.MatterOverdrive.container.slot.SlotUpgrade;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.gui.element.*;
+import com.MO.MatterOverdrive.gui.pages.ConfigPage;
 import com.MO.MatterOverdrive.gui.pages.PageUpgrades;
+import com.MO.MatterOverdrive.network.packet.server.PacketChangeRedstoneMode;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.StatCollector;
@@ -37,6 +40,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     MOElementButton upgradesPageButton;
     ElementSlotsList slotsList;
     ElementIndicator indicator;
+    ElementStates redstoneState;
 
 
     public MOGuiMachine(ContainerMachine<T> container,T machine)
@@ -46,15 +50,18 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 
     public MOGuiMachine(ContainerMachine<T> container,T machine,int width,int height)
     {
-        super(container,width,height);
+        super(container, width, height);
         this.machine = machine;
 
         homePage = new ElementBaseGroup(this,0,0,xSize,ySize);
         homePage.setName("Home");
-        configPage = new ElementBaseGroup(this,0,0,xSize,ySize);
+        configPage = new ConfigPage(this,0,0,xSize,ySize);
         configPage.setName("Configurations");
         upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container,machine);
         indicator = new ElementIndicator(this,6,ySize - 18);
+        redstoneState = new ElementStates(this,this,120,40,"RedstoneMode",60,21,new String[]{"High","Low","Disabled"});
+        redstoneState.setLabel("Redstone: ");
+        redstoneState.setNormalTexture(MOElementButton.HOVER_TEXTURE);
 
         pages.add(homePage);
         pages.add(configPage);
@@ -87,6 +94,9 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         super.initGui();
         this.addElement(slotsList);
         this.addElement(indicator);
+
+        redstoneState.setSelectedState(machine.getRedstoneMode());
+        configPage.addElement(redstoneState);
     }
 
     @Override
@@ -105,6 +115,17 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         }else
         {
             indicator.setIndication(0);
+        }
+    }
+
+    @Override
+    public void handleElementButtonClick(String buttonName, int mouseButton)
+    {
+        super.handleElementButtonClick(buttonName, mouseButton);
+        if (buttonName == "RedstoneMode")
+        {
+            machine.setRedstoneMode((byte)mouseButton);
+            MatterOverdrive.packetPipeline.sendToServer(new PacketChangeRedstoneMode(machine, (byte) mouseButton));
         }
     }
 
@@ -131,5 +152,10 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 
         drawElements(0, true);
         drawTabs(0, true);
+    }
+
+    public T getMachine()
+    {
+        return machine;
     }
 }

@@ -4,10 +4,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.network.packet.AbstractBiPacketHandler;
 import com.MO.MatterOverdrive.network.packet.bi.PacketGetDatabase;
 import com.MO.MatterOverdrive.network.packet.client.*;
-import com.MO.MatterOverdrive.network.packet.server.PacketMatterScannerUpdate;
-import com.MO.MatterOverdrive.network.packet.server.PacketPatternMonitorCommands;
-import com.MO.MatterOverdrive.network.packet.server.PacketRemoveTask;
-import com.MO.MatterOverdrive.network.packet.server.PacketTransporterCommands;
+import com.MO.MatterOverdrive.network.packet.server.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -47,7 +44,8 @@ public class PacketPipeline
         registerPacket(PacketTransporterCommands.ServerHandler.class, PacketTransporterCommands.class);
         registerPacket(PacketSyncTransportProgress.ClientHandler.class,PacketSyncTransportProgress.class);
         registerBiPacket(PacketGetDatabase.Handler.class, PacketGetDatabase.class);
-        registerPacket(PacketUpdateMatterRegistry.ClientHandler.class,PacketUpdateMatterRegistry.class);
+        registerPacket(PacketUpdateMatterRegistry.ClientHandler.class, PacketUpdateMatterRegistry.class);
+        registerPacket(PacketChangeRedstoneMode.ServerHandler.class,PacketChangeRedstoneMode.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

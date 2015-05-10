@@ -18,6 +18,8 @@ public class MOElementButton extends ElementButton
     public static final ScaleTexture HOVER_TEXTURE_DARK = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_over_dark.png"),18,18).setOffsets(7,7,7,7);
 
     protected String text;
+    protected boolean isDown;
+    protected int lastMouseButton;
     IButtonHandler buttonHandler;
 
     public MOElementButton(GuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int sizeX, int sizeY, String texture) {
@@ -37,10 +39,25 @@ public class MOElementButton extends ElementButton
 
         if (isEnabled())
         {
-            buttonHandler.handleElementButtonClick(getName(), mouseButton);
+            isDown = true;
+            lastMouseButton = mouseButton;
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onMouseReleased(int mouseX, int mouseY) {
+        if (isEnabled() && intersectsWith(mouseX, mouseY))
+        {
+            onAction(mouseX,mouseY,lastMouseButton);
+            isDown = false;
+        }
+    }
+
+    public void onAction(int mouseX, int mouseY,int mouseButton)
+    {
+        buttonHandler.handleElementButtonClick(getName(), lastMouseButton);
     }
 
     @Override

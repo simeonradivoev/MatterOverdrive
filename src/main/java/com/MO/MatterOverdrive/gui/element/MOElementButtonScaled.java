@@ -14,9 +14,13 @@ public class MOElementButtonScaled extends MOElementButton
     private ScaleTexture normalTexture;
     private ScaleTexture overTexture;
     private ScaleTexture disabledTexture;
+    private ScaleTexture downTexture;
 
     public MOElementButtonScaled(GuiBase gui, IButtonHandler handler, int posX, int posY, String name,int sizeX,int sizeY) {
         super(gui, handler, posX, posY, name, 0, 0, 0, 0, sizeX, sizeY, "");
+        normalTexture = NORMAL_TEXTURE;
+        overTexture = HOVER_TEXTURE;
+        downTexture = HOVER_TEXTURE_DARK;
     }
 
     @Override
@@ -25,11 +29,16 @@ public class MOElementButtonScaled extends MOElementButton
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glColor4f(1, 1, 1, 1);
         if (isEnabled()) {
-            if (intersectsWith(mouseX, mouseY) && overTexture != null) {
-
-                overTexture.Render(posX,posY,sizeX,sizeY);
-            } else if (normalTexture != null){
-                normalTexture.Render(posX,posY,sizeX,sizeY);
+            if (!isDown) {
+                if (intersectsWith(mouseX, mouseY) && overTexture != null) {
+                    overTexture.Render(posX, posY, sizeX, sizeY);
+                } else if (normalTexture != null) {
+                    normalTexture.Render(posX, posY, sizeX, sizeY);
+                }
+            }else
+            {
+                if (downTexture != null)
+                    downTexture.Render(posX,posY,sizeX,sizeY);
             }
         } else if (disabledTexture != null){
             disabledTexture.Render(posX,posY,sizeX,sizeY);

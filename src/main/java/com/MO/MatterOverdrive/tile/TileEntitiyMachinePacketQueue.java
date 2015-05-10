@@ -42,6 +42,7 @@ public class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implement
         packetQueue = new MatterNetworkPacketQueue(this,TASK_QUEUE_SIZE);
         broadcastTracker = new TimeTracker();
         connections = new BlockPosition[6];
+        redstoneMode = Reference.MODE_REDSTONE_NONE;
     }
 
     @Override
@@ -189,8 +190,9 @@ public class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implement
     }
 
     @Override
-    public boolean canPreform(MatterNetworkPacket task) {
-        return true;
+    public boolean canPreform(MatterNetworkPacket task)
+    {
+        return getRedstoneActive();
     }
 
     @Override

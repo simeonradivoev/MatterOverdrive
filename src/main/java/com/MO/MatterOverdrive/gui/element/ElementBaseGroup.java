@@ -147,9 +147,13 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
     @Override
     public void onMouseReleased(int mouseX, int mouseY) {
 
-        for (int i = getElements().size(); i-- > 0;) {
+        mouseX -= this.getGlobalX();
+        mouseY -= this.getGlobalY();
+
+        for (int i = getElements().size(); i-- > 0;)
+        {
             ElementBase c = getElements().get(i);
-            if (!c.isVisible() || !c.isEnabled()) { // no bounds checking on mouseUp events
+            if (!c.isVisible() || !c.isEnabled()) {
                 continue;
             }
             c.onMouseReleased(mouseX, mouseY);

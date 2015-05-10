@@ -2,6 +2,8 @@ package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.helpers.MathHelper;
+import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.EnumSkyBlock;
@@ -25,6 +27,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
         energyStorage.setCapacity(ENERGY_STORAGE);
         energyStorage.setMaxExtract(MAX_ENERGY_EXTRACT);
         energyStorage.setMaxReceive(0);
+        redstoneMode = Reference.MODE_REDSTONE_LOW;
     }
 
     @Override
@@ -161,5 +164,11 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     @Override
     public float soundVolume() {
         return 0;
+    }
+
+    @Override
+    public boolean isAffectedBy(UpgradeTypes type)
+    {
+        return type == UpgradeTypes.PowerStorage;
     }
 }

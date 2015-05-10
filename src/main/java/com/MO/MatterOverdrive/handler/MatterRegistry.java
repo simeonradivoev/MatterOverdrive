@@ -118,9 +118,9 @@ public class MatterRegistry
     }
     public static MatterEntry registerFromRecipe(Item item) {return registerFromRecipe(new ItemStack(item));}
     public static int checkInConfig(String key){
-        if (MatterOverdrive.configHandler.getCategory(MOConfigurationHandler.CATEGORY_OVERRIDE_MATTER).containsKey(key))
+        if (MatterOverdrive.configHandler.config.hasKey(MOConfigurationHandler.CATEGORY_OVERRIDE_MATTER, key))
         {
-            return MatterOverdrive.configHandler.getCategory(MOConfigurationHandler.CATEGORY_OVERRIDE_MATTER).get(key).getInt(-1);
+            return MatterOverdrive.configHandler.getInt(key,MOConfigurationHandler.CATEGORY_OVERRIDE_MATTER,-1);
         }
         return -1;
     }

@@ -29,8 +29,6 @@ public class SidePannel extends ElementBaseGroup
         button = new MOElementButtonScaled(gui,this, 0, 0, "Toggle", 16,height);
         button.setNormalTexture(new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_normal.png"), 32, 143).setOffsets(0,0,42,100));
         button.setOverTexture(new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_over.png"), 32, 143).setOffsets(0,0,42,100));
-        this.setTexture(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png", 37, 143);
-
     }
 
     @Override

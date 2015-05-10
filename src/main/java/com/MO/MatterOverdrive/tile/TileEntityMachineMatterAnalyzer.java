@@ -56,6 +56,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
         taskQueueSending = new MatterNetworkTaskQueue<MatterNetworkTaskStorePattern>(this,1,MatterNetworkTaskStorePattern.class);
         broadcastTracker = new TimeTracker();
+        redstoneMode = Reference.MODE_REDSTONE_LOW;
     }
 
     @Override
@@ -120,7 +121,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     public boolean isAnalyzing()
     {
-        if (inventory.getSlot(input_slot).getItem() != null)
+        if (getRedstoneActive() && inventory.getSlot(input_slot).getItem() != null)
         {
             if (inventory.getSlot(database_slot).getItem() != null) {
                 return MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(input_slot)) > 0 && hasConnectionToPatterns();

@@ -76,5 +76,5 @@ public class MOBaseItem extends Item
 		}
 	}
 
-	public boolean hasDetails(ItemStack damage){return false;}
+	public boolean hasDetails(ItemStack stack){return false;}
 }

@@ -39,7 +39,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
 
     public GuiTransporter(InventoryPlayer inventoryPlayer,TileEntityMachineTransporter machine)
     {
-        super(new ContainerTransporter(inventoryPlayer,machine), machine);
+        super(new ContainerTransporter(inventoryPlayer,machine), machine,225,220);
         energy = new MOElementEnergy(this,xSize - 35,50,machine.getEnergyStorage());
         matterStored = new ElementMatterStored(this,xSize - 35,100,machine.getMatterStorage());
 
@@ -92,6 +92,8 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         configPage.addElement(name);
         configPage.addElement(resetButton);
         homePage.addElement(removeLocation);
+
+        redstoneState.setPosition(120,150);
 
         xCoords.init();
         yCoords.init();

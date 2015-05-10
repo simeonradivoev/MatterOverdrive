@@ -5,7 +5,9 @@ import java.util.List;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.ColorHelper;
 import cofh.lib.util.position.BlockPosition;
+import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.network.packet.bi.PacketGetDatabase;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MOPhysicsHelper;
 import com.MO.MatterOverdrive.util.MOStringHelper;
@@ -95,9 +97,7 @@ public class MatterScanner extends MOBaseItem
 	@Override
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
 	{
-		IMatterDatabase database = getLink(player.worldObj, itemstack);
-
-		if (database != null)
+		if (isLinked(itemstack))
 		{
 			if (itemstack.hasTagCompound()) {
 				infos.add(ChatFormatting.GREEN + "Online");
@@ -105,12 +105,8 @@ public class MatterScanner extends MOBaseItem
 
 			NBTTagCompound lastSelected = getSelectedAsNBT(itemstack);
 			if(lastSelected != null) {
-				NBTTagCompound lastItem = database.getItemAsNBT(ItemStack.loadItemStackFromNBT(lastSelected));
-				if (lastItem != null)
-				{
-					infos.add("Progress: " + lastItem.getByte(MatterDatabaseHelper.PROGRESS_TAG_NAME) + " / " + 100 + " %");
-					infos.add("Selected: " + MatterDatabaseHelper.GetItemStackFromNBT(lastItem).getDisplayName());
-				}
+				infos.add("Progress: " + lastSelected.getByte(MatterDatabaseHelper.PROGRESS_TAG_NAME) + " / " + 100 + " %");
+				infos.add("Selected: " + MatterDatabaseHelper.GetItemStackFromNBT(lastSelected).getDisplayName());
 			}
 		} else {
 			infos.add(ChatFormatting.RED + "Offline");
@@ -232,6 +228,11 @@ public class MatterScanner extends MOBaseItem
 		}
 
 		return false;
+	}
+
+	public static void updateSelected(ItemStack scanner)
+	{
+
 	}
 
 	public static void setSelected(ItemStack scanner,ItemStack itemStack)

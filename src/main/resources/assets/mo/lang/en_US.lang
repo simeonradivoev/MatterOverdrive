@@ -22,6 +22,13 @@ item.tritanium_plate.name=Tritanium Plate
 item.tritanium_dust.name=Tritanium Dust
 item.pattern_drive.name=Pattern Drive
 item.earl_gray_tea.name=Tea. Earl Grey. Hot.
+item.security_protocol.empty.name=Security Protocol
+item.security_protocol.claim.name=Security Protocol [Claim]
+item.security_protocol.claim.description=Claims Machines
+item.security_protocol.access.name=Security Protocol [Access]
+item.security_protocol.access.description=Allows to access claimed Machines
+item.security_protocol.remove.name=Security Protocol [Remove]
+item.security_protocol.remove.description=Removes Claim form Machines
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade

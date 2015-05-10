@@ -29,7 +29,7 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
 
     public TileEntityWeaponStation()
     {
-        super(2);
+        super(0);
     }
 
     @Override
@@ -41,6 +41,7 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
         SIGHTS_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_SIGHTS));
         OTHER_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_OTHER));
         INPUT_SLOT = inventory.AddSlot(new WeaponSlot(true));
+        redstoneMode = Reference.MODE_REDSTONE_LOW;
         super.RegisterSlots(inventory);
     }
 

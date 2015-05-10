@@ -10,6 +10,7 @@ import com.MO.MatterOverdrive.network.packet.PacketAbstract;
 import com.MO.MatterOverdrive.network.packet.TileEntityUpdatePacket;
 import com.MO.MatterOverdrive.network.packet.client.AbstractClientPacketHandler;
 import com.MO.MatterOverdrive.network.packet.server.AbstractServerPacketHandler;
+import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -54,6 +55,7 @@ public class PacketGetDatabase extends TileEntityUpdatePacket
         NBTTagCompound tagCompound = new NBTTagCompound();
         if (list != null)
             tagCompound.setTag("List",list);
+
         ByteBufUtils.writeTag(buf, tagCompound);
     }
 
@@ -68,7 +70,8 @@ public class PacketGetDatabase extends TileEntityUpdatePacket
             TileEntity tileEntity = message.getTileEntity(player.worldObj);
             if (tileEntity instanceof IMatterDatabase)
             {
-                return new PacketGetDatabase(((IMatterDatabase) tileEntity).getItemsAsNBT());
+                IMatterDatabase database = (IMatterDatabase) tileEntity;
+                return new PacketGetDatabase(database.getItemsAsNBT());
             }
 
             return null;

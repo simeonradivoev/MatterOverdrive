@@ -66,7 +66,7 @@ public class GuiMatterScanner extends MOGuiBase
 		scanPageButton.setToolTip("Quide Database");
         pageButtons.add(infoPageButton);
 
-        MatterOverdrive.packetPipeline.sendToServer(new PacketGetDatabase(MatterScanner.getLinkPosition(scanner)));
+		MatterOverdrive.packetPipeline.sendToServer(new PacketGetDatabase(MatterScanner.getLinkPosition(scanner)));
 	}
 	
 	@Override

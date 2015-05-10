@@ -5,6 +5,7 @@ import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterPatternStorage;
 import com.MO.MatterOverdrive.api.network.*;
@@ -53,6 +54,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
         this.taskQueueProcessing = new MatterNetworkPacketQueue(this,1);
         taskProcessingTracker = new TimeTracker();
+        redstoneMode = Reference.MODE_REDSTONE_LOW;
     }
 
     @Override
@@ -137,6 +139,12 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         if (side.isServer()) {
             MatterNetworkHelper.broadcastConnection(worldObj, this);
         }
+    }
+
+    @Override
+    public boolean isAffectedBy(UpgradeTypes type)
+    {
+        return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.PowerUsage;
     }
 
     //region Database functions
@@ -306,18 +314,18 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
-        if (packet instanceof MatterNetworkTaskPacket) {
-            if (((MatterNetworkTaskPacket) packet).getTask(worldObj) instanceof MatterNetworkTaskStorePattern) {
-                MatterNetworkTaskStorePattern task = (MatterNetworkTaskStorePattern) ((MatterNetworkTaskPacket) packet).getTask(worldObj);
-                return addItem(task.getItemStack(), task.getProgress(), true, null);
+        if (getRedstoneActive()) {
+            if (packet instanceof MatterNetworkTaskPacket) {
+                if (((MatterNetworkTaskPacket) packet).getTask(worldObj) instanceof MatterNetworkTaskStorePattern) {
+                    MatterNetworkTaskStorePattern task = (MatterNetworkTaskStorePattern) ((MatterNetworkTaskPacket) packet).getTask(worldObj);
+                    return addItem(task.getItemStack(), task.getProgress(), true, null);
+                }
+            } else if (packet instanceof MatterNetworkRequestPacket) {
+                MatterNetworkRequestPacket requestPacket = (MatterNetworkRequestPacket) packet;
+                return requestPacket.getRequestType() == Reference.PACKET_REQUEST_CONNECTION
+                        || requestPacket.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH
+                        || requestPacket.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
             }
-        }
-        else if (packet instanceof MatterNetworkRequestPacket)
-        {
-            MatterNetworkRequestPacket requestPacket = (MatterNetworkRequestPacket)packet;
-            return requestPacket.getRequestType() == Reference.PACKET_REQUEST_CONNECTION
-                    || requestPacket.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH
-                    || requestPacket.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
         }
         return false;
     }

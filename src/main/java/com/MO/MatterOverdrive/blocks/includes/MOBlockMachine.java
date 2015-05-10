@@ -29,6 +29,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.management.ItemInWorldManager;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 
@@ -100,7 +103,18 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
     {
         if(!world.isRemote && hasGui)
         {
-            FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, x, y, z);
+            TileEntity tileEntity = world.getTileEntity(x,y,z);
+            if (tileEntity instanceof MOTileEntityMachine)
+            {
+                if (((MOTileEntityMachine) tileEntity).isUseableByPlayer(player) || player.capabilities.isCreativeMode) {
+                    FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, x, y, z);
+                }else
+                {
+                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + "No rights to access the " + getLocalizedName());
+                    message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
+                    player.addChatMessage(message);
+                }
+            }
         }
 
         return true;

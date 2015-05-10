@@ -41,6 +41,7 @@ public class Reference
 	//region Colors
 	public static final GuiColor COLOR_MATTER = new GuiColor(191,228,230);
     public static final GuiColor COLOR_HOLO = new GuiColor(169,226,251);
+	public static final GuiColor COLOR_GUI_DARK = new GuiColor(44,54,52);
 	//endregion
 
 	//region Modules
@@ -86,4 +87,10 @@ public class Reference
     public static final int PACKET_RESPONCE_INVALID = 0;
     public static final int PACKET_RESPONCE_VALID = 1;
     //endregion
+
+	//region machine mods
+	public static final byte MODE_REDSTONE_HIGH = 0;
+	public static final byte MODE_REDSTONE_LOW = 1;
+	public static final byte MODE_REDSTONE_NONE = 2;
+	//endregion
 }

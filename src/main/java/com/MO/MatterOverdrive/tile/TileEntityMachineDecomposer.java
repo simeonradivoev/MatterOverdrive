@@ -4,6 +4,7 @@ import cofh.lib.util.TimeTracker;
 
 import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.matter.IMatterHandler;
@@ -55,6 +56,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         this.matterStorage.setMaxReceive(MATTER_TRANSFER);
         this.matterStorage.setMaxExtract(MATTER_EXTRACT);
         time = new TimeTracker();
+        redstoneMode = Reference.MODE_REDSTONE_LOW;
 	}
 
     @Override
@@ -148,7 +150,8 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 
 	public boolean isDecomposing()
     {
-        return this.getStackInSlot(INPUT_SLOT_ID) != null
+        return getRedstoneActive()
+                && this.getStackInSlot(INPUT_SLOT_ID) != null
                 && isItemValidForSlot(0, getStackInSlot(INPUT_SLOT_ID))
                 && MatterHelper.getMatterAmountFromItem(this.getStackInSlot(INPUT_SLOT_ID)) <= this.getMatterCapacity() - this.getMatterStored()
                 && canPutInOutput();

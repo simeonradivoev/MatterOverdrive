@@ -349,10 +349,10 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
 	public boolean isReplicating()
 	{
-		if(taskQueueProcessing.size() > 0 && internalPatternStorage != null && canCompleteTask())
+		if(getRedstoneActive() && taskQueueProcessing.size() > 0 && internalPatternStorage != null && canCompleteTask())
         {
             ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage);
-            return this.getMatterStored() >= MatterHelper.getMatterAmountFromItem(item) && canReplicateIntoOutput(item) && canReplicateIntoSecoundOutput()&& redstoneState;
+            return this.getMatterStored() >= MatterHelper.getMatterAmountFromItem(item) && canReplicateIntoOutput(item) && canReplicateIntoSecoundOutput();
         }
         return false;
 	}
@@ -595,7 +595,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         int broadcasts = 0;
 
-        if (!canCompleteTask() && patternSearchTracker.hasDelayPassed(worldObj,PATTERN_SEARCH_DELAY) && redstoneState) {
+        if (getRedstoneActive() && !canCompleteTask() && patternSearchTracker.hasDelayPassed(worldObj,PATTERN_SEARCH_DELAY)) {
 
                 MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
             if (task != null) {
@@ -635,5 +635,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         ItemStack s = super.decrStackSize(slot, size);
         ForceSync();
         return s;
+    }
+
+    @Override
+    public boolean isAffectedBy(UpgradeTypes type)
+    {
+        return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Speed || type == UpgradeTypes.Fail || type == UpgradeTypes.PowerUsage;
     }
 }

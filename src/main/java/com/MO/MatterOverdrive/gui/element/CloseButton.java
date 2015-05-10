@@ -19,13 +19,10 @@ public class CloseButton extends MOElementButton
 	}
 
 	@Override
-	public boolean onMousePressed(int x, int y, int mouseButton) 
+	public void onAction(int mouseX, int mouseY,int mouseButton)
 	{
-		if (isEnabled()) 
-		{
-			Minecraft.getMinecraft().thePlayer.closeScreen();
-		}
-		return super.onMousePressed(x, y, mouseButton);
+		Minecraft.getMinecraft().thePlayer.closeScreen();
+        super.onAction(mouseX,mouseY,mouseButton);
 	}
 
 }

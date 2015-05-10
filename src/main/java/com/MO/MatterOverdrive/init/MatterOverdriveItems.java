@@ -41,6 +41,7 @@ public class MatterOverdriveItems
     public static ItemUpgrade item_upgrade;
     public static WeaponColorModule weapon_module_color;
     public static WeaponModuleBarrel weapon_module_barrel;
+    public static SecurityProtocol security_protocol;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -67,6 +68,7 @@ public class MatterOverdriveItems
         pattern_drive = new PatternDrive("pattern_drive",2);
         weapon_module_color = new WeaponColorModule("weapon_module_color");
         weapon_module_barrel = new WeaponModuleBarrel("weapon_module_barrel");
+        security_protocol = new SecurityProtocol("security_protocol");
 
 	}
 	
@@ -99,6 +101,7 @@ public class MatterOverdriveItems
         weapon_module_color.Register();
         weapon_module_barrel.Register();
         earl_gray_tea.Register();
+        security_protocol.Register();
 
         GameRegistry.addSmelting(new ItemStack(matter_dust), new ItemStack(matter_dust_refined), 0);
         GameRegistry.addSmelting(new ItemStack(tritanium_dust),new ItemStack(tritanium_ingot),5);
@@ -114,6 +117,7 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new ItemStack(tritanium_plate),new Object[]{"TTT",'T',new ItemStack(tritanium_ingot)});
         GameRegistry.addRecipe(new ItemStack(phaser),new Object[]{"IGI","IDI","WCW",'I',Items.iron_ingot,'G',Blocks.glass,'D',dilithium_ctystal,'W',Blocks.wool,'C',new ItemStack(isolinear_circuit,1,3)});
         GameRegistry.addRecipe(new ItemStack(pattern_drive),new Object[]{" M ", "RER"," C ",'M',machine_casing,'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'R',Items.redstone});
+        GameRegistry.addRecipe(new ItemStack(security_protocol),new Object[]{"PP", "CP",'P',Items.paper,'C',new ItemStack(isolinear_circuit,1,0)});
 
         MatterRegistry.register(matter_dust_refined, 1);
         MatterRegistry.register(emergency_ration,3);

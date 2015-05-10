@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.tile;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.transport.ITransportList;
@@ -32,6 +33,7 @@ import java.util.List;
  */
 public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements IMatterConnection, ITransportList
 {
+    public static final int MAX_ENTETIES_PRE_TRANSPORT = 3;
     public static final int TRANSPORT_TIME = 70;
     public static final int TRANSPORT_DELAY = 80;
     private static final int TRANSPORT_RANGE = 32;
@@ -51,6 +53,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         matterStorage.setCapacity(512);
         locations = new ArrayList<TransportLocation>();
         selectedLocation = 0;
+        redstoneMode = Reference.MODE_REDSTONE_LOW;
     }
 
     @Override
@@ -132,17 +135,9 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
                     if (transportTimer >= getSpeed())
                     {
-                        for (Entity e : entities)
+                        for (int i = 0;i < Math.min(entities.size(),MAX_ENTETIES_PRE_TRANSPORT);i++)
                         {
-                            if (e instanceof EntityLivingBase)
-                            {
-                                ((EntityLivingBase) e).setPositionAndUpdate(position.x,position.y,position.z);
-                            }
-                            else
-                            {
-                                e.setPosition(position.x,position.y,position.z);
-                            }
-
+                            Teleport(entities.get(i),position);
                             transportTracker = worldObj.getTotalWorldTime() + getTransportDelay();
                         }
 
@@ -183,8 +178,16 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         }
     }
 
-    public void Teleport(Entity entity)
+    public void Teleport(Entity entity,TransportLocation position)
     {
+        if (entity instanceof EntityLivingBase)
+        {
+            ((EntityLivingBase) entity).setPositionAndUpdate(position.x,position.y,position.z);
+        }
+        else
+        {
+            entity.setPosition(position.x,position.y,position.z);
+        }
 
     }
 
@@ -311,6 +314,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         return dir != ForgeDirection.UP;
     }
 
+    @Override
     public boolean isAffectedBy(UpgradeTypes type)
     {
         return type == UpgradeTypes.PowerUsage || type == UpgradeTypes.Speed || type == UpgradeTypes.Range || type == UpgradeTypes.PowerStorage;
