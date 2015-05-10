@@ -38,16 +38,20 @@ public class MatterRegistry
     public static boolean blacklisted(Item item){return blacklist.contains(getKey(item));}
     public static boolean blacklisted(ItemStack itemStack)
     {
-        if (blacklist.contains(getKey(itemStack)))
+        if (blacklisted(getKey(itemStack)))
         {
             return true;
-        }else if (blacklist.contains(getKey(itemStack.getItem())))
+        }else if (blacklisted(getKey(itemStack.getItem())))
         {
             return true;
         }else
         {
             return false;
         }
+    }
+    public static boolean blacklisted(String key)
+    {
+        return blacklist.contains(key);
     }
     public static String getKey(Block block) {return getKey(new ItemStack(block));}
     public static String getKey(Item item) {return getKey(new ItemStack(item));}
@@ -66,39 +70,50 @@ public class MatterRegistry
         }
     }
     public static MatterEntry register(Block block,int matter) {
-        String key = getKey(block);
-        int configMatter = checkInConfig(key);
-        if (configMatter > 0)
-            return register(new MatterEntry(key, configMatter,(byte)1));
-        else
-            return register(new MatterEntry(key, matter,(byte)1));
-
+        if (!blacklisted(block)) {
+            String key = getKey(block);
+            int configMatter = checkInConfig(key);
+            if (configMatter > 0)
+                return register(new MatterEntry(key, configMatter, (byte) 1));
+            else
+                return register(new MatterEntry(key, matter, (byte) 1));
+        }
+        return null;
     }
     public static MatterEntry register(Item item,int matter)
     {
-        String key = getKey(item);
-        int configMatter = checkInConfig(key);
-        if (configMatter > 0)
-            return register(new MatterEntry(key, configMatter,(byte)1));
-        else
-        return register(new MatterEntry(key, matter, (byte) 1));
+        if (!blacklisted(item)) {
+            String key = getKey(item);
+            int configMatter = checkInConfig(key);
+            if (configMatter > 0)
+                return register(new MatterEntry(key, configMatter, (byte) 1));
+            else
+                return register(new MatterEntry(key, matter, (byte) 1));
+        }
+        return null;
     }
     public static MatterEntry register(ItemStack itemStack,int matter)
     {
-        String key = getKey(itemStack);
-        int configMatter = checkInConfig(key);
-        if (configMatter > 0)
-            return register(new MatterEntry(key, configMatter,(byte)1));
-        else
-            return register(new MatterEntry(key, matter, (byte) 2));
+        if (!blacklisted(itemStack)) {
+            String key = getKey(itemStack);
+            int configMatter = checkInConfig(key);
+            if (configMatter > 0)
+                return register(new MatterEntry(key, configMatter, (byte) 1));
+            else
+                return register(new MatterEntry(key, matter, (byte) 2));
+        }
+        return null;
     }
     public static MatterEntry register(String key,int matter)
     {
-        int configMatter = checkInConfig(key);
-        if (configMatter > 0)
-            return register(new MatterEntry(key, configMatter,(byte)1));
-        else
-            return register(new MatterEntry(key, matter, (byte) 0));
+        if (!blacklisted(key)) {
+            int configMatter = checkInConfig(key);
+            if (configMatter > 0)
+                return register(new MatterEntry(key, configMatter, (byte) 1));
+            else
+                return register(new MatterEntry(key, matter, (byte) 0));
+        }
+        return null;
     }
     public static MatterEntry registerFromRecipe(Item item) {return registerFromRecipe(new ItemStack(item));}
     public static int checkInConfig(String key){

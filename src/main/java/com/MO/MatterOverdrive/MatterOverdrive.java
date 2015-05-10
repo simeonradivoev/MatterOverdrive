@@ -66,6 +66,11 @@ public class MatterOverdrive
         MatterOverdriveWorld.register();
 		MatterNetworkRegistry.register();
         packetPipeline.registerPackets();
+
+		MatterOverdriveMatter.init(configHandler);
+		MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);
+		MatterOverdriveMatter.registerFromConfig(configHandler);
+		MatterOverdriveMatter.registerBasic(configHandler);
 		UpdateTabs();
 	}
 	
@@ -82,10 +87,7 @@ public class MatterOverdrive
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-        MatterOverdriveMatter.registerBasic(configHandler);
-        MatterOverdriveMatter.init(configHandler);
-        MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);
-        MatterOverdriveMatter.registerFromConfig(configHandler);
+
 	}
 
     @EventHandler
