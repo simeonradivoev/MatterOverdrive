@@ -52,7 +52,7 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     @Override
     public int getDamage(ItemStack stack)
     {
-        return 0;
+        return super.getDamage(stack);
     }
 
     @Override
@@ -184,7 +184,7 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
 	public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer player)
 	{
 		this.TagCompountCheck(item);
-		
+
 		if(player.isSneaking())
 		{
 			SwitchModes(world,player,item);
@@ -204,6 +204,7 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player)
     {
         DrainEnergy(itemStack, getMaxItemUseDuration(itemStack), false);
+        itemStack.setItemDamage(getDamage(itemStack));
         setHeat(itemStack, world, getMaxItemUseDuration(itemStack) + 40);
 
         return itemStack;
@@ -224,6 +225,7 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         else
         {
             DrainEnergy(itemStack, duration - 1, false);
+            itemStack.setItemDamage(getDamage(itemStack));
             player.stopUsingItem();
         }
     }
@@ -232,6 +234,7 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     {
         setHeat(itemStack, world, getMaxItemUseDuration(itemStack) - count);
         DrainEnergy(itemStack, getMaxItemUseDuration(itemStack) - count, false);
+        itemStack.setItemDamage(getDamage(itemStack));
     }
 	
 	private void SwitchModes(World world,EntityPlayer player,ItemStack item)
