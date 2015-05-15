@@ -54,10 +54,10 @@ public class MatterOverdrive
         playerEventHandler = new PlayerEventHandler();
 		packetPipeline = new PacketPipeline();
         configHandler = new MOConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
-        tickHandler = new TickHandler(configHandler,playerEventHandler);
+		FMLCommonHandler.instance().bus().register(configHandler);
+		tickHandler = new TickHandler(configHandler,playerEventHandler);
         FMLCommonHandler.instance().bus().register(tickHandler);
         FMLCommonHandler.instance().bus().register(playerEventHandler);
-        FMLCommonHandler.instance().bus().register(configHandler);
         MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
         MatterOverdriveWorld.init();

@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.handler;
 
+import com.MO.MatterOverdrive.client.RenderParticlesHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -17,9 +18,12 @@ public class TickHandler
 
     public TickHandler(MOConfigurationHandler configurationHandler,PlayerEventHandler playerEventHandler)
     {
-        networkTick = new MatterNetworkTickHandler(configurationHandler);
+        networkTick = new MatterNetworkTickHandler();
         this.playerEventHandler = playerEventHandler;
         versionCheckerHandler = new VersionCheckerHandler();
+
+        configurationHandler.subscribe(versionCheckerHandler);
+        configurationHandler.subscribe(networkTick);
     }
 
     @SubscribeEvent
@@ -30,7 +34,8 @@ public class TickHandler
 
     //Called when the client ticks.
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
+    public void onClientTick(TickEvent.ClientTickEvent event)
+    {
 
     }
 
