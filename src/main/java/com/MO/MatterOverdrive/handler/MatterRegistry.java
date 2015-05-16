@@ -1,9 +1,20 @@
 package com.MO.MatterOverdrive.handler;
 
+import java.io.*;
 import java.util.*;
 
 import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.Reference;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModAPIManager;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.FMLModIdMappingEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -12,6 +23,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -21,7 +33,7 @@ public class MatterRegistry
 {
     public static boolean hasComplitedRegistration = false;
     private static int MAX_DEPTH = 8;
-	private static Map<String,MatterEntry> entries = Collections.synchronizedMap(new HashMap<String,MatterEntry>());
+	private static Map<String,MatterEntry> entries = new HashMap<String,MatterEntry>();
     private static Set<String> blacklist = Collections.synchronizedSet(new HashSet<String>());
 
 	public static MatterEntry register(MatterEntry entry)
@@ -30,6 +42,71 @@ public class MatterRegistry
 		entries.put(entry.getName(), entry);
 		return entry;
 	}
+
+    public static void saveToFile(String path) throws IOException {
+        File file = new File(path);
+
+        file.getParentFile().mkdirs();
+        file.createNewFile();
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+        outputStream.writeObject(entries);
+        outputStream.writeUTF(Reference.VERSION);
+        outputStream.writeInt(CraftingManager.getInstance().getRecipeList().size());
+        outputStream.close();
+        fileOutputStream.close();
+        System.out.println("RegistrySaved to: " + path);
+    }
+
+    public static void loadFromFile(String path) throws IOException, ClassNotFoundException {
+        File file = new File(path);
+        if (file.exists()) {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
+            entries = (HashMap<String,MatterEntry>) inputStream.readObject();
+            String version = inputStream.readUTF();
+            inputStream.close();
+            fileInputStream.close();
+            System.out.println("Registry Loaded with " + entries.size() +" entries, from version " + version + " from: " + path);
+        }
+    }
+    public static boolean needsCalculation(String path) throws IOException, ClassNotFoundException {
+        File file = new File(path);
+        if (file.exists()) {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
+            HashMap<String,MatterEntry> entires = (HashMap<String,MatterEntry>) inputStream.readObject();
+            String version = inputStream.readUTF();
+            int recipeCount = inputStream.readInt();
+            inputStream.close();
+            fileInputStream.close();
+
+            if (version.equalsIgnoreCase(Reference.VERSION) && recipeCount == CraftingManager.getInstance().getRecipeList().size())
+            {
+                for (Map.Entry<String,MatterEntry> entry : entires.entrySet())
+                {
+                    if (!entry.getValue().calculated)
+                    {
+                        if (MatterRegistry.entries.containsKey(entry.getKey()))
+                        {
+                            if (!MatterRegistry.entries.get(entry.getKey()).equals(entry.getValue()))
+                            {
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+
+            }
+        }
+        return true;
+    }
 
     public static void addToBlacklist(ItemStack itemStack) {blacklist.add(getKey(itemStack));}
     public static void addToBlacklist(String key) {blacklist.add(key);}
@@ -126,7 +203,7 @@ public class MatterRegistry
     }
     public static MatterEntry registerFromRecipe(ItemStack item)
     {
-        int matter = getMatterFromRecipe(item, false, 0);
+        int matter = getMatterFromRecipe(item, false, 0,true);
         if(matter > 0)
             return register(new MatterEntry(getKey(item),matter,(byte)2));
         else {
@@ -137,7 +214,7 @@ public class MatterRegistry
 
     public static MatterEntry registerFromRecipe(Block block)
     {
-        int matter = getMatterFromRecipe(block, false, 0);
+        int matter = getMatterFromRecipe(block, false, 0,true);
 
         if(matter > 0)
             return register(new MatterEntry(getKey(block),matter,(byte)1));
@@ -205,12 +282,12 @@ public class MatterRegistry
         return e;
     }
 
-    public static int getMatterFromRecipe(Block block,boolean recursive,int depth)
+    public static int getMatterFromRecipe(Block block,boolean recursive,int depth,boolean calculated)
     {
-        return getMatterFromRecipe(new ItemStack(block), recursive, depth);
+        return getMatterFromRecipe(new ItemStack(block), recursive, depth,calculated);
     }
 
-    public static int getMatterFromRecipe(ItemStack item,boolean recursive,int depth)
+    public static int getMatterFromRecipe(ItemStack item,boolean recursive,int depth,boolean calculated)
     {
         int matter = 0;
 
@@ -225,13 +302,13 @@ public class MatterRegistry
                     int m = 0;
 
                     if (recipe instanceof ShapedRecipes) {
-                        m = getMatterFromList(recipeOutput, ((ShapedRecipes) recipe).recipeItems, recursive, ++depth);
+                        m = getMatterFromList(recipeOutput, ((ShapedRecipes) recipe).recipeItems, recursive, ++depth,calculated);
                     } else if (recipe instanceof ShapelessRecipes) {
-                        m = getMatterFromList(recipeOutput, ((ShapelessRecipes) recipe).recipeItems.toArray(), recursive, ++depth);
+                        m = getMatterFromList(recipeOutput, ((ShapelessRecipes) recipe).recipeItems.toArray(), recursive, ++depth,calculated);
                     } else if (recipe instanceof ShapedOreRecipe) {
-                        m = getMatterFromList(recipeOutput, ((ShapedOreRecipe) recipe).getInput(), recursive, ++depth);
+                        m = getMatterFromList(recipeOutput, ((ShapedOreRecipe) recipe).getInput(), recursive, ++depth,calculated);
                     } else if (recipe instanceof ShapelessOreRecipe) {
-                        m = getMatterFromList(recipeOutput, ((ShapelessOreRecipe) recipe).getInput().toArray(), recursive, ++depth);
+                        m = getMatterFromList(recipeOutput, ((ShapelessOreRecipe) recipe).getInput().toArray(), recursive, ++depth,calculated);
                     }
 
                     matter += m;
@@ -264,7 +341,7 @@ public class MatterRegistry
         }
     }
 
-    public static int getMatterFromList(ItemStack item, Object[] list,boolean recursive,int depth)
+    public static int getMatterFromList(ItemStack item, Object[] list,boolean recursive,int depth,boolean calculated)
     {
         int totalMatter = 0;
         int tempMatter;
@@ -313,12 +390,12 @@ public class MatterRegistry
                         }
                         //if there is no entry for item and recursive is true, then continue searching to it's recipe list
                         else if (tempEntry == null && recursive) {
-                            tempMatter = getMatterFromRecipe(stack, recursive, ++depth);
+                            tempMatter = getMatterFromRecipe(stack, recursive, ++depth,calculated);
 
                             //if the matter is higher than 0 that means the recipe search was successful.
                             //registration now helps to remove it from future checks
                             if (tempMatter > 0) {
-                                register(stack, tempMatter);
+                                register(stack, tempMatter).setCalculated(calculated);
                             }
                             else if (tempMatter < 0) {
                                 //that means the item had a recipe with a blacklisted item
@@ -377,7 +454,7 @@ public class MatterRegistry
                             //here we use the recursion to calculate it's matter from any recipes it has
                             else if (tempEntry == null && recursive)
                             {
-                                int m = getMatterFromRecipe(stack,recursive,++depth);
+                                int m = getMatterFromRecipe(stack,recursive,++depth,calculated);
                                 //if the item has matter, has lower matter than the previous
                                 //if the item was first there is no previous so store that amount
                                 if ( m > 0 && (m < tempMatter || first))

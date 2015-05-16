@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.init;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -9,6 +10,8 @@ import net.minecraft.item.ItemStack;
 
 import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
+
+import java.io.File;
 
 public class MatterOverdriveMatter
 {
@@ -47,7 +50,7 @@ public class MatterOverdriveMatter
         reg(c,Blocks.cactus,4);
         reg(c,"plankWood",4);
         reg(c, Blocks.end_stone, 6);
-        reg(c,"stone",4);
+        reg(c,"stone",1);
         reg(c,Blocks.soul_sand,4);
         reg(c,Blocks.snow,2);
         reg(c,Blocks.pumpkin,2);
@@ -189,8 +192,6 @@ public class MatterOverdriveMatter
         reg(c,new ItemStack(Items.dye,1,2),1);
         reg(c,new ItemStack(Items.dye,1,3),1);
         //endregion
-
-        MatterRegistry.register(MatterOverdriveItems.matter_dust_refined, 1);
     }
 
 	private static void reg(MOConfigurationHandler c,String name,int matter)
