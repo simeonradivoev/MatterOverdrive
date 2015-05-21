@@ -264,4 +264,10 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
 
         ForceSync();
     }
+
+    @Override
+    public boolean shouldRenderInPass(int pass)
+    {
+        return pass == 1;
+    }
 }

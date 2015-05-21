@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.util.math;
 
 import com.MO.MatterOverdrive.util.Vector3;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -12,15 +13,15 @@ public class MOMathHelper
 	public static final double PI2 = Math.PI * 2;
 	public static double degreesToRadians = Math.PI / 180.0;
 
-	public static Vector3f randomSpherePoint(double x0,double y0,double z0,Vector3 radius,Random rand)
+	public static Vector3f randomSpherePoint(double x0,double y0,double z0,Vec3 radius,Random rand)
     {
     	   double u = rand.nextDouble();
     	   double v = rand.nextDouble();
     	   double theta = 2 * Math.PI * u;
     	   double phi = Math.acos(2 * v - 1);
-    	   double x = x0 + (radius.getX() * Math.sin(phi) * Math.cos(theta));
-    	   double y = y0 + (radius.getY() * Math.sin(phi) * Math.sin(theta));
-    	   double z = z0 + (radius.getZ() * Math.cos(phi));
+    	   double x = x0 + (radius.xCoord * Math.sin(phi) * Math.cos(theta));
+    	   double y = y0 + (radius.yCoord * Math.sin(phi) * Math.sin(theta));
+    	   double z = z0 + (radius.zCoord * Math.cos(phi));
     	   return new Vector3f((float)x,(float)y,(float)z);
     }
 
@@ -95,6 +96,16 @@ public class MOMathHelper
     public static float distance(Vector2f one,Vector2f two)
     {
         return MathHelper.sqrt_float((one.x - two.x) * (one.x - two.x) + (one.y - two.y) * (one.y - two.y));
+    }
+
+    public static double distance(int x,int y,int z,int x1,int y1,int z1)
+    {
+        return Math.sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1) + (z - z1) * (z - z1));
+    }
+
+    public static int distanceSqured(int x,int y,int z,int x1,int y1,int z1)
+    {
+        return (x - x1) * (x - x1) + (y - y1) * (y - y1) + (z - z1) * (z - z1);
     }
 
     public static float Lerp(float form,float to,float time)

@@ -14,5 +14,9 @@
     "transporter": {"category": "master","sounds": [{"name": "transporter/transporter_0", "stream": false}]},
     "transporter_0": {"category": "master","sounds": [{"name": "transporter/transporter_1", "stream": false}]},
     "transporter_1": {"category": "master","sounds": [{"name": "transporter/transporter_2", "stream": false}]},
-    "transporter_2": {"category": "master","sounds": [{"name": "transporter/transporter_3", "stream": false}]}
+    "transporter_2": {"category": "master","sounds": [{"name": "transporter/transporter_3", "stream": false}]},
+    "windy": {"category": "master","sounds": [{"name": "windy", "stream": false}]},
+    "anomaly_consume": {"category": "master","sounds": [{"name": "gravitational_anomaly/consume", "stream": false}]},
+    "electric_machine": {"category": "master","sounds": [{"name": "electric_machine", "stream": false}]},
+    "force_field": {"category": "master","sounds": [{"name": "force_field", "stream": false}]}
 }

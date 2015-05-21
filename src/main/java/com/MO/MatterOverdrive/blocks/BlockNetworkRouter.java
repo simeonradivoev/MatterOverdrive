@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.blocks;
 
+import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.handler.GuiHandler;
@@ -25,10 +26,11 @@ public class BlockNetworkRouter extends MOBlockMachine
     public BlockNetworkRouter(Material material, String name)
     {
         super(material, name);
-        setHardness(2.0F);
+        setHardness(20.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
         setHasGui(true);
+        setRotationType(BlockHelper.RotationType.PREVENT);
     }
 
     @Override

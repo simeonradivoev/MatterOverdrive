@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.blocks.includes;
 
 import cofh.api.block.IDismantleable;
+import cofh.api.tileentity.ITileInfo;
 import cofh.lib.util.helpers.InventoryHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.data.inventory.Slot;
@@ -11,6 +12,7 @@ import com.MO.MatterOverdrive.items.includes.MOEnergyMatterBlockItem;
 import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
+import com.MO.MatterOverdrive.util.MOEnergyHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.FMLLog;
@@ -32,10 +34,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -108,6 +114,7 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
             {
                 if (((MOTileEntityMachine) tileEntity).isUseableByPlayer(player) || player.capabilities.isCreativeMode) {
                     FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, x, y, z);
+                    return true;
                 }else
                 {
                     ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + "No rights to access the " + getLocalizedName());
@@ -117,7 +124,24 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
             }
         }
 
-        return true;
+        return false;
+    }
+
+    @Override
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
+    {
+        TileEntity tileEntity = world.getTileEntity(x,y,z);
+        if (tileEntity != null && tileEntity instanceof MOTileEntityMachine)
+        {
+            if (!player.capabilities.isCreativeMode && ((MOTileEntityMachine) tileEntity).hasOwner() && !((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getName()))
+            {
+                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + "Only the owner can brake the " + getLocalizedName());
+                    message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
+                    player.addChatMessage(message);
+                return false;
+            }
+        }
+        return removedByPlayer(world, player, x, y, z);
     }
 
     public ItemStack getNBTDrop(World world, int x, int y, int z, IMOTileEntity te)
@@ -206,6 +230,22 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
     @Override
     public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
     {
+        TileEntity tileEntity = world.getTileEntity(x,y,z);
+        if (tileEntity instanceof MOTileEntityMachine)
+        {
+            if (player.capabilities.isCreativeMode || (((MOTileEntityMachine) tileEntity).hasOwner() && ((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getName())))
+            {
+                return true;
+            }else
+            {
+                if (world.isRemote) {
+                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + "Only the owner can dismantle the " + getLocalizedName());
+                    message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
+                    player.addChatMessage(message);
+                }
+                return false;
+            }
+        }
         return true;
     }
 

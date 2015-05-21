@@ -51,6 +51,8 @@ public class GuiHandler implements IGuiHandler
             registerContainer(TileEntityMachinePatternMonitor.class, ContainerPatternMonitor.class);
             registerContainer(TileEntityMachineNetworkSwitch.class, ContainerNetworkSwitch.class);
             registerContainer(TileEntityMachineTransporter.class, ContainerTransporter.class);
+            registerContainer(TileEntityMachineMatterRecycler.class,ContainerRecycler.class);
+            registerContainer(TileEntityMachineFusionReactorController.class,ContainerFusionReactor.class);
         }
         else
         {
@@ -64,6 +66,8 @@ public class GuiHandler implements IGuiHandler
             registerGuiAndContainer(TileEntityMachinePatternMonitor.class, GuiPatternMonitor.class,ContainerPatternMonitor.class);
             registerGuiAndContainer(TileEntityMachineNetworkSwitch.class, GuiNetworkSwitch.class,ContainerNetworkSwitch.class);
             registerGuiAndContainer(TileEntityMachineTransporter.class, GuiTransporter.class,ContainerTransporter.class);
+            registerGuiAndContainer(TileEntityMachineMatterRecycler.class, GuiRecycler.class, ContainerRecycler.class);
+            registerGuiAndContainer(TileEntityMachineFusionReactorController.class,GuiFusionReactor.class,ContainerFusionReactor.class);
         }
     }
 

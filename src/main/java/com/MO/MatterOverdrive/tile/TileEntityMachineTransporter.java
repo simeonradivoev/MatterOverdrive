@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -252,7 +253,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
             float height = p.y + 1 + random.nextFloat() * entity.height;
 
             Vector3f origin = new Vector3f(p.x ,height, p.z);
-            Vector3f pos = MOMathHelper.randomSpherePoint(origin.x,origin.y,origin.z, new Vector3(radiusX, 0,radiusZ), random);
+            Vector3f pos = MOMathHelper.randomSpherePoint(origin.x,origin.y,origin.z, Vec3.createVectorHelper(radiusX, 0,radiusZ), random);
             Vector3f dir = Vector3f.cross(Vector3f.sub(origin, pos,null), new Vector3f(0,1,0),null);
             dir.scale(speed);
             ReplicatorParticle replicatorParticle = new ReplicatorParticle(this.worldObj,pos.x,pos.y ,pos.z,dir.x,dir.y,dir.z);

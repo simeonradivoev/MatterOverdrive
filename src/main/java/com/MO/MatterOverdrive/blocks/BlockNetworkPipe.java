@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.blocks;
 
 import cofh.api.block.IDismantleable;
+import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.InventoryHelper;
 import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityNetworkPipe;
@@ -22,8 +23,9 @@ public class BlockNetworkPipe extends BlockPipe implements IDismantleable
     public BlockNetworkPipe(Material material, String name)
     {
         super(material, name);
-        setHardness(1.0F);
+        setHardness(10.0F);
         this.setResistance(9.0f);
+        setRotationType(BlockHelper.RotationType.PREVENT);
     }
 
     @Override

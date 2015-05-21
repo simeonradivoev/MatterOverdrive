@@ -198,10 +198,10 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
     @Override
     public Packet getDescriptionPacket()
     {
-        S35PacketUpdateTileEntity packet = (S35PacketUpdateTileEntity)super.getDescriptionPacket();
-        NBTTagCompound connections = packet.func_148857_g();
-        connections.setBoolean("matterVisible",getMatterStored() > 0);
-        return new S35PacketUpdateTileEntity(xCoord,yCoord,zCoord,1,connections);
+        NBTTagCompound tagCompound = new NBTTagCompound();
+        tagCompound.setInteger("Connections",getConnections());
+        tagCompound.setBoolean("matterVisible", getMatterStored() > 0);
+        return new S35PacketUpdateTileEntity(xCoord,yCoord,zCoord,1,tagCompound);
     }
 
     @Override

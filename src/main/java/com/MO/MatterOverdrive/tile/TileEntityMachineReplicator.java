@@ -41,6 +41,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Vector3f;
@@ -307,16 +308,20 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
     private boolean failReplicate(int amount)
     {
-        if(getStackInSlot(SECOUND_OUTPUT_SLOT_ID) == null)
+        ItemStack stack = getStackInSlot(SECOUND_OUTPUT_SLOT_ID);
+
+        if(stack == null)
         {
-            setInventorySlotContents(SECOUND_OUTPUT_SLOT_ID, new ItemStack(MatterOverdriveItems.matter_dust, amount));
+            stack = new ItemStack(MatterOverdriveItems.matter_dust);
+            MatterOverdriveItems.matter_dust.setMatter(stack,amount);
+            setInventorySlotContents(SECOUND_OUTPUT_SLOT_ID, stack);
             return true;
         }
         else
         {
-            if(getStackInSlot(SECOUND_OUTPUT_SLOT_ID).getItem() == MatterOverdriveItems.matter_dust && getStackInSlot(SECOUND_OUTPUT_SLOT_ID).stackSize + amount < getStackInSlot(SECOUND_OUTPUT_SLOT_ID).getMaxStackSize())
+            if (canReplicateIntoSecoundOutput(amount))
             {
-                getStackInSlot(SECOUND_OUTPUT_SLOT_ID).stackSize+=amount;
+                stack.stackSize++;
             }
         }
         return false;
@@ -334,7 +339,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         {
             float speed = 0.05f;
 
-            Vector3f pos = MOMathHelper.randomSpherePoint(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D,new Vector3(0.5,0.5,0.5),this.worldObj.rand);
+            Vector3f pos = MOMathHelper.randomSpherePoint(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Vec3.createVectorHelper(0.5,0.5,0.5), this.worldObj.rand);
             Vector3f dir = new Vector3f(random.nextFloat() * 2 - 1,(random.nextFloat()* 2 - 1) * 0.05f,random.nextFloat()* 2 - 1);
             dir.scale(speed);
             ReplicatorParticle replicatorParticle = new ReplicatorParticle(this.worldObj,pos.getX(),pos.getY() ,pos.getZ(),dir.getX(), dir.getY(), dir.getZ());
@@ -352,7 +357,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 		if(getRedstoneActive() && taskQueueProcessing.size() > 0 && internalPatternStorage != null && canCompleteTask())
         {
             ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage);
-            return this.getMatterStored() >= MatterHelper.getMatterAmountFromItem(item) && canReplicateIntoOutput(item) && canReplicateIntoSecoundOutput();
+            int matter = MatterHelper.getMatterAmountFromItem(item);
+            return this.getMatterStored() >= matter && canReplicateIntoOutput(item) && canReplicateIntoSecoundOutput(matter);
         }
         return false;
 	}
@@ -444,24 +450,21 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 		return false;
 	}
 
-    private boolean canReplicateIntoSecoundOutput()
+    private boolean canReplicateIntoSecoundOutput(int matter)
     {
-        IMatterDatabase database = MatterScanner.getLink(worldObj, getStackInSlot(DATABASE_SLOT_ID));
-        NBTTagCompound itemAsNBT = null;
+        ItemStack stack = getStackInSlot(SECOUND_OUTPUT_SLOT_ID);
 
-        if(database != null)
-        {
-            itemAsNBT = database.getItemAsNBT(MatterScanner.getSelectedAsItem(getStackInSlot(DATABASE_SLOT_ID)));
-        }
-        ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
-
-        if(getStackInSlot(SECOUND_OUTPUT_SLOT_ID) == null)
+        if (stack == null)
         {
             return true;
         }else
         {
-            return getStackInSlot(SECOUND_OUTPUT_SLOT_ID).getItem() == MatterOverdriveItems.matter_dust && getStackInSlot(SECOUND_OUTPUT_SLOT_ID).stackSize + MatterHelper.getMatterAmountFromItem(item) < getStackInSlot(SECOUND_OUTPUT_SLOT_ID).getMaxStackSize();
+            if (stack.getItem() == MatterOverdriveItems.matter_dust && stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
+            {
+                return true;
+            }
         }
+        return false;
     }
 
     @Override

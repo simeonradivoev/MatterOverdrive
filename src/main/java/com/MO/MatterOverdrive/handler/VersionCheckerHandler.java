@@ -8,7 +8,8 @@ import net.minecraft.server.MinecraftServer;
 /**
  * Created by Simeon on 5/7/2015.
  */
-public class VersionCheckerHandler implements IConfigSubscriber {
+public class VersionCheckerHandler implements IConfigSubscriber
+{
     private boolean updateInfoDisplayed = false;
     int lastPoll = 400;
     private boolean checkForUpdates;

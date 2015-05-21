@@ -13,6 +13,7 @@ import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.MatterSlot;
 import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
+import com.MO.MatterOverdrive.items.MatterDust;
 import com.MO.MatterOverdrive.network.packet.client.PacketMatterUpdate;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -29,16 +30,14 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 {
 	public static final int MATTER_STORAGE = 1024;
 	public static final int ENERGY_STORAGE = 512000;
-    public  static final  int MATTER_TRANSFER = 2;
-    public  static final  int MATTER_EXTRACT = 2;
     public  static  final  int MATTER_EXTRACT_SPEED = 100;
     public  static  final float FAIL_CHANGE = 0.05f;
 
     public static final int DECEOPOSE_SPEED_PER_MATTER = 80;
     public static final int DECOMPOSE_ENERGY_PER_MATTER = 8000;
 
-    public int INPUT_SLOT_ID = 0;
-    public int OUTPUT_SLOT_ID = 1;
+    public int INPUT_SLOT_ID;
+    public int OUTPUT_SLOT_ID;
 
     private TimeTracker time;
     private static Random random = new Random();
@@ -53,8 +52,8 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         this.energyStorage.setMaxReceive(ENERGY_STORAGE);
 
         this.matterStorage.setCapacity(MATTER_STORAGE);
-        this.matterStorage.setMaxReceive(MATTER_TRANSFER);
-        this.matterStorage.setMaxExtract(MATTER_EXTRACT);
+        this.matterStorage.setMaxReceive(MATTER_STORAGE);
+        this.matterStorage.setMaxExtract(MATTER_STORAGE);
         time = new TimeTracker();
         redstoneMode = Reference.MODE_REDSTONE_LOW;
 	}
@@ -105,7 +104,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
                     TileEntity e = worldObj.getTileEntity(this.xCoord + dir.offsetX,this.yCoord + dir.offsetY,this.zCoord + dir.offsetZ);
                     if(e instanceof IMatterHandler)
                     {
-                        if (MatterHelper.Transfer(dir,MATTER_EXTRACT,this,(IMatterHandler)e) != 0)
+                        if (MatterHelper.Transfer(dir,MATTER_STORAGE,this,(IMatterHandler)e) != 0)
                         {
                             updateClientMatter();
                         }
@@ -117,14 +116,10 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 
 	protected void manageDecompose()
 	{
-		boolean isDirty = false;
-
         if(!worldObj.isRemote)
         {
             if (this.isDecomposing())
             {
-                int itemMatter = MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
-
                 if(this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick())
                 {
                     this.decomposeTime++;
@@ -150,11 +145,12 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 
 	public boolean isDecomposing()
     {
+        int matter = MatterHelper.getMatterAmountFromItem(this.getStackInSlot(INPUT_SLOT_ID));
         return getRedstoneActive()
                 && this.getStackInSlot(INPUT_SLOT_ID) != null
                 && isItemValidForSlot(0, getStackInSlot(INPUT_SLOT_ID))
-                && MatterHelper.getMatterAmountFromItem(this.getStackInSlot(INPUT_SLOT_ID)) <= this.getMatterCapacity() - this.getMatterStored()
-                && canPutInOutput();
+                && matter <= this.getMatterCapacity() - this.getMatterStored()
+                && canPutInOutput(matter);
     }
 
     @Override
@@ -174,7 +170,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     {
         int matter = MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(INPUT_SLOT_ID));
         if (matter > 0) {
-            return MathHelper.round(DECEOPOSE_SPEED_PER_MATTER * matter * getUpgradeMultiply(UpgradeTypes.Speed));
+            return MathHelper.round(DECEOPOSE_SPEED_PER_MATTER * Math.log(DECEOPOSE_SPEED_PER_MATTER * matter) * getUpgradeMultiply(UpgradeTypes.Speed));
         }else
         {
             return 1;
@@ -194,23 +190,20 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         return MathHelper.round((matter * DECOMPOSE_ENERGY_PER_MATTER) * upgradeMultiply);
     }
 
-    private boolean canPutInOutput()
+    private boolean canPutInOutput(int matter)
     {
-        if(getStackInSlot(OUTPUT_SLOT_ID) == null)
+        ItemStack stack = getStackInSlot(OUTPUT_SLOT_ID);
+        if(stack == null)
         {
             return true;
         }
         else
         {
-            if(getStackInSlot(OUTPUT_SLOT_ID).getItem() == MatterOverdriveItems.matter_dust)
+            if(stack.getItem() == MatterOverdriveItems.matter_dust)
             {
-                if(getStackInSlot(INPUT_SLOT_ID) != null)
+                if (stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
                 {
-                    return  getStackInSlot(OUTPUT_SLOT_ID).stackSize + MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID)) < getStackInSlot(OUTPUT_SLOT_ID).getMaxStackSize();
-                }
-                else
-                {
-                    return getStackInSlot(OUTPUT_SLOT_ID).stackSize < getStackInSlot(OUTPUT_SLOT_ID).getMaxStackSize();
+                    return true;
                 }
             }
         }
@@ -220,19 +213,29 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 
     private void failDecompose()
     {
-        if(getStackInSlot(OUTPUT_SLOT_ID) != null)
+        ItemStack stack = getStackInSlot(OUTPUT_SLOT_ID);
+        int matter =MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
+
+        if (stack != null)
         {
-            getStackInSlot(OUTPUT_SLOT_ID).stackSize+=MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
+            if (stack.getItem() == MatterOverdriveItems.matter_dust && stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
+            {
+                stack.stackSize++;
+            }
         }
         else
         {
-            setInventorySlotContents(OUTPUT_SLOT_ID, new ItemStack(MatterOverdriveItems.matter_dust, MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID))));
+            stack = new ItemStack(MatterOverdriveItems.matter_dust);
+            MatterOverdriveItems.matter_dust.setMatter(stack, matter);
+            setInventorySlotContents(OUTPUT_SLOT_ID, stack);
         }
     }
 	
 	private void decomposeItem() 
 	{
-		if(getStackInSlot(INPUT_SLOT_ID) != null && canPutInOutput())
+        int matterAmount = MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
+
+		if(getStackInSlot(INPUT_SLOT_ID) != null && canPutInOutput(matterAmount))
 		{
             if(random.nextFloat() < getFailChance())
             {
@@ -240,14 +243,13 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
             }
             else
             {
-                int matterAmount = MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
                 int matter = this.matterStorage.getMatterStored();
                 this.matterStorage.setMatterStored(matterAmount + matter);
                 updateClientMatter();
             }
 
-            this.decrStackSize(0, 1);
-            forceClientUpdate = true;
+            this.decrStackSize(INPUT_SLOT_ID, 1);
+            ForceSync();
 		}
 	}
 

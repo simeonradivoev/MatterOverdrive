@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.init;
 
+import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.world.MOWorldGen;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -8,14 +9,15 @@ import cpw.mods.fml.common.registry.GameRegistry;
  */
 public class MatterOverdriveWorld
 {
-    public static MOWorldGen worldGen;
+    public MOWorldGen worldGen;
 
-    public static void init()
+    public MatterOverdriveWorld(MOConfigurationHandler configurationHandler)
     {
-        worldGen = new MOWorldGen();
+        worldGen = new MOWorldGen(configurationHandler);
+        configurationHandler.subscribe(worldGen);
     }
 
-    public static void register()
+    public void register()
     {
         GameRegistry.registerWorldGenerator(worldGen,1);
     }

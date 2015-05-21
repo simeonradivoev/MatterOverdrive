@@ -67,7 +67,7 @@ public class MatterRegistry
             String version = inputStream.readUTF();
             inputStream.close();
             fileInputStream.close();
-            System.out.println("Registry Loaded with " + entries.size() +" entries, from version " + version + " from: " + path);
+            System.out.println("Registry Loaded with " + entries.size() + " entries, from version " + version + " from: " + path);
         }
     }
     public static boolean needsCalculation(String path) throws IOException, ClassNotFoundException {
@@ -75,28 +75,23 @@ public class MatterRegistry
         if (file.exists()) {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
-            HashMap<String,MatterEntry> entires = (HashMap<String,MatterEntry>) inputStream.readObject();
+            HashMap<String, MatterEntry> entires = (HashMap<String, MatterEntry>) inputStream.readObject();
             String version = inputStream.readUTF();
             int recipeCount = inputStream.readInt();
             inputStream.close();
             fileInputStream.close();
 
-            if (version.equalsIgnoreCase(Reference.VERSION) && recipeCount == CraftingManager.getInstance().getRecipeList().size())
-            {
-                for (Map.Entry<String,MatterEntry> entry : entires.entrySet())
-                {
-                    if (!entry.getValue().calculated)
-                    {
-                        if (MatterRegistry.entries.containsKey(entry.getKey()))
-                        {
-                            if (!MatterRegistry.entries.get(entry.getKey()).equals(entry.getValue()))
-                            {
+            //checks if the saved versions differ from the current version of the mod
+            //and alos checks if the recipe list count has changed
+            if (version.equalsIgnoreCase(Reference.VERSION) && recipeCount == CraftingManager.getInstance().getRecipeList().size()) {
+                for (Map.Entry<String, MatterEntry> entry : entires.entrySet()) {
+                    if (!entry.getValue().calculated) {
+                        if (MatterRegistry.entries.containsKey(entry.getKey())) {
+                            if (!MatterRegistry.entries.get(entry.getKey()).equals(entry.getValue())) {
+                                //if the entry is in the list but it's matter was changed
+                                System.out.println("Matter Registry has changed! Recalculation required!");
                                 return true;
                             }
-                        }
-                        else
-                        {
-                            return true;
                         }
                     }
                 }
@@ -105,6 +100,8 @@ public class MatterRegistry
 
             }
         }
+        //if the registry file is missing then calculate
+        System.out.println("Saved Matter Registry missing! Recalculation required!");
         return true;
     }
 

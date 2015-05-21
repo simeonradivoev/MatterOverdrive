@@ -1,20 +1,16 @@
 package com.MO.MatterOverdrive.blocks;
 
 import cofh.lib.util.helpers.BlockHelper;
-import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
-import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
-import com.MO.MatterOverdrive.handler.GuiHandler;
+import com.MO.MatterOverdrive.client.render.MOBlockRenderer;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.tile.TileEntityMachineMatterAnalyzer;
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -31,7 +27,7 @@ public class BlockMatterAnalyzer extends MOBlockMachine
     public BlockMatterAnalyzer(Material material, String name)
     {
         super(material, name);
-        setHardness(2.0F);
+        setHardness(20.0F);
         this.setResistance(5.0f);
         this.setHarvestLevel("pickaxe", 2);
         setHasGui(true);
@@ -78,6 +74,6 @@ public class BlockMatterAnalyzer extends MOBlockMachine
     @Override
     public int getRenderType()
     {
-        return BlockRendererReplicator.renderID;
+        return MOBlockRenderer.renderID;
     }
 }

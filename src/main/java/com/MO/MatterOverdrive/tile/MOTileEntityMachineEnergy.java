@@ -4,21 +4,28 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyStorage;
+import cofh.api.tileentity.ITileInfo;
 import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.EnergySlot;
 import com.MO.MatterOverdrive.network.packet.client.PacketPowerUpdate;
+import com.MO.MatterOverdrive.util.MOEnergyHelper;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 3/18/2015.
  */
-public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler
+public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler, ITileInfo
 {
 
     protected EnergyStorage energyStorage;
@@ -185,5 +192,11 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
                 itemStack.getTagCompound().setInteger("PowerReceive",energyStorage.getMaxReceive());
             }
         }
+    }
+
+    @Override
+    public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug)
+    {
+        info.add(new ChatComponentText("Energy: " + MOEnergyHelper.formatEnergy(getEnergyStorage().getEnergyStored(),getEnergyStorage().getMaxEnergyStored())));
     }
 }

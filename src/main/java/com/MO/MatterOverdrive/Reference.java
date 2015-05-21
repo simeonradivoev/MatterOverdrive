@@ -6,7 +6,7 @@ public class Reference
 {
 	public static final String MOD_ID = "mo";
 	public static final String MOD_NAME = "Matter Overdrive";
-	public static final String VERSION = "0.2.7";
+	public static final String VERSION = "0.3";
 	public static final String CLIENT_PROXY_CLASS = "com.MO.MatterOverdrive.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.MO.MatterOverdrive.proxy.CommonProxy";
 	public static final String GUI_FACTORY_CLASS = "com.MO.MatterOverdrive.gui.GuiConfigFactory";
@@ -22,6 +22,7 @@ public class Reference
 	public static final String PATH_PARTICLE = PATH_GFX + "particle/";
 	public static final String PATH_GUI = PATH_GFX + "gui/";
 	public static final String PATH_BLOCKS = PATH_GFX + "blocks/";
+	public static final String PATH_FX = PATH_GFX + "fx/";
 	public static final String PATH_ELEMENTS = PATH_GUI + "elements/";
 	public static final String PATH_ICON = PATH_GUI + "icons/";
     public static final String PATH_ITEM = PATH_GFX + "items/";
@@ -41,7 +42,10 @@ public class Reference
 	//region Colors
 	public static final GuiColor COLOR_MATTER = new GuiColor(191,228,230);
     public static final GuiColor COLOR_HOLO = new GuiColor(169,226,251);
+	public static final GuiColor COLOR_HOLO_RED = new GuiColor(230,80,20);
 	public static final GuiColor COLOR_GUI_DARK = new GuiColor(44,54,52);
+	public static final GuiColor COLOR_GUI_DARKER = new GuiColor(34,40,37);
+	public static final GuiColor COLOR_GUI_ENERGY = new GuiColor(224,0,0);
 	//endregion
 
 	//region Modules
@@ -92,5 +96,9 @@ public class Reference
 	public static final byte MODE_REDSTONE_HIGH = 0;
 	public static final byte MODE_REDSTONE_LOW = 1;
 	public static final byte MODE_REDSTONE_NONE = 2;
+	//endregion
+
+	//region models
+	public static final String MODEL_SPHERE = Reference.PATH_MODEL_BLOCKS + "sphere.obj";
 	//endregion
 }

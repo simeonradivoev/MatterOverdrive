@@ -3,15 +3,11 @@ package com.MO.MatterOverdrive.proxy;
 import com.MO.MatterOverdrive.client.RenderHandler;
 import com.MO.MatterOverdrive.client.render.*;
 import com.MO.MatterOverdrive.handler.KeyHandler;
-import com.MO.MatterOverdrive.handler.VersionCheckerHandler;
 import com.MO.MatterOverdrive.handler.TooltipHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
-import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
-import com.MO.MatterOverdrive.tile.TileEntityMachinePatternStorage;
-import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
-import com.MO.MatterOverdrive.tile.TileEntityWeaponStation;
+import com.MO.MatterOverdrive.tile.*;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityMatterPipe;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityNetworkPipe;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityPipe;
@@ -35,15 +31,27 @@ public class ClientProxy extends CommonProxy
     public static TileEntityRendererPatterStorage pattern_storage_renderer;
     public static TileEntityRendererWeaponStation renderer_weapon_station;
     public static TileEntityRendererPatternMonitor pattern_monitor_renderer;
+    public static TileEntityRendererGravitationalAnomaly gravitational_anomaly_renderer;
+    public static TileEntityRendererGravitationalStabilizer gravitational_stabilizer_renderer;
+    public static TileEntityRendererFusionReactorController fusion_reactor_controller_renderer;
 
+    public static RenderHandler renderHandler;
+    public static MOBlockRenderer blockRenderer;
+    public static RendererBlockGravitationalStabilizer gravitationalStabilizerRenderer;
 
     @Override
 	public void registerProxies()
 	{
+        renderHandler = new RenderHandler(Minecraft.getMinecraft().theWorld,Minecraft.getMinecraft().getTextureManager());
+
         FMLCommonHandler.instance().bus().register(new KeyHandler());
         MinecraftForge.EVENT_BUS.register(new MatterOverdriveIcons());
-        MinecraftForge.EVENT_BUS.register(new RenderHandler());
+        MinecraftForge.EVENT_BUS.register(renderHandler);
         MinecraftForge.EVENT_BUS.register(new TooltipHandler());
+        FMLCommonHandler.instance().bus().register(renderHandler);
+
+        blockRenderer = new MOBlockRenderer();
+        gravitationalStabilizerRenderer = new RendererBlockGravitationalStabilizer();
 
         pipeRenderer = new TileEntityRendererPipe();
         matter_pipeRenderer = new TileEntityRendererMatterPipe();
@@ -52,6 +60,9 @@ public class ClientProxy extends CommonProxy
         pattern_storage_renderer = new TileEntityRendererPatterStorage();
         renderer_weapon_station = new TileEntityRendererWeaponStation();
         pattern_monitor_renderer = new TileEntityRendererPatternMonitor();
+        gravitational_anomaly_renderer = new TileEntityRendererGravitationalAnomaly();
+        gravitational_stabilizer_renderer = new TileEntityRendererGravitationalStabilizer();
+        fusion_reactor_controller_renderer = new TileEntityRendererFusionReactorController();
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, pipeRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMatterPipe.class, matter_pipeRenderer);
@@ -60,13 +71,18 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternStorage.class,pattern_storage_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeaponStation.class,renderer_weapon_station);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternMonitor.class,pattern_monitor_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGravitationalAnomaly.class,gravitational_anomaly_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineGravitationalStabilizer.class,gravitational_stabilizer_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineFusionReactorController.class,fusion_reactor_controller_renderer);
 
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.matter_pipe), new ItemRendererPipe(matter_pipeRenderer, new TileEntityMatterPipe(), 2));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.network_pipe),new ItemRendererPipe(network_pipeRenderer,new TileEntityNetworkPipe(),2));
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser, new ItemRendererPhaser());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.replicator),new ItemRendererTileEntityMachine(replicator_renderer,new TileEntityMachineReplicator()));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.pattern_storage),new ItemRendererTileEntityMachine(pattern_storage_renderer,new TileEntityMachinePatternStorage()));
-        RenderingRegistry.registerBlockHandler(new BlockRendererReplicator());
+
+        RenderingRegistry.registerBlockHandler(blockRenderer);
+        RenderingRegistry.registerBlockHandler(gravitationalStabilizerRenderer);
 	}
 
     @Override

@@ -38,7 +38,7 @@ public class MatterOverdriveMatter
 
     public static void registerBasicBlocks(MOConfigurationHandler c)
     {
-        reg(c,Blocks.dirt, 1);
+        reg(c,Blocks.dirt, 1,3);
         reg(c,Blocks.wool, 2,16);
         reg(c,Blocks.grass, 5);
         reg(c,"cobblestone", 1);
@@ -63,7 +63,6 @@ public class MatterOverdriveMatter
         reg(c,"paneGlass",1);
         reg(c,Blocks.bedrock,1024);
         reg(c,Blocks.sponge,8);
-        reg(c,Blocks.rail,1);
         reg(c,Blocks.vine,1);
         reg(c,Blocks.tallgrass,1);
         reg(c,Blocks.mossy_cobblestone,2);
@@ -72,6 +71,7 @@ public class MatterOverdriveMatter
         reg(c, Blocks.hardened_clay, 3);
         reg(c,Blocks.stonebrick,2,4);
         reg(c,Blocks.skull,8,5);
+        reg(c,Blocks.cobblestone_wall,1);
 
         //region Ore
         reg(c,"oreDiamond",512);
@@ -85,7 +85,7 @@ public class MatterOverdriveMatter
         //endregion
 
         //region flowers
-        reg(c,Blocks.red_flower,1);
+        reg(c,Blocks.red_flower,1,9);
         reg(c,Blocks.yellow_flower,1);
         reg(c,Blocks.brown_mushroom,1);
         reg(c,Blocks.brown_mushroom_block,1);
@@ -120,10 +120,10 @@ public class MatterOverdriveMatter
         reg(c, Items.feather, 1);
         reg(c, Items.fermented_spider_eye, 1);
         reg(c, Items.flint, 1);
-        reg(c, Items.fish, 1);
+        reg(c, Items.fish, 1,4);
         reg(c, Items.cooked_fished, 1);
         reg(c, Items.ghast_tear, 8);
-        reg(c, "nuggetGold", 1);
+        reg(c, "nuggetGold", 4);
         reg(c, Items.gunpowder, 2);
         reg(c, Items.melon, 1);
         reg(c, "cropWheat", 1);
@@ -144,13 +144,16 @@ public class MatterOverdriveMatter
         reg(c, Items.porkchop, 2);
         reg(c, Items.cooked_porkchop, 4);
         reg(c, Items.paper, 1);
-        reg(c, Items.lava_bucket, 30);
-        reg(c, Items.water_bucket, 28);
-        reg(c, Items.milk_bucket, 28);
+        reg(c, Items.lava_bucket, 24 + 96);
+        reg(c, Items.water_bucket, 12 + 96);
+        reg(c, Items.milk_bucket, 12 + 96);
         reg(c, "ingotBrickNether", 1);
         reg(c, Items.nether_wart, 3);
         reg(c, Items.nether_star, 1024);
-        reg(c,Items.iron_horse_armor,128);
+        reg(c,Items.iron_horse_armor,32 * 5);
+        reg(c,Items.golden_horse_armor,42 * 5);
+        reg(c,Items.diamond_horse_armor,256 * 5);
+        reg(c,Items.experience_bottle,32);
         reg(c, "slimeball", 2);
         reg(c, "record", 4);
         reg(c, Items.chicken, 2);
@@ -159,6 +162,8 @@ public class MatterOverdriveMatter
         reg(c, "dustSaltpeter", 2);
         reg(c, "dustSulfur", 2);
         reg(c,Items.name_tag,32);
+        reg(c,Items.skull,16,5);
+        reg(c,Items.glass_bottle,3);
 
         //region Ingots
         reg(c, "ingotBrick", 2);

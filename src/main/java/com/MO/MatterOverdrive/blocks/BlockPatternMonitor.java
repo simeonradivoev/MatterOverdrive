@@ -1,20 +1,14 @@
 package com.MO.MatterOverdrive.blocks;
 
 import cofh.lib.util.helpers.BlockHelper;
-import com.MO.MatterOverdrive.MatterOverdrive;
-import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
-import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
-import com.MO.MatterOverdrive.handler.GuiHandler;
+import com.MO.MatterOverdrive.client.render.MOBlockRenderer;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -29,12 +23,10 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class BlockPatternMonitor extends MOBlockMachine
 {
-    private IIcon front_icon;
-
     public BlockPatternMonitor(Material material, String name)
     {
         super(material, name);
-        setHardness(2.0F);
+        setHardness(20.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
         setBlockBounds(0,0,0,1,1,1);
@@ -42,19 +34,12 @@ public class BlockPatternMonitor extends MOBlockMachine
         setHasGui(true);
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
-    {
-        front_icon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "pattern_monitor_front");
-    }
-
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
         if (side == meta)
         {
-            return front_icon;
+            return MatterOverdriveIcons.Monitor_back;
         }
         else if (side == BlockHelper.getOppositeSide(meta))
         {
@@ -139,6 +124,6 @@ public class BlockPatternMonitor extends MOBlockMachine
     @Override
     public int getRenderType()
     {
-        return BlockRendererReplicator.renderID;
+        return MOBlockRenderer.renderID;
     }
 }

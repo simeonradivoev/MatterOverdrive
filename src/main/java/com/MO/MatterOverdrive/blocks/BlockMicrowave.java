@@ -2,17 +2,14 @@ package com.MO.MatterOverdrive.blocks;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.includes.MOBlock;
-import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
-import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
-import com.MO.MatterOverdrive.client.render.BlockRendererReplicator;
+import com.MO.MatterOverdrive.client.render.MOBlockRenderer;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -26,7 +23,7 @@ public class BlockMicrowave extends MOBlock
     public BlockMicrowave(Material material, String name)
     {
         super(material, name);
-        setHardness(2.0F);
+        setHardness(10.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
     }
@@ -69,7 +66,7 @@ public class BlockMicrowave extends MOBlock
     @Override
     public int getRenderType()
     {
-        return BlockRendererReplicator.renderID;
+        return MOBlockRenderer.renderID;
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)

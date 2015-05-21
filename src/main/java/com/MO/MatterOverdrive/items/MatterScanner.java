@@ -7,6 +7,7 @@ import cofh.lib.util.helpers.ColorHelper;
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.IScannable;
 import com.MO.MatterOverdrive.network.packet.bi.PacketGetDatabase;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MOPhysicsHelper;
@@ -44,7 +45,7 @@ public class MatterScanner extends MOBaseItem
 	public static final String PAGE_TAG_NAME = "page";
 	public static final String PANEL_OPEN_TAG_NAME = "panelOpen";
 	public static final int PROGRESS_PER_ITEM = 10;
-	public static final int SCAN_TIME = 40;
+	public static final int SCAN_TIME = 60;
 	@SideOnly(Side.CLIENT)
 	public static MachineSound scanningSound;
 	public static IIcon offline_icon;
@@ -190,27 +191,6 @@ public class MatterScanner extends MOBaseItem
 		return 1;
 	}
 
-
-
-	private void increaseScanProgress(ItemStack item)
-	{
-		if(item.hasTagCompound())
-		{
-			int lastScanProgress = item.getTagCompound().getInteger(MatterDatabaseHelper.PROGRESS_TAG_NAME);
-			item.getTagCompound().setInteger(MatterDatabaseHelper.PROGRESS_TAG_NAME, MathHelper.clampI(lastScanProgress + 1, 0, 1));
-		}
-	}
-
-	private int getScanProgress(ItemStack item)
-	{
-		if(item.hasTagCompound())
-		{
-			return item.getTagCompound().getInteger(MatterDatabaseHelper.PROGRESS_TAG_NAME);
-		}
-
-		return 0;
-	}
-
 	private void resetScanProgress(ItemStack item)
 	{
 		if(item.hasTagCompound())
@@ -228,11 +208,6 @@ public class MatterScanner extends MOBaseItem
 		}
 
 		return false;
-	}
-
-	public static void updateSelected(ItemStack scanner)
-	{
-
 	}
 
 	public static void setSelected(ItemStack scanner,ItemStack itemStack)
@@ -325,14 +300,23 @@ public class MatterScanner extends MOBaseItem
 	/**
 	 * How long it takes to use or consume an item
 	 */
-	public int getMaxItemUseDuration(ItemStack p_77626_1_)
+	public int getMaxItemUseDuration(ItemStack scanner)
 	{
-		return SCAN_TIME;
+        ItemStack selected = getSelectedAsItem(scanner);
+        if (selected != null)
+        {
+            return MatterHelper.getMatterAmountFromItem(selected);
+        }
+        else
+        {
+            return SCAN_TIME;
+        }
 	}
 
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
 	{
-		if(this.getMovingObjectPositionFromPlayer(world,entityplayer,true) != null)
+		MovingObjectPosition hit = getScanningPos(entityplayer);
+		if( hit != null && hit.typeOfHit != MovingObjectPosition.MovingObjectType.MISS)
 		{
 			if (world.isRemote)
 				playSound(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
@@ -369,8 +353,8 @@ public class MatterScanner extends MOBaseItem
 			return scanner;
 		}
 
-		MovingObjectPosition position = this.getMovingObjectPositionFromPlayer(player.worldObj,player,true);
-		if (position != null) {
+		MovingObjectPosition position = getScanningPos(player);
+		if (position != null && position.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
 			if (!world.isRemote) {
 				int x = position.blockX;
 				int y = position.blockY;
@@ -384,16 +368,22 @@ public class MatterScanner extends MOBaseItem
 		return scanner;
 	}
 
+	public MovingObjectPosition getScanningPos(EntityPlayer player)
+	{
+		return MOPhysicsHelper.rayTrace(player,player.worldObj,5,0,Vec3.createVectorHelper(0,player.getEyeHeight(),0));
+	}
+
 	@Override
 	public void onUsingTick(ItemStack scanner, EntityPlayer player, int count)
 	{
-		MovingObjectPosition position = this.getMovingObjectPositionFromPlayer(player.worldObj,player,true);
-		if (position != null) {
+		MovingObjectPosition hit = getScanningPos(player);
 
-			if (!player.worldObj.isRemote) {
-				int x = position.blockX;
-				int y = position.blockY;
-				int z = position.blockZ;
+		if (hit != null) {
+
+			if (!player.worldObj.isRemote && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+				int x = hit.blockX;
+				int y = hit.blockY;
+				int z = hit.blockZ;
 				ItemStack lastSelected = getSelectedAsItem(scanner);
 				ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(player.worldObj, x, y, z);
 
@@ -448,13 +438,14 @@ public class MatterScanner extends MOBaseItem
 	{
 		this.TagCompountCheck(scanner);
 
+        StringBuilder scanInfo = new StringBuilder();
 		IMatterDatabase database = getLink(world, scanner);
 
 		if (database != null)
 		{
 			resetScanProgress(scanner);
 
-			StringBuilder scanInfo = new StringBuilder();
+
 			scanInfo.append(EnumChatFormatting.YELLOW + "[" + scanner.getDisplayName() + "] ");
 
 			if (database.addItem(worldBlock, PROGRESS_PER_ITEM,false,scanInfo)) {
@@ -470,6 +461,18 @@ public class MatterScanner extends MOBaseItem
 				SoundHandler.PlaySoundAt(world, "scanner_fail", player);
 				return false;
 			}
+		}else
+		{
+            if (world.getBlock(x,y,z) instanceof IScannable)
+            {
+                ((IScannable) world.getBlock(x,y,z)).onScan(world,x,y,z,player,scanner);
+                //DisplayInfo(player, scanInfo, EnumChatFormatting.GREEN);
+                return true;
+            }else if (world.getTileEntity(x,y,z) instanceof IScannable)
+            {
+                ((IScannable) world.getBlock(x,y,z)).onScan(world,x,y,z,player,scanner);
+                return true;
+            }
 		}
 
 		return false;

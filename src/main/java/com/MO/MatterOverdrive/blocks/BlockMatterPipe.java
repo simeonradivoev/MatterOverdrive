@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.blocks;
 
+import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityMatterPipe;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
@@ -14,8 +15,9 @@ public class BlockMatterPipe extends BlockPipe
     public BlockMatterPipe(Material material, String name)
     {
         super(material, name);
-        setHardness(1.0F);
+        setHardness(10.0F);
         this.setResistance(5.0f);
+        setRotationType(BlockHelper.RotationType.PREVENT);
     }
 
     @Override

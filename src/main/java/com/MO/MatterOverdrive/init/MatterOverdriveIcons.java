@@ -12,12 +12,16 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 public class MatterOverdriveIcons
 {
     public static IIcon Base;
+    public static IIcon Recycler;
     public static IIcon Vent;
     public static IIcon Vent2;
     public static IIcon Matter_tank_full;
     public static IIcon Matter_tank_empty;
     public static IIcon Transperant;
     public static IIcon Network_port_square;
+    public static IIcon Monitor_back;
+    public static IIcon YellowStripes;
+    public static IIcon Coil;
 
     public static IIcon particle_steam;
 
@@ -45,6 +49,10 @@ public class MatterOverdriveIcons
         Transperant = register(r, "transperant");
         Network_port_square = register(r,"network_port");
         Vent2 = register(r,"vent2");
+        Monitor_back = register(r,"holo_monitor");
+        YellowStripes = register(r,"base_stripes");
+        Recycler = register(r,"recycler_side");
+        Coil = register(r,"base_coil");
     }
 
     private void initParticleIcons(IIconRegister r)

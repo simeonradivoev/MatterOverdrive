@@ -24,11 +24,7 @@ public class GuiConfig extends cpw.mods.fml.client.config.GuiConfig
     private static List<IConfigElement> getConfigElements(GuiScreen parent) {
 
         List<IConfigElement> list = new ArrayList<IConfigElement>();
-
-        list.add(new ConfigElement<ConfigCategory>(MatterOverdrive.configHandler.config.getCategory(MOConfigurationHandler.CATEGORY_WORLD_GEN)));
-        list.add(new ConfigElement<ConfigCategory>(MatterOverdrive.configHandler.config.getCategory(MOConfigurationHandler.CATEGORY_MATTER_NETWORK)));
-        list.add(new ConfigElement<ConfigCategory>(MatterOverdrive.configHandler.config.getCategory(MOConfigurationHandler.CATEGORY_MACHINES)));
-        list.add(new ConfigElement<ConfigCategory>(MatterOverdrive.configHandler.config.getCategory(MOConfigurationHandler.CATEGORY_MATTER)));
+        MatterOverdrive.configHandler.addCategoryToGui(list);
         return list;
     }
 }

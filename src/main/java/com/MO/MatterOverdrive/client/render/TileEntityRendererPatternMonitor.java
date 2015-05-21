@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.client.render;
 
+import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
 import com.MO.MatterOverdrive.util.RenderUtils;
@@ -19,15 +20,16 @@ public class TileEntityRendererPatternMonitor extends TileEntitySpecialRenderer
 {
     public static ResourceLocation screenTexture = new ResourceLocation(Reference.PATH_BLOCKS + "pattern_monitor_holo.png");
     public static ResourceLocation screenTextureBack = new ResourceLocation(Reference.PATH_BLOCKS + "pattern_monitor_holo_back.png");
+    public static ResourceLocation screenTextureGlow = new ResourceLocation(Reference.PATH_FX + "holo_monitor_glow.png");
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks) {
         glPushMatrix();
 
-        ForgeDirection direction = ForgeDirection.getOrientation(tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
-        glTranslated(x, y, z);
+        int meta = tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+        ForgeDirection direction = ForgeDirection.getOrientation(meta);
 
-        float thickness = 5f * (1f / 16f);
+        /*float thickness = 5f * (1f / 16f);
 
         if (direction == ForgeDirection.EAST) {
             glTranslated(thickness, 1, 1);
@@ -44,47 +46,31 @@ public class TileEntityRendererPatternMonitor extends TileEntitySpecialRenderer
             glTranslated(1, 1, 1 - thickness);
             glRotatef(90, 1, 0, 0);
             glRotatef(180, 0, 0, 1);
-        }
+        }*/
 
         glDisable(GL_LIGHTING);
         glDisable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
         RenderUtils.disableLightmap();
-        Minecraft.getMinecraft().renderEngine.bindTexture(screenTextureBack);
-        glColor3f(Reference.COLOR_HOLO.getFloatR() * 0.05f, Reference.COLOR_HOLO.getFloatG() * 0.05f, Reference.COLOR_HOLO.getFloatB() * 0.05f);
 
-        glTranslated(0, 0.5f * (1f / 16f), 0);
+        RenderUtils.beginDrawinngBlockScreen(x, y, z, direction, Reference.COLOR_HOLO, tileEntity, -0.65);
+        glTranslated(0, 0, -0.05);
+        Minecraft.getMinecraft().renderEngine.bindTexture(screenTexture);
+        glColor3f(Reference.COLOR_HOLO.getFloatR() * 0.7f, Reference.COLOR_HOLO.getFloatG() * 0.7f, Reference.COLOR_HOLO.getFloatB() * 0.7f);
 
-        Tessellator tessellator = Tessellator.instance;
-
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-        tessellator.addVertexWithUV(0, 0, 1, 0, 1);
-        tessellator.addVertexWithUV(1, 0, 1, 1, 1);
-        tessellator.addVertexWithUV(1, 0, 0, 1, 0);
-        tessellator.draw();
-
-        glTranslated(0, 0.5f * (1f / 16f), 0);
+        RenderUtils.drawPlane(1);
 
         if (tileEntity instanceof TileEntityMachinePatternMonitor) {
             TileEntityMachinePatternMonitor monitor = (TileEntityMachinePatternMonitor) tileEntity;
             glPushMatrix();
-            glTranslated(0.45, 0, 0.33);
+            glTranslated(0.47, 0.33, 0);
             glScaled(0.03, 0.03, 0.03);
-            glRotatef(90, 1, 0, 0);
             Minecraft.getMinecraft().fontRenderer.drawString(Integer.toString(monitor.getDatabases().size()), 0, 0, 0x78a1b3);
             glPopMatrix();
         }
 
-        Minecraft.getMinecraft().renderEngine.bindTexture(screenTexture);
-        glColor3f(Reference.COLOR_HOLO.getFloatR() * 0.7f, Reference.COLOR_HOLO.getFloatG() * 0.7f, Reference.COLOR_HOLO.getFloatB() * 0.7f);
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-        tessellator.addVertexWithUV(0, 0, 1, 0, 1);
-        tessellator.addVertexWithUV(1, 0, 1, 1, 1);
-        tessellator.addVertexWithUV(1, 0, 0, 1, 0);
-        tessellator.draw();
+        RenderUtils.endDrawinngBlockScreen();
 
         glDisable(GL_BLEND);
         glEnable(GL_CULL_FACE);

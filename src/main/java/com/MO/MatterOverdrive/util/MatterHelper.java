@@ -40,10 +40,19 @@ public class MatterHelper
 	
 	public static int getMatterAmountFromItem(ItemStack item)
 	{
-        if(item != null) {
-            MatterEntry matter = MatterRegistry.getEntry(item);
-            if(matter != null)
-                return matter.getMatter();
+        if(item != null)
+        {
+            if (item.getItem() instanceof IMatterItem)
+            {
+                int matter = ((IMatterItem) item.getItem()).getMatter(item);
+                return matter;
+            }
+            else
+            {
+                MatterEntry matter = MatterRegistry.getEntry(item);
+                if (matter != null)
+                    return matter.getMatter();
+            }
         }
 		return 0;
 	}

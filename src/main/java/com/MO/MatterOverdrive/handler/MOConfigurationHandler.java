@@ -30,17 +30,22 @@ public class MOConfigurationHandler
     public static final String CATEGORY_OVERRIDE_MATTER = CATEGORY_MATTER + ".item overrides";
     public static final String CATEGORY_NEW_ITEMS = CATEGORY_MATTER + ".new items";
     public static final String CATEGORY_WORLD_SPAWN_ORES = "spawn ores";
+    public static final String CATEGORY_WORLD_SPAWN_OTHER = "spawn other";
     public static final String CATEGORY_WORLD_SPAWN = "spawn";
     public static final String CATEGORY_CLIENT = "client";
+    public static final String CATEGORY_SERVER = "server";
 
     public static final String KEY_AUTOMATIC_RECIPE_CALCULATION = "automatic matter calculation from recipe";
     public static final String KEY_MAX_BROADCASTS = "max broadcasts per tick";
     public static final String KEY_MBLACKLIST = "blacklist";
     public static final String KEY_VERSION_CHECK = "version_check";
+    public static final String KEY_GRAVITATIONAL_ANOMALY_FALLING_BLOCKS = "gravitational anomaly falling blocks";
+    public static final String KEY_GRAVITATIONAL_ANOMALY_BLOCK_ENTITIES = "gravitational anomaly block entities";
+    public static final String KEY_GRAVITATIONAL_ANOMALY_SPAWN_CHANCE = "gravitational anomaly spawn chance";
 
     public MOConfigurationHandler(File file)
     {
-        config = new Configuration(file);
+        config = new Configuration(file,Reference.VERSION);
         subscribers = new HashSet<IConfigSubscriber>();
     }
 
@@ -60,6 +65,9 @@ public class MOConfigurationHandler
         category = config.getCategory(CATEGORY_CLIENT);
         updateCategoryLang(category);
         category.setComment("Options for the Matter overdrive client");
+        category = config.getCategory(CATEGORY_SERVER);
+        updateCategoryLang(category);
+        category.setComment("Options form the Matter Overdrive server");
 
         category = config.getCategory(CATEGORY_MACHINES);
         category.setComment("Machine Options.");
@@ -172,10 +180,11 @@ public class MOConfigurationHandler
 
     public void addCategoryToGui(List<IConfigElement> list)
     {
-        list.add(new ConfigElement<ConfigCategory>(MatterOverdrive.configHandler.config.getCategory(MOConfigurationHandler.CATEGORY_CLIENT)));
-        list.add(new ConfigElement<ConfigCategory>(MatterOverdrive.configHandler.config.getCategory(MOConfigurationHandler.CATEGORY_WORLD_GEN)));
-        list.add(new ConfigElement<ConfigCategory>(MatterOverdrive.configHandler.config.getCategory(MOConfigurationHandler.CATEGORY_MATTER_NETWORK)));
-        list.add(new ConfigElement<ConfigCategory>(MatterOverdrive.configHandler.config.getCategory(MOConfigurationHandler.CATEGORY_MACHINES)));
-        list.add(new ConfigElement<ConfigCategory>(MatterOverdrive.configHandler.config.getCategory(MOConfigurationHandler.CATEGORY_MATTER)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_CLIENT)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_SERVER)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_WORLD_GEN)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_MATTER_NETWORK)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_MACHINES)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_MATTER)));
     }
 }

@@ -43,6 +43,11 @@ public class MachineSound extends PositionedSound implements ITickableSound
         this.repeat = repeat;
     }
 
+    public void setVolume(float volume)
+    {
+        this.volume = volume;
+    }
+
     @Override
     public void update()
     {

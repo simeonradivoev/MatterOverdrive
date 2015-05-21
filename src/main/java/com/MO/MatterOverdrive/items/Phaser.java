@@ -10,10 +10,14 @@ import com.MO.MatterOverdrive.api.weapon.IWeapon;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
 import com.MO.MatterOverdrive.sound.PhaserSound;
 import com.MO.MatterOverdrive.util.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -47,18 +51,6 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
 	public void registerIcons(IIconRegister iconRegistry)
     {
 
-    }
-
-    @Override
-    public int getDamage(ItemStack stack)
-    {
-        return super.getDamage(stack);
-    }
-
-    @Override
-    public int getDisplayDamage(ItemStack stack)
-    {
-        return super.getDamage(stack);
     }
 
     @Override
@@ -398,6 +390,16 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         {
             return super.getEnergyStored(container);
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void getSubItems(Item item, CreativeTabs tabs, List list)
+    {
+        ItemStack unpowered = new ItemStack(item);
+        ItemStack powered = new ItemStack(item);
+        setEnergyStored(powered,getMaxEnergyStored(powered));
+        list.add(unpowered);
+        list.add(powered);
     }
 
     @Override

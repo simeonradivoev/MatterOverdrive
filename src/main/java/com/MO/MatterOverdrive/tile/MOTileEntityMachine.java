@@ -144,6 +144,14 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                     sound = new MachineSound(soundRes, xCoord, yCoord, zCoord, soundVolume() * soundMultiply, 1);
                     FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
                 }
+                else if (FMLClientHandler.instance().getClient().getSoundHandler().isSoundPlaying(sound))
+                {
+                    sound.setVolume(soundVolume());
+                }
+                else
+                {
+                    sound.startPlaying();
+                }
             }
             else if (sound != null)
             {

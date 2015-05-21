@@ -49,13 +49,13 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	@Override
 	public int getDamage(ItemStack stack)
 	 {
-		return getMaxEnergyStored(stack) - getEnergyStored(stack) + 1;
+		return getMaxEnergyStored(stack) - getEnergyStored(stack);
 	 }
 	
 	@Override
 	public int getMaxDamage(ItemStack stack)
 	{
-		return getMaxEnergyStored(stack)+2;
+		return getMaxEnergyStored(stack);
 	}
 	
 	@Override
@@ -63,12 +63,11 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
     {
         return true;
     }
-	
-	@Override
+
 	public int getDisplayDamage(ItemStack stack)
-    {
-        return getDamage(stack);
-    }
+	{
+		return getDamage(stack);
+	}
 	
 	@Override
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
@@ -150,22 +149,10 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 		this.TagCompountCheck(container);
 		return container.stackTagCompound.getInteger("Energy");
 	}
-	
-	@Override
-	 public void onCreated(ItemStack stack, World world, EntityPlayer player) 
-	 {
-		this.setEnergyStored(stack, 0);
-	 }
 
 	@Override
 	public int getMaxEnergyStored(ItemStack container) 
 	{
 		return capacity;
-	}
-	
-	@Override
-	public void InitTagCompount(ItemStack stack)
-	{
-		this.setEnergyStored(stack, capacity);
 	}
 }

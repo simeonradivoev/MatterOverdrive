@@ -48,13 +48,19 @@ public class MatterStorage implements IMatterStorage
 	@Override
 	public int extractMatter(ForgeDirection direction,int amount,boolean simulate) 
 	{
+		return extractMatter(amount,simulate);
+	}
+
+
+	public int extractMatter(int amount,boolean simulate)
+	{
 		int maxDrain = MathHelper.clampI(Math.min(amount, maxExtract),0,this.matter);
-		
+
 		if(!simulate)
 		{
 			this.matter -= maxDrain;
 		}
-		
+
 		return maxDrain;
 	}
 

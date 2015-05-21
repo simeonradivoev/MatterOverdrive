@@ -1,7 +1,5 @@
 package com.MO.MatterOverdrive.client.render;
 
-import cofh.lib.gui.GuiColor;
-import com.MO.MatterOverdrive.util.RenderUtils;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.block.Block;
@@ -13,12 +11,11 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by Simeon on 3/19/2015.
  */
-public class BlockRendererReplicator implements ISimpleBlockRenderingHandler
+public class MOBlockRenderer implements ISimpleBlockRenderingHandler
 {
-
     public static int renderID;
 
-    public BlockRendererReplicator()
+    public MOBlockRenderer()
     {
         renderID = RenderingRegistry.getNextAvailableRenderId();
     }

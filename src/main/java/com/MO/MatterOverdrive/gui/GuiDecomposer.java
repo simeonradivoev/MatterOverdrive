@@ -54,31 +54,6 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 		AddHotbarPlayerSlots(this.inventorySlots,this);
 	}
 
-    @Override
-    protected void renderToolTip(ItemStack stack, int x, int y)
-    {
-        List list = stack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
-
-        for (int k = 0; k < list.size(); ++k)
-        {
-            String info = (String)list.get(k);
-
-            if (k == 0)
-            {
-                list.set(k, stack.getRarity().rarityColor + info);
-            }
-            else
-            {
-                list.set(k, EnumChatFormatting.GRAY + info);
-            }
-        }
-
-        //MatterHelper.DrawMatterInfoTooltip(stack,TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER,machine.getEnergyDrainMax()		,list);
-
-        FontRenderer font = stack.getItem().getFontRenderer(stack);
-        drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
-    }
-
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
 			int p_146976_2_, int p_146976_3_) 

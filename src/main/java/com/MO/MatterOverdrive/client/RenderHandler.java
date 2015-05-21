@@ -11,10 +11,12 @@ import com.MO.MatterOverdrive.sound.PhaserSound;
 import com.MO.MatterOverdrive.util.MOPhysicsHelper;
 import com.MO.MatterOverdrive.util.WeaponHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,6 +43,14 @@ public class RenderHandler
     private static Random random = new Random();
     public static ResourceLocation phaserSoundLocation = new ResourceLocation(Reference.MOD_ID + ":" +"phaser_beam_1");
     Map<Entity,PhaserSound> soundMap = new HashMap<Entity, PhaserSound>();
+    RenderMatterScannerInfoHandler matterScannerInfoHandler;
+    RenderParticlesHandler renderParticlesHandler;
+
+    public RenderHandler(World world,TextureManager textureManager)
+    {
+        matterScannerInfoHandler = new RenderMatterScannerInfoHandler();
+        renderParticlesHandler = new RenderParticlesHandler(world,textureManager);
+    }
 
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event)
@@ -51,6 +61,16 @@ public class RenderHandler
         renderClient();
         renderOthers();
         glPopMatrix();
+
+        matterScannerInfoHandler.onRenderWorldLast(event);
+        renderParticlesHandler.onRenderWorldLast(event);
+    }
+
+    //Called when the client ticks.
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event)
+    {
+        renderParticlesHandler.onClientTick(event);
     }
 
     public void renderOthers()
@@ -185,5 +205,10 @@ public class RenderHandler
             soundMap.remove(entity);
 
         }
+    }
+
+    public RenderParticlesHandler getRenderParticlesHandler()
+    {
+        return renderParticlesHandler;
     }
 }

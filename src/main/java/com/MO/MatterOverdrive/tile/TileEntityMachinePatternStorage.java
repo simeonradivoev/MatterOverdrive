@@ -4,7 +4,9 @@ import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.position.BlockPosition;
+import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.IScannable;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.matter.IMatterPatternStorage;
@@ -13,6 +15,7 @@ import com.MO.MatterOverdrive.blocks.BlockPatternStorage;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.PatternStorageSlot;
+import com.MO.MatterOverdrive.init.MatterOverdriveItems;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
 import cpw.mods.fml.relauncher.Side;
 import com.MO.MatterOverdrive.matter_network.MatterNetworkPacket;
@@ -25,6 +28,7 @@ import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,10 +37,12 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.List;
+
 /**
  * Created by Simeon on 3/27/2015.
  */
-public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy implements IMatterDatabase, IMatterNetworkClient,IMatterNetworkConnectionProxy
+public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy implements IMatterDatabase, IMatterNetworkClient,IMatterNetworkConnectionProxy,IScannable
 {
     public static final int TASK_PROCESS_DELAY = 40;
     public static final int ENERGY_CAPACITY = 64000;
@@ -395,6 +401,31 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public int onNetworkTick(World world,TickEvent.Phase phase)
     {
         return 0;
+    }
+
+    @Override
+    public void addInfo(World world, double x, double y, double z, List<String> infos)
+    {
+        int patternCount = 0;
+        for (ItemStack patternDrive : getPatternStorageList())
+        {
+            if (patternDrive != null) {
+                patternCount += MatterOverdriveItems.pattern_drive.getItemsAsNBT(patternDrive).tagCount();
+            }
+        }
+        if (patternCount > 0)
+        {
+            infos.add(patternCount + "xPatterns");
+        }else
+        {
+            infos.add("No Patterns.");
+        }
+
+    }
+
+    @Override
+    public void onScan(World world, double x, double y, double z, EntityPlayer player, ItemStack scanner) {
+
     }
     //endregion
 }

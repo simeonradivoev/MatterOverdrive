@@ -17,7 +17,12 @@ public class TooltipHandler
         if (MatterHelper.containsMatter(event.itemStack))
         {
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-                event.toolTip.add(EnumChatFormatting.BLUE + "Matter: " + MatterHelper.formatMatter(MatterHelper.getMatterAmountFromItem(event.itemStack)));
+                event.toolTip.add(EnumChatFormatting.BLUE + "Matter: " + EnumChatFormatting.GOLD + MatterHelper.formatMatter(MatterHelper.getMatterAmountFromItem(event.itemStack)));
+            }
+        }else
+        {
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+                event.toolTip.add(EnumChatFormatting.BLUE + "Matter: " + EnumChatFormatting.RED + "None");
             }
         }
     }

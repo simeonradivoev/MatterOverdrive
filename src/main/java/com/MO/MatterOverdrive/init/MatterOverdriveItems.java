@@ -42,13 +42,15 @@ public class MatterOverdriveItems
     public static WeaponColorModule weapon_module_color;
     public static WeaponModuleBarrel weapon_module_barrel;
     public static SecurityProtocol security_protocol;
+    public static SpacetimeEqualizer spacetime_equalizer;
+    public static Wrench wrench;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
-		matter_dust = new MatterDust("matter_dust");
-		matter_dust_refined = new MatterDust("matter_dust_refined");
+		matter_dust = new MatterDust("matter_dust",false);
+		matter_dust_refined = new MatterDust("matter_dust_refined",true);
 		matter_scanner = new MatterScanner("matter_scanner");
-		battery = new Battery("battery",131072);
+		battery = new Battery("battery",512000);
 		creative_battery = new CreativeBattery("creative_battery",1048576);
 		phaser = new Phaser("phaser");
 		emergency_ration = new ItemFood(8,0.8F,false);
@@ -69,7 +71,8 @@ public class MatterOverdriveItems
         weapon_module_color = new WeaponColorModule("weapon_module_color");
         weapon_module_barrel = new WeaponModuleBarrel("weapon_module_barrel");
         security_protocol = new SecurityProtocol("security_protocol");
-
+        spacetime_equalizer = new SpacetimeEqualizer("spacetime_equalizer");
+        wrench = new Wrench("tritanium_wrench");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -102,8 +105,9 @@ public class MatterOverdriveItems
         weapon_module_barrel.Register();
         earl_gray_tea.Register();
         security_protocol.Register();
+        spacetime_equalizer.Register();
+        wrench.Register();
 
-        GameRegistry.addSmelting(new ItemStack(matter_dust), new ItemStack(matter_dust_refined), 0);
         GameRegistry.addSmelting(new ItemStack(tritanium_dust),new ItemStack(tritanium_ingot),5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_ingot),10);
 
@@ -118,8 +122,9 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new ItemStack(phaser),new Object[]{"IGI","IDI","WCW",'I',Items.iron_ingot,'G',Blocks.glass,'D',dilithium_ctystal,'W',Blocks.wool,'C',new ItemStack(isolinear_circuit,1,3)});
         GameRegistry.addRecipe(new ItemStack(pattern_drive),new Object[]{" M ", "RER"," C ",'M',machine_casing,'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'R',Items.redstone});
         GameRegistry.addRecipe(new ItemStack(security_protocol),new Object[]{"PP", "CP",'P',Items.paper,'C',new ItemStack(isolinear_circuit,1,0)});
+        GameRegistry.addRecipe(new ItemStack(wrench),new Object[]{"T T"," Y "," T ",'T',tritanium_ingot,'Y',new ItemStack(Blocks.wool,1,4)});
+        GameRegistry.addRecipe(new ItemStack(spacetime_equalizer),new Object[]{" M ","EHE", " M ",'M',s_magnet,'E',Items.ender_pearl,'H',h_compensator});
 
-        MatterRegistry.register(matter_dust_refined, 1);
         MatterRegistry.register(emergency_ration,3);
         MatterRegistry.register(earl_gray_tea,2);
 	}
@@ -127,8 +132,8 @@ public class MatterOverdriveItems
     public static void addToDungons()
     {
         weapon_module_color.addToDunguns();
-        addToDungons(emergency_ration, 1, 8, 20);
-        addToDungons(earl_gray_tea,1,2,10);
+        addToDungons(emergency_ration, 1, 8, 6);
+        addToDungons(earl_gray_tea,1,2,2);
     }
 
     private static void addToDungons(Item item,int min,int max,int chance)
