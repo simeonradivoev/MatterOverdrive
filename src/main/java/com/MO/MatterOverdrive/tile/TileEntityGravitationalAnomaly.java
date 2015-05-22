@@ -333,7 +333,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                         distance = MOMathHelper.distance(blockPosX,blockPosY,blockPosZ,xCoord,yCoord,zCoord);
                         hardness = block.getBlockHardness(world,blockPosX,blockPosY,blockPosZ);
 
-                        if (block != Blocks.air && hardness >= 0 && (distance < eventHorizon || hardness < strength))
+                        if (block != Blocks.air && distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
                         {
                             blocks.add(new PositionWrapper(blockPosX,blockPosY,blockPosZ));
                         }
@@ -355,7 +355,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                     }
                 }
                 if (solidCount < MAX_BLOCKS_PER_HARVEST) {
-                    if (brakeBlock(world,position.x, position.y, position.z,strength,eventHorizon)) {
+                    if (brakeBlock(world,position.x, position.y, position.z,strength,eventHorizon,range)) {
                         solidCount++;
                     }
                 }
@@ -446,12 +446,12 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         return Math.pow(getMaxRange(),3);
     }
 
-    public boolean brakeBlock(World world,int x,int y,int z,float strength,double eventHorizon)
+    public boolean brakeBlock(World world,int x,int y,int z,float strength,double eventHorizon,int range)
     {
         Block block = world.getBlock(x, y, z);
         float hardness = block.getBlockHardness(worldObj,x,y,z);
         double distance = MOMathHelper.distance(x,y,z,xCoord,yCoord,zCoord);
-        if (hardness >= 0 && (distance < eventHorizon || hardness < strength))
+        if (distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
         {
             int meta = worldObj.getBlockMetadata(x, y, z);
             if (BLOCK_ENTETIES) {
