@@ -76,7 +76,6 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     {
         blockDestoryTimer = new TimeTracker();
         this.mass = 2048 + MathHelper.round(Math.random() * 8192);
-        blocks = new PriorityQueue<PositionWrapper>(0,new BlockComparitor(xCoord,yCoord,zCoord));
     }
 
     public TileEntityGravitationalAnomaly(int mass)
@@ -317,7 +316,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         float hardness;
         Block block;
 
-        blocks.clear();
+        blocks = new PriorityQueue<PositionWrapper>(1,new BlockComparitor(xCoord,yCoord,zCoord));
 
         if (blockDestoryTimer.hasDelayPassed(world,BLOCK_DESTORY_DELAY))
         {
