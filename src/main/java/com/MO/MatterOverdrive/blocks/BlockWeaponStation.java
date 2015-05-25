@@ -28,6 +28,7 @@ public class BlockWeaponStation extends MOBlockMachine
         setHardness(20.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
+        lightValue = 10;
         setHasGui(true);
     }
 

@@ -23,6 +23,7 @@ public class Reference
 	public static final String PATH_GUI = PATH_GFX + "gui/";
 	public static final String PATH_BLOCKS = PATH_GFX + "blocks/";
 	public static final String PATH_FX = PATH_GFX + "fx/";
+	public static final String PATH_SHADERS = "mo:shaders/";
 	public static final String PATH_ELEMENTS = PATH_GUI + "elements/";
 	public static final String PATH_ICON = PATH_GUI + "icons/";
     public static final String PATH_ITEM = PATH_GFX + "items/";

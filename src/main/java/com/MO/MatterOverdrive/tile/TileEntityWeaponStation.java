@@ -9,9 +9,12 @@ import com.MO.MatterOverdrive.data.inventory.Slot;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.data.inventory.WeaponSlot;
 import com.MO.MatterOverdrive.util.MatterHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -74,6 +77,12 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
         return 0;
     }
 
+    @Override
+    public boolean shouldRenderInPass(int pass)
+    {
+        return pass == 1;
+    }
+
     //region Inventory Functions
     @Override
     public ItemStack getStackInSlot(int slot)
@@ -131,4 +140,11 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
         return false;
     }
     //endregion
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getRenderBoundingBox()
+    {
+        return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord + 1,yCoord + 2,zCoord + 1);
+    }
 }

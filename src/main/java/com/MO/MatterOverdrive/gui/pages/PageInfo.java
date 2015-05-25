@@ -172,7 +172,6 @@ public class PageInfo extends ElementBaseGroup
     {
         if(guideID >= 0 && guideID < MatterOverdriveQuide.getQuides().size())
         {
-
             MOGuideEntry entry = MatterOverdriveQuide.getQuides().get(guideID);
             ResourceLocation descriptionLocation = entry.description;
 
