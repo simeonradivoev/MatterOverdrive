@@ -15,8 +15,8 @@ import org.lwjgl.input.Keyboard;
 public class KeyHandler
 {
     private static  final int MATTER_SCANNER_KEY = 0;
-    private static  final String[] keyDesc = {"Open Matter Scanner GUI"};
-    private  static  final  int[] keyValues = {Keyboard.KEY_C};
+    private static  final String[] keyDesc = {"Open Matter Scanner GUI","Ender Teleporter Android Ability"};
+    private  static  final  int[] keyValues = {Keyboard.KEY_C,Keyboard.KEY_X};
     private  final KeyBinding[] keys;
 
     public  KeyHandler()
@@ -38,11 +38,16 @@ public class KeyHandler
             boolean isDown = Keyboard.getEventKeyState();
 
             //Matter Scanner key
-            if(isDown && keyValues[MATTER_SCANNER_KEY] == key)
+            if(isDown && keys[MATTER_SCANNER_KEY].getKeyCode() == key)
             {
                 //send packet to open gui
                 MatterScanner.DisplayGuiScreen();
             }
         }
+    }
+
+    public KeyBinding getBinding(int id)
+    {
+        return keys[id];
     }
 }
