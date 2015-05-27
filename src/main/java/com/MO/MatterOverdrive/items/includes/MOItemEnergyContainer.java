@@ -47,12 +47,6 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	}
 	
 	@Override
-	public int getDamage(ItemStack stack)
-	 {
-		return getMaxEnergyStored(stack) - getEnergyStored(stack);
-	 }
-	
-	@Override
 	public int getMaxDamage(ItemStack stack)
 	{
 		return getMaxEnergyStored(stack);
@@ -66,7 +60,7 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 
 	public int getDisplayDamage(ItemStack stack)
 	{
-		return getDamage(stack);
+		return getMaxEnergyStored(stack) - getEnergyStored(stack);
 	}
 	
 	@Override
