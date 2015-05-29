@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -34,10 +35,10 @@ public class TileEntityRendererFusionReactorController extends TileEntitySpecial
             glTranslated(x, y, z);
 
             for (int i = 0; i < TileEntityMachineFusionReactorController.positionsCount; i++) {
-                Vector3f pos = controller.getPosition(i,back);
+                Vec3 pos = controller.getPosition(i,back);
 
                 glPushMatrix();
-                glTranslated(pos.x, pos.y, pos.z);
+                glTranslated(pos.xCoord, pos.yCoord, pos.zCoord);
                 //glRotated(90, 1, 0, 0);
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE);

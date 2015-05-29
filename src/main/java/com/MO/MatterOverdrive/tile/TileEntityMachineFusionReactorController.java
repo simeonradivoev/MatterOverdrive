@@ -17,10 +17,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
 
 /**
  * Created by Simeon on 5/14/2015.
@@ -114,37 +112,36 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         return 0;
     }
 
-    public Vector3f getPosition(int i,int meta)
+    public Vec3 getPosition(int i,int meta)
     {
         if (i < positionsCount)
         {
             ForgeDirection back = ForgeDirection.getOrientation(BlockHelper.getOppositeSide(meta));
-            Vector4f pos = new Vector4f(TileEntityMachineFusionReactorController.positions[i * 2], 0, TileEntityMachineFusionReactorController.positions[(i * 2) + 1], 1);
-            Matrix4f rotationMatirx = new Matrix4f();
+            Vec3 pos = Vec3.createVectorHelper(TileEntityMachineFusionReactorController.positions[i * 2], 0, TileEntityMachineFusionReactorController.positions[(i * 2) + 1]);
 
             if (back == ForgeDirection.NORTH)
             {
-                rotationMatirx.rotate((float)Math.PI,new Vector3f(0,1,0));
+                pos.rotateAroundY((float)Math.PI);
             }
             else if (back == ForgeDirection.WEST)
             {
-                rotationMatirx.rotate((float)(Math.PI + Math.PI / 2),new Vector3f(0,1,0));
+                pos.rotateAroundY((float)(Math.PI + Math.PI / 2));
             }
             else if (back == ForgeDirection.EAST)
             {
-                rotationMatirx.rotate((float)(Math.PI / 2),new Vector3f(0,1,0));
+                pos.rotateAroundY((float)(Math.PI / 2));
             }
             else if (back == ForgeDirection.UP)
             {
-                rotationMatirx.rotate((float)(Math.PI + Math.PI / 2),new Vector3f(1,0,0));
+                pos.rotateAroundX((float)(Math.PI / 2));
             }
             else if (back == ForgeDirection.DOWN)
             {
-                rotationMatirx.rotate((float)(Math.PI / 2),new Vector3f(1,0,0));
+                pos.rotateAroundX((float) (Math.PI + Math.PI / 2));
+
             }
 
-            rotationMatirx.transform(rotationMatirx, pos, pos);
-            return new Vector3f(pos.x,pos.y,pos.z);
+            return pos;
         }
         return null;
     }
@@ -160,8 +157,8 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
             float matterPerTick = this.matterPerTick;
 
             for (int i = 0; i < positionsCount; i++) {
-                Vector3f offset = getPosition(i, meta);
-                BlockPosition position = new BlockPosition(xCoord + Math.round(offset.x),yCoord + Math.round(offset.y),zCoord + Math.round(offset.z));
+                Vec3 offset = getPosition(i, meta);
+                BlockPosition position = new BlockPosition(xCoord + (int)offset.xCoord,yCoord + (int)offset.yCoord,zCoord + (int)offset.zCoord);
 
                 if (blocks[i] == 255)
                 {
@@ -176,7 +173,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                             info = "GRAVITATIONAL ANOMALY TOO FAR";
                             break;
                         }
-                        anomalyPosition = new BlockPosition((int)offset.x + anomalyOffset.x,(int)offset.y + anomalyOffset.y,(int)offset.z + anomalyOffset.z);
+                        anomalyPosition = new BlockPosition((int)offset.xCoord + anomalyOffset.x,(int)offset.yCoord + anomalyOffset.y,(int)offset.zCoord + anomalyOffset.z);
                     }else
                     {
                         validStructure = false;
