@@ -166,7 +166,7 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
 
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
     {
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+        if (player.isSneaking())
         {
             clearStorage(itemStack);
         }
