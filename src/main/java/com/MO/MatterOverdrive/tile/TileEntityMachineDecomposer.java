@@ -169,8 +169,9 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     public int getSpeed()
     {
         int matter = MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(INPUT_SLOT_ID));
-        if (matter > 0) {
-            return MathHelper.round(DECEOPOSE_SPEED_PER_MATTER * Math.log(DECEOPOSE_SPEED_PER_MATTER * matter) * getUpgradeMultiply(UpgradeTypes.Speed));
+        if (matter > 0)
+        {
+            return MathHelper.round(DECEOPOSE_SPEED_PER_MATTER * Math.log(DECEOPOSE_SPEED_PER_MATTER * (long)matter) * getUpgradeMultiply(UpgradeTypes.Speed));
         }else
         {
             return 1;
