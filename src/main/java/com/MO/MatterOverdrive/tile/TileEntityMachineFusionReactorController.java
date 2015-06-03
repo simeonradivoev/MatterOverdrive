@@ -158,7 +158,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
             for (int i = 0; i < positionsCount; i++) {
                 Vec3 offset = getPosition(i, meta);
-                BlockPosition position = new BlockPosition(xCoord + (int)offset.xCoord,yCoord + (int)offset.yCoord,zCoord + (int)offset.zCoord);
+                BlockPosition position = new BlockPosition(xCoord + (int)Math.round(offset.xCoord),yCoord + (int)Math.round(offset.yCoord),zCoord + (int)Math.round(offset.zCoord));
 
                 if (blocks[i] == 255)
                 {
