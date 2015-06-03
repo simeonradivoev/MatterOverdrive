@@ -4,6 +4,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.IScannable;
 import com.MO.MatterOverdrive.client.render.TileEntityRendererPatternMonitor;
 import com.MO.MatterOverdrive.items.MatterScanner;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.RenderUtils;
@@ -99,7 +100,26 @@ public class RenderMatterScannerInfoHandler
         if (matter > 0) {
             infos.add("Matter: " + MatterHelper.formatMatter(matter));
         }
-        drawInfoList(blockItemStack.getDisplayName(), infos);
+        String blockName = "Unknown";
+
+        try {
+            if (blockItemStack != null) {
+                blockName = blockItemStack.getDisplayName();
+            }
+            else
+            {
+                blockName = player.worldObj.getBlock(position.blockX, position.blockY, position.blockZ).getLocalizedName();
+            }
+        }
+        catch (Exception exeption)
+        {
+            blockName = player.worldObj.getBlock(position.blockX, position.blockY, position.blockZ).getLocalizedName();
+        }
+        finally
+        {
+            drawInfoList(blockName, infos);
+        }
+
         if (!(block instanceof IScannable))
         {
             drawProgressBar(scanner,player);
