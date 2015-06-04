@@ -6,7 +6,9 @@ import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.IScannable;
+import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.fx.GravitationalAnomalyParticle;
+import com.MO.MatterOverdrive.handler.AndroidStatRegistry;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.items.SpacetimeEqualizer;
 import com.MO.MatterOverdrive.sound.GravitationalAnomalySound;
@@ -65,7 +67,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     @SideOnly(Side.CLIENT)
     private GravitationalAnomalySound sound;
     private TimeTracker blockDestoryTimer;
-    private int mass;
+    private long mass;
     @SideOnly(Side.CLIENT)
     public int consumedCount;
     PriorityQueue<PositionWrapper> blocks;
@@ -88,7 +90,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public void writeCustomNBT(NBTTagCompound nbt)
     {
         super.writeCustomNBT(nbt);
-        nbt.setInteger("Mass", mass);
+        nbt.setLong("Mass", mass);
         nbt.setFloat("Suppression", suppression);
     }
 
@@ -96,7 +98,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public void readCustomNBT(NBTTagCompound nbt)
     {
         super.readCustomNBT(nbt);
-        mass = nbt.getInteger("Mass");
+        mass = nbt.getLong("Mass");
         suppression = nbt.getFloat("Suppression");
     }
 
