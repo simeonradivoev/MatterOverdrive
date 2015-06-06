@@ -105,7 +105,7 @@ public class MatterNetworkTaskQueue<T extends MatterNetworkTask>
     {
         if (tasks.size() > 0)
         {
-            return tasks.get(tasks.size() - 1);
+            return tasks.get(0);
         }
         return null;
     }
