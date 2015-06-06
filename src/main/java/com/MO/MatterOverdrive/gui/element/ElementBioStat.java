@@ -5,7 +5,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.IBionicStat;
 import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.gui.MOGuiBase;
-import com.MO.MatterOverdrive.network.packet.server.PacketUnlockBionicStat;
+import com.MO.MatterOverdrive.network.packet.server.PacketUnlockBioticStat;
 import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -82,7 +82,7 @@ public class ElementBioStat extends MOElementButton {
             if (stat.canBeUnlocked(player,level+1) && level < stat.maxLevel())
             {
                 gui.playSound(Reference.MOD_ID + ":" + "gui.biotic_stat_unlock",1,1);
-                MatterOverdrive.packetPipeline.sendToServer(new PacketUnlockBionicStat(stat.getUnlocalizedName(),++level));
+                MatterOverdrive.packetPipeline.sendToServer(new PacketUnlockBioticStat(stat.getUnlocalizedName(),++level));
             }
         }
         super.onAction(mouseX,mouseY,mouseButton);

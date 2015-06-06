@@ -47,7 +47,7 @@ public class PacketPipeline
         registerPacket(PacketUpdateMatterRegistry.ClientHandler.class, PacketUpdateMatterRegistry.class);
         registerPacket(PacketChangeRedstoneMode.ServerHandler.class,PacketChangeRedstoneMode.class);
         registerPacket(PacketSyncAndroid.ClientHandler.class,PacketSyncAndroid.class);
-        registerPacket(PacketUnlockBionicStat.ServerHandler.class,PacketUnlockBionicStat.class);
+        registerPacket(PacketUnlockBioticStat.ServerHandler.class,PacketUnlockBioticStat.class);
         registerPacket(PacketTeleportPlayer.ServerHandler.class,PacketTeleportPlayer.class);
         registerPacket(PacketSpawnParticle.ClientHandler.class,PacketSpawnParticle.class);
     }
