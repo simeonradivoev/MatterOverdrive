@@ -1,9 +1,11 @@
 package com.MO.MatterOverdrive.tile;
 
 
+import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.BlockHelper;
+import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.position.BlockPosition;
 import cofh.lib.util.position.IRotateableTile;
 import com.MO.MatterOverdrive.Reference;
@@ -90,6 +92,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     {
         super.updateEntity();
         if (!worldObj.isRemote) {
+            //System.out.println("Fusion Reactor Update in chunk that is loaded:" + worldObj.getChunkFromBlockCoords(xCoord,zCoord).isChunkLoaded);
             manageStructure();
             manageEnergyGeneration();
             manageEnergyExtract();
@@ -274,6 +277,26 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                 {
                     energyStorage.extractEnergy(((IEnergyReceiver) entity).receiveEnergy(dir.getOpposite(),energy,false),false);
                 }
+            }
+        }
+    }
+
+    @Override
+    public boolean isCharging()
+    {
+        return this.inventory.getStackInSlot(energySlotID) != null && EnergyHelper.isEnergyContainerItem(this.inventory.getStackInSlot(energySlotID));
+    }
+
+    @Override
+    protected void manageCharging()
+    {
+        if(isCharging())
+        {
+            if(!this.worldObj.isRemote)
+            {
+                int maxExtracted = Math.min(energyStorage.getMaxExtract(),energyStorage.getEnergyStored());
+                int extracted = EnergyHelper.insertEnergyIntoContainer(this.inventory.getStackInSlot(energySlotID),maxExtracted,false);
+                energyStorage.extractEnergy(extracted,false);
             }
         }
     }

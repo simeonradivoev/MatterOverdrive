@@ -46,6 +46,10 @@ public class PacketPipeline
         registerBiPacket(PacketGetDatabase.Handler.class, PacketGetDatabase.class);
         registerPacket(PacketUpdateMatterRegistry.ClientHandler.class, PacketUpdateMatterRegistry.class);
         registerPacket(PacketChangeRedstoneMode.ServerHandler.class,PacketChangeRedstoneMode.class);
+        registerPacket(PacketSyncAndroid.ClientHandler.class,PacketSyncAndroid.class);
+        registerPacket(PacketUnlockBionicStat.ServerHandler.class,PacketUnlockBionicStat.class);
+        registerPacket(PacketTeleportPlayer.ServerHandler.class,PacketTeleportPlayer.class);
+        registerPacket(PacketSpawnParticle.ClientHandler.class,PacketSpawnParticle.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

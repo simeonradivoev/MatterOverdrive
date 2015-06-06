@@ -40,6 +40,7 @@ public class MatterOverdriveBlocks
     public static BlockFusionReactorController fusion_reactor_controller;
     public static BlockFusionReactorCoil fusion_reactor_coil;
     public static BlockMatterRecycler recycler;
+    public static BlockAndroidStation androidStation;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -76,6 +77,7 @@ public class MatterOverdriveBlocks
         fusion_reactor_controller = new BlockFusionReactorController(Material.iron,"fusion_reactor_controller");
         fusion_reactor_coil = new BlockFusionReactorCoil(Material.iron,"fusion_reactor_coil");
         recycler = new BlockMatterRecycler(Material.iron,"matter_recycler");
+        androidStation = new BlockAndroidStation(Material.iron,"android_station");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -114,6 +116,8 @@ public class MatterOverdriveBlocks
         fusion_reactor_coil.Register();
         recycler.Register();
         MatterOverdrive.configHandler.subscribe(recycler);
+        androidStation.Register();
+        MatterOverdrive.configHandler.subscribe(androidStation);
 
         if (event.getSide() == Side.CLIENT)
         {

@@ -33,16 +33,12 @@ public class MatterRegistry
 {
     public static boolean hasComplitedRegistration = false;
     private static int MAX_DEPTH = 8;
-    private static int basicEntires = 0;
+    public static int basicEntires = 0;
 	private static Map<String,MatterEntry> entries = new HashMap<String,MatterEntry>();
     private static Set<String> blacklist = Collections.synchronizedSet(new HashSet<String>());
 
 	public static MatterEntry register(MatterEntry entry)
 	{
-        if (!entry.calculated)
-        {
-            basicEntires++;
-        }
         System.out.println("Registered: " + entry.getName());
 		entries.put(entry.getName(), entry);
 		return entry;
@@ -59,6 +55,7 @@ public class MatterRegistry
         outputStream.writeUTF(Reference.VERSION);
         outputStream.writeInt(CraftingManager.getInstance().getRecipeList().size());
         outputStream.writeInt(basicEntires);
+        outputStream.writeInt(blacklist.size());
         outputStream.close();
         fileOutputStream.close();
         System.out.println("RegistrySaved to: " + path);
@@ -79,37 +76,63 @@ public class MatterRegistry
     public static boolean needsCalculation(String path) throws IOException, ClassNotFoundException
     {
         File file = new File(path);
-        if (file.exists()) {
+        String reason = "";
+        if (file.exists())
+        {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
             HashMap<String, MatterEntry> entires = (HashMap<String, MatterEntry>) inputStream.readObject();
             String version = inputStream.readUTF();
             int recipeCount = inputStream.readInt();
             int basicEntries = inputStream.readInt();
+            int blackListSize = inputStream.readInt();
             inputStream.close();
             fileInputStream.close();
 
             //checks if the saved versions differ from the current version of the mod
             //and alos checks if the recipe list count has changed
-            if (version.equalsIgnoreCase(Reference.VERSION) && recipeCount == CraftingManager.getInstance().getRecipeList().size() && basicEntries == MatterRegistry.basicEntires) {
-                for (Map.Entry<String, MatterEntry> entry : entires.entrySet()) {
-                    if (!entry.getValue().calculated) {
-                        if (MatterRegistry.entries.containsKey(entry.getKey())) {
-                            if (!MatterRegistry.entries.get(entry.getKey()).equals(entry.getValue())) {
-                                //if the entry is in the list but it's matter was changed
-                                System.out.println("Matter Registry has changed! Recalculation required!");
-                                return true;
+            if (version.equalsIgnoreCase(Reference.VERSION))
+            {
+                if (recipeCount == CraftingManager.getInstance().getRecipeList().size())
+                {
+                    if (basicEntries == MatterRegistry.basicEntires)
+                    {
+                        if (blackListSize == blacklist.size()) {
+
+                            for (Map.Entry<String, MatterEntry> entry : entires.entrySet())
+                            {
+                                if (!entry.getValue().calculated) {
+                                    if (MatterRegistry.entries.containsKey(entry.getKey())) {
+                                        if (!MatterRegistry.entries.get(entry.getKey()).equals(entry.getValue())) {
+                                            //if the entry is in the list but it's matter was changed
+                                            System.out.println("Matter Registry has changed! " + entry.getKey() +  " changed from " + MatterRegistry.entries.get(entry.getKey()) + " to " + entry.getValue().getMatter() + ". Recalculation required!");
+                                            return true;
+                                        }
+                                    }
+                                }
                             }
+
+                            return false;
+                        }else
+                        {
+                            reason = "Blacklist changed";
                         }
+                    }else
+                    {
+                        reason = "Basic Entries size changed";
                     }
+                }else
+                {
+                    reason = "Recipe List Changed";
                 }
-
-                return false;
-
             }
+        }else
+        {
+            reason = "Recipe List File missing";
         }
+
         //if the registry file is missing then calculate
-        System.out.println("Saved Matter Registry missing! Recalculation required!");
+        System.out.println(reason + "! Recalculation required!");
         return true;
     }
 
@@ -333,6 +356,7 @@ public class MatterRegistry
             if (value > 0)
             {
                 register(category.get(i).getName(),value);
+                basicEntires++;
             }
         }
     }

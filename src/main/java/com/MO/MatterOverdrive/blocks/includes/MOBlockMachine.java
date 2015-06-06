@@ -13,6 +13,7 @@ import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
 import com.MO.MatterOverdrive.util.MOEnergyHelper;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.FMLLog;
@@ -112,12 +113,12 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
             TileEntity tileEntity = world.getTileEntity(x,y,z);
             if (tileEntity instanceof MOTileEntityMachine)
             {
-                if (((MOTileEntityMachine) tileEntity).isUseableByPlayer(player) || player.capabilities.isCreativeMode) {
+                if (((MOTileEntityMachine) tileEntity).isUseableByPlayer(player)) {
                     FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, x, y, z);
                     return true;
                 }else
                 {
-                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + "No rights to access the " + getLocalizedName());
+                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal(getUnlocalizedMessage(0)).replace("$0", getLocalizedName()));
                     message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
                     player.addChatMessage(message);
                 }
@@ -125,6 +126,17 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
         }
 
         return false;
+    }
+
+    protected String getUnlocalizedMessage(int type)
+    {
+        switch (type)
+        {
+            case 0:
+                return "alert.no_rights";
+            default:
+                return  "alert.no_access_default";
+        }
     }
 
     @Override
@@ -233,17 +245,23 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
         TileEntity tileEntity = world.getTileEntity(x,y,z);
         if (tileEntity instanceof MOTileEntityMachine)
         {
-            if (player.capabilities.isCreativeMode || (((MOTileEntityMachine) tileEntity).hasOwner() && ((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getName())))
+            if (player.capabilities.isCreativeMode || !((MOTileEntityMachine) tileEntity).hasOwner())
             {
                 return true;
             }else
             {
-                if (world.isRemote) {
-                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + "Only the owner can dismantle the " + getLocalizedName());
-                    message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
-                    player.addChatMessage(message);
+                if (((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getName()))
+                {
+                    return true;
+                }else
+                {
+                    if (world.isRemote) {
+                        ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + "Only the owner can dismantle the " + getLocalizedName());
+                        message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
+                        player.addChatMessage(message);
+                    }
+                    return false;
                 }
-                return false;
             }
         }
         return true;

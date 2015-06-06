@@ -44,6 +44,7 @@ public class MatterOverdriveItems
     public static SecurityProtocol security_protocol;
     public static SpacetimeEqualizer spacetime_equalizer;
     public static Wrench wrench;
+    public static RougeAndroidParts androidParts;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -73,6 +74,7 @@ public class MatterOverdriveItems
         security_protocol = new SecurityProtocol("security_protocol");
         spacetime_equalizer = new SpacetimeEqualizer("spacetime_equalizer");
         wrench = new Wrench("tritanium_wrench");
+        androidParts = new RougeAndroidParts("rouge_android_part");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -107,6 +109,7 @@ public class MatterOverdriveItems
         security_protocol.Register();
         spacetime_equalizer.Register();
         wrench.Register();
+        androidParts.Register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust),new ItemStack(tritanium_ingot),5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_ingot),10);

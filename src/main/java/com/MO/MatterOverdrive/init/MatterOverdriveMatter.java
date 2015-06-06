@@ -197,6 +197,13 @@ public class MatterOverdriveMatter
         reg(c,new ItemStack(Items.dye,1,2),1);
         reg(c,new ItemStack(Items.dye,1,3),1);
         //endregion
+
+        //region rouge android parts
+        reg(c,new ItemStack(MatterOverdriveItems.androidParts,1,Reference.BIONIC_HEAD),64 * 5);
+        reg(c,new ItemStack(MatterOverdriveItems.androidParts,1,Reference.BIONIC_ARMS),64 * 6);
+        reg(c,new ItemStack(MatterOverdriveItems.androidParts,1,Reference.BIONIC_LEGS),64 * 6);
+        reg(c,new ItemStack(MatterOverdriveItems.androidParts,1,Reference.BIONIC_CHEST),64 * 9);
+        //endregion
     }
 
 	private static void reg(MOConfigurationHandler c,String name,int matter)
@@ -207,6 +214,7 @@ public class MatterOverdriveMatter
     private static void reg(MOConfigurationHandler c,ItemStack itemStack,int matter)
     {
         MatterRegistry.register(itemStack,matter);
+        MatterRegistry.basicEntires++;
     }
     private static void reg(MOConfigurationHandler c,Block block,int matter)
     {
@@ -216,8 +224,10 @@ public class MatterOverdriveMatter
     {
         for (int i = 0;i < subItems;i++) {
             String key = MatterRegistry.getKey(new ItemStack(Item.getItemFromBlock(block), 1, i));
-            if (key != null)
-                MatterRegistry.register(key,matter);
+            if (key != null) {
+                MatterRegistry.register(key, matter);
+                MatterRegistry.basicEntires++;
+            }
         }
     }
     private static void reg(MOConfigurationHandler c,Item item,int matter){reg(c,item,matter,1);}
@@ -225,8 +235,10 @@ public class MatterOverdriveMatter
     {
         for (int i = 0;i < subItems;i++) {
             String key = MatterRegistry.getKey(new ItemStack(item, 1, i));
-            if (key != null)
-                MatterRegistry.register(key,matter);
+            if (key != null) {
+                MatterRegistry.register(key, matter);
+                MatterRegistry.basicEntires++;
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.container.slot;
 
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.Slot;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -11,7 +12,7 @@ public class SlotInventory extends MOSlot {
 
     Slot slot;
 
-    public SlotInventory(Inventory inventory, Slot slot, int x, int y)
+    public SlotInventory(IInventory inventory, Slot slot, int x, int y)
     {
         super(inventory, slot.getId(), x, y);
         this.slot = slot;

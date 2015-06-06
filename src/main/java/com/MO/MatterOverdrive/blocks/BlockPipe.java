@@ -2,8 +2,6 @@ package com.MO.MatterOverdrive.blocks;
 
 import java.util.List;
 
-import com.MO.MatterOverdrive.api.matter.IMatterConnection;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;

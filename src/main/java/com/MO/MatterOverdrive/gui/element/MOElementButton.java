@@ -5,8 +5,13 @@ import cofh.lib.gui.element.ElementButton;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.IButtonHandler;
 import com.MO.MatterOverdrive.data.ScaleTexture;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Simeon on 4/8/2015.
@@ -16,7 +21,9 @@ public class MOElementButton extends ElementButton
     public static final ScaleTexture NORMAL_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_normal.png"),18,18).setOffsets(7,7,7,7);
     public static final ScaleTexture HOVER_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_over.png"),18,18).setOffsets(7,7,7,7);
     public static final ScaleTexture HOVER_TEXTURE_DARK = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_over_dark.png"),18,18).setOffsets(7,7,7,7);
+    public static final Random rand = new Random();
 
+    protected String[] sounds = new String[]{"button_soft_0","button_soft_1"};
     protected String text;
     protected boolean isDown;
     protected int lastMouseButton;
@@ -47,12 +54,37 @@ public class MOElementButton extends ElementButton
     }
 
     @Override
-    public void onMouseReleased(int mouseX, int mouseY) {
-        if (isEnabled() && intersectsWith(mouseX, mouseY))
+    public void onMouseReleased(int mouseX, int mouseY)
+    {
+        if (isEnabled() && intersectsWith(mouseX, mouseY) && isDown)
         {
-            onAction(mouseX,mouseY,lastMouseButton);
-            isDown = false;
+            String sound = getSound();
+            if (sound != null && !sound.isEmpty()) {
+                gui.playSound(Reference.MOD_ID + ":gui." + sound, getSoundVolume(), 0.9f + rand.nextFloat() * 0.2f);
+            }
+            onAction(mouseX, mouseY, lastMouseButton);
         }
+
+        isDown = false;
+    }
+
+    public String getSound()
+    {
+        if (sounds != null && sounds.length > 0)
+        {
+            return sounds[rand.nextInt(sounds.length)];
+        }
+        return null;
+    }
+
+    public void setSounds(String... sounds)
+    {
+        this.sounds = sounds;
+    }
+
+    public float getSoundVolume()
+    {
+        return 0.5f;
     }
 
     public void onAction(int mouseX, int mouseY,int mouseButton)

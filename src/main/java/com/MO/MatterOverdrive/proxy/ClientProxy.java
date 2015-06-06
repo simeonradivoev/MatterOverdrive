@@ -2,6 +2,9 @@ package com.MO.MatterOverdrive.proxy;
 
 import com.MO.MatterOverdrive.client.RenderHandler;
 import com.MO.MatterOverdrive.client.render.*;
+import com.MO.MatterOverdrive.client.render.entity.*;
+import com.MO.MatterOverdrive.entity.*;
+import com.MO.MatterOverdrive.gui.GuiAndroidHud;
 import com.MO.MatterOverdrive.handler.KeyHandler;
 import com.MO.MatterOverdrive.handler.TooltipHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
@@ -17,6 +20,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -34,20 +38,29 @@ public class ClientProxy extends CommonProxy
     public static TileEntityRendererGravitationalAnomaly gravitational_anomaly_renderer;
     public static TileEntityRendererGravitationalStabilizer gravitational_stabilizer_renderer;
     public static TileEntityRendererFusionReactorController fusion_reactor_controller_renderer;
+    public static TileEntityRendererAndroidStation rendererAndroidStation;
+
+    public static EntityRendererRougeAndroid rendererRougeAndroid;
 
     public static RenderHandler renderHandler;
     public static MOBlockRenderer blockRenderer;
     public static RendererBlockGravitationalStabilizer gravitationalStabilizerRenderer;
+    public static KeyHandler keyHandler;
+
+    public static GuiAndroidHud androidHud;
 
     @Override
 	public void registerProxies()
 	{
         renderHandler = new RenderHandler(Minecraft.getMinecraft().theWorld,Minecraft.getMinecraft().getTextureManager());
+        androidHud = new GuiAndroidHud(Minecraft.getMinecraft());
 
-        FMLCommonHandler.instance().bus().register(new KeyHandler());
+        keyHandler = new KeyHandler();
+        FMLCommonHandler.instance().bus().register(keyHandler);
         MinecraftForge.EVENT_BUS.register(new MatterOverdriveIcons());
         MinecraftForge.EVENT_BUS.register(renderHandler);
         MinecraftForge.EVENT_BUS.register(new TooltipHandler());
+        MinecraftForge.EVENT_BUS.register(androidHud);
         FMLCommonHandler.instance().bus().register(renderHandler);
 
         blockRenderer = new MOBlockRenderer();
@@ -63,6 +76,9 @@ public class ClientProxy extends CommonProxy
         gravitational_anomaly_renderer = new TileEntityRendererGravitationalAnomaly();
         gravitational_stabilizer_renderer = new TileEntityRendererGravitationalStabilizer();
         fusion_reactor_controller_renderer = new TileEntityRendererFusionReactorController();
+        rendererAndroidStation = new TileEntityRendererAndroidStation();
+
+        rendererRougeAndroid = new EntityRendererRougeAndroid(new ModelBiped(),0);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, pipeRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMatterPipe.class, matter_pipeRenderer);
@@ -74,6 +90,7 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGravitationalAnomaly.class,gravitational_anomaly_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineGravitationalStabilizer.class,gravitational_stabilizer_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineFusionReactorController.class,fusion_reactor_controller_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAndroidStation.class,rendererAndroidStation);
 
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.matter_pipe), new ItemRendererPipe(matter_pipeRenderer, new TileEntityMatterPipe(), 2));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.network_pipe),new ItemRendererPipe(network_pipeRenderer,new TileEntityNetworkPipe(),2));
@@ -83,6 +100,12 @@ public class ClientProxy extends CommonProxy
 
         RenderingRegistry.registerBlockHandler(blockRenderer);
         RenderingRegistry.registerBlockHandler(gravitationalStabilizerRenderer);
+        RenderingRegistry.registerEntityRenderingHandler(EntityRougeAndroidMob.class,rendererRougeAndroid);
+        RenderingRegistry.registerEntityRenderingHandler(EntityFailedPig.class,new EntityRendererFailedPig(new ModelPig(),new ModelPig(0.5f),0.7F));
+        RenderingRegistry.registerEntityRenderingHandler(EntityFailedCow.class,new EntityRendererFaildCow(new ModelCow(),0.7f));
+        RenderingRegistry.registerEntityRenderingHandler(EntityFailedChicken.class,new EntityRendererFailedChicken(new ModelChicken(),0.3f));
+        RenderingRegistry.registerEntityRenderingHandler(EntityFailedSheep.class,new EntityRendererFailedSheep(new ModelSheep2(),new ModelSheep1(),0.7f));
+        RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class,new EntityRendererMadScientist());
 	}
 
     @Override

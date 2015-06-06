@@ -10,7 +10,6 @@ public class Reference
 	public static final String CLIENT_PROXY_CLASS = "com.MO.MatterOverdrive.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.MO.MatterOverdrive.proxy.CommonProxy";
 	public static final String GUI_FACTORY_CLASS = "com.MO.MatterOverdrive.gui.GuiConfigFactory";
-	public static final String TEXTURE_PATH_ENTITIES = "textures/entities";
 	public static final String CHANNEL_NAME = MOD_ID + "_channel";
 	public static final String VERSIONS_FILE_URL = "https://raw.githubusercontent.com/simeonradivoev/MatterOverdrive/master/Versions.txt";
 	public static final String VERSIONS_FILE_URL_MIRROR = "http://simeon.co.vu/Mods/MatterOverdrive/Versions.txt";
@@ -26,6 +25,7 @@ public class Reference
 	public static final String PATH_SHADERS = "mo:shaders/";
 	public static final String PATH_ELEMENTS = PATH_GUI + "elements/";
 	public static final String PATH_ICON = PATH_GUI + "icons/";
+	public static final String PATH_ENTITIES = PATH_GFX + "entities/";
     public static final String PATH_ITEM = PATH_GFX + "items/";
 	public static final String PATH_GUI_ITEM = PATH_GUI + "items/";
     public static final String PATH_MODEL = "mo:models/";
@@ -56,6 +56,20 @@ public class Reference
 	public static final int MODULE_SIGHTS = 3;
 	public static final int MODULE_OTHER = 4;
 	//end region
+
+	//region Bionic Types
+	public static final int BIONIC_HEAD = 0;
+	public static final int BIONIC_ARMS = 1;
+	public static final int BIONIC_LEGS = 2;
+	public static final int BIONIC_CHEST = 3;
+	public static final int BIONIC_OTHER = 4;
+	public static final int BIONIC_BATTERY = 5;
+	//endregion
+
+	//region Andoid Stats Types
+	public static final int ANDROID_STAT_TELEPORT = 0;
+	public static final int ANDROID_STAT_NANOBOTS = 1;
+	//endregion
 
 	//region Weapon Stat
 	public static final int WS_DAMAGE = 0;

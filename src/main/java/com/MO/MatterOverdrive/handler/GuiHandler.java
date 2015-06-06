@@ -53,6 +53,7 @@ public class GuiHandler implements IGuiHandler
             registerContainer(TileEntityMachineTransporter.class, ContainerTransporter.class);
             registerContainer(TileEntityMachineMatterRecycler.class,ContainerRecycler.class);
             registerContainer(TileEntityMachineFusionReactorController.class,ContainerFusionReactor.class);
+            registerContainer(TileEntityAndroidStation.class,ContainerAndroidStation.class);
         }
         else
         {
@@ -68,6 +69,7 @@ public class GuiHandler implements IGuiHandler
             registerGuiAndContainer(TileEntityMachineTransporter.class, GuiTransporter.class,ContainerTransporter.class);
             registerGuiAndContainer(TileEntityMachineMatterRecycler.class, GuiRecycler.class, ContainerRecycler.class);
             registerGuiAndContainer(TileEntityMachineFusionReactorController.class,GuiFusionReactor.class,ContainerFusionReactor.class);
+            registerGuiAndContainer(TileEntityAndroidStation.class,GuiAndroidStation.class,ContainerAndroidStation.class);
         }
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
 public class ElementSlot extends MOElementBase
 {
     protected ResourceLocation icon;
-    public String type = "small";
+    protected String type = "small";
     protected int iconOffsetX;
     protected int iconOffsetY;
 
@@ -100,5 +100,10 @@ public class ElementSlot extends MOElementBase
 
     public void setIcon(ResourceLocation icon) {
         this.icon = icon;
+    }
+
+    public void setType(String type)
+    {
+        this.type = type;
     }
 }

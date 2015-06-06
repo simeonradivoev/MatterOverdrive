@@ -18,28 +18,28 @@ import java.util.List;
 public class Inventory implements IInventory
 {
     List<Slot> slots;
-    TileEntity entity;
     String name;
     IUseableCondition useableCondition;
 
     //region Constructors
-    public Inventory(TileEntity entity,String name)
+    public Inventory(String name)
     {
-        this(entity,name,new ArrayList<Slot>());
+        this(name,new ArrayList<Slot>());
     }
 
-    public Inventory(TileEntity entity,String name,Collection<Slot> slots)
+    public Inventory(String name,Collection<Slot> slots)
     {
-        this(entity,name,slots,null);
+        this(name,slots,null);
     }
 
-    public Inventory(TileEntity entity,String name,Collection<Slot> slots,IUseableCondition useableCondition)
+    public Inventory(String name,Collection<Slot> slots,IUseableCondition useableCondition)
     {
         this.slots = new ArrayList<Slot>(slots);
-        this.entity = entity;
         this.name = name;
         this.useableCondition = useableCondition;
     }
+
+
     //endregion
 
     public int AddSlot(Slot slot)
@@ -116,7 +116,7 @@ public class Inventory implements IInventory
                 itemstack = this.slots.get(slot).getItem();
                 this.slots.get(slot).setItem(null);
 
-                entity.updateContainingBlockInfo();
+                //entity.updateContainingBlockInfo();
                 return itemstack;
             }
             else
@@ -128,7 +128,7 @@ public class Inventory implements IInventory
                     this.slots.get(slot).setItem(null);
                 }
 
-                entity.updateContainingBlockInfo();
+                //entity.updateContainingBlockInfo();
                 return itemstack;
             }
         }
@@ -182,20 +182,14 @@ public class Inventory implements IInventory
     @Override
     public void markDirty()
     {
-        if(this.entity != null)
-        {
-            this.entity.markDirty();
-        }
+
     }
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer player)
     {
-        if(useableCondition != null)
-        {
-            return useableCondition.usableByPlayer(player);
-        }
-        return entity.getWorldObj().getTileEntity(entity.xCoord, entity.yCoord, entity.zCoord) != entity ? false : player.getDistanceSq((double)entity.xCoord + 0.5D, (double)entity.yCoord + 0.5D, (double)entity.zCoord + 0.5D) <= 64.0D;
+        return true;
+
     }
 
     @Override

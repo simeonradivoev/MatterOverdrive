@@ -34,6 +34,10 @@ item.tritanium_wrench.name=Tritanium Wrench
 item.tritanium_wrench.details=Safely disassembles and rotates machines
 item.spacetime_equalizer.name=Space-Time Equalizer
 item.spacetime_equalizer.details=Can be warn on the chest to negate Gravitational forces
+item.rouge_android_part.head.name=Android Head
+item.rouge_android_part.arms.name=Android Arm
+item.rouge_android_part.legs.name=Android Leg
+item.rouge_android_part.chest.name=Android Torso
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade
@@ -88,9 +92,29 @@ tile.fusion_reactor_controller.name=Fusion Reactor Controller
 tile.fusion_reactor_controller.details=Main Controller for Fusion Reactor
 tile.fusion_reactor_coil.name=Fusion Reactor Coil
 tile.fusion_reactor_coil.details=Used to confine the Plasma in Fusion Reactors
+tile.android_station.name=Android Station
+tile.android_station.details=Android Upgrade Management
 container.replicator.name=Replicator
 machine.tooltip.matter=Matter
 machine.tooltip.energy=Charged
+
+entity.rouge_android.name=Rouge Android
+entity.failed_pig.name=Failed Pig
+entity.failed_chicken.name=Failed Chicken
+entity.failed_cow.name=Failed Cow
+entity.failed_sheep.name=Failed Sheep
+entity.mad_scientist.name=Mad Scientist
+entity.mad_scientist.line.fail.0=You don't have all the Android Parts!
+entity.mad_scientist.line.fail.1=I'm not giving you any of my parts!
+entity.mad_scientist.line.fail.2=You need all Android Parts, or you'll die!
+entity.mad_scientist.line.fail.3=I can't do the procedure without all the Android parts!
+entity.mad_scientist.line.0=I don't deal with humans. But fortunately if you bring me a set of Android parts I can help you escape that fleshy body!
+entity.mad_scientist.line.1=NO! I can even look at you. So fragile! Bring me a set of Android parts and before it's to late!
+entity.mad_scientist.line.2=Are you ok ? You look trapped! How can you stand that flesh? Maybe you bring me a set of Android Parts, and maybe I can help you, with your problem.
+entity.mad_scientist.line.success.0=It is done. Now go and spread the word!
+entity.mad_scientist.line.success.1=It's ALIVE! It's ALIVE! Muaha ha ha ha! It's ALIVE!
+entity.mad_scientist.line.success.2=You are now one of us! Go my child!
+entity.mad_scientist.line.success.3=It all looks good, just forgot to put you nose on.
 
 itemGroup.tabMatterOverdrive=Matter Overdrive
 itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Modules
@@ -123,6 +147,13 @@ gui.pattern_monitor.name=Network Pattern Monitor
 gui.network_switch.name=Network Switch
 gui.recycler.name=Matter Recycler
 gui.fusion_reactor.name=Fusion Reactor
+gui.android_hud.transforming.line.0=Booting up System
+gui.android_hud.transforming.line.1=Constructing Neural Pathways
+gui.android_hud.transforming.line.2=Neural Configurations in Progress
+gui.android_hud.transforming.line.3=Installing Drivers
+gui.android_hud.transforming.line.4=Adjusting Artificial Limbs
+gui.android_hud.transforming.line.5=Purging Biological Contaminants
+gui.android_hud.transforming.line.final=Transformation in Progress
 
 module.battery.name=Battery Module
 module.color.name=Color Module
@@ -141,8 +172,31 @@ module.barrel.name=Barrel Module
 module.sights.name=Sights Module
 module.other.name=Other Module
 
+biopart.head.name=Head
+biopart.arms.name=Arms
+biopart.legs.name=Legs
+biopart.chest.name=Chest
+biopart.other.name=Other
+biopart.battery.name=Battery
+
+biotic_stat.teleport.name=Ender Teleporter
+biotic_stat.teleport.details=Allows for short teleports by hitting the '$0' key /n/Each Teleport takes $1 /n/A battery capable of extracting $1 is required
+biotic_stat.nanobots.name=Nanobots
+biotic_stat.nanobots.details=Heals woulds by using Matter Plasma and Energy
+biotic_stat.nano_armor.name=Nano Armor
+biotic_stat.nano_armor.details=Absorbs $0 of incoming damage
+biotic_stat.floatation.name=Air Bags
+biotic_stat.floatation.details=Enables floating when in water
+biotic_stat.speed.name=Limb Overclocking
+biotic_stat.speed.details=Increases movement speed by $0
+biotic_stat.high_jump.name=High Jump
+biotic_stat.high_jump.details=Enables higher jumping while sneaking /n/Each jump drains $0 /n/A battery capable of extracting $0 is required
+biotic_stat.equalizer.name=Space-Time Equalizer
+biotic_stat.equalizer.details=Internal Space-Time Equalizer /n/that negates the gravitational effects of /n/Gravitational Anomalies
+
 death.attack.phaser.item=%1$s was disintegrated by %2$s using %3$s
 death.attack.blackHole=%1$s was crushed by a Gravitational Anomaly
+death.attack.android_transformation=%1$s has ended his biological existence
 
 task.state.-1.name=Invalid
 task.state.-1.description=Task is not a Valid.
@@ -177,3 +231,7 @@ config.matter_registry.item_blacklist.name=Blacklist
 config.spawn_ores.name=Spawn Ores
 config.client.name=Client Options
 config.server.name=Server Options
+
+alert.no_rights=No Rights to Access the $0
+alert.no_access_default=Access denied to $0
+alert.not_android=Biological Entity Detected! Access Denied!

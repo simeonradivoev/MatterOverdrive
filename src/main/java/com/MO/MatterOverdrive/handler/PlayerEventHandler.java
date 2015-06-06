@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.handler;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.network.packet.client.PacketUpdateMatterRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;

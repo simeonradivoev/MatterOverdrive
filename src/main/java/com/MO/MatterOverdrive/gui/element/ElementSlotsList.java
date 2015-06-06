@@ -16,10 +16,10 @@ import java.util.List;
  */
 public class ElementSlotsList extends ElementBaseGroup
 {
-
+    ElementSlot mainSlot;
     int margin = 0;
 
-    public ElementSlotsList(GuiBase gui, int posX, int posY,int width,int height, Inventory inventory,int main,boolean isDark)
+    public ElementSlotsList(GuiBase gui, int posX, int posY, int width, int height, Inventory inventory, int main)
     {
         super(gui, posX, posY, width, height);
         int index = 0;
@@ -29,27 +29,29 @@ public class ElementSlotsList extends ElementBaseGroup
             {
                 if (index == main)
                 {
-                    ElementSlot elementSlot = new ElementSlot(gui, 0, 0, 37, 22, isDark ? "big_main_dark" : "big_main", inventory.getSlot(i).getTexture());
-                    elementSlot.setItemOffset(3, 3);
-                    addElement(elementSlot);
+                    mainSlot = new ElementSlot(gui, 0, 0, 37, 22, "big_main", inventory.getSlot(i).getTexture());
+                    mainSlot.setItemOffset(3, 3);
+                    addElement(mainSlot);
                 }
-                else
-                    addElement(new ElementSlot(gui,0,0,22,22,"big",inventory.getSlot(i).getTexture()));
+                else {
+
+                    addElement(new ElementSlot(gui, 0, 0, 22, 22, "big", inventory.getSlot(i).getTexture()));
+                }
 
                 index++;
             }
         }
     }
 
-    public ElementSlotsList(GuiBase gui, int posX, int posY,int width,int height, List<Slot> inventory,int main,boolean isDark)
+    public ElementSlotsList(GuiBase gui, int posX, int posY,int width,int height, List<Slot> inventory,int main)
     {
         super(gui, posX, posY, width, height);
         for (int i = 0;i < inventory.size();i++)
         {
             if (i == main) {
-                ElementSlot elementSlot = new ElementSlot(gui, 0, 0, 37, 22, isDark ? "big_main_dark" : "big_main", inventory.get(i).getTexture());
-                elementSlot.setItemOffset(5,5);
-                addElement(elementSlot);
+                mainSlot = new ElementSlot(gui, 0, 0, 37, 22, "big_main", inventory.get(i).getTexture());
+                mainSlot.setItemOffset(5,5);
+                addElement(mainSlot);
 
             }
             else
@@ -73,5 +75,10 @@ public class ElementSlotsList extends ElementBaseGroup
     public void setMargin(int margin)
     {
         this.margin = margin;
+    }
+
+    public ElementSlot getMainSlot()
+    {
+        return mainSlot;
     }
 }

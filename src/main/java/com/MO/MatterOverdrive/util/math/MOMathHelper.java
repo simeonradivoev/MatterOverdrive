@@ -108,6 +108,11 @@ public class MOMathHelper
         return (x - x1) * (x - x1) + (y - y1) * (y - y1) + (z - z1) * (z - z1);
     }
 
+    public static boolean animationInRange(int time,int begin,int length)
+    {
+        return time >= begin && time < begin + length;
+    }
+
     public static float Lerp(float form,float to,float time)
     {
         float newTime = MathHelper.clamp_float(time,0,1);

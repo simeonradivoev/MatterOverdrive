@@ -162,7 +162,8 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         {
             if (entities.get(i) instanceof EntityPlayer)
             {
-                if (((EntityPlayer) entities.get(i)).capabilities.isCreativeMode)
+                AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)entities.get(i));
+                if (((EntityPlayer) entities.get(i)).capabilities.isCreativeMode || androidPlayer.isUnlocked(AndroidStatRegistry.equalizer,1))
                     continue;
             }
 

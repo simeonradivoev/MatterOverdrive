@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.handler;
 
 import com.MO.MatterOverdrive.client.RenderParticlesHandler;
+import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.tile.IMOTickable;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
@@ -43,6 +44,10 @@ public class TickHandler
     public void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
         versionCheckerHandler.onPlayerTick(event);
+        AndroidPlayer player = AndroidPlayer.get(event.player);
+        if (player != null) {
+            player.onPlayerTick(event);
+        }
     }
 
     //Called when the client ticks.

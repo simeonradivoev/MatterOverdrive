@@ -3,7 +3,6 @@ package com.MO.MatterOverdrive.blocks;
 import cofh.api.block.IDismantleable;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.InventoryHelper;
-import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.pipes.TileEntityNetworkPipe;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

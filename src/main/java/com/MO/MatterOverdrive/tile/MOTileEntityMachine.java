@@ -6,6 +6,7 @@ import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.blocks.includes.MOBlock;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
 import com.MO.MatterOverdrive.data.Inventory;
+import com.MO.MatterOverdrive.data.TileEntityInventory;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.fx.VentParticle;
 
@@ -55,7 +56,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     protected boolean forceClientUpdate;
     protected String owner;
 
-    protected Inventory inventory;
+    protected TileEntityInventory inventory;
     private int upgradeSlotCount;
     private int[] upgrade_slots;
 
@@ -64,7 +65,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         soundRes = getSoundFor(getSound());
         this.upgradeSlotCount = upgradeGount;
         upgrade_slots = new int[upgradeGount];
-        inventory = new Inventory(this,"");
+        inventory = new TileEntityInventory(this,"");
         RegisterSlots(inventory);
     }
 
@@ -395,7 +396,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         if (hasOwner())
         {
-            if (player.getGameProfile().getName().equals(owner))
+            if (player.getGameProfile().getName().equals(owner) || player.capabilities.isCreativeMode)
             {
                 return true;
             }else

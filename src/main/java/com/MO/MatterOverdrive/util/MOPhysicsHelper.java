@@ -24,6 +24,10 @@ public class MOPhysicsHelper
 
     public static MovingObjectPosition rayTrace(EntityLivingBase viewer,World world,double distance,float ticks,Vec3 offset)
     {
+        return rayTrace(viewer,world,distance,ticks,offset,false,false);
+    }
+    public static MovingObjectPosition rayTrace(EntityLivingBase viewer,World world,double distance,float ticks,Vec3 offset,boolean checkBlockCollision,boolean onlySolid)
+    {
         MovingObjectPosition objectMouseOver = null;
         Entity pointedEntity = null;
 
@@ -32,7 +36,7 @@ public class MOPhysicsHelper
             if (world != null)
             {
                 double d0 = distance;
-                objectMouseOver = MOPhysicsHelper.rayTraceForBlocks(viewer,world,d0, ticks,offset);
+                objectMouseOver = MOPhysicsHelper.rayTraceForBlocks(viewer,world,d0, ticks,offset,checkBlockCollision,onlySolid);
                 double d1 = d0;
                 Vec3 vec3 = getPosition(viewer, ticks).addVector(offset.xCoord,offset.yCoord,offset.zCoord);
 
@@ -92,21 +96,34 @@ public class MOPhysicsHelper
                     }
                 }
 
-                if (pointedEntity != null && (d2 < d1 || objectMouseOver == null))
+                if (pointedEntity != null && d2 < d1)
                 {
-                    objectMouseOver = new MovingObjectPosition(pointedEntity, vec33);
+                    if (objectMouseOver != null)
+                    {
+                        objectMouseOver.typeOfHit = MovingObjectPosition.MovingObjectType.ENTITY;
+                        objectMouseOver.entityHit = pointedEntity;
+                        objectMouseOver.hitVec = vec33;
+                    }
+                    else
+                    {
+                        objectMouseOver = new MovingObjectPosition(pointedEntity, vec33);
+                        objectMouseOver.blockX = (int)vec33.xCoord;
+                        objectMouseOver.blockY = (int)vec33.yCoord;
+                        objectMouseOver.blockZ = (int)vec33.zCoord;
+                    }
+
                 }
             }
         }
         return objectMouseOver;
     }
 
-    public static MovingObjectPosition rayTraceForBlocks(EntityLivingBase viewer,World world,double distance,float ticks,Vec3 offset)
+    public static MovingObjectPosition rayTraceForBlocks(EntityLivingBase viewer,World world,double distance,float ticks,Vec3 offset,boolean collisionCheck,boolean onlySolid)
     {
         Vec3 vec3 = getPosition(viewer,ticks).addVector(offset.xCoord,offset.yCoord,offset.zCoord);
         Vec3 vec31 = viewer.getLook(ticks);
         Vec3 vec32 = vec3.addVector(vec31.xCoord * distance, vec31.yCoord * distance, vec31.zCoord * distance);
-        return world.func_147447_a(vec3, vec32, false, false, true);
+        return world.func_147447_a(vec3, vec32, collisionCheck, onlySolid, true);
     }
 
     public static Vec3 getPosition(EntityLivingBase entity, float p_70666_1_)

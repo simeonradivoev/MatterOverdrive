@@ -172,19 +172,19 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer {
 		
 		Vector2f uv1 = new Vector2f(1,1);
 		uv1.add(uv);
-		uv1.scale(5*texPixel);
+		uv1.scale(6*texPixel);
 		
 		Vector2f uv2 = new Vector2f(1,0);
 		uv2.add(uv);
-		uv2.scale(5*texPixel);
+		uv2.scale(6*texPixel);
 		
 		Vector2f uv3 = new Vector2f(0,0);
 		uv3.add(uv);
-		uv3.scale(5*texPixel);
+		uv3.scale(6*texPixel);
 		
 		Vector2f uv4 = new Vector2f(0,1);
 		uv4.add(uv);
-		uv4.scale(5*texPixel);
+		uv4.scale(6*texPixel);
 
         Vector3f normal = new Vector3f(0,0,-1);
 		

@@ -370,7 +370,7 @@ public class MatterScanner extends MOBaseItem
 
 	public MovingObjectPosition getScanningPos(EntityPlayer player)
 	{
-		return MOPhysicsHelper.rayTrace(player,player.worldObj,5,0,Vec3.createVectorHelper(0,player.getEyeHeight(),0));
+		return MOPhysicsHelper.rayTrace(player,player.worldObj,5,0,Vec3.createVectorHelper(0,player.getEyeHeight(),0),true,false);
 	}
 
 	@Override

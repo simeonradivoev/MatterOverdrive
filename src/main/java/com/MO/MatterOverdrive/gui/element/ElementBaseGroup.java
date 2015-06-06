@@ -71,10 +71,11 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
 
     protected void handleTooltips(int mouseX,int mouseY)
     {
-        ElementBase element = getElementAtPosition(mouseX,mouseY);
-        if (element != null)
-        {
-            element.addTooltip(((MOGuiBase)gui).getTooltips());
+        if (gui.mc.thePlayer.inventory.getItemStack() == null) {
+            ElementBase element = getElementAtPosition(mouseX, mouseY);
+            if (element != null) {
+                element.addTooltip(((MOGuiBase) gui).getTooltips());
+            }
         }
     }
 

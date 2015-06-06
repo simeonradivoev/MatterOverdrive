@@ -5,6 +5,7 @@ import cofh.lib.render.RenderHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
 import com.MO.MatterOverdrive.client.render.ItemRendererPhaser;
+import com.MO.MatterOverdrive.gui.GuiAndroidHud;
 import com.MO.MatterOverdrive.items.Phaser;
 import com.MO.MatterOverdrive.items.WeaponColorModule;
 import com.MO.MatterOverdrive.sound.PhaserSound;
@@ -26,6 +27,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderWorldEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -45,11 +47,13 @@ public class RenderHandler
     Map<Entity,PhaserSound> soundMap = new HashMap<Entity, PhaserSound>();
     RenderMatterScannerInfoHandler matterScannerInfoHandler;
     RenderParticlesHandler renderParticlesHandler;
+    RenderBiostatEffects biostatEffects;
 
     public RenderHandler(World world,TextureManager textureManager)
     {
         matterScannerInfoHandler = new RenderMatterScannerInfoHandler();
         renderParticlesHandler = new RenderParticlesHandler(world,textureManager);
+        biostatEffects = new RenderBiostatEffects();
     }
 
     @SubscribeEvent
@@ -64,6 +68,8 @@ public class RenderHandler
 
         matterScannerInfoHandler.onRenderWorldLast(event);
         renderParticlesHandler.onRenderWorldLast(event);
+        biostatEffects.onRenderWorldLast(event);
+        //GuiAndroidHud.renderHud(Minecraft.getMinecraft(), event.partialTicks);
     }
 
     //Called when the client ticks.
@@ -123,7 +129,7 @@ public class RenderHandler
         glRotated(-viewer.getRotationYawHead(), 0, 1, 0);
         glRotated(viewer.rotationPitch, 1, 0, 0);
         glTranslatef(offset.x, offset.y, offset.z);
-        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(viewer, world, getPhaserRange(viewer), 1.0f, Vec3.createVectorHelper(0,height,0));
+        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(viewer, world, getPhaserRange(viewer), 1.0f, Vec3.createVectorHelper(0,height,0),false,true);
         double distance = 450;
         if (hit != null)
         {

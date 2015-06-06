@@ -42,7 +42,8 @@ public class RenderUtils
 	
 	public static void renderStack(int x, int y, ItemStack stack)
 	{
-		if (stack != null) {
+		if (stack != null && stack.getItem() != null) {
+			glColor3f(1,1,1);
 			RenderHelper.enableGUIStandardItemLighting();
 			renderItem.renderItemIntoGUI(fontRenderer, textureManager, stack, x, y);
 			RenderHelper.disableStandardItemLighting();
@@ -139,6 +140,42 @@ public class RenderUtils
 		tessellator.addVertexWithUV(sizeX, sizeY, sizeZ, 1, 1);
 
 		tessellator.draw();
+	}
+
+	public static int lerp(int a,int b,float lerp)
+	{
+		int MASK1 = 0xff00ff;
+		int MASK2 = 0x00ff00;
+
+		int f2 = Math.round(256 * lerp);
+		int f1 = Math.round(256 - f2);
+
+		return ((((( a & MASK1 ) * f1 ) + ( ( b & MASK1 ) * f2 )) >> 8 ) & MASK1 ) | ((((( a & MASK2 ) * f1 ) + ( ( b & MASK2 ) * f2 )) >> 8 ) & MASK2 );
+	}
+
+	public static GuiColor lerp(GuiColor a,GuiColor b,float lerp)
+	{
+		return new GuiColor(lerp(a.getColor(),b.getColor(),lerp));
+	}
+
+	public static void applyColor(int color)
+	{
+		glColor4f((color & 0x000000ff) / 255f,(color & 0x0000ff00) / 255f,(color & 0x00ff0000) / 256f,(color >> 24)/255f);
+	}
+
+	public static void applyColor(GuiColor color)
+	{
+		glColor3f(color.getFloatR(), color.getFloatG(), color.getFloatB());
+	}
+
+	public static void applyColorWithMultipy(GuiColor color,float mul)
+	{
+		glColor3f(color.getFloatR() * mul, color.getFloatG() * mul, color.getFloatB() * mul);
+	}
+
+	public static void applyColorWithAlpha(GuiColor color)
+	{
+		glColor4f(color.getFloatR(),color.getFloatG(),color.getFloatB(),color.getFloatA());
 	}
 
     public static void beginDrawinngBlockScreen(double x, double y, double z,ForgeDirection side,GuiColor color,TileEntity entity)

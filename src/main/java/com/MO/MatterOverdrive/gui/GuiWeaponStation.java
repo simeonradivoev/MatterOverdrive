@@ -11,6 +11,7 @@ import com.MO.MatterOverdrive.gui.element.ElementSlot;
 import com.MO.MatterOverdrive.tile.TileEntityWeaponStation;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -25,7 +26,7 @@ import org.lwjgl.util.vector.Vector2f;
  */
 public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
 {
-    public static final ScaleTexture BG = new ScaleTexture(new ResourceLocation(Reference.PATH_GUI + "weapon_station.png"),255,141).setOffsets(141,34,42,94);
+    public static final ScaleTexture BG = new ScaleTexture(new ResourceLocation(Reference.PATH_GUI + "weapon_station.png"),255,141).setOffsets(213,34,42,94);
 
     ElementModelPreview weaponPreview;
     ElementSlot[] module_slots = new ElementSlot[5];
@@ -50,6 +51,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         sidePannel.setPosition(243, 33);
         closeButton.setPosition(237, 6);
         indicator.setPosition(6, 220);
+        slotsList.getMainSlot().setType("big_main_dark");
     }
 
     @Override

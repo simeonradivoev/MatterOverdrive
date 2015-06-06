@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.gui.element;
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementBase;
+import com.MO.MatterOverdrive.util.RenderUtils;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -44,7 +45,7 @@ public abstract class MOElementBase extends ElementBase
 
     protected void ApplyColor()
     {
-        GL11.glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
+        RenderUtils.applyColor(color);
     }
 
     protected void ResetColor()

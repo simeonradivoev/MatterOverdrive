@@ -1,29 +1,15 @@
 package com.MO.MatterOverdrive.gui;
 
 import cofh.lib.gui.GuiColor;
-import cofh.lib.gui.element.ElementBase;
-import cofh.lib.gui.element.ElementButtonManaged;
-import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.helpers.StringHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.ContainerMachine;
-import com.MO.MatterOverdrive.container.MOBaseContainer;
-import com.MO.MatterOverdrive.container.slot.MOSlot;
-import com.MO.MatterOverdrive.container.slot.SlotPatternStorage;
-import com.MO.MatterOverdrive.container.slot.SlotUpgrade;
-import com.MO.MatterOverdrive.data.Inventory;
-import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.pages.ConfigPage;
 import com.MO.MatterOverdrive.gui.pages.PageUpgrades;
 import com.MO.MatterOverdrive.network.packet.server.PacketChangeRedstoneMode;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
-import net.minecraft.inventory.Container;
-import net.minecraft.util.StatCollector;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Simeon on 4/8/2015.
@@ -82,7 +68,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         upgradesPageButton.setToolTip("Upgrades");
         pageButtons.add(upgradesPageButton);
 
-        slotsList = new ElementSlotsList(this,5,52,80,200,machine.getInventory(),0,false);
+        slotsList = new ElementSlotsList(this,5,52,80,200,machine.getInventory(),0);
         slotsList.setMargin(5);
 
         setPage(0);

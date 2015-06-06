@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.util;
 
+import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
@@ -40,6 +41,13 @@ public class MOStringHelper
         else {
             return String.valueOf(number);
         }
+    }
+
+    public static String typingAnimation(String message,int time,int maxTime)
+    {
+        float percent = ((float)time / (float)maxTime);
+        int messageCount = message.length();
+        return message.substring(0, MathHelper.clampI(Math.round(messageCount * percent),0,messageCount));
     }
 
     public static boolean hasTranslation(String string){return StatCollector.canTranslate(string);}
