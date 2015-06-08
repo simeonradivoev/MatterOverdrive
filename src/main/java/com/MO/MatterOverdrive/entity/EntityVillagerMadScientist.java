@@ -4,18 +4,16 @@ import cofh.lib.audio.SoundBase;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
 import com.MO.MatterOverdrive.util.MOStringHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.MusicTicker;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
@@ -24,6 +22,7 @@ import net.minecraft.world.World;
  */
 public class EntityVillagerMadScientist extends EntityVillager
 {
+    @SideOnly(Side.CLIENT)
     public static SoundBase transform_music = new SoundBase(Reference.MOD_ID + ":" + "transformation_music", 1, 1,false,0,0,0,0, ISound.AttenuationType.NONE);
 
     public EntityVillagerMadScientist(World p_i1748_1_)
@@ -119,10 +118,7 @@ public class EntityVillagerMadScientist extends EntityVillager
             //EntityLightningBolt lightningBolt = new EntityLightningBolt(worldObj,player.posX,player.posY,player.posZ);
             //worldObj.weatherEffects.add(lightningBolt);
 
-            if (!Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(transform_music))
-            {
-                Minecraft.getMinecraft().getSoundHandler().playSound(transform_music);
-            }
+            playTransformMusic();
         }
         else
         {
@@ -136,5 +132,14 @@ public class EntityVillagerMadScientist extends EntityVillager
         //player.attackEntityFrom(damageSource,player.getHealth()-1);
         //player.hurtTime = 100;
         //player.maxHurtTime = 100;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void playTransformMusic()
+    {
+        if (!Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(transform_music))
+        {
+            Minecraft.getMinecraft().getSoundHandler().playSound(transform_music);
+        }
     }
 }
