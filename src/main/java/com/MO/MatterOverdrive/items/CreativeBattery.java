@@ -13,8 +13,8 @@ import java.util.List;
 
 public class CreativeBattery extends Battery
 {
-	private static final int BATTERY_EXTRACT = 1024;
-	private static final int BATTERY_INPUT = 1024;
+	private static final int BATTERY_EXTRACT = 8192;
+	private static final int BATTERY_INPUT = 8192;
 
 	public CreativeBattery(String name, int capacity) 
 	{
