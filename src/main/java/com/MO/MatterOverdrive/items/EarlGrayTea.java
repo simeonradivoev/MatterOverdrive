@@ -21,6 +21,7 @@ public class EarlGrayTea extends ItemFood
         super(4, 0.8F, false);
         setUnlocalizedName(name);
         setTextureName(Reference.MOD_ID + ":" + name);
+        setAlwaysEdible();
     }
 
     public void Register()
@@ -44,7 +45,12 @@ public class EarlGrayTea extends ItemFood
             player.curePotionEffects(itemStack);
         }
 
-        return itemStack.stackSize <= 0 ? new ItemStack(Items.bucket) : itemStack;
+        if (itemStack.stackSize > 0)
+        {
+            player.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
+        }
+
+        return itemStack.stackSize <= 0 ? new ItemStack(Items.glass_bottle) : itemStack;
     }
 
     @Override
