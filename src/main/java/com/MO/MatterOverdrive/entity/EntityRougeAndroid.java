@@ -1,6 +1,8 @@
 package com.MO.MatterOverdrive.entity;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.util.IConfigSubscriber;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -14,8 +16,10 @@ import java.util.List;
 /**
  * Created by Simeon on 5/26/2015.
  */
-public class EntityRougeAndroid
+public class EntityRougeAndroid implements IConfigSubscriber
 {
+    private static BiomeGenBase.SpawnListEntry spawnListEntry;
+
     public static void registerEntity()
     {
         createEntity(EntityRougeAndroidMob.class,"rouge_android",0xFFFFF,0);
@@ -26,20 +30,27 @@ public class EntityRougeAndroid
         int randomID = EntityRegistry.findGlobalUniqueEntityId();
         EntityRegistry.registerGlobalEntityID(entityClass,name,randomID);
         EntityRegistry.registerModEntity(entityClass,name,randomID, MatterOverdrive.instance,64,1,true);
-        List<BiomeGenBase> biomeGenBaseList = new ArrayList<BiomeGenBase>();
+        spawnListEntry = new BiomeGenBase.SpawnListEntry(entityClass,3,1,2);
         for (int i = 0;i < BiomeGenBase.getBiomeGenArray().length;i++)
         {
             if (BiomeGenBase.getBiomeGenArray()[i] != null) {
-                biomeGenBaseList.add(BiomeGenBase.getBiomeGenArray()[i]);
+                BiomeGenBase.getBiomeGenArray()[i].getSpawnableList(EnumCreatureType.monster).add(spawnListEntry);
             }
         }
-        EntityRegistry.addSpawn(entityClass,10,1,3, EnumCreatureType.monster, biomeGenBaseList.toArray(new BiomeGenBase[]{}));
-
         createEgg(randomID,solidColor,spotColor);
     }
 
     public static void createEgg(int id,int solidColor,int spotColor)
     {
         EntityList.entityEggs.put(Integer.valueOf(id),new EntityList.EntityEggInfo(id,solidColor,spotColor));
+    }
+
+    @Override
+    public void onConfigChanged(MOConfigurationHandler config)
+    {
+        if (spawnListEntry != null)
+        {
+            spawnListEntry.itemWeight = config.config.getInt("rouge_android.spawn.chance",MOConfigurationHandler.CATEGORY_WORLD_GEN,3,0,100,"The spawn change of the Rouge Android");
+        }
     }
 }

@@ -63,7 +63,7 @@ public class MatterOverdrive
         MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
 		moWorld = new MatterOverdriveWorld(configHandler);
-		MatterOverdriveEntities.init(event);
+		MatterOverdriveEntities.init(event,configHandler);
 		MatterOverdriveBlocks.register(event);
 		MatterOverdriveItems.register(event);
 		MatterOverdriveEntities.register(event);
