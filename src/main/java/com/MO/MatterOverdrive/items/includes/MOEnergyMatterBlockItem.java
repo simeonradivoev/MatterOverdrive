@@ -6,9 +6,6 @@ import java.util.Map;
 
 import com.MO.MatterOverdrive.api.inventory.IUpgrade;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
-import com.MO.MatterOverdrive.blocks.includes.MOBlock;
-import com.MO.MatterOverdrive.container.slot.SlotUpgrade;
-import com.MO.MatterOverdrive.items.ItemUpgrade;
 import com.MO.MatterOverdrive.util.MOEnergyHelper;
 
 import com.MO.MatterOverdrive.util.MOStringHelper;
