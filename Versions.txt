@@ -1,9 +1,5 @@
 {"versions":[
+    {"version":"0.3.4", "changes":"New Shield Ability and various fixes", "type":"beta","date":"12.06,2015","url":"http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/"},
     {"version":"0.3.3", "changes":"Android abilities, Mad Scientist and Rouge Androids", "type":"beta","date":"06.06,2015","url":"http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/"},
-    {"version":"0.3.1", "changes":"1.7 java crash fix and weapon station holograms.", "type":"beta","date":"21.05,2015","url":"http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/"},
-    {"version":"0.3", "changes":"Gravitational Anomalies, Fusion Reactors and Recyclers plus fixes.", "type":"beta","date":"21.05,2015","url":"http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/"},
-    {"version":"0.2.7", "changes":"Automatic Matter Calculation Optimizations and Lots of Config options.", "type":"beta","date":"10.2,2015","url":"http://minecraft.curseforge.com/mc-mods/229694-matter-overdrive/files/2237530"},
-    {"version":"0.2.6.1", "changes":"Fixed some crashes, transporter recipe and matter balancing.", "type":"beta","date":"8.2,2015","url":"http://minecraft.curseforge.com/mc-mods/229694-matter-overdrive/files/2237277"},
-    {"version":"0.2.6", "changes":"Implemented the transporter and an automatic matter calculation.", "type":"beta","date":"8.2,2015","url":"http://minecraft.curseforge.com/mc-mods/229694-matter-overdrive/files/2237277"},
-    {"version":"0.2.4", "changes":"Lots of Matter Network Implementations, and a new Pattern Monitor", "type":"beta","date":"5.2,2015","url":"http://minecraft.curseforge.com/mc-mods/229694-matter-overdrive/files/2236431"}
+    {"version":"0.3.1", "changes":"1.7 java crash fix and weapon station holograms.", "type":"beta","date":"21.05,2015","url":"http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/"}
 ]}

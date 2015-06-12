@@ -6,7 +6,7 @@ public class Reference
 {
 	public static final String MOD_ID = "mo";
 	public static final String MOD_NAME = "Matter Overdrive";
-	public static final String VERSION = "0.3.3";
+	public static final String VERSION = "0.3.4";
 	public static final String CLIENT_PROXY_CLASS = "com.MO.MatterOverdrive.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.MO.MatterOverdrive.proxy.CommonProxy";
 	public static final String GUI_FACTORY_CLASS = "com.MO.MatterOverdrive.gui.GuiConfigFactory";
@@ -65,11 +65,6 @@ public class Reference
 	public static final int BIONIC_CHEST = 3;
 	public static final int BIONIC_OTHER = 4;
 	public static final int BIONIC_BATTERY = 5;
-	//endregion
-
-	//region Andoid Stats Types
-	public static final int ANDROID_STAT_TELEPORT = 0;
-	public static final int ANDROID_STAT_NANOBOTS = 1;
 	//endregion
 
 	//region Weapon Stat
