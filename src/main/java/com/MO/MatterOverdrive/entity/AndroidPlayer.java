@@ -8,12 +8,11 @@ import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.IBionicStat;
 import com.MO.MatterOverdrive.data.Inventory;
-import com.MO.MatterOverdrive.data.MOAttributeModifier;
 import com.MO.MatterOverdrive.data.inventory.BionicSlot;
 import com.MO.MatterOverdrive.data.inventory.EnergySlot;
 import com.MO.MatterOverdrive.handler.AndroidStatRegistry;
-import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.network.packet.client.PacketSyncAndroid;
+import com.MO.MatterOverdrive.network.packet.server.PacketSendAndroidAnction;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -138,7 +137,8 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             ItemStack battery = getStackInSlot(ENERGY_SLOT);
             IEnergyContainerItem energyContainerItem = (IEnergyContainerItem)battery.getItem();
             energyExtracted = energyContainerItem.extractEnergy(battery,amount,simulate);
-            sync(player,PacketSyncAndroid.SYNC_BATTERY);
+            if (energyExtracted > 0 && !simulate)
+                sync(PacketSyncAndroid.SYNC_BATTERY);
         }
         else
         {
@@ -188,7 +188,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         this.unlocked.setInteger(stat.getUnlocalizedName(), level);
         stat.onUnlock(this,level);
-        sync(player,PacketSyncAndroid.SYNC_STATS);
+        sync(PacketSyncAndroid.SYNC_STATS);
     }
 
     @Override
@@ -229,7 +229,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             ItemStack battery = getStackInSlot(ENERGY_SLOT);
             IEnergyContainerItem energyContainerItem = (IEnergyContainerItem)battery.getItem();
             energyReceived = energyContainerItem.receiveEnergy(battery,amount,simulate);
-            sync(player,PacketSyncAndroid.SYNC_BATTERY);
+            sync(PacketSyncAndroid.SYNC_BATTERY);
         }
         else
         {
@@ -248,7 +248,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void setAndroid(boolean isAndroid)
     {
         this.isAndroid = isAndroid;
-        sync(player,PacketSyncAndroid.SYNC_ALL);
+        sync(PacketSyncAndroid.SYNC_ALL);
     }
 
     public boolean isAndroid()
@@ -256,12 +256,34 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         return isAndroid;
     }
 
-    public void sync(EntityPlayer player,int syncPart)
+    public void sync(int part)
+    {
+        this.sync(player, part,false);
+    }
+
+    public void sync(int part,boolean others)
+    {
+        this.sync(player, part,others);
+    }
+
+    private void sync(EntityPlayer player,int syncPart,boolean toOthers)
     {
         if (player instanceof EntityPlayerMP)
         {
-            MatterOverdrive.packetPipeline.sendTo(new PacketSyncAndroid(this,syncPart), (EntityPlayerMP)player);
+            if (toOthers)
+            {
+                MatterOverdrive.packetPipeline.sendToAllAround(new PacketSyncAndroid(this, syncPart, toOthers), player, 64);
+            }
+            else
+            {
+                MatterOverdrive.packetPipeline.sendTo(new PacketSyncAndroid(this, syncPart, toOthers), (EntityPlayerMP) player);
+            }
         }
+    }
+
+    public void setActionToServer(int action,boolean state,int options)
+    {
+        MatterOverdrive.packetPipeline.sendToServer(new PacketSendAndroidAnction(action,state,options));
     }
 
     public void copy(AndroidPlayer player)
@@ -284,7 +306,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void resetUnlocked()
     {
         this.unlocked = new NBTTagCompound();
-        sync(player, PacketSyncAndroid.SYNC_STATS);
+        sync(PacketSyncAndroid.SYNC_STATS);
         player.getEntityAttribute(SharedMonsterAttributes.movementSpeed).removeAllModifiers();
     }
     public void reset(IBionicStat stat)
@@ -292,7 +314,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         if (getUnlocked().hasKey(stat.getUnlocalizedName()))
         {
             getUnlocked().removeTag(stat.getUnlocalizedName());
-            sync(player,PacketSyncAndroid.SYNC_STATS);
+            sync(PacketSyncAndroid.SYNC_STATS);
         }
     }
 
@@ -383,9 +405,9 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public void onEntityHurt(LivingHurtEvent event)
     {
-        if (isAndroid()) {
+        if (isAndroid() && !event.isCanceled()) {
             effects.setInteger("GlitchTime", 10);
-            sync(player, PacketSyncAndroid.SYNC_EFFECTS);
+            sync(PacketSyncAndroid.SYNC_EFFECTS);
                 player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "gui.glitch_" + player.worldObj.rand.nextInt(11), 0.2f, 0.9f + player.worldObj.rand.nextFloat() * 0.2f);
         }
     }
@@ -463,7 +485,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 player.setDead();
             }
 
-            sync(player,PacketSyncAndroid.SYNC_EFFECTS);
+            sync(PacketSyncAndroid.SYNC_EFFECTS);
         }
     }
 
@@ -503,7 +525,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void startTurningToAndroid()
     {
         effects.setInteger("Turning",TRANSFORM_TIME);
-        sync(player,PacketSyncAndroid.SYNC_EFFECTS);
+        sync(PacketSyncAndroid.SYNC_EFFECTS);
     }
     public long getEffectLong(String effect)
     {
@@ -556,7 +578,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @Override
     public void markDirty()
     {
-        sync(player,PacketSyncAndroid.SYNC_ALL);
+        sync(PacketSyncAndroid.SYNC_ALL);
     }
 
     @Override

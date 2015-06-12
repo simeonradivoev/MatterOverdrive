@@ -4,6 +4,7 @@ import cofh.lib.gui.GuiColor;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import com.MO.MatterOverdrive.tile.TileEntityAndroidStation;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.MO.MatterOverdrive.util.RenderUtils;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
@@ -227,23 +228,21 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
             rotate(station,noise);
 
             glDisable(GL_CULL_FACE);
+            glDisable(GL_LIGHTING);
             glScaled(0.02,0.02,0.02);
             glRotated(180,1,0,0);
 
-            GuiColor color = new GuiColor(Reference.COLOR_HOLO_RED.getIntR() / 80,Reference.COLOR_HOLO_RED.getIntG() / 80,Reference.COLOR_HOLO_RED.getIntB() / 80);
-            String info = "ACCESS";
-            int width = Minecraft.getMinecraft().fontRenderer.getStringWidth(info);
-            glPushMatrix();
-            glTranslated(-width/2,-32,0);
-            Minecraft.getMinecraft().fontRenderer.drawString(info, 0, 0, color.getColor());
-            glPopMatrix();
-            glPushMatrix();
-            info = "DENIED";
-            width = Minecraft.getMinecraft().fontRenderer.getStringWidth(info);
-            glTranslated(-width/2,-32,0);
-            Minecraft.getMinecraft().fontRenderer.drawString(info, 0, 10, color.getColor());
-            glPopMatrix();
-            glEnable(GL_CULL_FACE);
+            GuiColor color = new GuiColor(Reference.COLOR_HOLO_RED.getIntR() / 3,Reference.COLOR_HOLO_RED.getIntG() / 3,Reference.COLOR_HOLO_RED.getIntB() / 3);
+            String info[] = MOStringHelper.translateToLocal("gui.hologram.access_denied").split(" ");
+            for (int i = 0;i < info.length;i++)
+            {
+                int width = Minecraft.getMinecraft().fontRenderer.getStringWidth(info[i]);
+                glPushMatrix();
+                glTranslated(-width/2,-32,0);
+                Minecraft.getMinecraft().fontRenderer.drawString(info[i], 0, i * 10, color.getColor());
+                glPopMatrix();
+            }
+
             glPopMatrix();
         }
     }

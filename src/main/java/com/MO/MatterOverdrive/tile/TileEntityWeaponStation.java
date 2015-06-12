@@ -135,7 +135,7 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
 
     //region Upgrades
     @Override
-    public boolean isAffectedBy(UpgradeTypes type)
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return false;
     }

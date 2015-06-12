@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.handler;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.google.gson.Gson;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -141,7 +142,7 @@ public class VersionCheckerHandler implements IConfigSubscriber {
 
             if (version != null) {
                 if (!version.version.equals(Reference.VERSION)) {
-                    ChatComponentText chat = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.WHITE + "A new version is available!");
+                    ChatComponentText chat = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.WHITE + MOStringHelper.translateToLocal("alert.new_update"));
                     ChatStyle style = new ChatStyle();
                     player.addChatMessage(chat);
 

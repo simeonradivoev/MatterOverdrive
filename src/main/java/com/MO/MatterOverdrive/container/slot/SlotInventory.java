@@ -26,4 +26,9 @@ public class SlotInventory extends MOSlot {
         }
         return false;
     }
+
+    public Slot getSlot()
+    {
+        return slot;
+    }
 }

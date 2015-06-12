@@ -7,6 +7,8 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
@@ -14,11 +16,12 @@ import org.lwjgl.input.Keyboard;
 /**
  * Created by Simeon on 3/6/2015.
  */
+@SideOnly(Side.CLIENT)
 public class KeyHandler
 {
-    private static  final int MATTER_SCANNER_KEY = 0;
-    public static final int TELEPORT_KEY = 1;
-    private static  final String[] keyDesc = {"Open Matter Scanner GUI","Ender Teleporter Android Ability"};
+    public static  final int MATTER_SCANNER_KEY = 0;
+    public static final int ABILITY_USE_KEY = 1;
+    private static  final String[] keyDesc = {"Open Matter Scanner GUI","Android Ability key"};
     private  static  final  int[] keyValues = {Keyboard.KEY_C,Keyboard.KEY_X};
     private  final KeyBinding[] keys;
 

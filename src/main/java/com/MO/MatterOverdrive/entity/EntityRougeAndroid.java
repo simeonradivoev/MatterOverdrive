@@ -31,13 +31,30 @@ public class EntityRougeAndroid implements IConfigSubscriber
         EntityRegistry.registerGlobalEntityID(entityClass,name,randomID);
         EntityRegistry.registerModEntity(entityClass,name,randomID, MatterOverdrive.instance,64,1,true);
         spawnListEntry = new BiomeGenBase.SpawnListEntry(entityClass,3,1,2);
-        for (int i = 0;i < BiomeGenBase.getBiomeGenArray().length;i++)
+        addInBiome(BiomeGenBase.beach,
+                BiomeGenBase.birchForest,
+                BiomeGenBase.birchForestHills,
+                BiomeGenBase.desert,
+                BiomeGenBase.desertHills,
+                BiomeGenBase.forest,
+                BiomeGenBase.forestHills,
+                BiomeGenBase.extremeHills,
+                BiomeGenBase.taiga,
+                BiomeGenBase.taigaHills,
+                BiomeGenBase.megaTaiga,
+                BiomeGenBase.megaTaigaHills);
+        createEgg(randomID, solidColor, spotColor);
+    }
+
+    private static void addInBiome(BiomeGenBase... biomes)
+    {
+        for (int i = 0;i < biomes.length;i++)
         {
-            if (BiomeGenBase.getBiomeGenArray()[i] != null) {
-                BiomeGenBase.getBiomeGenArray()[i].getSpawnableList(EnumCreatureType.monster).add(spawnListEntry);
+            if (biomes[i] != null)
+            {
+                biomes[i].getSpawnableList(EnumCreatureType.monster).add(spawnListEntry);
             }
         }
-        createEgg(randomID,solidColor,spotColor);
     }
 
     public static void createEgg(int id,int solidColor,int spotColor)

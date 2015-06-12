@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.blocks.BlockGravitationalAnomaly;
 import com.MO.MatterOverdrive.client.RenderParticlesHandler;
 import com.MO.MatterOverdrive.fx.GravitationalStabilizerBeamParticle;
@@ -166,5 +167,11 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     public int getPhase()
     {
         return 0;
+    }
+
+    @Override
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
+    {
+        return false;
     }
 }

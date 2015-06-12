@@ -61,7 +61,13 @@ public class BioticStatHighJump extends AbstractBioticStat {
     @Override
     public boolean isEnabled(AndroidPlayer android, int level)
     {
-        return android.extractEnergy(ENERGY_PER_JUMP,true) == ENERGY_PER_JUMP;
+        return super.isEnabled(android,level) && android.extractEnergy(ENERGY_PER_JUMP,true) == ENERGY_PER_JUMP;
+    }
+
+    @Override
+    public boolean isActive(AndroidPlayer androidPlayer, int level)
+    {
+        return isEnabled(androidPlayer,level);
     }
 
     @Override

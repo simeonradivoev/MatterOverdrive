@@ -147,7 +147,7 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
         {
             if (!player.capabilities.isCreativeMode && ((MOTileEntityMachine) tileEntity).hasOwner() && !((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getName()))
             {
-                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + "Only the owner can brake the " + getLocalizedName());
+                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.brake").replace("$0",getLocalizedName()));
                     message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
                     player.addChatMessage(message);
                 return false;
@@ -256,7 +256,7 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
                 }else
                 {
                     if (world.isRemote) {
-                        ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + "Only the owner can dismantle the " + getLocalizedName());
+                        ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.dismantle").replace("$0",getLocalizedName()));
                         message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
                         player.addChatMessage(message);
                     }

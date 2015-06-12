@@ -8,6 +8,7 @@ import com.MO.MatterOverdrive.gui.pages.PageTasks;
 import com.MO.MatterOverdrive.network.packet.server.PacketPatternMonitorCommands;
 import com.MO.MatterOverdrive.network.packet.server.PacketRemoveTask;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -33,8 +34,10 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
         name = "pattern_monitor";
         refreshButton = new MOElementButton(this,this,6,75,"Refresh",0,0,22,0,22,22, "");
         refreshButton.setTexture(Reference.PATH_GUI_ITEM + "refresh.png", 44, 22);
+        refreshButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.button.refresh"));
         requestButton = new MOElementButton(this,this,6,100,"Request",0,0,22,0,22,22,"");
         requestButton.setTexture(Reference.PATH_GUI_ITEM + "request.png",44,22);
+        requestButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.button.request"));
         elementGrid = new ElementPatternsGrid(this,48,40,160,114);
         searchField = new MOElementTextField(this,41,26,167,14);
 
@@ -43,7 +46,7 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
 
         tasksButton = new MOElementButton(this,this,6,8,"Tasks",0,0,24,0,24,0,24,24,"");
         tasksButton.setTexture(Reference.PATH_GUI_ITEM + "tasks.png", 48, 24);
-        tasksButton.setToolTip("Tasks");
+        tasksButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.tasks"));
         pageButtons.add(tasksButton);
 
         elementGrid.updateStackList(machine.getDatabases());

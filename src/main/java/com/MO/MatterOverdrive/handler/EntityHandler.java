@@ -39,7 +39,7 @@ public class EntityHandler
     public void onEntityJoinWorld(EntityJoinWorldEvent event)
     {
         if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer)
-            AndroidPlayer.get((EntityPlayer) event.entity).sync((EntityPlayer)event.entity, PacketSyncAndroid.SYNC_ALL);
+            AndroidPlayer.get((EntityPlayer) event.entity).sync(PacketSyncAndroid.SYNC_ALL);
     }
 
     @SubscribeEvent
@@ -67,6 +67,7 @@ public class EntityHandler
     public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event)
     {
         AndroidPlayer.get(event.entityPlayer).copy(AndroidPlayer.get(event.original));
+        AndroidPlayer.get(event.entityPlayer).sync(PacketSyncAndroid.SYNC_ALL);
     }
 
     @SubscribeEvent
@@ -92,7 +93,6 @@ public class EntityHandler
         if (event.entityLiving instanceof EntityPlayer)
         {
             AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.entityLiving);
-            androidPlayer.onEntityHurt(event);
 
             if (androidPlayer != null && androidPlayer.isAndroid()) {
                 for (IBionicStat stat : AndroidStatRegistry.stats.values()) {
@@ -102,6 +102,8 @@ public class EntityHandler
                     }
                 }
             }
+
+            androidPlayer.onEntityHurt(event);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.init;
 
+import cofh.api.modhelpers.ThermalExpansionHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
 import com.MO.MatterOverdrive.items.*;
@@ -14,6 +15,7 @@ import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.items.includes.MOBaseItem;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 
@@ -25,6 +27,7 @@ public class MatterOverdriveItems
 	public static MOBaseItem me_conversion_matrix;
 	public static Phaser phaser;
 	public static MOBaseItem battery;
+    public static MOBaseItem hc_battery;
 	public static MOBaseItem creative_battery;
 	public static MatterDust matter_dust;
 	public static MatterDust matter_dust_refined;
@@ -45,14 +48,16 @@ public class MatterOverdriveItems
     public static SpacetimeEqualizer spacetime_equalizer;
     public static Wrench wrench;
     public static RougeAndroidParts androidParts;
+    public static MOBaseItem forceFieldEmitter;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
 		matter_dust = new MatterDust("matter_dust",false);
 		matter_dust_refined = new MatterDust("matter_dust_refined",true);
 		matter_scanner = new MatterScanner("matter_scanner");
-		battery = new Battery("battery",512000);
-		creative_battery = new CreativeBattery("creative_battery",1048576);
+		battery = new Battery("battery", 1 << 19,Reference.COLOR_MATTER,400,800);
+		creative_battery = new CreativeBattery("creative_battery",1 << 24,Reference.COLOR_HOLO_RED,8192,8192);
+        hc_battery = new Battery("hc_battery",1 << 20,Reference.COLOR_YELLOW_STRIPES,4096,4096);
 		phaser = new Phaser("phaser");
 		emergency_ration = new ItemFood(8,0.8F,false);
 		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive).setTextureName(Reference.MOD_ID + ":" + "emergency_ration");
@@ -75,6 +80,7 @@ public class MatterOverdriveItems
         spacetime_equalizer = new SpacetimeEqualizer("spacetime_equalizer");
         wrench = new Wrench("tritanium_wrench");
         androidParts = new RougeAndroidParts("rouge_android_part");
+        forceFieldEmitter = new MOBaseItem("forcefield_emitter");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -110,11 +116,14 @@ public class MatterOverdriveItems
         spacetime_equalizer.Register();
         wrench.Register();
         androidParts.Register();
+        forceFieldEmitter.Register();
+        hc_battery.Register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust),new ItemStack(tritanium_ingot),5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_ingot),10);
 
 		GameRegistry.addRecipe(new ItemStack(battery), new Object[]{" R ", "TGT", "TDT", 'T', tritanium_ingot, 'D', MatterOverdriveItems.dilithium_ctystal, 'R', Items.redstone, 'G', Items.gold_ingot});
+        GameRegistry.addRecipe(new ItemStack(hc_battery),new Object[]{" P ","DBD"," P ",'B',battery,'D',dilithium_ctystal,'P',tritanium_plate});
 		GameRegistry.addRecipe(new ItemStack(matter_scanner), new Object[]{"III","GDG","IRI", 'I',Items.iron_ingot, 'D',new ItemStack(isolinear_circuit,1,2),'R',Items.redstone,'G',Items.gold_ingot});
         GameRegistry.addRecipe(new ItemStack(h_compensator),new Object[]{" M ","CPC","DED",'D', MatterOverdriveItems.dilithium_ctystal,'M',machine_casing,'I',Items.iron_ingot,'C',new ItemStack(isolinear_circuit,1,0),'P',new ItemStack(isolinear_circuit,1,1),'E',Items.ender_eye});
         GameRegistry.addRecipe(new ItemStack(integration_matrix),new Object[]{" M ","GPG","DED",'G', Blocks.glass,'M',machine_casing,'I',Items.iron_ingot,'P',new ItemStack(isolinear_circuit,1,1),'E',Items.ender_pearl,'D',MatterOverdriveItems.dilithium_ctystal});
@@ -127,9 +136,13 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new ItemStack(security_protocol),new Object[]{"PP", "CP",'P',Items.paper,'C',new ItemStack(isolinear_circuit,1,0)});
         GameRegistry.addRecipe(new ItemStack(wrench),new Object[]{"T T"," Y "," T ",'T',tritanium_ingot,'Y',new ItemStack(Blocks.wool,1,4)});
         GameRegistry.addRecipe(new ItemStack(spacetime_equalizer),new Object[]{" M ","EHE", " M ",'M',s_magnet,'E',Items.ender_pearl,'H',h_compensator});
+        GameRegistry.addRecipe(new ItemStack(forceFieldEmitter),new Object[]{"CDC","CDC","PCP",'P',tritanium_plate,'E',Items.ender_pearl,'D',dilithium_ctystal,'2',new ItemStack(isolinear_circuit,1,1),'C',s_magnet});
 
         MatterRegistry.register(emergency_ration,3);
         MatterRegistry.register(earl_gray_tea,2);
+
+        ThermalExpansionHelper.addPulverizerRecipe(8000,new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_dust,2));
+        ThermalExpansionHelper.addPulverizerRecipe(4000,new ItemStack(tritanium_ingot),new ItemStack(tritanium_dust));
 	}
 
     public static void addToDungons()

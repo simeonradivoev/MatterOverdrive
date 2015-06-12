@@ -17,6 +17,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
@@ -40,15 +42,23 @@ public class RenderUtils
 	private static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 	private static RenderItem     renderItem   = new RenderItem();
 	
-	public static void renderStack(int x, int y, ItemStack stack)
-	{
+	public static void renderStack(int x, int y, ItemStack stack) {
 		if (stack != null && stack.getItem() != null) {
-			glColor3f(1,1,1);
+			glColor3f(1, 1, 1);
 			RenderHelper.enableGUIStandardItemLighting();
 			renderItem.renderItemIntoGUI(fontRenderer, textureManager, stack, x, y);
 			RenderHelper.disableStandardItemLighting();
 		}
-	 }
+	}
+
+	public static void renderStack(int x, int y, ItemStack stack,float opacity) {
+		if (stack != null && stack.getItem() != null) {
+			glColor3f(1, 1, 1);
+			RenderHelper.enableGUIStandardItemLighting();
+			renderItem.renderItemIntoGUI(fontRenderer, textureManager, stack, x, y);
+			RenderHelper.disableStandardItemLighting();
+		}
+	}
 
 	public static void rotateFromBlock(World world,int x,int y,int z)
 	{
@@ -249,12 +259,9 @@ public class RenderUtils
 	{
 		try
 		{
-			for(int i = 0;i < Math.min(maxLines, infos.size());i++)
-			{
-				String info = infos.get(i).toString();
-				info = info.substring(0, Math.min(maxLineWidth, info.length()));
-				fontRenderer.drawStringWithShadow(info, x, y + i * 10, color);
-			}
+			int linesCounter = 0;
+			String infoText = StringUtils.join(infos,"\n");
+			fontRenderer.drawSplitString(infoText, x, y + linesCounter * 10, maxLineWidth, color);
 		}
 		catch(Exception e)
 		{

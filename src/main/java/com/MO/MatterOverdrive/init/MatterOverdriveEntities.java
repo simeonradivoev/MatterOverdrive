@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.init;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.entity.*;
+import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.handler.village.TradeHandlerMadScientist;
 import com.MO.MatterOverdrive.handler.village.VillageCreatationMadScientist;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -20,9 +21,10 @@ public class MatterOverdriveEntities
 {
     public static EntityRougeAndroid rougeAndroid;
 
-    public static void init(FMLPreInitializationEvent event)
+    public static void init(FMLPreInitializationEvent event,MOConfigurationHandler configurationHandler)
     {
         rougeAndroid = new EntityRougeAndroid();
+        configurationHandler.subscribe(rougeAndroid);
     }
 
     public static void register(FMLPreInitializationEvent event)

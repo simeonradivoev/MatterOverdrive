@@ -1,7 +1,7 @@
 package com.MO.MatterOverdrive.container;
 
 import cofh.lib.util.helpers.InventoryHelper;
-import com.MO.MatterOverdrive.container.slot.SlotUpgrade;
+import com.MO.MatterOverdrive.container.slot.SlotInventory;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
@@ -47,7 +47,7 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
         {
             if (inventory.getSlot(i) instanceof UpgradeSlot)
             {
-                addSlotToContainer(new SlotUpgrade(inventory,i,x + (upgradeSlotIndex % 5) * 24,y + (upgradeSlotIndex / 5) * 24));
+                addSlotToContainer(new SlotInventory(inventory,inventory.getSlot(i),x + (upgradeSlotIndex % 5) * 24,y + (upgradeSlotIndex / 5) * 24));
                 upgradeSlotIndex++;
             }
         }

@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.gui.element;
 
 import com.MO.MatterOverdrive.container.IButtonHandler;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.element.ElementButton;
@@ -15,7 +16,7 @@ public class CloseButton extends MOElementButton
 		super(gui,handler, posX, posY, name, 0, 0, 9, 0, 9, 9,
 				Reference.PATH_ELEMENTS + "close_button.png");
 		this.setTexture(Reference.PATH_ELEMENTS + "close_button.png", 18, 9);
-		this.setToolTip("Close");
+		this.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.close"));
 	}
 
 	@Override

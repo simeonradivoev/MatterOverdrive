@@ -266,7 +266,7 @@ public class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implement
     }
 
     @Override
-    public boolean isAffectedBy(UpgradeTypes type)
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type.equals(UpgradeTypes.Speed);
     }

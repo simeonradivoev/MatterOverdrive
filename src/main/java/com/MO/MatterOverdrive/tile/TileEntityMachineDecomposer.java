@@ -292,4 +292,10 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     {
         return 0;
     }
+
+    @Override
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
+    {
+        return type != UpgradeTypes.Range && type != UpgradeTypes.SecondOutput;
+    }
 }

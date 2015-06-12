@@ -98,7 +98,9 @@ public class GuiAndroidHud extends Gui
             if (android.isAndroid()) {
                 glPushMatrix();
                 double energy_perc = (double) android.getEnergyStored() / (double) android.getMaxEnergyStored();
-                GuiColor color = new GuiColor(Reference.COLOR_HOLO.getIntR() / 2, Reference.COLOR_HOLO.getIntG() / 2, Reference.COLOR_HOLO.getIntB() / 2, Reference.COLOR_HOLO.getIntA());
+                GuiColor enabledColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 2, Reference.COLOR_HOLO.getIntG() / 2, Reference.COLOR_HOLO.getIntB() / 2, Reference.COLOR_HOLO.getIntA());
+                GuiColor disabledColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 5, Reference.COLOR_HOLO.getIntG() / 5, Reference.COLOR_HOLO.getIntB() / 5, Reference.COLOR_HOLO.getIntA());
+                GuiColor color = enabledColor;
 
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -109,7 +111,7 @@ public class GuiAndroidHud extends Gui
                 glTranslated((hudRotationYawSmooth - mc.thePlayer.rotationYaw) * 6, (hudRotationPitchSmooth - mc.thePlayer.rotationPitch) * 6, 0);
 
 
-                glColor3f(color.getFloatR() / 2, color.getFloatG() / 2, color.getFloatB() / 2);
+                glColor3f(enabledColor.getFloatR() / 2, enabledColor.getFloatG() / 2, enabledColor.getFloatB() / 2);
                 mc.renderEngine.bindTexture(top_element_bg);
                 func_146110_a(0, 10, 0, 0, 174, 11, 174, 11);
 
@@ -117,7 +119,7 @@ public class GuiAndroidHud extends Gui
                 func_146110_a(event.resolution.getScaledWidth() - 174, 10, 0, 0, 174, 11, 174, 11);
 
                 //region energy
-                GuiColor energyColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, color, (float) energy_perc);
+                GuiColor energyColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, enabledColor, (float) energy_perc);
                 mc.fontRenderer.drawString(Math.round((energy_perc) * 100d) + "%", 32, 28, energyColor.getColor());
                 RenderUtils.applyColor(energyColor);
                 mc.renderEngine.bindTexture(battery_icon);
@@ -125,8 +127,8 @@ public class GuiAndroidHud extends Gui
                 //endregion
 
                 //region speed
-                glColor3f(color.getFloatR(), color.getFloatG(), color.getFloatB());
-                mc.fontRenderer.drawString(Integer.toString((int)Math.round(android.getSpeedMultiply() * 100)) + "%", 76, 28, color.getColor());
+                glColor3f(enabledColor.getFloatR(), enabledColor.getFloatG(), enabledColor.getFloatB());
+                mc.fontRenderer.drawString(Integer.toString((int) Math.round(android.getSpeedMultiply() * 100)) + "%", 76, 28, enabledColor.getColor());
                 mc.renderEngine.bindTexture(person_icon);
                 func_146110_a(58, 22, 0, 0, 18, 18, 18, 18);
                 //endregion
@@ -134,7 +136,7 @@ public class GuiAndroidHud extends Gui
                 int count = 0;
                 for (int i = 0; i < android.getSizeInventory(); i++) {
                     if (android.getStackInSlot(i) != null) {
-                        drawAndroidPart(android.getStackInSlot(i), color, event.resolution.getScaledWidth() - getX(count), getY(count));
+                        drawAndroidPart(android.getStackInSlot(i), enabledColor, event.resolution.getScaledWidth() - getX(count), getY(count));
                         count++;
                     }
                 }
@@ -146,11 +148,18 @@ public class GuiAndroidHud extends Gui
                         if (stat.showOnHud(android, level)) {
                             if (stat.isEnabled(android,level))
                             {
-                                drawBioticStat(stat, level, color, event.resolution.getScaledWidth() - getX(count), getY(count));
+                                if (stat.isActive(android,level))
+                                {
+                                    color = enabledColor;
+                                }else
+                                {
+                                    color = disabledColor;
+                                }
                             }else
                             {
-                                drawBioticStat(stat, level, Reference.COLOR_HOLO_RED, event.resolution.getScaledWidth() - getX(count), getY(count));
+                                color = Reference.COLOR_HOLO_RED;
                             }
+                            drawBioticStat(stat, level, color, event.resolution.getScaledWidth() - getX(count), getY(count));
                             count++;
                         }
                     }
@@ -272,24 +281,31 @@ public class GuiAndroidHud extends Gui
     public void drawAndroidPart(ItemStack stack,GuiColor color,int x,int y)
     {
         drawStatBG(color,x,y);
+        glEnable(GL_BLEND);
         glColor4f(1,1,1,0.5f);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         RenderHelper.bindItemTexture(stack);
-        drawTexturedModelRectFromIcon(x + 1, y + 1, stack.getIconIndex(), 18, 18);
+        RenderUtils.renderStack(x + 2,y + 2,stack);
+        glDisable(GL_BLEND);
+        //drawTexturedModelRectFromIcon(x + 1, y + 1, stack.getIconIndex(), 18, 18);
     }
 
     public void drawBioticStat(IBionicStat stat,int level,GuiColor color,int x,int y)
     {
         drawStatBG(color,x,y);
+        glEnable(GL_BLEND);
         mc.renderEngine.bindTexture(stat.getIcon(level));
         func_146110_a(x + 1, y + 1, 0, 0, 18, 18, 18, 18);
+        glDisable(GL_BLEND);
     }
 
     public void drawStatBG(GuiColor color,int x,int y)
     {
+        glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         glColor3f(color.getFloatR(), color.getFloatG(), color.getFloatB());
         mc.renderEngine.bindTexture(icon_bg);
         func_146110_a(x, y, 0, 0, 20, 20, 20, 20);
+        glDisable(GL_BLEND);
     }
 }

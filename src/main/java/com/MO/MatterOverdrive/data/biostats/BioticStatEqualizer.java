@@ -39,8 +39,9 @@ public class BioticStatEqualizer extends AbstractBioticStat
     }
 
     @Override
-    public boolean isEnabled(AndroidPlayer android, int level) {
-        return true;
+    public boolean isActive(AndroidPlayer androidPlayer, int level)
+    {
+        return isEnabled(androidPlayer,level);
     }
 
     @Override

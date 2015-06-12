@@ -102,7 +102,7 @@ public class AndoidCommands extends CommandBase
 
                     if (validCommand)
                     {
-                        androidPlayer.sync(player, PacketSyncAndroid.SYNC_ALL);
+                        androidPlayer.sync(PacketSyncAndroid.SYNC_ALL,false);
                         sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "["+ Reference.MOD_NAME+"] " + EnumChatFormatting.RESET + commandInfo));
                         return;
                     }

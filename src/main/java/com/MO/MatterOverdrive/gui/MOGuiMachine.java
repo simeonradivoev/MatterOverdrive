@@ -10,6 +10,7 @@ import com.MO.MatterOverdrive.gui.pages.ConfigPage;
 import com.MO.MatterOverdrive.gui.pages.PageUpgrades;
 import com.MO.MatterOverdrive.network.packet.server.PacketChangeRedstoneMode;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 
 /**
  * Created by Simeon on 4/8/2015.
@@ -45,8 +46,8 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         configPage.setName("Configurations");
         upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container,machine);
         indicator = new ElementIndicator(this,6,ySize - 18);
-        redstoneState = new ElementStates(this,this,120,40,"RedstoneMode",60,21,new String[]{"High","Low","Disabled"});
-        redstoneState.setLabel("Redstone: ");
+        redstoneState = new ElementStates(this,this,120,40,"RedstoneMode",60,21,new String[]{MOStringHelper.translateToLocal("gui.redstone_mode.high"),MOStringHelper.translateToLocal("gui.redstone_mode.low"),MOStringHelper.translateToLocal("gui.redstone_mode.disabled")});
+        redstoneState.setLabel(MOStringHelper.translateToLocal("gui.config.redstone") + ": ");
         redstoneState.setNormalTexture(MOElementButton.HOVER_TEXTURE);
 
         pages.add(homePage);
@@ -55,17 +56,17 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 
         homePageButton = new MOElementButton(this,this,6,8,"Home",0,0,24,0,24,0,24,24,"");
         homePageButton.setTexture(Reference.PATH_GUI_ITEM + "home2.png", 48, 24);
-        homePageButton.setToolTip("Home");
+        homePageButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.home"));
         pageButtons.add(homePageButton);
 
         configPageButton = new MOElementButton(this,this,6,8,"Config",0,0,24,0,24,0,24,24,"");
         configPageButton.setTexture(Reference.PATH_GUI_ITEM + "config.png", 48, 24);
-        configPageButton.setToolTip("Configurations");
+        configPageButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.configurations"));
         pageButtons.add(configPageButton);
 
         upgradesPageButton = new MOElementButton(this,this,6,8,"Upgrades",0,0,24,0,24,0,24,24,"");
         upgradesPageButton.setTexture(Reference.PATH_GUI_ITEM + "upgrades.png", 48, 24);
-        upgradesPageButton.setToolTip("Upgrades");
+        upgradesPageButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.upgrades"));
         pageButtons.add(upgradesPageButton);
 
         slotsList = new ElementSlotsList(this,5,52,80,200,machine.getInventory(),0);

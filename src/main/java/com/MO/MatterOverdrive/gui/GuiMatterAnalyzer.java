@@ -8,6 +8,7 @@ import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.pages.PageTasks;
 import com.MO.MatterOverdrive.tile.TileEntityMachineMatterAnalyzer;
 
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 /**
@@ -32,7 +33,7 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
 
         tasksButton = new MOElementButton(this,this,6,8,"Tasks",0,0,24,0,24,0,24,24,"");
         tasksButton.setTexture(Reference.PATH_GUI_ITEM + "tasks.png", 48, 24);
-        tasksButton.setToolTip("Tasks");
+        tasksButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.tasks"));
         pageButtons.add(tasksButton);
     }
 

@@ -7,6 +7,7 @@ import cofh.lib.render.RenderHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.data.ScaleTexture;
 import com.MO.MatterOverdrive.gui.MOGuiBase;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -79,12 +80,12 @@ public class SidePannel extends ElementBaseGroup
     {
         if(isOpen)
         {
-            button.setToolTip("Close Menu");
+            button.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.close_menu"));
             this.setSize(37 + 16, sizeY);
         }
         else
         {
-            button.setToolTip("Open Menu");
+            button.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.open_menu"));
             this.setSize(37, sizeY);
         }
     }

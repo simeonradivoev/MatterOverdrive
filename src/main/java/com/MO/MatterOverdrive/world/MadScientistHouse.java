@@ -2,7 +2,6 @@ package com.MO.MatterOverdrive.world;
 
 import com.MO.MatterOverdrive.entity.EntityVillagerMadScientist;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;

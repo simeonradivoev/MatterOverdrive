@@ -92,11 +92,18 @@ public class PageScanInfo extends ElementBaseGroup
 
         if(item != null)
         {
-            String Matter = "Matter: " + String.valueOf(MatterHelper.getMatterAmountFromItem(item)) + MatterHelper.MATTER_UNIT;
-
+            //GL11.glEnable(GL11.GL_BLEND);
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            GL11.glAlphaFunc(GL11.GL_GREATER,0.5f);
             List infos = item.getTooltip(null, false);
-            infos.add(Matter);
-            RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 32, new GuiColor(255, 255, 255).getColor());
+
+            if (MatterHelper.CanScan(item))
+            {
+                String Matter = "Matter: " + String.valueOf(MatterHelper.getMatterAmountFromItem(item)) + MatterHelper.MATTER_UNIT;
+                infos.add(Matter);
+            }
+
+            RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 200, new GuiColor(255, 255, 255).getColor());
         }
         else
         {
@@ -125,7 +132,7 @@ public class PageScanInfo extends ElementBaseGroup
     {
         itemNBT = tagCompound;
 
-        scan_progress.setVisible(itemNBT != null);
+        scan_progress.setVisible(itemNBT != null && MatterHelper.CanScan(MatterDatabaseHelper.GetItemStackFromNBT(tagCompound)));
         scan_info_graph.setVisible(itemNBT != null);
         itemPreview.setVisible(itemNBT != null);
 

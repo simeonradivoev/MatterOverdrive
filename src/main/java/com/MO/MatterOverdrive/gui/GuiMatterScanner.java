@@ -2,16 +2,13 @@ package com.MO.MatterOverdrive.gui;
 
 import cofh.lib.util.TimeTracker;
 import com.MO.MatterOverdrive.MatterOverdrive;
-import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.container.ContainerMatterScanner;
 import com.MO.MatterOverdrive.gui.element.MOElementButton;
 import com.MO.MatterOverdrive.gui.pages.PageInfo;
 import com.MO.MatterOverdrive.gui.pages.PageScanInfo;
 import com.MO.MatterOverdrive.items.MatterScanner;
-import com.MO.MatterOverdrive.network.packet.bi.PacketGetDatabase;
+import com.MO.MatterOverdrive.network.packet.bi.PacketMatterScannerGetDatabase;
 import com.MO.MatterOverdrive.network.packet.server.PacketMatterScannerUpdate;
-
-import cofh.lib.gui.container.ContainerFalse;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
@@ -20,7 +17,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ResourceLocation;
 
 public class GuiMatterScanner extends MOGuiBase
 {
@@ -66,12 +62,13 @@ public class GuiMatterScanner extends MOGuiBase
 		scanPageButton.setToolTip("Quide Database");
         pageButtons.add(infoPageButton);
 
-		MatterOverdrive.packetPipeline.sendToServer(new PacketGetDatabase(MatterScanner.getLinkPosition(scanner)));
+		MatterOverdrive.packetPipeline.sendToServer(new PacketMatterScannerGetDatabase(MatterScanner.getLinkPosition(scanner)));
 	}
 	
 	@Override
 	public void initGui() 
 	{
+		currentPage = MatterScanner.getLastPage(scanner);
 		super.initGui();
 
 		//set selected item in list, as active object
@@ -84,8 +81,6 @@ public class GuiMatterScanner extends MOGuiBase
 
 		this.sidePannel.addElement(scanPageButton);
 		this.sidePannel.addElement(infoPageButton);
-
-		setPage(MatterScanner.getLastPage(scanner));
 	}
 
 	@Override
@@ -151,6 +146,7 @@ public class GuiMatterScanner extends MOGuiBase
 		}
 	}
 
+	@Override
     public void setPage(int page)
 	{
         super.setPage(page);

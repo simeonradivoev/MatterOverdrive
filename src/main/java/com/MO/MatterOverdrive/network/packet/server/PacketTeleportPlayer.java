@@ -69,7 +69,7 @@ public class PacketTeleportPlayer extends PacketAbstract {
                 androidPlayer.getEffects().setLong("LastTeleport", player.worldObj.getTotalWorldTime() + BioticStatTeleport.TELEPORT_DELAY);
                 androidPlayer.getEffects().setInteger("GlitchTime",5);
                 androidPlayer.extractEnergy(BioticStatTeleport.ENERGY_PER_TELEPORT,false);
-                androidPlayer.sync(player, PacketSyncAndroid.SYNC_ALL);
+                androidPlayer.sync(PacketSyncAndroid.SYNC_ALL);
                 androidPlayer.getPlayer().fallDistance = 0;
             }
             return null;

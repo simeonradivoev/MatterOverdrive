@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.items;
 
+import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.creativetab.CreativeTabs;
@@ -13,15 +14,10 @@ import java.util.List;
 
 public class CreativeBattery extends Battery
 {
-	private static final int BATTERY_EXTRACT = 8192;
-	private static final int BATTERY_INPUT = 8192;
-
-	public CreativeBattery(String name, int capacity) 
+	public CreativeBattery(String name, int capacity,GuiColor color,int input,int output)
 	{
-		super(name, capacity);
+		super(name, capacity,color,input,output);
 		this.setMaxStackSize(1);
-		this.setMaxExtract(BATTERY_EXTRACT);
-		this.setMaxReceive(BATTERY_INPUT);
 	}
 
 	@SideOnly(Side.CLIENT)

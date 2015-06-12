@@ -5,8 +5,9 @@ import cofh.lib.gui.GuiColor;
 import com.MO.MatterOverdrive.api.inventory.IUpgrade;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.container.slot.MOSlot;
-import com.MO.MatterOverdrive.container.slot.SlotUpgrade;
+import com.MO.MatterOverdrive.container.slot.SlotInventory;
 import com.MO.MatterOverdrive.data.Inventory;
+import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.gui.element.ElementBaseGroup;
 import com.MO.MatterOverdrive.gui.element.ElementInventorySlot;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 /**
  * Created by Simeon on 4/11/2015.
@@ -62,7 +62,7 @@ public class PageUpgrades extends ElementBaseGroup
 
         for (int i = 0;i < container.inventorySlots.size();i++)
         {
-            if (container.getSlot(i) instanceof SlotUpgrade)
+            if (container.getSlot(i) instanceof SlotInventory && ((SlotInventory)container.getSlot(i)).getSlot() instanceof UpgradeSlot)
             {
                 ItemStack upgradeItem = container.getSlot(i).getStack();
                 if (upgradeItem != null && MatterHelper.isUpgrade(upgradeItem))
@@ -71,7 +71,7 @@ public class PageUpgrades extends ElementBaseGroup
                     Map<UpgradeTypes,Double> upgradeMap = upgrade.getUpgrades(upgradeItem);
                     for (final Map.Entry<UpgradeTypes, Double> entry : upgradeMap.entrySet())
                     {
-                        if (machine.isAffectedBy(entry.getKey())) {
+                        if (machine.isAffectedByUpgrade(entry.getKey())) {
                             if (upgradesMap.containsKey(entry.getKey())) {
                                 double previusValue = upgradesMap.get(entry.getKey());
                                 upgradesMap.put(entry.getKey(), previusValue * entry.getValue());
@@ -88,7 +88,7 @@ public class PageUpgrades extends ElementBaseGroup
 
         for (final Map.Entry<UpgradeTypes, Double> entry : upgradesMap.entrySet())
         {
-            if (machine.isAffectedBy(entry.getKey())) {
+            if (machine.isAffectedByUpgrade(entry.getKey())) {
                 infos.add(MOStringHelper.toInfo(entry.getKey(), entry.getValue()));
             }
         }
@@ -100,7 +100,7 @@ public class PageUpgrades extends ElementBaseGroup
     {
         for (int i = 0;i < container.inventorySlots.size();i++)
         {
-            if(container.inventorySlots.get(i) instanceof SlotUpgrade)
+            if(container.getSlot(i) instanceof SlotInventory && ((SlotInventory)container.getSlot(i)).getSlot() instanceof UpgradeSlot)
             {
                 ElementInventorySlot slotElement = new ElementInventorySlot(gui, (MOSlot) container.inventorySlots.get(i), 22,22,"big");
                 slotElement.setIcon(inventory.getSlot(((MOSlot) container.inventorySlots.get(i)).getSlotIndex()).getTexture());

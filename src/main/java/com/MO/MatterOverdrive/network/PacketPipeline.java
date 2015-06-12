@@ -2,7 +2,7 @@ package com.MO.MatterOverdrive.network;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.network.packet.AbstractBiPacketHandler;
-import com.MO.MatterOverdrive.network.packet.bi.PacketGetDatabase;
+import com.MO.MatterOverdrive.network.packet.bi.PacketMatterScannerGetDatabase;
 import com.MO.MatterOverdrive.network.packet.client.*;
 import com.MO.MatterOverdrive.network.packet.server.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -43,13 +43,14 @@ public class PacketPipeline
         registerPacket(PacketRemoveTask.ServerHandler.class,PacketRemoveTask.class);
         registerPacket(PacketTransporterCommands.ServerHandler.class, PacketTransporterCommands.class);
         registerPacket(PacketSyncTransportProgress.ClientHandler.class,PacketSyncTransportProgress.class);
-        registerBiPacket(PacketGetDatabase.Handler.class, PacketGetDatabase.class);
+        registerBiPacket(PacketMatterScannerGetDatabase.Handler.class, PacketMatterScannerGetDatabase.class);
         registerPacket(PacketUpdateMatterRegistry.ClientHandler.class, PacketUpdateMatterRegistry.class);
         registerPacket(PacketChangeRedstoneMode.ServerHandler.class,PacketChangeRedstoneMode.class);
         registerPacket(PacketSyncAndroid.ClientHandler.class,PacketSyncAndroid.class);
         registerPacket(PacketUnlockBioticStat.ServerHandler.class,PacketUnlockBioticStat.class);
         registerPacket(PacketTeleportPlayer.ServerHandler.class,PacketTeleportPlayer.class);
         registerPacket(PacketSpawnParticle.ClientHandler.class,PacketSpawnParticle.class);
+        registerPacket(PacketSendAndroidAnction.ServerHandler.class,PacketSendAndroidAnction.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

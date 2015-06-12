@@ -43,6 +43,7 @@ public class Reference
 	//region Colors
 	public static final GuiColor COLOR_MATTER = new GuiColor(191,228,230);
     public static final GuiColor COLOR_HOLO = new GuiColor(169,226,251);
+	public static final GuiColor COLOR_YELLOW_STRIPES = new GuiColor(254,203,4);
 	public static final GuiColor COLOR_HOLO_RED = new GuiColor(230,80,20);
 	public static final GuiColor COLOR_GUI_DARK = new GuiColor(44,54,52);
 	public static final GuiColor COLOR_GUI_DARKER = new GuiColor(34,40,37);

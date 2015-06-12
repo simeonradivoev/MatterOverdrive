@@ -5,6 +5,7 @@ import com.MO.MatterOverdrive.data.biostats.*;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 
 import java.util.HashMap;
 
@@ -22,6 +23,7 @@ public class AndroidStatRegistry
     public static BioticStatSpeed speed;
     public static BioticStatHighJump highJump;
     public static BioticStatEqualizer equalizer;
+    public static BioticStatShield shield;
 
     public static boolean registerStat(IBionicStat stat)
     {
@@ -54,18 +56,24 @@ public class AndroidStatRegistry
     public static void init()
     {
         teleport = new BioticStatTeleport("teleport",48);
-        teleport.addReqiredItm(new ItemStack(MatterOverdriveItems.h_compensator));
         nanobots = new BiostatNanobots("nanobots",26);
         nanoArmor = new BioticStatNanoArmor("nano_armor",30);
-        nanoArmor.setRoot(nanobots);
         flotation = new BioticStatFlotation("floatation",14);
         speed = new BioticStatSpeed("speed",18);
         highJump = new BioticStatHighJump("high_jump",36);
-        highJump.setRoot(speed);
         highJump.addReqiredItm(new ItemStack(Blocks.piston));
         equalizer = new BioticStatEqualizer("equalizer",24);
-        equalizer.setRoot(highJump);
         equalizer.addReqiredItm(new ItemStack(MatterOverdriveItems.spacetime_equalizer));
+        shield = new BioticStatShield("shield",36);
+
+        teleport.addReqiredItm(new ItemStack(MatterOverdriveItems.h_compensator));
+        teleport.addToEnabledBlacklist(shield);
+        nanoArmor.setRoot(nanobots);
+        highJump.setRoot(speed);
+        highJump.addToEnabledBlacklist(shield);
+        equalizer.setRoot(highJump);
+        shield.setRoot(nanoArmor);
+        shield.addReqiredItm(new ItemStack(MatterOverdriveItems.forceFieldEmitter,2));
     }
 
     public static void registerAll()
@@ -77,5 +85,6 @@ public class AndroidStatRegistry
         registerStat(speed);
         registerStat(highJump);
         registerStat(equalizer);
+        registerStat(shield);
     }
 }

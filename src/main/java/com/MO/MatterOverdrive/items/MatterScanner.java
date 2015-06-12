@@ -2,13 +2,11 @@ package com.MO.MatterOverdrive.items;
 
 import java.util.List;
 
-import cofh.lib.util.TimeTracker;
-import cofh.lib.util.helpers.ColorHelper;
 import cofh.lib.util.position.BlockPosition;
-import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.IScannable;
-import com.MO.MatterOverdrive.network.packet.bi.PacketGetDatabase;
+import com.MO.MatterOverdrive.handler.KeyHandler;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MOPhysicsHelper;
 import com.MO.MatterOverdrive.util.MOStringHelper;
@@ -16,19 +14,15 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ITickableSound;
-import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
-import cofh.lib.util.helpers.MathHelper;
 
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.gui.GuiMatterScanner;
@@ -37,7 +31,6 @@ import com.MO.MatterOverdrive.items.includes.MOBaseItem;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import org.lwjgl.input.Keyboard;
-import scala.collection.parallel.ParIterableLike;
 
 public class MatterScanner extends MOBaseItem
 {
@@ -82,7 +75,7 @@ public class MatterScanner extends MOBaseItem
 			else
 			{
 				infos.add(MOStringHelper.MORE_INFO);
-				infos.add("Press '"+ EnumChatFormatting.YELLOW + "C" + EnumChatFormatting.GRAY + "' to open GUI");
+				infos.add("Press '"+ EnumChatFormatting.YELLOW + Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(KeyHandler.MATTER_SCANNER_KEY).getKeyCode()) + EnumChatFormatting.GRAY + "' to open GUI");
 			}
 		}
 	}
@@ -210,12 +203,19 @@ public class MatterScanner extends MOBaseItem
 		return false;
 	}
 
-	public static void setSelected(ItemStack scanner,ItemStack itemStack)
+
+
+	public static void setSelected(World world,ItemStack scanner,ItemStack itemStack)
 	{
 		if(scanner.hasTagCompound())
 		{
-			NBTTagCompound tagCompound = new NBTTagCompound();
-			itemStack.writeToNBT(tagCompound);
+			NBTTagCompound tagCompound = getSelectedFromDatabase(world,scanner,itemStack);
+            if (tagCompound == null)
+            {
+                tagCompound = new NBTTagCompound();
+                itemStack.writeToNBT(tagCompound);
+            }
+
 			setSelected(scanner, tagCompound);
 		}
 	}
@@ -245,6 +245,16 @@ public class MatterScanner extends MOBaseItem
 		}
 		return null;
 	}
+
+    public static NBTTagCompound getSelectedFromDatabase(World world,ItemStack scanner,ItemStack forItem)
+    {
+        IMatterDatabase database = getLink(world,scanner);
+        if (database != null)
+        {
+            return database.getItemAsNBT(forItem);
+        }
+        return null;
+    }
 
 	
 	@Override
@@ -276,17 +286,9 @@ public class MatterScanner extends MOBaseItem
 	{
 		if(scanner.hasTagCompound())
 		{
-			return scanner.getTagCompound().getInteger(PAGE_TAG_NAME);
+			return scanner.getTagCompound().getShort(PAGE_TAG_NAME);
 		}
 		return 0;
-	}
-
-	public static void setLastPage(ItemStack scanner,int page)
-	{
-		if(scanner.hasTagCompound())
-		{
-			scanner.getTagCompound().setInteger(PAGE_TAG_NAME, page);
-		}
 	}
 
 	/**
@@ -305,12 +307,13 @@ public class MatterScanner extends MOBaseItem
         ItemStack selected = getSelectedAsItem(scanner);
         if (selected != null)
         {
-            return MatterHelper.getMatterAmountFromItem(selected);
+            if (MatterHelper.CanScan(selected))
+            {
+                return SCAN_TIME + MatterHelper.getMatterAmountFromItem(selected);
+            }
         }
-        else
-        {
-            return SCAN_TIME;
-        }
+
+        return Integer.MAX_VALUE;
 	}
 
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
@@ -380,24 +383,24 @@ public class MatterScanner extends MOBaseItem
 
 		if (hit != null) {
 
-			if (!player.worldObj.isRemote && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-				int x = hit.blockX;
-				int y = hit.blockY;
-				int z = hit.blockZ;
-				ItemStack lastSelected = getSelectedAsItem(scanner);
-				ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(player.worldObj, x, y, z);
+            if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                int x = hit.blockX;
+                int y = hit.blockY;
+                int z = hit.blockZ;
+                ItemStack lastSelected = getSelectedAsItem(scanner);
+                ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(player.worldObj, x, y, z);
 
-				if (!MatterDatabaseHelper.areEqual(lastSelected, worldItem))
-				{
-					setSelected(scanner, worldItem);
-					player.stopUsingItem();
-					if (player.worldObj.isRemote)
-					{
-						stopScanSounds();
-					}
-				}
-			}
-		}
+                if (!MatterDatabaseHelper.areEqual(lastSelected, worldItem)) {
+
+                    setSelected(player.worldObj,scanner, worldItem);
+
+                    player.stopUsingItem();
+                    if (player.worldObj.isRemote) {
+                        stopScanSounds();
+                    }
+                }
+            }
+        }
 		else
 		{
 			if (player.worldObj.isRemote)
@@ -441,11 +444,9 @@ public class MatterScanner extends MOBaseItem
         StringBuilder scanInfo = new StringBuilder();
 		IMatterDatabase database = getLink(world, scanner);
 
-		if (database != null)
+		if (database != null && MatterHelper.CanScan(worldBlock))
 		{
 			resetScanProgress(scanner);
-
-
 			scanInfo.append(EnumChatFormatting.YELLOW + "[" + scanner.getDisplayName() + "] ");
 
 			if (database.addItem(worldBlock, PROGRESS_PER_ITEM,false,scanInfo)) {

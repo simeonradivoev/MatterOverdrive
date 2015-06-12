@@ -7,6 +7,8 @@ import com.MO.MatterOverdrive.handler.KeyHandler;
 import com.MO.MatterOverdrive.network.packet.server.PacketTeleportPlayer;
 import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.util.MOPhysicsHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
@@ -26,6 +28,8 @@ public class BioticStatTeleport extends AbstractBioticStat {
     public final ResourceLocation teleport_icon = new ResourceLocation(Reference.PATH_GUI_ITEM + "biotic_stat_teleport.png");
     public static final int TELEPORT_DELAY = 40;
     public static final int ENERGY_PER_TELEPORT = 4096;
+    @SideOnly(Side.CLIENT)
+    private boolean hasPressedKey;
     public BioticStatTeleport(String name, int xp)
     {
         super(name, xp);
@@ -35,7 +39,7 @@ public class BioticStatTeleport extends AbstractBioticStat {
     @Override
     public String getDetails(int level)
     {
-        return super.getDetails(level).replace("$0", Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(1).getKeyCode())).replace("$1", EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + EnumChatFormatting.GRAY);
+        return super.getDetails(level).replace("$0", Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode())).replace("$1", EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + EnumChatFormatting.GRAY);
     }
 
     @Override
@@ -45,13 +49,19 @@ public class BioticStatTeleport extends AbstractBioticStat {
     }
 
     @Override
-    public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down) {
-        if (keycode == ClientProxy.keyHandler.getBinding(KeyHandler.TELEPORT_KEY).getKeyCode()) {
-            if (!down) {
+    public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
+    {
+        if (keycode == ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode())
+        {
+            if (!down && hasPressedKey) {
                 Vec3 pos = getPos(androidPlayer);
                 if (pos != null) {
                     MatterOverdrive.packetPipeline.sendToServer(new PacketTeleportPlayer(pos.xCoord, pos.yCoord, pos.zCoord));
+                    hasPressedKey = false;
                 }
+            }else
+            {
+                hasPressedKey = true;
             }
         }
     }
@@ -117,17 +127,33 @@ public class BioticStatTeleport extends AbstractBioticStat {
     @Override
     public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
     {
-
+        if (androidPlayer.getPlayer().worldObj.isRemote) {
+            if (!isEnabled(androidPlayer, level)) {
+                hasPressedKey = false;
+            }
+        }
     }
 
     @Override
     public boolean isEnabled(AndroidPlayer android, int level)
     {
-        return android.getEffectLong(EFFECT_KEY_LAST_TELEPORT) <= android.getPlayer().worldObj.getTotalWorldTime() && android.extractEnergy(ENERGY_PER_TELEPORT,true) == ENERGY_PER_TELEPORT;
+        return super.isEnabled(android,level) && android.getEffectLong(EFFECT_KEY_LAST_TELEPORT) <= android.getPlayer().worldObj.getTotalWorldTime() && android.extractEnergy(ENERGY_PER_TELEPORT,true) == ENERGY_PER_TELEPORT;
+    }
+
+    @Override
+    public boolean isActive(AndroidPlayer androidPlayer, int level)
+    {
+        return isEnabled(androidPlayer,level);
     }
 
     @Override
     public ResourceLocation getIcon(int level) {
         return teleport_icon;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean getHasPressedKey()
+    {
+        return hasPressedKey;
     }
 }

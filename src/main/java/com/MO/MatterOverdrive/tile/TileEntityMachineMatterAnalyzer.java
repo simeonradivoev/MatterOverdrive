@@ -343,5 +343,11 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         return taskQueueSending;
     }
+
+    @Override
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
+    {
+        return type == UpgradeTypes.PowerUsage || type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Fail || type == UpgradeTypes.Output || type == UpgradeTypes.Speed;
+    }
     //endregion
 }

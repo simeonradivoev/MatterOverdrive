@@ -641,7 +641,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
 
     @Override
-    public boolean isAffectedBy(UpgradeTypes type)
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Speed || type == UpgradeTypes.Fail || type == UpgradeTypes.PowerUsage;
     }

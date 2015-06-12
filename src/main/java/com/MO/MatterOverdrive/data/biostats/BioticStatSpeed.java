@@ -78,7 +78,13 @@ public class BioticStatSpeed extends AbstractBioticStat
 
     @Override
     public boolean isEnabled(AndroidPlayer android, int level) {
-        return android.getEnergyStored() > 0;
+        return super.isEnabled(android,level) && android.getEnergyStored() > 0;
+    }
+
+    @Override
+    public boolean isActive(AndroidPlayer androidPlayer, int level)
+    {
+        return isEnabled(androidPlayer,level);
     }
 
     @Override

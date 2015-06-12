@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.handler;
 
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.util.EnumChatFormatting;
@@ -17,12 +18,12 @@ public class TooltipHandler
         if (MatterHelper.containsMatter(event.itemStack))
         {
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-                event.toolTip.add(EnumChatFormatting.BLUE + "Matter: " + EnumChatFormatting.GOLD + MatterHelper.formatMatter(MatterHelper.getMatterAmountFromItem(event.itemStack)));
+                event.toolTip.add(EnumChatFormatting.BLUE + MOStringHelper.translateToLocal("gui.tooltip.matter") + ": " + EnumChatFormatting.GOLD + MatterHelper.formatMatter(MatterHelper.getMatterAmountFromItem(event.itemStack)));
             }
         }else
         {
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-                event.toolTip.add(EnumChatFormatting.BLUE + "Matter: " + EnumChatFormatting.RED + "None");
+                event.toolTip.add(EnumChatFormatting.BLUE + MOStringHelper.translateToLocal("gui.tooltip.matter") + ": " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.matter.none"));
             }
         }
     }

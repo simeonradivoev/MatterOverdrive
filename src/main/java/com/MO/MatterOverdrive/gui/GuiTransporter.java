@@ -9,6 +9,7 @@ import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.events.ITextHandler;
 import com.MO.MatterOverdrive.network.packet.server.PacketTransporterCommands;
 import com.MO.MatterOverdrive.tile.TileEntityMachineTransporter;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -58,22 +59,22 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         saveButton = new MOElementButtonScaled(this,this,70,50 + 18 * 3,"Save",50,18);
         saveButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
         saveButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
-        saveButton.setText("Save");
+        saveButton.setText(MOStringHelper.translateToLocal("gui.label.button.save"));
 
         resetButton = new MOElementButtonScaled(this,this,70 + 52,50 + 18 * 3,"Reset",50,18);
         resetButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
         resetButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
-        resetButton.setText("Reset");
+        resetButton.setText(MOStringHelper.translateToLocal("gui.label.button.reset"));
 
         saveToNewButton = new MOElementButtonScaled(this,this,80,50 + 18 * 4,"New",80,18);
         saveToNewButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
         saveToNewButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
-        saveToNewButton.setText("Add");
+        saveToNewButton.setText(MOStringHelper.translateToLocal("gui.label.button.add"));
 
         removeLocation = new MOElementButtonScaled(this,this,50,ySize - 55,"Remove",60,18);
         removeLocation.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
 
-        removeLocation.setText("Remove");
+        removeLocation.setText(MOStringHelper.translateToLocal("gui.label.button.remove"));
     }
 
     @Override

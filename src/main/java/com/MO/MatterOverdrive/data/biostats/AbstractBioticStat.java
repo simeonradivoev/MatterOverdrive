@@ -22,6 +22,7 @@ public abstract class AbstractBioticStat implements IBionicStat
     IBionicStat root;
     List<IBionicStat> competitors;
     List<ItemStack> reqiredItems;
+    List<IBionicStat> enabledBlacklist;
     int maxLevel;
     boolean showOnHud;
 
@@ -31,6 +32,7 @@ public abstract class AbstractBioticStat implements IBionicStat
         this.xp = xp;
         competitors = new ArrayList<IBionicStat>();
         reqiredItems = new ArrayList<ItemStack>();
+        enabledBlacklist = new ArrayList<IBionicStat>();
         maxLevel = 1;
     }
 
@@ -43,6 +45,12 @@ public abstract class AbstractBioticStat implements IBionicStat
     public String getDisplayName(AndroidPlayer androidPlayer,int level)
     {
         return MOStringHelper.translateToLocal("biotic_stat." + name + ".name");
+    }
+
+    @Override
+    public boolean isEnabled(AndroidPlayer android, int level)
+    {
+        return checkBlacklistActive(android,level);
     }
 
     public String getDetails(int level)
@@ -156,15 +164,52 @@ public abstract class AbstractBioticStat implements IBionicStat
             list.add(EnumChatFormatting.GRAY + detailsSplit[i]);
         }
 
+        String reqires = "";
+
         if (root != null)
         {
-            list.add("Requires: "+EnumChatFormatting.GOLD+"[" + root.getDisplayName(android,0) + "]");
+            reqires += EnumChatFormatting.GOLD+"[" + root.getDisplayName(android,0) + "]";
+        }
+
+        if (reqiredItems.size() > 0)
+        {
+            for (int i = 0;i < reqiredItems.size();i++)
+            {
+                if (!reqires.isEmpty())
+                {
+                    reqires += EnumChatFormatting.GRAY + ", ";
+                }
+                if (reqiredItems.get(i).stackSize > 1)
+                {
+                    reqires += EnumChatFormatting.WHITE.toString() + reqiredItems.get(i).stackSize + "x";
+                }
+
+                reqires += EnumChatFormatting.WHITE + "[" + reqiredItems.get(i).getDisplayName() + "]";
+            }
+        }
+
+        if (!reqires.isEmpty())
+        {
+           list.add(MOStringHelper.translateToLocal("gui.tooltip.requires") + ": " + reqires);
         }
 
         if (level <= maxLevel())
         {
             list.add((android.getPlayer().experienceLevel < xp ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + "XP: " + xp);
         }
+    }
+
+    public boolean checkBlacklistActive(AndroidPlayer androidPlayer,int level)
+    {
+        for (int i = 0;i < enabledBlacklist.size();i++)
+        {
+            if(enabledBlacklist.get(i).isActive(androidPlayer,level))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void addReqiredItm(ItemStack stack)
@@ -225,5 +270,15 @@ public abstract class AbstractBioticStat implements IBionicStat
     public List<ItemStack> getRequiredItems()
     {
         return reqiredItems;
+    }
+
+    public List<IBionicStat> getEnabledBlacklist()
+    {
+        return enabledBlacklist;
+    }
+
+    public void addToEnabledBlacklist(IBionicStat stat)
+    {
+        enabledBlacklist.add(stat);
     }
 }

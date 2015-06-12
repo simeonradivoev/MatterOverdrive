@@ -5,6 +5,7 @@ import cofh.lib.render.RenderHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
 import com.MO.MatterOverdrive.client.render.ItemRendererPhaser;
+import com.MO.MatterOverdrive.client.render.RendererShield;
 import com.MO.MatterOverdrive.gui.GuiAndroidHud;
 import com.MO.MatterOverdrive.items.Phaser;
 import com.MO.MatterOverdrive.items.WeaponColorModule;
@@ -48,12 +49,14 @@ public class RenderHandler
     RenderMatterScannerInfoHandler matterScannerInfoHandler;
     RenderParticlesHandler renderParticlesHandler;
     RenderBiostatEffects biostatEffects;
+    RendererShield rendererShield;
 
     public RenderHandler(World world,TextureManager textureManager)
     {
         matterScannerInfoHandler = new RenderMatterScannerInfoHandler();
         renderParticlesHandler = new RenderParticlesHandler(world,textureManager);
         biostatEffects = new RenderBiostatEffects();
+        rendererShield = new RendererShield();
     }
 
     @SubscribeEvent
@@ -69,6 +72,7 @@ public class RenderHandler
         matterScannerInfoHandler.onRenderWorldLast(event);
         renderParticlesHandler.onRenderWorldLast(event);
         biostatEffects.onRenderWorldLast(event);
+        rendererShield.onRenderWorldLast(event);
         //GuiAndroidHud.renderHud(Minecraft.getMinecraft(), event.partialTicks);
     }
 

@@ -148,7 +148,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public boolean isAffectedBy(UpgradeTypes type)
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.PowerUsage;
     }

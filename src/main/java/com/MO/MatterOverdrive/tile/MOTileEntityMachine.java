@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.tile;
 
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.IUpgradeable;
 import com.MO.MatterOverdrive.api.inventory.IUpgrade;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.blocks.includes.MOBlock;
@@ -38,7 +39,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 3/11/2015.
  */
-public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTileEntity, ISidedInventory
+public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTileEntity, ISidedInventory, IUpgradeable
 {
 
     protected static Random random = new Random();
@@ -101,7 +102,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         for (int i = 0;i < upgrade_slots.length; i++)
         {
-            upgrade_slots[i] = inventory.AddSlot(new UpgradeSlot(false));
+            upgrade_slots[i] = inventory.AddSlot(new UpgradeSlot(false,this));
         }
     }
 
@@ -449,7 +450,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         double multiply = 1;
 
         //check to see if the machine is affected by this type of Update
-        if (isAffectedBy(type)) {
+        if (isAffectedByUpgrade(type)) {
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
                 if (inventory.getSlot(i) instanceof UpgradeSlot) {
                     ItemStack upgradeItem = inventory.getStackInSlot(i);
@@ -465,10 +466,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
 
         return multiply;
-    }
-    public boolean isAffectedBy(UpgradeTypes type)
-    {
-        return true;
     }
     //endregion
 

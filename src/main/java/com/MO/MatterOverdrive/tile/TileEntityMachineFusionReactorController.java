@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.tile;
 
 
+import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.lib.util.TimeTracker;
@@ -9,6 +10,7 @@ import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.position.BlockPosition;
 import cofh.lib.util.position.IRotateableTile;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import cpw.mods.fml.relauncher.Side;
@@ -273,6 +275,11 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                 ForgeDirection dir = ForgeDirection.getOrientation((i + startDir) % 6);
                 entity = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
+                if (entity instanceof IEnergyConnection)
+                {
+                    if (((IEnergyConnection) entity).canConnectEnergy(dir.getOpposite()));
+                }
+
                 if (entity instanceof IEnergyReceiver)
                 {
                     energyStorage.extractEnergy(((IEnergyReceiver) entity).receiveEnergy(dir.getOpposite(),energy,false),false);
@@ -421,5 +428,11 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         if (meta != dir.ordinal())
             return true;
         return false;
+    }
+
+    @Override
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
+    {
+        return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Range || type == UpgradeTypes.Speed;
     }
 }

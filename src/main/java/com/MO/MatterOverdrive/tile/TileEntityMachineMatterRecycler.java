@@ -207,4 +207,10 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     {
         return slot == OUTPUT_SLOT_ID;
     }
+
+    @Override
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
+    {
+        return type == UpgradeTypes.Speed || type == UpgradeTypes.PowerStorage || type == UpgradeTypes.PowerUsage;
+    }
 }

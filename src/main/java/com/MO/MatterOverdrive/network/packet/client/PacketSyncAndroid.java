@@ -6,6 +6,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -20,13 +21,15 @@ public class PacketSyncAndroid extends PacketAbstract
     public static final int SYNC_STATS = 2;
     NBTTagCompound data;
     int syncPart;
+    int playerID;
+    boolean others;
 
     public PacketSyncAndroid()
     {
         data = new NBTTagCompound();
     }
 
-    public PacketSyncAndroid(AndroidPlayer player,int syncPart)
+    public PacketSyncAndroid(AndroidPlayer player,int syncPart,boolean others)
     {
         switch (syncPart)
         {
@@ -48,6 +51,8 @@ public class PacketSyncAndroid extends PacketAbstract
                 player.saveNBTData(data);
         }
         this.syncPart = syncPart;
+        this.playerID = player.getPlayer().getEntityId();
+        this.others = others;
     }
 
     @Override
@@ -55,6 +60,8 @@ public class PacketSyncAndroid extends PacketAbstract
     {
         data = ByteBufUtils.readTag(buf);
         syncPart = buf.readInt();
+        playerID = buf.readInt();
+        others = buf.readBoolean();
     }
 
     @Override
@@ -62,6 +69,8 @@ public class PacketSyncAndroid extends PacketAbstract
     {
         ByteBufUtils.writeTag(buf,data);
         buf.writeInt(syncPart);
+        buf.writeInt(playerID);
+        buf.writeBoolean(others);
     }
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketSyncAndroid>
@@ -69,24 +78,34 @@ public class PacketSyncAndroid extends PacketAbstract
         @Override
         public IMessage handleClientMessage(EntityPlayer player, PacketSyncAndroid message, MessageContext ctx)
         {
-            AndroidPlayer ex = AndroidPlayer.get(player);
-            if (ex != null) {
-                switch (message.syncPart)
-                {
-                    case SYNC_BATTERY:
-                        if (ex.getStackInSlot(ex.ENERGY_SLOT) != null)
-                        {
-                            ex.getStackInSlot(ex.ENERGY_SLOT).readFromNBT(message.data);
+            Entity entity = player.worldObj.getEntityByID(message.playerID);
+            if (!message.others)
+            {
+                entity = player;
+            }
+
+            if (entity instanceof EntityPlayer) {
+                EntityPlayer source = (EntityPlayer)entity;
+                if (source != null) {
+                    AndroidPlayer ex = AndroidPlayer.get(source);
+
+                    if (ex != null) {
+                        switch (message.syncPart) {
+                            case SYNC_BATTERY:
+                                if (ex.getStackInSlot(ex.ENERGY_SLOT) != null) {
+                                    ex.getStackInSlot(ex.ENERGY_SLOT).readFromNBT(message.data);
+                                }
+                                break;
+                            case SYNC_EFFECTS:
+                                ex.setEffects(message.data);
+                                break;
+                            case SYNC_STATS:
+                                ex.setUnlocked(message.data);
+                                break;
+                            default:
+                                ex.loadNBTData(message.data);
                         }
-                        break;
-                    case SYNC_EFFECTS:
-                        ex.setEffects(message.data);
-                        break;
-                    case SYNC_STATS:
-                        ex.setUnlocked(message.data);
-                        break;
-                    default:
-                        ex.loadNBTData(message.data);
+                    }
                 }
             }
             return null;

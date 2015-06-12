@@ -6,6 +6,7 @@ import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.pages.PageTasks;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.network.packet.server.PacketRemoveTask;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
@@ -52,7 +53,7 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 
         packetsButton = new MOElementButton(this,this,6,8,"Tasks",0,0,24,0,24,0,24,24,"");
         packetsButton.setTexture(Reference.PATH_GUI_ITEM + "tasks.png", 48, 24);
-        packetsButton.setToolTip("Tasks");
+        packetsButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.tasks"));
         pageButtons.add(packetsButton);
 
         itemPattern = new ElementItemPattern(this, entity.getInternalPatternStorage(), "big_main", 37, 22);

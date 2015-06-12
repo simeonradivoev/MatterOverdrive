@@ -316,7 +316,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     }
 
     @Override
-    public boolean isAffectedBy(UpgradeTypes type)
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type == UpgradeTypes.PowerUsage || type == UpgradeTypes.Speed || type == UpgradeTypes.Range || type == UpgradeTypes.PowerStorage;
     }

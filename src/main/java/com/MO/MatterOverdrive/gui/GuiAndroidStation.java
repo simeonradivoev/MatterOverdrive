@@ -68,6 +68,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         addStat(androidPlayer,AndroidStatRegistry.speed,3,0);
         addStat(androidPlayer,AndroidStatRegistry.highJump,3,1);
         addStat(androidPlayer,AndroidStatRegistry.equalizer,3,2);
+        addStat(androidPlayer,AndroidStatRegistry.shield,1,2);
 
         mob = new EntityRougeAndroidMob(Minecraft.getMinecraft().theWorld);
         mob.getEntityData().setBoolean("Hologram",true);

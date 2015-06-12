@@ -43,5 +43,8 @@
     "gui.glitch_8": {"category": "master","sounds": [{"name": "gui/glitch_8", "stream": false}]},
     "gui.glitch_9": {"category": "master","sounds": [{"name": "gui/glitch_9", "stream": false}]},
     "gui.glitch_10": {"category": "master","sounds": [{"name": "gui/glitch_10", "stream": false}]},
-    "android_teleport": {"category": "player","sounds": [{"name": "entities/android_teleport", "stream": false}]}
+    "android_teleport": {"category": "player","sounds": [{"name": "entities/android_teleport", "stream": false}]},
+    "shield_loop": {"category": "player","sounds": [{"name": "shield_loop", "stream": true}]},
+    "shield_hit_0": {"category": "player","sounds": [{"name": "shield_hit_0", "stream": false}]},
+    "shield_hit_1": {"category": "player","sounds": [{"name": "shield_hit_1", "stream": false}]}
 }

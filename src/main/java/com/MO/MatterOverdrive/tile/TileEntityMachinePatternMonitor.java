@@ -5,6 +5,7 @@ import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.network.*;
 import com.MO.MatterOverdrive.network.packet.client.PacketPatternMonitorSync;
@@ -67,6 +68,11 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     @Override
     public float soundVolume() {
         return 0;
+    }
+
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
+    {
+        return false;
     }
 
     //region Matter Network Functions

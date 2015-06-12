@@ -25,6 +25,7 @@ public interface IBionicStat
     IBionicStat getRoot();
     List<ItemStack> getRequiredItems();
     boolean isEnabled(AndroidPlayer android, int level);
+    boolean isActive(AndroidPlayer androidPlayer,int level);
     boolean showOnHud(AndroidPlayer android,int level);
     ResourceLocation getIcon(int level);
     int maxLevel();
