@@ -126,5 +126,7 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
     {
         TileEntityGravitationalAnomaly.BLOCK_ENTETIES = config.getBool(MOConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_BLOCK_ENTITIES, MOConfigurationHandler.CATEGORY_SERVER, true, "Should the blocks drop entities or be directly consumed when destroyed by the gravitational anomaly");
         TileEntityGravitationalAnomaly.FALLING_BLOCKS = config.getBool(MOConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FALLING_BLOCKS,MOConfigurationHandler.CATEGORY_SERVER,true,"Should blocks be turned into falling blocks when broken");
+        TileEntityGravitationalAnomaly.VANILLA_FLUIDS = config.getBool(MOConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_VANILLA_FLUIDS,MOConfigurationHandler.CATEGORY_SERVER,true,"Should vanilla fluid block such as water and lava be consumed by the anomaly");
+        TileEntityGravitationalAnomaly.FORGE_FLUIDS = config.getBool(MOConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS,MOConfigurationHandler.CATEGORY_SERVER,true,"Should other mod fluid blocks be consumed by the anomaly");
     }
 }

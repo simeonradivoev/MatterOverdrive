@@ -1,15 +1,12 @@
 package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
-import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.MathHelper;
-import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.IScannable;
 import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.fx.GravitationalAnomalyParticle;
 import com.MO.MatterOverdrive.handler.AndroidStatRegistry;
-import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.items.SpacetimeEqualizer;
 import com.MO.MatterOverdrive.sound.GravitationalAnomalySound;
 import com.MO.MatterOverdrive.util.MatterHelper;
@@ -19,8 +16,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDynamicLiquid;
-import net.minecraft.block.BlockStaticLiquid;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,7 +35,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.IFluidBlock;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -53,6 +49,8 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 {
     public static boolean FALLING_BLOCKS = true;
     public static boolean BLOCK_ENTETIES = true;
+    public static boolean VANILLA_FLUIDS = true;
+    public static boolean FORGE_FLUIDS = true;
     public static final float MAX_VOLUME = 0.5f;
     public static final int BLOCK_DESTORY_DELAY = 6;
     public static final int MAX_BLOCKS_PER_HARVEST = 6;
@@ -368,6 +366,10 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                         block = getBlock(world,blockPosX,blockPosY,blockPosZ);
                         distance = MOMathHelper.distance(blockPosX,blockPosY,blockPosZ,xCoord,yCoord,zCoord);
                         hardness = block.getBlockHardness(world,blockPosX,blockPosY,blockPosZ);
+                        if (block instanceof IFluidBlock || block instanceof BlockLiquid)
+                        {
+                            hardness = 1;
+                        }
 
                         if (block != null && block != Blocks.air && distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
                         {
@@ -566,30 +568,44 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     public boolean cleanLiquids(Block block,int x,int y,int z)
     {
-        if (block instanceof IFluidBlock)
+        if (block instanceof IFluidBlock && FORGE_FLUIDS)
         {
-            if (FALLING_BLOCKS)
+            if(((IFluidBlock) block).canDrain(worldObj,x,y,z))
             {
-                EntityFallingBlock fallingBlock = new EntityFallingBlock(worldObj, x + 0.5, y + 0.5, z + 0.5, block, worldObj.getBlockMetadata(x, y, z));
-                fallingBlock.field_145812_b = 1;
-                fallingBlock.noClip = true;
-                worldObj.spawnEntityInWorld(fallingBlock);
+                if (FALLING_BLOCKS)
+                {
+                    EntityFallingBlock fallingBlock = new EntityFallingBlock(worldObj, x + 0.5, y + 0.5, z + 0.5, block, worldObj.getBlockMetadata(x, y, z));
+                    fallingBlock.field_145812_b = 1;
+                    fallingBlock.noClip = true;
+                    worldObj.spawnEntityInWorld(fallingBlock);
+                }
+
+                ((IFluidBlock) block).drain(worldObj,x,y,z,true);
                 return true;
             }
-            else
-            {
 
+        }else if (block instanceof BlockLiquid && VANILLA_FLUIDS)
+        {
+            if(worldObj.setBlock(x, y, z, Blocks.air, 0, 2)) {
+                if (FALLING_BLOCKS)
+                {
+                    EntityFallingBlock fallingBlock = new EntityFallingBlock(worldObj, x + 0.5, y + 0.5, z + 0.5, block, worldObj.getBlockMetadata(x, y, z));
+                    fallingBlock.field_145812_b = 1;
+                    fallingBlock.noClip = true;
+                    worldObj.spawnEntityInWorld(fallingBlock);
+                }
+                return true;
             }
-
-            worldObj.setBlock(x, y, z, Blocks.air, 0, 2);
         }
 
         return false;
     }
 
     public boolean cleanFlowingLiquids(Block block,int x,int y,int z) {
-        if (block == Blocks.flowing_water || block == Blocks.flowing_lava) {
-            return worldObj.setBlock(x, y, z, Blocks.air, 0, 2);
+        if (VANILLA_FLUIDS) {
+            if (block == Blocks.flowing_water || block == Blocks.flowing_lava) {
+                return worldObj.setBlock(x, y, z, Blocks.air, 0, 2);
+            }
         }
         return false;
     }

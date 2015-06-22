@@ -42,6 +42,8 @@ public class MOConfigurationHandler
     public static final String KEY_GRAVITATIONAL_ANOMALY_FALLING_BLOCKS = "gravitational anomaly falling blocks";
     public static final String KEY_GRAVITATIONAL_ANOMALY_BLOCK_ENTITIES = "gravitational anomaly block entities";
     public static final String KEY_GRAVITATIONAL_ANOMALY_SPAWN_CHANCE = "gravitational anomaly spawn chance";
+    public static final String KEY_GRAVITATIONAL_ANOMALY_VANILLA_FLUIDS = "gravitational anomaly vanilla fluids";
+    public static final String KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS = "gravitational anomaly forge fluids";
 
     public MOConfigurationHandler(File file)
     {
