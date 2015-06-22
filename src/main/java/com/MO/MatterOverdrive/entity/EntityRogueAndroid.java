@@ -16,13 +16,13 @@ import java.util.List;
 /**
  * Created by Simeon on 5/26/2015.
  */
-public class EntityRougeAndroid implements IConfigSubscriber
+public class EntityRogueAndroid implements IConfigSubscriber
 {
     private static BiomeGenBase.SpawnListEntry spawnListEntry;
 
     public static void registerEntity()
     {
-        createEntity(EntityRougeAndroidMob.class,"rouge_android",0xFFFFF,0);
+        createEntity(EntityRougeAndroidMob.class,"rogue_android",0xFFFFF,0);
     }
 
     public static void  createEntity(Class<? extends EntityLiving> entityClass,String name,int solidColor,int spotColor)
@@ -67,7 +67,7 @@ public class EntityRougeAndroid implements IConfigSubscriber
     {
         if (spawnListEntry != null)
         {
-            spawnListEntry.itemWeight = config.config.getInt("rouge_android.spawn.chance",MOConfigurationHandler.CATEGORY_WORLD_GEN,3,0,100,"The spawn change of the Rouge Android");
+            spawnListEntry.itemWeight = config.config.getInt("rogue_android.spawn.chance",MOConfigurationHandler.CATEGORY_WORLD_GEN,3,0,100,"The spawn change of the Rogue Android");
         }
     }
 }

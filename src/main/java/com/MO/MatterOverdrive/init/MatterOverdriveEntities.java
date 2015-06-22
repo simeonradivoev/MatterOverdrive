@@ -4,7 +4,6 @@ import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.entity.*;
 import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
-import com.MO.MatterOverdrive.handler.village.TradeHandlerMadScientist;
 import com.MO.MatterOverdrive.handler.village.VillageCreatationMadScientist;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -12,19 +11,18 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.structure.MapGenStructureIO;
 
 /**
  * Created by Simeon on 5/26/2015.
  */
 public class MatterOverdriveEntities
 {
-    public static EntityRougeAndroid rougeAndroid;
+    public static EntityRogueAndroid rogueandroid;
 
     public static void init(FMLPreInitializationEvent event,MOConfigurationHandler configurationHandler)
     {
-        rougeAndroid = new EntityRougeAndroid();
-        configurationHandler.subscribe(rougeAndroid);
+        rogueandroid = new EntityRogueAndroid();
+        configurationHandler.subscribe(rogueandroid);
     }
 
     public static void register(FMLPreInitializationEvent event)
@@ -37,7 +35,7 @@ public class MatterOverdriveEntities
         //addViligger(666,"mad_scientist.png",new TradeHandlerMadScientist());
         VillageCreatationMadScientist creatationMadScientist = new VillageCreatationMadScientist();
         VillagerRegistry.instance().registerVillageCreationHandler(creatationMadScientist);
-        rougeAndroid.registerEntity();
+        rogueandroid.registerEntity();
     }
 
     public static void addViligger(int id,String texture,VillagerRegistry.IVillageTradeHandler tradeHandler)
