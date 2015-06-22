@@ -89,7 +89,6 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     @Override
     public void writeCustomNBT(NBTTagCompound nbt)
     {
-        super.writeCustomNBT(nbt);
         nbt.setLong("Mass", mass);
         nbt.setFloat("Suppression", suppression);
     }
@@ -97,9 +96,13 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     @Override
     public void readCustomNBT(NBTTagCompound nbt)
     {
-        super.readCustomNBT(nbt);
         mass = nbt.getLong("Mass");
         suppression = nbt.getFloat("Suppression");
+    }
+
+    @Override
+    protected void onAwake(Side side) {
+
     }
 
     @Override
@@ -276,6 +279,36 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         return 1;
     }
 
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
+    }
+
+    @Override
+    public void onNeighborBlockChange() {
+
+    }
+
+    @Override
+    public void writeToDropItem(ItemStack itemStack) {
+
+    }
+
+    @Override
+    public void readFromPlaceItem(ItemStack itemStack) {
+
+    }
+
     public  static class BlockComparitor implements Comparator<PositionWrapper>
     {
         int posX,posY,posZ;
@@ -336,7 +369,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                         distance = MOMathHelper.distance(blockPosX,blockPosY,blockPosZ,xCoord,yCoord,zCoord);
                         hardness = block.getBlockHardness(world,blockPosX,blockPosY,blockPosZ);
 
-                        if (block != Blocks.air && distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
+                        if (block != null && block != Blocks.air && distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
                         {
                             blocks.add(new PositionWrapper(blockPosX,blockPosY,blockPosZ));
                         }
@@ -452,6 +485,9 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public boolean brakeBlock(World world,int x,int y,int z,float strength,double eventHorizon,int range)
     {
         Block block = world.getBlock(x, y, z);
+        if (block == null)
+            return true;
+
         float hardness = block.getBlockHardness(worldObj,x,y,z);
         double distance = MOMathHelper.distance(x,y,z,xCoord,yCoord,zCoord);
         if (distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
@@ -467,8 +503,12 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                     world.spawnEntityInWorld(fallingBlock);
                 }
                 else {
-                    EntityItem item = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, BlockHelper.createStackedBlock(block, meta));
-                    world.spawnEntityInWorld(item);
+                    ItemStack bStack = createStackedBlock(block, meta);
+                    if (bStack != null)
+                    {
+                        EntityItem item = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, bStack);
+                        world.spawnEntityInWorld(item);
+                    }
                 }
 
                 block.breakBlock(world, x, y, z, block, 0);
@@ -480,7 +520,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 int matter = 0;
 
                 if (block.canSilkHarvest(worldObj, null, x, y, z, meta)) {
-                    matter += MatterHelper.getMatterAmountFromItem(BlockHelper.createStackedBlock(block, meta));
+                    matter += MatterHelper.getMatterAmountFromItem(createStackedBlock(block, meta));
                 } else {
                     for (ItemStack stack : block.getDrops(worldObj, x, y, z, meta, 0))
                     {
@@ -508,6 +548,20 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         }
 
         return false;
+    }
+
+    protected ItemStack createStackedBlock(Block block,int meta)
+    {
+        if (block != null) {
+            Item item = Item.getItemFromBlock(block);
+            if (item != null) {
+                if (item.getHasSubtypes()) {
+                    return new ItemStack(item, 1, meta);
+                }
+                return new ItemStack(item, 1, 0);
+            }
+        }
+        return null;
     }
 
     public boolean cleanLiquids(Block block,int x,int y,int z)
