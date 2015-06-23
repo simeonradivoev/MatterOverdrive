@@ -92,7 +92,7 @@ public class EntityRougeAndroidMob extends EntityMob
 
                 if (j < 20)
                 {
-                    this.entityDropItem(new ItemStack(MatterOverdriveItems.androidParts, 1, rand.nextInt(5)), 0.0F);
+                    this.entityDropItem(new ItemStack(MatterOverdriveItems.androidParts, 1, rand.nextInt(4)), 0.0F);
                 }
             }
         }
