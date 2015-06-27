@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.data;
 
 import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Simeon on 5/14/2015.
@@ -8,23 +9,52 @@ import net.minecraft.util.IIcon;
 public class IconHolder implements IIcon
 {
     public float minX,minY,maxX,maxY;
+    public int width;
+    public int height;
+    public int canvasWidth;
+    public int canvasHeight;
+    ResourceLocation canvas;
+    String name;
 
-    public IconHolder(float minX,float minY,float maxX,float maxY)
+    public IconHolder(float minX,float minY,float maxX,float maxY,int width,int height)
     {
         this.minX = minX;
         this.minY = minY;
         this.maxX = maxX;
         this.maxY = maxY;
+        this.width = width;
+        this.height = height;
+    }
+
+    public void setCanvasWidth(int width)
+    {
+        canvasWidth = width;
+    }
+
+    public void setCanvasHeight(int height)
+    {
+        canvasHeight = height;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public IconHolder setCanvas(ResourceLocation canvas)
+    {
+        this.canvas = canvas;
+        return this;
     }
 
     @Override
     public int getIconWidth() {
-        return 0;
+        return width;
     }
 
     @Override
     public int getIconHeight() {
-        return 0;
+        return height;
     }
 
     @Override
@@ -59,6 +89,17 @@ public class IconHolder implements IIcon
 
     @Override
     public String getIconName() {
-        return null;
+        return name;
+    }
+
+    public ResourceLocation getCanvas()
+    {
+        return canvas;
+    }
+    public IconHolder setCanvasSize(int width,int height)
+    {
+        this.canvasWidth = width;
+        this.canvasHeight = height;
+        return this;
     }
 }

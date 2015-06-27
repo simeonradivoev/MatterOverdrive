@@ -25,10 +25,10 @@ public class GuiSolarPanel extends MOGuiMachine<TileEntityMachineSolarPanel>
     public void initGui()
     {
         super.initGui();
-        AddMainPlayerSlots(inventorySlots, homePage);
+        AddMainPlayerSlots(inventorySlots, pages.get(0));
         AddHotbarPlayerSlots(inventorySlots, this);
         elements.remove(slotsList);
-        homePage.addElement(energy);
+        pages.get(0).addElement(energy);
     }
 
     @Override

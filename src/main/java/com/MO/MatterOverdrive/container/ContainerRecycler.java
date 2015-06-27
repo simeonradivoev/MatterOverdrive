@@ -24,7 +24,7 @@ public class ContainerRecycler extends ContainerMachine<TileEntityMachineMatterR
     @Override
     public void init(InventoryPlayer inventory)
     {
-        this.addSlotToContainer(new SlotInventory(machine.getInventory(),machine.getInventory().getSlot(machine.INPUT_SLOT_ID),8,55));
+        this.addSlotToContainer(new SlotInventory(machine.getInventoryContainer(),machine.getInventoryContainer().getSlot(machine.INPUT_SLOT_ID),8,55));
         this.addSlotToContainer(new SlotRemoveOnly(machine,machine.OUTPUT_SLOT_ID,64,52));
         this.addSlotToContainer(new SlotEnergy(machine,this.machine.getEnergySlotID(),8,82));
 

@@ -645,4 +645,19 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Speed || type == UpgradeTypes.Fail || type == UpgradeTypes.PowerUsage;
     }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
+    }
 }

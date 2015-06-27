@@ -20,6 +20,8 @@ import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -240,6 +242,11 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     }
 
     @Override
+    protected void onAwake(Side side) {
+
+    }
+
+    @Override
     public void writeCustomNBT(NBTTagCompound tagCompound)
     {
         super.writeCustomNBT(tagCompound);
@@ -348,6 +355,21 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type == UpgradeTypes.PowerUsage || type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Fail || type == UpgradeTypes.Output || type == UpgradeTypes.Speed;
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
     }
     //endregion
 }

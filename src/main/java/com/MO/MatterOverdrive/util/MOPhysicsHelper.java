@@ -1,5 +1,9 @@
 package com.MO.MatterOverdrive.util;
 
+import com.MO.MatterOverdrive.util.math.MOMathHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
@@ -124,6 +128,15 @@ public class MOPhysicsHelper
         Vec3 vec31 = viewer.getLook(ticks);
         Vec3 vec32 = vec3.addVector(vec31.xCoord * distance, vec31.yCoord * distance, vec31.zCoord * distance);
         return world.func_147447_a(vec3, vec32, collisionCheck, onlySolid, true);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static MovingObjectPosition mouseRaytraceForBlocks(int mouseX,int mouseY,int width,int height,EntityLivingBase viewer,World world,boolean collisionCheck,boolean onlySolid)
+    {
+        Vec3 dir = MOMathHelper.mouseToWorldRay(mouseX, mouseY, width, height);
+        Vec3 vec3 = viewer.getPosition(1);
+        Vec3 vec32 = vec3.addVector(dir.xCoord * 32, dir.yCoord * 32, dir.zCoord * 32);
+        return world.func_147447_a(vec3, vec32, false, false, true);
     }
 
     public static Vec3 getPosition(EntityLivingBase entity, float p_70666_1_)

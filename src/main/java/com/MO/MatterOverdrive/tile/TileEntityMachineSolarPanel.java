@@ -6,6 +6,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -40,6 +41,11 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
         }
 
         super.updateEntity();
+    }
+
+    @Override
+    protected void onAwake(Side side) {
+
     }
 
     @Override
@@ -170,5 +176,20 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type == UpgradeTypes.PowerStorage;
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
     }
 }

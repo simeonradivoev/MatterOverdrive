@@ -1,13 +1,13 @@
 package com.MO.MatterOverdrive.data.biostats;
 
-import cofh.lib.util.helpers.InventoryHelper;
+import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.IBionicStat;
 import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.util.MOStringHelper;
-import com.MO.MatterOverdrive.util.RenderUtils;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.IIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,7 @@ public abstract class AbstractBioticStat implements IBionicStat
     List<IBionicStat> enabledBlacklist;
     int maxLevel;
     boolean showOnHud;
+    IIcon icon;
 
     public AbstractBioticStat(String name, int xp)
     {
@@ -212,6 +213,12 @@ public abstract class AbstractBioticStat implements IBionicStat
         return true;
     }
 
+    @Override
+    public void registerIcons(TextureMap holoIcons)
+    {
+        icon = holoIcons.registerIcon(Reference.MOD_ID + ":" + "biotic_stat_" + name);
+    }
+
     public void addReqiredItm(ItemStack stack)
     {
         reqiredItems.add(stack);
@@ -280,5 +287,11 @@ public abstract class AbstractBioticStat implements IBionicStat
     public void addToEnabledBlacklist(IBionicStat stat)
     {
         enabledBlacklist.add(stat);
+    }
+
+    @Override
+    public IIcon getIcon(int level)
+    {
+        return icon;
     }
 }

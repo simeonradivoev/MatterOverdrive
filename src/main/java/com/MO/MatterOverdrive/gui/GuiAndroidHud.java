@@ -9,6 +9,7 @@ import com.MO.MatterOverdrive.animation.TextAnimationSegment;
 import com.MO.MatterOverdrive.api.inventory.IBionicStat;
 import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.handler.AndroidStatRegistry;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.MO.MatterOverdrive.util.RenderUtils;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -41,8 +42,6 @@ public class GuiAndroidHud extends Gui
     public static final ResourceLocation spinner_tex = new ResourceLocation(Reference.PATH_ELEMENTS + "spinner.png");
     public static final ResourceLocation top_element_bg = new ResourceLocation(Reference.PATH_ELEMENTS + "android_bg_element.png");
     public static final ResourceLocation icon_bg = new ResourceLocation(Reference.PATH_ELEMENTS + "android_feature_icon_bg.png");
-    public static final ResourceLocation battery_icon = new ResourceLocation(Reference.PATH_GUI_ITEM + "battery.png");
-    public static final ResourceLocation person_icon = new ResourceLocation(Reference.PATH_GUI_ITEM + "person.png");
     private AnimationTextTyping textTyping;
     private Minecraft mc;
     private Random random;
@@ -73,7 +72,7 @@ public class GuiAndroidHud extends Gui
     {
         AndroidPlayer android = AndroidPlayer.get(mc.thePlayer);
 
-        if (android.isAndroid() && event.type == RenderGameOverlayEvent.ElementType.FOOD || event.type == RenderGameOverlayEvent.ElementType.AIR)
+        if (android.isAndroid() && (event.type == RenderGameOverlayEvent.ElementType.FOOD || event.type == RenderGameOverlayEvent.ElementType.AIR))
         {
             event.setCanceled(true);
             return;
@@ -118,19 +117,21 @@ public class GuiAndroidHud extends Gui
                 mc.renderEngine.bindTexture(top_element_bg);
                 func_146110_a(event.resolution.getScaledWidth() - 174, 10, 0, 0, 174, 11, 174, 11);
 
+                ClientProxy.holoIcons.bindSheet();
+
                 //region energy
                 GuiColor energyColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, enabledColor, (float) energy_perc);
                 mc.fontRenderer.drawString(Math.round((energy_perc) * 100d) + "%", 32, 28, energyColor.getColor());
                 RenderUtils.applyColor(energyColor);
-                mc.renderEngine.bindTexture(battery_icon);
-                func_146110_a(12, 20, 0, 0, 22, 22, 22, 22);
+                ClientProxy.holoIcons.bindSheet();
+                RenderHelper.renderIcon(12,20,0,ClientProxy.holoIcons.getIcon("battery"),22,22);
                 //endregion
 
                 //region speed
                 glColor3f(enabledColor.getFloatR(), enabledColor.getFloatG(), enabledColor.getFloatB());
                 mc.fontRenderer.drawString(Integer.toString((int) Math.round(android.getSpeedMultiply() * 100)) + "%", 76, 28, enabledColor.getColor());
-                mc.renderEngine.bindTexture(person_icon);
-                func_146110_a(58, 22, 0, 0, 18, 18, 18, 18);
+                ClientProxy.holoIcons.bindSheet();
+                RenderHelper.renderIcon(58,22,0,ClientProxy.holoIcons.getIcon("person"),18,18);
                 //endregion
 
                 int count = 0;
@@ -294,8 +295,8 @@ public class GuiAndroidHud extends Gui
     {
         drawStatBG(color,x,y);
         glEnable(GL_BLEND);
-        mc.renderEngine.bindTexture(stat.getIcon(level));
-        func_146110_a(x + 1, y + 1, 0, 0, 18, 18, 18, 18);
+        ClientProxy.holoIcons.bindSheet();
+        RenderHelper.renderIcon(x + 1,y + 1,0,stat.getIcon(level),18,18);
         glDisable(GL_BLEND);
     }
 

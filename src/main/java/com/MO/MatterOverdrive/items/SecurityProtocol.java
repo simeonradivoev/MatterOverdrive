@@ -15,6 +15,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Simeon on 5/10/2015.
@@ -37,9 +38,14 @@ public class SecurityProtocol extends MOBaseItem {
 
         if (itemstack.hasTagCompound())
         {
-            infos.add(MOStringHelper.translateToLocal(getUnlocalizedName() + "." + types[MathHelper.clampI(itemstack.getItemDamage(),0,types.length)] + ".description"));
-            String owner = itemstack.getTagCompound().getString("Owner");
-            infos.add(EnumChatFormatting.YELLOW + "Owner: " + owner);
+            infos.add(MOStringHelper.translateToLocal(getUnlocalizedName() + "." + types[MathHelper.clampI(itemstack.getItemDamage(), 0, types.length)] + ".description"));
+            try {
+                String owner = player.worldObj.func_152378_a(UUID.fromString(itemstack.getTagCompound().getString("Owner"))).getGameProfile().getName();
+                infos.add(EnumChatFormatting.YELLOW + "Owner: " + owner);
+            }catch (Exception e)
+            {
+                infos.add(EnumChatFormatting.RED + MOStringHelper.translateToLocal(getUnlocalizedName() + ".invalid"));
+            }
         }
     }
 
@@ -75,11 +81,11 @@ public class SecurityProtocol extends MOBaseItem {
         {
             if (player.isSneaking()) {
                 TagCompountCheck(stack);
-                stack.getTagCompound().setString("Owner", player.getGameProfile().getName());
+                stack.getTagCompound().setString("Owner", player.getGameProfile().getId().toString());
                 stack.setItemDamage(1);
             }
         }
-        else if (stack.getTagCompound().getString("Owner").equals(player.getGameProfile().getName()) || player.capabilities.isCreativeMode)
+        else if (stack.getTagCompound().getString("Owner").equals(player.getGameProfile().getId().toString()) || player.capabilities.isCreativeMode)
         {
             if (player.isSneaking())
             {

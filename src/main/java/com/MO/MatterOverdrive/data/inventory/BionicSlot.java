@@ -2,7 +2,9 @@ package com.MO.MatterOverdrive.data.inventory;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.IBionicPart;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -28,10 +30,10 @@ public class BionicSlot extends Slot
     }
 
     @Override
-    public ResourceLocation getTexture()
+    public IIcon getTexture()
     {
         if (type < names.length) {
-            return new ResourceLocation(Reference.PATH_GUI_ITEM + "android_slot_" + names[type] + ".png");
+            return ClientProxy.holoIcons.getIcon("android_slot_" + names[type]);
         }
         return null;
     }

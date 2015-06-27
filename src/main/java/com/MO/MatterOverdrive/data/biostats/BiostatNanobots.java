@@ -12,7 +12,6 @@ public class BiostatNanobots extends AbstractBioticStat
 {
     public final static float REGEN_AMOUNT_PER_TICK = 0.03f;
     public final static int ENERGY_PER_REGEN = 32;
-    public final ResourceLocation nanobots_icon = new ResourceLocation(Reference.PATH_GUI_ITEM + "biotic_stat_nanobots.png");
 
     public BiostatNanobots(String name, int xp)
     {
@@ -60,11 +59,5 @@ public class BiostatNanobots extends AbstractBioticStat
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
         return isEnabled(androidPlayer,level);
-    }
-
-    @Override
-    public ResourceLocation getIcon(int level)
-    {
-        return nanobots_icon;
     }
 }

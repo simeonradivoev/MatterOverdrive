@@ -7,6 +7,7 @@ import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -31,7 +32,7 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 
     protected void init(InventoryPlayer inventory)
     {
-        AddUpgradeSlots(machine.getInventory(),77,52);
+        AddUpgradeSlots(machine.getInventoryContainer(),77,52);
     }
 
     @Override
@@ -70,7 +71,10 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
             }
             else if(slotID >= machine.getSizeInventory())
             {
-                tryAndPutInMachineSlots(itemstack1,machine.getInventory());
+                if(tryAndPutInMachineSlots(itemstack1,machine))
+                {
+
+                }
             }
 
             if (itemstack1.stackSize == 0)
@@ -95,11 +99,16 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 
     protected boolean putInPlayerInventory(ItemStack itemStack)
     {
-        return InventoryHelper.mergeItemStack(inventorySlots,itemStack,machine.getInventory().getSizeInventory(),inventorySlots.size() - machine.getInventory().getSizeInventory(),true,true);
+        return InventoryHelper.mergeItemStack(inventorySlots,itemStack,machine.getSizeInventory(),inventorySlots.size() - machine.getSizeInventory(),true,true);
     }
 
-    protected boolean tryAndPutInMachineSlots(ItemStack itemStack,Inventory inventory)
+    protected boolean tryAndPutInMachineSlots(ItemStack itemStack,IInventory inventory)
     {
         return InventoryHelper.mergeItemStack(inventorySlots,itemStack,0,inventory.getSizeInventory(),false,true);
+    }
+
+    public T getMachine()
+    {
+        return machine;
     }
 }

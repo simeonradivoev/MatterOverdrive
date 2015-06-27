@@ -17,6 +17,7 @@ import com.MO.MatterOverdrive.items.MatterDust;
 import com.MO.MatterOverdrive.network.packet.client.PacketMatterUpdate;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -262,6 +263,11 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     }
 
     @Override
+    protected void onAwake(Side side) {
+
+    }
+
+    @Override
 	public void writeCustomNBT(NBTTagCompound nbt)
     {
         super.writeCustomNBT(nbt);
@@ -297,5 +303,20 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type != UpgradeTypes.Range && type != UpgradeTypes.SecondOutput;
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
     }
 }

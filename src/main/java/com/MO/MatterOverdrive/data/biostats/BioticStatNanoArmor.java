@@ -12,8 +12,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
  */
 public class BioticStatNanoArmor extends AbstractBioticStat
 {
-    public final ResourceLocation nanoArmorIcon = new ResourceLocation(Reference.PATH_GUI_ITEM + "biotic_stat_nano_armor.png");
-
     public BioticStatNanoArmor(String name, int xp)
     {
         super(name, xp);
@@ -67,10 +65,5 @@ public class BioticStatNanoArmor extends AbstractBioticStat
     public float getDamageNegate(int level)
     {
         return 1 + level * 0.1f;
-    }
-
-    @Override
-    public ResourceLocation getIcon(int level) {
-        return nanoArmorIcon;
     }
 }

@@ -25,7 +25,6 @@ import org.lwjgl.input.Keyboard;
 public class BioticStatTeleport extends AbstractBioticStat {
 
     public static final String EFFECT_KEY_LAST_TELEPORT = "LastTeleport";
-    public final ResourceLocation teleport_icon = new ResourceLocation(Reference.PATH_GUI_ITEM + "biotic_stat_teleport.png");
     public static final int TELEPORT_DELAY = 40;
     public static final int ENERGY_PER_TELEPORT = 4096;
     @SideOnly(Side.CLIENT)
@@ -144,11 +143,6 @@ public class BioticStatTeleport extends AbstractBioticStat {
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
         return isEnabled(androidPlayer,level);
-    }
-
-    @Override
-    public ResourceLocation getIcon(int level) {
-        return teleport_icon;
     }
 
     @SideOnly(Side.CLIENT)

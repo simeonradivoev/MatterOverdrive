@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.handler;
 import com.MO.MatterOverdrive.api.inventory.IBionicStat;
 import com.MO.MatterOverdrive.data.biostats.*;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -86,5 +87,13 @@ public class AndroidStatRegistry
         registerStat(highJump);
         registerStat(equalizer);
         registerStat(shield);
+    }
+
+    public static void registerIcons(TextureMap holoIcons)
+    {
+        for (IBionicStat stat : stats.values())
+        {
+            stat.registerIcons(holoIcons);
+        }
     }
 }

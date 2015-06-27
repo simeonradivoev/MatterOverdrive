@@ -11,6 +11,7 @@ import com.MO.MatterOverdrive.data.inventory.WeaponSlot;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,6 +34,11 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
     public TileEntityWeaponStation()
     {
         super(0);
+    }
+
+    @Override
+    protected void onAwake(Side side) {
+
     }
 
     @Override
@@ -96,6 +102,17 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
         }
     }
 
+    public boolean isItemValidForSlot(int slot, ItemStack item)
+    {
+        if (slot != INPUT_SLOT)
+        {
+            return getActiveInventory().isItemValidForSlot(slot,item);
+        }else
+        {
+            return super.isItemValidForSlot(slot, item);
+        }
+    }
+
     @Override
     public ItemStack decrStackSize(int slot, int size)
     {
@@ -146,5 +163,20 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
     public AxisAlignedBB getRenderBoundingBox()
     {
         return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord + 1,yCoord + 2,zCoord + 1);
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
     }
 }

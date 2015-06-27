@@ -18,7 +18,6 @@ import java.util.List;
 public class PlayerEventHandler
 {
     public List<EntityPlayerMP> players;
-
     public PlayerEventHandler()
     {
         players = new ArrayList<EntityPlayerMP>();
@@ -32,6 +31,7 @@ public class PlayerEventHandler
                 if (!MinecraftServer.getServer().isSinglePlayer()) {
 
                     MatterOverdrive.packetPipeline.sendTo(new PacketUpdateMatterRegistry(MatterRegistry.getEntries()), (EntityPlayerMP) event.player);
+
                 }
             } else {
                 players.add((EntityPlayerMP) event.player);

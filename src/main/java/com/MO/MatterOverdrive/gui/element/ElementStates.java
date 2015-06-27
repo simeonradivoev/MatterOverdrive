@@ -39,6 +39,10 @@ public class ElementStates extends MOElementButtonScaled
     public void drawForeground(int mouseX, int mouseY)
     {
         super.drawForeground(mouseX, mouseY);
+        GL11.glColor4d(1, 1, 1, 1);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glAlphaFunc(GL11.GL_GREATER,0.5f);
+        GL11.glCullFace(GL11.GL_BACK);
         int width = getFontRenderer().getStringWidth(label);
         getFontRenderer().drawString(label,posX - width - 4,posY + 6,0xFFFFFF);
     }

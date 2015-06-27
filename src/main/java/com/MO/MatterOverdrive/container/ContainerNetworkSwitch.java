@@ -33,6 +33,6 @@ public class ContainerNetworkSwitch extends ContainerMachine<TileEntityMachineNe
     @Override
     protected boolean putInPlayerInventory(ItemStack itemStack)
     {
-        return InventoryHelper.mergeItemStack(inventorySlots, itemStack, machine.getInventory().getSizeInventory() - 1, (inventoryItemStacks.size() - machine.getInventory().getSizeInventory()), false, true);
+        return InventoryHelper.mergeItemStack(inventorySlots, itemStack, machine.getSizeInventory() - 1, (inventoryItemStacks.size() - machine.getSizeInventory()), false, true);
     }
 }

@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 /**
  * Created by Simeon on 3/21/2015.
  */
-public class MOTileEntity extends TileEntity implements IMOTileEntity
+public abstract class MOTileEntity extends TileEntity implements IMOTileEntity
 {
     private boolean isAwake = false;
 
@@ -50,45 +50,9 @@ public class MOTileEntity extends TileEntity implements IMOTileEntity
         writeCustomNBT(nbt);
     }
 
-    public void writeCustomNBT(NBTTagCompound nbt)
-    {
+    public abstract void writeCustomNBT(NBTTagCompound nbt);
 
-    }
+    public abstract void readCustomNBT(NBTTagCompound nbt);
 
-    public void readCustomNBT(NBTTagCompound nbt)
-    {
-
-    }
-
-    protected void onAwake(Side side) {
-
-    }
-
-    @Override
-    public void onAdded() {
-
-    }
-
-    @Override
-    public void onDestroyed() {
-
-    }
-
-    @Override
-    public void onNeighborBlockChange()
-    {
-
-    }
-
-    @Override
-    public void writeToDropItem(ItemStack itemStack)
-    {
-
-    }
-
-    @Override
-    public void readFromPlaceItem(ItemStack itemStack)
-    {
-
-    }
+    protected abstract void onAwake(Side side);
 }

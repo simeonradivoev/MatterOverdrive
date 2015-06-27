@@ -45,6 +45,9 @@ public class Reference
     public static final GuiColor COLOR_HOLO = new GuiColor(169,226,251);
 	public static final GuiColor COLOR_YELLOW_STRIPES = new GuiColor(254,203,4);
 	public static final GuiColor COLOR_HOLO_RED = new GuiColor(230,80,20);
+	public static final GuiColor COLOR_HOLO_GREEN = new GuiColor(24,207,0);
+	public static final GuiColor COLOR_HOLO_YELLOW = new GuiColor(252,223,116);
+    public static final GuiColor COLOR_HOLO_PURPLE = new GuiColor(116,23,230);
 	public static final GuiColor COLOR_GUI_DARK = new GuiColor(44,54,52);
 	public static final GuiColor COLOR_GUI_DARKER = new GuiColor(34,40,37);
 	public static final GuiColor COLOR_GUI_ENERGY = new GuiColor(224,0,0);

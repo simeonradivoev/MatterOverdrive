@@ -1,24 +1,13 @@
 package com.MO.MatterOverdrive.handler;
 
-import com.MO.MatterOverdrive.client.RenderParticlesHandler;
 import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.tile.IMOTickable;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.client.Minecraft;
-import net.minecraft.crash.CrashReport;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ReportedException;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.ForgeModContainer;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by Simeon on 4/26/2015.

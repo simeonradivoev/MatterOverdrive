@@ -27,7 +27,7 @@ public class GuiNetworkSwitch extends MOGuiMachine<TileEntityMachineNetworkSwitc
     public void initGui()
     {
         super.initGui();
-        homePage.addElement(connections);
+        pages.get(0).addElement(connections);
         AddHotbarPlayerSlots(inventorySlots, this);
     }
 }

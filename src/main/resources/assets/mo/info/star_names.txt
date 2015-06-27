@@ -1,0 +1,13 @@
+Felis,Mali,Arch'tol,Apillaris,Agamir,Asphylium,Atryll,Balartropheus,Bubobubo,Brynox,Borrphylus,
+Bixion,Crom'atar,Clorr'barad,Cindrol,Chogal,Coxinthropus,Diomochtus,Diatomica,Drollgat,Daorshar,
+Dyshor,Elunemar,Ekshatar,Ensavrithal,Ersix,Echyon,Folchost,Felxis,Fuzortrach,Fom'trox,Fyyyr,
+Gobrogloctus,Grontosh'tar,GORG-KRLN*,Gytropia,Grogotal,Hydraxion,Hilisorn,Hacir'soron,Hoebrond,
+Hackar'soron,Illurius,Infernogerm,Ichtiopar,Indrol'soron,Iatreziol,Jarak,Jyraxor,Jissar,Joltonar,
+Japragal,Kollotrops,Khol'grob,Kuzdulnar,Korffugium,Kirrotarr,Luk'galesh,Lon,Libtal,Lach'galesh,
+Lambrosarchus,Mul'tesh,Marradral,Mesjur,Mentrasza,Murrtrunax,Nebulus,Neolucidius,Nomenara,Nijgar,
+Nachystral,Orgathol,Orbiculatus,Oburrus,Ondol,Ojdra'sul,Pak'tak,Pholotrox,Patrick'Stuwartelur,Pikaiar,
+Proloct,Q'chan,Quantylychinus,Qor'jabal,Qovojdran,Qolirn,Ryyyk'trakar,Rhexioculus,Rallbhar,Robarmaghaton,
+Rajckatror,Silurius,Scyngrolitis,Sacharr,Sol,Sorr'soron,Tallicus,TK-421*,Turmidi,Tysaurannorus,Taucar,Uchval,
+Utiopia,Undul,Uxixil,Umbrajil,Valarius,Vermithrex,Vulpisar,Vylnar,Vorgrosar,Wonxin,Waj,Wros,Wipon,Waf'bar,
+Xizorat,Xailyr,Xozburdum,Xi'ci,Xiab'yoj,Ynn'zagar,Yilser,Yombadrax,Yj'baj,Yuuzhan'Vong,Zablator,
+Zuxinotelus,Zubebonaraki,Zoravas,Zangrom

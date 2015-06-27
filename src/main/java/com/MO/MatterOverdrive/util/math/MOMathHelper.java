@@ -1,10 +1,17 @@
 package com.MO.MatterOverdrive.util.math;
 
 import com.MO.MatterOverdrive.util.Vector3;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import java.util.Random;
 
@@ -40,6 +47,42 @@ public class MOMathHelper
         return ((number >> pos) & 1) == 1;
 	}
 
+    public static double nextGaussian(Random random,double mean,double variance)
+    {
+        return mean + random.nextGaussian()*variance;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static Vec3 mouseToWorldRay(int mouseX,int mouseY,int width,int height)
+    {
+        double aspectRatio = ((double)width / (double)height);
+        double fov = ((Minecraft.getMinecraft().gameSettings.fovSetting / 2d) + 11) * (Math.PI / 180);
+        EntityLivingBase renderViewEntity = Minecraft.getMinecraft().renderViewEntity;
+
+        double a = -((double)mouseX / (double)width - 0.5) * 2;
+        double b = -((double)mouseY / (double)height - 0.5) * 2;
+        double tanf = Math.tan(fov);
+
+
+        float yawn = renderViewEntity.rotationYaw;
+        float pitch = renderViewEntity.rotationPitch;
+
+        Matrix4f rot = new Matrix4f();
+        rot.rotate(yawn * (float)(Math.PI / 180),new Vector3f(0,-1,0));
+        rot.rotate(pitch * (float)(Math.PI / 180),new Vector3f(1,0,0));
+        Vector4f foward = new Vector4f(0,0,1,0);
+        Vector4f up = new Vector4f(0,1,0,0);
+        Vector4f left = new Vector4f(1,0,0,0);
+        Matrix4f.transform(rot,foward,foward);
+        Matrix4f.transform(rot,up,up);
+        Matrix4f.transform(rot,left,left);
+
+        return  Vec3.createVectorHelper(foward.x,foward.y,foward.z)
+                .addVector(left.x * tanf * aspectRatio * a,left.y * tanf * aspectRatio * a,left.z * tanf * aspectRatio * a)
+                .addVector(up.x * tanf * b,up.y * tanf * b,up.z * tanf * b)
+                .normalize();
+    }
+
 	
 	public static int setBoolean(int number,int pos,boolean value)
 	{
@@ -52,6 +95,10 @@ public class MOMathHelper
 		}
 	}
 
+    // t - time
+    // b - from value
+    //c - to value
+    //d - maxTime
     public static double easeIn(double t,double b , double c, double d)
     {
         return c*(t/=d)*t*t*t + b;

@@ -8,6 +8,8 @@ import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -116,7 +118,6 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
     @Override
     public void writeCustomNBT(NBTTagCompound comp)
     {
-        super.writeCustomNBT(comp);
         if(!worldObj.isRemote)
         {
             storage.writeToNBT(comp);
@@ -127,12 +128,16 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
     @Override
     public  void  readCustomNBT(NBTTagCompound comp)
     {
-        super.readCustomNBT(comp);
         storage.readFromNBT(comp);
         if (comp.hasKey("transfer_dir"))
         {
             lastDir = ForgeDirection.values()[comp.getByte("transfer_dir")];
         }
+    }
+
+    @Override
+    protected void onAwake(Side side) {
+
     }
 
     @Override
@@ -211,5 +216,30 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
         if(worldObj.isRemote) {
             this.setMatterVisible(pkt.func_148857_g().getBoolean("matterVisible"));
         }
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
+    }
+
+    @Override
+    public void writeToDropItem(ItemStack itemStack) {
+
+    }
+
+    @Override
+    public void readFromPlaceItem(ItemStack itemStack) {
+
     }
 }

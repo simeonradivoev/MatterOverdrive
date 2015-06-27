@@ -1,79 +1,108 @@
 package com.MO.MatterOverdrive.client;
 
-import cofh.lib.gui.GuiColor;
-import cofh.lib.render.RenderHelper;
-import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
-import com.MO.MatterOverdrive.client.render.ItemRendererPhaser;
-import com.MO.MatterOverdrive.client.render.RendererShield;
-import com.MO.MatterOverdrive.gui.GuiAndroidHud;
-import com.MO.MatterOverdrive.items.Phaser;
-import com.MO.MatterOverdrive.items.WeaponColorModule;
-import com.MO.MatterOverdrive.sound.PhaserSound;
-import com.MO.MatterOverdrive.util.MOPhysicsHelper;
-import com.MO.MatterOverdrive.util.WeaponHelper;
+import com.MO.MatterOverdrive.client.render.*;
+import com.MO.MatterOverdrive.client.render.biostat.BiostatRendererShield;
+import com.MO.MatterOverdrive.client.render.biostat.BiostatRendererTeleporter;
+import com.MO.MatterOverdrive.client.render.block.MOBlockRenderer;
+import com.MO.MatterOverdrive.client.render.block.RendererBlockGravitationalStabilizer;
+import com.MO.MatterOverdrive.client.render.block.RendererBlockPipe;
+import com.MO.MatterOverdrive.client.render.entity.*;
+import com.MO.MatterOverdrive.client.render.item.ItemRendererPhaser;
+import com.MO.MatterOverdrive.client.render.item.ItemRendererPipe;
+import com.MO.MatterOverdrive.client.render.item.ItemRendererTileEntityMachine;
+import com.MO.MatterOverdrive.client.render.tileentity.*;
+import com.MO.MatterOverdrive.entity.*;
+import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
+import com.MO.MatterOverdrive.init.MatterOverdriveItems;
+import com.MO.MatterOverdrive.tile.*;
+import com.MO.MatterOverdrive.tile.pipes.TileEntityMatterPipe;
+import com.MO.MatterOverdrive.tile.pipes.TileEntityNetworkPipe;
+import com.MO.MatterOverdrive.tile.pipes.TileEntityPipe;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.client.model.*;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.item.Item;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderWorldEvent;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import org.lwjgl.util.vector.Vector3f;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Simeon on 4/17/2015.
  */
 public class RenderHandler
 {
-    private static Random random = new Random();
-    public static ResourceLocation phaserSoundLocation = new ResourceLocation(Reference.MOD_ID + ":" +"phaser_beam_1");
-    Map<Entity,PhaserSound> soundMap = new HashMap<Entity, PhaserSound>();
-    RenderMatterScannerInfoHandler matterScannerInfoHandler;
-    RenderParticlesHandler renderParticlesHandler;
-    RenderBiostatEffects biostatEffects;
-    RendererShield rendererShield;
+    private Random random = new Random();
+    private RenderMatterScannerInfoHandler matterScannerInfoHandler;
+    private RenderParticlesHandler renderParticlesHandler;
+    private RendererPhaserBeam rendererPhaserBeam;
+    private List<IWorldLastRenderer> customRenderers;
+
+    //region Block Renderers
+    private MOBlockRenderer blockRenderer;
+    private RendererBlockGravitationalStabilizer gravitationalStabilizerRenderer;
+    private RendererBlockPipe rendererBlockPipe;
+    //endregion
+    //region Biostat Renderers
+    private BiostatRendererTeleporter rendererTeleporter;
+    private BiostatRendererShield biostatRendererShield;
+    //endregion
+    //region Item Renderers
+    private static ItemRendererPhaser rendererPhaser;
+    //endregion
+    //region Entity Renderers
+    private EntityRendererRougeAndroid rendererRougeAndroid;
+    private EntityRendererMadScientist rendererMadScientist;
+    private EntityRendererFaildCow rendererFaildCow;
+    private EntityRendererFailedChicken rendererFailedChicken;
+    private EntityRendererFailedPig rendererFailedPig;
+    private EntityRendererFailedSheep rendererFailedSheep;
+    //endregion
+    //region Tile Entity Renderers
+    private TileEntityRendererPipe pipeRenderer;
+    private TileEntityRendererMatterPipe matter_pipeRenderer;
+    private TileEntityRendererNetworkPipe network_pipeRenderer;
+    private TileEntityRendererReplicator replicator_renderer;
+    private TileEntityRendererPatterStorage pattern_storage_renderer;
+    private TileEntityRendererWeaponStation renderer_weapon_station;
+    private TileEntityRendererPatternMonitor pattern_monitor_renderer;
+    private TileEntityRendererGravitationalAnomaly gravitational_anomaly_renderer;
+    private TileEntityRendererGravitationalStabilizer gravitational_stabilizer_renderer;
+    private TileEntityRendererFusionReactorController fusion_reactor_controller_renderer;
+    private TileEntityRendererAndroidStation rendererAndroidStation;
+    private TileEntityRendererStarMap rendererStarMap;
+    //endregion
 
     public RenderHandler(World world,TextureManager textureManager)
     {
+        customRenderers = new ArrayList<IWorldLastRenderer>();
         matterScannerInfoHandler = new RenderMatterScannerInfoHandler();
         renderParticlesHandler = new RenderParticlesHandler(world,textureManager);
-        biostatEffects = new RenderBiostatEffects();
-        rendererShield = new RendererShield();
+        rendererTeleporter = new BiostatRendererTeleporter();
+        biostatRendererShield = new BiostatRendererShield();
+        rendererPhaserBeam = new RendererPhaserBeam();
+
+        addCustomRenderer(matterScannerInfoHandler);
+        addCustomRenderer(renderParticlesHandler);
+        addCustomRenderer(rendererTeleporter);
+        addCustomRenderer(biostatRendererShield);
+        addCustomRenderer(rendererPhaserBeam);
     }
 
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event)
     {
-        glPushMatrix();
-
-        glTranslated(-Minecraft.getMinecraft().thePlayer.posX, -Minecraft.getMinecraft().thePlayer.posY, -Minecraft.getMinecraft().thePlayer.posZ);
-        renderClient();
-        renderOthers();
-        glPopMatrix();
-
-        matterScannerInfoHandler.onRenderWorldLast(event);
-        renderParticlesHandler.onRenderWorldLast(event);
-        biostatEffects.onRenderWorldLast(event);
-        rendererShield.onRenderWorldLast(event);
-        //GuiAndroidHud.renderHud(Minecraft.getMinecraft(), event.partialTicks);
+        for (int i = 0;i < customRenderers.size();i++)
+        {
+            customRenderers.get(i).onRenderWorldLast(this,event);
+        }
     }
 
     //Called when the client ticks.
@@ -83,142 +112,94 @@ public class RenderHandler
         renderParticlesHandler.onClientTick(event);
     }
 
-    public void renderOthers()
+    public void createTileEntityRenderers()
     {
-        for (Object playerObj : Minecraft.getMinecraft().theWorld.getLoadedEntityList())
-        {
-            if (playerObj instanceof EntityOtherPlayerMP)
-            {
-                EntityOtherPlayerMP playerMP = (EntityOtherPlayerMP)playerObj;
-                if (playerMP.isUsingItem() && playerMP.getItemInUse().getItem() instanceof Phaser)
-                {
-                    renderBeam(playerMP,playerMP.worldObj,new Vector3f(-0.23f, 0.2f, 0.7f),playerMP.getEyeHeight() - 0.5f,-0.3f);
-                    PlayPhaserSound(playerMP);
-                }
-                else
-                {
-                    StopPhaserSound(playerMP);
-                }
-            }
-        }
+        pipeRenderer = new TileEntityRendererPipe();
+        matter_pipeRenderer = new TileEntityRendererMatterPipe();
+        network_pipeRenderer = new TileEntityRendererNetworkPipe();
+        replicator_renderer = new TileEntityRendererReplicator();
+        pattern_storage_renderer = new TileEntityRendererPatterStorage();
+        renderer_weapon_station = new TileEntityRendererWeaponStation();
+        pattern_monitor_renderer = new TileEntityRendererPatternMonitor();
+        gravitational_anomaly_renderer = new TileEntityRendererGravitationalAnomaly();
+        gravitational_stabilizer_renderer = new TileEntityRendererGravitationalStabilizer();
+        fusion_reactor_controller_renderer = new TileEntityRendererFusionReactorController();
+        rendererAndroidStation = new TileEntityRendererAndroidStation();
+        rendererStarMap = new TileEntityRendererStarMap();
     }
 
-    public void renderClient()
+    public void createBlockRenderers()
     {
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-
-        if (player.isUsingItem() && player.getItemInUse().getItem() instanceof Phaser)
-        {
-            renderBeam(player,player.worldObj,new Vector3f(-0.1f, -0.1f, 0.25f),0,0.25f);
-            PlayPhaserSound(player);
-        }
-        else
-        {
-            StopPhaserSound(player);
-        }
+        blockRenderer = new MOBlockRenderer();
+        gravitationalStabilizerRenderer = new RendererBlockGravitationalStabilizer();
+        rendererBlockPipe = new RendererBlockPipe();
     }
 
-    public void renderBeam(EntityPlayer viewer,World world,Vector3f offset,float height,float distanceOffset)
+    public void registerBlockRenderers()
     {
-        RenderHelper.bindTexture(ItemRendererPhaser.phaserTexture);
-        glDisable(GL_CULL_FACE);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glDisable(GL_LIGHTING);
-
-        GuiColor color = getPhaserColor(viewer);
-        glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
-        glPushMatrix();
-        glTranslated(viewer.posX, viewer.posY + height, viewer.posZ);
-        glRotated(-viewer.getRotationYawHead(), 0, 1, 0);
-        glRotated(viewer.rotationPitch, 1, 0, 0);
-        glTranslatef(offset.x, offset.y, offset.z);
-        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(viewer, world, getPhaserRange(viewer), 1.0f, Vec3.createVectorHelper(0,height,0),false,true);
-        double distance = 450;
-        if (hit != null)
-        {
-            Vec3 hitVector = hit.hitVec;
-            distance = hitVector.distanceTo(viewer.getPosition(1.0f));
-            Block b = world.getBlock(hit.blockX,hit.blockY,hit.blockZ);
-            if (hit.entityHit != null && hit.entityHit instanceof EntityLivingBase)
-            {
-                viewer.worldObj.spawnParticle("reddust",hitVector.xCoord,hitVector.yCoord,hitVector.zCoord,0,0,0);
-            }
-            else if(b != null && b != Blocks.air)
-            {
-                viewer.worldObj.spawnParticle("smoke",hitVector.xCoord,hitVector.yCoord,hitVector.zCoord,0,0,0);
-            }
-
-        }
-        glScaled(1, 1, distance + distanceOffset);
-        ItemRendererPhaser.phaserModel.renderPart("beam");
-        glPopMatrix();
-
-        glEnable(GL_CULL_FACE);
-        glDisable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        RenderingRegistry.registerBlockHandler(blockRenderer);
+        RenderingRegistry.registerBlockHandler(gravitationalStabilizerRenderer);
+        RenderingRegistry.registerBlockHandler(rendererBlockPipe);
     }
 
-    public GuiColor getPhaserColor(EntityPlayer player)
+    public void registerTileEntitySpecialRenderers()
     {
-        GuiColor color = WeaponColorModule.defaultColor;
-        ItemStack color_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_COLOR, player.getItemInUse());
-        if (color_module != null)
-        {
-            IWeaponModule module = (IWeaponModule)color_module.getItem();
-            Object colorObject = module.getValue(color_module);
-            if(colorObject instanceof GuiColor)
-            {
-                color = (GuiColor)colorObject;
-            }
-        }
-        return color;
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, pipeRenderer);
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMatterPipe.class, matter_pipeRenderer);
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityNetworkPipe.class, network_pipeRenderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineReplicator.class,replicator_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternStorage.class,pattern_storage_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeaponStation.class,renderer_weapon_station);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternMonitor.class,pattern_monitor_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGravitationalAnomaly.class,gravitational_anomaly_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineGravitationalStabilizer.class,gravitational_stabilizer_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineFusionReactorController.class,fusion_reactor_controller_renderer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAndroidStation.class,rendererAndroidStation);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineStarMap.class,rendererStarMap);
     }
 
-    private int getPhaserRange(EntityPlayer player)
+    public void createItemRenderers()
     {
-        int range = Phaser.RANGE;
-        ItemStack phaserStack = player.getItemInUse();
-        if (phaserStack != null && phaserStack.getItem() instanceof Phaser)
-        {
-            range = ((Phaser) phaserStack.getItem()).getRange(phaserStack);
-        }
-        return range;
+        rendererPhaser = new ItemRendererPhaser();
     }
 
-    private void PlayPhaserSound(Entity entity)
+    public void registerItemRenderers()
     {
-        if (!soundMap.containsKey(entity))
-        {
-            PhaserSound sound = new PhaserSound(phaserSoundLocation,(float)entity.posX,(float)entity.posY,(float)entity.posZ,random.nextFloat() * 0.1f + 0.3f,1);
-            soundMap.put(entity,sound);
-            Minecraft.getMinecraft().getSoundHandler().playSound(sound);
-        }
-        else if (soundMap.get(entity).isDonePlaying())
-        {
-            StopPhaserSound(entity);
-            PlayPhaserSound(entity);
-        }
-        else
-        {
-            soundMap.get(entity).setPosition((float)entity.posX,(float)entity.posY,(float)entity.posZ);
-        }
+        MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser, rendererPhaser);
+        //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.matter_pipe), new ItemRendererPipe(matter_pipeRenderer, new TileEntityMatterPipe(), 2));
+        //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.network_pipe),new ItemRendererPipe(network_pipeRenderer,new TileEntityNetworkPipe(),2));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.replicator), new ItemRendererTileEntityMachine(replicator_renderer, new TileEntityMachineReplicator()));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.pattern_storage),new ItemRendererTileEntityMachine(pattern_storage_renderer,new TileEntityMachinePatternStorage()));
     }
 
-    private void StopPhaserSound(Entity entity)
+    public void createEntityRenderers()
     {
-        if (soundMap.containsKey(entity))
-        {
-            PhaserSound sound = soundMap.get(entity);
-            sound.stopPlaying();
-            Minecraft.getMinecraft().getSoundHandler().stopSound(sound);
-            soundMap.remove(entity);
+        rendererRougeAndroid = new EntityRendererRougeAndroid(new ModelBiped(),0);
+        rendererMadScientist = new EntityRendererMadScientist();
+        rendererFailedPig = new EntityRendererFailedPig(new ModelPig(),new ModelPig(0.5f),0.7F);
+        rendererFaildCow = new EntityRendererFaildCow(new ModelCow(),0.7f);
+        rendererFailedChicken = new EntityRendererFailedChicken(new ModelChicken(),0.3f);
+        rendererFailedSheep = new EntityRendererFailedSheep(new ModelSheep2(),new ModelSheep1(),0.7f);
+    }
 
-        }
+    public void registerEntityRenderers()
+    {
+        RenderingRegistry.registerEntityRenderingHandler(EntityRougeAndroidMob.class, rendererRougeAndroid);
+        RenderingRegistry.registerEntityRenderingHandler(EntityFailedPig.class,rendererFailedPig);
+        RenderingRegistry.registerEntityRenderingHandler(EntityFailedCow.class,rendererFaildCow);
+        RenderingRegistry.registerEntityRenderingHandler(EntityFailedChicken.class,rendererFailedChicken);
+        RenderingRegistry.registerEntityRenderingHandler(EntityFailedSheep.class,rendererFailedSheep);
+        RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class,rendererMadScientist);
     }
 
     public RenderParticlesHandler getRenderParticlesHandler()
     {
         return renderParticlesHandler;
     }
+    public TileEntityRendererStarMap getRendererStarMap()
+    {
+        return rendererStarMap;
+    }
+    public Random getRandom(){return random;}
+    public void addCustomRenderer(IWorldLastRenderer renderer){customRenderers.add(renderer);}
 }

@@ -1,9 +1,8 @@
 package com.MO.MatterOverdrive.blocks;
 
 import cofh.lib.util.helpers.BlockHelper;
-import com.MO.MatterOverdrive.client.render.MOBlockRenderer;
+import com.MO.MatterOverdrive.client.render.block.MOBlockRenderer;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
-import com.MO.MatterOverdrive.proxy.ClientProxy;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;

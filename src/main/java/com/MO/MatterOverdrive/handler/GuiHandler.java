@@ -20,17 +20,6 @@ public class GuiHandler implements IGuiHandler
     private Map<Class<? extends MOTileEntity>,Class<? extends MOGuiBase>> guis;
     private Map<Class<? extends MOTileEntity>,Class<? extends MOBaseContainer>> containers;
 
-    public static final byte guiIDReplicator = 0;
-    public static final byte guiIDDecomposer = 1;
-    public static final byte guiIDMatterScanner = 2;
-    public static final byte guiNetworkRouter = 3;
-    public static final byte guiMatterAnalyzer = 4;
-    public static final byte guiPatternStorage = 5;
-    public static final byte guiSolarPanel = 6;
-    public static final byte guiWeaponStation = 7;
-    public static final byte guiPatternMonitor = 8;
-    public static final byte getGuiNetworkSwitch = 9;
-
     public GuiHandler()
     {
         guis = new HashMap<Class<? extends MOTileEntity>, Class<? extends MOGuiBase>>();
@@ -54,6 +43,7 @@ public class GuiHandler implements IGuiHandler
             registerContainer(TileEntityMachineMatterRecycler.class,ContainerRecycler.class);
             registerContainer(TileEntityMachineFusionReactorController.class,ContainerFusionReactor.class);
             registerContainer(TileEntityAndroidStation.class,ContainerAndroidStation.class);
+            registerContainer(TileEntityMachineStarMap.class,ContainerStarMap.class);
         }
         else
         {
@@ -70,6 +60,7 @@ public class GuiHandler implements IGuiHandler
             registerGuiAndContainer(TileEntityMachineMatterRecycler.class, GuiRecycler.class, ContainerRecycler.class);
             registerGuiAndContainer(TileEntityMachineFusionReactorController.class,GuiFusionReactor.class,ContainerFusionReactor.class);
             registerGuiAndContainer(TileEntityAndroidStation.class,GuiAndroidStation.class,ContainerAndroidStation.class);
+            registerGuiAndContainer(TileEntityMachineStarMap.class,GuiStarMap.class,ContainerStarMap.class);
         }
     }
 

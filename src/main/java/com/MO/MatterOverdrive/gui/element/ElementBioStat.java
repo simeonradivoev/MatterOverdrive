@@ -1,12 +1,15 @@
 package com.MO.MatterOverdrive.gui.element;
 
+import cofh.lib.render.RenderHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.IBionicStat;
 import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.gui.MOGuiBase;
 import com.MO.MatterOverdrive.network.packet.server.PacketUnlockBioticStat;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.util.RenderUtils;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -110,17 +113,16 @@ public class ElementBioStat extends MOElementButton {
         GL11.glDisable(GL11.GL_BLEND);
     }
 
-    public void drawIcon(ResourceLocation icon,int x,int y)
+    public void drawIcon(IIcon icon,int x,int y)
     {
         if(icon != null)
         {
             GL11.glEnable(GL11.GL_BLEND);
 
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
-            gui.bindTexture(icon);
-            gui.drawSizedTexturedModalRect(x, y,0,0,16,16,16,16);
+            ClientProxy.holoIcons.bindSheet();
+            RenderHelper.renderIcon(x, y, 0, icon, 16, 16);
             GL11.glDisable(GL11.GL_BLEND);
-
         }
     }
 

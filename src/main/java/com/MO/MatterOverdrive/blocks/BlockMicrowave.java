@@ -2,8 +2,7 @@ package com.MO.MatterOverdrive.blocks;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.includes.MOBlock;
-import com.MO.MatterOverdrive.client.render.MOBlockRenderer;
-import com.MO.MatterOverdrive.proxy.ClientProxy;
+import com.MO.MatterOverdrive.client.render.block.MOBlockRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;

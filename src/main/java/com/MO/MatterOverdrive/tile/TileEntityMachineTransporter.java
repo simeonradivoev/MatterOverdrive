@@ -23,6 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -71,6 +72,11 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         readLocations(nbt);
     }
 
+    @Override
+    protected void onAwake(Side side) {
+
+    }
+
     public void readLocations(NBTTagCompound nbt)
     {
         locations.clear();
@@ -93,6 +99,21 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         }
         nbt.setTag("transportLocations", locationsList);
         nbt.setInteger("selectedTransport", selectedLocation);
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
     }
 
     @Override

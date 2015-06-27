@@ -4,7 +4,9 @@ import cofh.lib.gui.slot.SlotEnergy;
 import cofh.lib.gui.slot.SlotRemoveOnly;
 import cofh.lib.util.helpers.EnergyHelper;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -12,8 +14,6 @@ import net.minecraft.util.ResourceLocation;
  */
 public class EnergySlot extends Slot
 {
-    protected static final ResourceLocation Icon = new ResourceLocation(Reference.PATH_GUI + "items/energy.png");
-
     public EnergySlot(boolean isMainSlot) {
         super(isMainSlot);
     }
@@ -25,9 +25,9 @@ public class EnergySlot extends Slot
     }
 
     @Override
-    public ResourceLocation getTexture()
+    public IIcon getTexture()
     {
-        return Icon;
+        return ClientProxy.holoIcons.getIcon("energy");
     }
 
     @Override

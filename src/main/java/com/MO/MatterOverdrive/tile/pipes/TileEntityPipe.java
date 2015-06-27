@@ -19,12 +19,6 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
     private int connections = 0;
 
     @Override
-    public void onAdded()
-    {
-
-    }
-
-    @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
     {
         connections = pkt.func_148857_g().getInteger("Connections");
@@ -43,14 +37,14 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
 	{
         if(needsUpdate)
         {
-            updateSides();
+            updateSides(true);
             needsUpdate = false;
         }
 	}
 
-    public void updateSides()
+    public void updateSides(boolean notify)
 	{
-        connections = 0;
+        int connections = 0;
 
         for(int i = 0;i < 6;i++)
         {
@@ -62,7 +56,7 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
             }
         }
 
-        this.setConnections(connections,2);
+        this.setConnections(connections,notify);
 	}
 
     public int getConnections()
@@ -70,13 +64,25 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
         return connections;
     }
 
-    public void setConnections(int connections,int notify)
+    public void setConnections(int connections,boolean notify)
     {
-        this.connections = connections;
-        if (worldObj != null) {
-            worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, connections, notify);
-            worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+        if (worldObj != null && this.connections != connections) {
+
+            if (notify) {
+                for (int i = 0; i < 6; i++) {
+                    TileEntity t = this.worldObj.getTileEntity(ForgeDirection.values()[i].offsetX + this.xCoord, ForgeDirection.values()[i].offsetY + this.yCoord, ForgeDirection.values()[i].offsetZ + this.zCoord);
+                    if (t instanceof TileEntityPipe) {
+                        ((TileEntityPipe) t).updateSides(false);
+                    }
+                }
+            }
+
+            worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, connections, notify ? 3 : 0);
+            //worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+            //worldObj.markBlockRangeForRenderUpdate(xCoord - 4,yCoord - 4,zCoord - 4,xCoord + 4,yCoord + 4,zCoord + 4);
+            //worldObj.notifyBlockOfNeighborChange(xCoord, yCoord, zCoord, blockType);
         }
+        this.connections = connections;
     }
 
     public abstract boolean canConnectTo(TileEntity entity,ForgeDirection direction);

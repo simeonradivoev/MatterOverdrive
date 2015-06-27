@@ -19,7 +19,7 @@ public class AndroidTeleportParticle extends EntityFX
         //this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D)) + 4;
         this.particleMaxAge = 16;
         this.noClip = true;
-        this.particleIcon = new IconHolder(0,0,32f/128f,32f/128f);
+        this.particleIcon = new IconHolder(0,0,32f/128f,32f/128f,32,32);
     }
 
     public void renderParticle(Tessellator p_70539_1_, float p_70539_2_, float xOffet, float yOffset, float zOffset, float p_70539_6_, float p_70539_7_)

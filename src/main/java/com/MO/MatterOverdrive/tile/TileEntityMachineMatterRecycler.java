@@ -8,8 +8,11 @@ import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
 import com.MO.MatterOverdrive.data.inventory.SlotRecycler;
 import com.MO.MatterOverdrive.util.MatterHelper;
+import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -55,6 +58,11 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     {
         super.readCustomNBT(nbt);
         this.recycleTime = nbt.getShort("RecycleTime");
+    }
+
+    @Override
+    protected void onAwake(Side side) {
+
     }
 
     @Override
@@ -212,5 +220,20 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type == UpgradeTypes.Speed || type == UpgradeTypes.PowerStorage || type == UpgradeTypes.PowerUsage;
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
     }
 }

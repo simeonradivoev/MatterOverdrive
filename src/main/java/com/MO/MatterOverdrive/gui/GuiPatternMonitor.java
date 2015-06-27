@@ -3,10 +3,12 @@ package com.MO.MatterOverdrive.gui;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.ContainerPatternMonitor;
+import com.MO.MatterOverdrive.container.MOBaseContainer;
 import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.pages.PageTasks;
 import com.MO.MatterOverdrive.network.packet.server.PacketPatternMonitorCommands;
 import com.MO.MatterOverdrive.network.packet.server.PacketRemoveTask;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternMonitor;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -25,7 +27,6 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
     MOElementButton requestButton;
     ElementPatternsGrid elementGrid;
     PageTasks pageTasks;
-    MOElementButton tasksButton;
     MOElementTextField searchField;
 
     public GuiPatternMonitor(InventoryPlayer inventoryPlayer, TileEntityMachinePatternMonitor machine)
@@ -41,15 +42,17 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
         elementGrid = new ElementPatternsGrid(this,48,40,160,114);
         searchField = new MOElementTextField(this,41,26,167,14);
 
-        pageTasks = new PageTasks(this,0,0,xSize,ySize,machine.getQueue((byte)0));
-        pages.add(pageTasks);
-
-        tasksButton = new MOElementButton(this,this,6,8,"Tasks",0,0,24,0,24,0,24,24,"");
-        tasksButton.setTexture(Reference.PATH_GUI_ITEM + "tasks.png", 48, 24);
-        tasksButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.tasks"));
-        pageButtons.add(tasksButton);
-
         elementGrid.updateStackList(machine.getDatabases());
+    }
+
+    @Override
+    public void registerPages(MOBaseContainer container,TileEntityMachinePatternMonitor machine)
+    {
+        super.registerPages(container,machine);
+
+        pageTasks = new PageTasks(this,0,0,xSize,ySize,machine.getQueue((byte)0));
+        pageTasks.setName("Tasks");
+        AddPage(pageTasks, ClientProxy.holoIcons.getIcon("page_icon_tasks"), MOStringHelper.translateToLocal("gui.tooltip.page.tasks")).setIconColor(Reference.COLOR_MATTER);
     }
 
     @Override
@@ -59,8 +62,8 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
 
         this.addElement(refreshButton);
         this.addElement(requestButton);
-        homePage.addElement(elementGrid);
-        homePage.addElement(searchField);
+        pages.get(0).addElement(elementGrid);
+        pages.get(0).addElement(searchField);
         AddHotbarPlayerSlots(inventorySlots,this);
     }
 

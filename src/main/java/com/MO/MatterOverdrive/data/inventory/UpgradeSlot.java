@@ -4,7 +4,9 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.IUpgradeable;
 import com.MO.MatterOverdrive.api.inventory.IUpgrade;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Map;
@@ -15,14 +17,13 @@ import java.util.Map;
 public class UpgradeSlot extends Slot
 {
     private IUpgradeable upgradeable;
-    protected static final ResourceLocation Icon = new ResourceLocation(Reference.PATH_GUI + "items/upgrade.png");
 
     public UpgradeSlot(boolean isMainSlot,IUpgradeable upgradeable) {
         super(isMainSlot);
         this.upgradeable = upgradeable;
     }
 
-
+    @Override
     public boolean isValidForSlot(ItemStack item)
     {
         if (item.getItem() instanceof IUpgrade)
@@ -39,8 +40,10 @@ public class UpgradeSlot extends Slot
         }
         return false;
     }
-    public ResourceLocation getTexture()
+
+    @Override
+    public IIcon getTexture()
     {
-        return Icon;
+        return ClientProxy.holoIcons.getIcon("upgrade");
     }
 }

@@ -51,6 +51,9 @@ public class PacketPipeline
         registerPacket(PacketTeleportPlayer.ServerHandler.class,PacketTeleportPlayer.class);
         registerPacket(PacketSpawnParticle.ClientHandler.class,PacketSpawnParticle.class);
         registerPacket(PacketSendAndroidAnction.ServerHandler.class,PacketSendAndroidAnction.class);
+        registerPacket(PacketUpdatePlanet.ClientHandler.class,PacketUpdatePlanet.class);
+        registerPacket(PacketUpdateGalaxy.ClientHandler.class,PacketUpdateGalaxy.class);
+        registerPacket(PacketStarMapClientCommands.ServerHandler.class,PacketStarMapClientCommands.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

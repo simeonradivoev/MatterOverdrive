@@ -2,10 +2,8 @@ package com.MO.MatterOverdrive.blocks;
 
 import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
-import com.MO.MatterOverdrive.client.render.MOBlockRenderer;
-import com.MO.MatterOverdrive.client.render.RendererBlockGravitationalStabilizer;
+import com.MO.MatterOverdrive.client.render.block.RendererBlockGravitationalStabilizer;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
-import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.tile.TileEntityMachineGravitationalStabilizer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

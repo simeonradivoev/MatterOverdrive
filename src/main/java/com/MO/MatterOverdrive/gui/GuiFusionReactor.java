@@ -31,7 +31,7 @@ public class GuiFusionReactor extends MOGuiMachine<TileEntityMachineFusionReacto
     public void initGui()
     {
         super.initGui();
-        homePage.addElement(powerBar);
+        pages.get(0).addElement(powerBar);
         AddHotbarPlayerSlots(this.inventorySlots,this);
     }
 
@@ -50,7 +50,7 @@ public class GuiFusionReactor extends MOGuiMachine<TileEntityMachineFusionReacto
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
         super.drawGuiContainerForegroundLayer(x,y);
-        if (homePage.isVisible())
+        if (pages.get(0).isVisible())
         {
             String info = "Efficiency";
             int width = fontRendererObj.getStringWidth(info);

@@ -9,10 +9,12 @@ import com.MO.MatterOverdrive.data.inventory.ModuleSlot;
 import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 5/27/2015.
@@ -29,6 +31,11 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     public TileEntityAndroidStation()
     {
         super(0);
+    }
+
+    @Override
+    protected void onAwake(Side side) {
+
     }
 
     @Override
@@ -113,7 +120,7 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
-        return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord + 1,yCoord + 2,zCoord + 1);
+        return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord + 1,yCoord + 3,zCoord + 1);
     }
 
     @Override
@@ -125,5 +132,20 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
             return super.isUseableByPlayer(player);
         }
         return false;
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
     }
 }

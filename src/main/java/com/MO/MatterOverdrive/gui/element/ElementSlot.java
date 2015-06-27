@@ -2,9 +2,13 @@ package com.MO.MatterOverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.element.ElementBase;
+import cofh.lib.render.RenderHelper;
 import cofh.lib.util.helpers.StringHelper;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.data.HoloIcon;
 import com.MO.MatterOverdrive.data.inventory.Slot;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -15,14 +19,14 @@ import java.util.List;
  */
 public class ElementSlot extends MOElementBase
 {
-    protected ResourceLocation icon;
+    protected IIcon icon;
     protected String type = "small";
     protected int iconOffsetX;
     protected int iconOffsetY;
 
     protected String info = "";
 
-    public ElementSlot(GuiBase gui, int posX, int posY,int width,int height,String type,ResourceLocation icon)
+    public ElementSlot(GuiBase gui, int posX, int posY,int width,int height,String type,IIcon icon)
     {
         super(gui, posX, posY,width,height);
         iconOffsetX = ((sizeX - 16) / 2);
@@ -60,15 +64,15 @@ public class ElementSlot extends MOElementBase
 
     }
 
-    public void drawSlotIcon(ResourceLocation icon,int x,int y)
+    public void drawSlotIcon(IIcon icon,int x,int y)
     {
         if(icon != null)
         {
             GL11.glEnable(GL11.GL_BLEND);
             ApplyColor();
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
-            gui.bindTexture(icon);
-            gui.drawSizedTexturedModalRect(x, y,0,0,16,16,16,16);
+            ClientProxy.holoIcons.bindSheet();
+            RenderHelper.renderIcon(x,y,0,icon,16,16);
             GL11.glDisable(GL11.GL_BLEND);
             ResetColor();
         }
@@ -94,11 +98,11 @@ public class ElementSlot extends MOElementBase
         this.info = info;
     }
 
-    public ResourceLocation getIcon() {
+    public IIcon getIcon() {
         return icon;
     }
 
-    public void setIcon(ResourceLocation icon) {
+    public void setIcon(IIcon icon) {
         this.icon = icon;
     }
 

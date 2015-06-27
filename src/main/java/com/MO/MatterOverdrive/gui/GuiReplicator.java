@@ -2,10 +2,12 @@ package com.MO.MatterOverdrive.gui;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
+import com.MO.MatterOverdrive.container.MOBaseContainer;
 import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.pages.PageTasks;
 import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.network.packet.server.PacketRemoveTask;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
@@ -24,6 +26,7 @@ import com.MO.MatterOverdrive.container.ContainerReplicator;
 import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 
 import net.minecraft.entity.player.InventoryPlayer;
+import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
@@ -35,7 +38,6 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
     ElementSlot outputSlot;
     ElementSlot seccoundOutputSlot;
     PageTasks pagePackets;
-    MOElementButton packetsButton;
     ElementItemPattern itemPattern;
 
 	public GuiReplicator(InventoryPlayer inventoryPlayer,TileEntityMachineReplicator entity)
@@ -47,14 +49,6 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 		replicate_progress = new ElementDualScaled(this,32,52);
         outputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),22,22,"big");
         seccoundOutputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.SECOUND_OUTPUT_SLOT_ID),22,22,"big");
-
-        pagePackets = new PageTasks(this,10,0,xSize,ySize,machine.getQueue((byte) 0));
-        pages.add(pagePackets);
-
-        packetsButton = new MOElementButton(this,this,6,8,"Tasks",0,0,24,0,24,0,24,24,"");
-        packetsButton.setTexture(Reference.PATH_GUI_ITEM + "tasks.png", 48, 24);
-        packetsButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.tasks"));
-        pageButtons.add(packetsButton);
 
         itemPattern = new ElementItemPattern(this, entity.getInternalPatternStorage(), "big_main", 37, 22);
         slotsList.setPosition(5, 49);
@@ -68,14 +62,24 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
 	@Override
 	public void initGui() {
         super.initGui();
-        homePage.addElement(outputSlot);
-        homePage.addElement(seccoundOutputSlot);
-        homePage.addElement(matterElement);
-        homePage.addElement(energyElement);
 		this.addElement(replicate_progress);
+        pages.get(0).addElement(outputSlot);
+        pages.get(0).addElement(seccoundOutputSlot);
+        pages.get(0).addElement(matterElement);
+        pages.get(0).addElement(energyElement);
         AddHotbarPlayerSlots(inventorySlots, this);
-        AddMainPlayerSlots(inventorySlots, homePage);
+        AddMainPlayerSlots(inventorySlots, pages.get(0));
 	}
+
+    @Override
+    public void registerPages(MOBaseContainer container,TileEntityMachineReplicator machine)
+    {
+        super.registerPages(container,machine);
+
+        pagePackets = new PageTasks(this,10,0,xSize,ySize,machine.getQueue((byte) 0));
+        pagePackets.setName("Tasks");
+        AddPage(pagePackets, ClientProxy.holoIcons.getIcon("page_icon_tasks"), MOStringHelper.translateToLocal("gui.tooltip.page.tasks")).setIconColor(Reference.COLOR_MATTER);
+    }
 
     @Override
     protected void renderToolTip(ItemStack stack, int x, int y)
@@ -111,7 +115,15 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
     }
-	
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTick, int x, int y) {
+
+        super.drawGuiContainerBackgroundLayer(partialTick,x,y);
+
+        replicate_progress.setQuantity(MathHelper.round(((float)this.machine.replicateProgress / 100f) * 24));
+    }
+
 	@Override
 	public void drawGuiContainerForegroundLayer(int part1,int part2)
 	{
@@ -168,14 +180,5 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
             MatterOverdrive.packetPipeline.sendToServer(new PacketRemoveTask(machine,mouseButton,(byte)0,Reference.TASK_STATE_INVALID));
         }
     }
-
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
-			int p_146976_2_, int p_146976_3_) 
-	{
-		super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
-
-		replicate_progress.setQuantity(MathHelper.round(((float)this.machine.replicateProgress / 100f) * 24));
-	}
 	
 }

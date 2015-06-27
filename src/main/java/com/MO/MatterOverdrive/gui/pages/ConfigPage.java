@@ -3,6 +3,9 @@ package com.MO.MatterOverdrive.gui.pages;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.gui.MOGuiMachine;
 import com.MO.MatterOverdrive.gui.element.ElementBaseGroup;
+import com.MO.MatterOverdrive.gui.element.ElementStates;
+import com.MO.MatterOverdrive.gui.element.MOElementButton;
+import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 
 /**
@@ -11,11 +14,23 @@ import com.MO.MatterOverdrive.util.MOStringHelper;
 public class ConfigPage extends ElementBaseGroup
 {
     MOGuiMachine machineGui;
+    ElementStates redstoneState;
 
     public ConfigPage(MOGuiMachine gui, int posX, int posY, int width,int height)
     {
         super(gui,posX,posY,width,height);
         machineGui = gui;
+        redstoneState = new ElementStates(gui,gui,120,40,"RedstoneMode",60,21,new String[]{MOStringHelper.translateToLocal("gui.redstone_mode.high"),MOStringHelper.translateToLocal("gui.redstone_mode.low"),MOStringHelper.translateToLocal("gui.redstone_mode.disabled")});
+        redstoneState.setLabel(MOStringHelper.translateToLocal("gui.config.redstone") + ": ");
+        redstoneState.setNormalTexture(MOElementButton.HOVER_TEXTURE);
+    }
+
+    @Override
+    public void init()
+    {
+        super.init();
+        addElement(redstoneState);
+        redstoneState.setSelectedState(machineGui.getMachine().getRedstoneMode());
     }
 
     @Override

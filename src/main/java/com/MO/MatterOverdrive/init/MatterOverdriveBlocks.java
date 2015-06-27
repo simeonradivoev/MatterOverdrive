@@ -41,6 +41,7 @@ public class MatterOverdriveBlocks
     public static BlockFusionReactorCoil fusion_reactor_coil;
     public static BlockMatterRecycler recycler;
     public static BlockAndroidStation androidStation;
+    public static BlockStarMap starMap;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -78,6 +79,7 @@ public class MatterOverdriveBlocks
         fusion_reactor_coil = new BlockFusionReactorCoil(Material.iron,"fusion_reactor_coil");
         recycler = new BlockMatterRecycler(Material.iron,"matter_recycler");
         androidStation = new BlockAndroidStation(Material.iron,"android_station");
+        starMap = new BlockStarMap(Material.iron,"star_map");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -118,6 +120,8 @@ public class MatterOverdriveBlocks
         MatterOverdrive.configHandler.subscribe(recycler);
         androidStation.Register();
         MatterOverdrive.configHandler.subscribe(androidStation);
+        starMap.Register();
+        MatterOverdrive.configHandler.subscribe(starMap);
 
         if (event.getSide() == Side.CLIENT)
         {
@@ -145,6 +149,7 @@ public class MatterOverdriveBlocks
         GameRegistry.addRecipe(new ItemStack(recycler),new Object[]{"T T", "1P2", "NTM", '2', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1),'1', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'T', MatterOverdriveItems.tritanium_plate,'P',Blocks.piston});
         GameRegistry.addRecipe(new ItemStack(gravitational_stabilizer),new Object[]{" T ","TST","CMC",'M',MatterOverdriveItems.machine_casing,'S',MatterOverdriveItems.spacetime_equalizer,'T',MatterOverdriveItems.tritanium_plate,'C',MatterOverdriveItems.s_magnet});
         GameRegistry.addRecipe(new ItemStack(fusion_reactor_controller),new Object[]{"CTC","2M3","CTC",'C',fusion_reactor_coil,'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'M',MatterOverdriveItems.machine_casing,'T',MatterOverdriveItems.tritanium_plate});
-        GameRegistry.addRecipe(new ItemStack(androidStation),new Object[]{"THA","2B3","GMR",'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'B',MatterOverdriveItems.battery,'G',Items.glowstone_dust,'R',Items.redstone,'M',MatterOverdriveItems.machine_casing,'H',new ItemStack(MatterOverdriveItems.androidParts, 1,0),'T',new ItemStack(MatterOverdriveItems.androidParts, 1,3),'A',new ItemStack(MatterOverdriveItems.androidParts, 1,1)});
+        GameRegistry.addRecipe(new ItemStack(androidStation),new Object[]{"THA","2F3","GMR",'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'F',MatterOverdriveItems.forceFieldEmitter,'G',Items.glowstone_dust,'R',Items.redstone,'M',MatterOverdriveItems.machine_casing,'H',new ItemStack(MatterOverdriveItems.androidParts, 1,0),'T',new ItemStack(MatterOverdriveItems.androidParts, 1,3),'A',new ItemStack(MatterOverdriveItems.androidParts, 1,1)});
+        GameRegistry.addRecipe(new ItemStack(starMap),new Object[]{" S ","CFC","GMR",'S',MatterOverdriveItems.security_protocol,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'M',MatterOverdriveItems.machine_casing,'F',MatterOverdriveItems.forceFieldEmitter,'G',Items.glowstone_dust,'R',Items.redstone});
     }
 }

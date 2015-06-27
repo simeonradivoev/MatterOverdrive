@@ -45,12 +45,12 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 	{
 		super.initGui();
 
-        homePage.addElement(outputSlot);
-        homePage.addElement(energyElement);
-        homePage.addElement(matterElement);
+		pages.get(0).addElement(outputSlot);
+		pages.get(0).addElement(energyElement);
+		pages.get(0).addElement(matterElement);
         this.addElement(decompose_progress);
 
-        AddMainPlayerSlots(this.inventorySlots, homePage);
+        AddMainPlayerSlots(this.inventorySlots, pages.get(0));
 		AddHotbarPlayerSlots(this.inventorySlots,this);
 	}
 

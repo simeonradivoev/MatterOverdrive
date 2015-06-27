@@ -4,6 +4,8 @@ import cofh.api.modhelpers.ThermalExpansionHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
 import com.MO.MatterOverdrive.items.*;
+import com.MO.MatterOverdrive.items.starmap.ItemScoutShip;
+import com.MO.MatterOverdrive.items.starmap.ShipFactory;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -49,6 +51,8 @@ public class MatterOverdriveItems
     public static Wrench wrench;
     public static RougeAndroidParts androidParts;
     public static MOBaseItem forceFieldEmitter;
+    public static ShipFactory shipFactory;
+    public static ItemScoutShip scoutShip;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -81,6 +85,8 @@ public class MatterOverdriveItems
         wrench = new Wrench("tritanium_wrench");
         androidParts = new RougeAndroidParts("rouge_android_part");
         forceFieldEmitter = new MOBaseItem("forcefield_emitter");
+        shipFactory = new ShipFactory("ship_factory");
+        scoutShip = new ItemScoutShip("scout_ship");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -118,6 +124,8 @@ public class MatterOverdriveItems
         androidParts.Register();
         forceFieldEmitter.Register();
         hc_battery.Register();
+        shipFactory.Register();
+        scoutShip.Register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust),new ItemStack(tritanium_ingot),5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_ingot),10);

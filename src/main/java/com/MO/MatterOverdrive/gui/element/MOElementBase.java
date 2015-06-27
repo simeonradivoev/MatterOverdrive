@@ -45,7 +45,9 @@ public abstract class MOElementBase extends ElementBase
 
     protected void ApplyColor()
     {
-        RenderUtils.applyColor(color);
+        if (color != null) {
+            RenderUtils.applyColor(color);
+        }
     }
 
     protected void ResetColor()

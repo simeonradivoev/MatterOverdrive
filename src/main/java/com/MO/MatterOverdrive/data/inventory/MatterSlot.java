@@ -2,8 +2,10 @@ package com.MO.MatterOverdrive.data.inventory;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.slot.SlotMatter;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -11,9 +13,6 @@ import net.minecraft.util.ResourceLocation;
  */
 public class MatterSlot extends Slot
 {
-
-    protected static final ResourceLocation Icon = new ResourceLocation(Reference.PATH_GUI + "items/decompose.png");
-
     public MatterSlot(boolean isMainSlot) {
         super(isMainSlot);
     }
@@ -25,9 +24,9 @@ public class MatterSlot extends Slot
     }
 
     @Override
-    public ResourceLocation getTexture()
+    public IIcon getTexture()
     {
-        return Icon;
+        return ClientProxy.holoIcons.getIcon("decompose");
     }
 
     @Override

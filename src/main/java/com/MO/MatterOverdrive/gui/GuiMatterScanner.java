@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.gui;
 import cofh.lib.util.TimeTracker;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.container.ContainerMatterScanner;
+import com.MO.MatterOverdrive.container.MOBaseContainer;
 import com.MO.MatterOverdrive.gui.element.MOElementButton;
 import com.MO.MatterOverdrive.gui.pages.PageInfo;
 import com.MO.MatterOverdrive.gui.pages.PageScanInfo;
@@ -11,12 +12,15 @@ import com.MO.MatterOverdrive.network.packet.bi.PacketMatterScannerGetDatabase;
 import com.MO.MatterOverdrive.network.packet.server.PacketMatterScannerUpdate;
 
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.client.event.GuiScreenEvent;
 
 public class GuiMatterScanner extends MOGuiBase
 {
@@ -24,9 +28,7 @@ public class GuiMatterScanner extends MOGuiBase
     public int databaseSlot;
 
 	private static final int REFRESH_DEPLAY = 200;
-	private static final String INFO_PAGE_BUTTON_NAME = "InfoPageButton";
-	private static final String SCAN_PAGE_BUTTON_NAME = "ScanPageButton";
-	public static final String QUIDE_ELEMENTS_NAME = "QuideList";
+    public static final String QUIDE_ELEMENTS_NAME = "GUIDE_ENTRY";
 
 	int lastPage = 0;
 	PageScanInfo pageScanInfo;
@@ -45,22 +47,10 @@ public class GuiMatterScanner extends MOGuiBase
 		this.databaseSlot = slot;
 		lastPage = MatterScanner.getLastPage(scanner);
 
-		pageScanInfo = new PageScanInfo(this,0,0,"Scan Process",null,scanner);
+		pageScanInfo = new PageScanInfo(this,0,0,"Scan Info",null,scanner);
 		updateSelected(scanner);
 		pageScanInfo.setSize(this.xSize, this.ySize);
-		pageInfo = new PageInfo(this,0,0,xSize,ySize,"Matter Overdrive");
-        pages.add(pageScanInfo);
-        pages.add(pageInfo);
 
-		scanPageButton = new MOElementButton(this,this,6,8,SCAN_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
-		scanPageButton.setTexture(Reference.PATH_GUI_ITEM + "search54.png", 44, 22);
-		scanPageButton.setToolTip("Scan Info");
-        pageButtons.add(scanPageButton);
-
-		infoPageButton = new MOElementButton(this,this,6,28 + 8,INFO_PAGE_BUTTON_NAME,0,0,22,0,22,0,22,22,"");
-		infoPageButton.setTexture(Reference.PATH_GUI_ITEM + "info20.png", 44, 22);
-		scanPageButton.setToolTip("Quide Database");
-        pageButtons.add(infoPageButton);
 
 		MatterOverdrive.packetPipeline.sendToServer(new PacketMatterScannerGetDatabase(MatterScanner.getLinkPosition(scanner)));
 	}
@@ -82,6 +72,14 @@ public class GuiMatterScanner extends MOGuiBase
 		this.sidePannel.addElement(scanPageButton);
 		this.sidePannel.addElement(infoPageButton);
 	}
+
+    @Override
+    public void registerPages(MOBaseContainer container)
+    {
+        pageInfo = new PageInfo(this,0,0,xSize,ySize,"Info Database");
+        AddPage(pageScanInfo, ClientProxy.holoIcons.getIcon("page_icon_info"), MOStringHelper.translateToLocal("gui.tooltip.page.scan_info"));
+        AddPage(pageInfo,ClientProxy.holoIcons.getIcon("page_icon_search"),MOStringHelper.translateToLocal("gui.tooltip.page.info_database"));
+    }
 
 	@Override
 	protected void updateElementInformation()

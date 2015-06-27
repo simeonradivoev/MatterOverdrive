@@ -1,6 +1,6 @@
 package com.MO.MatterOverdrive.gui.element;
 
-public interface IMOListBoxElement 
+public interface IMOListBoxElement
 {
 	String getName();
 

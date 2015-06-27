@@ -4,8 +4,10 @@ import cofh.lib.gui.element.ElementEnergyStored;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.ContainerMatterAnalyzer;
+import com.MO.MatterOverdrive.container.MOBaseContainer;
 import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.pages.PageTasks;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.tile.TileEntityMachineMatterAnalyzer;
 
 import com.MO.MatterOverdrive.util.MOStringHelper;
@@ -19,7 +21,6 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
     MOElementEnergy energyElement;
     ElementScanProgress scanProgress;
     PageTasks pageTasks;
-    MOElementButton tasksButton;
 
     public GuiMatterAnalyzer(InventoryPlayer playerInventory,TileEntityMachineMatterAnalyzer analyzer)
     {
@@ -28,13 +29,15 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
         energyElement = new MOElementEnergy(this,176,39,analyzer.getEnergyStorage());
         energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
         scanProgress = new ElementScanProgress(this,49,36);
-        pageTasks = new PageTasks(this,0,0,xSize,ySize,analyzer.getQueue((byte)0));
-        pages.add(pageTasks);
+    }
 
-        tasksButton = new MOElementButton(this,this,6,8,"Tasks",0,0,24,0,24,0,24,24,"");
-        tasksButton.setTexture(Reference.PATH_GUI_ITEM + "tasks.png", 48, 24);
-        tasksButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.tasks"));
-        pageButtons.add(tasksButton);
+    @Override
+    public void registerPages(MOBaseContainer container,TileEntityMachineMatterAnalyzer machine)
+    {
+        super.registerPages(container,machine);
+        pageTasks = new PageTasks(this,0,0,xSize,ySize,machine.getQueue((byte)0));
+        pageTasks.setName("Tasks");
+        AddPage(pageTasks, ClientProxy.holoIcons.getIcon("page_icon_tasks"),"gui.tooltip.page.tasks").setIconColor(Reference.COLOR_MATTER);
     }
 
     @Override
@@ -42,10 +45,10 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
     {
         super.initGui();
 
-        homePage.addElement(energyElement);
-        homePage.addElement(scanProgress);
+        pages.get(0).addElement(energyElement);
+        pages.get(0).addElement(scanProgress);
 
-        AddMainPlayerSlots(inventorySlots, homePage);
+        AddMainPlayerSlots(inventorySlots, pages.get(0));
         AddHotbarPlayerSlots(inventorySlots,this);
     }
 

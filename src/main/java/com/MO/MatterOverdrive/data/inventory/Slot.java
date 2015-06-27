@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.data.inventory;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -22,7 +23,7 @@ public class Slot
     {
         return true;
     }
-    public ResourceLocation getTexture()
+    public IIcon getTexture()
     {
         return null;
     }

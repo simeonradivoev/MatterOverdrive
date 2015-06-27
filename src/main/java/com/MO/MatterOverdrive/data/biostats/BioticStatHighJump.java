@@ -13,7 +13,6 @@ import net.minecraftforge.event.entity.living.LivingEvent;
  */
 public class BioticStatHighJump extends AbstractBioticStat {
 
-    public static final ResourceLocation icon = new ResourceLocation(Reference.PATH_GUI_ITEM + "biotic_stat_high_jump.png");
     public final static int ENERGY_PER_JUMP = 1024;
 
     public BioticStatHighJump(String name, int xp)
@@ -68,10 +67,5 @@ public class BioticStatHighJump extends AbstractBioticStat {
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
         return isEnabled(androidPlayer,level);
-    }
-
-    @Override
-    public ResourceLocation getIcon(int level) {
-        return icon;
     }
 }

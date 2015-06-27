@@ -82,19 +82,19 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
     {
         super.initGui();
 
-        homePage.addElement(energy);
-        homePage.addElement(matterStored);
-        homePage.addElement(list);
-        configPage.addElement(xCoords);
-        configPage.addElement(yCoords);
-        configPage.addElement(zCoords);
-        configPage.addElement(saveButton);
-        configPage.addElement(saveToNewButton);
-        configPage.addElement(name);
-        configPage.addElement(resetButton);
-        homePage.addElement(removeLocation);
+        pages.get(0).addElement(energy);
+        pages.get(0).addElement(matterStored);
+        pages.get(0).addElement(list);
+        pages.get(1).addElement(xCoords);
+        pages.get(1).addElement(yCoords);
+        pages.get(1).addElement(zCoords);
+        pages.get(1).addElement(saveButton);
+        pages.get(1).addElement(saveToNewButton);
+        pages.get(1).addElement(name);
+        pages.get(1).addElement(resetButton);
+        pages.get(0).addElement(removeLocation);
 
-        redstoneState.setPosition(120,150);
+        pages.get(1).getElements().get(0).setPosition(120, 150);
 
         xCoords.init();
         yCoords.init();
@@ -137,7 +137,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
     {
         super.drawGuiContainerForegroundLayer(x, y);
 
-        if (configPage.isVisible()) {
+        if (pages.get(1).isVisible()) {
             getFontRenderer().drawString("X:", xCoords.getPosX() - 10, xCoords.getPosY() + 4, 0xFFFFFF);
             getFontRenderer().drawString(Integer.toString(xCoords.getNumber() - machine.xCoord), xCoords.getPosX() + xCoords.getWidth() + 4, xCoords.getPosY() + 4, 0xFFFFFF);
 

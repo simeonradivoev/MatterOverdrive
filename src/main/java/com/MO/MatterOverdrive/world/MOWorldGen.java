@@ -14,7 +14,9 @@ import net.minecraft.world.gen.feature.WorldGenDungeons;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import scala.Int;
 
+import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -29,6 +31,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     public static final int TRITANIUM_VEIN_SIZE = 6;
     public static final int DILITHIUM_VEINS_PER_CHUNK = 4;
     public static final int DILITHIUM_VEIN_SIZE = 3;
+    HashSet<Integer> gravitationalAnomalyDimensions;
 
     boolean generateTritanium;
     boolean generateDilithium;
@@ -39,6 +42,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         tritaniumGen = new WorldGenMinable(MatterOverdriveBlocks.tritaniumOre,TRITANIUM_VEIN_SIZE);
         dilithiumGen = new WorldGenMinable(MatterOverdriveBlocks.dilithiumOre,DILITHIUM_VEIN_SIZE);
         anomalyGen = new WorldGenGravitationalAnomaly(0.005f,2048,2048 + 8192);
+        gravitationalAnomalyDimensions = new HashSet<Integer>();
 
         configurationHandler.subscribe(anomalyGen);
     }
@@ -57,6 +61,8 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
                 generateEnd(world, random, chunkX * 16, chunkZ * 16);
                 break;
         }
+
+        generateGravitationalAnomalies(world,random,chunkX * 16,chunkZ * 16,world.provider.dimensionId);
     }
 
     public void generateOverworld(World world,Random random,int chunkX, int chunkZ)
@@ -86,25 +92,28 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
             }
         }
 
-        generateGravitationalAnomalies(world,random,chunkX,chunkZ);
+
     }
     public void generateNether(World world,Random random,int chunkX, int chunkZ)
     {
-        generateGravitationalAnomalies(world,random,chunkX,chunkZ);
+
     }
     public void generateEnd(World world,Random random,int chunkX, int chunkZ)
     {
-        generateGravitationalAnomalies(world,random,chunkX,chunkZ);
+
     }
-    private void generateGravitationalAnomalies(World world,Random random,int chunkX, int chunkZ)
+    private void generateGravitationalAnomalies(World world,Random random,int chunkX, int chunkZ,int dimention)
     {
-        if (generateAnomalies) {
-            int x = chunkX + random.nextInt(16);
-            int z = chunkZ + random.nextInt(16);
-            int y = random.nextInt(60) + 4;
+        if (generateAnomalies)
+        {
+            if (gravitationalAnomalyDimensions.contains(dimention)) {
+                int x = chunkX + random.nextInt(16);
+                int z = chunkZ + random.nextInt(16);
+                int y = random.nextInt(60) + 4;
 
-            if (anomalyGen.generate(world, random, x, y, z)) {
+                if (anomalyGen.generate(world, random, x, y, z)) {
 
+                }
             }
         }
     }
@@ -116,7 +125,8 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     }
 
     @Override
-    public void onConfigChanged(MOConfigurationHandler config) {
+    public void onConfigChanged(MOConfigurationHandler config)
+    {
         Property shouldGenerateOres = config.config.get(MOConfigurationHandler.CATEGORY_WORLD_GEN, MOConfigurationHandler.CATEGORY_WORLD_SPAWN_ORES, true);
         shouldGenerateOres.comment = "Should Matter Overdrive Ore Blocks be Generated ?";
         generateTritanium = shouldGenerate(MatterOverdriveBlocks.tritaniumOre, config) && shouldGenerateOres.getBoolean(true);
@@ -124,5 +134,12 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         Property shouldGenerateOthers = config.config.get(MOConfigurationHandler.CATEGORY_WORLD_GEN, MOConfigurationHandler.CATEGORY_WORLD_SPAWN_OTHER, true);
         shouldGenerateOthers.comment = "Should other Matter Overdrive World Blocks be Generated?";
         generateAnomalies = shouldGenerate(MatterOverdriveBlocks.gravitational_anomaly, config) && shouldGenerateOthers.getBoolean(true);
+        Property gravitationalAnomalyDimsPropery = config.config.get(MOConfigurationHandler.CATEGORY_WORLD_GEN,"gravitational_anomaly_dimensions",new int[]{-1,0,2});
+        gravitationalAnomalyDimsPropery.comment = "Dimension id's in which the gravitational anomaly should spawn in";
+        int[] gravitationalAnomalyDims = gravitationalAnomalyDimsPropery.getIntList();
+        for (int i = 0;i < gravitationalAnomalyDims.length;i++)
+        {
+            gravitationalAnomalyDimensions.add(gravitationalAnomalyDims[i]);
+        }
     }
 }

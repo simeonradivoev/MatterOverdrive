@@ -17,6 +17,7 @@ import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import com.MO.MatterOverdrive.matter_network.packets.MatterNetwrokResponcePacket;
 import com.MO.MatterOverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -178,6 +179,11 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     }
 
     @Override
+    protected void onAwake(Side side) {
+
+    }
+
+    @Override
     public BlockPosition getPosition() {
         return new BlockPosition(xCoord,yCoord,zCoord);
     }
@@ -275,5 +281,20 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     public boolean shouldRenderInPass(int pass)
     {
         return pass == 1;
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
     }
 }

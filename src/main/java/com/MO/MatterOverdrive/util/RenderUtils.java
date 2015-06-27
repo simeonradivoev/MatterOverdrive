@@ -1,38 +1,31 @@
 package com.MO.MatterOverdrive.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cofh.lib.gui.GuiColor;
-import cofh.lib.inventory.InventoryManager;
-import cofh.lib.util.helpers.BlockHelper;
-import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.client.render.TileEntityRendererPatternMonitor;
+import com.MO.MatterOverdrive.client.render.tileentity.TileEntityRendererPatternMonitor;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
-import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import org.lwjgl.util.vector.Vector3f;
-import scala.reflect.internal.Trees.This;
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nullable;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -45,18 +38,24 @@ public class RenderUtils
 	public static void renderStack(int x, int y, ItemStack stack) {
 		if (stack != null && stack.getItem() != null) {
 			glColor3f(1, 1, 1);
+			glDisable(GL_CULL_FACE);
+			glDepthMask(true);
 			RenderHelper.enableGUIStandardItemLighting();
 			renderItem.renderItemIntoGUI(fontRenderer, textureManager, stack, x, y);
 			RenderHelper.disableStandardItemLighting();
+			glEnable(GL_CULL_FACE);
 		}
 	}
 
 	public static void renderStack(int x, int y, ItemStack stack,float opacity) {
 		if (stack != null && stack.getItem() != null) {
 			glColor3f(1, 1, 1);
+			glDisable(GL_CULL_FACE);
+			glDepthMask(true);
 			RenderHelper.enableGUIStandardItemLighting();
 			renderItem.renderItemIntoGUI(fontRenderer, textureManager, stack, x, y);
 			RenderHelper.disableStandardItemLighting();
+			glEnable(GL_CULL_FACE);
 		}
 	}
 
@@ -107,47 +106,58 @@ public class RenderUtils
 
 	public static void drawCube(double sizeX,double sizeY,double sizeZ,GuiColor color)
 	{
+		drawCube(0, 0, 0, sizeX, sizeY, sizeZ, color);
+	}
+
+	public static void drawCube(double sizeX,double sizeY,double sizeZ,GuiColor color,float multiply)
+	{
+		drawCube(0, 0, 0, sizeX, sizeY, sizeZ, new GuiColor((int)(color.getIntR() * multiply),(int)(color.getIntG() * multiply),(int)(color.getIntB() * multiply)));
+	}
+
+	public static void drawCube(double x,double y,double z,double sizeX,double sizeY,double sizeZ,GuiColor color)
+	{
 		Tessellator tessellator = Tessellator.instance;
 
 		tessellator.startDrawingQuads();
-		tessellator.setColorRGBA(color.getIntR(), color.getIntG(), color.getIntB(), color.getIntA());
+		if (color != null)
+			tessellator.setColorRGBA(color.getIntR(), color.getIntG(), color.getIntB(), color.getIntA());
 		tessellator.setBrightness(255);
 
 		//base
-		tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-		tessellator.addVertexWithUV(sizeX, 0, 0, 1, 0);
-		tessellator.addVertexWithUV(sizeX, 0, sizeZ, 1, 1);
-		tessellator.addVertexWithUV(0, 0, sizeZ, 0, 1);
+		tessellator.addVertexWithUV(x, y, 0, 0, 0);
+		tessellator.addVertexWithUV(x + sizeX, y, 0, 1, 0);
+		tessellator.addVertexWithUV(x + sizeX, y, sizeZ, 1, 1);
+		tessellator.addVertexWithUV(x, y, sizeZ, 0, 1);
 
 		//top
-		tessellator.addVertexWithUV(sizeX, sizeY, 0, 1, 0);
-		tessellator.addVertexWithUV(0, sizeY, 0, 0, 0);
-		tessellator.addVertexWithUV(0, sizeY, sizeZ, 0, 1);
-		tessellator.addVertexWithUV(sizeX, sizeY, sizeZ, 1, 1);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, 0, 1, 0);
+		tessellator.addVertexWithUV(x, y + sizeY, 0, 0, 0);
+		tessellator.addVertexWithUV(x, y + sizeY, sizeZ, 0, 1);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, sizeZ, 1, 1);
 
 		//west
-		tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-		tessellator.addVertexWithUV(0, 0, sizeZ, 1, 0);
-		tessellator.addVertexWithUV(0, sizeY, sizeZ, 1, 1);
-		tessellator.addVertexWithUV(0, sizeY, 0, 0, 1);
+		tessellator.addVertexWithUV(x, y, 0, 0, 0);
+		tessellator.addVertexWithUV(x, y, sizeZ, 1, 0);
+		tessellator.addVertexWithUV(x, y + sizeY, sizeZ, 1, 1);
+		tessellator.addVertexWithUV(x, y + sizeY, 0, 0, 1);
 
 		//east
-		tessellator.addVertexWithUV(sizeX, 0, sizeZ, 1, 0);
-		tessellator.addVertexWithUV(sizeX, 0, 0, 0, 0);
-		tessellator.addVertexWithUV(sizeX, sizeY, 0, 0, 1);
-		tessellator.addVertexWithUV(sizeX, sizeY, sizeZ, 1, 1);
+		tessellator.addVertexWithUV(x + sizeX, y, sizeZ, 1, 0);
+		tessellator.addVertexWithUV(x + sizeX, y, 0, 0, 0);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, 0, 0, 1);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, sizeZ, 1, 1);
 
 		//north
-		tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-		tessellator.addVertexWithUV(0, sizeY, 0, 0, 1);
-		tessellator.addVertexWithUV(sizeX, sizeY, 0, 1, 1);
-		tessellator.addVertexWithUV(sizeX, 0, 0, 1, 0);
+		tessellator.addVertexWithUV(x, y, 0, 0, 0);
+		tessellator.addVertexWithUV(x, y + sizeY, 0, 0, 1);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, 0, 1, 1);
+		tessellator.addVertexWithUV(x + sizeX, y, 0, 1, 0);
 
 		//south
-		tessellator.addVertexWithUV(0, sizeY, sizeZ, 0, 1);
-		tessellator.addVertexWithUV(0, 0, sizeZ, 0, 0);
-		tessellator.addVertexWithUV(sizeX, 0, sizeZ, 1, 0);
-		tessellator.addVertexWithUV(sizeX, sizeY, sizeZ, 1, 1);
+		tessellator.addVertexWithUV(x, y + sizeY, sizeZ, 0, 1);
+		tessellator.addVertexWithUV(x, y,sizeZ, 0, 0);
+		tessellator.addVertexWithUV(x + sizeX, y, sizeZ, 1, 0);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, sizeZ, 1, 1);
 
 		tessellator.draw();
 	}
@@ -173,24 +183,27 @@ public class RenderUtils
 		glColor4f((color & 0x000000ff) / 255f,(color & 0x0000ff00) / 255f,(color & 0x00ff0000) / 256f,(color >> 24)/255f);
 	}
 
-	public static void applyColor(GuiColor color)
-	{
+	public static void applyColor(GuiColor color) {
 		glColor3f(color.getFloatR(), color.getFloatG(), color.getFloatB());
 	}
 
-	public static void applyColorWithMultipy(GuiColor color,float mul)
-	{
+	public static void applyColorWithMultipy(GuiColor color,float mul) {
 		glColor3f(color.getFloatR() * mul, color.getFloatG() * mul, color.getFloatB() * mul);
 	}
 
+    public static void applyColorWithAdd(GuiColor color,float add)
+    {
+        glColor3f(color.getFloatR() + add, color.getFloatG() + add, color.getFloatB() + add);
+    }
+
 	public static void applyColorWithAlpha(GuiColor color)
 	{
-		glColor4f(color.getFloatR(),color.getFloatG(),color.getFloatB(),color.getFloatA());
+		glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
 	}
 
     public static void beginDrawinngBlockScreen(double x, double y, double z,ForgeDirection side,GuiColor color,TileEntity entity)
     {
-        beginDrawinngBlockScreen(x,y,z,side,color,entity,0.05);
+        beginDrawinngBlockScreen(x, y, z, side, color, entity, 0.05);
     }
 
     public static void beginDrawinngBlockScreen(double x, double y, double z,ForgeDirection side,GuiColor color,TileEntity entity,double offset)
@@ -296,6 +309,40 @@ public class RenderUtils
 
 		GL11.glTranslated(-interpPosX, -interpPosY, -interpPosZ);
 	}
+
+	public static void rotateTo(Entity viewer)
+	{
+		glRotated(viewer.rotationYaw,0,-1,0);
+		glRotated(viewer.rotationPitch, 1, 0, 0);
+	}
+
+	public static void tessalateParticle(EntityLivingBase viewer, IIcon particleIcon,double scale,Vec3 position,GuiColor color)
+	{
+		tessalateParticle(viewer, particleIcon, scale, position, color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
+	}
+
+	public static void tessalateParticle(EntityLivingBase viewer, IIcon particleIcon,double scale,Vec3 position,float r,float g,float b,float a)
+	{
+		float f1 = MathHelper.cos(viewer.rotationYaw * 0.017453292F);
+		float f2 = MathHelper.sin(viewer.rotationYaw * 0.017453292F);
+		float f3 = -f2 * MathHelper.sin(viewer.rotationPitch * 0.017453292F);
+		float f4 = f1 * MathHelper.sin(viewer.rotationPitch * 0.017453292F);
+		float f5 = MathHelper.cos(viewer.rotationPitch * 0.017453292F);
+
+		float uMin = particleIcon.getMinU();
+		float uMax = particleIcon.getMaxU();
+		float vMin = particleIcon.getMinV();
+		float vMax = particleIcon.getMaxV();
+
+		float x = (float)position.xCoord;
+		float y = (float)position.yCoord;
+		float z = (float)position.zCoord;
+		Tessellator.instance.setColorRGBA_F(r, g, b, a);
+		Tessellator.instance.addVertexWithUV((double)(x - f1 * scale - f3 * scale), (double)(y - f5 * scale), (double)(z - f2 * scale - f4 * scale), (double)uMax, (double)vMax);
+		Tessellator.instance.addVertexWithUV((double) (x - f1 * scale + f3 * scale), (double) (y + f5 * scale), (double) (z - f2 * scale + f4 * scale), (double) uMax, (double) vMin);
+		Tessellator.instance.addVertexWithUV((double)(x + f1 * scale + f3 * scale), (double)(y + f5 * scale), (double)(z + f2 * scale + f4 * scale), (double)uMin, (double)vMin);
+		Tessellator.instance.addVertexWithUV((double)(x + f1 * scale - f3 * scale), (double)(y - f5 * scale), (double)(z + f2 * scale - f4 * scale), (double)uMin, (double)vMax);
+	}
 	
 	public static void enable3DRender() {
 		 GL11.glEnable(GL11.GL_LIGHTING);
@@ -309,17 +356,31 @@ public class RenderUtils
 		 GL11.glEnable(GL11.GL_CULL_FACE);
 	 }
 
-	public static void drawSizedTexturedModalRect(int x, int y, int u, int v, int width, int height,int widthU, int heightV, float texW, float texH,float zLevel) {
+	public static void drawSizedTexturedModalRect(int x, int y, int u, int v, int width, int height,int widthU, int heightV, float texW, float texH,float zLevel)
+	{
+        Tessellator.instance.startDrawingQuads();
+		tessalateSizedModelRect(x, y, u, v, width, height, widthU, heightV, texW, texH, zLevel);
+        Tessellator.instance.draw();
+	}
 
+	public static void tessalateSizedModelRect(int x,int y,int u, int v,int width,int height,int widthU,int heightV,float texW,float texH,float zLevel)
+	{
 		float texU = 1 / texW;
 		float texV = 1 / texH;
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x, y + height, zLevel, u * texU, (v + heightV) * texV);
-		tessellator.addVertexWithUV(x + width, y + height, zLevel, (u + widthU) * texU, (v + heightV) * texV);
-		tessellator.addVertexWithUV(x + width, y, zLevel, (u + widthU) * texU, v * texV);
-		tessellator.addVertexWithUV(x, y, zLevel, u * texU, v * texV);
-		tessellator.draw();
+		Tessellator.instance.addVertexWithUV(x, y + height, zLevel, u * texU, (v + heightV) * texV);
+		Tessellator.instance.addVertexWithUV(x + width, y + height, zLevel, (u + widthU) * texU, (v + heightV) * texV);
+		Tessellator.instance.addVertexWithUV(x + width, y, zLevel, (u + widthU) * texU, v * texV);
+		Tessellator.instance.addVertexWithUV(x, y, zLevel, u * texU, v * texV);
+	}
+
+	public static void drawString(String string,int x,int y,GuiColor color,float multiply)
+	{
+		drawString(Minecraft.getMinecraft().fontRenderer,string,x,y,color,multiply);
+	}
+
+	public static void drawString(FontRenderer fontRenderer,String string,int x,int y,GuiColor color,float multiply)
+	{
+		fontRenderer.drawString(string, x, y, new GuiColor((int) (color.getIntR() * multiply), (int) (color.getIntG() * multiply), (int) (color.getIntB() * multiply)).getColor());
 	}
 
 	public static void beginStencil()

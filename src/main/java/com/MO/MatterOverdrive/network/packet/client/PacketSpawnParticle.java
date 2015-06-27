@@ -1,6 +1,6 @@
 package com.MO.MatterOverdrive.network.packet.client;
 
-import com.MO.MatterOverdrive.client.RenderParticlesHandler;
+import com.MO.MatterOverdrive.client.render.RenderParticlesHandler;
 import com.MO.MatterOverdrive.fx.AndroidTeleportParticle;
 import com.MO.MatterOverdrive.network.packet.PacketAbstract;
 import com.MO.MatterOverdrive.proxy.ClientProxy;

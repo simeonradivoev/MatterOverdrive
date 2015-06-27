@@ -8,6 +8,10 @@ import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import com.MO.MatterOverdrive.util.MatterNetworkHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -47,14 +51,29 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     }
 
     @Override
-    public void onAdded() {
-        super.onAdded();
+    public void onAdded(World world, int x, int y, int z) {
 
     }
 
     @Override
-    public void onDestroyed() {
-        super.onDestroyed();
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed()
+    {
+
+    }
+
+    @Override
+    public void writeToDropItem(ItemStack itemStack) {
+
+    }
+
+    @Override
+    public void readFromPlaceItem(ItemStack itemStack) {
+
     }
 
     @Override
@@ -89,7 +108,8 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
         return MOMathHelper.getBoolean(getConnections(),side.ordinal());
     }
 
-    public void updateSides()
+    @Override
+    public void updateSides(boolean notify)
     {
         int connections = 0;
         int connectionCount = 0;
@@ -104,7 +124,7 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
             }
         }
 
-        this.setConnections(connections, 2);
+        this.setConnections(connections, notify);
     }
 
     @Override
@@ -116,5 +136,20 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     public int onNetworkTick(World world, TickEvent.Phase phase)
     {
         return 0;
+    }
+
+    @Override
+    public void writeCustomNBT(NBTTagCompound nbt) {
+
+    }
+
+    @Override
+    public void readCustomNBT(NBTTagCompound nbt) {
+
+    }
+
+    @Override
+    protected void onAwake(Side side) {
+
     }
 }

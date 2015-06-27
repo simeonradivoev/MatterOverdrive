@@ -2,7 +2,7 @@ package com.MO.MatterOverdrive.blocks;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
-import com.MO.MatterOverdrive.client.render.MOBlockRenderer;
+import com.MO.MatterOverdrive.client.render.block.MOBlockRenderer;
 import com.MO.MatterOverdrive.tile.TileEntityAndroidStation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

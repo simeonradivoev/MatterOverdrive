@@ -1,10 +1,9 @@
 package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.helpers.BlockHelper;
-import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.blocks.BlockGravitationalAnomaly;
-import com.MO.MatterOverdrive.client.RenderParticlesHandler;
+import com.MO.MatterOverdrive.client.render.RenderParticlesHandler;
 import com.MO.MatterOverdrive.fx.GravitationalStabilizerBeamParticle;
 import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
@@ -12,7 +11,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -42,6 +41,11 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
             spawnParticles(worldObj);
             hit = seacrhForAnomalies(worldObj);
         }
+    }
+
+    @Override
+    protected void onAwake(Side side) {
+
     }
 
     MovingObjectPosition seacrhForAnomalies(World world)
@@ -173,5 +177,20 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return false;
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
     }
 }

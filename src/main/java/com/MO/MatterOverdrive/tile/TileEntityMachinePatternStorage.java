@@ -28,6 +28,7 @@ import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -425,6 +426,21 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
     @Override
     public void onScan(World world, double x, double y, double z, EntityPlayer player, ItemStack scanner) {
+
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
 
     }
     //endregion

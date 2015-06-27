@@ -8,6 +8,7 @@ import com.MO.MatterOverdrive.container.slot.MOSlot;
 import com.MO.MatterOverdrive.container.slot.SlotInventory;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
+import com.MO.MatterOverdrive.gui.MOGuiMachine;
 import com.MO.MatterOverdrive.gui.element.ElementBaseGroup;
 import com.MO.MatterOverdrive.gui.element.ElementInventorySlot;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
@@ -28,25 +29,25 @@ import java.util.Map;
 public class PageUpgrades extends ElementBaseGroup
 {
     Container container;
-    MOTileEntityMachine machine;
+    MOGuiMachine guiMachine;
 
-    public PageUpgrades(GuiBase gui, int posX, int posY,Container container,MOTileEntityMachine machine)
+    public PageUpgrades(MOGuiMachine gui, int posX, int posY,Container container)
     {
-        this(gui, posX, posY, 0, 0, container, machine);
+        this(gui, posX, posY, 0, 0, container);
     }
 
-    public PageUpgrades(GuiBase gui, int posX, int posY, int width, int height,Container container,MOTileEntityMachine machine)
+    public PageUpgrades(MOGuiMachine gui, int posX, int posY, int width, int height,Container container)
     {
         super(gui, posX, posY, width, height);
         this.container = container;
-        this.machine = machine;
+        this.guiMachine = gui;
     }
 
     @Override
     public void init()
     {
         super.init();
-        AddUpgradeSlots(container, machine.getInventory());
+        AddUpgradeSlots(container, guiMachine.getMachine().getInventoryContainer());
     }
 
     @Override
@@ -71,7 +72,7 @@ public class PageUpgrades extends ElementBaseGroup
                     Map<UpgradeTypes,Double> upgradeMap = upgrade.getUpgrades(upgradeItem);
                     for (final Map.Entry<UpgradeTypes, Double> entry : upgradeMap.entrySet())
                     {
-                        if (machine.isAffectedByUpgrade(entry.getKey())) {
+                        if (guiMachine.getMachine().isAffectedByUpgrade(entry.getKey())) {
                             if (upgradesMap.containsKey(entry.getKey())) {
                                 double previusValue = upgradesMap.get(entry.getKey());
                                 upgradesMap.put(entry.getKey(), previusValue * entry.getValue());
@@ -88,7 +89,7 @@ public class PageUpgrades extends ElementBaseGroup
 
         for (final Map.Entry<UpgradeTypes, Double> entry : upgradesMap.entrySet())
         {
-            if (machine.isAffectedByUpgrade(entry.getKey())) {
+            if (guiMachine.getMachine().isAffectedByUpgrade(entry.getKey())) {
                 infos.add(MOStringHelper.toInfo(entry.getKey(), entry.getValue()));
             }
         }

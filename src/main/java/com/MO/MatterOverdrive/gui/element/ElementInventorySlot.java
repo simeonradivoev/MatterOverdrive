@@ -3,7 +3,9 @@ package com.MO.MatterOverdrive.gui.element;
 import cofh.lib.gui.GuiBase;
 import cofh.lib.util.helpers.StringHelper;
 import com.MO.MatterOverdrive.container.slot.MOSlot;
+import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Slot;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
@@ -15,7 +17,7 @@ public class ElementInventorySlot extends ElementSlot
 {
     MOSlot slot;
 
-    public ElementInventorySlot(GuiBase gui,MOSlot slot, int posX, int posY,int width,int height, String type,ResourceLocation icon)
+    public ElementInventorySlot(GuiBase gui,MOSlot slot, int posX, int posY,int width,int height, String type,IIcon icon)
     {
         super(gui, posX, posY,width,height, type,icon);
         this.slot = slot;
@@ -26,7 +28,7 @@ public class ElementInventorySlot extends ElementSlot
         this(gui,slot, posX, posY,width,height, type,null);
     }
 
-    public ElementInventorySlot(GuiBase gui,MOSlot slot,int width,int height, String type,ResourceLocation icon) {
+    public ElementInventorySlot(GuiBase gui,MOSlot slot,int width,int height, String type,IIcon icon) {
         this(gui,slot, slot.xDisplayPosition, slot.yDisplayPosition, width,height,type,icon);
     }
 
@@ -48,8 +50,8 @@ public class ElementInventorySlot extends ElementSlot
 
         if (!isVisible)
         {
-            slot.xDisplayPosition = Integer.MIN_VALUE;
-            slot.yDisplayPosition = Integer.MIN_VALUE;
+            slot.xDisplayPosition = Integer.MIN_VALUE+10;
+            slot.yDisplayPosition = Integer.MIN_VALUE+10;
         }
         else {
             slot.xDisplayPosition = posX + iconOffsetX;

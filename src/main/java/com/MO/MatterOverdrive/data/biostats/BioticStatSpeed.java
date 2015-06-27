@@ -19,7 +19,6 @@ import java.util.UUID;
  */
 public class BioticStatSpeed extends AbstractBioticStat
 {
-    public static final ResourceLocation icon = new ResourceLocation(Reference.PATH_GUI_ITEM + "biotic_stat_speed.png");
     UUID modiferID;
 
     public BioticStatSpeed(String name, int xp) {
@@ -85,10 +84,5 @@ public class BioticStatSpeed extends AbstractBioticStat
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
         return isEnabled(androidPlayer,level);
-    }
-
-    @Override
-    public ResourceLocation getIcon(int level) {
-        return icon;
     }
 }

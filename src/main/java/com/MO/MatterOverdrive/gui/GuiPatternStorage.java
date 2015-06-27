@@ -1,25 +1,14 @@
 package com.MO.MatterOverdrive.gui;
 
-import cofh.lib.gui.element.ElementBase;
 import cofh.lib.gui.element.ElementEnergyStored;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.ContainerPatternStorage;
-import com.MO.MatterOverdrive.container.MOBaseContainer;
 import com.MO.MatterOverdrive.container.slot.MOSlot;
-import com.MO.MatterOverdrive.container.slot.SlotDatabase;
 import com.MO.MatterOverdrive.container.slot.SlotPatternStorage;
-import com.MO.MatterOverdrive.data.inventory.Slot;
 import com.MO.MatterOverdrive.gui.element.ElementInventorySlot;
-import com.MO.MatterOverdrive.gui.element.ElementPlayerSlots;
-import com.MO.MatterOverdrive.gui.element.ElementSlot;
-import com.MO.MatterOverdrive.gui.element.ElementSlotsList;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternStorage;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Simeon on 3/27/2015.
@@ -40,9 +29,9 @@ public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStor
     public void initGui()
     {
         super.initGui();
-        homePage.addElement(energyElement);
-        AddPatternStorageSlots(inventorySlots, homePage);
-        AddMainPlayerSlots(inventorySlots, homePage);
+        pages.get(0).addElement(energyElement);
+        AddPatternStorageSlots(inventorySlots, pages.get(0));
+        AddMainPlayerSlots(inventorySlots, pages.get(0));
         AddHotbarPlayerSlots(inventorySlots, this);
     }
 
@@ -52,7 +41,7 @@ public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStor
         {
             if(container.inventorySlots.get(i) instanceof SlotPatternStorage)
             {
-                list.addElement(new ElementInventorySlot(this, (MOSlot)container.inventorySlots.get(i),22,22, "big",machine.getInventory().getSlot(i).getTexture()));
+                list.addElement(new ElementInventorySlot(this, (MOSlot)container.inventorySlots.get(i),22,22, "big",machine.getInventoryContainer().getSlot(i).getTexture()));
             }
         }
     }

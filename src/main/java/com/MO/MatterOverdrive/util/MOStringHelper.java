@@ -2,9 +2,16 @@ package com.MO.MatterOverdrive.util;
 
 import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import sun.net.ResourceManager;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.text.DecimalFormat;
 
 /**
@@ -102,7 +109,7 @@ public class MOStringHelper
 
     public static String weaponStatToInfo(int type,double value)
     {
-        return weaponStatToInfo(type, value, weaponStatGetGood(type,value));
+        return weaponStatToInfo(type, value, weaponStatGetGood(type, value));
     }
 
     public static boolean getGood(UpgradeTypes type,double value)
@@ -117,6 +124,50 @@ public class MOStringHelper
                 return value < 1;
             default:
                 return value >= 1;
+        }
+    }
+
+    public static String readTextFile(ResourceLocation location)
+    {
+       StringBuilder text = new StringBuilder();
+        try {
+            String path = "/assets/"+location.getResourceDomain()+"/" + location.getResourcePath();
+            InputStream descriptionStream = MOStringHelper.class.getResourceAsStream(path);
+            LineNumberReader descriptionReader = new LineNumberReader(new InputStreamReader(descriptionStream));
+            String line;
+
+            while ((line = descriptionReader.readLine()) != null) {
+                text.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return text.toString();
+    }
+
+    public static String addPrefix(String name,String prefix)
+    {
+        if (prefix.endsWith("-"))
+        {
+            return prefix.substring(0,prefix.length()-2) + Character.toLowerCase(name.charAt(0)) + name.substring(1);
+        }
+        else
+        {
+            return prefix + " " + name;
+        }
+    }
+
+    public static String addSuffix(String name, String suffix)
+    {
+        if (suffix.startsWith("-"))
+        {
+            return name + suffix.substring(1);
+        }
+        else
+        {
+            return name + " " + suffix;
         }
     }
 

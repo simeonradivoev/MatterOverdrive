@@ -3,7 +3,9 @@ package com.MO.MatterOverdrive.data.inventory;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.slot.SlotShielding;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -11,8 +13,6 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ShieldingSlot extends Slot
 {
-    protected static final ResourceLocation Icon = new ResourceLocation(Reference.PATH_GUI + "items/shielding.png");
-
     public ShieldingSlot(boolean isMainSlot) {
         super(isMainSlot);
     }
@@ -30,9 +30,9 @@ public class ShieldingSlot extends Slot
     }
 
     @Override
-    public ResourceLocation getTexture()
+    public IIcon getTexture()
     {
-        return Icon;
+        return ClientProxy.holoIcons.getIcon("shielding");
     }
 
     @Override

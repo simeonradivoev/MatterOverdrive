@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.init;
 
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
@@ -35,8 +36,9 @@ public class MatterOverdriveIcons
             case 0:
                 initBlockIcons(event.map);
                 break;
-            case 1:
-
+            case 4:
+                ClientProxy.holoIcons.registerIcons(event.map);
+                break;
         }
     }
 

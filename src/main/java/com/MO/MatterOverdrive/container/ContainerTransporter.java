@@ -18,7 +18,7 @@ public class ContainerTransporter extends ContainerMachine<TileEntityMachineTran
     @Override
     public void init(InventoryPlayer inventory)
     {
-        addSlotToContainer(new SlotEnergy(machine.getInventory(),machine.getEnergySlotID(),8,55));
+        addSlotToContainer(new SlotEnergy(machine.getInventoryContainer(),machine.getEnergySlotID(),8,55));
         super.init(inventory);
         MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, false, true);
     }

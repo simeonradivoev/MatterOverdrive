@@ -1,7 +1,9 @@
 package com.MO.MatterOverdrive.api.inventory;
 
 import com.MO.MatterOverdrive.entity.AndroidPlayer;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -27,6 +29,7 @@ public interface IBionicStat
     boolean isEnabled(AndroidPlayer android, int level);
     boolean isActive(AndroidPlayer androidPlayer,int level);
     boolean showOnHud(AndroidPlayer android,int level);
-    ResourceLocation getIcon(int level);
+    void registerIcons(TextureMap holoIcons);
+    IIcon getIcon(int level);
     int maxLevel();
 }

@@ -34,7 +34,6 @@ public class BioticStatShield extends AbstractBioticStat
     public static final int ENERGY_PER_DAMAGE = 128;
     public static final String TAG_SHIELD = "Shield";
     public static final String TAG_HITS = "Hits";
-    public static final ResourceLocation icon = new ResourceLocation(Reference.PATH_GUI_ITEM + "biotic_stat_shield.png");
     @SideOnly(Side.CLIENT)
     private SoundBase shieldSound;
     private AttributeModifier modifyer;
@@ -240,10 +239,5 @@ public class BioticStatShield extends AbstractBioticStat
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
         return getShieldState(androidPlayer);
-    }
-
-    @Override
-    public ResourceLocation getIcon(int level) {
-        return icon;
     }
 }

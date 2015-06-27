@@ -3,8 +3,10 @@ package com.MO.MatterOverdrive.data.inventory;
 import cofh.lib.util.helpers.EnergyHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -12,12 +14,6 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ModuleSlot extends Slot
 {
-    public static final ResourceLocation battery_module = new ResourceLocation(Reference.PATH_GUI_ITEM + "battery.png");
-    public static final ResourceLocation color_module = new ResourceLocation(Reference.PATH_GUI_ITEM + "color.png");
-    public static final ResourceLocation barrel_module = new ResourceLocation(Reference.PATH_GUI_ITEM + "barrel.png");
-    public static final ResourceLocation sights_module = new ResourceLocation(Reference.PATH_GUI_ITEM + "sights.png");
-    public static final ResourceLocation other_module = new ResourceLocation(Reference.PATH_GUI_ITEM + "module.png");
-
     int type;
 
     public ModuleSlot(boolean isMainSlot,int type)
@@ -44,20 +40,20 @@ public class ModuleSlot extends Slot
         }
     }
 
-    public ResourceLocation getTexture()
+    public IIcon getTexture()
     {
         switch (type)
         {
             case Reference.MODULE_BATTERY:
-                return battery_module;
+                return ClientProxy.holoIcons.getIcon("battery");
             case Reference.MODULE_COLOR:
-                return color_module;
+                return ClientProxy.holoIcons.getIcon("color");
             case Reference.MODULE_BARREL:
-                return barrel_module;
+                return ClientProxy.holoIcons.getIcon("barrel");
             case Reference.MODULE_SIGHTS:
-                return sights_module;
+                return ClientProxy.holoIcons.getIcon("sights");
             default:
-                return other_module;
+                return ClientProxy.holoIcons.getIcon("module");
         }
     }
 }

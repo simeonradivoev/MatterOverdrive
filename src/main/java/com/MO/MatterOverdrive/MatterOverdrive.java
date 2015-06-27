@@ -1,7 +1,6 @@
 package com.MO.MatterOverdrive;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.MO.MatterOverdrive.commands.AndoidCommands;
 import com.MO.MatterOverdrive.handler.*;
@@ -11,7 +10,6 @@ import com.MO.MatterOverdrive.network.PacketPipeline;
 
 import com.MO.MatterOverdrive.proxy.CommonProxy;
 
-import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -55,6 +53,8 @@ public class MatterOverdrive
 		packetPipeline = new PacketPipeline();
 		entityHandler = new EntityHandler();
         configHandler = new MOConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
+
+
 		FMLCommonHandler.instance().bus().register(configHandler);
 		tickHandler = new TickHandler(configHandler,playerEventHandler);
         FMLCommonHandler.instance().bus().register(tickHandler);
@@ -83,12 +83,12 @@ public class MatterOverdrive
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-        configHandler.init();
         guiHandler.register(event.getSide());
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 		MinecraftForge.EVENT_BUS.register(entityHandler);
 		MatterOverdriveItems.addToDungons();
 		proxy.registerProxies();
+		configHandler.init();
 	}
 	
 	@EventHandler

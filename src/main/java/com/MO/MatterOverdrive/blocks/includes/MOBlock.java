@@ -3,23 +3,17 @@ package com.MO.MatterOverdrive.blocks.includes;
 import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.MOTileEntity;
-import com.MO.MatterOverdrive.util.MOStringHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.common.util.RotationHelper;
 
 import java.util.Random;
 
@@ -59,7 +53,7 @@ public class MOBlock extends Block
 
         IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x,y,z);
         if(tileEntity != null)
-            tileEntity.onAdded();
+            tileEntity.onAdded(world,x,y,z);
     }
 
     @Override

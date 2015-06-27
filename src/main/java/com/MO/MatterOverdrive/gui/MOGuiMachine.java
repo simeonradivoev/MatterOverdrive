@@ -5,10 +5,12 @@ import cofh.lib.util.helpers.StringHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.ContainerMachine;
+import com.MO.MatterOverdrive.container.MOBaseContainer;
 import com.MO.MatterOverdrive.gui.element.*;
 import com.MO.MatterOverdrive.gui.pages.ConfigPage;
 import com.MO.MatterOverdrive.gui.pages.PageUpgrades;
 import com.MO.MatterOverdrive.network.packet.server.PacketChangeRedstoneMode;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 
@@ -18,16 +20,8 @@ import com.MO.MatterOverdrive.util.MOStringHelper;
 public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
 {
     T machine;
-    protected ElementBaseGroup homePage;
-    protected ElementBaseGroup configPage;
-    protected PageUpgrades upgradesPage;
-
-    MOElementButton homePageButton;
-    MOElementButton configPageButton;
-    MOElementButton upgradesPageButton;
     ElementSlotsList slotsList;
     ElementIndicator indicator;
-    ElementStates redstoneState;
 
 
     public MOGuiMachine(ContainerMachine<T> container,T machine)
@@ -40,37 +34,26 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         super(container, width, height);
         this.machine = machine;
 
-        homePage = new ElementBaseGroup(this,0,0,xSize,ySize);
-        homePage.setName("Home");
-        configPage = new ConfigPage(this,0,0,xSize,ySize);
-        configPage.setName("Configurations");
-        upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container,machine);
         indicator = new ElementIndicator(this,6,ySize - 18);
-        redstoneState = new ElementStates(this,this,120,40,"RedstoneMode",60,21,new String[]{MOStringHelper.translateToLocal("gui.redstone_mode.high"),MOStringHelper.translateToLocal("gui.redstone_mode.low"),MOStringHelper.translateToLocal("gui.redstone_mode.disabled")});
-        redstoneState.setLabel(MOStringHelper.translateToLocal("gui.config.redstone") + ": ");
-        redstoneState.setNormalTexture(MOElementButton.HOVER_TEXTURE);
 
-        pages.add(homePage);
-        pages.add(configPage);
-        pages.add(upgradesPage);
-
-        homePageButton = new MOElementButton(this,this,6,8,"Home",0,0,24,0,24,0,24,24,"");
-        homePageButton.setTexture(Reference.PATH_GUI_ITEM + "home2.png", 48, 24);
-        homePageButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.home"));
-        pageButtons.add(homePageButton);
-
-        configPageButton = new MOElementButton(this,this,6,8,"Config",0,0,24,0,24,0,24,24,"");
-        configPageButton.setTexture(Reference.PATH_GUI_ITEM + "config.png", 48, 24);
-        configPageButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.configurations"));
-        pageButtons.add(configPageButton);
-
-        upgradesPageButton = new MOElementButton(this,this,6,8,"Upgrades",0,0,24,0,24,0,24,24,"");
-        upgradesPageButton.setTexture(Reference.PATH_GUI_ITEM + "upgrades.png", 48, 24);
-        upgradesPageButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.page.upgrades"));
-        pageButtons.add(upgradesPageButton);
-
-        slotsList = new ElementSlotsList(this,5,52,80,200,machine.getInventory(),0);
+        slotsList = new ElementSlotsList(this,5,52,80,200,machine.getInventoryContainer(),0);
         slotsList.setMargin(5);
+
+        registerPages(container,machine);
+    }
+
+    public void registerPages(MOBaseContainer container,T machine)
+    {
+        ElementBaseGroup homePage = new ElementBaseGroup(this,0,0,xSize,ySize);
+        homePage.setName("Home");
+        ConfigPage configPage = new ConfigPage(this,0,0,xSize,ySize);
+        configPage.setName("Configurations");
+        PageUpgrades upgradesPage = new PageUpgrades(this,0,0,xSize,ySize,container);
+        upgradesPage.setName("Upgrades");
+
+        AddPage(homePage, ClientProxy.holoIcons.getIcon("page_icon_home"),MOStringHelper.translateToLocal("gui.tooltip.page.home")).setIconColor(Reference.COLOR_MATTER);
+        AddPage(configPage, ClientProxy.holoIcons.getIcon("page_icon_config"), MOStringHelper.translateToLocal("gui.tooltip.page.configurations"));
+        AddPage(upgradesPage, ClientProxy.holoIcons.getIcon("page_icon_upgrades"), MOStringHelper.translateToLocal("gui.tooltip.page.upgrades"));
 
         setPage(0);
     }
@@ -81,9 +64,6 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         super.initGui();
         this.addElement(slotsList);
         this.addElement(indicator);
-
-        redstoneState.setSelectedState(machine.getRedstoneMode());
-        configPage.addElement(redstoneState);
     }
 
     @Override

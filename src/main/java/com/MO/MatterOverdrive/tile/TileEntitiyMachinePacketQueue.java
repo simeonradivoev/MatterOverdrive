@@ -18,6 +18,8 @@ import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkBroadcastPacke
 import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import com.MO.MatterOverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import com.MO.MatterOverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -71,6 +73,11 @@ public class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implement
     }
 
     @Override
+    protected void onAwake(Side side) {
+
+    }
+
+    @Override
     public void  writeCustomNBT(NBTTagCompound nbt)
     {
         super.writeCustomNBT(nbt);
@@ -104,12 +111,6 @@ public class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implement
 
     @Override
     public float soundVolume() { return 0;}
-
-    @Override
-    public void onAdded()
-    {
-
-    }
 
     @Override
     public IMatterNetworkConnection getMatterNetworkConnection()
@@ -283,5 +284,20 @@ public class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implement
             }
         }
         return connections[id];
+    }
+
+    @Override
+    public void onAdded(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving) {
+
+    }
+
+    @Override
+    public void onDestroyed() {
+
     }
 }

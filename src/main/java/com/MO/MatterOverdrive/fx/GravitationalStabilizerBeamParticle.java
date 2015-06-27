@@ -39,7 +39,7 @@ public class GravitationalStabilizerBeamParticle extends EntityFX
         this.up = up;
         this.orbitRadius = orbitRadius + (rand.nextFloat() * orbitRadius * 0.5f);
         startTime = rand.nextInt(time);
-        this.particleIcon = new IconHolder(0,0,32f/128f,32f/128f);
+        this.particleIcon = new IconHolder(0,0,32f/128f,32f/128f,32,32);
     }
 
     public void setColor(float r,float g,float b,float a)

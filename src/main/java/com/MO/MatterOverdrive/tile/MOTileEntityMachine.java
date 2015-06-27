@@ -16,10 +16,12 @@ import com.MO.MatterOverdrive.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,12 +31,14 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.apache.logging.log4j.Level;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by Simeon on 3/11/2015.
@@ -55,9 +59,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     protected boolean redstoneStateDirty = true;
     protected byte redstoneMode;
     protected boolean forceClientUpdate;
-    protected String owner;
+    protected UUID owner;
 
-    protected TileEntityInventory inventory;
+    protected Inventory inventory;
     private int upgradeSlotCount;
     private int[] upgrade_slots;
 
@@ -190,7 +194,14 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         redstoneState = nbt.getBoolean("redstoneState");
         forceClientUpdate = nbt.getBoolean("forceClientUpdate");
         redstoneMode = nbt.getByte("redstoneMode");
-        owner = nbt.getString("Owner");
+        if (nbt.hasKey("Owner", 8) && !nbt.getString("Owner").isEmpty()) {
+            try {
+            owner = UUID.fromString(nbt.getString("Owner"));
+            }catch (Exception e)
+            {
+                FMLLog.log(Level.ERROR,"Invalid Owner ID: " + nbt.getString("Owner"));
+            }
+        }
         inventory.readFromNBT(nbt);
     }
 
@@ -201,7 +212,11 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         nbt.setBoolean("forceClientUpdate", forceClientUpdate);
         nbt.setByte("redstoneMode", redstoneMode);
         if (owner != null)
-            nbt.setString("Owner",owner);
+            nbt.setString("Owner",owner.toString());
+        else if (nbt.hasKey("Owner",6))
+        {
+            nbt.removeTag("Owner");
+        }
         forceClientUpdate = false;
         inventory.writeToNBT(nbt);
     }
@@ -209,7 +224,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public void writeToDropItem(ItemStack itemStack)
     {
-        super.writeToDropItem(itemStack);
         if (!itemStack.hasTagCompound())
             itemStack.setTagCompound(new NBTTagCompound());
 
@@ -228,27 +242,30 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         itemStack.getTagCompound().setTag("Upgrades", upgrades);
         itemStack.getTagCompound().setByte("redstoneMode", redstoneMode);
         if (hasOwner())
-            itemStack.getTagCompound().setString("Owner",owner);
+            itemStack.getTagCompound().setString("Owner",owner.toString());
     }
 
     @Override
     public void readFromPlaceItem(ItemStack itemStack)
     {
-        super.readFromPlaceItem(itemStack);
-        NBTTagList upgrades = itemStack.getTagCompound().getTagList("Upgrades",10);
-        for (int i = 0;i < upgrades.tagCount();i++)
-        {
-            NBTTagCompound upgradeNBT = upgrades.getCompoundTagAt(i);
-            int slot = upgradeNBT.getByte("Slot");
-            if (slot < inventory.getSizeInventory() && slot >= 0)
-            {
-                inventory.getSlot(slot).setItem(ItemStack.loadItemStackFromNBT(upgradeNBT));
+        if (itemStack.hasTagCompound()) {
+            NBTTagList upgrades = itemStack.getTagCompound().getTagList("Upgrades", 10);
+            for (int i = 0; i < upgrades.tagCount(); i++) {
+                NBTTagCompound upgradeNBT = upgrades.getCompoundTagAt(i);
+                int slot = upgradeNBT.getByte("Slot");
+                if (slot < inventory.getSizeInventory() && slot >= 0) {
+                    inventory.getSlot(slot).setItem(ItemStack.loadItemStackFromNBT(upgradeNBT));
+                }
             }
-        }
-        this.redstoneMode = itemStack.getTagCompound().getByte("redstoneMode");
-        if (itemStack.getTagCompound().hasKey("Owner", 8))
-        {
-            this.owner = itemStack.getTagCompound().getString("Owner");
+            this.redstoneMode = itemStack.getTagCompound().getByte("redstoneMode");
+            if (itemStack.getTagCompound().hasKey("Owner", 8)) {
+                try {
+                    this.owner = UUID.fromString(itemStack.getTagCompound().getString("Owner"));
+                }catch (Exception e)
+                {
+                    FMLLog.log(Level.ERROR,e,"Invalid Owner ID: " + itemStack.getTagCompound().getString("Owner"));
+                }
+            }
         }
     }
 
@@ -310,18 +327,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @Override
-    public void onAdded()
-    {
-
-    }
-
-    @Override
-    public void onDestroyed()
-    {
-
-    }
-
-    @Override
     public void onNeighborBlockChange()
     {
         redstoneStateDirty = true;
@@ -330,7 +335,10 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     //region Inventory Methods
     public boolean isItemValidForSlot(int slot, ItemStack item)
     {
-        return inventory.isItemValidForSlot(slot, item);
+        if (getInventory() != null)
+            return getInventory().isItemValidForSlot(slot, item);
+        else
+            return false;
     }
 
     @Override
@@ -354,42 +362,70 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public int getSizeInventory()
     {
-        return inventory.getSizeInventory();
+        if (getInventory() != null)
+            return getInventory().getSizeInventory();
+        else
+            return 0;
     }
 
     @Override
-    public ItemStack getStackInSlot(int slot) {
-        return inventory.getStackInSlot(slot);
+    public ItemStack getStackInSlot(int slot)
+    {
+        if (getInventory() != null)
+            return getInventory().getStackInSlot(slot);
+        else
+            return null;
     }
 
     @Override
-    public ItemStack decrStackSize(int slot, int size) {
-        return inventory.decrStackSize(slot, size);
+    public ItemStack decrStackSize(int slot, int size)
+    {
+        if (getInventory() != null)
+            return getInventory().decrStackSize(slot, size);
+        else
+            return null;
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot) {
-        return inventory.getStackInSlotOnClosing(slot);
+    public ItemStack getStackInSlotOnClosing(int slot)
+    {
+        if (getInventory() != null)
+            return getInventory().getStackInSlotOnClosing(slot);
+        else
+            return null;
     }
 
     @Override
-    public void setInventorySlotContents(int slot, ItemStack itemStack) {
-        inventory.setInventorySlotContents(slot,itemStack);
+    public void setInventorySlotContents(int slot, ItemStack itemStack)
+    {
+        if (getInventory() != null)
+            getInventory().setInventorySlotContents(slot, itemStack);
     }
 
     @Override
-    public String getInventoryName() {
-        return inventory.getInventoryName();
+    public String getInventoryName()
+    {
+        if (getInventory() != null)
+            return getInventory().getInventoryName();
+        else
+            return "";
     }
 
     @Override
-    public boolean hasCustomInventoryName() {
-        return inventory.hasCustomInventoryName();
+    public boolean hasCustomInventoryName()
+    {
+        if (getInventory() != null)
+            return getInventory().hasCustomInventoryName();
+        return false;
     }
 
     @Override
-    public int getInventoryStackLimit() {
-        return inventory.getInventoryStackLimit();
+    public int getInventoryStackLimit()
+    {
+        if (getInventory() != null)
+            return getInventory().getInventoryStackLimit();
+        else
+            return 0;
     }
 
     @Override
@@ -397,7 +433,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         if (hasOwner())
         {
-            if (player.getGameProfile().getName().equals(owner) || player.capabilities.isCreativeMode)
+            if (player.getGameProfile().getId().equals(owner) || player.capabilities.isCreativeMode)
             {
                 return true;
             }else
@@ -407,7 +443,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                     ItemStack itemStack = player.inventory.getStackInSlot(i);
                     if (itemStack != null && itemStack.getItem() instanceof SecurityProtocol)
                     {
-                        if (itemStack.hasTagCompound() && itemStack.getItemDamage() == 2 &&  itemStack.getTagCompound().getString("Owner").equals(owner))
+                        if (itemStack.hasTagCompound() && itemStack.getItemDamage() == 2 &&  UUID.fromString(itemStack.getTagCompound().getString("Owner")).equals(owner))
                         {
                             return true;
                         }
@@ -433,7 +469,12 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 
     }
 
-    public Inventory getInventory()
+    public IInventory getInventory()
+    {
+        return inventory;
+    }
+
+    public Inventory getInventoryContainer()
     {
         return inventory;
     }
@@ -538,39 +579,49 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         this.redstoneMode = redstoneMode;
     }
 
-    public String getOwner()
+    public UUID getOwner()
     {
         return owner;
     }
 
     public boolean hasOwner()
     {
-        return owner != null && !owner.isEmpty();
+        return owner != null;
     }
 
     public boolean claim(ItemStack security_protocol)
     {
-        if (owner == null || owner.isEmpty()) {
-            if (security_protocol.hasTagCompound() && security_protocol.getTagCompound().hasKey("Owner", 8)) {
-                String newOwner = security_protocol.getTagCompound().getString("Owner");
-                if (newOwner != null && !newOwner.isEmpty()) {
-                    owner = newOwner;
-                    ForceSync();
-                    return true;
+        try {
+            if (owner == null) {
+                if (security_protocol.hasTagCompound() && security_protocol.getTagCompound().hasKey("Owner", 8)) {
+                    UUID newOwner = UUID.fromString(security_protocol.getTagCompound().getString("Owner"));
+                    if (newOwner != null) {
+                        owner = newOwner;
+                        ForceSync();
+                        return true;
+                    }
                 }
             }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
         return false;
     }
 
     public boolean unclaim(ItemStack security_protocol)
     {
-        if (owner != null && !owner.isEmpty()) {
-            if (security_protocol.hasTagCompound() && security_protocol.getTagCompound().hasKey("Owner", 8) && owner.equals(security_protocol.getTagCompound().getString("Owner"))) {
-                owner = null;
-                ForceSync();
-                return true;
+        try {
+            if (owner != null) {
+                if (security_protocol.hasTagCompound() && security_protocol.getTagCompound().hasKey("Owner", 8) && owner.equals(UUID.fromString(security_protocol.getTagCompound().getString("Owner")))) {
+                    owner = null;
+                    ForceSync();
+                    return true;
+                }
             }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
         return false;
     }

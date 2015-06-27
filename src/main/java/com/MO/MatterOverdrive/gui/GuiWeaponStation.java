@@ -11,9 +11,7 @@ import com.MO.MatterOverdrive.gui.element.ElementSlot;
 import com.MO.MatterOverdrive.tile.TileEntityWeaponStation;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -43,7 +41,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
 
         for (int i = 0;i < module_slots.length;i++)
         {
-            module_slots[i] = new ElementInventorySlot(this,(MOSlot)inventorySlots.getSlot(i+1),20,20,"holo",machine.getInventory().getSlot(i).getTexture());
+            module_slots[i] = new ElementInventorySlot(this,(MOSlot)inventorySlots.getSlot(i+1),20,20,"holo",machine.getInventoryContainer().getSlot(i).getTexture());
             module_slots[i].setColor(Reference.COLOR_MATTER.getIntR(),Reference.COLOR_MATTER.getIntG(),Reference.COLOR_MATTER.getIntB(),78);
             module_slots[i].setInfo("module." + module_slots_info[i] + ".name");
         }
@@ -58,11 +56,11 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
     public void initGui()
     {
         super.initGui();
-        homePage.addElement(weaponPreview);
+        pages.get(0).addElement(weaponPreview);
 
         for (int i = 0;i < module_slots.length;i++)
         {
-            homePage.addElement(module_slots[i]);
+            pages.get(0).addElement(module_slots[i]);
         }
 
         AddMainPlayerSlots(inventorySlots, this);
@@ -123,11 +121,12 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         super.drawGuiContainerForegroundLayer(x, y);
 
         ItemStack item = machine.getStackInSlot(machine.INPUT_SLOT);
-        if (MatterHelper.isWeapon(item))
+        if (MatterHelper.isWeapon(item) && pages.get(0).isVisible())
         {
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glPushMatrix();
             GL11.glLineWidth(1f);
-            GL11.glColor3f(Reference.COLOR_MATTER.getFloatR(), Reference.COLOR_MATTER.getFloatG(), Reference.COLOR_MATTER.getFloatB());
+            GL11.glColor4f(Reference.COLOR_MATTER.getFloatR(), Reference.COLOR_MATTER.getFloatG(), Reference.COLOR_MATTER.getFloatB(), 1);
 
             IWeapon weapon = (IWeapon)item.getItem();
             for (int i = 0; i < module_slots.length;i++)
@@ -146,6 +145,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
             }
 
             GL11.glPopMatrix();
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
     }
 

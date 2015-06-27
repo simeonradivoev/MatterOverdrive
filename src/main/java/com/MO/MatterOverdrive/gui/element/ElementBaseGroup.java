@@ -122,6 +122,7 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
                 ((MOElementBase) element).updateInfo();
             }
         }
+
     }
 
     @Override

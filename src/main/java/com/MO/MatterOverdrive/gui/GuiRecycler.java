@@ -40,11 +40,11 @@ public class GuiRecycler extends MOGuiMachine<TileEntityMachineMatterRecycler>
     {
         super.initGui();
 
-        homePage.addElement(outputSlot);
-        homePage.addElement(energyElement);
+        pages.get(0).addElement(outputSlot);
+        pages.get(0).addElement(energyElement);
         this.addElement(recycle_progress);
 
-        AddMainPlayerSlots(this.inventorySlots, homePage);
+        AddMainPlayerSlots(this.inventorySlots, pages.get(0));
         AddHotbarPlayerSlots(this.inventorySlots, this);
     }
 

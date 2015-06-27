@@ -11,6 +11,7 @@ import com.MO.MatterOverdrive.gui.element.ElementBioStat;
 import com.MO.MatterOverdrive.gui.element.ElementInventorySlot;
 import com.MO.MatterOverdrive.gui.element.ElementSlot;
 import com.MO.MatterOverdrive.handler.AndroidStatRegistry;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.tile.TileEntityAndroidStation;
 import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -59,7 +60,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         parts_slots[Reference.BIONIC_CHEST].setPosition(320,280);
         parts_slots[Reference.BIONIC_OTHER].setPosition(320,250);
         parts_slots[Reference.BIONIC_BATTERY].setPosition(320,310);
-        parts_slots[Reference.BIONIC_BATTERY].setIcon(new ResourceLocation(Reference.PATH_GUI_ITEM + "battery.png"));
+        parts_slots[Reference.BIONIC_BATTERY].setIcon(ClientProxy.holoIcons.getIcon("battery"));
 
         addStat(androidPlayer,AndroidStatRegistry.teleport,0,0);
         addStat(androidPlayer,AndroidStatRegistry.nanobots,1,0);
@@ -88,12 +89,12 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 
         for (int i = 0;i < parts_slots.length;i++)
         {
-            homePage.addElement(parts_slots[i]);
+            pages.get(0).addElement(parts_slots[i]);
         }
 
         for (int i = 0;i < stats.size();i++)
         {
-            homePage.addElement(stats.get(i));
+            pages.get(0).addElement(stats.get(i));
         }
 
         AddMainPlayerSlots(inventorySlots, this);
@@ -128,7 +129,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
     {
         super.drawGuiContainerForegroundLayer(x,y);
 
-        if (homePage.isVisible()) {
+        if (pages.get(0).isVisible()) {
             glEnable(GL_BLEND);
             //glBlendFunc(GL_ONE, GL_ONE);
             glEnable(GL_LIGHTING);

@@ -10,7 +10,6 @@ import net.minecraftforge.event.entity.living.LivingEvent;
  */
 public class BioticStatEqualizer extends AbstractBioticStat
 {
-    public static final ResourceLocation icon = new ResourceLocation(Reference.PATH_GUI_ITEM + "biotic_stat_equalizer.png");
     public BioticStatEqualizer(String name, int xp)
     {
         super(name, xp);
@@ -42,10 +41,5 @@ public class BioticStatEqualizer extends AbstractBioticStat
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
         return isEnabled(androidPlayer,level);
-    }
-
-    @Override
-    public ResourceLocation getIcon(int level) {
-        return icon;
     }
 }

@@ -2,7 +2,6 @@ package com.MO.MatterOverdrive.network.packet.server;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.client.RenderParticlesHandler;
 import com.MO.MatterOverdrive.data.biostats.BioticStatTeleport;
 import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.network.packet.PacketAbstract;

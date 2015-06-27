@@ -20,11 +20,7 @@ public class SlotInventory extends MOSlot {
 
     public boolean isItemValid(ItemStack itemStack)
     {
-        if(isVisible)
-        {
-            return slot.isValidForSlot(itemStack);
-        }
-        return false;
+        return slot.isValidForSlot(itemStack);
     }
 
     public Slot getSlot()

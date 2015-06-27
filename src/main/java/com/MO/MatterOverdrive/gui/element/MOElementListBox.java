@@ -180,10 +180,12 @@ public class MOElementListBox extends MOElementBase {
 					DrawElement(nextElement,getContentLeft(), getContentTop() + heightDrawn, selectedLineColor, this.textColor, false, false);
 				}
 
+				glDisable(GL_STENCIL_TEST);
 				if (getContentTop() + heightDrawn <= mouseY && getContentTop() + heightDrawn + getElementHeight(nextElement) >= mouseY &&
 						mouseX >= getContentLeft() && mouseX <= getContentLeft() + getElementWidth(nextElement)) {
 					drawElementTooltip(nextElement,mouseX,mouseY);
 				}
+				glEnable(GL_STENCIL_TEST);
 				heightDrawn += getElementHeight(nextElement);
 			}
 			nextElement++;

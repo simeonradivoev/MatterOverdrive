@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.blocks;
 
 import java.util.List;
 
+import com.MO.MatterOverdrive.client.render.block.RendererBlockPipe;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
@@ -14,7 +15,7 @@ import com.MO.MatterOverdrive.tile.pipes.TileEntityPipe;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockPipe extends MOBlockContainer
+public abstract class BlockPipe extends MOBlockContainer
 {
 
 	public BlockPipe(Material material, String name) 
@@ -130,7 +131,7 @@ public class BlockPipe extends MOBlockContainer
     @Override
 	public int getRenderType()
 	{
-		return -1;
+		return RendererBlockPipe.rendererID;
 	}
 
     @Override
@@ -143,12 +144,6 @@ public class BlockPipe extends MOBlockContainer
 	public boolean renderAsNormalBlock()
 	{
 		return false;
-	}
-	
-	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
-	{
-		return null;
 	}
 
 }

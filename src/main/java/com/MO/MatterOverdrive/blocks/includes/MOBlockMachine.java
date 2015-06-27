@@ -1,54 +1,40 @@
 package com.MO.MatterOverdrive.blocks.includes;
 
 import cofh.api.block.IDismantleable;
-import cofh.api.tileentity.ITileInfo;
 import cofh.lib.util.helpers.InventoryHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.data.inventory.Slot;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
-import com.MO.MatterOverdrive.handler.GuiHandler;
 import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.items.includes.MOEnergyMatterBlockItem;
 import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
-import com.MO.MatterOverdrive.util.MOEnergyHelper;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
-import com.google.common.collect.Lists;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.management.ItemInWorldManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.ForgeDirection;
+import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Simeon on 4/5/2015.
  */
-public class MOBlockMachine extends MOBlockContainer implements IDismantleable, IConfigSubscriber
+public abstract class MOBlockMachine extends MOBlockContainer implements IDismantleable, IConfigSubscriber
 {
     public float volume;
     public boolean hasGui;
@@ -70,27 +56,19 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
-    {
-        return null;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
-    {
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
         super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
 
-        try
-        {
-            IMOTileEntity entity = (IMOTileEntity)world.getTileEntity(x,y,z);
-            if(entity != null)
-            {
+        IMOTileEntity entity = (IMOTileEntity) world.getTileEntity(x, y, z);
+        if (entity != null) {
+            try {
                 entity.readFromPlaceItem(itemStack);
+            } catch (Exception e) {
+                e.printStackTrace();
+                FMLLog.log(Level.ERROR,"Could not load settings from placing item",e);
             }
-        }
-        catch (Exception e)
-        {
-            FMLLog.warning("Could not load settings from placing item");
+
+            entity.onPlaced(world, entityLiving);
         }
     }
 
@@ -193,9 +171,9 @@ public class MOBlockMachine extends MOBlockContainer implements IDismantleable, 
 
         if (!returnDrops)
         {
-            for (int i1 = 0; i1 < machine.getInventory().getSizeInventory(); ++i1)
+            for (int i1 = 0; i1 < machine.getInventoryContainer().getSizeInventory(); ++i1)
             {
-                Slot slot = machine.getInventory().getSlot(i1);
+                Slot slot = machine.getInventoryContainer().getSlot(i1);
                 ItemStack itemstack = slot.getItem();
 
                 if (itemstack != null && !(slot instanceof UpgradeSlot))
