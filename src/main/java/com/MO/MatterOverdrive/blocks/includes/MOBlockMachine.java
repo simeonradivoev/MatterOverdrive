@@ -123,7 +123,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
         TileEntity tileEntity = world.getTileEntity(x,y,z);
         if (tileEntity != null && tileEntity instanceof MOTileEntityMachine)
         {
-            if (!player.capabilities.isCreativeMode && ((MOTileEntityMachine) tileEntity).hasOwner() && !((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getName()))
+            if (!player.capabilities.isCreativeMode && ((MOTileEntityMachine) tileEntity).hasOwner() && !((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getId()))
             {
                     ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.brake").replace("$0",getLocalizedName()));
                     message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
@@ -228,7 +228,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
                 return true;
             }else
             {
-                if (((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getName()))
+                if (((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getId()))
                 {
                     return true;
                 }else
