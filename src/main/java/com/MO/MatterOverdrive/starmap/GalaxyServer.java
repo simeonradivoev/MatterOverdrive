@@ -2,23 +2,23 @@ package com.MO.MatterOverdrive.starmap;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
-import com.MO.MatterOverdrive.network.packet.client.PacketUpdateGalaxy;
-import com.MO.MatterOverdrive.network.packet.client.PacketUpdatePlanet;
+import com.MO.MatterOverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
+import com.MO.MatterOverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import com.MO.MatterOverdrive.starmap.data.Galaxy;
 import com.MO.MatterOverdrive.starmap.data.Planet;
 import com.MO.MatterOverdrive.starmap.data.Quadrant;
 import com.MO.MatterOverdrive.starmap.data.Star;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
+import com.MO.MatterOverdrive.util.MOLog;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
+import org.apache.logging.log4j.Level;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -117,11 +117,14 @@ public class GalaxyServer implements IConfigSubscriber
         if (!load.world.isRemote && load.world.provider.dimensionId == 0)
         {
             world = load.world;
-
             File galaxyFile = getGalaxyFile(load.world);
+            long start = System.nanoTime();
             if (!loadGalaxy(galaxyFile)) {
                 createGalaxy(galaxyFile, load.world);
-
+                MOLog.log(Level.INFO, "Galaxy Generated and saved to '%1$s'. Took %2$s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
+            }else
+            {
+                MOLog.log(Level.INFO,"Galaxy Loaded from '%1$s'. Took %2$s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
             }
         }
     }
@@ -129,10 +132,13 @@ public class GalaxyServer implements IConfigSubscriber
     @SubscribeEvent
     public void onWorldSave(WorldEvent.Save save)
     {
-        if (!save.world.isRemote && save.world.provider.dimensionId == 0) {
+        if (!save.world.isRemote && save.world.provider.dimensionId == 0)
+        {
             if (theGalaxy != null) {
+                long start = System.nanoTime();
                 File galaxyFile = getGalaxyFile(save.world);
-                //saveGalaxy(galaxyFile);
+                saveGalaxy(galaxyFile);
+                MOLog.log(Level.INFO,"Galaxy saved to '%s'. Took %s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
             }
         }
     }
@@ -175,6 +181,7 @@ public class GalaxyServer implements IConfigSubscriber
                             planet.setHomeworld(true);
                             planet.setBuildingSpaces(8);
                             planet.setFleetSpaces(10);
+                            planet.markDirty();
                             return planet;
                         }
                     }

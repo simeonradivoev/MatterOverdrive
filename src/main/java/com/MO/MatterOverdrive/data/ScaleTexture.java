@@ -135,15 +135,17 @@ public class ScaleTexture
         this.height = height;
     }
 
-    public void setTextureSize(int width,int height)
+    public ScaleTexture setTextureSize(int width,int height)
     {
         this.texW = width;
         this.texH = height;
+        return this;
     }
 
-    public void setUV(int u,int v)
+    public ScaleTexture setUV(int u,int v)
     {
         this.u = u;
         this.v = v;
+        return this;
     }
 }

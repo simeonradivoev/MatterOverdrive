@@ -6,11 +6,9 @@ import java.util.*;
 import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.util.MOLog;
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModAPIManager;
-import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLModIdMappingEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
@@ -28,6 +26,8 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 public class MatterRegistry
 {
@@ -39,7 +39,7 @@ public class MatterRegistry
 
 	public static MatterEntry register(MatterEntry entry)
 	{
-        System.out.println("Registered: " + entry.getName());
+        MOLog.log(Level.INFO, "Registered: %1$s - %2$s kM", entry.getName(),entry.getMatter());
 		entries.put(entry.getName(), entry);
 		return entry;
 	}
@@ -58,7 +58,7 @@ public class MatterRegistry
         outputStream.writeInt(blacklist.size());
         outputStream.close();
         fileOutputStream.close();
-        System.out.println("RegistrySaved to: " + path);
+        MOLog.log(Level.INFO,"RegistrySaved to: %s",path);
     }
 
     public static void loadFromFile(String path) throws IOException, ClassNotFoundException {
@@ -70,7 +70,7 @@ public class MatterRegistry
             String version = inputStream.readUTF();
             inputStream.close();
             fileInputStream.close();
-            System.out.println("Registry Loaded with " + entries.size() + " entries, from version " + version + " from: " + path);
+            MOLog.log(Level.INFO,"Registry Loaded with %1$s entries, from version %2$s from: %3$s",entries.size(),version,file.getPath());
         }
     }
     public static boolean needsCalculation(String path) throws IOException, ClassNotFoundException
@@ -105,7 +105,7 @@ public class MatterRegistry
                                     if (MatterRegistry.entries.containsKey(entry.getKey())) {
                                         if (!MatterRegistry.entries.get(entry.getKey()).equals(entry.getValue())) {
                                             //if the entry is in the list but it's matter was changed
-                                            System.out.println("Matter Registry has changed! " + entry.getKey() +  " changed from " + MatterRegistry.entries.get(entry.getKey()) + " to " + entry.getValue().getMatter() + ". Recalculation required!");
+                                            MOLog.log(Level.WARN,"Matter Registry has changed! %1$s changed from %2$s to %3$s. Recalculation required!",entry.getKey(),MatterRegistry.entries.get(entry.getKey()),entry.getValue().getMatter());
                                             return true;
                                         }
                                     }
@@ -132,7 +132,7 @@ public class MatterRegistry
         }
 
         //if the registry file is missing then calculate
-        System.out.println(reason + "! Recalculation required!");
+        MOLog.log(Level.WARN,reason + "! Recalculation required!");
         return true;
     }
 

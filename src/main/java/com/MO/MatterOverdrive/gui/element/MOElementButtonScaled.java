@@ -4,6 +4,8 @@ import cofh.lib.gui.GuiBase;
 import cofh.lib.render.RenderHelper;
 import com.MO.MatterOverdrive.container.IButtonHandler;
 import com.MO.MatterOverdrive.data.ScaleTexture;
+import com.MO.MatterOverdrive.proxy.ClientProxy;
+import com.MO.MatterOverdrive.util.RenderUtils;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -27,7 +29,10 @@ public class MOElementButtonScaled extends MOElementButton
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glColor4f(1, 1, 1, 1);
+        if (color != null)
+            RenderUtils.applyColor(color);
+        else
+            GL11.glColor4f(1, 1, 1, 1);
         if (isEnabled()) {
             if (!isDown) {
                 if (intersectsWith(mouseX, mouseY) && overTexture != null) {
@@ -48,10 +53,6 @@ public class MOElementButtonScaled extends MOElementButton
         }
 
         GL11.glDisable(GL11.GL_BLEND);
-
-
-
-
     }
 
     @Override
@@ -59,8 +60,23 @@ public class MOElementButtonScaled extends MOElementButton
     {
         if (text != null && !text.isEmpty())
         {
-            int width = getFontRenderer().getStringWidth(text);
-            getFontRenderer().drawString(text,posX + sizeX / 2 - (width / 2),posY + sizeY / 2 - 3,0xFFFFFF);
+            if (icon != null)
+            {
+                int width = getFontRenderer().getStringWidth(text) - icon.getIconWidth();
+                getFontRenderer().drawString(text,posX + sizeX / 2 - (width / 2),posY + sizeY / 2 - 3,labelColor);
+                ClientProxy.holoIcons.bindSheet();
+                RenderHelper.renderIcon(posX + sizeX / 2 - icon.getIconWidth() - width/2,posY + sizeY / 2 - icon.getIconHeight()/2,0,icon,icon.getIconWidth(),icon.getIconHeight());
+            }else
+            {
+                int width = getFontRenderer().getStringWidth(text);
+                getFontRenderer().drawString(text,posX + sizeX / 2 - (width / 2),posY + sizeY / 2 - 3,labelColor);
+            }
+        }else
+        {
+            if (icon != null) {
+                ClientProxy.holoIcons.bindSheet();
+                RenderHelper.renderIcon(posX + sizeX / 2 - icon.getIconWidth()/2,posY + sizeY / 2 - icon.getIconHeight()/2,0,icon,icon.getIconWidth(),icon.getIconHeight());
+            }
         }
     }
 
@@ -79,6 +95,9 @@ public class MOElementButtonScaled extends MOElementButton
     public void setOverTexture(ScaleTexture overTexture) {
         this.overTexture = overTexture;
     }
+
+    public ScaleTexture getDownTexture(){return downTexture;}
+    public void setDownTexture(ScaleTexture downTexture){this.downTexture = downTexture;}
 
     public ScaleTexture getDisabledTextureTexture() {
         return disabledTexture;

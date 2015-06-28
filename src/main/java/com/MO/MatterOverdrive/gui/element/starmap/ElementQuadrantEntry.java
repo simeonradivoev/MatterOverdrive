@@ -31,6 +31,11 @@ public class ElementQuadrantEntry extends ElementAbstractStarMapEntry<Quadrant>
     }
 
     @Override
+    protected boolean canView(Quadrant spaceBody, EntityPlayer player) {
+        return true;
+    }
+
+    @Override
     public float getMultiply(Quadrant quadrant)
     {
         GuiStarMap guiStarMap = (GuiStarMap)gui;

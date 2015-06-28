@@ -3,19 +3,15 @@ package com.MO.MatterOverdrive.tile;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.inventory.starmap.IBuildable;
-import com.MO.MatterOverdrive.api.inventory.starmap.IBuilding;
 import com.MO.MatterOverdrive.data.Inventory;
-import com.MO.MatterOverdrive.data.TileEntityInventory;
 import com.MO.MatterOverdrive.data.inventory.Slot;
-import com.MO.MatterOverdrive.items.SecurityProtocol;
-import com.MO.MatterOverdrive.network.packet.server.PacketStarMapClientCommands;
+import com.MO.MatterOverdrive.network.packet.server.starmap.PacketStarMapAttack;
+import com.MO.MatterOverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
 import com.MO.MatterOverdrive.starmap.GalaxyClient;
 import com.MO.MatterOverdrive.starmap.GalaxyServer;
 import com.MO.MatterOverdrive.starmap.data.*;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -225,7 +221,9 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy
                 if (homeworld != null)
                     position = new GalacticPosition(homeworld);
             } else {
-                position = new GalacticPosition(GalaxyServer.getInstance().getHomeworld((EntityPlayer)entityLiving));
+                Planet homeworld = GalaxyServer.getInstance().getHomeworld((EntityPlayer)entityLiving);
+                if (homeworld != null)
+                    position = new GalacticPosition(homeworld);
             }
 
             destination = new GalacticPosition(position);
@@ -278,6 +276,11 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy
     {
         if (worldObj.isRemote)
             MatterOverdrive.packetPipeline.sendToServer(new PacketStarMapClientCommands(this));
+    }
+
+    public void Attack(GalacticPosition from,GalacticPosition to,int shipID)
+    {
+        MatterOverdrive.packetPipeline.sendToServer(new PacketStarMapAttack(from,to,shipID));
     }
 
     public boolean isItemValidForSlot(int slot, ItemStack item,EntityPlayer player)

@@ -29,8 +29,6 @@ public class MatterOverdriveIcons
     @SubscribeEvent
     public void registerTextures(TextureStitchEvent event)
     {
-        System.out.println("Stiching textures");
-
         switch (event.map.getTextureType())
         {
             case 0:

@@ -1,11 +1,14 @@
 package com.MO.MatterOverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
+import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementButton;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.container.IButtonHandler;
 import com.MO.MatterOverdrive.data.ScaleTexture;
+import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -27,7 +30,10 @@ public class MOElementButton extends ElementButton
     protected String text;
     protected boolean isDown;
     protected int lastMouseButton;
+    protected GuiColor color;
+    int labelColor = 0xFFFFFF;
     IButtonHandler buttonHandler;
+    IIcon icon;
 
     public MOElementButton(GuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int sizeX, int sizeY, String texture) {
         super(gui, posX, posY, name, sheetX, sheetY, hoverX, hoverY, sizeX, sizeY, texture);
@@ -95,6 +101,8 @@ public class MOElementButton extends ElementButton
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
+        if (color != null)
+            RenderUtils.applyColor(color);
         GL11.glEnable(GL11.GL_BLEND);
         super.drawBackground(mouseX, mouseY, gameTicks);
         GL11.glDisable(GL11.GL_BLEND);
@@ -107,4 +115,14 @@ public class MOElementButton extends ElementButton
     public void setText(String text) {
         this.text = text;
     }
+
+    public void setColor(GuiColor color){this.color = color;}
+    public void setColor(GuiColor color,float multiplay){this.color = new GuiColor((int)(color.getIntR() * multiplay),(int)(color.getIntG() * multiplay),(int)(color.getIntB() * multiplay));}
+
+    public GuiColor getColor(){return this.color;}
+
+    public void setTextColor(int color){this.labelColor = color;}
+    public int getTextColor(){return this.labelColor;}
+    public void setIcon(IIcon icon){this.icon = icon;}
+    public IIcon getIcon(){return this.icon;}
 }

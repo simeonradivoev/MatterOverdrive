@@ -41,6 +41,11 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
     }
 
     @Override
+    protected boolean canView(Star spaceBody, EntityPlayer player) {
+        return true;
+    }
+
+    @Override
     protected void onTravelPress()
     {
         ((GuiStarMap) gui).getMachine().setGalaxticPosition(new GalacticPosition(spaceBody));

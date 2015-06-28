@@ -1,7 +1,7 @@
-package com.MO.MatterOverdrive.network.packet.client;
+package com.MO.MatterOverdrive.network.packet.client.starmap;
 
-import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.network.packet.PacketAbstract;
+import com.MO.MatterOverdrive.network.packet.client.AbstractClientPacketHandler;
 import com.MO.MatterOverdrive.starmap.GalaxyClient;
 import com.MO.MatterOverdrive.starmap.data.Galaxy;
 import com.MO.MatterOverdrive.starmap.data.Planet;

@@ -129,6 +129,23 @@ public class GalacticPosition
         return quadrantID == quadrant.getId();
     }
 
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null)
+            return false;
+
+        if (obj.hashCode() == hashCode())
+        {
+            return true;
+        }
+
+        if (obj instanceof GalacticPosition) {
+            return planetID == ((GalacticPosition) obj).planetID && starID == ((GalacticPosition) obj).starID && quadrantID == ((GalacticPosition) obj).quadrantID;
+        }
+        return false;
+    }
+
     public int getStarID()
     {
         return starID;
@@ -142,5 +159,12 @@ public class GalacticPosition
     public int getPlanetID()
     {
         return planetID;
+    }
+
+    public NBTTagCompound toNBT()
+    {
+        NBTTagCompound tagCompound = new NBTTagCompound();
+        writeToNBT(tagCompound);
+        return tagCompound;
     }
 }

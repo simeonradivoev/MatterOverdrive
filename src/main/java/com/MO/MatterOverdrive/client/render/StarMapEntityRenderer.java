@@ -1,6 +1,8 @@
 package com.MO.MatterOverdrive.client.render;
 
 import com.MO.MatterOverdrive.entity.EntityRougeAndroidMob;
+import com.MO.MatterOverdrive.starmap.data.Planet;
+import com.MO.MatterOverdrive.starmap.data.Star;
 import com.MO.MatterOverdrive.tile.TileEntityMachineStarMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -72,6 +74,21 @@ public class StarMapEntityRenderer extends EntityRenderer
             renderEntity.posX = starMap.xCoord - 1.6;
             renderEntity.posY = starMap.yCoord + 1.8;
             renderEntity.posZ = starMap.zCoord - 1.6;
+        }
+        else if (starMap.getZoomLevel() == 2)
+        {
+            Star star = starMap.getStar();
+            float maxDistance = 0;
+            for (Planet planet : star.getPlanets())
+            {
+                if (maxDistance < planet.getOrbit())
+                {
+                    maxDistance = planet.getOrbit();
+                }
+            }
+            renderEntity.posX = starMap.xCoord - (maxDistance * 3);
+            renderEntity.posY = starMap.yCoord + 1.0;
+            renderEntity.posZ = starMap.zCoord - (maxDistance * 3);
         }
         else
         {

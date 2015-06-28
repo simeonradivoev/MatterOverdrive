@@ -1,6 +1,7 @@
-package com.MO.MatterOverdrive.network.packet.server;
+package com.MO.MatterOverdrive.network.packet.server.starmap;
 
 import com.MO.MatterOverdrive.network.packet.TileEntityUpdatePacket;
+import com.MO.MatterOverdrive.network.packet.server.AbstractServerPacketHandler;
 import com.MO.MatterOverdrive.starmap.data.GalacticPosition;
 import com.MO.MatterOverdrive.tile.TileEntityMachineStarMap;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

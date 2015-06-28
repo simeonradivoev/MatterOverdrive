@@ -36,6 +36,16 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
     }
 
     @Override
+    protected boolean canView(Planet planet, EntityPlayer player)
+    {
+        if (planet.hasOwner())
+        {
+            return planet.isOwner(player);
+        }
+        return true;
+    }
+
+    @Override
     public float getMultiply(Planet planet)
     {
         GuiStarMap guiStarMap = (GuiStarMap)gui;

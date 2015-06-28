@@ -48,7 +48,7 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
 
             }else
             {
-                glClearColor(0,0,0,0);
+                glClearColor(0, 0, 0, 0);
                 glClear(GL_COLOR_BUFFER_BIT);
             }
 
@@ -142,6 +142,8 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
 
     public List<ISpaceBodyHoloRenderer> getRenderers(int level)
     {
-        return renderers.get(level);
+        if (level >= 0 && level < renderers.size())
+            return renderers.get(level);
+        return null;
     }
 }

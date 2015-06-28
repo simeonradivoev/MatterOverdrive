@@ -9,10 +9,7 @@ import com.MO.MatterOverdrive.container.ContainerStarMap;
 import com.MO.MatterOverdrive.container.MOBaseContainer;
 import com.MO.MatterOverdrive.data.ScaleTexture;
 import com.MO.MatterOverdrive.gui.element.ElementBaseGroup;
-import com.MO.MatterOverdrive.gui.pages.PageGalaxy;
-import com.MO.MatterOverdrive.gui.pages.PagePlanetMenu;
-import com.MO.MatterOverdrive.gui.pages.PageQuadrant;
-import com.MO.MatterOverdrive.gui.pages.PageStar;
+import com.MO.MatterOverdrive.gui.pages.*;
 import com.MO.MatterOverdrive.handler.GuiHandler;
 import com.MO.MatterOverdrive.proxy.ClientProxy;
 import com.MO.MatterOverdrive.starmap.GalaxyClient;
@@ -46,6 +43,7 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
     PagePlanetMenu planetPage;
     PageQuadrant pageQuadrant;
     PageStar pageStar;
+    PagePlanetStats pagePlanetStats;
 
     public GuiStarMap(InventoryPlayer inventoryPlayer, TileEntityMachineStarMap machine)
     {
@@ -77,6 +75,9 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         planetPage = new PagePlanetMenu(this,0,0,width,height,(ContainerStarMap)container,starMap);
         planetPage.setName("Planet");
         AddPage(planetPage, ClientProxy.holoIcons.getIcon("page_icon_planet"), MOStringHelper.translateToLocal("gui.tooltip.page.planet")).setIconColor(Reference.COLOR_MATTER);
+        pagePlanetStats = new PagePlanetStats(this,0,0,width,height,starMap);
+        pagePlanetStats.setName("Planet Stats");
+        AddPage(pagePlanetStats,ClientProxy.holoIcons.getIcon("icon_stats"),MOStringHelper.translateToLocal("gui.tooltip.page.planet_stats")).setIconColor(Reference.COLOR_MATTER);
 
         setPage(machine.getZoomLevel());
     }
@@ -91,15 +92,15 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
         List<ISpaceBodyHoloRenderer> renderers = ClientProxy.renderHandler.getRendererStarMap().getRenderers(machine.getZoomLevel());
-        for (ISpaceBodyHoloRenderer renderer : renderers)
-        {
-            glPushMatrix();
-            glTranslated(xSize / 2, ySize, 0);
-            if (machine.getActiveSpaceBody() != null)
-            {
-                renderer.renderGUIInfo(GalaxyClient.getInstance().getTheGalaxy(), machine.getActiveSpaceBody(),machine,partialTick,0.8f);
+        if (renderers != null) {
+            for (ISpaceBodyHoloRenderer renderer : renderers) {
+                glPushMatrix();
+                glTranslated(xSize / 2, ySize, 0);
+                if (machine.getActiveSpaceBody() != null) {
+                    renderer.renderGUIInfo(GalaxyClient.getInstance().getTheGalaxy(), machine.getActiveSpaceBody(), machine, partialTick, 0.8f);
+                }
+                glPopMatrix();
             }
-            glPopMatrix();
         }
         glPopMatrix();
     }
@@ -119,6 +120,7 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         pageQuadrant.init();
         pageStar.init();
         planetPage.init();
+        pagePlanetStats.init();
         if (newPage != machine.getZoomLevel())
         {
             machine.setZoomLevel(newPage);
@@ -166,6 +168,7 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
             setPage(machine.getZoomLevel());
         }
         super.updateElementInformation();
+        pageButtons.get(4).setVisible(machine.getPlanet() != null);
         pageButtons.get(3).setVisible(machine.getPlanet() != null);
         pageButtons.get(2).setVisible(machine.getStar() != null);
         pageButtons.get(1).setVisible(machine.getQuadrant() != null);

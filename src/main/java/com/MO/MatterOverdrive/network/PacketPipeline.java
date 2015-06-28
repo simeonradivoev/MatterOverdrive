@@ -4,7 +4,12 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.network.packet.AbstractBiPacketHandler;
 import com.MO.MatterOverdrive.network.packet.bi.PacketMatterScannerGetDatabase;
 import com.MO.MatterOverdrive.network.packet.client.*;
+import com.MO.MatterOverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
+import com.MO.MatterOverdrive.network.packet.client.starmap.PacketUpdatePlanet;
+import com.MO.MatterOverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
 import com.MO.MatterOverdrive.network.packet.server.*;
+import com.MO.MatterOverdrive.network.packet.server.starmap.PacketStarMapAttack;
+import com.MO.MatterOverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -54,6 +59,8 @@ public class PacketPipeline
         registerPacket(PacketUpdatePlanet.ClientHandler.class,PacketUpdatePlanet.class);
         registerPacket(PacketUpdateGalaxy.ClientHandler.class,PacketUpdateGalaxy.class);
         registerPacket(PacketStarMapClientCommands.ServerHandler.class,PacketStarMapClientCommands.class);
+        registerPacket(PacketStarMapAttack.ServerHandler.class,PacketStarMapAttack.class);
+        registerPacket(PacketUpdateTravelEvents.Clienthandler.class,PacketUpdateTravelEvents.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

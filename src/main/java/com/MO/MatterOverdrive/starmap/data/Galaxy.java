@@ -4,14 +4,12 @@ import com.MO.MatterOverdrive.starmap.GalaxyGenerator;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by Simeon on 6/13/2015.
@@ -19,8 +17,8 @@ import java.util.Random;
 public class Galaxy extends SpaceBody
 {
     long seed;
-    int starCount;
     HashMap<Integer,Quadrant> quadrantHashMap;
+    List<TravelEvent> travelEvents;
     World world;
     int version;
 
@@ -37,6 +35,12 @@ public class Galaxy extends SpaceBody
         setSeed(seed);
     }
 
+    private void init()
+    {
+        quadrantHashMap = new HashMap<Integer, Quadrant>();
+        travelEvents = new ArrayList<TravelEvent>();
+    }
+
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
@@ -50,6 +54,12 @@ public class Galaxy extends SpaceBody
             quadrantList.appendTag(quadrantNBT);
         }
         tagCompound.setTag("Quadrants", quadrantList);
+        NBTTagList travelEventsList = new NBTTagList();
+        for (TravelEvent travelEvent : travelEvents)
+        {
+            travelEventsList.appendTag(travelEvent.toNBT());
+        }
+        tagCompound.setTag("TravelEvents",travelEventsList);
     }
 
     public void writeToBuffer(ByteBuf buf)
@@ -64,20 +74,31 @@ public class Galaxy extends SpaceBody
 
     public void readFromNBT(NBTTagCompound tagCompound,GalaxyGenerator generator)
     {
-        super.readFromNBT(tagCompound,generator);
+        super.readFromNBT(tagCompound, generator);
+        quadrantHashMap.clear();
+        travelEvents.clear();
+
         version = tagCompound.getInteger("Version");
-        NBTTagList quadrantList = tagCompound.getTagList("Quadrants",10);
+        NBTTagList quadrantList = tagCompound.getTagList("Quadrants", 10);
         for (int i = 0;i < quadrantList.tagCount();i++)
         {
             Quadrant quadrant = new Quadrant();
-            quadrant.readFromNBT(quadrantList.getCompoundTagAt(i),generator);
+            quadrant.readFromNBT(quadrantList.getCompoundTagAt(i), generator);
             addQuadrant(quadrant);
             quadrant.setGalaxy(this);
+        }
+        NBTTagList travelEventsList = tagCompound.getTagList("TravelEvents",10);
+        for (int i = 0;i < travelEventsList.tagCount();i++)
+        {
+            travelEvents.add(new TravelEvent(travelEventsList.getCompoundTagAt(i)));
         }
     }
 
     public void readFromBuffer(ByteBuf buf)
     {
+        quadrantHashMap.clear();
+        travelEvents.clear();
+
         version = buf.readInt();
         int size = buf.readInt();
         for (int i = 0;i < size;i++)
@@ -87,16 +108,17 @@ public class Galaxy extends SpaceBody
             addQuadrant(quadrant);
             quadrant.setGalaxy(this);
         }
+        int travelEventsSize = buf.readInt();
+        for (int i = 0;i < travelEventsSize;i++)
+        {
+            TravelEvent travelEvent = new TravelEvent(buf);
+            travelEvents.add(travelEvent);
+        }
     }
 
     @Override
     public SpaceBody getParent() {
         return null;
-    }
-
-    private void init()
-    {
-        quadrantHashMap = new HashMap<Integer, Quadrant>();
     }
 
     public Map<Integer,Quadrant> getQuadrantMap()
@@ -208,4 +230,19 @@ public class Galaxy extends SpaceBody
         }
         return count;
     }
+
+    public boolean addTravelEvent(TravelEvent travelEvent)
+    {
+        for (TravelEvent event : travelEvents)
+        {
+            if (event.from.equals(travelEvent.from) && event.shipID == travelEvent.shipID)
+            {
+                return false;
+            }
+        }
+        travelEvents.add(travelEvent);
+        return true;
+    }
+    public List<TravelEvent> getTravelEvents(){return travelEvents;}
+    public void setTravelEvents(List<TravelEvent> travelEvents){this.travelEvents = travelEvents;}
 }

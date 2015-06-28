@@ -12,6 +12,7 @@ import com.MO.MatterOverdrive.starmap.data.SpaceBody;
 import com.MO.MatterOverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -22,22 +23,27 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
 {
     public static ScaleTexture BG = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry.png"),32,32).setOffsets(18,12,15,15);
     public static ScaleTexture BG_FLIPPED = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_flipped.png"),32,32).setOffsets(12,18,15,15);
-    public static ScaleTexture BG_MIDDLE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15);
+    public static ScaleTexture BG_MIDDLE_NORMAL = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96, 32);
+    public static ScaleTexture BG_MIDDLE_OVER = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96, 32).setUV(32, 0);
+    public static ScaleTexture BG_MIDDLE_DOWN = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96,32).setUV(64,0);
     protected T spaceBody;
     protected ElementGroupList groupList;
+    protected IIcon travelIcon,searchIcon;
 
     public ElementAbstractStarMapEntry(GuiStarMap gui, ElementGroupList groupList, int width, int height, T spaceBody)
     {
         super(gui, groupList, 0, 0, spaceBody.getName(), 0, 0, 0, 0, width, height, "");
         this.spaceBody = spaceBody;
         this.groupList = groupList;
+        this.travelIcon = ClientProxy.holoIcons.getIcon("travel_icon");
+        this.searchIcon = ClientProxy.holoIcons.getIcon("icon_search");
     }
 
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         float multiply = getMultiply(spaceBody);
 
@@ -45,13 +51,21 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
         if (isSelected(spaceBody))
         {
             this.BG.Render(posX, posY, sizeX - 64, sizeY);
+            if (canView(spaceBody,Minecraft.getMinecraft().thePlayer)) {
+                this.BG_MIDDLE_NORMAL.Render(posX + sizeX - 64, posY, 32, sizeY);
+            }
             if (canTravelTo(spaceBody, Minecraft.getMinecraft().thePlayer))
                 this.BG_FLIPPED.Render(posX + sizeX - 32, posY, 32, sizeY);
-            RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply*0.75f);
-            this.BG_MIDDLE.Render(posX + sizeX - 64,posY,32,sizeY);
+            RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply * 0.75f);
+
         }else
         {
-            this.BG.Render(posX, posY, sizeX - 64, sizeY);
+            if (intersectsWith(mouseX,mouseY))
+            {
+                this.BG.Render(posX, posY, sizeX - 64, sizeY);
+            }else {
+                this.BG.Render(posX, posY, sizeX - 64, sizeY);
+            }
         }
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glDisable(GL11.GL_BLEND);
@@ -84,18 +98,19 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
 
                 RenderUtils.applyColorWithMultipy(color, multiply);
                 ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(posX + sizeX - 32 + 6, posY + 5, 0, ClientProxy.holoIcons.getIcon("travel_icon"), 18, 18);
+                RenderHelper.renderIcon(posX + sizeX - 32 + 6, posY + 5, 0, travelIcon, travelIcon.getIconWidth(), travelIcon.getIconHeight());
             }
 
-            multiply = 0.5f;
-            if (intersectsWith(mouseX,mouseY) && mouseX > sizeX - 64 && mouseX < sizeX - 32)
-            {
-                multiply = 1f;
-            }
+            if (canView(spaceBody,Minecraft.getMinecraft().thePlayer)) {
+                multiply = 0.5f;
+                if (intersectsWith(mouseX, mouseY) && mouseX > sizeX - 64 && mouseX < sizeX - 32) {
+                    multiply = 1f;
+                }
 
-            RenderUtils.applyColorWithMultipy(color,multiply);
-            ClientProxy.holoIcons.bindSheet();
-            RenderHelper.renderIcon(posX + sizeX - 64 + 7, posY + 6, 0, ClientProxy.holoIcons.getIcon("icon_search"), 16, 16);
+                RenderUtils.applyColorWithMultipy(color, multiply);
+                ClientProxy.holoIcons.bindSheet();
+                RenderHelper.renderIcon(posX + sizeX - 64 + searchIcon.getIconWidth() / 2, posY + searchIcon.getIconHeight() / 2, 0, searchIcon, searchIcon.getIconWidth(), searchIcon.getIconHeight());
+            }
         }else
         {
             drawElementName(spaceBody,getSpaceBodyColor(spaceBody),0.3f);
@@ -118,7 +133,9 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
                     return false;
                 }
             } else if (mouseX > sizeX - 64 && mouseX < sizeX - 32) {
-                onViewPress();
+                if (canView(spaceBody,Minecraft.getMinecraft().thePlayer)) {
+                    onViewPress();
+                }
             }
             playSound();
         }
@@ -135,6 +152,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
     }
 
     protected abstract boolean canTravelTo(T spaceBody,EntityPlayer player);
+    protected abstract boolean canView(T spaceBody,EntityPlayer player);
 
     protected void playSound()
     {

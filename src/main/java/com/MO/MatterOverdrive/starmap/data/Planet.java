@@ -5,9 +5,7 @@ import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.starmap.IBuilding;
 import com.MO.MatterOverdrive.api.inventory.starmap.IShip;
-import com.MO.MatterOverdrive.data.Inventory;
-import com.MO.MatterOverdrive.data.inventory.Slot;
-import com.MO.MatterOverdrive.network.packet.client.PacketUpdatePlanet;
+import com.MO.MatterOverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import com.MO.MatterOverdrive.starmap.GalaxyGenerator;
 import com.MO.MatterOverdrive.starmap.gen.ISpaceBodyGen;
 import cpw.mods.fml.common.FMLLog;
@@ -190,6 +188,8 @@ public class Planet extends SpaceBody implements IInventory
     public int getSeed(){return seed;}
     public boolean isGenerated(){return generated;}
     public void setGenerated(boolean generated){this.generated = generated;}
+    public ItemStack getShip(int at){return fleet.get(at);}
+    public int fleetCount(){return fleet.size();}
     public static GuiColor getGuiColor(Planet planet)
     {
         if (planet.hasOwner()) {

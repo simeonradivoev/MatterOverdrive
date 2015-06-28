@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.handler;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
+import com.MO.MatterOverdrive.util.MOLog;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.google.gson.Gson;
 import cpw.mods.fml.common.FMLLog;
@@ -72,9 +73,9 @@ public class VersionCheckerHandler implements IConfigSubscriber {
             try {
                 result = download.get();
             } catch (InterruptedException e) {
-                FMLLog.log(Level.ERROR, e, "Version Checking from " + mirrors[currentMirror-1] + "was interrupted");
+                MOLog.log(Level.ERROR, e, "Version Checking from '%1$s' was interrupted",mirrors[currentMirror - 1]);
             } catch (ExecutionException e) {
-                FMLLog.log(Level.ERROR, e, "Version Checking from " + mirrors[currentMirror-1] + "has failed");
+                MOLog.log(Level.ERROR, e, "Version Checking from '%1$s' has failed",mirrors[currentMirror-1]);
             } finally {
                 if (result != null)
                 {
@@ -164,7 +165,7 @@ public class VersionCheckerHandler implements IConfigSubscriber {
                     return true;
 
                 } else {
-                    FMLLog.log(Level.INFO, "Matter Overdrive Version " + version.version + " is up to date. From " + mirrors[currentMirror-1]);
+                    MOLog.log(Level.INFO, "Matter Overdrive Version %1$s is up to date. From '%2$s'",version.version,mirrors[currentMirror-1]);
                 }
             }
         }
