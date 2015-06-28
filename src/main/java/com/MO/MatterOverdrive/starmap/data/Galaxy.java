@@ -70,6 +70,11 @@ public class Galaxy extends SpaceBody
         {
            quadrant.writeToBuffer(buf);
         }
+        buf.writeInt(travelEvents.size());
+        for (int i = 0; i < travelEvents.size();i++)
+        {
+            travelEvents.get(i).writeToBuffer(buf);
+        }
     }
 
     public void readFromNBT(NBTTagCompound tagCompound,GalaxyGenerator generator)
