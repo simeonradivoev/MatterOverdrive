@@ -148,9 +148,6 @@ public class MatterOverdriveItems
 
         MatterRegistry.register(emergency_ration,3);
         MatterRegistry.register(earl_gray_tea,2);
-
-        ThermalExpansionHelper.addPulverizerRecipe(8000,new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_dust,2));
-        ThermalExpansionHelper.addPulverizerRecipe(4000,new ItemStack(tritanium_ingot),new ItemStack(tritanium_dust));
 	}
 
     public static void addToDungons()

@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive;
 import java.io.File;
 
 import com.MO.MatterOverdrive.commands.AndoidCommands;
+import com.MO.MatterOverdrive.compat.MatterOverdriveCompat;
 import com.MO.MatterOverdrive.handler.*;
 import com.MO.MatterOverdrive.handler.thread.RegisterItemsFromRecipes;
 import com.MO.MatterOverdrive.init.*;
@@ -78,6 +79,8 @@ public class MatterOverdrive
 		MatterOverdriveMatter.registerFromConfig(configHandler);
 		MatterOverdriveMatter.registerBasic(configHandler);
 		UpdateTabs();
+
+		MatterOverdriveCompat.preInit(event);
 	}
 	
 	@EventHandler
@@ -89,12 +92,14 @@ public class MatterOverdrive
 		MatterOverdriveItems.addToDungons();
 		proxy.registerProxies();
 		configHandler.init();
+
+		MatterOverdriveCompat.init(event);
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-
+		MatterOverdriveCompat.postInit(event);
 	}
 
 
