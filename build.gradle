@@ -43,6 +43,10 @@ repositories {
         name "ThermalExpansion"
         artifactPattern "http://addons-origin.cursecdn.com/files/2233/797/[module]-[revision].[ext]"
     }
+    maven {
+        name "ChickenBones"
+        url "http://chickenbones.net/maven/"
+    }
 }
 
 dependencies {
@@ -50,6 +54,8 @@ dependencies {
     compile group: 'cofh', name: 'CoFHCore', version: '[1.7.10]3.0.2-285-dev', ext: 'jar'
     compile group: 'cofh', name: 'ThermalFoundation', version: '[1.7.10]1.0.0-88-dev', ext: 'jar'
     compile group: 'cofh', name: 'ThermalExpansion', version: '[1.7.10]4.0.0-176-dev', ext: 'jar'
+    compile group: 'codechicken', name: 'CodeChickenCore', version: '1.7.10-1.0.7.46', classifier: 'dev'
+    compile group: 'codechicken', name: 'NotEnoughItems', version: '1.7.10-1.0.5.111', classifier: 'dev'
 }
 
 processResources
