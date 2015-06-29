@@ -5,7 +5,7 @@ repositories {
     }
     ivy {
         name "CoFHCore"
-        artifactPattern 'http://addons-origin.cursecdn.com/files/2243/947/[module]-[revision].[ext]'
+        artifactPattern 'http://addons-origin.cursecdn.com/files/2244/285/[module]-[revision].[ext]'
     }
     ivy {
         name "ThermalFoundation"
@@ -17,8 +17,8 @@ repositories {
     }
 
     ivy {
-        name "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+        name "ThermalDynamics"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2244/301/[module]-[revision].[ext]"
     }
 
     //maven repos
@@ -55,6 +55,7 @@ dependencies {
     compile group: 'cofh', name: 'CoFHCore', version: "[${config.mc_version}]${config.cofh_core_version}", ext: 'jar'
     compile group: 'cofh', name: 'ThermalFoundation', version: "[${config.mc_version}]${config.cofh_tf_version}", ext: 'jar'
     compile group: 'cofh', name: 'ThermalExpansion', version: "[${config.mc_version}]${config.cofh_te_version}", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalDynamics', version: "${config.mc_version}]${config.cofh_td_version}", ext: 'jar'
     // EnderIO
     compile group: 'com.enderio', name: 'EnderIO', version: "${config.mc_version}-${config.enderio_version}", classifier: 'dev'
 }
