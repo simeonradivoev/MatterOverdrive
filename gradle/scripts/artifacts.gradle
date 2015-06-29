@@ -1,0 +1,28 @@
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task myJavadocs(type: Javadoc) {
+    source = sourceSets.api.java
+    include "com.MO.MatterOverdrive/api/**"
+
+    classpath = configurations.compile
+}
+
+task javadocJar(type: Jar, dependsOn: myJavadocs) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc/'
+}
+
+artifacts {
+    archives jar
+    archives deobfJar
+    archives sourcesJar
+    archives javadocJar
+}
