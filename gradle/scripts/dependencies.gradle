@@ -41,7 +41,7 @@ repositories {
 dependencies {
     // Chicken Bones
     compile group: 'codechicken', name: 'CodeChickenLib', version: "1.7.10-${config.ccl_version}", classifier: 'dev' // Forge http://files.minecraftforge.net/CodeChickenLib/
-    compile group: 'codechicken', name: 'CodeChickenCore', version: "1.7.10-${config.ccc-version}", classifier: 'dev' // CB maven
+    compile group: 'codechicken', name: 'CodeChickenCore', version: "1.7.10-${config.ccc_version}", classifier: 'dev' // CB maven
     compile group: 'codechicken', name: 'NotEnoughItems', version: "1.7.10-${config.nei_version}", classifier: 'dev' // CB maven
     // WAILA
     compile group: 'mcp.mobius.waila', name: 'Waila', version: '${config.waila_version}_1.7.10', classifier: 'dev'
