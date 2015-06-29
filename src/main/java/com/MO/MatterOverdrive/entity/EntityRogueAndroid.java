@@ -29,7 +29,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         int randomID = EntityRegistry.findGlobalUniqueEntityId();
         EntityRegistry.registerGlobalEntityID(entityClass,name,randomID);
-        EntityRegistry.registerModEntity(entityClass,name,randomID, MatterOverdrive.instance,64,1,true);
+        EntityRegistry.registerModEntity(entityClass, name, randomID, MatterOverdrive.instance, 64, 1, true);
         spawnListEntry = new BiomeGenBase.SpawnListEntry(entityClass,3,1,2);
         addInBiome(BiomeGenBase.beach,
                 BiomeGenBase.birchForest,
@@ -42,7 +42,13 @@ public class EntityRogueAndroid implements IConfigSubscriber
                 BiomeGenBase.taiga,
                 BiomeGenBase.taigaHills,
                 BiomeGenBase.megaTaiga,
-                BiomeGenBase.megaTaigaHills);
+                BiomeGenBase.megaTaigaHills,
+                BiomeGenBase.beach,
+                BiomeGenBase.deepOcean,
+                BiomeGenBase.iceMountains,
+                BiomeGenBase.icePlains,
+                BiomeGenBase.mesa);
+
         createEgg(randomID, solidColor, spotColor);
     }
 
