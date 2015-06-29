@@ -46,7 +46,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public final static int TRANSFORM_TIME = 20 * 34;
     public final static String EFFECT_KEY_TURNING = "Turning";
     public final static String EXT_PROP_NAME = "AndroidPlayer";
-    public final static int ENERGY_WATCHER = 20;
+    public final static int ENERGY_WATCHER = 29;
     public final static int ENERGY_FOOD_MULTIPLY = 256;
     public final static int ENERGY_PER_JUMP = 512;
     public final static float FALL_NEGATE = 0.5f;
