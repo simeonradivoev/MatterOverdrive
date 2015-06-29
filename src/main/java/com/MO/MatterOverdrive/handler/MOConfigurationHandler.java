@@ -1,12 +1,10 @@
 package com.MO.MatterOverdrive.handler;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 
@@ -86,7 +84,7 @@ public class MOConfigurationHandler
         updateCategoryLang(category);
 
         config.get(CATEGORY_WORLD_GEN,CATEGORY_WORLD_SPAWN_ORES, true, "Should ores such as dilithium and tritanium ore spawn in the world. This applies for all ores !").setLanguageKey("config." + CATEGORY_WORLD_SPAWN_ORES.replace(' ', '_') + ".name");
-        config.get(CATEGORY_WORLD_GEN,CATEGORY_WORLD_SPAWN + "." + MatterOverdriveBlocks.dilithiumOre.getUnlocalizedName(),true).setLanguageKey(MatterOverdriveBlocks.dilithiumOre.getUnlocalizedName() + ".name");
+        config.get(CATEGORY_WORLD_GEN,CATEGORY_WORLD_SPAWN + "." + MatterOverdriveBlocks.dilithium_ore.getUnlocalizedName(),true).setLanguageKey(MatterOverdriveBlocks.dilithium_ore.getUnlocalizedName() + ".name");
         config.get(CATEGORY_WORLD_GEN,CATEGORY_WORLD_SPAWN + "." + MatterOverdriveBlocks.tritaniumOre.getUnlocalizedName(),true).setLanguageKey(MatterOverdriveBlocks.tritaniumOre.getUnlocalizedName() + ".name");
 
         config.getBoolean(KEY_AUTOMATIC_RECIPE_CALCULATION, CATEGORY_MATTER, true, "Shoud Matter be automaticly calculated from Recipes");
