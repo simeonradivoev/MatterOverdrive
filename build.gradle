@@ -1,18 +1,3 @@
-// Define properties file
-ext.configFile = file "build.properties"
-
-configFile.withReader {
-    // Load config.
-    def prop = new Properties()
-    prop.load(it)
-    project.ext.config = new ConfigSlurper().parse prop
-}
-
-apply plugin: 'forge'
-apply from: 'gradle/scripts/dependencies.gradle'
-apply from: 'gradle/scripts/artifacts.gradle'
-apply from: 'gradle/scripts/optional.gradle'
-
 buildscript {
     repositories {
         mavenCentral()
@@ -30,16 +15,47 @@ buildscript {
     }
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+apply plugin: 'forge'
 
-version = "${config.mc_version}-${config.mod_version}"
-group= "${config.mo_group}"
-archivesBaseName = "${config.mo_base_name}"
+version = "0.3.5"
+group= "com.MO.MatterOverdrive" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "MatterOverdrive"
 
 minecraft {
-    version = config.mc_version + "-" + config.forge_version
+    version = "1.7.10-10.13.4.1448-1.7.10"
     runDir = "eclipse"
+}
+
+repositories {
+     ivy {
+        name "CoFHLib"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2243/944/[module]-[revision].[ext]"
+    }
+    ivy {
+        name "CoFHCore"
+        artifactPattern 'http://addons-origin.cursecdn.com/files/2244/285/[module]-[revision].[ext]'
+    }
+    ivy {
+        name "ThermalFoundation"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2243/149/[module]-[revision].[ext]"
+    }
+    ivy {
+        name "ThermalExpansion"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2233/797/[module]-[revision].[ext]"
+    }
+    maven {
+        name "ChickenBones"
+        url "http://chickenbones.net/maven/"
+    }
+}
+
+dependencies {
+    compile group: 'cofh', name: 'CoFHLib', version: '[1.7.10]1.0.3B1-164-dev', ext: 'jar'
+    compile group: 'cofh', name: 'CoFHCore', version: '[1.7.10]3.0.2-285-dev', ext: 'jar'
+    compile group: 'cofh', name: 'ThermalFoundation', version: '[1.7.10]1.0.0-88-dev', ext: 'jar'
+    compile group: 'cofh', name: 'ThermalExpansion', version: '[1.7.10]4.0.0-176-dev', ext: 'jar'
+    compile group: 'codechicken', name: 'CodeChickenCore', version: '1.7.10-1.0.7.46', classifier: 'dev'
+    compile group: 'codechicken', name: 'NotEnoughItems', version: '1.7.10-1.0.5.111', classifier: 'dev'
 }
 
 processResources
@@ -61,4 +77,3 @@ processResources
         exclude 'mcmod.info'
     }
 }
-
