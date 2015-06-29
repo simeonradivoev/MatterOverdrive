@@ -46,10 +46,10 @@ dependencies {
     // WAILA
     compile group: 'mcp.mobius.waila', name: 'Waila', version: '${config.waila_version}_1.7.10', classifier: 'dev'
     // CoFH
-    compile group: 'cofh', name: 'CoFHLib', version: '[1.7.10]${config.cofh_lib_version}', ext: 'jar'
-    compile group: 'cofh', name: 'CoFHCore', version: '[1.7.10]${config.cofh_core_version}', ext: 'jar'
-    compile group: 'cofh', name: 'ThermalFoundation', version: '[1.7.10]${config.cofh_tf_version}', ext: 'jar'
-    compile group: 'cofh', name: 'ThermalExpansion', version: '[1.7.10]${config.cofh_te._ersion}', ext: 'jar'
+    compile group: 'cofh', name: 'CoFHLib', version: "[1.7.10]${config.cofh_lib_version}", ext: 'jar'
+    compile group: 'cofh', name: 'CoFHCore', version: "[1.7.10]${config.cofh_core_version}", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalFoundation', version: "[1.7.10]${config.cofh_tf_version}", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalExpansion', version: "[1.7.10]${config.cofh_te_version}", ext: 'jar'
     // EnderIO
-    compile group: 'com.enderio', name: 'EnderIO', version: '1.7.10-${config.enderio_version}', classifier: 'dev'
+    compile group: 'com.enderio', name: 'EnderIO', version: "1.7.10-${config.enderio_version}", classifier: 'dev'
 }
