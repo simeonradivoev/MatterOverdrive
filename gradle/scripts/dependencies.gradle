@@ -40,16 +40,16 @@ repositories {
 
 dependencies {
     // Chicken Bones
-    compile group: 'codechicken', name: 'CodeChickenLib', version: "1.7.10-${config.ccl_version}", classifier: 'dev' // Forge http://files.minecraftforge.net/CodeChickenLib/
-    compile group: 'codechicken', name: 'CodeChickenCore', version: "1.7.10-${config.ccc_version}", classifier: 'dev' // CB maven
-    compile group: 'codechicken', name: 'NotEnoughItems', version: "1.7.10-${config.nei_version}", classifier: 'dev' // CB maven
+    compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.mc_version}-${config.ccl_version}", classifier: 'dev' // Forge http://files.minecraftforge.net/CodeChickenLib/
+    compile group: 'codechicken', name: 'CodeChickenCore', version: "${config.mc_version}-${config.ccc_version}", classifier: 'dev' // CB maven
+    compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.mc_version}-${config.nei_version}", classifier: 'dev' // CB maven
     // WAILA
-    compile group: 'mcp.mobius.waila', name: 'Waila', version: '${config.waila_version}_1.7.10', classifier: 'dev'
+    compile group: 'mcp.mobius.waila', name: 'Waila', version: "${config.waila_version}_${config.mc_version}", classifier: 'dev'
     // CoFH
-    compile group: 'cofh', name: 'CoFHLib', version: "[1.7.10]${config.cofh_lib_version}", ext: 'jar'
-    compile group: 'cofh', name: 'CoFHCore', version: "[1.7.10]${config.cofh_core_version}", ext: 'jar'
-    compile group: 'cofh', name: 'ThermalFoundation', version: "[1.7.10]${config.cofh_tf_version}", ext: 'jar'
-    compile group: 'cofh', name: 'ThermalExpansion', version: "[1.7.10]${config.cofh_te_version}", ext: 'jar'
+    compile group: 'cofh', name: 'CoFHLib', version: "[${config.mc_version}]${config.cofh_lib_version}", ext: 'jar'
+    compile group: 'cofh', name: 'CoFHCore', version: "[${config.mc_version}]${config.cofh_core_version}", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalFoundation', version: "[${config.mc_version}]${config.cofh_tf_version}", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalExpansion', version: "[${config.mc_version}]${config.cofh_te_version}", ext: 'jar'
     // EnderIO
-    compile group: 'com.enderio', name: 'EnderIO', version: "1.7.10-${config.enderio_version}", classifier: 'dev'
+    compile group: 'com.enderio', name: 'EnderIO', version: "${config.mc_version}-${config.enderio_version}", classifier: 'dev'
 }
