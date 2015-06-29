@@ -36,6 +36,11 @@ repositories {
         name "tterrag"
         url "http://maven.tterrag.com"
     }
+
+    maven {
+        name "IC2 and Forestry" // Forestry is required by EnderIO
+        url "http://maven.ic2.player.to"
+    }
 }
 
 dependencies {
