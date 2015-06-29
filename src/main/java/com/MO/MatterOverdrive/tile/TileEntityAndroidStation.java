@@ -1,5 +1,6 @@
 package com.MO.MatterOverdrive.tile;
 
+import cofh.lib.util.helpers.SecurityHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.data.Inventory;

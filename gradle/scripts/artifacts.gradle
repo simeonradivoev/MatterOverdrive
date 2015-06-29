@@ -1,0 +1,38 @@
+task myJavadocs(type: Javadoc) {
+    source = sourceSets.api.java
+    include "com.MO.MatterOverdrive/api/**"
+
+    classpath = configurations.compile
+}
+
+task javadocJar(type: Jar, dependsOn: myJavadocs) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc/'
+}
+
+task sourceJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task devJar(type: Jar) {
+
+    manifest {
+        attributes 'FMLCorePlugin': 'com.MO.MatterOverdrive.MatterOverdrive'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+
+    from(sourceSets.main.output) {
+        include "com.MO.Matteroverdrive/**"
+        include "assets/**"
+        include 'mcmod.info'
+    }
+
+    classifier = 'dev'
+}
+
+artifacts {
+    archives devJar
+    archives sourceJar
+    archives javadocJar
+}

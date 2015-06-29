@@ -1,0 +1,85 @@
+repositories {
+    ivy {
+        name "CoFHLib"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2243/944/[module]-[revision].[ext]"
+    }
+    ivy {
+        name "CoFHCore"
+        artifactPattern 'http://addons-origin.cursecdn.com/files/2243/947/[module]-[revision].[ext]'
+    }
+    ivy {
+        name "ThermalFoundation"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2243/149/[module]-[revision].[ext]"
+    }
+    ivy {
+        name "ThermalExpansion"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2233/797/[module]-[revision].[ext]"
+    }
+
+    //maven repos
+    maven {
+        name "ChickenBones"
+        url "http://chickenbones.net/maven/"
+    }
+
+    maven {
+        name "Mobius"
+        url "http://mobiusstrip.eu/maven"
+    }
+
+    maven {
+        name "FireBall API Depot"
+        url "http://dl.tsr.me/artifactory/libs-release-local"
+    }
+
+    maven {
+        name = "Player"
+        url = "http://maven.ic2.player.to/"
+    }
+
+    maven {
+        name = "Tterrag"
+        url = "http://maven.tterrag.com/"
+    }
+
+    maven  {
+        name = "RX14 Proxy"
+        url = "http://mvn.rx14.co.uk/repo/"
+    }
+
+    maven {
+        name "OpenComputers Repo"
+        url = "http://maven.cil.li/"
+    }
+
+    ivy {
+        name "BuildCraft"
+        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+    }
+}
+
+configurations {
+    mods
+}
+
+dependencies {
+    //Mods
+    mods "mcp.mobius.waila:Waila:${config.waila_version}_${config.mc_version}:dev"
+    mods "com.enderio:EnderIO:${config.mc_version}-${config.enderio_version}:dev"
+    mods "li.cil.oc:OpenComputers:MC${config.mc_version}-${config.opencomputers_version}:dev"
+
+    compile group: 'cofh', name: 'CoFHLib', version: '[1.7.10]1.0.3B1-164-dev', ext: 'jar'
+    //compile group: 'cofh', name: 'CoFHCore', version: '[1.7.10]3.0.2-284-dev', ext: 'jar'
+    //compile group: 'cofh', name: 'ThermalFoundation', version: '[1.7.10]1.0.0-88-dev', ext: 'jar'
+    //compile group: 'cofh', name: 'ThermalExpansion', version: '[1.7.10]4.0.0-176-dev', ext: 'jar'
+    compile "codechicken:CodeChickenLib:${config.mc_version}-${config.ccl_version}:dev"
+    compile "codechicken:CodeChickenCore:${config.mc_version}-${config.ccc_version}:dev"
+    compile "codechicken:NotEnoughItems:${config.mc_version}-${config.nei_version}:dev"
+
+    //APIs
+    compile "li.cil.oc:OpenComputers:MC${config.mc_version}-${config.opencomputers_version}:api"
+    compile "appeng:Waila:${config.waila_version}_${config.mc_version}:api"
+
+    //unit tests
+    testCompile "junit:junit:4.11"
+}
