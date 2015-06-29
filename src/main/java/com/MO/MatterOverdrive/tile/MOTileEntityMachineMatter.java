@@ -1,15 +1,24 @@
 package com.MO.MatterOverdrive.tile;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
+import com.MO.MatterOverdrive.Reference;
+import com.MO.MatterOverdrive.compat.modules.waila.IWailaBodyProvider;
 import com.MO.MatterOverdrive.network.packet.client.PacketMatterUpdate;
+import com.MO.MatterOverdrive.util.MatterHelper;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 import com.MO.MatterOverdrive.api.matter.IMatterHandler;
 import com.MO.MatterOverdrive.api.matter.IMatterStorage;
 import com.MO.MatterOverdrive.data.MatterStorage;
 
-public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IMatterHandler
+import java.util.List;
+
+public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IMatterHandler, IWailaBodyProvider
 {
 	protected MatterStorage matterStorage;
 	
@@ -86,7 +95,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 
 	public void updateClientMatter()
 	{
-		MatterOverdrive.packetPipeline.sendToAllAround(new PacketMatterUpdate(this),this,64);
+		MatterOverdrive.packetPipeline.sendToAllAround(new PacketMatterUpdate(this), this, 64);
 	}
 
 	@Override
@@ -121,4 +130,20 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 			}
 		}
 	}
+
+	//region WELA
+	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		TileEntity te = accessor.getTileEntity();
+
+		if (te instanceof MOTileEntityMachineMatter) {
+			MOTileEntityMachineMatter machine = (MOTileEntityMachineMatter)te;
+			currenttip.add(EnumChatFormatting.AQUA + String.format("%s / %s %s",machine.getMatterStored(),machine.getMatterCapacity(), MatterHelper.MATTER_UNIT));
+
+		} else {
+			throw new RuntimeException("MOTileEntityMachineMatter WAILA provider is being used for something that is not a MOTileEntityMachineMatter: " + te.getClass());
+		}
+
+		return currenttip;
+	}
+	//endregion
 }

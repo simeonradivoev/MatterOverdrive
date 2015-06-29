@@ -1,12 +1,8 @@
 package com.MO.MatterOverdrive.compat.modules.waila;
 
-import com.MO.MatterOverdrive.blocks.BlockStarMap;
-import com.MO.MatterOverdrive.blocks.BlockWeaponStation;
-import com.MO.MatterOverdrive.blocks.TransporterBlock;
+import com.MO.MatterOverdrive.blocks.*;
 import com.MO.MatterOverdrive.compat.Compat;
-import com.MO.MatterOverdrive.tile.TileEntityMachineStarMap;
-import com.MO.MatterOverdrive.tile.TileEntityMachineTransporter;
-import com.MO.MatterOverdrive.tile.TileEntityWeaponStation;
+import com.MO.MatterOverdrive.tile.*;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -39,5 +35,8 @@ public class CompatWaila {
 		registrar.registerBodyProvider(new TileEntityWeaponStation(), BlockWeaponStation.class);
 		registrar.registerBodyProvider(new TileEntityMachineStarMap(), BlockStarMap.class);
 		registrar.registerBodyProvider(new TileEntityMachineTransporter(), TransporterBlock.class);
+		registrar.registerBodyProvider(new TileEntityMachineDecomposer(), DecomposerBlock.class);
+		registrar.registerBodyProvider(new TileEntityMachineReplicator(), ReplicatorBlock.class);
+		registrar.registerBodyProvider(new TileEntityMachineFusionReactorController(),BlockFusionReactorController.class);
 	}
 }
