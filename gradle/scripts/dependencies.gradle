@@ -55,7 +55,7 @@ dependencies {
     compile group: 'cofh', name: 'CoFHCore', version: "[${config.mc_version}]${config.cofh_core_version}", ext: 'jar'
     compile group: 'cofh', name: 'ThermalFoundation', version: "[${config.mc_version}]${config.cofh_tf_version}", ext: 'jar'
     compile group: 'cofh', name: 'ThermalExpansion', version: "[${config.mc_version}]${config.cofh_te_version}", ext: 'jar'
-    compile group: 'cofh', name: 'ThermalDynamics', version: "${config.mc_version}]${config.cofh_td_version}", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalDynamics', version: "[${config.mc_version}]${config.cofh_td_version}", ext: 'jar'
     // EnderIO
     compile group: 'com.enderio', name: 'EnderIO', version: "${config.mc_version}-${config.enderio_version}", classifier: 'dev'
 }
