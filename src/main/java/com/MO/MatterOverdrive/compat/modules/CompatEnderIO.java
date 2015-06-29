@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 
 /**
+ * Compatibility for Ender IO
+ *
  * @author shadowfacts
  */
 @Compat("EnderIO")

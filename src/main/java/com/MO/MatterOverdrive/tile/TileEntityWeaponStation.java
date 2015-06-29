@@ -2,6 +2,7 @@ package com.MO.MatterOverdrive.tile;
 
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
+import com.MO.MatterOverdrive.compat.modules.waila.IWailaBodyProvider;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.ItemInventoryWrapper;
 import com.MO.MatterOverdrive.data.inventory.ModuleSlot;
@@ -11,18 +12,26 @@ import com.MO.MatterOverdrive.data.inventory.WeaponSlot;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 4/13/2015.
  */
-public class TileEntityWeaponStation extends MOTileEntityMachine
+public class TileEntityWeaponStation extends MOTileEntityMachine implements IWailaBodyProvider
 {
     public int INPUT_SLOT;
     public int BATTERY_MODULE;
@@ -179,4 +188,24 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
     public void onDestroyed() {
 
     }
+
+//	WAILA
+	@Override
+	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		TileEntity te = accessor.getTileEntity();
+
+		if (te instanceof TileEntityWeaponStation) {
+			TileEntityWeaponStation weaponStation = (TileEntityWeaponStation)te;
+
+			if (weaponStation.getStackInSlot(INPUT_SLOT) != null) {
+				String name = weaponStation.getStackInSlot(INPUT_SLOT).getDisplayName();
+				currenttip.add(EnumChatFormatting.YELLOW + "Current Weapon: " + EnumChatFormatting.WHITE + name);
+			}
+
+		} else {
+			throw new RuntimeException("Weapon Station WAILA provider is being used for something that is not a Weapon Station: " + te.getClass());
+		}
+
+		return currenttip;
+	}
 }

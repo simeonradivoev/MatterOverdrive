@@ -1,6 +1,7 @@
 package com.MO.MatterOverdrive.compat;
 
 import com.MO.MatterOverdrive.compat.modules.*;
+import com.MO.MatterOverdrive.compat.modules.waila.CompatWaila;
 import com.MO.MatterOverdrive.util.MOLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -26,6 +27,7 @@ public class MatterOverdriveCompat {
 		register(CompatThermalExpansion.class);
 		register(CompatExNihilo.class);
 		register(CompatEnderIO.class);
+		register(CompatWaila.class);
 		register(CompatNEI.class);
 	}
 

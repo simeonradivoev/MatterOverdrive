@@ -7,6 +7,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
 import com.MO.MatterOverdrive.api.transport.ITransportList;
+import com.MO.MatterOverdrive.compat.modules.waila.IWailaBodyProvider;
 import com.MO.MatterOverdrive.data.TransportLocation;
 import com.MO.MatterOverdrive.fx.ReplicatorParticle;
 import com.MO.MatterOverdrive.network.packet.client.PacketSyncTransportProgress;
@@ -15,13 +16,17 @@ import com.MO.MatterOverdrive.util.Vector3;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -33,7 +38,7 @@ import java.util.List;
 /**
  * Created by Simeon on 5/3/2015.
  */
-public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements IMatterConnection, ITransportList
+public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements IMatterConnection, ITransportList, IWailaBodyProvider
 {
     public static final int MAX_ENTETIES_PRE_TRANSPORT = 3;
     public static final int TRANSPORT_TIME = 70;
@@ -356,4 +361,27 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     public List<TransportLocation> getPositions() {
         return locations;
     }
+
+
+//	WAILA
+	@Override
+	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		TileEntity te = accessor.getTileEntity();
+
+		if (te instanceof TileEntityMachineTransporter) {
+			TileEntityMachineTransporter transporter = (TileEntityMachineTransporter)te;
+
+			TransportLocation location = transporter.getSelectedLocation();
+
+			currenttip.add(String.format("%sSelected Location: %s%s", EnumChatFormatting.YELLOW, EnumChatFormatting.WHITE, location.name));
+			currenttip.add(String.format("%sDestination Coords: %s X:%d Y:%d Z:%d", EnumChatFormatting.YELLOW, EnumChatFormatting.WHITE, location.x, location.y, location.z));
+
+		} else {
+			throw new RuntimeException("Transporter WAILA provider is being used for something that is not a Transporter: " + te.getClass());
+		}
+
+
+
+		return currenttip;
+	}
 }
