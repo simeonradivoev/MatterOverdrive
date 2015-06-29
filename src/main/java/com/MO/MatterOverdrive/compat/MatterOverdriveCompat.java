@@ -25,6 +25,7 @@ public class MatterOverdriveCompat {
 	static {
 		register(CompatThermalExpansion.class);
 		register(CompatExNihilo.class);
+		register(CompatEnderIO.class);
 	}
 
 	private static boolean register(Class clazz) {
