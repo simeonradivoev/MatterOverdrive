@@ -25,7 +25,7 @@ public class MatterOverdriveBlocks
     public static BlockNetworkPipe network_pipe;
     public static BlockNetworkRouter network_router;
     public static BlockMatterAnalyzer matter_analyzer;
-    public static DilithiumOre dilithiumOre;
+    public static DilithiumOre dilithium_ore;
     public static MOBlock tritaniumOre;
     public static MOBlock tritanium_block;
     public static MOBlock machine_hull;
@@ -52,7 +52,7 @@ public class MatterOverdriveBlocks
         network_pipe = new BlockNetworkPipe(Material.iron,"network_pipe");
         network_router = new BlockNetworkRouter(Material.iron,"network_router");
         matter_analyzer = new BlockMatterAnalyzer(Material.iron,"matter_analyzer");
-        dilithiumOre = new DilithiumOre(Material.rock,"dilithium_ore");
+        dilithium_ore = new DilithiumOre(Material.rock,"dilithium_ore");
         tritaniumOre = new MOBlock(Material.rock,"tritanium_ore");
         tritaniumOre.setHardness(15.0F);
         tritaniumOre.setResistance(5.0F);
@@ -95,7 +95,7 @@ public class MatterOverdriveBlocks
         network_router.Register();
         matter_analyzer.Register();
         MatterOverdrive.configHandler.subscribe(matter_analyzer);
-        dilithiumOre.Register();
+        dilithium_ore.Register();
         tritaniumOre.Register();
         tritanium_block.Register();
         machine_hull.Register();
@@ -127,7 +127,7 @@ public class MatterOverdriveBlocks
         {
             MatterOverdriveQuide.Register(replicator);
             MatterOverdriveQuide.Register(decomposer);
-            MatterOverdriveQuide.Register(dilithiumOre);
+            MatterOverdriveQuide.Register(dilithium_ore);
             MatterOverdriveQuide.Register(tritaniumOre);
         }
 

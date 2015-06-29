@@ -3,6 +3,7 @@ package com.MO.MatterOverdrive.tile;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.inventory.starmap.IBuildable;
+import com.MO.MatterOverdrive.compat.modules.waila.IWailaBodyProvider;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.Slot;
 import com.MO.MatterOverdrive.network.packet.server.starmap.PacketStarMapAttack;
@@ -10,20 +11,28 @@ import com.MO.MatterOverdrive.network.packet.server.starmap.PacketStarMapClientC
 import com.MO.MatterOverdrive.starmap.GalaxyClient;
 import com.MO.MatterOverdrive.starmap.GalaxyServer;
 import com.MO.MatterOverdrive.starmap.data.*;
+import com.MO.MatterOverdrive.util.MOStringHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import scala.tools.nsc.Global;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 6/13/2015.
  */
-public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy
+public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implements IWailaBodyProvider
 {
     GalacticPosition position;
     GalacticPosition destination;
@@ -308,4 +317,21 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy
         }
     }
 
+//	WAILA
+	@Override
+	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		TileEntity te = accessor.getTileEntity();
+		if (te instanceof TileEntityMachineStarMap) {
+			TileEntityMachineStarMap starMap = (TileEntityMachineStarMap)te;
+
+			String[] levels = new String[]{"gui.tooltip.page.galaxy", "gui.tooltip.page.quadrant", "gui.tooltip.page.star", "gui.tooltip.page.planet", "gui.tooltip.page.planet_stats"};
+
+			currenttip.add(String.format("%sCurrent Mode: %s%s (%d)", EnumChatFormatting.YELLOW, EnumChatFormatting.WHITE, MOStringHelper.translateToLocal(levels[starMap.zoomLevel]), starMap.zoomLevel));
+
+		} else {
+			throw new RuntimeException("Star Map WAILA provider is being used for something that is not a Star Map: " + te.getClass());
+		}
+
+		return currenttip;
+	}
 }

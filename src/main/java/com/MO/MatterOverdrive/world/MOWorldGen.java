@@ -1,8 +1,5 @@
 package com.MO.MatterOverdrive.world;
 
-import cofh.lib.world.WorldGenDungeon;
-import com.MO.MatterOverdrive.MatterOverdrive;
-import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
@@ -10,11 +7,8 @@ import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenDungeons;
 import net.minecraft.world.gen.feature.WorldGenMinable;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import scala.Int;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -40,7 +34,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     public MOWorldGen(MOConfigurationHandler configurationHandler)
     {
         tritaniumGen = new WorldGenMinable(MatterOverdriveBlocks.tritaniumOre,TRITANIUM_VEIN_SIZE);
-        dilithiumGen = new WorldGenMinable(MatterOverdriveBlocks.dilithiumOre,DILITHIUM_VEIN_SIZE);
+        dilithiumGen = new WorldGenMinable(MatterOverdriveBlocks.dilithium_ore,DILITHIUM_VEIN_SIZE);
         anomalyGen = new WorldGenGravitationalAnomaly(0.005f,2048,2048 + 8192);
         gravitationalAnomalyDimensions = new HashSet<Integer>();
 
@@ -130,7 +124,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         Property shouldGenerateOres = config.config.get(MOConfigurationHandler.CATEGORY_WORLD_GEN, MOConfigurationHandler.CATEGORY_WORLD_SPAWN_ORES, true);
         shouldGenerateOres.comment = "Should Matter Overdrive Ore Blocks be Generated ?";
         generateTritanium = shouldGenerate(MatterOverdriveBlocks.tritaniumOre, config) && shouldGenerateOres.getBoolean(true);
-        generateDilithium = shouldGenerate(MatterOverdriveBlocks.dilithiumOre, config) && shouldGenerateOres.getBoolean(true);
+        generateDilithium = shouldGenerate(MatterOverdriveBlocks.dilithium_ore, config) && shouldGenerateOres.getBoolean(true);
         Property shouldGenerateOthers = config.config.get(MOConfigurationHandler.CATEGORY_WORLD_GEN, MOConfigurationHandler.CATEGORY_WORLD_SPAWN_OTHER, true);
         shouldGenerateOthers.comment = "Should other Matter Overdrive World Blocks be Generated?";
         generateAnomalies = shouldGenerate(MatterOverdriveBlocks.gravitational_anomaly, config) && shouldGenerateOthers.getBoolean(true);

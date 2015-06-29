@@ -1,3 +1,13 @@
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
 task myJavadocs(type: Javadoc) {
     source = sourceSets.api.java
     include "com.MO.MatterOverdrive/api/**"
@@ -10,29 +20,9 @@ task javadocJar(type: Jar, dependsOn: myJavadocs) {
     from 'build/docs/javadoc/'
 }
 
-task sourceJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task devJar(type: Jar) {
-
-    manifest {
-        attributes 'FMLCorePlugin': 'com.MO.MatterOverdrive.MatterOverdrive'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
-
-    from(sourceSets.main.output) {
-        include "com.MO.Matteroverdrive/**"
-        include "assets/**"
-        include 'mcmod.info'
-    }
-
-    classifier = 'dev'
-}
-
 artifacts {
-    archives devJar
-    archives sourceJar
+    archives jar
+    archives deobfJar
+    archives sourcesJar
     archives javadocJar
 }

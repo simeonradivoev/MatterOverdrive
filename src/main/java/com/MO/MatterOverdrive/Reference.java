@@ -7,9 +7,10 @@ public class Reference
 	public static final String MOD_ID = "mo";
 	public static final String MOD_NAME = "Matter Overdrive";
 	public static final String VERSION = "0.3.5";
+	public static final String GUI_FACTORY_CLASS = "com.MO.MatterOverdrive.gui.GuiConfigFactory";
+	public static final String DEPEDNENCIES = "after:ThermalExpansion;after:exnihilo;after:EnderIO;";
 	public static final String CLIENT_PROXY_CLASS = "com.MO.MatterOverdrive.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.MO.MatterOverdrive.proxy.CommonProxy";
-	public static final String GUI_FACTORY_CLASS = "com.MO.MatterOverdrive.gui.GuiConfigFactory";
 	public static final String CHANNEL_NAME = MOD_ID + "_channel";
 	public static final String VERSIONS_FILE_URL = "https://raw.githubusercontent.com/simeonradivoev/MatterOverdrive/master/Versions.txt";
 	public static final String VERSIONS_FILE_URL_MIRROR = "http://simeon.co.vu/Mods/MatterOverdrive/Versions.txt";
