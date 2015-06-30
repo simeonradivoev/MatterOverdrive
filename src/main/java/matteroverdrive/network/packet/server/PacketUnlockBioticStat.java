@@ -52,7 +52,6 @@ public class PacketUnlockBioticStat extends PacketAbstract
             if (stat != null && androidPlayer != null && androidPlayer.isAndroid())
             {
                 androidPlayer.tryUnlock(stat, message.level);
-                stat.onUnlock(androidPlayer,message.level);
             }
             return null;
         }
