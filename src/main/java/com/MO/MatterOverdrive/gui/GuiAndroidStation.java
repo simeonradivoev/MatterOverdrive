@@ -20,6 +20,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,22 +63,23 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         parts_slots[Reference.BIONIC_BATTERY].setPosition(320,310);
         parts_slots[Reference.BIONIC_BATTERY].setIcon(ClientProxy.holoIcons.getIcon("battery"));
 
-        addStat(androidPlayer,AndroidStatRegistry.teleport,0,0);
-        addStat(androidPlayer,AndroidStatRegistry.nanobots,1,0);
-        addStat(androidPlayer,AndroidStatRegistry.nanoArmor,1,1);
-        addStat(androidPlayer,AndroidStatRegistry.flotation,2,0);
-        addStat(androidPlayer,AndroidStatRegistry.speed,3,0);
-        addStat(androidPlayer,AndroidStatRegistry.highJump,3,1);
-        addStat(androidPlayer,AndroidStatRegistry.equalizer,3,2);
-        addStat(androidPlayer,AndroidStatRegistry.shield,1,2);
+        addStat(androidPlayer,AndroidStatRegistry.teleport,0,0,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,AndroidStatRegistry.nanobots,1,1,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,AndroidStatRegistry.nanoArmor,0,1,ForgeDirection.EAST);
+        addStat(androidPlayer,AndroidStatRegistry.flotation,2,0,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,AndroidStatRegistry.speed,3,0,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,AndroidStatRegistry.highJump,3,1,ForgeDirection.UP);
+        addStat(androidPlayer,AndroidStatRegistry.equalizer,3,2,ForgeDirection.UP);
+        addStat(androidPlayer,AndroidStatRegistry.shield,0,2,ForgeDirection.UP);
+        addStat(androidPlayer,AndroidStatRegistry.attack,2,1,ForgeDirection.WEST);
 
         mob = new EntityRougeAndroidMob(Minecraft.getMinecraft().theWorld);
         mob.getEntityData().setBoolean("Hologram",true);
     }
 
-    public void addStat(AndroidPlayer androidPlayer,IBionicStat stat,int x,int y)
+    public void addStat(AndroidPlayer androidPlayer,IBionicStat stat,int x,int y,ForgeDirection direction)
     {
-        ElementBioStat elemStat = new ElementBioStat(this,0,0,stat,androidPlayer.getUnlockedLevel(stat),androidPlayer);
+        ElementBioStat elemStat = new ElementBioStat(this,0,0,stat,androidPlayer.getUnlockedLevel(stat),androidPlayer,direction);
         elemStat.setPosition(54 + x * 30,42 + y * 30);
         stats.add(elemStat);
     }
@@ -144,6 +146,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
             glDisable(GL_BLEND);
 
             String info = Minecraft.getMinecraft().thePlayer.experienceLevel + " XP";
+            glDisable(GL_LIGHTING);
             int width = fontRendererObj.getStringWidth(info);
             fontRendererObj.drawString(EnumChatFormatting.GREEN + info, 280 - width / 2, 345, 0xFFFFFF);
         }

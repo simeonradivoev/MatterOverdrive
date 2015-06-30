@@ -32,7 +32,8 @@ public class HoloIcons
             "shielding","scanner","upgrade","decompose","pattern_storage","home_icon","page_icon_home",
             "page_icon_tasks","page_icon_upgrades","page_icon_config","page_icon_search","page_icon_info",
             "page_icon_galaxy","page_icon_quadrant","page_icon_star","page_icon_planet","energy","arrow_right",
-            "travel_icon","icon_search","icon_size","icon_shuttle","icon_stats","icon_scount_planet","icon_attack"};
+            "travel_icon","icon_search","icon_size","icon_shuttle","icon_stats","icon_scount_planet","icon_attack",
+            "up_arrow"};
 
     public HoloIcons()
     {

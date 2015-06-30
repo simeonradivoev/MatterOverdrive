@@ -25,6 +25,7 @@ public class AndroidStatRegistry
     public static BioticStatHighJump highJump;
     public static BioticStatEqualizer equalizer;
     public static BioticStatShield shield;
+    public static BioticStatAttack attack;
 
     public static boolean registerStat(IBionicStat stat)
     {
@@ -66,15 +67,19 @@ public class AndroidStatRegistry
         equalizer = new BioticStatEqualizer("equalizer",24);
         equalizer.addReqiredItm(new ItemStack(MatterOverdriveItems.spacetime_equalizer));
         shield = new BioticStatShield("shield",36);
+        attack = new BioticStatAttack("attack",30);
 
         teleport.addReqiredItm(new ItemStack(MatterOverdriveItems.h_compensator));
         teleport.addToEnabledBlacklist(shield);
         nanoArmor.setRoot(nanobots);
+        nanoArmor.addCompetitor(attack);
         highJump.setRoot(speed);
         highJump.addToEnabledBlacklist(shield);
         equalizer.setRoot(highJump);
         shield.setRoot(nanoArmor);
         shield.addReqiredItm(new ItemStack(MatterOverdriveItems.forceFieldEmitter,2));
+        attack.addCompetitor(nanoArmor);
+        attack.setRoot(nanobots);
     }
 
     public static void registerAll()
@@ -87,6 +92,7 @@ public class AndroidStatRegistry
         registerStat(highJump);
         registerStat(equalizer);
         registerStat(shield);
+        registerStat(attack);
     }
 
     public static void registerIcons(TextureMap holoIcons)

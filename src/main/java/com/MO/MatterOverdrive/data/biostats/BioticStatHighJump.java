@@ -29,7 +29,7 @@ public class BioticStatHighJump extends AbstractBioticStat {
     @Override
     public String getDetails(int level)
     {
-        return super.getDetails(level).replace("$0", EnumChatFormatting.YELLOW.toString() + ENERGY_PER_JUMP + " RF" + EnumChatFormatting.GRAY);
+        return String.format(super.getDetails(level),EnumChatFormatting.YELLOW.toString() + ENERGY_PER_JUMP + " RF" + EnumChatFormatting.GRAY);
     }
 
     @Override

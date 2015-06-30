@@ -7,6 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Simeon on 5/29/2015.
  */
@@ -34,7 +36,7 @@ public class BioticStatNanoArmor extends AbstractBioticStat
     @Override
     public String getDetails(int level)
     {
-        return super.getDetails(level).replace("$0", EnumChatFormatting.GREEN + Integer.toString(Math.round((getDamageNegate(level)) * 100)) + "%" + EnumChatFormatting.GRAY);
+        return String.format(super.getDetails(level), EnumChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(getDamageNegate(level)) + EnumChatFormatting.GRAY);
     }
 
     @Override
@@ -64,6 +66,6 @@ public class BioticStatNanoArmor extends AbstractBioticStat
 
     public float getDamageNegate(int level)
     {
-        return 1 + level * 0.1f;
+        return (1 + level) * 0.06f;
     }
 }

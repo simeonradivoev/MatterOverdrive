@@ -153,9 +153,9 @@ public abstract class AbstractBioticStat implements IBionicStat
     public void onTooltip(AndroidPlayer android, int level, List<String> list, int mouseX, int mouseY)
     {
         String name = getDisplayName(android, level);
-        if (maxLevel() > 0 && level > 0)
+        if (maxLevel() > 1)
         {
-            name += " x" + level;
+            name += String.format(" [%s/%s]",level,maxLevel());
         }
         list.add(EnumChatFormatting.WHITE + name);
         String details = getDetails(level);

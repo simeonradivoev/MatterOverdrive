@@ -38,7 +38,7 @@ public class BioticStatTeleport extends AbstractBioticStat {
     @Override
     public String getDetails(int level)
     {
-        return super.getDetails(level).replace("$0", Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode())).replace("$1", EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + EnumChatFormatting.GRAY);
+        return String.format(super.getDetails(level),Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()),EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + EnumChatFormatting.GRAY);
     }
 
     @Override

@@ -112,7 +112,7 @@ public class BioticStatShield extends AbstractBioticStat
 
     public String getDetails(int level)
     {
-        return super.getDetails(level).replace("$0", Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()));
+        return String.format(super.getDetails(level), Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()));
     }
 
     public boolean getShieldState(AndroidPlayer androidPlayer)
