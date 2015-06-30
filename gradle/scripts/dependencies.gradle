@@ -21,6 +21,11 @@ repositories {
         artifactPattern "http://addons-origin.cursecdn.com/files/2244/301/[module]-[revision].[ext]"
     }
 
+    ivy {
+        name "ExtraUtilities"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2242/27/[module]-[revision].[ext]"
+    }
+
     //maven repos
     maven {
         name "ChickenBones"
@@ -58,4 +63,6 @@ dependencies {
     compile group: 'cofh', name: 'ThermalDynamics', version: "[${config.mc_version}]${config.cofh_td_version}", ext: 'jar'
     // EnderIO
     compile group: 'com.enderio', name: 'EnderIO', version: "${config.mc_version}-${config.enderio_version}", classifier: 'dev'
+    // Extra Utilities
+    compile group: 'ExtraUtilities', name: 'extrautilities', version: "${config.xu_version}", ext: 'jar'
 }
