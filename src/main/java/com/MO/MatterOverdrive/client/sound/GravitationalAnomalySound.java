@@ -1,4 +1,4 @@
-package com.MO.MatterOverdrive.sound;
+package com.MO.MatterOverdrive.client.sound;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.audio.ITickableSound;

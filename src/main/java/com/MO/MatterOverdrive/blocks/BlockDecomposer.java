@@ -17,11 +17,11 @@ import com.MO.MatterOverdrive.tile.TileEntityMachineDecomposer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class DecomposerBlock extends MOMatterEnergyStorageBlock
+public class BlockDecomposer extends MOMatterEnergyStorageBlock
 {
 	public IIcon iconTop;
 	
-	public DecomposerBlock(Material material, String name) 
+	public BlockDecomposer(Material material, String name)
 	{
 		super(material, name, true, true);
         setHardness(20.0F);

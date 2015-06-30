@@ -5,7 +5,6 @@ import com.MO.MatterOverdrive.util.IConfigSubscriber;
 import com.MO.MatterOverdrive.util.MOLog;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.google.gson.Gson;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
@@ -173,10 +172,10 @@ public class VersionCheckerHandler implements IConfigSubscriber {
     }
 
     @Override
-    public void onConfigChanged(MOConfigurationHandler config)
+    public void onConfigChanged(ConfigurationHandler config)
     {
         String comment = "Should Matter Overdrive check for newer versions, every time the world starts";
-        checkForUpdates = config.getBool(MOConfigurationHandler.KEY_VERSION_CHECK,MOConfigurationHandler.CATEGORY_CLIENT,true,comment);
-        config.config.get(MOConfigurationHandler.CATEGORY_CLIENT,MOConfigurationHandler.KEY_VERSION_CHECK,true).comment = comment;
+        checkForUpdates = config.getBool(ConfigurationHandler.KEY_VERSION_CHECK, ConfigurationHandler.CATEGORY_CLIENT,true,comment);
+        config.config.get(ConfigurationHandler.CATEGORY_CLIENT, ConfigurationHandler.KEY_VERSION_CHECK,true).comment = comment;
     }
 }

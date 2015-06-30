@@ -1,11 +1,9 @@
 package com.MO.MatterOverdrive.animation;
 
-import java.util.List;
-
 /**
  * Created by Simeon on 5/31/2015.
  */
-public class AnimationTextTyping extends AnimationTimeline<TextAnimationSegment>
+public class AnimationTextTyping extends AnimationTimeline<AnimationSegmentText>
 {
     public AnimationTextTyping(boolean loopable, int duration) {
         super(loopable, duration);
@@ -13,7 +11,7 @@ public class AnimationTextTyping extends AnimationTimeline<TextAnimationSegment>
 
     public String getString()
     {
-        TextAnimationSegment segment = getCurrentSegment();
+        AnimationSegmentText segment = getCurrentSegment();
         if (segment != null)
         {
             return segment.getText(time);

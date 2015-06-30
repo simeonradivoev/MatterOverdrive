@@ -19,13 +19,13 @@ import java.util.List;
 /**
  * Created by Simeon on 3/15/2015.
  */
-public class Isolinear_circuit extends MOBaseItem
+public class IsolinearCircuit extends MOBaseItem
 {
     public static final String[] subItemNames = {"mk1","mk2","mk3","mk4"};
     @SideOnly(Side.CLIENT)
     private IIcon[] icons;
 
-    public Isolinear_circuit(String name)
+    public IsolinearCircuit(String name)
     {
         super(name);
         this.setHasSubtypes(true);

@@ -1,21 +1,14 @@
 package com.MO.MatterOverdrive.entity;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.handler.ConfigurationHandler;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
 import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.WorldChunkManager;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeManager;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -67,13 +60,13 @@ public class EntityRogueAndroid implements IConfigSubscriber
     }
 
     @Override
-    public void onConfigChanged(MOConfigurationHandler config)
+    public void onConfigChanged(ConfigurationHandler config)
     {
         if (spawnListEntry != null)
         {
-            spawnListEntry.itemWeight = config.config.getInt("rogue_android.spawn.chance",MOConfigurationHandler.CATEGORY_WORLD_GEN,3,0,100,"The spawn change of the Rogue Android");
+            spawnListEntry.itemWeight = config.config.getInt("rogue_android.spawn.chance", ConfigurationHandler.CATEGORY_WORLD_GEN,3,0,100,"The spawn change of the Rogue Android");
             biomesBlacklist.clear();
-            String[] blacklist = config.config.getStringList("rouge.biome.blacklist",MOConfigurationHandler.CATEGORY_WORLD_GEN,new String[]{"Hell","Sky"},"The blacklist for Android spawn biomes");
+            String[] blacklist = config.config.getStringList("rouge.biome.blacklist", ConfigurationHandler.CATEGORY_WORLD_GEN,new String[]{"Hell","Sky"},"The blacklist for Android spawn biomes");
             for (int i = 0;i < blacklist.length;i++)
             {
                 biomesBlacklist.add(blacklist[i].toLowerCase());

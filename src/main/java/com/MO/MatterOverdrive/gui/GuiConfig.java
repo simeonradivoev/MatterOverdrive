@@ -2,11 +2,8 @@ package com.MO.MatterOverdrive.gui;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
 import cpw.mods.fml.client.config.IConfigElement;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.ConfigElement;
 
 import java.util.ArrayList;
 import java.util.List;

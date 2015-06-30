@@ -1,6 +1,6 @@
 package com.MO.MatterOverdrive.world;
 
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.handler.ConfigurationHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
 import cpw.mods.fml.common.IWorldGenerator;
@@ -31,7 +31,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     boolean generateDilithium;
     boolean generateAnomalies;
 
-    public MOWorldGen(MOConfigurationHandler configurationHandler)
+    public MOWorldGen(ConfigurationHandler configurationHandler)
     {
         tritaniumGen = new WorldGenMinable(MatterOverdriveBlocks.tritaniumOre,TRITANIUM_VEIN_SIZE);
         dilithiumGen = new WorldGenMinable(MatterOverdriveBlocks.dilithium_ore,DILITHIUM_VEIN_SIZE);
@@ -111,24 +111,24 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
             }
         }
     }
-    private boolean shouldGenerate(Block block,MOConfigurationHandler config)
+    private boolean shouldGenerate(Block block,ConfigurationHandler config)
     {
-        Property p = config.config.get(MOConfigurationHandler.CATEGORY_WORLD_GEN,MOConfigurationHandler.CATEGORY_WORLD_SPAWN + "." + block.getUnlocalizedName(), true);
+        Property p = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN, ConfigurationHandler.CATEGORY_WORLD_SPAWN + "." + block.getUnlocalizedName(), true);
         p.setLanguageKey(block.getUnlocalizedName() + ".name");
         return p.getBoolean(true);
     }
 
     @Override
-    public void onConfigChanged(MOConfigurationHandler config)
+    public void onConfigChanged(ConfigurationHandler config)
     {
-        Property shouldGenerateOres = config.config.get(MOConfigurationHandler.CATEGORY_WORLD_GEN, MOConfigurationHandler.CATEGORY_WORLD_SPAWN_ORES, true);
+        Property shouldGenerateOres = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN, ConfigurationHandler.CATEGORY_WORLD_SPAWN_ORES, true);
         shouldGenerateOres.comment = "Should Matter Overdrive Ore Blocks be Generated ?";
         generateTritanium = shouldGenerate(MatterOverdriveBlocks.tritaniumOre, config) && shouldGenerateOres.getBoolean(true);
         generateDilithium = shouldGenerate(MatterOverdriveBlocks.dilithium_ore, config) && shouldGenerateOres.getBoolean(true);
-        Property shouldGenerateOthers = config.config.get(MOConfigurationHandler.CATEGORY_WORLD_GEN, MOConfigurationHandler.CATEGORY_WORLD_SPAWN_OTHER, true);
+        Property shouldGenerateOthers = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN, ConfigurationHandler.CATEGORY_WORLD_SPAWN_OTHER, true);
         shouldGenerateOthers.comment = "Should other Matter Overdrive World Blocks be Generated?";
         generateAnomalies = shouldGenerate(MatterOverdriveBlocks.gravitational_anomaly, config) && shouldGenerateOthers.getBoolean(true);
-        Property gravitationalAnomalyDimsPropery = config.config.get(MOConfigurationHandler.CATEGORY_WORLD_GEN,"gravitational_anomaly_dimensions",new int[]{-1,0,2});
+        Property gravitationalAnomalyDimsPropery = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN,"gravitational_anomaly_dimensions",new int[]{-1,0,2});
         gravitationalAnomalyDimsPropery.comment = "Dimension id's in which the gravitational anomaly should spawn in";
         int[] gravitationalAnomalyDims = gravitationalAnomalyDimsPropery.getIntList();
         for (int i = 0;i < gravitationalAnomalyDims.length;i++)

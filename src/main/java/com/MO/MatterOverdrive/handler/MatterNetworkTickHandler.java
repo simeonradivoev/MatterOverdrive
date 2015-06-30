@@ -36,7 +36,7 @@ public class MatterNetworkTickHandler implements IConfigSubscriber
     }
 
     @Override
-    public void onConfigChanged(MOConfigurationHandler config) {
-        this.max_broadcasts = config.getInt(MOConfigurationHandler.KEY_MAX_BROADCASTS,MOConfigurationHandler.CATEGORY_MATTER_NETWORK,128,"The maximum amount of network packet broadcasts per tick.");
+    public void onConfigChanged(ConfigurationHandler config) {
+        this.max_broadcasts = config.getInt(ConfigurationHandler.KEY_MAX_BROADCASTS, ConfigurationHandler.CATEGORY_MATTER_NETWORK,128,"The maximum amount of network packet broadcasts per tick.");
     }
 }

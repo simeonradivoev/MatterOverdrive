@@ -18,9 +18,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MatterOverdriveBlocks 
 {
-	public static ReplicatorBlock replicator;
-	public static DecomposerBlock decomposer;
-	public static TransporterBlock transporter;
+	public static BlockReplicator replicator;
+	public static BlockDecomposer decomposer;
+	public static BlockTransporter transporter;
 	public static BlockMatterPipe matter_pipe;
     public static BlockNetworkPipe network_pipe;
     public static BlockNetworkRouter network_router;
@@ -45,9 +45,9 @@ public class MatterOverdriveBlocks
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
-		replicator = new ReplicatorBlock(Material.iron,"replicator");
-		decomposer = new DecomposerBlock(Material.iron,"decomposer");
-		transporter = new TransporterBlock(Material.iron,"transporter");
+		replicator = new BlockReplicator(Material.iron,"replicator");
+		decomposer = new BlockDecomposer(Material.iron,"decomposer");
+		transporter = new BlockTransporter(Material.iron,"transporter");
 		matter_pipe = new BlockMatterPipe(Material.iron,"matter_pipe");
         network_pipe = new BlockNetworkPipe(Material.iron,"network_pipe");
         network_router = new BlockNetworkRouter(Material.iron,"network_router");

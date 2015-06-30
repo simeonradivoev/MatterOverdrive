@@ -1,6 +1,6 @@
 package com.MO.MatterOverdrive.starmap;
 
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.handler.ConfigurationHandler;
 import com.MO.MatterOverdrive.starmap.data.Galaxy;
 import com.MO.MatterOverdrive.starmap.data.Planet;
 import com.MO.MatterOverdrive.starmap.data.Quadrant;
@@ -191,14 +191,14 @@ public class GalaxyGenerator implements IConfigSubscriber
     public Random getStarRandom(){return starRandom;}
 
     @Override
-    public void onConfigChanged(MOConfigurationHandler config)
+    public void onConfigChanged(ConfigurationHandler config)
     {
-        StarPrefixChance = config.config.getFloat("name_prefix_chance", MOConfigurationHandler.CATEGORY_STARMAP, 1, 0, 1, "The chance of adding a prefix to a Star System's name");
-        StarSufixChance = config.config.getFloat("name_suffix_chance", MOConfigurationHandler.CATEGORY_STARMAP, 0.8f, 0, 1, "The chance of adding a suffix to a Star System's name");
-        minStars = config.config.getInt("min_star_count", MOConfigurationHandler.CATEGORY_STARMAP, 2048, 0, 512000, "The minimum amount of stars in a galaxy");
-        maxStars = config.config.getInt("max_star_count", MOConfigurationHandler.CATEGORY_STARMAP, 2048 + 256, 0, 512000, "The maximum amount of stars in a galaxy");
-        minPlanets = config.config.getInt("min_planet_count", MOConfigurationHandler.CATEGORY_STARMAP, 1, 0, 8, "The minimum amount of planets per star system");
-        maxPlanets = config.config.getInt("max_planet_count",MOConfigurationHandler.CATEGORY_STARMAP,4,0,8,"The maximum amount of planets pre star system");
-        quadrantCount = config.config.getInt("quadrant_count",MOConfigurationHandler.CATEGORY_STARMAP,3,1,6,"The amount of quadrants the galaxy should be divided into. The amount is cubed. x ^ 3. For example 3 ^ 3 = 27 quadrants.");
+        StarPrefixChance = config.config.getFloat("name_prefix_chance", ConfigurationHandler.CATEGORY_STARMAP, 1, 0, 1, "The chance of adding a prefix to a Star System's name");
+        StarSufixChance = config.config.getFloat("name_suffix_chance", ConfigurationHandler.CATEGORY_STARMAP, 0.8f, 0, 1, "The chance of adding a suffix to a Star System's name");
+        minStars = config.config.getInt("min_star_count", ConfigurationHandler.CATEGORY_STARMAP, 2048, 0, 512000, "The minimum amount of stars in a galaxy");
+        maxStars = config.config.getInt("max_star_count", ConfigurationHandler.CATEGORY_STARMAP, 2048 + 256, 0, 512000, "The maximum amount of stars in a galaxy");
+        minPlanets = config.config.getInt("min_planet_count", ConfigurationHandler.CATEGORY_STARMAP, 1, 0, 8, "The minimum amount of planets per star system");
+        maxPlanets = config.config.getInt("max_planet_count", ConfigurationHandler.CATEGORY_STARMAP,4,0,8,"The maximum amount of planets pre star system");
+        quadrantCount = config.config.getInt("quadrant_count", ConfigurationHandler.CATEGORY_STARMAP,3,1,6,"The amount of quadrants the galaxy should be divided into. The amount is cubed. x ^ 3. For example 3 ^ 3 = 27 quadrants.");
     }
 }

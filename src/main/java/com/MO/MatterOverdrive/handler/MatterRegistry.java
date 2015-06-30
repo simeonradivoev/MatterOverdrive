@@ -7,12 +7,6 @@ import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.util.MOLog;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLModIdMappingEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -21,13 +15,11 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
 
 public class MatterRegistry
 {
@@ -223,9 +215,9 @@ public class MatterRegistry
     }
     public static MatterEntry registerFromRecipe(Item item) {return registerFromRecipe(new ItemStack(item));}
     public static int checkInConfig(String key){
-        if (MatterOverdrive.configHandler.config.hasKey(MOConfigurationHandler.CATEGORY_OVERRIDE_MATTER, key))
+        if (MatterOverdrive.configHandler.config.hasKey(ConfigurationHandler.CATEGORY_OVERRIDE_MATTER, key))
         {
-            return MatterOverdrive.configHandler.getInt(key,MOConfigurationHandler.CATEGORY_OVERRIDE_MATTER,-1);
+            return MatterOverdrive.configHandler.getInt(key, ConfigurationHandler.CATEGORY_OVERRIDE_MATTER,-1);
         }
         return -1;
     }
@@ -347,9 +339,9 @@ public class MatterRegistry
         return matter;
     }
 
-    public static void loadNewItemsFromConfig(MOConfigurationHandler c)
+    public static void loadNewItemsFromConfig(ConfigurationHandler c)
     {
-        List<Property> category = c.getCategory(MOConfigurationHandler.CATEGORY_NEW_ITEMS).getOrderedValues();
+        List<Property> category = c.getCategory(ConfigurationHandler.CATEGORY_NEW_ITEMS).getOrderedValues();
         for (int i = 0; i < category.size();i++)
         {
             int value = category.get(i).getInt(0);
@@ -361,9 +353,9 @@ public class MatterRegistry
         }
     }
 
-    public static void loadBlacklistFromConfig(MOConfigurationHandler c)
+    public static void loadBlacklistFromConfig(ConfigurationHandler c)
     {
-        String[] list = c.getStringList(MOConfigurationHandler.CATEGORY_MATTER,MOConfigurationHandler.KEY_MBLACKLIST);
+        String[] list = c.getStringList(ConfigurationHandler.CATEGORY_MATTER, ConfigurationHandler.KEY_MBLACKLIST);
         for (int i = 0; i < list.length;i++)
         {
             addToBlacklist(list[i]);

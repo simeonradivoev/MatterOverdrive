@@ -1,6 +1,6 @@
 package com.MO.MatterOverdrive.world;
 
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.handler.ConfigurationHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveBlocks;
 import com.MO.MatterOverdrive.tile.TileEntityGravitationalAnomaly;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
@@ -41,8 +41,8 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
     }
 
     @Override
-    public void onConfigChanged(MOConfigurationHandler config)
+    public void onConfigChanged(ConfigurationHandler config)
     {
-        chance = config.config.getFloat(MOConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_SPAWN_CHANCE,MOConfigurationHandler.CATEGORY_WORLD_GEN,defaultChance,0,1,"Spawn Chance of Gravity Anomaly pre chunk");
+        chance = config.config.getFloat(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_SPAWN_CHANCE, ConfigurationHandler.CATEGORY_WORLD_GEN,defaultChance,0,1,"Spawn Chance of Gravity Anomaly pre chunk");
     }
 }

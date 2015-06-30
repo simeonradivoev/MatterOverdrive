@@ -15,14 +15,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.World;
 
-public class TransporterBlock extends MOMatterEnergyStorageBlock
+public class BlockTransporter extends MOMatterEnergyStorageBlock
 {
 	@SideOnly(Side.CLIENT)
 	private IIcon iconTop;
 	@SideOnly(Side.CLIENT)
 	private IIcon iconFront;
 
-	public TransporterBlock(Material material, String name) 
+	public BlockTransporter(Material material, String name)
 	{
 		super(material, name,true,true);
 		setHardness(20.0F);

@@ -2,7 +2,7 @@ package com.MO.MatterOverdrive.blocks;
 
 import cofh.lib.util.helpers.BlockHelper;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockMachine;
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.handler.ConfigurationHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import com.MO.MatterOverdrive.tile.TileEntityMachinePatternStorage;
 import cpw.mods.fml.relauncher.Side;
@@ -57,7 +57,7 @@ public class BlockPatternStorage extends MOBlockMachine
         return false;
     }
 
-    public void onConfigChanged(MOConfigurationHandler config)
+    public void onConfigChanged(ConfigurationHandler config)
     {
         super.onConfigChanged(config);
         hasVentParticles = config.getMachineBool(getUnlocalizedName(),"particles.vent", true, "Sould vent particles be displayed");

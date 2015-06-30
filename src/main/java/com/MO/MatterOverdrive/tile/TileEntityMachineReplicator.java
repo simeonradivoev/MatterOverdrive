@@ -7,9 +7,8 @@ import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
 import com.MO.MatterOverdrive.api.matter.IMatterConnection;
-import com.MO.MatterOverdrive.api.matter.IMatterDatabase;
 import com.MO.MatterOverdrive.api.network.*;
-import com.MO.MatterOverdrive.blocks.ReplicatorBlock;
+import com.MO.MatterOverdrive.blocks.BlockReplicator;
 import com.MO.MatterOverdrive.data.Inventory;
 import com.MO.MatterOverdrive.data.inventory.DatabaseSlot;
 import com.MO.MatterOverdrive.data.inventory.RemoveOnlySlot;
@@ -20,11 +19,9 @@ import com.MO.MatterOverdrive.matter_network.MatterNetworkPacket;
 import com.MO.MatterOverdrive.fx.ReplicatorParticle;
 import com.MO.MatterOverdrive.handler.SoundHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveItems;
-import com.MO.MatterOverdrive.items.MatterScanner;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import com.MO.MatterOverdrive.util.MatterDatabaseHelper;
 import com.MO.MatterOverdrive.util.MatterHelper;
-import com.MO.MatterOverdrive.util.Vector3;
 
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -168,7 +165,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                         this.replicateTime = 0;
                         this.replicateItem(internalPatternStorage, newItem);
                         MatterOverdrive.packetPipeline.sendToDimention(new PacketReplicationComplete(this), worldObj);
-                        SoundHandler.PlaySoundAt(worldObj, "replicate_success", this.xCoord, this.yCoord, this.zCoord, 0.25F * getBlockType(ReplicatorBlock.class).replication_volume, 1.0F, 0.2F, 0.8F);
+                        SoundHandler.PlaySoundAt(worldObj, "replicate_success", this.xCoord, this.yCoord, this.zCoord, 0.25F * getBlockType(BlockReplicator.class).replication_volume, 1.0F, 0.2F, 0.8F);
                     }
                     if (timeTracker.hasDelayPassed(worldObj, RADIATION_DAMAGE_DELAY)) {
                         manageRadiation();
@@ -179,7 +176,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             }
             else
             {
-                if (getBlockType(ReplicatorBlock.class).hasVentParticles) {
+                if (getBlockType(BlockReplicator.class).hasVentParticles) {
                     SpawnVentParticles(0.05f, ForgeDirection.getOrientation(BlockHelper.getLeftSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
                     SpawnVentParticles(0.05f, ForgeDirection.getOrientation(BlockHelper.getRightSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
                 }

@@ -5,7 +5,7 @@ import cofh.lib.util.helpers.InventoryHelper;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.data.inventory.Slot;
 import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.handler.ConfigurationHandler;
 import com.MO.MatterOverdrive.items.includes.MOEnergyMatterBlockItem;
 import com.MO.MatterOverdrive.tile.IMOTileEntity;
 import com.MO.MatterOverdrive.tile.MOTileEntityMachine;
@@ -246,7 +246,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     }
 
     @Override
-    public void onConfigChanged(MOConfigurationHandler config)
+    public void onConfigChanged(ConfigurationHandler config)
     {
         config.initMachineCategory(getUnlocalizedName());
         volume = (float)config.getMachineDouble(getUnlocalizedName(), "volume",1,"The volume of the Machine");

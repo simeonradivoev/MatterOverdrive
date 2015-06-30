@@ -1,6 +1,6 @@
 package com.MO.MatterOverdrive.blocks;
 
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.handler.ConfigurationHandler;
 import com.MO.MatterOverdrive.init.MatterOverdriveIcons;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
@@ -13,12 +13,12 @@ import com.MO.MatterOverdrive.tile.TileEntityMachineReplicator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ReplicatorBlock extends MOMatterEnergyStorageBlock
+public class BlockReplicator extends MOMatterEnergyStorageBlock
 {
 	public float replication_volume;
     public boolean hasVentParticles;
 	
-	public ReplicatorBlock(Material material,String name)
+	public BlockReplicator(Material material, String name)
 	{
 		super(material, name, true, true);
 		setHardness(20.0F);
@@ -68,7 +68,7 @@ public class ReplicatorBlock extends MOMatterEnergyStorageBlock
     }
 
 	@Override
-	public void onConfigChanged(MOConfigurationHandler config)
+	public void onConfigChanged(ConfigurationHandler config)
 	{
 		super.onConfigChanged(config);
 		replication_volume = (float)config.getMachineDouble(getUnlocalizedName(),"volume.replicate", 1, "The volume of the replication animation");

@@ -1,11 +1,10 @@
 package com.MO.MatterOverdrive.gui;
 
-import cofh.lib.audio.SoundBase;
 import cofh.lib.gui.GuiColor;
 import cofh.lib.render.RenderHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.animation.AnimationTextTyping;
-import com.MO.MatterOverdrive.animation.TextAnimationSegment;
+import com.MO.MatterOverdrive.animation.AnimationSegmentText;
 import com.MO.MatterOverdrive.api.inventory.IBionicStat;
 import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.handler.AndroidStatRegistry;
@@ -18,12 +17,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.util.JsonException;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
@@ -58,13 +54,13 @@ public class GuiAndroidHud extends Gui
         for (int i = 0;i < 5;i++)
         {
             info = MOStringHelper.translateToLocal("gui.android_hud.transforming.line." + i);
-            textTyping.addSeqmentSequential(new TextAnimationSegment(info,0,1).setLengthPerCharacter(2));
-            textTyping.addSeqmentSequential(new TextAnimationSegment(info,0,0).setLengthPerCharacter(2));
+            textTyping.addSeqmentSequential(new AnimationSegmentText(info,0,1).setLengthPerCharacter(2));
+            textTyping.addSeqmentSequential(new AnimationSegmentText(info,0,0).setLengthPerCharacter(2));
         }
 
         info = MOStringHelper.translateToLocal("gui.android_hud.transforming.line.final");
-        textTyping.addSeqmentSequential(new TextAnimationSegment(info,0,1).setLengthPerCharacter(2));
-        textTyping.addSeqmentSequential(new TextAnimationSegment(info,AndroidPlayer.TRANSFORM_TIME,0));
+        textTyping.addSeqmentSequential(new AnimationSegmentText(info,0,1).setLengthPerCharacter(2));
+        textTyping.addSeqmentSequential(new AnimationSegmentText(info,AndroidPlayer.TRANSFORM_TIME,0));
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)

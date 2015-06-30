@@ -2,7 +2,7 @@ package com.MO.MatterOverdrive.blocks;
 
 import com.MO.MatterOverdrive.api.IScannable;
 import com.MO.MatterOverdrive.blocks.includes.MOBlockContainer;
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.handler.ConfigurationHandler;
 import com.MO.MatterOverdrive.tile.TileEntityGravitationalAnomaly;
 import com.MO.MatterOverdrive.util.IConfigSubscriber;
 import cpw.mods.fml.relauncher.Side;
@@ -10,11 +10,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
@@ -122,11 +120,11 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
     }
 
     @Override
-    public void onConfigChanged(MOConfigurationHandler config)
+    public void onConfigChanged(ConfigurationHandler config)
     {
-        TileEntityGravitationalAnomaly.BLOCK_ENTETIES = config.getBool(MOConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_BLOCK_ENTITIES, MOConfigurationHandler.CATEGORY_SERVER, true, "Should the blocks drop entities or be directly consumed when destroyed by the gravitational anomaly");
-        TileEntityGravitationalAnomaly.FALLING_BLOCKS = config.getBool(MOConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FALLING_BLOCKS,MOConfigurationHandler.CATEGORY_SERVER,true,"Should blocks be turned into falling blocks when broken");
-        TileEntityGravitationalAnomaly.VANILLA_FLUIDS = config.getBool(MOConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_VANILLA_FLUIDS,MOConfigurationHandler.CATEGORY_SERVER,true,"Should vanilla fluid block such as water and lava be consumed by the anomaly");
-        TileEntityGravitationalAnomaly.FORGE_FLUIDS = config.getBool(MOConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS,MOConfigurationHandler.CATEGORY_SERVER,true,"Should other mod fluid blocks be consumed by the anomaly");
+        TileEntityGravitationalAnomaly.BLOCK_ENTETIES = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_BLOCK_ENTITIES, ConfigurationHandler.CATEGORY_SERVER, true, "Should the blocks drop entities or be directly consumed when destroyed by the gravitational anomaly");
+        TileEntityGravitationalAnomaly.FALLING_BLOCKS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FALLING_BLOCKS, ConfigurationHandler.CATEGORY_SERVER,true,"Should blocks be turned into falling blocks when broken");
+        TileEntityGravitationalAnomaly.VANILLA_FLUIDS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_VANILLA_FLUIDS, ConfigurationHandler.CATEGORY_SERVER,true,"Should vanilla fluid block such as water and lava be consumed by the anomaly");
+        TileEntityGravitationalAnomaly.FORGE_FLUIDS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS, ConfigurationHandler.CATEGORY_SERVER,true,"Should other mod fluid blocks be consumed by the anomaly");
     }
 }

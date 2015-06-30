@@ -1,6 +1,5 @@
 package com.MO.MatterOverdrive.init;
 
-import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -8,35 +7,33 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.handler.ConfigurationHandler;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
-
-import java.io.File;
 
 public class MatterOverdriveMatter
 {
-	public static void init(MOConfigurationHandler config)
+	public static void init(ConfigurationHandler config)
 	{
 
 	}
 	
-	public static void registerBasic(MOConfigurationHandler c)
+	public static void registerBasic(ConfigurationHandler c)
 	{
         registerBasicItems(c);
         registerBasicBlocks(c);
 	}
 
-    public static void registerFromConfig(MOConfigurationHandler c)
+    public static void registerFromConfig(ConfigurationHandler c)
     {
         MatterRegistry.loadNewItemsFromConfig(c);
     }
 
-    public static void registerBlacklistFromConfig(MOConfigurationHandler c)
+    public static void registerBlacklistFromConfig(ConfigurationHandler c)
     {
         MatterRegistry.loadBlacklistFromConfig(c);
     }
 
-    public static void registerBasicBlocks(MOConfigurationHandler c)
+    public static void registerBasicBlocks(ConfigurationHandler c)
     {
         reg(c,Blocks.dirt, 1,3);
         reg(c,Blocks.wool, 2,16);
@@ -99,7 +96,7 @@ public class MatterOverdriveMatter
     }
 
 
-    public static void registerBasicItems(MOConfigurationHandler c)
+    public static void registerBasicItems(ConfigurationHandler c)
     {
         reg(c, Items.apple, 1);
         reg(c, Items.arrow, 1);
@@ -206,21 +203,21 @@ public class MatterOverdriveMatter
         //endregion
     }
 
-	private static void reg(MOConfigurationHandler c,String name,int matter)
+	private static void reg(ConfigurationHandler c,String name,int matter)
 	{
 		MatterRegistry.register(name,matter);
 	}
 
-    private static void reg(MOConfigurationHandler c,ItemStack itemStack,int matter)
+    private static void reg(ConfigurationHandler c,ItemStack itemStack,int matter)
     {
         MatterRegistry.register(itemStack,matter);
         MatterRegistry.basicEntires++;
     }
-    private static void reg(MOConfigurationHandler c,Block block,int matter)
+    private static void reg(ConfigurationHandler c,Block block,int matter)
     {
         reg(c,block,matter,1);
     }
-    private static void reg(MOConfigurationHandler c,Block block,int matter,int subItems)
+    private static void reg(ConfigurationHandler c,Block block,int matter,int subItems)
     {
         for (int i = 0;i < subItems;i++) {
             String key = MatterRegistry.getKey(new ItemStack(Item.getItemFromBlock(block), 1, i));
@@ -230,8 +227,8 @@ public class MatterOverdriveMatter
             }
         }
     }
-    private static void reg(MOConfigurationHandler c,Item item,int matter){reg(c,item,matter,1);}
-    private static void reg(MOConfigurationHandler c,Item item,int matter,int subItems)
+    private static void reg(ConfigurationHandler c,Item item,int matter){reg(c,item,matter,1);}
+    private static void reg(ConfigurationHandler c,Item item,int matter,int subItems)
     {
         for (int i = 0;i < subItems;i++) {
             String key = MatterRegistry.getKey(new ItemStack(item, 1, i));

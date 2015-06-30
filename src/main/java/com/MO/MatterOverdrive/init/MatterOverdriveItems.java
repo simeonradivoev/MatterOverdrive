@@ -1,6 +1,5 @@
 package com.MO.MatterOverdrive.init;
 
-import cofh.api.modhelpers.ThermalExpansionHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.handler.MatterRegistry;
 import com.MO.MatterOverdrive.items.*;
@@ -17,7 +16,6 @@ import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.items.includes.MOBaseItem;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 
@@ -33,7 +31,7 @@ public class MatterOverdriveItems
 	public static MOBaseItem creative_battery;
 	public static MatterDust matter_dust;
 	public static MatterDust matter_dust_refined;
-    public static Isolinear_circuit isolinear_circuit;
+    public static IsolinearCircuit isolinear_circuit;
     public static MOBaseItem h_compensator;
     public static MOBaseItem integration_matrix;
     public static MOBaseItem machine_casing;
@@ -67,7 +65,7 @@ public class MatterOverdriveItems
 		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive).setTextureName(Reference.MOD_ID + ":" + "emergency_ration");
         earl_gray_tea = new EarlGrayTea("earl_gray_tea");
 		me_conversion_matrix = new MOBaseItem("me_conversion_matrix");
-        isolinear_circuit = new Isolinear_circuit("isolinear_circuit");
+        isolinear_circuit = new IsolinearCircuit("isolinear_circuit");
         item_upgrade = new ItemUpgrade("upgrade");
         h_compensator = new MOBaseItem("h_compensator");
         integration_matrix = new MOBaseItem("integration_matrix");

@@ -1,7 +1,7 @@
 package com.MO.MatterOverdrive.starmap;
 
 import com.MO.MatterOverdrive.MatterOverdrive;
-import com.MO.MatterOverdrive.handler.MOConfigurationHandler;
+import com.MO.MatterOverdrive.handler.ConfigurationHandler;
 import com.MO.MatterOverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
 import com.MO.MatterOverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import com.MO.MatterOverdrive.starmap.data.Galaxy;
@@ -255,7 +255,7 @@ public class GalaxyServer implements IConfigSubscriber
     }
 
     @Override
-    public void onConfigChanged(MOConfigurationHandler config)
+    public void onConfigChanged(ConfigurationHandler config)
     {
 
     }

@@ -17,7 +17,7 @@ import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
-public class MOConfigurationHandler
+public class ConfigurationHandler
 {
     private Set<IConfigSubscriber> subscribers;
 	public Configuration config;
@@ -44,7 +44,7 @@ public class MOConfigurationHandler
     public static final String KEY_GRAVITATIONAL_ANOMALY_VANILLA_FLUIDS = "gravitational anomaly vanilla fluids";
     public static final String KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS = "gravitational anomaly forge fluids";
 
-    public MOConfigurationHandler(File file)
+    public ConfigurationHandler(File file)
     {
         config = new Configuration(file,Reference.VERSION);
         subscribers = new HashSet<IConfigSubscriber>();
@@ -184,12 +184,12 @@ public class MOConfigurationHandler
 
     public void addCategoryToGui(List<IConfigElement> list)
     {
-        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_CLIENT)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_SERVER)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_WORLD_GEN)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_MATTER_NETWORK)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_MACHINES)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_MATTER)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(MOConfigurationHandler.CATEGORY_STARMAP)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_CLIENT)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_SERVER)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_WORLD_GEN)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_MATTER_NETWORK)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_MACHINES)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_MATTER)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_STARMAP)));
     }
 }

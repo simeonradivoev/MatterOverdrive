@@ -19,7 +19,7 @@ public class TickHandler
     private PlayerEventHandler playerEventHandler;
     private boolean worldStartFired = false;
 
-    public TickHandler(MOConfigurationHandler configurationHandler,PlayerEventHandler playerEventHandler)
+    public TickHandler(ConfigurationHandler configurationHandler,PlayerEventHandler playerEventHandler)
     {
         networkTick = new MatterNetworkTickHandler();
         this.playerEventHandler = playerEventHandler;

@@ -33,7 +33,7 @@ public class MatterOverdrive
 
     public static TickHandler tickHandler;
     public static PlayerEventHandler playerEventHandler;
-	public static MOConfigurationHandler configHandler;
+	public static ConfigurationHandler configHandler;
     public static CraftingHandler craftingHandler;
     public static GuiHandler guiHandler;
     public static PacketPipeline packetPipeline;
@@ -53,7 +53,7 @@ public class MatterOverdrive
         craftingHandler = new CraftingHandler();
 		packetPipeline = new PacketPipeline();
 		entityHandler = new EntityHandler();
-        configHandler = new MOConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
+        configHandler = new ConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
 
 
 		FMLCommonHandler.instance().bus().register(configHandler);
@@ -112,7 +112,7 @@ public class MatterOverdrive
     @EventHandler
     public void serverStart(FMLServerStartedEvent event)
     {
-        if (configHandler.getBool(MOConfigurationHandler.KEY_AUTOMATIC_RECIPE_CALCULATION,MOConfigurationHandler.CATEGORY_MATTER,true))
+        if (configHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_RECIPE_CALCULATION, ConfigurationHandler.CATEGORY_MATTER,true))
 		{
             try {
                 if (MatterRegistry.needsCalculation(registryPath))
