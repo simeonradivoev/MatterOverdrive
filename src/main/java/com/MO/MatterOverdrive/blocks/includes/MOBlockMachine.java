@@ -131,7 +131,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
                 return false;
             }
         }
-        return removedByPlayer(world, player, x, y, z);
+        return world.setBlockToAir(x, y, z);
     }
 
     public ItemStack getNBTDrop(World world, int x, int y, int z, IMOTileEntity te)
