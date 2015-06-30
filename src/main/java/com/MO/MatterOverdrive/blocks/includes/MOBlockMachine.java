@@ -143,7 +143,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
         return itemStack;
     }
 
-    public boolean isHasGui() {
+    public boolean hasGui() {
         return hasGui;
     }
 
