@@ -2,6 +2,8 @@ package matteroverdrive.compat.modules;
 
 import cofh.api.modhelpers.ThermalExpansionHelper;
 import matteroverdrive.compat.Compat;
+import static matteroverdrive.init.MatterOverdriveBlocks.*;
+import static matteroverdrive.init.MatterOverdriveItems.*;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.minecraft.item.ItemStack;
 
