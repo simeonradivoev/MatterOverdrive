@@ -1,7 +1,6 @@
 package com.MO.MatterOverdrive.tile;
 
 import cofh.lib.util.helpers.MathHelper;
-import cofh.lib.util.position.BlockPosition;
 import com.MO.MatterOverdrive.MatterOverdrive;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.inventory.UpgradeTypes;
@@ -11,8 +10,6 @@ import com.MO.MatterOverdrive.compat.modules.waila.IWailaBodyProvider;
 import com.MO.MatterOverdrive.data.TransportLocation;
 import com.MO.MatterOverdrive.fx.ReplicatorParticle;
 import com.MO.MatterOverdrive.network.packet.client.PacketSyncTransportProgress;
-import com.MO.MatterOverdrive.sound.MachineSound;
-import com.MO.MatterOverdrive.util.Vector3;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

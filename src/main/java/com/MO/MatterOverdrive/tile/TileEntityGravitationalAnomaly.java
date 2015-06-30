@@ -8,7 +8,7 @@ import com.MO.MatterOverdrive.entity.AndroidPlayer;
 import com.MO.MatterOverdrive.fx.GravitationalAnomalyParticle;
 import com.MO.MatterOverdrive.handler.AndroidStatRegistry;
 import com.MO.MatterOverdrive.items.SpacetimeEqualizer;
-import com.MO.MatterOverdrive.sound.GravitationalAnomalySound;
+import com.MO.MatterOverdrive.client.sound.GravitationalAnomalySound;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -35,7 +35,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.IFluidBlock;
 import org.lwjgl.util.vector.Vector3f;
 

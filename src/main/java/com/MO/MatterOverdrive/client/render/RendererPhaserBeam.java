@@ -8,7 +8,7 @@ import com.MO.MatterOverdrive.client.RenderHandler;
 import com.MO.MatterOverdrive.client.render.item.ItemRendererPhaser;
 import com.MO.MatterOverdrive.items.Phaser;
 import com.MO.MatterOverdrive.items.WeaponColorModule;
-import com.MO.MatterOverdrive.sound.PhaserSound;
+import com.MO.MatterOverdrive.client.sound.PhaserSound;
 import com.MO.MatterOverdrive.util.MOPhysicsHelper;
 import com.MO.MatterOverdrive.util.WeaponHelper;
 import net.minecraft.block.Block;

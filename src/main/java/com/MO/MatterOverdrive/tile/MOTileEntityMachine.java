@@ -12,7 +12,7 @@ import com.MO.MatterOverdrive.data.inventory.UpgradeSlot;
 import com.MO.MatterOverdrive.fx.VentParticle;
 
 import com.MO.MatterOverdrive.items.SecurityProtocol;
-import com.MO.MatterOverdrive.sound.MachineSound;
+import com.MO.MatterOverdrive.client.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MatterHelper;
 import com.MO.MatterOverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.client.FMLClientHandler;

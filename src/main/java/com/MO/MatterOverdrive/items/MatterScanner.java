@@ -7,7 +7,7 @@ import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.IScannable;
 import com.MO.MatterOverdrive.handler.KeyHandler;
 import com.MO.MatterOverdrive.proxy.ClientProxy;
-import com.MO.MatterOverdrive.sound.MachineSound;
+import com.MO.MatterOverdrive.client.sound.MachineSound;
 import com.MO.MatterOverdrive.util.MOPhysicsHelper;
 import com.MO.MatterOverdrive.util.MOStringHelper;
 import com.mojang.realmsclient.gui.ChatFormatting;

@@ -8,7 +8,7 @@ import cofh.lib.util.helpers.MathHelper;
 import com.MO.MatterOverdrive.Reference;
 import com.MO.MatterOverdrive.api.weapon.IWeapon;
 import com.MO.MatterOverdrive.api.weapon.IWeaponModule;
-import com.MO.MatterOverdrive.sound.PhaserSound;
+import com.MO.MatterOverdrive.client.sound.PhaserSound;
 import com.MO.MatterOverdrive.util.*;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
