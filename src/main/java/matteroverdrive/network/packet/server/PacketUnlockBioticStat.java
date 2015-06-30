@@ -37,7 +37,8 @@ public class PacketUnlockBioticStat extends PacketAbstract
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(ByteBuf buf)
+    {
         ByteBufUtils.writeUTF8String(buf,name);
         buf.writeInt(level);
     }
