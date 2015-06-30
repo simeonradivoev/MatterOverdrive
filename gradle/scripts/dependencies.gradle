@@ -50,6 +50,7 @@ repositories {
 
 dependencies {
     // Chicken Bones
+    compile "codechicken:ForgeMultipart:${config.mc_version}-${config.fmp_version}:dev"
     compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.mc_version}-${config.ccl_version}", classifier: 'dev' // Forge http://files.minecraftforge.net/CodeChickenLib/
     compile group: 'codechicken', name: 'CodeChickenCore', version: "${config.mc_version}-${config.ccc_version}", classifier: 'dev' // CB maven
     compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.mc_version}-${config.nei_version}", classifier: 'dev' // CB maven
