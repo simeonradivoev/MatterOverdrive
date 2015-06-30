@@ -22,16 +22,13 @@ public class WeightedDirection
 
     public static  void Sort(List<WeightedDirection> dirs)
     {
-        Collections.sort(dirs, new Comparator<WeightedDirection>() {
-            @Override
-            public int compare(WeightedDirection o1, WeightedDirection o2) {
-                if (o1.weight > o2.weight)
-                    return 1;
-                else if (o1.weight < o2.weight)
-                    return -1;
-                else
-                    return 0;
-            }
-        });
+        Collections.sort(dirs, (o1, o2) -> {
+			if (o1.weight > o2.weight)
+				return 1;
+			else if (o1.weight < o2.weight)
+				return -1;
+			else
+				return 0;
+		});
     }
 }
