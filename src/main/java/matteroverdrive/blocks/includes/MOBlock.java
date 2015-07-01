@@ -33,12 +33,12 @@ public class MOBlock extends Block
         rotationType = BlockHelper.RotationType.FOUR_WAY;
     }
 
-    public void Register()
+    public void register()
     {
-        RegisterBlock();
+        registerBlock();
     }
 
-    protected void RegisterBlock()
+    protected void registerBlock()
     {
         GameRegistry.registerBlock(this, this.getUnlocalizedName().substring(5));
     }

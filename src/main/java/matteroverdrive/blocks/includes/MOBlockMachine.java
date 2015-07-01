@@ -45,7 +45,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     }
 
     @Override
-    protected void RegisterBlock()
+    protected void registerBlock()
     {
         GameRegistry.registerBlock(this, MOEnergyMatterBlockItem.class, this.getUnlocalizedName().substring(5));
     }

@@ -61,9 +61,9 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
     }
 
     @Override
-    public void Register(String name)
+    public void register(String name)
     {
-        super.Register(name);
+        super.register(name);
         GameRegistry.addRecipe(new ItemStack(this, 1, 0), new Object[]{" R ", " C ", " T ", 'G', Blocks.glass, 'R', Items.redstone, 'T', MatterOverdriveItems.tritanium_plate, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0)});
         //speed
         GameRegistry.addRecipe(new ItemStack(this,1,1),new Object[]{" R ","GUG"," E ",'U',new ItemStack(this,1,0),'G',Items.glowstone_dust,'R',Items.redstone,'E',Items.emerald});

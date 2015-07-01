@@ -39,9 +39,9 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
         this.setMaxStackSize(16);
     }
 
-    public void Register()
+    public void register()
     {
-        super.Register();
+        super.register();
 
         //damage barrel
         GameRegistry.addRecipe(new ItemStack(this,1,0)," G ","RDR"," T ",'T', MatterOverdriveItems.tritanium_plate,'D',MatterOverdriveItems.dilithium_ctystal,'R', Items.redstone,'G', Blocks.glass);

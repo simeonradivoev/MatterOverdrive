@@ -18,9 +18,9 @@ public abstract class MOBlockContainer extends MOBlock implements ITileEntityPro
     }
 
     @Override
-    public void Register()
+    public void register()
     {
-        super.Register();
+        super.register();
         TileEntity e = createNewTileEntity(null,0);
         if(e != null)
         {

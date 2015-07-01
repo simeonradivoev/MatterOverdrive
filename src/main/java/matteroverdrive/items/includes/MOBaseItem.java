@@ -52,14 +52,14 @@ public class MOBaseItem extends Item
 		}
 	}
 	
-	public void Register(String name)
+	public void register(String name)
 	{
 		GameRegistry.registerItem(this, name);
 	}
 	
-	public void Register()
+	public void register()
 	{
-		this.Register(this.getUnlocalizedName().substring(5));
+		this.register(this.getUnlocalizedName().substring(5));
 	}
 	
 	public void InitTagCompount(ItemStack stack)

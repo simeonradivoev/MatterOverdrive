@@ -84,43 +84,43 @@ public class MatterOverdriveBlocks
 	
 	public static void register(FMLPreInitializationEvent event)
 	{
-		replicator.Register();
+		replicator.register();
         MatterOverdrive.configHandler.subscribe(replicator);
-		transporter.Register();
+		transporter.register();
         MatterOverdrive.configHandler.subscribe(transporter);
-		decomposer.Register();
+		decomposer.register();
         MatterOverdrive.configHandler.subscribe(decomposer);
-		matter_pipe.Register();
-        network_pipe.Register();
-        network_router.Register();
-        matter_analyzer.Register();
+		matter_pipe.register();
+        network_pipe.register();
+        network_router.register();
+        matter_analyzer.register();
         MatterOverdrive.configHandler.subscribe(matter_analyzer);
-        dilithium_ore.Register();
-        tritaniumOre.Register();
-        tritanium_block.Register();
-        machine_hull.Register();
-        pattern_storage.Register();
+        dilithium_ore.register();
+        tritaniumOre.register();
+        tritanium_block.register();
+        machine_hull.register();
+        pattern_storage.register();
         MatterOverdrive.configHandler.subscribe(pattern_storage);
-        solar_panel.Register();
+        solar_panel.register();
         MatterOverdrive.configHandler.subscribe(solar_panel);
-        weapon_station.Register();
-        microwave.Register();
-        pattern_monitor.Register();
+        weapon_station.register();
+        microwave.register();
+        pattern_monitor.register();
         MatterOverdrive.configHandler.subscribe(pattern_monitor);
-        network_switch.Register();
+        network_switch.register();
         MatterOverdrive.configHandler.subscribe(network_switch);
-        gravitational_anomaly.Register();
+        gravitational_anomaly.register();
         MatterOverdrive.configHandler.subscribe(gravitational_anomaly);
-        gravitational_stabilizer.Register();
+        gravitational_stabilizer.register();
         MatterOverdrive.configHandler.subscribe(gravitational_stabilizer);
-        fusion_reactor_controller.Register();
+        fusion_reactor_controller.register();
         MatterOverdrive.configHandler.subscribe(fusion_reactor_controller);
-        fusion_reactor_coil.Register();
-        recycler.Register();
+        fusion_reactor_coil.register();
+        recycler.register();
         MatterOverdrive.configHandler.subscribe(recycler);
-        androidStation.Register();
+        androidStation.register();
         MatterOverdrive.configHandler.subscribe(androidStation);
-        starMap.Register();
+        starMap.register();
         MatterOverdrive.configHandler.subscribe(starMap);
 
         if (event.getSide() == Side.CLIENT)
