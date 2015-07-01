@@ -15,7 +15,6 @@ import net.minecraft.util.StatCollector;
 public class EntityDamageSourcePhaser extends EntityDamageSource
 {
     protected Entity damageSourceEntity;
-    private static final String __OBFID = "CL_00001522";
 
     public EntityDamageSourcePhaser(Entity p_i1567_2_)
     {
