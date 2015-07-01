@@ -1,4 +1,4 @@
-package matteroverdrive.data;
+package matteroverdrive.api.transport;
 
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;

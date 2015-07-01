@@ -7,7 +7,7 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.transport.ITransportList;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
-import matteroverdrive.data.TransportLocation;
+import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.fx.ReplicatorParticle;
 import matteroverdrive.network.packet.client.PacketSyncTransportProgress;
 import matteroverdrive.util.math.MOMathHelper;

@@ -1,7 +1,5 @@
 package matteroverdrive.api.transport;
 
-import matteroverdrive.data.TransportLocation;
-
 import java.util.List;
 
 /**

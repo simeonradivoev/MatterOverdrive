@@ -1,6 +1,6 @@
 package matteroverdrive.network.packet.server;
 
-import matteroverdrive.data.TransportLocation;
+import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.tile.TileEntityMachineTransporter;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

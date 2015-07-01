@@ -1,6 +1,6 @@
 package matteroverdrive.gui.element;
 
-import matteroverdrive.data.TransportLocation;
+import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.tile.TileEntityMachineTransporter;
