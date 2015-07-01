@@ -11,6 +11,9 @@ hs_err_pid*
 /run
 /logs
 
+# windows
+*.bat
+
 # gradle
 /.gradle
 /build
