@@ -1,4 +1,4 @@
-package matteroverdrive.items;
+package matteroverdrive.items.weapon.module;
 
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;

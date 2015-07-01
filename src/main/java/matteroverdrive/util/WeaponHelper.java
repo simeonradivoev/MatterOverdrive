@@ -3,7 +3,7 @@ package matteroverdrive.util;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
-import matteroverdrive.items.WeaponColorModule;
+import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import net.minecraft.item.ItemStack;
 
 import java.util.Map;
@@ -40,7 +40,7 @@ public class WeaponHelper
                 return (GuiColor)value;
             }
         }
-        return WeaponColorModule.defaultColor;
+        return WeaponModuleColor.defaultColor;
     }
 
     public static double getStatMultiply(int stat,ItemStack weapon)

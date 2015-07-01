@@ -3,9 +3,9 @@ package matteroverdrive.client.render.item;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
-import matteroverdrive.items.Phaser;
+import matteroverdrive.items.weapon.Phaser;
 
-import matteroverdrive.items.WeaponColorModule;
+import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
@@ -137,7 +137,7 @@ public class ItemRendererPhaser implements IItemRenderer
         Minecraft.getMinecraft().renderEngine.bindTexture(phaserTexture);
     	phaserModel.renderPart("phaser");
 
-        GuiColor color = WeaponColorModule.defaultColor;
+        GuiColor color = WeaponModuleColor.defaultColor;
         ItemStack color_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_COLOR, item);
         if (color_module != null)
         {

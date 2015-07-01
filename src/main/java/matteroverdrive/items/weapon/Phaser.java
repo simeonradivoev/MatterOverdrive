@@ -1,4 +1,4 @@
-package matteroverdrive.items;
+package matteroverdrive.items.weapon;
 
 import java.util.*;
 

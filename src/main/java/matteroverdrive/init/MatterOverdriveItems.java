@@ -6,6 +6,9 @@ import matteroverdrive.items.starmap.ItemScoutShip;
 import matteroverdrive.items.starmap.ShipFactory;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.items.*;
+import matteroverdrive.items.weapon.Phaser;
+import matteroverdrive.items.weapon.module.WeaponModuleColor;
+import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -42,7 +45,7 @@ public class MatterOverdriveItems
     public static MOBaseItem tritanium_plate;
     public static PatternDrive pattern_drive;
     public static ItemUpgrade item_upgrade;
-    public static WeaponColorModule weapon_module_color;
+    public static WeaponModuleColor weapon_module_color;
     public static WeaponModuleBarrel weapon_module_barrel;
     public static SecurityProtocol security_protocol;
     public static SpacetimeEqualizer spacetime_equalizer;
@@ -76,7 +79,7 @@ public class MatterOverdriveItems
         tritanium_dust = new MOBaseItem("tritanium_dust");
         tritanium_plate = new MOBaseItem("tritanium_plate");
         pattern_drive = new PatternDrive("pattern_drive",2);
-        weapon_module_color = new WeaponColorModule("weapon_module_color");
+        weapon_module_color = new WeaponModuleColor("weapon_module_color");
         weapon_module_barrel = new WeaponModuleBarrel("weapon_module_barrel");
         security_protocol = new SecurityProtocol("security_protocol");
         spacetime_equalizer = new SpacetimeEqualizer("spacetime_equalizer");

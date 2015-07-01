@@ -1,4 +1,4 @@
-package matteroverdrive.items;
+package matteroverdrive.items.weapon.module;
 
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.MatterOverdrive;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by Simeon on 4/14/2015.
  */
-public class WeaponColorModule extends MOBaseItem implements IWeaponModule
+public class WeaponModuleColor extends MOBaseItem implements IWeaponModule
 {
     private IIcon overlayIcon;
     public static final GuiColor defaultColor = new GuiColor(255,255,255);
@@ -40,7 +40,7 @@ public class WeaponColorModule extends MOBaseItem implements IWeaponModule
             };
     public static final String names[] = {"red","green","blue","brown","pink","sky_blue","gold","lime_green","black","grey"};
 
-    public WeaponColorModule(String name)
+    public WeaponModuleColor(String name)
     {
         super(name);
         setCreativeTab(MatterOverdrive.tabMatterOverdrive_modules);

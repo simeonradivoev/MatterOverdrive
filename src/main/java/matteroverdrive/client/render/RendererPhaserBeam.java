@@ -6,8 +6,8 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.item.ItemRendererPhaser;
-import matteroverdrive.items.Phaser;
-import matteroverdrive.items.WeaponColorModule;
+import matteroverdrive.items.weapon.Phaser;
+import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import matteroverdrive.client.sound.PhaserSound;
 import matteroverdrive.util.MOPhysicsHelper;
 import matteroverdrive.util.WeaponHelper;
@@ -129,7 +129,7 @@ public class RendererPhaserBeam implements IWorldLastRenderer
 
     public GuiColor getPhaserColor(EntityPlayer player)
     {
-        GuiColor color = WeaponColorModule.defaultColor;
+        GuiColor color = WeaponModuleColor.defaultColor;
         ItemStack color_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_COLOR, player.getItemInUse());
         if (color_module != null)
         {
