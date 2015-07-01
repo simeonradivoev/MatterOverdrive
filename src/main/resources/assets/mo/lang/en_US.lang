@@ -236,7 +236,7 @@ biotic_stat.shield.details=Protects the player from projectiles /n/To enable, ho
 biotic_stat.attack.name=Attack Boost
 biotic_stat.attack.details=Increases attack power by %1$s
 
-death.attack.phaser.item=%1$s was disintegrated by %2$s using %3$s
+death.attack.phaser=%1$s was disintegrated by %2$s using %3$s
 death.attack.blackHole=%1$s was crushed by a Gravitational Anomaly
 death.attack.android_transformation=%1$s has ended his biological existence
 

@@ -67,10 +67,15 @@ public class GalaxyClient
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
-        if (!Minecraft.getMinecraft().isGamePaused() && Minecraft.getMinecraft().theWorld != null && Minecraft.getMinecraft().theWorld.isRemote && Minecraft.getMinecraft().theWorld.provider.dimensionId == 0 && event.phase == TickEvent.Phase.START)
-        {
-            theGalaxy.update(Minecraft.getMinecraft().theWorld);
-        }
+		if (Minecraft.getMinecraft().theWorld != null &&
+				theGalaxy != null &&
+				!Minecraft.getMinecraft().isGamePaused() &&
+				Minecraft.getMinecraft().theWorld.isRemote &&
+				Minecraft.getMinecraft().theWorld.provider.dimensionId == 0 &&
+				event.phase == TickEvent.Phase.START)
+		{
+			theGalaxy.update(Minecraft.getMinecraft().theWorld);
+		}
     }
 
     public static GalaxyClient getInstance()
