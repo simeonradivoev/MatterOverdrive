@@ -18,6 +18,7 @@ import java.util.Map;
  */
 public class Star extends SpaceBody
 {
+    //region Private Vars
     private Quadrant quadrant;
     private HashMap<Integer,Planet> planetHashMap;
     private float x,y,z,size,mass;
@@ -25,7 +26,9 @@ public class Star extends SpaceBody
     private int temperature,color,seed;
     private boolean generated;
     private boolean isDirty;
+    //endregion
 
+    //region Constructors
     public Star()
     {
         super();
@@ -37,7 +40,47 @@ public class Star extends SpaceBody
         super(name,id);
         init();
     }
+    //endregion
 
+    public void generateMissing(NBTTagCompound tagCompound,GalaxyGenerator galaxyGenerator)
+    {
+        if (galaxyGenerator != null) {
+            for (ISpaceBodyGen<Star> starGen : galaxyGenerator.getStarGen().getGens()) {
+                galaxyGenerator.getStarRandom().setSeed(seed);
+                if (starGen.generateMissing(tagCompound, this, galaxyGenerator.getStarRandom())) {
+                    break;
+                }
+            }
+
+            for (Planet planet : getPlanets()) {
+                planet.generateMissing(tagCompound, galaxyGenerator);
+            }
+        }
+    }
+
+    //region Updates
+    public void update(World world)
+    {
+        for (Planet planet : getPlanets())
+        {
+            planet.update(world);
+        }
+    }
+    //endregion
+
+    //region Events
+    public void onSave(File file,World world)
+    {
+        isDirty = false;
+
+        for (Planet planet : getPlanets())
+        {
+            planet.onSave(file, world);
+        }
+    }
+    //endregion
+
+    //region Read - Write
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
@@ -87,41 +130,9 @@ public class Star extends SpaceBody
 
         generateMissing(tagCompound, generator);
     }
+    //endregion
 
-    public void generateMissing(NBTTagCompound tagCompound,GalaxyGenerator galaxyGenerator)
-    {
-        if (galaxyGenerator != null) {
-            for (ISpaceBodyGen<Star> starGen : galaxyGenerator.getStarGen().getGens()) {
-                galaxyGenerator.getStarRandom().setSeed(seed);
-                if (starGen.generateMissing(tagCompound, this, galaxyGenerator.getStarRandom())) {
-                    break;
-                }
-            }
-
-            for (Planet planet : getPlanets()) {
-                planet.generateMissing(tagCompound, galaxyGenerator);
-            }
-        }
-    }
-
-    public void update(World world)
-    {
-        for (Planet planet : getPlanets())
-        {
-            planet.update(world);
-        }
-    }
-
-    public void onSave(File file,World world)
-    {
-        isDirty = false;
-
-        for (Planet planet : getPlanets())
-        {
-            planet.onSave(file,world);
-        }
-    }
-
+    //region Getters and Setters
     @Override
     public SpaceBody getParent() {
         return quadrant;
@@ -132,22 +143,18 @@ public class Star extends SpaceBody
     {
         planetHashMap = new HashMap<Integer, Planet>();
     }
-
     public Collection<Planet> getPlanets()
     {
         return planetHashMap.values();
     }
-
     public Map<Integer,Planet> getPlanetMap()
     {
         return planetHashMap;
     }
-
     public void addPlanet(Planet planet)
     {
         getPlanetMap().put(planet.getId(), planet);
     }
-
     public void setPosition(float x,float y,float z){this.x = x;this.y = y;this.z = z;}
     public Vec3 getPosition(){return getPosition(1);}
     public Vec3 getPosition(double multipy){return Vec3.createVectorHelper(x * multipy, y * multipy, z * multipy);}
@@ -227,4 +234,5 @@ public class Star extends SpaceBody
         return false;
     }
     public void markDirty(){this.isDirty = true;}
+    //endregion
 }

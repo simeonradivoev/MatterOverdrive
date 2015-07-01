@@ -10,10 +10,13 @@ import net.minecraft.world.World;
  */
 public class TravelEvent
 {
+    //region Private Vars
     private long timeStart;
     private int timeLength,shipID;
     private GalacticPosition from,to;
+    //endregion
 
+    //region Constructors
     public TravelEvent()
     {
 
@@ -37,35 +40,9 @@ public class TravelEvent
         this.shipID = shipID;
         this.timeLength = timeLength;
     }
+    //endregion
 
-    public boolean isComplete(World world)
-    {
-       return (timeStart + timeLength) - world.getTotalWorldTime() <= 0;
-    }
-
-    public boolean isValid(Galaxy galaxy)
-    {
-        if (this.from != null && this.to != null) {
-            Planet from = galaxy.getPlanet(this.from);
-            Planet to = galaxy.getPlanet(this.to);
-            if (from != null && to != null) {
-                if (shipID >= 0 && shipID < from.fleetCount()) {
-                    return from.getShip(shipID) != null;
-                }
-            }
-        }
-        return false;
-    }
-
-    public ItemStack getShip(Galaxy galaxy)
-    {
-        if (isValid(galaxy))
-        {
-            return galaxy.getPlanet(from).getShip(shipID);
-        }
-        return null;
-    }
-
+    //region Read - Write
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         tagCompound.setInteger("ShipID", shipID);
@@ -101,63 +78,57 @@ public class TravelEvent
         buf.writeInt(timeLength);
         buf.writeLong(timeStart);
     }
+    //endregion
 
     //region Getters and Setters
-    public int getTimeLength() {
-        return timeLength;
-    }
-
-    public void setTimeLength(int timeLength) {
-        this.timeLength = timeLength;
-    }
-
-    public long getTimeStart() {
-        return timeStart;
-    }
-
+    public int getTimeLength() {return timeLength;}
+    public void setTimeLength(int timeLength) {this.timeLength = timeLength;}
+    public long getTimeStart() {return timeStart;}
     public long getTimeRemainning(World world)
     {
         return (timeStart + timeLength) - world.getTotalWorldTime();
     }
-
-    public double getPercent(World world)
-    {
-        return 1d - (double)((timeStart + timeLength) - world.getTotalWorldTime()) / (double)timeLength;
-    }
-
-    public void setTimeStart(long timeStart) {
-        this.timeStart = timeStart;
-    }
-
-    public int getShipID() {
-        return shipID;
-    }
-
-    public void setShipID(int shipID) {
-        this.shipID = shipID;
-    }
-
+    public double getPercent(World world) {return 1d - (double)((timeStart + timeLength) - world.getTotalWorldTime()) / (double)timeLength;}
+    public void setTimeStart(long timeStart) {this.timeStart = timeStart;}
+    public int getShipID() {return shipID;}
+    public void setShipID(int shipID) {this.shipID = shipID;}
     public GalacticPosition getTo() {
         return to;
     }
-
     public void setTo(GalacticPosition to) {
         this.to = to;
     }
-
     public GalacticPosition getFrom() {
         return from;
     }
-
-    public void setFrom(GalacticPosition from) {
-        this.from = from;
-    }
-
+    public void setFrom(GalacticPosition from) {this.from = from;}
     public NBTTagCompound toNBT()
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
         writeToNBT(tagCompound);
         return tagCompound;
     }
+    public ItemStack getShip(Galaxy galaxy)
+    {
+        if (isValid(galaxy))
+        {
+            return galaxy.getPlanet(from).getShip(shipID);
+        }
+        return null;
+    }
+    public boolean isValid(Galaxy galaxy)
+    {
+        if (this.from != null && this.to != null) {
+            Planet from = galaxy.getPlanet(this.from);
+            Planet to = galaxy.getPlanet(this.to);
+            if (from != null && to != null) {
+                if (shipID >= 0 && shipID < from.fleetCount()) {
+                    return from.getShip(shipID) != null;
+                }
+            }
+        }
+        return false;
+    }
+    public boolean isComplete(World world) {return (timeStart + timeLength) - world.getTotalWorldTime() <= 0;}
     //endregion
 }

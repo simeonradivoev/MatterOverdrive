@@ -8,27 +8,32 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class GalacticPosition
 {
-    int quadrantID = -1;
-    int starID = -1;
-    int planetID = -1;
+    //region Private Vars
+    private int quadrantID = -1;
+    private int starID = -1;
+    private int planetID = -1;
+    //endregion
 
-    public GalacticPosition()
+    //region Constructors
+    public GalacticPosition() {}
+    public GalacticPosition(int quadrantID,int starID,int planetID)
     {
-
+        setPosition(quadrantID,starID,planetID);
     }
-
     public GalacticPosition(GalacticPosition other)
     {
         quadrantID = other.quadrantID;
         starID = other.starID;
         planetID = other.planetID;
     }
-
-    public GalacticPosition(int quadrantID,int starID,int planetID)
+    public GalacticPosition(Star star)
     {
-        setPosition(quadrantID,starID,planetID);
+        this.starID = star.getId();
+        if (star.getQuadrant() != null)
+        {
+            quadrantID = star.getQuadrant().getId();
+        }
     }
-
     public GalacticPosition(Planet planet)
     {
         this.planetID = planet.getId();
@@ -41,40 +46,23 @@ public class GalacticPosition
             }
         }
     }
-
-    public GalacticPosition(Star star)
-    {
-        this.starID = star.getId();
-        if (star.getQuadrant() != null)
-        {
-            quadrantID = star.getQuadrant().getId();
-        }
-    }
-
     public GalacticPosition(Quadrant quadrant)
     {
         this.quadrantID = quadrant.getId();
     }
-
     public GalacticPosition(NBTTagCompound tagCompound)
     {
         super();
         readFromNBT(tagCompound);
     }
-
     public GalacticPosition(ByteBuf buf)
     {
         super();
         readFromBuffer(buf);
     }
+    //endregion
 
-    public void setPosition(int quadrantID,int starID,int planetID)
-    {
-        this.quadrantID = quadrantID;
-        this.starID = starID;
-        this.planetID = planetID;
-    }
-
+    //region Read - Write
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         tagCompound.setInteger("GalacticPositionPlanet",planetID);
@@ -105,7 +93,9 @@ public class GalacticPosition
         starID = buf.readInt();
         quadrantID = buf.readInt();
     }
+    //endregion
 
+    //region Getters and Setters
     public boolean equals(Star star)
     {
         if (star != null && starID == star.getId())
@@ -114,7 +104,6 @@ public class GalacticPosition
         }
         return false;
     }
-
     public boolean equals(Planet planet)
     {
         if (planetID == planet.getId())
@@ -123,12 +112,10 @@ public class GalacticPosition
         }
         return false;
     }
-
     public boolean equals(Quadrant quadrant)
     {
         return quadrantID == quadrant.getId();
     }
-
     @Override
     public boolean equals(Object obj)
     {
@@ -145,22 +132,15 @@ public class GalacticPosition
         }
         return false;
     }
-
-    public int getStarID()
-    {
-        return starID;
-    }
-
+    public int getStarID() {return starID;}
     public int getQuadrantID()
     {
         return quadrantID;
     }
-
     public int getPlanetID()
     {
         return planetID;
     }
-
     public int distanceTo(Galaxy galaxy,GalacticPosition position)
     {
         Star from = galaxy.getStar(this);
@@ -172,11 +152,17 @@ public class GalacticPosition
         }
         return 0;
     }
-
     public NBTTagCompound toNBT()
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
         writeToNBT(tagCompound);
         return tagCompound;
     }
+    public void setPosition(int quadrantID,int starID,int planetID)
+    {
+        this.quadrantID = quadrantID;
+        this.starID = starID;
+        this.planetID = planetID;
+    }
+    //endregion
 }

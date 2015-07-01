@@ -27,7 +27,10 @@ import java.util.UUID;
  */
 public class Planet extends SpaceBody implements IInventory
 {
+    //region Static Vars
     public static final int SLOT_COUNT = 4;
+    //endregion
+    //region Private Vars
     private Star star;
     private float size,orbit;
     private byte type;
@@ -37,7 +40,9 @@ public class Planet extends SpaceBody implements IInventory
     private List<ItemStack> fleet;
     private boolean isDirty,homeworld,generated,needsUpdate;
     private int buildingSpaces,fleetSpaces,seed;
+    //endregion
 
+    //region Constructors
     public Planet()
     {
         super();
@@ -49,6 +54,7 @@ public class Planet extends SpaceBody implements IInventory
         super(name,id);
         init();
     }
+    //endregion
 
     private void init()
     {
@@ -57,6 +63,7 @@ public class Planet extends SpaceBody implements IInventory
         fleet = new ArrayList();
     }
 
+    //region Updates
     public void update(World world)
     {
         if (!world.isRemote)
@@ -103,7 +110,9 @@ public class Planet extends SpaceBody implements IInventory
             }
         }
     }
+    //endregion
 
+    //region Events
     public void onSave(File file,World world)
     {
         isDirty = false;
@@ -113,7 +122,9 @@ public class Planet extends SpaceBody implements IInventory
     {
 
     }
+    //endregion
 
+    //region Read - Write
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
@@ -209,12 +220,13 @@ public class Planet extends SpaceBody implements IInventory
             }
         }
     }
+    //endregion
 
+    //region Getters and Setters
     @Override
     public SpaceBody getParent() {
         return star;
     }
-
     public void setStar(Star star)
     {
         this.star = star;
@@ -270,6 +282,26 @@ public class Planet extends SpaceBody implements IInventory
             return Reference.COLOR_HOLO;
         }
     }
+    public void markForUpdate(){needsUpdate = true;}
+    public boolean canBuild(IBuilding building,ItemStack stack)
+    {
+        if (buildings.size() < buildingSpaces)
+        {
+            return building.canBuild(stack,this);
+        }
+        return false;
+    }
+
+    public boolean canBuild(IShip ship,ItemStack stack)
+    {
+        if (fleet.size() < fleetSpaces)
+        {
+            return ship.canBuild(stack,this);
+        }
+        return false;
+    }
+    public boolean isDirty(){return this.isDirty;}
+    //endregion
 
     //region Inventory
     @Override
@@ -374,8 +406,6 @@ public class Planet extends SpaceBody implements IInventory
         markForUpdate();
     }
 
-    public void markForUpdate(){needsUpdate = true;}
-
     @Override
     public boolean isUseableByPlayer(EntityPlayer player)
     {
@@ -409,24 +439,5 @@ public class Planet extends SpaceBody implements IInventory
             return stack.getItem() instanceof IShip;
         }
     }
-
-    public boolean canBuild(IBuilding building,ItemStack stack)
-    {
-        if (buildings.size() < buildingSpaces)
-        {
-            return building.canBuild(stack,this);
-        }
-        return false;
-    }
-
-    public boolean canBuild(IShip ship,ItemStack stack)
-    {
-        if (fleet.size() < fleetSpaces)
-        {
-            return ship.canBuild(stack,this);
-        }
-        return false;
-    }
-    public boolean isDirty(){return this.isDirty;}
     //endregion
 }

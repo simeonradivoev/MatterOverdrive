@@ -17,13 +17,16 @@ import java.util.Map;
  */
 public class Quadrant extends SpaceBody
 {
+    //region Private Vars
     private Galaxy galaxy;
     private HashMap<Integer,Star> starHashMap;
     private boolean loaded;
     private float size;
     private float x,y,z;
     private boolean isDirty;
+    //endregion
 
+    //region Constructors
     public Quadrant()
     {
         super();
@@ -35,19 +38,39 @@ public class Quadrant extends SpaceBody
         super(name,id);
         init();
     }
+    //endregion
 
-    public void setPosition(float x,float y,float z)
+    //region Updates
+    public void update(World world)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        for (Star star : getStars())
+        {
+            star.update(world);
+        }
+    }
+    //endregion
+
+    public void generateMissing(NBTTagCompound tagCompound,GalaxyGenerator galaxyGenerator)
+    {
+        for (Star star : getStars())
+        {
+            star.generateMissing(tagCompound, galaxyGenerator);
+        }
     }
 
-    public void setSize(float size)
+    //region Events
+    public void onSave(File file,World world)
     {
-        this.size = size;
-    }
+        isDirty = false;
 
+        for (Star star : getStars())
+        {
+            star.onSave(file, world);
+        }
+    }
+    //endregion
+
+    //region Read - Write
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
@@ -63,7 +86,7 @@ public class Quadrant extends SpaceBody
             star.writeToNBT(quadrantNBT);
             starList.appendTag(quadrantNBT);
         }
-        tagCompound.setTag("Stars",starList);
+        tagCompound.setTag("Stars", starList);
     }
 
     public void writeToBuffer(ByteBuf buf)
@@ -78,7 +101,7 @@ public class Quadrant extends SpaceBody
         {
             NBTTagCompound starNBT = new NBTTagCompound();
             star.writeToNBT(starNBT);
-            ByteBufUtils.writeTag(buf,starNBT);
+            ByteBufUtils.writeTag(buf, starNBT);
         }
     }
 
@@ -117,38 +140,13 @@ public class Quadrant extends SpaceBody
             star.setQuadrant(this);
         }
     }
+    //endregion
 
-    public void update(World world)
-    {
-        for (Star star : getStars())
-        {
-            star.update(world);
-        }
-    }
-
-    public void generateMissing(NBTTagCompound tagCompound,GalaxyGenerator galaxyGenerator)
-    {
-        for (Star star : getStars())
-        {
-            star.generateMissing(tagCompound, galaxyGenerator);
-        }
-    }
-
-    public void onSave(File file,World world)
-    {
-        isDirty = false;
-
-        for (Star star : getStars())
-        {
-            star.onSave(file,world);
-        }
-    }
-
+    //region Getters and Setters
     @Override
     public SpaceBody getParent() {
         return galaxy;
     }
-
     private void init()
     {
         starHashMap = new HashMap<Integer, Star>();
@@ -161,27 +159,22 @@ public class Quadrant extends SpaceBody
     {
         return isLoaded();
     }
-
     public Collection<Star> getStars()
     {
         return starHashMap.values();
     }
-
     public Map<Integer,Star> getStarMap()
     {
         return starHashMap;
     }
-
     public void addStar(Star star)
     {
         starHashMap.put(star.getId(),star);
     }
-
     public void setGalaxy(Galaxy galaxy)
     {
         this.galaxy = galaxy;
     }
-
     public Galaxy getGalaxy()
     {
         return galaxy;
@@ -208,4 +201,10 @@ public class Quadrant extends SpaceBody
         return false;
     }
     public void markDirty(){this.isDirty = true;}
+    public void setPosition(float x,float y,float z) {this.x = x;this.y = y;this.z = z;}
+    public void setSize(float size)
+    {
+        this.size = size;
+    }
+    //endregion
 }

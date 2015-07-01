@@ -23,30 +23,34 @@ import java.util.Random;
  */
 public class GalaxyGenerator implements IConfigSubscriber
 {
-    Random random,starRandom,planetRandom,starNameRandom;
-    WeightedRandomSpaceGen<Planet> planetGen;
-    WeightedRandomSpaceGen<Star> starGen;
-    float StarPrefixChance = 1;
-    float StarSufixChance = 0.8f;
-    int maxStars = 2048 + 256;
-    int minStars = 2048;
-    int minPlanets = 1;
-    int maxPlanets = 4;
-    int quadrantCount = 3;
+    //region Private Vars
+    private Random random,starRandom,planetRandom,starNameRandom;
+    private WeightedRandomSpaceGen<Planet> planetGen;
+    private WeightedRandomSpaceGen<Star> starGen;
+    private float StarPrefixChance = 1;
+    private float StarSufixChance = 0.8f;
+    private int maxStars = 2048 + 256;
+    private int minStars = 2048;
+    private int minPlanets = 1;
+    private int maxPlanets = 4;
+    private int quadrantCount = 3;
+    //endregion
 
+    //region Constructors
     public GalaxyGenerator()
     {
         random = new Random();
         starRandom = new Random();
         planetRandom = new Random();
         starNameRandom = new Random();
-        planetGen = new WeightedRandomSpaceGen<Planet>(random);
-        starGen = new WeightedRandomSpaceGen<Star>(random);
+        planetGen = new WeightedRandomSpaceGen(random);
+        starGen = new WeightedRandomSpaceGen(random);
         planetGen.addGen(new PlanetGasGiantGen());
         planetGen.addGen(new PlanetDwarfGen());
         planetGen.addGen(new PlanetNormalGen());
         starGen.addGens(StarGen.getStarGens());
     }
+    //endregion
 
     //region Single Generation
     public Galaxy generateGalaxy(String name,int id,long seed)
@@ -180,6 +184,7 @@ public class GalaxyGenerator implements IConfigSubscriber
     }
     //endregion
 
+    //region Other Gen
     public Vec3 generateStarPosition(Random random)
     {
         double x = MathHelper.clamp_double(MOMathHelper.nextGaussian(random, 0, 1d / 3d), -1, 1);
@@ -187,12 +192,9 @@ public class GalaxyGenerator implements IConfigSubscriber
         double z = MathHelper.clamp_double(MOMathHelper.nextGaussian(random, 0, 1d / 3d), -1, 1);
         return Vec3.createVectorHelper(x,y,z);
     }
+    //endregion
 
-    public WeightedRandomSpaceGen<Planet> getPlanetGen(){return planetGen;}
-    public WeightedRandomSpaceGen<Star> getStarGen(){return starGen;}
-    public Random getPlanetRandom(){return planetRandom;}
-    public Random getStarRandom(){return starRandom;}
-
+    //region Events
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
@@ -204,4 +206,14 @@ public class GalaxyGenerator implements IConfigSubscriber
         maxPlanets = config.config.getInt("max_planet_count", ConfigurationHandler.CATEGORY_STARMAP,4,0,8,"The maximum amount of planets pre star system");
         quadrantCount = config.config.getInt("quadrant_count", ConfigurationHandler.CATEGORY_STARMAP,3,1,6,"The amount of quadrants the galaxy should be divided into. The amount is cubed. x ^ 3. For example 3 ^ 3 = 27 quadrants.");
     }
+    //endregion
+
+    //region Getters and Setters
+    public WeightedRandomSpaceGen<Planet> getPlanetGen(){return planetGen;}
+    public WeightedRandomSpaceGen<Star> getStarGen(){return starGen;}
+    public Random getPlanetRandom(){return planetRandom;}
+    public Random getStarRandom(){return starRandom;}
+    //endregion
+
+
 }

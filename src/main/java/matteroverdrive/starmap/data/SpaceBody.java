@@ -10,20 +10,21 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public abstract class SpaceBody
 {
-    int id;
-    String name;
+    //region Protected Vars
+    protected int id;
+    protected String name;
+    //endregion
 
-    public SpaceBody()
-    {
-
-    }
-
+    //region Constructors
+    public SpaceBody() {}
     public SpaceBody(String name,int id)
     {
         this.id = id;
         this.name = name;
     }
+    //endregion
 
+    //region Read - Write
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         tagCompound.setInteger("ID", id);
@@ -47,22 +48,21 @@ public abstract class SpaceBody
         id = buf.readInt();
         name = ByteBufUtils.readUTF8String(buf);
     }
+    //endregion
 
+    //region Getters and Setters
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public abstract SpaceBody getParent();
+    //endregion
 }

@@ -35,27 +35,56 @@ import java.util.UUID;
  */
 public class GalaxyServer implements IConfigSubscriber
 {
+    //region Static Vars
     public static final int GALAXY_VERSION = 0;
+    //endregion
+    //region Private Vars
     private static GalaxyServer instance;
-    World world;
-    Galaxy theGalaxy;
-    GalaxyGenerator galaxyGenerator;
-    Random random;
-    HashMap<UUID,Planet> homePlanets;
+    private World world;
+    private Galaxy theGalaxy;
+    private GalaxyGenerator galaxyGenerator;
+    private Random random;
+    private HashMap<UUID,Planet> homePlanets;
+    //endregion
 
+    //region Constructors
     public GalaxyServer()
     {
         galaxyGenerator = new GalaxyGenerator();
         random = new Random();
         homePlanets = new HashMap<UUID, Planet>();
     }
+    //endregion
 
+    //region Saving and Creation
     public void createGalaxy(File file,World world)
     {
         theGalaxy = galaxyGenerator.generateGalaxy("Galaxy",world.getWorldInfo().getVanillaDimension(),world.getWorldInfo().getSeed());
         saveGalaxy(file);
     }
 
+    public boolean saveGalaxy(File file)
+    {
+        MappedByteBuffer mappedByteBuffer;
+
+        try {
+            if (!file.exists())
+                file.createNewFile();
+
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            NBTTagCompound tagCompound = new NBTTagCompound();
+            theGalaxy.writeToNBT(tagCompound);
+            CompressedStreamTools.writeCompressed(tagCompound, fileOutputStream);
+            fileOutputStream.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    //endregion
+
+    //region Loading
     public boolean loadGalaxy(File file)
     {
         if (file.exists() && file.isFile()) {
@@ -79,26 +108,74 @@ public class GalaxyServer implements IConfigSubscriber
         return false;
     }
 
-    public boolean saveGalaxy(File file)
+    public void loadClaimedPlanets()
     {
-        MappedByteBuffer mappedByteBuffer;
-
-        try {
-            if (!file.exists())
-                file.createNewFile();
-
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            NBTTagCompound tagCompound = new NBTTagCompound();
-            theGalaxy.writeToNBT(tagCompound);
-            CompressedStreamTools.writeCompressed(tagCompound, fileOutputStream);
-            fileOutputStream.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+        if (theGalaxy != null) {
+            homePlanets.clear();
+            for (Quadrant quadrant : theGalaxy.getQuadrants()) {
+                for (Star star : quadrant.getStars()) {
+                    for (Planet planet : star.getPlanets()) {
+                        if (planet.isHomeworld() && planet.hasOwner()) {
+                            homePlanets.put(planet.getOwnerUUID(), planet);
+                        }
+                    }
+                }
+            }
         }
     }
+    //endregion
 
+    private Planet claimPlanet(EntityPlayer player)
+    {
+        UUID playerUUID = EntityPlayer.func_146094_a(player.getGameProfile());
+        int quadrantID = random.nextInt(theGalaxy.getQuadrants().size());
+        for (Quadrant quadrant : theGalaxy.getQuadrants())
+        {
+            if (quadrant.getId() == quadrantID)
+            {
+                for (Star star : quadrant.getStars()) {
+                    if (star.getPlanets().size() > 0) {
+                        boolean isClaimed = false;
+                        for (Planet planet : star.getPlanets()) {
+                            if (planet.hasOwner() && !planet.getOwnerUUID().equals(playerUUID)) {
+                                isClaimed = true;
+                                break;
+                            }
+                        }
+
+                        if (!isClaimed) {
+                            int planetID = random.nextInt(star.getPlanets().size());
+                            Planet planet = (Planet) star.getPlanets().toArray()[planetID];
+                            planet.setOwner(player);
+                            planet.setHomeworld(true);
+                            planet.setBuildingSpaces(8);
+                            planet.setFleetSpaces(10);
+                            planet.markDirty();
+                            return planet;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean tryAndClaimPlanet(EntityPlayer player)
+    {
+        UUID playerUUID = EntityPlayer.func_146094_a(player.getGameProfile());
+        if (!homePlanets.containsKey(playerUUID))
+        {
+            Planet claimedPlanet = claimPlanet(player);
+            if (claimedPlanet != null)
+            {
+                homePlanets.put(playerUUID,claimedPlanet);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //region Events
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event)
     {
@@ -167,95 +244,32 @@ public class GalaxyServer implements IConfigSubscriber
         }
     }
 
-    private Planet claimPlanet(EntityPlayer player)
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
     {
-        UUID playerUUID = EntityPlayer.func_146094_a(player.getGameProfile());
-        int quadrantID = random.nextInt(theGalaxy.getQuadrants().size());
-        for (Quadrant quadrant : theGalaxy.getQuadrants())
-        {
-            if (quadrant.getId() == quadrantID)
-            {
-                for (Star star : quadrant.getStars()) {
-                    if (star.getPlanets().size() > 0) {
-                        boolean isClaimed = false;
-                        for (Planet planet : star.getPlanets()) {
-                            if (planet.hasOwner() && !planet.getOwnerUUID().equals(playerUUID)) {
-                                isClaimed = true;
-                                break;
-                            }
-                        }
 
-                        if (!isClaimed) {
-                            int planetID = random.nextInt(star.getPlanets().size());
-                            Planet planet = (Planet) star.getPlanets().toArray()[planetID];
-                            planet.setOwner(player);
-                            planet.setHomeworld(true);
-                            planet.setBuildingSpaces(8);
-                            planet.setFleetSpaces(10);
-                            planet.markDirty();
-                            return planet;
-                        }
-                    }
-                }
-            }
-        }
-        return null;
     }
+    //endregion
 
-    public void loadClaimedPlanets()
-    {
-        if (theGalaxy != null) {
-            homePlanets.clear();
-            for (Quadrant quadrant : theGalaxy.getQuadrants()) {
-                for (Star star : quadrant.getStars()) {
-                    for (Planet planet : star.getPlanets()) {
-                        if (planet.isHomeworld() && planet.hasOwner()) {
-                            homePlanets.put(planet.getOwnerUUID(), planet);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private boolean tryAndClaimPlanet(EntityPlayer player)
-    {
-        UUID playerUUID = EntityPlayer.func_146094_a(player.getGameProfile());
-        if (!homePlanets.containsKey(playerUUID))
-        {
-            Planet claimedPlanet = claimPlanet(player);
-            if (claimedPlanet != null)
-            {
-                homePlanets.put(playerUUID,claimedPlanet);
-                return true;
-            }
-        }
-        return false;
-    }
-
+    //region Getters and Setters
     public Planet getHomeworld(EntityPlayer player)
     {
         return homePlanets.get(EntityPlayer.func_146094_a(player.getGameProfile()));
     }
-
     public Galaxy getTheGalaxy()
     {
         return theGalaxy;
     }
-
     public void setTheGalaxy(Galaxy galaxy)
     {
         theGalaxy = galaxy;
     }
-
     private File getGalaxyFile(World world)
     {
         File worldDirectory = world.getSaveHandler().getWorldDirectory();
         return new File(worldDirectory.getPath() + "/galaxy.dat");
     }
-
     public GalaxyGenerator getGalaxyGenerator(){return galaxyGenerator;}
-
     public static GalaxyServer getInstance()
     {
         if (instance == null)
@@ -264,10 +278,5 @@ public class GalaxyServer implements IConfigSubscriber
         }
         return instance;
     }
-
-    @Override
-    public void onConfigChanged(ConfigurationHandler config)
-    {
-
-    }
+    //endregion
 }

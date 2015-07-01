@@ -20,25 +20,22 @@ import java.util.UUID;
 @SideOnly(Side.CLIENT)
 public class GalaxyClient
 {
+    //region Private Vars
     private static GalaxyClient instance;
-    Galaxy theGalaxy;
-    HashMap<UUID,Planet> homePlanets;
+    private Galaxy theGalaxy;
+    private HashMap<UUID,Planet> homePlanets;
+    //endregion
 
+    //region Constructors
     public GalaxyClient()
     {
-        homePlanets = new HashMap<UUID, Planet>();
+        homePlanets = new HashMap();
     }
-
     public Galaxy getTheGalaxy()
     {
         return theGalaxy;
     }
-
-    public void setTheGalaxy(Galaxy galaxy)
-    {
-        theGalaxy = galaxy;
-        loadClaimedPlanets();
-    }
+    //endregion
 
     public void loadClaimedPlanets()
     {
@@ -59,11 +56,7 @@ public class GalaxyClient
         }
     }
 
-    public Planet getHomeworld(EntityPlayer player)
-    {
-        return homePlanets.get(EntityPlayer.func_146094_a(player.getGameProfile()));
-    }
-
+    //region Events
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
@@ -77,7 +70,9 @@ public class GalaxyClient
 			theGalaxy.update(Minecraft.getMinecraft().theWorld);
 		}
     }
+    //endregion
 
+    //region Getters and Setters
     public static GalaxyClient getInstance()
     {
         if (instance == null)
@@ -87,4 +82,14 @@ public class GalaxyClient
 
         return instance;
     }
+    public Planet getHomeworld(EntityPlayer player)
+    {
+        return homePlanets.get(EntityPlayer.func_146094_a(player.getGameProfile()));
+    }
+    public void setTheGalaxy(Galaxy galaxy)
+    {
+        theGalaxy = galaxy;
+        loadClaimedPlanets();
+    }
+    //endregion
 }
