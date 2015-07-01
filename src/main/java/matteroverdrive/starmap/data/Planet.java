@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,15 +28,15 @@ import java.util.UUID;
 public class Planet extends SpaceBody implements IInventory
 {
     public static final int SLOT_COUNT = 4;
-    Star star;
-    float size,orbit;
-    byte type;
-    UUID ownerUUID;
-    ItemStack[] inventory;
-    List<ItemStack> buildings;
-    List<ItemStack> fleet;
-    boolean isDirty,homeworld,generated;
-    int buildingSpaces,fleetSpaces,seed;
+    private Star star;
+    private float size,orbit;
+    private byte type;
+    private UUID ownerUUID;
+    private ItemStack[] inventory;
+    private List<ItemStack> buildings;
+    private List<ItemStack> fleet;
+    private boolean isDirty,homeworld,generated,needsUpdate;
+    private int buildingSpaces,fleetSpaces,seed;
 
     public Planet()
     {
@@ -52,17 +53,17 @@ public class Planet extends SpaceBody implements IInventory
     private void init()
     {
         inventory = new ItemStack[SLOT_COUNT];
-        buildings = new ArrayList<ItemStack>();
-        fleet = new ArrayList<ItemStack>();
+        buildings = new ArrayList();
+        fleet = new ArrayList();
     }
 
     public void update(World world)
     {
         if (!world.isRemote)
         {
-            if (isDirty)
+            if (needsUpdate)
             {
-                isDirty = false;
+                needsUpdate = false;
                 MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdatePlanet(this),world);
             }
 
@@ -103,6 +104,10 @@ public class Planet extends SpaceBody implements IInventory
         }
     }
 
+    public void onSave(File file,World world)
+    {
+        isDirty = false;
+    }
 
     public void onTravelEvent(ItemStack ship,GalacticPosition from)
     {
@@ -366,7 +371,10 @@ public class Planet extends SpaceBody implements IInventory
     public void markDirty()
     {
         isDirty = true;
+        markForUpdate();
     }
+
+    public void markForUpdate(){needsUpdate = true;}
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer player)
@@ -419,5 +427,6 @@ public class Planet extends SpaceBody implements IInventory
         }
         return false;
     }
+    public boolean isDirty(){return this.isDirty;}
     //endregion
 }

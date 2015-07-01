@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,13 +18,13 @@ import java.util.Map;
  */
 public class Star extends SpaceBody
 {
-    Quadrant quadrant;
-    HashMap<Integer,Planet> planetHashMap;
-    float x,y,z,size,mass;
-    byte type;
-    int temperature,color,seed;
-    boolean generated;
-    boolean isDirty;
+    private Quadrant quadrant;
+    private HashMap<Integer,Planet> planetHashMap;
+    private float x,y,z,size,mass;
+    private byte type;
+    private int temperature,color,seed;
+    private boolean generated;
+    private boolean isDirty;
 
     public Star()
     {
@@ -58,7 +59,7 @@ public class Star extends SpaceBody
             planet.writeToNBT(quadrantNBT);
             planetList.appendTag(quadrantNBT);
         }
-        tagCompound.setTag("Planets",planetList);
+        tagCompound.setTag("Planets", planetList);
     }
 
     @Override
@@ -108,6 +109,16 @@ public class Star extends SpaceBody
         for (Planet planet : getPlanets())
         {
             planet.update(world);
+        }
+    }
+
+    public void onSave(File file,World world)
+    {
+        isDirty = false;
+
+        for (Planet planet : getPlanets())
+        {
+            planet.onSave(file,world);
         }
     }
 
@@ -198,6 +209,22 @@ public class Star extends SpaceBody
         }
         return false;
     }
-    public boolean isDirty(){return isDirty;}
-    public void setDirty(boolean isDirty){this.isDirty = isDirty;}
+    public boolean isDirty()
+    {
+        if (isDirty)
+        {
+            return true;
+        }else
+        {
+            for (Planet planet : getPlanets())
+            {
+                if (planet.isDirty())
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public void markDirty(){this.isDirty = true;}
 }

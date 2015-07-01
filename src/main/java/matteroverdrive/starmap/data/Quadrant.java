@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,12 +17,12 @@ import java.util.Map;
  */
 public class Quadrant extends SpaceBody
 {
-    Galaxy galaxy;
-    HashMap<Integer,Star> starHashMap;
-    boolean loaded;
-    float size;
-    float x,y,z;
-    boolean isDirty;
+    private Galaxy galaxy;
+    private HashMap<Integer,Star> starHashMap;
+    private boolean loaded;
+    private float size;
+    private float x,y,z;
+    private boolean isDirty;
 
     public Quadrant()
     {
@@ -52,10 +53,10 @@ public class Quadrant extends SpaceBody
     {
         super.writeToNBT(tagCompound);
         NBTTagList starList = new NBTTagList();
-        tagCompound.setFloat("X",x);
-        tagCompound.setFloat("Y",y);
-        tagCompound.setFloat("Z",z);
-        tagCompound.setFloat("Size",size);
+        tagCompound.setFloat("X", x);
+        tagCompound.setFloat("Y", y);
+        tagCompound.setFloat("Z", z);
+        tagCompound.setFloat("Size", size);
         for (Star star : getStars())
         {
             NBTTagCompound quadrantNBT = new NBTTagCompound();
@@ -129,7 +130,17 @@ public class Quadrant extends SpaceBody
     {
         for (Star star : getStars())
         {
-            star.generateMissing(tagCompound,galaxyGenerator);
+            star.generateMissing(tagCompound, galaxyGenerator);
+        }
+    }
+
+    public void onSave(File file,World world)
+    {
+        isDirty = false;
+
+        for (Star star : getStars())
+        {
+            star.onSave(file,world);
         }
     }
 
@@ -179,6 +190,22 @@ public class Quadrant extends SpaceBody
     public float getY(){return y;}
     public float getZ(){return z;}
     public float getSize(){return size;}
-    public boolean isDirty(){return isDirty;}
-    public void setDirty(boolean isDirty){this.isDirty = isDirty;}
+    public boolean isDirty()
+    {
+        if (isDirty)
+        {
+            return true;
+        }else
+        {
+            for (Star star : getStars())
+            {
+                if (star.isDirty())
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public void markDirty(){this.isDirty = true;}
 }

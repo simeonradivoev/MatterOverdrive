@@ -135,11 +135,12 @@ public class GalaxyServer implements IConfigSubscriber
     {
         if (!save.world.isRemote && save.world.provider.dimensionId == 0)
         {
-            if (theGalaxy != null) {
+            if (theGalaxy != null && theGalaxy.isDirty())
+            {
                 long start = System.nanoTime();
                 File galaxyFile = getGalaxyFile(save.world);
                 saveGalaxy(galaxyFile);
-                //MOLog.log(Level.INFO,"Galaxy saved to '%s'. Took %s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
+                MOLog.log(Level.INFO,"Galaxy saved to '%s'. Took %s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
             }
         }
     }

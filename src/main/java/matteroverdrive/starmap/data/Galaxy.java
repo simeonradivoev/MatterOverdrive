@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -20,12 +21,12 @@ public class Galaxy extends SpaceBody
     public static float GALAXY_SIZE_TO_LY = 8000;
     public static float LY_TO_TICKS = 5;
 
-
-    long seed;
-    HashMap<Integer,Quadrant> quadrantHashMap;
-    List<TravelEvent> travelEvents;
-    World world;
-    int version;
+    private long seed;
+    private HashMap<Integer,Quadrant> quadrantHashMap;
+    private List<TravelEvent> travelEvents;
+    private World world;
+    private int version;
+    private boolean isDirty;
 
     public Galaxy()
     {
@@ -181,6 +182,16 @@ public class Galaxy extends SpaceBody
         }
     }
 
+    public void onSave(File file,World world)
+    {
+        isDirty = false;
+
+        for (Quadrant quadrant : getQuadrants())
+        {
+            quadrant.onSave(file,world);
+        }
+    }
+
     //region Getters and Setters
     @Override
     public SpaceBody getParent() {
@@ -311,5 +322,21 @@ public class Galaxy extends SpaceBody
     }
     public List<TravelEvent> getTravelEvents(){return travelEvents;}
     public void setTravelEvents(List<TravelEvent> travelEvents){this.travelEvents = travelEvents;}
+    public boolean isDirty()
+    {
+        if (isDirty)
+        {
+            return true;
+        }else
+        {
+            for (Quadrant quadrant : getQuadrants()) {
+                if (quadrant.isDirty()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public void markDirty(){this.isDirty = true;}
     //endregion
 }
