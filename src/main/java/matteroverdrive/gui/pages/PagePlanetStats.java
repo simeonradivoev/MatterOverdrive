@@ -36,7 +36,7 @@ public class PagePlanetStats extends ElementBaseGroup implements IListHandler
     {
         shipList.init();
         Planet planet = GalaxyClient.getInstance().getTheGalaxy().getPlanet(starMap.getGalaxyPosition());
-        if (planet != null)
+        if (planet != null && !starMap.getGalaxyPosition().equals(starMap.getDestination()))
         {
             for (int i = 0;i < planet.getFleet().size();i++)
             {

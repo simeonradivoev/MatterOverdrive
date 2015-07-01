@@ -375,7 +375,7 @@ public class RenderUtils
 
 	public static void drawString(String string,int x,int y,GuiColor color,float multiply)
 	{
-		drawString(Minecraft.getMinecraft().fontRenderer,string,x,y,color,multiply);
+		drawString(Minecraft.getMinecraft().fontRenderer, string, x, y, color, multiply);
 	}
 
 	public static void drawString(FontRenderer fontRenderer,String string,int x,int y,GuiColor color,float multiply)
@@ -450,4 +450,43 @@ public class RenderUtils
 		//right
 		drawSizedTexturedModalRect(left + width - chunkSize, top, u+texW - chunkSize, v, chunkSize, height, chunkSize, height, texW, texH, zLevel);
 	}
+
+	public static void drawShip(double x,double y,double z,double size)
+	{
+		Tessellator.instance.startDrawing(GL_TRIANGLES);
+		Tessellator.instance.addVertex(x-size, y, z);
+		Tessellator.instance.addVertex(x + size, y, z-size);
+		Tessellator.instance.addVertex(x + size, y, z+size);
+
+
+		Tessellator.instance.addVertex(x-size, y, z);
+		Tessellator.instance.addVertex(x+size, y, z+size);
+		Tessellator.instance.addVertex(x+size, y + size, z);
+
+		Tessellator.instance.addVertex(x-size, y, z);
+		Tessellator.instance.addVertex(x+size, y+size, z);
+		Tessellator.instance.addVertex(x+size, y, z-size);
+
+		Tessellator.instance.addVertex(x + size, y, z - size);
+		Tessellator.instance.addVertex(x + size, y + size, z);
+		Tessellator.instance.addVertex(x + size, y, z + size);
+		Tessellator.instance.draw();
+	}
+
+    public static void rotateTowards(Vec3 from,Vec3 to,Vec3 up)
+    {
+        double dot = from.dotProduct(to);
+        if (Math.abs(dot - (-1.0)) < Double.MIN_VALUE)
+        {
+            glRotated(180,up.xCoord,up.yCoord,up.zCoord);
+        }
+        if (Math.abs(dot - (1.0)) < Double.MIN_VALUE)
+        {
+            return;
+        }
+
+        double rotAngle = Math.acos(dot);
+        Vec3 rotAxis = from.crossProduct(to).normalize();
+        glRotated(rotAngle * (180d / Math.PI), rotAxis.xCoord, rotAxis.yCoord, rotAxis.zCoord);
+    }
 }

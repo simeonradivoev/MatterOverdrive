@@ -9,6 +9,8 @@ import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.entity.player.EntityPlayer;
 
+import java.util.List;
+
 /**
  * Created by Simeon on 6/27/2015.
  */
@@ -22,6 +24,10 @@ public class ElementQuadrantEntry extends ElementAbstractStarMapEntry<Quadrant>
     protected void drawElementName(Quadrant quadrant, GuiColor color, float multiply)
     {
         RenderUtils.drawString(spaceBody.getName(), posX + 16, posY + 10, color, multiply);
+    }
+
+    public void addTooltip(List<String> list)
+    {
     }
 
     @Override

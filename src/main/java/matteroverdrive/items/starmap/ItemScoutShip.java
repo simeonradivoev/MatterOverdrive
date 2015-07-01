@@ -1,6 +1,7 @@
 package matteroverdrive.items.starmap;
 
 import matteroverdrive.starmap.data.Planet;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 /**

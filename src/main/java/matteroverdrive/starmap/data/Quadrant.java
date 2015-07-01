@@ -5,6 +5,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class Quadrant extends SpaceBody
     boolean loaded;
     float size;
     float x,y,z;
+    boolean isDirty;
 
     public Quadrant()
     {
@@ -82,7 +84,7 @@ public class Quadrant extends SpaceBody
     @Override
     public void readFromNBT(NBTTagCompound tagCompound,GalaxyGenerator generator)
     {
-        super.readFromNBT(tagCompound,generator);
+        super.readFromNBT(tagCompound, generator);
         if (tagCompound != null) {
             x = tagCompound.getFloat("X");
             y = tagCompound.getFloat("Y");
@@ -112,6 +114,14 @@ public class Quadrant extends SpaceBody
             star.readFromNBT(ByteBufUtils.readTag(buf),null);
             addStar(star);
             star.setQuadrant(this);
+        }
+    }
+
+    public void update(World world)
+    {
+        for (Star star : getStars())
+        {
+            star.update(world);
         }
     }
 
@@ -169,4 +179,6 @@ public class Quadrant extends SpaceBody
     public float getY(){return y;}
     public float getZ(){return z;}
     public float getSize(){return size;}
+    public boolean isDirty(){return isDirty;}
+    public void setDirty(boolean isDirty){this.isDirty = isDirty;}
 }

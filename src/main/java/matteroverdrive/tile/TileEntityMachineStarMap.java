@@ -125,10 +125,6 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     public void updateEntity()
     {
         super.updateEntity();
-        if (!worldObj.isRemote && getPlanet() != null)
-        {
-            getPlanet().update(worldObj);
-        }
     }
 
     public void zoom()

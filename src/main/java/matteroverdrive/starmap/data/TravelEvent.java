@@ -10,9 +10,9 @@ import net.minecraft.world.World;
  */
 public class TravelEvent
 {
-    long timeStart;
-    int timeLength,shipID;
-    GalacticPosition from,to;
+    private long timeStart;
+    private int timeLength,shipID;
+    private GalacticPosition from,to;
 
     public TravelEvent()
     {
@@ -40,7 +40,7 @@ public class TravelEvent
 
     public boolean isComplete(World world)
     {
-       return timeStart + timeLength <= world.getTotalWorldTime();
+       return (timeStart + timeLength) - world.getTotalWorldTime() <= 0;
     }
 
     public boolean isValid(Galaxy galaxy)
@@ -113,6 +113,16 @@ public class TravelEvent
 
     public long getTimeStart() {
         return timeStart;
+    }
+
+    public long getTimeRemainning(World world)
+    {
+        return (timeStart + timeLength) - world.getTotalWorldTime();
+    }
+
+    public double getPercent(World world)
+    {
+        return 1d - (double)((timeStart + timeLength) - world.getTotalWorldTime()) / (double)timeLength;
     }
 
     public void setTimeStart(long timeStart) {

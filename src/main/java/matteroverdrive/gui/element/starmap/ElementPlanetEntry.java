@@ -1,13 +1,20 @@
 package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
+import cofh.lib.render.RenderHelper;
+import matteroverdrive.api.inventory.starmap.IShip;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.data.GalacticPosition;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 6/21/2015.
@@ -25,6 +32,43 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
             RenderUtils.drawString(spaceBody.getName(), posX + 16, posY + 10, color, multiply);
         else
             RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer,spaceBody.getName(),posX + 16,posY + 10,color,multiply);
+
+        if (planet.isOwner(Minecraft.getMinecraft().thePlayer) && planet.isHomeworld())
+        {
+            if (isSelected(planet))
+            {
+                ClientProxy.holoIcons.renderIcon("home_icon", posX + sizeX + 4, posY + 8);
+            }else
+            {
+                ClientProxy.holoIcons.renderIcon("home_icon", posX + sizeX - 60, posY + 8);
+            }
+        }
+
+        boolean fleetFlag = false;
+        for (ItemStack ship : planet.getFleet())
+        {
+            if (((IShip)ship.getItem()).isOwner(ship,Minecraft.getMinecraft().thePlayer))
+            {
+                fleetFlag = true;
+                break;
+            }
+        }
+        if (fleetFlag)
+        {
+            if (isSelected(planet))
+            {
+                ClientProxy.holoIcons.renderIcon("icon_shuttle", posX + sizeX + 21, posY + 7);
+            }else
+            {
+                ClientProxy.holoIcons.renderIcon("icon_shuttle", posX + sizeX - 44, posY + 7);
+            }
+        }
+    }
+
+    @Override
+    public void addTooltip(List<String> list)
+    {
+
     }
 
     @Override

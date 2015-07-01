@@ -56,6 +56,59 @@ public class Planet extends SpaceBody implements IInventory
         fleet = new ArrayList<ItemStack>();
     }
 
+    public void update(World world)
+    {
+        if (!world.isRemote)
+        {
+            if (isDirty)
+            {
+                isDirty = false;
+                MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdatePlanet(this),world);
+            }
+
+            for (int i = 0;i < SLOT_COUNT;i++)
+            {
+                ItemStack ship = getStackInSlot(i);
+                if (ship != null)
+                {
+                    if (ship.getItem() instanceof IBuilding && canBuild((IBuilding)ship.getItem(),ship)) {
+                        int buildTime = ((IBuilding) ship.getItem()).getBuildTime(ship);
+                        int maxBuildTime = ((IBuilding) ship.getItem()).maxBuildTime(ship, this);
+                        if (buildTime < maxBuildTime) {
+                            ((IBuilding) ship.getItem()).setBuildTime(ship, buildTime + 1);
+                            markDirty();
+                        } else {
+                            buildings.add(ship);
+                            setInventorySlotContents(i, null);
+                            markDirty();
+                        }
+                    }else if (ship.getItem() instanceof IShip && canBuild((IShip)ship.getItem(),ship))
+                    {
+                        int buildTime = ((IShip) ship.getItem()).getBuildTime(ship);
+                        int maxBuildTime = ((IShip) ship.getItem()).maxBuildTime(ship, this);
+                        if (buildTime < maxBuildTime) {
+                            ((IShip) ship.getItem()).setBuildTime(ship, buildTime + 1);
+                            markDirty();
+                        } else {
+                            fleet.add(ship);
+                            if (getOwnerUUID() != null) {
+                                ((IShip) ship.getItem()).setOwner(ship, getOwnerUUID());
+                            }
+                            setInventorySlotContents(i, null);
+                            markDirty();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    public void onTravelEvent(ItemStack ship,GalacticPosition from)
+    {
+
+    }
+
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
@@ -89,7 +142,7 @@ public class Planet extends SpaceBody implements IInventory
         tagCompound.setFloat("Orbit", orbit);
         tagCompound.setInteger("BuildingSpaces", buildingSpaces);
         tagCompound.setInteger("FleetSpaces",fleetSpaces);
-        tagCompound.setInteger("Seed",seed);
+        tagCompound.setInteger("Seed", seed);
     }
 
     public void readFromNBT(NBTTagCompound tagCompound,GalaxyGenerator generator)
@@ -189,6 +242,8 @@ public class Planet extends SpaceBody implements IInventory
     public boolean isGenerated(){return generated;}
     public void setGenerated(boolean generated){this.generated = generated;}
     public ItemStack getShip(int at){return fleet.get(at);}
+    public void addShip(ItemStack ship){if (ship != null && ship.getItem() instanceof IShip) fleet.add(ship);}
+    public ItemStack removeShip(int at){if (at < fleet.size()) return fleet.remove(at); else return null;}
     public int fleetCount(){return fleet.size();}
     public static GuiColor getGuiColor(Planet planet)
     {
@@ -363,50 +418,6 @@ public class Planet extends SpaceBody implements IInventory
             return ship.canBuild(stack,this);
         }
         return false;
-    }
-
-    public void update(World world)
-    {
-        if (!world.isRemote)
-        {
-            if (isDirty)
-            {
-                isDirty = false;
-                MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdatePlanet(this),world);
-            }
-
-            for (int i = 0;i < SLOT_COUNT;i++)
-            {
-                ItemStack stack = getStackInSlot(i);
-                if (stack != null)
-                {
-                    if (stack.getItem() instanceof IBuilding && canBuild((IBuilding)stack.getItem(),stack)) {
-                        int buildTime = ((IBuilding) stack.getItem()).getBuildTime(stack);
-                        int maxBuildTime = ((IBuilding) stack.getItem()).maxBuildTime(stack, this);
-                        if (buildTime < maxBuildTime) {
-                            ((IBuilding) stack.getItem()).setBuildTime(stack, buildTime + 1);
-                            markDirty();
-                        } else {
-                            buildings.add(stack);
-                            setInventorySlotContents(i, null);
-                            markDirty();
-                        }
-                    }else if (stack.getItem() instanceof IShip && canBuild((IShip)stack.getItem(),stack))
-                    {
-                        int buildTime = ((IShip) stack.getItem()).getBuildTime(stack);
-                        int maxBuildTime = ((IShip) stack.getItem()).maxBuildTime(stack, this);
-                        if (buildTime < maxBuildTime) {
-                            ((IShip) stack.getItem()).setBuildTime(stack, buildTime + 1);
-                            markDirty();
-                        } else {
-                            fleet.add(stack);
-                            setInventorySlotContents(i, null);
-                            markDirty();
-                        }
-                    }
-                }
-            }
-        }
     }
     //endregion
 }

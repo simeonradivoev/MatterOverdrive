@@ -20,7 +20,7 @@ public class PageGalaxy extends ElementBaseGroup implements IListHandler
 
     public PageGalaxy(GuiStarMap gui, int posX, int posY, int width, int height,TileEntityMachineStarMap starMap) {
         super(gui, posX, posY, width, height);
-        quadrantList = new ElementGroupList(gui,this,0,16,128+64,228);
+        quadrantList = new ElementGroupList(gui,this,0,16,width,228);
         quadrantList.setName("Quadrants");
         quadrantList.setScroll(scroll);
         this.starMap = starMap;

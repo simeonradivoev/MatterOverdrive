@@ -36,7 +36,6 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
 
     public StarMapRendererStar()
     {
-
         sphere = new Sphere();
         random = new Random();
     }
@@ -144,13 +143,23 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
     public void renderGUIInfo(Galaxy galaxy, SpaceBody spaceBody,TileEntityMachineStarMap starMap, float partialTicks,float opacity)
     {
         if (spaceBody instanceof Star) {
-            Star star = (Star)spaceBody;
-            ClientProxy.holoIcons.bindSheet();
             RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, opacity);
             glEnable(GL_ALPHA_TEST);
-            RenderHelper.renderIcon(82,-30,0,ClientProxy.holoIcons.getIcon("icon_size"),16,16);
-            //RenderUtils.drawString(star.getName(), 82, -30, Reference.COLOR_HOLO,opacity);
-            RenderUtils.drawString(DecimalFormat.getPercentInstance().format(star.getSize()), 102, -25, Reference.COLOR_HOLO,opacity);
+
+            Planet planet = galaxy.getPlanet(starMap.getDestination());
+            if (planet != null)
+            {
+                if (planet.isOwner(Minecraft.getMinecraft().thePlayer)) {
+                    RenderUtils.drawString(planet.getName(), 72, -42, Reference.COLOR_HOLO, opacity);
+                }else
+                {
+                    RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer,planet.getName(), 72, -42, Reference.COLOR_HOLO, opacity);
+                }
+
+                RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, opacity);
+                ClientProxy.holoIcons.renderIcon("icon_size", 72, -28);
+                RenderUtils.drawString(DecimalFormat.getPercentInstance().format(planet.getSize()), 92, -23, Reference.COLOR_HOLO, opacity);
+            }
 
             glDisable(GL_TEXTURE_2D);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

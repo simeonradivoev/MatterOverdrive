@@ -1,5 +1,6 @@
 package matteroverdrive.starmap;
 
+import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
@@ -124,7 +125,7 @@ public class GalaxyServer implements IConfigSubscriber
                 MOLog.log(Level.INFO, "Galaxy Generated and saved to '%1$s'. Took %2$s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
             }else
             {
-                MOLog.log(Level.INFO,"Galaxy Loaded from '%1$s'. Took %2$s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
+                MOLog.log(Level.INFO, "Galaxy Loaded from '%1$s'. Took %2$s milliseconds", galaxyFile.getPath(), ((System.nanoTime() - start) / 1000000));
             }
         }
     }
@@ -138,7 +139,7 @@ public class GalaxyServer implements IConfigSubscriber
                 long start = System.nanoTime();
                 File galaxyFile = getGalaxyFile(save.world);
                 saveGalaxy(galaxyFile);
-                MOLog.log(Level.INFO,"Galaxy saved to '%s'. Took %s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
+                //MOLog.log(Level.INFO,"Galaxy saved to '%s'. Took %s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
             }
         }
     }
@@ -153,6 +154,15 @@ public class GalaxyServer implements IConfigSubscriber
                 theGalaxy = null;
                 homePlanets.clear();
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldTick(TickEvent.WorldTickEvent event)
+    {
+        if (!event.world.isRemote && event.world.provider.dimensionId == 0)
+        {
+            theGalaxy.update(event.world);
         }
     }
 

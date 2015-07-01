@@ -161,6 +161,18 @@ public class GalacticPosition
         return planetID;
     }
 
+    public int distanceTo(Galaxy galaxy,GalacticPosition position)
+    {
+        Star from = galaxy.getStar(this);
+        Star to = galaxy.getStar(position);
+
+        if (from != null && to != null)
+        {
+            return (int)(from.getPosition().distanceTo(to.getPosition()) * Galaxy.GALAXY_SIZE_TO_LY);
+        }
+        return 0;
+    }
+
     public NBTTagCompound toNBT()
     {
         NBTTagCompound tagCompound = new NBTTagCompound();

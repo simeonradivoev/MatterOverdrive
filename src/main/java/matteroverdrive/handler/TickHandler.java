@@ -1,6 +1,8 @@
 package matteroverdrive.handler;
 
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.starmap.GalaxyClient;
+import matteroverdrive.starmap.GalaxyServer;
 import matteroverdrive.tile.IMOTickable;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -60,7 +62,8 @@ public class TickHandler
 
     //Called when a new frame is displayed (See fps)
     @SubscribeEvent
-    public void onRenderTick(TickEvent.RenderTickEvent event) {
+    public void onRenderTick(TickEvent.RenderTickEvent event)
+    {
 
     }
 

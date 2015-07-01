@@ -48,6 +48,21 @@ public class MOStringHelper
         }
     }
 
+    public static String formatRemainingTime(float seccounds)
+    {
+        if (seccounds > 60 * 60)
+        {
+            return String.format("%s hours",String.valueOf(Math.round(seccounds / 60 * 60)));
+        }
+        else if (seccounds > 60 && seccounds < 60 * 60)
+        {
+            return String.format("%s min",String.valueOf(Math.round(seccounds / 60)));
+        }else
+        {
+            return String.format("%s sec",String.valueOf(Math.round(seccounds)));
+        }
+    }
+
     public static String typingAnimation(String message,int time,int maxTime)
     {
         float percent = ((float)time / (float)maxTime);

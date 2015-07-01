@@ -6,6 +6,7 @@ import matteroverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
 import matteroverdrive.network.packet.server.AbstractServerPacketHandler;
 import matteroverdrive.starmap.GalaxyServer;
 import matteroverdrive.starmap.data.GalacticPosition;
+import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.TravelEvent;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -53,7 +54,7 @@ public class PacketStarMapAttack extends PacketAbstract
         @Override
         public IMessage handleServerMessage(EntityPlayer player, PacketStarMapAttack message, MessageContext ctx)
         {
-            TravelEvent travelEvent = new TravelEvent(player.worldObj,message.from,message.to,message.shipID,20 * 30);
+            TravelEvent travelEvent = new TravelEvent(player.worldObj,message.from,message.to,message.shipID,(int)(message.from.distanceTo(GalaxyServer.getInstance().getTheGalaxy(),message.to) * Galaxy.LY_TO_TICKS));
             if (travelEvent.isValid(GalaxyServer.getInstance().getTheGalaxy()))
             {
                 GalaxyServer.getInstance().getTheGalaxy().addTravelEvent(travelEvent);

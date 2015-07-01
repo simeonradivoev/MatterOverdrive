@@ -24,7 +24,7 @@ public class PageQuadrant extends ElementBaseGroup implements IListHandler {
 
     public PageQuadrant(GuiStarMap gui, int posX, int posY, int width, int height,TileEntityMachineStarMap starMap) {
         super(gui, posX, posY, width, height);
-        starList = new ElementGroupList(gui,this,0,16,128+64,228);
+        starList = new ElementGroupList(gui,this,0,16,width,228);
         starList.setName("Stars");
         starList.setScroll(scroll);
         this.starMap = starMap;

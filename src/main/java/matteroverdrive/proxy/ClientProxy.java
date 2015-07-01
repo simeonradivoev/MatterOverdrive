@@ -1,5 +1,6 @@
 package matteroverdrive.proxy;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.gui.GuiAndroidHud;
@@ -54,6 +55,7 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(new TooltipHandler());
         MinecraftForge.EVENT_BUS.register(androidHud);
         FMLCommonHandler.instance().bus().register(renderHandler);
+        FMLCommonHandler.instance().bus().register(GalaxyClient.getInstance());
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class Star extends SpaceBody
     byte type;
     int temperature,color,seed;
     boolean generated;
+    boolean isDirty;
 
     public Star()
     {
@@ -101,6 +103,14 @@ public class Star extends SpaceBody
         }
     }
 
+    public void update(World world)
+    {
+        for (Planet planet : getPlanets())
+        {
+            planet.update(world);
+        }
+    }
+
     @Override
     public SpaceBody getParent() {
         return quadrant;
@@ -128,7 +138,8 @@ public class Star extends SpaceBody
     }
 
     public void setPosition(float x,float y,float z){this.x = x;this.y = y;this.z = z;}
-    public Vec3 getPosition(){return Vec3.createVectorHelper(x,y,z);}
+    public Vec3 getPosition(){return getPosition(1);}
+    public Vec3 getPosition(double multipy){return Vec3.createVectorHelper(x * multipy, y * multipy, z * multipy);}
     public float getX(){return x;}
     public float getY(){return y;}
     public float getZ(){return z;}
@@ -187,4 +198,6 @@ public class Star extends SpaceBody
         }
         return false;
     }
+    public boolean isDirty(){return isDirty;}
+    public void setDirty(boolean isDirty){this.isDirty = isDirty;}
 }

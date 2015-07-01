@@ -2,11 +2,13 @@ package matteroverdrive.items.starmap;
 
 import matteroverdrive.api.inventory.starmap.IShip;
 import matteroverdrive.items.includes.MOBaseItem;
+import matteroverdrive.util.MOLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Simeon on 6/24/2015.
@@ -46,5 +48,34 @@ public abstract class ItemShipAbstract extends MOBaseItem implements IShip
         }
 
         building.getTagCompound().setInteger("BuildTime", buildTime);
+    }
+
+    @Override
+    public boolean isOwner(ItemStack ship, EntityPlayer player)
+    {
+        if (ship.hasTagCompound())
+        {
+            if (ship.getTagCompound().hasKey("Owner") && !ship.getTagCompound().getString("Owner").isEmpty()) {
+                try {
+                    return UUID.fromString(ship.getTagCompound().getString("Owner")).equals(EntityPlayer.func_146094_a(player.getGameProfile()));
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void setOwner(ItemStack ship, UUID playerId)
+    {
+        if (!ship.hasTagCompound())
+        {
+            ship.setTagCompound(new NBTTagCompound());
+        }
+
+        ship.getTagCompound().setString("Owner",playerId.toString());
     }
 }

@@ -20,7 +20,7 @@ public class PageStar extends ElementBaseGroup implements IListHandler
 
     public PageStar(GuiStarMap gui, int posX, int posY, int width, int height,TileEntityMachineStarMap starMap) {
         super(gui, posX, posY, width, height);
-        planetList = new ElementGroupList(gui,this,0,16,128+64,228);
+        planetList = new ElementGroupList(gui,this,0,16,width,228);
         planetList.setName("Stars");
         //planetList.textColor = Reference.COLOR_HOLO.getColor();
         //planetList.selectedTextColor = Reference.COLOR_HOLO_YELLOW.getColor();

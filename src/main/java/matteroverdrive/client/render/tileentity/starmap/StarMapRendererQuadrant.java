@@ -65,8 +65,12 @@ public class StarMapRendererQuadrant extends StarMapRendererStars {
                 RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer, star.getName(), 0, -52, Reference.COLOR_HOLO, opacity);
             }
 
+            ClientProxy.holoIcons.renderIcon("icon_size",48,-28);
+            //RenderUtils.drawString(star.getName(), 82, -30, Reference.COLOR_HOLO,opacity);
+            RenderUtils.drawString(DecimalFormat.getPercentInstance().format(star.getSize()), 68, -23, Reference.COLOR_HOLO,opacity);
+
             if (origin != null)
-                RenderUtils.drawString(String.format("Distance: %s LY", format.format(origin.getPosition().distanceTo(star.getPosition()) * 8000f)), 0, -42, Reference.COLOR_HOLO, opacity);
+                RenderUtils.drawString(String.format("Distance: %s LY", format.format(origin.getPosition().distanceTo(star.getPosition()) * Galaxy.GALAXY_SIZE_TO_LY)), 0, -42, Reference.COLOR_HOLO, opacity);
         }
         glDisable(GL_ALPHA_TEST);
     }

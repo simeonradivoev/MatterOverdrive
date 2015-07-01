@@ -87,9 +87,9 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
         {
             glPushMatrix();
             glRotated(random.nextDouble() * 360,0,1,0);
-            glRotated(random.nextDouble() * 360,0,0,1);
-            glTranslated(planetSize - 0.04,0,0);
-            RenderUtils.drawCube(0.1, 0.1, 0.1, Reference.COLOR_HOLO,(1f / viewerDistance));
+            glRotated(random.nextDouble() * 360, 0, 0, 1);
+            glTranslated(planetSize - 0.04, 0, 0);
+            RenderUtils.drawCube(0.1, 0.1, 0.1, Reference.COLOR_HOLO, (1f / viewerDistance));
             glPopMatrix();
         }
     }
@@ -104,34 +104,12 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
             double direction = random.nextDouble() * 2 - 1;
             double radius = random.nextDouble() * 0.3 + 0.1;
             glRotated(random.nextDouble() * 360,0,0,1);
-            glRotated(startingAngle + Math.copySign(Minecraft.getMinecraft().theWorld.getWorldTime() * 0.2,direction), 0, 1, 0);
+            glRotated(startingAngle + Math.copySign(Minecraft.getMinecraft().theWorld.getWorldTime() * 0.2, direction), 0, 1, 0);
             glTranslated(planetSize + radius, 0, 0);
-            glRotated(90,0,-Math.copySign(1, direction), 0);
-            drawShip(0.03);
+            glRotated(90, 0, -Math.copySign(1, direction), 0);
+            RenderUtils.drawShip(0,0,0,0.03);
             glPopMatrix();
         }
-    }
-
-    private void drawShip(double size)
-    {
-        Tessellator.instance.startDrawing(GL_TRIANGLES);
-        Tessellator.instance.addVertex(-size, 0, 0);
-        Tessellator.instance.addVertex(size, 0, -size);
-        Tessellator.instance.addVertex(size, 0, size);
-
-
-        Tessellator.instance.addVertex(-size, 0, 0);
-        Tessellator.instance.addVertex(size, 0, size);
-        Tessellator.instance.addVertex(size, size, 0);
-
-        Tessellator.instance.addVertex(-size, 0, 0);
-        Tessellator.instance.addVertex(size, size, 0);
-        Tessellator.instance.addVertex(size, 0, -size);
-
-        Tessellator.instance.addVertex(size, 0, -size);
-        Tessellator.instance.addVertex(size, size, 0);
-        Tessellator.instance.addVertex(size, 0, size);
-        Tessellator.instance.draw();
     }
 
     private void drawPlanetInfoClose(Planet planet)

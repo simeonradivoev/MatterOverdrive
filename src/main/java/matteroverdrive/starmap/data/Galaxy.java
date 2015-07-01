@@ -1,8 +1,11 @@
 package matteroverdrive.starmap.data;
 
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
 import matteroverdrive.starmap.GalaxyGenerator;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
@@ -14,6 +17,10 @@ import java.util.*;
  */
 public class Galaxy extends SpaceBody
 {
+    public static float GALAXY_SIZE_TO_LY = 8000;
+    public static float LY_TO_TICKS = 5;
+
+
     long seed;
     HashMap<Integer,Quadrant> quadrantHashMap;
     List<TravelEvent> travelEvents;
@@ -57,7 +64,7 @@ public class Galaxy extends SpaceBody
         {
             travelEventsList.appendTag(travelEvent.toNBT());
         }
-        tagCompound.setTag("TravelEvents",travelEventsList);
+        tagCompound.setTag("TravelEvents", travelEventsList);
     }
 
     public void writeToBuffer(ByteBuf buf)
@@ -90,7 +97,7 @@ public class Galaxy extends SpaceBody
             addQuadrant(quadrant);
             quadrant.setGalaxy(this);
         }
-        NBTTagList travelEventsList = tagCompound.getTagList("TravelEvents",10);
+        NBTTagList travelEventsList = tagCompound.getTagList("TravelEvents", 10);
         for (int i = 0;i < travelEventsList.tagCount();i++)
         {
             travelEvents.add(new TravelEvent(travelEventsList.getCompoundTagAt(i)));
@@ -119,6 +126,62 @@ public class Galaxy extends SpaceBody
         }
     }
 
+    public void update(World world)
+    {
+        manageTravelEvents(world);
+
+        for (Quadrant quadrant : getQuadrants())
+        {
+            quadrant.update(world);
+        }
+    }
+
+    private void manageDirty(World world)
+    {
+        if (world.isRemote)
+        {
+
+        }
+    }
+
+    private void manageTravelEvents(World world)
+    {
+        Iterator<TravelEvent> travelEventIterator = travelEvents.iterator();
+
+        while (travelEventIterator.hasNext())
+        {
+            TravelEvent travelEvent = travelEventIterator.next();
+
+            if (travelEvent.isValid(this)) {
+
+                if (travelEvent.isComplete(world))
+                {
+                    if (!world.isRemote)
+                    {
+                        Planet to = getPlanet(travelEvent.getTo());
+                        Planet from = getPlanet(travelEvent.getFrom());
+                        if (to != null) {
+                            ItemStack ship = from.removeShip(travelEvent.getShipID());
+                            if (ship != null) {
+                                to.addShip(ship);
+                                from.markDirty();
+                                to.markDirty();
+                                to.onTravelEvent(ship,travelEvent.getFrom());
+                                MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdateTravelEvents(this), world);
+                            }
+                        }
+                    }
+
+                    travelEventIterator.remove();
+                }
+            }else
+            {
+                travelEventIterator.remove();
+            }
+        }
+    }
+
+    //region Getters and Setters
     @Override
     public SpaceBody getParent() {
         return null;
@@ -238,7 +301,7 @@ public class Galaxy extends SpaceBody
     {
         for (TravelEvent event : travelEvents)
         {
-            if (event.from.equals(travelEvent.from) && event.shipID == travelEvent.shipID)
+            if (event.getFrom().equals(travelEvent.getFrom()) && event.getShipID() == travelEvent.getShipID())
             {
                 return false;
             }
@@ -248,4 +311,5 @@ public class Galaxy extends SpaceBody
     }
     public List<TravelEvent> getTravelEvents(){return travelEvents;}
     public void setTravelEvents(List<TravelEvent> travelEvents){this.travelEvents = travelEvents;}
+    //endregion
 }
