@@ -1,5 +1,6 @@
 package matteroverdrive.items.starmap;
 
+import matteroverdrive.api.starmap.ShipType;
 import matteroverdrive.starmap.data.Planet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -21,5 +22,10 @@ public class ItemScoutShip extends ItemShipAbstract
     @Override
     public int maxBuildTime(ItemStack building, Planet planet) {
         return 20 * 30;
+    }
+
+    @Override
+    public ShipType getType(ItemStack ship) {
+        return ShipType.SCOUT;
     }
 }

@@ -1,8 +1,7 @@
 package matteroverdrive.items.starmap;
 
-import matteroverdrive.api.inventory.starmap.IShip;
+import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.items.includes.MOBaseItem;
-import matteroverdrive.util.MOLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

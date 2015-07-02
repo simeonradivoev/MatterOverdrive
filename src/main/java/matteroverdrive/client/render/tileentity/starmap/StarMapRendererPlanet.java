@@ -2,7 +2,7 @@ package matteroverdrive.client.render.tileentity.starmap;
 
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
-import matteroverdrive.api.inventory.starmap.IBuilding;
+import matteroverdrive.api.starmap.IBuilding;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.Planet;
@@ -12,7 +12,6 @@ import matteroverdrive.util.RenderUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

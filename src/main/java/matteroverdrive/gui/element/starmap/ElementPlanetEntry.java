@@ -1,8 +1,7 @@
 package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
-import cofh.lib.render.RenderHelper;
-import matteroverdrive.api.inventory.starmap.IShip;
+import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
 import matteroverdrive.proxy.ClientProxy;
@@ -12,7 +11,6 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
-import matteroverdrive.api.inventory.starmap.IShip;
+import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.client.render.tileentity.starmap.StarMapRendererStars;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;

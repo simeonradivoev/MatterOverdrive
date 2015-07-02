@@ -1,6 +1,6 @@
 package matteroverdrive.items.starmap;
 
-import matteroverdrive.api.inventory.starmap.IBuilding;
+import matteroverdrive.api.starmap.IBuilding;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
