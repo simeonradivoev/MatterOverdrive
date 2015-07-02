@@ -1,4 +1,4 @@
-package matteroverdrive.api.inventory.starmap;
+package matteroverdrive.api.starmap;
 
 import matteroverdrive.starmap.data.Planet;
 import net.minecraft.item.ItemStack;

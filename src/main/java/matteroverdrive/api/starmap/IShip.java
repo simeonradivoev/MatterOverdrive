@@ -1,4 +1,4 @@
-package matteroverdrive.api.inventory.starmap;
+package matteroverdrive.api.starmap;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -12,4 +12,5 @@ public interface IShip extends IBuildable
 {
     boolean isOwner(ItemStack ship,EntityPlayer player);
     void setOwner(ItemStack ship,UUID ownerID);
+    ShipType getType(ItemStack ship);
 }

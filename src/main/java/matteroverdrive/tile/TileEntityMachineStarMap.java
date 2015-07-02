@@ -2,7 +2,7 @@ package matteroverdrive.tile;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.inventory.starmap.IBuildable;
+import matteroverdrive.api.starmap.IBuildable;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;

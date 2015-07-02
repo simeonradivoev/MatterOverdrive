@@ -2,7 +2,7 @@ package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiBase;
 import matteroverdrive.Reference;
-import matteroverdrive.api.inventory.starmap.IShip;
+import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.tile.TileEntityMachineStarMap;
