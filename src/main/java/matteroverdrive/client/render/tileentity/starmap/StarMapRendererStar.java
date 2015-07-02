@@ -4,6 +4,7 @@ import cofh.lib.gui.GuiColor;
 import cofh.lib.render.RenderHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.Star;
@@ -149,7 +150,7 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
             Planet planet = galaxy.getPlanet(starMap.getDestination());
             if (planet != null)
             {
-                if (planet.isOwner(Minecraft.getMinecraft().thePlayer)) {
+                if (GalaxyClient.getInstance().canSeePlanetInfo(planet,Minecraft.getMinecraft().thePlayer)) {
                     RenderUtils.drawString(planet.getName(), 72, -42, Reference.COLOR_HOLO, opacity);
                 }else
                 {
@@ -179,42 +180,30 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
         }
     }
 
-    private void drawPlanetInfo(Planet planet)
-    {
+    private void drawPlanetInfo(Planet planet) {
         glTranslated(0, planet.getSize() * 0.13f + 0.05f, 0);
         glScaled(0.005, 0.005, 0.005);
         glRotated(180, 0, 0, 1);
+        if (GalaxyClient.getInstance().canSeePlanetInfo(planet, Minecraft.getMinecraft().thePlayer)) {
+            int width = Minecraft.getMinecraft().fontRenderer.getStringWidth(planet.getName());
+            Minecraft.getMinecraft().fontRenderer.drawString(planet.getName(), -width / 2, 0, Planet.getGuiColor(planet).getColor());
 
-        if (planet.hasOwner())
-        {
-            if (planet.isOwner(Minecraft.getMinecraft().thePlayer))
-            {
-                int width = Minecraft.getMinecraft().fontRenderer.getStringWidth(planet.getName());
-                Minecraft.getMinecraft().fontRenderer.drawString(planet.getName(), -width / 2, 0, Planet.getGuiColor(planet).getColor());
-
-                if (planet.isHomeworld())
-                {
-                    width = Minecraft.getMinecraft().fontRenderer.getStringWidth("[Home]");
-                    Minecraft.getMinecraft().fontRenderer.drawString(EnumChatFormatting.GOLD + "[Home]", -width / 2, -10, 0xFFFFFF);
-                }
+            if (planet.isHomeworld(Minecraft.getMinecraft().thePlayer)) {
+                width = Minecraft.getMinecraft().fontRenderer.getStringWidth("[Home]");
+                Minecraft.getMinecraft().fontRenderer.drawString(EnumChatFormatting.GOLD + "[Home]", -width / 2, -10, 0xFFFFFF);
             }
-            else
-            {
-                int width = Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(planet.getName());
-                Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(planet.getName(), -width / 2, 0, Planet.getGuiColor(planet).getColor());
+        } else {
+            int width = Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(planet.getName());
+            Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(planet.getName(), -width / 2, 0, Planet.getGuiColor(planet).getColor());
 
+            if (planet.hasOwner()) {
                 EntityPlayer owner = Minecraft.getMinecraft().theWorld.func_152378_a(planet.getOwnerUUID());
-                if (owner != null)
-                {
-                    String info = String.format("[%s]",owner.getDisplayName());
+                if (owner != null) {
+                    String info = String.format("[%s]", owner.getDisplayName());
                     width = Minecraft.getMinecraft().fontRenderer.getStringWidth(info);
                     Minecraft.getMinecraft().fontRenderer.drawString(EnumChatFormatting.GOLD + info, -width / 2, -10, 0xFFFFFF);
                 }
             }
-        }else
-        {
-            int width = Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(planet.getName());
-            Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(planet.getName(), -width / 2, 0, Planet.getGuiColor(planet).getColor());
         }
     }
 

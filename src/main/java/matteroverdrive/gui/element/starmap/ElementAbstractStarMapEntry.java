@@ -16,6 +16,8 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
+
 /**
  * Created by Simeon on 6/21/2015.
  */
@@ -26,6 +28,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
     public static ScaleTexture BG_MIDDLE_NORMAL = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96, 32);
     public static ScaleTexture BG_MIDDLE_OVER = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96, 32).setUV(32, 0);
     public static ScaleTexture BG_MIDDLE_DOWN = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96,32).setUV(64,0);
+    public static ScaleTexture BG_CIRCLE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_circle.png"),32,32).setOffsets(15,15,15,15);
     protected T spaceBody;
     protected ElementGroupList groupList;
     protected IIcon travelIcon,searchIcon;
@@ -89,6 +92,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
             float multiply = 1f;
             GuiColor color = getSpaceBodyColor(spaceBody);
             drawElementName(spaceBody,color,multiply);
+            int iconsX = 0;
 
             if (canTravelTo(spaceBody, Minecraft.getMinecraft().thePlayer)) {
                 multiply = 0.5f;
@@ -99,6 +103,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
                 RenderUtils.applyColorWithMultipy(color, multiply);
                 ClientProxy.holoIcons.bindSheet();
                 RenderHelper.renderIcon(posX + sizeX - 32 + 6, posY + 5, 0, travelIcon, travelIcon.getIconWidth(), travelIcon.getIconHeight());
+                iconsX +=32;
             }
 
             if (canView(spaceBody,Minecraft.getMinecraft().thePlayer)) {
@@ -110,15 +115,41 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
                 RenderUtils.applyColorWithMultipy(color, multiply);
                 ClientProxy.holoIcons.bindSheet();
                 RenderHelper.renderIcon(posX + sizeX - 64 + searchIcon.getIconWidth() / 2, posY + searchIcon.getIconHeight() / 2, 0, searchIcon, searchIcon.getIconWidth(), searchIcon.getIconHeight());
+                iconsX+=32;
+            }
+
+            multiply = 0.8f;
+            List<IIcon> icons = getIcons(spaceBody);
+            if (icons != null) {
+                for (IIcon icon : icons) {
+                    GL11.glEnable(GL11.GL_BLEND);
+                    RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply);
+                    BG_CIRCLE.Render(posX + 128 + iconsX, posY, 32, 32);
+                    ClientProxy.holoIcons.bindSheet();
+                    RenderHelper.renderIcon(posX + iconsX + 128 + 16 - icon.getIconWidth() / 2, posY + 16 - icon.getIconHeight() / 2, 0, icon, icon.getIconWidth(), icon.getIconHeight());
+                    iconsX+=32;
+                }
             }
         }else
         {
             drawElementName(spaceBody,getSpaceBodyColor(spaceBody),0.3f);
-
+            int x = 0;
+            List<IIcon> icons = getIcons(spaceBody);
+            if (icons != null) {
+                for (IIcon icon : icons) {
+                    GL11.glEnable(GL11.GL_BLEND);
+                    RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), 0.3f);
+                    BG_CIRCLE.Render(posX + 128 + x, posY, 32, 32);
+                    ClientProxy.holoIcons.bindSheet();
+                    RenderHelper.renderIcon(posX + x + 128 + 16 - icon.getIconWidth() / 2, posY + 16 - icon.getIconHeight() / 2, 0, icon, icon.getIconWidth(), icon.getIconHeight());
+                    x += 32;
+                }
+            }
         }
     }
 
     protected abstract void drawElementName(T spaceBody,GuiColor color,float multiply);
+    protected abstract List<IIcon> getIcons(T spaceBody);
 
     @Override
     public boolean onMousePressed(int mouseX, int mouseY, int mouseButton) {

@@ -2,7 +2,7 @@ package matteroverdrive.network.packet.server.starmap;
 
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.network.packet.server.AbstractServerPacketHandler;
-import matteroverdrive.starmap.data.GalacticPosition;
+import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;

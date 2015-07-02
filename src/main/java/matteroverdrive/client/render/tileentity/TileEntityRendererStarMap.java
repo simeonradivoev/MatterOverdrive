@@ -1,10 +1,7 @@
 package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
-import matteroverdrive.client.render.tileentity.starmap.StarMapRenderGalaxy;
-import matteroverdrive.client.render.tileentity.starmap.StarMapRendererPlanet;
-import matteroverdrive.client.render.tileentity.starmap.StarMapRendererQuadrant;
-import matteroverdrive.client.render.tileentity.starmap.StarMapRendererStar;
+import matteroverdrive.client.render.tileentity.starmap.*;
 import matteroverdrive.container.ContainerStarMap;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.starmap.GalaxyClient;
@@ -32,11 +29,12 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
 
     public TileEntityRendererStarMap()
     {
-        renderers = new HashMap<Integer, List<ISpaceBodyHoloRenderer>>(4);
+        renderers = new HashMap(4);
         registerRenderer(0,new StarMapRenderGalaxy());
         registerRenderer(1,new StarMapRendererQuadrant());
         registerRenderer(2,new StarMapRendererStar());
         registerRenderer(3,new StarMapRendererPlanet());
+        registerRenderer(4,new StarMapRenderPlanetStats());
     }
 
     @Override
@@ -108,7 +106,7 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
     {
         if (!renderers.containsKey(level) || renderers.get(level) != null)
         {
-            renderers.put(level,new ArrayList<ISpaceBodyHoloRenderer>());
+            renderers.put(level,new ArrayList());
         }
 
         renderers.get(level).add(renderer);

@@ -1,6 +1,10 @@
-package matteroverdrive.starmap.data;
+package matteroverdrive.api.starmap;
 
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.starmap.data.Galaxy;
+import matteroverdrive.starmap.data.Planet;
+import matteroverdrive.starmap.data.Quadrant;
+import matteroverdrive.starmap.data.Star;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -141,14 +145,25 @@ public class GalacticPosition
     {
         return planetID;
     }
-    public int distanceTo(Galaxy galaxy,GalacticPosition position)
+    public int distanceToLY(Galaxy galaxy,GalacticPosition position)
     {
-        Star from = galaxy.getStar(this);
-        Star to = galaxy.getStar(position);
+        Star fromStar = galaxy.getStar(this);
+        Star toStar = galaxy.getStar(position);
 
-        if (from != null && to != null)
+        if (fromStar != null && toStar != null && fromStar != toStar)
         {
-            return (int)(from.getPosition().distanceTo(to.getPosition()) * Galaxy.GALAXY_SIZE_TO_LY);
+            return (int)(fromStar.getPosition().distanceTo(toStar.getPosition()) * Galaxy.GALAXY_SIZE_TO_LY);
+        }
+        return 0;
+    }
+    public int distanceToAU(Galaxy galaxy,GalacticPosition position)
+    {
+        Planet fromPlanet = galaxy.getPlanet(this);
+        Planet toPlanet = galaxy.getPlanet(position);
+
+        if (fromPlanet != null && toPlanet != null)
+        {
+            return (int)(Math.abs(fromPlanet.getOrbit() - toPlanet.getOrbit()) * Galaxy.PLANET_SYSTEM_SIZE_TO_AU);
         }
         return 0;
     }

@@ -2,6 +2,7 @@ package matteroverdrive.tile;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IBuildable;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.Inventory;
@@ -204,7 +205,7 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     {
         if (getPlanet() != null)
         {
-            return 3;
+            return 4;
         }else
         {
             return 2;

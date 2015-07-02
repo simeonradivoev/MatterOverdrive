@@ -43,6 +43,8 @@ item.forcefield_emitter.name=Force Field Emitter
 item.hc_battery.name=High Capacity Battery
 item.ship_factory.name=Ship Factory
 item.scout_ship.name=Scout Ship
+item.ship_colonizer.name=Colonizer Ship
+item.building_base.name=Base
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade
@@ -282,3 +284,4 @@ alert.not_android=Biological Entity Detected! Access Denied!
 alert.no_rights.brake=Only the owner can brake the $0
 alert.no_rights.dismantle=Only the owner can dismantle the $0
 alert.new_update=A new version is available!
+alert.starmap.ship_arrive=&3%1$s &rhas arrived at &3%2$s!

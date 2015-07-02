@@ -4,6 +4,7 @@ import cofh.lib.gui.GuiColor;
 import cofh.lib.render.RenderHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.starmap.data.SpaceBody;
@@ -59,7 +60,7 @@ public class StarMapRendererQuadrant extends StarMapRendererStars {
 
 
             DecimalFormat format = new DecimalFormat("#");
-            if (star.isClaimed(Minecraft.getMinecraft().thePlayer) >= 2) {
+            if (GalaxyClient.getInstance().canSeeStarInfo(star,Minecraft.getMinecraft().thePlayer)) {
                 RenderUtils.drawString(star.getName(), 0, -52, Reference.COLOR_HOLO, opacity);
             } else {
                 RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer, star.getName(), 0, -52, Reference.COLOR_HOLO, opacity);

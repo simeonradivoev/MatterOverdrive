@@ -21,7 +21,7 @@ public class PagePlanetStats extends ElementBaseGroup implements IListHandler
     {
         super(gui, posX, posY, width, height);
         this.starMap = starMap;
-        shipList = new ElementGroupList(gui,this,16,16,186,256);
+        shipList = new ElementGroupList(gui,this,16,16,width,256);
     }
 
     @Override

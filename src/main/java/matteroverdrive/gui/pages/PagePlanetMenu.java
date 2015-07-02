@@ -10,6 +10,7 @@ import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.starmap.ElementSlotBuilding;
 import matteroverdrive.gui.element.starmap.ElementSlotShip;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import net.minecraft.client.Minecraft;
@@ -76,11 +77,12 @@ public class PagePlanetMenu extends ElementBaseGroup {
             int width = getFontRenderer().getStringWidth(starMap.getPlanet().getName());
             glTranslated(sizeY / 2 + width / 2, 0, 0);
             glScaled(2, 2, 2);
-            if (starMap.getPlanet().isOwner(Minecraft.getMinecraft().thePlayer)) {
-                getFontRenderer().drawString(starMap.getPlanet().getName(), 0, 0, Planet.getGuiColor(starMap.getPlanet()).getColor());
+            if (GalaxyClient.getInstance().canSeePlanetInfo(starMap.getPlanet(),Minecraft.getMinecraft().thePlayer))
+            {
+                getFontRenderer().drawString(starMap.getPlanet().getName(), 12 - width/2, 0, Planet.getGuiColor(starMap.getPlanet()).getColor());
             }else
             {
-                Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(starMap.getPlanet().getName(), 0, 0, Planet.getGuiColor(starMap.getPlanet()).getColor());
+                Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(starMap.getPlanet().getName(), 12-width/2, 0, Planet.getGuiColor(starMap.getPlanet()).getColor());
             }
             glPopMatrix();
         }

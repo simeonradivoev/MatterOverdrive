@@ -3,20 +3,25 @@ package matteroverdrive.starmap.data;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IBuilding;
 import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.starmap.GalaxyGenerator;
 import matteroverdrive.starmap.gen.ISpaceBodyGen;
 import cpw.mods.fml.common.FMLLog;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +76,7 @@ public class Planet extends SpaceBody implements IInventory
             if (needsUpdate)
             {
                 needsUpdate = false;
-                MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdatePlanet(this),world);
+                MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdatePlanet(this), world);
             }
 
             for (int i = 0;i < SLOT_COUNT;i++)
@@ -118,9 +123,33 @@ public class Planet extends SpaceBody implements IInventory
         isDirty = false;
     }
 
-    public void onTravelEvent(ItemStack ship,GalacticPosition from)
+    public void onTravelEvent(ItemStack ship,GalacticPosition from,World world)
     {
+        if (!world.isRemote)
+        {
+            if (ship.getItem() instanceof IShip)
+            {
+                UUID ownerID = ((IShip) ship.getItem()).getOwnerID(ship);
+                if (ownerID != null)
+                {
+                    world.func_152378_a(ownerID).addChatMessage(
+                            new ChatComponentText(
+                                    EnumChatFormatting.GOLD + "["+Reference.MOD_NAME+"]" +
+                                    EnumChatFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.ship_arrive"),ship.getDisplayName(),name)
+                            )
+                    );
+                }
 
+                ((IShip) ship.getItem()).onTravel(ship,this);
+                if (ship.stackSize <= 0)
+                {
+                    removeShip(ship);
+                }
+
+                markDirty();
+                markForUpdate();
+            }
+        }
     }
     //endregion
 
@@ -237,6 +266,7 @@ public class Planet extends SpaceBody implements IInventory
     }
     public UUID getOwnerUUID(){return ownerUUID;}
     public void setOwner(EntityPlayer player){ownerUUID = EntityPlayer.func_146094_a(player.getGameProfile());}
+    public void setOwnerUUID(UUID ownerUUID){this.ownerUUID = ownerUUID;}
     public boolean hasOwner(){return ownerUUID != null;}
     public boolean isOwner(EntityPlayer player){if (hasOwner()) return getOwnerUUID().equals(EntityPlayer.func_146094_a(player.getGameProfile())); return false; }
     public void setHomeworld(boolean homeworld){this.homeworld = homeworld;}
@@ -260,7 +290,26 @@ public class Planet extends SpaceBody implements IInventory
     public void setGenerated(boolean generated){this.generated = generated;}
     public ItemStack getShip(int at){return fleet.get(at);}
     public void addShip(ItemStack ship){if (ship != null && ship.getItem() instanceof IShip) fleet.add(ship);}
+    public boolean canAddShip(ItemStack ship,@Nullable EntityPlayer player)
+    {
+        if (ship != null && ship.getItem() instanceof IShip)
+        {
+            if (player != null && hasOwner() && isHomeworld())
+            {
+                return isOwner(player);
+            }
+            else
+            {
+                if (fleetCount() < fleetSpaces) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public ItemStack removeShip(int at){if (at < fleet.size()) return fleet.remove(at); else return null;}
+    public boolean removeShip(ItemStack ship){return fleet.remove(ship);}
+    public void addBuilding(ItemStack building){this.buildings.add(building);}
     public int fleetCount(){return fleet.size();}
     public static GuiColor getGuiColor(Planet planet)
     {

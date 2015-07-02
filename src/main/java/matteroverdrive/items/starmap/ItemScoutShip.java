@@ -5,6 +5,8 @@ import matteroverdrive.starmap.data.Planet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import java.util.UUID;
+
 /**
  * Created by Simeon on 6/24/2015.
  */
@@ -27,5 +29,11 @@ public class ItemScoutShip extends ItemShipAbstract
     @Override
     public ShipType getType(ItemStack ship) {
         return ShipType.SCOUT;
+    }
+
+    @Override
+    public void onTravel(ItemStack stack, Planet to)
+    {
+
     }
 }

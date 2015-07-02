@@ -6,14 +6,17 @@ import matteroverdrive.client.render.tileentity.starmap.StarMapRendererStars;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
 import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.starmap.data.GalacticPosition;
+import matteroverdrive.starmap.GalaxyClient;
+import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.Star;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,53 +38,56 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
     @Override
     protected void drawElementName(Star star,GuiColor color,float multiply)
     {
-        if (Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode || star.isClaimed(Minecraft.getMinecraft().thePlayer) >= 2)
+        if (Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode || GalaxyClient.getInstance().canSeeStarInfo(star,Minecraft.getMinecraft().thePlayer))
         {
             RenderUtils.drawString(spaceBody.getName(), posX + 16, posY + 10, color, multiply);
         }else
         {
             RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer,spaceBody.getName(), posX + 16, posY + 10, color, multiply);
         }
+    }
 
+    @Override
+    protected List<IIcon> getIcons(Star star)
+    {
+        List<IIcon> icons = new ArrayList<>();
         boolean homeworldFlag = false;
         boolean fleetFlag = false;
-
+        boolean buildingsFlag = false;
         for (Planet planet : star.getPlanets())
         {
-            if (planet.isOwner(Minecraft.getMinecraft().thePlayer) && planet.isHomeworld())
+            if (planet.isOwner(Minecraft.getMinecraft().thePlayer))
             {
-                homeworldFlag = true;
+                if (planet.isHomeworld())
+                {
+                    homeworldFlag = true;
+                }
+                if (planet.getBuildings().size() > 0)
+                {
+                    buildingsFlag = true;
+                }
             }
             for (ItemStack ship : planet.getFleet())
             {
                 if (((IShip)ship.getItem()).isOwner(ship,Minecraft.getMinecraft().thePlayer))
                 {
                     fleetFlag = true;
-                    break;
                 }
             }
         }
-
         if (homeworldFlag)
         {
-            if (isSelected(star)) {
-                ClientProxy.holoIcons.renderIcon("home_icon", posX + sizeX + 4, posY + 8);
-            }else
-            {
-                ClientProxy.holoIcons.renderIcon("home_icon", posX + sizeX - 60, posY + 8);
-            }
+            icons.add(ClientProxy.holoIcons.getIcon("home_icon"));
         }
-
         if (fleetFlag)
         {
-            if (isSelected(star))
-            {
-                ClientProxy.holoIcons.renderIcon("icon_shuttle", posX + sizeX + 21, posY + 7);
-            }else
-            {
-                ClientProxy.holoIcons.renderIcon("icon_shuttle", posX + sizeX - 44, posY + 7);
-            }
+            icons.add(ClientProxy.holoIcons.getIcon("icon_shuttle"));
         }
+        if (buildingsFlag)
+        {
+            icons.add(ClientProxy.holoIcons.getIcon("factory"));
+        }
+        return icons;
     }
 
     @Override

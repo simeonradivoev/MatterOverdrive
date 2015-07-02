@@ -2,6 +2,7 @@ package matteroverdrive.starmap;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.Quadrant;
@@ -10,6 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -54,6 +56,36 @@ public class GalaxyClient
                 }
             }
         }
+    }
+
+    public boolean canSeePlanetInfo(Planet planet,EntityPlayer player)
+    {
+        if (planet.isOwner(player))
+        {
+            return true;
+        }
+
+        for (ItemStack shipStack : planet.getFleet())
+        {
+            if (((IShip)shipStack.getItem()).isOwner(shipStack,player))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean canSeeStarInfo(Star star,EntityPlayer player)
+    {
+        for (Planet planet : star.getPlanets())
+        {
+            if (canSeePlanetInfo(planet,player))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     //region Events

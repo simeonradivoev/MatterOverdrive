@@ -3,6 +3,7 @@ package matteroverdrive.starmap;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.starmap.data.Galaxy;
@@ -15,6 +16,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -52,14 +54,14 @@ public class GalaxyServer implements IConfigSubscriber
     {
         galaxyGenerator = new GalaxyGenerator();
         random = new Random();
-        homePlanets = new HashMap<UUID, Planet>();
+        homePlanets = new HashMap();
     }
     //endregion
 
     //region Saving and Creation
     public void createGalaxy(File file,World world)
     {
-        theGalaxy = galaxyGenerator.generateGalaxy("Galaxy",world.getWorldInfo().getVanillaDimension(),world.getWorldInfo().getSeed());
+        theGalaxy = galaxyGenerator.generateGalaxy("Galaxy",world.getWorldInfo().getVanillaDimension(),world.getWorldInfo().getSeed(),world);
         saveGalaxy(file);
     }
 
@@ -85,14 +87,14 @@ public class GalaxyServer implements IConfigSubscriber
     //endregion
 
     //region Loading
-    public boolean loadGalaxy(File file)
+    public boolean loadGalaxy(File file,World world)
     {
         if (file.exists() && file.isFile()) {
             try {
                 FileInputStream inputStream = new FileInputStream(file);
                 NBTTagCompound tagCompound = CompressedStreamTools.readCompressed(inputStream);
                 inputStream.close();
-                theGalaxy = new Galaxy();
+                theGalaxy = new Galaxy(world);
                 theGalaxy.readFromNBT(tagCompound,galaxyGenerator);
                 if (theGalaxy.getVersion() != GALAXY_VERSION)
                 {
@@ -146,11 +148,7 @@ public class GalaxyServer implements IConfigSubscriber
                         if (!isClaimed) {
                             int planetID = random.nextInt(star.getPlanets().size());
                             Planet planet = (Planet) star.getPlanets().toArray()[planetID];
-                            planet.setOwner(player);
-                            planet.setHomeworld(true);
-                            planet.setBuildingSpaces(8);
-                            planet.setFleetSpaces(10);
-                            planet.markDirty();
+                            buildHomeworld(planet,player);
                             return planet;
                         }
                     }
@@ -158,6 +156,17 @@ public class GalaxyServer implements IConfigSubscriber
             }
         }
         return null;
+    }
+
+    private void buildHomeworld(Planet planet,EntityPlayer player)
+    {
+        planet.setOwner(player);
+        planet.setHomeworld(true);
+        planet.setBuildingSpaces(8);
+        planet.setFleetSpaces(10);
+        planet.addBuilding(new ItemStack(MatterOverdriveItems.buildingBase));
+        planet.addShip(new ItemStack(MatterOverdriveItems.scoutShip));
+        planet.markDirty();
     }
 
     private boolean tryAndClaimPlanet(EntityPlayer player)
@@ -197,7 +206,7 @@ public class GalaxyServer implements IConfigSubscriber
             world = load.world;
             File galaxyFile = getGalaxyFile(load.world);
             long start = System.nanoTime();
-            if (!loadGalaxy(galaxyFile)) {
+            if (!loadGalaxy(galaxyFile,load.world)) {
                 createGalaxy(galaxyFile, load.world);
                 MOLog.log(Level.INFO, "Galaxy Generated and saved to '%1$s'. Took %2$s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
             }else
@@ -216,8 +225,10 @@ public class GalaxyServer implements IConfigSubscriber
             {
                 long start = System.nanoTime();
                 File galaxyFile = getGalaxyFile(save.world);
-                saveGalaxy(galaxyFile);
-                MOLog.log(Level.INFO,"Galaxy saved to '%s'. Took %s milliseconds",galaxyFile.getPath(),((System.nanoTime() - start) / 1000000));
+                if (saveGalaxy(galaxyFile)) {
+                    theGalaxy.onSave(galaxyFile,save.world);
+                    MOLog.log(Level.INFO, "Galaxy saved to '%s'. Took %s milliseconds", galaxyFile.getPath(), ((System.nanoTime() - start) / 1000000));
+                }
             }
         }
     }

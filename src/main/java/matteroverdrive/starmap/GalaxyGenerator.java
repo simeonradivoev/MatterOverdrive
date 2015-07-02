@@ -13,6 +13,7 @@ import matteroverdrive.starmap.gen.PlanetNormalGen;
 import matteroverdrive.starmap.gen.StarGen;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +54,9 @@ public class GalaxyGenerator implements IConfigSubscriber
     //endregion
 
     //region Single Generation
-    public Galaxy generateGalaxy(String name,int id,long seed)
+    public Galaxy generateGalaxy(String name,int id,long seed,World world)
     {
-        Galaxy galaxy = new Galaxy(name,id,seed);
+        Galaxy galaxy = new Galaxy(name,id,seed,world);
         random.setSeed(seed);
         generateQuadrants(galaxy, quadrantCount);
         return galaxy;

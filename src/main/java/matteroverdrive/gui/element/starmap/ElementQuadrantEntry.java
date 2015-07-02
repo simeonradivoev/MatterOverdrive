@@ -4,10 +4,11 @@ import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
-import matteroverdrive.starmap.data.GalacticPosition;
+import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IIcon;
 
 import java.util.List;
 
@@ -24,6 +25,11 @@ public class ElementQuadrantEntry extends ElementAbstractStarMapEntry<Quadrant>
     protected void drawElementName(Quadrant quadrant, GuiColor color, float multiply)
     {
         RenderUtils.drawString(spaceBody.getName(), posX + 16, posY + 10, color, multiply);
+    }
+
+    @Override
+    protected List<IIcon> getIcons(Quadrant spaceBody) {
+        return null;
     }
 
     public void addTooltip(List<String> list)

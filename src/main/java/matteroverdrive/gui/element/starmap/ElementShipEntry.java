@@ -6,13 +6,17 @@ import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
-import matteroverdrive.starmap.data.GalacticPosition;
+import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.TravelEvent;
+import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 6/28/2015.
@@ -33,7 +37,21 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     protected void drawElementName(Planet planet, GuiColor color, float multiply)
     {
         RenderUtils.renderStack(posX + 10, posY + sizeY / 2 - 8, ship);
-        RenderUtils.drawString(Minecraft.getMinecraft().fontRenderer,ship.getDisplayName(),posX + 31,posY + 12,color,multiply);
+        RenderUtils.drawString(Minecraft.getMinecraft().fontRenderer, ship.getDisplayName(), posX + 31, posY + 12, color, multiply);
+
+        for (TravelEvent travelEvent : GalaxyClient.getInstance().getTheGalaxy().getTravelEvents())
+        {
+            if (travelEvent.getFrom().equals(new GalacticPosition(planet)) && travelEvent.getShipID() == shipId) {
+                long time = travelEvent.getTimeRemainning(Minecraft.getMinecraft().theWorld);
+                RenderUtils.drawString(String.format("%s until arrival.",MOStringHelper.formatRemainingTime(time / 20)) ,posX + 128,posY + 12,color,multiply);
+            }
+        }
+    }
+
+    @Override
+    protected List<IIcon> getIcons(Planet spaceBody)
+    {
+        return null;
     }
 
     @Override
@@ -52,7 +70,12 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
                 return false;
             }
         }
-        return true;
+
+        Planet to = GalaxyClient.getInstance().getTheGalaxy().getPlanet(((GuiStarMap)gui).getMachine().getDestination());
+        if (to != null && to != planet) {
+            return to.canAddShip(ship, player);
+        }
+        return false;
     }
 
     @Override
@@ -68,7 +91,12 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     @Override
     protected GuiColor getSpaceBodyColor(Planet planet)
     {
-        return Reference.COLOR_HOLO;
+        if (canView(planet,Minecraft.getMinecraft().thePlayer)) {
+            return Reference.COLOR_HOLO;
+        }else
+        {
+            return Reference.COLOR_HOLO_RED;
+        }
     }
 
     @Override

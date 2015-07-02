@@ -5,13 +5,16 @@ import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
 import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.starmap.data.GalacticPosition;
+import matteroverdrive.starmap.GalaxyClient;
+import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,41 +29,36 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
     @Override
     protected void drawElementName(Planet planet, GuiColor color, float multiply)
     {
-        if (Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode || planet.isOwner(Minecraft.getMinecraft().thePlayer))
+        if (Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode || GalaxyClient.getInstance().canSeePlanetInfo(planet, Minecraft.getMinecraft().thePlayer))
             RenderUtils.drawString(spaceBody.getName(), posX + 16, posY + 10, color, multiply);
         else
             RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer,spaceBody.getName(),posX + 16,posY + 10,color,multiply);
+    }
 
-        if (planet.isOwner(Minecraft.getMinecraft().thePlayer) && planet.isHomeworld())
+    @Override
+    protected List<IIcon> getIcons(Planet planet)
+    {
+        List<IIcon> icons = new ArrayList<>();
+        if (planet.isOwner(Minecraft.getMinecraft().thePlayer))
         {
-            if (isSelected(planet))
+            if (planet.isHomeworld())
             {
-                ClientProxy.holoIcons.renderIcon("home_icon", posX + sizeX + 4, posY + 8);
-            }else
+                icons.add(ClientProxy.holoIcons.getIcon("home_icon"));
+            }
+            if (planet.getBuildings().size() > 0)
             {
-                ClientProxy.holoIcons.renderIcon("home_icon", posX + sizeX - 60, posY + 8);
+                icons.add(ClientProxy.holoIcons.getIcon("factory"));
             }
         }
-
-        boolean fleetFlag = false;
         for (ItemStack ship : planet.getFleet())
         {
             if (((IShip)ship.getItem()).isOwner(ship,Minecraft.getMinecraft().thePlayer))
             {
-                fleetFlag = true;
+                icons.add(ClientProxy.holoIcons.getIcon("icon_shuttle"));
                 break;
             }
         }
-        if (fleetFlag)
-        {
-            if (isSelected(planet))
-            {
-                ClientProxy.holoIcons.renderIcon("icon_shuttle", posX + sizeX + 21, posY + 7);
-            }else
-            {
-                ClientProxy.holoIcons.renderIcon("icon_shuttle", posX + sizeX - 44, posY + 7);
-            }
-        }
+        return icons;
     }
 
     @Override

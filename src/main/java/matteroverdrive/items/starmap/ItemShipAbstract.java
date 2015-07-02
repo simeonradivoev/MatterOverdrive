@@ -68,6 +68,21 @@ public abstract class ItemShipAbstract extends MOBaseItem implements IShip
     }
 
     @Override
+    public UUID getOwnerID(ItemStack stack)
+    {
+        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Owner",8))
+        {
+            try {
+                return UUID.fromString(stack.getTagCompound().getString("Owner"));
+            }catch (Exception e)
+            {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void setOwner(ItemStack ship, UUID playerId)
     {
         if (!ship.hasTagCompound())

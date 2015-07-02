@@ -1,6 +1,8 @@
 package matteroverdrive.starmap.data;
 
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.api.starmap.GalacticPosition;
+import matteroverdrive.starmap.GalaxyServer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -32,15 +34,22 @@ public class TravelEvent
         readFromBuffer(buf);
     }
 
-    public TravelEvent(World world,GalacticPosition from,GalacticPosition to,int shipID,int timeLength)
+    public TravelEvent(World world,GalacticPosition from,GalacticPosition to,int shipID,Galaxy galaxy)
     {
         timeStart = world.getTotalWorldTime();
         this.from = from;
         this.to = to;
         this.shipID = shipID;
-        this.timeLength = timeLength;
+        calculateTravelTime(galaxy,from,to);
     }
     //endregion
+
+    private void calculateTravelTime(Galaxy galaxy,GalacticPosition from,GalacticPosition to)
+    {
+        this.timeLength = (int)(from.distanceToLY(galaxy,to) * Galaxy.LY_TO_TICKS);
+        if (this.timeLength == 0)
+            this.timeLength = (int)(from.distanceToAU(galaxy, to) * Galaxy.AU_TO_TICKS);
+    }
 
     //region Read - Write
     public void writeToNBT(NBTTagCompound tagCompound)

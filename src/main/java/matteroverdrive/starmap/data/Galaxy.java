@@ -1,6 +1,8 @@
 package matteroverdrive.starmap.data;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.starmap.GalacticPosition;
+import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
 import matteroverdrive.starmap.GalaxyGenerator;
 import io.netty.buffer.ByteBuf;
@@ -19,8 +21,10 @@ import java.util.*;
 public class Galaxy extends SpaceBody
 {
     //region Static Vars
-    public static float GALAXY_SIZE_TO_LY = 8000;
-    public static float LY_TO_TICKS = 5;
+    public static final float GALAXY_SIZE_TO_LY = 8000;
+    public static final float LY_TO_TICKS = 8;
+    public static final float AU_TO_TICKS = 10;
+    public static final float PLANET_SYSTEM_SIZE_TO_AU = 100;
     //endregion
     //region Private Vars
     private long seed;
@@ -32,17 +36,19 @@ public class Galaxy extends SpaceBody
     //endregion
 
     //region Constructors
-    public Galaxy()
+    public Galaxy(World world)
     {
         super();
         init();
+        this.world = world;
     }
 
-    public Galaxy(String name,int id,long seed)
+    public Galaxy(String name,int id,long seed,World world)
     {
         super(name, id);
         init();
         setSeed(seed);
+        this.world = world;
     }
     //endregion
 
@@ -93,7 +99,7 @@ public class Galaxy extends SpaceBody
                                 to.addShip(ship);
                                 from.markDirty();
                                 to.markDirty();
-                                to.onTravelEvent(ship,travelEvent.getFrom());
+                                to.onTravelEvent(ship,travelEvent.getFrom(),world);
                                 MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdateTravelEvents(this), world);
                             }
                         }
@@ -305,7 +311,6 @@ public class Galaxy extends SpaceBody
         }
         return count;
     }
-
     public boolean addTravelEvent(TravelEvent travelEvent)
     {
         for (TravelEvent event : travelEvents)
@@ -317,6 +322,24 @@ public class Galaxy extends SpaceBody
         }
         travelEvents.add(travelEvent);
         return true;
+    }
+    public boolean canCompleteTravelEvent(TravelEvent travelEvent)
+    {
+        if (travelEvent.getTo() != null) {
+            Planet to = getPlanet(travelEvent.getTo());
+            ItemStack shipStack = travelEvent.getShip(this);
+            if (shipStack != null && to != null)
+            {
+                EntityPlayer owner = null;
+                UUID ownerID = ((IShip)shipStack.getItem()).getOwnerID(shipStack);
+                if (ownerID != null)
+                {
+                    owner = world.func_152378_a(ownerID);
+                }
+                return to.canAddShip(shipStack,owner);
+            }
+        }
+        return false;
     }
     public List<TravelEvent> getTravelEvents(){return travelEvents;}
     public void setTravelEvents(List<TravelEvent> travelEvents){this.travelEvents = travelEvents;}

@@ -2,6 +2,8 @@ package matteroverdrive.init;
 
 import matteroverdrive.Reference;
 import matteroverdrive.handler.MatterRegistry;
+import matteroverdrive.items.starmap.ItemBuildingBase;
+import matteroverdrive.items.starmap.ItemColonizerShip;
 import matteroverdrive.items.starmap.ItemScoutShip;
 import matteroverdrive.items.starmap.ShipFactory;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -54,6 +56,8 @@ public class MatterOverdriveItems
     public static MOBaseItem forceFieldEmitter;
     public static ShipFactory shipFactory;
     public static ItemScoutShip scoutShip;
+    public static ItemColonizerShip colonizerShip;
+    public static ItemBuildingBase buildingBase;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -88,6 +92,8 @@ public class MatterOverdriveItems
         forceFieldEmitter = new MOBaseItem("forcefield_emitter");
         shipFactory = new ShipFactory("ship_factory");
         scoutShip = new ItemScoutShip("scout_ship");
+        colonizerShip = new ItemColonizerShip("ship_colonizer");
+        buildingBase = new ItemBuildingBase("building_base");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -127,6 +133,8 @@ public class MatterOverdriveItems
         hc_battery.register();
         shipFactory.register();
         scoutShip.register();
+        colonizerShip.register();
+        buildingBase.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust),new ItemStack(tritanium_ingot),5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_ingot),10);
