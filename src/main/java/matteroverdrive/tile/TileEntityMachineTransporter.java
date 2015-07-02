@@ -1,6 +1,10 @@
 package matteroverdrive.tile;
 
 import cofh.lib.util.helpers.MathHelper;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.peripheral.IPeripheral;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
@@ -35,7 +39,7 @@ import java.util.List;
 /**
  * Created by Simeon on 5/3/2015.
  */
-public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements IMatterConnection, ITransportList, IWailaBodyProvider
+public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements IMatterConnection, ITransportList, IWailaBodyProvider, IPeripheral
 {
     public static final int MAX_ENTETIES_PRE_TRANSPORT = 3;
     public static final int TRANSPORT_TIME = 70;
@@ -381,4 +385,64 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 		return currenttip;
 	}
+
+
+//	ComputerCraft
+	@Override
+	public String getType() {
+		return "MatterOverdrive_Transporter";
+	}
+
+	@Override
+	public String[] getMethodNames() {
+		return new String[]{"getLocations", "getActiveLocation", "setLocation", "setActiveLocation"};
+	}
+
+	@Override
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+		switch (method) {
+			case 0: // getLocations
+				return handleGetLocations(computer, context, arguments);
+			case 1: // getActiveLocation
+				return handleGetActiveLocation(computer, context, arguments);
+			case 2: // setLocation
+				return handleSetLocation(computer, context, arguments);
+			case 3: // setActiveLocation
+				return handleSetActiveLocation(computer, context, arguments);
+			default:
+				throw new RuntimeException(getMethodNames()[method] + " is not a valid method");
+		}
+	}
+
+	@Override
+	public void attach(IComputerAccess computer) {
+
+	}
+
+	@Override
+	public void detach(IComputerAccess computer) {
+
+	}
+
+	@Override
+	public boolean equals(IPeripheral other) { // Does this mean if it's the same type or if they're the same one?
+		return false; // TODO: Implement
+	}
+
+	public Object[] handleGetLocations(IComputerAccess computer, ILuaContext context, Object[] arguments) {
+		return null;
+	}
+
+	public Object[] handleGetActiveLocation(IComputerAccess computer, ILuaContext context, Object[] arguments) {
+		return null;
+	}
+
+	public Object[] handleSetLocation(IComputerAccess computer, ILuaContext context, Object[] arguments) {
+		return null;
+	}
+
+	public Object[] handleSetActiveLocation(IComputerAccess computer, ILuaContext context, Object[] arguments) {
+		return null;
+	}
+
 }
