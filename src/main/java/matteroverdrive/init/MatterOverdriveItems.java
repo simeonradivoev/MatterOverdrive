@@ -2,6 +2,8 @@ package matteroverdrive.init;
 
 import matteroverdrive.Reference;
 import matteroverdrive.handler.MatterRegistry;
+import matteroverdrive.items.food.EarlGrayTea;
+import matteroverdrive.items.food.RomulanAle;
 import matteroverdrive.items.starmap.ItemBuildingBase;
 import matteroverdrive.items.starmap.ItemColonizerShip;
 import matteroverdrive.items.starmap.ItemScoutShip;
@@ -29,6 +31,7 @@ public class MatterOverdriveItems
 	public static MOBaseItem matter_scanner;
 	public static ItemFood emergency_ration;
     public static EarlGrayTea earl_gray_tea;
+    public static RomulanAle romulan_ale;
 	public static MOBaseItem me_conversion_matrix;
 	public static Phaser phaser;
 	public static MOBaseItem battery;
@@ -71,6 +74,7 @@ public class MatterOverdriveItems
 		emergency_ration = new ItemFood(8,0.8F,false);
 		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive).setTextureName(Reference.MOD_ID + ":" + "emergency_ration");
         earl_gray_tea = new EarlGrayTea("earl_gray_tea");
+		romulan_ale = new RomulanAle("romulan_ale");
 		me_conversion_matrix = new MOBaseItem("me_conversion_matrix");
         isolinear_circuit = new IsolinearCircuit("isolinear_circuit");
         item_upgrade = new ItemUpgrade("upgrade");
@@ -125,6 +129,7 @@ public class MatterOverdriveItems
         weapon_module_color.register();
         weapon_module_barrel.register();
         earl_gray_tea.Register();
+		romulan_ale.register();
         security_protocol.register();
         spacetime_equalizer.Register();
         wrench.register();
@@ -136,7 +141,7 @@ public class MatterOverdriveItems
         colonizerShip.register();
         buildingBase.register();
 
-        GameRegistry.addSmelting(new ItemStack(tritanium_dust),new ItemStack(tritanium_ingot),5);
+        GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_ingot),10);
 
 		GameRegistry.addRecipe(new ItemStack(battery), new Object[]{" R ", "TGT", "TDT", 'T', tritanium_ingot, 'D', MatterOverdriveItems.dilithium_ctystal, 'R', Items.redstone, 'G', Items.gold_ingot});
@@ -155,15 +160,17 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new ItemStack(spacetime_equalizer),new Object[]{" M ","EHE", " M ",'M',s_magnet,'E',Items.ender_pearl,'H',h_compensator});
         GameRegistry.addRecipe(new ItemStack(forceFieldEmitter),new Object[]{"CDC","CDC","PCP",'P',tritanium_plate,'E',Items.ender_pearl,'D',dilithium_ctystal,'2',new ItemStack(isolinear_circuit,1,1),'C',s_magnet});
 
-        MatterRegistry.register(emergency_ration,3);
-        MatterRegistry.register(earl_gray_tea,2);
+        MatterRegistry.register(emergency_ration, 3);
+        MatterRegistry.register(earl_gray_tea, 2);
+		MatterRegistry.register(romulan_ale, 2);
 	}
 
     public static void addToDungons()
     {
         weapon_module_color.addToDunguns();
         addToDungons(emergency_ration, 1, 8, 6);
-        addToDungons(earl_gray_tea,1,2,2);
+        addToDungons(earl_gray_tea, 1, 2, 2);
+        addToDungons(romulan_ale, 1, 2, 2);
     }
 
     private static void addToDungons(Item item,int min,int max,int chance)

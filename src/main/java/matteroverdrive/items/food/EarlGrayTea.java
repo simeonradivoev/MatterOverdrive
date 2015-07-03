@@ -1,4 +1,4 @@
-package matteroverdrive.items;
+package matteroverdrive.items.food;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;

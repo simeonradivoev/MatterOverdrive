@@ -23,6 +23,7 @@ item.tritanium_dust.name=Tritanium Dust
 item.pattern_drive.name=Pattern Drive
 item.pattern_drive.details=Stores 2 Item Patterns
 item.earl_gray_tea.name=Tea. Earl Grey. Hot.
+item.romulan_ale.name=Romulan Ale
 item.security_protocol.empty.name=Security Protocol
 item.security_protocol.claim.name=Security Protocol [Claim]
 item.security_protocol.claim.description=Claims Machines
