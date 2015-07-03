@@ -46,7 +46,7 @@ public class PacketUpdateGalaxy extends PacketAbstract {
         @Override
         public IMessage handleClientMessage(EntityPlayer player, PacketUpdateGalaxy message, MessageContext ctx)
         {
-            message.galaxy.setWorld(Minecraft.getMinecraft().theWorld);
+            message.galaxy.setWorld(player.worldObj);
             GalaxyClient.getInstance().setTheGalaxy(message.galaxy);
             GalaxyClient.getInstance().loadClaimedPlanets();
             return null;
