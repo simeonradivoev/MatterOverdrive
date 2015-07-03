@@ -3,6 +3,7 @@ package matteroverdrive.proxy;
 import cpw.mods.fml.client.FMLClientHandler;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.HoloIcons;
+import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.TooltipHandler;
@@ -59,9 +60,15 @@ public class ClientProxy extends CommonProxy
     }
 
     @Override
+    public void registerCompatModules()
+    {
+        super.registerCompatModules();
+        MatterOverdriveCompat.registerClientModules();
+    }
+
+    @Override
     public EntityPlayer getPlayerEntity(MessageContext ctx)
     {
         return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : super.getPlayerEntity(ctx));
     }
-
 }

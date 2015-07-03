@@ -25,16 +25,23 @@ public class MatterOverdriveCompat {
 
 	private static ArrayList<Class> modules = new ArrayList<Class>();
 
-//	Add additional modules here
-	static {
+	//	Add additional modules that need to run on the Server and/or Client here
+	public static void registerModules()
+	{
 		register(CompatThermalExpansion.class);
 		register(CompatExNihilo.class);
-		register(CompatEnderIO.class);
 		register(CompatWaila.class);
+		register(CompatEnderIO.class);
+	}
+
+	//Add additional modules that need to run ONLY on the Client
+	public static void registerClientModules()
+	{
 		register(CompatNEI.class);
 	}
 
-	private static boolean register(Class clazz) {
+	private static boolean register(Class clazz)
+	{
 		if (clazz.isAnnotationPresent(Compat.class)) {
 			Compat annotation = (Compat)clazz.getAnnotation(Compat.class);
 			if (Loader.isModLoaded(annotation.value())) {

@@ -1,6 +1,7 @@
 package matteroverdrive.proxy;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.starmap.GalaxyServer;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -17,6 +18,11 @@ public class CommonProxy
         MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance());
         MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance().getGalaxyGenerator());
 	}
+
+    public void registerCompatModules()
+    {
+        MatterOverdriveCompat.registerModules();
+    }
 
     public void registerBlockIcons(IIconRegister register)
     {

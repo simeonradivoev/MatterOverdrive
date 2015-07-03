@@ -80,6 +80,7 @@ public class MatterOverdrive
 		MatterOverdriveMatter.registerBasic(configHandler);
 		UpdateTabs();
 
+		proxy.registerCompatModules();
 		MatterOverdriveCompat.preInit(event);
 	}
 	
