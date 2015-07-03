@@ -73,11 +73,6 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     {
         super.updateElementInformation();
 
-        for (int i = 0; i < pageButtons.size();i++)
-        {
-            pageButtons.get(i).setPosition(6,8 + (pageButtons.get(i).getHeight() + 2) * i);
-        }
-
         if (machine.isActive())
         {
             indicator.setIndication(1);

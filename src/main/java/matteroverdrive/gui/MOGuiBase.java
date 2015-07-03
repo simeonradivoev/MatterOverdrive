@@ -172,6 +172,11 @@ public abstract class MOGuiBase extends GuiBase implements IButtonHandler,ITextH
 
     protected void updateElementInformation()
     {
+        for (int i = 0; i < pageButtons.size();i++)
+        {
+            pageButtons.get(i).setPosition(6,8 + (pageButtons.get(i).getHeight() + 2) * i);
+        }
+
         for (int i = elements.size(); i-- > 0;)
         {
             if (elements.get(i) instanceof MOElementBase)

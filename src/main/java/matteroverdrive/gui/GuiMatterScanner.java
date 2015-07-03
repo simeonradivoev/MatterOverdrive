@@ -41,14 +41,10 @@ public class GuiMatterScanner extends MOGuiBase
 	{
 		super(new ContainerMatterScanner(),300,230);
 		this.scanner = scanner;
+		registerPages(this, scanner);
 		refreshTimeTracker = new TimeTracker();
 		this.databaseSlot = slot;
 		lastPage = MatterScanner.getLastPage(scanner);
-
-		pageScanInfo = new PageScanInfo(this,0,0,"Scan Info",null,scanner);
-		updateSelected(scanner);
-		pageScanInfo.setSize(this.xSize, this.ySize);
-
 
 		MatterOverdrive.packetPipeline.sendToServer(new PacketMatterScannerGetDatabase(MatterScanner.getLinkPosition(scanner)));
 	}
@@ -66,18 +62,18 @@ public class GuiMatterScanner extends MOGuiBase
 			//SetSelected(null);
 
         updateSelected(scanner);
-
-		this.sidePannel.addElement(scanPageButton);
-		this.sidePannel.addElement(infoPageButton);
 	}
 
-    @Override
-    public void registerPages(MOBaseContainer container)
-    {
-        pageInfo = new PageInfo(this,0,0,xSize,ySize,"Info Database");
-        AddPage(pageScanInfo, ClientProxy.holoIcons.getIcon("page_icon_info"), MOStringHelper.translateToLocal("gui.tooltip.page.scan_info"));
-        AddPage(pageInfo,ClientProxy.holoIcons.getIcon("page_icon_search"),MOStringHelper.translateToLocal("gui.tooltip.page.info_database"));
-    }
+	private void registerPages(GuiMatterScanner gui,ItemStack matterScanner)
+	{
+		pageScanInfo = new PageScanInfo(this,0,0,"Scan Info",null,scanner);
+		updateSelected(scanner);
+		pageScanInfo.setSize(this.xSize, this.ySize);
+		pageInfo = new PageInfo(this,0,0,xSize,ySize,"Info Database");
+
+		AddPage(pageScanInfo, ClientProxy.holoIcons.getIcon("page_icon_info"), MOStringHelper.translateToLocal("gui.tooltip.page.scan_info"));
+		AddPage(pageInfo,ClientProxy.holoIcons.getIcon("page_icon_search"),MOStringHelper.translateToLocal("gui.tooltip.page.info_database"));
+	}
 
 	@Override
 	protected void updateElementInformation()

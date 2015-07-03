@@ -38,12 +38,14 @@ public class RenderUtils
 	public static void renderStack(int x, int y, ItemStack stack) {
 		if (stack != null && stack.getItem() != null) {
 			glColor3f(1, 1, 1);
-			glDisable(GL_CULL_FACE);
+			//glDisable(GL_CULL_FACE);
 			glDepthMask(true);
-			RenderHelper.enableGUIStandardItemLighting();
+			//RenderHelper.enableGUIStandardItemLighting();
+			glEnable(GL_LIGHTING);
 			renderItem.renderItemIntoGUI(fontRenderer, textureManager, stack, x, y);
-			RenderHelper.disableStandardItemLighting();
-			glEnable(GL_CULL_FACE);
+			glDisable(GL_LIGHTING);
+			//RenderHelper.disableStandardItemLighting();
+			//glEnable(GL_CULL_FACE);
 		}
 	}
 

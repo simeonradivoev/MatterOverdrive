@@ -32,6 +32,7 @@ public class MOElementIconButton extends MOElementButton
     {
         if (icon != null)
         {
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
             ClientProxy.holoIcons.bindSheet();
             if (iconColor != null)
                 RenderUtils.applyColor(iconColor);
