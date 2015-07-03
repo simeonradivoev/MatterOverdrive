@@ -6,7 +6,7 @@ public class Reference
 {
 	public static final String MOD_ID = "mo";
 	public static final String MOD_NAME = "Matter Overdrive";
-	public static final String VERSION = "0.3.5";
+	public static final String VERSION = "0.4.0-RC1";
 	public static final String GUI_FACTORY_CLASS = "GuiConfigFactory";
 	public static final String DEPEDNENCIES = "after:ThermalExpansion;after:exnihilo;after:EnderIO;";
 	public static final String CLIENT_PROXY_CLASS = "matteroverdrive.proxy.ClientProxy";
