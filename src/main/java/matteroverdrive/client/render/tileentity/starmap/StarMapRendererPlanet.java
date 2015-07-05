@@ -16,6 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.text.DecimalFormat;
 
@@ -35,7 +36,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
 
             Planet planet = (Planet)spaceBody;
             glPushMatrix();
-            renderPlanet(planet,viewerDistance);
+            renderPlanet(planet, viewerDistance);
             glPopMatrix();
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -45,6 +46,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
 
     protected void renderPlanet(Planet planet,float viewerDistance)
     {
+        glPushMatrix();
         float size = getClampedSize(planet);
         glRotated(10, 1, 0, 0);
 
@@ -52,6 +54,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
         glPolygonMode(GL_FRONT, GL_LINE);
 
         glEnable(GL_CULL_FACE);
+        //region Sphere rotated
         glPushMatrix();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDisable(GL_TEXTURE_2D);
@@ -60,6 +63,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
         sphere.draw(size * 0.99f, 64, 32);
         glDepthMask(false);
 
+        //region Planet
         glPushMatrix();
         glRotated(90, 1, 0, 0);
 
@@ -67,16 +71,22 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         sphere.draw(size, 64, 32);
         glPopMatrix();
+        //endregion
 
-        drawBuildings(planet,size,viewerDistance);
-        drawShips(planet,size,viewerDistance);
+        drawBuildings(planet, size, viewerDistance);
         glPopMatrix();
+        //endregion
+
         glDisable(GL_CULL_FACE);
-
         glPopMatrix();
 
-        glPushMatrix();
         drawPlanetInfoClose(planet);
+
+        //region draw Ships
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glEnable(GL_TEXTURE_2D);
+        drawShips(planet, size, viewerDistance);
+        //endregion
     }
 
     protected float getClampedSize(Planet planet)
@@ -105,20 +115,48 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
         for (int i = 0; i < planet.getFleet().size();i++)
         {
             glPushMatrix();
-            double startingAngle = random.nextDouble() * 320;
             double direction = random.nextDouble() * 2 - 1;
-            double radius = random.nextDouble() * 0.3 + 0.1;
-            glRotated(random.nextDouble() * 360, 0, 0, 1);
-            glRotated(startingAngle + Math.copySign(Minecraft.getMinecraft().theWorld.getWorldTime() * 0.2, direction), 0, 1, 0);
-            glTranslated(planetSize + radius, 0, 0);
-            glRotated(90, 0, -Math.copySign(1, direction), 0);
-            RenderUtils.drawShip(0, 0, 0, 0.03);
+            double startingAngle = random.nextDouble() * Math.PI*2;
+            double phi = startingAngle + Math.copySign(Minecraft.getMinecraft().theWorld.getWorldTime() * 0.005, direction);
+            double theta = random.nextDouble() * Math.PI * 2;
+            double radius = random.nextDouble() * 0.3 + 0.1  + planetSize;
+            Vector3f pos = new Vector3f((float)(Math.sin(phi) * Math.sin(theta) * radius),(float)(Math.sin(phi) * Math.cos(theta) * radius),(float)(Math.cos(phi) * radius));
+            renderShipPath(planet,planet.getShip(i),phi,theta,direction,radius);
+            glTranslatef(pos.x,pos.y,pos.z);
+            glPushMatrix();
+            glScaled(0.01, 0.01, 0.01);
+            glRotated(Minecraft.getMinecraft().renderViewEntity.rotationYaw, 0, -1, 0);
+            glRotated(Minecraft.getMinecraft().renderViewEntity.rotationPitch, 1, 0, 0);
+            glRotated(180,0,0,1);
+            glTranslated(-8, -8, 0);
+            RenderUtils.renderStack(0, 0, planet.getShip(i));
+            glPopMatrix();
+
             glPopMatrix();
         }
     }
 
+    protected void renderShipPath(Planet planet,ItemStack shipStack,double phi,double theta,double direction,double radius)
+    {
+        glDisable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+        RenderUtils.applyColorWithMultipy(getPlanetColor(planet), 0.2f);
+        glBegin(GL_LINE_STRIP);
+        for (int p = 0;p < 8;p++)
+        {
+            double newPhi = phi - Math.copySign(0.1 * p ,direction);
+            Vector3f pathPos = new Vector3f((float)(Math.sin(newPhi) * Math.sin(theta) * radius),(float)(Math.sin(newPhi) * Math.cos(theta) * radius),(float)(Math.cos(newPhi) * radius));
+            glVertex3f(pathPos.x, pathPos.y, pathPos.z);
+        }
+        glEnd();
+        glEnable(GL_TEXTURE_2D);
+
+    }
+
     protected void drawPlanetInfoClose(Planet planet)
     {
+        glPushMatrix();
         RenderUtils.rotateTo(Minecraft.getMinecraft().renderViewEntity);
         glEnable(GL_TEXTURE_2D);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -141,6 +179,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
             }
             glPopMatrix();
         }
+        glPopMatrix();
     }
 
     @Override

@@ -11,6 +11,9 @@ import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -28,10 +31,14 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
 
             if (from != null && from != to) {
                 glPushMatrix();
-                glRotated(Minecraft.getMinecraft().renderViewEntity.rotationYaw, 0, -1, 0);
+                Matrix4f rotationMat = new Matrix4f();
+                rotationMat.rotate(Minecraft.getMinecraft().renderViewEntity.rotationYaw * (float) (Math.PI / 180D), new Vector3f(0, -1, 0));
+                //glRotated(Minecraft.getMinecraft().renderViewEntity.rotationYaw, 0, -1, 0);
                 glEnable(GL_BLEND);
                 glPushMatrix();
-                glTranslated((getClampedSize(to) + 0.25), 0, 0);
+                Vector4f pos = new Vector4f((float)(getClampedSize(to) + 0.25),0,0,1);
+                Matrix4f.transform(rotationMat, pos, pos);
+                glTranslated(pos.x, pos.y, pos.z);
                 renderPlanet(from, viewerDistance);
                 glPopMatrix();
 
@@ -39,6 +46,7 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
                 glEnable(GL_TEXTURE_2D);
                 glEnable(GL_ALPHA_TEST);
+                RenderUtils.rotateTo(Minecraft.getMinecraft().renderViewEntity);
                 glScaled(0.01, 0.01, 0.01);
                 glRotated(180, 0, 0, 1);
                 glTranslated(-9, -9, 0);
@@ -48,7 +56,9 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE);
                 glPushMatrix();
-                glTranslated(-(getClampedSize(from) + 0.25), 0, 0);
+                pos = new Vector4f((float)-(getClampedSize(from) + 0.25),0,0,1);
+                Matrix4f.transform(rotationMat,pos,pos);
+                glTranslated(pos.x, pos.y, pos.z);
                 renderPlanet(to, viewerDistance);
                 glPopMatrix();
                 glPopMatrix();
@@ -96,11 +106,5 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
                 }
             }
         }
-    }
-
-    @Override
-    protected float getClampedSize(Planet planet)
-    {
-        return Math.min(Math.max(planet.getSize(),1f),2.2f) * 0.3f;
     }
 }
