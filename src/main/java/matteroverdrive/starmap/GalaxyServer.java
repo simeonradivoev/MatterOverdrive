@@ -1,15 +1,33 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.starmap;
 
+import com.sun.istack.internal.NotNull;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
-import matteroverdrive.starmap.data.Galaxy;
-import matteroverdrive.starmap.data.Planet;
-import matteroverdrive.starmap.data.Quadrant;
-import matteroverdrive.starmap.data.Star;
+import matteroverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
+import matteroverdrive.starmap.data.*;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOLog;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -23,6 +41,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -127,6 +146,11 @@ public class GalaxyServer implements IConfigSubscriber
     }
     //endregion
 
+    /**
+     * Claims a planet as the given players homeworld
+     * @param player
+     * @return
+     */
     private Planet claimPlanet(EntityPlayer player)
     {
         UUID playerUUID = EntityPlayer.func_146094_a(player.getGameProfile());
@@ -158,6 +182,12 @@ public class GalaxyServer implements IConfigSubscriber
         return null;
     }
 
+    /**
+     * Modifyes the planet to be a homeworld, by adding more fleet and building spaces
+     * and building the starting buildings, such as a Base and a Ship Factory
+     * @param planet The planet that will be transformed into a homeworld
+     * @param player The player that will own the homeworld
+     */
     private void buildHomeworld(Planet planet,EntityPlayer player)
     {
         planet.setOwner(player);
@@ -169,6 +199,12 @@ public class GalaxyServer implements IConfigSubscriber
         planet.markDirty();
     }
 
+    /**
+     * This function checks if a player already has a homeworld
+     * and if not, then claims a random world and puts it in the homePlanets list
+     * @param player The player that wants to claim a planet as their homeworld
+     * @return if the player already has a world, returns false, if claiming was successful, returns true
+     */
     private boolean tryAndClaimPlanet(EntityPlayer player)
     {
         UUID playerUUID = EntityPlayer.func_146094_a(player.getGameProfile());
@@ -182,6 +218,36 @@ public class GalaxyServer implements IConfigSubscriber
             }
         }
         return false;
+    }
+
+    /**
+     * a Helper function that tries to create a travel event from one
+     * Galactic Position to another, by checking if the event can be finished
+     * and if so, then removes the ship from the source planet and puts it in the
+     * travel event and returns the event itself
+     * @param from The source planet position
+     * @param to The Destination Planet position
+     * @param shipID The Id of the ship. The id will be checked if valid
+     * @return The Travel event if valid, and if not then returns null
+     */
+    public TravelEvent createTravelEvent(GalacticPosition from,GalacticPosition to,int shipID)
+    {
+        Planet planet = theGalaxy.getPlanet(from);
+        if (planet != null) {
+            ItemStack ship = planet.getShip(shipID);
+            if (ship != null) {
+                TravelEvent travelEvent = new TravelEvent(world, from, to, ship, GalaxyServer.getInstance().getTheGalaxy());
+                if (travelEvent.isValid(GalaxyServer.getInstance().getTheGalaxy())) {
+                    if (GalaxyServer.getInstance().getTheGalaxy().canCompleteTravelEvent(travelEvent)) {
+                        theGalaxy.getPlanet(from).removeShip(shipID);
+                        theGalaxy.getPlanet(from).markDirty();
+                        GalaxyServer.getInstance().getTheGalaxy().addTravelEvent(travelEvent);
+                        return travelEvent;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     //region Events

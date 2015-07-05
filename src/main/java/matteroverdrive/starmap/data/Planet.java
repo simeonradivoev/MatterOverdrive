@@ -331,7 +331,9 @@ public class Planet extends SpaceBody implements IInventory
             return Reference.COLOR_HOLO;
         }
     }
-    public void markForUpdate(){needsUpdate = true;}
+    public void markForUpdate(){
+        needsUpdate = true;
+    }
     public boolean canBuild(IBuilding building,ItemStack stack)
     {
         if (buildings.size() < buildingSpaces)

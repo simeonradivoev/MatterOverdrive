@@ -94,17 +94,13 @@ public class Galaxy extends SpaceBody
                         Planet to = getPlanet(travelEvent.getTo());
                         Planet from = getPlanet(travelEvent.getFrom());
                         if (to != null) {
-                            ItemStack ship = from.removeShip(travelEvent.getShipID());
-                            if (ship != null) {
-                                to.addShip(ship);
-                                from.markDirty();
-                                to.markDirty();
-                                to.onTravelEvent(ship,travelEvent.getFrom(),world);
-                                MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdateTravelEvents(this), world);
-                            }
+                            to.addShip(travelEvent.getShip());
+                            from.markDirty();
+                            to.markDirty();
+                            to.onTravelEvent(travelEvent.getShip(),travelEvent.getFrom(),world);
+                            MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdateTravelEvents(this), world);
                         }
                     }
-
                     travelEventIterator.remove();
                 }
             }else
@@ -313,13 +309,6 @@ public class Galaxy extends SpaceBody
     }
     public boolean addTravelEvent(TravelEvent travelEvent)
     {
-        for (TravelEvent event : travelEvents)
-        {
-            if (event.getFrom().equals(travelEvent.getFrom()) && event.getShipID() == travelEvent.getShipID())
-            {
-                return false;
-            }
-        }
         travelEvents.add(travelEvent);
         return true;
     }
@@ -327,7 +316,7 @@ public class Galaxy extends SpaceBody
     {
         if (travelEvent.getTo() != null) {
             Planet to = getPlanet(travelEvent.getTo());
-            ItemStack shipStack = travelEvent.getShip(this);
+            ItemStack shipStack = travelEvent.getShip();
             if (shipStack != null && to != null)
             {
                 EntityPlayer owner = null;

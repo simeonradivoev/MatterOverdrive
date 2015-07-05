@@ -7,7 +7,9 @@ import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.SpaceBody;
+import matteroverdrive.starmap.data.TravelEvent;
 import matteroverdrive.tile.TileEntityMachineStarMap;
+import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -36,7 +38,7 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
                 //glRotated(Minecraft.getMinecraft().renderViewEntity.rotationYaw, 0, -1, 0);
                 glEnable(GL_BLEND);
                 glPushMatrix();
-                Vector4f pos = new Vector4f((float)(getClampedSize(to) + 0.25),0,0,1);
+                Vector4f pos = new Vector4f((float)(getClampedSize(from) + 0.25),0,0,1);
                 Matrix4f.transform(rotationMat, pos, pos);
                 glTranslated(pos.x, pos.y, pos.z);
                 renderPlanet(from, viewerDistance);
@@ -49,6 +51,7 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
                 RenderUtils.rotateTo(Minecraft.getMinecraft().renderViewEntity);
                 glScaled(0.01, 0.01, 0.01);
                 glRotated(180, 0, 0, 1);
+                drawTravelingShips(galaxy, to);
                 glTranslated(-9, -9, 0);
                 ClientProxy.holoIcons.renderIcon("arrow_right", 0, 0);
                 glPopMatrix();
@@ -56,7 +59,7 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE);
                 glPushMatrix();
-                pos = new Vector4f((float)-(getClampedSize(from) + 0.25),0,0,1);
+                pos = new Vector4f((float)-(getClampedSize(to) + 0.25),0,0,1);
                 Matrix4f.transform(rotationMat,pos,pos);
                 glTranslated(pos.x, pos.y, pos.z);
                 renderPlanet(to, viewerDistance);
@@ -73,6 +76,23 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glEnable(GL_TEXTURE_2D);
+        }
+    }
+
+    protected void drawTravelingShips(Galaxy galaxy,Planet planet)
+    {
+        int heightCount = -24;
+        for (TravelEvent travelEvent : galaxy.getTravelEvents())
+        {
+            if (travelEvent.getTo().equals(planet))
+            {
+                String time = MOStringHelper.formatRemainingTime(travelEvent.getTimeRemainning(Minecraft.getMinecraft().theWorld) / 20);
+                int width = fontRenderer.getStringWidth(time);
+                RenderUtils.renderStack(-8, heightCount - 8, travelEvent.getShip());
+                heightCount += 10;
+                fontRenderer.drawString(time, -width/2, heightCount-2, Reference.COLOR_HOLO.getColor());
+                heightCount += 10;
+            }
         }
     }
 

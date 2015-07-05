@@ -1,5 +1,8 @@
 package matteroverdrive.network.packet.client.starmap;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.AbstractClientPacketHandler;
 import matteroverdrive.starmap.GalaxyClient;
@@ -8,6 +11,7 @@ import matteroverdrive.starmap.data.TravelEvent;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
@@ -53,13 +57,24 @@ public class PacketUpdateTravelEvents extends PacketAbstract
         }
     }
 
-    public static class Clienthandler extends AbstractClientPacketHandler<PacketUpdateTravelEvents>
+    public static class ClientHandler extends AbstractClientPacketHandler<PacketUpdateTravelEvents>
     {
         @Override
         public IMessage handleClientMessage(EntityPlayer player, PacketUpdateTravelEvents message, MessageContext ctx)
         {
             GalaxyClient.getInstance().getTheGalaxy().setTravelEvents(message.travelEvents);
+            notifyChange();
             return null;
+        }
+
+        @SideOnly(Side.CLIENT)
+        private void notifyChange()
+        {
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiStarMap)
+            {
+                GuiStarMap guiStarMap = (GuiStarMap)Minecraft.getMinecraft().currentScreen;
+                guiStarMap.onTravelEventsChange(GalaxyClient.getInstance().getTheGalaxy().getTravelEvents());
+            }
         }
     }
 }

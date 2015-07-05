@@ -1,5 +1,8 @@
 package matteroverdrive.network.packet.client.starmap;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.AbstractClientPacketHandler;
 import matteroverdrive.starmap.GalaxyClient;
@@ -11,6 +14,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -86,6 +90,7 @@ public class PacketUpdatePlanet extends PacketAbstract
                         } else {
                             planet.readFromNBT(message.planetData,null);
                         }
+                        notifyChange(planet);
                     }
                 }
 
@@ -95,6 +100,16 @@ public class PacketUpdatePlanet extends PacketAbstract
                 }
             }
             return null;
+        }
+
+        @SideOnly(Side.CLIENT)
+        private void notifyChange(Planet planet)
+        {
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiStarMap)
+            {
+                GuiStarMap guiStarMap = (GuiStarMap)Minecraft.getMinecraft().currentScreen;
+                guiStarMap.onPlanetChange(planet);
+            }
         }
     }
 }

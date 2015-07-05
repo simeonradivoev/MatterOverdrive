@@ -1,11 +1,15 @@
 package matteroverdrive.starmap.data;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.starmap.GalaxyServer;
+import matteroverdrive.util.MOLog;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
+import org.apache.logging.log4j.Level;
 
 /**
  * Created by Simeon on 6/28/2015.
@@ -14,8 +18,9 @@ public class TravelEvent
 {
     //region Private Vars
     private long timeStart;
-    private int timeLength,shipID;
+    private int timeLength;
     private GalacticPosition from,to;
+    private ItemStack ship;
     //endregion
 
     //region Constructors
@@ -34,12 +39,12 @@ public class TravelEvent
         readFromBuffer(buf);
     }
 
-    public TravelEvent(World world,GalacticPosition from,GalacticPosition to,int shipID,Galaxy galaxy)
+    public TravelEvent(World world,GalacticPosition from,GalacticPosition to,ItemStack shipStack,Galaxy galaxy)
     {
         timeStart = world.getTotalWorldTime();
         this.from = from;
         this.to = to;
-        this.shipID = shipID;
+        this.ship = shipStack;
         calculateTravelTime(galaxy,from,to);
     }
     //endregion
@@ -54,7 +59,11 @@ public class TravelEvent
     //region Read - Write
     public void writeToNBT(NBTTagCompound tagCompound)
     {
-        tagCompound.setInteger("ShipID", shipID);
+        NBTTagCompound shipStackNBT = new NBTTagCompound();
+        if (ship != null) {
+            ship.writeToNBT(shipStackNBT);
+            tagCompound.setTag("Ship",shipStackNBT);
+        }
         tagCompound.setInteger("TimeLength", timeLength);
         tagCompound.setLong("TimeStart",timeStart);
         tagCompound.setTag("From", from.toNBT());
@@ -65,7 +74,15 @@ public class TravelEvent
     {
         from = new GalacticPosition(tagCompound.getCompoundTag("From"));
         to = new GalacticPosition(tagCompound.getCompoundTag("To"));
-        shipID = tagCompound.getInteger("ShipID");
+        if (tagCompound.hasKey("Ship", Constants.NBT.TAG_COMPOUND))
+        {
+            try {
+                ship = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("Ship"));
+            }catch (Exception e)
+            {
+                MOLog.log(Level.WARN,e,"Could not load ship from NBT in travel event");
+            }
+        }
         timeLength = tagCompound.getInteger("TimeLength");
         timeStart = tagCompound.getLong("TimeStart");
     }
@@ -74,7 +91,7 @@ public class TravelEvent
     {
         from = new GalacticPosition(buf);
         to = new GalacticPosition(buf);
-        shipID = buf.readInt();
+        ship = ByteBufUtils.readItemStack(buf);
         timeLength = buf.readInt();
         timeStart = buf.readLong();
     }
@@ -83,7 +100,7 @@ public class TravelEvent
     {
         from.writeToBuffer(buf);
         to.writeToBuffer(buf);
-        buf.writeInt(shipID);
+        ByteBufUtils.writeItemStack(buf,ship);
         buf.writeInt(timeLength);
         buf.writeLong(timeStart);
     }
@@ -99,8 +116,8 @@ public class TravelEvent
     }
     public double getPercent(World world) {return 1d - (double)((timeStart + timeLength) - world.getTotalWorldTime()) / (double)timeLength;}
     public void setTimeStart(long timeStart) {this.timeStart = timeStart;}
-    public int getShipID() {return shipID;}
-    public void setShipID(int shipID) {this.shipID = shipID;}
+    public ItemStack getShip() {return ship;}
+    public void setShip(ItemStack ship) {this.ship = ship;}
     public GalacticPosition getTo() {
         return to;
     }
@@ -117,23 +134,13 @@ public class TravelEvent
         writeToNBT(tagCompound);
         return tagCompound;
     }
-    public ItemStack getShip(Galaxy galaxy)
-    {
-        if (isValid(galaxy))
-        {
-            return galaxy.getPlanet(from).getShip(shipID);
-        }
-        return null;
-    }
     public boolean isValid(Galaxy galaxy)
     {
         if (this.from != null && this.to != null) {
             Planet from = galaxy.getPlanet(this.from);
             Planet to = galaxy.getPlanet(this.to);
             if (from != null && to != null) {
-                if (shipID >= 0 && shipID < from.fleetCount()) {
-                    return from.getShip(shipID) != null;
-                }
+                return ship != null;
             }
         }
         return false;

@@ -11,6 +11,9 @@ import matteroverdrive.gui.element.ElementBaseGroup;
 import matteroverdrive.gui.pages.*;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
+import matteroverdrive.starmap.data.Galaxy;
+import matteroverdrive.starmap.data.Planet;
+import matteroverdrive.starmap.data.TravelEvent;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
@@ -120,6 +123,18 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
             machine.setZoomLevel(newPage);
             machine.SyncCommandsToServer();
         }
+    }
+
+    public void onPlanetChange(Planet planet)
+    {
+        pageStar.init();
+        pagePlanetStats.loadShips();
+        planetPage.init();
+    }
+
+    public void onTravelEventsChange(List<TravelEvent> travelEvents)
+    {
+        pagePlanetStats.init();
     }
 
     @Override
