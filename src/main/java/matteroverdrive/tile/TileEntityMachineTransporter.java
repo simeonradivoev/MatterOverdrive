@@ -409,6 +409,18 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	}
 
 	private String[] methodNames;
+	
+	public String[] getMethodNames() {
+		if (methodNames == null) {
+			methodNames = new String[]{};
+			for (ComputerMethod m : ComputerMethod.values()) {
+				methodNames = new String[methodNames.length + 1];
+				methodNames[methodNames.length - 1] = m.name();
+			}
+		}
+
+		return methodNames;
+	}
 
 	private Object[] callMethod(int method, Object[] args) {
 		switch (method) {
@@ -479,32 +491,8 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	}
 
 	@Override
-	public String[] getMethodNames() {
-		if (methodNames == null) {
-			methodNames = new String[]{};
-			for (ComputerMethod m : ComputerMethod.values()) {
-				methodNames = new String[methodNames.length + 1];
-				methodNames[methodNames.length - 1] = m.name();
-			}
-		}
-
-		return methodNames;
-	}
-
-	@Override
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-		switch (method) {
-			case 0: // getLocations
-				return handleGetLocations(computer, context, arguments);
-			case 1: // getSelectedLocation
-				return handleGetSelectedLocation(computer, context, arguments);
-			case 2: // setLocation
-				return handleSetLocation(computer, context, arguments);
-			case 3: // setSelectedLocation
-				return handleSetSelectedLocation(computer, context, arguments);
-			default:
-				throw new RuntimeException(getMethodNames()[method] + " is not a valid method");
-		}
+		return callMethod(method, arguments);
 	}
 
 	@Override
@@ -520,22 +508,6 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	@Override
 	public boolean equals(IPeripheral other) { // Does this mean if it's the same type or if they're the same one?
 		return false; // TODO: Implement
-	}
-
-	public Object[] handleGetLocations(IComputerAccess computer, ILuaContext context, Object[] arguments) {
-		return null;
-	}
-
-	public Object[] handleGetSelectedLocation(IComputerAccess computer, ILuaContext context, Object[] arguments) {
-		return null;
-	}
-
-	public Object[] handleSetLocation(IComputerAccess computer, ILuaContext context, Object[] arguments) {
-		return null;
-	}
-
-	public Object[] handleSetSelectedLocation(IComputerAccess computer, ILuaContext context, Object[] arguments) {
-		return null;
 	}
 
 
