@@ -1,6 +1,7 @@
 package matteroverdrive.tile;
 
 import cofh.lib.util.helpers.MathHelper;
+import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -39,6 +40,7 @@ import java.util.List;
 /**
  * Created by Simeon on 5/3/2015.
  */
+@Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral")
 public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements IMatterConnection, ITransportList, IWailaBodyProvider, IPeripheral
 {
     public static final int MAX_ENTETIES_PRE_TRANSPORT = 3;

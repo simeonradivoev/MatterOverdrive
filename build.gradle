@@ -61,15 +61,3 @@ processResources
     }
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-            srcDir 'src/api/java'
-        }
-        resources {
-            srcDir 'resources'
-        }
-    }
-}
-
