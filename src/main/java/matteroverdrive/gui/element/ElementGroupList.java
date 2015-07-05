@@ -52,6 +52,7 @@ public class ElementGroupList extends ElementBaseGroup {
         }
 
         smoothScroll = (int)MOMathHelper.Lerp(smoothScroll,scroll,smoothScrollMultiply);
+        selectedIndex = MathHelper.clamp_int(selectedIndex,0,elements.size()-1);
     }
 
     @Override
@@ -140,7 +141,10 @@ public class ElementGroupList extends ElementBaseGroup {
 
     public boolean isSelected(ElementBase elementBase)
     {
-        return elements.get(selectedIndex).equals(elementBase);
+        if (selectedIndex < elements.size()) {
+            return elements.get(selectedIndex).equals(elementBase);
+        }
+        return false;
     }
     public void setScroll(int scroll){this.scroll = scroll;}
     public int getScroll(){return this.scroll;}

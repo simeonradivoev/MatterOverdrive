@@ -41,6 +41,7 @@ public class PageStar extends ElementBaseGroup implements IListHandler
             }
         }
         planetList.limitScroll();
+        planetList.update(0,0);
     }
 
     @Override

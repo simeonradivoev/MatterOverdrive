@@ -43,6 +43,7 @@ public class PagePlanetStats extends ElementBaseGroup implements IListHandler
                 shipList.addElement(new ElementShipEntry((GuiStarMap)gui,shipList,186,32,planet,planet.getFleet().get(i),i));
             }
         }
+        shipList.update(0,0);
     }
 
     @Override

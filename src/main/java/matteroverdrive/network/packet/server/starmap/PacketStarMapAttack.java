@@ -4,9 +4,12 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
 import matteroverdrive.network.packet.server.AbstractServerPacketHandler;
+import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.GalaxyServer;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.starmap.data.Galaxy;
+import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.TravelEvent;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -54,14 +57,9 @@ public class PacketStarMapAttack extends PacketAbstract
         @Override
         public IMessage handleServerMessage(EntityPlayer player, PacketStarMapAttack message, MessageContext ctx)
         {
-            TravelEvent travelEvent = new TravelEvent(player.worldObj,message.from,message.to,message.shipID, GalaxyServer.getInstance().getTheGalaxy());
-            if (travelEvent.isValid(GalaxyServer.getInstance().getTheGalaxy()))
-            {
-                if (GalaxyServer.getInstance().getTheGalaxy().canCompleteTravelEvent(travelEvent))
-                {
-                    GalaxyServer.getInstance().getTheGalaxy().addTravelEvent(travelEvent);
-                    MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdateTravelEvents(GalaxyServer.getInstance().getTheGalaxy()), player.worldObj);
-                }
+            TravelEvent travelEvent = GalaxyServer.getInstance().createTravelEvent(message.from,message.to,message.shipID);
+            if (travelEvent != null) {
+                MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdateTravelEvents(GalaxyServer.getInstance().getTheGalaxy()), player.worldObj);
             }
             return null;
         }

@@ -38,14 +38,6 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     {
         RenderUtils.renderStack(posX + 10, posY + sizeY / 2 - 8, ship);
         RenderUtils.drawString(Minecraft.getMinecraft().fontRenderer, ship.getDisplayName(), posX + 31, posY + 12, color, multiply);
-
-        for (TravelEvent travelEvent : GalaxyClient.getInstance().getTheGalaxy().getTravelEvents())
-        {
-            if (travelEvent.getFrom().equals(new GalacticPosition(planet)) && travelEvent.getShipID() == shipId) {
-                long time = travelEvent.getTimeRemainning(Minecraft.getMinecraft().theWorld);
-                RenderUtils.drawString(String.format("%s until arrival.",MOStringHelper.formatRemainingTime(time / 20)) ,posX + 128,posY + 12,color,multiply);
-            }
-        }
     }
 
     @Override
@@ -63,14 +55,6 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     @Override
     protected boolean canView(Planet planet,EntityPlayer player)
     {
-        for (TravelEvent travelEvent : GalaxyClient.getInstance().getTheGalaxy().getTravelEvents())
-        {
-            if (travelEvent.getFrom().equals(new GalacticPosition(planet)) && travelEvent.getShipID() == shipId)
-            {
-                return false;
-            }
-        }
-
         Planet to = GalaxyClient.getInstance().getTheGalaxy().getPlanet(((GuiStarMap)gui).getMachine().getDestination());
         if (to != null && to != planet) {
             return to.canAddShip(ship, player);

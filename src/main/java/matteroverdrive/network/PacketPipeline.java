@@ -60,7 +60,7 @@ public class PacketPipeline
         registerPacket(PacketUpdateGalaxy.ClientHandler.class,PacketUpdateGalaxy.class);
         registerPacket(PacketStarMapClientCommands.ServerHandler.class,PacketStarMapClientCommands.class);
         registerPacket(PacketStarMapAttack.ServerHandler.class,PacketStarMapAttack.class);
-        registerPacket(PacketUpdateTravelEvents.Clienthandler.class,PacketUpdateTravelEvents.class);
+        registerPacket(PacketUpdateTravelEvents.ClientHandler.class,PacketUpdateTravelEvents.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

@@ -1,9 +1,6 @@
 package matteroverdrive.items.starmap;
 
-import matteroverdrive.api.starmap.IBuildable;
-import matteroverdrive.api.starmap.IBuilding;
-import matteroverdrive.api.starmap.IShip;
-import matteroverdrive.api.starmap.ShipType;
+import matteroverdrive.api.starmap.*;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.starmap.data.Planet;
 import net.minecraft.item.ItemStack;
@@ -40,7 +37,15 @@ public class ItemColonizerShip  extends ItemShipAbstract
     }
 
     @Override
-    public boolean canBuild(ItemStack building, Planet planet) {
+    public boolean canBuild(ItemStack building, Planet planet)
+    {
+        for (ItemStack buildingStack : planet.getFleet())
+        {
+            if (buildingStack.getItem() instanceof IBuilding && ((IBuilding)buildingStack.getItem()).getType(buildingStack) == BuildingType.BASE)
+            {
+                return false;
+            }
+        }
         return true;
     }
 
