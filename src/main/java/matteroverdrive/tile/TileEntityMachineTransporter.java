@@ -1,6 +1,7 @@
 package matteroverdrive.tile;
 
 import cofh.lib.util.helpers.MathHelper;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -36,6 +37,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Created by Simeon on 5/3/2015.
@@ -388,6 +390,68 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		return currenttip;
 	}
 
+//	All Computers
+
+	private enum ComputerMethod {
+		getLocations,
+		getSelectedLocation,
+		setLocation,
+		setSelectedLocation;
+
+		Function<Object[], Object[]> handler;
+	}
+
+	{
+		ComputerMethod.getLocations.handler = this::computerGetLocations;
+		ComputerMethod.getSelectedLocation.handler = this::computerGetSelectedLocation;
+		ComputerMethod.setLocation.handler = this::computerSetLocation;
+		ComputerMethod.setSelectedLocation.handler = this::computerSetSelectedLocation;
+	}
+
+	private String[] methodNames;
+
+	private Object[] callMethod(int method, Object[] args) {
+		switch (method) {
+			case 0:
+				return callMethod(ComputerMethod.getLocations, args);
+			case 1:
+				return callMethod(ComputerMethod.getSelectedLocation, args);
+			case 2:
+				return callMethod(ComputerMethod.setLocation, args);
+			case 3:
+				return callMethod(ComputerMethod.setSelectedLocation, args);
+			default:
+				throw new IllegalArgumentException("Invalid method id");
+		}
+	}
+
+	private Object[] callMethod(ComputerMethod method, Object[] args) {
+		return method.handler.apply(args);
+	}
+
+
+//	Computer methods
+	private Object[] computerGetLocations(Object[] args) {
+		ArrayList<String> names = new ArrayList<String>();
+		for (TransportLocation loc : locations) {
+			names.add(loc.name);
+		}
+		return names.toArray();
+	}
+
+	private Object[] computerGetSelectedLocation(Object[] args) {
+		return new Object[]{ getSelectedLocation().name };
+	}
+
+	// args: String name, int x, int y, int z
+	private Object[] computerSetLocation(Object[] args) {
+		return null;
+	}
+
+	private Object[] computerSetSelectedLocation(Object[] args) {
+		return null;
+	}
+
 
 //	ComputerCraft
 	@Override
@@ -397,7 +461,15 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 	@Override
 	public String[] getMethodNames() {
-		return new String[]{"getLocations", "getActiveLocation", "setLocation", "setActiveLocation"};
+		if (methodNames == null) {
+			methodNames = new String[]{};
+			for (ComputerMethod m : ComputerMethod.values()) {
+				methodNames = new String[methodNames.length + 1];
+				methodNames[methodNames.length - 1] = m.name();
+			}
+		}
+
+		return methodNames;
 	}
 
 	@Override
@@ -405,12 +477,12 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		switch (method) {
 			case 0: // getLocations
 				return handleGetLocations(computer, context, arguments);
-			case 1: // getActiveLocation
-				return handleGetActiveLocation(computer, context, arguments);
+			case 1: // getSelectedLocation
+				return handleGetSelectedLocation(computer, context, arguments);
 			case 2: // setLocation
 				return handleSetLocation(computer, context, arguments);
-			case 3: // setActiveLocation
-				return handleSetActiveLocation(computer, context, arguments);
+			case 3: // setSelectedLocation
+				return handleSetSelectedLocation(computer, context, arguments);
 			default:
 				throw new RuntimeException(getMethodNames()[method] + " is not a valid method");
 		}
@@ -435,7 +507,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		return null;
 	}
 
-	public Object[] handleGetActiveLocation(IComputerAccess computer, ILuaContext context, Object[] arguments) {
+	public Object[] handleGetSelectedLocation(IComputerAccess computer, ILuaContext context, Object[] arguments) {
 		return null;
 	}
 
@@ -443,8 +515,12 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		return null;
 	}
 
-	public Object[] handleSetActiveLocation(IComputerAccess computer, ILuaContext context, Object[] arguments) {
+	public Object[] handleSetSelectedLocation(IComputerAccess computer, ILuaContext context, Object[] arguments) {
 		return null;
 	}
+
+
+//	Open Computers
+
 
 }
