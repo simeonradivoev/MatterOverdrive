@@ -449,6 +449,12 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	}
 
 	private Object[] computerSetSelectedLocation(Object[] args) {
+		if (!(args[0] instanceof Double)) {
+			throw new IllegalArgumentException("Argument 1 must be a number");
+		}
+		int locNum = (int)Math.floor((Double)args[0]);
+		TransportLocation loc = locations.get(locNum);
+		setSelectedLocation(loc.x, loc.y, loc.z, loc.name);
 		return null;
 	}
 
