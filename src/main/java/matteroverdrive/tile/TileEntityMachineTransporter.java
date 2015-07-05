@@ -432,7 +432,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 //	Computer methods
 	private Object[] computerGetLocations(Object[] args) {
-		ArrayList<String> names = new ArrayList<String>();
+		ArrayList<String> names = new ArrayList<>();
 		for (TransportLocation loc : locations) {
 			names.add(loc.name);
 		}
@@ -445,6 +445,19 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 	// args: String name, int x, int y, int z
 	private Object[] computerSetLocation(Object[] args) {
+		if (!(args[0] instanceof String)) {
+			throw new IllegalArgumentException("First argument must be a string containing the name of the transport location");
+		}
+		for (int i = 1; i <= 4; i++) {
+			if (!(args[i] instanceof Double)) {
+				throw new IllegalArgumentException("Argument " + i + 1 + " must be an integer");
+			}
+		}
+		String name = (String)args[0];
+		int x = (int)Math.floor((Double)args[1]);
+		int y = (int)Math.floor((Double)args[2]);
+		int z = (int)Math.floor((Double)args[3]);
+		addNewLocation(x, y, z, name);
 		return null;
 	}
 
