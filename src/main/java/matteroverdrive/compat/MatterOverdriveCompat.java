@@ -30,7 +30,6 @@ public class MatterOverdriveCompat {
 	{
 		register(CompatThermalExpansion.class);
 		register(CompatExNihilo.class);
-		register(CompatWaila.class);
 		register(CompatEnderIO.class);
 	}
 
@@ -38,6 +37,7 @@ public class MatterOverdriveCompat {
 	public static void registerClientModules()
 	{
 		register(CompatNEI.class);
+		register(CompatWaila.class);
 	}
 
 	private static boolean register(Class clazz)
