@@ -417,14 +417,13 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		ComputerMethod.setSelectedLocation.handler = this::computerSetSelectedLocation;
 	}
 
-	private String[] methodNames;
+	private String[] methodNames = null;
 
-	public String[] getMethodNames() {
+	public String[] genMethodNames() {
 		if (methodNames == null) {
-			methodNames = new String[]{};
+			methodNames = new String[ComputerMethod.values().length];
 			for (ComputerMethod m : ComputerMethod.values()) {
-				methodNames = new String[methodNames.length + 1];
-				methodNames[methodNames.length - 1] = m.name();
+				methodNames[m.ordinal()] = m.name();
 			}
 		}
 
