@@ -41,6 +41,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
@@ -452,15 +453,33 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 //	Computer methods
 	private Object[] computerGetLocations(Object[] args) {
-		ArrayList<String> names = new ArrayList<>();
+
+		ArrayList<HashMap<String, Object>> list = new ArrayList<>();
 		for (TransportLocation loc : locations) {
-			names.add(loc.name);
+			HashMap<String, Object> map = new HashMap<>();
+
+			map.put("name", loc.name);
+			map.put("selected", selectedLocation == locations.indexOf(loc));
+			map.put("x", loc.x);
+			map.put("y", loc.y);
+			map.put("z", loc.z);
+
+			list.add(map);
 		}
-		return names.toArray();
+
+		return list.toArray();
 	}
 
 	private Object[] computerGetSelectedLocation(Object[] args) {
-		return new Object[]{ getSelectedLocation().name };
+		HashMap<String, Object> map = new HashMap<>();
+
+		TransportLocation loc = locations.get(selectedLocation);
+		map.put("name", loc.name);
+		map.put("x", loc.x);
+		map.put("y", loc.y);
+		map.put("z", loc.z);
+
+		return new Object[]{ map };
 	}
 
 	/**
@@ -489,7 +508,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 	/**
 	 * args:
-	 * id (number) numeric index of the location to select
+	 * id (number) numeric index of the location to select (First location has index 0)
 	 */
 	private Object[] computerSetSelectedLocation(Object[] args) {
 		if (!(args[0] instanceof Double)) {
