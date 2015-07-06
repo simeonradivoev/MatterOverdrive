@@ -463,7 +463,13 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		return new Object[]{ getSelectedLocation().name };
 	}
 
-	// args: String name, int x, int y, int z
+	/**
+	 * args:
+	 * name (string) name of the new location
+	 * x (number) x coord of the new location
+	 * y (number) y coord of the new location
+	 * z (number) z coord of the new location
+	 */
 	private Object[] computerSetLocation(Object[] args) {
 		if (!(args[0] instanceof String)) {
 			throw new IllegalArgumentException("First argument must be a string containing the name of the transport location");
@@ -481,6 +487,10 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		return null;
 	}
 
+	/**
+	 * args:
+	 * id (number) numeric index of the location to select
+	 */
 	private Object[] computerSetSelectedLocation(Object[] args) {
 		if (!(args[0] instanceof Double)) {
 			throw new IllegalArgumentException("Argument 1 must be a number");
