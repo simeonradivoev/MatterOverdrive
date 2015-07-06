@@ -507,6 +507,11 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	}
 
 	@Override
+	public String[] getMethodNames() {
+		return genMethodNames();
+	}
+
+	@Override
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 		return callMethod(method, arguments);
 	}
@@ -528,6 +533,26 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 
 //	Open Computers
+	@Override
+	public String getComponentName() {
+		return "mo_transporter";
+	}
+
+	@Override
+	public String[] methods() {
+		return genMethodNames();
+	}
+
+	@Override
+	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+		int methodId = Arrays.asList(genMethodNames()).indexOf(method);
+
+		if (methodId == -1) {
+			throw new NoSuchMethodException("The method " + method + " does not exist");
+		}
+
+		return callMethod(methodId, args.toArray());
+	}
 
 
 }
