@@ -409,7 +409,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	}
 
 	private String[] methodNames;
-	
+
 	public String[] getMethodNames() {
 		if (methodNames == null) {
 			methodNames = new String[]{};
