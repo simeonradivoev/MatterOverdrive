@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.client.render.tileentity.starmap;
 
 import cofh.lib.gui.GuiColor;
@@ -10,6 +28,7 @@ import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.SpaceBody;
 import matteroverdrive.tile.TileEntityMachineStarMap;
+import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,6 +38,8 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -67,7 +88,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
         glPushMatrix();
         glRotated(90, 1, 0, 0);
 
-        RenderUtils.applyColorWithMultipy(getPlanetColor(planet), 0.2f * (1f / viewerDistance));
+        RenderUtils.applyColorWithMultipy(Planet.getGuiColor(planet), 0.2f * (1f / viewerDistance));
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         sphere.draw(size, 64, 32);
         glPopMatrix();
@@ -141,7 +162,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
         glDisable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
-        RenderUtils.applyColorWithMultipy(getPlanetColor(planet), 0.2f);
+        RenderUtils.applyColorWithMultipy(Planet.getGuiColor(planet), 0.2f);
         glBegin(GL_LINE_STRIP);
         for (int p = 0;p < 8;p++)
         {
@@ -198,11 +219,18 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
                 for (int i = 0; i < planet.getSizeInventory(); i++) {
                     if (planet.getStackInSlot(i) != null) {
                         ItemStack stack = planet.getStackInSlot(i);
-                        if (stack.getItem() instanceof IBuildable) {
+                        List<String> info = new ArrayList<>();
+                        if (stack.getItem() instanceof IBuildable && planet.canBuild((IBuildable)stack.getItem(),stack,info)) {
                             RenderUtils.renderStack(0, 0 - itemCount * 18 - 21, stack);
                             glEnable(GL_BLEND);
                             glBlendFunc(GL_ONE, GL_ONE);
-                            RenderUtils.drawString(String.format("%1$s - %2$s", stack.getDisplayName(), DecimalFormat.getPercentInstance().format((double) ((IBuildable) stack.getItem()).getBuildTime(stack) / (double) ((IBuildable) stack.getItem()).maxBuildTime(stack, planet))), 0 + 18, 5 - itemCount * 18 - 21, Reference.COLOR_HOLO, opacity);
+                            RenderUtils.drawString(String.format("%1$s - %2$s", stack.getDisplayName(), MOStringHelper.formatRemainingTime(((IBuildable) stack.getItem()).getRemainingBuildTimeTicks(stack, planet, Minecraft.getMinecraft().theWorld)/20)), 0 + 18, 5 - itemCount * 18 - 21, Reference.COLOR_HOLO, opacity);
+                        }else
+                        {
+                            RenderUtils.renderStack(0, 0 - itemCount * 18 - 21, stack);
+                            glEnable(GL_BLEND);
+                            glBlendFunc(GL_ONE, GL_ONE);
+                            RenderUtils.drawString(String.join(". ",info), 0 + 18, 5 - itemCount * 18 - 21, Reference.COLOR_HOLO_RED, opacity);
                         }
                         itemCount++;
                     }
@@ -244,26 +272,5 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
     @Override
     public double getHologramHeight() {
         return 1.5;
-    }
-
-    public GuiColor getPlanetColor(Planet planet)
-    {
-        if (planet.hasOwner()) {
-            if (planet.getOwnerUUID().equals(EntityPlayer.func_146094_a(Minecraft.getMinecraft().thePlayer.getGameProfile()))) {
-                if (planet.isHomeworld())
-                {
-                    return Reference.COLOR_HOLO_GREEN;
-                }else
-                {
-                    return Reference.COLOR_HOLO_YELLOW;
-                }
-            }else
-            {
-                return Reference.COLOR_HOLO_RED;
-            }
-        }else
-        {
-            return Reference.COLOR_HOLO;
-        }
     }
 }

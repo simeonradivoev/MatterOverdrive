@@ -1,11 +1,27 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.starmap.data;
 
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.api.starmap.GalacticPosition;
-import matteroverdrive.api.starmap.IBuilding;
-import matteroverdrive.api.starmap.IShip;
+import matteroverdrive.api.starmap.*;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.starmap.GalaxyGenerator;
 import matteroverdrive.starmap.gen.ISpaceBodyGen;
@@ -81,33 +97,47 @@ public class Planet extends SpaceBody implements IInventory
 
             for (int i = 0;i < SLOT_COUNT;i++)
             {
-                ItemStack ship = getStackInSlot(i);
-                if (ship != null)
+                List<String> buildInfo = new ArrayList<>();
+                ItemStack buildableStack = getStackInSlot(i);
+                if (buildableStack != null)
                 {
-                    if (ship.getItem() instanceof IBuilding && canBuild((IBuilding)ship.getItem(),ship)) {
-                        int buildTime = ((IBuilding) ship.getItem()).getBuildTime(ship);
-                        int maxBuildTime = ((IBuilding) ship.getItem()).maxBuildTime(ship, this);
-                        if (buildTime < maxBuildTime) {
-                            ((IBuilding) ship.getItem()).setBuildTime(ship, buildTime + 1);
-                            markDirty();
-                        } else {
-                            buildings.add(ship);
-                            setInventorySlotContents(i, null);
+                    if (buildableStack.getItem() instanceof IBuilding)
+                    {
+                        //check if building can be built and if build start is above zero
+                        //if below zero then the building was just put in
+                        if (canBuild((IBuilding) buildableStack.getItem(), buildableStack, buildInfo)) {
+                            if (((IBuilding) buildableStack.getItem()).isReadyToBuild(world, buildableStack, this)) {
+                                buildings.add(buildableStack);
+                                setInventorySlotContents(i, null);
+                                onBuild((IBuilding)buildableStack.getItem(),buildableStack,world);
+                                markDirty();
+                            }
+                        }else
+                        {
+                            //resets the build start time
+                            ((IBuilding) buildableStack.getItem()).setBuildStart(buildableStack,world.getTotalWorldTime());
                             markDirty();
                         }
-                    }else if (ship.getItem() instanceof IShip && canBuild((IShip)ship.getItem(),ship))
+                    }
+                    else if (buildableStack.getItem() instanceof IShip)
                     {
-                        int buildTime = ((IShip) ship.getItem()).getBuildTime(ship);
-                        int maxBuildTime = ((IShip) ship.getItem()).maxBuildTime(ship, this);
-                        if (buildTime < maxBuildTime) {
-                            ((IShip) ship.getItem()).setBuildTime(ship, buildTime + 1);
-                            markDirty();
-                        } else {
-                            fleet.add(ship);
-                            if (getOwnerUUID() != null) {
-                                ((IShip) ship.getItem()).setOwner(ship, getOwnerUUID());
+                        //check if ship can be built and if build start is above zero
+                        //if below zero then the ship was just put in
+                        if (canBuild((IShip) buildableStack.getItem(), buildableStack, buildInfo)) {
+                            if (((IShip) buildableStack.getItem()).isReadyToBuild(world, buildableStack, this)) {
+                                fleet.add(buildableStack);
+                                if (getOwnerUUID() != null)
+                                {
+                                    ((IShip) buildableStack.getItem()).setOwner(buildableStack, getOwnerUUID());
+                                }
+                                setInventorySlotContents(i, null);
+                                onBuild((IShip) buildableStack.getItem(), buildableStack,world);
+                                markDirty();
                             }
-                            setInventorySlotContents(i, null);
+                        }else
+                        {
+                            //resets the build start time
+                            ((IShip) buildableStack.getItem()).setBuildStart(buildableStack,world.getTotalWorldTime());
                             markDirty();
                         }
                     }
@@ -149,6 +179,20 @@ public class Planet extends SpaceBody implements IInventory
                 markDirty();
                 markForUpdate();
             }
+        }
+    }
+
+    public void onBuild(IBuildable buildable,ItemStack buildableStack,World world)
+    {
+        UUID ownerID = buildable.getOwnerID(buildableStack);
+        if (ownerID != null)
+        {
+            world.func_152378_a(ownerID).addChatMessage(
+                    new ChatComponentText(
+                            EnumChatFormatting.GOLD + "["+Reference.MOD_NAME+"]" +
+                            EnumChatFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.on_build"),buildableStack.getDisplayName(),name)
+                    )
+            );
         }
     }
     //endregion
@@ -317,10 +361,10 @@ public class Planet extends SpaceBody implements IInventory
             if (planet.getOwnerUUID().equals(EntityPlayer.func_146094_a(Minecraft.getMinecraft().thePlayer.getGameProfile()))) {
                 if (planet.isHomeworld())
                 {
-                    return Reference.COLOR_HOLO_GREEN;
+                    return Reference.COLOR_HOLO_YELLOW;
                 }else
                 {
-                    return Reference.COLOR_HOLO_YELLOW;
+                    return Reference.COLOR_HOLO_GREEN;
                 }
             }else
             {
@@ -334,20 +378,44 @@ public class Planet extends SpaceBody implements IInventory
     public void markForUpdate(){
         needsUpdate = true;
     }
-    public boolean canBuild(IBuilding building,ItemStack stack)
+    public boolean canBuild(IBuildable buildable,ItemStack stack,List<String> info)
+    {
+        if (buildable instanceof IBuilding)
+        {
+            return canBuild((IBuilding)buildable,stack,info);
+        }
+        else if (buildable instanceof IShip)
+        {
+            return canBuild((IShip)buildable,stack,info);
+        }
+        else return false;
+    }
+    public boolean canBuild(IBuilding building,ItemStack stack,List<String> info)
     {
         if (buildings.size() < buildingSpaces)
         {
-            return building.canBuild(stack,this);
+            return building.canBuild(stack,this,info);
         }
+        info.add(MOStringHelper.translateToLocal("gui.tooltip.starmap.no_building_space"));
         return false;
     }
 
-    public boolean canBuild(IShip ship,ItemStack stack)
+    public boolean canBuild(IShip ship,ItemStack stack,List<String> info)
     {
         if (fleet.size() < fleetSpaces)
         {
-            return ship.canBuild(stack,this);
+            for (ItemStack building : getBuildings())
+            {
+                if (building.getItem() instanceof IBuilding && ((IBuilding) building.getItem()).getType(building) == BuildingType.SHIP_FACTORY)
+                {
+                    return ship.canBuild(stack,this,info);
+                }
+            }
+
+            info.add(MOStringHelper.translateToLocal("gui.tooltip.starmap.no_ship_factory"));
+        }else
+        {
+            info.add(MOStringHelper.translateToLocal("gui.tooltip.starmap.no_ship_space"));
         }
         return false;
     }

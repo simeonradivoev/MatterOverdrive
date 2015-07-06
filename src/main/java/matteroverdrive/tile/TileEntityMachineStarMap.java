@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile;
 
 import matteroverdrive.MatterOverdrive;
@@ -9,6 +27,7 @@ import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.network.packet.server.starmap.PacketStarMapAttack;
 import matteroverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
+import matteroverdrive.proxy.CommonProxy;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.GalaxyServer;
 import matteroverdrive.starmap.data.*;
@@ -301,7 +320,7 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     {
         if (itemStack != null && itemStack.getItem() instanceof IBuildable)
         {
-            ((IBuildable) itemStack.getItem()).setBuildTime(itemStack,0);
+            ((IBuildable) itemStack.getItem()).setBuildStart(itemStack, getWorldObj().getTotalWorldTime());
         }
     }
 
@@ -309,7 +328,7 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     {
         if (itemStack != null && itemStack.getItem() instanceof IBuildable)
         {
-            ((IBuildable) itemStack.getItem()).setBuildTime(itemStack,0);
+            ((IBuildable) itemStack.getItem()).setBuildStart(itemStack, getWorldObj().getTotalWorldTime());
         }
     }
 

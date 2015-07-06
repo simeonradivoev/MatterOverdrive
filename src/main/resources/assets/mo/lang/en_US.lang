@@ -196,6 +196,11 @@ gui.label.button.add=Add
 gui.label.button.reset=Reset
 gui.label.button.scout=Send Scout
 
+gui.tooltip.starmap.no_ship_space=Not enough ship spaces
+gui.tooltip.starmap.no_building_space=Not enough building spaces
+gui.tooltip.starmap.no_ship_factory=No ship factory
+gui.tooltip.starmap.has_base=Base building already present
+
 module.battery.name=Battery Module
 module.color.name=Color Module
 module.color.red=Red
@@ -286,3 +291,4 @@ alert.no_rights.brake=Only the owner can brake the $0
 alert.no_rights.dismantle=Only the owner can dismantle the $0
 alert.new_update=A new version is available!
 alert.starmap.ship_arrive=§3%1$s §rhas arrived at §3%2$s§r!
+alert.starmap.on_build=§3%1$s §rwas built at §3%2$s§r!

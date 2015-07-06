@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.items.starmap;
 
 import matteroverdrive.api.starmap.IShip;
@@ -12,84 +30,18 @@ import java.util.UUID;
 /**
  * Created by Simeon on 6/24/2015.
  */
-public abstract class ItemShipAbstract extends MOBaseItem implements IShip
+public abstract class ItemShipAbstract extends ItemBuildableAbstract implements IShip
 {
     public ItemShipAbstract(String name)
     {
         super(name);
+        setMaxStackSize(1);
     }
 
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
-        super.addDetails(itemstack,player,infos);
-        infos.add("Build Time: " + getBuildTime(itemstack));
+        super.addDetails(itemstack, player, infos);
     }
 
     public boolean hasDetails(ItemStack stack){return true;}
-
-    public int getBuildTime(ItemStack building)
-    {
-        if (building.hasTagCompound())
-        {
-            return building.getTagCompound().getInteger("BuildTime");
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    public void setBuildTime(ItemStack building,int buildTime)
-    {
-        if (!building.hasTagCompound())
-        {
-            building.setTagCompound(new NBTTagCompound());
-        }
-
-        building.getTagCompound().setInteger("BuildTime", buildTime);
-    }
-
-    @Override
-    public boolean isOwner(ItemStack ship, EntityPlayer player)
-    {
-        if (ship.hasTagCompound())
-        {
-            if (ship.getTagCompound().hasKey("Owner") && !ship.getTagCompound().getString("Owner").isEmpty()) {
-                try {
-                    return UUID.fromString(ship.getTagCompound().getString("Owner")).equals(EntityPlayer.func_146094_a(player.getGameProfile()));
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public UUID getOwnerID(ItemStack stack)
-    {
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Owner",8))
-        {
-            try {
-                return UUID.fromString(stack.getTagCompound().getString("Owner"));
-            }catch (Exception e)
-            {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void setOwner(ItemStack ship, UUID playerId)
-    {
-        if (!ship.hasTagCompound())
-        {
-            ship.setTagCompound(new NBTTagCompound());
-        }
-
-        ship.getTagCompound().setString("Owner",playerId.toString());
-    }
 }

@@ -1,7 +1,26 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
+import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
 import matteroverdrive.proxy.ClientProxy;
@@ -17,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Simeon on 6/28/2015.
@@ -41,7 +61,7 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     }
 
     @Override
-    protected List<IIcon> getIcons(Planet spaceBody)
+    protected Map<IIcon,Integer> getIcons(Planet spaceBody)
     {
         return null;
     }
@@ -49,15 +69,17 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     @Override
     protected boolean canTravelTo(Planet ship, EntityPlayer player)
     {
-        return false;
+        return ((GuiStarMap)gui).getMachine().getGalaxyPosition().equals(ship);
     }
 
     @Override
     protected boolean canView(Planet planet,EntityPlayer player)
     {
-        Planet to = GalaxyClient.getInstance().getTheGalaxy().getPlanet(((GuiStarMap)gui).getMachine().getDestination());
-        if (to != null && to != planet) {
-            return to.canAddShip(ship, player);
+        if (ship.getItem() instanceof IShip && ((IShip) ship.getItem()).isOwner(ship,Minecraft.getMinecraft().thePlayer)) {
+            Planet to = GalaxyClient.getInstance().getTheGalaxy().getPlanet(((GuiStarMap) gui).getMachine().getDestination());
+            if (to != null && to != planet) {
+                return to.canAddShip(ship, player);
+            }
         }
         return false;
     }
@@ -90,9 +112,8 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     }
 
     @Override
-    protected void onViewPress()
-    {
-        ((GuiStarMap) gui).getMachine().Attack(((GuiStarMap) gui).getMachine().getGalaxyPosition(),((GuiStarMap) gui).getMachine().getDestination(),shipId);
+    protected void onViewPress() {
+        ((GuiStarMap) gui).getMachine().Attack(((GuiStarMap) gui).getMachine().getGalaxyPosition(), ((GuiStarMap) gui).getMachine().getDestination(), shipId);
         //((GuiStarMap) gui).getMachine().SyncCommandsToServer();
     }
 

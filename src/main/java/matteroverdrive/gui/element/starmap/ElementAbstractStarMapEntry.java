@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
@@ -16,7 +34,11 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.security.KeyPair;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Simeon on 6/21/2015.
@@ -53,7 +75,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
         RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply);
         if (isSelected(spaceBody))
         {
-            this.BG.Render(posX, posY, sizeX - 64, sizeY);
+            getBG(spaceBody).Render(posX, posY, sizeX - 64, sizeY);
             if (canView(spaceBody,Minecraft.getMinecraft().thePlayer)) {
                 this.BG_MIDDLE_NORMAL.Render(posX + sizeX - 64, posY, 32, sizeY);
             }
@@ -65,13 +87,18 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
         {
             if (intersectsWith(mouseX,mouseY))
             {
-                this.BG.Render(posX, posY, sizeX - 64, sizeY);
+                getBG(spaceBody).Render(posX, posY, sizeX - 64, sizeY);
             }else {
-                this.BG.Render(posX, posY, sizeX - 64, sizeY);
+                getBG(spaceBody).Render(posX, posY, sizeX - 64, sizeY);
             }
         }
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glDisable(GL11.GL_BLEND);
+    }
+
+    protected ScaleTexture getBG(T spaceBody)
+    {
+        return BG;
     }
 
     float getMultiply(T spaceBody)
@@ -119,37 +146,45 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
             }
 
             multiply = 0.8f;
-            List<IIcon> icons = getIcons(spaceBody);
+            Map<IIcon,Integer> icons = getIcons(spaceBody);
             if (icons != null) {
-                for (IIcon icon : icons) {
-                    GL11.glEnable(GL11.GL_BLEND);
-                    RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply);
-                    BG_CIRCLE.Render(posX + 128 + iconsX, posY, 32, 32);
-                    ClientProxy.holoIcons.bindSheet();
-                    RenderHelper.renderIcon(posX + iconsX + 128 + 16 - icon.getIconWidth() / 2, posY + 16 - icon.getIconHeight() / 2, 0, icon, icon.getIconWidth(), icon.getIconHeight());
-                    iconsX+=32;
+                for (Map.Entry<IIcon,Integer> entry : icons.entrySet()) {
+                    if (entry.getValue() != 0) {
+                        GL11.glEnable(GL11.GL_BLEND);
+                        RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply);
+                        BG_CIRCLE.Render(posX + 128 + iconsX, posY, 32, 32);
+                        ClientProxy.holoIcons.bindSheet();
+                        RenderHelper.renderIcon(posX + iconsX + 128 + 16 - entry.getKey().getIconWidth() / 2, posY + 16 - entry.getKey().getIconHeight() / 2, 0, entry.getKey(), entry.getKey().getIconWidth(), entry.getKey().getIconHeight());
+                        if (entry.getValue() > 0)
+                            RenderUtils.drawString(String.valueOf(entry.getValue()), posX + iconsX + 128 + 16 + 3, posY + 16 + 3, Reference.COLOR_HOLO,1);
+                        iconsX += 32;
+                    }
                 }
             }
         }else
         {
             drawElementName(spaceBody,getSpaceBodyColor(spaceBody),0.3f);
             int x = 0;
-            List<IIcon> icons = getIcons(spaceBody);
+            Map<IIcon,Integer> icons = getIcons(spaceBody);
             if (icons != null) {
-                for (IIcon icon : icons) {
-                    GL11.glEnable(GL11.GL_BLEND);
-                    RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), 0.3f);
-                    BG_CIRCLE.Render(posX + 128 + x, posY, 32, 32);
-                    ClientProxy.holoIcons.bindSheet();
-                    RenderHelper.renderIcon(posX + x + 128 + 16 - icon.getIconWidth() / 2, posY + 16 - icon.getIconHeight() / 2, 0, icon, icon.getIconWidth(), icon.getIconHeight());
-                    x += 32;
+                for (Map.Entry<IIcon,Integer> entry : icons.entrySet()) {
+                    if (entry.getValue() != 0) {
+                        GL11.glEnable(GL11.GL_BLEND);
+                        RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), 0.3f);
+                        BG_CIRCLE.Render(posX + 128 + x, posY, 32, 32);
+                        ClientProxy.holoIcons.bindSheet();
+                        RenderHelper.renderIcon(posX + x + 128 + 16 - entry.getKey().getIconWidth() / 2, posY + 16 - entry.getKey().getIconHeight() / 2, 0, entry.getKey(), entry.getKey().getIconWidth(), entry.getKey().getIconHeight());
+                        if (entry.getValue() > 0)
+                            RenderUtils.drawString(String.valueOf(entry.getValue()), posX + x + 128 + 16 + 3, posY + 16 + 3, getSpaceBodyColor(spaceBody),0.6f);
+                        x += 32;
+                    }
                 }
             }
         }
     }
 
     protected abstract void drawElementName(T spaceBody,GuiColor color,float multiply);
-    protected abstract List<IIcon> getIcons(T spaceBody);
+    protected abstract Map<IIcon,Integer> getIcons(T spaceBody);
 
     @Override
     public boolean onMousePressed(int mouseX, int mouseY, int mouseButton) {
