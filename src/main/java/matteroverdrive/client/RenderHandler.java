@@ -1,5 +1,6 @@
 package matteroverdrive.client;
 
+import cofh.core.util.ConfigHandler;
 import matteroverdrive.client.render.IWorldLastRenderer;
 import matteroverdrive.client.render.RenderMatterScannerInfoHandler;
 import matteroverdrive.client.render.RenderParticlesHandler;
@@ -14,6 +15,7 @@ import matteroverdrive.client.render.item.ItemRendererPhaser;
 import matteroverdrive.client.render.item.ItemRendererTileEntityMachine;
 import matteroverdrive.client.render.tileentity.*;
 import matteroverdrive.entity.*;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveItems;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -110,7 +112,7 @@ public class RenderHandler
         renderParticlesHandler.onClientTick(event);
     }
 
-    public void createTileEntityRenderers()
+    public void createTileEntityRenderers(ConfigurationHandler configHandler)
     {
         pipeRenderer = new TileEntityRendererPipe();
         matter_pipeRenderer = new TileEntityRendererMatterPipe();
@@ -124,6 +126,9 @@ public class RenderHandler
         fusion_reactor_controller_renderer = new TileEntityRendererFusionReactorController();
         rendererAndroidStation = new TileEntityRendererAndroidStation();
         rendererStarMap = new TileEntityRendererStarMap();
+
+        configHandler.subscribe(rendererAndroidStation);
+        configHandler.subscribe(renderer_weapon_station);
     }
 
     public void createBlockRenderers()

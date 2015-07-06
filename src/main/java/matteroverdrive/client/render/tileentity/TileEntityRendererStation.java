@@ -2,7 +2,9 @@ package matteroverdrive.client.render.tileentity;
 
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.tile.MOTileEntityMachine;
+import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
@@ -24,7 +26,7 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * Created by Simeon on 5/27/2015.
  */
-public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> extends TileEntitySpecialRenderer
+public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> extends TileEntitySpecialRenderer implements IConfigSubscriber
 {
     public static ResourceLocation glowTexture = new ResourceLocation(Reference.PATH_FX + "hologram_beam.png");
     ResourceLocation holo_shader_vert_loc = new ResourceLocation(Reference.PATH_SHADERS + "holo_shader.vert");
@@ -33,6 +35,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
     String holo_shader_frag;
     protected int shaderProgram;
     protected boolean validShader = true;
+    private boolean enableHoloShader = true;
     int vertexShader;
     int fragmentShader;
     Random fliker;
@@ -211,10 +214,15 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
 
     protected void beginHolo(T tileEntity)
     {
-        if (validShader)
+        if (validShader && enableHoloShader)
         {
             glUseProgram(shaderProgram);
             glUniform4f(0, getHoloColor(tileEntity).getFloatR(),getHoloColor(tileEntity).getFloatG(),getHoloColor(tileEntity).getFloatB(), 0);
+        }else
+        {
+            glEnable(GL_ALPHA_TEST);
+            glEnable(GL_DEPTH_TEST);
+            glDepthMask(true);
         }
     }
 
@@ -225,7 +233,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
 
     protected void rotate(T station,double noise)
     {
-        glRotated((Minecraft.getMinecraft().theWorld.getWorldTime() * 0.5) + (1800 * noise),0,-1,0);
+        glRotated((Minecraft.getMinecraft().theWorld.getWorldTime() * 0.5) + (1800 * noise), 0, -1, 0);
     }
 
     protected boolean isUsable(T station)
@@ -259,5 +267,11 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
 
             glPopMatrix();
         }
+    }
+
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
+    {
+        enableHoloShader = config.getBool("use holo shader",config.CATEGORY_CLIENT,true,"Use the custom holo shader for holographic items");
     }
 }

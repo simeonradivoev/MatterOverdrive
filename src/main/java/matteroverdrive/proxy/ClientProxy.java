@@ -1,6 +1,6 @@
 package matteroverdrive.proxy;
 
-import cpw.mods.fml.client.FMLClientHandler;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.compat.MatterOverdriveCompat;
@@ -37,7 +37,7 @@ public class ClientProxy extends CommonProxy
 
         //region Render Handler Functions
         renderHandler.createBlockRenderers();
-        renderHandler.createTileEntityRenderers();
+        renderHandler.createTileEntityRenderers(MatterOverdrive.configHandler);
         renderHandler.createItemRenderers();
         renderHandler.createEntityRenderers();
         renderHandler.registerBlockRenderers();
