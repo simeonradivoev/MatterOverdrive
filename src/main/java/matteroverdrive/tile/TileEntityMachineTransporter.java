@@ -405,7 +405,8 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	private enum ComputerMethod {
 		getLocations,
 		getSelectedLocation,
-		setLocation,
+		getLocation,
+		addLocation,
 		setSelectedLocation;
 
 		Function<Object[], Object[]> handler;
@@ -414,7 +415,8 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	{
 		ComputerMethod.getLocations.handler = this::computerGetLocations;
 		ComputerMethod.getSelectedLocation.handler = this::computerGetSelectedLocation;
-		ComputerMethod.setLocation.handler = this::computerSetLocation;
+		ComputerMethod.getLocation.handler = this::computerGetLocation;
+		ComputerMethod.addLocation.handler = this::computerAddLocation;
 		ComputerMethod.setSelectedLocation.handler = this::computerSetSelectedLocation;
 	}
 
@@ -438,8 +440,10 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 			case 1:
 				return callMethod(ComputerMethod.getSelectedLocation, args);
 			case 2:
-				return callMethod(ComputerMethod.setLocation, args);
+				return callMethod(ComputerMethod.getLocation, args);
 			case 3:
+				return callMethod(ComputerMethod.addLocation, args);
+			case 4:
 				return callMethod(ComputerMethod.setSelectedLocation, args);
 			default:
 				throw new IllegalArgumentException("Invalid method id");
@@ -471,9 +475,24 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	}
 
 	private Object[] computerGetSelectedLocation(Object[] args) {
+		return computerGetLocation(new Object[]{ 1.0 });
+	}
+
+	/**
+	 * args:
+	 * id (number) numeric index of the location to select (First location has index 0)
+	 */
+	private Object[] computerGetLocation(Object[] args) {
+
+		if (!(args[0] instanceof Double)) {
+			throw new IllegalArgumentException("First argument must be the numerical id of the transport location");
+		}
+
+		int locNum = (int)Math.floor((Double)args[0]);
+
 		HashMap<String, Object> map = new HashMap<>();
 
-		TransportLocation loc = locations.get(selectedLocation);
+		TransportLocation loc = locations.get(locNum);
 		map.put("name", loc.name);
 		map.put("x", loc.x);
 		map.put("y", loc.y);
@@ -489,7 +508,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	 * y (number) y coord of the new location
 	 * z (number) z coord of the new location
 	 */
-	private Object[] computerSetLocation(Object[] args) {
+	private Object[] computerAddLocation(Object[] args) {
 		if (!(args[0] instanceof String)) {
 			throw new IllegalArgumentException("First argument must be a string containing the name of the transport location");
 		}
