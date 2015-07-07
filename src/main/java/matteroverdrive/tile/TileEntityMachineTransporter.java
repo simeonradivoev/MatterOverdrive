@@ -676,7 +676,11 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 	@Override
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-		return callMethod(method, arguments);
+		try {
+			return callMethod(method, arguments);
+		} catch (Exception e) {
+			throw new LuaException(e.getMessage());
+		}
 	}
 
 	@Override
