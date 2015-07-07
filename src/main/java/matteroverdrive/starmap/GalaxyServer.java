@@ -291,9 +291,12 @@ public class GalaxyServer implements IConfigSubscriber
     @SubscribeEvent
     public void onWorldSave(WorldEvent.Save save)
     {
+        if (save.world == null || theGalaxy == null)
+            return;
+
         if (!save.world.isRemote && save.world.provider.dimensionId == 0)
         {
-            if (theGalaxy != null && theGalaxy.isDirty())
+            if (theGalaxy.isDirty())
             {
                 long start = System.nanoTime();
                 File galaxyFile = getGalaxyFile(save.world);
@@ -308,6 +311,9 @@ public class GalaxyServer implements IConfigSubscriber
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload unload)
     {
+        if (unload.world == null || theGalaxy == null)
+            return;
+
         if (unload.world.isRemote && unload.world.provider.dimensionId == 0) {
             this.world = null;
 
@@ -321,6 +327,9 @@ public class GalaxyServer implements IConfigSubscriber
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event)
     {
+        if (event.world == null || theGalaxy == null)
+            return;
+
         if (!event.world.isRemote && event.world.provider.dimensionId == 0)
         {
             theGalaxy.update(event.world);
