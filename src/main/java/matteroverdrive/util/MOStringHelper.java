@@ -50,9 +50,9 @@ public class MOStringHelper
 
     public static String formatRemainingTime(float seccounds)
     {
-        if (seccounds > 60 * 60)
+        if (seccounds > 3600)
         {
-            return String.format("%s hours",String.valueOf(Math.round(seccounds / 60 * 60)));
+            return String.format("%s hr",String.valueOf(Math.round(seccounds / 3600)));
         }
         else if (seccounds > 60 && seccounds < 60 * 60)
         {

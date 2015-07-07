@@ -18,8 +18,10 @@
 
 package matteroverdrive.items.starmap;
 
+import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.api.starmap.IBuildable;
 import matteroverdrive.items.includes.MOBaseItem;
+import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.Planet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -37,6 +39,8 @@ public abstract class ItemBuildableAbstract extends MOBaseItem implements IBuild
     {
         super(name);
     }
+
+    protected abstract int getBuildLengthUnscaled(ItemStack buildableStack, Planet planet);
 
     @Override
     public long getBuildStart(ItemStack building)
@@ -117,5 +121,11 @@ public abstract class ItemBuildableAbstract extends MOBaseItem implements IBuild
         }
 
         ship.getTagCompound().setString("Owner",playerId.toString());
+    }
+
+    @Override
+    public int getBuildLength(ItemStack buildableStack, Planet planet)
+    {
+        return MathHelper.ceil(getBuildLengthUnscaled(buildableStack, planet) * Galaxy.GALAXY_BUILD_TIME_MULTIPLY);
     }
 }

@@ -63,7 +63,7 @@ public class ItemColonizerShip  extends ItemShipAbstract
     }
 
     @Override
-    public int getBuildLength(ItemStack building, Planet planet) {
+    public int getBuildLengthUnscaled(ItemStack building, Planet planet) {
         return 20 * 250;
     }
 }

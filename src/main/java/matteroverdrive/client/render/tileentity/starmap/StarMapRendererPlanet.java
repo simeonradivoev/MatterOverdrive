@@ -195,7 +195,10 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
                 int x = (int) (Math.cos(angle) * radius) - 10;
                 int y = (int) (Math.sin(angle) * radius) - 10;
                 RenderUtils.renderStack(x, y, planet.getBuildings().get(i));
-                Minecraft.getMinecraft().fontRenderer.drawString(planet.getBuildings().get(i).getDisplayName(), x + 21, y + 6, Reference.COLOR_HOLO.getColor());
+                GuiColor color = Reference.COLOR_HOLO_RED;
+                if (planet.getBuildings().get(i).getItem() instanceof IBuilding && !((IBuilding) planet.getBuildings().get(i).getItem()).isOwner(planet.getBuildings().get(i),Minecraft.getMinecraft().thePlayer))
+                    color = Reference.COLOR_HOLO;
+                Minecraft.getMinecraft().fontRenderer.drawString(planet.getBuildings().get(i).getDisplayName(), x + 21, y + 6, color.getColor());
 
             }
             glPopMatrix();

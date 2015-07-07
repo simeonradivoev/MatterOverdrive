@@ -25,6 +25,8 @@ public class Galaxy extends SpaceBody
     public static final float LY_TO_TICKS = 8;
     public static final float AU_TO_TICKS = 10;
     public static final float PLANET_SYSTEM_SIZE_TO_AU = 100;
+    public static float GALAXY_BUILD_TIME_MULTIPLY = 1;
+    public static float GALAXY_TRAVEL_TIME_MULTIPLY = 1;
     //endregion
     //region Private Vars
     private long seed;

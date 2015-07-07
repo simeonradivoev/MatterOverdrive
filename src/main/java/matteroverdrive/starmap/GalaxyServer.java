@@ -339,7 +339,8 @@ public class GalaxyServer implements IConfigSubscriber
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
-
+        Galaxy.GALAXY_BUILD_TIME_MULTIPLY = config.config.getFloat("galaxy build time multiply",config.CATEGORY_STARMAP,1,0,10,"The multiplier for the building and ship building times");
+        Galaxy.GALAXY_TRAVEL_TIME_MULTIPLY = config.config.getFloat("galaxy travel time multiply",config.CATEGORY_STARMAP,1,0,10,"The multiplier for the ship travel times");
     }
     //endregion
 

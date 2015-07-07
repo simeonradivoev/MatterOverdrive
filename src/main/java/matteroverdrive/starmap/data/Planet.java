@@ -108,6 +108,10 @@ public class Planet extends SpaceBody implements IInventory
                         if (canBuild((IBuilding) buildableStack.getItem(), buildableStack, buildInfo)) {
                             if (((IBuilding) buildableStack.getItem()).isReadyToBuild(world, buildableStack, this)) {
                                 buildings.add(buildableStack);
+                                if (getOwnerUUID() != null)
+                                {
+                                    ((IBuilding)buildableStack.getItem()).setOwner(buildableStack,getOwnerUUID());
+                                }
                                 setInventorySlotContents(i, null);
                                 onBuild((IBuilding)buildableStack.getItem(),buildableStack,world);
                                 markDirty();

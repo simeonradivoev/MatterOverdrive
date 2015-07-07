@@ -89,9 +89,8 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
                 String time = MOStringHelper.formatRemainingTime(travelEvent.getTimeRemainning(Minecraft.getMinecraft().theWorld) / 20);
                 int width = fontRenderer.getStringWidth(time);
                 RenderUtils.renderStack(-8, heightCount - 8, travelEvent.getShip());
-                heightCount += 10;
-                fontRenderer.drawString(time, -width/2, heightCount-2, Reference.COLOR_HOLO.getColor());
-                heightCount += 10;
+                fontRenderer.drawString(time, -width/2, heightCount+8, Reference.COLOR_HOLO.getColor());
+                heightCount -= 26;
             }
         }
     }

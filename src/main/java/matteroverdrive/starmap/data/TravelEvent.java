@@ -1,5 +1,6 @@
 package matteroverdrive.starmap.data;
 
+import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.api.starmap.GalacticPosition;
@@ -107,12 +108,12 @@ public class TravelEvent
     //endregion
 
     //region Getters and Setters
-    public int getTimeLength() {return timeLength;}
+    public int getTimeLength() {return MathHelper.ceil(timeLength * Galaxy.GALAXY_TRAVEL_TIME_MULTIPLY);}
     public void setTimeLength(int timeLength) {this.timeLength = timeLength;}
     public long getTimeStart() {return timeStart;}
     public long getTimeRemainning(World world)
     {
-        return (timeStart + timeLength) - world.getTotalWorldTime();
+        return (timeStart + getTimeLength()) - world.getTotalWorldTime();
     }
     public double getPercent(World world) {return 1d - (double)((timeStart + timeLength) - world.getTotalWorldTime()) / (double)timeLength;}
     public void setTimeStart(long timeStart) {this.timeStart = timeStart;}
