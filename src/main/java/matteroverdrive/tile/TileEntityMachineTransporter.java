@@ -407,7 +407,11 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		getSelectedLocation,
 		getLocation,
 		addLocation,
-		setSelectedLocation;
+		setSelectedLocation,
+		setName,
+		setX,
+		setY,
+		setZ;
 
 		Function<Object[], Object[]> handler;
 	}
@@ -418,6 +422,10 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		ComputerMethod.getLocation.handler = this::computerGetLocation;
 		ComputerMethod.addLocation.handler = this::computerAddLocation;
 		ComputerMethod.setSelectedLocation.handler = this::computerSetSelectedLocation;
+		ComputerMethod.setName.handler = this::computerSetName;
+		ComputerMethod.setX.handler = this::computerSetX;
+		ComputerMethod.setY.handler = this::computerSetY;
+		ComputerMethod.setZ.handler = this::computerSetZ;
 	}
 
 	private String[] methodNames = null;
@@ -445,6 +453,14 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 				return callMethod(ComputerMethod.addLocation, args);
 			case 4:
 				return callMethod(ComputerMethod.setSelectedLocation, args);
+			case 5:
+				return callMethod(ComputerMethod.setName, args);
+			case 6:
+				return callMethod(ComputerMethod.setX, args);
+			case 7:
+				return callMethod(ComputerMethod.setY, args);
+			case 8:
+				return callMethod(ComputerMethod.setZ, args);
 			default:
 				throw new IllegalArgumentException("Invalid method id");
 		}
@@ -475,7 +491,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	}
 
 	private Object[] computerGetSelectedLocation(Object[] args) {
-		return computerGetLocation(new Object[]{ 1.0 });
+		return computerGetLocation(new Object[]{1.0});
 	}
 
 	/**
@@ -537,11 +553,94 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		return null;
 	}
 
+	/**
+	 * args:
+	 * id (number) numeric index of the location to select (First location has index 0)
+	 * name (string) the new name
+	 */
+	private Object[] computerSetName(Object[] args) {
+		if (!(args[0] instanceof Double)) {
+			throw new IllegalArgumentException("Argument 1 must be a number");
+		}
+		if (!(args[1] instanceof String)) {
+			throw new IllegalArgumentException("Argument 2 must be a string");
+		}
+
+		int locNum = (int)Math.floor((Double)args[0]);
+
+		locations.get(locNum).name = (String)args[1];
+
+		return null;
+	}
+
+	/**
+	 * args:
+	 * id (number) numeric index of the location to select (first location has index 0)
+	 * x (number) the new X coordinate
+	 */
+	private Object[] computerSetX(Object[] args) {
+		if (!(args[0] instanceof Double)) {
+			throw new IllegalArgumentException("Argument 1 must be a number");
+		}
+		if (!(args[1] instanceof Double)) {
+			throw new IllegalArgumentException("Argument 2 must be a number");
+		}
+
+		int locNum = (int)Math.floor((Double)args[0]);
+		int newX = (int)Math.floor((Double)args[1]);
+
+		locations.get(locNum).x = newX;
+
+		return null;
+	}
+
+	/**
+	 * args:
+	 * id (number) numeric index of the location to select (first location has index 0)
+	 * y (number) the new Y coordinate
+	 */
+	private Object[] computerSetY(Object[] args) {
+		if (!(args[0] instanceof Double)) {
+			throw new IllegalArgumentException("Argument 1 must be a number");
+		}
+		if (!(args[1] instanceof Double)) {
+			throw new IllegalArgumentException("Argument 2 must be a number");
+		}
+
+		int locNum = (int)Math.floor((Double)args[0]);
+		int newY = (int)Math.floor((Double)args[1]);
+
+		locations.get(locNum).y = newY;
+
+		return null;
+	}
+
+	/**
+	 * args:
+	 * id (number) numeric index of the location to select (first location has index 0)
+	 * z (number) the new Z coordinate
+	 */
+	private Object[] computerSetZ(Object[] args) {
+		if (!(args[0] instanceof Double)) {
+			throw new IllegalArgumentException("Argument 1 must be a number");
+		}
+		if (!(args[1] instanceof Double)) {
+			throw new IllegalArgumentException("Argument 2 must be a number");
+		}
+
+		int locNum = (int)Math.floor((Double)args[0]);
+		int newZ = (int)Math.floor((Double)args[1]);
+
+		locations.get(locNum).z = newZ;
+
+		return null;
+	}
+
 
 //	ComputerCraft
 	@Override
 	public String getType() {
-		return "MatterOverdrive_Transporter";
+		return "mo_transporter";
 	}
 
 	@Override
@@ -591,6 +690,5 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 		return callMethod(methodId, args.toArray());
 	}
-
 
 }
