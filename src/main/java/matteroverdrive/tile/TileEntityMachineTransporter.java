@@ -10,7 +10,6 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
-import li.cil.oc.common.tileentity.traits.Computer;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
@@ -411,7 +410,8 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		setName,
 		setX,
 		setY,
-		setZ;
+		setZ,
+		setRedstoneMode;
 
 		Function<Object[], Object[]> handler;
 	}
@@ -426,6 +426,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		ComputerMethod.setX.handler = this::computerSetX;
 		ComputerMethod.setY.handler = this::computerSetY;
 		ComputerMethod.setZ.handler = this::computerSetZ;
+		ComputerMethod.setRedstoneMode.handler = this::computerSetRedstoneMode;
 	}
 
 	private String[] methodNames = null;
@@ -461,6 +462,8 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 				return callMethod(ComputerMethod.setY, args);
 			case 8:
 				return callMethod(ComputerMethod.setZ, args);
+			case 9:
+				return callMethod(ComputerMethod.setRedstoneMode, args);
 			default:
 				throw new IllegalArgumentException("Invalid method id");
 		}
@@ -632,6 +635,29 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		int newZ = (int)Math.floor((Double)args[1]);
 
 		locations.get(locNum).z = newZ;
+
+		return null;
+	}
+
+	/**
+	 * args:
+	 * mode (number) the redstone mode of the transporter
+	 * 		0: High redstone signal
+	 * 		1: Low redstone signal
+	 * 		2: Redstone disabled
+	 */
+	private Object[] computerSetRedstoneMode(Object[] args) {
+		if (!(args[0] instanceof Double)) {
+			throw new IllegalArgumentException("Argument 1 must be a number from 0 to 2");
+		}
+
+		int i = (int)Math.floor((Double)args[0]);
+
+		if (i < 0 || i > 2) {
+			throw new IllegalArgumentException("Argument 1 must be a number from 0 to 2");
+		}
+
+		setRedstoneMode((byte)i);
 
 		return null;
 	}
