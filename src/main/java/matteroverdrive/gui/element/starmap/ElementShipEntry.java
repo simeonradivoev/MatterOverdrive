@@ -69,13 +69,14 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     @Override
     protected boolean canTravelTo(Planet ship, EntityPlayer player)
     {
-        return ((GuiStarMap)gui).getMachine().getGalaxyPosition().equals(ship);
+        return false;
     }
 
     @Override
     protected boolean canView(Planet planet,EntityPlayer player)
     {
-        if (ship.getItem() instanceof IShip && ((IShip) ship.getItem()).isOwner(ship,Minecraft.getMinecraft().thePlayer)) {
+        if (ship.getItem() instanceof IShip && ((IShip) ship.getItem()).isOwner(ship,Minecraft.getMinecraft().thePlayer))
+        {
             Planet to = GalaxyClient.getInstance().getTheGalaxy().getPlanet(((GuiStarMap) gui).getMachine().getDestination());
             if (to != null && to != planet) {
                 return to.canAddShip(ship, player);

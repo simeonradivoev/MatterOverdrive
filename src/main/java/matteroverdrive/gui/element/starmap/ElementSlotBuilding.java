@@ -27,6 +27,7 @@ import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 import java.text.DecimalFormat;
@@ -55,7 +56,8 @@ public class ElementSlotBuilding extends ElementInventorySlot
                     List<String> info = new ArrayList<>();
 
                     if (starMap.getPlanet().canBuild((IBuilding)getSlot().getStack().getItem(),getSlot().getStack(),info)) {
-                        String time = MOStringHelper.formatRemainingTime(((IBuilding) getSlot().getStack().getItem()).getRemainingBuildTimeTicks(getSlot().getStack(), starMap.getPlanet(), starMap.getWorldObj()) / 20);
+                        ItemStack buildingStack = getSlot().getStack();
+                        String time = MOStringHelper.formatRemainingTime(((IBuilding) buildingStack.getItem()).getRemainingBuildTimeTicks(buildingStack, starMap.getPlanet(), Minecraft.getMinecraft().theWorld) / 20);
                         int timeWidth = getFontRenderer().getStringWidth(time);
                         getFontRenderer().drawString(time, posX - timeWidth - 4, posY + 6, Reference.COLOR_HOLO.getColor());
                     }else

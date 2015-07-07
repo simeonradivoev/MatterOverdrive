@@ -45,8 +45,8 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
 
     public TileEntityRendererStation()
     {
-        holoColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 8, Reference.COLOR_HOLO.getIntG() / 8, Reference.COLOR_HOLO.getIntB() / 8);
-        red_holoColor = new GuiColor(Reference.COLOR_HOLO_RED.getIntR() / 8,Reference.COLOR_HOLO_RED.getIntG() / 8,Reference.COLOR_HOLO_RED.getIntB() / 8);
+        holoColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 4, Reference.COLOR_HOLO.getIntG() / 4, Reference.COLOR_HOLO.getIntB() / 4);
+        red_holoColor = new GuiColor(Reference.COLOR_HOLO_RED.getIntR() / 4,Reference.COLOR_HOLO_RED.getIntG() / 4,Reference.COLOR_HOLO_RED.getIntB() / 4);
 
         shaderProgram = glCreateProgram();
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -127,7 +127,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         Tessellator.instance.startDrawingQuads();
         GuiColor color = getHoloColor(entity);
 
-        Tessellator.instance.setColorRGBA_F(Reference.COLOR_HOLO.getFloatR() * mul,Reference.COLOR_HOLO.getFloatG() * mul,Reference.COLOR_HOLO.getFloatB() * mul,1);
+        Tessellator.instance.setColorRGBA_F(getHoloColor(entity).getFloatR(),getHoloColor(entity).getFloatG(),getHoloColor(entity).getFloatB(),1);
         Tessellator.instance.addVertexWithUV(0,0,0,1,1);
         Tessellator.instance.addVertexWithUV(-topSizeExtend,hologramHeight,-topSize,1,0);
         Tessellator.instance.addVertexWithUV(1 + topSizeExtend,hologramHeight,-topSize,0,0);

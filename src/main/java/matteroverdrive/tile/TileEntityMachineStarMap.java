@@ -318,17 +318,19 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
 
     public void onItemPickup(EntityPlayer player, ItemStack itemStack)
     {
-        if (itemStack != null && itemStack.getItem() instanceof IBuildable)
-        {
-            ((IBuildable) itemStack.getItem()).setBuildStart(itemStack, getWorldObj().getTotalWorldTime());
+        if (!worldObj.isRemote) {
+            if (itemStack != null && itemStack.getItem() instanceof IBuildable) {
+                ((IBuildable) itemStack.getItem()).setBuildStart(itemStack, getWorldObj().getTotalWorldTime());
+            }
         }
     }
 
     public void onItemPlaced(ItemStack itemStack)
     {
-        if (itemStack != null && itemStack.getItem() instanceof IBuildable)
-        {
-            ((IBuildable) itemStack.getItem()).setBuildStart(itemStack, getWorldObj().getTotalWorldTime());
+        if (!worldObj.isRemote) {
+            if (itemStack != null && itemStack.getItem() instanceof IBuildable) {
+                ((IBuildable) itemStack.getItem()).setBuildStart(itemStack, getWorldObj().getTotalWorldTime());
+            }
         }
     }
 

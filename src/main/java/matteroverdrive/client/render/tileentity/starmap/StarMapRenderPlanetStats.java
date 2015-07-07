@@ -84,7 +84,7 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
         int heightCount = -24;
         for (TravelEvent travelEvent : galaxy.getTravelEvents())
         {
-            if (travelEvent.getTo().equals(planet))
+            if (travelEvent.getTo().equals(planet) && ((IShip)travelEvent.getShip().getItem()).isOwner(travelEvent.getShip(),Minecraft.getMinecraft().thePlayer))
             {
                 String time = MOStringHelper.formatRemainingTime(travelEvent.getTimeRemainning(Minecraft.getMinecraft().theWorld) / 20);
                 int width = fontRenderer.getStringWidth(time);

@@ -108,7 +108,7 @@ public class StarMapEntityRenderer extends EntityRenderer
         this.mc.gameSettings.hideGUI = true;
         this.mc.gameSettings.thirdPersonView = 0;
         this.mc.gameSettings.fovSetting = 70;
-        super.updateCameraAndRender(partialTick);
+        super.updateCameraAndRender(1);
         this.mc.gameSettings.fovSetting = fov;
         this.mc.gameSettings.hideGUI = false;
         this.mc.gameSettings.thirdPersonView = personMode;

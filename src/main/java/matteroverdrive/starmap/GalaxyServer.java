@@ -22,6 +22,8 @@ import com.sun.istack.internal.NotNull;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
+import matteroverdrive.api.starmap.IBuilding;
+import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
@@ -194,8 +196,12 @@ public class GalaxyServer implements IConfigSubscriber
         planet.setHomeworld(true);
         planet.setBuildingSpaces(8);
         planet.setFleetSpaces(10);
-        planet.addBuilding(new ItemStack(MatterOverdriveItems.buildingBase));
-        planet.addShip(new ItemStack(MatterOverdriveItems.scoutShip));
+        ItemStack base = new ItemStack(MatterOverdriveItems.buildingBase);
+        ((IBuilding)base.getItem()).setOwner(base,EntityPlayer.func_146094_a(player.getGameProfile()));
+        planet.addBuilding(base);
+        ItemStack scoutShip = new ItemStack(MatterOverdriveItems.scoutShip);
+        ((IShip)scoutShip.getItem()).setOwner(scoutShip,EntityPlayer.func_146094_a(player.getGameProfile()));
+        planet.addShip(scoutShip);
         planet.markDirty();
     }
 
