@@ -400,77 +400,44 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	}
 
 //	All Computers
-
-	private enum ComputerMethod {
-		getLocations,
-		getSelectedLocation,
-		getLocation,
-		addLocation,
-		setSelectedLocation,
-		setName,
-		setX,
-		setY,
-		setZ,
-		setRedstoneMode;
-
-		Function<Object[], Object[]> handler;
-	}
-
-	{
-		ComputerMethod.getLocations.handler = this::computerGetLocations;
-		ComputerMethod.getSelectedLocation.handler = this::computerGetSelectedLocation;
-		ComputerMethod.getLocation.handler = this::computerGetLocation;
-		ComputerMethod.addLocation.handler = this::computerAddLocation;
-		ComputerMethod.setSelectedLocation.handler = this::computerSetSelectedLocation;
-		ComputerMethod.setName.handler = this::computerSetName;
-		ComputerMethod.setX.handler = this::computerSetX;
-		ComputerMethod.setY.handler = this::computerSetY;
-		ComputerMethod.setZ.handler = this::computerSetZ;
-		ComputerMethod.setRedstoneMode.handler = this::computerSetRedstoneMode;
-	}
-
-	private String[] methodNames = null;
-
-	public String[] genMethodNames() {
-		if (methodNames == null) {
-			methodNames = new String[ComputerMethod.values().length];
-			for (ComputerMethod m : ComputerMethod.values()) {
-				methodNames[m.ordinal()] = m.name();
-			}
-		}
-
-		return methodNames;
-	}
+	private String[] methodNames = new String[] {
+			"getLocations",
+			"getSelectedLocation",
+			"getLocation",
+			"addLocation",
+			"setSelectedLocation",
+			"setName",
+			"setX",
+			"setY",
+			"setZ",
+			"setRedstoneMode"
+	};
 
 	private Object[] callMethod(int method, Object[] args) {
 		switch (method) {
 			case 0:
-				return callMethod(ComputerMethod.getLocations, args);
+				return computerGetLocations(args);
 			case 1:
-				return callMethod(ComputerMethod.getSelectedLocation, args);
+				return computerGetSelectedLocation(args);
 			case 2:
-				return callMethod(ComputerMethod.getLocation, args);
+				return computerGetLocation(args);
 			case 3:
-				return callMethod(ComputerMethod.addLocation, args);
+				return computerAddLocation(args);
 			case 4:
-				return callMethod(ComputerMethod.setSelectedLocation, args);
+				return computerSetSelectedLocation(args);
 			case 5:
-				return callMethod(ComputerMethod.setName, args);
+				return computerSetName(args);
 			case 6:
-				return callMethod(ComputerMethod.setX, args);
+				return computerSetX(args);
 			case 7:
-				return callMethod(ComputerMethod.setY, args);
+				return computerSetY(args);
 			case 8:
-				return callMethod(ComputerMethod.setZ, args);
+				return computerSetZ(args);
 			case 9:
-				return callMethod(ComputerMethod.setRedstoneMode, args);
+				return computerSetRedstoneMode(args);
 			default:
 				throw new IllegalArgumentException("Invalid method id");
 		}
-	}
-
-	private Object[] callMethod(ComputerMethod method, Object[] args) {
-		return method.handler.apply(args);
 	}
 
 
@@ -671,7 +638,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 	@Override
 	public String[] getMethodNames() {
-		return genMethodNames();
+		return methodNames;
 	}
 
 	@Override
@@ -707,15 +674,15 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 	@Override
 	public String[] methods() {
-		return genMethodNames();
+		return methodNames;
 	}
 
 	@Override
 	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
-		int methodId = Arrays.asList(genMethodNames()).indexOf(method);
+		int methodId = Arrays.asList(methodNames).indexOf(method);
 
 		if (methodId == -1) {
-			throw new NoSuchMethodException("The method " + method + " does not exist");
+			throw new RuntimeException("The method " + method + " does not exist");
 		}
 
 		return callMethod(methodId, args.toArray());
