@@ -8,6 +8,17 @@ import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.position.BlockPosition;
 import cofh.lib.util.position.IRotateableTile;
+import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.ComputerCraftAPI;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.peripheral.IPeripheral;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.ManagedPeripheral;
+import li.cil.oc.api.network.SimpleComponent;
+import li.cil.oc.common.tileentity.traits.Computer;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
@@ -25,10 +36,19 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.function.Function;
+
 /**
  * Created by Simeon on 5/14/2015.
  */
-public class TileEntityMachineFusionReactorController extends MOTileEntityMachineMatter implements IRotateableTile, IMatterConnection
+@Optional.InterfaceList({
+		@Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral"),
+		@Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.SimpleComponent"),
+		@Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.ManagedPeripheral")
+})
+public class TileEntityMachineFusionReactorController extends MOTileEntityMachineMatter implements IRotateableTile, IMatterConnection, IPeripheral, SimpleComponent, ManagedPeripheral
 {
     public static final int STRUCTURE_CHECK_DELAY = 40;
     public static final int[] positions = new int[]{0,5,1,0,2,0,3,1,4,2,5,3,5,4,5,5,5,6,5,7,4,8,3,9,2,10,1,10,0,10,-1,10,-2,10,-3,9,-4,8,-5,7,-5,6,-5,5,-5,4,-5,3,-4,2,-3,1,-2,0,-1,0};
@@ -456,4 +476,110 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     public void onDestroyed() {
 
     }
+
+//	All Computers
+	private String[] methodNames = new String[] {
+			"getStatus",
+			"isValid",
+			"getEnergyGenerated",
+			"getMatterUsed",
+			"getEnergyStored",
+			"getMatterStored"
+	};
+
+	private Object[] callMethod(int method, Object[] args) {
+		switch (method) {
+			case 0:
+				return computerGetStatus(args);
+			case 1:
+				return computerIsValid(args);
+			case 2:
+				return computerGetEnergyGenerated(args);
+			case 3:
+				return computerGetMatterUsed(args);
+			case 4:
+				return computerGetEnergyStored(args);
+			case 5:
+				return computerGetMatterStored(args);
+			default: throw new IllegalArgumentException("Invalid method id");
+		}
+	}
+
+//	Computer Methods
+	private Object[] computerGetStatus(Object[] args) {
+		return new Object[]{monitorInfo};
+	}
+
+	private Object[] computerIsValid(Object[] args) {
+		return new Object[]{validStructure};
+	}
+
+	private Object[] computerGetEnergyGenerated(Object[] args) {
+		return new Object[]{energyPerTick};
+	}
+
+	private Object[] computerGetMatterUsed(Object[] args) {
+		return new Object[]{matterPerTick};
+	}
+
+	private Object[] computerGetEnergyStored(Object[] args) {
+		return new Object[]{energyStorage.getEnergyStored()};
+	}
+
+	private Object[] computerGetMatterStored(Object[] args) {
+		return new Object[]{matterStorage.getMatterStored()};
+	}
+
+//	ComputerCraft
+	@Override
+	public String getType() {
+		return "mo_fusion_reactor_controller";
+	}
+
+	@Override
+	public String[] getMethodNames() {
+		return methodNames;
+	}
+
+	@Override
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+		try {
+			return callMethod(method, arguments);
+		} catch (Exception e) {
+			throw new LuaException(e.getMessage());
+		}
+	}
+
+	@Override
+	public void attach(IComputerAccess computer) {}
+
+	@Override
+	public void detach(IComputerAccess computer) {}
+
+	@Override
+	public boolean equals(IPeripheral other) {
+		return false;
+	}
+
+//	OpenComputers
+	@Override
+	public String getComponentName() {
+		return "mo_fusion_reactor_controller";
+	}
+
+	@Override
+	public String[] methods() {
+		return methodNames;
+	}
+
+	@Override
+	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+		int methodId = Arrays.asList(methodNames).indexOf(method);
+
+		if (methodId == -1) {
+			throw new RuntimeException("The method " + method + " does not exist");
+		}
+
+		return callMethod(methodId, args.toArray());
+	}
 }

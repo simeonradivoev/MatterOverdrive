@@ -3,6 +3,7 @@ package matteroverdrive.compat.modules.computercraft;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import matteroverdrive.tile.TileEntityMachineFusionReactorController;
 import matteroverdrive.tile.TileEntityMachineTransporter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -19,6 +20,8 @@ public class MOPeripheralProvider implements IPeripheralProvider {
 
 		if (te instanceof TileEntityMachineTransporter) {
 			return (TileEntityMachineTransporter)te;
+		} else if (te instanceof TileEntityMachineFusionReactorController) {
+			return (TileEntityMachineFusionReactorController)te;
 		}
 
 		return null;
