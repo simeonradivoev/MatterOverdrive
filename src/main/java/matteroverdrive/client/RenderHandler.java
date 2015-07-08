@@ -11,6 +11,7 @@ import matteroverdrive.client.render.RendererPhaserBeam;
 import matteroverdrive.client.render.biostat.BiostatRendererShield;
 import matteroverdrive.client.render.biostat.BiostatRendererTeleporter;
 import matteroverdrive.client.render.block.MOBlockRenderer;
+import matteroverdrive.client.render.block.RendererBlockChargingStation;
 import matteroverdrive.client.render.block.RendererBlockGravitationalStabilizer;
 import matteroverdrive.client.render.block.RendererBlockPipe;
 import matteroverdrive.client.render.entity.*;
@@ -49,6 +50,7 @@ public class RenderHandler
     private MOBlockRenderer blockRenderer;
     private RendererBlockGravitationalStabilizer gravitationalStabilizerRenderer;
     private RendererBlockPipe rendererBlockPipe;
+    private RendererBlockChargingStation rendererBlockChargingStation;
     //endregion
     //region Biostat Renderers
     private BiostatRendererTeleporter rendererTeleporter;
@@ -138,6 +140,7 @@ public class RenderHandler
         blockRenderer = new MOBlockRenderer();
         gravitationalStabilizerRenderer = new RendererBlockGravitationalStabilizer();
         rendererBlockPipe = new RendererBlockPipe();
+        rendererBlockChargingStation = new RendererBlockChargingStation();
     }
 
     public void registerBlockRenderers()
@@ -145,13 +148,11 @@ public class RenderHandler
         RenderingRegistry.registerBlockHandler(blockRenderer);
         RenderingRegistry.registerBlockHandler(gravitationalStabilizerRenderer);
         RenderingRegistry.registerBlockHandler(rendererBlockPipe);
+        RenderingRegistry.registerBlockHandler(rendererBlockChargingStation);
     }
 
     public void registerTileEntitySpecialRenderers()
     {
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, pipeRenderer);
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMatterPipe.class, matter_pipeRenderer);
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityNetworkPipe.class, network_pipeRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineReplicator.class,replicator_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternStorage.class,pattern_storage_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeaponStation.class,renderer_weapon_station);
@@ -172,11 +173,8 @@ public class RenderHandler
     public void registerItemRenderers()
     {
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser, rendererPhaser);
-        //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.matter_pipe), new ItemRendererPipe(matter_pipeRenderer, new TileEntityMatterPipe(), 2));
-        //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.network_pipe),new ItemRendererPipe(network_pipeRenderer,new TileEntityNetworkPipe(),2));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.replicator), new ItemRendererTileEntityMachine(replicator_renderer, new TileEntityMachineReplicator()));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.pattern_storage),new ItemRendererTileEntityMachine(pattern_storage_renderer,new TileEntityMachinePatternStorage()));
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.chargingStation),new ItemRendererTileEntityMachine(rendererChargingStation,new TileEntityMachineChargingStation(),0.5));
     }
 
     public void createEntityRenderers()

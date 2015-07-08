@@ -23,6 +23,7 @@ public class MatterOverdriveIcons
     public static IIcon Monitor_back;
     public static IIcon YellowStripes;
     public static IIcon Coil;
+    public static IIcon charging_station;
 
     public static IIcon particle_steam;
 
@@ -53,6 +54,7 @@ public class MatterOverdriveIcons
         YellowStripes = register(r,"base_stripes");
         Recycler = register(r,"recycler_side");
         Coil = register(r,"base_coil");
+        charging_station = register(r,"charging_station");
     }
 
     private void initParticleIcons(IIconRegister r)

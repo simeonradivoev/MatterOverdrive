@@ -21,6 +21,7 @@ package matteroverdrive.blocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
+import matteroverdrive.client.render.block.RendererBlockChargingStation;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineChargingStation;
 import net.minecraft.block.material.Material;
@@ -60,7 +61,7 @@ public class BlockChargingStation extends MOBlockMachine
     @Override
     public int getRenderType()
     {
-        return -1;
+        return RendererBlockChargingStation.renderID;
     }
 
     @Override

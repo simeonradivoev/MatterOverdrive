@@ -19,13 +19,22 @@
 package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.Reference;
+import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.client.model.obj.Face;
+import net.minecraftforge.client.model.obj.GroupObject;
+import net.minecraftforge.client.model.obj.WavefrontObject;
+import org.lwjgl.util.vector.Matrix4f;
+
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -33,7 +42,6 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class TileEntityRendererChargingStation extends TileEntitySpecialRenderer
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.PATH_BLOCKS + "charging_station.png");
     private IModelCustom model;
 
     public TileEntityRendererChargingStation()
@@ -47,15 +55,15 @@ public class TileEntityRendererChargingStation extends TileEntitySpecialRenderer
         if (tileEntity != null) {
             glPushMatrix();
             glColor3d(1, 1, 1);
-            glTranslated(x + 0.5, y, z + 0.5);
-            RenderUtils.rotateFromBlock(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-            bindTexture(TEXTURE);
-            model.renderPart("Base");
-            double colorMultiply = Math.sin(Minecraft.getMinecraft().theWorld.getWorldTime() * 0.2) * 0.2 + 0.8;
-            glColor3d(colorMultiply, colorMultiply, colorMultiply);
+            glTranslated(x, y, z);
+            bindTexture(TextureMap.locationBlocksTexture);
             glDisable(GL_LIGHTING);
             RenderUtils.disableLightmap();
-            model.renderPart("Rod");
+            Tessellator.instance.startDrawingQuads();
+            Matrix4f mat = new Matrix4f();
+            RenderUtils.rotateFromBlock(mat,tileEntity.getWorldObj(),tileEntity.xCoord,tileEntity.yCoord,tileEntity.zCoord);
+            RenderUtils.tesseleteModelAsBlock(mat, ((WavefrontObject) model).groupObjects.get(1), MatterOverdriveIcons.charging_station, 0, 0, 0, 230,false,null);
+            Tessellator.instance.draw();
             glEnable(GL_LIGHTING);
             glPopMatrix();
         }

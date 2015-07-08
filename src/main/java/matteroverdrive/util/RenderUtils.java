@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.util;
 
 import cofh.lib.gui.GuiColor;
@@ -18,11 +36,16 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.obj.Face;
+import net.minecraftforge.client.model.obj.GroupObject;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import java.util.List;
 
@@ -83,9 +106,31 @@ public class RenderUtils
 		//System.out.println("Metadata " + metadata + "at [" + x +","+ y +","+ z + "]");
 	}
 
+	public static void rotateFromBlock(Matrix4f mat,IBlockAccess world,int x,int y,int z)
+	{
+		if(world != null)
+		{
+			int metadata = world.getBlockMetadata(x, y, z);
+
+			ForgeDirection direction = ForgeDirection.values()[metadata];
+			Vector3f axis = new Vector3f(0,1,0);
+
+			if (direction == ForgeDirection.WEST)
+			{
+				mat.rotate(-(float) (Math.PI / 2), axis);
+			}
+			else if (direction == ForgeDirection.EAST) {
+				mat.rotate((float) (Math.PI / 2), axis);
+			}
+			else if (direction == ForgeDirection.NORTH) {
+				mat.rotate(-(float) (Math.PI), axis);
+			}
+		}
+	}
+
 	public static void drawPlane(double size)
 	{
-		drawPlane(size,size);
+		drawPlane(size, size);
 	}
 
 	public static void drawPlane(double sizeX,double sizeY)
@@ -161,6 +206,82 @@ public class RenderUtils
 		tessellator.addVertexWithUV(x + sizeX, y + sizeY, sizeZ, 1, 1);
 
 		tessellator.draw();
+	}
+
+	public static void tesseleteModelAsBlock(Matrix4f mat,GroupObject object,IIcon icon,int x,int y,int z,int brightness,boolean lighting,GuiColor color)
+	{
+		float uSize = icon.getMaxU() - icon.getMinU();
+		float vSize = icon.getMaxV() - icon.getMinV();
+		float textureOffset = 0.00005F;
+		Vector4f pos = new Vector4f(0,0,0,1);
+
+		for (Face face : object.faces)
+		{
+			if (face.faceNormal == null)
+			{
+				face.faceNormal = face.calculateFaceNormal();
+			}
+			float averageU = 0F;
+			float averageV = 0F;
+
+			if ((face.textureCoordinates != null) && (face.textureCoordinates.length > 0))
+			{
+				for (int i = 0; i < face.textureCoordinates.length; ++i)
+				{
+					averageU += face.textureCoordinates[i].u;
+					averageV += face.textureCoordinates[i].v;
+				}
+
+				averageU = averageU / face.textureCoordinates.length;
+				averageV = averageV / face.textureCoordinates.length;
+			}
+
+			float offsetU, offsetV;
+
+			for (int i = 0; i < face.vertices.length; ++i)
+			{
+
+				if ((face.textureCoordinates != null) && (face.textureCoordinates.length > 0))
+				{
+					offsetU = textureOffset;
+					offsetV = textureOffset;
+
+					if (face.textureCoordinates[i].u > averageU)
+					{
+						offsetU = -offsetU;
+					}
+					if (face.textureCoordinates[i].v > averageV)
+					{
+						offsetV = -offsetV;
+					}
+
+					pos.x = face.vertices[i].x;
+					pos.y = face.vertices[i].y;
+					pos.z = face.vertices[i].z;
+					pos.w = 1;
+					Matrix4f.transform(mat, pos, pos);
+
+					Tessellator.instance.setNormal(face.faceNormal.x, face.faceNormal.y, face.faceNormal.z);
+					float colorMul = 1f;
+					if (lighting)
+					{
+						colorMul = 0.7f + 0.3f * Vector3f.dot(new Vector3f(face.faceNormal.x,face.faceNormal.y,face.faceNormal.z),new Vector3f(0,1,0));
+					}
+					if (color != null) {
+						Tessellator.instance.setColorRGBA_F(color.getFloatR() + colorMul, color.getFloatG() + colorMul, color.getFloatB() + colorMul, color.getFloatA());
+					}else
+					{
+						Tessellator.instance.setColorRGBA_F(colorMul, colorMul, colorMul, 1);
+					}
+					Tessellator.instance.setBrightness(brightness);
+					Tessellator.instance.addVertexWithUV(x + 0.5f + pos.x, y + pos.y, z + 0.5f + pos.z, icon.getMinU() + face.textureCoordinates[i].u * uSize + offsetU, icon.getMinV() + face.textureCoordinates[i].v * vSize + offsetV);
+				}
+				else
+				{
+					Tessellator.instance.addVertex(x + face.vertices[i].x, y + face.vertices[i].y, z + face.vertices[i].z);
+				}
+			}
+		}
 	}
 
 	public static int lerp(int a,int b,float lerp)
