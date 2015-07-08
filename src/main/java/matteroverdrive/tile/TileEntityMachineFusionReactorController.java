@@ -528,16 +528,19 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
 //	ComputerCraft
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public String getType() {
 		return "mo_fusion_reactor_controller";
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public String[] getMethodNames() {
 		return methodNames;
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 		try {
 			return callMethod(method, arguments);
@@ -547,28 +550,34 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public void attach(IComputerAccess computer) {}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public void detach(IComputerAccess computer) {}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public boolean equals(IPeripheral other) {
 		return false;
 	}
 
 //	OpenComputers
 	@Override
+	@Optional.Method(modid = "OpenComputers")
 	public String getComponentName() {
 		return "mo_fusion_reactor_controller";
 	}
 
 	@Override
+	@Optional.Method(modid = "OpenComputers")
 	public String[] methods() {
 		return methodNames;
 	}
 
 	@Override
+	@Optional.Method(modid = "OpenComputers")
 	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
 		int methodId = Arrays.asList(methodNames).indexOf(method);
 

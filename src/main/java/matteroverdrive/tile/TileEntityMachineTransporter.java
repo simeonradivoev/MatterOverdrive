@@ -631,16 +631,19 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 //	ComputerCraft
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public String getType() {
 		return "mo_transporter";
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public String[] getMethodNames() {
 		return methodNames;
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 		try {
 			return callMethod(method, arguments);
@@ -650,16 +653,19 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public void attach(IComputerAccess computer) {
 
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public void detach(IComputerAccess computer) {
 
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public boolean equals(IPeripheral other) { // Does this mean if it's the same type or if they're the same one?
 		return false; // TODO: Implement
 	}
@@ -667,16 +673,19 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 //	Open Computers
 	@Override
+	@Optional.Method(modid = "OpenComputers")
 	public String getComponentName() {
 		return "mo_transporter";
 	}
 
 	@Override
+	@Optional.Method(modid = "OpenComputers")
 	public String[] methods() {
 		return methodNames;
 	}
 
 	@Override
+	@Optional.Method(modid = "OpenComputers")
 	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
 		int methodId = Arrays.asList(methodNames).indexOf(method);
 
