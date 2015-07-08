@@ -1,5 +1,6 @@
 package matteroverdrive.tile;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
@@ -185,6 +186,7 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
 
 //	WAILA
 	@Override
+	@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		TileEntity te = accessor.getTileEntity();
 

@@ -378,6 +378,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 //	WAILA
 	@Override
+	@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		TileEntity te = accessor.getTileEntity();
 

@@ -18,6 +18,7 @@
 
 package matteroverdrive.tile;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
@@ -338,6 +339,7 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
 
 //	WAILA
 	@Override
+	@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		TileEntity te = accessor.getTileEntity();
 		if (te instanceof TileEntityMachineStarMap) {

@@ -1,5 +1,6 @@
 package matteroverdrive.tile;
 
+import cpw.mods.fml.common.Optional;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.api.matter.IMatterStorage;
@@ -130,7 +131,8 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 		}
 	}
 
-	//region WELA
+//	WAILA
+	@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		TileEntity te = accessor.getTileEntity();
 
@@ -144,5 +146,5 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 
 		return currenttip;
 	}
-	//endregion
+
 }
