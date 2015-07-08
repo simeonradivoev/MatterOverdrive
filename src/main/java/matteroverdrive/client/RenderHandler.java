@@ -25,6 +25,7 @@ import matteroverdrive.tile.*;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.Item;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -77,6 +78,7 @@ public class RenderHandler
     private TileEntityRendererFusionReactorController fusion_reactor_controller_renderer;
     private TileEntityRendererAndroidStation rendererAndroidStation;
     private TileEntityRendererStarMap rendererStarMap;
+    private TileEntityRendererChargingStation rendererChargingStation;
     //endregion
 
     public RenderHandler(World world,TextureManager textureManager)
@@ -125,6 +127,7 @@ public class RenderHandler
         fusion_reactor_controller_renderer = new TileEntityRendererFusionReactorController();
         rendererAndroidStation = new TileEntityRendererAndroidStation();
         rendererStarMap = new TileEntityRendererStarMap();
+        rendererChargingStation = new TileEntityRendererChargingStation();
 
         configHandler.subscribe(rendererAndroidStation);
         configHandler.subscribe(renderer_weapon_station);
@@ -158,6 +161,7 @@ public class RenderHandler
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineFusionReactorController.class,fusion_reactor_controller_renderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAndroidStation.class,rendererAndroidStation);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineStarMap.class,rendererStarMap);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineChargingStation.class,rendererChargingStation);
     }
 
     public void createItemRenderers()
@@ -172,6 +176,7 @@ public class RenderHandler
         //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.network_pipe),new ItemRendererPipe(network_pipeRenderer,new TileEntityNetworkPipe(),2));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.replicator), new ItemRendererTileEntityMachine(replicator_renderer, new TileEntityMachineReplicator()));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.pattern_storage),new ItemRendererTileEntityMachine(pattern_storage_renderer,new TileEntityMachinePatternStorage()));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.chargingStation),new ItemRendererTileEntityMachine(rendererChargingStation,new TileEntityMachineChargingStation(),0.5));
     }
 
     public void createEntityRenderers()

@@ -2,6 +2,7 @@ package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.Reference;
 import matteroverdrive.tile.TileEntityMachinePatternStorage;
+import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -39,7 +40,7 @@ public class TileEntityRendererPatterStorage extends TileEntitySpecialRenderer
         {
             GL11.glPushMatrix();
             GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
-            rotate(patternStorage.getWorldObj(), patternStorage.xCoord, patternStorage.yCoord, patternStorage.zCoord);
+            RenderUtils.rotateFromBlock(patternStorage.getWorldObj(), patternStorage.xCoord, patternStorage.yCoord, patternStorage.zCoord);
             bindTexture(texture);
 
             for (int i = 0; i < patternStorage.pattern_storage_slots.length;i++)
@@ -60,25 +61,6 @@ public class TileEntityRendererPatterStorage extends TileEntitySpecialRenderer
             bindTexture(ventTexture);
             model.renderPart("Vents");
             GL11.glPopMatrix();
-        }
-    }
-
-    private void rotate(World world,int x,int y,int z)
-    {
-        if(world != null) {
-            int metadata = world.getBlockMetadata(x, y, z);
-
-            ForgeDirection direction = ForgeDirection.values()[metadata];
-
-            if (direction == ForgeDirection.WEST) {
-                GL11.glRotated(-90, 0, 1, 0);
-            }
-            if (direction == ForgeDirection.EAST) {
-                GL11.glRotated(90, 0, 1, 0);
-            }
-            if (direction == ForgeDirection.NORTH) {
-                GL11.glRotated(-180, 0, 1, 0);
-            }
         }
     }
 }

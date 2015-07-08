@@ -41,6 +41,7 @@ public class MatterOverdriveBlocks
     public static BlockMatterRecycler recycler;
     public static BlockAndroidStation androidStation;
     public static BlockStarMap starMap;
+    public static BlockChargingStation chargingStation;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -79,6 +80,7 @@ public class MatterOverdriveBlocks
         recycler = new BlockMatterRecycler(Material.iron,"matter_recycler");
         androidStation = new BlockAndroidStation(Material.iron,"android_station");
         starMap = new BlockStarMap(Material.iron,"star_map");
+        chargingStation = new BlockChargingStation(Material.iron,"charging_station");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -121,6 +123,7 @@ public class MatterOverdriveBlocks
         MatterOverdrive.configHandler.subscribe(androidStation);
         starMap.register();
         MatterOverdrive.configHandler.subscribe(starMap);
+        chargingStation.register();
 
         if (event.getSide() == Side.CLIENT)
         {
