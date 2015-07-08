@@ -1,31 +1,28 @@
 package matteroverdrive.gui;
 
+import cofh.lib.gui.element.ElementDualScaled;
+import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.container.ContainerReplicator;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.pages.PageTasks;
 import matteroverdrive.items.MatterScanner;
+import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.network.packet.server.PacketRemoveTask;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.tile.TileEntityMachineReplicator;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
-import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-
-import cofh.lib.gui.element.ElementDualScaled;
-import cofh.lib.util.helpers.MathHelper;
-
-import matteroverdrive.Reference;
-import matteroverdrive.container.ContainerReplicator;
-import matteroverdrive.tile.TileEntityMachineReplicator;
-
-import net.minecraft.entity.player.InventoryPlayer;
 
 import java.util.List;
 

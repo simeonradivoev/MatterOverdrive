@@ -19,13 +19,13 @@
 package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
+import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.client.render.tileentity.starmap.StarMapRendererStars;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
-import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.Star;
 import matteroverdrive.util.RenderUtils;
@@ -35,7 +35,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

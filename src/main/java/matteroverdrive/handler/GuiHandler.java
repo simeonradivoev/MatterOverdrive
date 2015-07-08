@@ -1,5 +1,6 @@
 package matteroverdrive.handler;
 
+import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.container.*;
 import matteroverdrive.gui.*;
@@ -7,7 +8,6 @@ import matteroverdrive.tile.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.IGuiHandler;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

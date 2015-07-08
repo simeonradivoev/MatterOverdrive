@@ -1,10 +1,10 @@
 package matteroverdrive.blocks;
 
 import cofh.api.block.IDismantleable;
-import matteroverdrive.blocks.includes.MOBlock;
-import matteroverdrive.init.MatterOverdriveIcons;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.blocks.includes.MOBlock;
+import matteroverdrive.init.MatterOverdriveIcons;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

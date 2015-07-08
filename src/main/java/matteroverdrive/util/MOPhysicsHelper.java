@@ -1,8 +1,8 @@
 package matteroverdrive.util;
 
-import matteroverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;

@@ -2,6 +2,8 @@ package matteroverdrive.client.render.tileentity.starmap;
 
 import cofh.lib.gui.GuiColor;
 import cofh.lib.render.RenderHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
@@ -9,8 +11,6 @@ import matteroverdrive.starmap.data.*;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Vec3;
 

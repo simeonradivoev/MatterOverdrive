@@ -4,10 +4,10 @@ import codechicken.nei.VisiblityData;
 import codechicken.nei.api.API;
 import codechicken.nei.api.INEIGuiHandler;
 import codechicken.nei.api.TaggedInventoryArea;
-import matteroverdrive.compat.Compat;
-import matteroverdrive.gui.GuiStarMap;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import matteroverdrive.compat.Compat;
+import matteroverdrive.gui.GuiStarMap;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 

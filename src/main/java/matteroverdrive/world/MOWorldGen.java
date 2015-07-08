@@ -1,9 +1,9 @@
 package matteroverdrive.world;
 
+import cpw.mods.fml.common.IWorldGenerator;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.util.IConfigSubscriber;
-import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;

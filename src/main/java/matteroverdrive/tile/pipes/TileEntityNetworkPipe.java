@@ -1,6 +1,8 @@
 package matteroverdrive.tile.pipes;
 
 import cofh.lib.util.position.BlockPosition;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkCable;
 import matteroverdrive.api.network.IMatterNetworkConnection;
@@ -9,8 +11,6 @@ import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.util.MatterNetworkHelper;
 import matteroverdrive.util.math.MOMathHelper;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

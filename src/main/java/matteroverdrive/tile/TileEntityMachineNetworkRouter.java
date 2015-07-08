@@ -1,7 +1,7 @@
 package matteroverdrive.tile;
 
-import matteroverdrive.util.MatterNetworkHelper;
 import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.util.MatterNetworkHelper;
 
 /**
  * Created by Simeon on 3/11/2015.

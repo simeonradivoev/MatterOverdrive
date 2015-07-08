@@ -9,7 +9,8 @@ import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.position.BlockPosition;
 import cofh.lib.util.position.IRotateableTile;
 import cpw.mods.fml.common.Optional;
-import dan200.computercraft.api.ComputerCraftAPI;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -18,13 +19,10 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
-import li.cil.oc.common.tileentity.traits.Computer;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.init.MatterOverdriveBlocks;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -37,8 +35,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.function.Function;
 
 /**
  * Created by Simeon on 5/14/2015.

@@ -1,17 +1,17 @@
 package matteroverdrive.client.render.tileentity;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
 import matteroverdrive.client.render.tileentity.starmap.*;
 import matteroverdrive.container.ContainerStarMap;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.starmap.GalaxyClient;
+import matteroverdrive.starmap.data.SpaceBody;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.RenderUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.starmap.data.SpaceBody;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.*;
+import net.minecraft.util.Vec3;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,14 +1,14 @@
 package matteroverdrive.network.packet.bi;
 
 import cofh.lib.util.position.BlockPosition;
-import matteroverdrive.api.matter.IMatterDatabase;
-import matteroverdrive.gui.GuiMatterScanner;
-import matteroverdrive.network.packet.AbstractBiPacketHandler;
-import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.gui.GuiMatterScanner;
+import matteroverdrive.network.packet.AbstractBiPacketHandler;
+import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

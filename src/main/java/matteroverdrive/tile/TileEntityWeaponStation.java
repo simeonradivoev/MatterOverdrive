@@ -1,5 +1,7 @@
 package matteroverdrive.tile;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
@@ -8,8 +10,6 @@ import matteroverdrive.data.ItemInventoryWrapper;
 import matteroverdrive.data.inventory.ModuleSlot;
 import matteroverdrive.data.inventory.WeaponSlot;
 import matteroverdrive.util.MatterHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.EntityLivingBase;

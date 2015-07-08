@@ -25,12 +25,10 @@ import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
-import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 

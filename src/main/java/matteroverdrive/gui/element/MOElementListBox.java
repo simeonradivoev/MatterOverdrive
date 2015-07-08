@@ -1,19 +1,18 @@
 package matteroverdrive.gui.element;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.listbox.IListBoxElement;
 import cofh.lib.util.helpers.StringHelper;
+import matteroverdrive.gui.MOGuiBase;
+import matteroverdrive.gui.events.IListHandler;
+import matteroverdrive.util.RenderUtils;
+import net.minecraft.util.MathHelper;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import matteroverdrive.gui.MOGuiBase;
-import matteroverdrive.gui.events.IListHandler;
-import matteroverdrive.util.RenderUtils;
-import net.minecraft.util.MathHelper;
+import static org.lwjgl.opengl.GL11.*;
 
 public class MOElementListBox extends MOElementBase {
 

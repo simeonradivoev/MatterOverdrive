@@ -6,9 +6,9 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.item.ItemRendererPhaser;
+import matteroverdrive.client.sound.PhaserSound;
 import matteroverdrive.items.weapon.Phaser;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
-import matteroverdrive.client.sound.PhaserSound;
 import matteroverdrive.util.MOPhysicsHelper;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.block.Block;
@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 
 /**
  * Created by Simeon on 6/13/2015.

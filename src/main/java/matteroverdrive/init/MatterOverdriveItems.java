@@ -1,28 +1,26 @@
 package matteroverdrive.init;
 
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.MatterRegistry;
+import matteroverdrive.items.*;
 import matteroverdrive.items.food.EarlGrayTea;
 import matteroverdrive.items.food.RomulanAle;
+import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.items.starmap.ItemBuildingBase;
 import matteroverdrive.items.starmap.ItemColonizerShip;
 import matteroverdrive.items.starmap.ItemScoutShip;
 import matteroverdrive.items.starmap.ShipFactory;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import matteroverdrive.items.*;
 import matteroverdrive.items.weapon.Phaser;
-import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
+import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.items.includes.MOBaseItem;
-
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 

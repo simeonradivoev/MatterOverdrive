@@ -1,8 +1,6 @@
 package matteroverdrive.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementBase;
 import cofh.lib.util.helpers.MathHelper;
@@ -15,10 +13,12 @@ import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.gui.events.ITextHandler;
 import net.minecraft.inventory.Container;
-import cofh.lib.gui.GuiBase;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class MOGuiBase extends GuiBase implements IButtonHandler,ITextHandler,IListHandler, GuiElementList
 {

@@ -1,8 +1,5 @@
 package matteroverdrive.handler;
 
-import java.io.*;
-import java.util.*;
-
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
@@ -20,6 +17,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.Level;
+
+import java.io.*;
+import java.util.*;
 
 public class MatterRegistry
 {

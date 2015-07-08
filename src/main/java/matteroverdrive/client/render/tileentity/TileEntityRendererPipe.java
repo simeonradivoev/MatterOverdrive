@@ -1,18 +1,16 @@
 package matteroverdrive.client.render.tileentity;
 
-import javax.vecmath.*;
-
-import org.lwjgl.opengl.GL11;
-
 import matteroverdrive.Reference;
 import matteroverdrive.tile.pipes.TileEntityPipe;
 import matteroverdrive.util.math.MOMathHelper;
-
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.lwjgl.opengl.GL11;
+
+import javax.vecmath.*;
 
 public class TileEntityRendererPipe extends TileEntitySpecialRenderer {
 	

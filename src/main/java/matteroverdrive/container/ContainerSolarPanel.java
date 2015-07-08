@@ -1,9 +1,9 @@
 package matteroverdrive.container;
 
-import matteroverdrive.tile.TileEntityMachineSolarPanel;
-import matteroverdrive.util.MOContainerHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.tile.TileEntityMachineSolarPanel;
+import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;

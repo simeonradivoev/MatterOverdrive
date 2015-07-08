@@ -4,7 +4,6 @@ import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.api.starmap.GalacticPosition;
-import matteroverdrive.starmap.GalaxyServer;
 import matteroverdrive.util.MOLog;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

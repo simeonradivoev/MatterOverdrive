@@ -1,19 +1,15 @@
 package matteroverdrive.network.packet.server.starmap;
 
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.network.packet.PacketAbstract;
-import matteroverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
-import matteroverdrive.network.packet.server.AbstractServerPacketHandler;
-import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.starmap.GalaxyClient;
-import matteroverdrive.starmap.GalaxyServer;
-import matteroverdrive.api.starmap.GalacticPosition;
-import matteroverdrive.starmap.data.Galaxy;
-import matteroverdrive.starmap.data.Planet;
-import matteroverdrive.starmap.data.TravelEvent;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.starmap.GalacticPosition;
+import matteroverdrive.network.packet.PacketAbstract;
+import matteroverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
+import matteroverdrive.network.packet.server.AbstractServerPacketHandler;
+import matteroverdrive.starmap.GalaxyServer;
+import matteroverdrive.starmap.data.TravelEvent;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**

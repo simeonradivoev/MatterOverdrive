@@ -18,6 +18,8 @@
 
 package matteroverdrive.tile;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.starmap.GalacticPosition;
@@ -27,13 +29,13 @@ import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.network.packet.server.starmap.PacketStarMapAttack;
 import matteroverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
-import matteroverdrive.proxy.CommonProxy;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.GalaxyServer;
-import matteroverdrive.starmap.data.*;
+import matteroverdrive.starmap.data.Planet;
+import matteroverdrive.starmap.data.Quadrant;
+import matteroverdrive.starmap.data.SpaceBody;
+import matteroverdrive.starmap.data.Star;
 import matteroverdrive.util.MOStringHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.EntityLivingBase;

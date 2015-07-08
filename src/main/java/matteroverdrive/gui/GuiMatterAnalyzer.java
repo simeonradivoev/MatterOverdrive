@@ -3,12 +3,11 @@ package matteroverdrive.gui;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerMatterAnalyzer;
 import matteroverdrive.container.MOBaseContainer;
+import matteroverdrive.gui.element.ElementScanProgress;
+import matteroverdrive.gui.element.MOElementEnergy;
 import matteroverdrive.gui.pages.PageTasks;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityMachineMatterAnalyzer;
-
-import matteroverdrive.gui.element.ElementScanProgress;
-import matteroverdrive.gui.element.MOElementEnergy;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 /**

@@ -1,13 +1,13 @@
 package matteroverdrive.tile.pipes;
 
 import cofh.lib.util.TimeTracker;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.data.MatterStorage;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.math.MOMathHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

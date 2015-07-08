@@ -18,7 +18,8 @@
 
 package matteroverdrive.starmap;
 
-import com.sun.istack.internal.NotNull;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
@@ -28,12 +29,9 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
-import matteroverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
 import matteroverdrive.starmap.data.*;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOLog;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -43,7 +41,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import org.apache.logging.log4j.Level;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

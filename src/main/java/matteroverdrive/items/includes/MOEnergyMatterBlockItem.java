@@ -1,17 +1,12 @@
 package matteroverdrive.items.includes;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.util.MOEnergyHelper;
-
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -19,6 +14,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Keyboard;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MOEnergyMatterBlockItem extends ItemBlock
 {

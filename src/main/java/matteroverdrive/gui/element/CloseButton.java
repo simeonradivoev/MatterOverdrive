@@ -1,10 +1,10 @@
 package matteroverdrive.gui.element;
 
+import cofh.lib.gui.GuiBase;
+import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.util.MOStringHelper;
-import matteroverdrive.Reference;
 import net.minecraft.client.Minecraft;
-import cofh.lib.gui.GuiBase;
 
 public class CloseButton extends MOElementButton
 {

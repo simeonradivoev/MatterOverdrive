@@ -1,10 +1,10 @@
 package matteroverdrive.blocks;
 
 import cofh.lib.util.helpers.BlockHelper;
-import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.tile.TileEntityMachineNetworkRouter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.blocks.includes.MOBlockMachine;
+import matteroverdrive.tile.TileEntityMachineNetworkRouter;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;

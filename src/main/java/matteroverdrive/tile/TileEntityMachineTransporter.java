@@ -2,6 +2,8 @@ package matteroverdrive.tile;
 
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -15,13 +17,11 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.transport.ITransportList;
-import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.api.transport.TransportLocation;
+import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.fx.ReplicatorParticle;
 import matteroverdrive.network.packet.client.PacketSyncTransportProgress;
 import matteroverdrive.util.math.MOMathHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Created by Simeon on 5/3/2015.

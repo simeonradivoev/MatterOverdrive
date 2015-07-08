@@ -1,12 +1,12 @@
 package matteroverdrive.blocks;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.blocks.includes.MOBlockContainer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.tile.TileEntityGravitationalAnomaly;
 import matteroverdrive.util.IConfigSubscriber;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

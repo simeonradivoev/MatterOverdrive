@@ -1,10 +1,10 @@
 package matteroverdrive.handler;
 
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 

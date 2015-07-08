@@ -1,13 +1,11 @@
 package matteroverdrive.gui.element;
 
+import cofh.lib.gui.element.ElementTextField;
+import matteroverdrive.Reference;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.ITextHandler;
 import net.minecraft.util.ResourceLocation;
-
-import matteroverdrive.Reference;
-
-import cofh.lib.gui.element.ElementTextField;
 
 public class MOElementTextField extends ElementTextField
 {

@@ -29,7 +29,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 

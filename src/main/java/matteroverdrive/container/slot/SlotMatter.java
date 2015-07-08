@@ -1,7 +1,6 @@
 package matteroverdrive.container.slot;
 
 import matteroverdrive.util.MatterHelper;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 

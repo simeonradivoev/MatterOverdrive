@@ -1,10 +1,10 @@
 package matteroverdrive.network.packet.client;
 
-import matteroverdrive.network.packet.TileEntityUpdatePacket;
-import matteroverdrive.tile.TileEntityMachineTransporter;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.network.packet.TileEntityUpdatePacket;
+import matteroverdrive.tile.TileEntityMachineTransporter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 

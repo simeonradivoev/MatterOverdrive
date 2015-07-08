@@ -4,20 +4,17 @@ import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.items.weapon.Phaser;
-
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glTranslated;
 
 /**
  * Created by Simeon on 3/11/2015.

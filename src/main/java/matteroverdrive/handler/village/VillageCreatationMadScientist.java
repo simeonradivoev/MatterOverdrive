@@ -1,7 +1,7 @@
 package matteroverdrive.handler.village;
 
-import matteroverdrive.world.MadScientistHouse;
 import cpw.mods.fml.common.registry.VillagerRegistry;
+import matteroverdrive.world.MadScientistHouse;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.StructureVillagePieces;

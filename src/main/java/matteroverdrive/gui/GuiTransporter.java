@@ -2,10 +2,10 @@ package matteroverdrive.gui;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerTransporter;
+import matteroverdrive.gui.element.*;
 import matteroverdrive.network.packet.server.PacketTransporterCommands;
 import matteroverdrive.tile.TileEntityMachineTransporter;
 import matteroverdrive.util.MOStringHelper;
-import matteroverdrive.gui.element.*;
 import net.minecraft.entity.player.InventoryPlayer;
 
 /**

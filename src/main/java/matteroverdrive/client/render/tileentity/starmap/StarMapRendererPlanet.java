@@ -19,6 +19,8 @@
 package matteroverdrive.client.render.tileentity.starmap;
 
 import cofh.lib.gui.GuiColor;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.IBuildable;
 import matteroverdrive.api.starmap.IBuilding;
@@ -30,10 +32,7 @@ import matteroverdrive.starmap.data.SpaceBody;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -42,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
 /**
  * Created by Simeon on 6/17/2015.

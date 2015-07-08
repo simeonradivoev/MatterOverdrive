@@ -18,7 +18,8 @@
 
 package matteroverdrive.items.starmap;
 
-import matteroverdrive.api.starmap.*;
+import matteroverdrive.api.starmap.IBuilding;
+import matteroverdrive.api.starmap.ShipType;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.starmap.data.Planet;
 import net.minecraft.item.ItemStack;

@@ -1,8 +1,8 @@
 package matteroverdrive.handler;
 
 import matteroverdrive.api.inventory.IBionicStat;
-import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.data.biostats.*;
+import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;

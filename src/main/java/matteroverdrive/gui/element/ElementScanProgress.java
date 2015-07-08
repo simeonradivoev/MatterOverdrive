@@ -3,10 +3,8 @@ package matteroverdrive.gui.element;
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.GuiColor;
 import cofh.lib.util.helpers.MathHelper;
-
 import matteroverdrive.Reference;
 import matteroverdrive.util.math.MOMathHelper;
-
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;

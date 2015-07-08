@@ -1,12 +1,11 @@
 package matteroverdrive.blocks.includes;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.tile.IMOTileEntity;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public abstract class MOBlockContainer extends MOBlock implements ITileEntityProvider
 {

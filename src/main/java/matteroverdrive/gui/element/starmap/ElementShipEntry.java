@@ -25,17 +25,13 @@ import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
-import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.starmap.data.Planet;
-import matteroverdrive.starmap.data.TravelEvent;
-import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-import java.util.List;
 import java.util.Map;
 
 /**

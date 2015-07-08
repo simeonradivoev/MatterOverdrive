@@ -1,7 +1,7 @@
 package matteroverdrive.util;
 
-import matteroverdrive.Reference;
 import cpw.mods.fml.common.FMLLog;
+import matteroverdrive.Reference;
 import org.apache.logging.log4j.Level;
 
 /**

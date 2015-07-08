@@ -1,9 +1,9 @@
 package matteroverdrive.compat.modules.waila;
 
-import matteroverdrive.blocks.*;
-import matteroverdrive.compat.Compat;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
+import matteroverdrive.blocks.*;
+import matteroverdrive.compat.Compat;
 import matteroverdrive.tile.*;
 import mcp.mobius.waila.api.IWailaRegistrar;
 

@@ -1,9 +1,8 @@
 package matteroverdrive.container.slot;
 
+import matteroverdrive.util.MatterHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-
-import matteroverdrive.util.MatterHelper;
 
 public class SlotDatabase extends MOSlot
 {

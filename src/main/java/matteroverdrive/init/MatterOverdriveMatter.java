@@ -1,14 +1,13 @@
 package matteroverdrive.init;
 
 import matteroverdrive.Reference;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.MatterRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
-import matteroverdrive.handler.ConfigurationHandler;
 
 public class MatterOverdriveMatter
 {

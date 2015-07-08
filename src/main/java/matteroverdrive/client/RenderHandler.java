@@ -1,6 +1,9 @@
 package matteroverdrive.client;
 
-import cofh.core.util.ConfigHandler;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.client.render.IWorldLastRenderer;
 import matteroverdrive.client.render.RenderMatterScannerInfoHandler;
 import matteroverdrive.client.render.RenderParticlesHandler;
@@ -18,10 +21,6 @@ import matteroverdrive.entity.*;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveItems;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.tile.*;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.texture.TextureManager;

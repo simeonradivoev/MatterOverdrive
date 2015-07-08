@@ -1,8 +1,8 @@
 package matteroverdrive.network.packet.server;
 
-import matteroverdrive.network.packet.AbstractPacketHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import matteroverdrive.network.packet.AbstractPacketHandler;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**

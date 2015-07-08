@@ -1,20 +1,19 @@
 package matteroverdrive.init;
 
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.blocks.*;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.blocks.world.DilithiumOre;
 import matteroverdrive.guide.MatterOverdriveQuide;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.blocks.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MatterOverdriveBlocks 
 {

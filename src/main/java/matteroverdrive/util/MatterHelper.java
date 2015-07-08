@@ -1,18 +1,15 @@
 package matteroverdrive.util;
 
-import java.util.List;
-
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.matter.IMatterItem;
+import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.api.matter.IMatterProvider;
+import matteroverdrive.api.matter.IMatterReceiver;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.handler.MatterEntry;
 import matteroverdrive.handler.MatterRegistry;
-
 import matteroverdrive.items.MatterScanner;
-import matteroverdrive.api.matter.IMatterPatternStorage;
-import matteroverdrive.api.matter.IMatterReceiver;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
@@ -26,6 +23,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 public class MatterHelper 
 {

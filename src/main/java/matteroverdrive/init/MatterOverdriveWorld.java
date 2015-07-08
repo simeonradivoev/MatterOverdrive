@@ -1,8 +1,8 @@
 package matteroverdrive.init;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.world.MOWorldGen;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * Created by Simeon on 3/23/2015.

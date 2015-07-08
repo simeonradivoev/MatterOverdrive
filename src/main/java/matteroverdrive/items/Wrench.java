@@ -1,8 +1,8 @@
 package matteroverdrive.items;
 
 import cofh.api.block.IDismantleable;
-import matteroverdrive.items.includes.MOBaseItem;
 import cpw.mods.fml.common.eventhandler.Event;
+import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;

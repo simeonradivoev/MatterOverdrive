@@ -1,17 +1,16 @@
 package matteroverdrive.gui;
 
+import cofh.lib.gui.element.ElementDualScaled;
+import cofh.lib.util.helpers.MathHelper;
+import matteroverdrive.Reference;
+import matteroverdrive.container.ContainerDecomposer;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementMatterStored;
 import matteroverdrive.gui.element.ElementSlot;
-import matteroverdrive.util.MatterHelper;
-import matteroverdrive.container.ContainerDecomposer;
 import matteroverdrive.gui.element.MOElementEnergy;
-import net.minecraft.entity.player.InventoryPlayer;
-import cofh.lib.gui.element.ElementDualScaled;
-import cofh.lib.util.helpers.MathHelper;
-
-import matteroverdrive.Reference;
 import matteroverdrive.tile.TileEntityMachineDecomposer;
+import matteroverdrive.util.MatterHelper;
+import net.minecraft.entity.player.InventoryPlayer;
 
 public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 {

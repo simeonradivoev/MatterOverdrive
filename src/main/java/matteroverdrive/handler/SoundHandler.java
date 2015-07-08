@@ -1,11 +1,10 @@
 package matteroverdrive.handler;
 
-import java.util.Random;
-
 import matteroverdrive.Reference;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class SoundHandler 
 {

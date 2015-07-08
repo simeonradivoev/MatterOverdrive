@@ -1,8 +1,7 @@
 package matteroverdrive.util;
 
-import matteroverdrive.api.matter.IMatterDatabase;
-
 import cofh.lib.util.helpers.MathHelper;
+import matteroverdrive.api.matter.IMatterDatabase;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

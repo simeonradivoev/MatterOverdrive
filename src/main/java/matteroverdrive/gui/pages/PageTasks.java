@@ -2,9 +2,9 @@ package matteroverdrive.gui.pages;
 
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.gui.MOGuiBase;
-import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.gui.element.ElementBaseGroup;
 import matteroverdrive.gui.element.ElementTaskList;
+import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 
 /**
  * Created by Simeon on 4/21/2015.

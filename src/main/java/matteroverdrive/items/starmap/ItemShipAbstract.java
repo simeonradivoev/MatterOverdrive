@@ -19,13 +19,10 @@
 package matteroverdrive.items.starmap;
 
 import matteroverdrive.api.starmap.IShip;
-import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Simeon on 6/24/2015.

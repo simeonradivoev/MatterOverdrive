@@ -1,7 +1,7 @@
 package matteroverdrive.network.packet.bi;
 
-import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.network.packet.TileEntityUpdatePacket;
 
 /**
  * Created by Simeon on 6/12/2015.

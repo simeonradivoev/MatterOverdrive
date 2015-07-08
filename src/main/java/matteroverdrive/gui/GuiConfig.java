@@ -1,8 +1,8 @@
 package matteroverdrive.gui;
 
+import cpw.mods.fml.client.config.IConfigElement;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import cpw.mods.fml.client.config.IConfigElement;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.ArrayList;

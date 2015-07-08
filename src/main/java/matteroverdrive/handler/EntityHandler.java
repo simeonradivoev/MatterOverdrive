@@ -1,9 +1,9 @@
 package matteroverdrive.handler;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.api.inventory.IBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;

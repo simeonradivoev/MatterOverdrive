@@ -1,15 +1,15 @@
 package matteroverdrive.network.packet.server;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.data.biostats.BioticStatTeleport;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.network.packet.PacketAbstract;
-import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.client.PacketSpawnParticle;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
+import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 

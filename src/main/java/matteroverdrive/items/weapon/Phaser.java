@@ -1,16 +1,16 @@
 package matteroverdrive.items.weapon;
 
-import java.util.*;
-
 import cofh.api.energy.IEnergyContainerItem;
-import cofh.lib.util.helpers.*;
+import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.helpers.MathHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.client.sound.PhaserSound;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.handler.SoundHandler;
+import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.util.*;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,12 +22,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-
-import matteroverdrive.handler.SoundHandler;
-import matteroverdrive.items.includes.MOItemEnergyContainer;
 import org.lwjgl.util.vector.Vector2f;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Phaser extends MOItemEnergyContainer implements IWeapon{
 

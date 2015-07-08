@@ -1,13 +1,13 @@
 package matteroverdrive.data.biostats;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.server.PacketTeleportPlayer;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOPhysicsHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;

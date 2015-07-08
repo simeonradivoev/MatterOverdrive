@@ -1,12 +1,12 @@
 package matteroverdrive.container;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.container.slot.SlotDatabase;
 import matteroverdrive.container.slot.SlotEnergy;
 import matteroverdrive.container.slot.SlotMatter;
 import matteroverdrive.tile.TileEntityMachineMatterAnalyzer;
 import matteroverdrive.util.MOContainerHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;

@@ -1,14 +1,5 @@
 package matteroverdrive;
 
-import java.io.File;
-
-import matteroverdrive.commands.AndoidCommands;
-import matteroverdrive.compat.MatterOverdriveCompat;
-import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
-import matteroverdrive.network.PacketPipeline;
-
-import matteroverdrive.proxy.CommonProxy;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -16,10 +7,17 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import matteroverdrive.matter_network.MatterNetworkRegistry;
+import matteroverdrive.commands.AndoidCommands;
+import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.handler.*;
+import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
 import matteroverdrive.init.*;
+import matteroverdrive.matter_network.MatterNetworkRegistry;
+import matteroverdrive.network.PacketPipeline;
+import matteroverdrive.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.io.File;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, guiFactory = Reference.GUI_FACTORY_CLASS, dependencies = Reference.DEPEDNENCIES)
 public class MatterOverdrive 

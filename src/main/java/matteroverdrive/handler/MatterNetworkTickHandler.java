@@ -1,9 +1,9 @@
 package matteroverdrive.handler;
 
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
-import matteroverdrive.util.IConfigSubscriber;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
+import matteroverdrive.util.IConfigSubscriber;
 
 import java.util.List;
 

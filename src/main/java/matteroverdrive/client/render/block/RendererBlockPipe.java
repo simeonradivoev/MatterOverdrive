@@ -1,9 +1,9 @@
 package matteroverdrive.client.render.block;
 
-import matteroverdrive.tile.pipes.TileEntityPipe;
-import matteroverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import matteroverdrive.tile.pipes.TileEntityPipe;
+import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;

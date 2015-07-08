@@ -20,9 +20,9 @@ package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
+import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
-import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.starmap.data.Star;

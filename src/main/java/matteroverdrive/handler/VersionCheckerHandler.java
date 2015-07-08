@@ -1,11 +1,11 @@
 package matteroverdrive.handler;
 
+import com.google.gson.Gson;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
-import com.google.gson.Gson;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;

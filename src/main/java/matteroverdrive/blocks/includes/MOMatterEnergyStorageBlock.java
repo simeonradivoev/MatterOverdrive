@@ -4,7 +4,6 @@ import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.MOTileEntityMachineEnergy;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;

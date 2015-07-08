@@ -2,7 +2,6 @@ package matteroverdrive.data.inventory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Simeon on 3/16/2015.

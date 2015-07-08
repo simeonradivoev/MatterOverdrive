@@ -1,8 +1,8 @@
 package matteroverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
-
 import cofh.lib.util.helpers.MathHelper;
+import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
@@ -12,7 +12,6 @@ import matteroverdrive.data.inventory.MatterSlot;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MatterHelper;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;

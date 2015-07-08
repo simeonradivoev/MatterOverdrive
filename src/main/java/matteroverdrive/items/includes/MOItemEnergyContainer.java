@@ -1,14 +1,13 @@
 package matteroverdrive.items.includes;
 
-import java.util.List;
-
+import cofh.api.energy.IEnergyContainerItem;
+import cofh.lib.util.helpers.EnergyHelper;
 import matteroverdrive.util.MOEnergyHelper;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import cofh.api.energy.IEnergyContainerItem;
-import cofh.lib.util.helpers.EnergyHelper;
+
+import java.util.List;
 
 public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContainerItem
 {

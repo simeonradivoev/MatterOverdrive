@@ -1,13 +1,16 @@
 package matteroverdrive.compat;
 
-import matteroverdrive.compat.modules.*;
-import matteroverdrive.compat.modules.computercraft.CompatComputerCraft;
-import matteroverdrive.compat.modules.waila.CompatWaila;
-import matteroverdrive.util.MOLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import matteroverdrive.compat.modules.CompatEnderIO;
+import matteroverdrive.compat.modules.CompatExNihilo;
+import matteroverdrive.compat.modules.CompatNEI;
+import matteroverdrive.compat.modules.CompatThermalExpansion;
+import matteroverdrive.compat.modules.computercraft.CompatComputerCraft;
+import matteroverdrive.compat.modules.waila.CompatWaila;
+import matteroverdrive.util.MOLog;
 import org.apache.logging.log4j.Level;
 
 import java.lang.reflect.Method;

@@ -1,8 +1,8 @@
 package matteroverdrive.handler.thread;
 
+import cpw.mods.fml.common.FMLLog;
 import matteroverdrive.handler.MatterEntry;
 import matteroverdrive.handler.MatterRegistry;
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;

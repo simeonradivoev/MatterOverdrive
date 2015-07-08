@@ -1,9 +1,9 @@
 package matteroverdrive.items;
 
-import matteroverdrive.Reference;
-import matteroverdrive.items.includes.MOBaseItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.Reference;
+import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

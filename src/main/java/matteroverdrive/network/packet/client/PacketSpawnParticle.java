@@ -1,15 +1,15 @@
 package matteroverdrive.network.packet.client;
 
-import matteroverdrive.client.render.RenderParticlesHandler;
-import matteroverdrive.fx.AndroidTeleportParticle;
-import matteroverdrive.network.packet.PacketAbstract;
-import matteroverdrive.proxy.ClientProxy;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.client.render.RenderParticlesHandler;
+import matteroverdrive.fx.AndroidTeleportParticle;
+import matteroverdrive.network.packet.PacketAbstract;
+import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;

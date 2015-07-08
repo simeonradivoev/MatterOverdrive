@@ -1,24 +1,23 @@
 package matteroverdrive.tile;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IUpgradeable;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.blocks.includes.MOBlockMachine;
+import matteroverdrive.client.sound.MachineSound;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.TileEntityInventory;
 import matteroverdrive.data.inventory.UpgradeSlot;
 import matteroverdrive.fx.VentParticle;
-
 import matteroverdrive.items.SecurityProtocol;
-import matteroverdrive.client.sound.MachineSound;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.math.MOMathHelper;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

@@ -1,14 +1,13 @@
 package matteroverdrive.gui.element;
 
-import matteroverdrive.Reference;
-import matteroverdrive.data.ScaleTexture;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.Minecraft;
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.element.ElementBase;
 import cofh.lib.render.RenderHelper;
+import matteroverdrive.Reference;
+import matteroverdrive.data.ScaleTexture;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class ElementProgress extends ElementBase
 {

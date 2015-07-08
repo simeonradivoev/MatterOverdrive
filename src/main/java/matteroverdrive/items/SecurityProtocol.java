@@ -1,11 +1,11 @@
 package matteroverdrive.items;
 
 import cofh.lib.util.helpers.MathHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.tile.MOTileEntityMachine;
 import matteroverdrive.util.MOStringHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

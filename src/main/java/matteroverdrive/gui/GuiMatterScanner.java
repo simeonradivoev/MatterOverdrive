@@ -3,18 +3,15 @@ package matteroverdrive.gui;
 import cofh.lib.util.TimeTracker;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerMatterScanner;
-import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.pages.PageInfo;
 import matteroverdrive.gui.pages.PageScanInfo;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.network.packet.bi.PacketMatterScannerGetDatabase;
 import matteroverdrive.network.packet.server.PacketMatterScannerUpdate;
-
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterDatabaseHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

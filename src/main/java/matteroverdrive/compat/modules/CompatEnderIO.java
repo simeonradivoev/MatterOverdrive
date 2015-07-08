@@ -1,9 +1,9 @@
 package matteroverdrive.compat.modules;
 
-import matteroverdrive.compat.Compat;
-import matteroverdrive.init.MatterOverdriveItems;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
+import matteroverdrive.compat.Compat;
+import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;

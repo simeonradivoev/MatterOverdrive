@@ -1,17 +1,16 @@
 package matteroverdrive.blocks;
 
-import java.util.List;
-
-import matteroverdrive.client.render.block.RendererBlockPipe;
 import matteroverdrive.blocks.includes.MOBlockContainer;
+import matteroverdrive.client.render.block.RendererBlockPipe;
 import matteroverdrive.tile.pipes.TileEntityPipe;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 public abstract class BlockPipe extends MOBlockContainer
 {

@@ -1,9 +1,8 @@
 package matteroverdrive;
 
+import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-
-import matteroverdrive.init.MatterOverdriveItems;
 
 public class MatterOverdriveTab extends CreativeTabs 
 {

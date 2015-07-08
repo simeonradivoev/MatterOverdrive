@@ -6,6 +6,7 @@ import matteroverdrive.tile.TileEntityGravitationalAnomaly;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+
 import java.util.Random;
 
 /**

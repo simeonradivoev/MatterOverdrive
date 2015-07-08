@@ -1,10 +1,7 @@
 package matteroverdrive.api.weapon;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Created by Simeon on 4/13/2015.

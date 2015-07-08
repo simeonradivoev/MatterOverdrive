@@ -1,8 +1,8 @@
 package matteroverdrive.init;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.proxy.ClientProxy;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.event.TextureStitchEvent;

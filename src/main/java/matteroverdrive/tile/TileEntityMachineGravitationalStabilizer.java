@@ -1,15 +1,15 @@
 package matteroverdrive.tile;
 
 import cofh.lib.util.helpers.BlockHelper;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.blocks.BlockGravitationalAnomaly;
 import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.fx.GravitationalStabilizerBeamParticle;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.math.MOMathHelper;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;

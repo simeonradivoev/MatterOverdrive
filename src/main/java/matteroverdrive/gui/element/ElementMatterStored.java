@@ -1,17 +1,15 @@
 package matteroverdrive.gui.element;
 
-import java.util.List;
-
 import cofh.lib.gui.GuiBase;
 import cofh.lib.render.RenderHelper;
 import cofh.lib.util.helpers.MathHelper;
-
 import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterStorage;
 import matteroverdrive.util.MatterHelper;
-
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.List;
 
 
 public class ElementMatterStored extends MOElementBase

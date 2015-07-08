@@ -1,7 +1,7 @@
 package matteroverdrive.handler.village;
 
-import matteroverdrive.init.MatterOverdriveItems;
 import cpw.mods.fml.common.registry.VillagerRegistry;
+import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;

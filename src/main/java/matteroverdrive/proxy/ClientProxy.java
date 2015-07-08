@@ -1,5 +1,7 @@
 package matteroverdrive.proxy;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.HoloIcons;
@@ -8,10 +10,7 @@ import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.TooltipHandler;
 import matteroverdrive.init.MatterOverdriveIcons;
-
 import matteroverdrive.starmap.GalaxyClient;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;

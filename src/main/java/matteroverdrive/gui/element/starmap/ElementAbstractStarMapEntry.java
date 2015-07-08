@@ -34,10 +34,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-import java.security.KeyPair;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

@@ -1,9 +1,12 @@
 package matteroverdrive.blocks;
 
 import cofh.lib.util.helpers.BlockHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.Reference;
+import matteroverdrive.blocks.includes.MOMatterEnergyStorageBlock;
 import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.init.MatterOverdriveIcons;
-import matteroverdrive.blocks.includes.MOMatterEnergyStorageBlock;
 import matteroverdrive.tile.TileEntityMachineDecomposer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -12,10 +15,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import matteroverdrive.Reference;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockDecomposer extends MOMatterEnergyStorageBlock
 {

@@ -1,9 +1,9 @@
 package matteroverdrive.tile.pipes;
 
-import matteroverdrive.tile.MOTileEntity;
-import matteroverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.tile.MOTileEntity;
+import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;

@@ -1,14 +1,14 @@
 package matteroverdrive.handler;
 
-import matteroverdrive.api.inventory.IBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.items.MatterScanner;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.api.inventory.IBionicStat;
+import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.items.MatterScanner;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;

@@ -1,20 +1,18 @@
 package matteroverdrive.gui.element;
 
-import java.util.List;
-
-import matteroverdrive.items.MatterScanner;
 import matteroverdrive.gui.MOGuiBase;
+import matteroverdrive.items.MatterScanner;
 import matteroverdrive.util.MatterDatabaseHelper;
-import matteroverdrive.util.RenderUtils;
-import org.lwjgl.opengl.GL11;
-
 import matteroverdrive.util.MatterHelper;
-
+import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 public class MatterDatabaseListBox extends MOElementListBox
 {

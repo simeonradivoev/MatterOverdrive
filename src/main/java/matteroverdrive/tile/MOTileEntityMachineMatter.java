@@ -1,11 +1,12 @@
 package matteroverdrive.tile;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.matter.IMatterHandler;
+import matteroverdrive.api.matter.IMatterStorage;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
+import matteroverdrive.data.MatterStorage;
 import matteroverdrive.network.packet.client.PacketMatterUpdate;
 import matteroverdrive.util.MatterHelper;
-import matteroverdrive.api.matter.IMatterStorage;
-import matteroverdrive.data.MatterStorage;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.item.ItemStack;
@@ -13,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
-import matteroverdrive.api.matter.IMatterHandler;
 
 import java.util.List;
 

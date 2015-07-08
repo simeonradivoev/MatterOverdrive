@@ -1,8 +1,8 @@
 package matteroverdrive.starmap.data;
 
-import matteroverdrive.starmap.GalaxyGenerator;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.starmap.GalaxyGenerator;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**

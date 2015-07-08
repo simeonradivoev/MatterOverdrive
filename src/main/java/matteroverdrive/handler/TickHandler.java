@@ -1,13 +1,11 @@
 package matteroverdrive.handler;
 
-import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.starmap.GalaxyClient;
-import matteroverdrive.starmap.GalaxyServer;
-import matteroverdrive.tile.IMOTickable;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.tile.IMOTickable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 

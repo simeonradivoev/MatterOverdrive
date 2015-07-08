@@ -1,21 +1,20 @@
 package matteroverdrive.handler;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import matteroverdrive.Reference;
-import matteroverdrive.init.MatterOverdriveBlocks;
-
-import matteroverdrive.util.IConfigSubscriber;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import matteroverdrive.Reference;
+import matteroverdrive.init.MatterOverdriveBlocks;
+import matteroverdrive.util.IConfigSubscriber;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+
+import java.io.File;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ConfigurationHandler
 {

@@ -2,19 +2,19 @@ package matteroverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.MathHelper;
-import matteroverdrive.Reference;
-import matteroverdrive.api.IScannable;
-import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.fx.GravitationalAnomalyParticle;
-import matteroverdrive.handler.AndroidStatRegistry;
-import matteroverdrive.items.SpacetimeEqualizer;
-import matteroverdrive.client.sound.GravitationalAnomalySound;
-import matteroverdrive.util.MatterHelper;
-import matteroverdrive.util.math.MOMathHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.Reference;
+import matteroverdrive.api.IScannable;
+import matteroverdrive.client.sound.GravitationalAnomalySound;
+import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.fx.GravitationalAnomalyParticle;
+import matteroverdrive.handler.AndroidStatRegistry;
+import matteroverdrive.items.SpacetimeEqualizer;
+import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
@@ -39,7 +39,9 @@ import net.minecraftforge.fluids.IFluidBlock;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * Created by Simeon on 5/11/2015.

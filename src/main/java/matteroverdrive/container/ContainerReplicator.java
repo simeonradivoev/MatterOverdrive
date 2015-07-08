@@ -1,18 +1,16 @@
 package matteroverdrive.container;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.container.slot.SlotDatabase;
 import matteroverdrive.container.slot.SlotEnergy;
 import matteroverdrive.container.slot.SlotRemoveOnly;
 import matteroverdrive.container.slot.SlotShielding;
+import matteroverdrive.tile.TileEntityMachineReplicator;
 import matteroverdrive.util.MOContainerHelper;
-import matteroverdrive.container.slot.SlotDatabase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
-
-import matteroverdrive.tile.TileEntityMachineReplicator;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerReplicator extends ContainerMachine<TileEntityMachineReplicator>
 {

@@ -1,21 +1,20 @@
 package matteroverdrive.items;
 
-import java.util.List;
-
 import cofh.lib.util.position.BlockPosition;
-import matteroverdrive.Reference;
-import matteroverdrive.api.IScannable;
-import matteroverdrive.handler.KeyHandler;
-import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.client.sound.MachineSound;
-import matteroverdrive.util.MOPhysicsHelper;
-import matteroverdrive.util.MOStringHelper;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.Reference;
+import matteroverdrive.api.IScannable;
+import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.client.sound.MachineSound;
 import matteroverdrive.gui.GuiMatterScanner;
+import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.SoundHandler;
 import matteroverdrive.items.includes.MOBaseItem;
+import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.MOPhysicsHelper;
+import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.client.Minecraft;
@@ -28,9 +27,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
-
-import matteroverdrive.api.matter.IMatterDatabase;
 import org.lwjgl.input.Keyboard;
+
+import java.util.List;
 
 public class MatterScanner extends MOBaseItem
 {

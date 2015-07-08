@@ -19,13 +19,13 @@
 package matteroverdrive.starmap.data;
 
 import cofh.lib.gui.GuiColor;
+import cpw.mods.fml.common.FMLLog;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.*;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.starmap.GalaxyGenerator;
 import matteroverdrive.starmap.gen.ISpaceBodyGen;
-import cpw.mods.fml.common.FMLLog;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

@@ -2,8 +2,6 @@ package matteroverdrive.api.weapon;
 
 import net.minecraft.item.ItemStack;
 
-import java.util.Objects;
-
 /**
  * Created by Simeon on 4/14/2015.
  */

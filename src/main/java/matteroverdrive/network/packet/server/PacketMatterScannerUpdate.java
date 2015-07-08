@@ -1,12 +1,12 @@
 package matteroverdrive.network.packet.server;
 
-import matteroverdrive.items.MatterScanner;
-import matteroverdrive.network.packet.PacketAbstract;
-import matteroverdrive.util.MatterHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.items.MatterScanner;
+import matteroverdrive.network.packet.PacketAbstract;
+import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

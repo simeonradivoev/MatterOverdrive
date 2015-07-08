@@ -1,9 +1,9 @@
 package matteroverdrive.matter_network;
 
+import cpw.mods.fml.common.FMLLog;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
 import matteroverdrive.api.network.MatterNetworkTask;
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;

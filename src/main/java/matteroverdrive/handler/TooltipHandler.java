@@ -1,8 +1,8 @@
 package matteroverdrive.handler;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.input.Keyboard;
