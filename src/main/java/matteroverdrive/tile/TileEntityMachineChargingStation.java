@@ -26,6 +26,8 @@ import matteroverdrive.entity.AndroidPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -38,6 +40,7 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
 
     public static final int ENERGY_CAPACITY = 512000;
     public static final int ENERGY_TRANSFER = 1024;
+    public static int RANGE = 16;
 
     public TileEntityMachineChargingStation()
     {
@@ -58,15 +61,21 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     private void manageAndroidCharging()
     {
         if (!worldObj.isRemote) {
-            AxisAlignedBB radius = AxisAlignedBB.getBoundingBox(xCoord - 8, yCoord - 8, zCoord - 8, xCoord + 8, yCoord + 8, zCoord + 8);
+            AxisAlignedBB radius = AxisAlignedBB.getBoundingBox(xCoord - RANGE, yCoord - RANGE, zCoord - RANGE, xCoord + RANGE, yCoord + RANGE, zCoord + RANGE);
             List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, radius);
             for (EntityPlayer player : players) {
                 if (AndroidPlayer.get(player).isAndroid()) {
-                    int avalibleEnergy = extractEnergy(ForgeDirection.UNKNOWN, ENERGY_TRANSFER, true);
-                    extractEnergy(ForgeDirection.UNKNOWN, AndroidPlayer.get(player).receiveEnergy(avalibleEnergy, false), false);
+                    int energy = getReqiredEnergy(player);
+                    int availableEnergy = Math.min(energy,extractEnergy(ForgeDirection.UNKNOWN, ENERGY_TRANSFER, true));
+                    extractEnergy(ForgeDirection.UNKNOWN, AndroidPlayer.get(player).receiveEnergy(availableEnergy, false), false);
                 }
             }
         }
+    }
+
+    private int getReqiredEnergy(EntityPlayer player)
+    {
+        return (int)(ENERGY_TRANSFER * (1.0D - MathHelper.clamp_double((Vec3.createVectorHelper(player.posX,player.posY,player.posZ).subtract(Vec3.createVectorHelper(xCoord,yCoord,zCoord)).lengthVector() / (double)RANGE),0,1)));
     }
 
     @Override

@@ -4,6 +4,7 @@ import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
+import matteroverdrive.client.render.block.RendererBlockPatternStorage;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachinePatternStorage;
@@ -48,7 +49,7 @@ public class BlockPatternStorage extends MOBlockMachine
     @Override
     public int getRenderType()
     {
-        return -1;
+        return RendererBlockPatternStorage.renderID;
     }
 
     @Override

@@ -22,10 +22,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.client.render.block.RendererBlockChargingStation;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineChargingStation;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
@@ -52,6 +54,17 @@ public class BlockChargingStation extends MOBlockMachine
         return MatterOverdriveIcons.Base;
     }
 
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World p_149633_1_, int x, int y, int z)
+    {
+        return AxisAlignedBB.getBoundingBox((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
+    }
+
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int x, int y, int z)
+    {
+        return AxisAlignedBB.getBoundingBox((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
+    }
+
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
     {
@@ -68,5 +81,12 @@ public class BlockChargingStation extends MOBlockMachine
     public boolean isOpaqueCube()
     {
         return false;
+    }
+
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
+    {
+        super.onConfigChanged(config);
+        TileEntityMachineChargingStation.RANGE = config.getInt("charge station range",config.CATEGORY_MACHINES,16,"The range of the Charge Station");
     }
 }

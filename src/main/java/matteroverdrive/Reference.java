@@ -116,5 +116,6 @@ public class Reference
 	//region models
 	public static final String MODEL_SPHERE = Reference.PATH_MODEL_BLOCKS + "sphere.obj";
 	public static final String MODEL_CHARGING_STATION = Reference.PATH_MODEL_BLOCKS + "charging_station.obj";
+	public static final String MODEL_PATTERN_STORAGE = Reference.PATH_MODEL_BLOCKS + "pattern_storage.obj";
 	//endregion
 }

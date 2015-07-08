@@ -19,7 +19,6 @@ import org.lwjgl.opengl.GL11;
  */
 public class TileEntityRendererPatterStorage extends TileEntitySpecialRenderer
 {
-    public static final String MODEL_PATH = Reference.PATH_MODEL_BLOCKS + "pattern_storage.obj";
     private IModelCustom model;
     private ResourceLocation texture;
     private ResourceLocation ventTexture;
@@ -29,7 +28,7 @@ public class TileEntityRendererPatterStorage extends TileEntitySpecialRenderer
     {
         texture = new ResourceLocation(Reference.PATH_BLOCKS + "pattern_storage.png");
         ventTexture = new ResourceLocation(Reference.PATH_BLOCKS + "vent.png");
-        model = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL_PATH));
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.MODEL_PATTERN_STORAGE));
     }
 
     @Override
@@ -54,12 +53,6 @@ public class TileEntityRendererPatterStorage extends TileEntitySpecialRenderer
                     GL11.glPopMatrix();
                 }
             }
-
-
-            //model.renderPart("Front");
-            model.renderPart("pattern_storage");
-            bindTexture(ventTexture);
-            model.renderPart("Vents");
             GL11.glPopMatrix();
         }
     }

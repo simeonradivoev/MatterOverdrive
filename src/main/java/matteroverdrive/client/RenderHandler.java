@@ -10,10 +10,7 @@ import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.client.render.RendererPhaserBeam;
 import matteroverdrive.client.render.biostat.BiostatRendererShield;
 import matteroverdrive.client.render.biostat.BiostatRendererTeleporter;
-import matteroverdrive.client.render.block.MOBlockRenderer;
-import matteroverdrive.client.render.block.RendererBlockChargingStation;
-import matteroverdrive.client.render.block.RendererBlockGravitationalStabilizer;
-import matteroverdrive.client.render.block.RendererBlockPipe;
+import matteroverdrive.client.render.block.*;
 import matteroverdrive.client.render.entity.*;
 import matteroverdrive.client.render.item.ItemRendererPhaser;
 import matteroverdrive.client.render.item.ItemRendererTileEntityMachine;
@@ -51,6 +48,7 @@ public class RenderHandler
     private RendererBlockGravitationalStabilizer gravitationalStabilizerRenderer;
     private RendererBlockPipe rendererBlockPipe;
     private RendererBlockChargingStation rendererBlockChargingStation;
+    private RendererBlockPatternStorage rendererBlockPatternStorage;
     //endregion
     //region Biostat Renderers
     private BiostatRendererTeleporter rendererTeleporter;
@@ -141,6 +139,7 @@ public class RenderHandler
         gravitationalStabilizerRenderer = new RendererBlockGravitationalStabilizer();
         rendererBlockPipe = new RendererBlockPipe();
         rendererBlockChargingStation = new RendererBlockChargingStation();
+        rendererBlockPatternStorage = new RendererBlockPatternStorage();
     }
 
     public void registerBlockRenderers()
@@ -149,6 +148,7 @@ public class RenderHandler
         RenderingRegistry.registerBlockHandler(gravitationalStabilizerRenderer);
         RenderingRegistry.registerBlockHandler(rendererBlockPipe);
         RenderingRegistry.registerBlockHandler(rendererBlockChargingStation);
+        RenderingRegistry.registerBlockHandler(rendererBlockPatternStorage);
     }
 
     public void registerTileEntitySpecialRenderers()
@@ -174,7 +174,6 @@ public class RenderHandler
     {
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser, rendererPhaser);
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.replicator), new ItemRendererTileEntityMachine(replicator_renderer, new TileEntityMachineReplicator()));
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.pattern_storage),new ItemRendererTileEntityMachine(pattern_storage_renderer,new TileEntityMachinePatternStorage()));
     }
 
     public void createEntityRenderers()

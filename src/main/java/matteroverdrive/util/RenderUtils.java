@@ -265,7 +265,7 @@ public class RenderUtils
 					float colorMul = 1f;
 					if (lighting)
 					{
-						colorMul = 0.7f + 0.3f * Vector3f.dot(new Vector3f(face.faceNormal.x,face.faceNormal.y,face.faceNormal.z),new Vector3f(0,1,0));
+						colorMul = 0.7f + 0.3f * Vector3f.dot(new Vector3f(face.faceNormal.x,face.faceNormal.y,face.faceNormal.z),new Vector3f(-0.3f,1,0));
 					}
 					if (color != null) {
 						Tessellator.instance.setColorRGBA_F(color.getFloatR() + colorMul, color.getFloatG() + colorMul, color.getFloatB() + colorMul, color.getFloatA());

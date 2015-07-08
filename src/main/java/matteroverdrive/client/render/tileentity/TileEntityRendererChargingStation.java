@@ -18,6 +18,7 @@
 
 package matteroverdrive.client.render.tileentity;
 
+import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.util.RenderUtils;
@@ -54,7 +55,8 @@ public class TileEntityRendererChargingStation extends TileEntitySpecialRenderer
     {
         if (tileEntity != null) {
             glPushMatrix();
-            glColor3d(1, 1, 1);
+            float colorMul = (float)(Math.sin(Minecraft.getMinecraft().theWorld.getWorldTime()*0.2));
+            glColor3d(colorMul, colorMul, colorMul);
             glTranslated(x, y, z);
             bindTexture(TextureMap.locationBlocksTexture);
             glDisable(GL_LIGHTING);
@@ -62,7 +64,7 @@ public class TileEntityRendererChargingStation extends TileEntitySpecialRenderer
             Tessellator.instance.startDrawingQuads();
             Matrix4f mat = new Matrix4f();
             RenderUtils.rotateFromBlock(mat,tileEntity.getWorldObj(),tileEntity.xCoord,tileEntity.yCoord,tileEntity.zCoord);
-            RenderUtils.tesseleteModelAsBlock(mat, ((WavefrontObject) model).groupObjects.get(1), MatterOverdriveIcons.charging_station, 0, 0, 0, 230,false,null);
+            RenderUtils.tesseleteModelAsBlock(mat, ((WavefrontObject) model).groupObjects.get(1), MatterOverdriveIcons.charging_station, 0, 0, 0, (int)(colorMul * 20) + 220,false,null);
             Tessellator.instance.draw();
             glEnable(GL_LIGHTING);
             glPopMatrix();
