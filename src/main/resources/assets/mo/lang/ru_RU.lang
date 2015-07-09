@@ -1,3 +1,6 @@
+==========================================================================================================
+# Предметы
+
 item.matter_scanner.name=Сканер материи
 item.emergency_ration.name=Аварийный паёк
 item.phaser.name=Фазер
@@ -58,13 +61,30 @@ item.weapon_module_barrel.damage.name=Дилитиевая фокусирующ�
 item.weapon_module_barrel.fire.name=Зажигательный фильтр
 item.weapon_module_barrel.explosion.name=Взрыво-индуктивный барабан
 
+==========================================================================================================
+# Плитка объектов
+ 
+## Репликатор ##
 tile.replicator.name=Репликатор материи
 tile.replicator.config.volume.replicate=Громкость репликации
 tile.replicator.config.particles.vent=Частицы вента
+tile.replicator.config.storage.matter=Хранилище материи
+tile.replicator.config.storage.energy=Хранилище энергии
+tile.replicator.config.cost.replication.energy=Стоимость электроэнергии за материю
+tile.replicator.config.speed.replication=Скорость выработки материи 
+tile.replicator.config.fail=Возможность неудачи
 tile.replicator.details=Реплицирует предметы и блоки из плазменной материи
 tile.replicator_active.name=Репликатор материи
+
+## Разлагатель ##
 tile.decomposer.name=Разлагатель материи
 tile.decomposer.details=Разлагает предметы в плазменную материю
+tile.decomposer.config.storage.matter=Хранилище материи
+tile.decomposer.config.storage.energy=Хранилище энергии
+tile.decomposer.config.speed.decompose=Скорость разложения
+tile.decomposer.config.cost.decompose=Стоимость разложения
+
+
 tile.matter_pipe.name=Материальная транспортная труба
 tile.matter_pipe.details=Транспортирует плазменную материя
 tile.network_pipe.name=Материальный cетевой кабель
@@ -80,9 +100,14 @@ tile.matter_analyzer.details=Анализирует шаблоны предме�
 tile.dilithium_ore.name=Дилитиевая руда
 tile.tritanium_ore.name=Тритановая руда
 tile.tritanium_block.name=Тритановый блок
+
+## Хранилище шаблонов ##
 tile.pattern_storage.name=Хранилище шаблонов
 tile.pattern_storage.details=Хранит шаблоны предметов, для репликации
 tile.pattern_storage.config.particles.vent=Частицы вента
+tile.pattern_storage.config.storage.energy=Хранилище энергии
+tile.pattern_storage.config.transfer.energy=Скорость передачи энергии
+
 tile.machine_hull.name=Машинный корпус
 tile.solar_panel.name=Солнечная панель
 tile.solar_panel.details=Производит RF от солнечного света
@@ -96,10 +121,20 @@ tile.gravitational_stabilizer.name=Гравитационный стабилиз
 tile.gravitational_stabilizer.details=Используется для подавления эффектов гравитационных аномалий
 tile.matter_recycler.name=Утилизатор материи
 tile.matter_recycler.details=Используется для переработки предметов, готовых для разложения
+
+## Термоядерный реактор ##
 tile.fusion_reactor_controller.name=Контроллер термоядерного реактора
+tile.fusion_reactor_controller.config.storage.energy=Хранилище энергии
+tile.fusion_reactor_controller.config.storage.matter=Хранилище материи
+tile.fusion_reactor_controller.config.output.energy=Выходная энергия
+tile.fusion_reactor_controller.config.drain.matter=Расход материи
+tile.fusion_reactor_controller.config.distance.anomaly=Максимальное расстояние аномалии
+tile.fusion_reactor_controller.config.check.delay=Задержка проверки структуры
 tile.fusion_reactor_controller.details=Главный контроллер термоядерного реактора
 tile.fusion_reactor_coil.name=Катушка термоядерного реактора
 tile.fusion_reactor_coil.details=Используется для удержания плазмы в термоядерных реакторах
+ 
+## Android-станция ##
 tile.android_station.name=Android-станция
 tile.android_station.details=Управление Android-улучшениями
 tile.star_map.name=Звездная карта
@@ -115,6 +150,8 @@ entity.failed_pig.name=Неудачная свинья
 entity.failed_chicken.name=Неудачная курица
 entity.failed_cow.name=Неудачная корова
 entity.failed_sheep.name=Неудачная овца
+
+## Безумный учёный ##
 entity.mad_scientist.name=Безумный учёный
 entity.mad_scientist.line.fail.0=У вас нет всех Android-частей!
 entity.mad_scientist.line.fail.1=Я не дам вам какие либо из моих частей!
@@ -132,6 +169,8 @@ itemGroup.tabMatterOverdrive=Matter Overdrive
 itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Модули
 itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Улучшения
 
+==========================================================================================================
+# Типы улучшений
 upgradetype.Speed.name=Время
 upgradetype.PowerUsage.name=Потребляемая мощность
 upgradetype.Output.name=Выход
@@ -140,6 +179,8 @@ upgradetype.Fail.name=Неудача
 upgradetype.Range.name=Диапазон
 upgradetype.PowerStorage.name=Мощность хранения
 
+==========================================================================================================
+# Оружейные статистики
 weaponstat.0.name=Урон
 weaponstat.1.name=Боеприпасы
 weaponstat.2.name=Эффект
@@ -148,6 +189,9 @@ weaponstat.4.name=Урон от огня
 weaponstat.5.name=Урон блокам
 weaponstat.6.name=Урон от взрыва
 weaponstat.7.name=Скорострельность
+
+==========================================================================================================
+# Графический интерфейс
 
 gui.replicator.name=Репликатор шаблонов
 gui.decomposer.name=Разлагатель материи
@@ -198,10 +242,14 @@ gui.label.button.add=Добавить
 gui.label.button.reset=Сбросить
 gui.label.button.scout=Отправить разведчика
 
+### Подсказки в графическом интерфейсе ###
 gui.tooltip.starmap.no_ship_space=Not enough ship spaces
 gui.tooltip.starmap.no_building_space=Not enough building spaces
 gui.tooltip.starmap.no_ship_factory=Нет корабля-фабрики
 gui.tooltip.starmap.has_base=Основное здание уже присутствует
+
+==========================================================================================================
+# Модули
 
 module.battery.name=Модуль «Батарейка»
 module.color.name=Модуль «Цвет»
@@ -220,12 +268,18 @@ module.barrel.name=Модуль «Ствол»
 module.sights.name=Модуль «Прицел»
 module.other.name=Другой модуль
 
+==========================================================================================================
+# Био части
+
 biopart.head.name=Голова
 biopart.arms.name=Руки
 biopart.legs.name=Ноги
 biopart.chest.name=Торс
 biopart.other.name=Другое
 biopart.battery.name=Батарейка
+
+==========================================================================================================
+# Биостатистики
 
 biotic_stat.teleport.name=Эндер-телепорт
 biotic_stat.teleport.details=Позволяет делать короткие телепорты, нажав '%1$s' клавишу /n/Каждый телепорт тратит %2$s
@@ -246,10 +300,16 @@ biotic_stat.shield.details=Защищает игрока от снарядов /
 biotic_stat.attack.name=Повышение атаки
 biotic_stat.attack.details=Увеличивает мощность удара на %1$s
 
+==========================================================================================================
+# Смерти
+
 death.attack.phaser=%1$s был размельчен %2$s
 death.attack.phaser.item=%1$s был размельчен %2$s с помощью %3$s
 death.attack.blackHole=%1$s был раздавлен гравитационной аномалией
 death.attack.android_transformation=%1$s закончил своё биологического существования
+
+==========================================================================================================
+# Задачи
 
 task.state.-1.name=Invalid
 task.state.-1.description=Task is not a Valid.
@@ -263,6 +323,9 @@ task.state.3.name=Processing
 task.state.3.description=Waiting to finish Processing.
 task.state.4.name=Finished
 task.state.4.description=Task is Complete.
+
+==========================================================================================================
+# Конфигурация
 
 task.store_pattern.state.1.description=Поиск хранилища шаблонов.
 task.store_pattern.state.2.description=Queued in Machine.\n Ожидание обработки.
@@ -285,6 +348,10 @@ config.spawn_ores.name=Спавн руд
 config.client.name=Настройки клиента
 config.server.name=Настройки сервера
 config.starmap.name=Настройки звездной карты
+config.ore_gen_blacklist.name=Ore Dimension Blacklist
+ 
+==========================================================================================================
+# Чат-оповещения
 
 alert.no_rights=No Rights to Access the $0
 alert.no_access_default=Access denied to $0
