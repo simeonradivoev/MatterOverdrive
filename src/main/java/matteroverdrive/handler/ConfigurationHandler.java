@@ -119,7 +119,7 @@ public class ConfigurationHandler
 
     public int getInt(String key,String category,Integer def)
     {
-        return getInt(key,category,def,"");
+        return getInt(key, category, def, "");
     }
 
     public String[] getStringList(String category,String key)
@@ -130,6 +130,16 @@ public class ConfigurationHandler
     public ConfigCategory getCategory(String cat)
     {
         return config.getCategory(cat);
+    }
+
+    public double getMachineDouble(String machine,String prop,double def,double min,double max,String comment)
+    {
+        Property p = config.get(CATEGORY_MACHINES + "." + machine.replaceFirst("tile.",""),prop,def);
+        p.comment = comment;
+        p.setLanguageKey(machine + ".config." + prop);
+        p.setMinValue(min);
+        p.setMaxValue(max);
+        return p.getDouble(def);
     }
 
     public double getMachineDouble(String machine,String prop,double def,String comment)
@@ -146,6 +156,14 @@ public class ConfigurationHandler
         p.comment = comment;
         p.setLanguageKey(machine + ".config." + prop);
         return p.getBoolean(def);
+    }
+
+    public int getMachineInt(String machine,String prop,int def,String comment)
+    {
+        Property p = config.get(CATEGORY_MACHINES + "." + machine.replaceFirst("tile.",""),prop,def);
+        p.comment = comment;
+        p.setLanguageKey(machine + ".config." + prop);
+        return p.getInt(def);
     }
 
     public void initMachineCategory(String machine)

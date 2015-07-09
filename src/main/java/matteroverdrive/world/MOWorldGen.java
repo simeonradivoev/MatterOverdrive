@@ -26,6 +26,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     public static final int DILITHIUM_VEINS_PER_CHUNK = 4;
     public static final int DILITHIUM_VEIN_SIZE = 3;
     HashSet<Integer> gravitationalAnomalyDimensions;
+    HashSet<Integer> oreDimentionsBlacklist;
 
     boolean generateTritanium;
     boolean generateDilithium;
@@ -36,7 +37,8 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         tritaniumGen = new WorldGenMinable(MatterOverdriveBlocks.tritaniumOre,TRITANIUM_VEIN_SIZE);
         dilithiumGen = new WorldGenMinable(MatterOverdriveBlocks.dilithium_ore,DILITHIUM_VEIN_SIZE);
         anomalyGen = new WorldGenGravitationalAnomaly(0.005f,2048,2048 + 8192);
-        gravitationalAnomalyDimensions = new HashSet<Integer>();
+        gravitationalAnomalyDimensions = new HashSet<>();
+        oreDimentionsBlacklist = new HashSet<>();
 
         configurationHandler.subscribe(anomalyGen);
     }
@@ -54,38 +56,16 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
             case 2:
                 generateEnd(world, random, chunkX * 16, chunkZ * 16);
                 break;
+            default:
+                generateOther(world,random,chunkX * 16,chunkZ * 16);
         }
 
-        generateGravitationalAnomalies(world,random,chunkX * 16,chunkZ * 16,world.provider.dimensionId);
+        generateGravitationalAnomalies(world, random, chunkX * 16, chunkZ * 16, world.provider.dimensionId);
+        generateOres(world, random, chunkX * 16, chunkZ * 16, world.provider.dimensionId);
     }
 
     public void generateOverworld(World world,Random random,int chunkX, int chunkZ)
     {
-        if (generateDilithium) {
-            for (int i = 0; i < DILITHIUM_VEINS_PER_CHUNK; i++) {
-                int x = chunkX + random.nextInt(16);
-                int z = chunkZ + random.nextInt(16);
-                int y = random.nextInt(28) + 4;
-
-                if (dilithiumGen.generate(world, random, x, y, z)) {
-
-                }
-            }
-        }
-
-        if (generateTritanium)
-        {
-            for (int i = 0; i < TRITANIUM_VEINS_PER_CHUNK; i++) {
-                int x = chunkX + random.nextInt(16);
-                int z = chunkZ + random.nextInt(16);
-                int y = random.nextInt(60) + 4;
-
-                if (tritaniumGen.generate(world, random, x, y, z)) {
-
-                }
-            }
-        }
-
 
     }
     public void generateNether(World world,Random random,int chunkX, int chunkZ)
@@ -95,6 +75,40 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     public void generateEnd(World world,Random random,int chunkX, int chunkZ)
     {
 
+    }
+    public void generateOther(World world,Random random,int chunkX, int chunkZ)
+    {
+
+    }
+
+    public void generateOres(World world,Random random,int chunkX,int chunkZ,int dimentionID)
+    {
+        if (!oreDimentionsBlacklist.contains(dimentionID))
+        {
+            if (generateDilithium) {
+                for (int i = 0; i < DILITHIUM_VEINS_PER_CHUNK; i++) {
+                    int x = chunkX + random.nextInt(16);
+                    int z = chunkZ + random.nextInt(16);
+                    int y = random.nextInt(28) + 4;
+
+                    if (dilithiumGen.generate(world, random, x, y, z)) {
+
+                    }
+                }
+            }
+
+            if (generateTritanium) {
+                for (int i = 0; i < TRITANIUM_VEINS_PER_CHUNK; i++) {
+                    int x = chunkX + random.nextInt(16);
+                    int z = chunkZ + random.nextInt(16);
+                    int y = random.nextInt(60) + 4;
+
+                    if (tritaniumGen.generate(world, random, x, y, z)) {
+
+                    }
+                }
+            }
+        }
     }
     private void generateGravitationalAnomalies(World world,Random random,int chunkX, int chunkZ,int dimention)
     {
@@ -128,12 +142,22 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         Property shouldGenerateOthers = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN, ConfigurationHandler.CATEGORY_WORLD_SPAWN_OTHER, true);
         shouldGenerateOthers.comment = "Should other Matter Overdrive World Blocks be Generated?";
         generateAnomalies = shouldGenerate(MatterOverdriveBlocks.gravitational_anomaly, config) && shouldGenerateOthers.getBoolean(true);
+        gravitationalAnomalyDimensions.clear();
         Property gravitationalAnomalyDimsPropery = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN,"gravitational_anomaly_dimensions",new int[]{-1,0,2});
         gravitationalAnomalyDimsPropery.comment = "Dimension id's in which the gravitational anomaly should spawn in";
         int[] gravitationalAnomalyDims = gravitationalAnomalyDimsPropery.getIntList();
         for (int i = 0;i < gravitationalAnomalyDims.length;i++)
         {
             gravitationalAnomalyDimensions.add(gravitationalAnomalyDims[i]);
+        }
+        this.oreDimentionsBlacklist.clear();
+        Property oreDimentionBlacklistProp = config.config.get(config.CATEGORY_WORLD_GEN,"ore_gen_blacklist",new int[]{-1,2});
+        oreDimentionBlacklistProp.comment = "A blacklist of all the Dimensions ores shouldn't spawn in";
+        oreDimentionBlacklistProp.setLanguageKey("config.ore_gen_blacklist.name");
+        int[] oreDimentionBlacklist = oreDimentionBlacklistProp.getIntList();
+        for (int i = 0;i < oreDimentionBlacklist.length;i++)
+        {
+            this.oreDimentionsBlacklist.add(oreDimentionBlacklist[i]);
         }
     }
 }

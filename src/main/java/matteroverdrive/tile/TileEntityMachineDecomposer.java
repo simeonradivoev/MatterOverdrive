@@ -24,13 +24,13 @@ import java.util.Random;
 
 public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter implements ISidedInventory, IMatterConnection
 {
-	public static final int MATTER_STORAGE = 1024;
-	public static final int ENERGY_STORAGE = 512000;
-    public  static  final  int MATTER_EXTRACT_SPEED = 100;
-    public  static  final float FAIL_CHANGE = 0.05f;
+	public static int MATTER_STORAGE = 1024;
+	public static int ENERGY_STORAGE = 512000;
+    public static  final  int MATTER_EXTRACT_SPEED = 100;
+    public static  final float FAIL_CHANGE = 0.05f;
 
-    public static final int DECEOPOSE_SPEED_PER_MATTER = 80;
-    public static final int DECOMPOSE_ENERGY_PER_MATTER = 8000;
+    public static int DECEOPOSE_SPEED_PER_MATTER = 80;
+    public static int DECOMPOSE_ENERGY_PER_MATTER = 8000;
 
     public int INPUT_SLOT_ID;
     public int OUTPUT_SLOT_ID;

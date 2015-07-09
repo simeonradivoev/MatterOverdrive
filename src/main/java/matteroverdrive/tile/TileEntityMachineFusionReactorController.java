@@ -46,15 +46,15 @@ import java.util.Arrays;
 })
 public class TileEntityMachineFusionReactorController extends MOTileEntityMachineMatter implements IRotateableTile, IMatterConnection, IPeripheral, SimpleComponent, ManagedPeripheral
 {
-    public static final int STRUCTURE_CHECK_DELAY = 40;
+    public static int STRUCTURE_CHECK_DELAY = 40;
     public static final int[] positions = new int[]{0,5,1,0,2,0,3,1,4,2,5,3,5,4,5,5,5,6,5,7,4,8,3,9,2,10,1,10,0,10,-1,10,-2,10,-3,9,-4,8,-5,7,-5,6,-5,5,-5,4,-5,3,-4,2,-3,1,-2,0,-1,0};
     public static final int[] blocks = new int[]{255,2,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,2};
     public static final int positionsCount = positions.length / 2;
-    public static final int MAX_GRAVITATIONAL_ANOMALY_DISTANCE = 3;
-    public static final int ENERGY_STORAGE = 100000000;
-    public static final int MATTER_STORAGE = 2048;
-    public static final int ENERGY_PER_TICK = 2048;
-    public static final float MATTER_DRAIN_PER_TICK = 1f / 80f;
+    public static int MAX_GRAVITATIONAL_ANOMALY_DISTANCE = 3;
+    public static int ENERGY_STORAGE = 100000000;
+    public static int MATTER_STORAGE = 2048;
+    public static int ENERGY_PER_TICK = 2048;
+    public static float MATTER_DRAIN_PER_TICK = 1f / 80f;
 
     private boolean validStructure = false;
     private String monitorInfo = "INVALID STRUCTURE";

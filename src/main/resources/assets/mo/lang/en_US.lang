@@ -1,3 +1,6 @@
+##########################################################################################################
+# Items
+
 item.matter_scanner.name=Matter Scanner
 item.emergency_ration.name=Emergency Ration
 item.phaser.name=Phaser
@@ -58,13 +61,30 @@ item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
 item.weapon_module_barrel.fire.name=Incendiary Filter
 item.weapon_module_barrel.explosion.name=Burst Inductive Drum
 
+##########################################################################################################
+# Tile Entities
+
+//////////// Replicator ////////////
 tile.replicator.name=Matter Replicator
 tile.replicator.config.volume.replicate=Replication Volume
 tile.replicator.config.particles.vent=Vent Particles
+tile.replicator.config.storage.matter=Matter Storage
+tile.replicator.config.storage.energy=Energy Storage
+tile.replicator.config.cost.replication.energy=Energy Cost per Matter
+tile.replicator.config.speed.replication=Speed per Matter
+tile.replicator.config.fail=Fail Chance
 tile.replicator.details=Replicates Items and Blocks from Matter Plasma
 tile.replicator_active.name=Matter Replicator
+
+//////////// Decomposer ////////////
 tile.decomposer.name=Matter Decomposer
 tile.decomposer.details=Decomposes Items into Matter Plasma
+tile.decomposer.config.storage.matter=Matter Storage
+tile.decomposer.config.storage.energy=Energy Storage
+tile.decomposer.config.speed.decompose=Decomposing Speed
+tile.decomposer.config.cost.decompose=Decomposing Cost
+
+
 tile.matter_pipe.name=Matter Transport Pipe
 tile.matter_pipe.details=Transports Matter Plasma
 tile.network_pipe.name=Matter Network Cable
@@ -80,9 +100,14 @@ tile.matter_analyzer.details=Analyzes Items Patterns
 tile.dilithium_ore.name=Dilithium Ore
 tile.tritanium_ore.name=Tritanium Ore
 tile.tritanium_block.name=Tritanium Block
+
+//////////// Pattern Storage ////////////
 tile.pattern_storage.name=Pattern Storage
 tile.pattern_storage.details=Stores item patterns, for replication
 tile.pattern_storage.config.particles.vent=Vent Particles
+tile.pattern_storage.config.storage.energy=Energy Storage
+tile.pattern_storage.config.transfer.energy=Energy Transfer Speed
+
 tile.machine_hull.name=Machine Hull
 tile.solar_panel.name=Solar Panel
 tile.solar_panel.details=Produces RF from Sunlight
@@ -96,10 +121,20 @@ tile.gravitational_stabilizer.name=Gravitational Stabilizer
 tile.gravitational_stabilizer.details=Used to suppress the effects of Gravitational Anomalies
 tile.matter_recycler.name=Matter Recycler
 tile.matter_recycler.details=Used to recycle items, ready for decomposing
+
+//////////// Fusion Reactor ////////////
 tile.fusion_reactor_controller.name=Fusion Reactor Controller
+tile.fusion_reactor_controller.config.storage.energy=Energy Storage
+tile.fusion_reactor_controller.config.storage.matter=Matter Storage
+tile.fusion_reactor_controller.config.output.energy=Energy Output
+tile.fusion_reactor_controller.config.drain.matter=Matter Drain
+tile.fusion_reactor_controller.config.distance.anomaly=Max Anomaly Distance
+tile.fusion_reactor_controller.config.check.delay=Structure Check Delay
 tile.fusion_reactor_controller.details=Main Controller for Fusion Reactor
 tile.fusion_reactor_coil.name=Fusion Reactor Coil
 tile.fusion_reactor_coil.details=Used to confine the Plasma in Fusion Reactors
+
+//////////// Android Station ////////////
 tile.android_station.name=Android Station
 tile.android_station.details=Android Upgrade Management
 tile.star_map.name=Star Map
@@ -115,6 +150,8 @@ entity.failed_pig.name=Failed Pig
 entity.failed_chicken.name=Failed Chicken
 entity.failed_cow.name=Failed Cow
 entity.failed_sheep.name=Failed Sheep
+
+//////////// Mad Scientist ///////////////
 entity.mad_scientist.name=Mad Scientist
 entity.mad_scientist.line.fail.0=You don't have all the Android Parts!
 entity.mad_scientist.line.fail.1=I'm not giving you any of my parts!
@@ -132,6 +169,8 @@ itemGroup.tabMatterOverdrive=Matter Overdrive
 itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Modules
 itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Upgrades
 
+##########################################################################################################
+# Upgrade Types
 upgradetype.Speed.name=Time
 upgradetype.PowerUsage.name=Power Usage
 upgradetype.Output.name=Output
@@ -140,6 +179,8 @@ upgradetype.Fail.name=Failure
 upgradetype.Range.name=Range
 upgradetype.PowerStorage.name=Power Storage
 
+##########################################################################################################
+# Weapon Stats
 weaponstat.0.name=Damage
 weaponstat.1.name=Ammo
 weaponstat.2.name=Effect
@@ -148,6 +189,9 @@ weaponstat.4.name=Fire Damage
 weaponstat.5.name=Block Damage
 weaponstat.6.name=Explosion Damage
 weaponstat.7.name=Fire Rate
+
+##########################################################################################################
+# GUI
 
 gui.replicator.name=Pattern Replicator
 gui.decomposer.name=Matter Decomposer
@@ -198,10 +242,14 @@ gui.label.button.add=Add
 gui.label.button.reset=Reset
 gui.label.button.scout=Send Scout
 
+### GUI Tooltips ###
 gui.tooltip.starmap.no_ship_space=Not enough ship spaces
 gui.tooltip.starmap.no_building_space=Not enough building spaces
 gui.tooltip.starmap.no_ship_factory=No ship factory
 gui.tooltip.starmap.has_base=Base building already present
+
+##########################################################################################################
+# Modules
 
 module.battery.name=Battery Module
 module.color.name=Color Module
@@ -220,12 +268,18 @@ module.barrel.name=Barrel Module
 module.sights.name=Sights Module
 module.other.name=Other Module
 
+##########################################################################################################
+# Bioparts
+
 biopart.head.name=Head
 biopart.arms.name=Arms
 biopart.legs.name=Legs
 biopart.chest.name=Chest
 biopart.other.name=Other
 biopart.battery.name=Battery
+
+##########################################################################################################
+# Biostats
 
 biotic_stat.teleport.name=Ender Teleporter
 biotic_stat.teleport.details=Allows for short teleports by hitting the '%1$s' key /n/Each Teleport takes %2$s /n/A battery capable of extracting %2$s is required
@@ -246,10 +300,16 @@ biotic_stat.shield.details=Protects the player from projectiles /n/To enable, ho
 biotic_stat.attack.name=Attack Boost
 biotic_stat.attack.details=Increases attack power by %1$s
 
+##########################################################################################################
+# Deaths
+
 death.attack.phaser=%1$s was disintegrated by %2$s
 death.attack.phaser.item=%1$s was disintegrated by %2$s using %3$s
 death.attack.blackHole=%1$s was crushed by a Gravitational Anomaly
 death.attack.android_transformation=%1$s has ended his biological existence
+
+##########################################################################################################
+# Tasks
 
 task.state.-1.name=Invalid
 task.state.-1.description=Task is not a Valid.
@@ -274,6 +334,8 @@ task.replicate_pattern.state.1.description=Searching for Available Replicators.
 info.mo.updater.download=download
 info.mo.updater.hover=Click to download the latest version.
 
+##########################################################################################################
+# Config
 config.machine_options.name=Machines
 config.world_gen.name=World Generation
 config.matter_network.name=Matter Network
@@ -285,6 +347,10 @@ config.spawn_ores.name=Spawn Ores
 config.client.name=Client Options
 config.server.name=Server Options
 config.starmap.name=Star Map Options
+config.ore_gen_blacklist.name=Ore Dimension Blacklist
+
+##########################################################################################################
+# Chat Alerts
 
 alert.no_rights=No Rights to Access the $0
 alert.no_access_default=Access denied to $0

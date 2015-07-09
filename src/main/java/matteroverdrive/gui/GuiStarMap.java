@@ -87,7 +87,7 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         glTranslated(guiLeft, guiTop, 0);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
-        List<ISpaceBodyHoloRenderer> renderers = ClientProxy.renderHandler.getRendererStarMap().getRenderers(machine.getZoomLevel());
+        List<ISpaceBodyHoloRenderer> renderers = ClientProxy.renderHandler.getTileEntityRendererStarMap().getRenderers(machine.getZoomLevel());
         if (renderers != null) {
             for (ISpaceBodyHoloRenderer renderer : renderers) {
                 glPushMatrix();

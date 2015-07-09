@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOMatterEnergyStorageBlock;
 import matteroverdrive.client.render.block.MOBlockRenderer;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineDecomposer;
 import net.minecraft.block.material.Material;
@@ -87,6 +88,17 @@ public class BlockDecomposer extends MOMatterEnergyStorageBlock
     public int getRenderType()
     {
         return MOBlockRenderer.renderID;
+    }
+
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
+    {
+        config.initMachineCategory(getUnlocalizedName());
+        TileEntityMachineDecomposer.MATTER_STORAGE = config.getMachineInt(getUnlocalizedName(),"storage.matter",1024,String.format("How much matter can the %s hold",getLocalizedName()));
+        TileEntityMachineDecomposer.ENERGY_STORAGE = config.getMachineInt(getUnlocalizedName(),"storage.energy",512000,String.format("How much energy can the %s hold",getLocalizedName()));
+        TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER = config.getMachineInt(getUnlocalizedName(),"speed.decompose",80,"The speed in ticks, of decomposing. (per matter)");
+        TileEntityMachineDecomposer.DECOMPOSE_ENERGY_PER_MATTER = config.getMachineInt(getUnlocalizedName(),"cost.decompose",8000,"Decomposing cost per matter");
+
     }
 
 }

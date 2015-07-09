@@ -18,24 +18,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
 {
-    public static final String MODEL_PATH = Reference.PATH_MODEL_BLOCKS + "replicator.obj";
-    private IModelCustom model;
-    private ResourceLocation texture;
-    private ResourceLocation ventTexture;
-    private ResourceLocation baseTexture;
-    private ResourceLocation portTexture;
     EntityItem itemEntity;
-
-    public TileEntityRendererReplicator()
-    {
-        texture = new ResourceLocation(Reference.PATH_BLOCKS + "replicator.png");
-        ventTexture = new ResourceLocation(Reference.PATH_BLOCKS + "vent.png");
-        baseTexture = new ResourceLocation(Reference.PATH_BLOCKS + "base.png");
-        portTexture = new ResourceLocation(Reference.PATH_BLOCKS + "network_port.png");
-        model = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL_PATH));
-    }
-
-
 
     @Override
     public void renderTileEntityAt(TileEntity entity, double x, double y, double z, float ticks)
@@ -44,21 +27,7 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
         if(replicator != null)
         {
             GL11.glPushMatrix();
-
             renderItem(replicator, x, y, z);
-
-            GL11.glColor3f(1,1,1);
-            GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
-            RenderUtils.rotateFromBlock(replicator.getWorldObj(), replicator.xCoord, replicator.yCoord, replicator.zCoord);
-            bindTexture(texture);
-            model.renderPart("Front");
-            model.renderPart("Inside");
-            bindTexture(ventTexture);
-            model.renderPart("Vents");
-            bindTexture(baseTexture);
-            model.renderPart("Shell");
-            bindTexture(portTexture);
-            model.renderPart("Back");
             GL11.glPopMatrix();
         }
     }

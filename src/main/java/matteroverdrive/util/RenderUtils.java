@@ -273,7 +273,9 @@ public class RenderUtils
 					{
 						Tessellator.instance.setColorRGBA_F(colorMul, colorMul, colorMul, 1);
 					}
-					Tessellator.instance.setBrightness(brightness);
+					if (brightness >= 0) {
+						Tessellator.instance.setBrightness(brightness);
+					}
 					Tessellator.instance.addVertexWithUV(x + 0.5f + pos.x, y + pos.y, z + 0.5f + pos.z, icon.getMinU() + face.textureCoordinates[i].u * uSize + offsetU, icon.getMinV() + face.textureCoordinates[i].v * vSize + offsetV);
 				}
 				else

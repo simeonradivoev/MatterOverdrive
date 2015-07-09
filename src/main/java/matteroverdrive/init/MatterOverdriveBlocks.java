@@ -124,6 +124,7 @@ public class MatterOverdriveBlocks
         starMap.register();
         MatterOverdrive.configHandler.subscribe(starMap);
         chargingStation.register();
+        MatterOverdrive.configHandler.subscribe(chargingStation);
 
         if (event.getSide() == Side.CLIENT)
         {

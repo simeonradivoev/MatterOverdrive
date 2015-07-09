@@ -25,6 +25,7 @@ public class MatterOverdriveIcons
     public static IIcon Coil;
     public static IIcon charging_station;
     public static IIcon pattern_storage;
+    public static IIcon replicator;
 
     public static IIcon particle_steam;
 
@@ -57,6 +58,7 @@ public class MatterOverdriveIcons
         Coil = register(r,"base_coil");
         charging_station = register(r,"charging_station");
         pattern_storage = register(r,"pattern_storage");
+        replicator = register(r,"replicator");
     }
 
     private void initParticleIcons(IIconRegister r)

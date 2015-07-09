@@ -48,8 +48,8 @@ import java.util.List;
 public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy implements IMatterDatabase, IMatterNetworkClient,IMatterNetworkConnectionProxy,IScannable
 {
     public static final int TASK_PROCESS_DELAY = 40;
-    public static final int ENERGY_CAPACITY = 64000;
-    public static final int ENERGY_TRANSFER = 128;
+    public static int ENERGY_CAPACITY = 64000;
+    public static int ENERGY_TRANSFER = 128;
     public int input_slot;
     public int[] pattern_storage_slots;
     private MatterNetworkPacketQueue taskQueueProcessing;

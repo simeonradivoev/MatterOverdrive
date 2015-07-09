@@ -30,33 +30,33 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.client.model.obj.GroupObject;
 import net.minecraftforge.client.model.obj.WavefrontObject;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
- * Created by Simeon on 7/8/2015.
+ * Created by Simeon on 7/9/2015.
  */
-public class RendererBlockChargingStation implements ISimpleBlockRenderingHandler
+public class RendererBlockReplicator implements ISimpleBlockRenderingHandler
 {
     public static int renderID;
     private IModelCustom model;
 
-    public RendererBlockChargingStation()
+    public RendererBlockReplicator()
     {
         renderID = RenderingRegistry.getNextAvailableRenderId();
-        model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.MODEL_CHARGING_STATION));
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.MODEL_REPLICATOR));
     }
 
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
     {
-        Matrix4f rot = new Matrix4f();
-        rot.translate(new Vector3f(-0.7f, -0.9f, -0.7f));
-        rot.scale(new Vector3f(0.6f, 0.6f, 0.6f));
-        Tessellator.instance.startDrawingQuads();
-        RenderUtils.tesseleteModelAsBlock(rot, ((WavefrontObject) model).groupObjects.get(0), MatterOverdriveIcons.charging_station, 0, 0, 0, 240, true, null);
-        RenderUtils.tesseleteModelAsBlock(rot, ((WavefrontObject) model).groupObjects.get(1), MatterOverdriveIcons.charging_station, 0, 0, 0, -1,true,null);
+        Tessellator.instance.startDrawing(GL11.GL_TRIANGLES);
+        Matrix4f mat = new Matrix4f();
+        mat.translate(new Vector3f(-0.5f,0,-0.5f));
+        renderBlock(mat, 0, 0, 0, -1);
         Tessellator.instance.draw();
     }
 
@@ -64,9 +64,30 @@ public class RendererBlockChargingStation implements ISimpleBlockRenderingHandle
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
     {
         Matrix4f rot = new Matrix4f();
+        rot.translate(new Vector3f(0,0.5f,0));
         RenderUtils.rotateFromBlock(rot,world,x,y,z);
-        RenderUtils.tesseleteModelAsBlock(rot, ((WavefrontObject) model).groupObjects.get(0), MatterOverdriveIcons.charging_station, x, y, z, block.getMixedBrightnessForBlock(world, x, y, z),true,null);
+        renderBlock(rot,x,y,z,block.getMixedBrightnessForBlock(world,x,y,z));
         return true;
+    }
+
+    protected void renderBlock(Matrix4f mat,int x,int y,int z,int brightness)
+    {
+        Tessellator.instance.draw();
+        Tessellator.instance.startDrawing(GL11.GL_TRIANGLES);
+        GroupObject front = ((WavefrontObject) model).groupObjects.get(0);
+        GroupObject inside = ((WavefrontObject) model).groupObjects.get(1);
+        GroupObject shell = ((WavefrontObject) model).groupObjects.get(2);
+        GroupObject vents = ((WavefrontObject) model).groupObjects.get(3);
+        GroupObject back = ((WavefrontObject) model).groupObjects.get(4);
+
+
+        RenderUtils.tesseleteModelAsBlock(mat, front, MatterOverdriveIcons.replicator, x, y, z, brightness, true, null);
+        RenderUtils.tesseleteModelAsBlock(mat, inside, MatterOverdriveIcons.replicator, x, y, z, brightness, true, null);
+        RenderUtils.tesseleteModelAsBlock(mat,vents,MatterOverdriveIcons.Vent,x,y,z,brightness,true,null);
+        RenderUtils.tesseleteModelAsBlock(mat,shell,MatterOverdriveIcons.Base,x,y,z,brightness,true,null);
+        RenderUtils.tesseleteModelAsBlock(mat,back,MatterOverdriveIcons.Network_port_square,x,y,z,brightness,true,null);
+        Tessellator.instance.draw();
+        Tessellator.instance.startDrawingQuads();
     }
 
     @Override

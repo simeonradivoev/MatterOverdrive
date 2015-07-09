@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.client.render.block.MOBlockRenderer;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineFusionReactorController;
@@ -66,7 +67,7 @@ public class BlockFusionReactorController extends MOBlockMachine
     @Override
     public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
     {
-        TileEntity tileEntity = world.getTileEntity(x,y,z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof TileEntityMachineFusionReactorController) {
             if (((TileEntityMachineFusionReactorController) tileEntity).isValidStructure())
             {
@@ -80,5 +81,17 @@ public class BlockFusionReactorController extends MOBlockMachine
     public int getRenderType()
     {
         return MOBlockRenderer.renderID;
+    }
+
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
+    {
+        super.onConfigChanged(config);
+        TileEntityMachineFusionReactorController.ENERGY_STORAGE = config.getInt(getUnlocalizedName(),"storage.energy",100000000,String.format("How much energy can the %s hold",getLocalizedName()));
+        TileEntityMachineFusionReactorController.MATTER_STORAGE = config.getInt(getUnlocalizedName(),"storage.matter",2048,String.format("How much matter can the %s hold",getLocalizedName()));
+        TileEntityMachineFusionReactorController.ENERGY_PER_TICK = config.getInt(getUnlocalizedName(),"output.energy",2048,"The Energy Output per tick. Dependant on the size of the anomaly as well");
+        TileEntityMachineFusionReactorController.MATTER_DRAIN_PER_TICK = (float)config.getMachineDouble(getUnlocalizedName(),"drain.matter",1 / 80,"How much matter is drained per tick. Dependant on the size of the anomaly as well");
+        TileEntityMachineFusionReactorController.MAX_GRAVITATIONAL_ANOMALY_DISTANCE = config.getMachineInt(getUnlocalizedName(),"distance.anomaly",3,"The maximum distance of the anomaly");
+        TileEntityMachineFusionReactorController.STRUCTURE_CHECK_DELAY = config.getMachineInt(getUnlocalizedName(),"check.delay",40,"The time delay between each structure check");
     }
 }

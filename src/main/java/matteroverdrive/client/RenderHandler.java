@@ -13,17 +13,13 @@ import matteroverdrive.client.render.biostat.BiostatRendererTeleporter;
 import matteroverdrive.client.render.block.*;
 import matteroverdrive.client.render.entity.*;
 import matteroverdrive.client.render.item.ItemRendererPhaser;
-import matteroverdrive.client.render.item.ItemRendererTileEntityMachine;
 import matteroverdrive.client.render.tileentity.*;
 import matteroverdrive.entity.*;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.tile.*;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.item.Item;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -45,10 +41,11 @@ public class RenderHandler
 
     //region Block Renderers
     private MOBlockRenderer blockRenderer;
-    private RendererBlockGravitationalStabilizer gravitationalStabilizerRenderer;
+    private RendererBlockGravitationalStabilizer rendererBlockGravitationalStabilizer;
     private RendererBlockPipe rendererBlockPipe;
     private RendererBlockChargingStation rendererBlockChargingStation;
     private RendererBlockPatternStorage rendererBlockPatternStorage;
+    private RendererBlockReplicator rendererBlockReplicator;
     //endregion
     //region Biostat Renderers
     private BiostatRendererTeleporter rendererTeleporter;
@@ -66,19 +63,19 @@ public class RenderHandler
     private EntityRendererFailedSheep rendererFailedSheep;
     //endregion
     //region Tile Entity Renderers
-    private TileEntityRendererPipe pipeRenderer;
-    private TileEntityRendererMatterPipe matter_pipeRenderer;
-    private TileEntityRendererNetworkPipe network_pipeRenderer;
-    private TileEntityRendererReplicator replicator_renderer;
-    private TileEntityRendererPatterStorage pattern_storage_renderer;
-    private TileEntityRendererWeaponStation renderer_weapon_station;
-    private TileEntityRendererPatternMonitor pattern_monitor_renderer;
-    private TileEntityRendererGravitationalAnomaly gravitational_anomaly_renderer;
-    private TileEntityRendererGravitationalStabilizer gravitational_stabilizer_renderer;
-    private TileEntityRendererFusionReactorController fusion_reactor_controller_renderer;
-    private TileEntityRendererAndroidStation rendererAndroidStation;
-    private TileEntityRendererStarMap rendererStarMap;
-    private TileEntityRendererChargingStation rendererChargingStation;
+    private TileEntityRendererReplicator tileEntityRendererReplicator;
+    private TileEntityRendererPipe tileEntityRendererPipe;
+    private TileEntityRendererMatterPipe tileEntityRendererMatterPipe;
+    private TileEntityRendererNetworkPipe tileEntityRendererNetworkPipe;
+    private TileEntityRendererPatterStorage tileEntityRendererPatterStorage;
+    private TileEntityRendererWeaponStation tileEntityRendererWeaponStation;
+    private TileEntityRendererPatternMonitor tileEntityRendererPatternMonitor;
+    private TileEntityRendererGravitationalAnomaly tileEntityRendererGravitationalAnomaly;
+    private TileEntityRendererGravitationalStabilizer tileEntityRendererGravitationalStabilizer;
+    private TileEntityRendererFusionReactorController tileEntityRendererFusionReactorController;
+    private TileEntityRendererAndroidStation tileEntityRendererAndroidStation;
+    private TileEntityRendererStarMap tileEntityRendererStarMap;
+    private TileEntityRendererChargingStation tileEntityRendererChargingStation;
     //endregion
 
     public RenderHandler(World world,TextureManager textureManager)
@@ -115,54 +112,56 @@ public class RenderHandler
 
     public void createTileEntityRenderers(ConfigurationHandler configHandler)
     {
-        pipeRenderer = new TileEntityRendererPipe();
-        matter_pipeRenderer = new TileEntityRendererMatterPipe();
-        network_pipeRenderer = new TileEntityRendererNetworkPipe();
-        replicator_renderer = new TileEntityRendererReplicator();
-        pattern_storage_renderer = new TileEntityRendererPatterStorage();
-        renderer_weapon_station = new TileEntityRendererWeaponStation();
-        pattern_monitor_renderer = new TileEntityRendererPatternMonitor();
-        gravitational_anomaly_renderer = new TileEntityRendererGravitationalAnomaly();
-        gravitational_stabilizer_renderer = new TileEntityRendererGravitationalStabilizer();
-        fusion_reactor_controller_renderer = new TileEntityRendererFusionReactorController();
-        rendererAndroidStation = new TileEntityRendererAndroidStation();
-        rendererStarMap = new TileEntityRendererStarMap();
-        rendererChargingStation = new TileEntityRendererChargingStation();
+        tileEntityRendererReplicator = new TileEntityRendererReplicator();
+        tileEntityRendererPipe = new TileEntityRendererPipe();
+        tileEntityRendererMatterPipe = new TileEntityRendererMatterPipe();
+        tileEntityRendererNetworkPipe = new TileEntityRendererNetworkPipe();
+        tileEntityRendererPatterStorage = new TileEntityRendererPatterStorage();
+        tileEntityRendererWeaponStation = new TileEntityRendererWeaponStation();
+        tileEntityRendererPatternMonitor = new TileEntityRendererPatternMonitor();
+        tileEntityRendererGravitationalAnomaly = new TileEntityRendererGravitationalAnomaly();
+        tileEntityRendererGravitationalStabilizer = new TileEntityRendererGravitationalStabilizer();
+        tileEntityRendererFusionReactorController = new TileEntityRendererFusionReactorController();
+        tileEntityRendererAndroidStation = new TileEntityRendererAndroidStation();
+        tileEntityRendererStarMap = new TileEntityRendererStarMap();
+        tileEntityRendererChargingStation = new TileEntityRendererChargingStation();
 
-        configHandler.subscribe(rendererAndroidStation);
-        configHandler.subscribe(renderer_weapon_station);
+        configHandler.subscribe(tileEntityRendererAndroidStation);
+        configHandler.subscribe(tileEntityRendererWeaponStation);
     }
 
     public void createBlockRenderers()
     {
         blockRenderer = new MOBlockRenderer();
-        gravitationalStabilizerRenderer = new RendererBlockGravitationalStabilizer();
+        rendererBlockGravitationalStabilizer = new RendererBlockGravitationalStabilizer();
         rendererBlockPipe = new RendererBlockPipe();
         rendererBlockChargingStation = new RendererBlockChargingStation();
         rendererBlockPatternStorage = new RendererBlockPatternStorage();
+        rendererBlockReplicator = new RendererBlockReplicator();
     }
 
     public void registerBlockRenderers()
     {
         RenderingRegistry.registerBlockHandler(blockRenderer);
-        RenderingRegistry.registerBlockHandler(gravitationalStabilizerRenderer);
+        RenderingRegistry.registerBlockHandler(rendererBlockGravitationalStabilizer);
         RenderingRegistry.registerBlockHandler(rendererBlockPipe);
         RenderingRegistry.registerBlockHandler(rendererBlockChargingStation);
         RenderingRegistry.registerBlockHandler(rendererBlockPatternStorage);
+        RenderingRegistry.registerBlockHandler(rendererBlockReplicator);
     }
 
     public void registerTileEntitySpecialRenderers()
     {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineReplicator.class,replicator_renderer);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternStorage.class,pattern_storage_renderer);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeaponStation.class,renderer_weapon_station);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternMonitor.class,pattern_monitor_renderer);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGravitationalAnomaly.class,gravitational_anomaly_renderer);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineGravitationalStabilizer.class,gravitational_stabilizer_renderer);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineFusionReactorController.class,fusion_reactor_controller_renderer);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAndroidStation.class,rendererAndroidStation);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineStarMap.class,rendererStarMap);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineChargingStation.class,rendererChargingStation);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineReplicator.class, tileEntityRendererReplicator);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternStorage.class, tileEntityRendererPatterStorage);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeaponStation.class, tileEntityRendererWeaponStation);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePatternMonitor.class, tileEntityRendererPatternMonitor);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGravitationalAnomaly.class, tileEntityRendererGravitationalAnomaly);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineGravitationalStabilizer.class, tileEntityRendererGravitationalStabilizer);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineFusionReactorController.class, tileEntityRendererFusionReactorController);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAndroidStation.class, tileEntityRendererAndroidStation);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineStarMap.class, tileEntityRendererStarMap);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineChargingStation.class, tileEntityRendererChargingStation);
     }
 
     public void createItemRenderers()
@@ -173,7 +172,6 @@ public class RenderHandler
     public void registerItemRenderers()
     {
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser, rendererPhaser);
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MatterOverdriveBlocks.replicator), new ItemRendererTileEntityMachine(replicator_renderer, new TileEntityMachineReplicator()));
     }
 
     public void createEntityRenderers()
@@ -200,9 +198,9 @@ public class RenderHandler
     {
         return renderParticlesHandler;
     }
-    public TileEntityRendererStarMap getRendererStarMap()
+    public TileEntityRendererStarMap getTileEntityRendererStarMap()
     {
-        return rendererStarMap;
+        return tileEntityRendererStarMap;
     }
     public Random getRandom(){return random;}
     public void addCustomRenderer(IWorldLastRenderer renderer){customRenderers.add(renderer);}

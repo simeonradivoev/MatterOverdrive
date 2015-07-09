@@ -56,7 +56,7 @@ public class RendererBlockPatternStorage implements ISimpleBlockRenderingHandler
         Tessellator.instance.startDrawing(GL11.GL_TRIANGLES);
         Matrix4f rot = new Matrix4f();
         rot.translate(new Vector3f(-0.5f,-0.5f,-0.5f));
-        renderBlock(rot,0,0,0,240);
+        renderBlock(rot,0,0,0,-1);
         Tessellator.instance.draw();
     }
 
