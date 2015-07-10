@@ -103,7 +103,7 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     {
         if (getStackInSlot(INPUT_SLOT_ID) != null && getStackInSlot(INPUT_SLOT_ID).getItem() instanceof IRecyclable)
         {
-            return ((IRecyclable) getStackInSlot(INPUT_SLOT_ID).getItem()).canRecycle(getStackInSlot(INPUT_SLOT_ID)) && canPutInOutput();
+            return ((IRecyclable) getStackInSlot(INPUT_SLOT_ID).getItem()).canRecycle(getStackInSlot(INPUT_SLOT_ID)) && canPutInOutput() && ((IRecyclable) getStackInSlot(INPUT_SLOT_ID).getItem()).getRecycleMatter(getStackInSlot(INPUT_SLOT_ID)) > 0;
         }
         return false;
     }
