@@ -54,7 +54,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     public static int ENERGY_STORAGE = 100000000;
     public static int MATTER_STORAGE = 2048;
     public static int ENERGY_PER_TICK = 2048;
-    public static float MATTER_DRAIN_PER_TICK = 1f / 80f;
+    public static double MATTER_DRAIN_PER_TICK = 1.0D / 80.0D;
 
     private boolean validStructure = false;
     private String monitorInfo = "INVALID STRUCTURE";
@@ -211,7 +211,8 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
                     energyEfficiency = 1f - ((float)anomalyDistance / (float)(MAX_GRAVITATIONAL_ANOMALY_DISTANCE+1));
                     energyPerTick = (int)Math.round(ENERGY_PER_TICK * getEnergyEfficiency() * getGravitationalAnomalyEnergyMultiply());
-                    matterPerTick = MATTER_DRAIN_PER_TICK * (float)getGravitationalAnomalyEnergyMultiply();
+                    double energyMultipy = getGravitationalAnomalyEnergyMultiply();
+                    matterPerTick = (float)(MATTER_DRAIN_PER_TICK * energyMultipy);
                 }
                 else {
                     if (position.getBlock(worldObj) == Blocks.air) {
@@ -360,7 +361,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
     public boolean isGeneratingPower()
     {
-        if (getEnergyEfficiency() > 0 && getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored() && getMatterStorage().getMatterStored() >= getMatterDrainPerTick())
+        if (getEnergyEfficiency() > 0 && getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored() && getMatterStorage().getMatterStored() > getMatterDrainPerTick())
         {
             return true;
         }
