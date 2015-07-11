@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.client.render;
 
 import cofh.lib.gui.GuiBase;
@@ -30,7 +48,8 @@ public class HoloIcons
             "page_icon_tasks","page_icon_upgrades","page_icon_config","page_icon_search","page_icon_info",
             "page_icon_galaxy","page_icon_quadrant","page_icon_star","page_icon_planet","energy","arrow_right",
             "travel_icon","icon_search","icon_size","icon_shuttle","icon_stats","icon_scount_planet","icon_attack",
-            "up_arrow"};
+            "up_arrow","crosshair","up_arrow_large","android_feature_icon_bg","android_feature_icon_bg_active"};
+
 
     public HoloIcons()
     {
@@ -62,7 +81,14 @@ public class HoloIcons
     {
         bindSheet();
         IIcon icon = getIcon(name);
-        RenderHelper.renderIcon(x,y,0,icon,icon.getIconWidth(),icon.getIconHeight());
+        RenderHelper.renderIcon(x, y, 0, icon, icon.getIconWidth(), icon.getIconHeight());
+    }
+
+    public void renderIcon(String name,int x,int y,int width,int height)
+    {
+        bindSheet();
+        IIcon icon = getIcon(name);
+        RenderHelper.renderIcon(x,y,0,icon,width,height);
     }
 
     public static void tessalateParticleIcon(IIcon icon,double x,double y,double z,float size,GuiColor color)

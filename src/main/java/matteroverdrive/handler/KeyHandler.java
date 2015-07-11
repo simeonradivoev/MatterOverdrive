@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.handler;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -21,8 +39,9 @@ public class KeyHandler
 {
     public static  final int MATTER_SCANNER_KEY = 0;
     public static final int ABILITY_USE_KEY = 1;
-    private static  final String[] keyDesc = {"Open Matter Scanner GUI","Android Ability key"};
-    private  static  final  int[] keyValues = {Keyboard.KEY_C,Keyboard.KEY_X};
+    public static final int ABILITY_SWITCH_KEY = 2;
+    private static  final String[] keyDesc = {"Open Matter Scanner GUI","Android Ability key","Android Switch Ability key"};
+    private  static  final  int[] keyValues = {Keyboard.KEY_C,Keyboard.KEY_X,Keyboard.KEY_TAB};
     private  final KeyBinding[] keys;
 
     public  KeyHandler()
@@ -57,12 +76,14 @@ public class KeyHandler
     public void manageBiostats(InputEvent.KeyInputEvent event)
     {
         AndroidPlayer androidPlayer = AndroidPlayer.get(FMLClientHandler.instance().getClientPlayerEntity());
+        if (androidPlayer.isAndroid()) {
+            androidPlayer.onKeyInput(event);
 
-        for (IBionicStat stat : AndroidStatRegistry.stats.values())
-        {
-            int level = androidPlayer.getUnlockedLevel(stat);
-            if (level > 0 && stat.isEnabled(androidPlayer,level)) {
-                stat.onKeyPress(androidPlayer, androidPlayer.getUnlockedLevel(stat), Keyboard.getEventKey(), Keyboard.getEventKeyState());
+            for (IBionicStat stat : AndroidStatRegistry.stats.values()) {
+                int level = androidPlayer.getUnlockedLevel(stat);
+                if (level > 0 && stat.isEnabled(androidPlayer, level)) {
+                    stat.onKeyPress(androidPlayer, androidPlayer.getUnlockedLevel(stat), Keyboard.getEventKey(), Keyboard.getEventKeyState());
+                }
             }
         }
     }

@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -47,18 +65,18 @@ public class MatterOverdrive
 	{
 		registryPath = event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + "Registry" + ".reg";
         guiHandler = new GuiHandler();
-        playerEventHandler = new PlayerEventHandler();
         craftingHandler = new CraftingHandler();
 		packetPipeline = new PacketPipeline();
 		entityHandler = new EntityHandler();
         configHandler = new ConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
-
+		playerEventHandler = new PlayerEventHandler(configHandler);
 
 		FMLCommonHandler.instance().bus().register(configHandler);
 		tickHandler = new TickHandler(configHandler,playerEventHandler);
         FMLCommonHandler.instance().bus().register(tickHandler);
         FMLCommonHandler.instance().bus().register(playerEventHandler);
         FMLCommonHandler.instance().bus().register(craftingHandler);
+		MinecraftForge.EVENT_BUS.register(playerEventHandler);
         MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
 		moWorld = new MatterOverdriveWorld(configHandler);

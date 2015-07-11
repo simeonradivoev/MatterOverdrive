@@ -296,9 +296,13 @@ biotic_stat.high_jump.details=Enables higher jumping while sneaking /n/Each jump
 biotic_stat.equalizer.name=Space-Time Equalizer
 biotic_stat.equalizer.details=Internal Space-Time Equalizer /n/that negates the gravitational effects of /n/Gravitational Anomalies
 biotic_stat.shield.name=Plasma Shield
-biotic_stat.shield.details=Protects the player from projectiles /n/To enable, hold the '%1$s' key while sneaking
+biotic_stat.shield.details=Protects the player from projectiles
 biotic_stat.attack.name=Attack Boost
 biotic_stat.attack.details=Increases attack power by %1$s
+biotic_stat.cloak.name=Cloak
+biotic_stat.cloak.details=Allows the player to go invisible. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
+biotic_stat.nightvision.name=Night Vision
+biotic_stat.nightvision.details=Allows the player to see in the dark. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
 
 ##########################################################################################################
 # Deaths

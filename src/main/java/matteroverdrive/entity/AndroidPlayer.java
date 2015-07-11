@@ -1,9 +1,28 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.entity;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyStorage;
 import cofh.lib.audio.SoundBase;
 import cofh.lib.util.helpers.MathHelper;
+import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,9 +32,13 @@ import matteroverdrive.api.inventory.IBionicStat;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.BionicSlot;
 import matteroverdrive.data.inventory.EnergySlot;
+import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.handler.AndroidStatRegistry;
+import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
+import matteroverdrive.network.packet.server.PacketAndroidChangeAbility;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
+import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -34,6 +57,8 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -57,10 +82,13 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public final static float POERLESS_SPEED_MULTIPLY = 0.25f;
     public final static int ENERGY_PER_EXOST = 16;
     public final static AttributeModifier outOfPowerSpeedModifyer = new AttributeModifier(UUID.fromString("ec778ddc-9711-498b-b9aa-8e5adc436e00"),"Android Out of Power",-0.5,2).setSaved(false);
+    private static List<IBionicStat> stats = new ArrayList<>();
+
 
     public final int ENERGY_SLOT;
     private final EntityPlayer player;
     private Inventory inventory;
+    private IBionicStat activeStat;
     NBTTagCompound unlocked;
     NBTTagCompound effects;
     int maxEnergy;
@@ -98,24 +126,30 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void saveNBTData(NBTTagCompound compound)
     {
         NBTTagCompound prop = new NBTTagCompound();
-        prop.setInteger("Energy",player.getDataWatcher().getWatchableObjectInt(ENERGY_WATCHER));
-        prop.setInteger("MaxEnergy",this.maxEnergy);
-        prop.setBoolean("isAndroid",isAndroid);
+        prop.setInteger("Energy", player.getDataWatcher().getWatchableObjectInt(ENERGY_WATCHER));
+        prop.setInteger("MaxEnergy", this.maxEnergy);
+        prop.setBoolean("isAndroid", isAndroid);
         prop.setTag("Stats",unlocked);
-        prop.setTag("Effects",effects);
+        prop.setTag("Effects", effects);
+        if (activeStat != null)
+            prop.setString("ActiveAbility",activeStat.getUnlocalizedName());
         inventory.writeToNBT(prop);
-        compound.setTag(EXT_PROP_NAME,prop);
+        compound.setTag(EXT_PROP_NAME, prop);
     }
 
     @Override
     public void loadNBTData(NBTTagCompound compound)
     {
         NBTTagCompound prop = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
-        player.getDataWatcher().updateObject(ENERGY_WATCHER,prop.getInteger("Energy"));
+        player.getDataWatcher().updateObject(ENERGY_WATCHER, prop.getInteger("Energy"));
         this.maxEnergy = prop.getInteger("MaxEnergy");
         this.isAndroid = prop.getBoolean("isAndroid");
         unlocked = prop.getCompoundTag("Stats");
         effects = prop.getCompoundTag("Effects");
+        if (prop.hasKey("ActiveAbility"))
+        {
+            activeStat = AndroidStatRegistry.getStat(prop.getString("ActiveAbility"));
+        }
         this.inventory.readFromNBT(prop);
     }
 
@@ -175,7 +209,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public boolean tryUnlock(IBionicStat stat, int level)
     {
-        if (stat.canBeUnlocked(this,level))
+        if (stat.canBeUnlocked(this, level))
         {
             unlock(stat,level);
             return true;
@@ -281,9 +315,14 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         }
     }
 
+    public void setActionToServer(int action,boolean state)
+    {
+        setActionToServer(action,state,0);
+    }
+
     public void setActionToServer(int action,boolean state,int options)
     {
-        MatterOverdrive.packetPipeline.sendToServer(new PacketSendAndroidAnction(action,state,options));
+        MatterOverdrive.packetPipeline.sendToServer(new PacketSendAndroidAnction(action, state, options));
     }
 
     public void copy(AndroidPlayer player)
@@ -325,47 +364,48 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         AndroidPlayer androidPlayer = AndroidPlayer.get(event.player);
 
-        if (event.phase == TickEvent.Phase.START && androidPlayer != null)
+        if (androidPlayer != null)
         {
-            if (androidPlayer.isAndroid())
-            {
-                if (getEnergyStored() > 0) {
-                    if (event.player.getFoodStats().needFood() && androidPlayer.getEnergyStored() > 0) {
-                        int foodNeeded = 20 - event.player.getFoodStats().getFoodLevel();
-                        int extractedEnergy = androidPlayer.extractEnergy(foodNeeded * ENERGY_FOOD_MULTIPLY, false);
-                        event.player.getFoodStats().addStats(extractedEnergy / ENERGY_FOOD_MULTIPLY, 0);
+            if (event.phase == TickEvent.Phase.START) {
+                if (androidPlayer.isAndroid()) {
+                    if (getEnergyStored() > 0) {
+                        if (event.player.getFoodStats().needFood() && androidPlayer.getEnergyStored() > 0) {
+                            int foodNeeded = 20 - event.player.getFoodStats().getFoodLevel();
+                            int extractedEnergy = androidPlayer.extractEnergy(foodNeeded * ENERGY_FOOD_MULTIPLY, false);
+                            event.player.getFoodStats().addStats(extractedEnergy / ENERGY_FOOD_MULTIPLY, 0);
+                        }
+
+                        manageHasPower();
+                        managePotionEffects();
+                        manageSwimming();
+                    } else if (getEnergyStored() <= 0) {
+                        manageOutOfPower();
                     }
 
-                    manageHasPower();
-                    managePotionEffects();
-                    manageSwimming();
-                } else if (getEnergyStored() <= 0)
-                {
-                    manageOutOfPower();
-                }
-
-                for (IBionicStat stat : AndroidStatRegistry.stats.values())
-                {
-                    int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
-                    if (unlockedLevel > 0)
-                    {
-                        if (stat.isEnabled(androidPlayer, unlockedLevel))
-                        {
-                            stat.changeAndroidStats(androidPlayer,unlockedLevel,true);
-                            stat.onAndroidUpdate(androidPlayer, unlockedLevel);
-                        }
-                        else
-                        {
-                            stat.changeAndroidStats(androidPlayer,unlockedLevel,false);
+                    for (IBionicStat stat : AndroidStatRegistry.stats.values()) {
+                        int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
+                        if (unlockedLevel > 0) {
+                            if (stat.isEnabled(androidPlayer, unlockedLevel)) {
+                                stat.changeAndroidStats(androidPlayer, unlockedLevel, true);
+                                stat.onAndroidUpdate(androidPlayer, unlockedLevel);
+                            } else {
+                                stat.changeAndroidStats(androidPlayer, unlockedLevel, false);
+                            }
                         }
                     }
                 }
+
+                manageTurning();
+                manageGlitch();
+                manageCharging();
             }
-
-            manageTurning();
-            manageGlitch();
-            manageCharging();
+            if (event.side == Side.CLIENT && androidPlayer.isAndroid())
+            {
+                manageAbilityWheel();
+            }
         }
+
+
     }
 
     public void manageOutOfPower()
@@ -400,6 +440,89 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             int freeEnergy = getMaxEnergyStored() - getEnergyStored();
             int receivedAmount = ((IEnergyContainerItem) player.getHeldItem().getItem()).extractEnergy(player.getHeldItem(), freeEnergy, false);
             receiveEnergy(receivedAmount, false);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public  void onKeyInput(InputEvent.KeyInputEvent event)
+    {
+
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void manageAbilityWheel()
+    {
+        if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_SWITCH_KEY).getIsKeyPressed())
+        {
+            GuiAndroidHud.showRadial = true;
+        }else
+        {
+            //System.out.println("Hide Wheel");
+            GuiAndroidHud.showRadial = false;
+        }
+
+        if (GuiAndroidHud.showRadial)
+        {
+            double mag = Math.sqrt(GuiAndroidHud.radialDeltaX * GuiAndroidHud.radialDeltaX + GuiAndroidHud.radialDeltaY * GuiAndroidHud.radialDeltaY);
+            double magAcceptance = 0.2D;
+
+            double radialAngle = -720F;
+            if (mag > magAcceptance)
+            {
+                double aSin = Math.toDegrees(Math.asin(GuiAndroidHud.radialDeltaX));
+
+                if(GuiAndroidHud.radialDeltaY >= 0 && GuiAndroidHud.radialDeltaX >= 0)
+                {
+                    radialAngle = aSin;
+                }
+                else if(GuiAndroidHud.radialDeltaY < 0 && GuiAndroidHud.radialDeltaX >= 0)
+                {
+                    radialAngle = 90D + (90D - aSin);
+                }
+                else if(GuiAndroidHud.radialDeltaY < 0 && GuiAndroidHud.radialDeltaX < 0)
+                {
+                    radialAngle = 180D - aSin;
+                }
+                else if(GuiAndroidHud.radialDeltaY >= 0 && GuiAndroidHud.radialDeltaX < 0)
+                {
+                    radialAngle = 270D + (90D + aSin);
+                }
+            }
+
+            if(mag > 0.9999999D)
+            {
+                mag = Math.round(mag);
+            }
+
+            stats.clear();
+            for (IBionicStat stat : AndroidStatRegistry.getStats()) {
+                if (stat.showOnWheel(this,getUnlockedLevel(stat)) && isUnlocked(stat,0))
+                {
+                    stats.add(stat);
+                }
+            }
+
+            if (mag > magAcceptance)
+            {
+                GuiAndroidHud.radialAngle = radialAngle;
+            }
+
+            int i = 0;
+            for (IBionicStat stat : stats)
+            {
+                float leeway = 360f / stats.size();
+                if (mag > magAcceptance && (i == 0 && (radialAngle < (leeway / 2) && radialAngle >= 0F || radialAngle > (360F) - (leeway / 2)) || i != 0 && radialAngle < (leeway * i) + (leeway / 2) && radialAngle > (leeway * i) - (leeway / 2)))
+                {
+                    if (activeStat != stat)
+                    {
+                        activeStat = stat;
+                        MatterOverdrive.packetPipeline.sendToServer(new PacketAndroidChangeAbility(activeStat.getUnlocalizedName()));
+                    }
+                    break;
+                }
+                i++;
+            }
+
         }
     }
 
@@ -531,6 +654,8 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         return getEffects().getLong(effect);
     }
+    public IBionicStat getActiveStat(){return activeStat;}
+    public void setActiveStat(IBionicStat stat){this.activeStat = stat;}
     //endregion
 
     //region inventory

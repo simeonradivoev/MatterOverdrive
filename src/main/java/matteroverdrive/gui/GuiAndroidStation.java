@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui;
 
 import matteroverdrive.Reference;
@@ -60,8 +78,8 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         parts_slots[Reference.BIONIC_BATTERY].setPosition(320,310);
         parts_slots[Reference.BIONIC_BATTERY].setIcon(ClientProxy.holoIcons.getIcon("battery"));
 
-        addStat(androidPlayer,AndroidStatRegistry.teleport,0,0,ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,AndroidStatRegistry.nanobots,1,1,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer, AndroidStatRegistry.teleport, 0, 0, ForgeDirection.UNKNOWN);
+        addStat(androidPlayer, AndroidStatRegistry.nanobots, 1, 1, ForgeDirection.UNKNOWN);
         addStat(androidPlayer,AndroidStatRegistry.nanoArmor,0,1,ForgeDirection.EAST);
         addStat(androidPlayer,AndroidStatRegistry.flotation,2,0,ForgeDirection.UNKNOWN);
         addStat(androidPlayer,AndroidStatRegistry.speed,3,0,ForgeDirection.UNKNOWN);
@@ -69,6 +87,8 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         addStat(androidPlayer,AndroidStatRegistry.equalizer,3,2,ForgeDirection.UP);
         addStat(androidPlayer,AndroidStatRegistry.shield,0,2,ForgeDirection.UP);
         addStat(androidPlayer,AndroidStatRegistry.attack,2,1,ForgeDirection.WEST);
+        addStat(androidPlayer,AndroidStatRegistry.cloak,0,3,ForgeDirection.UP);
+        addStat(androidPlayer,AndroidStatRegistry.nightvision,1,0,ForgeDirection.UNKNOWN);
 
         mob = new EntityRougeAndroidMob(Minecraft.getMinecraft().theWorld);
         mob.getEntityData().setBoolean("Hologram",true);

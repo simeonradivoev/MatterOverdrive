@@ -1,9 +1,28 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui;
 
 import cofh.lib.gui.GuiColor;
 import cofh.lib.render.RenderHelper;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
@@ -15,14 +34,19 @@ import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
+import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.util.JsonException;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import org.lwjgl.input.Mouse;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -37,12 +61,14 @@ public class GuiAndroidHud extends Gui
     public static final ResourceLocation glitch_tex = new ResourceLocation(Reference.PATH_GUI + "glitch.png");
     public static final ResourceLocation spinner_tex = new ResourceLocation(Reference.PATH_ELEMENTS + "spinner.png");
     public static final ResourceLocation top_element_bg = new ResourceLocation(Reference.PATH_ELEMENTS + "android_bg_element.png");
-    public static final ResourceLocation icon_bg = new ResourceLocation(Reference.PATH_ELEMENTS + "android_feature_icon_bg.png");
     private AnimationTextTyping textTyping;
     private Minecraft mc;
     private Random random;
     private ShaderGroup hurtShader;
-    private ShaderGroup transformShader;
+    private List<IBionicStat> stats = new ArrayList<>();
+    public static boolean showRadial = false;
+    public static double radialDeltaX,radialDeltaY,radialAngle;
+    private static double radialAnimationTime;
 
     public GuiAndroidHud(Minecraft mc)
     {
@@ -59,8 +85,19 @@ public class GuiAndroidHud extends Gui
         }
 
         info = MOStringHelper.translateToLocal("gui.android_hud.transforming.line.final");
-        textTyping.addSeqmentSequential(new AnimationSegmentText(info,0,1).setLengthPerCharacter(2));
+        textTyping.addSeqmentSequential(new AnimationSegmentText(info, 0, 1).setLengthPerCharacter(2));
         textTyping.addSeqmentSequential(new AnimationSegmentText(info,AndroidPlayer.TRANSFORM_TIME,0));
+    }
+
+    @SubscribeEvent
+    public void renderTick(TickEvent.RenderTickEvent event)
+    {
+        if (showRadial)
+        {
+            Mouse.getDX();
+            Mouse.getDY();
+            mc.mouseHelper.deltaX = mc.mouseHelper.deltaY = 0;
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
@@ -73,12 +110,164 @@ public class GuiAndroidHud extends Gui
             event.setCanceled(true);
             return;
         }
+
+        if (android.isAndroid() && event.isCancelable() && event.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+        {
+            event.setCanceled(true);
+
+            if (!showRadial)
+            {
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+                glEnable(GL_ALPHA_TEST);
+                //RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
+                glColor3d(1,1,1);
+                ClientProxy.holoIcons.renderIcon("crosshair", event.resolution.getScaledWidth() / 2 - 17 / 2, event.resolution.getScaledHeight()/2 - 17/2);
+            }
+        }
+
         if (event.isCancelable() || event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE)
         {
             return;
         }
 
         renderHud(event);
+
+        //System.out.println(showRadial);
+        if (android.isAndroid())
+        {
+            if (showRadial)
+            {
+                GuiAndroidHud.radialAnimationTime = Math.min(1,GuiAndroidHud.radialAnimationTime+event.partialTicks*0.2);
+            }else
+            {
+                GuiAndroidHud.radialAnimationTime = Math.max(0,GuiAndroidHud.radialAnimationTime-event.partialTicks*0.2);
+            }
+
+            if (GuiAndroidHud.radialAnimationTime > 0)
+            {
+                renderRadialMenu(event);
+            }
+        }
+    }
+
+    public void renderRadialMenu(RenderGameOverlayEvent event)
+    {
+        glPushMatrix();
+        glTranslated(event.resolution.getScaledWidth() / 2, event.resolution.getScaledHeight() / 2, 0);
+        double scale = MOMathHelper.easeIn(GuiAndroidHud.radialAnimationTime,0,1,1);
+        glScaled(scale, scale, scale);
+        ClientProxy.holoIcons.bindSheet();
+        AndroidPlayer androidPlayer = AndroidPlayer.get(Minecraft.getMinecraft().thePlayer);
+
+        stats.clear();
+        for (IBionicStat stat : AndroidStatRegistry.getStats())
+        {
+            if (stat.showOnWheel(androidPlayer, androidPlayer.getUnlockedLevel(stat)) && androidPlayer.isUnlocked(stat,0))
+            {
+                stats.add(stat);
+            }
+        }
+
+        glColor3f(1, 1, 1);
+        glDepthMask(false);
+        //glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+        glPushMatrix();
+        glRotated(radialAngle, 0, 0, -1);
+        RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.4f);
+        ClientProxy.holoIcons.renderIcon("up_arrow_large", -9, -50);
+        glPopMatrix();
+
+        int i = 0;
+        for (IBionicStat stat : stats)
+        {
+            double angleSeg = (Math.PI*2/stats.size());
+            double angle,x,y,radiusMin,radiusMax,angleAb,angleCircle;
+            double radius = 80;
+            angle = angleSeg * i;
+            angle += Math.toRadians(180D);
+
+            radiusMin = radius - 16;
+            radiusMax = radius + 16;
+
+            glDisable(GL_TEXTURE_2D);
+            glDisable(GL_ALPHA_TEST);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            if (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(stat))
+            {
+                radiusMax = radius + 20;
+                radiusMin = radius - 16;
+                glColor4d(0, 0, 0, 0.6);
+            }else
+            {
+                glColor4d(0, 0, 0, 0.4);
+            }
+
+
+            Tessellator.instance.startDrawingQuads();
+            for (int c = 0;c < 32;c++)
+            {
+                angleAb = ((angleSeg)/32d);
+                angleCircle = c * angleAb + angle - angleSeg/2;
+                Tessellator.instance.addVertex(Math.sin(angleCircle) * radiusMax,Math.cos(angleCircle) * radiusMax,-1);
+                Tessellator.instance.addVertex(Math.sin(angleCircle + angleAb) * radiusMax,Math.cos(angleCircle + angleAb) * radiusMax,-1);
+                Tessellator.instance.addVertex(Math.sin(angleCircle + angleAb) * radiusMin,Math.cos(angleCircle + angleAb) * radiusMin,-1);
+                Tessellator.instance.addVertex(Math.sin(angleCircle) * radiusMin,Math.cos(angleCircle) * radiusMin,-1);
+            }
+            Tessellator.instance.draw();
+
+            radiusMax = radius - 20;
+            radiusMin = radius - 25;
+            Tessellator.instance.startDrawingQuads();
+            glColor4d(0, 0, 0, 0.2);
+            for (int c = 0;c < 32;c++)
+            {
+                angleAb = ((Math.PI*2)/32d);
+                angleCircle = c * angleAb;
+                Tessellator.instance.addVertex(Math.sin(angleCircle) * radiusMax,Math.cos(angleCircle) * radiusMax,-1);
+                Tessellator.instance.addVertex(Math.sin(angleCircle + angleAb) * radiusMax,Math.cos(angleCircle + angleAb) * radiusMax,-1);
+                Tessellator.instance.addVertex(Math.sin(angleCircle + angleAb) * radiusMin,Math.cos(angleCircle + angleAb) * radiusMin,-1);
+                Tessellator.instance.addVertex(Math.sin(angleCircle) * radiusMin,Math.cos(angleCircle) * radiusMin,-1);
+            }
+            Tessellator.instance.draw();
+            glEnable(GL_TEXTURE_2D);
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE);
+            glEnable(GL_ALPHA_TEST);
+            glEnable(GL_DEPTH_TEST);
+            glDepthMask(false);
+
+            ClientProxy.holoIcons.bindSheet();
+            if (androidPlayer.getActiveStat() != null)
+            {
+                if (androidPlayer.getActiveStat().equals(stat))
+                {
+                    RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 1);
+                    x = Math.sin(angle) * radius;
+                    y = Math.cos(angle) * radius;
+                    RenderHelper.renderIcon(-12 + x, -12 + y, 10, stat.getIcon(0), 24, 24);
+                    String statName = stat.getDisplayName(androidPlayer, androidPlayer.getUnlockedLevel(stat));
+                    int statNameWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(statName);
+                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    Minecraft.getMinecraft().fontRenderer.drawString(statName, -statNameWidth / 2, -5, Reference.COLOR_HOLO.getColor());
+                }
+                else
+                {
+                    x = Math.sin(angle) * radius;
+                    y = Math.cos(angle) * radius;
+                    RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.2f);
+                    RenderHelper.renderIcon(-12 + x, -12 + y, 10, stat.getIcon(0), 24, 24);
+                }
+            }
+
+            i++;
+        }
+        glPopMatrix();
     }
 
     public static float hudRotationYawSmooth;
@@ -142,21 +331,16 @@ public class GuiAndroidHud extends Gui
                     IBionicStat stat = AndroidStatRegistry.getStat(object.toString());
                     if (stat != null) {
                         int level = android.getUnlockedLevel(stat);
-                        if (stat.showOnHud(android, level)) {
-                            if (stat.isEnabled(android,level))
-                            {
-                                if (stat.isActive(android,level))
-                                {
-                                    color = enabledColor;
-                                }else
-                                {
-                                    color = disabledColor;
-                                }
-                            }else
+                        if (stat.showOnHud(android, level))
+                        {
+                            if (!stat.isEnabled(android,level))
                             {
                                 color = Reference.COLOR_HOLO_RED;
+                            }else
+                            {
+                                color = enabledColor;
                             }
-                            drawBioticStat(stat, level, color, event.resolution.getScaledWidth() - getX(count), getY(count));
+                            drawBioticStat(stat,android, level, color, event.resolution.getScaledWidth() - getX(count), getY(count));
                             count++;
                         }
                     }
@@ -230,7 +414,7 @@ public class GuiAndroidHud extends Gui
 
     private void createHurtShader()
     {
-        if (hurtShader == null) {
+        if (hurtShader == null && Minecraft.getMinecraft().gameSettings.fancyGraphics) {
             try {
                 hurtShader = new ShaderGroup(Minecraft.getMinecraft().getTextureManager(), Minecraft.getMinecraft().getResourceManager(), Minecraft.getMinecraft().getFramebuffer(), new ResourceLocation("shaders/post/deconverge.json"));
             } catch (JsonException e) {
@@ -241,7 +425,7 @@ public class GuiAndroidHud extends Gui
 
     private void bindHurtShader()
     {
-        if (hurtShader != null)
+        if (hurtShader != null && Minecraft.getMinecraft().gameSettings.fancyGraphics)
         {
             Minecraft.getMinecraft().entityRenderer.theShaderGroup = hurtShader;
             hurtShader.createBindFramebuffers(Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
@@ -255,54 +439,64 @@ public class GuiAndroidHud extends Gui
         }
     }
 
-    public void renderGlitch(AndroidPlayer player,RenderGameOverlayEvent event)
-    {
+    public void renderGlitch(AndroidPlayer player,RenderGameOverlayEvent event) {
         glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE,GL_ONE);
-        glColor3d(1,1,1);
+        glBlendFunc(GL_ONE, GL_ONE);
+        glColor3d(1, 1, 1);
         mc.renderEngine.bindTexture(glitch_tex);
         func_146110_a(0, 0, random.nextInt(1280), random.nextInt(720), event.resolution.getScaledWidth(), event.resolution.getScaledHeight(), event.resolution.getScaledWidth(), event.resolution.getScaledHeight());
         glDisable(GL_BLEND);
     }
 
-    public int getX(int count)
+    private int getX(int count)
     {
-        return 44 + (22 * (count % STATS_PER_ROW));
+        return 44 + (24 * (count % STATS_PER_ROW));
     }
 
-    public int getY(int count)
+    private int getY(int count)
     {
-        return 23 + 22 * (count / STATS_PER_ROW);
+        return 23 + 24 * (count / STATS_PER_ROW);
     }
 
-    public void drawAndroidPart(ItemStack stack,GuiColor color,int x,int y)
+    private void drawAndroidPart(ItemStack stack,GuiColor color,int x,int y)
     {
-        drawStatBG(color,x,y);
+        drawNormalBG(color,x,y);
         glEnable(GL_BLEND);
-        glColor4f(1,1,1,0.5f);
+        glColor4f(1, 1, 1, 0.5f);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         RenderHelper.bindItemTexture(stack);
-        RenderUtils.renderStack(x + 2,y + 2,stack);
+        RenderUtils.renderStack(x + 2, y + 2, stack);
         glDisable(GL_BLEND);
         //drawTexturedModelRectFromIcon(x + 1, y + 1, stack.getIconIndex(), 18, 18);
     }
 
-    public void drawBioticStat(IBionicStat stat,int level,GuiColor color,int x,int y)
+    private void drawBioticStat(IBionicStat stat,AndroidPlayer androidPlayer,int level,GuiColor color,int x,int y)
     {
-        drawStatBG(color,x,y);
+        if (stat.isActive(androidPlayer,level))
+            drawActiveBG(color,x,y);
+        else
+            drawNormalBG(color, x, y);
         glEnable(GL_BLEND);
         ClientProxy.holoIcons.bindSheet();
-        RenderHelper.renderIcon(x + 1,y + 1,0,stat.getIcon(level),18,18);
+        RenderHelper.renderIcon(x + 2, y + 2, 0, stat.getIcon(level), 18, 18);
         glDisable(GL_BLEND);
     }
 
-    public void drawStatBG(GuiColor color,int x,int y)
+    private void drawNormalBG(GuiColor color,int x,int y)
     {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         glColor3f(color.getFloatR(), color.getFloatG(), color.getFloatB());
-        mc.renderEngine.bindTexture(icon_bg);
-        func_146110_a(x, y, 0, 0, 20, 20, 20, 20);
+        ClientProxy.holoIcons.renderIcon("android_feature_icon_bg", x, y, 22, 22);
+        glDisable(GL_BLEND);
+    }
+
+    private void drawActiveBG(GuiColor color,int x,int y)
+    {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        glColor3f(color.getFloatR(), color.getFloatG(), color.getFloatB());
+        ClientProxy.holoIcons.renderIcon("android_feature_icon_bg_active", x, y, 22, 22);
         glDisable(GL_BLEND);
     }
 }

@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.data.biostats;
 
 import cofh.lib.audio.SoundBase;
@@ -29,8 +47,8 @@ import java.util.UUID;
  */
 public class BioticStatShield extends AbstractBioticStat
 {
-    public static final int ENERGY_PER_TICK = 32;
-    public static final int ENERGY_PER_DAMAGE = 128;
+    public static final int ENERGY_PER_TICK = 64;
+    public static final int ENERGY_PER_DAMAGE = 256;
     public static final String TAG_SHIELD = "Shield";
     public static final String TAG_HITS = "Hits";
     @SideOnly(Side.CLIENT)
@@ -43,6 +61,7 @@ public class BioticStatShield extends AbstractBioticStat
         setShowOnHud(true);
         modifyer = new AttributeModifier(UUID.fromString("ead117ad-105a-43fe-ab22-a31aee6adc42"),"Shield Slowdown",-0.8,2);
         random = new Random();
+        setShowOnWheel(true);
     }
 
     @Override
@@ -50,27 +69,31 @@ public class BioticStatShield extends AbstractBioticStat
     {
         if (android.getPlayer().worldObj.isRemote)
         {
+
             if (android.getEffects().getBoolean(TAG_SHIELD))
             {
-                android.extractEnergy(ENERGY_PER_TICK,false);
-
-                if (!ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed() || !android.getPlayer().isSneaking())
+                if (!ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed())
                 {
-                    android.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, false, 0);
+                    android.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, false);
                     android.getEffects().setBoolean(TAG_SHIELD, false);
                     android.getEffects().removeTag(TAG_HITS);
                 }
             }else
             {
-                if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed() && android.getPlayer().isSneaking())
+                if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed())
                 {
                     setShield(android,true);
-                    android.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD,true,0);
+                    android.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, true);
                 }
             }
 
         }else
         {
+            if (android.getEffects().getBoolean(TAG_SHIELD))
+            {
+                android.extractEnergy(ENERGY_PER_TICK, false);
+            }
+
             if (android.getEffects().hasKey(TAG_HITS)) {
                 NBTTagList attackList = android.getEffects().getTagList(TAG_HITS, 10);
 
@@ -84,8 +107,7 @@ public class BioticStatShield extends AbstractBioticStat
                     {
                         attackList.removeTag(0);
                     }
-                }else
-                {
+                } else {
                     android.getEffects().removeTag(TAG_HITS);
                 }
 
@@ -97,7 +119,7 @@ public class BioticStatShield extends AbstractBioticStat
     @Override
     public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
     {
-        if (androidPlayer.getPlayer().isSneaking() && keycode == ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode() && down)
+        if (keycode == ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode() && down)
         {
 
         }
@@ -194,7 +216,8 @@ public class BioticStatShield extends AbstractBioticStat
                 stopShieldSound();
 
             }
-        }else if (androidPlayer.getEffects().getBoolean(TAG_SHIELD))
+
+        }else
         {
             if (androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.movementSpeed).getModifier(modifyer.getID()) == null)
             {
@@ -204,6 +227,13 @@ public class BioticStatShield extends AbstractBioticStat
             if (androidPlayer.getPlayer().worldObj.isRemote)
             {
                 playShieldSound();
+            }
+
+            if (androidPlayer.getPlayer().worldObj.isRemote)
+            {
+                if (!ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed() || !isEnabled(androidPlayer, level)) {
+                    androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, false);
+                }
             }
         }
     }
@@ -231,12 +261,18 @@ public class BioticStatShield extends AbstractBioticStat
     @Override
     public boolean isEnabled(AndroidPlayer androidPlayer,int level)
     {
-        return super.isEnabled(androidPlayer,level) && androidPlayer.extractEnergy(ENERGY_PER_TICK,true) >= ENERGY_PER_TICK;
+        return super.isEnabled(androidPlayer,level) && androidPlayer.extractEnergy(ENERGY_PER_TICK,true) >= ENERGY_PER_TICK && (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(this));
     }
 
     @Override
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
         return getShieldState(androidPlayer);
+    }
+
+    @Override
+    public boolean showOnHud(AndroidPlayer android,int level)
+    {
+        return android.getActiveStat() != null && android.getActiveStat().equals(this);
     }
 }

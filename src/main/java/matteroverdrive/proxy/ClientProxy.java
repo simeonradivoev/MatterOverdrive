@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.proxy;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -8,6 +26,7 @@ import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.handler.KeyHandler;
+import matteroverdrive.handler.MouseHandler;
 import matteroverdrive.handler.TooltipHandler;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.starmap.GalaxyClient;
@@ -19,6 +38,7 @@ public class ClientProxy extends CommonProxy
 {
     public static RenderHandler renderHandler;
     public static KeyHandler keyHandler;
+    public static MouseHandler mouseHandler;
     public static GuiAndroidHud androidHud;
     public static HoloIcons holoIcons;
 
@@ -30,6 +50,7 @@ public class ClientProxy extends CommonProxy
         renderHandler = new RenderHandler(Minecraft.getMinecraft().theWorld,Minecraft.getMinecraft().getTextureManager());
         androidHud = new GuiAndroidHud(Minecraft.getMinecraft());
         keyHandler = new KeyHandler();
+        mouseHandler = new MouseHandler();
         holoIcons = new HoloIcons();
 
         registerSubscribtions();
@@ -49,13 +70,16 @@ public class ClientProxy extends CommonProxy
     private void registerSubscribtions()
     {
         FMLCommonHandler.instance().bus().register(keyHandler);
+        FMLCommonHandler.instance().bus().register(mouseHandler);
         MinecraftForge.EVENT_BUS.register(GalaxyClient.getInstance());
         MinecraftForge.EVENT_BUS.register(new MatterOverdriveIcons());
         MinecraftForge.EVENT_BUS.register(renderHandler);
         MinecraftForge.EVENT_BUS.register(new TooltipHandler());
         MinecraftForge.EVENT_BUS.register(androidHud);
+        MinecraftForge.EVENT_BUS.register(mouseHandler);
         FMLCommonHandler.instance().bus().register(renderHandler);
         FMLCommonHandler.instance().bus().register(GalaxyClient.getInstance());
+        FMLCommonHandler.instance().bus().register(androidHud);
     }
 
     @Override

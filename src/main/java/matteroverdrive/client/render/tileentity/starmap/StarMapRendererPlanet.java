@@ -51,7 +51,9 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
     @Override
     public void renderBody(Galaxy galaxy, SpaceBody spaceBody, TileEntityMachineStarMap starMap, float partialTicks, float viewerDistance)
     {
-        if (spaceBody instanceof Planet) {
+        if (spaceBody instanceof Planet)
+        {
+            glLineWidth(1);
 
             Planet planet = (Planet)spaceBody;
             glPushMatrix();

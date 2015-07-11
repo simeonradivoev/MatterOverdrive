@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.handler;
 
 import matteroverdrive.api.inventory.IBionicStat;
@@ -7,6 +25,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -25,6 +44,8 @@ public class AndroidStatRegistry
     public static BioticStatEqualizer equalizer;
     public static BioticStatShield shield;
     public static BioticStatAttack attack;
+    public static BioticStatCloak cloak;
+    public static BioticStatNightvision nightvision;
 
     public static boolean registerStat(IBionicStat stat)
     {
@@ -67,6 +88,8 @@ public class AndroidStatRegistry
         equalizer.addReqiredItm(new ItemStack(MatterOverdriveItems.spacetime_equalizer));
         shield = new BioticStatShield("shield",36);
         attack = new BioticStatAttack("attack",30);
+        cloak = new BioticStatCloak("cloak",36);
+        nightvision = new BioticStatNightvision("nightvision",28);
 
         teleport.addReqiredItm(new ItemStack(MatterOverdriveItems.h_compensator));
         teleport.addToEnabledBlacklist(shield);
@@ -76,9 +99,10 @@ public class AndroidStatRegistry
         highJump.addToEnabledBlacklist(shield);
         equalizer.setRoot(highJump);
         shield.setRoot(nanoArmor);
-        shield.addReqiredItm(new ItemStack(MatterOverdriveItems.forceFieldEmitter,2));
+        shield.addReqiredItm(new ItemStack(MatterOverdriveItems.forceFieldEmitter, 2));
         attack.addCompetitor(nanoArmor);
         attack.setRoot(nanobots);
+        cloak.setRoot(shield);
     }
 
     public static void registerAll()
@@ -92,6 +116,8 @@ public class AndroidStatRegistry
         registerStat(equalizer);
         registerStat(shield);
         registerStat(attack);
+        registerStat(cloak);
+        registerStat(nightvision);
     }
 
     public static void registerIcons(TextureMap holoIcons)
@@ -100,5 +126,10 @@ public class AndroidStatRegistry
         {
             stat.registerIcons(holoIcons);
         }
+    }
+
+    public static Collection<IBionicStat> getStats()
+    {
+        return stats.values();
     }
 }
