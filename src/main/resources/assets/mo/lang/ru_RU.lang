@@ -282,7 +282,7 @@ biopart.battery.name=Батарейка
 # Биостатистики
 
 biotic_stat.teleport.name=Эндер-телепорт
-biotic_stat.teleport.details=Позволяет делать короткие телепорты, нажав '%1$s' клавишу /n/Каждый телепорт тратит %2$s
+biotic_stat.teleport.details=Позволяет делать короткие телепорты, нажав '%1$s' клавишу /n/Каждый телепорт тратит %2$s /n/Требуется %2$s заряда аккумулятора
 biotic_stat.nanobots.name=Наноботы
 biotic_stat.nanobots.details=Лечит с помощью материальной плазмы и энергии
 biotic_stat.nano_armor.name=Нано-броня
@@ -292,13 +292,17 @@ biotic_stat.floatation.details=Позволяет плавать в воде
 biotic_stat.speed.name=Разгоняющий лимб
 biotic_stat.speed.details=Увеличивает скорость передвижения на %1$s
 biotic_stat.high_jump.name=Высокий прыжок
-biotic_stat.high_jump.details=Позволяет высоко прыгать во время приседа /n/Каждый прыжок тратит %1$s
+biotic_stat.high_jump.details=Позволяет высоко прыгать во время приседа /n/Каждый прыжок тратит %1$s /n/Требуется %1$s заряда аккумулятора
 biotic_stat.equalizer.name=Пространственно-временной эквалайзер
 biotic_stat.equalizer.details=Внутренний пространственно-временной эквалайзер /n/который игнорирует гравитационные эффекты /n/Гравитационной аномалии
 biotic_stat.shield.name=Плазменный щит
-biotic_stat.shield.details=Защищает игрока от снарядов /n/Чтобы включить, удерживайте SHIFT+'%1$s'
+biotic_stat.shield.details=Защищает игрока от снарядов
 biotic_stat.attack.name=Повышение атаки
 biotic_stat.attack.details=Увеличивает мощность удара на %1$s
+biotic_stat.cloak.name=Плащ
+biotic_stat.cloak.details=Позволяет игроку становиться невидимым. /n/В активном состоянии тратит %1$s за тик /n/Требуется %1$s заряда аккумулятора
+biotic_stat.nightvision.name=Ночное зрение
+biotic_stat.nightvision.details=Позволяет игроку видеть в темноте. /n/В активном состоянии тратит %1$s за тик /n/Требуется %1$s заряда аккумулятора
 
 ==========================================================================================================
 # Смерти
