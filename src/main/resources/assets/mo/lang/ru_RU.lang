@@ -1,43 +1,54 @@
+==========================================================================================================
+# Предметы
+
 item.matter_scanner.name=Сканер материи
-item.emergency_ration.name=Emergency Ration
+item.emergency_ration.name=Аварийный паёк
 item.phaser.name=Фазер
 item.battery.name=Батарейка
 item.creative_battery.name=Творческая батарейка
 item.me_conversion_matrix.name=Материально-энергетическая конвертирующая матрица
-item.isolinear_circuit.mk1.name=Isolinear Circuit Mk1
-item.isolinear_circuit.mk2.name=Isolinear Circuit Mk2
-item.isolinear_circuit.mk3.name=Isolinear Circuit Mk3
-item.isolinear_circuit.mk4.name=Isolinear Circuit Mk4
-item.upgrade.base.name=Upgrade Shell
-item.h_compensator.name=Heisenberg Compensator
-item.integration_matrix.name=Integration Matrix
-item.s_magnet.name=Superconductor Magnet
-item.matter_dust_refined.name=Refined Matter Dust
-item.matter_dust.name=Matter Dust
-item.matter_dust.details=Put in a recycler, to refine
-item.machine_casing.name=Machine Casing
-item.dilithium_crystal.name=Dilithium Crystal
+item.isolinear_circuit.mk1.name=Isolinear схема MK1
+item.isolinear_circuit.mk2.name=Isolinear схема MK2
+item.isolinear_circuit.mk3.name=Isolinear схема MK3
+item.isolinear_circuit.mk4.name=Isolinear схема MK4
+item.upgrade.base.name=Оболочка улучшений
+item.h_compensator.name=Гейзенберговский компенсатор
+item.integration_matrix.name=Матрица интеграции
+item.s_magnet.name=Сверхпроводящий магнит
+item.matter_dust_refined.name=Очишенная материальная пыль
+item.matter_dust.name=Материальная пыль
+item.matter_dust.details=Положить в утилизатор, чтобы очистить
+item.machine_casing.name=Машинный корпус
+item.dilithium_crystal.name=Дилитиевый кристалл
 item.tritanium_ingot.name=Тритановый слиток
 item.tritanium_plate.name=Тритановая пластина
 item.tritanium_dust.name=Тритановая пыль
-item.pattern_drive.name=Pattern Drive
-item.pattern_drive.details=Stores 2 Item Patterns
+item.pattern_drive.name=Шаблон привода
+item.pattern_drive.details=Хранит 2 шаблона предмета
 item.earl_gray_tea.name=Чай. Эрл Грей. Горячий.
+item.romulan_ale.name=Ромуланский эль
 item.security_protocol.empty.name=Протокол безопасности
 item.security_protocol.claim.name=Протокол безопасности [Запрос]
-item.security_protocol.claim.description=Claims Machines
+item.security_protocol.claim.description=Защищает машины
 item.security_protocol.access.name=Протокол безопасности [Доступ]
-item.security_protocol.access.description=Allows to access claimed Machines
-item.security_protocol.remove.name=Протокол безопасности [Удалить]
-item.security_protocol.remove.description=Removes Claim form Machines
+item.security_protocol.access.description=Позволяет получить доступ к защищенным машинам
+item.security_protocol.remove.name=Протокол безопасности [Удаление]
+item.security_protocol.remove.description=Убирает защиту у машин
+item.security_protocol.invalid=Неверный протокол безопасности
 item.tritanium_wrench.name=Тритановый ключ
-item.tritanium_wrench.details=Safely disassembles and rotates machines
+item.tritanium_wrench.details=Безопасно демонтирует и вращает машины
 item.spacetime_equalizer.name=Пространственно-временной эквалайзер
-item.spacetime_equalizer.details=Can be warn on the chest to negate Gravitational forces
+item.spacetime_equalizer.details=Может быть одет в слот нагрудника, чтобы предотвратить влияние гравитационных сил
 item.rouge_android_part.head.name=Android-голова
 item.rouge_android_part.arms.name=Android-нога
 item.rouge_android_part.legs.name=Android-рука
 item.rouge_android_part.chest.name=Android-торс
+item.forcefield_emitter.name=Излучатель силового поля
+item.hc_battery.name=Высокоёмкостная батарейка
+item.ship_factory.name=Корабль-фабрика
+item.scout_ship.name=Разведывательный корабль
+item.ship_colonizer.name=Поселенческий корабль
+item.building_base.name=Основа
 
 item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
@@ -46,62 +57,101 @@ item.upgrade.range.name=Улучшение «Диапазон»
 item.upgrade.power_storage.name=Улучшение «Мощность хранения»
 
 item.weapon_module_color.name=Модуль «Цвет»
-item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
-item.weapon_module_barrel.fire.name=Incendiary Filter
-item.weapon_module_barrel.explosion.name=Burst Inductive Drum
+item.weapon_module_barrel.damage.name=Дилитиевая фокусирующая матрица
+item.weapon_module_barrel.fire.name=Зажигательный фильтр
+item.weapon_module_barrel.explosion.name=Взрыво-индуктивный барабан
 
-tile.replicator.name=Matter Replicator
-tile.replicator.config.volume.replicate=Replication Volume
-tile.replicator.config.particles.vent=Vent Particles
-tile.replicator.details=Replicates Items and Blocks from Matter Plasma
-tile.replicator_active.name=Matter Replicator
-tile.decomposer.name=Matter Decomposer
-tile.decomposer.details=Decomposes Items into Matter Plasma
-tile.matter_pipe.name=Matter Transport Pipe
-tile.matter_pipe.details=Transports Matter Plasma
-tile.network_pipe.name=Matter Network Cable
-tile.network_pipe.details=Connects Devices to a Matter Network
-tile.network_router.name=Matter Network Router
-tile.network_router.details=Used to route Machines or Switches from one Sub Local Network to Another
-tile.network_switch.name=Matter Network Switch
-tile.network_switch.details=Used to connect Machines in a local Network
+==========================================================================================================
+# Плитка объектов
+ 
+## Репликатор ##
+tile.replicator.name=Репликатор материи
+tile.replicator.config.volume.replicate=Громкость репликации
+tile.replicator.config.particles.vent=Частицы вента
+tile.replicator.config.storage.matter=Хранилище материи
+tile.replicator.config.storage.energy=Хранилище энергии
+tile.replicator.config.cost.replication.energy=Стоимость электроэнергии за материю
+tile.replicator.config.speed.replication=Скорость выработки материи 
+tile.replicator.config.fail=Возможность неудачи
+tile.replicator.details=Реплицирует предметы и блоки из плазменной материи
+tile.replicator_active.name=Репликатор материи
+
+## Разлагатель ##
+tile.decomposer.name=Разлагатель материи
+tile.decomposer.details=Разлагает предметы в плазменную материю
+tile.decomposer.config.storage.matter=Хранилище материи
+tile.decomposer.config.storage.energy=Хранилище энергии
+tile.decomposer.config.speed.decompose=Скорость разложения
+tile.decomposer.config.cost.decompose=Стоимость разложения
+
+
+tile.matter_pipe.name=Материальная транспортная труба
+tile.matter_pipe.details=Транспортирует плазменную материя
+tile.network_pipe.name=Материальный cетевой кабель
+tile.network_pipe.details=Соединяет устройства материальной сети
+tile.network_router.name=Маршрутизатор материальной сети
+tile.network_router.details=Используется для маршрутизации машин или переключения с одной локальной сети в другую
+tile.network_switch.name=Переключатель материальной сети
+tile.network_switch.details=Используется для подключения машин к локальной сети
 tile.transporter.name=Транспортер
-tile.matter_analyzer.name=Matter Analyzer
-tile.matter_analyzer.details=Analyzes Items Patterns
-tile.dilithium_ore.name=Dilithium руда
+tile.transporter.details=Телепортирует существ
+tile.matter_analyzer.name=Анализатор материи
+tile.matter_analyzer.details=Анализирует шаблоны предметов
+tile.dilithium_ore.name=Дилитиевая руда
 tile.tritanium_ore.name=Тритановая руда
 tile.tritanium_block.name=Тритановый блок
-tile.pattern_storage.name=Pattern Storage
-tile.pattern_storage.details=Stores item patterns, for replication
-tile.pattern_storage.config.particles.vent=Vent Particles
-tile.machine_hull.name=Machine Hull
+
+## Хранилище шаблонов ##
+tile.pattern_storage.name=Хранилище шаблонов
+tile.pattern_storage.details=Хранит шаблоны предметов, для репликации
+tile.pattern_storage.config.particles.vent=Частицы вента
+tile.pattern_storage.config.storage.energy=Хранилище энергии
+tile.pattern_storage.config.transfer.energy=Скорость передачи энергии
+
+tile.machine_hull.name=Машинный корпус
 tile.solar_panel.name=Солнечная панель
 tile.solar_panel.details=Производит RF от солнечного света
 tile.weapon_station.name=Оружейная станция
-tile.weapon_station.details=Used to upgrade and charge weapons
+tile.weapon_station.details=Используется для улучшения оружия
 tile.microwave.name=Микроволновка
-tile.pattern_monitor.name=Pattern Monitor
+tile.pattern_monitor.name=Монитор шаблонов
 tile.pattern_monitor.details=Used to Queue Replication Tasks
-tile.gravitational_anomaly.name=Gravitational Anomaly
-tile.gravitational_stabilizer.name=Gravitational Stabilizer
-tile.gravitational_stabilizer.details=Used to suppress the effects of Gravitational Anomalies
-tile.matter_recycler.name=Matter Recycler
-tile.matter_recycler.details=Used to recycle items, ready for decomposing
-tile.fusion_reactor_controller.name=Fusion Reactor Controller
-tile.fusion_reactor_controller.details=Main Controller for Fusion Reactor
-tile.fusion_reactor_coil.name=Fusion Reactor Coil
-tile.fusion_reactor_coil.details=Used to confine the Plasma in Fusion Reactors
-tile.android_station.name=Android-станция
-tile.android_station.details=Android Upgrade Management
-container.replicator.name=Репликатор
-machine.tooltip.matter=Вещество
-machine.tooltip.energy=Charged
+tile.gravitational_anomaly.name=Гравитационная аномалия
+tile.gravitational_stabilizer.name=Гравитационный стабилизатор
+tile.gravitational_stabilizer.details=Используется для подавления эффектов гравитационных аномалий
+tile.matter_recycler.name=Утилизатор материи
+tile.matter_recycler.details=Используется для переработки предметов, готовых для разложения
 
-entity.rouge_android.name=Rouge Android
-entity.failed_pig.name=Failed Pig
-entity.failed_chicken.name=Failed Chicken
-entity.failed_cow.name=Failed Cow
-entity.failed_sheep.name=Failed Sheep
+## Термоядерный реактор ##
+tile.fusion_reactor_controller.name=Контроллер термоядерного реактора
+tile.fusion_reactor_controller.config.storage.energy=Хранилище энергии
+tile.fusion_reactor_controller.config.storage.matter=Хранилище материи
+tile.fusion_reactor_controller.config.output.energy=Выходная энергия
+tile.fusion_reactor_controller.config.drain.matter=Расход материи
+tile.fusion_reactor_controller.config.distance.anomaly=Максимальное расстояние аномалии
+tile.fusion_reactor_controller.config.check.delay=Задержка проверки структуры
+tile.fusion_reactor_controller.details=Главный контроллер термоядерного реактора
+tile.fusion_reactor_coil.name=Катушка термоядерного реактора
+tile.fusion_reactor_coil.details=Используется для удержания плазмы в термоядерных реакторах
+ 
+## Android-станция ##
+tile.android_station.name=Android-станция
+tile.android_station.details=Управление Android-улучшениями
+tile.star_map.name=Звездная карта
+tile.star_map.details=Используется для управления галактикой
+tile.charging_station.name=Зарядная станция
+tile.charging_station.details=Используется для зарядки Android-ов
+container.replicator.name=Репликатор
+machine.tooltip.matter=Материя
+machine.tooltip.energy=Заряд
+
+entity.rogue_android.name=Бродящий Android
+entity.failed_pig.name=Неудачная свинья
+entity.failed_chicken.name=Неудачная курица
+entity.failed_cow.name=Неудачная корова
+entity.failed_sheep.name=Неудачная овца
+
+## Безумный учёный ##
 entity.mad_scientist.name=Безумный учёный
 entity.mad_scientist.line.fail.0=У вас нет всех Android-частей!
 entity.mad_scientist.line.fail.1=Я не дам вам какие либо из моих частей!
@@ -119,6 +169,8 @@ itemGroup.tabMatterOverdrive=Matter Overdrive
 itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Модули
 itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Улучшения
 
+==========================================================================================================
+# Типы улучшений
 upgradetype.Speed.name=Время
 upgradetype.PowerUsage.name=Потребляемая мощность
 upgradetype.Output.name=Выход
@@ -127,25 +179,30 @@ upgradetype.Fail.name=Неудача
 upgradetype.Range.name=Диапазон
 upgradetype.PowerStorage.name=Мощность хранения
 
+==========================================================================================================
+# Оружейные статистики
 weaponstat.0.name=Урон
 weaponstat.1.name=Боеприпасы
-weaponstat.2.name=Действие
+weaponstat.2.name=Эффект
 weaponstat.3.name=Диапазон
-weaponstat.4.name=Fire Damage
-weaponstat.5.name=Block Damage
-weaponstat.6.name=Explosion Damage
-weaponstat.7.name=Fire Rate
+weaponstat.4.name=Урон от огня
+weaponstat.5.name=Урон блокам
+weaponstat.6.name=Урон от взрыва
+weaponstat.7.name=Скорострельность
 
-gui.replicator.name=Pattern Replicator
-gui.decomposer.name=Matter Decomposer
-gui.matter_analyzer.name=Matter Analyzer
-gui.network_router.name=Network Router
-gui.pattern_storage.name=Pattern Storage
-gui.solar_panel.name=Solar Panel
-gui.pattern_monitor.name=Network Pattern Monitor
-gui.network_switch.name=Network Switch
-gui.recycler.name=Matter Recycler
-gui.fusion_reactor.name=Fusion Reactor
+==========================================================================================================
+# Графический интерфейс
+
+gui.replicator.name=Репликатор шаблонов
+gui.decomposer.name=Разлагатель материи
+gui.matter_analyzer.name=Анализатор материи
+gui.network_router.name=Маршрутизатор сети
+gui.pattern_storage.name=Хранилище шаблонов
+gui.solar_panel.name=Солнечная панель
+gui.pattern_monitor.name=Сетевой монитор шаблонов
+gui.network_switch.name=Сетевой переключатель
+gui.recycler.name=Утилизатор материи
+gui.fusion_reactor.name=Термоядерный реактор
 gui.android_hud.transforming.line.0=Загрузка системы
 gui.android_hud.transforming.line.1=Построение нервных путей
 gui.android_hud.transforming.line.2=Нервная конфигурации в процессе
@@ -153,6 +210,46 @@ gui.android_hud.transforming.line.3=Установка драйверов
 gui.android_hud.transforming.line.4=Регулировка протезов
 gui.android_hud.transforming.line.5=Очистка биологических загрязнений
 gui.android_hud.transforming.line.final=Преобразование в процессе
+gui.hologram.access_denied=ДОСТУП ЗАПРЕЩЕН
+gui.tooltip.close_menu=Закрыть меню
+gui.tooltip.open_menu=Открыть меню
+gui.tooltip.close=Закрыть
+gui.tooltip.page.home=Главная
+gui.tooltip.page.configurations=Конфигурации
+gui.tooltip.page.upgrades=Улучшения
+gui.tooltip.page.tasks=Задачи
+gui.tooltip.page.scan_info=Scan Info
+gui.tooltip.page.galaxy=Галактика
+gui.tooltip.page.quadrant=Квадрант
+gui.tooltip.page.star=Cолнечная система
+gui.tooltip.page.planet=Планета
+gui.tooltip.page.planet_stats=Статистика планеты
+gui.tooltip.button.refresh=Обновить список
+gui.tooltip.button.request=Отправить запросы
+gui.tooltip.matter=Материя
+gui.tooltip.matter.none=Нет
+gui.tooltip.energy.io=Ввод/вывод
+gui.tooltip.requires=Требуется
+gui.tooltip.scout_button=Отправить разведывательных кораблей, чтобы обнаружить планету и начать строительство
+gui.redstone_mode.high=Высокий
+gui.redstone_mode.low=Низкий
+gui.redstone_mode.disabled=Отключён
+gui.config.redstone=Красный камень
+gui.config.owner=Владелец
+gui.label.button.save=Сохранить
+gui.label.button.remove=Удалить
+gui.label.button.add=Добавить
+gui.label.button.reset=Сбросить
+gui.label.button.scout=Отправить разведчика
+
+### Подсказки в графическом интерфейсе ###
+gui.tooltip.starmap.no_ship_space=Not enough ship spaces
+gui.tooltip.starmap.no_building_space=Not enough building spaces
+gui.tooltip.starmap.no_ship_factory=Нет корабля-фабрики
+gui.tooltip.starmap.has_base=Основное здание уже присутствует
+
+==========================================================================================================
+# Модули
 
 module.battery.name=Модуль «Батарейка»
 module.color.name=Модуль «Цвет»
@@ -167,9 +264,12 @@ module.color.gold=Золотой
 module.color.black=Чёрный
 module.color.grey=Серый
 
-module.barrel.name=Barrel Module
-module.sights.name=Sights Module
+module.barrel.name=Модуль «Ствол»
+module.sights.name=Модуль «Прицел»
 module.other.name=Другой модуль
+
+==========================================================================================================
+# Био части
 
 biopart.head.name=Голова
 biopart.arms.name=Руки
@@ -178,24 +278,38 @@ biopart.chest.name=Торс
 biopart.other.name=Другое
 biopart.battery.name=Батарейка
 
+==========================================================================================================
+# Биостатистики
+
 biotic_stat.teleport.name=Эндер-телепорт
-biotic_stat.teleport.details=Позволяет делать короткие телепорты, нажав '$0' клавишу /n/Каждый телепорт тратит $1 /n/A battery capable of extracting $1 is required
+biotic_stat.teleport.details=Позволяет делать короткие телепорты, нажав '%1$s' клавишу /n/Каждый телепорт тратит %2$s
 biotic_stat.nanobots.name=Наноботы
 biotic_stat.nanobots.details=Лечит с помощью материальной плазмы и энергии
 biotic_stat.nano_armor.name=Нано-броня
-biotic_stat.nano_armor.details=Поглощает $0 урона
+biotic_stat.nano_armor.details=Поглощает %1$s урона
 biotic_stat.floatation.name=Воздушные мешки
 biotic_stat.floatation.details=Позволяет плавать в воде
-biotic_stat.speed.name=Limb Overclocking
-biotic_stat.speed.details=Увеличивает скорость передвижения на $0
+biotic_stat.speed.name=Разгоняющий лимб
+biotic_stat.speed.details=Увеличивает скорость передвижения на %1$s
 biotic_stat.high_jump.name=Высокий прыжок
-biotic_stat.high_jump.details=Позволяет высоко прыгать во время приседа /n/Каждый прыжок тратит $0 /n/A battery capable of extracting $0 is required
+biotic_stat.high_jump.details=Позволяет высоко прыгать во время приседа /n/Каждый прыжок тратит %1$s
 biotic_stat.equalizer.name=Пространственно-временной эквалайзер
 biotic_stat.equalizer.details=Внутренний пространственно-временной эквалайзер /n/который игнорирует гравитационные эффекты /n/Гравитационной аномалии
+biotic_stat.shield.name=Плазменный щит
+biotic_stat.shield.details=Защищает игрока от снарядов /n/Чтобы включить, удерживайте SHIFT+'%1$s'
+biotic_stat.attack.name=Повышение атаки
+biotic_stat.attack.details=Увеличивает мощность удара на %1$s
 
-death.attack.phaser.item=%1$s was disintegrated by %2$s using %3$s
+==========================================================================================================
+# Смерти
+
+death.attack.phaser=%1$s был размельчен %2$s
+death.attack.phaser.item=%1$s был размельчен %2$s с помощью %3$s
 death.attack.blackHole=%1$s был раздавлен гравитационной аномалией
-death.attack.android_transformation=%1$s has ended his biological existence
+death.attack.android_transformation=%1$s закончил своё биологического существования
+
+==========================================================================================================
+# Задачи
 
 task.state.-1.name=Invalid
 task.state.-1.description=Task is not a Valid.
@@ -210,27 +324,40 @@ task.state.3.description=Waiting to finish Processing.
 task.state.4.name=Finished
 task.state.4.description=Task is Complete.
 
-task.store_pattern.state.1.description=Searching for Pattern Storage.
-task.store_pattern.state.2.description=Queued in Machine.\n Waiting to Processing.
-task.store_pattern.state.3.description=Currently Storing Item Pattern.
-task.store_pattern.state.4.description=Item Pattern Successfully Stored.
+==========================================================================================================
+# Конфигурация
 
-task.replicate_pattern.state.1.description=Searching for Available Replicators.
+task.store_pattern.state.1.description=Поиск хранилища шаблонов.
+task.store_pattern.state.2.description=Queued in Machine.\n Ожидание обработки.
+task.store_pattern.state.3.description=Currently Storing Item Pattern.
+task.store_pattern.state.4.description=Шаблон предмета успешно сохранён.
+
+task.replicate_pattern.state.1.description=Поиск доступных репликаторов.
 
 info.mo.updater.download=скачать
 info.mo.updater.hover=Нажмите, чтобы загрузить последнюю версию.
 
 config.machine_options.name=Машины
 config.world_gen.name=Генерация мира
-config.matter_network.name=Matter Network
-config.matter_registry.name=Matter Registry
+config.matter_network.name=Материальная сеть
+config.matter_registry.name=Материальный реестр
 config.matter_registry.item_overrides.name=Override
 config.matter_registry.new_items.name=Новый
 config.matter_registry.item_blacklist.name=Черный список
 config.spawn_ores.name=Спавн руд
 config.client.name=Настройки клиента
 config.server.name=Настройки сервера
+config.starmap.name=Настройки звездной карты
+config.ore_gen_blacklist.name=Ore Dimension Blacklist
+ 
+==========================================================================================================
+# Чат-оповещения
 
 alert.no_rights=No Rights to Access the $0
 alert.no_access_default=Access denied to $0
 alert.not_android=Биологическое существо обнаружено! Доступ закрыт!
+alert.no_rights.brake=Только владелец может останавливать $0
+alert.no_rights.dismantle=Только владелец может демонтировать $0
+alert.new_update=Доступна новая версия! 
+alert.starmap.ship_arrive=§3%1$s §rприбыл на §3%2$s!
+alert.starmap.on_build=§3%1$s §rбыл построен на §3%2$s§r!
