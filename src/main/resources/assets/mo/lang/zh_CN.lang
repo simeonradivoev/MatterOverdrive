@@ -1,3 +1,6 @@
+##########################################################################################################
+# Items
+
 item.matter_scanner.name=物质扫描仪
 item.emergency_ration.name=应急营养单元
 item.phaser.name=超能相位枪
@@ -23,6 +26,7 @@ item.tritanium_dust.name=钛金粉
 item.pattern_drive.name=模式存储单元
 item.pattern_drive.details=可存储2个物品模式
 item.earl_gray_tea.name=格雷伯爵茶
+item.romulan_ale.name=罗姆兰麦酒
 item.security_protocol.empty.name=安全协定
 item.security_protocol.claim.name=安全协定[设置]
 item.security_protocol.claim.description=设置机器
@@ -30,6 +34,7 @@ item.security_protocol.access.name=安全协定[访问]
 item.security_protocol.access.description=允许访问已设置安全协定的机器
 item.security_protocol.remove.name=安全协定[清除]
 item.security_protocol.remove.description=移除机器安全设置
+item.security_protocol.invalid=安全协定无效
 item.tritanium_wrench.name=钛金扳手
 item.tritanium_wrench.details=安全装卸和旋转机器
 item.spacetime_equalizer.name=时空均衡器
@@ -38,6 +43,12 @@ item.rouge_android_part.head.name=机器人头部
 item.rouge_android_part.arms.name=机器人手部
 item.rouge_android_part.legs.name=机器人腿部
 item.rouge_android_part.chest.name=机器人躯干
+item.forcefield_emitter.name=力场发生器
+item.hc_battery.name=高能电池
+item.ship_factory.name=舰船工厂
+item.scout_ship.name=侦察飞船
+item.ship_colonizer.name=殖民飞船
+item.building_base.name=基地
 
 item.upgrade.speed.name=速度升级
 item.upgrade.power.name=能耗升级
@@ -50,13 +61,30 @@ item.weapon_module_barrel.damage.name=双锂聚焦矩阵
 item.weapon_module_barrel.fire.name=高能燃烧弹
 item.weapon_module_barrel.explosion.name=爆裂电磁炮
 
+##########################################################################################################
+# Tile Entities
+
+//////////// Replicator ////////////
 tile.replicator.name=物质重组仓
 tile.replicator.config.volume.replicate=Replication Volume
 tile.replicator.config.particles.vent=Vent Particles
+tile.replicator.config.storage.matter=物质储存
+tile.replicator.config.storage.energy=能量储存
+tile.replicator.config.cost.replication.energy=Energy Cost per Matter
+tile.replicator.config.speed.replication=Speed per Matter
+tile.replicator.config.fail=失败几率
 tile.replicator.details=将等离子态物质重组为物品和方块
 tile.replicator_active.name=物质复制仪
+
+//////////// Decomposer ////////////
 tile.decomposer.name=物质分解仓
 tile.decomposer.details=将物品分解为等离子态物质
+tile.decomposer.config.storage.matter=物质储存
+tile.decomposer.config.storage.energy=能量储存
+tile.decomposer.config.speed.decompose=分解速度
+tile.decomposer.config.cost.decompose=分解消耗
+
+
 tile.matter_pipe.name=物质运输管道
 tile.matter_pipe.details=运输等离子态物质
 tile.network_pipe.name=物质网络线缆
@@ -72,9 +100,14 @@ tile.matter_analyzer.details=分析物品模式
 tile.dilithium_ore.name=双锂矿石
 tile.tritanium_ore.name=钛金矿石
 tile.tritanium_block.name=钛金块
+
+//////////// Pattern Storage ////////////
 tile.pattern_storage.name=模式存储仓
 tile.pattern_storage.details=存储物品模式，用于复制
 tile.pattern_storage.config.particles.vent=Vent Particles
+tile.pattern_storage.config.storage.energy=能量储存
+tile.pattern_storage.config.transfer.energy=能量传输速度
+
 tile.machine_hull.name=机械外壳
 tile.solar_panel.name=太阳能板
 tile.solar_panel.details=通过太阳能产生RF
@@ -88,21 +121,37 @@ tile.gravitational_stabilizer.name=重力稳定器
 tile.gravitational_stabilizer.details=用于减弱重力异常点的影响
 tile.matter_recycler.name=物质循环仓
 tile.matter_recycler.details=用于物品循环, 为分解做准备
+
+//////////// Fusion Reactor ////////////
 tile.fusion_reactor_controller.name=聚变反应堆控制器
+tile.fusion_reactor_controller.config.storage.energy=能量储存
+tile.fusion_reactor_controller.config.storage.matter=物质储存
+tile.fusion_reactor_controller.config.output.energy=能量输出
+tile.fusion_reactor_controller.config.drain.matter=物质消耗
+tile.fusion_reactor_controller.config.distance.anomaly=Max Anomaly Distance
+tile.fusion_reactor_controller.config.check.delay=Structure Check Delay
 tile.fusion_reactor_controller.details=聚变反应堆的主要控制装置
 tile.fusion_reactor_coil.name=聚变反应堆外围
 tile.fusion_reactor_coil.details=用于限定聚变反应堆内的粒子范围
+
+//////////// Android Station ////////////
 tile.android_station.name=机器人装配台
 tile.android_station.details=机器人升级管理
+tile.star_map.name=星图
+tile.star_map.details=用于星系管理
+tile.charging_station.name=充能台
+tile.charging_station.details=用于充能机器人
 container.replicator.name=重组仓
 machine.tooltip.matter=物质
 machine.tooltip.energy=充能
 
-entity.rouge_android.name=血腥机器人
+entity.rogue_android.name=残暴机器人
 entity.failed_pig.name=实验失败的猪
 entity.failed_chicken.name=实验失败的鸡
 entity.failed_cow.name=实验失败的牛
 entity.failed_sheep.name=实验失败的羊
+
+//////////// Mad Scientist ///////////////
 entity.mad_scientist.name=疯狂科学家
 entity.mad_scientist.line.fail.0=你没有集齐所有的机器人部件!
 entity.mad_scientist.line.fail.1=我绝不会把我的部件给你!
@@ -120,6 +169,8 @@ itemGroup.tabMatterOverdrive=超能物质
 itemGroup.tabMatterOverdrive_modules=超能物质|模块
 itemGroup.tabMatterOverdrive_upgrades=超能物质|升级
 
+##########################################################################################################
+# Upgrade Types
 upgradetype.Speed.name=时间
 upgradetype.PowerUsage.name=能源使用
 upgradetype.Output.name=输出
@@ -128,6 +179,8 @@ upgradetype.Fail.name=故障
 upgradetype.Range.name=范围
 upgradetype.PowerStorage.name=能量存储
 
+##########################################################################################################
+# Weapon Stats
 weaponstat.0.name=伤害
 weaponstat.1.name=弹药
 weaponstat.2.name=眩晕时间
@@ -136,6 +189,9 @@ weaponstat.4.name=火焰伤害
 weaponstat.5.name=方块破坏
 weaponstat.6.name=爆炸伤害
 weaponstat.7.name=射速
+
+##########################################################################################################
+# GUI
 
 gui.replicator.name=物质重组仓
 gui.decomposer.name=物质分解仓
@@ -154,6 +210,46 @@ gui.android_hud.transforming.line.3=安装驱动程序
 gui.android_hud.transforming.line.4=校准机械臂
 gui.android_hud.transforming.line.5=清除生物杂质
 gui.android_hud.transforming.line.final=转化进行中
+gui.hologram.access_denied=拒绝访问
+gui.tooltip.close_menu=关闭菜单
+gui.tooltip.open_menu=打开菜单
+gui.tooltip.close=关闭
+gui.tooltip.page.home=主界面
+gui.tooltip.page.configurations=配置界面
+gui.tooltip.page.upgrades=升级界面
+gui.tooltip.page.tasks=任务
+gui.tooltip.page.scan_info=扫描信息
+gui.tooltip.page.galaxy=银河系
+gui.tooltip.page.quadrant=象限
+gui.tooltip.page.star=行星系
+gui.tooltip.page.planet=行星
+gui.tooltip.page.planet_stats=行星状态
+gui.tooltip.button.refresh=刷新列表
+gui.tooltip.button.request=发送请求
+gui.tooltip.matter=物质
+gui.tooltip.matter.none=无
+gui.tooltip.energy.io=输入/输出
+gui.tooltip.requires=需要
+gui.tooltip.scout_button=派遣侦察飞船，搜寻行星并开始修建
+gui.redstone_mode.high=高
+gui.redstone_mode.low=低
+gui.redstone_mode.disabled=禁用
+gui.config.redstone=红石
+gui.config.owner=拥有者
+gui.label.button.save=保存
+gui.label.button.remove=删除
+gui.label.button.add=添加
+gui.label.button.reset=重置
+gui.label.button.scout=派遣侦察飞船
+
+### GUI Tooltips ###
+gui.tooltip.starmap.no_ship_space=Not enough ship spaces
+gui.tooltip.starmap.no_building_space=Not enough building spaces
+gui.tooltip.starmap.no_ship_factory=No ship factory
+gui.tooltip.starmap.has_base=Base building already present
+
+##########################################################################################################
+# Modules
 
 module.battery.name=能量模块
 module.color.name=颜色模块
@@ -172,12 +268,18 @@ module.barrel.name=枪管模块
 module.sights.name=视野模块
 module.other.name=其他模块
 
+##########################################################################################################
+# Bioparts
+
 biopart.head.name=头部
 biopart.arms.name=手臂
 biopart.legs.name=腿部
 biopart.chest.name=胸部
 biopart.other.name=其他
 biopart.battery.name=能量单元
+
+##########################################################################################################
+# Biostats
 
 biotic_stat.teleport.name=末影传送
 biotic_stat.teleport.details=点击 '$0' 键进行短距离传送 /n/每次传送消耗 $1 /n/需要一个储能超过 $1 的电池
@@ -193,10 +295,21 @@ biotic_stat.high_jump.name=蓄力弹跳
 biotic_stat.high_jump.details=潜行时跳的更高 /n/每次弹跳消耗 $0 /n/需要一个储能超过 $0 的电池
 biotic_stat.equalizer.name=时空均衡器
 biotic_stat.equalizer.details=内置时空均衡器 /n/用于抵消来自于 /n/重力异常点的影响
+biotic_stat.shield.name=粒子护盾
+biotic_stat.shield.details=减免弹射物伤害 /n/请按住Shift+'$0'键开启
+biotic_stat.attack.name=伤害增强
+biotic_stat.attack.details=攻击伤害提升 %1$s
+
+##########################################################################################################
+# Deaths
 
 death.attack.phaser.item=%1$s 被 %2$s 使用 %3$s 分解掉了
+death.attack.phaser.item=%1$s was disintegrated by %2$s using %3$s
 death.attack.blackHole=%1$s 被巨大的重力扭曲碾碎了
 death.attack.android_transformation=%1$s 结束了他作为生物的存在
+
+##########################################################################################################
+# Tasks
 
 task.state.-1.name=无效
 task.state.-1.description=该任务出现错误.
@@ -221,6 +334,8 @@ task.replicate_pattern.state.1.description=搜索可用重组仓.
 info.mo.updater.download=下载
 info.mo.updater.hover=点击下载最新版本.
 
+##########################################################################################################
+# Config
 config.machine_options.name=机器
 config.world_gen.name=世界生成
 config.matter_network.name=物质网络
@@ -231,7 +346,17 @@ config.matter_registry.item_blacklist.name=黑名单
 config.spawn_ores.name=矿物生成
 config.client.name=客户端选项
 config.server.name=服务器选项
+config.starmap.name=星图选项
+config.ore_gen_blacklist.name=矿物黑名单
+
+##########################################################################################################
+# Chat Alerts
 
 alert.no_rights=无权访问 $0
 alert.no_access_default=访问被拒绝 $0
 alert.not_android=检测到生物实体! 拒绝访问!
+alert.no_rights.brake=只有拥有者可以破坏 $0
+alert.no_rights.dismantle=只有拥有者可以拆除 $0
+alert.new_update=有新版本可用!
+alert.starmap.ship_arrive=&3%1$s &r已经到达 &3%2$s!
+alert.starmap.on_build=§3%1$s §r 已在 §3%2$s§r建立!
