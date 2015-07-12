@@ -27,13 +27,14 @@ item.pattern_drive.name=Шаблон привода
 item.pattern_drive.details=Хранит 2 шаблона предмета
 item.earl_gray_tea.name=Чай. Эрл Грей. Горячий.
 item.romulan_ale.name=Ромуланский эль
+item.romulan_ale.name=Высоко опьяняющий алкогольный напиток ромуланского происхождения
 item.security_protocol.empty.name=Протокол безопасности
 item.security_protocol.claim.name=Протокол безопасности [Запрос]
-item.security_protocol.claim.description=Защищает машины
+item.security_protocol.claim.details=Защищает машины
 item.security_protocol.access.name=Протокол безопасности [Доступ]
-item.security_protocol.access.description=Позволяет получить доступ к защищенным машинам
+item.security_protocol.access.details=Позволяет получить доступ к защищенным машинам
 item.security_protocol.remove.name=Протокол безопасности [Удаление]
-item.security_protocol.remove.description=Убирает защиту у машин
+item.security_protocol.remove.details=Убирает защиту у машин
 item.security_protocol.invalid=Неверный протокол безопасности
 item.tritanium_wrench.name=Тритановый ключ
 item.tritanium_wrench.details=Безопасно демонтирует и вращает машины
@@ -46,9 +47,17 @@ item.rouge_android_part.chest.name=Android-торс
 item.forcefield_emitter.name=Излучатель силового поля
 item.hc_battery.name=Высокоёмкостная батарейка
 item.ship_factory.name=Корабль-фабрика
+item.ship_factory.details=Позволяет строить корабли
 item.scout_ship.name=Разведывательный корабль
+item.scout_ship.details=Быстрый корабль, используемый для разведки
 item.ship_colonizer.name=Поселенческий корабль
+item.ship_colonizer.details=Используется для защиты планет путем создания базы по прибытию
 item.building_base.name=Основа
+item.building_base.details=Главное здание, нужное всем
+item.android_pill_red.name=Красная пилюля
+item.android_pill_red.details=Take the red pill and lose what's holding you back
+item.android_pill_blue.name=Синяя пилюля
+item.android_pill_blue.details=Take the blue pill and you will wake up in your bed none the wiser
 
 item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
@@ -60,6 +69,7 @@ item.weapon_module_color.name=Модуль «Цвет»
 item.weapon_module_barrel.damage.name=Дилитиевая фокусирующая матрица
 item.weapon_module_barrel.fire.name=Зажигательный фильтр
 item.weapon_module_barrel.explosion.name=Взрыво-индуктивный барабан
+item.weapon_module_barrel.heal.name=Восстанавливающий конвертер
 
 ==========================================================================================================
 # Плитка объектов
@@ -165,9 +175,15 @@ entity.mad_scientist.line.success.1=Он ЖИВ! Он ЖИВ! Муаха ха х
 entity.mad_scientist.line.success.2=Теперь вы один из нас! Иди мой ребенок!
 entity.mad_scientist.line.success.3=Все это выглядит хорошо, просто я забыл сказать вам об этом.
 
+ 
+==========================================================================================================
+# Вкладки в творческом режиме
 itemGroup.tabMatterOverdrive=Matter Overdrive
 itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Модули
 itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Улучшения
+itemGroup.tabMatterOverdrive_food=Matter Overdrive: Еда
+itemGroup.tabMatterOverdrive_ships=Matter Overdrive: Корабли
+itemGroup.tabMatterOverdrive_buildings=Matter Overdrive: Здания
 
 ==========================================================================================================
 # Типы улучшений
@@ -189,6 +205,7 @@ weaponstat.4.name=Урон от огня
 weaponstat.5.name=Урон блокам
 weaponstat.6.name=Урон от взрыва
 weaponstat.7.name=Скорострельность
+weaponstat.8.name=Лечение
 
 ==========================================================================================================
 # Графический интерфейс
