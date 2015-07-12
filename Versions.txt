@@ -1,4 +1,5 @@
 {"versions":[
+	{"version": "0.4.0-RC2", "changes": "Server Crashes, Computercraft compatibility and more", "type": "beta", "date": "13.07,2015", "url": "http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/"},
 	{"version": "0.4.0-RC1", "changes": "More Star Map work, fix crash when opening the Matter Scanner GUI", "type": "beta", "date": "3.07,2015", "url": "http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/"},
     {"version":"0.3.5", "changes":"New Star Map, bugfixes and more configurations", "type":"beta","date":"27.06,2015","url":"http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/"},
 	{"version":"0.3.4.1", "changes":"Mad Scientist Server Crash Bugfix", "type":"beta","date":"16.06,2015","url":"http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/"},
