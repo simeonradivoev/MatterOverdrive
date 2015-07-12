@@ -25,7 +25,7 @@ public class EarlGrayTea extends ItemFood
 
     public void Register()
     {
-        setCreativeTab(MatterOverdrive.tabMatterOverdrive);
+        setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
         GameRegistry.registerItem(this, this.getUnlocalizedName().substring(5));
     }
 

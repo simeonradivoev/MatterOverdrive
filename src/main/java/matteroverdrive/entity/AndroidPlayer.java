@@ -39,7 +39,9 @@ import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketAndroidChangeAbility;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -50,7 +52,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -317,7 +322,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public void setActionToServer(int action,boolean state)
     {
-        setActionToServer(action,state,0);
+        setActionToServer(action, state, 0);
     }
 
     public void setActionToServer(int action,boolean state,int options)
@@ -366,8 +371,10 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
         if (androidPlayer != null)
         {
-            if (event.phase == TickEvent.Phase.START) {
-                if (androidPlayer.isAndroid()) {
+            if (event.side.isServer() && event.phase == TickEvent.Phase.START)
+            {
+                if (androidPlayer.isAndroid())
+                {
                     if (getEnergyStored() > 0) {
                         if (event.player.getFoodStats().needFood() && androidPlayer.getEnergyStored() > 0) {
                             int foodNeeded = 20 - event.player.getFoodStats().getFoodLevel();
@@ -382,30 +389,32 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                         manageOutOfPower();
                     }
 
-                    for (IBionicStat stat : AndroidStatRegistry.stats.values()) {
-                        int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
-                        if (unlockedLevel > 0) {
-                            if (stat.isEnabled(androidPlayer, unlockedLevel)) {
-                                stat.changeAndroidStats(androidPlayer, unlockedLevel, true);
-                                stat.onAndroidUpdate(androidPlayer, unlockedLevel);
-                            } else {
-                                stat.changeAndroidStats(androidPlayer, unlockedLevel, false);
-                            }
-                        }
-                    }
+                    manageCharging();
                 }
 
                 manageTurning();
-                manageGlitch();
-                manageCharging();
             }
-            if (event.side == Side.CLIENT && androidPlayer.isAndroid())
+            if (event.side.isClient() && androidPlayer.isAndroid())
             {
                 manageAbilityWheel();
             }
+            if (androidPlayer.isAndroid())
+            {
+                manageGlitch();
+
+                for (IBionicStat stat : AndroidStatRegistry.stats.values()) {
+                    int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
+                    if (unlockedLevel > 0) {
+                        if (stat.isEnabled(androidPlayer, unlockedLevel)) {
+                            stat.changeAndroidStats(androidPlayer, unlockedLevel, true);
+                            stat.onAndroidUpdate(androidPlayer, unlockedLevel);
+                        } else {
+                            stat.changeAndroidStats(androidPlayer, unlockedLevel, false);
+                        }
+                    }
+                }
+            }
         }
-
-
     }
 
     public void manageOutOfPower()
@@ -507,6 +516,12 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 GuiAndroidHud.radialAngle = radialAngle;
             }
 
+            if (stats.size() <= 0)
+            {
+                GuiAndroidHud.showRadial = false;
+                return;
+            }
+
             int i = 0;
             for (IBionicStat stat : stats)
             {
@@ -523,6 +538,29 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 i++;
             }
 
+        }
+    }
+
+    public void startConversion()
+    {
+        if (!isAndroid() && !isTurning()) {
+            if (player.worldObj.isRemote) {
+                playTransformMusic();
+            } else {
+                AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+                androidPlayer.startTurningToAndroid();
+            }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void playTransformMusic()
+    {
+        SoundBase transform_music = new SoundBase(Reference.MOD_ID + ":" + "transformation_music", 1, 1,false,0,0,0,0, ISound.AttenuationType.NONE);
+
+        if (!Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(transform_music))
+        {
+            Minecraft.getMinecraft().getSoundHandler().playSound(transform_music);
         }
     }
 
@@ -603,8 +641,8 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             {
                 effects.removeTag(EFFECT_KEY_TURNING);
                 setAndroid(true);
-                playGlitchSound(this,player.worldObj.rand, 0.8f);
-                player.attackEntityFrom(fake, player.getHealth() + 1);
+                playGlitchSound(this, player.worldObj.rand, 0.8f);
+                player.attackEntityFrom(fake, Integer.MAX_VALUE);
                 player.setDead();
             }
 
@@ -645,7 +683,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         return player;
     }
-    public void startTurningToAndroid()
+    private void startTurningToAndroid()
     {
         effects.setInteger("Turning",TRANSFORM_TIME);
         sync(PacketSyncAndroid.SYNC_EFFECTS);

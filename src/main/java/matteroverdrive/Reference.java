@@ -80,6 +80,7 @@ public class Reference
 	public static final int WS_BLOCK_DAMAGE = 5;
 	public static final int WS_EXPLOSION_DAMAGE = 6;
 	public static final int WS_FIRE_RATE = 7;
+	public static final int WS_HEAL = 8;
 	//endregion
 
 	// region Matter Network Tasks States

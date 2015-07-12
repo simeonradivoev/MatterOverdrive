@@ -18,6 +18,7 @@
 
 package matteroverdrive.items.starmap;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.IShip;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -33,6 +34,7 @@ public abstract class ItemShipAbstract extends ItemBuildableAbstract implements 
     {
         super(name);
         setMaxStackSize(1);
+        setCreativeTab(MatterOverdrive.tabMatterOverdrive_ships);
     }
 
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)

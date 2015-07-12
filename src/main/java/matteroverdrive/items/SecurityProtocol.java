@@ -38,7 +38,6 @@ public class SecurityProtocol extends MOBaseItem {
 
         if (itemstack.hasTagCompound())
         {
-            infos.add(MOStringHelper.translateToLocal(getUnlocalizedName() + "." + types[MathHelper.clampI(itemstack.getItemDamage(), 0, types.length)] + ".description"));
             try {
                 String owner = player.worldObj.func_152378_a(UUID.fromString(itemstack.getTagCompound().getString("Owner"))).getGameProfile().getName();
                 infos.add(EnumChatFormatting.YELLOW + "Owner: " + owner);

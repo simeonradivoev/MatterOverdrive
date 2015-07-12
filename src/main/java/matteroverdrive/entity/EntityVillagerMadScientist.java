@@ -18,6 +18,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 
 /**
@@ -105,33 +106,18 @@ public class EntityVillagerMadScientist extends EntityVillager
             }
         }
 
-        convertToAndroid(player);
-    }
-
-    void convertToAndroid(EntityPlayer player)
-    {
         if (player.worldObj.isRemote)
         {
             ChatComponentText componentText = new ChatComponentText(EnumChatFormatting.GOLD + "<Mad Scientist>" + EnumChatFormatting.GREEN + MOStringHelper.translateToLocal("entity.mad_scientist.line.success." + rand.nextInt(4)));
             componentText.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN));
             player.addChatMessage(componentText);
-            playTransformMusic();
         }
-        else
-        {
-            AndroidPlayer androidPlayer = AndroidPlayer.get(player);
-            androidPlayer.startTurningToAndroid();
-        }
+
+        AndroidPlayer.get(player).startConversion();
     }
 
-    @SideOnly(Side.CLIENT)
-    public void playTransformMusic()
+    public MerchantRecipeList getRecipes(EntityPlayer player)
     {
-        SoundBase transform_music = new SoundBase(Reference.MOD_ID + ":" + "transformation_music", 1, 1,false,0,0,0,0, ISound.AttenuationType.NONE);
-
-        if (!Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(transform_music))
-        {
-            Minecraft.getMinecraft().getSoundHandler().playSound(transform_music);
-        }
+        return super.getRecipes(player);
     }
 }

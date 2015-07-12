@@ -7,6 +7,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.*;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.handler.village.TradeHandlerMadScientist;
 import matteroverdrive.handler.village.VillageCreatationMadScientist;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -31,8 +32,10 @@ public class MatterOverdriveEntities
         addEntity(EntityFailedCow.class,"failed_cow",4470310,0x33CC33);
         addEntity(EntityFailedChicken.class,"failed_chicken",10592673,0x33CC33);
         addEntity(EntityFailedSheep.class,"failed_sheep",15198183,0x33CC33);
-        addEntity(EntityVillagerMadScientist.class,"mad_scientist",0xFFFFFF,0);
+        addEntity(EntityVillagerMadScientist.class, "mad_scientist", 0xFFFFFF, 0);
         //addViligger(666,"mad_scientist.png",new TradeHandlerMadScientist());
+
+        VillagerRegistry.instance().registerVillageTradeHandler(666,new TradeHandlerMadScientist());
         VillageCreatationMadScientist creatationMadScientist = new VillageCreatationMadScientist();
         VillagerRegistry.instance().registerVillageCreationHandler(creatationMadScientist);
         rogueandroid.registerEntity();
@@ -41,8 +44,8 @@ public class MatterOverdriveEntities
     public static void addViligger(int id,String texture,VillagerRegistry.IVillageTradeHandler tradeHandler)
     {
         VillagerRegistry.instance().registerVillagerId(id);
-        VillagerRegistry.instance().registerVillagerSkin(id,new ResourceLocation(Reference.PATH_ENTITIES + texture));
-        VillagerRegistry.instance().registerVillageTradeHandler(id,tradeHandler);
+        VillagerRegistry.instance().registerVillagerSkin(id, new ResourceLocation(Reference.PATH_ENTITIES + texture));
+
     }
 
     public static int addEntity(Class<? extends Entity> enityClass,String name,int mainColor,int spotsColor)

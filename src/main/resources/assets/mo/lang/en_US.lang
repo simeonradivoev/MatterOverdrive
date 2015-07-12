@@ -27,13 +27,14 @@ item.pattern_drive.name=Pattern Drive
 item.pattern_drive.details=Stores 2 Item Patterns
 item.earl_gray_tea.name=Tea. Earl Grey. Hot.
 item.romulan_ale.name=Romulan Ale
+item.romulan_ale.name=Highly intoxicating alcoholic beverage of Romulan origin
 item.security_protocol.empty.name=Security Protocol
 item.security_protocol.claim.name=Security Protocol [Claim]
-item.security_protocol.claim.description=Claims Machines
+item.security_protocol.claim.details=Claims Machines
 item.security_protocol.access.name=Security Protocol [Access]
-item.security_protocol.access.description=Allows to access claimed Machines
+item.security_protocol.access.details=Allows to access claimed Machines
 item.security_protocol.remove.name=Security Protocol [Remove]
-item.security_protocol.remove.description=Removes Claim form Machines
+item.security_protocol.remove.details=Removes Claim form Machines
 item.security_protocol.invalid=Invalid Security Protocol
 item.tritanium_wrench.name=Tritanium Wrench
 item.tritanium_wrench.details=Safely disassembles and rotates machines
@@ -46,9 +47,17 @@ item.rouge_android_part.chest.name=Android Torso
 item.forcefield_emitter.name=Force Field Emitter
 item.hc_battery.name=High Capacity Battery
 item.ship_factory.name=Ship Factory
+item.ship_factory.details=Allows the building of Ships
 item.scout_ship.name=Scout Ship
+item.scout_ship.details=A fast ship, used for scouting
 item.ship_colonizer.name=Colonizer Ship
+item.ship_colonizer.details=Used to claim planets by building a base on arrival
 item.building_base.name=Base
+item.building_base.details=Main building, needed for everything
+item.android_pill_red.name=Red Pill
+item.android_pill_red.details=Take the red pill and lose what's holding you back
+item.android_pill_blue.name=Blue Pill
+item.android_pill_blue.details=Take the blue pill and you will wake up in your bed none the wiser
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade
@@ -60,6 +69,7 @@ item.weapon_module_color.name=Color Module
 item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
 item.weapon_module_barrel.fire.name=Incendiary Filter
 item.weapon_module_barrel.explosion.name=Burst Inductive Drum
+item.weapon_module_barrel.heal.name=Regenerative Converter
 
 ##########################################################################################################
 # Tile Entities
@@ -165,9 +175,15 @@ entity.mad_scientist.line.success.1=It's ALIVE! It's ALIVE! Muaha ha ha ha! It's
 entity.mad_scientist.line.success.2=You are now one of us! Go my child!
 entity.mad_scientist.line.success.3=It all looks good, just forgot to put you nose on.
 
+
+##########################################################################################################
+# Creative Panels
 itemGroup.tabMatterOverdrive=Matter Overdrive
 itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Modules
 itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Upgrades
+itemGroup.tabMatterOverdrive_food=Matter Overdrive: Food
+itemGroup.tabMatterOverdrive_ships=Matter Overdrive: Ships
+itemGroup.tabMatterOverdrive_buildings=Matter Overdrive: Buildings
 
 ##########################################################################################################
 # Upgrade Types
@@ -189,6 +205,7 @@ weaponstat.4.name=Fire Damage
 weaponstat.5.name=Block Damage
 weaponstat.6.name=Explosion Damage
 weaponstat.7.name=Fire Rate
+weaponstat.8.name=Heal
 
 ##########################################################################################################
 # GUI

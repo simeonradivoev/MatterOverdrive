@@ -6,6 +6,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.MatterRegistry;
 import matteroverdrive.items.*;
+import matteroverdrive.items.food.AndroidPill;
 import matteroverdrive.items.food.EarlGrayTea;
 import matteroverdrive.items.food.RomulanAle;
 import matteroverdrive.items.includes.MOBaseItem;
@@ -59,6 +60,7 @@ public class MatterOverdriveItems
     public static ItemScoutShip scoutShip;
     public static ItemColonizerShip colonizerShip;
     public static ItemBuildingBase buildingBase;
+    public static AndroidPill androidPill;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -70,7 +72,7 @@ public class MatterOverdriveItems
         hc_battery = new Battery("hc_battery",1 << 20,Reference.COLOR_YELLOW_STRIPES,4096,4096);
 		phaser = new Phaser("phaser");
 		emergency_ration = new ItemFood(8,0.8F,false);
-		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive).setTextureName(Reference.MOD_ID + ":" + "emergency_ration");
+		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive_food).setTextureName(Reference.MOD_ID + ":" + "emergency_ration");
         earl_gray_tea = new EarlGrayTea("earl_gray_tea");
 		romulan_ale = new RomulanAle("romulan_ale");
 		me_conversion_matrix = new MOBaseItem("me_conversion_matrix");
@@ -96,6 +98,7 @@ public class MatterOverdriveItems
         scoutShip = new ItemScoutShip("scout_ship");
         colonizerShip = new ItemColonizerShip("ship_colonizer");
         buildingBase = new ItemBuildingBase("building_base");
+        androidPill = new AndroidPill("android_pill");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -138,6 +141,7 @@ public class MatterOverdriveItems
         scoutShip.register();
         colonizerShip.register();
         buildingBase.register();
+        androidPill.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_ingot),10);
@@ -166,6 +170,7 @@ public class MatterOverdriveItems
     public static void addToDungons()
     {
         weapon_module_color.addToDunguns();
+        androidPill.addToDunguns();
         addToDungons(emergency_ration, 1, 8, 6);
         addToDungons(earl_gray_tea, 1, 2, 2);
         addToDungons(romulan_ale, 1, 2, 2);

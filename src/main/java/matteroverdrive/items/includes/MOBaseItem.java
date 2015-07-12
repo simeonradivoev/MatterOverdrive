@@ -44,9 +44,9 @@ public class MOBaseItem extends Item
 
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
 	{
-		if (MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
+		if (MOStringHelper.hasTranslation(getUnlocalizedName(itemstack) + ".details"))
 		{
-			infos.add(EnumChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
+			infos.add(EnumChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName(itemstack) + ".details"));
 		}
 	}
 	

@@ -3,6 +3,7 @@ package matteroverdrive.items.weapon.module;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.init.MatterOverdriveItems;
@@ -27,13 +28,13 @@ import java.util.Map;
 public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
 {
 
-    public static final String[] names = {"damage","fire","explosion"};
+    public static final String[] names = {"damage","fire","explosion","heal"};
     private IIcon[] icons;
 
     public WeaponModuleBarrel(String name)
     {
         super(name);
-
+        setCreativeTab(MatterOverdrive.tabMatterOverdrive_modules);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(16);
@@ -47,6 +48,7 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
         GameRegistry.addRecipe(new ItemStack(this,1,0)," G ","RDR"," T ",'T', MatterOverdriveItems.tritanium_plate,'D',MatterOverdriveItems.dilithium_ctystal,'R', Items.redstone,'G', Blocks.glass);
         GameRegistry.addRecipe(new ItemStack(this,1,1)," G ","BFB"," T ",'T', MatterOverdriveItems.tritanium_plate,'F',Items.fire_charge,'B', Items.blaze_rod,'G', Blocks.glass);
         GameRegistry.addRecipe(new ItemStack(this,1,2)," B ","BRB","DTD",'T', MatterOverdriveItems.tritanium_plate,'R',Items.blaze_rod,'B', Blocks.tnt,'G', Blocks.glass,'D',Items.diamond);
+        GameRegistry.addRecipe(new ItemStack(this,1,3)," S ","SAS","ETE",'T', MatterOverdriveItems.tritanium_plate,'A',Items.golden_apple,'S', Items.sugar,'G', Blocks.glass,'E',Items.emerald);
     }
 
     @Override
@@ -136,6 +138,10 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
                 stats.put(Reference.WS_EFFECT,0.5);
                 stats.put(Reference.WS_FIRE_RATE,0.15);
                 break;
+            case 3:
+                stats.put(Reference.WS_DAMAGE,0.0D);
+                stats.put(Reference.WS_AMMO,0.5);
+                stats.put(Reference.WS_HEAL,0.1D);
         }
         return stats;
     }

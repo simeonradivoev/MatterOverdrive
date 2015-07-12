@@ -1,6 +1,7 @@
 package matteroverdrive.util;
 
 import cofh.lib.util.helpers.MathHelper;
+import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
@@ -188,6 +189,8 @@ public class MOStringHelper
     {
         switch (type)
         {
+            case Reference.WS_HEAL:
+                return value > 0;
             default:
                 return value >= 1;
         }

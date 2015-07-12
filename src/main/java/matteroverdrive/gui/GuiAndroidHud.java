@@ -45,6 +45,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.input.Mouse;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -105,7 +106,7 @@ public class GuiAndroidHud extends Gui
     {
         AndroidPlayer android = AndroidPlayer.get(mc.thePlayer);
 
-        if (android.isAndroid() && (event.type == RenderGameOverlayEvent.ElementType.FOOD || event.type == RenderGameOverlayEvent.ElementType.AIR))
+        if (android.isAndroid() && (event.type == RenderGameOverlayEvent.ElementType.FOOD || event.type == RenderGameOverlayEvent.ElementType.AIR || event.type == RenderGameOverlayEvent.ElementType.HEALTH))
         {
             event.setCanceled(true);
             return;
@@ -281,7 +282,9 @@ public class GuiAndroidHud extends Gui
 
             if (android.isAndroid()) {
                 glPushMatrix();
+                int x = 12;
                 double energy_perc = (double) android.getEnergyStored() / (double) android.getMaxEnergyStored();
+                double health_perc = android.getPlayer().getHealth() / android.getPlayer().getMaxHealth();
                 GuiColor enabledColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 2, Reference.COLOR_HOLO.getIntG() / 2, Reference.COLOR_HOLO.getIntB() / 2, Reference.COLOR_HOLO.getIntA());
                 GuiColor disabledColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 5, Reference.COLOR_HOLO.getIntG() / 5, Reference.COLOR_HOLO.getIntB() / 5, Reference.COLOR_HOLO.getIntA());
                 GuiColor color = enabledColor;
@@ -304,19 +307,35 @@ public class GuiAndroidHud extends Gui
 
                 ClientProxy.holoIcons.bindSheet();
 
+                //region Health
+                GuiColor healthColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, enabledColor, (float) health_perc);
+                RenderUtils.applyColor(healthColor);
+                ClientProxy.holoIcons.renderIcon("health", x, 22);
+                x += 18;
+                String info = DecimalFormat.getPercentInstance().format(health_perc);
+                mc.fontRenderer.drawString(info, 32, 28, healthColor.getColor());
+                x += mc.fontRenderer.getStringWidth(info) + 5;
+                //endregion
+
                 //region energy
                 GuiColor energyColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, enabledColor, (float) energy_perc);
-                mc.fontRenderer.drawString(Math.round((energy_perc) * 100d) + "%", 32, 28, energyColor.getColor());
                 RenderUtils.applyColor(energyColor);
                 ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(12,20,0,ClientProxy.holoIcons.getIcon("battery"),22,22);
+                RenderHelper.renderIcon(x, 20, 0, ClientProxy.holoIcons.getIcon("battery"), 22, 22);
+                x += 22;
+                info = DecimalFormat.getPercentInstance().format(energy_perc);
+                mc.fontRenderer.drawString(info, x, 28, energyColor.getColor());
+                x += mc.fontRenderer.getStringWidth(info) + 5;
                 //endregion
 
                 //region speed
                 glColor3f(enabledColor.getFloatR(), enabledColor.getFloatG(), enabledColor.getFloatB());
-                mc.fontRenderer.drawString(Integer.toString((int) Math.round(android.getSpeedMultiply() * 100)) + "%", 76, 28, enabledColor.getColor());
                 ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(58,22,0,ClientProxy.holoIcons.getIcon("person"),18,18);
+                RenderHelper.renderIcon(x, 22, 0, ClientProxy.holoIcons.getIcon("person"), 18, 18);
+                x += 18;
+                info = DecimalFormat.getPercentInstance().format(android.getSpeedMultiply());
+                mc.fontRenderer.drawString(info, x, 28, enabledColor.getColor());
+                x += mc.fontRenderer.getStringWidth(info) + 5;
                 //endregion
 
                 int count = 0;

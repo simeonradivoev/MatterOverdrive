@@ -23,7 +23,7 @@ public class RomulanAle extends ItemFood {
 	}
 
 	public void register() {
-		setCreativeTab(MatterOverdrive.tabMatterOverdrive);
+		setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
 		GameRegistry.registerItem(this, getUnlocalizedName().substring(5));
 	}
 

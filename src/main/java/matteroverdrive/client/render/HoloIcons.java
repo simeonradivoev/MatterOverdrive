@@ -48,7 +48,8 @@ public class HoloIcons
             "page_icon_tasks","page_icon_upgrades","page_icon_config","page_icon_search","page_icon_info",
             "page_icon_galaxy","page_icon_quadrant","page_icon_star","page_icon_planet","energy","arrow_right",
             "travel_icon","icon_search","icon_size","icon_shuttle","icon_stats","icon_scount_planet","icon_attack",
-            "up_arrow","crosshair","up_arrow_large","android_feature_icon_bg","android_feature_icon_bg_active"};
+            "up_arrow","crosshair","up_arrow_large","android_feature_icon_bg","android_feature_icon_bg_active",
+            "health"};
 
 
     public HoloIcons()

@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,6 +28,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.util.HashMap;
@@ -150,19 +152,67 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
                 double motionX = el.motionX;
                 double motionY = el.motionY;
                 double moutionZ = el.motionZ;
-                el.attackEntityFrom(damageInfo, damage);
-                el.motionX = motionX;
-                el.motionY = motionY;
-                el.motionZ = moutionZ;
+                if (damage > 0)
+                {
+                    el.attackEntityFrom(damageInfo, damage);
+                    el.motionX = motionX;
+                    el.motionY = motionY;
+                    el.motionZ = moutionZ;
+                }
 
                 el.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, GetSleepTime(item), 100));
                 //el.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, GetSleepTime(item), -10));
                 el.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, GetSleepTime(item), 100));
                 el.addPotionEffect(new PotionEffect(Potion.jump.id, GetSleepTime(item), -10));
 
-                if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,item))
+                if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,item) && isKillMode(item))
                 {
                     el.setFire(MathHelper.round(WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE,item) * item.getTagCompound().getByte("power")));
+                }
+                else if (WeaponHelper.hasStat(Reference.WS_HEAL,item))
+                {
+                    el.heal((float)(WeaponHelper.getStatMultiply(Reference.WS_HEAL,item) * item.getTagCompound().getByte("power")));
+                }
+            }else
+            {
+                if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,item))
+                {
+                    int x = hit.blockX;
+                    int y = hit.blockY;
+                    int z = hit.blockZ;
+
+                    if (player.worldObj.getBlock(x,y,z).isFlammable(player.worldObj,x,y,z, ForgeDirection.getOrientation(hit.sideHit))) {
+                        if (hit.sideHit == 0) {
+                            --y;
+                        }
+
+                        if (hit.sideHit == 1) {
+                            ++y;
+                        }
+
+                        if (hit.sideHit == 2) {
+                            --z;
+                        }
+
+                        if (hit.sideHit == 3) {
+                            ++z;
+                        }
+
+                        if (hit.sideHit == 4) {
+                            --x;
+                        }
+
+                        if (hit.sideHit == 5) {
+                            ++x;
+                        }
+
+                        if (player.canPlayerEdit(x, y, z, hit.sideHit, item)) {
+                            if (player.worldObj.isAirBlock(x, y, z)) {
+                                //player.worldObj.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
+                                player.worldObj.setBlock(x, y, z, Blocks.fire);
+                            }
+                        }
+                    }
                 }
             }
 

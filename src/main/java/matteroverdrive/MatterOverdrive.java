@@ -46,6 +46,9 @@ public class MatterOverdrive
 	public static final MatterOverdriveTab tabMatterOverdrive = new MatterOverdriveTab("tabMatterOverdrive");
 	public static final MatterOverdriveTab tabMatterOverdrive_modules = new MatterOverdriveTab("tabMatterOverdrive_modules");
 	public static final MatterOverdriveTab tabMatterOverdrive_upgrades = new MatterOverdriveTab("tabMatterOverdrive_upgrades");
+	public static final MatterOverdriveTab tabMatterOverdrive_food = new MatterOverdriveTab("tabMatterOverdrive_food");
+	public static final MatterOverdriveTab tabMatterOverdrive_ships = new MatterOverdriveTab("tabMatterOverdrive_ships");
+	public static final MatterOverdriveTab tabMatterOverdrive_buildings = new MatterOverdriveTab("tabMatterOverdrive_buildings");
 
     public static TickHandler tickHandler;
     public static PlayerEventHandler playerEventHandler;
@@ -156,6 +159,9 @@ public class MatterOverdrive
 		tabMatterOverdrive.item = MatterOverdriveItems.matter_scanner;
 		tabMatterOverdrive_modules.item = MatterOverdriveItems.weapon_module_color;
 		tabMatterOverdrive_upgrades.item = MatterOverdriveItems.item_upgrade;
+		tabMatterOverdrive_food.item = MatterOverdriveItems.earl_gray_tea;
+		tabMatterOverdrive_ships.item = MatterOverdriveItems.colonizerShip;
+		tabMatterOverdrive_buildings.item = MatterOverdriveItems.buildingBase;
 	}
 	
 }
