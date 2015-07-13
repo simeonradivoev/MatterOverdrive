@@ -175,6 +175,11 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     }
 
     @Override
+    protected void onActiveChange() {
+
+    }
+
+    @Override
     public void readCustomNBT(NBTTagCompound nbt)
     {
         super.readCustomNBT(nbt);

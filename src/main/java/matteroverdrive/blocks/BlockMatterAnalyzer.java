@@ -12,6 +12,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
@@ -22,6 +23,7 @@ public class BlockMatterAnalyzer extends MOBlockMachine
     public static float MACHINE_VOLUME;
     private IIcon iconTop;
     private IIcon iconFront;
+    private IIcon iconFronAnim;
 
     public BlockMatterAnalyzer(Material material, String name)
     {
@@ -44,6 +46,7 @@ public class BlockMatterAnalyzer extends MOBlockMachine
     {
         this.iconFront = iconRegister.registerIcon(Reference.MOD_ID + ":" + "analyzer_front");
         this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":" + "analyzer_top");
+        this.iconFronAnim = iconRegister.registerIcon(Reference.MOD_ID + ":" + "analyzer_front_anim");
     }
 
     @Override
@@ -68,6 +71,22 @@ public class BlockMatterAnalyzer extends MOBlockMachine
         }
 
         return MatterOverdriveIcons.Base;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
+    {
+        if (side == blockAccess.getBlockMetadata(x, y, z))
+        {
+            if (blockAccess.getTileEntity(x,y,z) instanceof TileEntityMachineMatterAnalyzer)
+            {
+                if (((TileEntityMachineMatterAnalyzer) blockAccess.getTileEntity(x,y,z)).isActive())
+                {
+                    return this.iconFronAnim;
+                }
+            }
+        }
+        return this.getIcon(side, blockAccess.getBlockMetadata(x, y, z));
     }
 
     @Override

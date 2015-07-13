@@ -172,6 +172,11 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     }
 
     @Override
+    protected void onActiveChange() {
+
+    }
+
+    @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type == UpgradeTypes.PowerStorage;

@@ -65,6 +65,12 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     }
 
     @Override
+    protected void onActiveChange()
+    {
+        ForceSync();
+    }
+
+    @Override
     public void writeCustomNBT(NBTTagCompound nbt)
     {
         super.writeCustomNBT(nbt);

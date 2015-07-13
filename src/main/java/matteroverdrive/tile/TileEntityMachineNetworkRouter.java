@@ -21,4 +21,9 @@ public class TileEntityMachineNetworkRouter extends TileEntitiyMachinePacketQueu
             MatterNetworkHelper.requestNeighborConnections(worldObj,this);
         }
     }
+
+    @Override
+    protected void onActiveChange() {
+
+    }
 }

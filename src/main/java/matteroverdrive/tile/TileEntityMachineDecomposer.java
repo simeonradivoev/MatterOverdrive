@@ -269,7 +269,12 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         nbt.setShort("DecomposeTime", (short)this.decomposeTime);
     }
 
-	@Override
+    @Override
+    protected void onActiveChange() {
+
+    }
+
+    @Override
 	public int[] getAccessibleSlotsFromSide(int side) 
 	{
         return new int[]{INPUT_SLOT_ID,OUTPUT_SLOT_ID};

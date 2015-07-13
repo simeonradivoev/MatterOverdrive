@@ -96,6 +96,11 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     }
 
     @Override
+    protected void onActiveChange() {
+
+    }
+
+    @Override
     public void readCustomNBT(NBTTagCompound nbt)
     {
         super.readCustomNBT(nbt);

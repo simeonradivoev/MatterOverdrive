@@ -123,8 +123,13 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         if (internalPatternStorage != null)
             nbt.setTag("InternalPattern", internalPatternStorage);
     }
-	
-	@Override
+
+    @Override
+    protected void onActiveChange() {
+
+    }
+
+    @Override
 	public void updateEntity()
 	{
         super.updateEntity();

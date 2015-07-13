@@ -77,6 +77,11 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     }
 
     @Override
+    protected void onActiveChange() {
+
+    }
+
+    @Override
     public boolean shouldRenderInPass(int pass)
     {
         return pass == 1;

@@ -99,6 +99,11 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     }
 
     @Override
+    protected void onActiveChange() {
+
+    }
+
+    @Override
     public void onAdded(World world, int x, int y, int z) {
 
     }

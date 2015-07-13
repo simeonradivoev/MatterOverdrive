@@ -129,6 +129,11 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
         return (float) Math.max(Math.max(getBeamColorR(), getBeamColorG()), getBeamColorB()) * 0.5f;
     }
 
+    @Override
+    protected void onActiveChange() {
+
+    }
+
     public double getBeamColorR()
     {
         return MOMathHelper.noise(0,yCoord,worldObj.getWorldTime() * 0.01);

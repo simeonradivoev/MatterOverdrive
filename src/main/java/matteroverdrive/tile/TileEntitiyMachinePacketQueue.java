@@ -27,7 +27,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 4/30/2015.
  */
-public class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implements IMatterNetworkClient, IMatterNetworkConnectionProxy
+public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implements IMatterNetworkClient, IMatterNetworkConnectionProxy
 {
     public static int[] directions = {0,1,2,3,4,5};
     protected int BROADCAST_DELAY = 2;

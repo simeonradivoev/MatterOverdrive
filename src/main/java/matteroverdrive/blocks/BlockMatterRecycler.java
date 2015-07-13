@@ -12,6 +12,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
@@ -20,6 +21,7 @@ import net.minecraft.world.World;
 public class BlockMatterRecycler extends MOMatterEnergyStorageBlock {
 
     private IIcon iconTop;
+    private IIcon iconSideAnim;
 
     public BlockMatterRecycler(Material material, String name)
     {
@@ -34,6 +36,7 @@ public class BlockMatterRecycler extends MOMatterEnergyStorageBlock {
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":" + "decomposer_top");
+        this.iconSideAnim = iconRegister.registerIcon(Reference.MOD_ID + ":" + "recycler_side_anim");
     }
 
     @SideOnly(Side.CLIENT)
@@ -44,6 +47,22 @@ public class BlockMatterRecycler extends MOMatterEnergyStorageBlock {
             return iconTop;
         }
         return MatterOverdriveIcons.Recycler;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
+    {
+        if (side != BlockHelper.getAboveSide(blockAccess.getBlockMetadata(x, y, z)))
+        {
+            if (blockAccess.getTileEntity(x,y,z) instanceof TileEntityMachineMatterRecycler)
+            {
+                if (((TileEntityMachineMatterRecycler) blockAccess.getTileEntity(x,y,z)).isActive())
+                {
+                    return iconSideAnim;
+                }
+            }
+        }
+        return this.getIcon(side, blockAccess.getBlockMetadata(x, y, z));
     }
 
     @Override

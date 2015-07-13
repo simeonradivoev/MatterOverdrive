@@ -320,10 +320,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
     }
 
-    protected void onActiveChange()
-    {
-
-    }
+    protected abstract void onActiveChange();
 
     @Override
     public void onNeighborBlockChange()

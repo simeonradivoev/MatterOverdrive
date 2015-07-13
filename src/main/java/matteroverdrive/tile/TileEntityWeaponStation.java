@@ -88,6 +88,11 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
     }
 
     @Override
+    protected void onActiveChange() {
+
+    }
+
+    @Override
     public boolean shouldRenderInPass(int pass)
     {
         return pass == 1;

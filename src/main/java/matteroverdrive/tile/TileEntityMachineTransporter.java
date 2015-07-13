@@ -155,6 +155,11 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     }
 
     @Override
+    protected void onActiveChange() {
+
+    }
+
+    @Override
     public void updateEntity()
     {
         super.updateEntity();

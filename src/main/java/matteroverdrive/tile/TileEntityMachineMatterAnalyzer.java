@@ -123,7 +123,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         }
     }
 
-
     public boolean isAnalyzing()
     {
         if (getRedstoneActive() && inventory.getSlot(input_slot).getItem() != null)
@@ -145,7 +144,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     @Override
     public void onActiveChange()
     {
-        forceClientUpdate = true;
+        ForceSync();
     }
 
     public boolean hasConnectionToPatterns()

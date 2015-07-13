@@ -131,6 +131,11 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     }
 
     @Override
+    protected void onActiveChange() {
+
+    }
+
+    @Override
     public void readCustomNBT(NBTTagCompound nbt)
     {
         super.readCustomNBT(nbt);
