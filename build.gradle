@@ -33,6 +33,10 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 version = "${config.mc_version}-${config.mod_version}"
+if (System.getenv().BUILD_NUMER != null) {
+    version += "-build-" + System.getenv().BUILD_NUMER
+}
+
 group= "${config.mo_group}"
 archivesBaseName = "${config.mo_base_name}"
 
