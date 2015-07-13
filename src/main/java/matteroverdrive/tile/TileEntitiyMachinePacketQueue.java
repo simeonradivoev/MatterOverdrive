@@ -9,7 +9,6 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkPacketQueue;
@@ -27,7 +26,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 4/30/2015.
  */
-public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implements IMatterNetworkClient, IMatterNetworkConnectionProxy
+public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine implements IMatterNetworkClient
 {
     public static int[] directions = {0,1,2,3,4,5};
     protected int BROADCAST_DELAY = 2;
@@ -63,8 +62,8 @@ public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine 
                 BlockPosition position = new BlockPosition(nbt.getCompoundTag("Connection" + i));
                 if (worldObj != null) {
                     TileEntity tileEntity = position.getTileEntity(worldObj);
-                    if (tileEntity != null && tileEntity instanceof IMatterNetworkConnectionProxy) {
-                        connections[i] = ((IMatterNetworkConnectionProxy) tileEntity).getMatterNetworkConnection().getPosition();
+                    if (tileEntity != null && tileEntity instanceof IMatterNetworkConnection) {
+                        connections[i] = ((IMatterNetworkConnection) tileEntity).getPosition();
                     }
                 }
             }
@@ -110,12 +109,6 @@ public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine 
 
     @Override
     public float soundVolume() { return 0;}
-
-    @Override
-    public IMatterNetworkConnection getMatterNetworkConnection()
-    {
-        return this;
-    }
 
     @Override
     public int onNetworkTick(World world,TickEvent.Phase phase)
@@ -275,7 +268,7 @@ public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine 
     {
         if (connections[id] != null)
         {
-            if (connections[id].getTileEntity(worldObj) != null && connections[id].getTileEntity(worldObj) instanceof IMatterNetworkConnectionProxy)
+            if (connections[id].getTileEntity(worldObj) != null && connections[id].getTileEntity(worldObj) instanceof IMatterNetworkConnection)
                 return connections[id];
             else {
                 connections[id] = null;

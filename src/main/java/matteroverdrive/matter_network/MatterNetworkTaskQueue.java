@@ -2,7 +2,7 @@ package matteroverdrive.matter_network;
 
 import cpw.mods.fml.common.FMLLog;
 import matteroverdrive.Reference;
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
+import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.MatterNetworkTask;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -17,12 +17,12 @@ import java.util.List;
  */
 public class MatterNetworkTaskQueue<T extends MatterNetworkTask>
 {
-    IMatterNetworkConnectionProxy entity;
+    IMatterNetworkConnection entity;
     protected List<T> tasks;
     int capacity = 0;
     Class<? extends MatterNetworkTask> type;
 
-    public MatterNetworkTaskQueue(IMatterNetworkConnectionProxy entity, int capacity,Class<? extends MatterNetworkTask> type)
+    public MatterNetworkTaskQueue(IMatterNetworkConnection entity, int capacity,Class<? extends MatterNetworkTask> type)
     {
         this.entity = entity;
         tasks = new ArrayList<T>(capacity);

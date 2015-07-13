@@ -1,12 +1,10 @@
 package matteroverdrive.tile.pipes;
 
 import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkCable;
 import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.util.MatterNetworkHelper;
@@ -21,12 +19,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 3/15/2015.
  */
-public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetworkCable, IMatterNetworkConnectionProxy {
+public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetworkCable, IMatterNetworkConnection {
 
     @Override
     public boolean canConnectTo(TileEntity entity, ForgeDirection direction)
     {
-        if (entity instanceof IMatterNetworkConnectionProxy)
+        if (entity instanceof IMatterNetworkConnection)
         {
             if (entity instanceof TileEntityNetworkPipe)
             {
@@ -46,7 +44,7 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
             }
             else
             {
-                return ((IMatterNetworkConnectionProxy) entity).getMatterNetworkConnection().canConnectFromSide(direction);
+                return ((IMatterNetworkConnection) entity).canConnectFromSide(direction);
             }
         }
         return false;
@@ -127,17 +125,6 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
         }
 
         this.setConnections(connections, notify);
-    }
-
-    @Override
-    public IMatterNetworkConnection getMatterNetworkConnection() {
-        return this;
-    }
-
-    @Override
-    public int onNetworkTick(World world, TickEvent.Phase phase)
-    {
-        return 0;
     }
 
     @Override

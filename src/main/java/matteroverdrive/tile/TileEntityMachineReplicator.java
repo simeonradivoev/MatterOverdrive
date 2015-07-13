@@ -13,8 +13,8 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
+import matteroverdrive.api.network.IMatterNetworkHandler;
 import matteroverdrive.blocks.BlockReplicator;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
@@ -48,7 +48,7 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.List;
 
 
-public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkConnectionProxy, IMatterNetworkDispatcher
+public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkHandler, IMatterNetworkDispatcher
 {
 	public static int MATTER_STORAGE = 1024;
 	public static int ENERGY_STORAGE = 512000;
@@ -92,7 +92,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         this.matterStorage.setMaxExtract(MATTER_TRANSFER);
         timeTracker = new TimeTracker();
         patternSearchTracker = new TimeTracker();
-        taskQueueProcessing = new MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern>(this,1,MatterNetworkTaskReplicatePattern.class);
+        taskQueueProcessing = new MatterNetworkTaskQueue<>(this,1,MatterNetworkTaskReplicatePattern.class);
 	}
 
     protected void RegisterSlots(Inventory inventory)
@@ -580,12 +580,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
         return BlockHelper.getOppositeSide(meta) == side.ordinal();
-    }
-
-    @Override
-    public IMatterNetworkConnection getMatterNetworkConnection()
-    {
-        return this;
     }
 
     @Override

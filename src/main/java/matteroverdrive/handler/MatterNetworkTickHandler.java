@@ -2,7 +2,7 @@ package matteroverdrive.handler;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
+import matteroverdrive.api.network.IMatterNetworkHandler;
 import matteroverdrive.util.IConfigSubscriber;
 
 import java.util.List;
@@ -22,8 +22,8 @@ public class MatterNetworkTickHandler implements IConfigSubscriber
             List tiles = event.world.loadedTileEntityList;
 
             for (int i = lastID; i < tiles.size(); i++) {
-                if (tiles.get(i) instanceof IMatterNetworkConnectionProxy) {
-                    broadcastCount += ((IMatterNetworkConnectionProxy) tiles.get(i)).onNetworkTick(event.world, event.phase);
+                if (tiles.get(i) instanceof IMatterNetworkHandler) {
+                    broadcastCount += ((IMatterNetworkHandler) tiles.get(i)).onNetworkTick(event.world, event.phase);
 
                     if (broadcastCount >= max_broadcasts) {
                         return;

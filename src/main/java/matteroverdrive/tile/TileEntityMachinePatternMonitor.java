@@ -10,8 +10,6 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.network.IMatterNetworkClient;
-import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
@@ -30,7 +28,7 @@ import java.util.HashSet;
 /**
  * Created by Simeon on 4/26/2015.
  */
-public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy implements IMatterNetworkConnectionProxy, IMatterNetworkDispatcher, IMatterNetworkClient
+public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy implements IMatterNetworkDispatcher, IMatterNetworkClient
 {
     public static final int BROADCAST_WEATING_DELAY = 80;
     public static final int SEARCH_DELAY = 120;
@@ -46,8 +44,8 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     public TileEntityMachinePatternMonitor()
     {
         super(4);
-        taskQueue = new MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern>(this,TASK_QUEUE_SIZE,MatterNetworkTaskReplicatePattern.class);
-        databases = new HashSet<BlockPosition>();
+        taskQueue = new MatterNetworkTaskQueue<>(this,TASK_QUEUE_SIZE,MatterNetworkTaskReplicatePattern.class);
+        databases = new HashSet<>();
         searchDelayTracker = new TimeTracker();
         broadcastTracker = new TimeTracker();
         validateTracker = new TimeTracker();
@@ -80,11 +78,6 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     }
 
     //region Matter Network Functions
-    @Override
-    public IMatterNetworkConnection getMatterNetworkConnection()
-    {
-        return this;
-    }
 
     @Override
     public int onNetworkTick(World world, TickEvent.Phase phase)

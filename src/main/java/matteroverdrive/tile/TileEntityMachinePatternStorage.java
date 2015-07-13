@@ -13,7 +13,6 @@ import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.blocks.BlockPatternStorage;
 import matteroverdrive.data.Inventory;
@@ -45,7 +44,7 @@ import java.util.List;
 /**
  * Created by Simeon on 3/27/2015.
  */
-public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy implements IMatterDatabase, IMatterNetworkClient,IMatterNetworkConnectionProxy,IScannable
+public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy implements IMatterDatabase, IMatterNetworkClient,IScannable
 {
     public static final int TASK_PROCESS_DELAY = 40;
     public static int ENERGY_CAPACITY = 64000;
@@ -397,12 +396,6 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     public boolean canConnectFromSide(ForgeDirection side) {
         return side.ordinal() == worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
-    }
-
-    @Override
-    public IMatterNetworkConnection getMatterNetworkConnection()
-    {
-        return this;
     }
 
     @Override

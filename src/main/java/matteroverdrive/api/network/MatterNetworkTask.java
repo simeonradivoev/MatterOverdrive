@@ -128,8 +128,8 @@ public abstract class MatterNetworkTask
         if (world != null && senderPos != null)
         {
             TileEntity entity = senderPos.getTileEntity(world);
-            if (entity instanceof IMatterNetworkConnectionProxy && ((IMatterNetworkConnectionProxy) entity).getMatterNetworkConnection() instanceof IMatterNetworkDispatcher) {
-                return (IMatterNetworkDispatcher) ((IMatterNetworkConnectionProxy) entity).getMatterNetworkConnection();
+            if (entity instanceof IMatterNetworkDispatcher) {
+                return (IMatterNetworkDispatcher)entity;
             }
         }
         return null;

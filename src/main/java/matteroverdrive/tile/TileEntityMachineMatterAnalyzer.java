@@ -10,8 +10,6 @@ import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
-import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.data.Inventory;
@@ -34,7 +32,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 3/16/2015.
  */
-public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory, IMatterNetworkDispatcher, IMatterNetworkConnectionProxy
+public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory, IMatterNetworkDispatcher
 {
     public static final int BROADCAST_DELAY = 60;
     public static final int BROADCAST_WEATING_DELAY = 180;
@@ -298,11 +296,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
             return true;
         }
         return false;
-    }
-
-    @Override
-    public IMatterNetworkConnection getMatterNetworkConnection() {
-        return this;
     }
 
     @Override

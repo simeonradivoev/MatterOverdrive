@@ -24,8 +24,8 @@ public class MatterNetworkHelper
             ForgeDirection oppositeDirection = direction.getOpposite();
             TileEntity e = position.getTileEntity(world);
             //if there is any connection in that direction
-            if (e instanceof IMatterNetworkConnectionProxy) {
-                IMatterNetworkConnection connection = ((IMatterNetworkConnectionProxy) e).getMatterNetworkConnection();
+            if (e instanceof IMatterNetworkConnection) {
+                IMatterNetworkConnection connection = (IMatterNetworkConnection) e;
                 //check if the packet has passed trough the connection or if it can connect from opposite source side
                 if (!taskPacket.hasPassedTrough(connection) && connection.canConnectFromSide(oppositeDirection)) {
                     if (connection instanceof IMatterNetworkCable) {

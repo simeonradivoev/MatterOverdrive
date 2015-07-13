@@ -3,7 +3,6 @@ package matteroverdrive.network.packet.server;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,15 +51,12 @@ public class PacketRemoveTask extends TileEntityUpdatePacket
         {
             TileEntity entity = message.getTileEntity(player.worldObj);
 
-            if (entity instanceof IMatterNetworkConnectionProxy)
+            if (entity instanceof IMatterNetworkDispatcher)
             {
-                if (((IMatterNetworkConnectionProxy) entity).getMatterNetworkConnection() instanceof IMatterNetworkDispatcher)
-                {
-                    IMatterNetworkDispatcher dispatcher = (IMatterNetworkDispatcher)((IMatterNetworkConnectionProxy) entity).getMatterNetworkConnection();
-                    dispatcher.getQueue(message.queueID).dropAt(message.taskIndex).setState(message.task_state);
-                    player.worldObj.markBlockForUpdate(entity.xCoord, entity.yCoord, entity.zCoord);
-                    entity.markDirty();
-                }
+                IMatterNetworkDispatcher dispatcher = (IMatterNetworkDispatcher)entity;
+                dispatcher.getQueue(message.queueID).dropAt(message.taskIndex).setState(message.task_state);
+                player.worldObj.markBlockForUpdate(entity.xCoord, entity.yCoord, entity.zCoord);
+                entity.markDirty();
             }
             return null;
         }

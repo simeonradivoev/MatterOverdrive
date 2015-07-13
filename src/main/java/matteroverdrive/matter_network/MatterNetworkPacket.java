@@ -2,7 +2,6 @@ package matteroverdrive.matter_network;
 
 import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.api.network.IMatterNetworkConnectionProxy;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -20,7 +19,7 @@ public abstract class MatterNetworkPacket
     protected HashSet<MatterNetworkPathNode> path;
 
 
-    public MatterNetworkPacket(){path = new HashSet<MatterNetworkPathNode>();}
+    public MatterNetworkPacket(){path = new HashSet<>();}
     public MatterNetworkPacket(BlockPosition senderPos,ForgeDirection port)
     {
         this();
@@ -55,8 +54,8 @@ public abstract class MatterNetworkPacket
         if (world != null)
         {
             TileEntity tileEntity = senderPos.getTileEntity(world);
-            if (tileEntity != null && tileEntity instanceof IMatterNetworkConnectionProxy)
-                return ((IMatterNetworkConnectionProxy) tileEntity).getMatterNetworkConnection();
+            if (tileEntity != null && tileEntity instanceof IMatterNetworkConnection)
+                return (IMatterNetworkConnection) tileEntity;
         }
         return null;
     }
