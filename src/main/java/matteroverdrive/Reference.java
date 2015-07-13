@@ -7,13 +7,14 @@ public class Reference
 	public static final String MOD_ID = "mo";
 	public static final String MOD_NAME = "Matter Overdrive";
 	public static final String VERSION = "0.4.0-RC2";
+	public static final String VERSION_DATE = "13.07.2015";
 	public static final String GUI_FACTORY_CLASS = "matteroverdrive.gui.GuiConfigFactory";
 	public static final String DEPEDNENCIES = "after:ThermalExpansion;after:exnihilo;after:EnderIO;";
 	public static final String CLIENT_PROXY_CLASS = "matteroverdrive.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "matteroverdrive.proxy.CommonProxy";
 	public static final String CHANNEL_NAME = MOD_ID + "_channel";
-	public static final String VERSIONS_FILE_URL = "https://raw.githubusercontent.com/simeonradivoev/MatterOverdrive/master/Versions.txt";
-	public static final String VERSIONS_FILE_URL_MIRROR = "http://simeon.co.vu/Mods/MatterOverdrive/Versions.txt";
+	public static final String VERSIONS_CHECK_URL = "http://simeon.co.vu/Mods/MatterOverdrive/wp-json/posts?type[]=mo_download&filter[posts_per_page]=1";
+	public static final String DOWNLOAD_URL = "http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/";
 
 	
 	//region GUI
