@@ -27,7 +27,7 @@ item.pattern_drive.name=Шаблон привода
 item.pattern_drive.details=Хранит 2 шаблона предмета
 item.earl_gray_tea.name=Чай. Эрл Грей. Горячий.
 item.romulan_ale.name=Ромуланский эль
-item.romulan_ale.name=Высоко опьяняющий алкогольный напиток ромуланского происхождения
+item.romulan_ale.details=Высоко опьяняющий алкогольный напиток ромуланского происхождения
 item.security_protocol.empty.name=Протокол безопасности
 item.security_protocol.claim.name=Протокол безопасности [Запрос]
 item.security_protocol.claim.details=Защищает машины
@@ -41,8 +41,8 @@ item.tritanium_wrench.details=Безопасно демонтирует и вр�
 item.spacetime_equalizer.name=Пространственно-временной эквалайзер
 item.spacetime_equalizer.details=Может быть одет в слот нагрудника, чтобы предотвратить влияние гравитационных сил
 item.rouge_android_part.head.name=Android-голова
-item.rouge_android_part.arms.name=Android-нога
-item.rouge_android_part.legs.name=Android-рука
+item.rouge_android_part.arms.name=Android-рука
+item.rouge_android_part.legs.name=Android-нога
 item.rouge_android_part.chest.name=Android-торс
 item.forcefield_emitter.name=Излучатель силового поля
 item.hc_battery.name=Высокоёмкостная батарейка
@@ -55,9 +55,9 @@ item.ship_colonizer.details=Используется для защиты пла�
 item.building_base.name=Основа
 item.building_base.details=Главное здание, нужное всем
 item.android_pill_red.name=Красная пилюля
-item.android_pill_red.details=Take the red pill and lose what's holding you back
+item.android_pill_red.details=Примите красную пилюлю и забудьте о том, что вас сдерживает
 item.android_pill_blue.name=Синяя пилюля
-item.android_pill_blue.details=Take the blue pill and you will wake up in your bed none the wiser
+item.android_pill_blue.details=Примите синюю пилюлю и вы проснетесь в постели более мудрым
 
 item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
@@ -261,7 +261,7 @@ gui.label.button.scout=Отправить разведчика
 
 ### Подсказки в графическом интерфейсе ###
 gui.tooltip.starmap.no_ship_space=Not enough ship spaces
-gui.tooltip.starmap.no_building_space=Not enough building spaces
+gui.tooltip.starmap.no_building_space=Не хватает строительных кораблей
 gui.tooltip.starmap.no_ship_factory=Нет корабля-фабрики
 gui.tooltip.starmap.has_base=Основное здание уже присутствует
 
