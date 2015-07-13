@@ -86,7 +86,7 @@ public class PacketPipeline
     {
         try {
             Side side = AbstractClientPacketHandler.class.isAssignableFrom(messageHandler) ? Side.CLIENT : Side.SERVER;
-            dispatcher.registerMessage(messageHandler, requestMessageType, packetID++, side);
+			dispatcher.registerMessage(messageHandler, requestMessageType, packetID++, side);
         }catch (Exception e)
         {
             e.printStackTrace();
