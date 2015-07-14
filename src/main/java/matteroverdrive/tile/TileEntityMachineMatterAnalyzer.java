@@ -18,6 +18,7 @@ import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.handler.SoundHandler;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
+import matteroverdrive.matter_network.components.MatterNetworkComponentAnalyzer;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
@@ -47,9 +48,8 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public int database_slot = 1;
     public int analyzeTime;
     private boolean isActive = false;
-    private TimeTracker broadcastTracker;
-
     private MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> taskQueueSending;
+    private MatterNetworkComponentAnalyzer networkComponent;
 
     public TileEntityMachineMatterAnalyzer()
     {
@@ -57,9 +57,9 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         this.energyStorage.setCapacity(ENERGY_STORAGE);
         this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
-        taskQueueSending = new MatterNetworkTaskQueue<MatterNetworkTaskStorePattern>(this,1,MatterNetworkTaskStorePattern.class);
-        broadcastTracker = new TimeTracker();
+        taskQueueSending = new MatterNetworkTaskQueue<>(this,1,MatterNetworkTaskStorePattern.class);
         redstoneMode = Reference.MODE_REDSTONE_LOW;
+        networkComponent = new MatterNetworkComponentAnalyzer(this);
     }
 
     @Override
@@ -77,20 +77,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         super.updateEntity();
         manageAnalyze();
     }
-
-    @Override
-    public String getSound()
-    {
-        return "analyzer";
-    }
-
-    @Override
-    public boolean hasSound() {
-        return true;
-    }
-
-    @Override
-    public float soundVolume() { return 0.3f;}
 
     protected void manageAnalyze()
     {
@@ -139,12 +125,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         return false;
     }
 
-    @Override
-    public void onActiveChange()
-    {
-        ForceSync();
-    }
-
     public boolean hasConnectionToPatterns()
     {
         if(MatterHelper.isMatterScanner(inventory.getStackInSlot(database_slot)))
@@ -172,12 +152,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         }
 
         return false;
-    }
-
-    @Override
-    public  boolean isActive()
-    {
-        return isActive;
     }
 
     public void analyzeItem()
@@ -217,21 +191,13 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         markDirty();
     }
 
-    public int getSpeed()
+    @Override
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
-        return MathHelper.round(ANALYZE_SPEED * getUpgradeMultiply(UpgradeTypes.Speed));
+        return type == UpgradeTypes.PowerUsage || type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Fail || type == UpgradeTypes.Output || type == UpgradeTypes.Speed;
     }
 
-    public int getEnergyDrainPerTick()
-    {
-        return getEnergyDrainMax() / getSpeed();
-    }
-
-    public int getEnergyDrainMax()
-    {
-        return MathHelper.round(ENERGY_DRAIN_PER_ITEM * getUpgradeMultiply(UpgradeTypes.PowerUsage));
-    }
-
+    //region NBT
     @Override
     public void readCustomNBT(NBTTagCompound tagCompound)
     {
@@ -242,11 +208,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    protected void onAwake(Side side) {
-
-    }
-
-    @Override
     public void writeCustomNBT(NBTTagCompound tagCompound)
     {
         super.writeCustomNBT(tagCompound);
@@ -254,10 +215,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         tagCompound.setBoolean("IsActive", isActive);
         taskQueueSending.writeToNBT(tagCompound);
     }
-
-    public IEnergyStorage getEnergyStorage() {
-        return energyStorage;
-    }
+    //endregion
 
     //region Inventory Methods
     @Override
@@ -281,7 +239,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     //endregion
 
     //region Matter Network Functions
-
     @Override
     public BlockPosition getPosition()
     {
@@ -301,57 +258,17 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     @Override
     public int onNetworkTick(World world,TickEvent.Phase phase)
     {
-        if(phase.equals(TickEvent.Phase.START))
-        {
-            return manageBroadcast(world,taskQueueSending.peek());
-        }
-        return 0;
-    }
-
-    private int manageBroadcast(World world,MatterNetworkTask task)
-    {
-        int broadcastCount = 0;
-        if (task != null)
-        {
-            if (task.getState() == Reference.TASK_STATE_PROCESSING) {
-
-            } else if (task.getState() == Reference.TASK_STATE_FINISHED) {
-                taskQueueSending.dequeueTask();
-                ForceSync();
-            }
-            else
-            {
-                if (!task.isAlive() && broadcastTracker.hasDelayPassed(worldObj, task.getState() == Reference.TASK_STATE_WAITING ? BROADCAST_WEATING_DELAY : BROADCAST_DELAY))
-                {
-                    for (int i = 0; i < 6; i++)
-                    {
-                        if (MatterNetworkHelper.broadcastTaskInDirection(worldObj, (byte) 0, task, this, ForgeDirection.getOrientation(i)))
-                        {
-                            task.setState(Reference.TASK_STATE_WAITING);
-                            broadcastCount++;
-                        }
-
-                    }
-                }
-            }
-        }
-
-        taskQueueSending.tickAllAlive(world,false);
-        return broadcastCount;
+        return networkComponent.onNetworkTick(world,phase);
     }
 
     @Override
-    public MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> getQueue(byte id)
+    public MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> getQueue(int id)
     {
         return taskQueueSending;
     }
+    //endregion
 
-    @Override
-    public boolean isAffectedByUpgrade(UpgradeTypes type)
-    {
-        return type == UpgradeTypes.PowerUsage || type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Fail || type == UpgradeTypes.Output || type == UpgradeTypes.Speed;
-    }
-
+    //region Events
     @Override
     public void onAdded(World world, int x, int y, int z) {
 
@@ -366,5 +283,31 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public void onDestroyed() {
 
     }
+
+    @Override
+    protected void onAwake(Side side) {
+
+    }
+
+    @Override
+    public void onActiveChange()
+    {
+        ForceSync();
+    }
+    //endregion
+
+    //region Getters and Setters
+    public IEnergyStorage getEnergyStorage() {return energyStorage;}
+    public int getSpeed() {return MathHelper.round(ANALYZE_SPEED * getUpgradeMultiply(UpgradeTypes.Speed));}
+    public int getEnergyDrainPerTick() {return getEnergyDrainMax() / getSpeed();}
+    public int getEnergyDrainMax() {return MathHelper.round(ENERGY_DRAIN_PER_ITEM * getUpgradeMultiply(UpgradeTypes.PowerUsage));}
+    @Override
+    public  boolean isActive() {return isActive;}
+    @Override
+    public String getSound() {return "analyzer";}
+    @Override
+    public boolean hasSound() {return true;}
+    @Override
+    public float soundVolume() { return 0.3f;}
     //endregion
 }
