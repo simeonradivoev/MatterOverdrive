@@ -129,7 +129,9 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         if (getRedstoneActive() && inventory.getSlot(input_slot).getItem() != null)
         {
-            if (inventory.getSlot(database_slot).getItem() != null) {
+            if (inventory.getSlot(database_slot).getItem() != null)
+            {
+                //get the Matterscanner destination
                 return MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(input_slot)) > 0 && hasConnectionToPatterns();
             }
             else

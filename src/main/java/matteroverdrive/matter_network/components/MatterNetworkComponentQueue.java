@@ -30,7 +30,7 @@ import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
-import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
 import matteroverdrive.util.MatterNetworkHelper;
 import net.minecraft.world.World;
@@ -70,9 +70,9 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
                 if (manageBroadcastPacket((MatterNetworkBroadcastPacket)packet,from))
                     return;
             }
-            else if (packet instanceof MatterNetwrokResponcePacket)
+            else if (packet instanceof MatterNetworkResponsePacket)
             {
-                if (manageResponcePackets((MatterNetwrokResponcePacket)packet,from))
+                if (manageResponcePackets((MatterNetworkResponsePacket)packet,from))
                     return;
             }else if (packet instanceof MatterNetworkRequestPacket)
             {
@@ -156,9 +156,9 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
         return broadcastCount;
     }
 
-    boolean manageResponcePackets(MatterNetwrokResponcePacket packet,ForgeDirection direction)
+    boolean manageResponcePackets(MatterNetworkResponsePacket packet,ForgeDirection direction)
     {
-        if (packet.getResponceType() == Reference.PACKET_RESPONCE_VALID && packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION)
+        if (packet.getResponseType() == Reference.PACKET_RESPONCE_VALID && packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION)
         {
             queue.setConnection(direction.ordinal(),packet.getSender(queue.getWorldObj()).getPosition());
             queue.ForceSync();

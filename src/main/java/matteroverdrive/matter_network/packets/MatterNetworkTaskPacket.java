@@ -48,7 +48,7 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
     public MatterNetworkTaskPacket copy(IMatterNetworkConnection connection)
     {
         MatterNetworkTaskPacket newPacket = new MatterNetworkTaskPacket(senderPos,taskID,queueID,senderPos.orientation);
-        newPacket.path = new HashSet<MatterNetworkPathNode>(path);
+        newPacket.path = new HashSet<>(path);
         addToPath(connection,ForgeDirection.UNKNOWN);
         return newPacket;
     }

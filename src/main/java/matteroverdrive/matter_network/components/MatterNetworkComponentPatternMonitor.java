@@ -27,11 +27,12 @@ import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
-import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.network.packet.client.PacketPatternMonitorSync;
 import matteroverdrive.tile.TileEntityMachinePatternMonitor;
 import matteroverdrive.util.MatterNetworkHelper;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -54,7 +55,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
 
     @Override
     public boolean canPreform(MatterNetworkPacket packet) {
-        if (packet instanceof MatterNetwrokResponcePacket)
+        if (packet instanceof MatterNetworkResponsePacket)
         {
             return true;
         }
@@ -69,21 +70,25 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
     @Override
     public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
     {
-        if (packet instanceof MatterNetwrokResponcePacket)
+        if (packet instanceof MatterNetworkResponsePacket)
         {
-            MatterNetwrokResponcePacket responcePacket = (MatterNetwrokResponcePacket)packet;
-            if (responcePacket.getResponceType() == Reference.PACKET_RESPONCE_VALID && responcePacket.getRequestType() == Reference.PACKET_REQUEST_CONNECTION)
-            {
-                if(!patternMonitor.getDatabases().contains(responcePacket.getSender(patternMonitor.getWorldObj()).getPosition()))
-                {
-                    patternMonitor.getDatabases().add(responcePacket.getSender(patternMonitor.getWorldObj()).getPosition());
-                    patternMonitor.SyncDatabasesWithClient();
-                }
-            }
+            manageResponsePacket((MatterNetworkResponsePacket)packet);
         }else if (packet instanceof MatterNetworkRequestPacket)
         {
 
             manageRequestPackets(patternMonitor,patternMonitor.getWorldObj(),(MatterNetworkRequestPacket)packet,from);
+        }
+    }
+
+    private void manageResponsePacket(MatterNetworkResponsePacket packet)
+    {
+        if (packet.fits(Reference.PACKET_RESPONCE_VALID,Reference.PACKET_REQUEST_CONNECTION))
+        {
+            if(!patternMonitor.getDatabases().contains(packet.getSender(patternMonitor.getWorldObj()).getPosition()))
+            {
+                patternMonitor.getDatabases().add(packet.getSender(patternMonitor.getWorldObj()).getPosition());
+                patternMonitor.SyncDatabasesWithClient();
+            }
         }
     }
 
@@ -104,10 +109,11 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
         return manageBroadcast(world,phase);
     }
 
-    public void manageSearch(World world,TickEvent.Phase phase)
+    private void manageSearch(World world,TickEvent.Phase phase)
     {
         if (phase.equals(TickEvent.Phase.END)) {
-            if (patternMonitor.needsRefresh()) {
+            if (patternMonitor.needsRefresh())
+            {
                 patternMonitor.getDatabases().clear();
                 MatterOverdrive.packetPipeline.sendToAllAround(new PacketPatternMonitorSync(patternMonitor), patternMonitor, 64);
 
@@ -120,7 +126,11 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
         }
     }
 
-    public void manageDatabaseValidation(World world)
+    /**
+     * Gets called to validate all connected Databases, if they exist.
+     * @param world
+     */
+    private void manageDatabaseValidation(World world)
     {
         if (validateTracker.hasDelayPassed(world, patternMonitor.VALIDATE_DELAY))
         {
@@ -135,7 +145,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
         }
     }
 
-    public int manageBroadcast(World world,TickEvent.Phase phase)
+    private int manageBroadcast(World world,TickEvent.Phase phase)
     {
         if (phase.equals(TickEvent.Phase.START)) {
             int broadcastCount = 0;
@@ -164,11 +174,11 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
         return 0;
     }
 
-    public void queueRequest(int[] request)
+    public void queuePatternRequest(NBTTagList patternRequests)
     {
-        for (int i = 0;i < request.length;i+=3)
+        for (int i = 0;i < patternRequests.tagCount();i++)
         {
-            MatterNetworkTaskReplicatePattern task = new MatterNetworkTaskReplicatePattern(patternMonitor, request[i], request[i + 1], request[i + 2]);
+            MatterNetworkTaskReplicatePattern task = new MatterNetworkTaskReplicatePattern(patternMonitor, patternRequests.getCompoundTagAt(i));
             task.setState(MatterNetworkTaskState.WAITING);
             if (patternMonitor.getQueue(0).queue(task));
         }

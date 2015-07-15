@@ -4,6 +4,7 @@ import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -11,9 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class MatterNetworkTaskReplicatePattern extends MatterNetworkTask
 {
-    int itemID;
-    int itemMetadata;
-    int amount;
+    NBTTagCompound pattern;
 
     public MatterNetworkTaskReplicatePattern()
     {
@@ -21,12 +20,19 @@ public class MatterNetworkTaskReplicatePattern extends MatterNetworkTask
 
     }
 
-    public MatterNetworkTaskReplicatePattern(IMatterNetworkConnection sender,int itemID,int itemMetadata,int amount)
+    public MatterNetworkTaskReplicatePattern(IMatterNetworkConnection sender,short itemID,short itemMetadata,byte amount)
     {
         super(sender);
-        this.itemID = itemID;
-        this.itemMetadata = itemMetadata;
-        this.amount = amount;
+        pattern = new NBTTagCompound();
+        pattern.setShort("id", itemID);
+        pattern.setShort("Damage", itemMetadata);
+        pattern.setByte("Count", amount);
+    }
+
+    public MatterNetworkTaskReplicatePattern(IMatterNetworkConnection sender,NBTTagCompound pattern)
+    {
+        super(sender);
+        this.pattern = pattern;
     }
 
     @Override
@@ -41,9 +47,7 @@ public class MatterNetworkTaskReplicatePattern extends MatterNetworkTask
         super.readFromNBT(compound);
         if (compound != null)
         {
-            itemID = compound.getInteger("itemID");
-            itemMetadata = compound.getInteger("itemMetadata");
-            amount = compound.getInteger("amount");
+            pattern = compound.getCompoundTag("Pattern");
         }
     }
 
@@ -53,9 +57,7 @@ public class MatterNetworkTaskReplicatePattern extends MatterNetworkTask
         super.writeToNBT(compound);
         if (compound != null)
         {
-            compound.setInteger("itemID",itemID);
-            compound.setInteger("itemMetadata",itemMetadata);
-            compound.setInteger("amount",amount);
+            compound.setTag("Pattern", pattern);
         }
     }
 
@@ -63,23 +65,23 @@ public class MatterNetworkTaskReplicatePattern extends MatterNetworkTask
     @Override
     public String getName()
     {
-        return amount + " " + MOStringHelper.translateToLocal(Item.getItemById(itemID).getUnlocalizedName() + ".name");
+        return pattern.getByte("Count") + " " + MOStringHelper.translateToLocal(Item.getItemById(pattern.getShort("id")).getUnlocalizedName() + ".name");
     }
 
     public int getAmount() {
-        return amount;
+        return pattern.getByte("Count");
     }
 
     public void setAmount(int amount) {
-        this.amount = amount;
+        pattern.setByte("Count",(byte)amount);
     }
 
     public int getItemMetadata() {
-        return itemMetadata;
+        return pattern.getShort("Damage");
     }
 
     public int getItemID() {
-        return itemID;
+        return pattern.getShort("id");
     }
     //endregion
 }

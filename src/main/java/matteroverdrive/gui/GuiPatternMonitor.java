@@ -17,6 +17,7 @@ import matteroverdrive.tile.TileEntityMachinePatternMonitor;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
         }
         else if (buttonName.equals("Request"))
         {
-            List<Integer> list = new ArrayList<Integer>();
+            NBTTagList requestList = new NBTTagList();
             for (int i = 0;i < elementGrid.getElements().size();i++)
             {
                 if (elementGrid.getElements().get(i) instanceof ElementMonitorItemPattern)
@@ -89,10 +90,10 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
 
                     if (itemPattern.getAmount() > 0)
                     {
-                        list.add((int) itemPattern.getTagCompound().getShort("id"));
-                        list.add((int) itemPattern.getTagCompound().getShort("Damage"));
-                        list.add(itemPattern.getAmount());
-                        itemPattern.setAmount(0);
+                        NBTTagCompound tagCompound = (NBTTagCompound)itemPattern.getTagCompound().copy();
+                        tagCompound.setByte("Count", (byte) itemPattern.getAmount());
+                        requestList.appendTag(tagCompound);
+                        itemPattern.setAmount((byte)0);
                     }
                     else
                     {
@@ -101,15 +102,10 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
                 }
             }
 
-            if (list.size() > 0)
+            if (requestList.tagCount() > 0)
             {
-                int[] array = new int[list.size()];
-                for (int i = 0;i < list.size();i++)
-                {
-                    array[i] = list.get(i);
-                }
                 NBTTagCompound tagCompound = new NBTTagCompound();
-                tagCompound.setIntArray("Requests", array);
+                tagCompound.setTag("Requests", requestList);
                 MatterOverdrive.packetPipeline.sendToServer(new PacketPatternMonitorCommands(machine, PacketPatternMonitorCommands.COMMAND_REQUEST, tagCompound));
             }
         }

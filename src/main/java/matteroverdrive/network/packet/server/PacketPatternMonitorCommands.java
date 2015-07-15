@@ -62,7 +62,7 @@ public class PacketPatternMonitorCommands extends TileEntityUpdatePacket
                 {
                     if (message.data != null)
                     {
-                        monitor.queueRequest(message.data.getIntArray("Requests"));
+                        monitor.queuePatternRequest(message.data.getTagList("Requests",10));
                     }
                 }
             }

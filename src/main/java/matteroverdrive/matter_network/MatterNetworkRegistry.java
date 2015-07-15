@@ -22,7 +22,7 @@ import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
-import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
 
@@ -35,8 +35,8 @@ import java.util.NoSuchElementException;
  */
 public class MatterNetworkRegistry
 {
-    public static List<Class<? extends MatterNetworkPacket>> packetTypes = new ArrayList<>();
-    public static List<Class<? extends MatterNetworkTask>> taskTypes = new ArrayList<>();
+    public static List<Class> packetTypes = new ArrayList<>();
+    public static List<Class> taskTypes = new ArrayList<>();
 
     public static int registerPacket(Class<? extends MatterNetworkPacket> packetClass)
     {
@@ -55,7 +55,7 @@ public class MatterNetworkRegistry
         registerPacket(MatterNetworkTaskPacket.class);
         registerPacket(MatterNetworkRequestPacket.class);
         registerPacket(MatterNetworkBroadcastPacket.class);
-        registerPacket(MatterNetwrokResponcePacket.class);
+        registerPacket(MatterNetworkResponsePacket.class);
 
         registerTask(MatterNetworkTaskReplicatePattern.class);
         registerTask(MatterNetworkTaskStorePattern.class);
@@ -79,9 +79,9 @@ public class MatterNetworkRegistry
         throw new NoSuchElementException(String.format("Task %s was not registered",type));
     }
 
-    public static Class<? extends MatterNetworkPacket> getPacketClass(int id)
+    public static Class getPacketClass(int id)
     {
         return packetTypes.get(id);
     }
-    public static Class<? extends MatterNetworkTask> getTaskClass(int id){return taskTypes.get(id);}
+    public static Class getTaskClass(int id){return taskTypes.get(id);}
 }

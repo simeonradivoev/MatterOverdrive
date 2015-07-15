@@ -29,7 +29,7 @@ import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
-import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.tile.TileEntityMachineReplicator;
 import matteroverdrive.util.MatterDatabaseHelper;
@@ -72,20 +72,12 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
     {
         packet.addToPath(replicator, from);
 
-        if (packet instanceof MatterNetworkTaskPacket) {
-            if (((MatterNetworkTaskPacket) packet).getTask(replicator.getWorldObj()) instanceof MatterNetworkTaskReplicatePattern)
-            {
-                MatterNetworkTaskReplicatePattern task = (MatterNetworkTaskReplicatePattern)((MatterNetworkTaskPacket) packet).getTask(replicator.getWorldObj());
-                if (replicator.getQueue(0).queue(task))
-                {
-                    task.setState(MatterNetworkTaskState.QUEUED);
-                    task.setAlive(true);
-                    replicator.ForceSync();
-                }
-            }
-        }else if (packet instanceof MatterNetwrokResponcePacket)
+        if (packet instanceof MatterNetworkTaskPacket)
         {
-            manageResponces((MatterNetwrokResponcePacket)packet);
+            manageTaskPackets((MatterNetworkTaskPacket)packet,((MatterNetworkTaskPacket) packet).getTask(replicator.getWorldObj()));
+        }else if (packet instanceof MatterNetworkResponsePacket)
+        {
+            manageResponses((MatterNetworkResponsePacket) packet);
         }
         else if (packet instanceof MatterNetworkRequestPacket)
         {
@@ -93,24 +85,41 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
         }
     }
 
-    private void manageResponces(MatterNetwrokResponcePacket packet)
+    private void manageTaskPackets(MatterNetworkTaskPacket packet,MatterNetworkTask task)
     {
-        if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH && packet.getResponceType() == Reference.PACKET_RESPONCE_VALID)
+        if (task instanceof MatterNetworkTaskReplicatePattern)
         {
-            NBTTagCompound responceTag = packet.getResponce();
+            if (replicator.getQueue(0).queue((MatterNetworkTaskReplicatePattern)task))
+            {
+                task.setState(MatterNetworkTaskState.QUEUED);
+                task.setAlive(true);
+                replicator.ForceSync();
+            }
+        }
+    }
+
+    private void manageResponses(MatterNetworkResponsePacket packet)
+    {
+        //Request pattern search response
+        if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH && packet.getResponseType() == Reference.PACKET_RESPONCE_VALID)
+        {
+            NBTTagCompound responseTag = packet.getResponse();
             MatterNetworkTaskReplicatePattern task = replicator.getQueue(0).peek();
-            if (responceTag != null && responceTag.getShort("id") == task.getItemID() && responceTag.getShort("Damage") == task.getItemMetadata())
+            if (responseTag != null && responseTag.getShort("id") == task.getItemID() && responseTag.getShort("Damage") == task.getItemMetadata())
             {
                 if (replicator.getInternalPatternStorage() != null)
                 {
                     //if the previous tag is the same but has a higher progress, then continue
-                    if (replicator.getInternalPatternStorage().getShort("id") == responceTag.getShort("id") && replicator.getInternalPatternStorage().getShort("Damage") == responceTag.getShort("Damage") && MatterDatabaseHelper.GetProgressFromNBT(replicator.getInternalPatternStorage()) > MatterDatabaseHelper.GetProgressFromNBT(responceTag))
+                    if (replicator.getInternalPatternStorage().getShort("id") == responseTag.getShort("id")
+                            && replicator.getInternalPatternStorage().getShort("Damage") == responseTag.getShort("Damage")
+                            && MatterDatabaseHelper.GetProgressFromNBT(replicator.getInternalPatternStorage()) > MatterDatabaseHelper.GetProgressFromNBT(responseTag))
                     {
                         return;
                     }
                 }
 
-                replicator.setInternalPatternStorage(responceTag);;
+                //save the pattern in the machine
+                replicator.setInternalPatternStorage(responseTag);
                 replicator.ForceSync();
             }
         }
@@ -145,13 +154,14 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
     {
         int broadcasts = 0;
 
-        if (replicator.getRedstoneActive() && !replicator.canCompleteTask() && patternSearchTracker.hasDelayPassed(replicator.getWorldObj(),replicator.PATTERN_SEARCH_DELAY)) {
+        MatterNetworkTaskReplicatePattern replicatePattern = replicator.getQueue(0).peek();
 
-            MatterNetworkTaskReplicatePattern task = replicator.getQueue(0).peek();
-            if (task != null) {
+        if (replicator.getRedstoneActive() && !replicator.canCompleteTask(replicatePattern) && patternSearchTracker.hasDelayPassed(replicator.getWorldObj(),replicator.PATTERN_SEARCH_DELAY)) {
+            if (replicatePattern != null) {
                 for (int i = 0; i < 6; i++) {
-                    MatterNetworkRequestPacket requestPacket = new MatterNetworkRequestPacket(replicator, Reference.PACKET_REQUEST_PATTERN_SEARCH,ForgeDirection.getOrientation(i), new int[]{task.getItemID(), task.getItemMetadata()});
-                    if (MatterNetworkHelper.broadcastTaskInDirection(world, requestPacket, replicator, ForgeDirection.getOrientation(i))) {
+                    MatterNetworkRequestPacket requestPacket = new MatterNetworkRequestPacket(replicator, Reference.PACKET_REQUEST_PATTERN_SEARCH,ForgeDirection.getOrientation(i), new int[]{replicatePattern.getItemID(), replicatePattern.getItemMetadata()});
+                    if (MatterNetworkHelper.broadcastTaskInDirection(world, requestPacket, replicator, ForgeDirection.getOrientation(i)))
+                    {
                         broadcasts++;
                     }
                 }

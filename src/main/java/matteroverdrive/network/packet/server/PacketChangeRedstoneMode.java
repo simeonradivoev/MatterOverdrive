@@ -46,6 +46,7 @@ public class PacketChangeRedstoneMode extends TileEntityUpdatePacket
             if (entity instanceof MOTileEntityMachine)
             {
                 ((MOTileEntityMachine) entity).setRedstoneMode(message.redstoneMode);
+                ((MOTileEntityMachine) entity).ForceSync();
             }
             return null;
         }

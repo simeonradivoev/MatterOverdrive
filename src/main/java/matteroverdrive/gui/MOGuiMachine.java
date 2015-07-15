@@ -86,11 +86,6 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     public void handleElementButtonClick(String buttonName, int mouseButton)
     {
         super.handleElementButtonClick(buttonName, mouseButton);
-        if (buttonName == "RedstoneMode")
-        {
-            machine.setRedstoneMode((byte)mouseButton);
-            MatterOverdrive.packetPipeline.sendToServer(new PacketChangeRedstoneMode(machine, (byte) mouseButton));
-        }
     }
 
     @Override

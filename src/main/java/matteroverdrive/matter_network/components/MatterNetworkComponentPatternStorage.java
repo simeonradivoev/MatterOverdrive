@@ -28,7 +28,7 @@ import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
-import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
 import matteroverdrive.tile.TileEntityMachinePatternStorage;
 import net.minecraft.item.Item;
@@ -104,7 +104,7 @@ public class MatterNetworkComponentPatternStorage extends MatterNetworkComponent
                 int[] array = (int[]) packet.getRequest();
                 NBTTagCompound tagCompound = patternStorage.getItemAsNBT(new ItemStack(Item.getItemById(array[0]), 1, array[1]));
                 if (tagCompound != null && packet.getSender(patternStorage.getWorldObj()) instanceof IMatterNetworkClient) {
-                    ((IMatterNetworkClient) packet.getSender(patternStorage.getWorldObj())).queuePacket(new MatterNetwrokResponcePacket(patternStorage, Reference.PACKET_RESPONCE_VALID,packet.getRequestType(), tagCompound,packet.getSenderPort()), ForgeDirection.UNKNOWN);
+                    ((IMatterNetworkClient) packet.getSender(patternStorage.getWorldObj())).queuePacket(new MatterNetworkResponsePacket(patternStorage, Reference.PACKET_RESPONCE_VALID,packet.getRequestType(), tagCompound,packet.getSenderPort()), ForgeDirection.UNKNOWN);
                 }
             }
         }else if (packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION || packet.getRequestType() == Reference.PACKET_REQUEST_CONNECTION)

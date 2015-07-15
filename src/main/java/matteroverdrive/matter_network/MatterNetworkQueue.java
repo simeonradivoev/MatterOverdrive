@@ -39,6 +39,7 @@ public abstract class MatterNetworkQueue <T>
 
     public MatterNetworkQueue(String name,IMatterNetworkConnection connection, int capacity)
     {
+        this.name = name;
         this.connection = connection;
         elements = new ArrayList<>(capacity);
         this.capacity = capacity;
@@ -136,7 +137,7 @@ public abstract class MatterNetworkQueue <T>
         {
             try
             {
-                T element = getElementClassFromNBT(tagList.getCompoundTagAt(i)).newInstance();
+                T element = (T)getElementClassFromNBT(tagList.getCompoundTagAt(i)).newInstance();
                 readElementFromNBT(tagList.getCompoundTagAt(i),element);
                 elements.add(element);
             }
@@ -153,7 +154,7 @@ public abstract class MatterNetworkQueue <T>
 
     protected abstract void readElementFromNBT(NBTTagCompound tagCompound,T element);
     protected abstract void writeElementToNBT(NBTTagCompound tagCompound,T element);
-    protected abstract Class<T> getElementClassFromNBT(NBTTagCompound tagCompound);
+    protected abstract Class getElementClassFromNBT(NBTTagCompound tagCompound);
 
     public void writeToNBT(NBTTagCompound tagCompound)
     {

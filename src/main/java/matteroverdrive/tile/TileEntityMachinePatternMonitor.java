@@ -24,21 +24,17 @@ import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentPatternMonitor;
-import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
-import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.network.packet.client.PacketPatternMonitorSync;
-import matteroverdrive.util.MatterNetworkHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -150,9 +146,9 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
 
     //endregion
 
-    public void queueRequest(int[] request)
+    public void queuePatternRequest(NBTTagList request)
     {
-        networkComponent.queueRequest(request);
+        networkComponent.queuePatternRequest(request);
     }
 
     public HashSet<BlockPosition> getDatabases()

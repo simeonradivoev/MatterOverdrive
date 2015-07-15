@@ -20,7 +20,6 @@ package matteroverdrive.matter_network.components;
 
 import cofh.lib.util.TimeTracker;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkHandler;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
@@ -57,9 +56,11 @@ public class MatterNetworkComponentAnalyzer implements IMatterNetworkHandler
         int broadcastCount = 0;
         if (task != null)
         {
-            if (task.getState() == MatterNetworkTaskState.PROCESSING) {
+            if (task.getState() == MatterNetworkTaskState.PROCESSING)
+            {
 
-            } else if (task.getState() == MatterNetworkTaskState.FINISHED)
+            }
+            else if (task.getState() == MatterNetworkTaskState.FINISHED)
             {
                 onTaskComplete(analyzer.getQueue(0).dequeue());
             }

@@ -571,7 +571,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
     public boolean isReplicating()
     {
-        if(getRedstoneActive() && taskQueueProcessing.size() > 0 && internalPatternStorage != null && canCompleteTask())
+        if(getRedstoneActive() && taskQueueProcessing.size() > 0 && internalPatternStorage != null && canCompleteTask(taskQueueProcessing.peek()))
         {
             ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage);
             int matter = MatterHelper.getMatterAmountFromItem(item);
@@ -579,10 +579,9 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         }
         return false;
     }
-    public boolean canCompleteTask()
+    public boolean canCompleteTask(MatterNetworkTaskReplicatePattern taskReplicatePattern)
     {
-        MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
-        if (task != null && internalPatternStorage != null && task.getItemID() == internalPatternStorage.getShort("id") && internalPatternStorage.getShort("Damage") == task.getItemMetadata())
+        if (taskReplicatePattern != null && internalPatternStorage != null && taskReplicatePattern.getItemID() == internalPatternStorage.getShort("id") && internalPatternStorage.getShort("Damage") == taskReplicatePattern.getItemMetadata())
         {
             return true;
         }

@@ -22,7 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
-import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -42,7 +42,7 @@ public abstract class MatterNetworkComponentClient implements IMatterNetworkClie
                 if (((Class)packet.getRequest()).isInstance(connection))
                 {
                     if (sender instanceof IMatterNetworkClient) {
-                        MatterNetwrokResponcePacket responcePacket = new MatterNetwrokResponcePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
+                        MatterNetworkResponsePacket responcePacket = new MatterNetworkResponsePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
 
                         if (((IMatterNetworkClient) sender).canPreform(responcePacket)) {
                             ((IMatterNetworkClient) sender).queuePacket(responcePacket, packet.getSenderPort());
@@ -53,7 +53,7 @@ public abstract class MatterNetworkComponentClient implements IMatterNetworkClie
                 }
             } else {
                 if (sender instanceof IMatterNetworkClient) {
-                    MatterNetwrokResponcePacket responcePacket = new MatterNetwrokResponcePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
+                    MatterNetworkResponsePacket responcePacket = new MatterNetworkResponsePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
                     if (((IMatterNetworkClient) sender).canPreform(responcePacket)) {
                         ((IMatterNetworkClient) sender).queuePacket(responcePacket, packet.getSenderPort());
 

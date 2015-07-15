@@ -18,7 +18,6 @@
 
 package matteroverdrive.matter_network;
 
-import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
