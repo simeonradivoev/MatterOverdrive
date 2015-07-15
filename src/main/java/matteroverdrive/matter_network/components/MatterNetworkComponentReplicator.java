@@ -76,7 +76,7 @@ public class MatterNetworkComponentReplicator implements IMatterNetworkDispatche
             if (((MatterNetworkTaskPacket) packet).getTask(replicator.getWorldObj()) instanceof MatterNetworkTaskReplicatePattern)
             {
                 MatterNetworkTaskReplicatePattern task = (MatterNetworkTaskReplicatePattern)((MatterNetworkTaskPacket) packet).getTask(replicator.getWorldObj());
-                if (replicator.getQueue(0).queueTask(task))
+                if (replicator.getQueue(0).queue(task))
                 {
                     task.setState(Reference.TASK_STATE_QUEUED);
                     task.setAlive(true);

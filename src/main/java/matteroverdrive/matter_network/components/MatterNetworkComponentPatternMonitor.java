@@ -142,7 +142,7 @@ public class MatterNetworkComponentPatternMonitor implements IMatterNetworkClien
 
             if (task != null) {
                 if (task.getState() == Reference.TASK_STATE_FINISHED || task.getState() == Reference.TASK_STATE_PROCESSING || task.getState() == Reference.TASK_STATE_QUEUED) {
-                    patternMonitor.getQueue(0).dequeueTask();
+                    patternMonitor.getQueue(0).dequeue();
                     patternMonitor.ForceSync();
                 } else {
                     if (!task.isAlive() && broadcastTracker.hasDelayPassed(world, patternMonitor.BROADCAST_WEATING_DELAY)) {
@@ -174,7 +174,7 @@ public class MatterNetworkComponentPatternMonitor implements IMatterNetworkClien
         {
             MatterNetworkTaskReplicatePattern task = new MatterNetworkTaskReplicatePattern(patternMonitor, request[i], request[i + 1], request[i + 2]);
             task.setState(Reference.TASK_STATE_WAITING);
-            if (patternMonitor.getQueue(0).queueTask(task));
+            if (patternMonitor.getQueue(0).queue(task));
         }
 
         patternMonitor.ForceSync();

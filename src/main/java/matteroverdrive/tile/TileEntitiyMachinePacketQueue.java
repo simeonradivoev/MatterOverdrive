@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
@@ -32,7 +50,7 @@ public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine 
     protected int BROADCAST_DELAY = 2;
     protected int TASK_QUEUE_SIZE = 16;
     private TimeTracker broadcastTracker;
-    private MatterNetworkPacketQueue packetQueue;
+    private MatterNetworkPacketQueue<MatterNetworkPacket> packetQueue;
 
     private BlockPosition[] connections;
 
@@ -55,7 +73,7 @@ public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine 
     public void readCustomNBT(NBTTagCompound nbt)
     {
         super.readCustomNBT(nbt);
-        packetQueue.readFromNBT(worldObj, nbt);
+        packetQueue.readFromNBT(nbt);
         for (int i = 0;i < connections.length;i++)
         {
             if (nbt.hasKey("Connection" + i)) {
@@ -79,7 +97,7 @@ public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine 
     public void  writeCustomNBT(NBTTagCompound nbt)
     {
         super.writeCustomNBT(nbt);
-        packetQueue.writeToNBT(worldObj, nbt);
+        packetQueue.writeToNBT(nbt);
         for (int i = 0;i < connections.length;i++)
         {
             if (getConnection(i) != null)
@@ -120,7 +138,7 @@ public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine 
 
             if (broadcastTracker.hasDelayPassed(worldObj, getBroadcastDelay()))
             {
-                MatterNetworkPacket packet = packetQueue.dequeuePacket();
+                MatterNetworkPacket packet = packetQueue.dequeue();
 
                 if (packet != null)
                 {
@@ -211,7 +229,7 @@ public abstract class TileEntitiyMachinePacketQueue extends MOTileEntityMachine 
                     return;
             }
 
-            if (packetQueue.queuePacket(packet)) {
+            if (packetQueue.queue(packet)) {
                 packet.addToPath(this, from);
                 broadcastTracker.markTime(worldObj);
                 ForceSync();

@@ -1,82 +1,57 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.matter_network;
 
-import cpw.mods.fml.common.FMLLog;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.MatterNetworkTask;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
  * Created by Simeon on 4/19/2015.
  */
-public class MatterNetworkTaskQueue<T extends MatterNetworkTask>
+public class MatterNetworkTaskQueue<T extends MatterNetworkTask> extends MatterNetworkQueue<T>
 {
-    IMatterNetworkConnection entity;
-    protected List<T> tasks;
-    int capacity = 0;
-    Class<? extends MatterNetworkTask> type;
-
-    public MatterNetworkTaskQueue(IMatterNetworkConnection entity, int capacity,Class<? extends MatterNetworkTask> type)
+    public MatterNetworkTaskQueue(IMatterNetworkConnection connection, int capacity)
     {
-        this.entity = entity;
-        tasks = new ArrayList<T>(capacity);
-        this.capacity = capacity;
-        this.type = type;
-    }
-
-    public boolean queueTask(T task)
-    {
-        if (tasks.size() > 0)
-        {
-            try
-            {
-                tasks.add(tasks.size(),task);
-                return true;
-            }
-            catch (Exception e)
-            {
-                FMLLog.severe("Could not add to Taks Queue: ", e);
-                return false;
-            }
-        }
-        else
-        {
-            return tasks.add(task);
-        }
-
+        super("Tasks", connection, capacity);
     }
 
     public void drop()
     {
-        for (T task : tasks)
+        for (MatterNetworkTask task : elements)
         {
             task.setState(Reference.TASK_STATE_INVALID);
         }
 
-        tasks.clear();
-    }
-
-    public T dropAt(int i)
-    {
-        if (i < tasks.size()) {
-            return tasks.remove(i);
-        }
-        return null;
+        elements.clear();
     }
 
     public T dropWithID(long id)
     {
-        for (int i = 0;i < tasks.size();i++)
+        for (int i = 0;i < elements.size();i++)
         {
-            if (tasks.get(i).getId() == id)
+            if (elements.get(i).getId() == id)
             {
-                return tasks.remove(i);
+                return elements.remove(i);
             }
         }
         return null;
@@ -84,112 +59,42 @@ public class MatterNetworkTaskQueue<T extends MatterNetworkTask>
 
     public void tickAllAlive(World world,boolean alive)
     {
-        for (int i = 0;i < tasks.size();i++)
+        for (int i = 0;i < elements.size();i++)
         {
-            if (tasks.get(i).isValid(world)) {
-                tasks.get(i).setAlive(alive);
+            if (elements.get(i).isValid(world)) {
+                elements.get(i).setAlive(alive);
             }
         }
-    }
-
-    public T dequeueTask()
-    {
-        if (tasks.size() > 0)
-        {
-            return tasks.remove(0);
-        }
-        return null;
-    }
-
-    public T peek()
-    {
-        if (tasks.size() > 0)
-        {
-            return tasks.get(0);
-        }
-        return null;
-    }
-
-    public int getLastIndex()
-    {
-        if (tasks.size() > 0)
-        {
-            return tasks.size()-1;
-        }
-        return -1;
-    }
-
-    public T getAt(int i)
-    {
-        if (i >= 0 && i < tasks.size())
-        {
-            return tasks.get(i);
-        }
-        return null;
     }
 
     public T getWithID(long id)
     {
-        for (int i = 0;i < tasks.size();i++)
+        for (int i = 0;i < elements.size();i++)
         {
-            if (tasks.get(i).getId() == id)
+            if (elements.get(i).getId() == id)
             {
-                return tasks.get(i);
+                return elements.get(i);
             }
         }
         return null;
     }
 
-    public boolean remove(T task)
+    @Override
+    protected void readElementFromNBT(NBTTagCompound tagCompound, MatterNetworkTask element)
     {
-        return tasks.remove(task);
+        element.readFromNBT(tagCompound);
     }
 
-    public int size()
+    @Override
+    protected void writeElementToNBT(NBTTagCompound tagCompound, MatterNetworkTask element)
     {
-        return tasks.size();
+        element.writeToNBT(tagCompound);
+        tagCompound.setInteger("Type", MatterNetworkRegistry.getTaskID(element.getClass()));
     }
 
-    public int remaintingCapacity()
+    @Override
+    protected Class getElementClassFromNBT(NBTTagCompound tagCompound)
     {
-        return capacity - tasks.size();
-    }
-
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        if (tagCompound == null)
-            return;
-
-        tasks.clear();
-        NBTTagList tagList = tagCompound.getTagList("Tasks",10);
-        for (int i = 0; i < tagList.tagCount();i++)
-        {
-            try
-            {
-                T task = (T)type.newInstance();
-                task.readFromNBT(tagList.getCompoundTagAt(i));
-                tasks.add(task);
-            }
-            catch (InstantiationException e)
-            {
-                e.printStackTrace();
-            }
-            catch (IllegalAccessException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
-        NBTTagList taskList = new NBTTagList();
-        for (T task : tasks)
-        {
-            NBTTagCompound taskNBT = new NBTTagCompound();
-            task.writeToNBT(taskNBT);
-            taskList.appendTag(taskNBT);
-        }
-        tagCompound.setTag("Tasks",taskList);
+        return MatterNetworkRegistry.getTaskClass(tagCompound.getInteger("Type"));
     }
 }

@@ -1,128 +1,61 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.matter_network;
 
-import cpw.mods.fml.common.FMLLog;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Simeon on 4/21/2015.
  */
-public class MatterNetworkPacketQueue
+public class MatterNetworkPacketQueue<T extends MatterNetworkPacket> extends MatterNetworkQueue<T>
 {
-    IMatterNetworkConnection entity;
-    protected List<MatterNetworkPacket> tasks;
-    int capacity = 0;
 
-    public MatterNetworkPacketQueue(IMatterNetworkConnection entity, int capacity)
+    public MatterNetworkPacketQueue(IMatterNetworkConnection connection, int capacity)
     {
-        this.entity = entity;
-        tasks = new ArrayList<>(capacity);
-        this.capacity = capacity;
-    }
-
-    public boolean queuePacket(MatterNetworkPacket task)
-    {
-        if (remaintingCapacity() > 0) {
-            if (tasks.size() > 0) {
-                try {
-                    tasks.add(tasks.size() - 1, task);
-                    return true;
-                } catch (Exception e) {
-                    FMLLog.severe("Could not add to Taks Queue: ", e);
-                    return false;
-                }
-            } else {
-                return tasks.add(task);
-            }
-        }
-        return false;
+        super("TaskPackets",connection,capacity);
     }
 
     public void tickAllAlive(World world,boolean alive)
     {
-        for (int i = 0;i < tasks.size();i++)
+        for (int i = 0;i < elements.size();i++)
         {
-            if (tasks.get(i).isValid(world)) {
+            if (elements.get(i).isValid(world)) {
                 //tasks.get(i).getTask(world).setAlive(alive);
             }
         }
     }
 
-    public MatterNetworkPacket dequeuePacket()
-    {
-        if (tasks.size() > 0)
-        {
-            return tasks.remove(0);
-        }
-        return null;
+    @Override
+    protected void readElementFromNBT(NBTTagCompound tagCompound, MatterNetworkPacket element) {
+        element.readFromNBT(tagCompound);
     }
 
-    public MatterNetworkPacket peek()
-    {
-        if (tasks.size() > 0)
-        {
-            return tasks.get(0);
-        }
-        return null;
+    @Override
+    protected void writeElementToNBT(NBTTagCompound tagCompound, MatterNetworkPacket element) {
+        element.writeToNBT(tagCompound);
+        tagCompound.setInteger("Type", MatterNetworkRegistry.getPacketID(element.getClass()));
     }
 
-    public MatterNetworkPacket getAt(int i)
-    {
-        if (i >= 0 && i < tasks.size())
-        {
-            return tasks.get(i);
-        }
-        return null;
-    }
-
-    public int size()
-    {
-        return tasks.size();
-    }
-
-    public int remaintingCapacity()
-    {
-        return capacity - tasks.size();
-    }
-
-    public void readFromNBT(World world, NBTTagCompound tagCompound)
-    {
-        if (tagCompound == null || world == null)
-            return;
-
-        tasks.clear();
-        NBTTagList tagList = tagCompound.getTagList("TaskPackets",10);
-        for (int i = 0; i < tagList.tagCount();i++)
-        {
-            MatterNetworkPacket packet = null;
-            try {
-                packet = MatterNetworkRegistry.getPacketClass(tagList.getCompoundTagAt(i).getInteger("Type")).newInstance();
-                packet.readFromNBT(tagList.getCompoundTagAt(i));
-                tasks.add(packet);
-
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void writeToNBT(World world, NBTTagCompound tagCompound)
-    {
-        NBTTagList taskList = new NBTTagList();
-        for (MatterNetworkPacket packet : tasks)
-        {
-            NBTTagCompound task = new NBTTagCompound();
-            packet.writeToNBT(task);
-            task.setInteger("Type",MatterNetworkRegistry.getPacketID(packet.getClass()));
-            taskList.appendTag(task);
-        }
-        tagCompound.setTag("TaskPackets",taskList);
+    @Override
+    protected Class getElementClassFromNBT(NBTTagCompound tagCompound) {
+        return MatterNetworkRegistry.getPacketClass(tagCompound.getInteger("Type"));
     }
 }

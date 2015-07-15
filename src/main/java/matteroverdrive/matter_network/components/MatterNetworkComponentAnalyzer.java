@@ -59,7 +59,7 @@ public class MatterNetworkComponentAnalyzer implements IMatterNetworkHandler
             if (task.getState() == Reference.TASK_STATE_PROCESSING) {
 
             } else if (task.getState() == Reference.TASK_STATE_FINISHED) {
-                analyzer.getQueue(0).dequeueTask();
+                analyzer.getQueue(0).dequeue();
                 analyzer.ForceSync();
             }
             else

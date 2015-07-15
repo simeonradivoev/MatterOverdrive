@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile;
 
 import cofh.api.energy.IEnergyStorage;
@@ -57,7 +75,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         this.energyStorage.setCapacity(ENERGY_STORAGE);
         this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
-        taskQueueSending = new MatterNetworkTaskQueue<>(this,1,MatterNetworkTaskStorePattern.class);
+        taskQueueSending = new MatterNetworkTaskQueue<>(this,1);
         redstoneMode = Reference.MODE_REDSTONE_LOW;
         networkComponent = new MatterNetworkComponentAnalyzer(this);
     }
@@ -177,13 +195,13 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
                 //if the scanner cannot take the item for some reason
                 //then just queue the analyzed item as a task
                 MatterNetworkTaskStorePattern storePattern = new MatterNetworkTaskStorePattern(this,itemStack,PROGRESS_AMOUNT_PER_ITEM);
-                taskQueueSending.queueTask(storePattern);
+                taskQueueSending.queue(storePattern);
             }
         }
         else
         {
             MatterNetworkTaskStorePattern storePattern = new MatterNetworkTaskStorePattern(this,itemStack,PROGRESS_AMOUNT_PER_ITEM);
-            taskQueueSending.queueTask(storePattern);
+            taskQueueSending.queue(storePattern);
         }
 
         decrStackSize(input_slot, 1);
