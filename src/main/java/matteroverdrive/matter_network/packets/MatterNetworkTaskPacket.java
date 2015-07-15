@@ -5,6 +5,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkPathNode;
 import net.minecraft.nbt.NBTTagCompound;
@@ -85,7 +86,7 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
 
     public boolean isValid(World world)
     {
-        return queueID >= (byte)0 && getTask(world) != null && getTask(world).getState() != Reference.TASK_STATE_INVALID;
+        return queueID >= (byte)0 && getTask(world) != null && getTask(world).getState() != MatterNetworkTaskState.INVALID;
     }
 
     @Override

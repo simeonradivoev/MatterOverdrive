@@ -32,6 +32,7 @@ import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.IMatterNetworkHandler;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.blocks.BlockReplicator;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
@@ -141,7 +142,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             {
                 if (energyStorage.getEnergyStored() >= getEnergyDrainPerTick()) {
 
-                    taskQueueProcessing.peek().setState(Reference.TASK_STATE_PROCESSING);
+                    taskQueueProcessing.peek().setState(MatterNetworkTaskState.PROCESSING);
                     this.replicateTime++;
                     this.extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(), false);
 
@@ -228,7 +229,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                     task.setAmount(task.getAmount()-1);
                     if (task.getAmount() <= 0)
                     {
-                        task.setState(Reference.TASK_STATE_FINISHED);
+                        task.setState(MatterNetworkTaskState.FINISHED);
                         taskQueueProcessing.dequeue();
                     }
                 }

@@ -2,6 +2,7 @@ package matteroverdrive.gui;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.container.ContainerPatternMonitor;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.element.ElementMonitorItemPattern;
@@ -116,7 +117,7 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
         {
             NBTTagCompound tagCompound = new NBTTagCompound();
             tagCompound.setInteger("TaskID",mouseButton);
-            MatterOverdrive.packetPipeline.sendToServer(new PacketRemoveTask(machine,mouseButton,(byte)0,Reference.TASK_STATE_INVALID));
+            MatterOverdrive.packetPipeline.sendToServer(new PacketRemoveTask(machine,mouseButton,(byte)0, MatterNetworkTaskState.INVALID));
         }
     }
 

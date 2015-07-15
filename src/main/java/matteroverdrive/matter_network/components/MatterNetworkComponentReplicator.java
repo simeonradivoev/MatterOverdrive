@@ -24,6 +24,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
@@ -77,7 +78,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
                 MatterNetworkTaskReplicatePattern task = (MatterNetworkTaskReplicatePattern)((MatterNetworkTaskPacket) packet).getTask(replicator.getWorldObj());
                 if (replicator.getQueue(0).queue(task))
                 {
-                    task.setState(Reference.TASK_STATE_QUEUED);
+                    task.setState(MatterNetworkTaskState.QUEUED);
                     task.setAlive(true);
                     replicator.ForceSync();
                 }
@@ -88,7 +89,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
         }
         else if (packet instanceof MatterNetworkRequestPacket)
         {
-            manageRequestPackets(replicator,replicator.getWorldObj(),(MatterNetworkRequestPacket)packet,from);
+            manageRequestPackets(replicator, replicator.getWorldObj(), (MatterNetworkRequestPacket) packet, from);
         }
     }
 

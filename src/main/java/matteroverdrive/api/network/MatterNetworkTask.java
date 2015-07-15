@@ -22,7 +22,7 @@ public abstract class MatterNetworkTask
     boolean isAlive;
 
     String unlocalizedName;
-    byte state;
+    MatterNetworkTaskState state;
 
     public MatterNetworkTask()
     {
@@ -37,11 +37,11 @@ public abstract class MatterNetworkTask
     {
         id = UUID.randomUUID().getMostSignificantBits();
     }
-    public byte getState()
+    public MatterNetworkTaskState getState()
     {
         return state;
     }
-    public void setState(byte state)
+    public void setState(MatterNetworkTaskState state)
     {
         this.state = state;
     }
@@ -54,7 +54,7 @@ public abstract class MatterNetworkTask
     {
         if (compound != null) {
             this.senderPos = new BlockPosition(compound);
-            this.state = compound.getByte("State");
+            this.state = MatterNetworkTaskState.get(compound.getInteger("State"));
             this.isAlive = compound.getBoolean("isAlive");
             this.id = compound.getLong("id");
         }
@@ -64,7 +64,7 @@ public abstract class MatterNetworkTask
         if (compound != null)
         {
             senderPos.writeToNBT(compound);
-            compound.setInteger("State",state);
+            compound.setInteger("State",state.ordinal());
             compound.setBoolean("isAlive",isAlive);
             compound.setLong("id",id);
         }
@@ -89,17 +89,17 @@ public abstract class MatterNetworkTask
         }
     }
 
-    private EnumChatFormatting getColorForState(int state)
+    private EnumChatFormatting getColorForState(MatterNetworkTaskState state)
     {
         switch (state)
         {
-            case Reference.TASK_STATE_WAITING:
+            case WAITING:
                 return EnumChatFormatting.AQUA;
-            case Reference.TASK_STATE_QUEUED:
+            case QUEUED:
                 return EnumChatFormatting.BLUE;
-            case Reference.TASK_STATE_PROCESSING:
+            case PROCESSING:
                 return EnumChatFormatting.YELLOW;
-            case Reference.TASK_STATE_FINISHED:
+            case FINISHED:
                 return EnumChatFormatting.GREEN;
             default:
                 return EnumChatFormatting.GRAY;

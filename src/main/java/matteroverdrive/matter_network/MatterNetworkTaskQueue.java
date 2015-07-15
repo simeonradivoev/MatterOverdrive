@@ -21,6 +21,7 @@ package matteroverdrive.matter_network;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -39,7 +40,7 @@ public class MatterNetworkTaskQueue<T extends MatterNetworkTask> extends MatterN
     {
         for (MatterNetworkTask task : elements)
         {
-            task.setState(Reference.TASK_STATE_INVALID);
+            task.setState(MatterNetworkTaskState.INVALID);
         }
 
         elements.clear();

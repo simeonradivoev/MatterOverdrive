@@ -25,6 +25,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
@@ -185,7 +186,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
     private boolean isInValidState(MatterNetworkTask task)
     {
         if (task != null) {
-            return task.getState() == Reference.TASK_STATE_WAITING;
+            return task.getState() == MatterNetworkTaskState.WAITING;
         }
         return false;
     }

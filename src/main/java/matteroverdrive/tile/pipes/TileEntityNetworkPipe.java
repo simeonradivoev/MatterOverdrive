@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkCable;
 import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.util.MatterNetworkHelper;
@@ -86,7 +87,7 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     {
         if (isValid())
         {
-            if (task instanceof MatterNetworkTaskPacket && ((MatterNetworkTaskPacket) task).getTask(worldObj).getState() > Reference.TASK_STATE_WAITING)
+            if (task instanceof MatterNetworkTaskPacket && ((MatterNetworkTaskPacket) task).getTask(worldObj).getState().above(MatterNetworkTaskState.WAITING))
                 return;
 
             for (int i = 0; i < 6; i++)

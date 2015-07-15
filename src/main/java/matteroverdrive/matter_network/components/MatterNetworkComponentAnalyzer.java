@@ -23,6 +23,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkHandler;
 import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.tile.TileEntityMachineMatterAnalyzer;
 import matteroverdrive.util.MatterNetworkHelper;
 import net.minecraft.world.World;
@@ -56,21 +57,21 @@ public class MatterNetworkComponentAnalyzer implements IMatterNetworkHandler
         int broadcastCount = 0;
         if (task != null)
         {
-            if (task.getState() == Reference.TASK_STATE_PROCESSING) {
+            if (task.getState() == MatterNetworkTaskState.PROCESSING) {
 
-            } else if (task.getState() == Reference.TASK_STATE_FINISHED) {
-                analyzer.getQueue(0).dequeue();
-                analyzer.ForceSync();
+            } else if (task.getState() == MatterNetworkTaskState.FINISHED)
+            {
+                onTaskComplete(analyzer.getQueue(0).dequeue());
             }
             else
             {
-                if (!task.isAlive() && broadcastTracker.hasDelayPassed(world, task.getState() == Reference.TASK_STATE_WAITING ? analyzer.BROADCAST_WEATING_DELAY : analyzer.BROADCAST_DELAY))
+                if (canBroadcastTask(world,task))
                 {
                     for (int i = 0; i < 6; i++)
                     {
                         if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, analyzer, ForgeDirection.getOrientation(i)))
                         {
-                            task.setState(Reference.TASK_STATE_WAITING);
+                            onTaskBroadcast(world, task, ForgeDirection.getOrientation(i));
                             broadcastCount++;
                         }
 
@@ -81,5 +82,20 @@ public class MatterNetworkComponentAnalyzer implements IMatterNetworkHandler
 
         analyzer.getQueue(0).tickAllAlive(world,false);
         return broadcastCount;
+    }
+
+    private void onTaskComplete(MatterNetworkTask task)
+    {
+        analyzer.ForceSync();
+    }
+
+    private boolean canBroadcastTask(World world,MatterNetworkTask task)
+    {
+        return !task.isAlive() && broadcastTracker.hasDelayPassed(world, task.getState() == MatterNetworkTaskState.WAITING ? analyzer.BROADCAST_WEATING_DELAY : analyzer.BROADCAST_DELAY);
+    }
+
+    private void onTaskBroadcast(World world,MatterNetworkTask task,ForgeDirection direction)
+    {
+        task.setState(MatterNetworkTaskState.WAITING);
     }
 }

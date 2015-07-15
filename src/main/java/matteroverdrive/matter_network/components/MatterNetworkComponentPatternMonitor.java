@@ -24,6 +24,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
@@ -141,14 +142,14 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
             MatterNetworkTaskReplicatePattern task = patternMonitor.getQueue(0).peek();
 
             if (task != null) {
-                if (task.getState() == Reference.TASK_STATE_FINISHED || task.getState() == Reference.TASK_STATE_PROCESSING || task.getState() == Reference.TASK_STATE_QUEUED) {
+                if (task.getState() == MatterNetworkTaskState.FINISHED || task.getState() == MatterNetworkTaskState.PROCESSING || task.getState() == MatterNetworkTaskState.QUEUED) {
                     patternMonitor.getQueue(0).dequeue();
                     patternMonitor.ForceSync();
                 } else {
                     if (!task.isAlive() && broadcastTracker.hasDelayPassed(world, patternMonitor.BROADCAST_WEATING_DELAY)) {
                         for (int i = 0; i < 6; i++) {
                             if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, patternMonitor, ForgeDirection.getOrientation(i))) {
-                                task.setState(Reference.TASK_STATE_WAITING);
+                                task.setState(MatterNetworkTaskState.WAITING);
                                 broadcastCount++;
                             }
 
@@ -168,7 +169,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
         for (int i = 0;i < request.length;i+=3)
         {
             MatterNetworkTaskReplicatePattern task = new MatterNetworkTaskReplicatePattern(patternMonitor, request[i], request[i + 1], request[i + 2]);
-            task.setState(Reference.TASK_STATE_WAITING);
+            task.setState(MatterNetworkTaskState.WAITING);
             if (patternMonitor.getQueue(0).queue(task));
         }
 

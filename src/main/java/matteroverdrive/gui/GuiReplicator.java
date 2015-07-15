@@ -5,6 +5,7 @@ import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.container.ContainerReplicator;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.element.*;
@@ -173,7 +174,7 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
         {
             NBTTagCompound tagCompound = new NBTTagCompound();
             tagCompound.setInteger("TaskID",mouseButton);
-            MatterOverdrive.packetPipeline.sendToServer(new PacketRemoveTask(machine,mouseButton,(byte)0,Reference.TASK_STATE_INVALID));
+            MatterOverdrive.packetPipeline.sendToServer(new PacketRemoveTask(machine,mouseButton,(byte)0, MatterNetworkTaskState.INVALID));
         }
     }
 	

@@ -24,6 +24,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
@@ -74,16 +75,16 @@ public class MatterNetworkComponentPatternStorage extends MatterNetworkComponent
         if (packet != null && packet.isValid(patternStorage.getWorldObj()))
         {
             if (packet instanceof MatterNetworkTaskPacket) {
-                if (taskProcessingTracker.hasDelayPassed(patternStorage.getWorldObj(), patternStorage.TASK_PROCESS_DELAY) && ((MatterNetworkTaskPacket) packet).getTask(patternStorage.getWorldObj()).getState() <= Reference.TASK_STATE_QUEUED) {
+                if (taskProcessingTracker.hasDelayPassed(patternStorage.getWorldObj(), patternStorage.TASK_PROCESS_DELAY) && ((MatterNetworkTaskPacket) packet).getTask(patternStorage.getWorldObj()).getState().belowOrEqual(MatterNetworkTaskState.QUEUED)) {
                     MatterNetworkTask task = ((MatterNetworkTaskPacket) packet).getTask(patternStorage.getWorldObj());
                     if (task instanceof MatterNetworkTaskStorePattern) {
                         if (patternStorage.addItem(((MatterNetworkTaskStorePattern) task).getItemStack(), ((MatterNetworkTaskStorePattern) task).getProgress(), false, null)) {
                             //if the task is finished and the item is in the database
-                            task.setState(Reference.TASK_STATE_FINISHED);
+                            task.setState(MatterNetworkTaskState.FINISHED);
                         } else {
                             //if the item could not be added to the database for some reason, and has passed the canProcess check
                             //then reset the task and set it to waiting
-                            task.setState(Reference.TASK_STATE_WAITING);
+                            task.setState(MatterNetworkTaskState.WAITING);
                         }
                     }
                 }
