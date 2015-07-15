@@ -24,7 +24,6 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterDatabase;
-import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
@@ -38,7 +37,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 7/13/2015.
  */
-public class MatterNetworkComponentPatternMonitor implements IMatterNetworkClient
+public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponentClient
 {
     private TileEntityMachinePatternMonitor patternMonitor;
     private TimeTracker broadcastTracker;
@@ -82,7 +81,8 @@ public class MatterNetworkComponentPatternMonitor implements IMatterNetworkClien
             }
         }else if (packet instanceof MatterNetworkRequestPacket)
         {
-            manageRequestPackets((MatterNetworkRequestPacket)packet,from);
+
+            manageRequestPackets(patternMonitor,patternMonitor.getWorldObj(),(MatterNetworkRequestPacket)packet,from);
         }
     }
 
@@ -161,11 +161,6 @@ public class MatterNetworkComponentPatternMonitor implements IMatterNetworkClien
             return broadcastCount;
         }
         return 0;
-    }
-
-    public void manageRequestPackets(MatterNetworkRequestPacket packet,ForgeDirection direction)
-    {
-        MatterNetworkHelper.handleConnectionRequestPacket(patternMonitor.getWorldObj(),patternMonitor,packet,direction);
     }
 
     public void queueRequest(int[] request)

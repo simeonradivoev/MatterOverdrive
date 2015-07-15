@@ -22,7 +22,6 @@ import cofh.lib.util.TimeTracker;
 import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
-import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.matter_network.MatterNetworkPacket;
@@ -41,7 +40,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 7/13/2015.
  */
-public class MatterNetworkComponentReplicator implements IMatterNetworkDispatcher, IMatterNetworkClient
+public class MatterNetworkComponentReplicator extends MatterNetworkComponentClient implements IMatterNetworkDispatcher
 {
     private TileEntityMachineReplicator replicator;
     private TimeTracker patternSearchTracker;
@@ -89,13 +88,8 @@ public class MatterNetworkComponentReplicator implements IMatterNetworkDispatche
         }
         else if (packet instanceof MatterNetworkRequestPacket)
         {
-            manageRequests((MatterNetworkRequestPacket)packet,from);
+            manageRequestPackets(replicator,replicator.getWorldObj(),(MatterNetworkRequestPacket)packet,from);
         }
-    }
-
-    private void manageRequests(MatterNetworkRequestPacket packet,ForgeDirection direction)
-    {
-        MatterNetworkHelper.handleConnectionRequestPacket(replicator.getWorldObj(), replicator, packet, direction);
     }
 
     private void manageResponces(MatterNetwrokResponcePacket packet)

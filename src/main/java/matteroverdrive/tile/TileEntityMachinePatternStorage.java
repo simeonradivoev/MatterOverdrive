@@ -18,7 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.position.BlockPosition;
@@ -30,8 +29,6 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.api.network.IMatterNetworkClient;
-import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.blocks.BlockPatternStorage;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
@@ -40,16 +37,12 @@ import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkPacketQueue;
-import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
-import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
-import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
-import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
+import matteroverdrive.matter_network.components.MatterNetworkComponentPatternStorage;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.MatterNetworkHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -70,7 +63,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public int input_slot;
     public int[] pattern_storage_slots;
     private MatterNetworkPacketQueue taskQueueProcessing;
-    private TimeTracker taskProcessingTracker;
+    private MatterNetworkComponentPatternStorage networkComponent;
 
     public TileEntityMachinePatternStorage()
     {
@@ -79,8 +72,8 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
         this.taskQueueProcessing = new MatterNetworkPacketQueue(this,1);
-        taskProcessingTracker = new TimeTracker();
         redstoneMode = Reference.MODE_REDSTONE_LOW;
+        networkComponent = new MatterNetworkComponentPatternStorage(this);
     }
 
     @Override
@@ -125,15 +118,37 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
+    {
+        return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.PowerUsage;
+    }
+
+    @Override
+    public void addInfo(World world, double x, double y, double z, List<String> infos)
+    {
+        int patternCount = 0;
+        for (ItemStack patternDrive : getPatternStorageList())
+        {
+            if (patternDrive != null) {
+                patternCount += MatterOverdriveItems.pattern_drive.getItemsAsNBT(patternDrive).tagCount();
+            }
+        }
+        if (patternCount > 0)
+        {
+            infos.add(patternCount + "xPatterns");
+        }else
+        {
+            infos.add("No Patterns.");
+        }
+
+    }
+
+    //region NBT
+    @Override
     public void writeCustomNBT(NBTTagCompound nbt)
     {
         super.writeCustomNBT(nbt);
         taskQueueProcessing.writeToNBT(nbt);
-    }
-
-    @Override
-    protected void onActiveChange() {
-
     }
 
     @Override
@@ -142,41 +157,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         super.readCustomNBT(nbt);
         taskQueueProcessing.readFromNBT(nbt);
     }
-
-    @Override
-    public String getSound() {
-        return null;
-    }
-
-    @Override
-    public boolean hasSound() {
-        return false;
-    }
-
-    @Override
-    public boolean isActive()
-    {
-        return energyStorage.getEnergyStored() > 0;
-    }
-
-    @Override
-    public float soundVolume() {
-        return 0;
-    }
-
-    @Override
-    protected void onAwake(Side side)
-    {
-        if (side.isServer()) {
-            MatterNetworkHelper.broadcastConnection(worldObj, this);
-        }
-    }
-
-    @Override
-    public boolean isAffectedByUpgrade(UpgradeTypes type)
-    {
-        return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.PowerUsage;
-    }
+    //endregion
 
     //region Database functions
     @Override
@@ -345,64 +326,13 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
-        if (getRedstoneActive()) {
-            if (packet instanceof MatterNetworkTaskPacket) {
-                if (((MatterNetworkTaskPacket) packet).getTask(worldObj) instanceof MatterNetworkTaskStorePattern) {
-                    MatterNetworkTaskStorePattern task = (MatterNetworkTaskStorePattern) ((MatterNetworkTaskPacket) packet).getTask(worldObj);
-                    return addItem(task.getItemStack(), task.getProgress(), true, null);
-                }
-            } else if (packet instanceof MatterNetworkRequestPacket) {
-                MatterNetworkRequestPacket requestPacket = (MatterNetworkRequestPacket) packet;
-                return requestPacket.getRequestType() == Reference.PACKET_REQUEST_CONNECTION
-                        || requestPacket.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH
-                        || requestPacket.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
-            }
-        }
-        return false;
+        return networkComponent.canPreform(packet);
     }
 
     @Override
     public void queuePacket(MatterNetworkPacket packet,ForgeDirection from)
     {
-        if (packet != null && packet.isValid(worldObj))
-        {
-            if (packet instanceof MatterNetworkTaskPacket) {
-                if (taskProcessingTracker.hasDelayPassed(worldObj, TASK_PROCESS_DELAY) && ((MatterNetworkTaskPacket) packet).getTask(worldObj).getState() <= Reference.TASK_STATE_QUEUED) {
-                    MatterNetworkTask task = ((MatterNetworkTaskPacket) packet).getTask(worldObj);
-                    if (task instanceof MatterNetworkTaskStorePattern) {
-                        if (addItem(((MatterNetworkTaskStorePattern) task).getItemStack(), ((MatterNetworkTaskStorePattern) task).getProgress(), false, null)) {
-                            //if the task is finished and the item is in the database
-                            task.setState(Reference.TASK_STATE_FINISHED);
-                        } else {
-                            //if the item could not be added to the database for some reason, and has passed the canProcess check
-                            //then reset the task and set it to waiting
-                            task.setState(Reference.TASK_STATE_WAITING);
-                        }
-                    }
-                }
-            }
-            else if (packet instanceof MatterNetworkRequestPacket)
-            {
-                manageRequests((MatterNetworkRequestPacket)packet,from);
-            }
-        }
-    }
-
-    private void manageRequests(MatterNetworkRequestPacket packet,ForgeDirection from)
-    {
-        if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH)
-        {
-            if (packet.getRequest() instanceof int[]) {
-                int[] array = (int[]) packet.getRequest();
-                NBTTagCompound tagCompound = getItemAsNBT(new ItemStack(Item.getItemById(array[0]), 1, array[1]));
-                if (tagCompound != null && packet.getSender(worldObj) instanceof IMatterNetworkClient) {
-                    ((IMatterNetworkClient) packet.getSender(worldObj)).queuePacket(new MatterNetwrokResponcePacket(this, Reference.PACKET_RESPONCE_VALID,packet.getRequestType(), tagCompound,packet.getSenderPort()), ForgeDirection.UNKNOWN);
-                }
-            }
-        }else if (packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION || packet.getRequestType() == Reference.PACKET_REQUEST_CONNECTION)
-        {
-            MatterNetworkHelper.handleConnectionRequestPacket(worldObj,this,packet,from);
-        }
+        networkComponent.queuePacket(packet,from);
     }
 
     @Override
@@ -421,27 +351,9 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     {
         return 0;
     }
+    //endregion
 
-    @Override
-    public void addInfo(World world, double x, double y, double z, List<String> infos)
-    {
-        int patternCount = 0;
-        for (ItemStack patternDrive : getPatternStorageList())
-        {
-            if (patternDrive != null) {
-                patternCount += MatterOverdriveItems.pattern_drive.getItemsAsNBT(patternDrive).tagCount();
-            }
-        }
-        if (patternCount > 0)
-        {
-            infos.add(patternCount + "xPatterns");
-        }else
-        {
-            infos.add("No Patterns.");
-        }
-
-    }
-
+    //region Events
     @Override
     public void onScan(World world, double x, double y, double z, EntityPlayer player, ItemStack scanner) {
 
@@ -460,6 +372,42 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     public void onDestroyed() {
 
+    }
+
+    @Override
+    protected void onAwake(Side side)
+    {
+        if (side.isServer()) {
+            MatterNetworkHelper.broadcastConnection(worldObj, this);
+        }
+    }
+
+    @Override
+    protected void onActiveChange() {
+
+    }
+    //endregion
+
+    //region Getters and Setters
+    @Override
+    public String getSound() {
+        return null;
+    }
+
+    @Override
+    public boolean hasSound() {
+        return false;
+    }
+
+    @Override
+    public boolean isActive()
+    {
+        return energyStorage.getEnergyStored() > 0;
+    }
+
+    @Override
+    public float soundVolume() {
+        return 0;
     }
     //endregion
 }

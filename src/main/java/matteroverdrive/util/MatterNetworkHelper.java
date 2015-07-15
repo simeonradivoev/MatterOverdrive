@@ -7,7 +7,6 @@ import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
-import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -52,40 +51,6 @@ public class MatterNetworkHelper
     public static boolean broadcastTaskInDirection(World world,byte queueID, MatterNetworkTask task, IMatterNetworkDispatcher dispatcher, ForgeDirection direction)
     {
         return broadcastTaskInDirection(world, new MatterNetworkTaskPacket(dispatcher, task,queueID,direction), dispatcher, direction);
-    }
-
-    public static boolean handleConnectionRequestPacket(World world,IMatterNetworkConnection connection,MatterNetworkRequestPacket packet,ForgeDirection direction)
-    {
-        IMatterNetworkConnection sender = packet.getSender(world);
-
-        if (packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION || packet.getRequestType() == Reference.PACKET_REQUEST_CONNECTION) {
-
-            if (packet.getRequest() instanceof Class)
-            {
-                if (((Class)packet.getRequest()).isInstance(connection))
-                {
-                    if (sender instanceof IMatterNetworkClient) {
-                        MatterNetwrokResponcePacket responcePacket = new MatterNetwrokResponcePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
-
-                        if (((IMatterNetworkClient) sender).canPreform(responcePacket)) {
-                            ((IMatterNetworkClient) sender).queuePacket(responcePacket, packet.getSenderPort());
-
-                        }
-                    }
-                    return true;
-                }
-            } else {
-                if (sender instanceof IMatterNetworkClient) {
-                    MatterNetwrokResponcePacket responcePacket = new MatterNetwrokResponcePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
-                    if (((IMatterNetworkClient) sender).canPreform(responcePacket)) {
-                        ((IMatterNetworkClient) sender).queuePacket(responcePacket, packet.getSenderPort());
-
-                    }
-                }
-                return true;
-            }
-        }
-        return false;
     }
 
     public static void broadcastConnection(World world,IMatterNetworkConnection connection)
