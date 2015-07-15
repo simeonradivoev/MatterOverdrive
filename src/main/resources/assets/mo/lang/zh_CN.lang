@@ -26,7 +26,8 @@ item.tritanium_dust.name=钛金粉
 item.pattern_drive.name=模式存储单元
 item.pattern_drive.details=可存储2个物品模式
 item.earl_gray_tea.name=格雷伯爵茶
-item.romulan_ale.name=罗姆兰麦酒
+item.romulan_ale.name=罗慕兰麦酒
+item.romulan_ale.name=原产自罗慕兰醇香醉人的酒饮料
 item.security_protocol.empty.name=安全协定
 item.security_protocol.claim.name=安全协定[设置]
 item.security_protocol.claim.description=设置机器
@@ -46,9 +47,17 @@ item.rouge_android_part.chest.name=机器人躯干
 item.forcefield_emitter.name=力场发生器
 item.hc_battery.name=高能电池
 item.ship_factory.name=舰船工厂
+item.ship_factory.details=允许舰船的建造
 item.scout_ship.name=侦察飞船
+item.scout_ship.details=快速飞船, 用于侦察
 item.ship_colonizer.name=殖民飞船
+item.ship_colonizer.details=用于在抵达后建造基地以占领星球
 item.building_base.name=基地
+item.building_base.details=主建筑, 所有东西的前置需求
+item.android_pill_red.name=红色药丸
+item.android_pill_red.details=吃下红色药丸后你将无所畏惧
+item.android_pill_blue.name=蓝色药丸
+item.android_pill_blue.details=吃下蓝色药丸后你会一无所知的在床上醒来
 
 item.upgrade.speed.name=速度升级
 item.upgrade.power.name=能耗升级
@@ -60,6 +69,7 @@ item.weapon_module_color.name=颜色模块
 item.weapon_module_barrel.damage.name=双锂聚焦矩阵
 item.weapon_module_barrel.fire.name=高能燃烧弹
 item.weapon_module_barrel.explosion.name=爆裂电磁炮
+item.weapon_module_barrel.heal.name=再生转换器
 
 ##########################################################################################################
 # Tile Entities
@@ -158,16 +168,22 @@ entity.mad_scientist.line.fail.1=我绝不会把我的部件给你!
 entity.mad_scientist.line.fail.2=你需要所有的机器人部件，不然你会死亡!
 entity.mad_scientist.line.fail.3=少了这些零部件我什么都做不了!
 entity.mad_scientist.line.0=我不和人类打交道. 但如果你给我全套机器人部件，我可以帮助你摆脱肉身!
-entity.mad_scientist.line.1=不! 简直无法直视. 你太脆弱了! 带给我一套机器人部件，不然一切都迟了!
+entity.mad_scientist.line.1=天哪! 简直无法直视. 你太脆弱了! 带给我一套机器人部件，不然一切都迟了!
 entity.mad_scientist.line.2=你还好么? 你看起来糟透了! 你是怎么在这具肉身坚持下来的? 如果你给我带来一套机器人组件, 或许我能尝试帮你解决这个问题.
 entity.mad_scientist.line.success.0=完成了. 现在离开去告知他人吧!
 entity.mad_scientist.line.success.1=它活了! 它活了! 哇哈哈哈哈哈! 它活了!
 entity.mad_scientist.line.success.2=你现在是我们中的一员! 去吧我的孩子!
 entity.mad_scientist.line.success.3=一切看起来都很好, 就是忘记把你鼻子按上去了.
 
+
+##########################################################################################################
+# Creative Panels
 itemGroup.tabMatterOverdrive=超能物质
 itemGroup.tabMatterOverdrive_modules=超能物质|模块
 itemGroup.tabMatterOverdrive_upgrades=超能物质|升级
+itemGroup.tabMatterOverdrive_food=超能物质|食物
+itemGroup.tabMatterOverdrive_ships=超能物质|舰船
+itemGroup.tabMatterOverdrive_buildings=超能物质|建筑
 
 ##########################################################################################################
 # Upgrade Types
@@ -189,6 +205,7 @@ weaponstat.4.name=火焰伤害
 weaponstat.5.name=方块破坏
 weaponstat.6.name=爆炸伤害
 weaponstat.7.name=射速
+weaponstat.8.name=治疗
 
 ##########################################################################################################
 # GUI
@@ -243,10 +260,10 @@ gui.label.button.reset=重置
 gui.label.button.scout=派遣侦察飞船
 
 ### GUI Tooltips ###
-gui.tooltip.starmap.no_ship_space=Not enough ship spaces
-gui.tooltip.starmap.no_building_space=Not enough building spaces
-gui.tooltip.starmap.no_ship_factory=No ship factory
-gui.tooltip.starmap.has_base=Base building already present
+gui.tooltip.starmap.no_ship_space=没有足够的舰船空间
+gui.tooltip.starmap.no_building_space=没有足够的建造空间
+gui.tooltip.starmap.no_ship_factory=无舰船工厂
+gui.tooltip.starmap.has_base=基地建造已经存在
 
 ##########################################################################################################
 # Modules
@@ -271,42 +288,46 @@ module.other.name=其他模块
 ##########################################################################################################
 # Bioparts
 
-biopart.head.name=头部
-biopart.arms.name=手臂
-biopart.legs.name=腿部
-biopart.chest.name=胸部
-biopart.other.name=其他
+biopart.head.name=头部组件
+biopart.arms.name=手臂组件
+biopart.legs.name=腿部组件
+biopart.chest.name=胸部组件
+biopart.other.name=其他组件
 biopart.battery.name=能量单元
 
 ##########################################################################################################
 # Biostats
 
 biotic_stat.teleport.name=末影传送
-biotic_stat.teleport.details=点击 '$0' 键进行短距离传送 /n/每次传送消耗 $1 /n/需要一个储能超过 $1 的电池
+biotic_stat.teleport.details=点击 '%1$s' 键进行短距离传送 /n/每次传送消耗 %2$s /n/需要一个输出超过 %2$s 的电池
 biotic_stat.nanobots.name=纳米机器人
 biotic_stat.nanobots.details=使用能量和等离子物质治疗伤口
 biotic_stat.nano_armor.name=纳米护甲
-biotic_stat.nano_armor.details=吸收 $0 的攻击伤害
+biotic_stat.nano_armor.details=吸收 %1$s 的攻击伤害
 biotic_stat.floatation.name=气囊
 biotic_stat.floatation.details=能够浮在水面上
 biotic_stat.speed.name=超频
-biotic_stat.speed.details=移动速度提升 $0
+biotic_stat.speed.details=移动速度提升 %1$s
 biotic_stat.high_jump.name=蓄力弹跳
-biotic_stat.high_jump.details=潜行时跳的更高 /n/每次弹跳消耗 $0 /n/需要一个储能超过 $0 的电池
+biotic_stat.high_jump.details=潜行时跳的更高 /n/每次弹跳消耗 %1$s /n/需要一个输出超过 %1$s 的电池
 biotic_stat.equalizer.name=时空均衡器
 biotic_stat.equalizer.details=内置时空均衡器 /n/用于抵消来自于 /n/重力异常点的影响
 biotic_stat.shield.name=粒子护盾
-biotic_stat.shield.details=减免弹射物伤害 /n/请按住Shift+'$0'键开启
+biotic_stat.shield.details=减免弹射物伤害
 biotic_stat.attack.name=伤害增强
 biotic_stat.attack.details=攻击伤害提升 %1$s
+biotic_stat.cloak.name=隐形斗篷
+biotic_stat.cloak.details=允许玩家隐形. /n/激活时, 消耗 %1$s 每tick /n/需要一个输出超过 %1$s 的电池
+biotic_stat.nightvision.name=夜视
+biotic_stat.nightvision.details=允许玩家看穿黑暗. /n/激活时, 消耗 %1$s 每tick /n/需要一个输出超过 %1$s 的电池
 
 ##########################################################################################################
 # Deaths
 
+death.attack.phaser=%1$s 被 %2$s 分解掉了
 death.attack.phaser.item=%1$s 被 %2$s 使用 %3$s 分解掉了
-death.attack.phaser.item=%1$s was disintegrated by %2$s using %3$s
 death.attack.blackHole=%1$s 被巨大的重力扭曲碾碎了
-death.attack.android_transformation=%1$s 结束了他作为生物的存在
+death.attack.android_transformation=%1$s 结束了他作为生命体的存在
 
 ##########################################################################################################
 # Tasks
@@ -358,5 +379,5 @@ alert.not_android=检测到生物实体! 拒绝访问!
 alert.no_rights.brake=只有拥有者可以破坏 $0
 alert.no_rights.dismantle=只有拥有者可以拆除 $0
 alert.new_update=有新版本可用!
-alert.starmap.ship_arrive=&3%1$s &r已经到达 &3%2$s!
-alert.starmap.on_build=§3%1$s §r 已在 §3%2$s§r建立!
+alert.starmap.ship_arrive=§3%1$s &r 已经到达 §3%1$s!
+alert.starmap.on_build=§3%1$s §r 已在 §3%2$s§r 建立!
