@@ -19,15 +19,17 @@
 package matteroverdrive.data.biostats;
 
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
  * Created by Simeon on 5/30/2015.
  */
-public class BioticStatHighJump extends AbstractBioticStat {
+public class BioticStatHighJump extends AbstractBioticStat implements IConfigSubscriber {
 
-    public final static int ENERGY_PER_JUMP = 1024;
+    public static int ENERGY_PER_JUMP = 1024;
 
     public BioticStatHighJump(String name, int xp)
     {
@@ -81,5 +83,11 @@ public class BioticStatHighJump extends AbstractBioticStat {
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
         return false;
+    }
+
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
+    {
+        ENERGY_PER_JUMP = config.getInt("high_jump_energy",config.CATEGORY_ABILITIES,1024,"The energy cost of each High Jump");
     }
 }

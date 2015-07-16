@@ -91,7 +91,7 @@ public class MatterOverdrive
 		MatterNetworkRegistry.register();
         packetPipeline.registerPackets();
 		AndroidStatRegistry.init();
-        AndroidStatRegistry.registerAll();
+        AndroidStatRegistry.registerAll(configHandler);
 
 		MatterOverdriveMatter.init(configHandler);
 		MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);

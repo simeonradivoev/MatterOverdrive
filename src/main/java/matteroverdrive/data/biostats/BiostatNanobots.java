@@ -19,15 +19,17 @@
 package matteroverdrive.data.biostats;
 
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.util.IConfigSubscriber;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
  * Created by Simeon on 5/29/2015.
  */
-public class BiostatNanobots extends AbstractBioticStat
+public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscriber
 {
     public final static float REGEN_AMOUNT_PER_TICK = 0.03f;
-    public final static int ENERGY_PER_REGEN = 32;
+    public static int ENERGY_PER_REGEN = 32;
 
     public BiostatNanobots(String name, int xp)
     {
@@ -75,5 +77,11 @@ public class BiostatNanobots extends AbstractBioticStat
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
         return false;
+    }
+
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
+    {
+        ENERGY_PER_REGEN = config.getInt("heal_energy_per_regen",config.CATEGORY_ABILITIES,32,"The energy cost of each heal by the Nanobots ability");
     }
 }

@@ -23,10 +23,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -45,10 +47,10 @@ import java.util.UUID;
 /**
  * Created by Simeon on 6/9/2015.
  */
-public class BioticStatShield extends AbstractBioticStat
+public class BioticStatShield extends AbstractBioticStat implements IConfigSubscriber
 {
-    public static final int ENERGY_PER_TICK = 64;
-    public static final int ENERGY_PER_DAMAGE = 256;
+    public static int ENERGY_PER_TICK = 64;
+    public static int ENERGY_PER_DAMAGE = 256;
     public static final String TAG_SHIELD = "Shield";
     public static final String TAG_HITS = "Hits";
     @SideOnly(Side.CLIENT)
@@ -274,5 +276,12 @@ public class BioticStatShield extends AbstractBioticStat
     public boolean showOnHud(AndroidPlayer android,int level)
     {
         return android.getActiveStat() != null && android.getActiveStat().equals(this);
+    }
+
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
+    {
+        ENERGY_PER_DAMAGE = config.getInt("shield_energy_per_damage",config.CATEGORY_ABILITIES,256,"The energy cost of each hit to the shield");
+        ENERGY_PER_TICK = config.getInt("shield_energy_per_tick",config.CATEGORY_ABILITIES,64,"The energy cost of the shield per tick");
     }
 }

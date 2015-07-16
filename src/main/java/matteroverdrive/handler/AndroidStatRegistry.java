@@ -105,7 +105,7 @@ public class AndroidStatRegistry
         cloak.setRoot(shield);
     }
 
-    public static void registerAll()
+    public static void registerAll(ConfigurationHandler configurationHandler)
     {
         registerStat(teleport);
         registerStat(nanobots);
@@ -118,6 +118,13 @@ public class AndroidStatRegistry
         registerStat(attack);
         registerStat(cloak);
         registerStat(nightvision);
+
+        configurationHandler.subscribe(teleport);
+        configurationHandler.subscribe(shield);
+        configurationHandler.subscribe(nanobots);
+        configurationHandler.subscribe(cloak);
+        configurationHandler.subscribe(highJump);
+        configurationHandler.subscribe(nightvision);
     }
 
     public static void registerIcons(TextureMap holoIcons)

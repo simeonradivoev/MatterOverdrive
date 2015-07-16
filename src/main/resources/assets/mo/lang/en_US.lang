@@ -369,6 +369,7 @@ config.client.name=Client Options
 config.server.name=Server Options
 config.starmap.name=Star Map Options
 config.ore_gen_blacklist.name=Ore Dimension Blacklist
+config.abilities.name=Android Abilities
 
 ##########################################################################################################
 # Chat Alerts
