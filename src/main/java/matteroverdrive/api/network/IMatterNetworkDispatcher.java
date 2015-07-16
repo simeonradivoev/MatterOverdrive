@@ -5,7 +5,7 @@ import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 /**
  * Created by Simeon on 4/20/2015.
  */
-public interface IMatterNetworkDispatcher extends IMatterNetworkConnection , IMatterNetworkHandler
+public interface IMatterNetworkDispatcher<T extends MatterNetworkTask> extends IMatterNetworkConnection , IMatterNetworkHandler
 {
-    MatterNetworkTaskQueue<? extends MatterNetworkTask> getQueue(int queueID);
+    MatterNetworkTaskQueue<T> getTaskQueue(int queueID);
 }

@@ -18,20 +18,31 @@
 
 package matteroverdrive.matter_network.components;
 
+import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
+import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 7/15/2015.
  */
-public abstract class MatterNetworkComponentClient implements IMatterNetworkClient
+public abstract class MatterNetworkComponentClient<T extends IMatterNetworkClient> implements IMatterNetworkClient
 {
-    public boolean manageRequestPackets(IMatterNetworkConnection connection,World world,MatterNetworkRequestPacket packet,ForgeDirection direction)
+    T rootClient;
+
+    public MatterNetworkComponentClient(T rootClient)
+    {
+        this.rootClient = rootClient;
+    }
+
+    public boolean manageBasicRequestPacketsResponses(IMatterNetworkConnection connection, World world, MatterNetworkRequestPacket packet, ForgeDirection direction)
     {
         IMatterNetworkConnection sender = packet.getSender(world);
 
@@ -42,10 +53,10 @@ public abstract class MatterNetworkComponentClient implements IMatterNetworkClie
                 if (((Class)packet.getRequest()).isInstance(connection))
                 {
                     if (sender instanceof IMatterNetworkClient) {
-                        MatterNetworkResponsePacket responcePacket = new MatterNetworkResponsePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
+                        MatterNetworkResponsePacket responsePacket = new MatterNetworkResponsePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
 
-                        if (((IMatterNetworkClient) sender).canPreform(responcePacket)) {
-                            ((IMatterNetworkClient) sender).queuePacket(responcePacket, packet.getSenderPort());
+                        if (((IMatterNetworkClient) sender).canPreform(responsePacket)) {
+                            ((IMatterNetworkClient) sender).queuePacket(responsePacket, packet.getSenderPort());
 
                         }
                     }
@@ -53,9 +64,9 @@ public abstract class MatterNetworkComponentClient implements IMatterNetworkClie
                 }
             } else {
                 if (sender instanceof IMatterNetworkClient) {
-                    MatterNetworkResponsePacket responcePacket = new MatterNetworkResponsePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
-                    if (((IMatterNetworkClient) sender).canPreform(responcePacket)) {
-                        ((IMatterNetworkClient) sender).queuePacket(responcePacket, packet.getSenderPort());
+                    MatterNetworkResponsePacket responsePacket = new MatterNetworkResponsePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
+                    if (((IMatterNetworkClient) sender).canPreform(responsePacket)) {
+                        ((IMatterNetworkClient) sender).queuePacket(responsePacket, packet.getSenderPort());
 
                     }
                 }
@@ -64,4 +75,51 @@ public abstract class MatterNetworkComponentClient implements IMatterNetworkClie
         }
         return false;
     }
+
+    protected abstract void manageResponsesQueuing(MatterNetworkResponsePacket packet);
+    protected abstract void manageTaskPacketQueuing(MatterNetworkTaskPacket packet,MatterNetworkTask task);
+    protected abstract void manageRequestsQueuing(MatterNetworkRequestPacket packet);
+
+    public void manageBasicPacketsQueuing(IMatterNetworkConnection connection,World world,MatterNetworkPacket packet,ForgeDirection direction)
+    {
+        packet.addToPath(rootClient, direction);
+
+        if (packet instanceof MatterNetworkRequestPacket)
+        {
+            manageRequestsQueuing((MatterNetworkRequestPacket)packet);
+            manageBasicRequestPacketsResponses(connection, world, (MatterNetworkRequestPacket) packet, direction);
+        }
+        else if (packet instanceof MatterNetworkResponsePacket)
+        {
+            manageResponsesQueuing((MatterNetworkResponsePacket)packet);
+        }
+        else if (packet instanceof MatterNetworkTaskPacket)
+        {
+            manageTaskPacketQueuing((MatterNetworkTaskPacket) packet, ((MatterNetworkTaskPacket) packet).getTask(world));
+        }
+    }
+
+    @Override
+    public boolean canPreform(MatterNetworkPacket packet)
+    {
+        if (packet.getReceiverPos() != null)
+        {
+            return packet.getReceiverPos().equals(getPosition());
+        }
+        return true;
+    }
+
+    //region Getters and Setters
+    @Override
+    public BlockPosition getPosition()
+    {
+        return rootClient.getPosition();
+    }
+
+    @Override
+    public boolean canConnectFromSide(ForgeDirection side)
+    {
+        return rootClient.canConnectFromSide(side);
+    }
+    //endregion
 }

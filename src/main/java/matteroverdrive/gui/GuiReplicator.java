@@ -73,7 +73,7 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
     {
         super.registerPages(container,machine);
 
-        pagePackets = new PageTasks(this,10,0,xSize,ySize,machine.getQueue((byte) 0));
+        pagePackets = new PageTasks(this,10,0,xSize,ySize,machine.getTaskQueue((byte) 0));
         pagePackets.setName("Tasks");
         AddPage(pagePackets, ClientProxy.holoIcons.getIcon("page_icon_tasks"), MOStringHelper.translateToLocal("gui.tooltip.page.tasks")).setIconColor(Reference.COLOR_MATTER);
     }
@@ -148,7 +148,7 @@ public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
     {
         super.updateElementInformation();
 
-        MatterNetworkTaskReplicatePattern task = machine.getQueue((byte)0).peek();
+        MatterNetworkTaskReplicatePattern task = machine.getTaskQueue((byte) 0).peek();
         if (task != null)
         {
             NBTTagCompound nbt = machine.getInternalPatternStorage();

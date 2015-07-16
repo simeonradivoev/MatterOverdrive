@@ -88,6 +88,7 @@ public class Reference
     public static final int PACKET_REQUEST_CONNECTION = 0;
 	public static final int PACKET_REQUEST_PATTERN_SEARCH = 1;
     public static final int PACKET_REQUEST_NEIGHBOR_CONNECTION = 2;
+	public static final int PACKET_REQUEST_VALID_PATTERN_DESTINATION = 3;
     //endregion
 
 	//region Broadcast Packet Type

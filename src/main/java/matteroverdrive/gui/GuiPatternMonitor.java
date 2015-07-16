@@ -19,9 +19,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Created by Simeon on 4/26/2015.
@@ -55,7 +52,7 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
     {
         super.registerPages(container,machine);
 
-        pageTasks = new PageTasks(this,0,0,xSize,ySize,machine.getQueue((byte)0));
+        pageTasks = new PageTasks(this,0,0,xSize,ySize,machine.getTaskQueue((byte) 0));
         pageTasks.setName("Tasks");
         AddPage(pageTasks, ClientProxy.holoIcons.getIcon("page_icon_tasks"), MOStringHelper.translateToLocal("gui.tooltip.page.tasks")).setIconColor(Reference.COLOR_MATTER);
     }

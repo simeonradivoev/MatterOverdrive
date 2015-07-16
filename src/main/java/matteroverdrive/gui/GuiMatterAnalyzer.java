@@ -32,7 +32,7 @@ public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnaly
     public void registerPages(MOBaseContainer container,TileEntityMachineMatterAnalyzer machine)
     {
         super.registerPages(container,machine);
-        pageTasks = new PageTasks(this,0,0,xSize,ySize,machine.getQueue((byte)0));
+        pageTasks = new PageTasks(this,0,0,xSize,ySize,machine.getTaskQueue((byte) 0));
         pageTasks.setName("Tasks");
         AddPage(pageTasks, ClientProxy.holoIcons.getIcon("page_icon_tasks"),"gui.tooltip.page.tasks").setIconColor(Reference.COLOR_MATTER);
     }

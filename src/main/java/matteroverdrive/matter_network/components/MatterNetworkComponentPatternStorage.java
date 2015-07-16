@@ -19,7 +19,6 @@
 package matteroverdrive.matter_network.components;
 
 import cofh.lib.util.TimeTracker;
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkClient;
@@ -31,6 +30,7 @@ import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
 import matteroverdrive.tile.TileEntityMachinePatternStorage;
+import matteroverdrive.util.MatterDatabaseHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,30 +40,82 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 7/15/2015.
  */
-public class MatterNetworkComponentPatternStorage extends MatterNetworkComponentClient
+public class MatterNetworkComponentPatternStorage extends MatterNetworkComponentClient<TileEntityMachinePatternStorage>
 {
-    private TileEntityMachinePatternStorage patternStorage;
     private TimeTracker taskProcessingTracker;
 
     public MatterNetworkComponentPatternStorage(TileEntityMachinePatternStorage patternStorage)
     {
-        this.patternStorage = patternStorage;
+        super(patternStorage);
         taskProcessingTracker = new TimeTracker();
     }
 
     @Override
+    protected void manageResponsesQueuing(MatterNetworkResponsePacket packet)
+    {
+
+    }
+
+    @Override
+    protected void manageTaskPacketQueuing(MatterNetworkTaskPacket packet, MatterNetworkTask task)
+    {
+        if (taskProcessingTracker.hasDelayPassed(rootClient.getWorldObj(), rootClient.TASK_PROCESS_DELAY) && task.getState().belowOrEqual(MatterNetworkTaskState.QUEUED)) {
+            if (task instanceof MatterNetworkTaskStorePattern) {
+                if (rootClient.addItem(((MatterNetworkTaskStorePattern) task).getItemStack(), ((MatterNetworkTaskStorePattern) task).getProgress(), false, null)) {
+                    //if the task is finished and the item is in the database
+                    task.setState(MatterNetworkTaskState.FINISHED);
+                } else {
+                    //if the item could not be added to the database for some reason, and has passed the canProcess check
+                    //then reset the task and set it to waiting
+                    task.setState(MatterNetworkTaskState.WAITING);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void manageRequestsQueuing(MatterNetworkRequestPacket packet)
+    {
+        if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH)
+        {
+            if (packet.getRequest() instanceof int[]) {
+                int[] array = (int[]) packet.getRequest();
+                NBTTagCompound tagCompound = rootClient.getItemAsNBT(new ItemStack(Item.getItemById(array[0]), 1, array[1]));
+                if (tagCompound != null && packet.getSender(rootClient.getWorldObj()) instanceof IMatterNetworkClient) {
+                    ((IMatterNetworkClient) packet.getSender(rootClient.getWorldObj())).queuePacket(new MatterNetworkResponsePacket(rootClient, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), tagCompound, packet.getSenderPort()), ForgeDirection.UNKNOWN);
+                }
+            }
+        }else if (packet.getRequestType() == Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION)
+        {
+            if (packet.getRequest() instanceof NBTTagCompound)
+            {
+                NBTTagCompound pattern = (NBTTagCompound)packet.getRequest();
+                NBTTagCompound tagCompound = rootClient.getItemAsNBT(ItemStack.loadItemStackFromNBT(pattern));
+                if (tagCompound != null
+                        && MatterDatabaseHelper.GetProgressFromNBT(tagCompound) >= MatterDatabaseHelper.MAX_ITEM_PROGRESS
+                        && packet.getSender(rootClient.getWorldObj()) instanceof IMatterNetworkClient)
+                {
+                    ((IMatterNetworkClient) packet.getSender(rootClient.getWorldObj())).queuePacket(new MatterNetworkResponsePacket(rootClient, Reference.PACKET_RESPONCE_INVALID,packet.getRequestType(), tagCompound,packet.getSenderPort()), ForgeDirection.UNKNOWN);
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean canPreform(MatterNetworkPacket packet) {
-        if (patternStorage.getRedstoneActive()) {
+        if (super.canPreform(packet) && rootClient.getRedstoneActive())
+        {
             if (packet instanceof MatterNetworkTaskPacket) {
-                if (((MatterNetworkTaskPacket) packet).getTask(patternStorage.getWorldObj()) instanceof MatterNetworkTaskStorePattern) {
-                    MatterNetworkTaskStorePattern task = (MatterNetworkTaskStorePattern) ((MatterNetworkTaskPacket) packet).getTask(patternStorage.getWorldObj());
-                    return patternStorage.addItem(task.getItemStack(), task.getProgress(), true, null);
+                if (((MatterNetworkTaskPacket) packet).getTask(rootClient.getWorldObj()) instanceof MatterNetworkTaskStorePattern) {
+                    MatterNetworkTaskStorePattern task = (MatterNetworkTaskStorePattern) ((MatterNetworkTaskPacket) packet).getTask(rootClient.getWorldObj());
+                    return rootClient.addItem(task.getItemStack(), task.getProgress(), true, null);
                 }
             } else if (packet instanceof MatterNetworkRequestPacket) {
                 MatterNetworkRequestPacket requestPacket = (MatterNetworkRequestPacket) packet;
                 return requestPacket.getRequestType() == Reference.PACKET_REQUEST_CONNECTION
                         || requestPacket.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH
-                        || requestPacket.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
+                        || requestPacket.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION
+                        || requestPacket.getRequestType() == Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION;
             }
         }
         return false;
@@ -72,55 +124,7 @@ public class MatterNetworkComponentPatternStorage extends MatterNetworkComponent
     @Override
     public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
     {
-        if (packet != null && packet.isValid(patternStorage.getWorldObj()))
-        {
-            if (packet instanceof MatterNetworkTaskPacket) {
-                if (taskProcessingTracker.hasDelayPassed(patternStorage.getWorldObj(), patternStorage.TASK_PROCESS_DELAY) && ((MatterNetworkTaskPacket) packet).getTask(patternStorage.getWorldObj()).getState().belowOrEqual(MatterNetworkTaskState.QUEUED)) {
-                    MatterNetworkTask task = ((MatterNetworkTaskPacket) packet).getTask(patternStorage.getWorldObj());
-                    if (task instanceof MatterNetworkTaskStorePattern) {
-                        if (patternStorage.addItem(((MatterNetworkTaskStorePattern) task).getItemStack(), ((MatterNetworkTaskStorePattern) task).getProgress(), false, null)) {
-                            //if the task is finished and the item is in the database
-                            task.setState(MatterNetworkTaskState.FINISHED);
-                        } else {
-                            //if the item could not be added to the database for some reason, and has passed the canProcess check
-                            //then reset the task and set it to waiting
-                            task.setState(MatterNetworkTaskState.WAITING);
-                        }
-                    }
-                }
-            }
-            else if (packet instanceof MatterNetworkRequestPacket)
-            {
-                manageRequests((MatterNetworkRequestPacket)packet,from);
-            }
-        }
-    }
-
-    private void manageRequests(MatterNetworkRequestPacket packet,ForgeDirection from)
-    {
-        if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH)
-        {
-            if (packet.getRequest() instanceof int[]) {
-                int[] array = (int[]) packet.getRequest();
-                NBTTagCompound tagCompound = patternStorage.getItemAsNBT(new ItemStack(Item.getItemById(array[0]), 1, array[1]));
-                if (tagCompound != null && packet.getSender(patternStorage.getWorldObj()) instanceof IMatterNetworkClient) {
-                    ((IMatterNetworkClient) packet.getSender(patternStorage.getWorldObj())).queuePacket(new MatterNetworkResponsePacket(patternStorage, Reference.PACKET_RESPONCE_VALID,packet.getRequestType(), tagCompound,packet.getSenderPort()), ForgeDirection.UNKNOWN);
-                }
-            }
-        }else if (packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION || packet.getRequestType() == Reference.PACKET_REQUEST_CONNECTION)
-        {
-            manageRequestPackets(patternStorage,patternStorage.getWorldObj(),packet,from);
-        }
-    }
-
-    @Override
-    public BlockPosition getPosition() {
-        return patternStorage.getPosition();
-    }
-
-    @Override
-    public boolean canConnectFromSide(ForgeDirection side) {
-        return patternStorage.canConnectFromSide(side);
+        manageBasicPacketsQueuing(rootClient,rootClient.getWorldObj(),packet,from);
     }
 
     @Override

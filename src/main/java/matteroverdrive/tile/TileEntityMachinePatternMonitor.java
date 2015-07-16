@@ -98,7 +98,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> getQueue(int id)
+    public MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> getTaskQueue(int id)
     {
         return taskQueue;
     }

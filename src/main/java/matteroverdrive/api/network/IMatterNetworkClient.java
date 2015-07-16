@@ -1,6 +1,7 @@
 package matteroverdrive.api.network;
 
 import matteroverdrive.matter_network.MatterNetworkPacket;
+import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**

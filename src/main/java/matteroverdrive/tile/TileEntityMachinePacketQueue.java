@@ -25,8 +25,12 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.api.network.IMatterNetworkDispatcher;
+import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkPacketQueue;
+import matteroverdrive.matter_network.MatterNetworkQueue;
+import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentQueue;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -113,7 +117,7 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     @Override
     public int onNetworkTick(World world,TickEvent.Phase phase)
     {
-        return networkComponent.onNetworkTick(world,phase);
+        return networkComponent.onNetworkTick(world, phase);
     }
 
     @Override
@@ -132,6 +136,11 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     public BlockPosition getPosition()
     {
         return new BlockPosition(xCoord,yCoord,zCoord);
+    }
+
+    public MatterNetworkPacketQueue<MatterNetworkPacket> getPacketQueue()
+    {
+        return packetQueue;
     }
     //endregion
 
@@ -176,11 +185,6 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
 
     @Override
     public float soundVolume() { return 0;}
-
-    public MatterNetworkPacketQueue<MatterNetworkPacket> getQueue()
-    {
-        return packetQueue;
-    }
 
     public BlockPosition getConnection(int id)
     {

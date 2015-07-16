@@ -19,6 +19,7 @@
 package matteroverdrive.matter_network;
 
 import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.util.MOLog;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

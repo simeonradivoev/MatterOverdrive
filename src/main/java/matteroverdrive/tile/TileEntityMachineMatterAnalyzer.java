@@ -28,6 +28,7 @@ import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.data.Inventory;
@@ -35,6 +36,7 @@ import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.handler.SoundHandler;
 import matteroverdrive.items.MatterScanner;
+import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentAnalyzer;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
@@ -51,10 +53,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 3/16/2015.
  */
-public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory, IMatterNetworkDispatcher
+public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory, IMatterNetworkDispatcher<MatterNetworkTaskStorePattern>, IMatterNetworkClient
 {
     public static final int BROADCAST_DELAY = 60;
     public static final int BROADCAST_WEATING_DELAY = 180;
+    public static final int VALID_LOCATION_CHECK_DELAY = 200;
 
     public static final int PROGRESS_AMOUNT_PER_ITEM = 20;
     public static final int ENERGY_STORAGE = 512000;
@@ -68,6 +71,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     private boolean isActive = false;
     private MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> taskQueueSending;
     private MatterNetworkComponentAnalyzer networkComponent;
+    private boolean hasValidPatternDestination;
 
     public TileEntityMachineMatterAnalyzer()
     {
@@ -78,6 +82,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         taskQueueSending = new MatterNetworkTaskQueue<>(this,1);
         redstoneMode = Reference.MODE_REDSTONE_LOW;
         networkComponent = new MatterNetworkComponentAnalyzer(this);
+
     }
 
     @Override
@@ -136,7 +141,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
             }
             else
             {
-                if (taskQueueSending.remaintingCapacity() > 0)
+                if (taskQueueSending.remaintingCapacity() > 0 && hasValidPatternDestination)
                 {
                     return  true;
                 }
@@ -282,9 +287,21 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> getQueue(int id)
+    public MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> getTaskQueue(int id)
     {
         return taskQueueSending;
+    }
+
+    @Override
+    public boolean canPreform(MatterNetworkPacket packet)
+    {
+        return networkComponent.canPreform(packet);
+    }
+
+    @Override
+    public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
+    {
+        networkComponent.queuePacket(packet,from);
     }
     //endregion
 
@@ -329,5 +346,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public boolean hasSound() {return true;}
     @Override
     public float soundVolume() { return 0.3f;}
+    public void setHasValidPatternDestination(boolean hasValidPatternDestination){this.hasValidPatternDestination = hasValidPatternDestination;}
+    public boolean getHasValidPatternDestination(){return hasValidPatternDestination;}
     //endregion
 }

@@ -20,7 +20,6 @@ package matteroverdrive.matter_network.components;
 
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.MathHelper;
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
@@ -39,30 +38,48 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 7/15/2015.
  */
-public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
+public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<TileEntityMachinePacketQueue> {
 
     public static int[] directions = {0,1,2,3,4,5};
-    private TileEntityMachinePacketQueue queue;
     private TimeTracker broadcastTracker;
 
     public MatterNetworkComponentQueue(TileEntityMachinePacketQueue queue)
     {
-        this.queue = queue;
+        super(queue);
         broadcastTracker = new TimeTracker();
+    }
+
+    @Override
+    protected void manageResponsesQueuing(MatterNetworkResponsePacket packet) {
+
+    }
+
+    @Override
+    protected void manageTaskPacketQueuing(MatterNetworkTaskPacket packet, MatterNetworkTask task) {
+
+    }
+
+    @Override
+    protected void manageRequestsQueuing(MatterNetworkRequestPacket packet) {
+
     }
 
     @Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
-        return queue.getRedstoneActive();
+        if (super.canPreform(packet))
+        {
+            return rootClient.getRedstoneActive();
+        }
+        return false;
     }
 
     @Override
     public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
     {
-        if (packet.isValid(queue.getWorldObj()))
+        if (packet.isValid(rootClient.getWorldObj()))
         {
-            if (packet instanceof MatterNetworkTaskPacket && !isInValidState(((MatterNetworkTaskPacket) packet).getTask(queue.getWorldObj()))) {
+            if (packet instanceof MatterNetworkTaskPacket && !isInValidState(((MatterNetworkTaskPacket) packet).getTask(rootClient.getWorldObj()))) {
                 return;
             }
             if (packet instanceof MatterNetworkBroadcastPacket)
@@ -72,55 +89,17 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
             }
             else if (packet instanceof MatterNetworkResponsePacket)
             {
-                if (manageResponcePackets((MatterNetworkResponsePacket)packet,from))
-                    return;
-            }else if (packet instanceof MatterNetworkRequestPacket)
-            {
-                if (manageRequestPackets(queue,queue.getWorldObj(),(MatterNetworkRequestPacket)packet,from))
+                if (manageResponsePackets((MatterNetworkResponsePacket)packet,from))
                     return;
             }
 
-            if (queue.getQueue().queue(packet)) {
-                packet.addToPath(queue, from);
-                broadcastTracker.markTime(queue.getWorldObj());
-                queue.ForceSync();
-            }
-        }
-    }
-
-    @Override
-    public BlockPosition getPosition() {
-        return queue.getPosition();
-    }
-
-    @Override
-    public boolean canConnectFromSide(ForgeDirection side) {
-        return queue.canConnectFromSide(side);
-    }
-
-    @Override
-    public int onNetworkTick(World world, TickEvent.Phase phase) {
-        int broadcastCount = 0;
-        if (phase.equals(TickEvent.Phase.END))
-        {
-            queue.getQueue().tickAllAlive(world, true);
-
-            if (broadcastTracker.hasDelayPassed(queue.getWorldObj(), getBroadcastDelay()))
+            if (rootClient.getPacketQueue().queue(packet))
             {
-                MatterNetworkPacket packet = queue.getQueue().dequeue();
-
-                if (packet != null)
-                {
-                    if (packet.isValid(queue.getWorldObj())) {
-
-                        broadcastCount += handlePacketBroadcast(world,packet);
-                    }
-
-                    queue.ForceSync();
-                }
+                packet.addToPath(rootClient, from);
+                broadcastTracker.markTime(rootClient.getWorldObj());
+                rootClient.ForceSync();
             }
         }
-        return broadcastCount;
     }
 
     protected int handlePacketBroadcast(World world,MatterNetworkPacket packet)
@@ -130,10 +109,10 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
 
         if (packet.isGuided()) {
             //check if it already has an established connection to reciver
-            for (int i = 0; i < queue.getConnections().length; i++) {
-                if (queue.getConnection(i).equals(packet.getReceiverPos()))
+            for (int i = 0; i < rootClient.getConnections().length; i++) {
+                if (rootClient.getConnection(i).equals(packet.getReceiverPos()))
                 {
-                    if (MatterNetworkHelper.broadcastTaskInDirection(queue.getWorldObj(), packet, queue, ForgeDirection.getOrientation(directions[i])))
+                    if (MatterNetworkHelper.broadcastTaskInDirection(rootClient.getWorldObj(), packet, rootClient, ForgeDirection.getOrientation(directions[i])))
                     {
                         foundReceiver = true;
                         broadcastCount++;
@@ -148,7 +127,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
                 if (packet instanceof MatterNetworkTaskPacket && !isInValidState(((MatterNetworkTaskPacket) packet).getTask(world)))
                     continue;
 
-                if (MatterNetworkHelper.broadcastTaskInDirection(queue.getWorldObj(), packet, queue, ForgeDirection.getOrientation(directions[i]))) {
+                if (MatterNetworkHelper.broadcastTaskInDirection(rootClient.getWorldObj(), packet, rootClient, ForgeDirection.getOrientation(directions[i]))) {
                     broadcastCount++;
                 }
             }
@@ -156,12 +135,12 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
         return broadcastCount;
     }
 
-    boolean manageResponcePackets(MatterNetworkResponsePacket packet,ForgeDirection direction)
+    boolean manageResponsePackets(MatterNetworkResponsePacket packet,ForgeDirection direction)
     {
         if (packet.getResponseType() == Reference.PACKET_RESPONCE_VALID && packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION)
         {
-            queue.setConnection(direction.ordinal(),packet.getSender(queue.getWorldObj()).getPosition());
-            queue.ForceSync();
+            rootClient.setConnection(direction.ordinal(),packet.getSender(rootClient.getWorldObj()).getPosition());
+            rootClient.ForceSync();
             return true;
         }
         return false;
@@ -171,8 +150,8 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
     {
         if ((packet.getBroadcastType() == Reference.PACKET_BROADCAST_CONNECTION))
         {
-            queue.setConnection(direction.ordinal(),packet.getSender(queue.getWorldObj()).getPosition());
-            queue.ForceSync();
+            rootClient.setConnection(direction.ordinal(),packet.getSender(rootClient.getWorldObj()).getPosition());
+            rootClient.ForceSync();
             return true;
         }
         return false;
@@ -180,7 +159,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
 
     private int getBroadcastDelay()
     {
-        return MathHelper.round(queue.BROADCAST_DELAY * queue.getUpgradeMultiply(UpgradeTypes.Speed));
+        return MathHelper.round(TileEntityMachinePacketQueue.BROADCAST_DELAY * rootClient.getUpgradeMultiply(UpgradeTypes.Speed));
     }
 
     private boolean isInValidState(MatterNetworkTask task)
@@ -189,5 +168,30 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient {
             return task.getState() == MatterNetworkTaskState.WAITING;
         }
         return false;
+    }
+
+    @Override
+    public int onNetworkTick(World world, TickEvent.Phase phase)
+    {
+        int broadcastCount = 0;
+        if (phase == TickEvent.Phase.END)
+        {
+            rootClient.getPacketQueue().tickAllAlive(world, true);
+
+            if (broadcastTracker.hasDelayPassed(rootClient.getWorldObj(), getBroadcastDelay()))
+            {
+                MatterNetworkPacket packet = rootClient.getPacketQueue().dequeue();
+                if (packet != null)
+                {
+                    if (packet.isValid(rootClient.getWorldObj())) {
+
+                        broadcastCount += handlePacketBroadcast(world,packet);
+                    }
+
+                    rootClient.ForceSync();
+                }
+            }
+        }
+        return broadcastCount;
     }
 }

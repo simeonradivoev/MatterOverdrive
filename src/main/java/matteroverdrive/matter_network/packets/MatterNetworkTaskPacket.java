@@ -1,13 +1,11 @@
 package matteroverdrive.matter_network.packets;
 
 import cofh.lib.util.position.BlockPosition;
-import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
-import matteroverdrive.matter_network.MatterNetworkPathNode;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -57,7 +55,7 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
     {
         IMatterNetworkConnection sender = getSender(world);
         if (sender != null && sender instanceof IMatterNetworkDispatcher) {
-            return ((IMatterNetworkDispatcher)(sender)).getQueue(queueID).getWithID(taskID);
+            return ((IMatterNetworkDispatcher)(sender)).getTaskQueue(queueID).getWithID(taskID);
         }
         return null;
     }
