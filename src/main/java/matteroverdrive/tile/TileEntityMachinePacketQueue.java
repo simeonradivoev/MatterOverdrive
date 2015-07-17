@@ -202,10 +202,7 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
 
     public void setConnection(int id,BlockPosition position)
     {
-        if (connections[id] != null)
-        {
-            connections[id] = position;
-        }
+        connections[id] = position;
     }
 
     public BlockPosition[] getConnections()
