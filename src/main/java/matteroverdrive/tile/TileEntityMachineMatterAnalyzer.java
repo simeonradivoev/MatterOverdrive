@@ -28,6 +28,7 @@ import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
@@ -53,7 +54,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 3/16/2015.
  */
-public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory, IMatterNetworkDispatcher<MatterNetworkTaskStorePattern>, IMatterNetworkClient
+public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory, IMatterNetworkDispatcher<MatterNetworkTaskStorePattern>, IMatterNetworkClient, IMatterNetworkBroadcaster
 {
     public static final int BROADCAST_DELAY = 60;
     public static final int BROADCAST_WEATING_DELAY = 180;
@@ -72,6 +73,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     private MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> taskQueueSending;
     private MatterNetworkComponentAnalyzer networkComponent;
     private boolean hasValidPatternDestination;
+    private String destinationFilter;
 
     public TileEntityMachineMatterAnalyzer()
     {
@@ -233,12 +235,26 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     }
 
     @Override
+    public void readConfigsFromNBT(NBTTagCompound nbt)
+    {
+        super.readConfigsFromNBT(nbt);
+        destinationFilter = nbt.getString("DestinationFilter");
+    }
+
+    @Override
     public void writeCustomNBT(NBTTagCompound tagCompound)
     {
         super.writeCustomNBT(tagCompound);
         tagCompound.setShort("AnalyzeTime", (short) analyzeTime);
         tagCompound.setBoolean("IsActive", isActive);
         taskQueueSending.writeToNBT(tagCompound);
+    }
+
+    @Override
+    public void writeConfigsToNBT(NBTTagCompound nbt)
+    {
+        super.writeConfigsToNBT(nbt);
+        nbt.setString("DestinationFilter",destinationFilter);
     }
     //endregion
 
@@ -348,5 +364,15 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public float soundVolume() { return 0.3f;}
     public void setHasValidPatternDestination(boolean hasValidPatternDestination){this.hasValidPatternDestination = hasValidPatternDestination;}
     public boolean getHasValidPatternDestination(){return hasValidPatternDestination;}
+
+    @Override
+    public String getDestinationFilter() {
+        return destinationFilter;
+    }
+
+    @Override
+    public void setDestinationFilter(String filter) {
+        destinationFilter = filter;
+    }
     //endregion
 }

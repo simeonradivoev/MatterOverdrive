@@ -1,10 +1,12 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
+import cofh.lib.gui.element.ElementTextFieldFiltered;
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.data.ScaleTexture;
+import matteroverdrive.gui.MOGuiBase;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
@@ -13,17 +15,17 @@ import org.lwjgl.input.Keyboard;
  */
 public class ElementIntegerField extends ElementBaseGroup implements IButtonHandler
 {
-    MOElementTextFieldFiltered numberField;
+    MOElementTextField numberField;
     MOElementButtonScaled incBtn;
     MOElementButtonScaled decBtn;
     int min;
     int max;
 
-    public ElementIntegerField(GuiBase gui, int posX, int posY, int width, int height,int min,int max) {
+    public ElementIntegerField(MOGuiBase gui, int posX, int posY, int width, int height,int min,int max) {
         super(gui, posX, posY, width, height);
 
-        numberField = new MOElementTextFieldFiltered(gui,18,4,width - 18 - 12,height);
-        numberField.setBacground(new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "field_over.png"), 30, 18).setOffsets(5, 5, 5, 5));
+        numberField = new MOElementTextField(gui,18,4,width - 18 - 12,height);
+        numberField.setBackground(new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "field_over.png"), 30, 18).setOffsets(5, 5, 5, 5));
         numberField.setTextOffset(4, 4);
 
         incBtn = new MOElementButtonScaled(gui,this,0,0,"Inc",16,height);
@@ -37,7 +39,7 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
         this.max = max;
     }
 
-    public ElementIntegerField(GuiBase gui, int posX, int posY, int width, int height)
+    public ElementIntegerField(MOGuiBase gui, int posX, int posY, int width, int height)
     {
         this(gui, posX, posY, width, height, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
@@ -52,7 +54,7 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
         addElement(decBtn);
     }
 
-    public ElementIntegerField(GuiBase gui, int posX, int posY) {
+    public ElementIntegerField(MOGuiBase gui, int posX, int posY) {
         this(gui, posX, posY, 120, 18, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 

@@ -27,7 +27,7 @@ import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 
-public class GuiReplicator extends MOGuiMachine<TileEntityMachineReplicator>
+public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicator>
 {
 	MOElementEnergy energyElement;
 	ElementMatterStored matterElement;

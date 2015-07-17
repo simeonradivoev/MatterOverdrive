@@ -95,7 +95,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
     public int onNetworkTick(World world, TickEvent.Phase phase) {
         manageDatabaseValidation(world);
         manageSearch(world, phase);
-        return manageBroadcast(world,phase);
+        return manageTaskBroadcast(world, phase);
     }
 
     private void manageSearch(World world,TickEvent.Phase phase)
@@ -134,7 +134,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
         }
     }
 
-    private int manageBroadcast(World world,TickEvent.Phase phase)
+    private int manageTaskBroadcast(World world, TickEvent.Phase phase)
     {
         if (phase.equals(TickEvent.Phase.START)) {
             int broadcastCount = 0;
@@ -147,7 +147,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
                 } else {
                     if (!task.isAlive() && broadcastTracker.hasDelayPassed(world, TileEntityMachinePatternMonitor.BROADCAST_WEATING_DELAY)) {
                         for (int i = 0; i < 6; i++) {
-                            if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i))) {
+                            if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i),MatterNetworkHelper.parseBlockPosition(rootClient))) {
                                 task.setState(MatterNetworkTaskState.WAITING);
                                 broadcastCount++;
                             }

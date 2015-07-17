@@ -4,6 +4,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IUpgradeable;
 import matteroverdrive.api.inventory.IUpgrade;
@@ -16,6 +17,7 @@ import matteroverdrive.data.TileEntityInventory;
 import matteroverdrive.data.inventory.UpgradeSlot;
 import matteroverdrive.fx.VentParticle;
 import matteroverdrive.items.SecurityProtocol;
+import matteroverdrive.network.packet.server.PacketSaveConfigs;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
@@ -190,9 +192,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public void readCustomNBT(NBTTagCompound nbt)
     {
+        readConfigsFromNBT(nbt);
         redstoneState = nbt.getBoolean("redstoneState");
         forceClientUpdate = nbt.getBoolean("forceClientUpdate");
-        redstoneMode = nbt.getByte("redstoneMode");
         if (nbt.hasKey("Owner", 8) && !nbt.getString("Owner").isEmpty()) {
             try {
             owner = UUID.fromString(nbt.getString("Owner"));
@@ -204,12 +206,17 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         inventory.readFromNBT(nbt);
     }
 
+    public void readConfigsFromNBT(NBTTagCompound nbt)
+    {
+        redstoneMode = nbt.getByte("redstoneMode");
+    }
+
     @Override
     public void  writeCustomNBT(NBTTagCompound nbt)
     {
-        nbt.setBoolean("redstoneState", redstoneState);
+        writeConfigsToNBT(nbt);
         nbt.setBoolean("forceClientUpdate", forceClientUpdate);
-        nbt.setByte("redstoneMode", redstoneMode);
+        nbt.setBoolean("redstoneState", redstoneState);
         if (owner != null)
             nbt.setString("Owner",owner.toString());
         else if (nbt.hasKey("Owner",6))
@@ -218,6 +225,11 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
         forceClientUpdate = false;
         inventory.writeToNBT(nbt);
+    }
+
+    public void writeConfigsToNBT(NBTTagCompound nbt)
+    {
+        nbt.setByte("redstoneMode", redstoneMode);
     }
 
     @Override
@@ -479,6 +491,11 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     public void ForceSync()
     {
         forceClientUpdate = true;
+    }
+
+    public void sendConfigsToServer()
+    {
+        MatterOverdrive.packetPipeline.sendToServer(new PacketSaveConfigs(this));
     }
 
     //region Upgrades

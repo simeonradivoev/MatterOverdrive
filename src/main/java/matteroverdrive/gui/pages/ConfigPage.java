@@ -1,7 +1,9 @@
 package matteroverdrive.gui.pages;
 
+import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.gui.MOGuiMachine;
 import matteroverdrive.gui.element.ElementBaseGroup;
 import matteroverdrive.gui.element.ElementStates;
@@ -38,10 +40,21 @@ public class ConfigPage extends ElementBaseGroup
     public void drawForeground(int mouseX, int mouseY)
     {
         super.drawForeground(mouseX, mouseY);
-        if (machineGui.getMachine().hasOwner()) {
+        int y = sizeY - 45;
+        if (machineGui.getMachine().hasOwner())
+        {
             String info = MOStringHelper.translateToLocal("gui.config.owner") + ": " + machineGui.getMachine().getOwner();
             int width = getFontRenderer().getStringWidth(info);
-            getFontRenderer().drawString(info, sizeX - width - 20, sizeY - 45, Reference.COLOR_GUI_DARK.getColor());
+            getFontRenderer().drawString(info, sizeX - width - 20, y, Reference.COLOR_GUI_DARK.getColor());
+            y -= 15;
+        }
+        if (machineGui.getMachine() instanceof IMatterNetworkConnection)
+        {
+            BlockPosition position = ((IMatterNetworkConnection) machineGui.getMachine()).getPosition();
+            String info = String.format("%s : [%s,%s,%s]",MOStringHelper.translateToLocal("gui.config.mnet.address"),position.x,position.y,position.z);
+            int width = getFontRenderer().getStringWidth(info);
+            getFontRenderer().drawString(info, sizeX - width - 20, y, Reference.COLOR_GUI_DARK.getColor());
+            y -= 15;
         }
     }
 

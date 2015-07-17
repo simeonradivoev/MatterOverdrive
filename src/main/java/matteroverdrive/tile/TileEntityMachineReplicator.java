@@ -29,10 +29,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
-import matteroverdrive.api.network.IMatterNetworkClient;
-import matteroverdrive.api.network.IMatterNetworkDispatcher;
-import matteroverdrive.api.network.IMatterNetworkHandler;
-import matteroverdrive.api.network.MatterNetworkTaskState;
+import matteroverdrive.api.network.*;
 import matteroverdrive.blocks.BlockReplicator;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
@@ -64,7 +61,7 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.List;
 
 
-public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkHandler, IMatterNetworkDispatcher<MatterNetworkTaskReplicatePattern>
+public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkHandler, IMatterNetworkDispatcher<MatterNetworkTaskReplicatePattern>,IMatterNetworkBroadcaster
 {
 	public static int MATTER_STORAGE = 1024;
 	public static int ENERGY_STORAGE = 512000;
@@ -91,11 +88,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 	public int replicateTime;
     public int replicateProgress;
 
-
     private MatterNetworkComponentReplicator networkComponent;
     private MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueueProcessing;
     private TimeTracker timeTracker;
     private NBTTagCompound internalPatternStorage;
+    private String destinationFilter;
 	
 	public TileEntityMachineReplicator()
 	{
@@ -428,6 +425,13 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
 
     @Override
+    public void readConfigsFromNBT(NBTTagCompound nbt)
+    {
+        super.readConfigsFromNBT(nbt);
+        destinationFilter = nbt.getString("DestinationFilter");
+    }
+
+    @Override
     public void writeCustomNBT(NBTTagCompound nbt)
     {
         super.writeCustomNBT(nbt);
@@ -436,6 +440,13 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
         if (internalPatternStorage != null)
             nbt.setTag("InternalPattern", internalPatternStorage);
+    }
+
+    @Override
+    public void writeConfigsToNBT(NBTTagCompound nbt)
+    {
+        super.writeConfigsToNBT(nbt);
+        nbt.setString("DestinationFilter", destinationFilter);
     }
     //endregion
 
@@ -598,6 +609,16 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             return true;
         }
         return false;
+    }
+
+    @Override
+    public String getDestinationFilter() {
+        return destinationFilter;
+    }
+
+    @Override
+    public void setDestinationFilter(String filter) {
+        destinationFilter = filter;
     }
     //endregion
 }

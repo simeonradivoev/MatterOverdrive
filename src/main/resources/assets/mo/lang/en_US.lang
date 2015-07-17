@@ -253,6 +253,7 @@ gui.redstone_mode.low=Low
 gui.redstone_mode.disabled=Disabled
 gui.config.redstone=Redstone
 gui.config.owner=Owner
+gui.config.mnet.address=Address
 gui.label.button.save=Save
 gui.label.button.remove=Remove
 gui.label.button.add=Add

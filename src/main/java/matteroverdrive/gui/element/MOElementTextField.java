@@ -1,13 +1,13 @@
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.element.ElementTextField;
+import cofh.lib.gui.element.ElementTextFieldFiltered;
 import matteroverdrive.Reference;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.ITextHandler;
 import net.minecraft.util.ResourceLocation;
 
-public class MOElementTextField extends ElementTextField
+public class MOElementTextField extends ElementTextFieldFiltered
 {
 	protected int textOffsetX,textOffsetY;
 	private ScaleTexture background;

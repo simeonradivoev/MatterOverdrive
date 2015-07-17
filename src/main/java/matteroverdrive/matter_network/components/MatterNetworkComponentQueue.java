@@ -67,11 +67,19 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     @Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
-        if (super.canPreform(packet))
+        if (rootClient.getRedstoneActive())
         {
-            return rootClient.getRedstoneActive();
+            if (packet instanceof MatterNetworkRequestPacket)
+            {
+                if (((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION)
+                    return false;
+            }
+            return true;
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
 
     @Override
@@ -104,32 +112,13 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
 
     protected int handlePacketBroadcast(World world,MatterNetworkPacket packet)
     {
-        boolean foundReceiver = false;
         int broadcastCount = 0;
+        for (int i = 0; i < directions.length; i++) {
+            if (packet instanceof MatterNetworkTaskPacket && !isInValidState(((MatterNetworkTaskPacket) packet).getTask(world)))
+                continue;
 
-        if (packet.isGuided()) {
-            //check if it already has an established connection to reciver
-            for (int i = 0; i < rootClient.getConnections().length; i++) {
-                if (rootClient.getConnection(i).equals(packet.getReceiverPos()))
-                {
-                    if (MatterNetworkHelper.broadcastTaskInDirection(rootClient.getWorldObj(), packet, rootClient, ForgeDirection.getOrientation(directions[i])))
-                    {
-                        foundReceiver = true;
-                        broadcastCount++;
-                    }
-                }
-            }
-        }
-
-        if (!foundReceiver) {
-            //if there is no connection to receiver send to all around
-            for (int i = 0; i < directions.length; i++) {
-                if (packet instanceof MatterNetworkTaskPacket && !isInValidState(((MatterNetworkTaskPacket) packet).getTask(world)))
-                    continue;
-
-                if (MatterNetworkHelper.broadcastTaskInDirection(rootClient.getWorldObj(), packet, rootClient, ForgeDirection.getOrientation(directions[i]))) {
-                    broadcastCount++;
-                }
+            if (MatterNetworkHelper.broadcastTaskInDirection(rootClient.getWorldObj(), packet, rootClient, ForgeDirection.getOrientation(directions[i]))) {
+                broadcastCount++;
             }
         }
         return broadcastCount;

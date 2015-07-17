@@ -1,5 +1,6 @@
 package matteroverdrive.matter_network.packets;
 
+import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import net.minecraft.world.World;
@@ -16,7 +17,11 @@ public class MatterNetworkRequestPacket extends MatterNetworkPacket
     public MatterNetworkRequestPacket(){super();}
     public MatterNetworkRequestPacket(IMatterNetworkConnection sender,int requestType,ForgeDirection port,Object request)
     {
-        super(sender.getPosition(),port);
+        this(sender,requestType,port,null,request);
+    }
+    public MatterNetworkRequestPacket(IMatterNetworkConnection sender,int requestType,ForgeDirection port,BlockPosition receiver,Object request)
+    {
+        super(sender.getPosition(),port,receiver);
         this.requestType = requestType;
         this.request = request;
     }

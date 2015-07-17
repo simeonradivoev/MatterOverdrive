@@ -35,17 +35,27 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
         this(sender.getPosition(), task.getId(),queueID,port);
     }
 
+    public MatterNetworkTaskPacket(IMatterNetworkDispatcher sender,MatterNetworkTask task,byte queueID,ForgeDirection port,BlockPosition receiverPos)
+    {
+        this(sender.getPosition(), task.getId(),queueID,port,receiverPos);
+    }
+
     public MatterNetworkTaskPacket(BlockPosition sender,long taskID,byte queueID,ForgeDirection port)
+    {
+        this(sender, taskID,queueID,port,null);
+    }
+
+    public MatterNetworkTaskPacket(BlockPosition sender,long taskID,byte queueID,ForgeDirection port,BlockPosition receiverPos)
     {
         super(sender,port);
         this.taskID = taskID;
         this.queueID = queueID;
-
+        this.receiverPos = receiverPos;
     }
 
     public MatterNetworkTaskPacket copy(IMatterNetworkConnection connection)
     {
-        MatterNetworkTaskPacket newPacket = new MatterNetworkTaskPacket(senderPos,taskID,queueID,senderPos.orientation);
+        MatterNetworkTaskPacket newPacket = new MatterNetworkTaskPacket(senderPos,taskID,queueID,senderPos.orientation,receiverPos);
         newPacket.path = new HashSet<>(path);
         addToPath(connection,ForgeDirection.UNKNOWN);
         return newPacket;

@@ -28,6 +28,7 @@ import matteroverdrive.api.IScannable;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.matter.IMatterPatternStorage;
+import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.blocks.BlockPatternStorage;
 import matteroverdrive.data.Inventory;
@@ -55,7 +56,7 @@ import java.util.List;
 /**
  * Created by Simeon on 3/27/2015.
  */
-public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy implements IMatterDatabase, IMatterNetworkClient,IScannable
+public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy implements IMatterDatabase, IMatterNetworkClient,IScannable,IMatterNetworkBroadcaster
 {
     public static final int TASK_PROCESS_DELAY = 40;
     public static int ENERGY_CAPACITY = 64000;
@@ -64,6 +65,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public int[] pattern_storage_slots;
     private MatterNetworkPacketQueue taskQueueProcessing;
     private MatterNetworkComponentPatternStorage networkComponent;
+    private String destinationFilter;
 
     public TileEntityMachinePatternStorage()
     {
@@ -152,10 +154,24 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
+    public void writeConfigsToNBT(NBTTagCompound nbt)
+    {
+        super.writeConfigsToNBT(nbt);
+        nbt.setString("DestinationFilter", destinationFilter);
+    }
+
+    @Override
     public void readCustomNBT(NBTTagCompound nbt)
     {
         super.readCustomNBT(nbt);
         taskQueueProcessing.readFromNBT(nbt);
+    }
+
+    @Override
+    public void readConfigsFromNBT(NBTTagCompound nbt)
+    {
+        super.readConfigsFromNBT(nbt);
+        destinationFilter = nbt.getString("DestinationFilter");
     }
     //endregion
 
@@ -408,6 +424,16 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     public float soundVolume() {
         return 0;
+    }
+
+    @Override
+    public String getDestinationFilter() {
+        return destinationFilter;
+    }
+
+    @Override
+    public void setDestinationFilter(String filter) {
+        destinationFilter = filter;
     }
     //endregion
 }

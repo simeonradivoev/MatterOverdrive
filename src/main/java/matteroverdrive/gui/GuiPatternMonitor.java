@@ -9,6 +9,7 @@ import matteroverdrive.gui.element.ElementMonitorItemPattern;
 import matteroverdrive.gui.element.ElementPatternsGrid;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.element.MOElementTextField;
+import matteroverdrive.gui.pages.MatterNetworkConfigPage;
 import matteroverdrive.gui.pages.PageTasks;
 import matteroverdrive.network.packet.server.PacketPatternMonitorCommands;
 import matteroverdrive.network.packet.server.PacketRemoveTask;
@@ -23,7 +24,7 @@ import net.minecraft.nbt.NBTTagList;
 /**
  * Created by Simeon on 4/26/2015.
  */
-public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMonitor>
+public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatternMonitor>
 {
     MOElementButton refreshButton;
     MOElementButton requestButton;
@@ -50,7 +51,7 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
     @Override
     public void registerPages(MOBaseContainer container,TileEntityMachinePatternMonitor machine)
     {
-        super.registerPages(container,machine);
+        super.registerPages(container, machine);
 
         pageTasks = new PageTasks(this,0,0,xSize,ySize,machine.getTaskQueue((byte) 0));
         pageTasks.setName("Tasks");
@@ -66,12 +67,12 @@ public class GuiPatternMonitor extends MOGuiMachine<TileEntityMachinePatternMoni
         this.addElement(requestButton);
         pages.get(0).addElement(elementGrid);
         pages.get(0).addElement(searchField);
-        AddHotbarPlayerSlots(inventorySlots,this);
+        AddHotbarPlayerSlots(inventorySlots, this);
     }
 
     public void handleElementButtonClick(String buttonName, int mouseButton)
     {
-        super.handleElementButtonClick(buttonName,mouseButton);
+        super.handleElementButtonClick(buttonName, mouseButton);
         if (buttonName.equals("Refresh"))
         {
             MatterOverdrive.packetPipeline.sendToServer(new PacketPatternMonitorCommands(machine,0,null));

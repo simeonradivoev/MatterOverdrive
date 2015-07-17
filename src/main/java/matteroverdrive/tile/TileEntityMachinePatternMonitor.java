@@ -25,6 +25,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.matter_network.MatterNetworkPacket;
@@ -43,7 +44,7 @@ import java.util.HashSet;
 /**
  * Created by Simeon on 4/26/2015.
  */
-public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy implements IMatterNetworkDispatcher, IMatterNetworkClient
+public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy implements IMatterNetworkDispatcher, IMatterNetworkClient, IMatterNetworkBroadcaster
 {
     public static final int BROADCAST_WEATING_DELAY = 80;
     public static final int SEARCH_DELAY = 120;
@@ -53,6 +54,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueue;
     TimeTracker searchDelayTracker;
     private MatterNetworkComponentPatternMonitor networkComponent;
+    private String destinationFilter;
 
     public TileEntityMachinePatternMonitor()
     {
@@ -116,6 +118,13 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     }
 
     @Override
+    public void writeConfigsToNBT(NBTTagCompound nbt)
+    {
+        super.writeConfigsToNBT(nbt);
+        nbt.setString("DestinationFilter", destinationFilter);
+    }
+
+    @Override
     protected void onActiveChange() {
 
     }
@@ -125,6 +134,13 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     {
         super.readCustomNBT(nbt);
         taskQueue.readFromNBT(nbt);
+    }
+
+    @Override
+    public void readConfigsFromNBT(NBTTagCompound nbt)
+    {
+        super.readConfigsFromNBT(nbt);
+        destinationFilter = nbt.getString("DestinationFilter");
     }
 
     @Override
@@ -210,5 +226,15 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     @Override
     public void onDestroyed() {
 
+    }
+
+    public void setDestinationFilter(String filter)
+    {
+        destinationFilter = filter;
+    }
+
+    public String getDestinationFilter()
+    {
+        return destinationFilter;
     }
 }

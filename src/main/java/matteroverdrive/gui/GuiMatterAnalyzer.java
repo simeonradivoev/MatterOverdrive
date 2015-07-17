@@ -13,7 +13,7 @@ import net.minecraft.item.Item;
 /**
  * Created by Simeon on 3/16/2015.
  */
-public class GuiMatterAnalyzer extends MOGuiMachine<TileEntityMachineMatterAnalyzer>
+public class GuiMatterAnalyzer extends MOGuiNetworkMachine<TileEntityMachineMatterAnalyzer>
 {
     MOElementEnergy energyElement;
     ElementScanProgress scanProgress;
