@@ -155,7 +155,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
     protected void manageReplicate() {
 
-        if (this.isReplicating()) {
+        if (this.isActive()) {
 
             ItemStack newItem = MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage);
             int time = getSpeed(newItem);
@@ -189,10 +189,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                 }
 
             }
-        }
-
-
-        if (!this.isReplicating()) {
+        } else {
             this.replicateTime = 0;
             replicateProgress = 0;
         }
@@ -355,18 +352,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         }
 	}
 
-
-	public boolean isReplicating()
-	{
-		if(getRedstoneActive() && taskQueueProcessing.size() > 0 && internalPatternStorage != null && canCompleteTask())
-        {
-            ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage);
-            int matter = MatterHelper.getMatterAmountFromItem(item);
-            return this.getMatterStored() >= matter && canReplicateIntoOutput(item) && canReplicateIntoSecoundOutput(matter);
-        }
-        return false;
-	}
-
     public boolean canCompleteTask()
     {
         MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
@@ -380,7 +365,13 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     public boolean isActive()
     {
-        return this.isReplicating() && energyStorage.getEnergyStored() > getEnergyDrainPerTick();
+		if(getRedstoneActive() && taskQueueProcessing.size() > 0 && internalPatternStorage != null && canCompleteTask())
+		{
+			ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage);
+			int matter = MatterHelper.getMatterAmountFromItem(item);
+			return this.getMatterStored() >= matter && canReplicateIntoOutput(item) && canReplicateIntoSecoundOutput(matter);
+		}
+		return false;
     }
 
     public void manageRadiation()
