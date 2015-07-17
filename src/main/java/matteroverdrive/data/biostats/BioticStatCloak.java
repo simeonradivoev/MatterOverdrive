@@ -19,10 +19,12 @@
 package matteroverdrive.data.biostats;
 
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -30,9 +32,9 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 /**
  * Created by Simeon on 7/10/2015.
  */
-public class BioticStatCloak extends AbstractBioticStat
+public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscriber
 {
-    public static final int ENERGY_PER_TICK = 128;
+    public static int ENERGY_PER_TICK = 128;
 
     public BioticStatCloak(String name, int xp) {
         super(name, xp);
@@ -104,5 +106,11 @@ public class BioticStatCloak extends AbstractBioticStat
     public boolean isEnabled(AndroidPlayer androidPlayer,int level)
     {
         return super.isEnabled(androidPlayer,level) && androidPlayer.extractEnergy(ENERGY_PER_TICK,true) >= ENERGY_PER_TICK;
+    }
+
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
+    {
+        ENERGY_PER_TICK = config.getInt("cloak_energy_per_tick",config.CATEGORY_ABILITIES,128,"The energy cost of the Cloak");
     }
 }

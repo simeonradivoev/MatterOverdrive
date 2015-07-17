@@ -22,10 +22,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.server.PacketTeleportPlayer;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOPhysicsHelper;
+import net.minecraft.block.Block;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -35,14 +38,19 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fluids.IFluidBlock;
 import org.lwjgl.input.Keyboard;
 
+import java.util.HashSet;
+
 /**
  * Created by Simeon on 5/29/2015.
  */
-public class BioticStatTeleport extends AbstractBioticStat {
+public class BioticStatTeleport extends AbstractBioticStat implements IConfigSubscriber {
 
     public static final String EFFECT_KEY_LAST_TELEPORT = "LastTeleport";
     public static final int TELEPORT_DELAY = 40;
-    public static final int ENERGY_PER_TELEPORT = 4096;
+    public static int ENERGY_PER_TELEPORT = 4096;
+    public static int MAX_TELEPORT_HEIGHT_CHECK = 8;
+    public static int MAX_TELEPORT_DISTANCE = 32;
+    private HashSet<String> blackListedBlocks;
     @SideOnly(Side.CLIENT)
     private boolean hasPressedKey;
     public BioticStatTeleport(String name, int xp)
@@ -50,6 +58,7 @@ public class BioticStatTeleport extends AbstractBioticStat {
         super(name, xp);
         setShowOnHud(true);
         setShowOnWheel(true);
+        blackListedBlocks = new HashSet<>();
     }
 
     @Override
@@ -83,11 +92,10 @@ public class BioticStatTeleport extends AbstractBioticStat {
     }
 
     public Vec3 getPos(AndroidPlayer androidPlayer) {
-        MovingObjectPosition position = MOPhysicsHelper.rayTraceForBlocks(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, 32, 0, Vec3.createVectorHelper(0, 0, 0), true, true);
+        MovingObjectPosition position = MOPhysicsHelper.rayTraceForBlocks(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, MAX_TELEPORT_DISTANCE, 0, Vec3.createVectorHelper(0, 0, 0), true, true);
         if (position != null && position.typeOfHit != MovingObjectPosition.MovingObjectType.MISS)
         {
-            ForgeDirection side = ForgeDirection.getOrientation(position.sideHit);
-            Vec3 pos = getTopSafeBlock(androidPlayer.getPlayer().worldObj, position.blockX, position.blockY, position.blockZ,position.sideHit);
+            Vec3 pos = getTopSafeBlock(androidPlayer.getPlayer().worldObj, position.blockX, position.blockY, position.blockZ, position.sideHit);
             if (pos != null) {
                 return Vec3.createVectorHelper(pos.xCoord + 0.5, pos.yCoord, pos.zCoord + 0.5);
             }
@@ -105,10 +113,23 @@ public class BioticStatTeleport extends AbstractBioticStat {
     public Vec3 getTopSafeBlock(World world,int x,int y,int z,int side)
     {
         int airBlockCount = 0;
-        int height = Math.min(y + 8, world.getActualHeight());
+        int heightCheck = MAX_TELEPORT_HEIGHT_CHECK;
+        if (side == 1)
+        {
+            heightCheck = 3;
+        }
+        int height = Math.min(y + heightCheck, world.getActualHeight());
+        Block block;
         for (int i = y;i < height;i++)
         {
-            if (!world.getBlock(x,i,z).isBlockSolid(world,x,i,z,world.getBlockMetadata(x,i,z)) || world.getBlock(x,i,z) instanceof IFluidBlock)
+            block = world.getBlock(x,i,z);
+            String unlocalizedName = block.getUnlocalizedName().substring(5);
+            if (blackListedBlocks.contains(unlocalizedName))
+            {
+                return null;
+            }
+
+            if (!block.isBlockSolid(world,x,i,z,world.getBlockMetadata(x,i,z)) || block instanceof IFluidBlock)
             {
                 airBlockCount++;
             }else
@@ -172,5 +193,19 @@ public class BioticStatTeleport extends AbstractBioticStat {
     public boolean showOnHud(AndroidPlayer android,int level)
     {
         return android.getActiveStat() != null && android.getActiveStat().equals(this);
+    }
+
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
+    {
+        this.blackListedBlocks.clear();
+        String[] blackListedBlocks = config.config.getStringList("teleport_blacklist",config.CATEGORY_ABILITIES,new String[]{"hellsand","barrier","bedrock"},"The Unlocalized names of the blacklist blocks that the player can't teleport to");
+        for (String block : blackListedBlocks)
+        {
+            this.blackListedBlocks.add(block);
+        }
+        MAX_TELEPORT_HEIGHT_CHECK = config.getInt("teleport_max_height_check",config.CATEGORY_ABILITIES,8,"The max height amount that the teleport ability checks if there is no 2 blocks air space");
+        ENERGY_PER_TELEPORT = config.getInt("teleport_energy_cost",config.CATEGORY_ABILITIES,4096,"The Energy cost of each Teleportation");
+        MAX_TELEPORT_DISTANCE = config.getInt("teleport_max_distance",config.CATEGORY_ABILITIES,32,"The maximum distance in blocks, the player can teleport to");
     }
 }

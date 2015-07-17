@@ -1,10 +1,12 @@
 package matteroverdrive.gui.pages;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.gui.MOGuiMachine;
 import matteroverdrive.gui.element.ElementBaseGroup;
 import matteroverdrive.gui.element.ElementStates;
 import matteroverdrive.gui.element.MOElementButton;
+import matteroverdrive.network.packet.server.PacketChangeRedstoneMode;
 import matteroverdrive.util.MOStringHelper;
 
 /**
@@ -19,7 +21,7 @@ public class ConfigPage extends ElementBaseGroup
     {
         super(gui,posX,posY,width,height);
         machineGui = gui;
-        redstoneState = new ElementStates(gui,gui,120,40,"RedstoneMode",60,21,new String[]{MOStringHelper.translateToLocal("gui.redstone_mode.high"),MOStringHelper.translateToLocal("gui.redstone_mode.low"),MOStringHelper.translateToLocal("gui.redstone_mode.disabled")});
+        redstoneState = new ElementStates(gui,this,120,40,"RedstoneMode",60,21,new String[]{MOStringHelper.translateToLocal("gui.redstone_mode.high"),MOStringHelper.translateToLocal("gui.redstone_mode.low"),MOStringHelper.translateToLocal("gui.redstone_mode.disabled")});
         redstoneState.setLabel(MOStringHelper.translateToLocal("gui.config.redstone") + ": ");
         redstoneState.setNormalTexture(MOElementButton.HOVER_TEXTURE);
     }
@@ -40,6 +42,16 @@ public class ConfigPage extends ElementBaseGroup
             String info = MOStringHelper.translateToLocal("gui.config.owner") + ": " + machineGui.getMachine().getOwner();
             int width = getFontRenderer().getStringWidth(info);
             getFontRenderer().drawString(info, sizeX - width - 20, sizeY - 45, Reference.COLOR_GUI_DARK.getColor());
+        }
+    }
+
+    @Override
+    public void handleElementButtonClick(String buttonName, int mouseButton)
+    {
+        if (buttonName == "RedstoneMode")
+        {
+            //machineGui.getMachine().setRedstoneMode((byte)mouseButton);
+            MatterOverdrive.packetPipeline.sendToServer(new PacketChangeRedstoneMode(machineGui.getMachine(), (byte) mouseButton));
         }
     }
 }

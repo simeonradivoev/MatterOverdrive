@@ -64,7 +64,14 @@ public abstract class MatterNetworkPacket
     {
         if (tagCompound != null)
         {
-            senderPos = new BlockPosition(tagCompound);
+            if (tagCompound.hasKey("Sender",10))
+            {
+                senderPos = new BlockPosition(tagCompound.getCompoundTag("Sender"));
+            }
+            if (tagCompound.hasKey("Receiver",10))
+            {
+                receiverPos = new BlockPosition(tagCompound.getCompoundTag("Receiver"));
+            }
         }
     }
 
@@ -72,7 +79,18 @@ public abstract class MatterNetworkPacket
     {
         if (tagCompound != null && senderPos != null)
         {
-            senderPos.writeToNBT(tagCompound);
+            if (senderPos != null)
+            {
+                NBTTagCompound sender = new NBTTagCompound();
+                senderPos.writeToNBT(sender);
+                tagCompound.setTag("Sender",sender);
+            }
+            if (receiverPos != null)
+            {
+                NBTTagCompound receiver = new NBTTagCompound();
+                receiverPos.writeToNBT(receiver);
+                tagCompound.setTag("Receiver",receiver);
+            }
         }
     }
 

@@ -16,32 +16,31 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.tile;
-
-import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.util.MatterNetworkHelper;
+package matteroverdrive.api.network;
 
 /**
- * Created by Simeon on 3/11/2015.
+ * Created by Simeon on 7/15/2015.
  */
-public class TileEntityMachineNetworkRouter extends TileEntityMachinePacketQueue
+public enum MatterNetworkTaskState
 {
+    INVALID,
+    UNKNOWN,
+    WAITING,
+    QUEUED,
+    PROCESSING,
+    FINISHED;
 
-    public TileEntityMachineNetworkRouter() {
-        super(4);
-    }
-
-    @Override
-    protected void onAwake(Side side)
+    public static MatterNetworkTaskState get(int ordinal)
     {
-        if (side.isServer()) {
-            MatterNetworkHelper.broadcastConnection(worldObj, this);
-            MatterNetworkHelper.requestNeighborConnections(worldObj,this);
-        }
+        return MatterNetworkTaskState.values()[ordinal];
     }
-
-    @Override
-    protected void onActiveChange() {
-
+    public boolean below(MatterNetworkTaskState state)
+    {
+        return ordinal() < state.ordinal();
     }
+    public boolean belowOrEqual(MatterNetworkTaskState state)
+    {
+        return ordinal() <= state.ordinal();
+    }
+    public boolean above(MatterNetworkTaskState state){return ordinal() > state.ordinal();}
 }

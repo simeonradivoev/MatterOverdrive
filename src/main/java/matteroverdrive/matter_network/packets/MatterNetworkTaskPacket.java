@@ -1,12 +1,11 @@
 package matteroverdrive.matter_network.packets;
 
 import cofh.lib.util.position.BlockPosition;
-import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
-import matteroverdrive.matter_network.MatterNetworkPathNode;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -47,7 +46,7 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
     public MatterNetworkTaskPacket copy(IMatterNetworkConnection connection)
     {
         MatterNetworkTaskPacket newPacket = new MatterNetworkTaskPacket(senderPos,taskID,queueID,senderPos.orientation);
-        newPacket.path = new HashSet<MatterNetworkPathNode>(path);
+        newPacket.path = new HashSet<>(path);
         addToPath(connection,ForgeDirection.UNKNOWN);
         return newPacket;
     }
@@ -56,7 +55,7 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
     {
         IMatterNetworkConnection sender = getSender(world);
         if (sender != null && sender instanceof IMatterNetworkDispatcher) {
-            return ((IMatterNetworkDispatcher)(sender)).getQueue(queueID).getWithID(taskID);
+            return ((IMatterNetworkDispatcher)(sender)).getTaskQueue(queueID).getWithID(taskID);
         }
         return null;
     }
@@ -85,7 +84,7 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
 
     public boolean isValid(World world)
     {
-        return queueID >= (byte)0 && getTask(world) != null && getTask(world).getState() != Reference.TASK_STATE_INVALID;
+        return queueID >= (byte)0 && getTask(world) != null && getTask(world).getState() != MatterNetworkTaskState.INVALID;
     }
 
     @Override

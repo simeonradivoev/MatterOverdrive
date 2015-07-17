@@ -332,25 +332,25 @@ death.attack.android_transformation=%1$s has ended his biological existence
 ##########################################################################################################
 # Tasks
 
-task.state.-1.name=Invalid
-task.state.-1.description=Task is not a Valid.
-task.state.0.name=Unknown
-task.state.0.description=Unknown
-task.state.1.name=Waiting
-task.state.1.description=Waiting to find Receiver.
-task.state.2.name=Queued
-task.state.2.description=Receiver Found.\nWaiting to process.
-task.state.3.name=Processing
-task.state.3.description=Waiting to finish Processing.
-task.state.4.name=Finished
-task.state.4.description=Task is Complete.
+task.state.INVALID.name=Invalid
+task.state.INVALID.description=Task is not a Valid.
+task.state.UNKNOWN.name=Unknown
+task.state.UNKNOWN.description=Unknown
+task.state.WAITING.name=Waiting
+task.state.WAITING.description=Waiting to find Receiver.
+task.state.QUEUED.name=Queued
+task.state.QUEUED.description=Receiver Found.\nWaiting to process.
+task.state.PROCESSING.name=Processing
+task.state.PROCESSING.description=Waiting to finish Processing.
+task.state.FINISHED.name=Finished
+task.state.FINISHED.description=Task is Complete.
 
-task.store_pattern.state.1.description=Searching for Pattern Storage.
-task.store_pattern.state.2.description=Queued in Machine.\n Waiting to Processing.
-task.store_pattern.state.3.description=Currently Storing Item Pattern.
-task.store_pattern.state.4.description=Item Pattern Successfully Stored.
+task.store_pattern.state.WAITING.description=Searching for Pattern Storage.
+task.store_pattern.state.QUEUED.description=Queued in Machine.\n Waiting to Processing.
+task.store_pattern.state.PROCESSING.description=Currently Storing Item Pattern.
+task.store_pattern.state.FINISHED.description=Item Pattern Successfully Stored.
 
-task.replicate_pattern.state.1.description=Searching for Available Replicators.
+task.replicate_pattern.state.WAITING.description=Searching for Available Replicators.
 
 info.mo.updater.download=download
 info.mo.updater.hover=Click to download the latest version.
@@ -369,6 +369,7 @@ config.client.name=Client Options
 config.server.name=Server Options
 config.starmap.name=Star Map Options
 config.ore_gen_blacklist.name=Ore Dimension Blacklist
+config.abilities.name=Android Abilities
 
 ##########################################################################################################
 # Chat Alerts

@@ -1,0 +1,187 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
+package matteroverdrive.matter_network.components;
+
+import cofh.lib.util.TimeTracker;
+import cofh.lib.util.position.BlockPosition;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.Reference;
+import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.api.network.MatterNetworkTaskState;
+import matteroverdrive.matter_network.MatterNetworkPacket;
+import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
+import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
+import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
+import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
+import matteroverdrive.network.packet.client.PacketPatternMonitorSync;
+import matteroverdrive.tile.TileEntityMachinePatternMonitor;
+import matteroverdrive.util.MatterNetworkHelper;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+/**
+ * Created by Simeon on 7/13/2015.
+ */
+public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponentClient<TileEntityMachinePatternMonitor>
+{
+    private TimeTracker broadcastTracker;
+    TimeTracker validateTracker;
+    private boolean needsSearchRefresh = true;
+
+    public MatterNetworkComponentPatternMonitor(TileEntityMachinePatternMonitor patternMonitor)
+    {
+        super(patternMonitor);
+        broadcastTracker = new TimeTracker();
+        validateTracker = new TimeTracker();
+    }
+
+    @Override
+    public boolean canPreform(MatterNetworkPacket packet)
+    {
+        if (super.canPreform(packet)) {
+            if (packet instanceof MatterNetworkResponsePacket) {
+                return true;
+            } else if (packet instanceof MatterNetworkRequestPacket) {
+                return ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_CONNECTION
+                        || ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void queuePacket(MatterNetworkPacket packet, ForgeDirection from) {
+        manageBasicPacketsQueuing(rootClient, rootClient.getWorldObj(), packet, from);
+    }
+
+    @Override
+    protected void manageResponsesQueuing(MatterNetworkResponsePacket packet)
+    {
+        if (packet.fits(Reference.PACKET_RESPONCE_VALID,Reference.PACKET_REQUEST_CONNECTION))
+        {
+            if(!rootClient.getDatabases().contains(packet.getSender(rootClient.getWorldObj()).getPosition()))
+            {
+                rootClient.getDatabases().add(packet.getSender(rootClient.getWorldObj()).getPosition());
+                rootClient.SyncDatabasesWithClient();
+            }
+        }
+    }
+
+    @Override
+    protected void manageTaskPacketQueuing(MatterNetworkTaskPacket packet, MatterNetworkTask task) {}
+    @Override
+    protected void manageRequestsQueuing(MatterNetworkRequestPacket packet) {}
+
+    @Override
+    public int onNetworkTick(World world, TickEvent.Phase phase) {
+        manageDatabaseValidation(world);
+        manageSearch(world, phase);
+        return manageBroadcast(world,phase);
+    }
+
+    private void manageSearch(World world,TickEvent.Phase phase)
+    {
+        if (phase.equals(TickEvent.Phase.END)) {
+            if (rootClient.needsRefresh())
+            {
+                rootClient.getDatabases().clear();
+                MatterOverdrive.packetPipeline.sendToAllAround(new PacketPatternMonitorSync(rootClient), rootClient, 64);
+
+                for (int i = 0; i < 6; i++) {
+                    MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_CONNECTION,ForgeDirection.getOrientation(i), IMatterDatabase.class);
+                    MatterNetworkHelper.broadcastTaskInDirection(world, packet, rootClient, ForgeDirection.getOrientation(i));
+                }
+                needsSearchRefresh = false;
+            }
+        }
+    }
+
+    /**
+     * Gets called to validate all connected Databases, if they exist.
+     * @param world
+     */
+    private void manageDatabaseValidation(World world)
+    {
+        if (validateTracker.hasDelayPassed(world, TileEntityMachinePatternMonitor.VALIDATE_DELAY))
+        {
+            for (BlockPosition blockPosition : rootClient.getDatabases())
+            {
+                if (blockPosition.getBlock(world) == null || blockPosition.getTileEntity(world) == null || !(blockPosition.getTileEntity(world) instanceof IMatterDatabase))
+                {
+                    needsSearchRefresh = true;
+                    return;
+                }
+            }
+        }
+    }
+
+    private int manageBroadcast(World world,TickEvent.Phase phase)
+    {
+        if (phase.equals(TickEvent.Phase.START)) {
+            int broadcastCount = 0;
+            MatterNetworkTaskReplicatePattern task = rootClient.getTaskQueue(0).peek();
+
+            if (task != null) {
+                if (task.getState() == MatterNetworkTaskState.FINISHED || task.getState() == MatterNetworkTaskState.PROCESSING || task.getState() == MatterNetworkTaskState.QUEUED) {
+                    rootClient.getTaskQueue(0).dequeue();
+                    rootClient.ForceSync();
+                } else {
+                    if (!task.isAlive() && broadcastTracker.hasDelayPassed(world, TileEntityMachinePatternMonitor.BROADCAST_WEATING_DELAY)) {
+                        for (int i = 0; i < 6; i++) {
+                            if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i))) {
+                                task.setState(MatterNetworkTaskState.WAITING);
+                                broadcastCount++;
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            rootClient.getTaskQueue(0).tickAllAlive(world, false);
+            return broadcastCount;
+        }
+        return 0;
+    }
+
+    public void queuePatternRequest(NBTTagList patternRequests)
+    {
+        for (int i = 0;i < patternRequests.tagCount();i++)
+        {
+            MatterNetworkTaskReplicatePattern task = new MatterNetworkTaskReplicatePattern(rootClient, patternRequests.getCompoundTagAt(i));
+            task.setState(MatterNetworkTaskState.WAITING);
+            if (rootClient.getTaskQueue(0).queue(task));
+        }
+
+        rootClient.ForceSync();
+    }
+
+    public boolean getNeedsSearchRefresh()
+    {
+        return needsSearchRefresh;
+    }
+
+    public void setNeedsSearchRefresh(boolean needsSearchRefresh)
+    {
+        this.needsSearchRefresh = needsSearchRefresh;
+    }
+}

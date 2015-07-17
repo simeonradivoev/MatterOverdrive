@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
@@ -12,9 +30,9 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.network.IMatterNetworkClient;
-import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.IMatterNetworkHandler;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.blocks.BlockReplicator;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
@@ -25,9 +43,7 @@ import matteroverdrive.handler.SoundHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
-import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
-import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
-import matteroverdrive.matter_network.packets.MatterNetwrokResponcePacket;
+import matteroverdrive.matter_network.components.MatterNetworkComponentReplicator;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.network.packet.client.PacketReplicationComplete;
 import matteroverdrive.util.MatterDatabaseHelper;
@@ -48,7 +64,7 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.List;
 
 
-public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkHandler, IMatterNetworkDispatcher
+public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkHandler, IMatterNetworkDispatcher<MatterNetworkTaskReplicatePattern>
 {
 	public static int MATTER_STORAGE = 1024;
 	public static int ENERGY_STORAGE = 512000;
@@ -75,11 +91,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 	public int replicateTime;
     public int replicateProgress;
 
-    TimeTracker timeTracker;
-    TimeTracker patternSearchTracker;
-    MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueueProcessing;
 
-    NBTTagCompound internalPatternStorage;
+    private MatterNetworkComponentReplicator networkComponent;
+    private MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueueProcessing;
+    private TimeTracker timeTracker;
+    private NBTTagCompound internalPatternStorage;
 	
 	public TileEntityMachineReplicator()
 	{
@@ -90,9 +106,9 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         this.matterStorage.setCapacity(MATTER_STORAGE);
         this.matterStorage.setMaxReceive(MATTER_TRANSFER);
         this.matterStorage.setMaxExtract(MATTER_TRANSFER);
+        taskQueueProcessing = new MatterNetworkTaskQueue<>(this,1);
+        networkComponent = new MatterNetworkComponentReplicator(this);
         timeTracker = new TimeTracker();
-        patternSearchTracker = new TimeTracker();
-        taskQueueProcessing = new MatterNetworkTaskQueue<>(this,1,MatterNetworkTaskReplicatePattern.class);
 	}
 
     protected void RegisterSlots(Inventory inventory)
@@ -102,31 +118,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         DATABASE_SLOT_ID = inventory.AddSlot(new DatabaseSlot(true));
         SHIELDING_SLOT_ID = inventory.AddSlot(new ShieldingSlot(true));
         super.RegisterSlots(inventory);
-    }
-
-    @Override
-	public void readCustomNBT(NBTTagCompound nbt)
-    {
-        super.readCustomNBT(nbt);
-        this.replicateTime = nbt.getShort("ReplicateTime");
-        taskQueueProcessing.readFromNBT(nbt);
-        internalPatternStorage = nbt.getCompoundTag("InternalPattern");
-    }
-
-    @Override
-    public void writeCustomNBT(NBTTagCompound nbt)
-    {
-        super.writeCustomNBT(nbt);
-        nbt.setShort("ReplicateTime", (short) this.replicateTime);
-        taskQueueProcessing.writeToNBT(nbt);
-
-        if (internalPatternStorage != null)
-            nbt.setTag("InternalPattern", internalPatternStorage);
-    }
-
-    @Override
-    protected void onActiveChange() {
-
     }
 
     @Override
@@ -140,19 +131,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         }
 	}
 
-    @Override
-    public String getSound() {
-        return "machine";
-    }
-
-    @Override
-    public boolean hasSound() {
-        return true;
-    }
-
-    @Override
-    public float soundVolume() { return 1;}
-
     protected void manageReplicate() {
 
         if (this.isActive()) {
@@ -164,7 +142,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             {
                 if (energyStorage.getEnergyStored() >= getEnergyDrainPerTick()) {
 
-                    taskQueueProcessing.peek().setState(Reference.TASK_STATE_PROCESSING);
+                    taskQueueProcessing.peek().setState(MatterNetworkTaskState.PROCESSING);
                     this.replicateTime++;
                     this.extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(), false);
 
@@ -221,33 +199,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             }
         }
     }
-
-    public int getSpeed(ItemStack itemStack)
-    {
-        int matter = MatterHelper.getMatterAmountFromItem(itemStack);
-        return MathHelper.round(((REPLICATE_SPEED_PER_MATTER * matter) - 60) * getUpgradeMultiply(UpgradeTypes.Speed)) + 60;
-    }
-
-    public double getFailChance(NBTTagCompound itemAsNBT)
-    {
-        double progressChance = 1.0 - ((double) MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) / (double)MatterDatabaseHelper.MAX_ITEM_PROGRESS);
-        double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.Fail);
-        //this does not nagate all fail chance if item is not fully scanned
-        return FAIL_CHANCE * upgradeMultiply + progressChance * 0.5 + (progressChance * 0.5) * upgradeMultiply;
-    }
-
-    public int getEnergyDrainPerTick()
-    {
-        int maxEnergy = getEnergyDrainMax();
-        return maxEnergy / getSpeed(MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage));
-    }
-
-    public int getEnergyDrainMax()
-    {
-        int matter = MatterHelper.getMatterAmountFromItem(MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage));
-        double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.PowerUsage);
-        return MathHelper.round((matter * REPLICATE_ENERGY_PER_MATTER) * upgradeMultiply);
-    }
 	
 	private void replicateItem(NBTTagCompound itemAsNBT,ItemStack newItem)
 	{
@@ -275,8 +226,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                     task.setAmount(task.getAmount()-1);
                     if (task.getAmount() <= 0)
                     {
-                        task.setState(Reference.TASK_STATE_FINISHED);
-                        taskQueueProcessing.dequeueTask();
+                        task.setState(MatterNetworkTaskState.FINISHED);
+                        taskQueueProcessing.dequeue();
                     }
                 }
             }
@@ -323,6 +274,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             if (canReplicateIntoSecoundOutput(amount))
             {
                 stack.stackSize++;
+                return true;
             }
         }
         return false;
@@ -414,15 +366,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         }
     }
 
-    private int getShielding()
-    {
-        if(getStackInSlot(SHIELDING_SLOT_ID) != null && getStackInSlot(SHIELDING_SLOT_ID).getItem() == MatterOverdriveItems.tritanium_plate)
-        {
-            return getStackInSlot(SHIELDING_SLOT_ID).stackSize;
-        }
-        return 0;
-    }
-
 	private boolean canReplicateIntoOutput(ItemStack itemStack)
 	{
         if (itemStack == null)
@@ -468,6 +411,34 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         return true;
     }
 
+    @Override
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
+    {
+        return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Speed || type == UpgradeTypes.Fail || type == UpgradeTypes.PowerUsage;
+    }
+
+    //region NBT
+    @Override
+    public void readCustomNBT(NBTTagCompound nbt)
+    {
+        super.readCustomNBT(nbt);
+        this.replicateTime = nbt.getShort("ReplicateTime");
+        taskQueueProcessing.readFromNBT(nbt);
+        internalPatternStorage = nbt.getCompoundTag("InternalPattern");
+    }
+
+    @Override
+    public void writeCustomNBT(NBTTagCompound nbt)
+    {
+        super.writeCustomNBT(nbt);
+        nbt.setShort("ReplicateTime", (short) this.replicateTime);
+        taskQueueProcessing.writeToNBT(nbt);
+
+        if (internalPatternStorage != null)
+            nbt.setTag("InternalPattern", internalPatternStorage);
+    }
+    //endregion
+
     //region Inventory Functions
     @Override
     public int[] getAccessibleSlotsFromSide(int side)
@@ -488,77 +459,26 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         return true;
     }
+
+    @Override
+    public ItemStack decrStackSize(int slot, int size) {
+        ItemStack s = super.decrStackSize(slot, size);
+        ForceSync();
+        return s;
+    }
     //endregion
 
     //region Matter Network functions
     @Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
-        if (packet instanceof MatterNetworkTaskPacket)
-        {
-            if (((MatterNetworkTaskPacket) packet).getTask(worldObj) instanceof MatterNetworkTaskReplicatePattern)
-            {
-                return taskQueueProcessing.remaintingCapacity() > 0;
-            }
-        }else if (packet instanceof MatterNetworkRequestPacket)
-        {
-            return ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_CONNECTION || ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
-        }
-        return false;
+        return networkComponent.canPreform(packet);
     }
 
     @Override
     public void queuePacket(MatterNetworkPacket packet,ForgeDirection from)
     {
-        packet.addToPath(this, from);
-
-        if (packet instanceof MatterNetworkTaskPacket) {
-            if (((MatterNetworkTaskPacket) packet).getTask(worldObj) instanceof MatterNetworkTaskReplicatePattern)
-            {
-                MatterNetworkTaskReplicatePattern task = (MatterNetworkTaskReplicatePattern)((MatterNetworkTaskPacket) packet).getTask(worldObj);
-                if (taskQueueProcessing.queueTask(task))
-                {
-                    task.setState(Reference.TASK_STATE_QUEUED);
-                    task.setAlive(true);
-                    ForceSync();
-                }
-            }
-        }else if (packet instanceof MatterNetwrokResponcePacket)
-        {
-            manageResponces((MatterNetwrokResponcePacket)packet);
-        }
-        else if (packet instanceof MatterNetworkRequestPacket)
-        {
-            manageRequests((MatterNetworkRequestPacket)packet,from);
-        }
-    }
-
-    private void manageRequests(MatterNetworkRequestPacket packet,ForgeDirection direction)
-    {
-        MatterNetworkHelper.handleConnectionRequestPacket(worldObj, this, packet, direction);
-    }
-
-    private void manageResponces(MatterNetwrokResponcePacket packet)
-    {
-        if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH && packet.getResponceType() == Reference.PACKET_RESPONCE_VALID)
-        {
-            NBTTagCompound responceTag = packet.getResponce();
-            MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
-            if (responceTag != null && responceTag.getShort("id") == task.getItemID() && responceTag.getShort("Damage") == task.getItemMetadata())
-            {
-                if (internalPatternStorage != null)
-                {
-                    //if the previous tag is the same but has a higher progress, then continue
-                    if (internalPatternStorage.getShort("id") == responceTag.getShort("id") && internalPatternStorage.getShort("Damage") == responceTag.getShort("Damage") && MatterDatabaseHelper.GetProgressFromNBT(internalPatternStorage) > MatterDatabaseHelper.GetProgressFromNBT(responceTag))
-                    {
-                        return;
-                    }
-                }
-
-                internalPatternStorage = responceTag;
-                ForceSync();
-            }
-        }
+        networkComponent.queuePacket(packet, from);
     }
 
     @Override
@@ -569,72 +489,24 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     public boolean canConnectFromSide(ForgeDirection side)
     {
-        int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
+        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
         return BlockHelper.getOppositeSide(meta) == side.ordinal();
     }
 
     @Override
     public int onNetworkTick(World world,TickEvent.Phase phase)
     {
-        if (phase.equals(TickEvent.Phase.END))
-        {
-            return managePatternSearch(world);
-        }
-        return 0;
-    }
-
-    public int managePatternSearch(World world)
-    {
-        int broadcasts = 0;
-
-        if (getRedstoneActive() && !canCompleteTask() && patternSearchTracker.hasDelayPassed(worldObj,PATTERN_SEARCH_DELAY)) {
-
-                MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
-            if (task != null) {
-                for (int i = 0; i < 6; i++) {
-                    MatterNetworkRequestPacket requestPacket = new MatterNetworkRequestPacket(this, Reference.PACKET_REQUEST_PATTERN_SEARCH,ForgeDirection.getOrientation(i), new int[]{task.getItemID(), task.getItemMetadata()});
-                    if (MatterNetworkHelper.broadcastTaskInDirection(world, requestPacket, this, ForgeDirection.getOrientation(i))) {
-                        broadcasts++;
-                    }
-                }
-            }
-        }
-        return broadcasts;
+        return networkComponent.onNetworkTick(world, phase);
     }
 
     @Override
-    protected void onAwake(Side side)
-    {
-        if (side.isServer()) {
-            MatterNetworkHelper.broadcastConnection(worldObj, this);
-        }
-    }
-
-    @Override
-    public MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> getQueue(byte queueID)
+    public MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> getTaskQueue(int queueID)
     {
         return taskQueueProcessing;
     }
     //endregion
 
-    public NBTTagCompound getInternalPatternStorage()
-    {
-        return internalPatternStorage;
-    }
-
-    @Override
-    public ItemStack decrStackSize(int slot, int size) {
-        ItemStack s = super.decrStackSize(slot, size);
-        ForceSync();
-        return s;
-    }
-
-    @Override
-    public boolean isAffectedByUpgrade(UpgradeTypes type)
-    {
-        return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Speed || type == UpgradeTypes.Fail || type == UpgradeTypes.PowerUsage;
-    }
-
+    //region Events
     @Override
     public void onAdded(World world, int x, int y, int z) {
 
@@ -649,4 +521,83 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public void onDestroyed() {
 
     }
+
+    @Override
+    protected void onAwake(Side side)
+    {
+        if (side.isServer()) {
+            MatterNetworkHelper.broadcastConnection(worldObj, this);
+        }
+    }
+
+    @Override
+    protected void onActiveChange() {
+
+    }
+    //endregion
+
+    //region Getters and Setters
+    public NBTTagCompound getInternalPatternStorage()
+    {
+        return internalPatternStorage;
+    }
+    public void setInternalPatternStorage(NBTTagCompound internalPatternStorage){this.internalPatternStorage = internalPatternStorage;}
+    private int getShielding()
+    {
+        if(getStackInSlot(SHIELDING_SLOT_ID) != null && getStackInSlot(SHIELDING_SLOT_ID).getItem() == MatterOverdriveItems.tritanium_plate)
+        {
+            return getStackInSlot(SHIELDING_SLOT_ID).stackSize;
+        }
+        return 0;
+    }
+
+	@Override
+    public String getSound() {
+        return "machine";
+    }
+
+	@Override
+    public boolean hasSound() {
+        return true;
+    }
+
+	@Override
+    public float soundVolume() { return 1;}
+
+	public int getSpeed(ItemStack itemStack)
+    {
+        int matter = MatterHelper.getMatterAmountFromItem(itemStack);
+        return MathHelper.round(((REPLICATE_SPEED_PER_MATTER * matter) - 60) * getUpgradeMultiply(UpgradeTypes.Speed)) + 60;
+    }
+
+	public double getFailChance(NBTTagCompound itemAsNBT)
+    {
+        double progressChance = 1.0 - ((double) MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) / (double)MatterDatabaseHelper.MAX_ITEM_PROGRESS);
+        double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.Fail);
+        //this does not nagate all fail chance if item is not fully scanned
+        return FAIL_CHANCE * upgradeMultiply + progressChance * 0.5 + (progressChance * 0.5) * upgradeMultiply;
+    }
+
+	public int getEnergyDrainPerTick()
+    {
+        int maxEnergy = getEnergyDrainMax();
+        return maxEnergy / getSpeed(MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage));
+    }
+
+	public int getEnergyDrainMax()
+    {
+        int matter = MatterHelper.getMatterAmountFromItem(MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage));
+        double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.PowerUsage);
+        return MathHelper.round((matter * REPLICATE_ENERGY_PER_MATTER) * upgradeMultiply);
+    }
+
+    public boolean canCompleteTask(MatterNetworkTaskReplicatePattern taskReplicatePattern)
+    {
+        if (taskReplicatePattern != null && internalPatternStorage != null && taskReplicatePattern.getItemID() == internalPatternStorage.getShort("id") && internalPatternStorage.getShort("Damage") == taskReplicatePattern.getItemMetadata())
+        {
+            return true;
+        }
+        return false;
+    }
+    //endregion
 }

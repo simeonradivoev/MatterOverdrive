@@ -29,6 +29,7 @@ public class ConfigurationHandler
     public static final String CATEGORY_WORLD_SPAWN_ORES = "spawn ores";
     public static final String CATEGORY_WORLD_SPAWN_OTHER = "spawn other";
     public static final String CATEGORY_WORLD_SPAWN = "spawn";
+    public static final String CATEGORY_ABILITIES = "abilities";
     public static final String CATEGORY_CLIENT = "client";
     public static final String CATEGORY_STARMAP = "starmap";
     public static final String CATEGORY_SERVER = "server";
@@ -80,6 +81,9 @@ public class ConfigurationHandler
         updateCategoryLang(category);
         category = config.getCategory(CATEGORY_STARMAP);
         category.setComment("Star Map Galaxy Options");
+        updateCategoryLang(category);
+        category = config.getCategory(CATEGORY_ABILITIES);
+        category.setComment("Android Player Abilities");
         updateCategoryLang(category);
 
         config.get(CATEGORY_WORLD_GEN,CATEGORY_WORLD_SPAWN_ORES, true, "Should ores such as dilithium and tritanium ore spawn in the world. This applies for all ores !").setLanguageKey("config." + CATEGORY_WORLD_SPAWN_ORES.replace(' ', '_') + ".name");
@@ -208,5 +212,6 @@ public class ConfigurationHandler
         list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_MACHINES)));
         list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_MATTER)));
         list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_STARMAP)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_ABILITIES)));
     }
 }

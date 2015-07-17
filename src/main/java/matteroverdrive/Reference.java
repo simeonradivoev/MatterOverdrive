@@ -84,19 +84,11 @@ public class Reference
 	public static final int WS_HEAL = 8;
 	//endregion
 
-	// region Matter Network Tasks States
-	public static final byte TASK_STATE_INVALID = -1;
-	public static final byte TASK_STATE_UNKNOWN = 0;
-	public static final byte TASK_STATE_WAITING = 1;
-	public static final byte TASK_STATE_QUEUED = 2;
-	public static final byte TASK_STATE_PROCESSING = 3;
-	public static final byte TASK_STATE_FINISHED = 4;
-	//endregion
-
 	//region Request Packet Type
     public static final int PACKET_REQUEST_CONNECTION = 0;
 	public static final int PACKET_REQUEST_PATTERN_SEARCH = 1;
     public static final int PACKET_REQUEST_NEIGHBOR_CONNECTION = 2;
+	public static final int PACKET_REQUEST_VALID_PATTERN_DESTINATION = 3;
     //endregion
 
 	//region Broadcast Packet Type
