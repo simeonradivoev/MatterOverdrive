@@ -29,6 +29,7 @@ import matteroverdrive.commands.AndoidCommands;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.handler.*;
 import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
+import matteroverdrive.imc.MOIMCHandler;
 import matteroverdrive.init.*;
 import matteroverdrive.matter_network.MatterNetworkRegistry;
 import matteroverdrive.network.PacketPipeline;
@@ -153,6 +154,11 @@ public class MatterOverdrive
 			tickHandler.onServerStart(event);
         }
     }
+
+	@EventHandler
+	public void imcCallback(FMLInterModComms.IMCEvent event) {
+		MOIMCHandler.imcCallback(event);
+	}
 
 	private void UpdateTabs()
 	{
