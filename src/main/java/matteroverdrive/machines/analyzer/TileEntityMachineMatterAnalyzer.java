@@ -16,10 +16,9 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.tile;
+package matteroverdrive.machines.analyzer;
 
 import cofh.api.energy.IEnergyStorage;
-import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.position.BlockPosition;
@@ -31,25 +30,28 @@ import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
-import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
-import matteroverdrive.data.inventory.Slot;
+import matteroverdrive.data.inventory.MatterSlot;
 import matteroverdrive.handler.SoundHandler;
 import matteroverdrive.items.MatterScanner;
+import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.analyzer.components.MatterNetworkComponentAnalyzer;
+import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
-import matteroverdrive.matter_network.components.MatterNetworkComponentAnalyzer;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
+import matteroverdrive.tile.MOTileEntityMachineEnergy;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
-import matteroverdrive.util.MatterNetworkHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.EnumSet;
 
 /**
  * Created by Simeon on 3/16/2015.
@@ -72,8 +74,8 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     private boolean isActive = false;
     private MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> taskQueueSending;
     private MatterNetworkComponentAnalyzer networkComponent;
+    private ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
     private boolean hasValidPatternDestination;
-    private String destinationFilter;
 
     public TileEntityMachineMatterAnalyzer()
     {
@@ -84,15 +86,15 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         taskQueueSending = new MatterNetworkTaskQueue<>(this,1);
         redstoneMode = Reference.MODE_REDSTONE_LOW;
         networkComponent = new MatterNetworkComponentAnalyzer(this);
-
+        componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+        addComponent(componentMatterNetworkConfigs);
     }
 
     @Override
     public void RegisterSlots(Inventory inventory)
     {
-        input_slot = inventory.AddSlot(new Slot(true));
+        input_slot = inventory.AddSlot(new MatterSlot(true));
         database_slot = inventory.AddSlot(new DatabaseSlot(true));
-
         super.RegisterSlots(inventory);
     }
 
@@ -226,35 +228,25 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     //region NBT
     @Override
-    public void readCustomNBT(NBTTagCompound tagCompound)
+    public void readCustomNBT(NBTTagCompound tagCompound, EnumSet<MachineNBTCategory> categories)
     {
-        super.readCustomNBT(tagCompound);
-        analyzeTime = tagCompound.getShort("AnalyzeTime");
-        isActive = tagCompound.getBoolean("IsActive");
-        taskQueueSending.readFromNBT(tagCompound);
+        super.readCustomNBT(tagCompound, categories);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            analyzeTime = tagCompound.getShort("AnalyzeTime");
+            isActive = tagCompound.getBoolean("IsActive");
+            taskQueueSending.readFromNBT(tagCompound);
+        }
     }
 
     @Override
-    public void readConfigsFromNBT(NBTTagCompound nbt)
+    public void writeCustomNBT(NBTTagCompound tagCompound, EnumSet<MachineNBTCategory> categories)
     {
-        super.readConfigsFromNBT(nbt);
-        destinationFilter = nbt.getString("DestinationFilter");
-    }
-
-    @Override
-    public void writeCustomNBT(NBTTagCompound tagCompound)
-    {
-        super.writeCustomNBT(tagCompound);
-        tagCompound.setShort("AnalyzeTime", (short) analyzeTime);
-        tagCompound.setBoolean("IsActive", isActive);
-        taskQueueSending.writeToNBT(tagCompound);
-    }
-
-    @Override
-    public void writeConfigsToNBT(NBTTagCompound nbt)
-    {
-        super.writeConfigsToNBT(nbt);
-        nbt.setString("DestinationFilter",destinationFilter);
+        super.writeCustomNBT(tagCompound, categories);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            tagCompound.setShort("AnalyzeTime", (short) analyzeTime);
+            tagCompound.setBoolean("IsActive", isActive);
+            taskQueueSending.writeToNBT(tagCompound);
+        }
     }
     //endregion
 
@@ -289,11 +281,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     @Override
     public boolean canConnectFromSide(ForgeDirection side) {
         int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
-        if (BlockHelper.getOppositeSide(meta) == side.ordinal())
-        {
-            return true;
-        }
-        return false;
+        return BlockHelper.getOppositeSide(meta) == side.ordinal();
     }
 
     @Override
@@ -367,12 +355,12 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     @Override
     public String getDestinationFilter() {
-        return destinationFilter;
+        return componentMatterNetworkConfigs.getDestinationFilter();
     }
 
     @Override
     public void setDestinationFilter(String filter) {
-        destinationFilter = filter;
+        componentMatterNetworkConfigs.setDestinationFilter(filter);
     }
     //endregion
 }

@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui.pages;
 
 import cofh.lib.gui.GuiColor;
@@ -57,7 +75,7 @@ public class PageUpgrades extends ElementBaseGroup
 
     public void DrawUpgradeStats()
     {
-        Map<UpgradeTypes,Double> upgradesMap = new HashMap<UpgradeTypes, Double>();
+        Map<UpgradeTypes,Double> upgradesMap = new HashMap<>();
 
         for (int i = 0;i < container.inventorySlots.size();i++)
         {
@@ -83,7 +101,7 @@ public class PageUpgrades extends ElementBaseGroup
             }
         }
 
-        List<String> infos = new ArrayList<String>();
+        List<String> infos = new ArrayList<>();
 
         for (final Map.Entry<UpgradeTypes, Double> entry : upgradesMap.entrySet())
         {
@@ -97,13 +115,16 @@ public class PageUpgrades extends ElementBaseGroup
 
     public void AddUpgradeSlots(Container container,Inventory inventory)
     {
+        int upgradeSlotIndex = 0;
         for (int i = 0;i < container.inventorySlots.size();i++)
         {
             if(container.getSlot(i) instanceof SlotInventory && ((SlotInventory)container.getSlot(i)).getSlot() instanceof UpgradeSlot)
             {
                 ElementInventorySlot slotElement = new ElementInventorySlot(gui, (MOSlot) container.inventorySlots.get(i), 22,22,"big");
                 slotElement.setIcon(inventory.getSlot(((MOSlot) container.inventorySlots.get(i)).getSlotIndex()).getTexture());
+                slotElement.setPosition(77 + (upgradeSlotIndex % 5) * 24,52 + (upgradeSlotIndex / 5) * 24);
                 this.addElement(slotElement);
+                upgradeSlotIndex++;
             }
         }
     }

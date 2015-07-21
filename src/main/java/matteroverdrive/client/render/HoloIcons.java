@@ -22,8 +22,8 @@ import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementButton;
 import cofh.lib.render.RenderHelper;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -49,7 +49,7 @@ public class HoloIcons
             "page_icon_galaxy","page_icon_quadrant","page_icon_star","page_icon_planet","energy","arrow_right",
             "travel_icon","icon_search","icon_size","icon_shuttle","icon_stats","icon_scount_planet","icon_attack",
             "up_arrow","crosshair","up_arrow_large","android_feature_icon_bg","android_feature_icon_bg_active",
-            "health"};
+            "health","black_circle","connections"};
 
 
     public HoloIcons()
@@ -60,12 +60,12 @@ public class HoloIcons
 
     public void registerIcons(TextureMap textureMap)
     {
-        for (int i = 0;i < icons.length;i++)
+        for (String icon : icons)
         {
-            textureMap.registerIcon(Reference.MOD_ID + ":" + icons[i]);
+            textureMap.registerIcon(Reference.MOD_ID + ":" + icon);
         }
 
-        AndroidStatRegistry.registerIcons(textureMap);
+        MatterOverdrive.statRegistry.registerIcons(textureMap);
     }
 
     public IIcon getIcon(String icon)

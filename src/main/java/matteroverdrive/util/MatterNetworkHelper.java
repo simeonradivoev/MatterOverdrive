@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.util;
 
 import cofh.lib.util.position.BlockPosition;
@@ -77,28 +95,26 @@ public class MatterNetworkHelper
 
     public static BlockPosition parseBlockPosition(IMatterNetworkBroadcaster broadcaster)
     {
-        String[] coords = broadcaster.getDestinationFilter().split(",");
-        if (coords.length >= 3)
-        {
-            int x,y,z;
-            try {
-                x = Integer.parseInt(coords[0]);
-                y = Integer.parseInt(coords[1]);
-                z = Integer.parseInt(coords[2]);
-            }
-            catch(NumberFormatException e)
-            {
-               return null;
-            }
-
-            if (coords.length >= 4)
-            {
-                int portOrdinal = Integer.parseInt(coords[3]);
-                if (portOrdinal >= 0 && portOrdinal < ForgeDirection.values().length) {
-                    return new BlockPosition(x, y, z,ForgeDirection.getOrientation(portOrdinal));
+        if (broadcaster.getDestinationFilter() != null) {
+            String[] coords = broadcaster.getDestinationFilter().split(",");
+            if (coords.length >= 3) {
+                int x, y, z;
+                try {
+                    x = Integer.parseInt(coords[0]);
+                    y = Integer.parseInt(coords[1]);
+                    z = Integer.parseInt(coords[2]);
+                } catch (NumberFormatException e) {
+                    return null;
                 }
+
+                if (coords.length >= 4) {
+                    int portOrdinal = Integer.parseInt(coords[3]);
+                    if (portOrdinal >= 0 && portOrdinal < ForgeDirection.values().length) {
+                        return new BlockPosition(x, y, z, ForgeDirection.getOrientation(portOrdinal));
+                    }
+                }
+                return new BlockPosition(x, y, z);
             }
-            return new BlockPosition(x,y,z);
         }
         return null;
     }

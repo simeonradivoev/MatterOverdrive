@@ -1,10 +1,29 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui;
 
 import cofh.lib.gui.element.ElementEnergyStored;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerPatternStorage;
 import matteroverdrive.container.slot.MOSlot;
-import matteroverdrive.container.slot.SlotPatternStorage;
+import matteroverdrive.container.slot.SlotInventory;
+import matteroverdrive.data.inventory.PatternStorageSlot;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.tile.TileEntityMachinePatternStorage;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -39,7 +58,7 @@ public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStor
     {
         for (int i = 0;i < container.inventorySlots.size();i++)
         {
-            if(container.inventorySlots.get(i) instanceof SlotPatternStorage)
+            if(container.inventorySlots.get(i) instanceof SlotInventory && ((SlotInventory) container.inventorySlots.get(i)).getSlot() instanceof PatternStorageSlot)
             {
                 list.addElement(new ElementInventorySlot(this, (MOSlot)container.inventorySlots.get(i),22,22, "big",machine.getInventoryContainer().getSlot(i).getTexture()));
             }

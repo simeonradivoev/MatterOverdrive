@@ -18,29 +18,28 @@
 
 package matteroverdrive.gui.pages;
 
-import matteroverdrive.Reference;
-import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.gui.MOGuiMachine;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.element.MOElementTextField;
 import matteroverdrive.gui.events.ITextHandler;
-import matteroverdrive.util.MOStringHelper;
+import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
+
 
 /**
  * Created by Simeon on 7/17/2015.
  */
 public class MatterNetworkConfigPage extends ConfigPage implements ITextHandler
 {
-    IMatterNetworkBroadcaster broadcaster;
+    ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
     MOElementTextField destinationTextField;
 
-    public MatterNetworkConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height,IMatterNetworkBroadcaster broadcaster) {
+    public MatterNetworkConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height,ComponentMatterNetworkConfigs componentMatterNetworkConfigs) {
         super(gui, posX, posY, width, height);
-        destinationTextField = new MOElementTextField(gui,this,64,84,128,16);
+        destinationTextField = new MOElementTextField(gui,this,64,84,96,16);
         destinationTextField.setName("Destination");
         destinationTextField.setBackground(MOElementButton.HOVER_TEXTURE_DARK);
         destinationTextField.setTextOffset(4, 3);
-        this.broadcaster = broadcaster;
+        this.componentMatterNetworkConfigs = componentMatterNetworkConfigs;
     }
 
     @Override
@@ -48,8 +47,10 @@ public class MatterNetworkConfigPage extends ConfigPage implements ITextHandler
     {
         super.init();
         addElement(destinationTextField);
-        if (broadcaster.getDestinationFilter() != null)
-            destinationTextField.setText(broadcaster.getDestinationFilter());
+        if (componentMatterNetworkConfigs != null) {
+            if (componentMatterNetworkConfigs.getDestinationFilter() != null)
+                destinationTextField.setText(componentMatterNetworkConfigs.getDestinationFilter());
+        }
     }
 
     @Override
@@ -62,9 +63,24 @@ public class MatterNetworkConfigPage extends ConfigPage implements ITextHandler
     @Override
     public void textChanged(String elementName, String text, boolean typed)
     {
-        if (elementName == "Destination") {
-            broadcaster.setDestinationFilter(text);
-            machineGui.getMachine().sendConfigsToServer();
+        if (elementName.equals("Destination"))
+        {
+            if (componentMatterNetworkConfigs != null) {
+                componentMatterNetworkConfigs.setDestinationFilter(text);
+                machineGui.getMachine().sendConfigsToServer();
+            }
         }
+    }
+
+    @Override
+    public void update(int mouseX, int mouseY)
+    {
+        super.update(mouseX,mouseY);
+        int x = destinationTextField.getPosX() + destinationTextField.getWidth() + 10;
+        /*for (ElementSlot slot : networkConfigSlots)
+        {
+            slot.setPosition(x,destinationTextField.getPosY() + 6);
+            x += slot.getWidth();
+        }*/
     }
 }

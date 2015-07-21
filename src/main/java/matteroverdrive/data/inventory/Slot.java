@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.data.inventory;
 
 import net.minecraft.item.ItemStack;
@@ -13,49 +31,29 @@ public class Slot
     private boolean drops = true;
     private boolean isMainSlot = false;
 
-    public Slot(boolean isMainSlot)
-    {
-        this.isMainSlot = isMainSlot;
-    }
-
-    public boolean isValidForSlot(ItemStack item)
-    {
-        return true;
-    }
+    public Slot(boolean isMainSlot) {this.isMainSlot = isMainSlot;}
+    public boolean isValidForSlot(ItemStack item) {return true;}
     public IIcon getTexture()
     {
         return null;
     }
-
     public ItemStack getItem() {
         return item;
     }
-
     public void setItem(ItemStack item) {
         this.item = item;
     }
-
-    public int getId() {
-        return id;
-    }
-
+    public int getId() {return id;}
     public void setId(int id) {
         this.id = id;
     }
-
-    boolean isEqual(net.minecraft.inventory.Slot slot)
-    {
-        return true;
-    }
-
     public boolean drops() {
         return drops;
     }
-
     public void setDrops(boolean drops) {
         this.drops = drops;
     }
-
+    public boolean keepOnDismatle(){return false;}
     public boolean isMainSlot()
     {
         return isMainSlot;
@@ -64,4 +62,5 @@ public class Slot
     {
         this.isMainSlot = mainSlot;
     }
+    public int getMaxStackSize(){return 64;}
 }

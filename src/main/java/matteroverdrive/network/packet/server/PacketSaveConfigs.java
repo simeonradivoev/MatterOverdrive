@@ -22,11 +22,14 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.machines.MOTileEntityMachine;
+import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
-import matteroverdrive.tile.MOTileEntityMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+
+import java.util.EnumSet;
 
 /**
  * Created by Simeon on 7/17/2015.
@@ -44,7 +47,7 @@ public class PacketSaveConfigs extends TileEntityUpdatePacket
     {
         super(machine);
         data = new NBTTagCompound();
-        machine.writeConfigsToNBT(data);
+        machine.writeCustomNBT(data, EnumSet.of(MachineNBTCategory.CONFIGS));
     }
 
     @Override
@@ -69,7 +72,7 @@ public class PacketSaveConfigs extends TileEntityUpdatePacket
             TileEntity tileEntity = message.getTileEntity(player.worldObj);
             if (tileEntity instanceof MOTileEntityMachine)
             {
-                ((MOTileEntityMachine) tileEntity).readConfigsFromNBT(message.data);
+                ((MOTileEntityMachine) tileEntity).readCustomNBT(message.data, EnumSet.of(MachineNBTCategory.CONFIGS));
             }
             return null;
         }

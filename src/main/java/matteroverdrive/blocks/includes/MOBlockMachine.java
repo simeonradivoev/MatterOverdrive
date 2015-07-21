@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.blocks.includes;
 
 import cofh.api.block.IDismantleable;
@@ -7,11 +25,10 @@ import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.inventory.Slot;
-import matteroverdrive.data.inventory.UpgradeSlot;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.items.includes.MOEnergyMatterBlockItem;
+import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.tile.IMOTileEntity;
-import matteroverdrive.tile.MOTileEntityMachine;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;
@@ -154,7 +171,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     @Override
     public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops)
     {
-        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> items = new ArrayList<>();
         ItemStack blockItem = getNBTDrop(world, x, y, z, (IMOTileEntity) world.getTileEntity(x, y, z));
         MOTileEntityMachine machine = (MOTileEntityMachine)world.getTileEntity(x,y,z);
         items.add(blockItem);
@@ -176,7 +193,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
                 Slot slot = machine.getInventoryContainer().getSlot(i1);
                 ItemStack itemstack = slot.getItem();
 
-                if (itemstack != null && !(slot instanceof UpgradeSlot))
+                if (itemstack != null && !slot.keepOnDismatle())
                 {
                     float f = world.rand.nextFloat() * 0.8F + 0.1F;
                     float f1 = world.rand.nextFloat() * 0.8F + 0.1F;

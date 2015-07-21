@@ -34,7 +34,9 @@ import matteroverdrive.init.*;
 import matteroverdrive.matter_network.MatterNetworkRegistry;
 import matteroverdrive.network.PacketPipeline;
 import matteroverdrive.proxy.CommonProxy;
+import matteroverdrive.util.MOLog;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.logging.log4j.Level;
 
 import java.io.File;
 
@@ -62,11 +64,16 @@ public class MatterOverdrive
 	public static String registryPath;
 	public static MatterOverdriveWorld moWorld;
 	public static EntityHandler entityHandler;
+	public static MatterRegistry matterRegistry;
+	public static AndroidStatRegistry statRegistry;
 
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+        checkJavaVersion();
+		matterRegistry = new MatterRegistry();
+		statRegistry = new AndroidStatRegistry();
 		registryPath = event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + "Registry" + ".reg";
         guiHandler = new GuiHandler();
         craftingHandler = new CraftingHandler();
@@ -91,9 +98,8 @@ public class MatterOverdrive
 		moWorld.register();
 		MatterNetworkRegistry.register();
         packetPipeline.registerPackets();
-		AndroidStatRegistry.init();
-        AndroidStatRegistry.registerAll(configHandler);
-
+		statRegistry.init();
+		statRegistry.registerAll(configHandler);
 		MatterOverdriveMatter.init(configHandler);
 		MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);
 		MatterOverdriveMatter.registerFromConfig(configHandler);
@@ -136,13 +142,13 @@ public class MatterOverdrive
         if (configHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_RECIPE_CALCULATION, ConfigurationHandler.CATEGORY_MATTER,true))
 		{
             try {
-                if (MatterRegistry.needsCalculation(registryPath))
+                if (matterRegistry.needsCalculation(registryPath))
                 {
                     Thread registerItemsThread = new Thread(new RegisterItemsFromRecipes(registryPath));
                     registerItemsThread.run();
                 }else
                 {
-                    MatterRegistry.loadFromFile(registryPath);
+					matterRegistry.loadFromFile(registryPath);
                 }
             } catch (Exception e)
             {
@@ -169,5 +175,16 @@ public class MatterOverdrive
 		tabMatterOverdrive_ships.item = MatterOverdriveItems.colonizerShip;
 		tabMatterOverdrive_buildings.item = MatterOverdriveItems.buildingBase;
 	}
-	
+
+	private void checkJavaVersion()
+	{
+        String versionString = System.getProperty("java.version");
+        int pos = versionString.indexOf('.');
+        pos = versionString.indexOf('.', pos+1);
+        double version = Double.parseDouble(versionString.substring(0, pos));
+        if (version < 1.8)
+        {
+            MOLog.log(Level.WARN,"MatterOverdrive only supports Java 8 and above. Please Update your Java version. Your Java version is: " + version);
+        }
+	}
 }

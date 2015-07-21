@@ -1,9 +1,27 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.commands;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.api.inventory.IBionicStat;
+import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -82,18 +100,18 @@ public class AndoidCommands extends CommandBase
                         }
                     }else if (parameters[0].equalsIgnoreCase("unlock"))
                     {
-                        if (AndroidStatRegistry.stats.containsKey(parameters[1]))
+                        if (MatterOverdrive.statRegistry.hasStat(parameters[1]))
                         {
-                            IBionicStat stat = AndroidStatRegistry.getStat(parameters[1]);
+                            IBionicStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
                             androidPlayer.unlock(stat, stat.maxLevel());
                             validCommand = true;
                             commandInfo = sender.getCommandSenderName() + " now has the ability " + EnumChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]";
                         }
                     }else if (parameters[0].equalsIgnoreCase("forget"))
                     {
-                        if (AndroidStatRegistry.stats.containsKey(parameters[1]))
+                        if (MatterOverdrive.statRegistry.hasStat(parameters[1]))
                         {
-                            IBionicStat stat = AndroidStatRegistry.getStat(parameters[1]);
+                            IBionicStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
                             androidPlayer.reset(stat);
                             validCommand = true;
                             commandInfo = EnumChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]" + EnumChatFormatting.RESET + " removed from " + sender.getCommandSenderName();
@@ -116,7 +134,7 @@ public class AndoidCommands extends CommandBase
     @Override
     public List addTabCompletionOptions(ICommandSender commandSender, String[] parameters)
     {
-        List<String> commands = new ArrayList<String>();
+        List<String> commands = new ArrayList<>();
 
         if (parameters.length == 2)
         {
@@ -131,13 +149,13 @@ public class AndoidCommands extends CommandBase
             }
             else if (parameters[0].equalsIgnoreCase("unlock"))
             {
-                for (IBionicStat stat : AndroidStatRegistry.stats.values())
+                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats())
                 {
                     commands.add(stat.getUnlocalizedName());
                 }
             }else if (parameters[0].equalsIgnoreCase("forget"))
             {
-                for (IBionicStat stat : AndroidStatRegistry.stats.values())
+                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats())
                 {
                     commands.add(stat.getUnlocalizedName());
                 }

@@ -1,5 +1,24 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.util;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.matter.IMatterItem;
 import matteroverdrive.api.matter.IMatterPatternStorage;
@@ -8,7 +27,6 @@ import matteroverdrive.api.matter.IMatterReceiver;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.handler.MatterEntry;
-import matteroverdrive.handler.MatterRegistry;
 import matteroverdrive.items.MatterScanner;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
@@ -32,12 +50,7 @@ public class MatterHelper
 	
 	public static boolean containsMatter(ItemStack item)
 	{
-		if(getMatterAmountFromItem(item) > 0)
-		{
-			return true;
-		}
-		
-		return false;
+		return getMatterAmountFromItem(item) > 0;
 	}
 	
 	public static int getMatterAmountFromItem(ItemStack item)
@@ -46,12 +59,11 @@ public class MatterHelper
         {
             if (item.getItem() instanceof IMatterItem)
             {
-                int matter = ((IMatterItem) item.getItem()).getMatter(item);
-                return matter;
+                return ((IMatterItem) item.getItem()).getMatter(item);
             }
             else
             {
-                MatterEntry matter = MatterRegistry.getEntry(item);
+                MatterEntry matter = MatterOverdrive.matterRegistry.getEntry(item);
                 if (matter != null)
                     return matter.getMatter();
             }
@@ -93,7 +105,7 @@ public class MatterHelper
 		for(int i = 0;i < recipes.size();i++)
 		{
 			IRecipe recipe = (IRecipe)recipes.get(i);
-			
+
 			if (recipe != null && recipe.getRecipeOutput() != null && recipe.getRecipeOutput().getItem() == item.getItem())
             {
 				return recipe;
@@ -105,43 +117,27 @@ public class MatterHelper
 
     public static boolean isWeaponModule(ItemStack itemStack)
     {
-        if (itemStack != null && itemStack.getItem() != null)
-        {
-            return itemStack.getItem() instanceof IWeaponModule;
-        }
-        return false;
+        return itemStack != null && itemStack.getItem() != null && itemStack.getItem() instanceof IWeaponModule;
     }
 
     public static boolean isWeapon(ItemStack itemStack)
     {
-        if (itemStack != null && itemStack.getItem() != null)
-        {
-            return itemStack.getItem() instanceof IWeapon;
-        }
-        return false;
+        return itemStack != null && itemStack.getItem() != null  && itemStack.getItem() instanceof IWeapon;
     }
 
 	public static boolean isMatterScanner(ItemStack item)
 	{
-        if(item != null && item.getItem() != null)
-		    return item.getItem() instanceof MatterScanner;
-        return false;
+        return item != null && item.getItem() != null && item.getItem() instanceof MatterScanner;
 	}
 
     public static boolean isMatterPatternStorage(ItemStack item)
     {
-        if(item != null && item.getItem() != null)
-            return item.getItem() instanceof IMatterPatternStorage;
-        return false;
+        return item != null && item.getItem() != null && item.getItem() instanceof IMatterPatternStorage;
     }
 
     public static boolean isUpgrade(ItemStack itemStack)
     {
-        if (itemStack != null)
-        {
-            return itemStack.getItem() instanceof IUpgrade;
-        }
-        return false;
+        return itemStack != null && itemStack.getItem() instanceof IUpgrade;
     }
 	
 	public static boolean CanScan(ItemStack stack)

@@ -24,7 +24,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.api.inventory.IBionicStat;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.items.MatterScanner;
 import net.minecraft.client.gui.GuiChat;
@@ -79,7 +80,7 @@ public class KeyHandler
         if (androidPlayer.isAndroid()) {
             androidPlayer.onKeyInput(event);
 
-            for (IBionicStat stat : AndroidStatRegistry.stats.values()) {
+            for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
                 int level = androidPlayer.getUnlockedLevel(stat);
                 if (level > 0 && stat.isEnabled(androidPlayer, level)) {
                     stat.onKeyPress(androidPlayer, androidPlayer.getUnlockedLevel(stat), Keyboard.getEventKey(), Keyboard.getEventKeyState());

@@ -1,11 +1,29 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.client.render.biostat;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.IWorldLastRenderer;
 import matteroverdrive.client.render.tileentity.TileEntityRendererGravitationalAnomaly;
 import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
@@ -25,7 +43,7 @@ public class BiostatRendererTeleporter implements IWorldLastRenderer
         AndroidPlayer androidPlayer = AndroidPlayer.get(Minecraft.getMinecraft().thePlayer);
         Vec3 playerPos = androidPlayer.getPlayer().getPosition(event.partialTicks);
 
-        if (androidPlayer != null && androidPlayer.isAndroid() && androidPlayer.isUnlocked(AndroidStatRegistry.teleport,AndroidStatRegistry.teleport.maxLevel()) && AndroidStatRegistry.teleport.isEnabled(androidPlayer,0) && AndroidStatRegistry.teleport.getHasPressedKey())
+        if (androidPlayer != null && androidPlayer.isAndroid() && androidPlayer.isUnlocked(MatterOverdrive.statRegistry.teleport,MatterOverdrive.statRegistry.teleport.maxLevel()) && MatterOverdrive.statRegistry.teleport.isEnabled(androidPlayer,0) && MatterOverdrive.statRegistry.teleport.getHasPressedKey())
         {
             if(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed())
             {
@@ -37,7 +55,7 @@ public class BiostatRendererTeleporter implements IWorldLastRenderer
 
                 //mob.rotationYawHead = androidPlayer.getPlayer().rotationYawHead;
 
-                Vec3 pos = AndroidStatRegistry.teleport.getPos(androidPlayer);
+                Vec3 pos = MatterOverdrive.statRegistry.teleport.getPos(androidPlayer);
                 if (pos != null)
                 {
                     Minecraft.getMinecraft().renderEngine.bindTexture(TileEntityRendererGravitationalAnomaly.glow);

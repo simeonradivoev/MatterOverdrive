@@ -22,9 +22,9 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import matteroverdrive.api.inventory.IBionicStat;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.network.packet.PacketAbstract;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -112,35 +112,31 @@ public class PacketSyncAndroid extends PacketAbstract
             }
 
             if (entity instanceof EntityPlayer) {
-                EntityPlayer source = (EntityPlayer)entity;
-                if (source != null) {
-                    AndroidPlayer ex = AndroidPlayer.get(source);
+                EntityPlayer source = (EntityPlayer) entity;
+                AndroidPlayer ex = AndroidPlayer.get(source);
 
-                    if (ex != null) {
-                        switch (message.syncPart) {
-                            case SYNC_BATTERY:
-                                if (ex.getStackInSlot(ex.ENERGY_SLOT) != null) {
-                                    ex.getStackInSlot(ex.ENERGY_SLOT).readFromNBT(message.data);
-                                }
-                                break;
-                            case SYNC_EFFECTS:
-                                ex.setEffects(message.data);
-                                break;
-                            case SYNC_STATS:
-                                ex.setUnlocked(message.data);
-                                break;
-                            case SYNC_ACTIVE_ABILITY:
-                                if (message.data.hasKey("Ability"))
-                                {
-                                    IBionicStat stat = AndroidStatRegistry.getStat(message.data.getString("Ability"));
-                                    ex.setActiveStat(stat);
-                                }else
-                                {
-                                    ex.setActiveStat(null);
-                                }
-                            default:
-                                ex.loadNBTData(message.data);
-                        }
+                if (ex != null) {
+                    switch (message.syncPart) {
+                        case SYNC_BATTERY:
+                            if (ex.getStackInSlot(ex.ENERGY_SLOT) != null) {
+                                ex.getStackInSlot(ex.ENERGY_SLOT).readFromNBT(message.data);
+                            }
+                            break;
+                        case SYNC_EFFECTS:
+                            ex.setEffects(message.data);
+                            break;
+                        case SYNC_STATS:
+                            ex.setUnlocked(message.data);
+                            break;
+                        case SYNC_ACTIVE_ABILITY:
+                            if (message.data.hasKey("Ability")) {
+                                IBionicStat stat = MatterOverdrive.statRegistry.getStat(message.data.getString("Ability"));
+                                ex.setActiveStat(stat);
+                            } else {
+                                ex.setActiveStat(null);
+                            }
+                        default:
+                            ex.loadNBTData(message.data);
                     }
                 }
             }

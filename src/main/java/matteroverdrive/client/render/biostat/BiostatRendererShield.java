@@ -1,11 +1,29 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.client.render.biostat;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.IWorldLastRenderer;
 import matteroverdrive.data.biostats.BioticStatShield;
 import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,8 +33,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.util.vector.Vector3f;
-
-import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -43,10 +59,9 @@ public class BiostatRendererShield implements IWorldLastRenderer
 
     public void onRenderWorldLast(RenderHandler handler,RenderWorldLastEvent event)
     {
-        List playerEntities = Minecraft.getMinecraft().theWorld.playerEntities;
-        for (int i = 0;i < playerEntities.size();i++)
+        for (Object entity : Minecraft.getMinecraft().theWorld.playerEntities)
         {
-            renderPlayerShield(event,(EntityPlayer)playerEntities.get(i));
+            renderPlayerShield(event,(EntityPlayer)entity);
         }
 
     }
@@ -109,7 +124,7 @@ public class BiostatRendererShield implements IWorldLastRenderer
 
     private boolean manageOpacityLerp(AndroidPlayer androidPlayer,float partialTicks)
     {
-        if (AndroidStatRegistry.shield.getShieldState(androidPlayer))
+        if (MatterOverdrive.statRegistry.shield.getShieldState(androidPlayer))
         {
             if (isClient(androidPlayer.getPlayer()))
             {

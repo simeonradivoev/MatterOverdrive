@@ -18,7 +18,8 @@
 
 package matteroverdrive.handler;
 
-import matteroverdrive.api.inventory.IBionicStat;
+import matteroverdrive.api.android.IAndroidStatRegistry;
+import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.data.biostats.*;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -31,23 +32,24 @@ import java.util.HashMap;
 /**
  * Created by Simeon on 5/27/2015.
  */
-public class AndroidStatRegistry
+public class AndroidStatRegistry implements IAndroidStatRegistry
 {
-    public static HashMap<String,IBionicStat> stats = new HashMap<String, IBionicStat>();
+    private HashMap<String,IBionicStat> stats = new HashMap<>();
 
-    public static BioticStatTeleport teleport;
-    public static BiostatNanobots nanobots;
-    public static BioticStatNanoArmor nanoArmor;
-    public static BioticStatFlotation flotation;
-    public static BioticStatSpeed speed;
-    public static BioticStatHighJump highJump;
-    public static BioticStatEqualizer equalizer;
-    public static BioticStatShield shield;
-    public static BioticStatAttack attack;
-    public static BioticStatCloak cloak;
-    public static BioticStatNightvision nightvision;
+    public BioticStatTeleport teleport;
+    public BiostatNanobots nanobots;
+    public BioticStatNanoArmor nanoArmor;
+    public BioticStatFlotation flotation;
+    public BioticStatSpeed speed;
+    public BioticStatHighJump highJump;
+    public BioticStatEqualizer equalizer;
+    public BioticStatShield shield;
+    public BioticStatAttack attack;
+    public BioticStatCloak cloak;
+    public BioticStatNightvision nightvision;
 
-    public static boolean registerStat(IBionicStat stat)
+    @Override
+    public boolean registerStat(IBionicStat stat)
     {
         if (stats.containsKey(stat.getUnlocalizedName()))
         {
@@ -60,22 +62,25 @@ public class AndroidStatRegistry
         }
     }
 
-    public static IBionicStat getStat(String name)
+    @Override
+    public IBionicStat getStat(String name)
     {
         return stats.get(name);
     }
 
-    public static boolean hasStat(String name)
+    @Override
+    public boolean hasStat(String name)
     {
         return stats.containsKey(name);
     }
 
-    public static void unregisterStat(IBionicStat stat)
+    @Override
+    public IBionicStat unregisterStat(String statName)
     {
-        stats.remove(stat.getUnlocalizedName());
+        return stats.remove(statName);
     }
 
-    public static void init()
+    public void init()
     {
         teleport = new BioticStatTeleport("teleport",48);
         nanobots = new BiostatNanobots("nanobots",26);
@@ -105,7 +110,7 @@ public class AndroidStatRegistry
         cloak.setRoot(shield);
     }
 
-    public static void registerAll(ConfigurationHandler configurationHandler)
+    public void registerAll(ConfigurationHandler configurationHandler)
     {
         registerStat(teleport);
         registerStat(nanobots);
@@ -127,7 +132,7 @@ public class AndroidStatRegistry
         configurationHandler.subscribe(nightvision);
     }
 
-    public static void registerIcons(TextureMap holoIcons)
+    public void registerIcons(TextureMap holoIcons)
     {
         for (IBionicStat stat : stats.values())
         {
@@ -135,7 +140,7 @@ public class AndroidStatRegistry
         }
     }
 
-    public static Collection<IBionicStat> getStats()
+    public Collection<IBionicStat> getStats()
     {
         return stats.values();
     }

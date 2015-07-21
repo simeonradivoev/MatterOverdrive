@@ -19,7 +19,7 @@
 package matteroverdrive.data.biostats;
 
 import matteroverdrive.Reference;
-import matteroverdrive.api.inventory.IBionicStat;
+import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -50,9 +50,9 @@ public abstract class AbstractBioticStat implements IBionicStat
     {
         this.name = name;
         this.xp = xp;
-        competitors = new ArrayList<IBionicStat>();
-        reqiredItems = new ArrayList<ItemStack>();
-        enabledBlacklist = new ArrayList<IBionicStat>();
+        competitors = new ArrayList<>();
+        reqiredItems = new ArrayList<>();
+        enabledBlacklist = new ArrayList<>();
         maxLevel = 1;
     }
 
@@ -89,9 +89,9 @@ public abstract class AbstractBioticStat implements IBionicStat
         //if any of the competitors are unlocked then this stat can't be unlocked
         if (competitors.size() > 0)
         {
-            for (int i = 0;i < competitors.size();i++)
+            for (IBionicStat compeditor : competitors)
             {
-                if (android.isUnlocked(competitors.get(i),0))
+                if (android.isUnlocked(compeditor,0))
                 {
                     return false;
                 }
@@ -99,10 +99,10 @@ public abstract class AbstractBioticStat implements IBionicStat
         }
         if (reqiredItems.size() > 0)
         {
-            for (int i = 0;i < reqiredItems.size();i++)
+            for (ItemStack item : reqiredItems)
             {
 
-                if (!hasItem(android, reqiredItems.get(i)))
+                if (!hasItem(android, item))
                 {
                     return false;
                 }
@@ -110,14 +110,7 @@ public abstract class AbstractBioticStat implements IBionicStat
         }
         if (android.isAndroid())
         {
-            if (android.getPlayer().capabilities.isCreativeMode)
-            {
-                return true;
-            }
-            else
-            {
-                return android.getPlayer().experienceLevel >= xp;
-            }
+            return android.getPlayer().capabilities.isCreativeMode || android.getPlayer().experienceLevel >= xp;
         }
         return false;
     }
@@ -148,9 +141,8 @@ public abstract class AbstractBioticStat implements IBionicStat
     //does not check if the items exist
     protected void consumeItems(AndroidPlayer androidPlayer)
     {
-        for (int i = 0;i < reqiredItems.size();i++)
+        for (ItemStack itemStack : reqiredItems)
         {
-            ItemStack itemStack = reqiredItems.get(i);
             int itemCount = itemStack.stackSize;
             for (int j = 0;j < androidPlayer.getPlayer().inventory.getSizeInventory();j++)
             {
@@ -179,9 +171,9 @@ public abstract class AbstractBioticStat implements IBionicStat
         list.add(EnumChatFormatting.WHITE + name);
         String details = getDetails(level);
         String[] detailsSplit = details.split("/n/");
-        for (int i = 0;i < detailsSplit.length;i++)
+        for (String detail : detailsSplit)
         {
-            list.add(EnumChatFormatting.GRAY + detailsSplit[i]);
+            list.add(EnumChatFormatting.GRAY + detail);
         }
 
         String reqires = "";
@@ -193,18 +185,18 @@ public abstract class AbstractBioticStat implements IBionicStat
 
         if (reqiredItems.size() > 0)
         {
-            for (int i = 0;i < reqiredItems.size();i++)
+            for (ItemStack itemStack : reqiredItems)
             {
                 if (!reqires.isEmpty())
                 {
                     reqires += EnumChatFormatting.GRAY + ", ";
                 }
-                if (reqiredItems.get(i).stackSize > 1)
+                if (itemStack.stackSize > 1)
                 {
-                    reqires += EnumChatFormatting.WHITE.toString() + reqiredItems.get(i).stackSize + "x";
+                    reqires += EnumChatFormatting.WHITE.toString() + itemStack.stackSize + "x";
                 }
 
-                reqires += EnumChatFormatting.WHITE + "[" + reqiredItems.get(i).getDisplayName() + "]";
+                reqires += EnumChatFormatting.WHITE + "[" + itemStack.getDisplayName() + "]";
             }
         }
 
@@ -221,9 +213,9 @@ public abstract class AbstractBioticStat implements IBionicStat
 
     public boolean checkBlacklistActive(AndroidPlayer androidPlayer,int level)
     {
-        for (int i = 0;i < enabledBlacklist.size();i++)
+        for (IBionicStat stat : enabledBlacklist)
         {
-            if(enabledBlacklist.get(i).isActive(androidPlayer,level))
+            if(stat.isActive(androidPlayer,level))
             {
                 return false;
             }

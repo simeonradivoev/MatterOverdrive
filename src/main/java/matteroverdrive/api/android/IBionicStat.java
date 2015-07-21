@@ -16,7 +16,7 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api.inventory;
+package matteroverdrive.api.android;
 
 import matteroverdrive.entity.AndroidPlayer;
 import net.minecraft.client.renderer.texture.TextureMap;

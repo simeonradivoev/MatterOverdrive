@@ -1,8 +1,27 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.handler;
 
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.matter.IMatterRegistry;
 import matteroverdrive.util.MOLog;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
@@ -21,22 +40,22 @@ import org.apache.logging.log4j.Level;
 import java.io.*;
 import java.util.*;
 
-public class MatterRegistry
+public class MatterRegistry implements IMatterRegistry
 {
-    public static boolean hasComplitedRegistration = false;
-    private static int MAX_DEPTH = 8;
-    public static int basicEntires = 0;
-	private static Map<String,MatterEntry> entries = new HashMap<String,MatterEntry>();
-    private static Set<String> blacklist = Collections.synchronizedSet(new HashSet<String>());
+    public boolean hasComplitedRegistration = false;
+    private static final int MAX_DEPTH = 8;
+    public int basicEntries = 0;
+	private Map<String,MatterEntry> entries = new HashMap<>();
+    private Set<String> blacklist = Collections.synchronizedSet(new HashSet<>());
 
-	public static MatterEntry register(MatterEntry entry)
+	public MatterEntry register(MatterEntry entry)
 	{
-        MOLog.log(Level.INFO, "Registered: %1$s - %2$s kM", entry.getName(),entry.getMatter());
+        MOLog.log(Level.INFO, "Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
 		entries.put(entry.getName(), entry);
 		return entry;
 	}
 
-    public static void saveToFile(String path) throws IOException {
+    public void saveToFile(String path) throws IOException {
         File file = new File(path);
 
         file.getParentFile().mkdirs();
@@ -46,26 +65,26 @@ public class MatterRegistry
         outputStream.writeObject(entries);
         outputStream.writeUTF(Reference.VERSION);
         outputStream.writeInt(CraftingManager.getInstance().getRecipeList().size());
-        outputStream.writeInt(basicEntires);
+        outputStream.writeInt(basicEntries);
         outputStream.writeInt(blacklist.size());
         outputStream.close();
         fileOutputStream.close();
         MOLog.log(Level.INFO,"RegistrySaved to: %s",path);
     }
 
-    public static void loadFromFile(String path) throws IOException, ClassNotFoundException {
+    public void loadFromFile(String path) throws IOException, ClassNotFoundException {
         File file = new File(path);
         if (file.exists()) {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
-            entries = (HashMap<String,MatterEntry>) inputStream.readObject();
+            entries = (HashMap) inputStream.readObject();
             String version = inputStream.readUTF();
             inputStream.close();
             fileInputStream.close();
             MOLog.log(Level.INFO,"Registry Loaded with %1$s entries, from version %2$s from: %3$s",entries.size(),version,file.getPath());
         }
     }
-    public static boolean needsCalculation(String path) throws IOException, ClassNotFoundException
+    public boolean needsCalculation(String path) throws IOException, ClassNotFoundException
     {
         File file = new File(path);
         String reason = "";
@@ -73,7 +92,7 @@ public class MatterRegistry
         {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
-            HashMap<String, MatterEntry> entires = (HashMap<String, MatterEntry>) inputStream.readObject();
+            HashMap<String, MatterEntry> entires = (HashMap)inputStream.readObject();
             String version = inputStream.readUTF();
             int recipeCount = inputStream.readInt();
             int basicEntries = inputStream.readInt();
@@ -87,17 +106,17 @@ public class MatterRegistry
             {
                 if (recipeCount == CraftingManager.getInstance().getRecipeList().size())
                 {
-                    if (basicEntries == MatterRegistry.basicEntires)
+                    if (basicEntries == this.basicEntries)
                     {
                         if (blackListSize == blacklist.size()) {
 
                             for (Map.Entry<String, MatterEntry> entry : entires.entrySet())
                             {
                                 if (!entry.getValue().calculated) {
-                                    if (MatterRegistry.entries.containsKey(entry.getKey())) {
-                                        if (!MatterRegistry.entries.get(entry.getKey()).equals(entry.getValue())) {
+                                    if (entries.containsKey(entry.getKey())) {
+                                        if (!entries.get(entry.getKey()).equals(entry.getValue())) {
                                             //if the entry is in the list but it's matter was changed
-                                            MOLog.log(Level.WARN,"Matter Registry has changed! %1$s changed from %2$s to %3$s. Recalculation required!",entry.getKey(),MatterRegistry.entries.get(entry.getKey()),entry.getValue().getMatter());
+                                            MOLog.log(Level.WARN,"Matter Registry has changed! %1$s changed from %2$s to %3$s. Recalculation required!",entry.getKey(),entries.get(entry.getKey()),entry.getValue().getMatter());
                                             return true;
                                         }
                                     }
@@ -128,32 +147,31 @@ public class MatterRegistry
         return true;
     }
 
-    public static void addToBlacklist(ItemStack itemStack) {blacklist.add(getKey(itemStack));}
-    public static void addToBlacklist(String key) {blacklist.add(key);}
-    public static void addToBlacklist(Item item) {blacklist.add(getKey(item));}
-    public static void addToBlacklist(Block block) {blacklist.add(getKey(block));}
-    public static boolean blacklisted(Block block){return blacklist.contains(getKey(block));}
-    public static boolean blacklisted(Item item){return blacklist.contains(getKey(item));}
-    public static boolean blacklisted(ItemStack itemStack)
+    @Override
+    public void addToBlacklist(ItemStack itemStack) {blacklist.add(getKey(itemStack));}
+    @Override
+    public void addToBlacklist(String key) {blacklist.add(key);}
+    @Override
+    public void addToBlacklist(Item item) {blacklist.add(getKey(item));}
+    @Override
+    public void addToBlacklist(Block block) {blacklist.add(getKey(block));}
+    @Override
+    public boolean blacklisted(Block block){return blacklist.contains(getKey(block));}
+    @Override
+    public boolean blacklisted(Item item){return blacklist.contains(getKey(item));}
+    @Override
+    public boolean blacklisted(ItemStack itemStack)
     {
-        if (blacklisted(getKey(itemStack)))
-        {
-            return true;
-        }else if (blacklisted(getKey(itemStack.getItem())))
-        {
-            return true;
-        }else
-        {
-            return false;
-        }
+        return blacklisted(getKey(itemStack.getItem())) || blacklisted(getKey(itemStack));
     }
-    public static boolean blacklisted(String key)
+    @Override
+    public boolean blacklisted(String key)
     {
         return blacklist.contains(key);
     }
-    public static String getKey(Block block) {return getKey(new ItemStack(block));}
-    public static String getKey(Item item) {return getKey(new ItemStack(item));}
-    public static String getKey(ItemStack itemStack) {
+    public String getKey(Block block) {return getKey(new ItemStack(block));}
+    public String getKey(Item item) {return getKey(new ItemStack(item));}
+    public String getKey(ItemStack itemStack) {
         try {
             return itemStack.getUnlocalizedName();
         } catch (Exception e)
@@ -167,7 +185,7 @@ public class MatterRegistry
             return null;
         }
     }
-    public static MatterEntry register(Block block,int matter) {
+    public MatterEntry register(Block block,int matter) {
         if (!blacklisted(block)) {
             String key = getKey(block);
             int configMatter = checkInConfig(key);
@@ -178,7 +196,7 @@ public class MatterRegistry
         }
         return null;
     }
-    public static MatterEntry register(Item item,int matter)
+    public MatterEntry register(Item item,int matter)
     {
         if (!blacklisted(item)) {
             String key = getKey(item);
@@ -190,7 +208,7 @@ public class MatterRegistry
         }
         return null;
     }
-    public static MatterEntry register(ItemStack itemStack,int matter)
+    public MatterEntry register(ItemStack itemStack,int matter)
     {
         if (!blacklisted(itemStack)) {
             String key = getKey(itemStack);
@@ -202,7 +220,7 @@ public class MatterRegistry
         }
         return null;
     }
-    public static MatterEntry register(String key,int matter)
+    public MatterEntry register(String key,int matter)
     {
         if (!blacklisted(key)) {
             int configMatter = checkInConfig(key);
@@ -213,15 +231,15 @@ public class MatterRegistry
         }
         return null;
     }
-    public static MatterEntry registerFromRecipe(Item item) {return registerFromRecipe(new ItemStack(item));}
-    public static int checkInConfig(String key){
+    public MatterEntry registerFromRecipe(Item item) {return registerFromRecipe(new ItemStack(item));}
+    public int checkInConfig(String key){
         if (MatterOverdrive.configHandler.config.hasKey(ConfigurationHandler.CATEGORY_OVERRIDE_MATTER, key))
         {
             return MatterOverdrive.configHandler.getInt(key, ConfigurationHandler.CATEGORY_OVERRIDE_MATTER,-1);
         }
         return -1;
     }
-    public static MatterEntry registerFromRecipe(ItemStack item)
+    public MatterEntry registerFromRecipe(ItemStack item)
     {
         int matter = getMatterFromRecipe(item, false, 0,true);
         if(matter > 0)
@@ -232,7 +250,7 @@ public class MatterRegistry
         }
     }
 
-    public static MatterEntry registerFromRecipe(Block block)
+    public MatterEntry registerFromRecipe(Block block)
     {
         int matter = getMatterFromRecipe(block, false, 0,true);
 
@@ -244,11 +262,11 @@ public class MatterRegistry
         }
     }
 
-	public static MatterEntry getEntry(Block block) {return getEntry(new ItemStack(block));}
+	public MatterEntry getEntry(Block block) {return getEntry(new ItemStack(block));}
 
-	public static MatterEntry getEntry(Item item) {return getEntry(new ItemStack(item));}
+	public MatterEntry getEntry(Item item) {return getEntry(new ItemStack(item));}
 
-    public static MatterEntry getEntry(ItemStack item)
+    public MatterEntry getEntry(ItemStack item)
     {
         try {
             if (!blacklist.contains(item.getUnlocalizedName()))
@@ -268,7 +286,7 @@ public class MatterRegistry
         }
     }
 
-    public static MatterEntry getEntry(String name)
+    public MatterEntry getEntry(String name)
     {
         MatterEntry e = entries.get(name);
 
@@ -285,29 +303,28 @@ public class MatterRegistry
         return e;
     }
 
-    static MatterEntry getOreDicionaryEntry(ItemStack stack)
+    private MatterEntry getOreDicionaryEntry(ItemStack stack)
     {
-        MatterEntry e = null;
-
+        MatterEntry e;
         int[] ids = OreDictionary.getOreIDs(stack);
-        for (int i = 0;i < ids.length;i++)
+        for (int id : ids)
         {
-            String entryName = OreDictionary.getOreName(ids[i]);
+            String entryName = OreDictionary.getOreName(id);
             e = entries.get(entryName);
 
             if(e != null)
                 return e;
         }
 
-        return e;
+        return null;
     }
 
-    public static int getMatterFromRecipe(Block block,boolean recursive,int depth,boolean calculated)
+    public int getMatterFromRecipe(Block block,boolean recursive,int depth,boolean calculated)
     {
         return getMatterFromRecipe(new ItemStack(block), recursive, depth,calculated);
     }
 
-    public static int getMatterFromRecipe(ItemStack item,boolean recursive,int depth,boolean calculated)
+    public int getMatterFromRecipe(ItemStack item,boolean recursive,int depth,boolean calculated)
     {
         int matter = 0;
 
@@ -339,30 +356,30 @@ public class MatterRegistry
         return matter;
     }
 
-    public static void loadNewItemsFromConfig(ConfigurationHandler c)
+    public void loadNewItemsFromConfig(ConfigurationHandler c)
     {
         List<Property> category = c.getCategory(ConfigurationHandler.CATEGORY_NEW_ITEMS).getOrderedValues();
-        for (int i = 0; i < category.size();i++)
+        for (Property key : category)
         {
-            int value = category.get(i).getInt(0);
+            int value = key.getInt(0);
             if (value > 0)
             {
-                register(category.get(i).getName(),value);
-                basicEntires++;
+                register(key.getName(),value);
+                basicEntries++;
             }
         }
     }
 
-    public static void loadBlacklistFromConfig(ConfigurationHandler c)
+    public void loadBlacklistFromConfig(ConfigurationHandler c)
     {
         String[] list = c.getStringList(ConfigurationHandler.CATEGORY_MATTER, ConfigurationHandler.KEY_MBLACKLIST);
-        for (int i = 0; i < list.length;i++)
+        for (String value : list)
         {
-            addToBlacklist(list[i]);
+            addToBlacklist(value);
         }
     }
 
-    public static int getMatterFromList(ItemStack item, Object[] list,boolean recursive,int depth,boolean calculated)
+    public int getMatterFromList(ItemStack item, Object[] list,boolean recursive,int depth,boolean calculated)
     {
         int totalMatter = 0;
         int tempMatter;
@@ -377,7 +394,6 @@ public class MatterRegistry
 
                 //reset temp vars
                 tempMatter = 0;
-                tempEntry = null;
 
                 if (s instanceof ItemStack || s instanceof Item || s instanceof Block) {
 
@@ -389,11 +405,11 @@ public class MatterRegistry
                     }
                     else if (s instanceof Block)
                     {
-                        stack = new ItemStack((Item)s);
+                        stack = new ItemStack((Block)s);
                     }
                     else if (s instanceof Item)
                     {
-                        stack = new ItemStack((Block)s);
+                        stack = new ItemStack((Item)s);
                     }
 
                     if (stack == null || blacklisted(stack)) {
@@ -410,8 +426,8 @@ public class MatterRegistry
                             tempMatter = tempEntry.getMatter();
                         }
                         //if there is no entry for item and recursive is true, then continue searching to it's recipe list
-                        else if (tempEntry == null && recursive) {
-                            tempMatter = getMatterFromRecipe(stack, recursive, ++depth,calculated);
+                        else if (recursive) {
+                            tempMatter = getMatterFromRecipe(stack, true, ++depth,calculated);
 
                             //if the matter is higher than 0 that means the recipe search was successful.
                             //registration now helps to remove it from future checks
@@ -443,21 +459,21 @@ public class MatterRegistry
                     //not using a index check, because the first item can be empty, and nothing positive is smaller than zero
                     boolean first = true;
 
-                    for (int i = 0;i < l.size();i++)
+                    for (Object element : l)
                     {
-                        if (l.get(i) instanceof ItemStack)
+                        if (element instanceof ItemStack)
                         {
                             ItemStack stack = null;
-                            if (l.get(i) instanceof ItemStack)
+                            if (element instanceof ItemStack)
                             {
-                                stack = (ItemStack)l.get(i);
+                                stack = (ItemStack)element;
                             }
-                            else if (l.get(i) instanceof Item)
+                            else if (element instanceof Item)
                             {
-                                stack = new ItemStack((Item)l.get(i));
-                            }else if (l.get(i) instanceof Block)
+                                stack = new ItemStack((Item)element);
+                            }else if (element instanceof Block)
                             {
-                                stack = new ItemStack((Block)l.get(i));
+                                stack = new ItemStack((Block)element);
                             }
 
                             tempEntry = getEntry(stack);
@@ -473,9 +489,9 @@ public class MatterRegistry
 
                             }
                             //here we use the recursion to calculate it's matter from any recipes it has
-                            else if (tempEntry == null && recursive)
+                            else if (recursive)
                             {
-                                int m = getMatterFromRecipe(stack,recursive,++depth,calculated);
+                                int m = getMatterFromRecipe(stack,true,++depth,calculated);
                                 //if the item has matter, has lower matter than the previous
                                 //if the item was first there is no previous so store that amount
                                 if ( m > 0 && (m < tempMatter || first))
@@ -515,7 +531,7 @@ public class MatterRegistry
         return MathHelper.round((double) totalMatter / (double) item.stackSize);
     }
 
-    static int handleReturns(Item item) {
+    private int handleReturns(Item item) {
         if (item == Items.lava_bucket || item == Items.water_bucket || item == Items.milk_bucket) {
             MatterEntry e = getEntry(Items.bucket);
             if (e != null)
@@ -530,14 +546,13 @@ public class MatterRegistry
         return 0;
     }
 
-    public static Map<String,MatterEntry> getEntries()
+    public Map<String,MatterEntry> getEntries()
     {
         return entries;
     }
 
-    public static void setEntries(Map<String,MatterEntry> entries)
+    public void setEntries(Map<String,MatterEntry> entries)
     {
-        MatterRegistry.entries = entries;
+        this.entries = entries;
     }
-	
 }

@@ -28,6 +28,7 @@ import matteroverdrive.api.starmap.IBuildable;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
+import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.server.starmap.PacketStarMapAttack;
 import matteroverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
 import matteroverdrive.starmap.GalaxyClient;
@@ -49,6 +50,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -118,16 +120,18 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.writeCustomNBT(nbt);
-        nbt.setByte("ZoomLevel",(byte)zoomLevel);
-        NBTTagCompound positionTag = new NBTTagCompound();
-        NBTTagCompound destinationTag = new NBTTagCompound();
-        position.writeToNBT(positionTag);
-        destination.writeToNBT(destinationTag);
-        nbt.setTag("GalacticPosition",positionTag);
-        nbt.setTag("GalacticDestination", destinationTag);
+        super.writeCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            nbt.setByte("ZoomLevel", (byte) zoomLevel);
+            NBTTagCompound positionTag = new NBTTagCompound();
+            NBTTagCompound destinationTag = new NBTTagCompound();
+            position.writeToNBT(positionTag);
+            destination.writeToNBT(destinationTag);
+            nbt.setTag("GalacticPosition", positionTag);
+            nbt.setTag("GalacticDestination", destinationTag);
+        }
     }
 
     @Override
@@ -136,12 +140,14 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     }
 
     @Override
-    public void readCustomNBT(NBTTagCompound nbt)
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.readCustomNBT(nbt);
-        zoomLevel = nbt.getByte("ZoomLevel");
-        position = new GalacticPosition(nbt.getCompoundTag("GalacticPosition"));
-        destination = new GalacticPosition(nbt.getCompoundTag("GalacticDestination"));
+        super.readCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            zoomLevel = nbt.getByte("ZoomLevel");
+            position = new GalacticPosition(nbt.getCompoundTag("GalacticPosition"));
+            destination = new GalacticPosition(nbt.getCompoundTag("GalacticDestination"));
+        }
     }
 
     @Override
@@ -199,10 +205,10 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     {
         if (worldObj.isRemote)
         {
-            return GalaxyClient.getInstance().getTheGalaxy().getPlanet(destination);
+            return GalaxyClient.getInstance().getPlanet(destination);
         }else
         {
-            return GalaxyServer.getInstance().getTheGalaxy().getPlanet(destination);
+            return GalaxyServer.getInstance().getPlanet(destination);
         }
     }
 
@@ -210,10 +216,10 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     {
         if (worldObj.isRemote)
         {
-            return  GalaxyClient.getInstance().getTheGalaxy().getStar(destination);
+            return  GalaxyClient.getInstance().getStar(destination);
         }else
         {
-            return GalaxyServer.getInstance().getTheGalaxy().getStar(destination);
+            return GalaxyServer.getInstance().getStar(destination);
         }
     }
 
@@ -221,10 +227,10 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     {
         if (worldObj.isRemote)
         {
-            return GalaxyClient.getInstance().getTheGalaxy().getQuadrant(destination);
+            return GalaxyClient.getInstance().getQuadrant(destination);
         }else
         {
-            return GalaxyServer.getInstance().getTheGalaxy().getQuadrant(destination);
+            return GalaxyServer.getInstance().getQuadrant(destination);
         }
     }
 
@@ -289,18 +295,16 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
         return this.destination;
     }
 
-    public SpaceBody getActiveSpaceBody()
-    {
-        switch (getZoomLevel())
-        {
+    public SpaceBody getActiveSpaceBody() {
+        switch (getZoomLevel()) {
             case 0:
                 return GalaxyClient.getInstance().getTheGalaxy();
             case 1:
-                return GalaxyClient.getInstance().getTheGalaxy().getQuadrant(destination);
+                return GalaxyClient.getInstance().getQuadrant(destination);
             case 2:
-                return GalaxyClient.getInstance().getTheGalaxy().getStar(destination);
+                return GalaxyClient.getInstance().getStar(destination);
             default:
-                return GalaxyClient.getInstance().getTheGalaxy().getPlanet(destination);
+                return GalaxyClient.getInstance().getPlanet(destination);
         }
     }
 
@@ -317,11 +321,7 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
 
     public boolean isItemValidForSlot(int slot, ItemStack item,EntityPlayer player)
     {
-        if (getPlanet() == null || getPlanet().isOwner(player))
-        {
-            return getInventory().isItemValidForSlot(slot,item);
-        }
-        return false;
+        return (getPlanet() == null || getPlanet().isOwner(player)) && getInventory().isItemValidForSlot(slot,item);
     }
 
     public void onItemPickup(EntityPlayer player, ItemStack itemStack)

@@ -16,19 +16,20 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.matter_network.components;
+package matteroverdrive.machines.analyzer.components;
 
 import cofh.lib.util.TimeTracker;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
+import matteroverdrive.machines.analyzer.TileEntityMachineMatterAnalyzer;
 import matteroverdrive.matter_network.MatterNetworkPacket;
+import matteroverdrive.matter_network.components.MatterNetworkComponentClientDispatcher;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
-import matteroverdrive.tile.TileEntityMachineMatterAnalyzer;
 import matteroverdrive.util.MatterNetworkHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;

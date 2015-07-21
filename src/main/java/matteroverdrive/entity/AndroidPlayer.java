@@ -28,18 +28,16 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.api.inventory.IBionicStat;
+import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.BionicSlot;
 import matteroverdrive.data.inventory.EnergySlot;
 import matteroverdrive.gui.GuiAndroidHud;
-import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketAndroidChangeAbility;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.entity.Entity;
@@ -52,10 +50,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -117,12 +112,12 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         player.getDataWatcher().addObject(ENERGY_WATCHER,this.maxEnergy);
     }
 
-    public static final void register(EntityPlayer player)
+    public static void register(EntityPlayer player)
     {
         player.registerExtendedProperties(EXT_PROP_NAME,new AndroidPlayer(player));
     }
 
-    public static final AndroidPlayer get(EntityPlayer player)
+    public static AndroidPlayer get(EntityPlayer player)
     {
         return (AndroidPlayer) player.getExtendedProperties(EXT_PROP_NAME);
     }
@@ -153,7 +148,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         effects = prop.getCompoundTag("Effects");
         if (prop.hasKey("ActiveAbility"))
         {
-            activeStat = AndroidStatRegistry.getStat(prop.getString("ActiveAbility"));
+            activeStat = MatterOverdrive.statRegistry.getStat(prop.getString("ActiveAbility"));
         }
         this.inventory.readFromNBT(prop);
     }
@@ -196,11 +191,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public boolean isUnlocked(IBionicStat stat,int level)
     {
-        if (unlocked.hasKey(stat.getUnlocalizedName()))
-        {
-            return unlocked.getInteger(stat.getUnlocalizedName()) >= level;
-        }
-        return false;
+        return unlocked.hasKey(stat.getUnlocalizedName()) && unlocked.getInteger(stat.getUnlocalizedName()) >= level;
     }
 
     public int getUnlockedLevel(IBionicStat stat)
@@ -311,11 +302,11 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         {
             if (toOthers)
             {
-                MatterOverdrive.packetPipeline.sendToAllAround(new PacketSyncAndroid(this, syncPart, toOthers), player, 64);
+                MatterOverdrive.packetPipeline.sendToAllAround(new PacketSyncAndroid(this, syncPart, true), player, 64);
             }
             else
             {
-                MatterOverdrive.packetPipeline.sendTo(new PacketSyncAndroid(this, syncPart, toOthers), (EntityPlayerMP) player);
+                MatterOverdrive.packetPipeline.sendTo(new PacketSyncAndroid(this, syncPart, false), (EntityPlayerMP) player);
             }
         }
     }
@@ -402,7 +393,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             {
                 manageGlitch();
 
-                for (IBionicStat stat : AndroidStatRegistry.stats.values()) {
+                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
                     int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
                     if (unlockedLevel > 0) {
                         if (stat.isEnabled(androidPlayer, unlockedLevel)) {
@@ -461,14 +452,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @SideOnly(Side.CLIENT)
     private void manageAbilityWheel()
     {
-        if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_SWITCH_KEY).getIsKeyPressed())
-        {
-            GuiAndroidHud.showRadial = true;
-        }else
-        {
-            //System.out.println("Hide Wheel");
-            GuiAndroidHud.showRadial = false;
-        }
+        GuiAndroidHud.showRadial = ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_SWITCH_KEY).getIsKeyPressed();
 
         if (GuiAndroidHud.showRadial)
         {
@@ -504,7 +488,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             }
 
             stats.clear();
-            for (IBionicStat stat : AndroidStatRegistry.getStats()) {
+            for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
                 if (stat.showOnWheel(this,getUnlockedLevel(stat)) && isUnlocked(stat,0))
                 {
                     stats.add(stat);
@@ -662,11 +646,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public boolean isTurning()
     {
-        if (effects.hasKey(EFFECT_KEY_TURNING))
-        {
-            return effects.getInteger(EFFECT_KEY_TURNING) > 0;
-        }
-        return false;
+        return effects.hasKey(EFFECT_KEY_TURNING) && effects.getInteger(EFFECT_KEY_TURNING) > 0;
     }
 
     public static void onEntityFall(LivingFallEvent event)

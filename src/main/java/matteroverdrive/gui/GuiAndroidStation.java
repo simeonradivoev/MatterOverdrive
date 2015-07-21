@@ -18,8 +18,9 @@
 
 package matteroverdrive.gui;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.api.inventory.IBionicStat;
+import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.container.ContainerAndroidStation;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.data.inventory.BionicSlot;
@@ -28,7 +29,6 @@ import matteroverdrive.entity.EntityRougeAndroidMob;
 import matteroverdrive.gui.element.ElementBioStat;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementSlot;
-import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import matteroverdrive.util.RenderUtils;
@@ -51,7 +51,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 {
     private EntityRougeAndroidMob mob;
     ElementSlot[] parts_slots = new ElementSlot[Reference.BIONIC_BATTERY+1];
-    List<ElementBioStat> stats = new ArrayList<ElementBioStat>(AndroidStatRegistry.stats.size());
+    List<ElementBioStat> stats = new ArrayList<>(MatterOverdrive.statRegistry.getStats().size());
 
     public GuiAndroidStation(InventoryPlayer inventoryPlayer, TileEntityAndroidStation machine)
     {
@@ -78,17 +78,17 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         parts_slots[Reference.BIONIC_BATTERY].setPosition(320,310);
         parts_slots[Reference.BIONIC_BATTERY].setIcon(ClientProxy.holoIcons.getIcon("battery"));
 
-        addStat(androidPlayer, AndroidStatRegistry.teleport, 0, 0, ForgeDirection.UNKNOWN);
-        addStat(androidPlayer, AndroidStatRegistry.nanobots, 1, 1, ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,AndroidStatRegistry.nanoArmor,0,1,ForgeDirection.EAST);
-        addStat(androidPlayer,AndroidStatRegistry.flotation,2,0,ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,AndroidStatRegistry.speed,3,0,ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,AndroidStatRegistry.highJump,3,1,ForgeDirection.UP);
-        addStat(androidPlayer,AndroidStatRegistry.equalizer,3,2,ForgeDirection.UP);
-        addStat(androidPlayer,AndroidStatRegistry.shield,0,2,ForgeDirection.UP);
-        addStat(androidPlayer,AndroidStatRegistry.attack,2,1,ForgeDirection.WEST);
-        addStat(androidPlayer,AndroidStatRegistry.cloak,0,3,ForgeDirection.UP);
-        addStat(androidPlayer,AndroidStatRegistry.nightvision,1,0,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer, MatterOverdrive.statRegistry.teleport, 0, 0, ForgeDirection.UNKNOWN);
+        addStat(androidPlayer, MatterOverdrive.statRegistry.nanobots, 1, 1, ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,MatterOverdrive.statRegistry.nanoArmor,0,1,ForgeDirection.EAST);
+        addStat(androidPlayer,MatterOverdrive.statRegistry.flotation,2,0,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,MatterOverdrive.statRegistry.speed,3,0,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,MatterOverdrive.statRegistry.highJump,3,1,ForgeDirection.UP);
+        addStat(androidPlayer,MatterOverdrive.statRegistry.equalizer,3,2,ForgeDirection.UP);
+        addStat(androidPlayer,MatterOverdrive.statRegistry.shield,0,2,ForgeDirection.UP);
+        addStat(androidPlayer,MatterOverdrive.statRegistry.attack,2,1,ForgeDirection.WEST);
+        addStat(androidPlayer,MatterOverdrive.statRegistry.cloak,0,3,ForgeDirection.UP);
+        addStat(androidPlayer,MatterOverdrive.statRegistry.nightvision,1,0,ForgeDirection.UNKNOWN);
 
         mob = new EntityRougeAndroidMob(Minecraft.getMinecraft().theWorld);
         mob.getEntityData().setBoolean("Hologram",true);
@@ -106,14 +106,14 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
     {
         super.initGui();
 
-        for (int i = 0;i < parts_slots.length;i++)
+        for (ElementSlot elementSlot : parts_slots)
         {
-            pages.get(0).addElement(parts_slots[i]);
+            pages.get(0).addElement(elementSlot);
         }
 
-        for (int i = 0;i < stats.size();i++)
+        for (ElementBioStat stat : stats)
         {
-            pages.get(0).addElement(stats.get(i));
+            pages.get(0).addElement(stat);
         }
 
         AddMainPlayerSlots(inventorySlots, this);
@@ -123,12 +123,12 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
     @Override
     public void drawTooltip(List<String> list) {
 
-        for (int i = 0;i < stats.size();i++)
+        for (ElementBioStat stat : stats)
         {
-            if (stats.get(i).intersectsWith(mouseX,mouseY))
+            if (stat.intersectsWith(mouseX, mouseY))
             {
                 int itemCount = 0;
-                for (ItemStack stack : stats.get(i).getStat().getRequiredItems()) {
+                for (ItemStack stack : stat.getStat().getRequiredItems()) {
                     int x = guiLeft + mouseX + 12 + 22 * itemCount;
                     int y = guiTop + mouseY - 36;
                     RenderUtils.renderStack(x, y, stack);

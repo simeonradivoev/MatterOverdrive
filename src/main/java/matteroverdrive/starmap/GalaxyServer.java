@@ -45,34 +45,26 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.util.HashMap;
-import java.util.Random;
 import java.util.UUID;
 
 /**
  * Created by Simeon on 6/17/2015.
  */
-public class GalaxyServer implements IConfigSubscriber
+public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
 {
     //region Static Vars
     public static final int GALAXY_VERSION = 0;
     //endregion
     //region Private Vars
     private static GalaxyServer instance;
-    private World world;
-    private Galaxy theGalaxy;
     private GalaxyGenerator galaxyGenerator;
-    private Random random;
-    private HashMap<UUID,Planet> homePlanets;
     //endregion
 
     //region Constructors
     public GalaxyServer()
     {
+        super();
         galaxyGenerator = new GalaxyGenerator();
-        random = new Random();
-        homePlanets = new HashMap();
     }
     //endregion
 
@@ -85,8 +77,6 @@ public class GalaxyServer implements IConfigSubscriber
 
     public boolean saveGalaxy(File file)
     {
-        MappedByteBuffer mappedByteBuffer;
-
         try {
             if (!file.exists())
                 file.createNewFile();
@@ -97,8 +87,9 @@ public class GalaxyServer implements IConfigSubscriber
             CompressedStreamTools.writeCompressed(tagCompound, fileOutputStream);
             fileOutputStream.close();
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e)
+        {
+            MOLog.log(Level.ERROR, e, "Galaxy could not be saved");
             return false;
         }
     }
@@ -112,43 +103,32 @@ public class GalaxyServer implements IConfigSubscriber
                 FileInputStream inputStream = new FileInputStream(file);
                 NBTTagCompound tagCompound = CompressedStreamTools.readCompressed(inputStream);
                 inputStream.close();
-                theGalaxy = new Galaxy(world);
-                theGalaxy.readFromNBT(tagCompound,galaxyGenerator);
-                if (theGalaxy.getVersion() != GALAXY_VERSION)
+                Galaxy theGalaxy = new Galaxy(world);
+                theGalaxy.readFromNBT(tagCompound, galaxyGenerator);
+                if (theGalaxy.getVersion() < GALAXY_VERSION)
                 {
+                    MOLog.log(Level.INFO,"Galaxy Version is too old. Galaxy Needs regeneration");
                     galaxyGenerator.regenerateQuadrants(theGalaxy);
                 }
-                loadClaimedPlanets();
+                setTheGalaxy(theGalaxy);
                 return true;
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException e)
+            {
+                MOLog.log(Level.ERROR,e,"Could not Load Galaxy from file");
                 return false;
             }
+        }else
+        {
+            MOLog.log(Level.INFO,"Galaxy File could not be found at: '%s'",file);
         }
         return false;
-    }
-
-    public void loadClaimedPlanets()
-    {
-        if (theGalaxy != null) {
-            homePlanets.clear();
-            for (Quadrant quadrant : theGalaxy.getQuadrants()) {
-                for (Star star : quadrant.getStars()) {
-                    for (Planet planet : star.getPlanets()) {
-                        if (planet.isHomeworld() && planet.hasOwner()) {
-                            homePlanets.put(planet.getOwnerUUID(), planet);
-                        }
-                    }
-                }
-            }
-        }
     }
     //endregion
 
     /**
      * Claims a planet as the given players homeworld
-     * @param player
-     * @return
+     * @param player the player that claims the planet
+     * @return The claimed planet. Null if none were claimed.
      */
     private Planet claimPlanet(EntityPlayer player)
     {
@@ -218,6 +198,9 @@ public class GalaxyServer implements IConfigSubscriber
             {
                 homePlanets.put(playerUUID,claimedPlanet);
                 return true;
+            }else
+            {
+                MOLog.log(Level.WARN,"%s could not claim planet.",player.getDisplayName());
             }
         }
         return false;
@@ -259,10 +242,15 @@ public class GalaxyServer implements IConfigSubscriber
     {
         if (!event.player.worldObj.isRemote)
         {
-            MatterOverdrive.packetPipeline.sendTo(new PacketUpdateGalaxy(theGalaxy), (EntityPlayerMP) event.player);
-            if (tryAndClaimPlanet(event.player)) {
-                Planet planet = getHomeworld(event.player);
-                MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdatePlanet(planet), event.player.worldObj);
+            if (theGalaxy != null) {
+                MatterOverdrive.packetPipeline.sendTo(new PacketUpdateGalaxy(theGalaxy), (EntityPlayerMP) event.player);
+                if (tryAndClaimPlanet(event.player)) {
+                    Planet planet = getHomeworld(event.player);
+                    MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdatePlanet(planet), event.player.worldObj);
+                }
+            }else
+            {
+                MOLog.log(Level.WARN,"Galaxy is missing.");
             }
         }
     }
@@ -313,11 +301,8 @@ public class GalaxyServer implements IConfigSubscriber
 
         if (unload.world.isRemote && unload.world.provider.dimensionId == 0) {
             this.world = null;
-
-            if (theGalaxy != null) {
-                theGalaxy = null;
-                homePlanets.clear();
-            }
+            theGalaxy = null;
+            homePlanets.clear();
         }
     }
 
@@ -336,24 +321,12 @@ public class GalaxyServer implements IConfigSubscriber
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
-        Galaxy.GALAXY_BUILD_TIME_MULTIPLY = config.config.getFloat("galaxy build time multiply",config.CATEGORY_STARMAP,1,0,10,"The multiplier for the building and ship building times");
-        Galaxy.GALAXY_TRAVEL_TIME_MULTIPLY = config.config.getFloat("galaxy travel time multiply",config.CATEGORY_STARMAP,1,0,10,"The multiplier for the ship travel times");
+        Galaxy.GALAXY_BUILD_TIME_MULTIPLY = config.config.getFloat("galaxy build time multiply",ConfigurationHandler.CATEGORY_STARMAP,1,0,10,"The multiplier for the building and ship building times");
+        Galaxy.GALAXY_TRAVEL_TIME_MULTIPLY = config.config.getFloat("galaxy travel time multiply",ConfigurationHandler.CATEGORY_STARMAP,1,0,10,"The multiplier for the ship travel times");
     }
     //endregion
 
     //region Getters and Setters
-    public Planet getHomeworld(EntityPlayer player)
-    {
-        return homePlanets.get(EntityPlayer.func_146094_a(player.getGameProfile()));
-    }
-    public Galaxy getTheGalaxy()
-    {
-        return theGalaxy;
-    }
-    public void setTheGalaxy(Galaxy galaxy)
-    {
-        theGalaxy = galaxy;
-    }
     private File getGalaxyFile(World world)
     {
         File worldDirectory = world.getSaveHandler().getWorldDirectory();

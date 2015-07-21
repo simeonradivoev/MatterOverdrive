@@ -1,8 +1,26 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.init;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.handler.MatterRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -24,12 +42,12 @@ public class MatterOverdriveMatter
 
     public static void registerFromConfig(ConfigurationHandler c)
     {
-        MatterRegistry.loadNewItemsFromConfig(c);
+        MatterOverdrive.matterRegistry.loadNewItemsFromConfig(c);
     }
 
     public static void registerBlacklistFromConfig(ConfigurationHandler c)
     {
-        MatterRegistry.loadBlacklistFromConfig(c);
+        MatterOverdrive.matterRegistry.loadBlacklistFromConfig(c);
     }
 
     public static void registerBasicBlocks(ConfigurationHandler c)
@@ -204,13 +222,13 @@ public class MatterOverdriveMatter
 
 	private static void reg(ConfigurationHandler c,String name,int matter)
 	{
-		MatterRegistry.register(name,matter);
+        MatterOverdrive.matterRegistry.register(name,matter);
 	}
 
     private static void reg(ConfigurationHandler c,ItemStack itemStack,int matter)
     {
-        MatterRegistry.register(itemStack,matter);
-        MatterRegistry.basicEntires++;
+        MatterOverdrive.matterRegistry.register(itemStack,matter);
+        MatterOverdrive.matterRegistry.basicEntries++;
     }
     private static void reg(ConfigurationHandler c,Block block,int matter)
     {
@@ -219,10 +237,10 @@ public class MatterOverdriveMatter
     private static void reg(ConfigurationHandler c,Block block,int matter,int subItems)
     {
         for (int i = 0;i < subItems;i++) {
-            String key = MatterRegistry.getKey(new ItemStack(Item.getItemFromBlock(block), 1, i));
+            String key = MatterOverdrive.matterRegistry.getKey(new ItemStack(Item.getItemFromBlock(block), 1, i));
             if (key != null) {
-                MatterRegistry.register(key, matter);
-                MatterRegistry.basicEntires++;
+                MatterOverdrive.matterRegistry.register(key, matter);
+                MatterOverdrive.matterRegistry.basicEntries++;
             }
         }
     }
@@ -230,10 +248,10 @@ public class MatterOverdriveMatter
     private static void reg(ConfigurationHandler c,Item item,int matter,int subItems)
     {
         for (int i = 0;i < subItems;i++) {
-            String key = MatterRegistry.getKey(new ItemStack(item, 1, i));
+            String key = MatterOverdrive.matterRegistry.getKey(new ItemStack(item, 1, i));
             if (key != null) {
-                MatterRegistry.register(key, matter);
-                MatterRegistry.basicEntires++;
+                MatterOverdrive.matterRegistry.register(key, matter);
+                MatterOverdrive.matterRegistry.basicEntries++;
             }
         }
     }

@@ -21,8 +21,8 @@ package matteroverdrive.network.packet.server;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.network.packet.PacketAbstract;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -80,15 +80,15 @@ public class PacketSendAndroidAnction extends PacketAbstract
             {
                 if (message.action == ACTION_SHIELD)
                 {
-                    AndroidStatRegistry.shield.setShield(androidPlayer,message.state);
+                    MatterOverdrive.statRegistry.shield.setShield(androidPlayer,message.state);
                 }
                 else if (message.action == ACTION_CLOAK)
                 {
-                    AndroidStatRegistry.cloak.setActive(androidPlayer,androidPlayer.getUnlockedLevel(AndroidStatRegistry.cloak),message.state);
+                    MatterOverdrive.statRegistry.cloak.setActive(androidPlayer,androidPlayer.getUnlockedLevel(MatterOverdrive.statRegistry.cloak),message.state);
                 }
                 else if (message.action == ACTION_NIGHTVISION)
                 {
-                    AndroidStatRegistry.nightvision.setActive(androidPlayer,androidPlayer.getUnlockedLevel(AndroidStatRegistry.nightvision),message.state);
+                    MatterOverdrive.statRegistry.nightvision.setActive(androidPlayer,androidPlayer.getUnlockedLevel(MatterOverdrive.statRegistry.nightvision),message.state);
                 }
             }
             return null;

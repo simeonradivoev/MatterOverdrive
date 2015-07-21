@@ -26,7 +26,6 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.network.*;
@@ -38,6 +37,8 @@ import matteroverdrive.data.inventory.ShieldingSlot;
 import matteroverdrive.fx.ReplicatorParticle;
 import matteroverdrive.handler.SoundHandler;
 import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentReplicator;
@@ -58,6 +59,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.util.EnumSet;
 import java.util.List;
 
 
@@ -89,10 +91,10 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public int replicateProgress;
 
     private MatterNetworkComponentReplicator networkComponent;
+    private ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
     private MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueueProcessing;
     private TimeTracker timeTracker;
     private NBTTagCompound internalPatternStorage;
-    private String destinationFilter;
 	
 	public TileEntityMachineReplicator()
 	{
@@ -105,6 +107,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         this.matterStorage.setMaxExtract(MATTER_TRANSFER);
         taskQueueProcessing = new MatterNetworkTaskQueue<>(this,1);
         networkComponent = new MatterNetworkComponentReplicator(this);
+        componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+        addComponent(componentMatterNetworkConfigs);
         timeTracker = new TimeTracker();
 	}
 
@@ -416,37 +420,27 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
     //region NBT
     @Override
-    public void readCustomNBT(NBTTagCompound nbt)
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.readCustomNBT(nbt);
-        this.replicateTime = nbt.getShort("ReplicateTime");
-        taskQueueProcessing.readFromNBT(nbt);
-        internalPatternStorage = nbt.getCompoundTag("InternalPattern");
+        super.readCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            this.replicateTime = nbt.getShort("ReplicateTime");
+            taskQueueProcessing.readFromNBT(nbt);
+            internalPatternStorage = nbt.getCompoundTag("InternalPattern");
+        }
     }
 
     @Override
-    public void readConfigsFromNBT(NBTTagCompound nbt)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.readConfigsFromNBT(nbt);
-        destinationFilter = nbt.getString("DestinationFilter");
-    }
+        super.writeCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            nbt.setShort("ReplicateTime", (short) this.replicateTime);
+            taskQueueProcessing.writeToNBT(nbt);
 
-    @Override
-    public void writeCustomNBT(NBTTagCompound nbt)
-    {
-        super.writeCustomNBT(nbt);
-        nbt.setShort("ReplicateTime", (short) this.replicateTime);
-        taskQueueProcessing.writeToNBT(nbt);
-
-        if (internalPatternStorage != null)
-            nbt.setTag("InternalPattern", internalPatternStorage);
-    }
-
-    @Override
-    public void writeConfigsToNBT(NBTTagCompound nbt)
-    {
-        super.writeConfigsToNBT(nbt);
-        nbt.setString("DestinationFilter", destinationFilter);
+            if (internalPatternStorage != null)
+                nbt.setTag("InternalPattern", internalPatternStorage);
+        }
     }
     //endregion
 
@@ -604,21 +598,20 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
     public boolean canCompleteTask(MatterNetworkTaskReplicatePattern taskReplicatePattern)
     {
-        if (taskReplicatePattern != null && internalPatternStorage != null && taskReplicatePattern.getItemID() == internalPatternStorage.getShort("id") && internalPatternStorage.getShort("Damage") == taskReplicatePattern.getItemMetadata())
-        {
-            return true;
-        }
-        return false;
+        return taskReplicatePattern != null
+                && internalPatternStorage != null
+                && taskReplicatePattern.getItemID() == internalPatternStorage.getShort("id")
+                && internalPatternStorage.getShort("Damage") == taskReplicatePattern.getItemMetadata();
     }
 
     @Override
     public String getDestinationFilter() {
-        return destinationFilter;
+        return componentMatterNetworkConfigs.getDestinationFilter();
     }
 
     @Override
     public void setDestinationFilter(String filter) {
-        destinationFilter = filter;
+        componentMatterNetworkConfigs.setDestinationFilter(filter);
     }
     //endregion
 }

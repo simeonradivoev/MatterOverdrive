@@ -46,5 +46,7 @@
     "android_teleport": {"category": "player","sounds": [{"name": "entities/android_teleport", "stream": false}]},
     "shield_loop": {"category": "player","sounds": [{"name": "shield_loop", "stream": true}]},
     "shield_hit_0": {"category": "player","sounds": [{"name": "shield_hit_0", "stream": false}]},
-    "shield_hit_1": {"category": "player","sounds": [{"name": "shield_hit_1", "stream": false}]}
+    "shield_hit_1": {"category": "player","sounds": [{"name": "shield_hit_1", "stream": false}]},
+    "cloak_on": {"category": "player","sounds": [{"name": "entities/cloak_on", "stream": false}]},
+    "cloak_off": {"category": "player","sounds": [{"name": "entities/cloak_off", "stream": false}]}
 }

@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
@@ -6,13 +24,14 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.client.sound.GravitationalAnomalySound;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.fx.GravitationalAnomalyParticle;
-import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.items.SpacetimeEqualizer;
+import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
@@ -40,6 +59,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.text.DecimalFormat;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -86,17 +106,21 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        nbt.setLong("Mass", mass);
-        nbt.setFloat("Suppression", suppression);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            nbt.setLong("Mass", mass);
+            nbt.setFloat("Suppression", suppression);
+        }
     }
 
     @Override
-    public void readCustomNBT(NBTTagCompound nbt)
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        mass = nbt.getLong("Mass");
-        suppression = nbt.getFloat("Suppression");
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            mass = nbt.getLong("Mass");
+            suppression = nbt.getFloat("Suppression");
+        }
     }
 
     @Override
@@ -108,7 +132,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public Packet getDescriptionPacket()
     {
         NBTTagCompound syncData = new NBTTagCompound();
-        writeCustomNBT(syncData);
+        writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);
     }
 
@@ -119,7 +143,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         NBTTagCompound syncData = pkt.func_148857_g();
         if(syncData != null)
         {
-            readCustomNBT(syncData);
+            readCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
         }
     }
 
@@ -160,18 +184,18 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         double range = getMaxRange() + 1;
         AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(xCoord - range, yCoord - range, zCoord - range, xCoord + range, yCoord + range, zCoord + range);
         List entities = world.getEntitiesWithinAABB(Entity.class, bb);
-        for (int i = 0;i < entities.size();i++)
+        for (Object entityObject : entities)
         {
-            if (entities.get(i) instanceof EntityPlayer)
+            if (entityObject instanceof EntityPlayer)
             {
-                AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)entities.get(i));
-                if (((EntityPlayer) entities.get(i)).capabilities.isCreativeMode || androidPlayer.isUnlocked(AndroidStatRegistry.equalizer,1))
+                AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)entityObject);
+                if (((EntityPlayer)entityObject).capabilities.isCreativeMode || androidPlayer.isUnlocked(MatterOverdrive.statRegistry.equalizer,1))
                     continue;
             }
 
-            if (entities.get(i) instanceof Entity)
+            if (entityObject instanceof Entity)
             {
-                Entity entity = (Entity)entities.get(i);
+                Entity entity = (Entity)entityObject;
                 Vec3 pos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
 
                 pos.yCoord += entity.getEyeHeight();
@@ -188,9 +212,9 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 }
                 else
                 {
-                    if (entities.get(i) instanceof EntityLivingBase)
+                    if (entityObject instanceof EntityLivingBase)
                     {
-                        ItemStack eq = ((EntityLivingBase) entities.get(i)).getEquipmentInSlot(3);
+                        ItemStack eq = ((EntityLivingBase) entityObject).getEquipmentInSlot(3);
                         if (eq != null && eq.getItem() instanceof SpacetimeEqualizer)
                             continue;
                     }
@@ -351,7 +375,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         float hardness;
         Block block;
 
-        blocks = new PriorityQueue<PositionWrapper>(1,new BlockComparitor(xCoord,yCoord,zCoord));
+        blocks = new PriorityQueue<>(1,new BlockComparitor(xCoord,yCoord,zCoord));
 
         if (blockDestoryTimer.hasDelayPassed(world,BLOCK_DESTORY_DELAY))
         {
@@ -454,9 +478,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 worldObj.removeEntity(entity);
             } else if (entity instanceof EntityFallingBlock) {
                 ItemStack itemStack = new ItemStack(((EntityFallingBlock) entity).func_145805_f());
-                if (itemStack != null) {
-                    matter = MatterHelper.getMatterAmountFromItem(itemStack) * itemStack.stackSize;
-                }
+                matter = MatterHelper.getMatterAmountFromItem(itemStack) * itemStack.stackSize;
                 entity.setDead();
                 worldObj.removeEntity(entity);
             } else if (entity instanceof EntityPlayer) {
@@ -534,8 +556,8 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 worldObj.playAuxSFXAtEntity(null, 2001, x, y, z, Block.getIdFromBlock(block) + (meta << 12));
 
                 List<EntityItem> result = worldObj.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x - 2, y - 2, z - 2, x + 3, y + 3, z + 3));
-                for (int i = 0; i < result.size(); i++) {
-                    EntityItem entity = result.get(i);
+                for (EntityItem entityItem : result) {
+                    EntityItem entity = entityItem;
                     if (entity.isDead || entity.getEntityItem().stackSize <= 0) {
                         continue;
                     }

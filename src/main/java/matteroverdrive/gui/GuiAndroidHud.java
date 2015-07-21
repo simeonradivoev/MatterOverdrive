@@ -25,12 +25,12 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.animation.AnimationSegmentText;
 import matteroverdrive.animation.AnimationTextTyping;
-import matteroverdrive.api.inventory.IBionicStat;
+import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.handler.AndroidStatRegistry;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
@@ -62,6 +62,7 @@ public class GuiAndroidHud extends Gui
     public static final ResourceLocation glitch_tex = new ResourceLocation(Reference.PATH_GUI + "glitch.png");
     public static final ResourceLocation spinner_tex = new ResourceLocation(Reference.PATH_ELEMENTS + "spinner.png");
     public static final ResourceLocation top_element_bg = new ResourceLocation(Reference.PATH_ELEMENTS + "android_bg_element.png");
+    public static final ResourceLocation cloak_overlay = new ResourceLocation(Reference.PATH_ELEMENTS + "cloak_overlay.png");
     private AnimationTextTyping textTyping;
     private Minecraft mc;
     private Random random;
@@ -162,7 +163,7 @@ public class GuiAndroidHud extends Gui
         AndroidPlayer androidPlayer = AndroidPlayer.get(Minecraft.getMinecraft().thePlayer);
 
         stats.clear();
-        for (IBionicStat stat : AndroidStatRegistry.getStats())
+        for (IBionicStat stat : MatterOverdrive.statRegistry.getStats())
         {
             if (stat.showOnWheel(androidPlayer, androidPlayer.getUnlockedLevel(stat)) && androidPlayer.isUnlocked(stat,0))
             {
@@ -286,8 +287,14 @@ public class GuiAndroidHud extends Gui
                 double energy_perc = (double) android.getEnergyStored() / (double) android.getMaxEnergyStored();
                 double health_perc = android.getPlayer().getHealth() / android.getPlayer().getMaxHealth();
                 GuiColor enabledColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 2, Reference.COLOR_HOLO.getIntG() / 2, Reference.COLOR_HOLO.getIntB() / 2, Reference.COLOR_HOLO.getIntA());
-                GuiColor disabledColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 5, Reference.COLOR_HOLO.getIntG() / 5, Reference.COLOR_HOLO.getIntB() / 5, Reference.COLOR_HOLO.getIntA());
                 GuiColor color = enabledColor;
+
+                if (MatterOverdrive.statRegistry.cloak.isActive(android,0)) {
+                    glDepthMask(false);
+                    glBlendFunc(GL_DST_COLOR, GL_ZERO);
+                    mc.renderEngine.bindTexture(cloak_overlay);
+                    func_146110_a(0, 0, 0, 0, event.resolution.getScaledWidth(), event.resolution.getScaledHeight(), event.resolution.getScaledWidth(), event.resolution.getScaledHeight());
+                }
 
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -297,8 +304,7 @@ public class GuiAndroidHud extends Gui
                 hudRotationPitchSmooth = hudRotationPitchSmooth * 0.4f + mc.thePlayer.rotationPitch * 0.6f;
                 glTranslated((hudRotationYawSmooth - mc.thePlayer.rotationYaw) * 6, (hudRotationPitchSmooth - mc.thePlayer.rotationPitch) * 6, 0);
 
-
-                glColor3f(enabledColor.getFloatR() / 2, enabledColor.getFloatG() / 2, enabledColor.getFloatB() / 2);
+                glColor3f(color.getFloatR() / 2, color.getFloatG() / 2, color.getFloatB() / 2);
                 mc.renderEngine.bindTexture(top_element_bg);
                 func_146110_a(0, 10, 0, 0, 174, 11, 174, 11);
 
@@ -335,7 +341,6 @@ public class GuiAndroidHud extends Gui
                 x += 18;
                 info = DecimalFormat.getPercentInstance().format(android.getSpeedMultiply());
                 mc.fontRenderer.drawString(info, x, 28, enabledColor.getColor());
-                x += mc.fontRenderer.getStringWidth(info) + 5;
                 //endregion
 
                 int count = 0;
@@ -347,7 +352,7 @@ public class GuiAndroidHud extends Gui
                 }
 
                 for (Object object : android.getUnlocked().func_150296_c()) {
-                    IBionicStat stat = AndroidStatRegistry.getStat(object.toString());
+                    IBionicStat stat = MatterOverdrive.statRegistry.getStat(object.toString());
                     if (stat != null) {
                         int level = android.getUnlockedLevel(stat);
                         if (stat.showOnHud(android, level))

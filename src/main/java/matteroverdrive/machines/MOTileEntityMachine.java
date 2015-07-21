@@ -1,4 +1,22 @@
-package matteroverdrive.tile;
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
+package matteroverdrive.machines;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLLog;
@@ -18,6 +36,8 @@ import matteroverdrive.data.inventory.UpgradeSlot;
 import matteroverdrive.fx.VentParticle;
 import matteroverdrive.items.SecurityProtocol;
 import matteroverdrive.network.packet.server.PacketSaveConfigs;
+import matteroverdrive.tile.IMOTileEntity;
+import matteroverdrive.tile.MOTileEntity;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
@@ -37,9 +57,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Simeon on 3/11/2015.
@@ -65,12 +83,14 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     protected Inventory inventory;
     private int upgradeSlotCount;
     private int[] upgrade_slots;
+    protected List<IMachineComponent> components;
 
-    public MOTileEntityMachine(int upgradeGount)
+    public MOTileEntityMachine(int upgradeCount)
     {
+        components = new ArrayList<>();
         soundRes = getSoundFor(getSound());
-        this.upgradeSlotCount = upgradeGount;
-        upgrade_slots = new int[upgradeGount];
+        this.upgradeSlotCount = upgradeCount;
+        upgrade_slots = new int[upgradeCount];
         inventory = new TileEntityInventory(this,"");
         RegisterSlots(inventory);
     }
@@ -101,6 +121,11 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             onActiveChange();
             lastActive = isActive();
         }
+
+        for (IMachineComponent component : components)
+        {
+            component.update(this);
+        }
     }
 
     protected void RegisterSlots(Inventory inventory)
@@ -108,6 +133,10 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         for (int i = 0;i < upgrade_slots.length; i++)
         {
             upgrade_slots[i] = inventory.AddSlot(new UpgradeSlot(false,this));
+        }
+        for (IMachineComponent component : components)
+        {
+            component.registerSlots(inventory);
         }
     }
 
@@ -190,46 +219,59 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @Override
-    public void readCustomNBT(NBTTagCompound nbt)
+    public void readCustomNBT(NBTTagCompound nbt,EnumSet<MachineNBTCategory> categories)
     {
-        readConfigsFromNBT(nbt);
-        redstoneState = nbt.getBoolean("redstoneState");
-        forceClientUpdate = nbt.getBoolean("forceClientUpdate");
-        if (nbt.hasKey("Owner", 8) && !nbt.getString("Owner").isEmpty()) {
-            try {
-            owner = UUID.fromString(nbt.getString("Owner"));
-            }catch (Exception e)
-            {
-                FMLLog.log(Level.ERROR,"Invalid Owner ID: " + nbt.getString("Owner"));
+        if (categories.contains(MachineNBTCategory.CONFIGS)) {
+            redstoneMode = nbt.getByte("redstoneMode");
+        }
+        if (categories.contains(MachineNBTCategory.DATA))
+        {
+            redstoneState = nbt.getBoolean("redstoneState");
+            forceClientUpdate = nbt.getBoolean("forceClientUpdate");
+            if (nbt.hasKey("Owner", 8) && !nbt.getString("Owner").isEmpty()) {
+                try {
+                    owner = UUID.fromString(nbt.getString("Owner"));
+                } catch (Exception e) {
+                    FMLLog.log(Level.ERROR, "Invalid Owner ID: " + nbt.getString("Owner"));
+                }
             }
         }
-        inventory.readFromNBT(nbt);
-    }
-
-    public void readConfigsFromNBT(NBTTagCompound nbt)
-    {
-        redstoneMode = nbt.getByte("redstoneMode");
+        if (categories.contains(MachineNBTCategory.INVENTORY))
+        {
+            inventory.readFromNBT(nbt);
+        }
+        for (IMachineComponent component : components)
+        {
+            component.readFromNBT(nbt, categories);
+        }
     }
 
     @Override
-    public void  writeCustomNBT(NBTTagCompound nbt)
+    public void  writeCustomNBT(NBTTagCompound nbt,EnumSet<MachineNBTCategory> categories)
     {
-        writeConfigsToNBT(nbt);
-        nbt.setBoolean("forceClientUpdate", forceClientUpdate);
-        nbt.setBoolean("redstoneState", redstoneState);
-        if (owner != null)
-            nbt.setString("Owner",owner.toString());
-        else if (nbt.hasKey("Owner",6))
+        if (categories.contains(MachineNBTCategory.CONFIGS))
         {
-            nbt.removeTag("Owner");
+            nbt.setByte("redstoneMode", redstoneMode);
+        }
+        if (categories.contains(MachineNBTCategory.DATA))
+        {
+            nbt.setBoolean("forceClientUpdate", forceClientUpdate);
+            nbt.setBoolean("redstoneState", redstoneState);
+            if (owner != null)
+                nbt.setString("Owner", owner.toString());
+            else if (nbt.hasKey("Owner", 6)) {
+                nbt.removeTag("Owner");
+            }
         }
         forceClientUpdate = false;
-        inventory.writeToNBT(nbt);
-    }
-
-    public void writeConfigsToNBT(NBTTagCompound nbt)
-    {
-        nbt.setByte("redstoneMode", redstoneMode);
+        if (categories.contains(MachineNBTCategory.INVENTORY))
+        {
+            inventory.writeToNBT(nbt);
+        }
+        for (IMachineComponent component : components)
+        {
+            component.writeToNBT(nbt,categories);
+        }
     }
 
     @Override
@@ -238,43 +280,48 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         if (!itemStack.hasTagCompound())
             itemStack.setTagCompound(new NBTTagCompound());
 
-        NBTTagList upgrades = new NBTTagList();
-
-        for (int i = 0;i < inventory.getSizeInventory();i++)
+        NBTTagCompound machineTag = new NBTTagCompound();
+        NBTTagList itemTagList = new NBTTagList();
+        for (int i = 0; i < getSizeInventory(); ++i)
         {
-            if (inventory.getSlot(i) instanceof UpgradeSlot && inventory.getSlot(i).getItem() != null)
+            if (inventory.getSlot(i).keepOnDismatle() && inventory.getStackInSlot(i) != null)
             {
-                NBTTagCompound tagCompound = new NBTTagCompound();
-                tagCompound.setByte("Slot",(byte)i);
-                inventory.getSlot(i).getItem().writeToNBT(tagCompound);
-                upgrades.appendTag(tagCompound);
+                NBTTagCompound itemTag = new NBTTagCompound();
+                itemTag.setByte("Slot", (byte)i);
+                getStackInSlot(i).writeToNBT(itemTag);
+                itemTagList.appendTag(itemTag);
             }
         }
-        itemStack.getTagCompound().setTag("Upgrades", upgrades);
-        itemStack.getTagCompound().setByte("redstoneMode", redstoneMode);
+        machineTag.setTag("Items", itemTagList);
+        writeCustomNBT(machineTag, EnumSet.of(MachineNBTCategory.CONFIGS, MachineNBTCategory.DATA));
+        machineTag.setByte("redstoneMode", redstoneMode);
         if (hasOwner())
-            itemStack.getTagCompound().setString("Owner",owner.toString());
+            machineTag.setString("Owner", owner.toString());
+
+        itemStack.getTagCompound().setTag("Machine", machineTag);
     }
 
     @Override
     public void readFromPlaceItem(ItemStack itemStack)
     {
-        if (itemStack.hasTagCompound()) {
-            NBTTagList upgrades = itemStack.getTagCompound().getTagList("Upgrades", 10);
-            for (int i = 0; i < upgrades.tagCount(); i++) {
-                NBTTagCompound upgradeNBT = upgrades.getCompoundTagAt(i);
-                int slot = upgradeNBT.getByte("Slot");
-                if (slot < inventory.getSizeInventory() && slot >= 0) {
-                    inventory.getSlot(slot).setItem(ItemStack.loadItemStackFromNBT(upgradeNBT));
-                }
+        if (itemStack.hasTagCompound())
+        {
+            NBTTagCompound machineTag = itemStack.getTagCompound().getCompoundTag("Machine");
+            NBTTagList itemTagList = machineTag.getTagList("Items", 10);
+            for (int i = 0; i < itemTagList.tagCount(); ++i)
+            {
+                NBTTagCompound itemTag = itemTagList.getCompoundTagAt(i);
+                byte b0 = itemTag.getByte("Slot");
+                inventory.setInventorySlotContents(b0, ItemStack.loadItemStackFromNBT(itemTag));
             }
-            this.redstoneMode = itemStack.getTagCompound().getByte("redstoneMode");
-            if (itemStack.getTagCompound().hasKey("Owner", 8)) {
+            readCustomNBT(machineTag, EnumSet.of(MachineNBTCategory.CONFIGS, MachineNBTCategory.DATA));
+            this.redstoneMode = machineTag.getByte("redstoneMode");
+            if (machineTag.hasKey("Owner", 8)) {
                 try {
-                    this.owner = UUID.fromString(itemStack.getTagCompound().getString("Owner"));
+                    this.owner = UUID.fromString(machineTag.getString("Owner"));
                 }catch (Exception e)
                 {
-                    FMLLog.log(Level.ERROR,e,"Invalid Owner ID: " + itemStack.getTagCompound().getString("Owner"));
+                    FMLLog.log(Level.ERROR,e,"Invalid Owner ID: " + machineTag.getString("Owner"));
                 }
             }
         }
@@ -285,7 +332,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         //System.out.println("Sending Packet To Client");
         NBTTagCompound syncData = new NBTTagCompound();
-        writeCustomNBT(syncData);
+        writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);
     }
 
@@ -296,7 +343,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         NBTTagCompound syncData = pkt.func_148857_g();
         if(syncData != null)
         {
-            readCustomNBT(syncData);
+            readCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
         }
     }
 
@@ -343,10 +390,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     //region Inventory Methods
     public boolean isItemValidForSlot(int slot, ItemStack item)
     {
-        if (getInventory() != null)
-            return getInventory().isItemValidForSlot(slot, item);
-        else
-            return false;
+        return getInventory() != null && getInventory().isItemValidForSlot(slot, item);
     }
 
     @Override
@@ -422,9 +466,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public boolean hasCustomInventoryName()
     {
-        if (getInventory() != null)
-            return getInventory().hasCustomInventoryName();
-        return false;
+        return getInventory() != null && getInventory().hasCustomInventoryName();
     }
 
     @Override
@@ -561,7 +603,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             Vector3f circle = MOMathHelper.randomCirclePoint(random.nextFloat(), random);
             circle.scale(0.4f);
             Vector4f circleTransformed = new Vector4f(circle.x,circle.y,circle.z,1);
-            rotation.transform(rotation, circleTransformed, circleTransformed);
+            Matrix4f.transform(rotation, circleTransformed, circleTransformed);
 
             float scale = 3f;
 
@@ -607,12 +649,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         try {
             if (owner == null) {
                 if (security_protocol.hasTagCompound() && security_protocol.getTagCompound().hasKey("Owner", 8)) {
-                    UUID newOwner = UUID.fromString(security_protocol.getTagCompound().getString("Owner"));
-                    if (newOwner != null) {
-                        owner = newOwner;
-                        ForceSync();
-                        return true;
-                    }
+                    owner = UUID.fromString(security_protocol.getTagCompound().getString("Owner"));
+                    ForceSync();
+                    return true;
                 }
             }
         }catch (Exception e)
@@ -637,6 +676,34 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void addComponent(IMachineComponent component)
+    {
+        components.add(component);
+    }
+    public boolean removeComponent(IMachineComponent component)
+    {
+        return components.remove(component);
+    }
+    public IMachineComponent removeComponent(int index)
+    {
+        return components.remove(index);
+    }
+    public IMachineComponent getComponent(int index)
+    {
+        return components.get(index);
+    }
+    public <T extends IMachineComponent> T getComponent(Class<T> componentClasss)
+    {
+        for (IMachineComponent component : components)
+        {
+            if (componentClasss.isInstance(component))
+            {
+                return componentClasss.cast(component);
+            }
+        }
+        return null;
     }
     //endregion
 }

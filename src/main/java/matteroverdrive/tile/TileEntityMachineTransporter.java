@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile;
 
 import cofh.lib.util.helpers.MathHelper;
@@ -20,6 +38,7 @@ import matteroverdrive.api.transport.ITransportList;
 import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.fx.ReplicatorParticle;
+import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.client.PacketSyncTransportProgress;
 import matteroverdrive.util.math.MOMathHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -38,10 +57,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Simeon on 5/3/2015.
@@ -71,23 +87,28 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         energyStorage.setCapacity(ENERGY_STORAGE);
         energyStorage.setMaxTransfer(MAX_ENERGY_EXTRACT);
         matterStorage.setCapacity(512);
-        locations = new ArrayList<TransportLocation>();
+        locations = new ArrayList<>();
         selectedLocation = 0;
         redstoneMode = Reference.MODE_REDSTONE_LOW;
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.writeCustomNBT(nbt);
-        writeLocations(nbt);
+        super.writeCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.DATA))
+        {
+            writeLocations(nbt);
+        }
     }
 
     @Override
-    public void readCustomNBT(NBTTagCompound nbt)
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.readCustomNBT(nbt);
-        readLocations(nbt);
+        super.readCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            readLocations(nbt);
+        }
     }
 
     @Override
@@ -109,10 +130,10 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     public void writeLocations(NBTTagCompound nbt)
     {
         NBTTagList locationsList = new NBTTagList();
-        for (int i = 0;i < locations.size();i++)
+        for (TransportLocation location : locations)
         {
             NBTTagCompound positionTag = new NBTTagCompound();
-            locations.get(i).writeToNBT(positionTag);
+            location.writeToNBT(positionTag);
             locationsList.appendTag(positionTag);
         }
         nbt.setTag("transportLocations", locationsList);
@@ -562,9 +583,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		}
 
 		int locNum = (int)Math.floor((Double)args[0]);
-		int newX = (int)Math.floor((Double)args[1]);
-
-		locations.get(locNum).x = newX;
+		locations.get(locNum).x = (int)Math.floor((Double)args[1]);
 
 		return null;
 	}
@@ -583,9 +602,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		}
 
 		int locNum = (int)Math.floor((Double)args[0]);
-		int newY = (int)Math.floor((Double)args[1]);
-
-		locations.get(locNum).y = newY;
+		locations.get(locNum).y = (int)Math.floor((Double)args[1]);
 
 		return null;
 	}
@@ -604,9 +621,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		}
 
 		int locNum = (int)Math.floor((Double)args[0]);
-		int newZ = (int)Math.floor((Double)args[1]);
-
-		locations.get(locNum).z = newZ;
+		locations.get(locNum).z = (int)Math.floor((Double)args[1]);
 
 		return null;
 	}

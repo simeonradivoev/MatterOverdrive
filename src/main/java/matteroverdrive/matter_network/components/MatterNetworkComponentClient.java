@@ -35,7 +35,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public abstract class MatterNetworkComponentClient<T extends IMatterNetworkClient> implements IMatterNetworkClient
 {
-    T rootClient;
+    protected T rootClient;
 
     public MatterNetworkComponentClient(T rootClient)
     {
@@ -102,11 +102,7 @@ public abstract class MatterNetworkComponentClient<T extends IMatterNetworkClien
     @Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
-        if (packet.getReceiverPos() != null)
-        {
-            return packet.getReceiverPos().equals(getPosition());
-        }
-        return true;
+        return packet.getReceiverPos() == null || packet.getReceiverPos().equals(getPosition());
     }
 
     //region Getters and Setters

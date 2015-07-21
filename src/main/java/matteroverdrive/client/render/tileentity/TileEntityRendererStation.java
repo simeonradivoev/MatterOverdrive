@@ -1,10 +1,29 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.client.render.tileentity;
 
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.tile.MOTileEntityMachine;
+import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.IConfigSubscriber;
+import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
@@ -15,6 +34,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.Level;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -120,7 +140,6 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         double height = 9f * (1f / 16f);
         double hologramHeight = getLightHeight();
         double topSize = getLightsSize() - 1;
-        double topSizeExtend = topSize;
 
         glPushMatrix();
         glTranslated(x,y + height,z);
@@ -129,23 +148,23 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
 
         Tessellator.instance.setColorRGBA_F(getHoloColor(entity).getFloatR(),getHoloColor(entity).getFloatG(),getHoloColor(entity).getFloatB(),1);
         Tessellator.instance.addVertexWithUV(0,0,0,1,1);
-        Tessellator.instance.addVertexWithUV(-topSizeExtend,hologramHeight,-topSize,1,0);
-        Tessellator.instance.addVertexWithUV(1 + topSizeExtend,hologramHeight,-topSize,0,0);
+        Tessellator.instance.addVertexWithUV(-topSize,hologramHeight,-topSize,1,0);
+        Tessellator.instance.addVertexWithUV(1 + topSize,hologramHeight,-topSize,0,0);
         Tessellator.instance.addVertexWithUV(1,0,0,0,1);
 
         Tessellator.instance.addVertexWithUV(1,0,0,1,1);
-        Tessellator.instance.addVertexWithUV(1 + topSize,hologramHeight,-topSizeExtend,1,0);
-        Tessellator.instance.addVertexWithUV(1 + topSize,hologramHeight,1 + topSizeExtend,0,0);
+        Tessellator.instance.addVertexWithUV(1 + topSize,hologramHeight,-topSize,1,0);
+        Tessellator.instance.addVertexWithUV(1 + topSize,hologramHeight,1 + topSize,0,0);
         Tessellator.instance.addVertexWithUV(1,0,1,0,1);
 
         Tessellator.instance.addVertexWithUV(1,0,1,1,1);
-        Tessellator.instance.addVertexWithUV(1 + topSizeExtend,hologramHeight,1 + topSize,1,0);
-        Tessellator.instance.addVertexWithUV(-topSizeExtend,hologramHeight,1 + topSize,0,0);
+        Tessellator.instance.addVertexWithUV(1 + topSize,hologramHeight,1 + topSize,1,0);
+        Tessellator.instance.addVertexWithUV(-topSize,hologramHeight,1 + topSize,0,0);
         Tessellator.instance.addVertexWithUV(0,0,1,0,1);
 
         Tessellator.instance.addVertexWithUV(0,0,1,1,1);
-        Tessellator.instance.addVertexWithUV(-topSize,hologramHeight,1 + topSizeExtend,1,0);
-        Tessellator.instance.addVertexWithUV(-topSize,hologramHeight,-topSizeExtend,0,0);
+        Tessellator.instance.addVertexWithUV(-topSize,hologramHeight,1 + topSize,1,0);
+        Tessellator.instance.addVertexWithUV(-topSize,hologramHeight,-topSize,0,0);
         Tessellator.instance.addVertexWithUV(0,0,0,0,1);
 
         Tessellator.instance.draw();
@@ -190,8 +209,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
             try {
                 renderHologram((T) tileEntity, x, y, z, ticks, t);
             } catch (ClassCastException e) {
-                System.out.println("Could not cast to desired station class");
-                e.printStackTrace();
+                MOLog.log(Level.WARN,e,"Could not cast to desired station class");
             }
             glDisable(GL_BLEND);
             glEnable(GL_ALPHA_TEST);
@@ -200,7 +218,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         }
         catch (Exception e)
         {
-
+            MOLog.log(Level.WARN,e,"Error while rendering a Station");
         }
 
         if (drawHoloLights())
@@ -272,6 +290,6 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
-        enableHoloShader = config.getBool("use holo shader",config.CATEGORY_CLIENT,true,"Use the custom holo shader for holographic items");
+        enableHoloShader = config.getBool("use holo shader",ConfigurationHandler.CATEGORY_CLIENT,true,"Use the custom holo shader for holographic items");
     }
 }

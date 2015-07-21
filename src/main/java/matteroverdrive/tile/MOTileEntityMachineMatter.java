@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile;
 
 import cpw.mods.fml.common.Optional;
@@ -6,6 +24,7 @@ import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.api.matter.IMatterStorage;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.MatterStorage;
+import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.client.PacketMatterUpdate;
 import matteroverdrive.util.MatterHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -16,6 +35,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IMatterHandler, IWailaBodyProvider
@@ -29,18 +49,22 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	}
 	
 	@Override
-	public void writeCustomNBT(NBTTagCompound nbt)
+	public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
 	{
-		super.writeCustomNBT(nbt);
-		matterStorage.writeToNBT(nbt);
+		super.writeCustomNBT(nbt, categories);
+		if (categories.contains(MachineNBTCategory.DATA)) {
+			matterStorage.writeToNBT(nbt);
+		}
 
 	}
 	
 	@Override
-	public void readCustomNBT(NBTTagCompound nbt)
+	public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
 	{
-		super.readCustomNBT(nbt);
-		matterStorage.readFromNBT(nbt);
+		super.readCustomNBT(nbt, categories);
+		if (categories.contains(MachineNBTCategory.DATA)) {
+			matterStorage.readFromNBT(nbt);
+		}
 
 	}
 	
@@ -61,7 +85,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 		if (!simulate && received != 0)
 		{
 			updateClientMatter();
-			worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
         return received;
 	}

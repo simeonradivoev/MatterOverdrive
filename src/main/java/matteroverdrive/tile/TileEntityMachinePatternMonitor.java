@@ -28,6 +28,9 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
+import matteroverdrive.machines.MOTileEntityMachine;
+import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentPatternMonitor;
@@ -39,12 +42,13 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.EnumSet;
 import java.util.HashSet;
 
 /**
  * Created by Simeon on 4/26/2015.
  */
-public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy implements IMatterNetworkDispatcher, IMatterNetworkClient, IMatterNetworkBroadcaster
+public class TileEntityMachinePatternMonitor extends MOTileEntityMachine implements IMatterNetworkDispatcher, IMatterNetworkClient, IMatterNetworkBroadcaster
 {
     public static final int BROADCAST_WEATING_DELAY = 80;
     public static final int SEARCH_DELAY = 120;
@@ -54,7 +58,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueue;
     TimeTracker searchDelayTracker;
     private MatterNetworkComponentPatternMonitor networkComponent;
-    private String destinationFilter;
+    private ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
 
     public TileEntityMachinePatternMonitor()
     {
@@ -63,6 +67,8 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
         databases = new HashSet<>();
         searchDelayTracker = new TimeTracker();
         networkComponent = new MatterNetworkComponentPatternMonitor(this);
+        componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+        addComponent(componentMatterNetworkConfigs);
     }
 
     @Override
@@ -111,17 +117,12 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.writeCustomNBT(nbt);
-        taskQueue.writeToNBT(nbt);
-    }
-
-    @Override
-    public void writeConfigsToNBT(NBTTagCompound nbt)
-    {
-        super.writeConfigsToNBT(nbt);
-        nbt.setString("DestinationFilter", destinationFilter);
+        super.writeCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            taskQueue.writeToNBT(nbt);
+        }
     }
 
     @Override
@@ -130,17 +131,13 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public void readCustomNBT(NBTTagCompound nbt)
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.readCustomNBT(nbt);
-        taskQueue.readFromNBT(nbt);
-    }
-
-    @Override
-    public void readConfigsFromNBT(NBTTagCompound nbt)
-    {
-        super.readConfigsFromNBT(nbt);
-        destinationFilter = nbt.getString("DestinationFilter");
+        super.readCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.DATA))
+        {
+            taskQueue.readFromNBT(nbt);
+        }
     }
 
     @Override
@@ -230,11 +227,16 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachineEnergy i
 
     public void setDestinationFilter(String filter)
     {
-        destinationFilter = filter;
+        componentMatterNetworkConfigs.setDestinationFilter(filter);
     }
 
     public String getDestinationFilter()
     {
-        return destinationFilter;
+        return componentMatterNetworkConfigs.getDestinationFilter();
+    }
+
+    public ComponentMatterNetworkConfigs getComponentMatterNetworkConfigs()
+    {
+        return componentMatterNetworkConfigs;
     }
 }

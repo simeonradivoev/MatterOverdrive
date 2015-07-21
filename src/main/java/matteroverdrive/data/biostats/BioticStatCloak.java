@@ -18,6 +18,7 @@
 
 package matteroverdrive.data.biostats;
 
+import matteroverdrive.Reference;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
@@ -53,10 +54,19 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     {
         if (!android.getPlayer().worldObj.isRemote)
         {
-            if (isActive(android, level)) {
+            if (isActive(android, level))
+            {
+                if (!android.getPlayer().isInvisible())
+                {
+                    android.getPlayer().worldObj.playSoundAtEntity(android.getPlayer(),Reference.MOD_ID + ":" + "cloak_on", 1, 1);
+                }
                 android.getPlayer().setInvisible(true);
                 android.extractEnergy(ENERGY_PER_TICK,false);
             } else {
+                if (android.getPlayer().isInvisible())
+                {
+                    android.getPlayer().worldObj.playSoundAtEntity(android.getPlayer(),Reference.MOD_ID + ":" + "cloak_off", 1, 1);
+                }
                 android.getPlayer().setInvisible(false);
             }
         }
@@ -64,7 +74,6 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
 
     public void setActive(AndroidPlayer android, int level,boolean active)
     {
-        android.getPlayer().setInvisible(active);
         android.getEffects().setBoolean("Cloaked", active);
         android.sync(PacketSyncAndroid.SYNC_EFFECTS,true);
     }
@@ -76,7 +85,8 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
         {
             if (down)
             {
-                androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_CLOAK,!androidPlayer.getEffects().getBoolean("Cloaked"));
+                boolean cloak = !androidPlayer.getEffects().getBoolean("Cloaked");
+                androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_CLOAK, cloak);
             }
         }
     }
@@ -99,7 +109,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     @Override
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
-        return androidPlayer.getEffects().getBoolean("Cloaked");
+        return androidPlayer.getEffects().getBoolean("Cloaked") && !androidPlayer.getPlayer().isUsingItem();
     }
 
     @Override

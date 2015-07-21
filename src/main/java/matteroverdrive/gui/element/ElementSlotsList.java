@@ -1,17 +1,33 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
+import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.data.Inventory;
-import matteroverdrive.data.inventory.Slot;
-
-import java.util.List;
 
 /**
  * Created by Simeon on 3/16/2015.
  */
 public class ElementSlotsList extends ElementBaseGroup
 {
-    ElementSlot mainSlot;
+    ElementInventorySlot mainSlot;
     int margin = 0;
 
     public ElementSlotsList(GuiBase gui, int posX, int posY, int width, int height, Inventory inventory, int main)
@@ -24,33 +40,17 @@ public class ElementSlotsList extends ElementBaseGroup
             {
                 if (index == main)
                 {
-                    mainSlot = new ElementSlot(gui, 0, 0, 37, 22, "big_main", inventory.getSlot(i).getTexture());
+                    mainSlot = new ElementInventorySlot(gui, (MOSlot)gui.inventorySlots.getSlot(i),0, 0, 37, 22, "big_main", inventory.getSlot(i).getTexture());
                     mainSlot.setItemOffset(3, 3);
                     addElement(mainSlot);
                 }
                 else {
 
-                    addElement(new ElementSlot(gui, 0, 0, 22, 22, "big", inventory.getSlot(i).getTexture()));
+                    addElement(new ElementInventorySlot(gui,(MOSlot)gui.inventorySlots.getSlot(i), 0, 0, 22, 22, "big", inventory.getSlot(i).getTexture()));
                 }
 
                 index++;
             }
-        }
-    }
-
-    public ElementSlotsList(GuiBase gui, int posX, int posY,int width,int height, List<Slot> inventory,int main)
-    {
-        super(gui, posX, posY, width, height);
-        for (int i = 0;i < inventory.size();i++)
-        {
-            if (i == main) {
-                mainSlot = new ElementSlot(gui, 0, 0, 37, 22, "big_main", inventory.get(i).getTexture());
-                mainSlot.setItemOffset(5,5);
-                addElement(mainSlot);
-
-            }
-            else
-                addElement(new ElementSlot(gui,0,0,22,22,"big",inventory.get(i).getTexture()));
         }
     }
 

@@ -23,58 +23,28 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.starmap.IShip;
-import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.Planet;
-import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.starmap.data.Star;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-import java.util.HashMap;
-import java.util.UUID;
-
 /**
  * Created by Simeon on 6/17/2015.
  */
 @SideOnly(Side.CLIENT)
-public class GalaxyClient
+public class GalaxyClient extends GalaxyCommon
 {
     //region Private Vars
     private static GalaxyClient instance;
-    private Galaxy theGalaxy;
-    private HashMap<UUID,Planet> homePlanets;
     //endregion
 
     //region Constructors
     public GalaxyClient()
     {
-        homePlanets = new HashMap();
-    }
-    public Galaxy getTheGalaxy()
-    {
-        return theGalaxy;
+        super();
     }
     //endregion
-
-    public void loadClaimedPlanets()
-    {
-        homePlanets.clear();
-
-        for (Quadrant quadrant : theGalaxy.getQuadrants())
-        {
-            for (Star star : quadrant.getStars())
-            {
-                for (Planet planet : star.getPlanets())
-                {
-                    if (planet.isHomeworld() && planet.hasOwner())
-                    {
-                        homePlanets.put(planet.getOwnerUUID(),planet);
-                    }
-                }
-            }
-        }
-    }
 
     public boolean canSeePlanetInfo(Planet planet,EntityPlayer player)
     {
@@ -132,15 +102,6 @@ public class GalaxyClient
         }
 
         return instance;
-    }
-    public Planet getHomeworld(EntityPlayer player)
-    {
-        return homePlanets.get(EntityPlayer.func_146094_a(player.getGameProfile()));
-    }
-    public void setTheGalaxy(Galaxy galaxy)
-    {
-        theGalaxy = galaxy;
-        loadClaimedPlanets();
     }
     //endregion
 }

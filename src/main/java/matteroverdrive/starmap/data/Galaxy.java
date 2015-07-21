@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.starmap.data;
 
 import io.netty.buffer.ByteBuf;
@@ -38,6 +56,11 @@ public class Galaxy extends SpaceBody
     //endregion
 
     //region Constructors
+    public Galaxy()
+    {
+        this(null);
+    }
+
     public Galaxy(World world)
     {
         super();
@@ -56,8 +79,8 @@ public class Galaxy extends SpaceBody
 
     private void init()
     {
-        quadrantHashMap = new HashMap();
-        travelEvents = new ArrayList();
+        quadrantHashMap = new HashMap<>();
+        travelEvents = new ArrayList<>();
     }
 
     //region update functions
@@ -73,10 +96,7 @@ public class Galaxy extends SpaceBody
 
     private void manageDirty(World world)
     {
-        if (world.isRemote)
-        {
 
-        }
     }
 
     private void manageTravelEvents(World world)
@@ -156,9 +176,9 @@ public class Galaxy extends SpaceBody
             quadrant.writeToBuffer(buf);
         }
         buf.writeInt(travelEvents.size());
-        for (int i = 0; i < travelEvents.size();i++)
+        for (TravelEvent travelEvent : travelEvents)
         {
-            travelEvents.get(i).writeToBuffer(buf);
+            travelEvent.writeToBuffer(buf);
         }
     }
 

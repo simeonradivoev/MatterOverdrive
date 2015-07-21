@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile;
 
 import cofh.lib.util.helpers.MathHelper;
@@ -8,11 +26,14 @@ import matteroverdrive.api.matter.IRecyclable;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.data.inventory.SlotRecycler;
+import matteroverdrive.machines.MachineNBTCategory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.EnumSet;
 
 /**
  * Created by Simeon on 5/15/2015.
@@ -53,10 +74,12 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     }
 
     @Override
-    public void readCustomNBT(NBTTagCompound nbt)
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.readCustomNBT(nbt);
-        this.recycleTime = nbt.getShort("RecycleTime");
+        super.readCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            this.recycleTime = nbt.getShort("RecycleTime");
+        }
     }
 
     @Override
@@ -71,10 +94,12 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.writeCustomNBT(nbt);
-        nbt.setShort("RecycleTime", (short)this.recycleTime);
+        super.writeCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            nbt.setShort("RecycleTime", (short) this.recycleTime);
+        }
     }
 
     public void manageRecycle()
@@ -107,11 +132,11 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
 
     public boolean isRecycling()
     {
-        if (getStackInSlot(INPUT_SLOT_ID) != null && getStackInSlot(INPUT_SLOT_ID).getItem() instanceof IRecyclable)
-        {
-            return ((IRecyclable) getStackInSlot(INPUT_SLOT_ID).getItem()).canRecycle(getStackInSlot(INPUT_SLOT_ID)) && canPutInOutput() && ((IRecyclable) getStackInSlot(INPUT_SLOT_ID).getItem()).getRecycleMatter(getStackInSlot(INPUT_SLOT_ID)) > 0;
-        }
-        return false;
+        return getStackInSlot(INPUT_SLOT_ID) != null
+                && getStackInSlot(INPUT_SLOT_ID).getItem() instanceof IRecyclable
+                && ((IRecyclable) getStackInSlot(INPUT_SLOT_ID).getItem()).canRecycle(getStackInSlot(INPUT_SLOT_ID))
+                && canPutInOutput()
+                && ((IRecyclable) getStackInSlot(INPUT_SLOT_ID).getItem()).getRecycleMatter(getStackInSlot(INPUT_SLOT_ID)) > 0;
     }
 
     public int getEnergyDrainPerTick()
@@ -169,7 +194,7 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
             if (stackInOutput == null)
             {
                 setInventorySlotContents(OUTPUT_SLOT_ID,outputStack);
-            }else if (stackInOutput != null)
+            }else
             {
                 stackInOutput.stackSize++;
             }
@@ -208,11 +233,7 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     @Override
     public boolean canInsertItem(int slot, ItemStack item, int side)
     {
-        if (slot != OUTPUT_SLOT_ID)
-        {
-            return super.canInsertItem(slot,item,side);
-        }
-        return false;
+        return slot != OUTPUT_SLOT_ID && super.canInsertItem(slot,item,side);
     }
 
     @Override

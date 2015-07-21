@@ -36,6 +36,7 @@ import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.PatternStorageSlot;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.MatterScanner;
+import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentPatternStorage;
@@ -51,6 +52,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -147,31 +149,30 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
     //region NBT
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.writeCustomNBT(nbt);
-        taskQueueProcessing.writeToNBT(nbt);
+        super.writeCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.CONFIGS))
+        {
+            nbt.setString("DestinationFilter", destinationFilter);
+        }
+        if (categories.contains(MachineNBTCategory.DATA))
+        {
+            taskQueueProcessing.writeToNBT(nbt);
+        }
     }
 
     @Override
-    public void writeConfigsToNBT(NBTTagCompound nbt)
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.writeConfigsToNBT(nbt);
-        nbt.setString("DestinationFilter", destinationFilter);
-    }
-
-    @Override
-    public void readCustomNBT(NBTTagCompound nbt)
-    {
-        super.readCustomNBT(nbt);
-        taskQueueProcessing.readFromNBT(nbt);
-    }
-
-    @Override
-    public void readConfigsFromNBT(NBTTagCompound nbt)
-    {
-        super.readConfigsFromNBT(nbt);
-        destinationFilter = nbt.getString("DestinationFilter");
+        super.readCustomNBT(nbt, categories);
+        if (categories.contains(MachineNBTCategory.CONFIGS))
+        {
+            destinationFilter = nbt.getString("DestinationFilter");
+        }
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            taskQueueProcessing.readFromNBT(nbt);
+        }
     }
     //endregion
 
@@ -180,11 +181,11 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public NBTTagList getItemsAsNBT()
     {
         NBTTagList list = new NBTTagList();
-        for (int i = 0;i < pattern_storage_slots.length;i++)
+        for (int slotId : pattern_storage_slots)
         {
-            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(pattern_storage_slots[i])))
+            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotId)))
             {
-                NBTTagList l = MatterDatabaseHelper.GetItemsTagList(inventory.getStackInSlot(pattern_storage_slots[i]));
+                NBTTagList l = MatterDatabaseHelper.GetItemsTagList(inventory.getStackInSlot(slotId));
                 if(l != null)
                 {
                     for (int t = 0;t < l.tagCount();t++)
@@ -205,13 +206,12 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     public boolean hasItem(ItemStack item)
     {
-        for (int i = 0;i < pattern_storage_slots.length;i++)
+        for (int slotID : pattern_storage_slots)
         {
-            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(pattern_storage_slots[i])))
+            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotID)))
             {
-                boolean hasItem = MatterDatabaseHelper.HasItem(inventory.getStackInSlot(pattern_storage_slots[i]), item);
-                if(hasItem)
-                    return hasItem;
+                boolean hasItem = MatterDatabaseHelper.HasItem(inventory.getStackInSlot(slotID), item);
+                if(hasItem) return true;
             }
         }
         return false;
@@ -226,20 +226,19 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
         if (!MatterHelper.CanScan(itemStack))
         {
-            info.append(EnumChatFormatting.RED + itemStack.getDisplayName() + " cannot be analyzed!");
+            info.append(String.format("%s%s cannot be analyzed!",EnumChatFormatting.RED,itemStack.getDisplayName()));
             return false;
         }
 
-        for (int i = 0;i < pattern_storage_slots.length;i++)
+        for (int slotId : pattern_storage_slots)
         {
-            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(pattern_storage_slots[i])))
+            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotId)))
             {
-                NBTTagCompound hasItemInPatternStorage = MatterDatabaseHelper.GetItemAsNBT(inventory.getStackInSlot(pattern_storage_slots[i]), itemStack);
+                NBTTagCompound hasItemInPatternStorage = MatterDatabaseHelper.GetItemAsNBT(inventory.getStackInSlot(slotId), itemStack);
                 if (hasItemInPatternStorage != null)
                 {
                     hasItem = hasItemInPatternStorage;
                     break;
-
                 }
             }
         }
@@ -257,28 +256,28 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
                     ForceSync();
                 }
                 if (info != null)
-                    info.append(EnumChatFormatting.GREEN + itemStack.getDisplayName() + " added to Pattern Storage. Progress is now at " + progress + "%.");
+                    info.append(String.format("%s added to Pattern Storage. Progress is now at %s",EnumChatFormatting.GREEN + itemStack.getDisplayName(),progress + "%"));
                 return true;
             }
             else
             {
                 if (info != null)
-                    info.append(EnumChatFormatting.RED + itemStack.getDisplayName() + " is fully analyzed!");
+                    info.append(String.format("%s is fully analyzed!",EnumChatFormatting.RED + itemStack.getDisplayName()));
                 return false;
             }
         }else
         {
-            for (int i = 0;i < pattern_storage_slots.length;i++)
+            for (int slotId : pattern_storage_slots)
             {
-                if (inventory.getStackInSlot(pattern_storage_slots[i]) != null)
+                if (inventory.getStackInSlot(slotId) != null)
                 {
-                    IMatterPatternStorage storage = (IMatterPatternStorage) inventory.getStackInSlot(pattern_storage_slots[i]).getItem();
-                    if (storage.addItem(inventory.getStackInSlot(pattern_storage_slots[i]), itemStack, amount, simulate))
+                    IMatterPatternStorage storage = (IMatterPatternStorage) inventory.getStackInSlot(slotId).getItem();
+                    if (storage.addItem(inventory.getStackInSlot(slotId), itemStack, amount, simulate))
                     {
                         if (!simulate)
                             ForceSync();
                         if (info != null)
-                            info.append(EnumChatFormatting.GREEN + itemStack.getDisplayName() + " added to Pattern Storage. Progress is now at " + amount + "%.");
+                            info.append(String.format("%s added to Pattern Storage. Progress is now at %s",EnumChatFormatting.GREEN + itemStack.getDisplayName(),amount + "%"));
                         return true;
                     }
                 }
@@ -286,18 +285,18 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         }
 
         if (info != null)
-            info.append(EnumChatFormatting.RED + "No space available for '"+itemStack.getDisplayName()+"' !");
+            info.append(String.format("%sNo space available for '%s' !",EnumChatFormatting.RED,itemStack.getDisplayName()));
         return false;
     }
 
     @Override
     public NBTTagCompound getItemAsNBT(ItemStack item)
     {
-        for (int i = 0;i < pattern_storage_slots.length;i++)
+        for (int slotId : pattern_storage_slots)
         {
-            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(pattern_storage_slots[i])))
+            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotId)))
             {
-                NBTTagCompound hasItem = MatterDatabaseHelper.GetItemAsNBT(inventory.getStackInSlot(pattern_storage_slots[i]), item);
+                NBTTagCompound hasItem = MatterDatabaseHelper.GetItemAsNBT(inventory.getStackInSlot(slotId), item);
                 if(hasItem != null)
                     return hasItem;
             }

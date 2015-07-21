@@ -1,0 +1,119 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
+package matteroverdrive.machines.components;
+
+
+import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.data.Inventory;
+import matteroverdrive.data.inventory.DestinationFilterSlot;
+import matteroverdrive.machines.MOTileEntityMachine;
+import matteroverdrive.machines.MachineComponentAbstract;
+import matteroverdrive.machines.MachineNBTCategory;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
+
+import java.util.EnumSet;
+
+/**
+ * Created by Simeon on 7/19/2015.
+ */
+public class ComponentMatterNetworkConfigs extends MachineComponentAbstract<MOTileEntityMachine>
+{
+    private String destinationFilter;
+    private int destinationFilterSlot;
+
+    public ComponentMatterNetworkConfigs(MOTileEntityMachine machine)
+    {
+        super(machine);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    {
+        if (categories.contains(MachineNBTCategory.CONFIGS))
+        {
+            if (nbt.hasKey("DestinationFilter", Constants.NBT.TAG_STRING))
+                destinationFilter = nbt.getString("DestinationFilter");
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    {
+        if (categories.contains(MachineNBTCategory.CONFIGS))
+        {
+            if (destinationFilter != null)
+                nbt.setString("DestinationFilter",destinationFilter);
+        }
+    }
+
+    @Override
+    public void registerSlots(Inventory inventory)
+    {
+        destinationFilterSlot = inventory.AddSlot(new DestinationFilterSlot(false));
+    }
+
+    @Override
+    public void update(MOTileEntityMachine machine) {
+
+    }
+
+    @Override
+    public boolean isAffectedByUpgrade(UpgradeTypes type) {
+        return false;
+    }
+
+    @Override
+    public boolean isActive() {
+        return false;
+    }
+
+    @Override
+    public void onActiveChange(MOTileEntityMachine machine) {
+
+    }
+
+    @Override
+    public void onAwake(MOTileEntityMachine machine, Side side) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving, MOTileEntityMachine machine) {
+
+    }
+
+    public String getDestinationFilter()
+    {
+        return destinationFilter;
+    }
+
+    public int getDestinationFilterSlot()
+    {
+        return destinationFilterSlot;
+    }
+
+    public void setDestinationFilter(String destinationFilter)
+    {
+        this.destinationFilter = destinationFilter;
+    }
+}

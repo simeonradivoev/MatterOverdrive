@@ -1,10 +1,27 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.init;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.handler.MatterRegistry;
 import matteroverdrive.items.*;
 import matteroverdrive.items.food.AndroidPill;
 import matteroverdrive.items.food.EarlGrayTea;
@@ -119,13 +136,13 @@ public class MatterOverdriveItems
         machine_casing.register();
         s_magnet.register();
         dilithium_ctystal.register();
-        MatterRegistry.addToBlacklist(dilithium_ctystal);
+        MatterOverdrive.matterRegistry.addToBlacklist(dilithium_ctystal);
         tritanium_ingot.register();
-        MatterRegistry.addToBlacklist(tritanium_ingot);
+        MatterOverdrive.matterRegistry.addToBlacklist(tritanium_ingot);
         tritanium_dust.register();
-        MatterRegistry.addToBlacklist(tritanium_dust);
+        MatterOverdrive.matterRegistry.addToBlacklist(tritanium_dust);
         tritanium_plate.register();
-        MatterRegistry.addToBlacklist(tritanium_plate);
+        MatterOverdrive.matterRegistry.addToBlacklist(tritanium_plate);
         pattern_drive.register();
         weapon_module_color.register();
         weapon_module_barrel.register();
@@ -146,25 +163,25 @@ public class MatterOverdriveItems
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_ingot),10);
 
-		GameRegistry.addRecipe(new ItemStack(battery), new Object[]{" R ", "TGT", "TDT", 'T', tritanium_ingot, 'D', MatterOverdriveItems.dilithium_ctystal, 'R', Items.redstone, 'G', Items.gold_ingot});
-        GameRegistry.addRecipe(new ItemStack(hc_battery),new Object[]{" P ","DBD"," P ",'B',battery,'D',dilithium_ctystal,'P',tritanium_plate});
-		GameRegistry.addRecipe(new ItemStack(matter_scanner), new Object[]{"III","GDG","IRI", 'I',Items.iron_ingot, 'D',new ItemStack(isolinear_circuit,1,2),'R',Items.redstone,'G',Items.gold_ingot});
-        GameRegistry.addRecipe(new ItemStack(h_compensator),new Object[]{" M ","CPC","DED",'D', MatterOverdriveItems.dilithium_ctystal,'M',machine_casing,'I',Items.iron_ingot,'C',new ItemStack(isolinear_circuit,1,0),'P',new ItemStack(isolinear_circuit,1,1),'E',Items.ender_eye});
-        GameRegistry.addRecipe(new ItemStack(integration_matrix),new Object[]{" M ","GPG","DED",'G', Blocks.glass,'M',machine_casing,'I',Items.iron_ingot,'P',new ItemStack(isolinear_circuit,1,1),'E',Items.ender_pearl,'D',MatterOverdriveItems.dilithium_ctystal});
-        GameRegistry.addRecipe(new ItemStack(machine_casing),new Object[]{" T ","I I","GRG",'G', Items.gold_ingot,'T',tritanium_plate,'I',tritanium_ingot,'R',Items.redstone});
-        GameRegistry.addRecipe(new ItemStack(s_magnet),new Object[]{"RRR","ETE","RRR",'E',Items.ender_pearl,'T',tritanium_ingot,'R',Items.redstone});
-        GameRegistry.addRecipe(new ItemStack(me_conversion_matrix),new Object[]{"EIE","CDC","EIE",'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'I',Items.iron_ingot,'D',MatterOverdriveItems.dilithium_ctystal});
-        GameRegistry.addRecipe(new ItemStack(tritanium_plate),new Object[]{"TTT",'T',new ItemStack(tritanium_ingot)});
-        GameRegistry.addRecipe(new ItemStack(phaser),new Object[]{"IGI","IDI","WCW",'I',Items.iron_ingot,'G',Blocks.glass,'D',dilithium_ctystal,'W',Blocks.wool,'C',new ItemStack(isolinear_circuit,1,3)});
-        GameRegistry.addRecipe(new ItemStack(pattern_drive),new Object[]{" M ", "RER"," C ",'M',machine_casing,'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'R',Items.redstone});
-        GameRegistry.addRecipe(new ItemStack(security_protocol),new Object[]{"PP", "CP",'P',Items.paper,'C',new ItemStack(isolinear_circuit,1,0)});
-        GameRegistry.addRecipe(new ItemStack(wrench),new Object[]{"T T"," Y "," T ",'T',tritanium_ingot,'Y',new ItemStack(Blocks.wool,1,4)});
-        GameRegistry.addRecipe(new ItemStack(spacetime_equalizer),new Object[]{" M ","EHE", " M ",'M',s_magnet,'E',Items.ender_pearl,'H',h_compensator});
-        GameRegistry.addRecipe(new ItemStack(forceFieldEmitter),new Object[]{"CDC","CDC","PCP",'P',tritanium_plate,'E',Items.ender_pearl,'D',dilithium_ctystal,'2',new ItemStack(isolinear_circuit,1,1),'C',s_magnet});
+		GameRegistry.addRecipe(new ItemStack(battery), " R ", "TGT", "TDT", 'T', tritanium_ingot, 'D', MatterOverdriveItems.dilithium_ctystal, 'R', Items.redstone, 'G', Items.gold_ingot);
+        GameRegistry.addRecipe(new ItemStack(hc_battery)," P ","DBD"," P ",'B',battery,'D',dilithium_ctystal,'P',tritanium_plate);
+		GameRegistry.addRecipe(new ItemStack(matter_scanner), "III","GDG","IRI", 'I',Items.iron_ingot, 'D',new ItemStack(isolinear_circuit,1,2),'R',Items.redstone,'G',Items.gold_ingot);
+        GameRegistry.addRecipe(new ItemStack(h_compensator)," M ","CPC","DED",'D', MatterOverdriveItems.dilithium_ctystal,'M',machine_casing,'I',Items.iron_ingot,'C',new ItemStack(isolinear_circuit,1,0),'P',new ItemStack(isolinear_circuit,1,1),'E',Items.ender_eye);
+        GameRegistry.addRecipe(new ItemStack(integration_matrix)," M ","GPG","DED",'G', Blocks.glass,'M',machine_casing,'I',Items.iron_ingot,'P',new ItemStack(isolinear_circuit,1,1),'E',Items.ender_pearl,'D',MatterOverdriveItems.dilithium_ctystal);
+        GameRegistry.addRecipe(new ItemStack(machine_casing)," T ","I I","GRG",'G', Items.gold_ingot,'T',tritanium_plate,'I',tritanium_ingot,'R',Items.redstone);
+        GameRegistry.addRecipe(new ItemStack(s_magnet),"RRR","ETE","RRR",'E',Items.ender_pearl,'T',tritanium_ingot,'R',Items.redstone);
+        GameRegistry.addRecipe(new ItemStack(me_conversion_matrix),"EIE","CDC","EIE",'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'I',Items.iron_ingot,'D',MatterOverdriveItems.dilithium_ctystal);
+        GameRegistry.addRecipe(new ItemStack(tritanium_plate),"TTT",'T',new ItemStack(tritanium_ingot));
+        GameRegistry.addRecipe(new ItemStack(phaser),"IGI","IDI","WCW",'I',Items.iron_ingot,'G',Blocks.glass,'D',dilithium_ctystal,'W',Blocks.wool,'C',new ItemStack(isolinear_circuit,1,3));
+        GameRegistry.addRecipe(new ItemStack(pattern_drive)," M ", "RER"," C ",'M',machine_casing,'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'R',Items.redstone);
+        GameRegistry.addRecipe(new ItemStack(security_protocol),"PP", "CP",'P',Items.paper,'C',new ItemStack(isolinear_circuit,1,0));
+        GameRegistry.addRecipe(new ItemStack(wrench),"T T"," Y "," T ",'T',tritanium_ingot,'Y',new ItemStack(Blocks.wool,1,4));
+        GameRegistry.addRecipe(new ItemStack(spacetime_equalizer)," M ","EHE", " M ",'M',s_magnet,'E',Items.ender_pearl,'H',h_compensator);
+        GameRegistry.addRecipe(new ItemStack(forceFieldEmitter),"CDC","CDC","PCP",'P',tritanium_plate,'E',Items.ender_pearl,'D',dilithium_ctystal,'2',new ItemStack(isolinear_circuit,1,1),'C',s_magnet);
 
-        MatterRegistry.register(emergency_ration, 3);
-        MatterRegistry.register(earl_gray_tea, 2);
-		MatterRegistry.register(romulan_ale, 2);
+        MatterOverdrive.matterRegistry.register(emergency_ration, 3);
+        MatterOverdrive.matterRegistry.register(earl_gray_tea, 2);
+        MatterOverdrive.matterRegistry.register(romulan_ale, 2);
 	}
 
     public static void addToDungons()

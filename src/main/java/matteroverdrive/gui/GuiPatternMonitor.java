@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui;
 
 import matteroverdrive.MatterOverdrive;
@@ -9,7 +27,6 @@ import matteroverdrive.gui.element.ElementMonitorItemPattern;
 import matteroverdrive.gui.element.ElementPatternsGrid;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.element.MOElementTextField;
-import matteroverdrive.gui.pages.MatterNetworkConfigPage;
 import matteroverdrive.gui.pages.PageTasks;
 import matteroverdrive.network.packet.server.PacketPatternMonitorCommands;
 import matteroverdrive.network.packet.server.PacketRemoveTask;
@@ -36,10 +53,10 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
     {
         super(new ContainerPatternMonitor(inventoryPlayer, machine), machine);
         name = "pattern_monitor";
-        refreshButton = new MOElementButton(this,this,6,75,"Refresh",0,0,22,0,22,22, "");
+        refreshButton = new MOElementButton(this,this,6,45,"Refresh",0,0,22,0,22,22, "");
         refreshButton.setTexture(Reference.PATH_GUI_ITEM + "refresh.png", 44, 22);
         refreshButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.button.refresh"));
-        requestButton = new MOElementButton(this,this,6,100,"Request",0,0,22,0,22,22,"");
+        requestButton = new MOElementButton(this,this,6,75,"Request",0,0,22,0,22,22,"");
         requestButton.setTexture(Reference.PATH_GUI_ITEM + "request.png",44,22);
         requestButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.button.request"));
         elementGrid = new ElementPatternsGrid(this,48,40,160,114);
@@ -107,7 +124,7 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
                 MatterOverdrive.packetPipeline.sendToServer(new PacketPatternMonitorCommands(machine, PacketPatternMonitorCommands.COMMAND_REQUEST, tagCompound));
             }
         }
-        else if (buttonName == "DropTask")
+        else if (buttonName.equals("DropTask"))
         {
             NBTTagCompound tagCompound = new NBTTagCompound();
             tagCompound.setInteger("TaskID",mouseButton);

@@ -40,7 +40,7 @@ public class PlayerEventHandler
     public List<EntityPlayerMP> players;
     public PlayerEventHandler(ConfigurationHandler configurationHandler)
     {
-        players = new ArrayList<EntityPlayerMP>();
+        players = new ArrayList<>();
         versionCheckerHandler = new VersionCheckerHandler();
 
         configurationHandler.subscribe(versionCheckerHandler);
@@ -50,10 +50,10 @@ public class PlayerEventHandler
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event)
     {
         if (event.player instanceof EntityPlayerMP) {
-            if (MatterRegistry.hasComplitedRegistration) {
+            if (MatterOverdrive.matterRegistry.hasComplitedRegistration) {
                 if (!MinecraftServer.getServer().isSinglePlayer()) {
 
-                    MatterOverdrive.packetPipeline.sendTo(new PacketUpdateMatterRegistry(MatterRegistry.getEntries()), (EntityPlayerMP) event.player);
+                    MatterOverdrive.packetPipeline.sendTo(new PacketUpdateMatterRegistry(MatterOverdrive.matterRegistry.getEntries()), (EntityPlayerMP) event.player);
 
                 }
             } else {
@@ -77,11 +77,11 @@ public class PlayerEventHandler
 
     public void onServerTick(TickEvent.ServerTickEvent event)
     {
-        if (MatterRegistry.hasComplitedRegistration)
+        if (MatterOverdrive.matterRegistry.hasComplitedRegistration)
         {
             for (int i = 0; i < MatterOverdrive.playerEventHandler.players.size();i++)
             {
-                MatterOverdrive.packetPipeline.sendTo(new PacketUpdateMatterRegistry(MatterRegistry.getEntries()),MatterOverdrive.playerEventHandler.players.get(i));
+                MatterOverdrive.packetPipeline.sendTo(new PacketUpdateMatterRegistry(MatterOverdrive.matterRegistry.getEntries()),MatterOverdrive.playerEventHandler.players.get(i));
             }
 
             MatterOverdrive.playerEventHandler.players.clear();

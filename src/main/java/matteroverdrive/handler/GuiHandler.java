@@ -1,13 +1,35 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.handler;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.container.*;
 import matteroverdrive.gui.*;
+import matteroverdrive.machines.MOTileEntityMachine;
+import matteroverdrive.machines.analyzer.TileEntityMachineMatterAnalyzer;
 import matteroverdrive.tile.*;
+import matteroverdrive.util.MOLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.Level;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -21,8 +43,8 @@ public class GuiHandler implements IGuiHandler
 
     public GuiHandler()
     {
-        guis = new HashMap<Class<? extends MOTileEntity>, Class<? extends MOGuiBase>>();
-        containers = new HashMap<Class<? extends MOTileEntity>, Class<? extends MOBaseContainer>>();
+        guis = new HashMap<>();
+        containers = new HashMap<>();
     }
 
     public void register(Side side)
@@ -87,24 +109,24 @@ public class GuiHandler implements IGuiHandler
             {
                 Class<? extends MOBaseContainer> containerClass = containers.get(entity.getClass());
                 Constructor[] constructors = containerClass.getDeclaredConstructors();
-                for (int i = 0;i < constructors.length;i++)
+                for (Constructor constructor : constructors)
                 {
-                    Class[] parameterTypes = constructors[i].getParameterTypes();
+                    Class[] parameterTypes = constructor.getParameterTypes();
                     if (parameterTypes.length == 2)
                     {
                         if (parameterTypes[0].isInstance(player.inventory) && parameterTypes[1].isInstance(entity))
                         {
                             onContainerOpen(entity,Side.SERVER);
-                            return constructors[i].newInstance(player.inventory,entity);
+                            return constructor.newInstance(player.inventory, entity);
                         }
                     }
                 }
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                MOLog.log(Level.WARN, e, "Could call Tile Entity Constructor in Server GUI handling");
             } catch (InstantiationException e) {
-                e.printStackTrace();
+                MOLog.log(Level.WARN, e, "Could not instantiate Tile Entity in Server GUI handling");
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                MOLog.log(Level.WARN, e, "No Rights to access Tile Entity Constructor in Server GUI handling");
             }
         }
 		return null;
@@ -129,28 +151,24 @@ public class GuiHandler implements IGuiHandler
 
                 Class<? extends MOGuiBase> containerClass = guis.get(entity.getClass());
                 Constructor[] constructors = containerClass.getDeclaredConstructors();
-                for (int i = 0;i < constructors.length;i++)
+                for (Constructor constructor : constructors)
                 {
-                    Class[] parameterTypes = constructors[i].getParameterTypes();
+                    Class[] parameterTypes = constructor.getParameterTypes();
                     if (parameterTypes.length == 2)
                     {
                         if (parameterTypes[0].isInstance(player.inventory) && parameterTypes[1].isInstance(entity))
                         {
                             onContainerOpen(entity,Side.CLIENT);
-                            return constructors[i].newInstance(player.inventory,entity);
+                            return constructor.newInstance(player.inventory, entity);
                         }
                     }
                 }
-            }
-            catch (InstantiationException e)
-            {
-                e.printStackTrace();
-            }
-            catch (IllegalAccessException e)
-            {
-                e.printStackTrace();
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                MOLog.log(Level.WARN, e, "Could call Tile Entity Constructor in Client GUI handling");
+            } catch (InstantiationException e) {
+                MOLog.log(Level.WARN, e, "Could not instantiate Tile Entity in Client GUI handling");
+            } catch (IllegalAccessException e) {
+                MOLog.log(Level.WARN, e, "No Rights to access Tile Entity Constructor in Client GUI handling");
             }
         }
         return null;

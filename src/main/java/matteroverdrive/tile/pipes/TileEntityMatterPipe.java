@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile.pipes;
 
 import cofh.lib.util.TimeTracker;
@@ -6,6 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.data.MatterStorage;
+import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,6 +38,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 
@@ -59,11 +79,7 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
     @Override
     public boolean canConnectTo(TileEntity entity,ForgeDirection direction)
     {
-        if (entity instanceof IMatterConnection)
-        {
-            return ((IMatterConnection) entity).canConnectFrom(direction);
-        }
-        return false;
+        return entity instanceof IMatterConnection && ((IMatterConnection) entity).canConnectFrom(direction);
     }
 
     public  void  Transfer()
@@ -91,7 +107,7 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
     private List<WeightedDirection> getWeightedValidSides(ForgeDirection transferDir)
     {
         int connections = getConnections();
-        List<WeightedDirection> validSides = new ArrayList<WeightedDirection>(6);
+        List<WeightedDirection> validSides = new ArrayList<>(6);
         ForgeDirection transferDirOp = MatterHelper.opposite(transferDir);
 
         for (int i = 0; i < 6; i++)
@@ -116,9 +132,9 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound comp)
+    public void writeCustomNBT(NBTTagCompound comp, EnumSet<MachineNBTCategory> categories)
     {
-        if(!worldObj.isRemote)
+        if(!worldObj.isRemote && categories.contains(MachineNBTCategory.DATA))
         {
             storage.writeToNBT(comp);
             comp.setByte("transfer_dir", (byte) this.lastDir.ordinal());
@@ -126,12 +142,13 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
     }
 
     @Override
-    public  void  readCustomNBT(NBTTagCompound comp)
+    public  void  readCustomNBT(NBTTagCompound comp, EnumSet<MachineNBTCategory> categories)
     {
-        storage.readFromNBT(comp);
-        if (comp.hasKey("transfer_dir"))
-        {
-            lastDir = ForgeDirection.values()[comp.getByte("transfer_dir")];
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            storage.readFromNBT(comp);
+            if (comp.hasKey("transfer_dir")) {
+                lastDir = ForgeDirection.values()[comp.getByte("transfer_dir")];
+            }
         }
     }
 

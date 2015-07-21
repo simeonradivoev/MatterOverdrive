@@ -1,7 +1,26 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.handler;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import matteroverdrive.api.inventory.IBionicStat;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,7 +71,7 @@ public class EntityHandler
                 androidPlayer.onEntityJump(event);
 
                 if (androidPlayer.isAndroid()) {
-                    for (IBionicStat stat : AndroidStatRegistry.stats.values()) {
+                    for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
                         int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
                         if (unlockedLevel > 0 && stat.isEnabled(androidPlayer,unlockedLevel)) {
                             stat.onLivingEvent(androidPlayer, unlockedLevel, event);
@@ -76,7 +95,7 @@ public class EntityHandler
         if (event.entityLiving instanceof EntityPlayer) {
             AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.entityLiving);
             if (androidPlayer != null && androidPlayer.isAndroid()) {
-                for (IBionicStat stat : AndroidStatRegistry.stats.values()) {
+                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
                     int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
                     if (unlockedLevel > 0 && stat.isEnabled(androidPlayer,unlockedLevel))
                     {
@@ -94,8 +113,8 @@ public class EntityHandler
         {
             AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.entityLiving);
 
-            if (androidPlayer != null && androidPlayer.isAndroid()) {
-                for (IBionicStat stat : AndroidStatRegistry.stats.values()) {
+            if (androidPlayer.isAndroid()) {
+                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
                     int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
                     if (unlockedLevel > 0 && stat.isEnabled(androidPlayer,unlockedLevel)) {
                         stat.onLivingEvent(androidPlayer,unlockedLevel , event);

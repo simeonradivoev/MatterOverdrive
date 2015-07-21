@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile;
 
 
@@ -23,6 +41,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.init.MatterOverdriveBlocks;
+import matteroverdrive.machines.MachineNBTCategory;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -35,6 +54,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 
 /**
  * Created by Simeon on 5/14/2015.
@@ -85,9 +105,9 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.writeCustomNBT(nbt);
+        super.writeCustomNBT(nbt, categories);
         nbt.setBoolean("ValidStructure", validStructure);
         nbt.setString("MonitorInfo",monitorInfo);
         nbt.setFloat("EnergyEfficiency",energyEfficiency);
@@ -101,9 +121,9 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     }
 
     @Override
-    public void readCustomNBT(NBTTagCompound nbt)
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
-        super.readCustomNBT(nbt);
+        super.readCustomNBT(nbt, categories);
         validStructure = nbt.getBoolean("ValidStructure");
         monitorInfo = nbt.getString("MonitorInfo");
         energyEfficiency = nbt.getFloat("EnergyEfficiency");
@@ -261,7 +281,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                 energyEfficiency = 0;
             }
 
-            if (this.validStructure != validStructure || this.monitorInfo != info || this.energyEfficiency != energyEfficiency || this.matterPerTick != matterPerTick) {
+            if (this.validStructure != validStructure || !this.monitorInfo.equals(info)|| this.energyEfficiency != energyEfficiency || this.matterPerTick != matterPerTick) {
                 this.validStructure = validStructure;
                 this.monitorInfo = info;
                 this.energyEfficiency = energyEfficiency;
@@ -305,7 +325,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
                 if (entity instanceof IEnergyConnection)
                 {
-                    if (((IEnergyConnection) entity).canConnectEnergy(dir.getOpposite()));
+                    ((IEnergyConnection) entity).canConnectEnergy(dir.getOpposite());
                 }
 
                 if (entity instanceof IEnergyReceiver)
@@ -366,11 +386,9 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
     public boolean isGeneratingPower()
     {
-        if (getEnergyEfficiency() > 0 && getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored() && getMatterStorage().getMatterStored() > getMatterDrainPerTick())
-        {
-            return true;
-        }
-        return false;
+        return getEnergyEfficiency() > 0
+                && getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored()
+                && getMatterStorage().getMatterStored() > getMatterDrainPerTick();
     }
 
     public float getEnergyEfficiency()
@@ -406,10 +424,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     public AxisAlignedBB getRenderBoundingBox()
     {
         ForgeDirection backSide = ForgeDirection.getOrientation(BlockHelper.getOppositeSide(worldObj.getBlockMetadata(xCoord,yCoord,zCoord)));
-
-
-        AxisAlignedBB alignedBB = AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord + backSide.offsetX * 10,yCoord + backSide.offsetY * 10,zCoord + backSide.offsetZ * 10);
-        return alignedBB;
+        return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord + backSide.offsetX * 10,yCoord + backSide.offsetY * 10,zCoord + backSide.offsetZ * 10);
     }
 
     public boolean isValidStructure()
@@ -453,9 +468,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     public boolean canConnectFrom(ForgeDirection dir)
     {
         int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
-        if (meta != dir.ordinal())
-            return true;
-        return false;
+        return meta != dir.ordinal();
     }
 
     @Override
