@@ -26,8 +26,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedPeripheral;
-import li.cil.oc.api.network.SimpleComponent;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.machines.MachineComponentAbstract;
@@ -45,11 +43,9 @@ import java.util.EnumSet;
  * Created by Simeon on 7/21/2015.
  */
 @Optional.InterfaceList({
-        @Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral"),
-        @Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.SimpleComponent"),
-        @Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.ManagedPeripheral")
+        @Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral")
 })
-public class ComponentComputers extends MachineComponentAbstract<TileEntityMachineFusionReactorController> implements IPeripheral,SimpleComponent,ManagedPeripheral {
+public class ComponentComputers extends MachineComponentAbstract<TileEntityMachineFusionReactorController> implements IPeripheral {
 
     private String[] methodNames = new String[]
             {
@@ -147,13 +143,11 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     //endregion
 
     //region Open Computers
-    @Override
     @Optional.Method(modid = "OpenComputers")
     public String[] methods() {
         return methodNames;
     }
 
-    @Override
     @Optional.Method(modid = "OpenComputers")
     public Object[] invoke(String method, Context context, Arguments args) throws Exception {
         int methodId = Arrays.asList(methodNames).indexOf(method);
@@ -165,7 +159,6 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
         return callMethod(methodId, args.toArray());
     }
 
-    @Override
     @Optional.Method(modid = "OpenComputers")
     public String getComponentName() {
         return peripheralName;
