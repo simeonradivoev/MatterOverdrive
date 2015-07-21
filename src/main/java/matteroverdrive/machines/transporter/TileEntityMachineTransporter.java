@@ -16,7 +16,7 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.tile;
+package matteroverdrive.machines.transporter;
 
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.Optional;
@@ -39,7 +39,9 @@ import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.fx.ReplicatorParticle;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.transporter.components.ComponentComputers;
 import matteroverdrive.network.packet.client.PacketSyncTransportProgress;
+import matteroverdrive.tile.MOTileEntityMachineMatter;
 import matteroverdrive.util.math.MOMathHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -57,7 +59,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Created by Simeon on 5/3/2015.
@@ -80,6 +84,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     public int selectedLocation;
     int transportTimer;
     long transportTracker;
+    private ComponentComputers computerComponent;
 
     public TileEntityMachineTransporter()
     {
@@ -90,13 +95,15 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         locations = new ArrayList<>();
         selectedLocation = 0;
         redstoneMode = Reference.MODE_REDSTONE_LOW;
+        computerComponent = new ComponentComputers(this);
+        addComponent(computerComponent);
     }
 
     @Override
     public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
         super.writeCustomNBT(nbt, categories);
-        if (categories.contains(MachineNBTCategory.DATA))
+        if (categories.contains(MachineNBTCategory.CONFIGS))
         {
             writeLocations(nbt);
         }
@@ -106,7 +113,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
         super.readCustomNBT(nbt, categories);
-        if (categories.contains(MachineNBTCategory.DATA)) {
+        if (categories.contains(MachineNBTCategory.CONFIGS)) {
             readLocations(nbt);
         }
     }
@@ -402,7 +409,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     }
 
 
-//	WAILA
+    //region WAILA
 	@Override
 	@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
@@ -424,297 +431,64 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
 		return currenttip;
 	}
+    //endregion
 
-//	All Computers
-	private String[] methodNames = new String[] {
-			"getLocations",
-			"getSelectedLocation",
-			"getLocation",
-			"addLocation",
-			"setSelectedLocation",
-			"setName",
-			"setX",
-			"setY",
-			"setZ",
-			"setRedstoneMode"
-	};
-
-	private Object[] callMethod(int method, Object[] args) {
-		switch (method) {
-			case 0:
-				return computerGetLocations(args);
-			case 1:
-				return computerGetSelectedLocation(args);
-			case 2:
-				return computerGetLocation(args);
-			case 3:
-				return computerAddLocation(args);
-			case 4:
-				return computerSetSelectedLocation(args);
-			case 5:
-				return computerSetName(args);
-			case 6:
-				return computerSetX(args);
-			case 7:
-				return computerSetY(args);
-			case 8:
-				return computerSetZ(args);
-			case 9:
-				return computerSetRedstoneMode(args);
-			default:
-				throw new IllegalArgumentException("Invalid method id");
-		}
-	}
-
-
-//	Computer methods
-	private Object[] computerGetLocations(Object[] args) {
-
-		ArrayList<HashMap<String, Object>> list = new ArrayList<>();
-		for (TransportLocation loc : locations) {
-			HashMap<String, Object> map = new HashMap<>();
-
-			map.put("name", loc.name);
-			map.put("selected", selectedLocation == locations.indexOf(loc));
-			map.put("x", loc.x);
-			map.put("y", loc.y);
-			map.put("z", loc.z);
-
-			list.add(map);
-		}
-
-		return list.toArray();
-	}
-
-	private Object[] computerGetSelectedLocation(Object[] args) {
-		return computerGetLocation(new Object[]{1.0});
-	}
-
-	/**
-	 * args:
-	 * id (number) numeric index of the location to select (First location has index 0)
-	 */
-	private Object[] computerGetLocation(Object[] args) {
-
-		if (!(args[0] instanceof Double)) {
-			throw new IllegalArgumentException("First argument must be the numerical id of the transport location");
-		}
-
-		int locNum = (int)Math.floor((Double)args[0]);
-
-		HashMap<String, Object> map = new HashMap<>();
-
-		TransportLocation loc = locations.get(locNum);
-		map.put("name", loc.name);
-		map.put("x", loc.x);
-		map.put("y", loc.y);
-		map.put("z", loc.z);
-
-		return new Object[]{ map };
-	}
-
-	/**
-	 * args:
-	 * name (string) name of the new location
-	 * x (number) x coord of the new location
-	 * y (number) y coord of the new location
-	 * z (number) z coord of the new location
-	 */
-	private Object[] computerAddLocation(Object[] args) {
-		if (!(args[0] instanceof String)) {
-			throw new IllegalArgumentException("First argument must be a string containing the name of the transport location");
-		}
-		for (int i = 1; i <= 4; i++) {
-			if (!(args[i] instanceof Double)) {
-				throw new IllegalArgumentException("Argument " + i + 1 + " must be an integer");
-			}
-		}
-		String name = (String)args[0];
-		int x = (int)Math.floor((Double)args[1]);
-		int y = (int)Math.floor((Double)args[2]);
-		int z = (int)Math.floor((Double)args[3]);
-		addNewLocation(x, y, z, name);
-		return null;
-	}
-
-	/**
-	 * args:
-	 * id (number) numeric index of the location to select (First location has index 0)
-	 */
-	private Object[] computerSetSelectedLocation(Object[] args) {
-		if (!(args[0] instanceof Double)) {
-			throw new IllegalArgumentException("Argument 1 must be a number");
-		}
-		selectedLocation = (int)Math.floor((Double)args[0]);
-		return null;
-	}
-
-	/**
-	 * args:
-	 * id (number) numeric index of the location to select (First location has index 0)
-	 * name (string) the new name
-	 */
-	private Object[] computerSetName(Object[] args) {
-		if (!(args[0] instanceof Double)) {
-			throw new IllegalArgumentException("Argument 1 must be a number");
-		}
-		if (!(args[1] instanceof String)) {
-			throw new IllegalArgumentException("Argument 2 must be a string");
-		}
-
-		int locNum = (int)Math.floor((Double)args[0]);
-
-		locations.get(locNum).name = (String)args[1];
-
-		return null;
-	}
-
-	/**
-	 * args:
-	 * id (number) numeric index of the location to select (first location has index 0)
-	 * x (number) the new X coordinate
-	 */
-	private Object[] computerSetX(Object[] args) {
-		if (!(args[0] instanceof Double)) {
-			throw new IllegalArgumentException("Argument 1 must be a number");
-		}
-		if (!(args[1] instanceof Double)) {
-			throw new IllegalArgumentException("Argument 2 must be a number");
-		}
-
-		int locNum = (int)Math.floor((Double)args[0]);
-		locations.get(locNum).x = (int)Math.floor((Double)args[1]);
-
-		return null;
-	}
-
-	/**
-	 * args:
-	 * id (number) numeric index of the location to select (first location has index 0)
-	 * y (number) the new Y coordinate
-	 */
-	private Object[] computerSetY(Object[] args) {
-		if (!(args[0] instanceof Double)) {
-			throw new IllegalArgumentException("Argument 1 must be a number");
-		}
-		if (!(args[1] instanceof Double)) {
-			throw new IllegalArgumentException("Argument 2 must be a number");
-		}
-
-		int locNum = (int)Math.floor((Double)args[0]);
-		locations.get(locNum).y = (int)Math.floor((Double)args[1]);
-
-		return null;
-	}
-
-	/**
-	 * args:
-	 * id (number) numeric index of the location to select (first location has index 0)
-	 * z (number) the new Z coordinate
-	 */
-	private Object[] computerSetZ(Object[] args) {
-		if (!(args[0] instanceof Double)) {
-			throw new IllegalArgumentException("Argument 1 must be a number");
-		}
-		if (!(args[1] instanceof Double)) {
-			throw new IllegalArgumentException("Argument 2 must be a number");
-		}
-
-		int locNum = (int)Math.floor((Double)args[0]);
-		locations.get(locNum).z = (int)Math.floor((Double)args[1]);
-
-		return null;
-	}
-
-	/**
-	 * args:
-	 * mode (number) the redstone mode of the transporter
-	 * 		0: High redstone signal
-	 * 		1: Low redstone signal
-	 * 		2: Redstone disabled
-	 */
-	private Object[] computerSetRedstoneMode(Object[] args) {
-		if (!(args[0] instanceof Double)) {
-			throw new IllegalArgumentException("Argument 1 must be a number from 0 to 2");
-		}
-
-		int i = (int)Math.floor((Double)args[0]);
-
-		if (i < 0 || i > 2) {
-			throw new IllegalArgumentException("Argument 1 must be a number from 0 to 2");
-		}
-
-		setRedstoneMode((byte)i);
-
-		return null;
-	}
-
-
-//	ComputerCraft
+    //region All Computers
+    //region ComputerCraft
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
 	public String getType() {
-		return "mo_transporter";
+		return computerComponent.getType();
 	}
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
 	public String[] getMethodNames() {
-		return methodNames;
+		return computerComponent.getMethodNames();
 	}
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-		try {
-			return callMethod(method, arguments);
-		} catch (Exception e) {
-			throw new LuaException(e.getMessage());
-		}
+        return computerComponent.callMethod(computer,context,method,arguments);
 	}
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
 	public void attach(IComputerAccess computer) {
-
+        computerComponent.attach(computer);
 	}
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
 	public void detach(IComputerAccess computer) {
-
+        computerComponent.attach(computer);
 	}
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
 	public boolean equals(IPeripheral other) { // Does this mean if it's the same type or if they're the same one?
-		return false; // TODO: Implement
+		return computerComponent.equals(other);
 	}
-
-
-//	Open Computers
+    //endregion
+    //region Open Computers
 	@Override
 	@Optional.Method(modid = "OpenComputers")
 	public String getComponentName() {
-		return "mo_transporter";
+		return computerComponent.getComponentName();
 	}
 
 	@Override
 	@Optional.Method(modid = "OpenComputers")
 	public String[] methods() {
-		return methodNames;
+		return computerComponent.methods();
 	}
 
 	@Override
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
-		int methodId = Arrays.asList(methodNames).indexOf(method);
-
-		if (methodId == -1) {
-			throw new RuntimeException("The method " + method + " does not exist");
-		}
-
-		return callMethod(methodId, args.toArray());
+		return computerComponent.invoke(method,context,args);
 	}
-
+    //endregion
+    //endregion
 }

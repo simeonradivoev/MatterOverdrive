@@ -24,6 +24,8 @@ import matteroverdrive.container.*;
 import matteroverdrive.gui.*;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.analyzer.TileEntityMachineMatterAnalyzer;
+import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
+import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import matteroverdrive.tile.*;
 import matteroverdrive.util.MOLog;
 import net.minecraft.entity.player.EntityPlayer;

@@ -16,7 +16,7 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.tile;
+package matteroverdrive.machines.fusionReactorController;
 
 
 import cofh.api.energy.IEnergyConnection;
@@ -42,6 +42,9 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.fusionReactorController.components.ComponentComputers;
+import matteroverdrive.tile.MOTileEntityMachineMatter;
+import matteroverdrive.tile.TileEntityGravitationalAnomaly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -53,7 +56,6 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 
 /**
@@ -84,6 +86,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     private BlockPosition anomalyPosition;
     private float matterPerTick;
     private float matterDrain;
+    private ComponentComputers componentComputers;
 
 
     public TileEntityMachineFusionReactorController() {
@@ -97,6 +100,8 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         matterStorage.setMaxExtract(MATTER_STORAGE);
         matterStorage.setMaxReceive(MATTER_STORAGE);
         redstoneMode = Reference.MODE_REDSTONE_LOW;
+        componentComputers = new ComponentComputers(this);
+        addComponent(componentComputers);
     }
 
     @Override
@@ -108,11 +113,13 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
         super.writeCustomNBT(nbt, categories);
-        nbt.setBoolean("ValidStructure", validStructure);
-        nbt.setString("MonitorInfo",monitorInfo);
-        nbt.setFloat("EnergyEfficiency",energyEfficiency);
-        nbt.setFloat("MatterPerTick",matterPerTick);
-        nbt.setInteger("EnergyPerTick", energyPerTick);
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            nbt.setBoolean("ValidStructure", validStructure);
+            nbt.setString("MonitorInfo", monitorInfo);
+            nbt.setFloat("EnergyEfficiency", energyEfficiency);
+            nbt.setFloat("MatterPerTick", matterPerTick);
+            nbt.setInteger("EnergyPerTick", energyPerTick);
+        }
     }
 
     @Override
@@ -124,11 +131,14 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
         super.readCustomNBT(nbt, categories);
-        validStructure = nbt.getBoolean("ValidStructure");
-        monitorInfo = nbt.getString("MonitorInfo");
-        energyEfficiency = nbt.getFloat("EnergyEfficiency");
-        matterPerTick = nbt.getFloat("MatterPerTick");
-        energyPerTick = nbt.getInteger("EnergyPerTick");
+        if (categories.contains(MachineNBTCategory.DATA))
+        {
+            validStructure = nbt.getBoolean("ValidStructure");
+            monitorInfo = nbt.getString("MonitorInfo");
+            energyEfficiency = nbt.getFloat("EnergyEfficiency");
+            matterPerTick = nbt.getFloat("MatterPerTick");
+            energyPerTick = nbt.getInteger("EnergyPerTick");
+        }
     }
 
     @Override
@@ -200,7 +210,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
     public void manageStructure()
     {
-        if (structureCheckTimer.hasDelayPassed(worldObj,STRUCTURE_CHECK_DELAY)) {
+        if (structureCheckTimer.hasDelayPassed(worldObj, STRUCTURE_CHECK_DELAY)) {
             int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
             int anomalyDistance = MAX_GRAVITATIONAL_ANOMALY_DISTANCE+1;
             boolean validStructure = true;
@@ -492,118 +502,58 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
     }
 
-//	All Computers
-	private String[] methodNames = new String[] {
-			"getStatus",
-			"isValid",
-			"getEnergyGenerated",
-			"getMatterUsed",
-			"getEnergyStored",
-			"getMatterStored"
-	};
-
-	private Object[] callMethod(int method, Object[] args) {
-		switch (method) {
-			case 0:
-				return computerGetStatus(args);
-			case 1:
-				return computerIsValid(args);
-			case 2:
-				return computerGetEnergyGenerated(args);
-			case 3:
-				return computerGetMatterUsed(args);
-			case 4:
-				return computerGetEnergyStored(args);
-			case 5:
-				return computerGetMatterStored(args);
-			default: throw new IllegalArgumentException("Invalid method id");
-		}
-	}
-
-//	Computer Methods
-	private Object[] computerGetStatus(Object[] args) {
-		return new Object[]{monitorInfo};
-	}
-
-	private Object[] computerIsValid(Object[] args) {
-		return new Object[]{validStructure};
-	}
-
-	private Object[] computerGetEnergyGenerated(Object[] args) {
-		return new Object[]{energyPerTick};
-	}
-
-	private Object[] computerGetMatterUsed(Object[] args) {
-		return new Object[]{matterPerTick};
-	}
-
-	private Object[] computerGetEnergyStored(Object[] args) {
-		return new Object[]{energyStorage.getEnergyStored()};
-	}
-
-	private Object[] computerGetMatterStored(Object[] args) {
-		return new Object[]{matterStorage.getMatterStored()};
-	}
-
-//	ComputerCraft
+    //region All Computers
+    //region ComputerCraft
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
 	public String getType() {
-		return "mo_fusion_reactor_controller";
+		return componentComputers.getType();
 	}
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
 	public String[] getMethodNames() {
-		return methodNames;
+		return componentComputers.getMethodNames();
 	}
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-		try {
-			return callMethod(method, arguments);
-		} catch (Exception e) {
-			throw new LuaException(e.getMessage());
-		}
+		return componentComputers.callMethod(computer,context,method,arguments);
 	}
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
-	public void attach(IComputerAccess computer) {}
+	public void attach(IComputerAccess computer) {componentComputers.attach(computer);}
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
-	public void detach(IComputerAccess computer) {}
+	public void detach(IComputerAccess computer) {componentComputers.detach(computer);}
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
 	public boolean equals(IPeripheral other) {
-		return false;
+		return componentComputers.equals(other);
 	}
-
-//	OpenComputers
+    //endregion
+    //region OpenComputers
 	@Override
 	@Optional.Method(modid = "OpenComputers")
 	public String getComponentName() {
-		return "mo_fusion_reactor_controller";
+		return componentComputers.getComponentName();
 	}
 
 	@Override
 	@Optional.Method(modid = "OpenComputers")
 	public String[] methods() {
-		return methodNames;
+		return componentComputers.methods();
 	}
 
 	@Override
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
-		int methodId = Arrays.asList(methodNames).indexOf(method);
-
-		if (methodId == -1) {
-			throw new RuntimeException("The method " + method + " does not exist");
-		}
-
-		return callMethod(methodId, args.toArray());
+		return componentComputers.invoke(method,context,args);
 	}
+    //endregion
+    //endregion
 }

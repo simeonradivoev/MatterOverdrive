@@ -23,7 +23,7 @@ package matteroverdrive.machines;
  */
 public abstract class MachineComponentAbstract<T extends MOTileEntityMachine> implements IMachineComponent<T>
 {
-    private T machine;
+    protected final T machine;
 
     public MachineComponentAbstract(T machine)
     {
