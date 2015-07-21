@@ -253,6 +253,7 @@ gui.redstone_mode.low=Низкий
 gui.redstone_mode.disabled=Отключён
 gui.config.redstone=Красный камень
 gui.config.owner=Владелец
+gui.config.mnet.address=Адрес
 gui.label.button.save=Сохранить
 gui.label.button.remove=Удалить
 gui.label.button.add=Добавить
@@ -260,7 +261,7 @@ gui.label.button.reset=Сбросить
 gui.label.button.scout=Отправить разведчика
 
 ### Подсказки в графическом интерфейсе ###
-gui.tooltip.starmap.no_ship_space=Not enough ship spaces
+gui.tooltip.starmap.no_ship_space=Не хватает мест для постройки короблей
 gui.tooltip.starmap.no_building_space=Не хватает строительных кораблей
 gui.tooltip.starmap.no_ship_factory=Нет корабля-фабрики
 gui.tooltip.starmap.has_base=Основное здание уже присутствует
@@ -332,32 +333,31 @@ death.attack.android_transformation=%1$s закончил своё биолог�
 ==========================================================================================================
 # Задачи
 
-task.state.-1.name=Invalid
-task.state.-1.description=Task is not a Valid.
-task.state.0.name=Unknown
-task.state.0.description=Unknown
-task.state.1.name=Waiting
-task.state.1.description=Waiting to find Receiver.
-task.state.2.name=Queued
-task.state.2.description=Receiver Found.\nWaiting to process.
-task.state.3.name=Processing
-task.state.3.description=Waiting to finish Processing.
-task.state.4.name=Finished
-task.state.4.description=Task is Complete.
+task.state.INVALID.name=Invalid
+task.state.INVALID.description=Task is not a Valid.
+task.state.UNKNOWN.name=Unknown
+task.state.UNKNOWN.description=Unknown
+task.state.WAITING.name=Waiting
+task.state.WAITING.description=Waiting to find Receiver.
+task.state.QUEUED.name=Queued
+task.state.QUEUED.description=Receiver Found.\nWaiting to process.
+task.state.PROCESSING.name=Processing
+task.state.PROCESSING.description=Waiting to finish Processing.
+task.state.FINISHED.name=Finished
+task.state.FINISHED.description=Task is Complete.
 
-==========================================================================================================
-# Конфигурация
+task.store_pattern.state.WAITING.description=Поиск хранилища шаблонов.
+task.store_pattern.state.QUEUED.description=Queued in Machine.\n Ожидание обработки.
+task.store_pattern.state.PROCESSING.description=Currently Storing Item Pattern.
+task.store_pattern.state.FINISHED.description=Шаблон предмета успешно сохранён.
 
-task.store_pattern.state.1.description=Поиск хранилища шаблонов.
-task.store_pattern.state.2.description=Queued in Machine.\n Ожидание обработки.
-task.store_pattern.state.3.description=Currently Storing Item Pattern.
-task.store_pattern.state.4.description=Шаблон предмета успешно сохранён.
-
-task.replicate_pattern.state.1.description=Поиск доступных репликаторов.
+task.replicate_pattern.state.WAITING.description=Поиск доступных репликаторов.
 
 info.mo.updater.download=скачать
 info.mo.updater.hover=Нажмите, чтобы загрузить последнюю версию.
 
+==========================================================================================================
+# Конфигурация
 config.machine_options.name=Машины
 config.world_gen.name=Генерация мира
 config.matter_network.name=Материальная сеть
@@ -370,6 +370,7 @@ config.client.name=Настройки клиента
 config.server.name=Настройки сервера
 config.starmap.name=Настройки звездной карты
 config.ore_gen_blacklist.name=Ore Dimension Blacklist
+сonfig.abilities.name=Android-способности
  
 ==========================================================================================================
 # Чат-оповещения
