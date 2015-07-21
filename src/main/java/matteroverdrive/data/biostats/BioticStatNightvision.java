@@ -20,6 +20,7 @@ package matteroverdrive.data.biostats;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
@@ -31,6 +32,7 @@ import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -57,12 +59,15 @@ public class BioticStatNightvision extends AbstractBioticStat implements IConfig
     {
         if (!android.getPlayer().worldObj.isRemote)
         {
-            if (isActive(android, level)) {
+            if (isActive(android, level) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,android))) {
                 android.extractEnergy(ENERGY_PER_TICK,false);
             }
         }else
         {
-            manageNightvision(android,level);
+            if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,android)))
+            {
+                manageNightvision(android, level);
+            }
         }
     }
 
@@ -122,6 +127,6 @@ public class BioticStatNightvision extends AbstractBioticStat implements IConfig
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
-        ENERGY_PER_TICK = config.getInt("nighvision_energy_per_tick",config.CATEGORY_ABILITIES,16,"The energy cost of the Nightvision");
+        ENERGY_PER_TICK = config.getInt("nighvision_energy_per_tick",ConfigurationHandler.CATEGORY_ABILITIES,16,"The energy cost of the Nightvision");
     }
 }

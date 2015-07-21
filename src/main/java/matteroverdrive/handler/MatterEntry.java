@@ -1,13 +1,33 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.handler;
+
+import matteroverdrive.api.matter.IMatterEntry;
 
 import java.io.Serializable;
 
-public class MatterEntry implements Serializable
+public class MatterEntry implements Serializable, IMatterEntry
 {
-	byte type;
-	int matter;
-    String name;
-	boolean calculated;
+	private byte type;
+	private int matter;
+	private String name;
+	private boolean calculated;
 
     public MatterEntry(String entry,int matter,byte type)
     {
@@ -16,10 +36,14 @@ public class MatterEntry implements Serializable
         this.matter = matter;
     }
 
-	public int getMatter() 
+    @Override
+	public int getMatter()
 	{
 		return matter;
 	}
+
+    @Override
+    public void setMatter(int matter){this.matter = matter;}
 
 	public boolean isBlock()
 	{
@@ -36,6 +60,7 @@ public class MatterEntry implements Serializable
 		return type;
 	}
 
+    @Override
 	public String getName()
 	{
 		return name;
@@ -44,6 +69,12 @@ public class MatterEntry implements Serializable
 	public void setCalculated(boolean calculated)
 	{
 		this.calculated = calculated;
+	}
+
+    @Override
+	public boolean getCalculated()
+	{
+		return calculated;
 	}
 
 	@Override

@@ -18,10 +18,12 @@
 
 package matteroverdrive.data.biostats;
 
+import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -58,7 +60,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     {
         if (event instanceof LivingEvent.LivingJumpEvent)
         {
-            if (event.entityLiving.isSneaking())
+            if (event.entityLiving.isSneaking() && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,androidPlayer)))
             {
                 if (!event.entity.worldObj.isRemote)
                     androidPlayer.extractEnergy(ENERGY_PER_JUMP, false);

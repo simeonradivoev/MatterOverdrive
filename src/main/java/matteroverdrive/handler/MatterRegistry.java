@@ -21,6 +21,7 @@ package matteroverdrive.handler;
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.events.MOEventRegisterMatterEntry;
 import matteroverdrive.api.matter.IMatterRegistry;
 import matteroverdrive.util.MOLog;
 import net.minecraft.block.Block;
@@ -31,6 +32,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -50,8 +52,11 @@ public class MatterRegistry implements IMatterRegistry
 
 	public MatterEntry register(MatterEntry entry)
 	{
-        MOLog.log(Level.INFO, "Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
-		entries.put(entry.getName(), entry);
+        if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterMatterEntry(entry)))
+        {
+            MOLog.log(Level.INFO, "Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
+            entries.put(entry.getName(), entry);
+        }
 		return entry;
 	}
 
@@ -77,7 +82,7 @@ public class MatterRegistry implements IMatterRegistry
         if (file.exists()) {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
-            entries = (HashMap) inputStream.readObject();
+            entries = (HashMap<String,MatterEntry>) inputStream.readObject();
             String version = inputStream.readUTF();
             inputStream.close();
             fileInputStream.close();
@@ -92,7 +97,7 @@ public class MatterRegistry implements IMatterRegistry
         {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
-            HashMap<String, MatterEntry> entires = (HashMap)inputStream.readObject();
+            HashMap<String, MatterEntry> entires = (HashMap<String, MatterEntry>)inputStream.readObject();
             String version = inputStream.readUTF();
             int recipeCount = inputStream.readInt();
             int basicEntries = inputStream.readInt();
@@ -112,7 +117,7 @@ public class MatterRegistry implements IMatterRegistry
 
                             for (Map.Entry<String, MatterEntry> entry : entires.entrySet())
                             {
-                                if (!entry.getValue().calculated) {
+                                if (!entry.getValue().getCalculated()) {
                                     if (entries.containsKey(entry.getKey())) {
                                         if (!entries.get(entry.getKey()).equals(entry.getValue())) {
                                             //if the entry is in the list but it's matter was changed
@@ -461,7 +466,7 @@ public class MatterRegistry implements IMatterRegistry
 
                     for (Object element : l)
                     {
-                        if (element instanceof ItemStack)
+                        if (s instanceof ItemStack || s instanceof Item || s instanceof Block)
                         {
                             ItemStack stack = null;
                             if (element instanceof ItemStack)

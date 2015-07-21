@@ -19,6 +19,7 @@
 package matteroverdrive.data.biostats;
 
 import matteroverdrive.Reference;
+import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
@@ -28,6 +29,7 @@ import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -54,7 +56,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     {
         if (!android.getPlayer().worldObj.isRemote)
         {
-            if (isActive(android, level))
+            if (isActive(android, level) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,android)))
             {
                 if (!android.getPlayer().isInvisible())
                 {
@@ -121,6 +123,6 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
-        ENERGY_PER_TICK = config.getInt("cloak_energy_per_tick",config.CATEGORY_ABILITIES,128,"The energy cost of the Cloak");
+        ENERGY_PER_TICK = config.getInt("cloak_energy_per_tick",ConfigurationHandler.CATEGORY_ABILITIES,128,"The energy cost of the Cloak");
     }
 }

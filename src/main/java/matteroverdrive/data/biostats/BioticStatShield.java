@@ -22,6 +22,7 @@ import cofh.lib.audio.SoundBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
+import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
@@ -36,6 +37,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -71,7 +73,6 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     {
         if (android.getPlayer().worldObj.isRemote)
         {
-
             if (android.getEffects().getBoolean(TAG_SHIELD))
             {
                 if (!ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed())
@@ -82,7 +83,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
                 }
             }else
             {
-                if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed())
+                if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed() && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level, android)))
                 {
                     setShield(android,true);
                     android.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, true);
@@ -121,10 +122,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     @Override
     public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
     {
-        if (keycode == ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode() && down)
-        {
 
-        }
     }
 
     public void setShield(AndroidPlayer androidPlayer,boolean on)
@@ -281,7 +279,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
-        ENERGY_PER_DAMAGE = config.getInt("shield_energy_per_damage",config.CATEGORY_ABILITIES,256,"The energy cost of each hit to the shield");
-        ENERGY_PER_TICK = config.getInt("shield_energy_per_tick",config.CATEGORY_ABILITIES,64,"The energy cost of the shield per tick");
+        ENERGY_PER_DAMAGE = config.getInt("shield_energy_per_damage",ConfigurationHandler.CATEGORY_ABILITIES,256,"The energy cost of each hit to the shield");
+        ENERGY_PER_TICK = config.getInt("shield_energy_per_tick",ConfigurationHandler.CATEGORY_ABILITIES,64,"The energy cost of the shield per tick");
     }
 }
