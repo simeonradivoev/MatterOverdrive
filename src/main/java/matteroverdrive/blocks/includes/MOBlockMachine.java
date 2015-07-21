@@ -92,12 +92,16 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
-        super.breakBlock(world,x,y,z,block,meta);
+        super.breakBlock(world, x, y, z, block, meta);
 
         //drops inventory
-        MOTileEntityMachine machine = (MOTileEntityMachine) world.getTileEntity(x, y, z);
-        if (machine != null)
-            MatterHelper.DropInventory(world, (MOTileEntityMachine) world.getTileEntity(x, y, z), x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te instanceof MOTileEntityMachine) {
+			MOTileEntityMachine machine = (MOTileEntityMachine) world.getTileEntity(x, y, z);
+			if (machine != null) {
+				MatterHelper.DropInventory(world, (MOTileEntityMachine) world.getTileEntity(x, y, z), x, y, z);
+			}
+		}
     }
 
     @Override
