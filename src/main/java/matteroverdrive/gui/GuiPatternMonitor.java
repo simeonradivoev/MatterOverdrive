@@ -59,7 +59,7 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
         requestButton = new MOElementButton(this,this,6,75,"Request",0,0,22,0,22,22,"");
         requestButton.setTexture(Reference.PATH_GUI_ITEM + "request.png",44,22);
         requestButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.button.request"));
-        elementGrid = new ElementPatternsGrid(this,48,40,160,114);
+        elementGrid = new ElementPatternsGrid(this,48,40,160,110);
         searchField = new MOElementTextField(this,41,26,167,14);
 
         elementGrid.updateStackList(machine.getDatabases());
