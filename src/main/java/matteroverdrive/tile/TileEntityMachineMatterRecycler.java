@@ -154,9 +154,10 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
 
     public int getSpeed()
     {
-        int matter = ((IRecyclable)getStackInSlot(INPUT_SLOT_ID).getItem()).getRecycleMatter(getStackInSlot(INPUT_SLOT_ID));
+        double matter = Math.log1p(((IRecyclable) getStackInSlot(INPUT_SLOT_ID).getItem()).getRecycleMatter(getStackInSlot(INPUT_SLOT_ID)));
+        matter*=matter;
         if (matter > 0) {
-            return MathHelper.round(RECYCLE_SPEED_PER_MATTER * Math.log(RECYCLE_SPEED_PER_MATTER * matter) * getUpgradeMultiply(UpgradeTypes.Speed));
+            return MathHelper.round(RECYCLE_SPEED_PER_MATTER * matter * getUpgradeMultiply(UpgradeTypes.Speed));
         }else
         {
             return 1;

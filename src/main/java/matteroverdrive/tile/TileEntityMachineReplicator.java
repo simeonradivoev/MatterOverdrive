@@ -571,7 +571,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
 	public int getSpeed(ItemStack itemStack)
     {
-        int matter = MatterHelper.getMatterAmountFromItem(itemStack);
+        double matter = Math.log1p(MatterHelper.getMatterAmountFromItem(itemStack));
+        matter *= matter;
         return MathHelper.round(((REPLICATE_SPEED_PER_MATTER * matter) - 60) * getUpgradeMultiply(UpgradeTypes.Speed)) + 60;
     }
 
