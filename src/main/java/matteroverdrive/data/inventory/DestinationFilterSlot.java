@@ -39,7 +39,7 @@ public class DestinationFilterSlot extends Slot
     }
 
     @Override
-    public IIcon getTexture()
+    public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("connections");
     }
@@ -49,4 +49,9 @@ public class DestinationFilterSlot extends Slot
 
     @Override
     public boolean keepOnDismatle(){return true;}
+
+    @Override
+    public String getUnlocalizedTooltip(){
+        return "gui.tooltip.slot.filter";
+    }
 }

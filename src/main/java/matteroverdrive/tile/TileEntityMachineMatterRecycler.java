@@ -67,6 +67,11 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     }
 
     @Override
+    protected void registerComponents() {
+
+    }
+
+    @Override
     public void updateEntity()
     {
         super.updateEntity();

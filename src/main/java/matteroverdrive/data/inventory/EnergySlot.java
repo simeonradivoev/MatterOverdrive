@@ -39,11 +39,16 @@ public class EnergySlot extends Slot
     }
 
     @Override
-    public IIcon getTexture()
+    public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("energy");
     }
 
     @Override
     public boolean keepOnDismatle(){return true;}
+
+    @Override
+    public String getUnlocalizedTooltip(){
+        return "gui.tooltip.slot.energy";
+    }
 }

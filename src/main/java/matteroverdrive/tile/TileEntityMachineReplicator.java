@@ -22,14 +22,17 @@ import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.position.BlockPosition;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.common.block.Item;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.network.*;
 import matteroverdrive.blocks.BlockReplicator;
+import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
@@ -48,12 +51,15 @@ import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.MatterNetworkHelper;
 import matteroverdrive.util.math.MOMathHelper;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -63,7 +69,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 
-public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkHandler, IMatterNetworkDispatcher<MatterNetworkTaskReplicatePattern>,IMatterNetworkBroadcaster
+public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkHandler, IMatterNetworkDispatcher<MatterNetworkTaskReplicatePattern>,IMatterNetworkBroadcaster,IWailaBodyProvider
 {
 	public static int MATTER_STORAGE = 1024;
 	public static int ENERGY_STORAGE = 512000;
@@ -107,8 +113,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         this.matterStorage.setMaxExtract(MATTER_TRANSFER);
         taskQueueProcessing = new MatterNetworkTaskQueue<>(this,1);
         networkComponent = new MatterNetworkComponentReplicator(this);
-        componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
-        addComponent(componentMatterNetworkConfigs);
         timeTracker = new TimeTracker();
 	}
 
@@ -119,6 +123,13 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         DATABASE_SLOT_ID = inventory.AddSlot(new DatabaseSlot(true));
         SHIELDING_SLOT_ID = inventory.AddSlot(new ShieldingSlot(true));
         super.RegisterSlots(inventory);
+    }
+
+    @Override
+    protected void registerComponents()
+    {
+        componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+        addComponent(componentMatterNetworkConfigs);
     }
 
     @Override
@@ -541,6 +552,23 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
     //endregion
 
+    //region Waila
+    @Override
+    @Optional.Method(modid = "Waila")
+    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        List<String> list = super.getWailaBody(itemStack, currenttip, accessor, config);
+        if (accessor.getTileEntity() instanceof TileEntityMachineReplicator) {
+
+            MatterNetworkTaskReplicatePattern task = ((TileEntityMachineReplicator) accessor.getTileEntity()).getTaskQueue(0).peek();
+            if (task != null) {
+                ItemStack pattern = new ItemStack(Item.getItemById(task.getItemID()), task.getAmount(), task.getItemMetadata());
+                list.add(EnumChatFormatting.YELLOW + String.format("Replicating %s", pattern.getDisplayName()));
+            }
+        }
+        return list;
+    }
+    //endregion
+
     //region Getters and Setters
     public NBTTagCompound getInternalPatternStorage()
     {
@@ -606,13 +634,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
 
     @Override
-    public String getDestinationFilter() {
-        return componentMatterNetworkConfigs.getDestinationFilter();
-    }
-
-    @Override
-    public void setDestinationFilter(String filter) {
-        componentMatterNetworkConfigs.setDestinationFilter(filter);
+    public NBTTagCompound getFilter() {
+        return componentMatterNetworkConfigs.getFilter();
     }
     //endregion
 }

@@ -78,6 +78,8 @@ public class MatterOverdriveItems
     public static ItemColonizerShip colonizerShip;
     public static ItemBuildingBase buildingBase;
     public static AndroidPill androidPill;
+    public static NetworkFlashDrive flashDrive;
+    public static CreativePatternDrive creativePatternDrive;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -116,6 +118,8 @@ public class MatterOverdriveItems
         colonizerShip = new ItemColonizerShip("ship_colonizer");
         buildingBase = new ItemBuildingBase("building_base");
         androidPill = new AndroidPill("android_pill");
+        flashDrive = new NetworkFlashDrive("network_flash_drive",Reference.COLOR_YELLOW_STRIPES);
+        creativePatternDrive = new CreativePatternDrive("creative_pattern_drive",0);
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -159,6 +163,8 @@ public class MatterOverdriveItems
         colonizerShip.register();
         buildingBase.register();
         androidPill.register();
+        flashDrive.register();
+        creativePatternDrive.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_ingot),10);
@@ -178,6 +184,7 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new ItemStack(wrench),"T T"," Y "," T ",'T',tritanium_ingot,'Y',new ItemStack(Blocks.wool,1,4));
         GameRegistry.addRecipe(new ItemStack(spacetime_equalizer)," M ","EHE", " M ",'M',s_magnet,'E',Items.ender_pearl,'H',h_compensator);
         GameRegistry.addRecipe(new ItemStack(forceFieldEmitter),"CDC","CDC","PCP",'P',tritanium_plate,'E',Items.ender_pearl,'D',dilithium_ctystal,'2',new ItemStack(isolinear_circuit,1,1),'C',s_magnet);
+        GameRegistry.addRecipe(new ItemStack(flashDrive)," I ","RCR"," I ",'I',Items.iron_ingot,'R',Items.redstone,'C',new ItemStack(isolinear_circuit,1,1));
 
         MatterOverdrive.matterRegistry.register(emergency_ration, 3);
         MatterOverdrive.matterRegistry.register(earl_gray_tea, 2);

@@ -71,38 +71,34 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
     }
 
     @Override
-    public int manageTopQueue(World world, MatterNetworkTaskStorePattern task)
-    {
+    public int manageTopQueue(World world, MatterNetworkTaskStorePattern task) {
         int broadcastCount = 0;
-        if (task != null)
-        {
-            if (task.getState() == MatterNetworkTaskState.FINISHED)
-            {
-                onTaskComplete(rootClient.getTaskQueue(0).dequeue());
-            }
-            else
-            {
-                if (canBroadcastTask(world,task))
-                {
-                    for (int i = 0; i < 6; i++)
-                    {
-                        if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i)))
-                        {
-                            onTaskBroadcast(world, task, ForgeDirection.getOrientation(i));
-                            broadcastCount++;
-                        }
-
+        if (task.getState() == MatterNetworkTaskState.FINISHED) {
+            onTaskComplete(rootClient.getTaskQueue(0).dequeue());
+        } else {
+            if (canBroadcastTask(world, task)) {
+                for (int i = 0; i < 6; i++) {
+                    if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i))) {
+                        onTaskBroadcast(world, task, ForgeDirection.getOrientation(i));
+                        broadcastCount++;
                     }
+
                 }
             }
         }
-        else
-        {
-            return manageValidDestinationCheck(world);
-        }
-
         rootClient.getTaskQueue(0).tickAllAlive(world, false);
         return broadcastCount;
+    }
+
+    @Override
+    public int onNetworkTick(World world, TickEvent.Phase phase)
+    {
+        int broadcasts = super.onNetworkTick(world,phase);
+        if (phase.equals(TickEvent.Phase.START))
+        {
+            broadcasts += manageValidDestinationCheck(world);
+        }
+        return broadcasts;
     }
 
     @Override
@@ -136,7 +132,7 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
                 for (int i = 0; i < 6; i++) {
                     NBTTagCompound itemTag = new NBTTagCompound();
                     rootClient.getInventory().getStackInSlot(rootClient.input_slot).writeToNBT(itemTag);
-                    MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION,ForgeDirection.getOrientation(i), itemTag);
+                    MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION,ForgeDirection.getOrientation(i),rootClient.getFilter(), itemTag);
                     if (MatterNetworkHelper.broadcastTaskInDirection(world, packet, rootClient, ForgeDirection.getOrientation(i)))
                     {
                         onValidDestinationBroadcast(world, packet, ForgeDirection.getOrientation(i));

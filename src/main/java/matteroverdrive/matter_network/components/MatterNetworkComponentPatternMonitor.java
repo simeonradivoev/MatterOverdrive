@@ -107,7 +107,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
                 MatterOverdrive.packetPipeline.sendToAllAround(new PacketPatternMonitorSync(rootClient), rootClient, 64);
 
                 for (int i = 0; i < 6; i++) {
-                    MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_CONNECTION,ForgeDirection.getOrientation(i), IMatterDatabase.class);
+                    MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_CONNECTION,ForgeDirection.getOrientation(i),rootClient.getFilter(), IMatterDatabase.class);
                     MatterNetworkHelper.broadcastTaskInDirection(world, packet, rootClient, ForgeDirection.getOrientation(i));
                 }
                 needsSearchRefresh = false;
@@ -147,7 +147,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
                 } else {
                     if (!task.isAlive() && broadcastTracker.hasDelayPassed(world, TileEntityMachinePatternMonitor.BROADCAST_WEATING_DELAY)) {
                         for (int i = 0; i < 6; i++) {
-                            if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i),MatterNetworkHelper.parseBlockPosition(rootClient))) {
+                            if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i),rootClient.getFilter())) {
                                 task.setState(MatterNetworkTaskState.WAITING);
                                 broadcastCount++;
                             }

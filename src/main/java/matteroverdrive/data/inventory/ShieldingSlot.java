@@ -45,14 +45,19 @@ public class ShieldingSlot extends Slot
     }
 
     @Override
-    public IIcon getTexture()
+    public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("shielding");
     }
 
     @Override
-    public int getMaxStackSize(){return 4;}
+    public int getMaxStackSize(){return 5;}
 
     @Override
     public boolean keepOnDismatle(){return true;}
+
+    @Override
+    public String getUnlocalizedTooltip(){
+        return "gui.tooltip.slot.shielding";
+    }
 }

@@ -121,7 +121,7 @@ public class PageUpgrades extends ElementBaseGroup
             if(container.getSlot(i) instanceof SlotInventory && ((SlotInventory)container.getSlot(i)).getSlot() instanceof UpgradeSlot)
             {
                 ElementInventorySlot slotElement = new ElementInventorySlot(gui, (MOSlot) container.inventorySlots.get(i), 22,22,"big");
-                slotElement.setIcon(inventory.getSlot(((MOSlot) container.inventorySlots.get(i)).getSlotIndex()).getTexture());
+                slotElement.setIcon(inventory.getSlot(((MOSlot) container.inventorySlots.get(i)).getSlotIndex()).getHoloIcon());
                 slotElement.setPosition(77 + (upgradeSlotIndex % 5) * 24,52 + (upgradeSlotIndex / 5) * 24);
                 this.addElement(slotElement);
                 upgradeSlotIndex++;

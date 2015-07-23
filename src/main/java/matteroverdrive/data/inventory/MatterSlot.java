@@ -39,8 +39,13 @@ public class MatterSlot extends Slot
     }
 
     @Override
-    public IIcon getTexture()
+    public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("decompose");
+    }
+
+    @Override
+    public String getUnlocalizedTooltip(){
+        return "gui.tooltip.slot.matter";
     }
 }

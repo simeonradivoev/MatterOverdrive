@@ -22,13 +22,14 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 7/16/2015.
  */
-public abstract class MatterNetworkComponentClientDispatcher <K extends MatterNetworkTask,T extends IMatterNetworkClient & IMatterNetworkDispatcher> extends MatterNetworkComponentClient<T> implements IMatterNetworkDispatcher<K>
+public abstract class MatterNetworkComponentClientDispatcher <K extends MatterNetworkTask,T extends MOTileEntityMachine & IMatterNetworkClient & IMatterNetworkDispatcher> extends MatterNetworkComponentClient<T> implements IMatterNetworkDispatcher<K>
 {
     private TickEvent.Phase dispatchPhase;
 
@@ -49,7 +50,9 @@ public abstract class MatterNetworkComponentClientDispatcher <K extends MatterNe
     {
         if (phase.equals(dispatchPhase))
         {
-            return manageTopQueue(world, getTaskQueue(0).peek());
+            if (getTaskQueue(0).peek() != null) {
+                return manageTopQueue(world, getTaskQueue(0).peek());
+            }
         }
         return 0;
     }

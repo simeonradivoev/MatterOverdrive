@@ -59,7 +59,7 @@ public class ModuleSlot extends Slot
     }
 
     @Override
-    public IIcon getTexture()
+    public IIcon getHoloIcon()
     {
         switch (type)
         {

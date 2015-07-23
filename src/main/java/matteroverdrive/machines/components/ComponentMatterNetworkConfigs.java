@@ -21,6 +21,7 @@ package matteroverdrive.machines.components;
 
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.api.network.IMatterNetworkFilter;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DestinationFilterSlot;
 import matteroverdrive.machines.MOTileEntityMachine;
@@ -102,9 +103,13 @@ public class ComponentMatterNetworkConfigs extends MachineComponentAbstract<MOTi
 
     }
 
-    public String getDestinationFilter()
+    public NBTTagCompound getFilter()
     {
-        return destinationFilter;
+        if (machine.getStackInSlot(destinationFilterSlot) != null && machine.getStackInSlot(destinationFilterSlot).getItem() instanceof IMatterNetworkFilter)
+        {
+            return ((IMatterNetworkFilter) machine.getStackInSlot(destinationFilterSlot).getItem()).getFilter(machine.getStackInSlot(destinationFilterSlot));
+        }
+        return null;
     }
 
     public int getDestinationFilterSlot()
@@ -115,5 +120,10 @@ public class ComponentMatterNetworkConfigs extends MachineComponentAbstract<MOTi
     public void setDestinationFilter(String destinationFilter)
     {
         this.destinationFilter = destinationFilter;
+    }
+
+    public String getDestinationFilter()
+    {
+        return destinationFilter;
     }
 }

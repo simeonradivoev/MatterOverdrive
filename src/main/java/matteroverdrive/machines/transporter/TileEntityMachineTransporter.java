@@ -95,8 +95,6 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         locations = new ArrayList<>();
         selectedLocation = 0;
         redstoneMode = Reference.MODE_REDSTONE_LOW;
-        computerComponent = new ComponentComputers(this);
-        addComponent(computerComponent);
     }
 
     @Override
@@ -192,6 +190,13 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     {
         super.updateEntity();
         manageTeleportation();
+    }
+
+    @Override
+    protected void registerComponents()
+    {
+        computerComponent = new ComponentComputers(this);
+        addComponent(computerComponent);
     }
 
     void manageTeleportation()

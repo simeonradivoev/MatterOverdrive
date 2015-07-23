@@ -20,7 +20,6 @@ package matteroverdrive.container;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.container.slot.SlotEnergy;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -41,9 +40,7 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
     @Override
     public void init(InventoryPlayer inventory)
     {
-        this.addSlotToContainer(new SlotEnergy(machine, this.machine.getEnergySlotID(),8,55));
-
-        super.init(inventory);
+        addAllSlotsFromInventory(machine.getInventoryContainer());
         MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, false, true);
     }
 

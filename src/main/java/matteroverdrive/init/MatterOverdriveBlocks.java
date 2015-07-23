@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.init;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -134,25 +152,26 @@ public class MatterOverdriveBlocks
             MatterOverdriveQuide.Register(tritaniumOre);
         }
 
-        GameRegistry.addRecipe(new ItemStack(decomposer), new Object[]{"TCT", "S S", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'S', Blocks.sticky_piston, 'T', MatterOverdriveItems.tritanium_plate});
-		GameRegistry.addRecipe(new ItemStack(replicator), new Object[]{"TCT", "IHI", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'H', MatterOverdriveItems.h_compensator, 'I', Items.iron_ingot, 'N', MatterOverdriveItems.integration_matrix, 'T', MatterOverdriveItems.tritanium_plate});
-        GameRegistry.addRecipe(new ItemStack(network_router), new Object[]{"IGI", "CDC", "OMO", 'M', MatterOverdriveItems.machine_casing, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'I', Items.iron_ingot, 'G', Blocks.glass,'D',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1)});
-        GameRegistry.addRecipe(new ItemStack(network_switch),new Object[]{" G ","C C","OMO",'M',MatterOverdriveItems.machine_casing,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,0),'G',Blocks.glass});
-        GameRegistry.addRecipe(new ItemStack(matter_pipe, 8), new Object[]{"IGI", "M M", "IGI", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'I', Items.iron_ingot});
-        GameRegistry.addRecipe(new ItemStack(network_pipe, 4), new Object[]{"IGI", "BCB", "IGI", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'I', Items.iron_ingot, 'B', Items.gold_ingot, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0)});
-        GameRegistry.addRecipe(new ItemStack(matter_analyzer), new Object[]{" C ", "IMI", "ONO", 'O', Blocks.iron_block, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'I', Items.iron_ingot});
-        GameRegistry.addRecipe(new ItemStack(tritanium_block), new Object[]{"TTT", "TTT", "TTT", 'T', MatterOverdriveItems.tritanium_ingot});
-        GameRegistry.addRecipe(new ItemStack(machine_hull), new Object[]{" T ", "T T", " T ", 'T', MatterOverdriveItems.tritanium_plate});
-        GameRegistry.addRecipe(new ItemStack(solar_panel), new Object[]{"CGC", "GQG", "KMK", 'C', Items.coal, 'Q', Items.quartz, 'K', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'M', MatterOverdriveItems.machine_casing,'G', Blocks.glass});
-        GameRegistry.addRecipe(new ItemStack(weapon_station), new Object[]{"   ","CBC","GMR",'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'B',MatterOverdriveItems.battery,'G',Items.glowstone_dust,'R',Items.redstone,'M',MatterOverdriveItems.machine_casing});
-        GameRegistry.addRecipe(new ItemStack(pattern_storage),new Object[]{"B3B","TCT","2M1",'B',new ItemStack(Blocks.wool,1,15),'1',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,0),'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'C',Blocks.chest,'M',MatterOverdriveItems.machine_casing,'T',MatterOverdriveItems.tritanium_ingot});
-        GameRegistry.addRecipe(new ItemStack(pattern_monitor),new Object[]{"GGG","SCS"," M ",'M',MatterOverdriveItems.machine_casing,'G',Blocks.glass,'S',Items.glowstone_dust,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2)});
-        GameRegistry.addRecipe(new ItemStack(transporter),new Object[]{"TGT", "CHC", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'M', MatterOverdriveItems.me_conversion_matrix, 'H', MatterOverdriveItems.h_compensator, 'E', Items.ender_pearl, 'N', MatterOverdriveItems.integration_matrix, 'T', MatterOverdriveItems.tritanium_plate,'G',Blocks.glowstone});
-        GameRegistry.addRecipe(new ItemStack(fusion_reactor_coil),new Object[]{"TMT","M M","CMC",'M',MatterOverdriveItems.s_magnet,'T',MatterOverdriveItems.tritanium_plate,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,0)});
-        GameRegistry.addRecipe(new ItemStack(recycler),new Object[]{"T T", "1P2", "NTM", '2', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1),'1', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'T', MatterOverdriveItems.tritanium_plate,'P',Blocks.piston});
-        GameRegistry.addRecipe(new ItemStack(gravitational_stabilizer),new Object[]{" T ","TST","CMC",'M',MatterOverdriveItems.machine_casing,'S',MatterOverdriveItems.spacetime_equalizer,'T',MatterOverdriveItems.tritanium_plate,'C',MatterOverdriveItems.s_magnet});
-        GameRegistry.addRecipe(new ItemStack(fusion_reactor_controller),new Object[]{"CTC","2M3","CTC",'C',fusion_reactor_coil,'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'M',MatterOverdriveItems.machine_casing,'T',MatterOverdriveItems.tritanium_plate});
-        GameRegistry.addRecipe(new ItemStack(androidStation),new Object[]{"THA","2F3","GMR",'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'F',MatterOverdriveItems.forceFieldEmitter,'G',Items.glowstone_dust,'R',Items.redstone,'M',MatterOverdriveItems.machine_casing,'H',new ItemStack(MatterOverdriveItems.androidParts, 1,0),'T',new ItemStack(MatterOverdriveItems.androidParts, 1,3),'A',new ItemStack(MatterOverdriveItems.androidParts, 1,1)});
-        GameRegistry.addRecipe(new ItemStack(starMap),new Object[]{" S ","CFC","GMR",'S',MatterOverdriveItems.security_protocol,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'M',MatterOverdriveItems.machine_casing,'F',MatterOverdriveItems.forceFieldEmitter,'G',Items.glowstone_dust,'R',Items.redstone});
-    }
+        GameRegistry.addRecipe(new ItemStack(decomposer), "TCT", "S S", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'S', Blocks.sticky_piston, 'T', MatterOverdriveItems.tritanium_plate);
+		GameRegistry.addRecipe(new ItemStack(replicator), "TCT", "IHI", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'H', MatterOverdriveItems.h_compensator, 'I', Items.iron_ingot, 'N', MatterOverdriveItems.integration_matrix, 'T', MatterOverdriveItems.tritanium_plate);
+        GameRegistry.addRecipe(new ItemStack(network_router), "IGI", "CDC", "OMO", 'M', MatterOverdriveItems.machine_casing, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'I', Items.iron_ingot, 'G', Blocks.glass,'D',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1));
+        GameRegistry.addRecipe(new ItemStack(network_switch)," G ","C C","OMO",'M',MatterOverdriveItems.machine_casing,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,0),'G',Blocks.glass);
+        GameRegistry.addRecipe(new ItemStack(matter_pipe, 8), "IGI", "M M", "IGI", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'I', Items.iron_ingot);
+        GameRegistry.addRecipe(new ItemStack(network_pipe, 4), "IGI", "BCB", "IGI", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'I', Items.iron_ingot, 'B', Items.gold_ingot, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0));
+        GameRegistry.addRecipe(new ItemStack(matter_analyzer), " C ", "IMI", "ONO", 'O', Blocks.iron_block, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'I', Items.iron_ingot);
+        GameRegistry.addRecipe(new ItemStack(tritanium_block), "TTT", "TTT", "TTT", 'T', MatterOverdriveItems.tritanium_ingot);
+        GameRegistry.addRecipe(new ItemStack(machine_hull)," T ", "T T", " T ", 'T', MatterOverdriveItems.tritanium_plate);
+        GameRegistry.addRecipe(new ItemStack(solar_panel), "CGC", "GQG", "KMK", 'C', Items.coal, 'Q', Items.quartz, 'K', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'M', MatterOverdriveItems.machine_casing,'G', Blocks.glass);
+        GameRegistry.addRecipe(new ItemStack(weapon_station), "   ","CBC","GMR",'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'B',MatterOverdriveItems.battery,'G',Items.glowstone_dust,'R',Items.redstone,'M',MatterOverdriveItems.machine_casing);
+        GameRegistry.addRecipe(new ItemStack(pattern_storage),"B3B","TCT","2M1",'B',new ItemStack(Blocks.wool,1,15),'1',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,0),'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'C',Blocks.chest,'M',MatterOverdriveItems.machine_casing,'T',MatterOverdriveItems.tritanium_ingot);
+        GameRegistry.addRecipe(new ItemStack(pattern_monitor),"GGG","SCS"," M ",'M',MatterOverdriveItems.machine_casing,'G',Blocks.glass,'S',Items.glowstone_dust,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2));
+        GameRegistry.addRecipe(new ItemStack(transporter),"TGT", "CHC", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'M', MatterOverdriveItems.me_conversion_matrix, 'H', MatterOverdriveItems.h_compensator, 'E', Items.ender_pearl, 'N', MatterOverdriveItems.integration_matrix, 'T', MatterOverdriveItems.tritanium_plate,'G',Blocks.glowstone);
+        GameRegistry.addRecipe(new ItemStack(fusion_reactor_coil),"TMT","M M","CMC",'M',MatterOverdriveItems.s_magnet,'T',MatterOverdriveItems.tritanium_plate,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,0));
+        GameRegistry.addRecipe(new ItemStack(recycler),"T T", "1P2", "NTM", '2', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1),'1', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'T', MatterOverdriveItems.tritanium_plate,'P',Blocks.piston);
+        GameRegistry.addRecipe(new ItemStack(gravitational_stabilizer)," T ","TST","CMC",'M',MatterOverdriveItems.machine_casing,'S',MatterOverdriveItems.spacetime_equalizer,'T',MatterOverdriveItems.tritanium_plate,'C',MatterOverdriveItems.s_magnet);
+        GameRegistry.addRecipe(new ItemStack(fusion_reactor_controller),"CTC","2M3","CTC",'C',fusion_reactor_coil,'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'M',MatterOverdriveItems.machine_casing,'T',MatterOverdriveItems.tritanium_plate);
+        GameRegistry.addRecipe(new ItemStack(androidStation),"THA","2F3","GMR",'3',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'2',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'F',MatterOverdriveItems.forceFieldEmitter,'G',Items.glowstone_dust,'R',Items.redstone,'M',MatterOverdriveItems.machine_casing,'H',new ItemStack(MatterOverdriveItems.androidParts, 1,0),'T',new ItemStack(MatterOverdriveItems.androidParts, 1,3),'A',new ItemStack(MatterOverdriveItems.androidParts, 1,1));
+        GameRegistry.addRecipe(new ItemStack(starMap)," S ","CFC","GMR",'S',MatterOverdriveItems.security_protocol,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'M',MatterOverdriveItems.machine_casing,'F',MatterOverdriveItems.forceFieldEmitter,'G',Items.glowstone_dust,'R',Items.redstone);
+        GameRegistry.addRecipe(new ItemStack(chargingStation)," F ","EDR","BMB",'M',MatterOverdriveItems.machine_casing,'B',MatterOverdriveItems.hc_battery,'E',Items.ender_eye,'R',Items.repeater,'F',MatterOverdriveItems.forceFieldEmitter,'D',MatterOverdriveItems.dilithium_ctystal);
+}
 }

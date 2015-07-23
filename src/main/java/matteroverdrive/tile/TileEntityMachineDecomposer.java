@@ -81,8 +81,13 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
         super.RegisterSlots(inventory);
     }
-	
-	@Override
+
+    @Override
+    protected void registerComponents() {
+
+    }
+
+    @Override
 	public void updateEntity()
 	{
 		super.updateEntity();

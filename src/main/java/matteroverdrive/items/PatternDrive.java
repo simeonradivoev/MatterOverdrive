@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.items;
 
 import cpw.mods.fml.relauncher.Side;
@@ -11,6 +29,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
@@ -85,12 +104,24 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     {
         if(itemstack.hasTagCompound())
         {
-            NBTTagList list = MatterDatabaseHelper.GetItemsTagList(itemstack);
+            NBTTagList list = getItemsAsNBT(itemstack);
             if (list != null) {
                 for (int i = 0;i < list.tagCount();i++)
                 {
                     int progress = MatterDatabaseHelper.GetProgressFromNBT(list.getCompoundTagAt(i));
-                    infos.add(MatterDatabaseHelper.getPatternInfoColor(progress) + MatterDatabaseHelper.GetItemStackFromNBT(list.getCompoundTagAt(i)).getDisplayName() + " [" + progress + "%]");
+                    String displayName = "Unknown";
+                    try {
+                        displayName = MatterDatabaseHelper.GetItemStackFromNBT(list.getCompoundTagAt(i)).getDisplayName();
+                    }catch (Exception e)
+                    {
+
+                    }
+                    infos.add(MatterDatabaseHelper.getPatternInfoColor(progress) + displayName + " [" + progress + "%]");
+                    if (i > 8)
+                    {
+                        infos.add(EnumChatFormatting.YELLOW + String.format("...and %s more patterns.",list.tagCount()-9));
+                        break;
+                    }
                 }
             }
         }

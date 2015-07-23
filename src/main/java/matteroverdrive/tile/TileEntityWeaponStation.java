@@ -77,6 +77,11 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
         super.RegisterSlots(inventory);
     }
 
+    @Override
+    protected void registerComponents() {
+
+    }
+
     public IInventory getActiveInventory()
     {
         if (inventory.getSlot(INPUT_SLOT).getItem() != null && MatterHelper.isWeapon(inventory.getSlot(INPUT_SLOT).getItem()))

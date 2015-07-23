@@ -44,6 +44,7 @@ import java.util.*;
 
 public class MatterRegistry implements IMatterRegistry
 {
+    private static final boolean REGISTRATION_DEBUG = false;
     public boolean hasComplitedRegistration = false;
     private static final int MAX_DEPTH = 8;
     public int basicEntries = 0;
@@ -74,7 +75,6 @@ public class MatterRegistry implements IMatterRegistry
         outputStream.writeInt(blacklist.size());
         outputStream.close();
         fileOutputStream.close();
-        MOLog.log(Level.INFO,"RegistrySaved to: %s",path);
     }
 
     public void loadFromFile(String path) throws IOException, ClassNotFoundException {
@@ -277,8 +277,10 @@ public class MatterRegistry implements IMatterRegistry
             if (!blacklist.contains(item.getUnlocalizedName()))
             {
                 MatterEntry e = entries.get(item.getUnlocalizedName());
-                if (e == null) {
+                if (e == null)
+                {
                     e = getOreDicionaryEntry(item);
+                    if (REGISTRATION_DEBUG && e == null) MOLog.log(Level.DEBUG,"Could not find ore dictionary entry for: %s",item.getUnlocalizedName());
                 }
                 return e;
             }else
@@ -287,6 +289,7 @@ public class MatterRegistry implements IMatterRegistry
             }
         }catch (Exception e)
         {
+            MOLog.log(Level.ERROR,e,"There was a problem getting a Matter Entry for: %s",item.getUnlocalizedName());
             return null;
         }
     }
@@ -312,9 +315,12 @@ public class MatterRegistry implements IMatterRegistry
     {
         MatterEntry e;
         int[] ids = OreDictionary.getOreIDs(stack);
+
+        if (REGISTRATION_DEBUG && ids.length <= 0) MOLog.log(Level.DEBUG,"No OreDictionary support for: %s",stack.getUnlocalizedName());
         for (int id : ids)
         {
             String entryName = OreDictionary.getOreName(id);
+            if (REGISTRATION_DEBUG) MOLog.log(Level.DEBUG,"Searching for OreDictionary key with name: %s for item: %s",entryName,stack.getUnlocalizedName());
             e = entries.get(entryName);
 
             if(e != null)
@@ -333,28 +339,24 @@ public class MatterRegistry implements IMatterRegistry
     {
         int matter = 0;
 
-        for(Object recipeObject : CraftingManager.getInstance().getRecipeList())
-        {
-            if (recipeObject instanceof IRecipe)
-            {
-                IRecipe recipe = (IRecipe)recipeObject;
-                ItemStack recipeOutput = recipe.getRecipeOutput();
+        List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+        for(IRecipe recipe : recipes) {
+            ItemStack recipeOutput = recipe.getRecipeOutput();
 
-                if (recipeOutput != null && recipeOutput.isItemEqual(item)) {
-                    int m = 0;
+            if (recipeOutput != null && recipeOutput.isItemEqual(item)) {
+                int m = 0;
 
-                    if (recipe instanceof ShapedRecipes) {
-                        m = getMatterFromList(recipeOutput, ((ShapedRecipes) recipe).recipeItems, recursive, ++depth,calculated);
-                    } else if (recipe instanceof ShapelessRecipes) {
-                        m = getMatterFromList(recipeOutput, ((ShapelessRecipes) recipe).recipeItems.toArray(), recursive, ++depth,calculated);
-                    } else if (recipe instanceof ShapedOreRecipe) {
-                        m = getMatterFromList(recipeOutput, ((ShapedOreRecipe) recipe).getInput(), recursive, ++depth,calculated);
-                    } else if (recipe instanceof ShapelessOreRecipe) {
-                        m = getMatterFromList(recipeOutput, ((ShapelessOreRecipe) recipe).getInput().toArray(), recursive, ++depth,calculated);
-                    }
-
-                    matter += m;
+                if (recipe instanceof ShapedRecipes) {
+                    m = getMatterFromList(recipeOutput, ((ShapedRecipes) recipe).recipeItems, recursive, ++depth, calculated);
+                } else if (recipe instanceof ShapelessRecipes) {
+                    m = getMatterFromList(recipeOutput, ((ShapelessRecipes) recipe).recipeItems.toArray(), recursive, ++depth, calculated);
+                } else if (recipe instanceof ShapedOreRecipe) {
+                    m = getMatterFromList(recipeOutput, ((ShapedOreRecipe) recipe).getInput(), recursive, ++depth, calculated);
+                } else if (recipe instanceof ShapelessOreRecipe) {
+                    m = getMatterFromList(recipeOutput, ((ShapelessOreRecipe) recipe).getInput().toArray(), recursive, ++depth, calculated);
                 }
+
+                matter += m;
             }
         }
 
@@ -418,7 +420,7 @@ public class MatterRegistry implements IMatterRegistry
                     }
 
                     if (stack == null || blacklisted(stack)) {
-                        //System.out.println(item.getDisplayName() + " is blacklisted.");
+                        if (REGISTRATION_DEBUG) MOLog.log(Level.DEBUG,"%s is blacklisted.",item.getUnlocalizedName());
                         return -1;
                     }
 
@@ -427,12 +429,14 @@ public class MatterRegistry implements IMatterRegistry
                     if (!ItemStack.areItemStacksEqual(stack,item)) {
                         tempEntry = getEntry(stack);
                         //if there is an entry use it's matter value
-                        if (tempEntry != null) {
+                        if (tempEntry != null)
+                        {
                             tempMatter = tempEntry.getMatter();
                         }
                         //if there is no entry for item and recursive is true, then continue searching to it's recipe list
                         else if (recursive) {
                             tempMatter = getMatterFromRecipe(stack, true, ++depth,calculated);
+                            if (REGISTRATION_DEBUG) MOLog.log(Level.DEBUG,"searching %s in depth: %s",stack.getUnlocalizedName(),depth-1);
 
                             //if the matter is higher than 0 that means the recipe search was successful.
                             //registration now helps to remove it from future checks
@@ -441,12 +445,12 @@ public class MatterRegistry implements IMatterRegistry
                             }
                             else if (tempMatter < 0) {
                                 //that means the item had a recipe with a blacklisted item
-                                //System.out.println(stack.getDisplayName() + " has a blacklisted item in it's recipe");
+                                if (REGISTRATION_DEBUG) MOLog.log(Level.DEBUG, "%s has a blacklisted item in it's recipe", stack.getUnlocalizedName());
                                 return -1;
                             }
                             else
                             {
-                                //System.out.println(stack.getDisplayName() + " cannot be replicated. Contains 0 matter");
+                                if (REGISTRATION_DEBUG) MOLog.log(Level.DEBUG,"%s cannot be replicated. Contains 0 matter",stack.getUnlocalizedName());
                                 return 0;
                             }
                         }
@@ -466,7 +470,7 @@ public class MatterRegistry implements IMatterRegistry
 
                     for (Object element : l)
                     {
-                        if (s instanceof ItemStack || s instanceof Item || s instanceof Block)
+                        if (element instanceof ItemStack || element instanceof Item || element instanceof Block)
                         {
                             ItemStack stack = null;
                             if (element instanceof ItemStack)
@@ -490,12 +494,16 @@ public class MatterRegistry implements IMatterRegistry
                                 {
                                     tempMatter = tempEntry.getMatter();
                                     first = false;
+                                }else
+                                {
+                                    if (REGISTRATION_DEBUG) MOLog.log(Level.DEBUG,"entry for %s, found in recipe for: %s was blacklisted or costs lower then previous",stack.getUnlocalizedName(),item.getUnlocalizedName());
                                 }
 
                             }
                             //here we use the recursion to calculate it's matter from any recipes it has
                             else if (recursive)
                             {
+                                MOLog.log(Level.DEBUG,"Could not find Matter entry for %s, found in recipe for: %s",stack.getUnlocalizedName(),item.getUnlocalizedName());
                                 int m = getMatterFromRecipe(stack,true,++depth,calculated);
                                 //if the item has matter, has lower matter than the previous
                                 //if the item was first there is no previous so store that amount
@@ -503,22 +511,34 @@ public class MatterRegistry implements IMatterRegistry
                                 {
                                     tempMatter = m;
                                     first = false;
+                                }else
+                                {
+                                    if (REGISTRATION_DEBUG) MOLog.log(Level.DEBUG,"entry for %s, found in recipe for: %s was blacklisted or costs lower then previous",stack.getUnlocalizedName(),item.getUnlocalizedName());
                                 }
                             }
+                        }else
+                        {
+                            if (REGISTRATION_DEBUG) MOLog.log(Level.DEBUG,"Found another type of object in list ot type: %s",element.getClass().toString());
                         }
                     }
 
                     //if for same reason the item is invalid, that can't really happen
                     if (tempMatter < 0)
+                    {
+                        if (REGISTRATION_DEBUG) MOLog.log(Level.ERROR,"%s is invalid.",item.getDisplayName());
                         return -1;
+                    }
                     //if all the items in the list have not matter return as empty
-                    else if (tempMatter == 0)
+                    else if (tempMatter == 0) {
+                        if (REGISTRATION_DEBUG) MOLog.log(Level.DEBUG,"%s has no items with matter in recipe.",item.getDisplayName());
                         return 0;
+                    }
                 }
                 //if the recipe contains anything other than itemsStacks, Items, Blocks or lists
                 //may be used if there are strings to OreDictionary items i don't really know
                 else
                 {
+                    if (REGISTRATION_DEBUG) MOLog.log(Level.DEBUG,"Element in list is unknown type: %s",s);
                     tempEntry = getEntry(s.toString());
                     if (tempEntry != null)
                     {

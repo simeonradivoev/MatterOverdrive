@@ -100,8 +100,6 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         matterStorage.setMaxExtract(MATTER_STORAGE);
         matterStorage.setMaxReceive(MATTER_STORAGE);
         redstoneMode = Reference.MODE_REDSTONE_LOW;
-        componentComputers = new ComponentComputers(this);
-        addComponent(componentComputers);
     }
 
     @Override
@@ -156,6 +154,13 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
             manageEnergyGeneration();
             manageEnergyExtract();
         }
+    }
+
+    @Override
+    protected void registerComponents()
+    {
+        componentComputers = new ComponentComputers(this);
+        addComponent(componentComputers);
     }
 
     @Override

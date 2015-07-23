@@ -67,6 +67,10 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
         databases = new HashSet<>();
         searchDelayTracker = new TimeTracker();
         networkComponent = new MatterNetworkComponentPatternMonitor(this);
+    }
+
+    @Override
+    protected void registerComponents() {
         componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
         addComponent(componentMatterNetworkConfigs);
     }
@@ -225,14 +229,10 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
 
     }
 
-    public void setDestinationFilter(String filter)
+    @Override
+    public NBTTagCompound getFilter()
     {
-        componentMatterNetworkConfigs.setDestinationFilter(filter);
-    }
-
-    public String getDestinationFilter()
-    {
-        return componentMatterNetworkConfigs.getDestinationFilter();
+        return componentMatterNetworkConfigs.getFilter();
     }
 
     public ComponentMatterNetworkConfigs getComponentMatterNetworkConfigs()

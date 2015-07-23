@@ -33,6 +33,7 @@ public class SlotInventory extends MOSlot {
     {
         super(inventory, slot.getId(), x, y);
         this.slot = slot;
+        holoIcon = slot.getHoloIcon();
     }
 
     public boolean isItemValid(ItemStack itemStack)
@@ -48,5 +49,10 @@ public class SlotInventory extends MOSlot {
     public Slot getSlot()
     {
         return slot;
+    }
+
+    public String getUnlocalizedTooltip()
+    {
+        return slot.getUnlocalizedTooltip();
     }
 }

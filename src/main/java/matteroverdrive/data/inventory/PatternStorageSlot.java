@@ -39,11 +39,16 @@ public class PatternStorageSlot extends Slot
     }
 
     @Override
-    public IIcon getTexture()
+    public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("pattern_storage");
     }
 
     @Override
     public int getMaxStackSize(){return 1;}
+
+    @Override
+    public String getUnlocalizedTooltip(){
+        return "gui.tooltip.slot.pattern_storage";
+    }
 }

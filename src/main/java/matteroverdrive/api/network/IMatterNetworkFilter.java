@@ -16,31 +16,16 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.data.inventory;
+package matteroverdrive.api.network;
 
-import matteroverdrive.util.MatterHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * Created by Simeon on 4/13/2015.
+ * Created by Simeon on 7/22/2015.
  */
-public class WeaponSlot extends Slot
+public interface IMatterNetworkFilter
 {
-    public WeaponSlot(boolean isMainSlot)
-    {
-        super(isMainSlot);
-    }
-
-    public boolean isValidForSlot(ItemStack item)
-    {
-        return MatterHelper.isWeapon(item);
-    }
-
-    @Override
-    public int getMaxStackSize(){return 1;}
-
-    @Override
-    public String getUnlocalizedTooltip(){
-        return "gui.tooltip.slot.weapon";
-    }
+    String CONNECTIONS_TAG = "CONNECTIONS";
+    NBTTagCompound getFilter(ItemStack stack);
 }

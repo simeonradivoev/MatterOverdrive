@@ -18,10 +18,6 @@
 
 package matteroverdrive.container;
 
-import matteroverdrive.container.slot.SlotEnergy;
-import matteroverdrive.container.slot.SlotInventory;
-import matteroverdrive.data.inventory.PatternStorageSlot;
-import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.tile.TileEntityMachinePatternStorage;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,24 +36,7 @@ public class ContainerPatternStorage extends ContainerMachine<TileEntityMachineP
     @Override
     public void init(InventoryPlayer inventoryPlayer)
     {
-        this.addSlotToContainer(new SlotInventory(machine, machine.getInventoryContainer().getSlot(machine.input_slot), 8, 55));
-
-        int slotXIndex = 0;
-        for (Slot slot : machine.getInventoryContainer().getSlots())
-        {
-            if (slot instanceof PatternStorageSlot)
-            {
-                int x = (slotXIndex % 3 * 24) + 77;
-                int y = (slotXIndex / 3) * 24 + 37;
-                this.addSlotToContainer(new SlotInventory(machine,slot,x,y));
-                slotXIndex ++;
-            }
-        }
-
-        this.addSlotToContainer(new SlotEnergy(machine, machine.getEnergySlotID(),8,82));
-
-        super.init(inventoryPlayer);
-
+        addAllSlotsFromInventory(machine.getInventoryContainer());
         MOContainerHelper.AddPlayerSlots(inventoryPlayer, this, 45, 89,true,true);
     }
 

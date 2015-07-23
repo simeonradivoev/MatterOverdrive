@@ -18,11 +18,12 @@
 
 package matteroverdrive.api.network;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 /**
  * Created by Simeon on 7/17/2015.
  */
 public interface IMatterNetworkBroadcaster extends IMatterNetworkConnection
 {
-    String getDestinationFilter();
-    void setDestinationFilter(String filter);
+    NBTTagCompound getFilter();
 }

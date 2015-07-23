@@ -25,6 +25,7 @@ import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -70,9 +71,9 @@ public class MatterNetworkHelper
     {
         return broadcastTaskInDirection(world,queueID,task,dispatcher,direction,null);
     }
-    public static boolean broadcastTaskInDirection(World world,byte queueID, MatterNetworkTask task, IMatterNetworkDispatcher dispatcher, ForgeDirection direction,BlockPosition receiver)
+    public static boolean broadcastTaskInDirection(World world,byte queueID, MatterNetworkTask task, IMatterNetworkDispatcher dispatcher, ForgeDirection direction,NBTTagCompound filter)
     {
-        return broadcastTaskInDirection(world, new MatterNetworkTaskPacket(dispatcher, task,queueID,direction,receiver), dispatcher, direction);
+        return broadcastTaskInDirection(world, new MatterNetworkTaskPacket(dispatcher, task,queueID,direction,filter), dispatcher, direction);
     }
 
     public static void broadcastConnection(World world,IMatterNetworkConnection connection)
@@ -91,31 +92,5 @@ public class MatterNetworkHelper
             MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(connection,Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION,ForgeDirection.getOrientation(i),null);
             broadcastTaskInDirection(world, packet, connection, ForgeDirection.getOrientation(i));
         }
-    }
-
-    public static BlockPosition parseBlockPosition(IMatterNetworkBroadcaster broadcaster)
-    {
-        if (broadcaster.getDestinationFilter() != null) {
-            String[] coords = broadcaster.getDestinationFilter().split(",");
-            if (coords.length >= 3) {
-                int x, y, z;
-                try {
-                    x = Integer.parseInt(coords[0]);
-                    y = Integer.parseInt(coords[1]);
-                    z = Integer.parseInt(coords[2]);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-
-                if (coords.length >= 4) {
-                    int portOrdinal = Integer.parseInt(coords[3]);
-                    if (portOrdinal >= 0 && portOrdinal < ForgeDirection.values().length) {
-                        return new BlockPosition(x, y, z, ForgeDirection.getOrientation(portOrdinal));
-                    }
-                }
-                return new BlockPosition(x, y, z);
-            }
-        }
-        return null;
     }
 }

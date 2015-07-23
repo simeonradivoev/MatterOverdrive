@@ -1,7 +1,26 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.util;
 
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.api.matter.IMatterPatternStorage;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -279,58 +298,45 @@ public class MatterDatabaseHelper
 	
 	public static NBTTagCompound GetItemAsNBT(ItemStack patternStorage, ItemStack item)
 	{
-		if(patternStorage.hasTagCompound())
-		{
-				NBTTagList itemList = GetItemsTagList(patternStorage);
-				
-				for(int i = 0;i < itemList.tagCount();i++)
-				{
-					if(areEqual(item, GetItemStackFromNBT(itemList.getCompoundTagAt(i))))
-						return GetItemAsNBTAt(patternStorage,i);
-				}
+		NBTTagList itemList = GetItemsTagList(patternStorage);
+		for (int i = 0; i < itemList.tagCount(); i++) {
+			if (areEqual(item, GetItemStackFromNBT(itemList.getCompoundTagAt(i))))
+				return GetItemAsNBTAt(patternStorage, i);
 		}
+		return null;
+	}
+	public static NBTTagCompound GetItemAsNBT(ItemStack patternStorage, int id)
+	{
+        NBTTagList itemList = GetItemsTagList(patternStorage);
+        if (itemList != null) {
+            for (int i = 0; i < itemList.tagCount(); i++) {
+                if (itemList.getCompoundTagAt(i).getShort("id") == id)
+                    return GetItemAsNBTAt(patternStorage, i);
+            }
+        }
 		
 		return null;
 	}
-	public static NBTTagCompound GetItemAsNBT(ItemStack scanner, int id)
+	public static NBTTagCompound GetItemAsNBT(ItemStack patternStorage, String id)
 	{
-		if(scanner.hasTagCompound())
-		{
-				NBTTagList itemList = GetItemsTagList(scanner);
-				
-				for(int i = 0;i < itemList.tagCount();i++)
-				{
-					if(itemList.getCompoundTagAt(i).getShort("id") == id)
-						return GetItemAsNBTAt(scanner,i);
-				}
-		}
-		
-		return null;
-	}
-	public static NBTTagCompound GetItemAsNBT(ItemStack scanner, String id)
-	{
-		if(scanner.hasTagCompound())
-		{
-			NBTTagList itemList = GetItemsTagList(scanner);
-
-			for(int i = 0;i < itemList.tagCount();i++)
-			{
-				if(GetItemStackFromNBT(itemList.getCompoundTagAt(i)).getUnlocalizedName().equalsIgnoreCase(id))
-					return GetItemAsNBTAt(scanner,i);
-			}
-		}
-
+        NBTTagList itemList = GetItemsTagList(patternStorage);
+        if (itemList != null)
+        {
+            for (int i = 0; i < itemList.tagCount(); i++) {
+                if (GetItemStackFromNBT(itemList.getCompoundTagAt(i)).getUnlocalizedName().equalsIgnoreCase(id))
+                    return GetItemAsNBTAt(patternStorage, i);
+            }
+        }
 		return null;
 	}
 
-	private static NBTTagCompound GetItemAsNBTAt(ItemStack scanner, int index)
+	private static NBTTagCompound GetItemAsNBTAt(ItemStack patternStorage, int index)
 	{
-		if(scanner.hasTagCompound())
-		{
-			NBTTagList itemList = GetItemsTagList(scanner);
-			if(itemList.tagCount() > index)
-				return itemList.getCompoundTagAt(index);
-		}
+        NBTTagList itemList = GetItemsTagList(patternStorage);
+        if (itemList != null) {
+            if (index < itemList.tagCount())
+                return itemList.getCompoundTagAt(index);
+        }
 		return null;
 	}
 	
@@ -348,17 +354,14 @@ public class MatterDatabaseHelper
 	
 	public static int GetIndexOfItem(ItemStack scanner, ItemStack item)
 	{
-		if(scanner.hasTagCompound())
-		{
-				NBTTagList itemList = GetItemsTagList(scanner);
-				System.out.println(itemList.tagCount());
-				
-				for(int i = 0;i < itemList.tagCount();i++)
-				{
-					if(areEqual(item, GetItemStackFromNBT(itemList.getCompoundTagAt(i))))
-						return i;
-				}
-		}
+        NBTTagList itemList = GetItemsTagList(scanner);
+
+        if (itemList != null) {
+            for (int i = 0; i < itemList.tagCount(); i++) {
+                if (areEqual(item, GetItemStackFromNBT(itemList.getCompoundTagAt(i))))
+                    return i;
+            }
+        }
 		
 		return -1;
 	}
@@ -395,8 +398,10 @@ public class MatterDatabaseHelper
 	
 	public static NBTTagList GetItemsTagList(ItemStack patternStorage)
 	{
-		if(patternStorage.hasTagCompound())
-			return patternStorage.getTagCompound().getTagList(ITEMS_TAG_NAME, 10);
+		if (patternStorage.getItem() instanceof IMatterPatternStorage)
+		{
+			return ((IMatterPatternStorage) patternStorage.getItem()).getItemsAsNBT(patternStorage);
+		}
 		return null;
 	}
 	

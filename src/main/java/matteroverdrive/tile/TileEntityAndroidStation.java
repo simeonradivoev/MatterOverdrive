@@ -70,6 +70,11 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
         super.RegisterSlots(inventory);
     }
 
+    @Override
+    protected void registerComponents() {
+
+    }
+
     public IInventory getActiveInventory()
     {
         return inventory;
@@ -150,8 +155,7 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     @Override
     public boolean isUseableByPlayer(EntityPlayer player)
     {
-        AndroidPlayer android = AndroidPlayer.get(player);
-        return android != null && android.isAndroid() && super.isUseableByPlayer(player);
+        return AndroidPlayer.get(player) != null && AndroidPlayer.get(player).isAndroid() && super.isUseableByPlayer(player);
     }
 
     @Override

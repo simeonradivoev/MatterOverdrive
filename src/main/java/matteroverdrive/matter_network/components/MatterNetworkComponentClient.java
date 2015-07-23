@@ -22,18 +22,21 @@ import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.api.network.IMatterNetworkFilter;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 7/15/2015.
  */
-public abstract class MatterNetworkComponentClient<T extends IMatterNetworkClient> implements IMatterNetworkClient
+public abstract class MatterNetworkComponentClient<T extends IMatterNetworkConnection> implements IMatterNetworkClient
 {
     protected T rootClient;
 
@@ -102,7 +105,20 @@ public abstract class MatterNetworkComponentClient<T extends IMatterNetworkClien
     @Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
-        return packet.getReceiverPos() == null || packet.getReceiverPos().equals(getPosition());
+        if (packet.getFilter() != null)
+        {
+            NBTTagList connectionsList = packet.getFilter().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_COMPOUND);
+            for (int i = 0;i < connectionsList.tagCount();i++)
+            {
+                BlockPosition filterPos = new BlockPosition(connectionsList.getCompoundTagAt(i));
+                if (filterPos.equals(getPosition()))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
 
     //region Getters and Setters

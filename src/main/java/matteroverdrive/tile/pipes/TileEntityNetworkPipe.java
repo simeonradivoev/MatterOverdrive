@@ -107,6 +107,11 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     {
         if (isValid())
         {
+            if (task == null)
+            {
+                System.out.println("Task is null");
+            }
+
             if (task instanceof MatterNetworkTaskPacket && ((MatterNetworkTaskPacket) task).getTask(worldObj).getState().above(MatterNetworkTaskState.WAITING))
                 return;
 

@@ -61,7 +61,8 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
         requestButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.button.request"));
         elementGrid = new ElementPatternsGrid(this,48,40,160,110);
         searchField = new MOElementTextField(this,41,26,167,14);
-
+        slotsList.addElement(refreshButton);
+        slotsList.addElement(requestButton);
         elementGrid.updateStackList(machine.getDatabases());
     }
 
@@ -80,8 +81,8 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
     {
         super.initGui();
 
-        this.addElement(refreshButton);
-        this.addElement(requestButton);
+        //this.addElement(refreshButton);
+        //this.addElement(requestButton);
         pages.get(0).addElement(elementGrid);
         pages.get(0).addElement(searchField);
         AddHotbarPlayerSlots(inventorySlots, this);

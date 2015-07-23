@@ -92,6 +92,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         this.upgradeSlotCount = upgradeCount;
         upgrade_slots = new int[upgradeCount];
         inventory = new TileEntityInventory(this,"");
+        registerComponents();
         RegisterSlots(inventory);
     }
 
@@ -139,6 +140,8 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             component.registerSlots(inventory);
         }
     }
+
+    protected abstract void registerComponents();
 
     private static ResourceLocation getSoundFor(String sound)
     {

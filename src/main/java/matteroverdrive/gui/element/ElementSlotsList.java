@@ -40,13 +40,13 @@ public class ElementSlotsList extends ElementBaseGroup
             {
                 if (index == main)
                 {
-                    mainSlot = new ElementInventorySlot(gui, (MOSlot)gui.inventorySlots.getSlot(i),0, 0, 37, 22, "big_main", inventory.getSlot(i).getTexture());
+                    mainSlot = new ElementInventorySlot(gui, (MOSlot)gui.inventorySlots.getSlot(i),0, 0, 37, 22, "big_main", inventory.getSlot(i).getHoloIcon());
                     mainSlot.setItemOffset(3, 3);
                     addElement(mainSlot);
                 }
                 else {
 
-                    addElement(new ElementInventorySlot(gui,(MOSlot)gui.inventorySlots.getSlot(i), 0, 0, 22, 22, "big", inventory.getSlot(i).getTexture()));
+                    addElement(new ElementInventorySlot(gui,(MOSlot)gui.inventorySlots.getSlot(i), 0, 0, 22, 22, "big", inventory.getSlot(i).getHoloIcon()));
                 }
 
                 index++;

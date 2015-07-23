@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui;
 
 import matteroverdrive.Reference;
@@ -41,7 +59,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
 
         for (int i = 0;i < module_slots.length;i++)
         {
-            module_slots[i] = new ElementInventorySlot(this,(MOSlot)inventorySlots.getSlot(i+1),20,20,"holo",machine.getInventoryContainer().getSlot(i).getTexture());
+            module_slots[i] = new ElementInventorySlot(this,(MOSlot)inventorySlots.getSlot(i+1),20,20,"holo",machine.getInventoryContainer().getSlot(i).getHoloIcon());
             module_slots[i].setColor(Reference.COLOR_MATTER.getIntR(),Reference.COLOR_MATTER.getIntG(),Reference.COLOR_MATTER.getIntB(),78);
             module_slots[i].setInfo("module." + module_slots_info[i] + ".name");
         }

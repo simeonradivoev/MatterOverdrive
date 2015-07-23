@@ -25,8 +25,8 @@ import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
-import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
+import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.tile.TileEntityMachineReplicator;
 import matteroverdrive.util.MatterDatabaseHelper;
@@ -125,7 +125,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
         if (rootClient.getRedstoneActive() && !rootClient.canCompleteTask(task) && patternSearchTracker.hasDelayPassed(world,rootClient.PATTERN_SEARCH_DELAY)) {
             if (task != null) {
                 for (int i = 0; i < 6; i++) {
-                    MatterNetworkRequestPacket requestPacket = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_PATTERN_SEARCH,ForgeDirection.getOrientation(i), new int[]{task.getItemID(), task.getItemMetadata()});
+                    MatterNetworkRequestPacket requestPacket = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_PATTERN_SEARCH,ForgeDirection.getOrientation(i),rootClient.getFilter(), new int[]{task.getItemID(), task.getItemMetadata()});
                     if (MatterNetworkHelper.broadcastTaskInDirection(world, requestPacket, rootClient, ForgeDirection.getOrientation(i)))
                     {
                         broadcasts++;

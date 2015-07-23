@@ -20,9 +20,6 @@ package matteroverdrive.container;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.container.slot.SlotEnergy;
-import matteroverdrive.container.slot.SlotInventory;
-import matteroverdrive.container.slot.SlotRemoveOnly;
 import matteroverdrive.tile.TileEntityMachineDecomposer;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,11 +38,7 @@ public class ContainerDecomposer extends ContainerMachine<TileEntityMachineDecom
 	@Override
 	public void init(InventoryPlayer inventory)
 	{
-		this.addSlotToContainer(new SlotInventory(machine,machine.getInventoryContainer().getSlot(machine.INPUT_SLOT_ID),8,55));
-		this.addSlotToContainer(new SlotRemoveOnly(machine,machine.OUTPUT_SLOT_ID,129,55));
-		this.addSlotToContainer(new SlotEnergy(machine,this.machine.getEnergySlotID(),8,82));
-
-		super.init(inventory);
+		addAllSlotsFromInventory(machine.getInventoryContainer());
 		MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89,true,true);
 	}
 	

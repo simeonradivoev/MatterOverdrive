@@ -58,6 +58,11 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
         manageAndroidCharging();
     }
 
+    @Override
+    protected void registerComponents() {
+
+    }
+
     private void manageAndroidCharging()
     {
         if (!worldObj.isRemote) {

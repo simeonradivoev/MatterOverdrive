@@ -18,7 +18,6 @@
 
 package matteroverdrive.container;
 
-import matteroverdrive.container.slot.SlotEnergy;
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -36,8 +35,7 @@ public class ContainerTransporter extends ContainerMachine<TileEntityMachineTran
     @Override
     public void init(InventoryPlayer inventory)
     {
-        addSlotToContainer(new SlotEnergy(machine.getInventoryContainer(),machine.getEnergySlotID(),8,55));
-        super.init(inventory);
+        addAllSlotsFromInventory(machine.getInventoryContainer());
         MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, false, true);
     }
 }

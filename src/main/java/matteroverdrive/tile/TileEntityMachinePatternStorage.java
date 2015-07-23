@@ -34,9 +34,9 @@ import matteroverdrive.blocks.BlockPatternStorage;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.PatternStorageSlot;
-import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentPatternStorage;
@@ -67,7 +67,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public int[] pattern_storage_slots;
     private MatterNetworkPacketQueue taskQueueProcessing;
     private MatterNetworkComponentPatternStorage networkComponent;
-    private String destinationFilter;
+    private ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
 
     public TileEntityMachinePatternStorage()
     {
@@ -113,6 +113,13 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         super.RegisterSlots(inventory);
     }
 
+    @Override
+    protected void registerComponents()
+    {
+        componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+        addComponent(componentMatterNetworkConfigs);
+    }
+
     protected void manageLinking()
     {
         if(MatterHelper.isMatterScanner(inventory.getStackInSlot(input_slot)))
@@ -133,8 +140,11 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         int patternCount = 0;
         for (ItemStack patternDrive : getPatternStorageList())
         {
-            if (patternDrive != null) {
-                patternCount += MatterOverdriveItems.pattern_drive.getItemsAsNBT(patternDrive).tagCount();
+            if (patternDrive != null && patternDrive.getItem() instanceof IMatterPatternStorage)
+            {
+                if (((IMatterPatternStorage) patternDrive.getItem()).getItemsAsNBT(patternDrive) != null) {
+                    patternCount += ((IMatterPatternStorage) patternDrive.getItem()).getItemsAsNBT(patternDrive).tagCount();
+                }
             }
         }
         if (patternCount > 0)
@@ -152,10 +162,6 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
         super.writeCustomNBT(nbt, categories);
-        if (categories.contains(MachineNBTCategory.CONFIGS))
-        {
-            nbt.setString("DestinationFilter", destinationFilter);
-        }
         if (categories.contains(MachineNBTCategory.DATA))
         {
             taskQueueProcessing.writeToNBT(nbt);
@@ -166,10 +172,6 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
         super.readCustomNBT(nbt, categories);
-        if (categories.contains(MachineNBTCategory.CONFIGS))
-        {
-            destinationFilter = nbt.getString("DestinationFilter");
-        }
         if (categories.contains(MachineNBTCategory.DATA)) {
             taskQueueProcessing.readFromNBT(nbt);
         }
@@ -426,13 +428,8 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public String getDestinationFilter() {
-        return destinationFilter;
-    }
-
-    @Override
-    public void setDestinationFilter(String filter) {
-        destinationFilter = filter;
+    public NBTTagCompound getFilter() {
+        return componentMatterNetworkConfigs.getFilter();
     }
     //endregion
 }

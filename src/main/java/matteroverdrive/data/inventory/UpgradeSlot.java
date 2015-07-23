@@ -58,7 +58,7 @@ public class UpgradeSlot extends Slot
     }
 
     @Override
-    public IIcon getTexture()
+    public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("upgrade");
     }
@@ -68,4 +68,9 @@ public class UpgradeSlot extends Slot
 
     @Override
     public boolean keepOnDismatle(){return true;}
+
+    @Override
+    public String getUnlocalizedTooltip(){
+        return "gui.tooltip.slot.upgrade";
+    }
 }

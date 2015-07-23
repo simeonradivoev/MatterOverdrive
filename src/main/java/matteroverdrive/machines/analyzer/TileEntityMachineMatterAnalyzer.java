@@ -86,8 +86,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         taskQueueSending = new MatterNetworkTaskQueue<>(this,1);
         redstoneMode = Reference.MODE_REDSTONE_LOW;
         networkComponent = new MatterNetworkComponentAnalyzer(this);
-        componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
-        addComponent(componentMatterNetworkConfigs);
     }
 
     @Override
@@ -96,6 +94,13 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         input_slot = inventory.AddSlot(new MatterSlot(true));
         database_slot = inventory.AddSlot(new DatabaseSlot(true));
         super.RegisterSlots(inventory);
+    }
+
+    @Override
+    protected void registerComponents()
+    {
+        componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+        addComponent(componentMatterNetworkConfigs);
     }
 
     @Override
@@ -354,13 +359,8 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public boolean getHasValidPatternDestination(){return hasValidPatternDestination;}
 
     @Override
-    public String getDestinationFilter() {
-        return componentMatterNetworkConfigs.getDestinationFilter();
-    }
-
-    @Override
-    public void setDestinationFilter(String filter) {
-        componentMatterNetworkConfigs.setDestinationFilter(filter);
+    public NBTTagCompound getFilter() {
+        return componentMatterNetworkConfigs.getFilter();
     }
     //endregion
 }

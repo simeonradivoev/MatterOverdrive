@@ -55,7 +55,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 
     public GuiAndroidStation(InventoryPlayer inventoryPlayer, TileEntityAndroidStation machine)
     {
-        super(new ContainerAndroidStation(inventoryPlayer,machine), machine,364,364);
+        super(new ContainerAndroidStation(inventoryPlayer,machine), machine,364,250);
         texW = 255;
         texH = 237;
         AndroidPlayer androidPlayer = AndroidPlayer.get(inventoryPlayer.player);
@@ -64,18 +64,18 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 
         for (int i = 0;i < parts_slots.length;i++)
         {
-            parts_slots[i] = new ElementInventorySlot(this,(MOSlot)inventorySlots.getSlot(i),20,20,"holo",androidPlayer.getInventory().getSlot(i).getTexture());
+            parts_slots[i] = new ElementInventorySlot(this,(MOSlot)inventorySlots.getSlot(i),20,20,"holo",androidPlayer.getInventory().getSlot(i).getHoloIcon());
             parts_slots[i].setColor(Reference.COLOR_MATTER.getIntR(),Reference.COLOR_MATTER.getIntG(),Reference.COLOR_MATTER.getIntB(),78);
             parts_slots[i].setInfo("biopart." + BionicSlot.names[i] + ".name");
         }
 
-        parts_slots[Reference.BIONIC_HEAD].setPosition(220,250);
-        parts_slots[Reference.BIONIC_ARMS].setPosition(220,280);
-        parts_slots[Reference.BIONIC_LEGS].setPosition(220,310);
+        parts_slots[Reference.BIONIC_HEAD].setPosition(220,ySize - 110);
+        parts_slots[Reference.BIONIC_ARMS].setPosition(220,ySize - 80);
+        parts_slots[Reference.BIONIC_LEGS].setPosition(220,ySize - 50);
 
-        parts_slots[Reference.BIONIC_CHEST].setPosition(320,280);
-        parts_slots[Reference.BIONIC_OTHER].setPosition(320,250);
-        parts_slots[Reference.BIONIC_BATTERY].setPosition(320,310);
+        parts_slots[Reference.BIONIC_CHEST].setPosition(320,ySize - 110);
+        parts_slots[Reference.BIONIC_OTHER].setPosition(320,ySize - 80);
+        parts_slots[Reference.BIONIC_BATTERY].setPosition(320,ySize - 50);
         parts_slots[Reference.BIONIC_BATTERY].setIcon(ClientProxy.holoIcons.getIcon("battery"));
 
         addStat(androidPlayer, MatterOverdrive.statRegistry.teleport, 0, 0, ForgeDirection.UNKNOWN);
@@ -97,7 +97,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
     public void addStat(AndroidPlayer androidPlayer,IBionicStat stat,int x,int y,ForgeDirection direction)
     {
         ElementBioStat elemStat = new ElementBioStat(this,0,0,stat,androidPlayer.getUnlockedLevel(stat),androidPlayer,direction);
-        elemStat.setPosition(54 + x * 30,42 + y * 30);
+        elemStat.setPosition(54 + x * 30,36 + y * 30);
         stats.add(elemStat);
     }
 
@@ -153,7 +153,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
             //glBlendFunc(GL_ONE, GL_ONE);
             glEnable(GL_LIGHTING);
             glPushMatrix();
-            glTranslated(280, 255, 100);
+            glTranslated(280, ySize - 110, 100);
             glScaled(50, 50, 50);
             glRotated(180, 0, 0, 1);
             glRotated(Minecraft.getMinecraft().theWorld.getWorldTime(), 0, 1, 0);
@@ -165,7 +165,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
             String info = Minecraft.getMinecraft().thePlayer.experienceLevel + " XP";
             glDisable(GL_LIGHTING);
             int width = fontRendererObj.getStringWidth(info);
-            fontRendererObj.drawString(EnumChatFormatting.GREEN + info, 280 - width / 2, 345, 0xFFFFFF);
+            fontRendererObj.drawString(EnumChatFormatting.GREEN + info, 280 - width / 2, ySize - 20, 0xFFFFFF);
         }
     }
 }

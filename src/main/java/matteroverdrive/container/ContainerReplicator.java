@@ -20,9 +20,6 @@ package matteroverdrive.container;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.container.slot.SlotEnergy;
-import matteroverdrive.container.slot.SlotInventory;
-import matteroverdrive.container.slot.SlotRemoveOnly;
 import matteroverdrive.tile.TileEntityMachineReplicator;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,13 +38,7 @@ public class ContainerReplicator extends ContainerMachine<TileEntityMachineRepli
 	@Override
 	public void init(InventoryPlayer inventory)
 	{
-		this.addSlotToContainer(new SlotRemoveOnly(machine,machine.OUTPUT_SLOT_ID,70,52));
-		this.addSlotToContainer(new SlotRemoveOnly(machine,machine.SECOUND_OUTPUT_SLOT_ID,96,52));
-		this.addSlotToContainer(new SlotInventory(machine, machine.getInventoryContainer().getSlot(machine.DATABASE_SLOT_ID),8,79));
-		this.addSlotToContainer(new SlotInventory(machine, machine.getInventoryContainer().getSlot(this.machine.SHIELDING_SLOT_ID),8,106));
-		this.addSlotToContainer(new SlotEnergy(machine, this.machine.getEnergySlotID(),8,133));
-
-		super.init(inventory);
+		addAllSlotsFromInventory(machine.getInventoryContainer());
 		MOContainerHelper.AddPlayerSlots(inventory, this,45,89,true,true);
 	}
 

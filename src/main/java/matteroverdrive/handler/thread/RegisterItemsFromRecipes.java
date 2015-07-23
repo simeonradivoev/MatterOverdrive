@@ -18,18 +18,16 @@
 
 package matteroverdrive.handler.thread;
 
-import cpw.mods.fml.common.FMLLog;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.handler.MatterEntry;
+import matteroverdrive.util.MOLog;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.apache.logging.log4j.Level;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Simeon on 5/7/2015.
@@ -37,6 +35,7 @@ import java.io.IOException;
 public class RegisterItemsFromRecipes implements Runnable {
 
     String savePath;
+    public static final boolean DEBUG = false;
 
     public RegisterItemsFromRecipes(String savePath)
     {
@@ -48,56 +47,57 @@ public class RegisterItemsFromRecipes implements Runnable {
 
         long startTime = System.currentTimeMillis();
         int count = 0;
-        FMLLog.info("Calculation Required! Starting Matter Recipe Calculation !");
+        MOLog.log(Level.INFO, "Calculation Required! Starting Matter Recipe Calculation !");
 
+        List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+        for(IRecipe recipe : recipes) {
+            if (recipe == null)
+                continue;
 
-        for(Object recipe : CraftingManager.getInstance().getRecipeList())
-        {
             try {
-                if (recipe instanceof IRecipe) {
-                    ItemStack itemStack = ((IRecipe) recipe).getRecipeOutput();
+                ItemStack itemStack = recipe.getRecipeOutput();
+                if (itemStack != null) {
+                    if (DEBUG) MOLog.log(Level.DEBUG, "Calculating Recipe for: %s", recipe.getRecipeOutput().getUnlocalizedName());
+                    MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(itemStack);
+                    int matter = 0;
 
-                    if (itemStack != null) {
-                        MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(itemStack);
-                        int matter = 0;
+                    if (entry == null) {
+                        matter += MatterOverdrive.matterRegistry.getMatterFromRecipe(itemStack,true,0,true);
 
-                        if (entry == null) {
-                            if (recipe instanceof ShapedRecipes) {
-                                matter += MatterOverdrive.matterRegistry.getMatterFromList(itemStack, ((ShapedRecipes) recipe).recipeItems, true, 0,true);
-                            } else if (recipe instanceof ShapelessRecipes) {
-                                matter += MatterOverdrive.matterRegistry.getMatterFromList(itemStack, ((ShapelessRecipes) recipe).recipeItems.toArray(), true, 0,true);
-                            } else if (recipe instanceof ShapedOreRecipe) {
-                                matter += MatterOverdrive.matterRegistry.getMatterFromList(itemStack, ((ShapedOreRecipe) recipe).getInput(), true, 0,true);
-                            } else if (recipe instanceof ShapelessOreRecipe) {
-                                matter += MatterOverdrive.matterRegistry.getMatterFromList(itemStack,((ShapelessOreRecipe) recipe).getInput().toArray(), true, 0,true);
-                            }
-
-                            if (matter > 0) {
-                                MatterEntry e = MatterOverdrive.matterRegistry.register(itemStack, matter);
-                                e.setCalculated(true);
-                                count++;
-                            }
+                        if (matter > 0) {
+                            MatterEntry e = MatterOverdrive.matterRegistry.register(itemStack, matter);
+                            e.setCalculated(true);
+                            count++;
+                        } else {
+                            if (DEBUG) MOLog.log(Level.DEBUG, "Could not calculate recipe for: %s", recipe.getRecipeOutput().getUnlocalizedName());
                         }
+                    }else
+                    {
+                        if (DEBUG) MOLog.log(Level.DEBUG, "Entry for: %s is already present", recipe.getRecipeOutput().getUnlocalizedName());
                     }
                 }
-            }catch (Exception e)
-            {
-                e.printStackTrace();
+            } catch (Exception e) {
+                if (recipe.getRecipeOutput() != null)
+                {
+                    MOLog.log(Level.ERROR, e, "There was a problem calculating matter from recipe for %s", recipe.getRecipeOutput().getUnlocalizedName());
+                }else
+                {
+                    MOLog.log(Level.ERROR, e, "There was a problem calculating matter from recipe");
+                }
             }
         }
 
-        FMLLog.info("Matter Recipe Calculation, Complete ! Took " + (System.currentTimeMillis() - startTime) + " Milliseconds. Registered total of " + count + " items");
+        MOLog.log(Level.INFO, "Matter Recipe Calculation, Complete ! Took " + (System.currentTimeMillis() - startTime) + " Milliseconds. Registered total of " + count + " items");
         startTime = System.currentTimeMillis();
-        FMLLog.info("Saving Registry to Disk");
+        MOLog.log(Level.INFO,"Saving Registry to Disk");
         try
         {
             MatterOverdrive.matterRegistry.saveToFile(savePath);
-            FMLLog.info("Registry saved at: " + savePath + ". Took " + (System.currentTimeMillis() - startTime) + " Milliseconds.");
+            MOLog.log(Level.INFO, "Registry saved at: " + savePath + ". Took " + (System.currentTimeMillis() - startTime) + " Milliseconds.");
         }
         catch (IOException e)
         {
-            FMLLog.severe("Could not save registry to: " + savePath);
-            e.printStackTrace();
+            MOLog.log(Level.ERROR, e, "Could not save registry to: " + savePath);
         }
         MatterOverdrive.matterRegistry.hasComplitedRegistration = true;
 

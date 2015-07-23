@@ -39,11 +39,16 @@ public class DatabaseSlot extends Slot
     }
 
     @Override
-    public IIcon getTexture()
+    public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("scanner");
     }
 
     @Override
     public int getMaxStackSize(){return 1;}
+
+    @Override
+    public String getUnlocalizedTooltip(){
+        return "gui.tooltip.slot.database";
+    }
 }

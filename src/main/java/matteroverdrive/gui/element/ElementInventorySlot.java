@@ -36,11 +36,12 @@ public class ElementInventorySlot extends ElementSlot
     {
         super(gui, posX, posY,width,height, type,icon);
         this.slot = slot;
+
     }
 
     public ElementInventorySlot(GuiBase gui,MOSlot slot, int posX, int posY,int width,int height, String type)
     {
-        this(gui,slot, posX, posY,width,height, type,null);
+        this(gui,slot, posX, posY,width,height, type,slot.getHoloIcon());
     }
 
     public ElementInventorySlot(GuiBase gui,MOSlot slot,int width,int height, String type,IIcon icon) {
@@ -48,14 +49,14 @@ public class ElementInventorySlot extends ElementSlot
     }
 
     public ElementInventorySlot(GuiBase gui,MOSlot slot,int width,int height, String type) {
-        this(gui,slot, slot.xDisplayPosition, slot.yDisplayPosition, width,height,type,null);
+        this(gui,slot, slot.xDisplayPosition, slot.yDisplayPosition, width,height,type,slot.getHoloIcon());
     }
 
     public void addTooltip(List<String> list)
     {
-        if (!info.isEmpty() && !slot.getHasStack())
+        if (slot.getUnlocalizedTooltip() != null && !slot.getUnlocalizedTooltip().isEmpty() && !slot.getHasStack())
         {
-            list.add(StringHelper.localize(info));
+            list.add(StringHelper.localize(slot.getUnlocalizedTooltip()));
         }
     }
 
@@ -74,6 +75,12 @@ public class ElementInventorySlot extends ElementSlot
         }
 
         slot.setVisible(isVisible);
+    }
+
+    @Override
+    protected boolean canDrawIcon(IIcon icon)
+    {
+        return !slot.getHasStack();
     }
 
     public MOSlot getSlot() {

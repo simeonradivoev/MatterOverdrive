@@ -18,7 +18,9 @@
 
 package matteroverdrive.gui.pages;
 
+import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.gui.MOGuiMachine;
+import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.element.MOElementTextField;
 import matteroverdrive.gui.events.ITextHandler;
@@ -31,6 +33,7 @@ import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 public class MatterNetworkConfigPage extends ConfigPage implements ITextHandler
 {
     ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
+    ElementInventorySlot filterSlot;
     MOElementTextField destinationTextField;
 
     public MatterNetworkConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height,ComponentMatterNetworkConfigs componentMatterNetworkConfigs) {
@@ -40,6 +43,7 @@ public class MatterNetworkConfigPage extends ConfigPage implements ITextHandler
         destinationTextField.setBackground(MOElementButton.HOVER_TEXTURE_DARK);
         destinationTextField.setTextOffset(4, 3);
         this.componentMatterNetworkConfigs = componentMatterNetworkConfigs;
+        filterSlot = new ElementInventorySlot(gui,(MOSlot)machineGui.inventorySlots.getSlot(componentMatterNetworkConfigs.getDestinationFilterSlot()),164,80,22,22,"big");
     }
 
     @Override
@@ -50,6 +54,7 @@ public class MatterNetworkConfigPage extends ConfigPage implements ITextHandler
         if (componentMatterNetworkConfigs != null) {
             if (componentMatterNetworkConfigs.getDestinationFilter() != null)
                 destinationTextField.setText(componentMatterNetworkConfigs.getDestinationFilter());
+            addElement(filterSlot);
         }
     }
 

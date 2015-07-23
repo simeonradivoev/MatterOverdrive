@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.matter_network;
 
 import cofh.lib.util.position.BlockPosition;
@@ -15,7 +33,7 @@ import java.util.HashSet;
 public abstract class MatterNetworkPacket
 {
     protected BlockPosition senderPos;
-    protected BlockPosition receiverPos;
+    protected NBTTagCompound filter;
     protected HashSet<MatterNetworkPathNode> path;
 
 
@@ -26,12 +44,12 @@ public abstract class MatterNetworkPacket
         this.senderPos = senderPos;
         this.senderPos.setOrientation(port);
     }
-    public MatterNetworkPacket(BlockPosition senderPos,ForgeDirection port,BlockPosition receiverPos)
+    public MatterNetworkPacket(BlockPosition senderPos,ForgeDirection port,NBTTagCompound filter)
     {
         this();
         this.senderPos = senderPos;
         this.senderPos.setOrientation(port);
-        this.receiverPos = receiverPos;
+        this.filter = filter;
     }
 
     public MatterNetworkPacket addToPath(IMatterNetworkConnection connection,ForgeDirection recivedFrom)
@@ -68,9 +86,9 @@ public abstract class MatterNetworkPacket
             {
                 senderPos = new BlockPosition(tagCompound.getCompoundTag("Sender"));
             }
-            if (tagCompound.hasKey("Receiver",10))
+            if (tagCompound.hasKey("Filter",10))
             {
-                receiverPos = new BlockPosition(tagCompound.getCompoundTag("Receiver"));
+                filter = tagCompound.getCompoundTag("Filter");
             }
         }
     }
@@ -85,20 +103,19 @@ public abstract class MatterNetworkPacket
                 senderPos.writeToNBT(sender);
                 tagCompound.setTag("Sender",sender);
             }
-            if (receiverPos != null)
+            if (filter != null)
             {
-                NBTTagCompound receiver = new NBTTagCompound();
-                receiverPos.writeToNBT(receiver);
-                tagCompound.setTag("Receiver",receiver);
+                tagCompound.setTag("Filter",filter);
             }
         }
     }
 
     public abstract boolean isValid(World world);
 
-    public boolean isGuided(){return receiverPos != null;}
-
-    public BlockPosition getReceiverPos(){return receiverPos;}
+    public NBTTagCompound getFilter()
+    {
+        return filter;
+    }
 
     public abstract String getName();
 

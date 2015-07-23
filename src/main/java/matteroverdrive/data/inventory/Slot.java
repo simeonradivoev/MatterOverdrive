@@ -33,7 +33,7 @@ public class Slot
 
     public Slot(boolean isMainSlot) {this.isMainSlot = isMainSlot;}
     public boolean isValidForSlot(ItemStack item) {return true;}
-    public IIcon getTexture()
+    public IIcon getHoloIcon()
     {
         return null;
     }
@@ -63,4 +63,5 @@ public class Slot
         this.isMainSlot = mainSlot;
     }
     public int getMaxStackSize(){return 64;}
+    public String getUnlocalizedTooltip(){return null;}
 }
