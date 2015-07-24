@@ -16,22 +16,20 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api.renderer;
+package matteroverdrive.api.android;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.starmap.data.Galaxy;
-import matteroverdrive.starmap.data.SpaceBody;
-import matteroverdrive.tile.TileEntityMachineStarMap;
+import matteroverdrive.api.renderer.IBioticStatRenderer;
+
+import java.util.Collection;
 
 /**
- * Created by Simeon on 6/17/2015.
+ * Created by Simeon on 7/24/2015.
  */
 @SideOnly(Side.CLIENT)
-public interface ISpaceBodyHoloRenderer
+public interface IAndroidStatRenderRegistry
 {
-    void renderBody(Galaxy galaxy, SpaceBody spaceBody, TileEntityMachineStarMap starMap, float partialTicks,float viewerDistance);
-    void renderGUIInfo(Galaxy galaxy, SpaceBody spaceBody,TileEntityMachineStarMap starMap, float partialTicks,float opacity);
-    boolean displayOnZoom(int zoom,SpaceBody spaceBody);
-    double getHologramHeight(SpaceBody spaceBody);
+    Collection<IBioticStatRenderer> getRendererCollection(Class<? extends IBionicStat> stat);
+    boolean registerRenderer(Class<? extends IBionicStat> stat,IBioticStatRenderer renderer);
 }

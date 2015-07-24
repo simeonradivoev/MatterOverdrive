@@ -273,7 +273,12 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
     }
 
     @Override
-    public double getHologramHeight() {
+    public boolean displayOnZoom(int zoom, SpaceBody spaceBody) {
+        return zoom == 3;
+    }
+
+    @Override
+    public double getHologramHeight(SpaceBody spaceBody) {
         return 1.5;
     }
 }

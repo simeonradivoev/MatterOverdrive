@@ -22,21 +22,29 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import matteroverdrive.client.render.IWorldLastRenderer;
-import matteroverdrive.client.render.RenderMatterScannerInfoHandler;
-import matteroverdrive.client.render.RenderParticlesHandler;
-import matteroverdrive.client.render.RendererPhaserBeam;
-import matteroverdrive.client.render.biostat.BiostatRendererShield;
-import matteroverdrive.client.render.biostat.BiostatRendererTeleporter;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.android.IAndroidStatRenderRegistry;
+import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.renderer.IBioticStatRenderer;
+import matteroverdrive.api.starmap.IStarmapRenderRegistry;
+import matteroverdrive.client.render.*;
+import matteroverdrive.client.render.biostat.BioticStatRendererShield;
+import matteroverdrive.client.render.biostat.BioticStatRendererTeleporter;
 import matteroverdrive.client.render.block.*;
 import matteroverdrive.client.render.entity.*;
 import matteroverdrive.client.render.item.ItemRendererPhaser;
 import matteroverdrive.client.render.tileentity.*;
+import matteroverdrive.client.render.tileentity.starmap.*;
 import matteroverdrive.entity.*;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
+import matteroverdrive.starmap.data.Galaxy;
+import matteroverdrive.starmap.data.Planet;
+import matteroverdrive.starmap.data.Quadrant;
+import matteroverdrive.starmap.data.Star;
 import matteroverdrive.tile.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.world.World;
@@ -44,6 +52,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -57,6 +66,8 @@ public class RenderHandler
     private RenderParticlesHandler renderParticlesHandler;
     private RendererPhaserBeam rendererPhaserBeam;
     private List<IWorldLastRenderer> customRenderers;
+    private AndroidStatRenderRegistry statRenderRegistry;
+    private StarmapRenderRegistry starmapRenderRegistry;
 
     //region Block Renderers
     private MOBlockRenderer blockRenderer;
@@ -67,8 +78,15 @@ public class RenderHandler
     private RendererBlockReplicator rendererBlockReplicator;
     //endregion
     //region Biostat Renderers
-    private BiostatRendererTeleporter rendererTeleporter;
-    private BiostatRendererShield biostatRendererShield;
+    private BioticStatRendererTeleporter rendererTeleporter;
+    private BioticStatRendererShield biostatRendererShield;
+    //endregion
+    //region Starmap Renderers
+    private StarMapRendererPlanet starMapRendererPlanet;
+    private StarMapRendererQuadrant starMapRendererQuadrant;
+    private StarMapRendererStar starMapRendererStar;
+    private StarMapRenderGalaxy starMapRenderGalaxy;
+    private StarMapRenderPlanetStats starMapRenderPlanetStats;
     //endregion
     //region Item Renderers
     private static ItemRendererPhaser rendererPhaser;
@@ -102,14 +120,12 @@ public class RenderHandler
         customRenderers = new ArrayList<IWorldLastRenderer>();
         matterScannerInfoHandler = new RenderMatterScannerInfoHandler();
         renderParticlesHandler = new RenderParticlesHandler(world,textureManager);
-        rendererTeleporter = new BiostatRendererTeleporter();
-        biostatRendererShield = new BiostatRendererShield();
         rendererPhaserBeam = new RendererPhaserBeam();
+        statRenderRegistry = new AndroidStatRenderRegistry();
+        starmapRenderRegistry = new StarmapRenderRegistry();
 
         addCustomRenderer(matterScannerInfoHandler);
         addCustomRenderer(renderParticlesHandler);
-        addCustomRenderer(rendererTeleporter);
-        addCustomRenderer(biostatRendererShield);
         addCustomRenderer(rendererPhaserBeam);
     }
 
@@ -119,6 +135,17 @@ public class RenderHandler
         for (int i = 0;i < customRenderers.size();i++)
         {
             customRenderers.get(i).onRenderWorldLast(this,event);
+        }
+        for (IBionicStat stat : MatterOverdrive.statRegistry.getStats())
+        {
+            Collection<IBioticStatRenderer> statRendererCollection = statRenderRegistry.getRendererCollection(stat.getClass());
+            if (statRendererCollection != null)
+            {
+                for (IBioticStatRenderer renderer : statRendererCollection)
+                {
+                    renderer.onWorldRender(stat,AndroidPlayer.get(Minecraft.getMinecraft().thePlayer).getUnlockedLevel(stat),event);
+                }
+            }
         }
     }
 
@@ -213,6 +240,36 @@ public class RenderHandler
         RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class,rendererMadScientist);
     }
 
+    public void createBioticStatRenderers()
+    {
+        rendererTeleporter = new BioticStatRendererTeleporter();
+        biostatRendererShield = new BioticStatRendererShield();
+    }
+
+    public void registerBioticStatRenderers()
+    {
+        statRenderRegistry.registerRenderer(MatterOverdrive.statRegistry.shield.getClass(),biostatRendererShield);
+        statRenderRegistry.registerRenderer(MatterOverdrive.statRegistry.teleport.getClass(),rendererTeleporter);
+    }
+
+    public void createStarmapRenderers()
+    {
+        starMapRendererPlanet = new StarMapRendererPlanet();
+        starMapRendererQuadrant = new StarMapRendererQuadrant();
+        starMapRendererStar = new StarMapRendererStar();
+        starMapRenderGalaxy = new StarMapRenderGalaxy();
+        starMapRenderPlanetStats = new StarMapRenderPlanetStats();
+    }
+
+    public void registerStarmapRenderers()
+    {
+        starmapRenderRegistry.registerRenderer(Planet.class,starMapRendererPlanet);
+        starmapRenderRegistry.registerRenderer(Quadrant.class,starMapRendererQuadrant);
+        starmapRenderRegistry.registerRenderer(Star.class,starMapRendererStar);
+        starmapRenderRegistry.registerRenderer(Galaxy.class,starMapRenderGalaxy);
+        starmapRenderRegistry.registerRenderer(Planet.class,starMapRenderPlanetStats);
+    }
+
     public RenderParticlesHandler getRenderParticlesHandler()
     {
         return renderParticlesHandler;
@@ -221,6 +278,8 @@ public class RenderHandler
     {
         return tileEntityRendererStarMap;
     }
+    public IAndroidStatRenderRegistry getStatRenderRegistry(){return statRenderRegistry;}
+    public IStarmapRenderRegistry getStarmapRenderRegistry(){return starmapRenderRegistry;}
     public Random getRandom(){return random;}
     public void addCustomRenderer(IWorldLastRenderer renderer){customRenderers.add(renderer);}
 }

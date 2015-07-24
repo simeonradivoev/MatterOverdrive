@@ -20,9 +20,9 @@ package matteroverdrive.client.render.biostat;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.client.RenderHandler;
-import matteroverdrive.client.render.IWorldLastRenderer;
+import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.client.render.tileentity.TileEntityRendererGravitationalAnomaly;
+import matteroverdrive.data.biostats.BioticStatTeleport;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.proxy.ClientProxy;
@@ -36,9 +36,10 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by Simeon on 6/13/2015.
  */
-public class BiostatRendererTeleporter implements IWorldLastRenderer
+public class BioticStatRendererTeleporter implements IBioticStatRenderer<BioticStatTeleport>
 {
-    public void onRenderWorldLast(RenderHandler renderHandler,RenderWorldLastEvent event)
+    @Override
+    public void onWorldRender(BioticStatTeleport stat,int level,RenderWorldLastEvent event)
     {
         AndroidPlayer androidPlayer = AndroidPlayer.get(Minecraft.getMinecraft().thePlayer);
         Vec3 playerPos = androidPlayer.getPlayer().getPosition(event.partialTicks);

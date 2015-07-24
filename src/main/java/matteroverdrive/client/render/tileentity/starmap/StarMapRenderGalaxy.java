@@ -127,7 +127,12 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
     }
 
     @Override
-    public double getHologramHeight() {
+    public boolean displayOnZoom(int zoom, SpaceBody spaceBody) {
+        return true;
+    }
+
+    @Override
+    public double getHologramHeight(SpaceBody spaceBody) {
         return 2.5;
     }
 

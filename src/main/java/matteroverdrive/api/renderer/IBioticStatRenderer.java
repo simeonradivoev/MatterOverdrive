@@ -20,18 +20,14 @@ package matteroverdrive.api.renderer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.starmap.data.Galaxy;
-import matteroverdrive.starmap.data.SpaceBody;
-import matteroverdrive.tile.TileEntityMachineStarMap;
+import matteroverdrive.api.android.IBionicStat;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 /**
- * Created by Simeon on 6/17/2015.
+ * Created by Simeon on 7/24/2015.
  */
 @SideOnly(Side.CLIENT)
-public interface ISpaceBodyHoloRenderer
+public interface IBioticStatRenderer<T extends IBionicStat>
 {
-    void renderBody(Galaxy galaxy, SpaceBody spaceBody, TileEntityMachineStarMap starMap, float partialTicks,float viewerDistance);
-    void renderGUIInfo(Galaxy galaxy, SpaceBody spaceBody,TileEntityMachineStarMap starMap, float partialTicks,float opacity);
-    boolean displayOnZoom(int zoom,SpaceBody spaceBody);
-    double getHologramHeight(SpaceBody spaceBody);
+    void onWorldRender(T stat,int level,RenderWorldLastEvent event);
 }

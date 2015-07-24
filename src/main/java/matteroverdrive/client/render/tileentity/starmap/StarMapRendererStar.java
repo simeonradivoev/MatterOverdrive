@@ -197,6 +197,16 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
         }
     }
 
+    @Override
+    public boolean displayOnZoom(int zoom, SpaceBody spaceBody) {
+        return true;
+    }
+
+    @Override
+    public double getHologramHeight(SpaceBody spaceBody) {
+        return 1.5;
+    }
+
     private void drawPlanetInfo(Planet planet) {
         glTranslated(0, planet.getSize() * 0.13f + 0.05f, 0);
         glScaled(0.005, 0.005, 0.005);
@@ -244,10 +254,5 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
     private void bindTexture(ResourceLocation location)
     {
         Minecraft.getMinecraft().renderEngine.bindTexture(location);
-    }
-
-    @Override
-    public double getHologramHeight() {
-        return 1.5;
     }
 }

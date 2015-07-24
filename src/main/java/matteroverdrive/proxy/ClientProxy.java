@@ -60,10 +60,14 @@ public class ClientProxy extends CommonProxy
         renderHandler.createTileEntityRenderers(MatterOverdrive.configHandler);
         renderHandler.createItemRenderers();
         renderHandler.createEntityRenderers();
+        renderHandler.createBioticStatRenderers();
+        renderHandler.createStarmapRenderers();
         renderHandler.registerBlockRenderers();
         renderHandler.registerTileEntitySpecialRenderers();
         renderHandler.registerItemRenderers();
         renderHandler.registerEntityRenderers();
+        renderHandler.registerBioticStatRenderers();
+        renderHandler.registerStarmapRenderers();
         //endregion
 	}
 

@@ -20,8 +20,7 @@ package matteroverdrive.client.render.biostat;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.client.RenderHandler;
-import matteroverdrive.client.render.IWorldLastRenderer;
+import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.data.biostats.BioticStatShield;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.util.RenderUtils;
@@ -39,7 +38,7 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by Simeon on 6/7/2015.
  */
-public class BiostatRendererShield implements IWorldLastRenderer
+public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatShield>
 {
     public static final ResourceLocation forcefield_damage_tex = new ResourceLocation(Reference.PATH_FX + "shield_damage.png");
     public static final ResourceLocation forcefield_tex = new ResourceLocation(Reference.PATH_FX + "forcefield_plasma.png");
@@ -50,14 +49,15 @@ public class BiostatRendererShield implements IWorldLastRenderer
     IModelCustom shield_model;
     float opacityLerp;
 
-    public BiostatRendererShield()
+    public BioticStatRendererShield()
     {
         shield_model = AdvancedModelLoader.loadModel(model_path);
         normal_sphere = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.MODEL_SPHERE));
         opacityLerp = 0;
     }
 
-    public void onRenderWorldLast(RenderHandler handler,RenderWorldLastEvent event)
+    @Override
+    public void onWorldRender(BioticStatShield stat,int level,RenderWorldLastEvent event)
     {
         for (Object entity : Minecraft.getMinecraft().theWorld.playerEntities)
         {

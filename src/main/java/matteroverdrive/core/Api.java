@@ -18,10 +18,15 @@
 
 package matteroverdrive.core;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMOApi;
 import matteroverdrive.api.android.IAndroidStatRegistry;
+import matteroverdrive.api.android.IAndroidStatRenderRegistry;
 import matteroverdrive.api.matter.IMatterRegistry;
+import matteroverdrive.api.starmap.IStarmapRenderRegistry;
+import matteroverdrive.proxy.ClientProxy;
 
 /**
  * Created by Simeon on 7/20/2015.
@@ -37,4 +42,16 @@ public class Api implements IMOApi
     }
     @Override
     public IAndroidStatRegistry getAndroidStatRegistry() {return MatterOverdrive.statRegistry;}
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IAndroidStatRenderRegistry getAndroidStatRenderRegistry() {
+        return ClientProxy.renderHandler.getStatRenderRegistry();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IStarmapRenderRegistry getStarmapRenrerRegistry() {
+        return ClientProxy.renderHandler.getStarmapRenderRegistry();
+    }
 }

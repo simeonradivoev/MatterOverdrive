@@ -16,22 +16,28 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api.renderer;
+package matteroverdrive.api.events;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.starmap.data.Galaxy;
-import matteroverdrive.starmap.data.SpaceBody;
-import matteroverdrive.tile.TileEntityMachineStarMap;
+import cpw.mods.fml.common.eventhandler.Event;
+import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.renderer.IBioticStatRenderer;
 
 /**
- * Created by Simeon on 6/17/2015.
+ * Created by Simeon on 7/24/2015.
  */
-@SideOnly(Side.CLIENT)
-public interface ISpaceBodyHoloRenderer
+public class MOEventRegisterAndroidStatRenderer extends Event
 {
-    void renderBody(Galaxy galaxy, SpaceBody spaceBody, TileEntityMachineStarMap starMap, float partialTicks,float viewerDistance);
-    void renderGUIInfo(Galaxy galaxy, SpaceBody spaceBody,TileEntityMachineStarMap starMap, float partialTicks,float opacity);
-    boolean displayOnZoom(int zoom,SpaceBody spaceBody);
-    double getHologramHeight(SpaceBody spaceBody);
+    public final Class<? extends IBionicStat> statClass;
+    public final IBioticStatRenderer renderer;
+
+    public MOEventRegisterAndroidStatRenderer(Class<? extends IBionicStat> statClass,IBioticStatRenderer renderer)
+    {
+        this.statClass = statClass;
+        this.renderer = renderer;
+    }
+
+    public boolean isCancelable()
+    {
+        return true;
+    }
 }

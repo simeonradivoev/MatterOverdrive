@@ -16,22 +16,18 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api.renderer;
+package matteroverdrive.api.starmap;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.starmap.data.Galaxy;
+import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
 import matteroverdrive.starmap.data.SpaceBody;
-import matteroverdrive.tile.TileEntityMachineStarMap;
+
+import java.util.Collection;
 
 /**
- * Created by Simeon on 6/17/2015.
+ * Created by Simeon on 7/25/2015.
  */
-@SideOnly(Side.CLIENT)
-public interface ISpaceBodyHoloRenderer
+public interface IStarmapRenderRegistry
 {
-    void renderBody(Galaxy galaxy, SpaceBody spaceBody, TileEntityMachineStarMap starMap, float partialTicks,float viewerDistance);
-    void renderGUIInfo(Galaxy galaxy, SpaceBody spaceBody,TileEntityMachineStarMap starMap, float partialTicks,float opacity);
-    boolean displayOnZoom(int zoom,SpaceBody spaceBody);
-    double getHologramHeight(SpaceBody spaceBody);
+    boolean registerRenderer(Class<? extends SpaceBody> spaceBodyType,ISpaceBodyHoloRenderer renderer);
+    Collection<ISpaceBodyHoloRenderer> getStarmapRendererCollection(Class<? extends SpaceBody> spaceBodyType);
 }

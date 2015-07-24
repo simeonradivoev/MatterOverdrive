@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui;
 
 import cofh.lib.gui.GuiColor;
@@ -22,6 +40,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
+import java.util.Collection;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -81,21 +100,25 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int x, int y)
     {
-        super.drawGuiContainerBackgroundLayer(partialTick,x,y);
+        super.drawGuiContainerBackgroundLayer(partialTick, x, y);
 
         glPushMatrix();
         glTranslated(guiLeft, guiTop, 0);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
-        List<ISpaceBodyHoloRenderer> renderers = ClientProxy.renderHandler.getTileEntityRendererStarMap().getRenderers(machine.getZoomLevel());
-        if (renderers != null) {
-            for (ISpaceBodyHoloRenderer renderer : renderers) {
-                glPushMatrix();
-                glTranslated(xSize / 2, ySize, 0);
-                if (machine.getActiveSpaceBody() != null) {
-                    renderer.renderGUIInfo(GalaxyClient.getInstance().getTheGalaxy(), machine.getActiveSpaceBody(), machine, partialTick, 0.8f);
+        Collection<ISpaceBodyHoloRenderer> renderers = ClientProxy.renderHandler.getStarmapRenderRegistry().getStarmapRendererCollection(machine.getActiveSpaceBody().getClass());
+        if (renderers != null)
+        {
+            for (ISpaceBodyHoloRenderer renderer : renderers)
+            {
+                if (renderer.displayOnZoom(machine.getZoomLevel(),machine.getActiveSpaceBody())) {
+                    glPushMatrix();
+                    glTranslated(xSize / 2, ySize, 0);
+                    if (machine.getActiveSpaceBody() != null) {
+                        renderer.renderGUIInfo(GalaxyClient.getInstance().getTheGalaxy(), machine.getActiveSpaceBody(), machine, partialTick, 0.8f);
+                    }
+                    glPopMatrix();
                 }
-                glPopMatrix();
             }
         }
         glPopMatrix();

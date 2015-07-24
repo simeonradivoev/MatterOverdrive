@@ -146,4 +146,9 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
             }
         }
     }
+
+    @Override
+    public boolean displayOnZoom(int zoom, SpaceBody spaceBody) {
+        return zoom == 4;
+    }
 }
