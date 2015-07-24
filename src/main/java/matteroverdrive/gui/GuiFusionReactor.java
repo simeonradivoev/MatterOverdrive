@@ -87,7 +87,7 @@ public class GuiFusionReactor extends MOGuiMachine<TileEntityMachineFusionReacto
             yPos = 104 + MathHelper.round(Math.cos(angle) * 74);
             drawCenteredString(fontRendererObj, format.format(powerBar.getProgressRight() * 100) + "%", xPos, yPos, Reference.COLOR_MATTER.getColor());
 
-            info = "+" + machine.getEnergyPerTick() + MOEnergyHelper.ENERGY_UNIT + "/t";
+            info = "+" + ((ContainerFusionReactor)getContainer()).getEnergyPerTick() + MOEnergyHelper.ENERGY_UNIT + "/t";
             width = fontRendererObj.getStringWidth(info);
             xPos = 140 - width / 2;
             yPos = 110;

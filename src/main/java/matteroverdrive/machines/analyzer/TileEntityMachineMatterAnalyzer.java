@@ -362,5 +362,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public NBTTagCompound getFilter() {
         return componentMatterNetworkConfigs.getFilter();
     }
+    public float getProgress(){return (float)analyzeTime / (float)getSpeed();}
     //endregion
 }

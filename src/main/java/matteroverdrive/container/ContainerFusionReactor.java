@@ -30,7 +30,7 @@ import net.minecraft.inventory.ICrafting;
  */
 public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFusionReactorController>
 {
-    int lastEnergyPerTick;
+    protected int energyPerTick;
 
     public ContainerFusionReactor(InventoryPlayer inventory,TileEntityMachineFusionReactorController machine)
     {
@@ -59,12 +59,12 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
-            if(this.lastEnergyPerTick != this.machine.getEnergyPerTick())
+            if(this.energyPerTick != this.machine.getEnergyPerTick())
             {
                 icrafting.sendProgressBarUpdate(this, 0, this.machine.getEnergyPerTick());
             }
 
-            this.lastEnergyPerTick = this.machine.getEnergyPerTick();
+            this.energyPerTick = this.machine.getEnergyPerTick();
         }
     }
 
@@ -72,6 +72,11 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
     public void updateProgressBar(int slot,int newValue)
     {
         if(slot == 0)
-            this.machine.setEnergyPerTick(newValue);
+            energyPerTick = newValue;
+    }
+
+    public int getEnergyPerTick()
+    {
+        return energyPerTick;
     }
 }

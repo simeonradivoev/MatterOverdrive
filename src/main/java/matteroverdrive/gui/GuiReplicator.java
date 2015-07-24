@@ -24,7 +24,8 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.network.MatterNetworkTaskState;
-import matteroverdrive.container.ContainerReplicator;
+import matteroverdrive.container.ContainerFactory;
+import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.pages.PageTasks;
@@ -57,7 +58,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
 
 	public GuiReplicator(InventoryPlayer inventoryPlayer,TileEntityMachineReplicator entity)
     {
-		super(new ContainerReplicator(inventoryPlayer, entity),entity);
+		super(ContainerFactory.createMachineContainer(entity,inventoryPlayer),entity);
         name = "replicator";
 		matterElement = new ElementMatterStored(this,141,39,machine.getMatterStorage());
 		energyElement = new MOElementEnergy(this,167,39,machine.getEnergyStorage());
@@ -136,7 +137,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
 
         super.drawGuiContainerBackgroundLayer(partialTick,x,y);
 
-        replicate_progress.setQuantity(MathHelper.round(((float)this.machine.replicateProgress / 100f) * 24));
+        replicate_progress.setQuantity(MathHelper.round(((ContainerMachine)getContainer()).getProgress() * 24));
     }
 
 	@Override

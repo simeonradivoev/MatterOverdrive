@@ -95,6 +95,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         locations = new ArrayList<>();
         selectedLocation = 0;
         redstoneMode = Reference.MODE_REDSTONE_LOW;
+        playerSlotsHotbar = true;
     }
 
     @Override

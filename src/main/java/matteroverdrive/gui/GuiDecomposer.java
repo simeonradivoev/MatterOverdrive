@@ -21,7 +21,8 @@ package matteroverdrive.gui;
 import cofh.lib.gui.element.ElementDualScaled;
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
-import matteroverdrive.container.ContainerDecomposer;
+import matteroverdrive.container.ContainerFactory;
+import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementMatterStored;
 import matteroverdrive.gui.element.ElementSlot;
@@ -39,7 +40,7 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 
 	public GuiDecomposer(InventoryPlayer inventoryPlayer,TileEntityMachineDecomposer entity)
 	{
-		super(new ContainerDecomposer(inventoryPlayer,entity),entity);
+		super(ContainerFactory.createMachineContainer(entity,inventoryPlayer),entity);
 		name = "decomposer";
 		matterElement = new ElementMatterStored(this,74,39,machine.getMatterStorage());
 		energyElement = new MOElementEnergy(this,100,39,machine.getEnergyStorage());
@@ -71,16 +72,7 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 			int p_146976_2_, int p_146976_3_) 
 	{
 		super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
-		
-		//if(this.replicator.isDecomposing())
-		//{
-		//	
-		//}
-		
-		//docompose_progress.setQuantity(MathHelper.round(((float)this.replicator.decomposeTime / (float)this.replicator.DECEOPOSE_SPEED) * 24));
-
-
-		decompose_progress.setQuantity(MathHelper.round(((float)this.machine.decomposeProgress / 100f) * 24));
+		decompose_progress.setQuantity(MathHelper.round((((ContainerMachine)getContainer()).getProgress() * 24)));
 		ManageReqiremnetsTooltips();
 	}
 

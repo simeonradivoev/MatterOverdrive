@@ -18,24 +18,20 @@
 
 package matteroverdrive.container;
 
-import matteroverdrive.tile.TileEntityMachinePatternMonitor;
+import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 
 /**
- * Created by Simeon on 4/26/2015.
+ * Created by Simeon on 7/23/2015.
  */
-public class ContainerPatternMonitor extends ContainerMachine<TileEntityMachinePatternMonitor>
+public class ContainerFactory
 {
-    public ContainerPatternMonitor(InventoryPlayer inventoryPlayer,TileEntityMachinePatternMonitor patternStorage)
+    public static  <T extends MOTileEntityMachine> ContainerMachine<T> createMachineContainer(T machine,InventoryPlayer inventoryPlayer)
     {
-        super(inventoryPlayer, patternStorage);
-    }
-
-    @Override
-    public void init(InventoryPlayer inventoryPlayer)
-    {
-        addAllSlotsFromInventory(machine.getInventoryContainer());
-        MOContainerHelper.AddPlayerSlots(inventoryPlayer, this, 45, 89, false, true);
+        ContainerMachine<T> containerMachine = new ContainerMachine<>(inventoryPlayer,machine);
+        containerMachine.addAllSlotsFromInventory(machine.getInventoryContainer());
+        MOContainerHelper.AddPlayerSlots(inventoryPlayer,containerMachine,45, 89,machine.hasPlayerSlotsMain(),machine.hasPlayerSlotsHotbar());
+        return containerMachine;
     }
 }

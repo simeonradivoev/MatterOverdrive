@@ -20,7 +20,7 @@ package matteroverdrive.gui;
 
 import cofh.lib.gui.element.ElementEnergyStored;
 import matteroverdrive.Reference;
-import matteroverdrive.container.ContainerPatternStorage;
+import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.container.slot.SlotInventory;
 import matteroverdrive.data.inventory.PatternStorageSlot;
@@ -38,7 +38,7 @@ public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStor
 
     public GuiPatternStorage(InventoryPlayer playerInventory,TileEntityMachinePatternStorage patternStorage)
     {
-        super(new ContainerPatternStorage(playerInventory,patternStorage),patternStorage);
+        super(ContainerFactory.createMachineContainer(patternStorage,playerInventory),patternStorage);
         name = "pattern_storage";
         energyElement = new ElementEnergyStored(this,176,39,patternStorage.getEnergyStorage());
         energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);

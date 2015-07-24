@@ -40,47 +40,40 @@ import java.util.Map;
 
 public class GuiHandler implements IGuiHandler
 {
-    private Map<Class<? extends MOTileEntity>,Class<? extends MOGuiBase>> guis;
-    private Map<Class<? extends MOTileEntity>,Class<? extends MOBaseContainer>> containers;
+    private Map<Class<? extends MOTileEntity>,Class<? extends MOGuiBase>> tileEntityGuiList;
+    private Map<Class<? extends MOTileEntity>,Class<? extends MOBaseContainer>> tileEntityContainerList;
 
     public GuiHandler()
     {
-        guis = new HashMap<>();
-        containers = new HashMap<>();
+        tileEntityGuiList = new HashMap<>();
+        tileEntityContainerList = new HashMap<>();
     }
 
     public void register(Side side)
     {
         if (side == Side.SERVER)
         {
-            registerContainer(TileEntityMachineReplicator.class, ContainerReplicator.class);
-            registerContainer(TileEntityMachineDecomposer.class, ContainerDecomposer.class);
-            registerContainer(TileEntityMachineNetworkRouter.class, ContainerNetworkRouter.class);
-            registerContainer(TileEntityMachineMatterAnalyzer.class, ContainerMatterAnalyzer.class);
-            registerContainer(TileEntityMachinePatternStorage.class, ContainerPatternStorage.class);
+            //Container Registration
             registerContainer(TileEntityMachineSolarPanel.class, ContainerSolarPanel.class);
             registerContainer(TileEntityWeaponStation.class, ContainerWeaponStation.class);
-            registerContainer(TileEntityMachinePatternMonitor.class, ContainerPatternMonitor.class);
-            registerContainer(TileEntityMachineNetworkSwitch.class, ContainerNetworkSwitch.class);
-            registerContainer(TileEntityMachineTransporter.class, ContainerTransporter.class);
-            registerContainer(TileEntityMachineMatterRecycler.class,ContainerRecycler.class);
             registerContainer(TileEntityMachineFusionReactorController.class,ContainerFusionReactor.class);
             registerContainer(TileEntityAndroidStation.class,ContainerAndroidStation.class);
             registerContainer(TileEntityMachineStarMap.class,ContainerStarMap.class);
         }
         else
         {
-            registerGuiAndContainer(TileEntityMachineReplicator.class, GuiReplicator.class,ContainerReplicator.class);
-            registerGuiAndContainer(TileEntityMachineDecomposer.class, GuiDecomposer.class,ContainerDecomposer.class);
-            registerGuiAndContainer(TileEntityMachineNetworkRouter.class, GuiNetworkRouter.class,ContainerNetworkRouter.class);
-            registerGuiAndContainer(TileEntityMachineMatterAnalyzer.class, GuiMatterAnalyzer.class,ContainerMatterAnalyzer.class);
-            registerGuiAndContainer(TileEntityMachinePatternStorage.class, GuiPatternStorage.class,ContainerPatternStorage.class);
+            //Gui Registration
+            registerGui(TileEntityMachineReplicator.class, GuiReplicator.class);
+            registerGui(TileEntityMachineDecomposer.class, GuiDecomposer.class);
+            registerGui(TileEntityMachineNetworkRouter.class, GuiNetworkRouter.class);
+            registerGui(TileEntityMachineMatterAnalyzer.class, GuiMatterAnalyzer.class);
+            registerGui(TileEntityMachinePatternStorage.class, GuiPatternStorage.class);
             registerGuiAndContainer(TileEntityMachineSolarPanel.class, GuiSolarPanel.class,ContainerSolarPanel.class);
             registerGuiAndContainer(TileEntityWeaponStation.class, GuiWeaponStation.class,ContainerWeaponStation.class);
-            registerGuiAndContainer(TileEntityMachinePatternMonitor.class, GuiPatternMonitor.class,ContainerPatternMonitor.class);
-            registerGuiAndContainer(TileEntityMachineNetworkSwitch.class, GuiNetworkSwitch.class,ContainerNetworkSwitch.class);
-            registerGuiAndContainer(TileEntityMachineTransporter.class, GuiTransporter.class,ContainerTransporter.class);
-            registerGuiAndContainer(TileEntityMachineMatterRecycler.class, GuiRecycler.class, ContainerRecycler.class);
+            registerGui(TileEntityMachinePatternMonitor.class, GuiPatternMonitor.class);
+            registerGui(TileEntityMachineNetworkSwitch.class, GuiNetworkSwitch.class);
+            registerGui(TileEntityMachineTransporter.class,GuiTransporter.class);
+            registerGui(TileEntityMachineMatterRecycler.class, GuiRecycler.class);
             registerGuiAndContainer(TileEntityMachineFusionReactorController.class,GuiFusionReactor.class,ContainerFusionReactor.class);
             registerGuiAndContainer(TileEntityAndroidStation.class,GuiAndroidStation.class,ContainerAndroidStation.class);
             registerGuiAndContainer(TileEntityMachineStarMap.class,GuiStarMap.class,ContainerStarMap.class);
@@ -89,13 +82,18 @@ public class GuiHandler implements IGuiHandler
 
     public void registerContainer(Class<? extends MOTileEntity> tileEntity,Class<? extends  MOBaseContainer> container)
     {
-        containers.put(tileEntity, container);
+        tileEntityContainerList.put(tileEntity, container);
     }
 
     public void registerGuiAndContainer(Class<? extends MOTileEntity> tileEntity,Class<? extends MOGuiBase> gui,Class<? extends  MOBaseContainer> container)
     {
-        containers.put(tileEntity, container);
-        guis.put(tileEntity,gui);
+        tileEntityContainerList.put(tileEntity, container);
+        tileEntityGuiList.put(tileEntity, gui);
+    }
+
+    public void registerGui(Class<? extends MOTileEntity> tileEntity,Class<? extends MOGuiBase> gui)
+    {
+        tileEntityGuiList.put(tileEntity, gui);
     }
 
 	@Override
@@ -103,13 +101,12 @@ public class GuiHandler implements IGuiHandler
 			int x, int y, int z) {
 
 		TileEntity entity = world.getTileEntity(x, y, z);
-        //System.out.println("Trying to get container");
 
-        if (entity != null && containers.containsKey(entity.getClass()))
+        if (entity != null && tileEntityContainerList.containsKey(entity.getClass()))
         {
             try
             {
-                Class<? extends MOBaseContainer> containerClass = containers.get(entity.getClass());
+                Class<? extends MOBaseContainer> containerClass = tileEntityContainerList.get(entity.getClass());
                 Constructor[] constructors = containerClass.getDeclaredConstructors();
                 for (Constructor constructor : constructors)
                 {
@@ -124,12 +121,15 @@ public class GuiHandler implements IGuiHandler
                     }
                 }
             } catch (InvocationTargetException e) {
-                MOLog.log(Level.WARN, e, "Could call Tile Entity Constructor in Server GUI handling");
+                MOLog.log(Level.WARN, e, "Could not call Tile Entity Constructor in Server GUI handling");
             } catch (InstantiationException e) {
                 MOLog.log(Level.WARN, e, "Could not instantiate Tile Entity in Server GUI handling");
             } catch (IllegalAccessException e) {
                 MOLog.log(Level.WARN, e, "No Rights to access Tile Entity Constructor in Server GUI handling");
             }
+        }else if (entity instanceof MOTileEntityMachine)
+        {
+            return ContainerFactory.createMachineContainer((MOTileEntityMachine)entity,player.inventory);
         }
 		return null;
 	}
@@ -147,11 +147,11 @@ public class GuiHandler implements IGuiHandler
 			int x, int y, int z) {
 		TileEntity entity = world.getTileEntity(x, y, z);
 
-        if (guis.containsKey(entity.getClass()))
+        if (tileEntityGuiList.containsKey(entity.getClass()))
         {
             try {
 
-                Class<? extends MOGuiBase> containerClass = guis.get(entity.getClass());
+                Class<? extends MOGuiBase> containerClass = tileEntityGuiList.get(entity.getClass());
                 Constructor[] constructors = containerClass.getDeclaredConstructors();
                 for (Constructor constructor : constructors)
                 {
@@ -166,7 +166,7 @@ public class GuiHandler implements IGuiHandler
                     }
                 }
             } catch (InvocationTargetException e) {
-                MOLog.log(Level.WARN, e, "Could call Tile Entity Constructor in Client GUI handling");
+                MOLog.log(Level.WARN, e, "Could not call Tile Entity Constructor in Client GUI handling");
             } catch (InstantiationException e) {
                 MOLog.log(Level.WARN, e, "Could not instantiate Tile Entity in Client GUI handling");
             } catch (IllegalAccessException e) {

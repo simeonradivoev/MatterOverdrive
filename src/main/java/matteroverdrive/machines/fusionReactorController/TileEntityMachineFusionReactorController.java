@@ -376,11 +376,6 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         return energyPerTick;
     }
 
-    public void setEnergyPerTick(int energy)
-    {
-        energyPerTick = energy;
-    }
-
     public double getGravitationalAnomalyEnergyMultiply()
     {
         if (anomalyPosition != null)

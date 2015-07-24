@@ -21,7 +21,7 @@ package matteroverdrive.gui;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.MatterNetworkTaskState;
-import matteroverdrive.container.ContainerPatternMonitor;
+import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.element.ElementMonitorItemPattern;
 import matteroverdrive.gui.element.ElementPatternsGrid;
@@ -51,7 +51,7 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
 
     public GuiPatternMonitor(InventoryPlayer inventoryPlayer, TileEntityMachinePatternMonitor machine)
     {
-        super(new ContainerPatternMonitor(inventoryPlayer, machine), machine);
+        super(ContainerFactory.createMachineContainer(machine,inventoryPlayer), machine);
         name = "pattern_monitor";
         refreshButton = new MOElementButton(this,this,6,45,"Refresh",0,0,22,0,22,22, "");
         refreshButton.setTexture(Reference.PATH_GUI_ITEM + "refresh.png", 44, 22);

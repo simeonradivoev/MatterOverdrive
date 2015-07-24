@@ -58,7 +58,6 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     private TimeTracker time;
     private static Random random = new Random();
 	public int decomposeTime;
-    public int decomposeProgress;
 	
 	public TileEntityMachineDecomposer()
 	{
@@ -72,6 +71,8 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         this.matterStorage.setMaxExtract(MATTER_STORAGE);
         time = new TimeTracker();
         redstoneMode = Reference.MODE_REDSTONE_LOW;
+        playerSlotsMain = true;
+        playerSlotsHotbar = true;
 	}
 
     @Override
@@ -151,16 +152,13 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
                         this.decomposeTime = 0;
                         this.decomposeItem();
                     }
-
-                    decomposeProgress = Math.round(((float) (decomposeTime) / (float) getSpeed()) * 100);
                 }
             }
         }
 
         if (!this.isDecomposing())
-            {
+        {
 			this.decomposeTime = 0;
-                decomposeProgress = 0;
 		}
 	}
 
@@ -342,5 +340,11 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     @Override
     public void onDestroyed() {
 
+    }
+
+    @Override
+    public float getProgress()
+    {
+        return (float) (decomposeTime) / (float) getSpeed();
     }
 }

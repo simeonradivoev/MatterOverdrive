@@ -78,6 +78,8 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         this.taskQueueProcessing = new MatterNetworkPacketQueue(this,1);
         redstoneMode = Reference.MODE_REDSTONE_LOW;
         networkComponent = new MatterNetworkComponentPatternStorage(this);
+        playerSlotsHotbar = true;
+        playerSlotsMain = true;
     }
 
     @Override

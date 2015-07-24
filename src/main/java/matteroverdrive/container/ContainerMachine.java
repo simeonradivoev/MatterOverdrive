@@ -19,12 +19,15 @@
 package matteroverdrive.container;
 
 import cofh.lib.util.helpers.InventoryHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.container.slot.SlotInventory;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.UpgradeSlot;
 import matteroverdrive.machines.MOTileEntityMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -37,6 +40,7 @@ import java.util.List;
 public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseContainer
 {
     protected T machine;
+    protected int progressScaled;
 
     public ContainerMachine()
     {
@@ -52,12 +56,39 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 
     protected void init(InventoryPlayer inventory)
     {
-        AddUpgradeSlots(machine.getInventoryContainer(), 77, 52);
+        //AddUpgradeSlots(machine.getInventoryContainer(), 77, 52);
+    }
+
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+        if (this.machine != null) {
+            short progressScaled = (short) (this.machine.getProgress() * Short.MAX_VALUE);
+            for (Object icrafting : this.crafters) {
+                if (this.progressScaled != progressScaled) {
+                    ((ICrafting) icrafting).sendProgressBarUpdate(this, 0, progressScaled);
+                }
+
+                this.progressScaled = progressScaled;
+            }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int slot,int newValue)
+    {
+        if(slot == 0)
+            this.progressScaled = newValue;
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer p_75145_1_) {
         return true;
+    }
+
+    public void AddUpgradeSlots(Inventory inventory)
+    {
+        AddUpgradeSlots(inventory,0,0);
     }
 
     public void AddUpgradeSlots(Inventory inventory,int x, int y)
@@ -135,5 +166,10 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
     public T getMachine()
     {
         return machine;
+    }
+
+    public float getProgress()
+    {
+        return (float)progressScaled / (float)Short.MAX_VALUE;
     }
 }

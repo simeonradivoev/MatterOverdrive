@@ -67,6 +67,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
         databases = new HashSet<>();
         searchDelayTracker = new TimeTracker();
         networkComponent = new MatterNetworkComponentPatternMonitor(this);
+        playerSlotsHotbar = true;
     }
 
     @Override

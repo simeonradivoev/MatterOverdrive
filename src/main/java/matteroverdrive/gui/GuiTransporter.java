@@ -19,7 +19,7 @@
 package matteroverdrive.gui;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.container.ContainerTransporter;
+import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import matteroverdrive.network.packet.server.PacketTransporterCommands;
@@ -51,7 +51,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
 
     public GuiTransporter(InventoryPlayer inventoryPlayer,TileEntityMachineTransporter machine)
     {
-        super(new ContainerTransporter(inventoryPlayer,machine), machine,225,220);
+        super(ContainerFactory.createMachineContainer(machine,inventoryPlayer), machine,225,220);
         energy = new MOElementEnergy(this,xSize - 35,50,machine.getEnergyStorage());
         matterStored = new ElementMatterStored(this,xSize - 35,100,machine.getMatterStorage());
 

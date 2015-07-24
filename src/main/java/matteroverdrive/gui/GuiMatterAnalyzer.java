@@ -19,7 +19,8 @@
 package matteroverdrive.gui;
 
 import matteroverdrive.Reference;
-import matteroverdrive.container.ContainerMatterAnalyzer;
+import matteroverdrive.container.ContainerFactory;
+import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.element.ElementScanProgress;
 import matteroverdrive.gui.element.MOElementEnergy;
@@ -39,7 +40,7 @@ public class GuiMatterAnalyzer extends MOGuiNetworkMachine<TileEntityMachineMatt
 
     public GuiMatterAnalyzer(InventoryPlayer playerInventory,TileEntityMachineMatterAnalyzer analyzer)
     {
-        super(new ContainerMatterAnalyzer(playerInventory,analyzer),analyzer);
+        super(ContainerFactory.createMachineContainer(analyzer,playerInventory),analyzer);
         name = "matter_analyzer";
         energyElement = new MOElementEnergy(this,176,39,analyzer.getEnergyStorage());
         energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
@@ -73,7 +74,7 @@ public class GuiMatterAnalyzer extends MOGuiNetworkMachine<TileEntityMachineMatt
     {
         super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
 
-        scanProgress.setProgress(((float) this.machine.analyzeTime / (float) machine.getSpeed()));
+        scanProgress.setProgress(((ContainerMachine)getContainer()).getProgress());
         
         if(this.machine.getStackInSlot(machine.input_slot) != null)
         {

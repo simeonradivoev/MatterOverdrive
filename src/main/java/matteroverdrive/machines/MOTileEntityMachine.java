@@ -84,6 +84,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     private int upgradeSlotCount;
     private int[] upgrade_slots;
     protected List<IMachineComponent> components;
+    protected boolean playerSlotsHotbar,playerSlotsMain;
 
     public MOTileEntityMachine(int upgradeCount)
     {
@@ -708,5 +709,8 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
         return null;
     }
+    public boolean hasPlayerSlotsHotbar(){return playerSlotsHotbar;}
+    public boolean hasPlayerSlotsMain(){return playerSlotsMain;}
+    public float getProgress(){return 0;}
     //endregion
 }

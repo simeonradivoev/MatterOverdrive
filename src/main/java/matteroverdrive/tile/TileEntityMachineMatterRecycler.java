@@ -43,7 +43,6 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     public static final int ENERGY_STORAGE = 512000;
     public int OUTPUT_SLOT_ID;
     public int INPUT_SLOT_ID;
-    public int recycleProgress;
     public int recycleTime;
 
     public static final int RECYCLE_SPEED_PER_MATTER = 80;
@@ -56,6 +55,8 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
         this.energyStorage.setMaxExtract(ENERGY_STORAGE);
         this.energyStorage.setMaxReceive(ENERGY_STORAGE);
         redstoneMode = Reference.MODE_REDSTONE_LOW;
+        playerSlotsHotbar = true;
+        playerSlotsMain = true;
     }
 
     @Override
@@ -117,7 +118,6 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
                 {
                     this.recycleTime++;
                     extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(), false);
-                    recycleProgress = Math.round(((float) (recycleTime) / (float) getSpeed()) * 100);
 
                     if (this.recycleTime >= getSpeed())
                     {
@@ -131,7 +131,6 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
         if (!this.isRecycling())
         {
             this.recycleTime = 0;
-            recycleProgress = 0;
         }
     }
 
@@ -268,4 +267,6 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     public void onDestroyed() {
 
     }
+
+    public float getProgress(){return (float) (recycleTime) / (float) getSpeed();}
 }

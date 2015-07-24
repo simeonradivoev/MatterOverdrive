@@ -21,7 +21,8 @@ package matteroverdrive.gui;
 import cofh.lib.gui.element.ElementDualScaled;
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
-import matteroverdrive.container.ContainerRecycler;
+import matteroverdrive.container.ContainerFactory;
+import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementSlot;
 import matteroverdrive.gui.element.MOElementEnergy;
@@ -39,7 +40,7 @@ public class GuiRecycler extends MOGuiMachine<TileEntityMachineMatterRecycler>
     ElementSlot outputSlot;
 
     public GuiRecycler(InventoryPlayer inventoryPlayer, TileEntityMachineMatterRecycler machine) {
-        super(new ContainerRecycler(inventoryPlayer,machine), machine);
+        super(ContainerFactory.createMachineContainer(machine,inventoryPlayer), machine);
 
         name = "recycler";
         energyElement = new MOElementEnergy(this,100,39,machine.getEnergyStorage());
@@ -69,7 +70,7 @@ public class GuiRecycler extends MOGuiMachine<TileEntityMachineMatterRecycler>
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
                                                    int p_146976_2_, int p_146976_3_) {
         super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
-        recycle_progress.setQuantity(MathHelper.round(((float) this.machine.recycleProgress / 100f) * 24));
+        recycle_progress.setQuantity(MathHelper.round(((ContainerMachine)getContainer()).getProgress() * 24));
         ManageReqiremnetsTooltips();
     }
 

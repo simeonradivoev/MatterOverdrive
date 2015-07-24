@@ -29,6 +29,7 @@ import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -64,7 +65,7 @@ public class NetworkFlashDrive extends MOBaseItem implements IMatterNetworkFilte
                 Block block = pos.getBlock(player.worldObj);
                 if (block != null)
                 {
-                    infos.add(String.format("[%s,%s,%s] %s", pos.x, pos.y, pos.z,block.getLocalizedName()));
+                    infos.add(String.format("[%s,%s,%s] %s", pos.x, pos.y, pos.z,block != Blocks.air ? block.getLocalizedName() : "Unknown"));
                 }
             }
         }

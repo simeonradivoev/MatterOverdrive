@@ -94,7 +94,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     private int replicateAnimationCounter;
 	
 	public int replicateTime;
-    public int replicateProgress;
+    private float replicateProgress;
 
     private MatterNetworkComponentReplicator networkComponent;
     private ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
@@ -114,6 +114,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         taskQueueProcessing = new MatterNetworkTaskQueue<>(this,1);
         networkComponent = new MatterNetworkComponentReplicator(this);
         timeTracker = new TimeTracker();
+        playerSlotsMain = true;
+        playerSlotsHotbar = true;
 	}
 
     protected void RegisterSlots(Inventory inventory)
@@ -168,7 +170,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                         manageRadiation();
                     }
 
-                    replicateProgress = (int) (((float) replicateTime / (float) time) * 100f);
+                    replicateProgress = (float) replicateTime / (float) time;
                 }
             }
             else
@@ -636,6 +638,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     public NBTTagCompound getFilter() {
         return componentMatterNetworkConfigs.getFilter();
+    }
+    @Override
+    public float getProgress()
+    {
+        return replicateProgress;
     }
     //endregion
 }
