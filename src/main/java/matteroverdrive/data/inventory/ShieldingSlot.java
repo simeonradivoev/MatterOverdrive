@@ -18,6 +18,8 @@
 
 package matteroverdrive.data.inventory;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
@@ -45,6 +47,7 @@ public class ShieldingSlot extends Slot
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("shielding");

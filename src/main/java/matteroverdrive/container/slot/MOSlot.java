@@ -30,7 +30,6 @@ import net.minecraft.util.IIcon;
  */
 public class MOSlot extends Slot
 {
-    protected IIcon holoIcon;
     boolean isVisible = true;
     protected String unlocalizedTooltip;
 
@@ -63,9 +62,10 @@ public class MOSlot extends Slot
         this.isVisible = visible;
     }
 
+    @SideOnly(Side.CLIENT)
     public IIcon getHoloIcon()
     {
-        return holoIcon;
+        return null;
     }
 
     public String getUnlocalizedTooltip()

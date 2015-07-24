@@ -18,6 +18,8 @@
 
 package matteroverdrive.data.inventory;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.IUpgradeable;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.inventory.UpgradeTypes;
@@ -58,6 +60,7 @@ public class UpgradeSlot extends Slot
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("upgrade");

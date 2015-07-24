@@ -18,9 +18,12 @@
 
 package matteroverdrive.container.slot;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.data.inventory.Slot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
 /**
  * Created by Simeon on 5/15/2015.
@@ -33,7 +36,6 @@ public class SlotInventory extends MOSlot {
     {
         super(inventory, slot.getId(), x, y);
         this.slot = slot;
-        holoIcon = slot.getHoloIcon();
     }
 
     public boolean isItemValid(ItemStack itemStack)
@@ -54,5 +56,12 @@ public class SlotInventory extends MOSlot {
     public String getUnlocalizedTooltip()
     {
         return slot.getUnlocalizedTooltip();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getHoloIcon()
+    {
+        return slot.getHoloIcon();
     }
 }

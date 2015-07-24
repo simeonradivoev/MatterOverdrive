@@ -18,6 +18,8 @@
 
 package matteroverdrive.data.inventory;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.item.ItemStack;
@@ -39,6 +41,7 @@ public class MatterSlot extends Slot
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("decompose");

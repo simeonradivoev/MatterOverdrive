@@ -18,6 +18,8 @@
 
 package matteroverdrive.data.inventory;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
@@ -39,6 +41,7 @@ public class PatternStorageSlot extends Slot
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("pattern_storage");

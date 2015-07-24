@@ -18,6 +18,8 @@
 
 package matteroverdrive.data.inventory;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
@@ -41,6 +43,7 @@ public class BionicSlot extends Slot
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public boolean isValidForSlot(ItemStack item)
     {
         return item.getItem() instanceof IBionicPart && ((IBionicPart) item.getItem()).getType(item) == type;

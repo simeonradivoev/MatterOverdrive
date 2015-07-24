@@ -19,6 +19,8 @@
 package matteroverdrive.data.inventory;
 
 import cofh.lib.util.helpers.EnergyHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.proxy.ClientProxy;
@@ -59,6 +61,7 @@ public class ModuleSlot extends Slot
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getHoloIcon()
     {
         switch (type)

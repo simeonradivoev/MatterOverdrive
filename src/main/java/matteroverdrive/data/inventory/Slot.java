@@ -18,6 +18,8 @@
 
 package matteroverdrive.data.inventory;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
@@ -33,6 +35,7 @@ public class Slot
 
     public Slot(boolean isMainSlot) {this.isMainSlot = isMainSlot;}
     public boolean isValidForSlot(ItemStack item) {return true;}
+    @SideOnly(Side.CLIENT)
     public IIcon getHoloIcon()
     {
         return null;

@@ -19,6 +19,8 @@
 package matteroverdrive.data.inventory;
 
 import cofh.lib.util.helpers.EnergyHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -39,6 +41,7 @@ public class EnergySlot extends Slot
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("energy");
