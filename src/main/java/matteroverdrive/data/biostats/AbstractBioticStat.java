@@ -180,7 +180,7 @@ public abstract class AbstractBioticStat implements IBionicStat
 
         if (root != null)
         {
-            reqires += EnumChatFormatting.GOLD+"[" + root.getDisplayName(android,0) + "]";
+            reqires += EnumChatFormatting.GOLD+String.format("[%s%s]",root.getDisplayName(android,0),root.maxLevel() > 1 ? " " + root.maxLevel() : "");
         }
 
         if (reqiredItems.size() > 0)
