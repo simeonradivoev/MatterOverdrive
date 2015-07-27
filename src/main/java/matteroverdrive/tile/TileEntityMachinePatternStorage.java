@@ -230,7 +230,8 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
         if (!MatterHelper.CanScan(itemStack))
         {
-            info.append(String.format("%s%s cannot be analyzed!",EnumChatFormatting.RED,itemStack.getDisplayName()));
+            if (info != null)
+                info.append(String.format("%s%s cannot be analyzed!",EnumChatFormatting.RED,itemStack.getDisplayName()));
             return false;
         }
 

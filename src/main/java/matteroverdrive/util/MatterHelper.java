@@ -151,7 +151,7 @@ public class MatterHelper
 		{
 			Block block = Block.getBlockFromItem(item);
 			
-			if(block == Blocks.bedrock || block == Blocks.obsidian)
+			if(block == Blocks.bedrock || block == Blocks.air)
 			{
 				return false;
 			}
