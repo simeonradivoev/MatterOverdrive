@@ -1,3 +1,6 @@
+##########################################################################################################
+# Items
+
 item.matter_scanner.name=Scanner de matière
 item.emergency_ration.name=Ration de secours
 item.phaser.name=Phaseur
@@ -21,8 +24,10 @@ item.tritanium_ingot.name=Lingot de tritanium
 item.tritanium_plate.name=Plaque de tritanium
 item.tritanium_dust.name=Poudre de tritanium
 item.pattern_drive.name=Conducteur de modèle
-item.pattern_drive.details=Stckez 2 modèles d'objet
+item.pattern_drive.details=Stockez 2 modèles d'objet
 item.earl_gray_tea.name=Thé. Earl Grey. Chaud.
+item.romulan_ale.name=Bière Romulienne
+item.romulan_ale.details=Boisson alcoolique hautement toxique d'origine Romulienne
 item.security_protocol.empty.name=Protocole de sécurité
 item.security_protocol.claim.name=Protocole de sécurité [Revendiquer]
 item.security_protocol.claim.description=Réclamez les machines
@@ -33,16 +38,30 @@ item.security_protocol.remove.description=Supprimez la revendication des machine
 item.security_protocol.invalid=Protocole de sécurité invalide
 item.tritanium_wrench.name=Clé en tritanium
 item.tritanium_wrench.details=Désassemblez en sécurité et tournez les machines
-item.spacetime_equalizer.name=Égaliseur Spatio-temporel
+item.spacetime_equalizer.name=Égaliseur spatio-temporel
 item.spacetime_equalizer.details=Peut être conseillé sur le coffre pour nier les forces gravitationnelles
 item.rouge_android_part.head.name=Tête d'androïde
 item.rouge_android_part.arms.name=Bras d'androïde
 item.rouge_android_part.legs.name=Jambe d'androïde
 item.rouge_android_part.chest.name=Torse d'androïde
-item.forcefield_emitter.name=Eméteur de champ de force
+item.forcefield_emitter.name=Émetteur de champ de force
 item.hc_battery.name=Batterie haute capacité
-item.ship_factory.name=Vaiseau usine
+item.ship_factory.name=Usine à vaisseau
+item.ship_factory.details=Permet la construction de vaisseaux
 item.scout_ship.name=Vaiseau éclaireur
+item.scout_ship.details=Vaisseau rapide, Utilisé pour la reconnaissance
+item.ship_colonizer.name=Vaiseau colonisateur
+item.ship_colonizer.details=Utilisé pour revendiquer les planètes par la construction d'une base à son arrivée
+item.building_base.name=Base
+item.building_base.details=Construction principale, nécessaire pout tout
+item.android_pill_red.name=Pilule rouge
+item.android_pill_red.details=Prenez la pilule rouge et perdez ce que vous transportez
+item.android_pill_blue.name=Pilule bleue
+item.android_pill_blue.details=Prenez la pilule bleue et réveillerez vous dans votre lit rien de plus sage
+item.creative_pattern_drive.name=Plan d'entrainement créatif
+item.creative_pattern_drive.details=Contains most replicatable items\nRight Click while sneaking to reload
+item.network_flash_drive.name=Mémoire flash réseau
+item.network_flash_drive.details=utilisé comme filtre dans les dispositifs du réseau de matière
 
 item.upgrade.speed.name=Amélioration de vitesse
 item.upgrade.power.name=Amélioration de puissance
@@ -54,14 +73,32 @@ item.weapon_module_color.name=Module de couleur
 item.weapon_module_barrel.damage.name=Matrice de concentration en dilithium 
 item.weapon_module_barrel.fire.name=Filtre incendiaire
 item.weapon_module_barrel.explosion.name=Tambour inductif à explosion
+item.weapon_module_barrel.heal.name=Converteur de régénération
 
+##########################################################################################################
+# Tile Entities
+
+//////////// Replicator ////////////
 tile.replicator.name=Réplicateur de matière
 tile.replicator.config.volume.replicate=Volume de réplication
 tile.replicator.config.particles.vent=Ventilateur de particules
+tile.replicator.config.storage.matter=Stockage de matière
+tile.replicator.config.storage.energy=Stockage d'énergie
+tile.replicator.config.cost.replication.energy=Coût énergétique par matière
+tile.replicator.config.speed.replication=Vitesse par matière
+tile.replicator.config.fail=Possibilité d'échouer
 tile.replicator.details=Réplique les éléments et les blocs depuis le plasma de matière
 tile.replicator_active.name=Réplicateur de matière
+
+//////////// Decomposer ////////////
 tile.decomposer.name=Décomposeur de matière
 tile.decomposer.details=Décompose les éléments en  plasma de matière
+tile.decomposer.config.storage.matter=Stockage de matière
+tile.decomposer.config.storage.energy=Stockage d'énergie
+tile.decomposer.config.speed.decompose=Vitesse de décomposition
+tile.decomposer.config.cost.decompose=Coût de décomposition
+
+
 tile.matter_pipe.name=Tuyau de transport de matière
 tile.matter_pipe.details=Transporte le plasma de matière
 tile.network_pipe.name=Câble du réseau de matière
@@ -77,9 +114,14 @@ tile.matter_analyzer.details=Analyse les modèles d'éléments
 tile.dilithium_ore.name=Minerai de dilithium
 tile.tritanium_ore.name=Minerai de tritanium
 tile.tritanium_block.name=Bloc de tritanium
+
+//////////// Pattern Storage ////////////
 tile.pattern_storage.name=Stockage de modèles
 tile.pattern_storage.details=Stocke les modèles d'éléments pour la réplication
 tile.pattern_storage.config.particles.vent=Ventilateur de particules
+tile.pattern_storage.config.storage.energy=Stockage d'énergie
+tile.pattern_storage.config.transfer.energy=Vitesse de transfert d"énergie
+
 tile.machine_hull.name=Coque de machine
 tile.solar_panel.name=Panneau solaire
 tile.solar_panel.details=Produit des RF à partir du soleil
@@ -93,14 +135,26 @@ tile.gravitational_stabilizer.name=Stabilisateurs gravitationnels
 tile.gravitational_stabilizer.details=Utilisé pour supprimer les effets des anomalies gravitationnelles
 tile.matter_recycler.name=Recycleur de matière
 tile.matter_recycler.details=Utilisé pour recycler des éléments, préparer à la décomposition
+
+//////////// Fusion Reactor ////////////
 tile.fusion_reactor_controller.name=Contrôleur de réacteur à fusion
+tile.fusion_reactor_controller.config.storage.energy=Stockage d'énergie
+tile.fusion_reactor_controller.config.storage.matter=Stockage de matière
+tile.fusion_reactor_controller.config.output.energy=Sortie d'énergie
+tile.fusion_reactor_controller.config.drain.matter=Évacuation de matière
+tile.fusion_reactor_controller.config.distance.anomaly=Distance maxi de l'anomalie
+tile.fusion_reactor_controller.config.check.delay=Délai de vérification de la structure
 tile.fusion_reactor_controller.details=Contrôleur principal du réacteur à fusion
 tile.fusion_reactor_coil.name=Bobine de réacteur à fusion
 tile.fusion_reactor_coil.details=Utilisé pour confiner le plasma dans le réacteur à fusion
+
+//////////// Android Station ////////////
 tile.android_station.name=Station d'androïdes
 tile.android_station.details=Amélioration de gestion des androïdes
 tile.star_map.name=Carte des étoiles
 tile.star_map.details=Utilisé pour la gestion de galaxie
+tile.charging_station.name=Station de chargement
+tile.charging_station.details=utilisé pour charger les androïdes
 container.replicator.name=Réplicateur
 machine.tooltip.matter=Matière
 machine.tooltip.energy=Chargé
@@ -110,6 +164,8 @@ entity.failed_pig.name=Cochon raté
 entity.failed_chicken.name=Poule ratée
 entity.failed_cow.name=Vache ratée
 entity.failed_sheep.name=Mouton raté
+
+//////////// Mad Scientist ///////////////
 entity.mad_scientist.name=Scientifique fou
 entity.mad_scientist.line.fail.0=Vous n'avez pas toutes les parties de l'androïde !
 entity.mad_scientist.line.fail.1=Je ne vous donnerai pas orte laquelle de mes parties !
@@ -123,10 +179,18 @@ entity.mad_scientist.line.success.1=Il VIE! Il VIE! Mouha ha ha ha! Il VIE!
 entity.mad_scientist.line.success.2=Vous etes maintenant l'un des notres ! Allez mon enfant !
 entity.mad_scientist.line.success.3=Tout semble bon, on a juste oublié de vous mettre le nez.
 
-itemGroup.tabMatterOverdrive=Overdrive à matière
-itemGroup.tabMatterOverdrive_modules=Overdrive à matière: Modules
-itemGroup.tabMatterOverdrive_upgrades=Overdrive à matière: Améliorations
 
+##########################################################################################################
+# Creative Panels
+itemGroup.tabMatterOverdrive=Matter Overdrive
+itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Modules
+itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Améliorations
+itemGroup.tabMatterOverdrive_food=Matter Overdrive: Nouriture
+itemGroup.tabMatterOverdrive_ships=Matter Overdrive: Vaisseaux
+itemGroup.tabMatterOverdrive_buildings=Matter Overdrive: Constructions
+
+##########################################################################################################
+# Upgrade Types
 upgradetype.Speed.name=Temps
 upgradetype.PowerUsage.name=Consommation
 upgradetype.Output.name=Sortie
@@ -135,14 +199,20 @@ upgradetype.Fail.name=Échec
 upgradetype.Range.name=Portée
 upgradetype.PowerStorage.name=Stockage
 
+##########################################################################################################
+# Weapon Stats
 weaponstat.0.name=Dommage
 weaponstat.1.name=Minution
 weaponstat.2.name=Effet
-weaponstat.3.name=portée
+weaponstat.3.name=Portée
 weaponstat.4.name=Dégats par le feu
 weaponstat.5.name=Dégats du bloc
 weaponstat.6.name=Dégats d'explosion
 weaponstat.7.name=Cadence de tir
+weaponstat.8.name=Santé
+
+##########################################################################################################
+# GUI
 
 gui.replicator.name=Réplicateur de matière
 gui.decomposer.name=Décomposeur de matière
@@ -154,44 +224,69 @@ gui.pattern_monitor.name=Moniteur de modèle
 gui.network_switch.name=Concentrateur réseau
 gui.recycler.name=Recycleur de matière
 gui.fusion_reactor.name=Réacteur à fusion
-gui.android_hud.transforming.line.0=Booting up System
-gui.android_hud.transforming.line.1=Constructing Neural Pathways
-gui.android_hud.transforming.line.2=Neural Configurations in Progress
-gui.android_hud.transforming.line.3=Installing Drivers
-gui.android_hud.transforming.line.4=Adjusting Artificial Limbs
-gui.android_hud.transforming.line.5=Purging Biological Contaminants
-gui.android_hud.transforming.line.final=Transformation in Progress
-gui.hologram.access_denied=ACCESS DENIED
-gui.tooltip.close_menu=Close Menu
-gui.tooltip.open_menu=Open Menu
-gui.tooltip.close=Close
-gui.tooltip.page.home=Home
+gui.android_hud.transforming.line.0=Démarrage système
+gui.android_hud.transforming.line.1=Construction des chemins neurales
+gui.android_hud.transforming.line.2=Configurations neurales en cours
+gui.android_hud.transforming.line.3=Installation des pilotes
+gui.android_hud.transforming.line.4=Réglage des prothèses
+gui.android_hud.transforming.line.5=Épuration des polluants biologiques
+gui.android_hud.transforming.line.final=Transformation en cours
+gui.hologram.access_denied=ACCÈS REFUSÉ
+gui.tooltip.close_menu=Fermer le menu
+gui.tooltip.open_menu=Ouvrir le menu
+gui.tooltip.close=Fermer
+gui.tooltip.page.home=Début
 gui.tooltip.page.configurations=Configurations
-gui.tooltip.page.upgrades=Upgrades
-gui.tooltip.page.tasks=Tasks
-gui.tooltip.page.scan_info=Scan Info
-gui.tooltip.page.galaxy=Galaxy
+gui.tooltip.page.upgrades=Améliorations
+gui.tooltip.page.tasks=Taches
+gui.tooltip.page.scan_info=Info du scan
+gui.tooltip.page.galaxy=Galaxie
 gui.tooltip.page.quadrant=Quadrant
-gui.tooltip.page.star=Planetary System
-gui.tooltip.page.planet=Planet
-gui.tooltip.page.planet_stats=Planet Stats
-gui.tooltip.button.refresh=Refresh List
-gui.tooltip.button.request=Send Requests
-gui.tooltip.matter=Matter
-gui.tooltip.matter.none=None
-gui.tooltip.energy.io=Input/Output
-gui.tooltip.requires=Requires
-gui.tooltip.scout_button=Send Scout Ships, to discover the planet and start building
-gui.redstone_mode.high=High
-gui.redstone_mode.low=Low
-gui.redstone_mode.disabled=Disabled
+gui.tooltip.page.star=Système planétaire
+gui.tooltip.page.planet=Planète
+gui.tooltip.page.planet_stats=Stats de la planète
+gui.tooltip.button.refresh=Rafraîchir la Liste
+gui.tooltip.button.request=Envoyer les demandes
+gui.tooltip.matter=Matière
+gui.tooltip.matter.none=Aucune
+gui.tooltip.energy.io=Entrée/Sortie
+gui.tooltip.requires=Exigés
+gui.tooltip.scout_button=Envoyez des vaiseaux éclaireurs, pour découvrir la planète et commencer les constructions
+gui.tooltip.slot.bionic.head=Tête
+gui.tooltip.slot.bionic.arms=Bras
+gui.tooltip.slot.bionic.legs=Jambes
+gui.tooltip.slot.bionic.chest=Coffre
+gui.tooltip.slot.bionic.other=Autre
+gui.tooltip.slot.bionic.battery=Batterie
+gui.tooltip.slot.database=Base de données des modèles
+gui.tooltip.slot.filter=Filtre réseau
+gui.tooltip.slot.energy=Energie RF
+gui.tooltip.slot.matter=Matière
+gui.tooltip.slot.pattern_storage=Stockage de modèles
+gui.tooltip.slot.shielding=Protégé
+gui.tooltip.slot.upgrade=Améliorable
+gui.tooltip.slot.recycle=Recyclable
+gui.tooltip.slot.weapon=Armement
+gui.redstone_mode.high=Haut
+gui.redstone_mode.low=Bas
+gui.redstone_mode.disabled=Désactivé
 gui.config.redstone=Redstone
-gui.config.owner=Owner
-gui.label.button.save=Save
-gui.label.button.remove=Remove
-gui.label.button.add=Add
-gui.label.button.reset=Reset
-gui.label.button.scout=Send Scout
+gui.config.owner=Propriétaire
+gui.config.mnet.address=Adresse
+gui.label.button.save=Sauvegarder
+gui.label.button.remove=Supprimer
+gui.label.button.add=Ajouter
+gui.label.button.reset=Mettre à zéro
+gui.label.button.scout=Envoyer l'éclaireur
+
+### GUI Tooltips ###
+gui.tooltip.starmap.no_ship_space=Pas assez d'espace de vaiseau
+gui.tooltip.starmap.no_building_space=Pas assez d'espace de construction
+gui.tooltip.starmap.no_ship_factory=Pas d'usine à vaiseau
+gui.tooltip.starmap.has_base=Base déjà présente
+
+##########################################################################################################
+# Modules
 
 module.battery.name=Module de batterie
 module.color.name=Module de couleur
@@ -210,12 +305,18 @@ module.barrel.name=Module de baril
 module.sights.name=Module de curiosités
 module.other.name=Autres modules
 
+##########################################################################################################
+# Bioparts
+
 biopart.head.name=Tête
 biopart.arms.name=Bras
 biopart.legs.name=jambes
 biopart.chest.name=Coffre
 biopart.other.name=Autre
 biopart.battery.name=Batterie
+
+##########################################################################################################
+# Biostats
 
 biotic_stat.teleport.name=Ender Teleporter
 biotic_stat.teleport.details=Allows for short teleports by hitting the '%1$s' key /n/Each Teleport takes %2$s /n/A battery capable of extracting %2$s is required
@@ -232,38 +333,50 @@ biotic_stat.high_jump.details=Enables higher jumping while sneaking /n/Each jump
 biotic_stat.equalizer.name=Space-Time Equalizer
 biotic_stat.equalizer.details=Internal Space-Time Equalizer /n/that negates the gravitational effects of /n/Gravitational Anomalies
 biotic_stat.shield.name=Plasma Shield
-biotic_stat.shield.details=Protects the player from projectiles /n/To enable, hold the '%1$s' key while sneaking
+biotic_stat.shield.details=Protects the player from projectiles
 biotic_stat.attack.name=Attack Boost
 biotic_stat.attack.details=Increases attack power by %1$s
+biotic_stat.cloak.name=Cloak
+biotic_stat.cloak.details=Allows the player to go invisible. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
+biotic_stat.nightvision.name=Night Vision
+biotic_stat.nightvision.details=Allows the player to see in the dark. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
+
+##########################################################################################################
+# Deaths
 
 death.attack.phaser=%1$s a été désintégré par %2$s
 death.attack.phaser.item=%1$s a été désintégré par %2$s avec %3$s
 death.attack.blackHole=%1$s a été écrasé par une anomalie gravitationnelle
 death.attack.android_transformation=%1$s a fini son existence biologique
 
-task.state.-1.name=Invalide
-task.state.-1.description=Cette tâche n'est pas valide.
-task.state.0.name=Inconnue
-task.state.0.description=Inconnue
-task.state.1.name=En attente
-task.state.1.description=En attente de trouver un récepteur.
-task.state.2.name=Mise en file
-task.state.2.description=Récepteur trouvé.\nEn file pour traitement.
-task.state.3.name=Traitement
-task.state.3.description=Patientez la fin du traitement.
-task.state.4.name=Fini
-task.state.4.description=La tâche is achevée.
+##########################################################################################################
+# Tasks
 
-task.store_pattern.state.1.description=Searching for Pattern Storage.
-task.store_pattern.state.2.description=Queued in Machine.\n Waiting to Processing.
-task.store_pattern.state.3.description=Currently Storing Item Pattern.
-task.store_pattern.state.4.description=Item Pattern Successfully Stored.
+task.state.INVALID.name=Invalide
+task.state.INVALID.description=La tache n'est pas valide.
+task.state.UNKNOWN.name=Inconnue
+task.state.UNKNOWN.description=Inconnue
+task.state.WAITING.name=En attente
+task.state.WAITING.description=En attente de trouver le récepteur.
+task.state.QUEUED.name=Dans la file
+task.state.QUEUED.description=Récepteur trouvé.\nTraitement en attente.
+task.state.PROCESSING.name=Traitement
+task.state.PROCESSING.description=En attente de la fin du traitement.
+task.state.FINISHED.name=Achevée
+task.state.FINISHED.description=La tache est achevée.
 
-task.replicate_pattern.state.1.description=Searching for Available Replicators.
+task.store_pattern.state.WAITING.description=Searching for Pattern Storage.
+task.store_pattern.state.QUEUED.description=Queued in Machine.\n Waiting to Processing.
+task.store_pattern.state.PROCESSING.description=Currently Storing Item Pattern.
+task.store_pattern.state.FINISHED.description=Item Pattern Successfully Stored.
 
-info.mo.updater.download=download
-info.mo.updater.hover=Click to download the latest version.
+task.replicate_pattern.state.WAITING.description=Searching for Available Replicators.
 
+info.mo.updater.download=téléchargement
+info.mo.updater.hover=Cliquez pour télécharger la dernière version.
+
+##########################################################################################################
+# Config
 config.machine_options.name=Machines
 config.world_gen.name=Génération du monde
 config.matter_network.name=Réseau de matière
@@ -275,6 +388,11 @@ config.spawn_ores.name=Minerai généré
 config.client.name=Options client
 config.server.name=Options serveur
 config.starmap.name=Options de la carte des étoiles
+config.ore_gen_blacklist.name=Ore Dimension Blacklist
+config.abilities.name=Android Abilities
+
+##########################################################################################################
+# Chat Alerts
 
 alert.no_rights=No Rights to Access the $0
 alert.no_access_default=Access denied to $0
@@ -282,3 +400,5 @@ alert.not_android=Biological Entity Detected! Access Denied!
 alert.no_rights.brake=Only the owner can brake the $0
 alert.no_rights.dismantle=Only the owner can dismantle the $0
 alert.new_update=A new version is available!
+alert.starmap.ship_arrive=§3%1$s §rhas arrived at §3%2$s§r!
+alert.starmap.on_build=§3%1$s §rwas built at §3%2$s§r!
