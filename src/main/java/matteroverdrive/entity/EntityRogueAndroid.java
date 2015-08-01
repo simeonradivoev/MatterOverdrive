@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.entity;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -37,6 +55,8 @@ public class EntityRogueAndroid implements IConfigSubscriber
 
     private static void addInBiome(BiomeGenBase[] biomes)
     {
+        loadBlacklist(MatterOverdrive.configHandler);
+
         for (int i = 0;i < biomes.length;i++)
         {
             if (biomes[i] != null)
@@ -65,12 +85,17 @@ public class EntityRogueAndroid implements IConfigSubscriber
         if (spawnListEntry != null)
         {
             spawnListEntry.itemWeight = config.config.getInt("rogue_android.spawn.chance", ConfigurationHandler.CATEGORY_WORLD_GEN,3,0,100,"The spawn change of the Rogue Android");
-            biomesBlacklist.clear();
-            String[] blacklist = config.config.getStringList("rouge.biome.blacklist", ConfigurationHandler.CATEGORY_WORLD_GEN,new String[]{"Hell","Sky"},"The blacklist for Android spawn biomes");
-            for (int i = 0;i < blacklist.length;i++)
-            {
-                biomesBlacklist.add(blacklist[i].toLowerCase());
-            }
+            loadBlacklist(config);
+        }
+    }
+
+    private static void loadBlacklist(ConfigurationHandler config)
+    {
+        biomesBlacklist.clear();
+        String[] blacklist = config.config.getStringList("rouge.biome.blacklist", ConfigurationHandler.CATEGORY_WORLD_GEN,new String[]{"Hell","Sky"},"The blacklist for Android spawn biomes");
+        for (int i = 0;i < blacklist.length;i++)
+        {
+            biomesBlacklist.add(blacklist[i].toLowerCase());
         }
     }
 }
