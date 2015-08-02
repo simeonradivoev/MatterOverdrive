@@ -9,6 +9,7 @@ configFile.withReader {
 }
 
 apply plugin: 'forge'
+apply plugin: 'maven'
 apply from: 'gradle/scripts/dependencies.gradle'
 apply from: 'gradle/scripts/artifacts.gradle'
 
