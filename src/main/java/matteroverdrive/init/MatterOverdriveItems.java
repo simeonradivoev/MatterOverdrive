@@ -31,7 +31,10 @@ import matteroverdrive.items.starmap.ItemBuildingBase;
 import matteroverdrive.items.starmap.ItemColonizerShip;
 import matteroverdrive.items.starmap.ItemScoutShip;
 import matteroverdrive.items.starmap.ShipFactory;
+import matteroverdrive.items.weapon.EnergyPack;
+import matteroverdrive.items.weapon.EnergyPackRecipe;
 import matteroverdrive.items.weapon.Phaser;
+import matteroverdrive.items.weapon.PhaserRifle;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import net.minecraft.init.Blocks;
@@ -50,8 +53,8 @@ public class MatterOverdriveItems
     public static RomulanAle romulan_ale;
 	public static MOBaseItem me_conversion_matrix;
 	public static Phaser phaser;
-	public static MOBaseItem battery;
-    public static MOBaseItem hc_battery;
+	public static Battery battery;
+    public static Battery hc_battery;
 	public static MOBaseItem creative_battery;
 	public static MatterDust matter_dust;
 	public static MatterDust matter_dust_refined;
@@ -80,6 +83,8 @@ public class MatterOverdriveItems
     public static AndroidPill androidPill;
     public static NetworkFlashDrive flashDrive;
     public static CreativePatternDrive creativePatternDrive;
+    public static PhaserRifle phaserRifle;
+    public static EnergyPack energyPack;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -120,6 +125,8 @@ public class MatterOverdriveItems
         androidPill = new AndroidPill("android_pill");
         flashDrive = new NetworkFlashDrive("network_flash_drive",Reference.COLOR_YELLOW_STRIPES);
         creativePatternDrive = new CreativePatternDrive("creative_pattern_drive",0);
+        phaserRifle = new PhaserRifle("phaser_rifle");
+        energyPack = new EnergyPack("energy_pack");
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -165,9 +172,11 @@ public class MatterOverdriveItems
         androidPill.register();
         flashDrive.register();
         creativePatternDrive.register();
+        phaserRifle.register();
+        energyPack.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
-        GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre),new ItemStack(tritanium_ingot),10);
+        GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);
 
 		GameRegistry.addRecipe(new ItemStack(battery), " R ", "TGT", "TDT", 'T', tritanium_ingot, 'D', MatterOverdriveItems.dilithium_ctystal, 'R', Items.redstone, 'G', Items.gold_ingot);
         GameRegistry.addRecipe(new ItemStack(hc_battery)," P ","DBD"," P ",'B',battery,'D',dilithium_ctystal,'P',tritanium_plate);
@@ -182,10 +191,12 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new ItemStack(pattern_drive)," M ", "RER"," C ",'M',machine_casing,'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'R',Items.redstone);
         GameRegistry.addRecipe(new ItemStack(security_protocol),"PP", "CP",'P',Items.paper,'C',new ItemStack(isolinear_circuit,1,0));
         GameRegistry.addRecipe(new ItemStack(wrench),"T T"," Y "," T ",'T',tritanium_ingot,'Y',new ItemStack(Blocks.wool,1,4));
-        GameRegistry.addRecipe(new ItemStack(spacetime_equalizer)," M ","EHE", " M ",'M',s_magnet,'E',Items.ender_pearl,'H',h_compensator);
-        GameRegistry.addRecipe(new ItemStack(forceFieldEmitter),"CDC","CDC","PCP",'P',tritanium_plate,'E',Items.ender_pearl,'D',dilithium_ctystal,'2',new ItemStack(isolinear_circuit,1,1),'C',s_magnet);
+        GameRegistry.addRecipe(new ItemStack(spacetime_equalizer), " M ", "EHE", " M ", 'M', s_magnet, 'E', Items.ender_pearl, 'H', h_compensator);
+        GameRegistry.addRecipe(new ItemStack(forceFieldEmitter), "CDC", "CDC", "P1P", 'P', tritanium_plate, 'E', Items.ender_pearl, 'D', dilithium_ctystal, '1', new ItemStack(isolinear_circuit, 1), 'C', s_magnet);
         GameRegistry.addRecipe(new ItemStack(flashDrive)," I ","RCR"," I ",'I',Items.iron_ingot,'R',Items.redstone,'C',new ItemStack(isolinear_circuit,1,1));
-
+        GameRegistry.addRecipe(new EnergyPackRecipe(new ItemStack(tritanium_plate), new ItemStack(battery), new ItemStack(Items.gunpowder)));
+        GameRegistry.addRecipe(new EnergyPackRecipe(new ItemStack(tritanium_plate), new ItemStack(hc_battery), new ItemStack(Items.gunpowder)));
+        GameRegistry.addRecipe(new ItemStack(phaserRifle),"III","GCF"," WB",'I',Items.iron_ingot,'C',new ItemStack(isolinear_circuit,1,3),'W',Blocks.wool,'G',Blocks.glass,'D',dilithium_ctystal,'F',forceFieldEmitter,'B',battery);
         MatterOverdrive.matterRegistry.register(emergency_ration, 3);
         MatterOverdrive.matterRegistry.register(earl_gray_tea, 2);
         MatterOverdrive.matterRegistry.register(romulan_ale, 2);

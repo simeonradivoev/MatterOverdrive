@@ -19,16 +19,19 @@
 package matteroverdrive.proxy;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.gui.GuiAndroidHud;
+import matteroverdrive.handler.ClientWeaponHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.MouseHandler;
 import matteroverdrive.handler.TooltipHandler;
 import matteroverdrive.init.MatterOverdriveIcons;
+import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.starmap.GalaxyClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,6 +44,7 @@ public class ClientProxy extends CommonProxy
     public static MouseHandler mouseHandler;
     public static GuiAndroidHud androidHud;
     public static HoloIcons holoIcons;
+    public static ClientWeaponHandler weaponHandler;
 
     @Override
 	public void registerProxies()
@@ -52,6 +56,7 @@ public class ClientProxy extends CommonProxy
         keyHandler = new KeyHandler();
         mouseHandler = new MouseHandler();
         holoIcons = new HoloIcons();
+        weaponHandler = new ClientWeaponHandler();
 
         registerSubscribtions();
 
@@ -97,5 +102,13 @@ public class ClientProxy extends CommonProxy
     public EntityPlayer getPlayerEntity(MessageContext ctx)
     {
         return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : super.getPlayerEntity(ctx));
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event)
+    {
+        super.init(event);
+        weaponHandler.registerWeapon(MatterOverdriveItems.phaserRifle);
+        weaponHandler.registerWeapon(MatterOverdriveItems.phaser);
     }
 }

@@ -70,6 +70,7 @@ public class BioticStatSpeed extends AbstractBioticStat
     public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
     {
         AttributeModifier instance = androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.movementSpeed).getModifier(modiferID);
+
         if (instance == null)
         {
             if (enabled) {

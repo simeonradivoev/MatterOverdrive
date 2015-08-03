@@ -33,9 +33,11 @@ import matteroverdrive.client.render.biostat.BioticStatRendererTeleporter;
 import matteroverdrive.client.render.block.*;
 import matteroverdrive.client.render.entity.*;
 import matteroverdrive.client.render.item.ItemRendererPhaser;
+import matteroverdrive.client.render.item.ItemRendererPhaserRifle;
 import matteroverdrive.client.render.tileentity.*;
 import matteroverdrive.client.render.tileentity.starmap.*;
 import matteroverdrive.entity.*;
+import matteroverdrive.entity.weapon.PhaserFire;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
@@ -90,6 +92,7 @@ public class RenderHandler
     //endregion
     //region Item Renderers
     private static ItemRendererPhaser rendererPhaser;
+    private static ItemRendererPhaserRifle rendererPhaserRifle;
     //endregion
     //region Entity Renderers
     private EntityRendererRougeAndroid rendererRougeAndroid;
@@ -98,6 +101,7 @@ public class RenderHandler
     private EntityRendererFailedChicken rendererFailedChicken;
     private EntityRendererFailedPig rendererFailedPig;
     private EntityRendererFailedSheep rendererFailedSheep;
+    private EntityRendererPhaserFire rendererPhaserFire;
     //endregion
     //region Tile Entity Renderers
     private TileEntityRendererReplicator tileEntityRendererReplicator;
@@ -213,11 +217,13 @@ public class RenderHandler
     public void createItemRenderers()
     {
         rendererPhaser = new ItemRendererPhaser();
+        rendererPhaserRifle = new ItemRendererPhaserRifle();
     }
 
     public void registerItemRenderers()
     {
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser, rendererPhaser);
+        MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaserRifle,rendererPhaserRifle);
     }
 
     public void createEntityRenderers()
@@ -228,6 +234,7 @@ public class RenderHandler
         rendererFaildCow = new EntityRendererFaildCow(new ModelCow(),0.7f);
         rendererFailedChicken = new EntityRendererFailedChicken(new ModelChicken(),0.3f);
         rendererFailedSheep = new EntityRendererFailedSheep(new ModelSheep2(),new ModelSheep1(),0.7f);
+        rendererPhaserFire = new EntityRendererPhaserFire();
     }
 
     public void registerEntityRenderers()
@@ -237,7 +244,8 @@ public class RenderHandler
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedCow.class,rendererFaildCow);
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedChicken.class,rendererFailedChicken);
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedSheep.class,rendererFailedSheep);
-        RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class,rendererMadScientist);
+        RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class, rendererMadScientist);
+        RenderingRegistry.registerEntityRenderingHandler(PhaserFire.class, rendererPhaserFire);
     }
 
     public void createBioticStatRenderers()

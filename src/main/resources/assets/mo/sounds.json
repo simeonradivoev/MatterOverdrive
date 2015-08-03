@@ -48,5 +48,9 @@
     "shield_hit_0": {"category": "player","sounds": [{"name": "shield_hit_0", "stream": false}]},
     "shield_hit_1": {"category": "player","sounds": [{"name": "shield_hit_1", "stream": false}]},
     "cloak_on": {"category": "player","sounds": [{"name": "entities/cloak_on", "stream": false}]},
-    "cloak_off": {"category": "player","sounds": [{"name": "entities/cloak_off", "stream": false}]}
+    "cloak_off": {"category": "player","sounds": [{"name": "entities/cloak_off", "stream": false}]},
+    "phaser_rifle_shot": {"category": "player","sounds": [{"name": "phaser_rifle/phaser_rifle_shot", "stream": false}]},
+    "overheat_alarm": {"category": "player","sounds": [{"name": "weapon/overheat_alarm", "stream": false}]},
+    "overheat": {"category": "player","sounds": [{"name": "weapon/overheat_med", "stream": false}]},
+    "reload": {"category": "player","sounds": [{"name": "weapon/reload", "stream": false}]}
 }

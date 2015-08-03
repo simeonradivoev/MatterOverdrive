@@ -304,7 +304,7 @@ public class RenderUtils
 
 	public static void applyColor(int color)
 	{
-		glColor4f((color & 0x000000ff) / 255f,(color & 0x0000ff00) / 255f,(color & 0x00ff0000) / 256f,(color >> 24)/255f);
+		glColor4f((float)(color >> 16 & 255) / 255f,(float)(color >> 8 & 255) / 255f,(float)(color >> 0 & 255) / 256f,(float)(color >> 24 & 255)/255f);
 	}
 
 	public static void applyColor(GuiColor color) {

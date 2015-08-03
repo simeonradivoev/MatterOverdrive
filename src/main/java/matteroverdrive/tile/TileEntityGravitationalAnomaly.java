@@ -26,6 +26,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.IGravityEntity;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.client.sound.GravitationalAnomalySound;
 import matteroverdrive.entity.AndroidPlayer;
@@ -196,6 +197,13 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
             if (entityObject instanceof Entity)
             {
                 Entity entity = (Entity)entityObject;
+                if (entity instanceof IGravityEntity)
+                {
+                    if (!((IGravityEntity) entity).isAffectedByAnomaly())
+                    {
+                        continue;
+                    }
+                }
                 Vec3 pos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
 
                 pos.yCoord += entity.getEyeHeight();

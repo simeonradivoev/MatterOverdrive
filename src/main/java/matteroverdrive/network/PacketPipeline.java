@@ -81,6 +81,8 @@ public class PacketPipeline
         registerPacket(PacketUpdateTravelEvents.ClientHandler.class,PacketUpdateTravelEvents.class);
         registerPacket(PacketAndroidChangeAbility.ServerHandler.class,PacketAndroidChangeAbility.class);
         registerPacket(PacketSaveConfigs.ServerHandler.class,PacketSaveConfigs.class);
+        registerBiPacket(PacketFirePhaserRifle.BiHandler.class, PacketFirePhaserRifle.class);
+        registerPacket(PacketReloadEnergyWeapon.ServerHandler.class,PacketReloadEnergyWeapon.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

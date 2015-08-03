@@ -21,7 +21,9 @@ package matteroverdrive.handler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.gui.GuiAndroidHud;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.MouseEvent;
 
 /**
@@ -44,6 +46,16 @@ public class MouseHandler
             if (mag > 1.0D) {
                 GuiAndroidHud.radialDeltaX /= mag;
                 GuiAndroidHud.radialDeltaY /= mag;
+            }
+        }
+        if (Minecraft.getMinecraft().thePlayer.getHeldItem() != null && Minecraft.getMinecraft().thePlayer.getHeldItem().getItem() instanceof IWeapon)
+        {
+            if (event.button == 0 && event.buttonstate)
+            {
+                if (((IWeapon) Minecraft.getMinecraft().thePlayer.getHeldItem().getItem()).onLeftClick(Minecraft.getMinecraft().thePlayer.getHeldItem(), Minecraft.getMinecraft().thePlayer))
+                {
+                    event.setCanceled(true);
+                }
             }
         }
     }

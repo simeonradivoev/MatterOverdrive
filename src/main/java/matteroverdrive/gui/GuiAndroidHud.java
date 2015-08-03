@@ -30,6 +30,8 @@ import matteroverdrive.Reference;
 import matteroverdrive.animation.AnimationSegmentText;
 import matteroverdrive.animation.AnimationTextTyping;
 import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.inventory.IEnergyPack;
+import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
@@ -41,6 +43,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.util.JsonException;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.input.Mouse;
@@ -71,6 +74,7 @@ public class GuiAndroidHud extends Gui
     public static boolean showRadial = false;
     public static double radialDeltaX,radialDeltaY,radialAngle;
     private static double radialAnimationTime;
+    private IIcon crosshairIcon;
 
     public GuiAndroidHud(Minecraft mc)
     {
@@ -119,13 +123,10 @@ public class GuiAndroidHud extends Gui
 
             if (!showRadial)
             {
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-                glEnable(GL_ALPHA_TEST);
-                //RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
-                glColor3d(1,1,1);
-                ClientProxy.holoIcons.renderIcon("crosshair", event.resolution.getScaledWidth() / 2 - 17 / 2, event.resolution.getScaledHeight()/2 - 17/2);
+                renderCrosshair(event);
             }
+
+            mc.getTextureManager().bindTexture(Gui.icons);
         }
 
         if (event.isCancelable() || event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE)
@@ -151,6 +152,31 @@ public class GuiAndroidHud extends Gui
                 renderRadialMenu(event);
             }
         }
+    }
+
+    public void renderCrosshair(RenderGameOverlayEvent event)
+    {
+        glPushMatrix();
+        float scale = 8 + ClientProxy.weaponHandler.getEquippedWeaponHeatPercent(Minecraft.getMinecraft().thePlayer)*16;
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+        glEnable(GL_ALPHA_TEST);
+        //RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
+        glColor3d(1, 1, 1);
+        crosshairIcon = ClientProxy.holoIcons.getIcon("crosshair");
+        glTranslated(event.resolution.getScaledWidth() / 2, event.resolution.getScaledHeight() / 2, 0);
+        glPushMatrix();
+        ClientProxy.holoIcons.bindSheet();
+        glRotated(90, 0, 0, 1);
+        RenderHelper.renderIcon(-1.5,-scale,0,crosshairIcon,3,3);
+        glRotated(90, 0, 0, 1);
+        RenderHelper.renderIcon(-1.5,-scale,0,crosshairIcon,3,3);
+        glRotated(90,0,0,1);
+        RenderHelper.renderIcon(-1.5,-scale,0,crosshairIcon,3,3);
+        glRotated(90,0,0,1);
+        RenderHelper.renderIcon(-1.5,-scale,0,crosshairIcon,3,3);
+        glPopMatrix();
+        glPopMatrix();
     }
 
     public void renderRadialMenu(RenderGameOverlayEvent event)
@@ -343,6 +369,10 @@ public class GuiAndroidHud extends Gui
                 mc.fontRenderer.drawString(info, x, 28, enabledColor.getColor());
                 //endregion
 
+                if (android.getPlayer().getHeldItem() != null && android.getPlayer().getHeldItem().getItem() instanceof IWeapon) {
+                    renderWeaponHud(event,(IWeapon)android.getPlayer().getHeldItem().getItem(),android.getPlayer().getHeldItem(),enabledColor);
+                }
+
                 int count = 0;
                 for (int i = 0; i < android.getSizeInventory(); i++) {
                     if (android.getStackInSlot(i) != null) {
@@ -375,7 +405,7 @@ public class GuiAndroidHud extends Gui
                 glDisable(GL_BLEND);
                 glPopMatrix();
 
-                renderHurt(android,event);
+                renderHurt(android, event);
             }else
             {
                 if (android.isTurning())
@@ -384,6 +414,48 @@ public class GuiAndroidHud extends Gui
                 }
             }
         }
+    }
+
+    private void renderWeaponHud(RenderGameOverlayEvent event,IWeapon weapon,ItemStack weaponStack,GuiColor color)
+    {
+        int x = 12;
+        int y = 44;
+
+        //region Ammo
+        float percent = (float)weapon.getAmmo(weaponStack) / (float)weapon.getMaxAmmo(weaponStack);
+        GuiColor lerpedColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, color, percent);
+        RenderUtils.applyColor(lerpedColor);
+        ClientProxy.holoIcons.bindSheet();
+        RenderHelper.renderIcon(x, y, 0, ClientProxy.holoIcons.getIcon("ammo"), 18, 18);
+        x += 18;
+        String info = DecimalFormat.getPercentInstance().format(percent);
+        mc.fontRenderer.drawString(info, x, y+4, lerpedColor.getColor());
+        x += mc.fontRenderer.getStringWidth(info);
+        int energyPackCount = 0;
+        for (ItemStack stack : Minecraft.getMinecraft().thePlayer.inventory.mainInventory)
+        {
+            if (stack != null && stack.getItem() instanceof IEnergyPack)
+            {
+                energyPackCount += stack.stackSize;
+            }
+        }
+        info = " | " + Integer.toString(energyPackCount);
+        mc.fontRenderer.drawString(info,x,y + 4,color.getColor());
+        x += 4 + mc.fontRenderer.getStringWidth(info);
+        //endregion
+
+        //region Temperature
+        if (weapon.getMaxHeat(weaponStack) > 0) {
+            percent = weapon.getHeat(weaponStack) / weapon.getMaxHeat(weaponStack);
+            lerpedColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, color, 1-percent);
+            RenderUtils.applyColor(lerpedColor);
+            ClientProxy.holoIcons.bindSheet();
+            RenderHelper.renderIcon(x, y, 0, ClientProxy.holoIcons.getIcon("temperature"), 18, 18);
+            x += 18;
+            info = DecimalFormat.getPercentInstance().format(percent);
+            mc.fontRenderer.drawString(info, x, y + 4, lerpedColor.getColor());
+        }
+        //endregion
     }
 
     private void renderTransformAnimation(AndroidPlayer player,RenderGameOverlayEvent event)

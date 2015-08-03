@@ -30,14 +30,11 @@ import matteroverdrive.items.weapon.Phaser;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import matteroverdrive.util.MOPhysicsHelper;
 import matteroverdrive.util.WeaponHelper;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
@@ -119,15 +116,18 @@ public class RendererPhaserBeam implements IWorldLastRenderer
         glRotated(-viewer.getRotationYawHead(), 0, 1, 0);
         glRotated(viewer.rotationPitch, 1, 0, 0);
         glTranslatef(offset.x, offset.y, offset.z);
-        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(viewer, world, getPhaserRange(viewer), 1.0f, Vec3.createVectorHelper(0, height, 0), false, true);
+        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(viewer, world, getPhaserRange(viewer), 0, Vec3.createVectorHelper(0, height, 0), false, true,MatterOverdriveItems.phaser.getPlayerLook(viewer,phaser));
         double distance = 450;
         if (hit != null)
         {
             Vec3 hitVector = hit.hitVec;
             distance = hitVector.distanceTo(viewer.getPosition(1.0f));
-            spawnParticles(hit,phaser,viewer.worldObj);
-
+            MatterOverdriveItems.phaser.spawnParticle(hit,phaser,world);
         }
+        Vec3 rots = MatterOverdriveItems.phaser.getBeamRotation(phaser,world);
+        glRotated(Math.toDegrees(rots.xCoord),1,0,0);
+        glRotated(Math.toDegrees(rots.yCoord),0,1,0);
+        glRotated(Math.toDegrees(rots.zCoord),0,0,1);
         glScaled(1, 1, distance + distanceOffset);
         ItemRendererPhaser.phaserModel.renderPart("beam");
         glPopMatrix();
@@ -135,41 +135,6 @@ public class RendererPhaserBeam implements IWorldLastRenderer
         glEnable(GL_CULL_FACE);
         glDisable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    }
-
-    private void spawnParticles(MovingObjectPosition hit,ItemStack phaser,World world)
-    {
-        Block b = world.getBlock(hit.blockX,hit.blockY,hit.blockZ);
-        if (hit.entityHit != null && hit.entityHit instanceof EntityLivingBase)
-        {
-            if (WeaponHelper.hasStat(Reference.WS_HEAL,phaser))
-            {
-                world.spawnParticle("happyVillager",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
-            }
-            else if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,phaser) && MatterOverdriveItems.phaser.isKillMode(phaser))
-            {
-                world.spawnParticle("flame",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
-            }
-            else
-            {
-                if (MatterOverdriveItems.phaser.isKillMode(phaser)) {
-                    world.spawnParticle("reddust", hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0);
-                }else
-                {
-                    world.spawnParticle("magicCrit", hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0);
-                }
-            }
-
-        }
-        else if(b != null && b != Blocks.air)
-        {
-            if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,phaser) && MatterOverdriveItems.phaser.isKillMode(phaser))
-            {
-                world.spawnParticle("flame",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
-            }
-
-            world.spawnParticle("smoke",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
-        }
     }
 
     public GuiColor getPhaserColor(EntityPlayer player)

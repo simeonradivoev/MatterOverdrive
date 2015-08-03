@@ -23,9 +23,12 @@ import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.ArrayList;
@@ -72,6 +75,23 @@ public class PlayerEventHandler
         AndroidPlayer player = AndroidPlayer.get(event.player);
         if (player != null) {
             player.onPlayerTick(event);
+        }
+
+        //used to stop the item refreshing when using weapons and changing their data
+        if(event.player.worldObj.isRemote) {
+            if (event.player.getItemInUse() != null && event.player.getItemInUse().getItem() instanceof IWeapon) {
+                ItemStack itemstack = event.player.inventory.getCurrentItem();
+
+                if (itemstack != null && Minecraft.getMinecraft().currentScreen == null) {
+                    if (event.player.getItemInUse().isItemEqual(itemstack)) {
+                        event.player.itemInUse = itemstack;
+                    } else {
+                        System.out.println(String.format("%s not equal to %s", itemstack, event.player.itemInUse));
+                    }
+                } else {
+                    event.player.clearItemInUse();
+                }
+            }
         }
     }
 

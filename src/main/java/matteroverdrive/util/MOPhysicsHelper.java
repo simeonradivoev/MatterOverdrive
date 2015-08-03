@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.util;
 
 import cpw.mods.fml.relauncher.Side;
@@ -28,6 +46,10 @@ public class MOPhysicsHelper
     }
     public static MovingObjectPosition rayTrace(EntityLivingBase viewer,World world,double distance,float ticks,Vec3 offset,boolean checkBlockCollision,boolean onlySolid)
     {
+        return rayTrace(viewer, world, distance, ticks, offset, checkBlockCollision, onlySolid, null);
+    }
+    public static MovingObjectPosition rayTrace(EntityLivingBase viewer,World world,double distance,float ticks,Vec3 offset,boolean checkBlockCollision,boolean onlySolid,Vec3 dir)
+    {
         MovingObjectPosition objectMouseOver = null;
         Entity pointedEntity = null;
 
@@ -36,7 +58,7 @@ public class MOPhysicsHelper
             if (world != null)
             {
                 double d0 = distance;
-                objectMouseOver = MOPhysicsHelper.rayTraceForBlocks(viewer,world,d0, ticks,offset,checkBlockCollision,onlySolid);
+                objectMouseOver = MOPhysicsHelper.rayTraceForBlocks(viewer,world,d0, ticks,offset,checkBlockCollision,onlySolid,dir);
                 double d1 = d0;
                 Vec3 vec3 = getPosition(viewer, ticks).addVector(offset.xCoord,offset.yCoord,offset.zCoord);
 
@@ -45,7 +67,7 @@ public class MOPhysicsHelper
                     d1 = objectMouseOver.hitVec.distanceTo(vec3);
                 }
 
-                Vec3 vec31 = viewer.getLook(ticks);
+                Vec3 vec31 = dir == null ? viewer.getLook(ticks) : dir;
                 Vec3 vec32 = vec3.addVector(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0);
                 Vec3 vec33 = null;
                 float f1 = 1.0F;
@@ -120,8 +142,12 @@ public class MOPhysicsHelper
 
     public static MovingObjectPosition rayTraceForBlocks(EntityLivingBase viewer,World world,double distance,float ticks,Vec3 offset,boolean collisionCheck,boolean onlySolid)
     {
+        return rayTraceForBlocks(viewer,world,distance,ticks,offset,collisionCheck,onlySolid,null);
+    }
+    public static MovingObjectPosition rayTraceForBlocks(EntityLivingBase viewer,World world,double distance,float ticks,Vec3 offset,boolean collisionCheck,boolean onlySolid,Vec3 dir)
+    {
         Vec3 vec3 = getPosition(viewer,ticks).addVector(offset.xCoord,offset.yCoord,offset.zCoord);
-        Vec3 vec31 = viewer.getLook(ticks);
+        Vec3 vec31 = dir == null ? viewer.getLook(ticks) : dir;
         Vec3 vec32 = vec3.addVector(vec31.xCoord * distance, vec31.yCoord * distance, vec31.zCoord * distance);
         return world.func_147447_a(vec3, vec32, collisionCheck, onlySolid, true);
     }

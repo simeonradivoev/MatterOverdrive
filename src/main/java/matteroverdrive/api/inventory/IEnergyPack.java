@@ -16,26 +16,14 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api.weapon;
+package matteroverdrive.api.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.util.vector.Vector2f;
 
 /**
- * Created by Simeon on 4/13/2015.
+ * Created by Simeon on 8/2/2015.
  */
-public interface IWeapon
+public interface IEnergyPack
 {
-    Vector2f getSlotPosition(int slot,ItemStack weapon);
-    Vector2f getModuleScreenPosition(int slot,ItemStack weapon);
-    boolean supportsModule(int slot,ItemStack weapon);
-    boolean onLeftClick(ItemStack weapon,EntityPlayer entityPlayer);
-    boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, boolean zoomed,int seed,int latency);
-    boolean isAlwaysEquipped(ItemStack weapon);
-    float getHeat(ItemStack weapon);
-    float getMaxHeat(ItemStack itemStack);
-    int getAmmo(ItemStack weapon);
-    int getMaxAmmo(ItemStack weapon);
-    int getShootCooldown();
+    int getEnergyAmount(ItemStack pack);
 }

@@ -117,7 +117,8 @@ public class MatterOverdrive
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 		MinecraftForge.EVENT_BUS.register(entityHandler);
 		MatterOverdriveItems.addToDungons();
-		proxy.registerProxies();
+		proxy.init(event);
+
 		configHandler.init();
 
 		MatterOverdriveCompat.init(event);

@@ -1,24 +1,38 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.items.weapon;
 
-import cofh.api.energy.IEnergyContainerItem;
-import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.helpers.MathHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
-import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.client.sound.PhaserSound;
 import matteroverdrive.handler.SoundHandler;
-import matteroverdrive.items.includes.MOItemEnergyContainer;
-import matteroverdrive.util.*;
+import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.util.MOPhysicsHelper;
+import matteroverdrive.util.WeaponHelper;
+import matteroverdrive.util.animation.MOEasing;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -35,11 +49,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Phaser extends MOItemEnergyContainer implements IWeapon{
+public class Phaser extends EnergyWeapon implements IWeapon{
 
 	private static final double ENERGY_MULTIPLY = 2.5;
-    private static final int MAX_USE_TIME = 80;
-    private static final int MIN_HEAT_FIRE = 40;
+    private static final int MAX_USE_TIME = 60;
+    private static final int MAX_HEAT = 80;
     public static final int MAX_LEVEL = 6;
     private static final int KILL_MODE_LEVEL = 3;
     private static final float KILL_DAMAGE_MULTIPLY = 2.5f;
@@ -49,9 +63,9 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     Map<EntityPlayer,PhaserSound> soundMap;
 	
 	public Phaser(String name) {
-		super(name,32000,128,128);
+		super(name,32000,128,128,RANGE);
 		this.bFull3D = true;
-        soundMap = new HashMap<EntityPlayer, PhaserSound>();
+        soundMap = new HashMap<>();
 	}
 	
 	public void registerIcons(IIconRegister iconRegistry)
@@ -60,61 +74,24 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     }
 
     @Override
-    public boolean hasDetails(ItemStack itemStack)
+    public int getBaseEnergyUse(ItemStack item)
     {
-        return true;
+        this.TagCompountCheck(item);
+        byte level = getPowerLevel(item);
+        return (int)Math.pow(ENERGY_MULTIPLY, level + 1);
     }
 
     @Override
-    public EnumAction getItemUseAction(ItemStack p_77661_1_)
-    {
-        return EnumAction.bow;
+    protected int getBaseMaxHeat(ItemStack item) {
+        return MAX_HEAT;
     }
 
     @Override
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+    protected void addCustomDetails(ItemStack weapon,EntityPlayer player,List infos)
     {
-        super.addDetails(itemstack, player, infos);
-
-        infos.add(EnumChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(GetEneryUse(itemstack)) + "/t");
-        infos.add(EnumChatFormatting.DARK_GREEN + "Damage: " + GetPhaserDamage(itemstack));
-        infos.add(EnumChatFormatting.BLUE + "Stun: " + (GetSleepTime(itemstack) / 20f)+ "s");
-        infos.add(EnumChatFormatting.DARK_RED + "Heat: " + getHeat(itemstack,player.worldObj));
-        AddModuleDetails(itemstack, infos);
+        infos.add(EnumChatFormatting.BLUE + "Stun: " + (GetSleepTime(weapon) / 20f) + "s");
     }
 
-    private void AddModuleDetails(ItemStack weapon,List infos)
-    {
-        ItemStack module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BARREL, weapon);
-        if (module != null)
-        {
-            infos.add(EnumChatFormatting.GRAY + "");
-            infos.add(EnumChatFormatting.GRAY + "Barrel:");
-
-            Object statsObject = ((IWeaponModule)module.getItem()).getValue(module);
-            if (statsObject instanceof Map)
-            {
-                for (final Map.Entry<Integer, Double> entry : ((Map<Integer,Double>) statsObject).entrySet())
-                {
-                    infos.add("    " + MOStringHelper.weaponStatToInfo(entry.getKey(), entry.getValue()));
-                }
-            }
-        }
-    }
-
-	@Override
-	public int getItemStackLimit(ItemStack item) 
-	{
-		return 1;
-	}
-	
-	@Override
-	public void onCreated(ItemStack itemStack, World world, EntityPlayer player) 
-	{
-		super.onCreated(itemStack, world, player);
-	}
-
-	
 	/**
      * How long it takes to use or consume an item
      */
@@ -138,15 +115,16 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         if (w.isRemote)
             return;
 
-        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(player, w, getRange(item), 0, Vec3.createVectorHelper(0, player.getEyeHeight(), 0), false, true);
+        Vec3 dir = getPlayerLook(player,item);
+        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(player, w, getRange(item), 0, Vec3.createVectorHelper(0, player.getEyeHeight(), 0), false, true,dir);
         if (hit != null)
         {
             Vec3 hitVector = hit.hitVec;
 
             if (hit.entityHit != null && hit.entityHit instanceof EntityLivingBase)
             {
-                DamageSource damageInfo = new EntityDamageSourcePhaser(player);
-                float damage = GetPhaserDamage(item);
+                DamageSource damageInfo = getDamageSource(item,player);
+                float damage = getWeaponScaledDamage(item);
 
                 EntityLivingBase el = (EntityLivingBase) hit.entityHit;
                 double motionX = el.motionX;
@@ -226,6 +204,23 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         }
 	}
 
+    public Vec3 getPlayerLook(EntityPlayer player,ItemStack weapon)
+    {
+        Vec3 dir = player.getLookVec();
+        Vec3 rot = getBeamRotation(weapon,player.worldObj);
+        dir.rotateAroundX((float)rot.xCoord);
+        dir.rotateAroundY((float) rot.yCoord);
+        dir.rotateAroundZ((float)rot.zCoord);
+        return dir;
+    }
+
+    public Vec3 getBeamRotation(ItemStack weapon,World world)
+    {
+        float accuracy = getHeat(weapon) / getMaxHeat(weapon);
+        double rotationY = (float)Math.toRadians(5) * MOEasing.Quart.easeIn(accuracy,0,1,1);
+        return Vec3.createVectorHelper(0,rotationY,0);
+    }
+
 	@Override
 	public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer player)
 	{
@@ -237,9 +232,13 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
 		}
         else
         {
-            if (getHeat(item,world) <= MIN_HEAT_FIRE && DrainEnergy(item,1,true))
+            if (canFire(item, world))
             {
                 player.setItemInUse(item, getMaxItemUseDuration(item));
+            }
+            if (needsRecharge(item))
+            {
+                chargeFromEnergyPack(item,player);
             }
             return item;
 		}
@@ -249,8 +248,8 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
 
     public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player)
     {
-        DrainEnergy(itemStack, getMaxItemUseDuration(itemStack), false);
-        setHeat(itemStack, world, getMaxItemUseDuration(itemStack) + 40);
+        //DrainEnergy(itemStack, getMaxItemUseDuration(itemStack), false);
+        //addHeat(itemStack, getMaxItemUseDuration(itemStack));
 
         return itemStack;
     }
@@ -258,95 +257,60 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     @Override
     public void onUsingTick(ItemStack itemStack, EntityPlayer player, int count)
     {
-        int duration = getMaxItemUseDuration(itemStack) - count;
-
-        if (DrainEnergy(itemStack,getMaxItemUseDuration(itemStack) - count,true))
+        if (canFire(itemStack,player.worldObj))
         {
-            int fireRate = MathHelper.round(5 / WeaponHelper.getStatMultiply(Reference.WS_FIRE_RATE, itemStack));
-
-            if (duration %  fireRate == (fireRate/2))
-                ManageShooting(itemStack, player.worldObj, player);
+            DrainEnergy(itemStack,1,false);
+            int powerLevelMultiply = (getPowerLevel(itemStack)+1) / MAX_LEVEL;
+            float newHeat =  (getHeat(itemStack)+1)*(1.1f + (0.05f*powerLevelMultiply));
+            setHeat(itemStack, newHeat);
+            ManageShooting(itemStack, player.worldObj, player);
+            manageOverheat(itemStack, player.worldObj, player);
         }
-        else
-        {
-            DrainEnergy(itemStack, duration - 1, false);
+        else {
             player.stopUsingItem();
         }
     }
 
-    public void onPlayerStoppedUsing(ItemStack itemStack, World world, EntityPlayer player, int count)
-    {
-        setHeat(itemStack, world, getMaxItemUseDuration(itemStack) - count);
-        DrainEnergy(itemStack, getMaxItemUseDuration(itemStack) - count, false);
+    public void onPlayerStoppedUsing(ItemStack itemStack, World world, EntityPlayer player, int count) {
+        //addHeat(itemStack, getMaxItemUseDuration(itemStack) - count);
+        //DrainEnergy(itemStack, getMaxItemUseDuration(itemStack) - count, false);
     }
 	
 	private void SwitchModes(World world,EntityPlayer player,ItemStack item)
 	{
 		this.TagCompountCheck(item);
 		SoundHandler.PlaySoundAt(world, "phaser_switch_mode", player);
-        byte level = item.getTagCompound().getByte("power");
+        byte level = getPowerLevel(item);
         level++;
         if(level >= MAX_LEVEL)
         {
             level = 0;
         }
-		item.getTagCompound().setByte("power", level);
-	}
-	
-	
-	private boolean DrainEnergy(ItemStack item,int ticks,boolean simulate)
-	{
-        return MOEnergyHelper.extractExactAmount(this, item, GetEneryUse(item) * ticks,simulate);
+		setPowerLevel(item,level);
 	}
 
-    public int getRange(ItemStack phaser)
-    {
-        int range = RANGE;
-        range = cofh.lib.util.helpers.MathHelper.round(range * getRangeMultiply(phaser));
-        return  range;
-    }
-
-    private double getRangeMultiply(ItemStack phaser)
-    {
-        return WeaponHelper.getStatMultiply(Reference.WS_RANGE,phaser);
-    }
-
-    private int GetEneryUse(ItemStack item)
-    {
-        this.TagCompountCheck(item);
-        byte level = item.getTagCompound().getByte("power");
-        return (int)Math.floor(Math.pow(ENERGY_MULTIPLY,level + 1) / getPowerMultiply(item));
-    }
-
-    private double getPowerMultiply(ItemStack phaser)
-    {
-        return WeaponHelper.getStatMultiply(Reference.WS_AMMO,phaser);
-    }
-	
-	private float GetPhaserDamage(ItemStack item)
+    @Override
+	public float getWeaponBaseDamage(ItemStack item)
 	{
         float damage = 0;
         this.TagCompountCheck(item);
-        byte level = item.getTagCompound().getByte("power");
+        byte level = getPowerLevel(item);
         if(level >= KILL_MODE_LEVEL)
         {
             damage = (float)Math.pow(KILL_DAMAGE_MULTIPLY,level - (KILL_MODE_LEVEL-1));
         }
-
-        damage *= getDamageMultiplay(item);
-
         return damage;
 	}
 
-    private float getDamageMultiplay(ItemStack phaser)
-    {
-        return (float)WeaponHelper.getStatMultiply(Reference.WS_DAMAGE, phaser);
+    @Override
+    public boolean canFire(ItemStack itemStack, World world) {
+        return !isOverheated(itemStack) && DrainEnergy(itemStack,1,true);
     }
 
     private int GetSleepTime(ItemStack item)
     {
         this.TagCompountCheck(item);
-        byte level = item.getTagCompound().getByte("power");
+        byte level = getPowerLevel(item);
         if(level < KILL_MODE_LEVEL)
         {
             return (int)(Math.pow(level+1,STUN_SLEEP_MULTIPLY) * sleepTimeMultipy(item));
@@ -358,117 +322,6 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
     {
         return WeaponHelper.getStatMultiply(Reference.WS_DAMAGE,phaser);
     }
-
-    public void setHeat(ItemStack item,World world,long amount)
-    {
-        if (item.hasTagCompound())
-        {
-            item.getTagCompound().setLong("heat",world.getTotalWorldTime() + amount);
-        }
-    }
-
-    public long getHeat(ItemStack item,World world) {
-        if (item.hasTagCompound()) {
-            return Math.max(0,item.getTagCompound().getLong("heat") - world.getTotalWorldTime());
-        }
-        return 0;
-    }
-
-    //region Energy Functions
-    @Override
-    public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
-
-        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
-        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
-        {
-            IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
-            int energy = e.receiveEnergy(energy_module,maxReceive,simulate);
-            if (!simulate)
-                WeaponHelper.setModuleAtSlot(Reference.MODULE_BATTERY,container,energy_module);
-            return energy;
-        }
-        else
-        {
-            return super.receiveEnergy(container,maxReceive,simulate);
-        }
-    }
-
-    @Override
-    public int extractEnergy(ItemStack container, int maxExtract, boolean simulate)
-    {
-
-        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
-        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
-        {
-            IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
-            int energy = e.extractEnergy(energy_module, maxReceive, simulate);
-            if (!simulate)
-                WeaponHelper.setModuleAtSlot(Reference.MODULE_BATTERY,container,energy_module);
-            return energy;
-        }
-        else
-        {
-            return super.extractEnergy(container, maxReceive, simulate);
-        }
-    }
-
-    @Override
-    protected void setEnergyStored(ItemStack container,int amount)
-    {
-        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
-        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
-        {
-            EnergyHelper.setDefaultEnergyTag(energy_module, amount);
-            WeaponHelper.setModuleAtSlot(Reference.MODULE_BATTERY,container,energy_module);
-        }
-        else
-        {
-            super.setEnergyStored(container,amount);
-        }
-
-    }
-
-    @Override
-    public int getEnergyStored(ItemStack container)
-    {
-        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
-        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
-        {
-            IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
-            return e.getEnergyStored(energy_module);
-        }
-        else
-        {
-            return super.getEnergyStored(container);
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tabs, List list)
-    {
-        ItemStack unpowered = new ItemStack(item);
-        ItemStack powered = new ItemStack(item);
-        setEnergyStored(powered,getMaxEnergyStored(powered));
-        list.add(unpowered);
-        list.add(powered);
-    }
-
-    @Override
-    public int getMaxEnergyStored(ItemStack container)
-    {
-        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
-        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
-        {
-            IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
-            return e.getMaxEnergyStored(energy_module);
-        }
-        else
-        {
-            return capacity;
-        }
-    }
-
-    //endregion
 
     @Override
     public Vector2f getSlotPosition(int slot, ItemStack weapon)
@@ -502,10 +355,89 @@ public class Phaser extends MOItemEnergyContainer implements IWeapon{
         return getSlotPosition(slot,weapon);
     }
 
+    public void spawnParticle(MovingObjectPosition hit,ItemStack weapon,World world)
+    {
+        Block b = world.getBlock(hit.blockX,hit.blockY,hit.blockZ);
+        if (hit.entityHit != null && hit.entityHit instanceof EntityLivingBase)
+        {
+            if (WeaponHelper.hasStat(Reference.WS_HEAL,weapon))
+            {
+                world.spawnParticle("happyVillager",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
+            }
+            else if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon) && MatterOverdriveItems.phaser.isKillMode(weapon))
+            {
+                world.spawnParticle("flame",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
+            }
+            else
+            {
+                if (MatterOverdriveItems.phaser.isKillMode(weapon)) {
+                    world.spawnParticle("reddust", hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0);
+                }else
+                {
+                    world.spawnParticle("magicCrit", hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0);
+                }
+            }
+
+        }
+        else if(b != null && b != Blocks.air)
+        {
+            if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon) && MatterOverdriveItems.phaser.isKillMode(weapon))
+            {
+                world.spawnParticle("flame",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
+            }
+
+            world.spawnParticle("smoke",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
+        }
+    }
+
+    @Override
+    public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
+    {
+        super.onUpdate(itemStack, world, entity, p_77663_4_, p_77663_5_);
+    }
+
     @Override
     public boolean supportsModule(int slot,ItemStack weapon)
     {
         return slot != Reference.MODULE_SIGHTS;
 
+    }
+
+    @Override
+    public boolean onLeftClick(ItemStack weapon, EntityPlayer entityPlayer) {
+        return false;
+    }
+
+    @Override
+    public boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, boolean zoomed,int seed,int latency)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isAlwaysEquipped(ItemStack weapon) {
+        return false;
+    }
+
+    @Override
+    public int getShootCooldown() {
+        return 0;
+    }
+
+    public byte getPowerLevel(ItemStack weapon)
+    {
+        if (weapon.hasTagCompound())
+        {
+            return weapon.getTagCompound().getByte("power");
+        }
+        return 0;
+    }
+
+    public void setPowerLevel(ItemStack weapon,byte level)
+    {
+        if (weapon.hasTagCompound())
+        {
+            weapon.getTagCompound().setByte("power",level);
+        }
     }
 }

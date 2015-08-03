@@ -22,8 +22,9 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.IMOTickable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -35,6 +36,8 @@ public class TickHandler
     private MatterNetworkTickHandler networkTick;
     private PlayerEventHandler playerEventHandler;
     private boolean worldStartFired = false;
+    private long lastTickTime;
+    private int lastTickLength;
 
     public TickHandler(ConfigurationHandler configurationHandler,PlayerEventHandler playerEventHandler)
     {
@@ -48,7 +51,11 @@ public class TickHandler
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
+        if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null)
+            return;
 
+        if (ClientProxy.weaponHandler != null)
+            ClientProxy.weaponHandler.onClientTick(event);
     }
 
     //Called when the server ticks. Usually 20 ticks a second.
@@ -56,6 +63,9 @@ public class TickHandler
     public void onServerTick(TickEvent.ServerTickEvent event)
     {
         playerEventHandler.onServerTick(event);
+
+        lastTickLength = (int)(System.nanoTime() - lastTickTime);
+        lastTickTime = System.nanoTime();
     }
 
     public void onServerStart(FMLServerStartedEvent event)
@@ -90,10 +100,16 @@ public class TickHandler
                 }
             }
         }
+
     }
 
     public void onWorldStart(Side side,World world)
     {
 
+    }
+
+    public int getLastTickLength()
+    {
+        return lastTickLength;
     }
 }
