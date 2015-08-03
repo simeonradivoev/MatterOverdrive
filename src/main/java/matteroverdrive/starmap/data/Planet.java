@@ -26,6 +26,7 @@ import matteroverdrive.api.starmap.*;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.starmap.GalaxyGenerator;
 import matteroverdrive.starmap.gen.ISpaceBodyGen;
+import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,6 +38,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
@@ -221,7 +223,7 @@ public class Planet extends SpaceBody implements IInventory
         {
             NBTTagCompound buiildingTAG = new NBTTagCompound();
             buildings.get(i).writeToNBT(buiildingTAG);
-            tagCompound.setTag("Building"+i,buiildingTAG);
+            tagCompound.setTag("Building" + i, buiildingTAG);
         }
         for (int i = 0;i < fleet.size();i++)
         {
@@ -258,7 +260,13 @@ public class Planet extends SpaceBody implements IInventory
         {
             if (tagCompound.hasKey("Building" + i,10))
             {
-                buildings.add(ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("Building"+i)));
+                ItemStack buildingStack = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("Building" + i));
+                if (buildingStack != null) {
+                    addBuilding(buildingStack);
+                }else
+                {
+                    MOLog.log(Level.ERROR,"There was a problem loading a building from NBT of planet %s",getName());
+                }
             }
         }
         fleetSpaces = tagCompound.getInteger("FleetSpaces");
@@ -266,7 +274,14 @@ public class Planet extends SpaceBody implements IInventory
         {
             if (tagCompound.hasKey("Ship"+i,10))
             {
-                fleet.add(ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("Ship" + i)));
+                ItemStack shipStack = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("Ship" + i));
+                if (shipStack != null)
+                {
+                    addShip(shipStack);
+                }else
+                {
+                    MOLog.log(Level.ERROR,"There was a problem loading a ship from NBT of planet %s",getName());
+                }
             }
         }
         if (tagCompound.hasKey("OwnerUUID",8))
@@ -340,7 +355,19 @@ public class Planet extends SpaceBody implements IInventory
     public boolean isGenerated(){return generated;}
     public void setGenerated(boolean generated){this.generated = generated;}
     public ItemStack getShip(int at){return fleet.get(at);}
-    public void addShip(ItemStack ship){if (ship != null && ship.getItem() instanceof IShip) fleet.add(ship);}
+    public void addShip(ItemStack ship){
+        if (ship != null) {
+            if (ship.getItem() instanceof IShip) {
+                fleet.add(ship);
+            }else
+            {
+                MOLog.log(Level.ERROR,"Trying to add an itemstack to ships, that does not contain a Ship Item");
+            }
+        }else
+        {
+            MOLog.log(Level.ERROR,"Trying to add a null Ship itemstack to %s",getName());
+        }
+    }
     public boolean canAddShip(ItemStack ship,@Nullable EntityPlayer player)
     {
         if (ship != null && ship.getItem() instanceof IShip)
@@ -360,7 +387,22 @@ public class Planet extends SpaceBody implements IInventory
     }
     public ItemStack removeShip(int at){if (at < fleet.size()) return fleet.remove(at); else return null;}
     public boolean removeShip(ItemStack ship){return fleet.remove(ship);}
-    public void addBuilding(ItemStack building){this.buildings.add(building);}
+    public void addBuilding(@Nonnull ItemStack building)
+    {
+        if (building != null)
+        {
+            if (building.getItem() instanceof IBuilding)
+            {
+                this.buildings.add(building);
+            }else
+            {
+                MOLog.log(Level.ERROR,"Trying to add a stack to buildings, that does not contain a Building Item");
+            }
+        }else
+        {
+            MOLog.log(Level.ERROR,"Trying to add a null building to planet %s",getName());
+        }
+    }
     public int fleetCount(){return fleet.size();}
     public static GuiColor getGuiColor(Planet planet)
     {
