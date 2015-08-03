@@ -62,6 +62,9 @@ item.creative_pattern_drive.name=Творческий шаблон привод�
 item.creative_pattern_drive.details=Contains most replicatable items\nRight Click while sneaking to reload
 item.network_flash_drive.name=Network Flash Drive
 item.network_flash_drive.details=Used as a filter in Matter Network devices
+item.energy_pack.name=Энергетический ранец
+item.energy_pack.details=Используется для быстрой подзарядки
+item.phaser_rifle.name=Фазерная винтовка
 
 item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
