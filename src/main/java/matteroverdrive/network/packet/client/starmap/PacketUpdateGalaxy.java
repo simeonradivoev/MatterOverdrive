@@ -25,7 +25,9 @@ import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.AbstractClientPacketHandler;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Galaxy;
+import matteroverdrive.util.MOLog;
 import net.minecraft.entity.player.EntityPlayer;
+import org.apache.logging.log4j.Level;
 
 /**
  * Created by Simeon on 6/15/2015.
@@ -54,7 +56,12 @@ public class PacketUpdateGalaxy extends PacketAbstract {
     @Override
     public void toBytes(ByteBuf buf)
     {
-        galaxy.writeToBuffer(buf);
+        try {
+            galaxy.writeToBuffer(buf);
+        }catch (Exception e)
+        {
+            MOLog.log(Level.FATAL, e, "There was a problem writing the galaxy to buffer when sending to player");
+        }
     }
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketUpdateGalaxy>
