@@ -44,6 +44,7 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class MatterOverdriveItems 
 {
@@ -200,6 +201,10 @@ public class MatterOverdriveItems
         MatterOverdrive.matterRegistry.register(emergency_ration, 3);
         MatterOverdrive.matterRegistry.register(earl_gray_tea, 2);
         MatterOverdrive.matterRegistry.register(romulan_ale, 2);
+
+        OreDictionary.registerOre("dustTritanium", tritanium_dust);
+        OreDictionary.registerOre("ingotTritanium",tritanium_ingot);
+        OreDictionary.registerOre("gemDilithium",dilithium_ctystal);
 	}
 
     public static void addToDungons()
