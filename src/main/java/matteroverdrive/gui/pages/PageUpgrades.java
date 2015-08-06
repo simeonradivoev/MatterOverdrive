@@ -33,6 +33,7 @@ import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,13 +117,22 @@ public class PageUpgrades extends ElementBaseGroup
     public void AddUpgradeSlots(Container container,Inventory inventory)
     {
         int upgradeSlotIndex = 0;
+        int upgradeCount = 0;
         for (int i = 0;i < container.inventorySlots.size();i++)
         {
             if(container.getSlot(i) instanceof SlotInventory && ((SlotInventory)container.getSlot(i)).getSlot() instanceof UpgradeSlot)
             {
-                ElementInventorySlot slotElement = new ElementInventorySlot(gui, (MOSlot) container.inventorySlots.get(i), 22,22,"big");
+                upgradeCount++;
+            }
+        }
+        for (int i = 0;i < container.inventorySlots.size();i++)
+        {
+            if(container.getSlot(i) instanceof SlotInventory && ((SlotInventory)container.getSlot(i)).getSlot() instanceof UpgradeSlot)
+            {
+                ElementInventorySlot slotElement = new ElementInventorySlot(gui, (MOSlot) container.inventorySlots.get(i), 22, 22, "big");
                 slotElement.setIcon(inventory.getSlot(((MOSlot) container.inventorySlots.get(i)).getSlotIndex()).getHoloIcon());
-                slotElement.setPosition(77 + (upgradeSlotIndex % 5) * 24,52 + (upgradeSlotIndex / 5) * 24);
+                int xStart = 12 + sizeX/2 - MathHelper.clamp_int(upgradeCount * 24,0,5*24) / 2;
+                slotElement.setPosition(xStart + (upgradeSlotIndex % 5) * 24,52 + (upgradeSlotIndex / 5) * 24);
                 this.addElement(slotElement);
                 upgradeSlotIndex++;
             }

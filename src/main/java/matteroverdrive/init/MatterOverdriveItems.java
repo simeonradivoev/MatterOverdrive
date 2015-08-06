@@ -82,10 +82,11 @@ public class MatterOverdriveItems
     public static ItemColonizerShip colonizerShip;
     public static ItemBuildingBase buildingBase;
     public static AndroidPill androidPill;
-    public static NetworkFlashDrive flashDrive;
+    public static NetworkFlashDrive networkFlashDrive;
     public static CreativePatternDrive creativePatternDrive;
     public static PhaserRifle phaserRifle;
     public static EnergyPack energyPack;
+    public static TransportFlashDrive transportFlashDrive;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -124,10 +125,11 @@ public class MatterOverdriveItems
         colonizerShip = new ItemColonizerShip("ship_colonizer");
         buildingBase = new ItemBuildingBase("building_base");
         androidPill = new AndroidPill("android_pill");
-        flashDrive = new NetworkFlashDrive("network_flash_drive",Reference.COLOR_YELLOW_STRIPES);
+        networkFlashDrive = new NetworkFlashDrive("network_flash_drive",Reference.COLOR_YELLOW_STRIPES);
         creativePatternDrive = new CreativePatternDrive("creative_pattern_drive",0);
         phaserRifle = new PhaserRifle("phaser_rifle");
         energyPack = new EnergyPack("energy_pack");
+        transportFlashDrive = new TransportFlashDrive("transport_flash_drive",Reference.COLOR_HOLO_GREEN);
 	}
 	
 	public static void register(FMLPreInitializationEvent event)
@@ -171,10 +173,11 @@ public class MatterOverdriveItems
         colonizerShip.register();
         buildingBase.register();
         androidPill.register();
-        flashDrive.register();
+        networkFlashDrive.register();
         creativePatternDrive.register();
         phaserRifle.register();
         energyPack.register();
+        transportFlashDrive.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);
@@ -194,7 +197,8 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new ItemStack(wrench),"T T"," Y "," T ",'T',tritanium_ingot,'Y',new ItemStack(Blocks.wool,1,4));
         GameRegistry.addRecipe(new ItemStack(spacetime_equalizer), " M ", "EHE", " M ", 'M', s_magnet, 'E', Items.ender_pearl, 'H', h_compensator);
         GameRegistry.addRecipe(new ItemStack(forceFieldEmitter), "CDC", "CDC", "P1P", 'P', tritanium_plate, 'E', Items.ender_pearl, 'D', dilithium_ctystal, '1', new ItemStack(isolinear_circuit, 1), 'C', s_magnet);
-        GameRegistry.addRecipe(new ItemStack(flashDrive)," I ","RCR"," I ",'I',Items.iron_ingot,'R',Items.redstone,'C',new ItemStack(isolinear_circuit,1,1));
+        GameRegistry.addRecipe(new ItemStack(networkFlashDrive),"RCR",'I',Items.iron_ingot,'R',Items.redstone,'C',new ItemStack(isolinear_circuit,1,0));
+        GameRegistry.addRecipe(new ItemStack(transportFlashDrive)," I ","ECR"," I",'I',Items.iron_ingot,'R',Items.redstone,'C',new ItemStack(isolinear_circuit,1,0));
         GameRegistry.addRecipe(new EnergyPackRecipe(new ItemStack(tritanium_plate), new ItemStack(battery), new ItemStack(Items.gunpowder)));
         GameRegistry.addRecipe(new EnergyPackRecipe(new ItemStack(tritanium_plate), new ItemStack(hc_battery), new ItemStack(Items.gunpowder)));
         GameRegistry.addRecipe(new ItemStack(phaserRifle),"III","GCF"," WB",'I',Items.iron_ingot,'C',new ItemStack(isolinear_circuit,1,3),'W',Blocks.wool,'G',Blocks.glass,'D',dilithium_ctystal,'F',forceFieldEmitter,'B',battery);

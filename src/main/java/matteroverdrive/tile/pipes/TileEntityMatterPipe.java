@@ -47,7 +47,7 @@ import java.util.Random;
  */
 public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConnection, IMatterHandler
 {
-    public  static  final int MATTER_STORAGE = 8;
+    public  static  final int MATTER_STORAGE = 32;
     public  static  final int TRANSFER_SPEED = 20;
     public  ForgeDirection lastDir = ForgeDirection.WEST;
     private MatterStorage storage;

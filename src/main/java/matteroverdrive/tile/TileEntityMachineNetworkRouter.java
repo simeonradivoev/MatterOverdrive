@@ -29,6 +29,7 @@ public class TileEntityMachineNetworkRouter extends TileEntityMachinePacketQueue
 
     public TileEntityMachineNetworkRouter() {
         super(4);
+        playerSlotsHotbar = true;
     }
 
     @Override

@@ -63,14 +63,17 @@ item.creative_pattern_drive.details=Contains most replicatable items\nRight Clic
 item.network_flash_drive.name=Network Flash Drive
 item.network_flash_drive.details=Used as a filter in Matter Network devices
 item.energy_pack.name=Energy Pack
-item.energy_pack.details=Used for rapid charging
+item.energy_pack.details=Used for rapid charging\nTo 'reload' energy weapons
 item.phaser_rifle.name=Phaser Rifle
+item.transport_flash_drive.name=Transport Flash Drive
+item.transport_flash_drive.details=Used to mark locations for quick use with Teleporter
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade
 item.upgrade.failsafe.name=Fail Safe Upgrade
 item.upgrade.range.name=Range Upgrade
 item.upgrade.power_storage.name=Power Storage Upgrade
+item.upgrade.hyper_speed.name=Hyper Speed Upgrade
 
 item.weapon_module_color.name=Color Module
 item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
@@ -281,6 +284,9 @@ gui.label.button.remove=Remove
 gui.label.button.add=Add
 gui.label.button.reset=Reset
 gui.label.button.scout=Send Scout
+gui.label.button.new=New
+gui.label.button.import=Import
+gui.label.button.import.too_far=Destination Too Far
 
 ### GUI Tooltips ###
 gui.tooltip.starmap.no_ship_space=Not enough ship spaces

@@ -73,7 +73,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 {
 	public static int MATTER_STORAGE = 1024;
 	public static int ENERGY_STORAGE = 512000;
-	public static final  int MATTER_TRANSFER = 2;
+	public static final int MATTER_TRANSFER = 128;
     public static final int PATTERN_SEARCH_DELAY = 60;
     public static final int REPLICATION_ANIMATION_TIME = 60;
 
@@ -461,15 +461,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     public int[] getAccessibleSlotsFromSide(int side)
     {
-        if(side == 1)
-        {
-            //top
-            return new int[]{DATABASE_SLOT_ID};
-        }
-        else
-        {
-            return new int[]{OUTPUT_SLOT_ID,SECOUND_OUTPUT_SLOT_ID};
-        }
+        return new int[]{OUTPUT_SLOT_ID,SECOUND_OUTPUT_SLOT_ID};
     }
 
     @Override

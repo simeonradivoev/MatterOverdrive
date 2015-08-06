@@ -18,13 +18,13 @@
 
 package matteroverdrive.gui;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.gui.element.*;
+import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
-import matteroverdrive.network.packet.server.PacketTransporterCommands;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 
 /**
  * Created by Simeon on 5/3/2015.
@@ -36,18 +36,12 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
     ElementIntegerField xCoords;
     ElementIntegerField yCoords;
     ElementIntegerField zCoords;
-    MOElementButtonScaled saveButton;
-    MOElementButtonScaled saveToNewButton;
+    MOElementButtonScaled importButton;
+    MOElementButtonScaled newLocationButton;
     MOElementButtonScaled resetButton;
     MOElementTextField name;
     ElementTransportList list;
     MOElementButtonScaled removeLocation;
-
-    String lastName = "";
-
-    int xPos;
-    int yPos;
-    int zPos;
 
     public GuiTransporter(InventoryPlayer inventoryPlayer,TileEntityMachineTransporter machine)
     {
@@ -55,9 +49,12 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         energy = new MOElementEnergy(this,xSize - 35,50,machine.getEnergyStorage());
         matterStored = new ElementMatterStored(this,xSize - 35,100,machine.getMatterStorage());
 
-        xCoords = new ElementIntegerField(this,80,50,80,16);
-        yCoords = new ElementIntegerField(this,80,50 + 18,80,16);
-        zCoords = new ElementIntegerField(this,80,50 + 18 * 2,80,16);
+        xCoords = new ElementIntegerField(this,this,80,50,80,16);
+        xCoords.setName("XCoord");
+        yCoords = new ElementIntegerField(this,this,80,50 + 18,80,16);
+        yCoords.setName("YCoord");
+        zCoords = new ElementIntegerField(this,this,80,50 + 18 * 2,80,16);
+        zCoords.setName("ZCoord");
 
         list = new ElementTransportList(this,this,45,30,140,100,machine);
         list.setName("Locations");
@@ -67,20 +64,21 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         name.setBackground(MOElementButton.HOVER_TEXTURE_DARK);
         name.setName("LocationName");
 
-        saveButton = new MOElementButtonScaled(this,this,70,50 + 18 * 3,"Save",50,18);
-        saveButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
-        saveButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
-        saveButton.setText(MOStringHelper.translateToLocal("gui.label.button.save"));
+        importButton = new MOElementButtonScaled(this,this,70,55 + 18 * 3,"Import",50,18);
+        importButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
+        importButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
+        importButton.setDisabledTexture(MOElementButton.HOVER_TEXTURE_DARK);
+        importButton.setText(MOStringHelper.translateToLocal("gui.label.button.import"));
 
-        resetButton = new MOElementButtonScaled(this,this,70 + 52,50 + 18 * 3,"Reset",50,18);
+        resetButton = new MOElementButtonScaled(this,this,70 + 52,55 + 18 * 3,"Reset",50,18);
         resetButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
         resetButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
         resetButton.setText(MOStringHelper.translateToLocal("gui.label.button.reset"));
 
-        saveToNewButton = new MOElementButtonScaled(this,this,80,50 + 18 * 4,"New",80,18);
-        saveToNewButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
-        saveToNewButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
-        saveToNewButton.setText(MOStringHelper.translateToLocal("gui.label.button.add"));
+        newLocationButton = new MOElementButtonScaled(this,this,115,ySize - 55,"New",40,18);
+        newLocationButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
+        newLocationButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
+        newLocationButton.setText(MOStringHelper.translateToLocal("gui.label.button.new"));
 
         removeLocation = new MOElementButtonScaled(this,this,50,ySize - 55,"Remove",60,18);
         removeLocation.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
@@ -99,11 +97,11 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         pages.get(1).addElement(xCoords);
         pages.get(1).addElement(yCoords);
         pages.get(1).addElement(zCoords);
-        pages.get(1).addElement(saveButton);
-        pages.get(1).addElement(saveToNewButton);
+        pages.get(1).addElement(importButton);
         pages.get(1).addElement(name);
         pages.get(1).addElement(resetButton);
         pages.get(0).addElement(removeLocation);
+        pages.get(0).addElement(newLocationButton);
 
         pages.get(1).getElements().get(0).setPosition(120, 150);
 
@@ -126,21 +124,16 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         yCoords.setBounds(machine.yCoord - machine.getTransportRange(), machine.yCoord + machine.getTransportRange());
         zCoords.setBounds(machine.zCoord - machine.getTransportRange(), machine.zCoord + machine.getTransportRange());
 
-        updateCoordinates();
-
-    }
-
-    private void updateCoordinates()
-    {
-        xPos = machine.getSelectedLocation().x;
-        yPos = machine.getSelectedLocation().y;
-        zPos = machine.getSelectedLocation().z;
-
-        xCoords.setNumber(xPos);
-        yCoords.setNumber(yPos);
-        zCoords.setNumber(zPos);
-
-        energy.setEnergyRequired(-machine.getEnergyDrain());
+        if (machine.getSelectedLocation() != null) {
+            xCoords.setNumber(machine.getSelectedLocation().x);
+            yCoords.setNumber(machine.getSelectedLocation().y);
+            zCoords.setNumber(machine.getSelectedLocation().z);
+        }else
+        {
+            xCoords.setNumber(0);
+            yCoords.setNumber(0);
+            zCoords.setNumber(0);
+        }
     }
 
     @Override
@@ -161,45 +154,72 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
     }
 
     @Override
-    protected void updateElementInformation()
-    {
-        super.updateElementInformation();
-
-        xPos = xCoords.getNumber();
-        yPos = yCoords.getNumber();
-        zPos = zCoords.getNumber();
-
-
-    }
-
-    @Override
     public void handleElementButtonClick(String buttonName, int mouseButton)
     {
         super.handleElementButtonClick(buttonName,mouseButton);
 
-        if (buttonName == "Save")
+        if (buttonName == "Import")
         {
-            machine.setSelectedLocation(xPos,yPos,zPos,name.getText());
-            MatterOverdrive.packetPipeline.sendToServer(new PacketTransporterCommands(machine));
-            updateInfo();
+            ItemStack usb = machine.getStackInSlot(machine.usbSlotID);
+            if (usb != null)
+            {
+                if (MatterOverdriveItems.transportFlashDrive.hasTarget(usb))
+                {
+                    machine.setSelectedLocation(MatterOverdriveItems.transportFlashDrive.getTargetX(usb),MatterOverdriveItems.transportFlashDrive.getTargetY(usb)+1,MatterOverdriveItems.transportFlashDrive.getTargetZ(usb),name.getText());
+                    machine.sendConfigsToServer();
+                    updateInfo();
+                }
+            }
         }
         else if (buttonName == "New")
         {
-            machine.addNewLocation(xPos,yPos,zPos,name.getText());
-            MatterOverdrive.packetPipeline.sendToServer(new PacketTransporterCommands(machine));
+            machine.addNewLocation(machine.xCoord, machine.yCoord, machine.zCoord, name.getText());
+            machine.sendConfigsToServer();
             updateInfo();
+            list.setSelectedIndex(list.getElementCount() - 1);
         }
         else if (buttonName == "Reset")
         {
             machine.setSelectedLocation(machine.xCoord,machine.yCoord,machine.zCoord,machine.getSelectedLocation().name);
-            MatterOverdrive.packetPipeline.sendToServer(new PacketTransporterCommands(machine));
+            machine.sendConfigsToServer();
             updateInfo();
         }
-        else  if (buttonName == "Remove")
+        else if (buttonName == "Remove")
         {
             machine.removeLocation(list.getSelectedIndex());
-            MatterOverdrive.packetPipeline.sendToServer(new PacketTransporterCommands(machine));
+            machine.sendConfigsToServer();
             updateInfo();
+        }
+        else if (buttonName.equals("XCoord") || buttonName.equals("YCoord") || buttonName.equals("ZCoord"))
+        {
+            machine.setSelectedLocation(xCoords.getNumber(), yCoords.getNumber(), zCoords.getNumber(), name.getText());
+            machine.sendConfigsToServer();
+        }
+    }
+
+    @Override
+    protected void updateElementInformation()
+    {
+        super.updateElementInformation();
+        ItemStack usb = machine.getStackInSlot(machine.usbSlotID);
+        if (usb != null)
+        {
+            int targetDestination = MatterOverdriveItems.transportFlashDrive.getTargetDistance(usb);
+            int transportRange = machine.getTransportRange();
+            boolean hasTarget = MatterOverdriveItems.transportFlashDrive.hasTarget(usb);
+            if (!hasTarget || targetDestination > transportRange)
+            {
+                importButton.setEnabled(false);
+                importButton.setToolTip(MOStringHelper.translateToLocal("gui.label.button.import.too_far"));
+            }
+            else {
+                importButton.setEnabled(true);
+                importButton.setToolTip(null);
+            }
+        }else
+        {
+            importButton.setEnabled(false);
+            importButton.setToolTip(null);
         }
     }
 
@@ -217,8 +237,20 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         {
             updateInfo();
             machine.selectedLocation = selected;
-            MatterOverdrive.packetPipeline.sendToServer(new PacketTransporterCommands(machine));
+            machine.sendConfigsToServer();
             list.setSelectedIndex(machine.selectedLocation);
+        }
+    }
+
+    @Override
+    public void textChanged(String elementName, String text, boolean typed)
+    {
+        if (typed) {
+            if (elementName.equals("LocationName")) {
+                machine.setSelectedLocation(xCoords.getNumber(), yCoords.getNumber(), zCoords.getNumber(), name.getText());
+                machine.sendConfigsToServer();
+                //updateInfo();
+            }
         }
     }
 }

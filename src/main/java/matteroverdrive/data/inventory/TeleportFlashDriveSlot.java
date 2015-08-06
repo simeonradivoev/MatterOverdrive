@@ -16,38 +16,38 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.tile;
+package matteroverdrive.data.inventory;
 
 import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.util.MatterNetworkHelper;
+import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.proxy.ClientProxy;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
 /**
- * Created by Simeon on 4/30/2015.
+ * Created by Simeon on 8/5/2015.
  */
-public class TileEntityMachineNetworkSwitch extends TileEntityMachinePacketQueue
+public class TeleportFlashDriveSlot extends Slot
 {
-
-    public TileEntityMachineNetworkSwitch() {
-        super(4);
-        playerSlotsHotbar = true;
-    }
-
-    @Override
-    protected void onAwake(Side side)
+    public TeleportFlashDriveSlot(boolean isMainSlot)
     {
-        if (side.isServer()) {
-            MatterNetworkHelper.broadcastConnection(worldObj, this);
-            MatterNetworkHelper.requestNeighborConnections(worldObj,this);
-        }
+        super(isMainSlot);
+    }
+
+    public boolean isValidForSlot(ItemStack item)
+    {
+        return item != null && item.getItem() == MatterOverdriveItems.transportFlashDrive;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getHoloIcon()
+    {
+        return ClientProxy.holoIcons.getIcon("flash_drive");
     }
 
     @Override
-    protected void registerComponents() {
-
-    }
-
-    @Override
-    protected void onActiveChange() {
-
+    public String getUnlocalizedTooltip(){
+        return "item.transport_flash_drive.name";
     }
 }

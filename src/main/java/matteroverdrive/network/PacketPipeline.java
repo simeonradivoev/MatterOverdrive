@@ -64,7 +64,6 @@ public class PacketPipeline
         registerPacket(PacketPatternMonitorCommands.ServerHandler.class,PacketPatternMonitorCommands.class);
         registerPacket(PacketReplicationComplete.ClientHandler.class,PacketReplicationComplete.class);
         registerPacket(PacketRemoveTask.ServerHandler.class,PacketRemoveTask.class);
-        registerPacket(PacketTransporterCommands.ServerHandler.class, PacketTransporterCommands.class);
         registerPacket(PacketSyncTransportProgress.ClientHandler.class,PacketSyncTransportProgress.class);
         registerBiPacket(PacketMatterScannerGetDatabase.Handler.class, PacketMatterScannerGetDatabase.class);
         registerPacket(PacketUpdateMatterRegistry.ClientHandler.class, PacketUpdateMatterRegistry.class);

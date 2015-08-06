@@ -18,6 +18,7 @@
 
 package matteroverdrive.gui.element;
 
+import matteroverdrive.Reference;
 import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.IListHandler;
@@ -39,18 +40,21 @@ public class ElementTransportList extends MOElementListBox
     @Override
     public void DrawElement(int i,int x,int y,int selectedLineColor,int selectedTextColor, boolean selected,boolean BG)
     {
+        TransportLocation position = transporter.getPositions().get(i);
+
         if (BG)
         {
-            if (selected)
+            if (selected && transporter.isLocationValid(position))
                 MOElementButton.NORMAL_TEXTURE.Render(x,y,getElementWidth(i),getElementHeight(i));
-            else
-                MOElementButton.HOVER_TEXTURE_DARK.Render(x,y,getElementWidth(i),getElementHeight(i));
+            else {
+                MOElementButton.HOVER_TEXTURE_DARK.Render(x, y, getElementWidth(i), getElementHeight(i));
+            }
         }
         else
         {
-            TransportLocation position = transporter.getPositions().get(i);
+
             String info = "[ X: " + (position.x + transporter.xCoord) + ", Y: " + (position.y + transporter.yCoord) + ", Z: " + (position.z + transporter.zCoord) + " ]";
-            gui.drawCenteredString(getFontRenderer(),position.name,x + getElementWidth(i)/2,y + getElementHeight(i) / 2 - 4,selectedTextColor);
+            gui.drawCenteredString(getFontRenderer(), position.name, x + getElementWidth(i) / 2, y + getElementHeight(i) / 2 - 4, transporter.isLocationValid(position) ? selectedTextColor : Reference.COLOR_HOLO_RED.getColor());
             //gui.drawCenteredString(getFontRenderer(), EnumChatFormatting.YELLOW + info,x + getElementWidth(i)/2,y + getElementHeight(i) / 2 + 2,0xFFFFFF);
         }
     }

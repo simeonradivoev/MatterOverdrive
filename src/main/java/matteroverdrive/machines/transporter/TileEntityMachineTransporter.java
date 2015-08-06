@@ -37,6 +37,8 @@ import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.transport.ITransportList;
 import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
+import matteroverdrive.data.Inventory;
+import matteroverdrive.data.inventory.TeleportFlashDriveSlot;
 import matteroverdrive.fx.ReplicatorParticle;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.transporter.components.ComponentComputers;
@@ -82,13 +84,14 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     public static final int ENERGY_PER_UNIT = 16;
     public List<TransportLocation> locations;
     public int selectedLocation;
+    public int usbSlotID;
     int transportTimer;
     long transportTracker;
     private ComponentComputers computerComponent;
 
     public TileEntityMachineTransporter()
     {
-        super(4);
+        super(5);
         energyStorage.setCapacity(ENERGY_STORAGE);
         energyStorage.setMaxTransfer(MAX_ENERGY_EXTRACT);
         matterStorage.setCapacity(512);
@@ -96,6 +99,13 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         selectedLocation = 0;
         redstoneMode = Reference.MODE_REDSTONE_LOW;
         playerSlotsHotbar = true;
+    }
+
+    @Override
+    protected void RegisterSlots(Inventory inventory)
+    {
+        super.RegisterSlots(inventory);
+        usbSlotID = inventory.AddSlot(new TeleportFlashDriveSlot(true));
     }
 
     @Override
@@ -276,9 +286,9 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         {
             TransportLocation location = locations.get(selectedLocation);
             int range = getTransportRange();
-            location.x = MathHelper.clampI(location.x,xCoord - range,xCoord + range);
-            location.y = MathHelper.clampI(location.y,yCoord - range,yCoord + range);
-            location.z = MathHelper.clampI(location.z,zCoord - range,zCoord + range);
+            //location.x = MathHelper.clampI(location.x,xCoord - range,xCoord + range);
+            //location.y = MathHelper.clampI(location.y,yCoord - range,yCoord + range);
+            //location.z = MathHelper.clampI(location.z,zCoord - range,zCoord + range);
             return location;
         }
         return new TransportLocation(xCoord,yCoord,zCoord,"Unknown");
@@ -286,14 +296,23 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
     public boolean isLocationValid(TransportLocation location)
     {
-        return !(location.x == xCoord && location.y < yCoord + 4 && location.y > yCoord - 4 && location.z == zCoord);
+        return !(location.x == xCoord && location.y < yCoord + 4 && location.y > yCoord - 4 && location.z == zCoord) && location.getDistance(xCoord,yCoord,zCoord) < getTransportRange();
     }
 
     public void setSelectedLocation(int x,int y,int z,String name)
     {
         if (selectedLocation < locations.size() && selectedLocation >= 0)
         {
-            locations.set(selectedLocation,new TransportLocation(x,y,z,name));
+            TransportLocation location = locations.get(selectedLocation);
+            if (location != null)
+            {
+                location.setPosition(x,y,z);
+                location.setName(name);
+            }else
+            {
+                locations.set(selectedLocation,new TransportLocation(x,y,z,name));
+            }
+
         }else
         {
             selectedLocation = 0;
@@ -308,8 +327,10 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
     public void removeLocation(int at)
     {
-        if (at < locations.size() && at >= 0)
+        if (at < locations.size() && at >= 0) {
             locations.remove(at);
+            selectedLocation = net.minecraft.util.MathHelper.clamp_int(selectedLocation,0,locations.size()-1);
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -379,7 +400,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     @Override
     public boolean isActive()
     {
-        return transportTimer > getSpeed() - TRANSPORT_TIME;
+        return  transportTimer > 0;
     }
 
     @Override

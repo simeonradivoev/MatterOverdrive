@@ -86,6 +86,8 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         taskQueueSending = new MatterNetworkTaskQueue<>(this,1);
         redstoneMode = Reference.MODE_REDSTONE_LOW;
         networkComponent = new MatterNetworkComponentAnalyzer(this);
+        playerSlotsHotbar = true;
+        playerSlotsMain = true;
     }
 
     @Override

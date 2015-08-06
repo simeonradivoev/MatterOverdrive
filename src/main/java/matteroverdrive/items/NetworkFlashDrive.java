@@ -20,21 +20,15 @@ package matteroverdrive.items;
 
 import cofh.lib.gui.GuiColor;
 import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkFilter;
-import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -43,15 +37,11 @@ import java.util.List;
 /**
  * Created by Simeon on 7/21/2015.
  */
-public class NetworkFlashDrive extends MOBaseItem implements IMatterNetworkFilter {
-
-    private IIcon overlay;
-    private GuiColor color;
+public class NetworkFlashDrive extends FlashDrive implements IMatterNetworkFilter {
 
     public NetworkFlashDrive(String name, GuiColor color)
     {
-        super(name);
-        this.color = color;
+        super(name,color);
         setMaxStackSize(1);
     }
 
@@ -69,53 +59,6 @@ public class NetworkFlashDrive extends MOBaseItem implements IMatterNetworkFilte
                 }
             }
         }
-    }
-
-    public boolean hasDetails(ItemStack stack){return true;}
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean requiresMultipleRenderPasses()
-    {
-        return true;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister p_94581_1_)
-    {
-        this.itemIcon = p_94581_1_.registerIcon(Reference.MOD_ID + ":" + "flash_drive");
-        overlay = p_94581_1_.registerIcon(Reference.MOD_ID + ":" + "flash_drive_overlay");
-    }
-
-    @Override
-    public int getRenderPasses(int metadata)
-    {
-        return 2;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamageForRenderPass(int damage, int pass)
-    {
-        if (pass == 1)
-        {
-            return overlay;
-        }else
-        {
-            return itemIcon;
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public int getColorFromItemStack(ItemStack itemStack, int pass)
-    {
-        if (pass == 1)
-        {
-            return color.getColor();
-        }
-        return super.getColorFromItemStack(itemStack,pass);
     }
 
     @Override
@@ -154,12 +97,6 @@ public class NetworkFlashDrive extends MOBaseItem implements IMatterNetworkFilte
 
             return true;
         }
-        return false;
-    }
-
-    @Override
-    public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
-    {
         return false;
     }
 

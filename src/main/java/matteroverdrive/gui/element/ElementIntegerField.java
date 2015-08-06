@@ -1,7 +1,23 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.element.ElementTextFieldFiltered;
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
@@ -15,21 +31,23 @@ import org.lwjgl.input.Keyboard;
  */
 public class ElementIntegerField extends ElementBaseGroup implements IButtonHandler
 {
-    MOElementTextField numberField;
+    IButtonHandler buttonHandler;
     MOElementButtonScaled incBtn;
     MOElementButtonScaled decBtn;
+    ScaleTexture numberBG;
+    int number;
     int min;
     int max;
 
-    public ElementIntegerField(MOGuiBase gui, int posX, int posY, int width, int height,int min,int max) {
+    public ElementIntegerField(MOGuiBase gui,IButtonHandler buttonHandler, int posX, int posY, int width, int height,int min,int max) {
         super(gui, posX, posY, width, height);
+        this.buttonHandler = buttonHandler;
 
-        numberField = new MOElementTextField(gui,18,4,width - 18 - 12,height);
-        numberField.setBackground(new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "field_over.png"), 30, 18).setOffsets(5, 5, 5, 5));
-        numberField.setTextOffset(4, 4);
+        numberBG = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "field_over.png"), 30, 18).setOffsets(5, 5, 5, 5);
 
         incBtn = new MOElementButtonScaled(gui,this,0,0,"Inc",16,height);
         incBtn.setNormalTexture(new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_normal_left.png"),10,18).setOffsets(5,2,5,5));
+        incBtn.setOverTexture(null);
         incBtn.setText("+");
 
         decBtn = new MOElementButtonScaled(gui,this,width - 16,0,"Dec",16,height);
@@ -39,9 +57,9 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
         this.max = max;
     }
 
-    public ElementIntegerField(MOGuiBase gui, int posX, int posY, int width, int height)
+    public ElementIntegerField(MOGuiBase gui,IButtonHandler buttonHandler, int posX, int posY, int width, int height)
     {
-        this(gui, posX, posY, width, height, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        this(gui,buttonHandler, posX, posY, width, height, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
     @Override
@@ -49,37 +67,22 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
     {
         super.init();
 
-        addElement(numberField);
         addElement(incBtn);
         addElement(decBtn);
     }
 
-    public ElementIntegerField(MOGuiBase gui, int posX, int posY) {
-        this(gui, posX, posY, 120, 18, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    public ElementIntegerField(MOGuiBase gui,IButtonHandler buttonHandler, int posX, int posY) {
+        this(gui,buttonHandler, posX, posY, 120, 18, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
     public int getNumber()
     {
-        if (numberField.getText().isEmpty())
-            return 0;
-
-        int number = 0;
-
-        try {
-            number = Integer.parseInt(numberField.getText());
-        }catch (Exception e)
-        {
-
-        }
-
-        MathHelper.clampI(number, min, max);
-        return number;
+        return MathHelper.clampI(number, min, max);
     }
 
     public void setNumber(int number)
     {
-        number = MathHelper.clampI(number,min,max);
-        numberField.setText(Integer.toString(number));
+        this.number = MathHelper.clampI(number,min,max);
     }
 
     @Override
@@ -89,12 +92,42 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
 
         if (buttonName == "Inc")
         {
-            setNumber(getNumber()+(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 16 : 1));
+            int value = 1;
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+                value = 64;
+            else if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+                value = 16;
+
+            setNumber(getNumber()+value);
+            buttonHandler.handleElementButtonClick(getName(),value);
         }
         else if (buttonName == "Dec")
         {
-            setNumber(getNumber()-(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 16 : 1));
+            int value = -1;
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+                value = -64;
+            else if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+                value = -16;
+
+            setNumber(getNumber()+value);
+            buttonHandler.handleElementButtonClick(getName(),value);
         }
+    }
+
+    @Override
+    public void drawBackground(int mouseX, int mouseY, float gameTicks)
+    {
+        super.drawBackground(mouseX,mouseY,gameTicks);
+        numberBG.Render(posX + 16,posY,sizeX - 32,sizeY);
+    }
+
+    @Override
+    public void drawForeground(int mouseX, int mouseY)
+    {
+        super.drawForeground(mouseX, mouseY);
+        String number = Integer.toString(this.number);
+        int numberWidth = getFontRenderer().getStringWidth(number);
+        getFontRenderer().drawString(number,posX - numberWidth/2 + sizeX/2,posY - getFontRenderer().FONT_HEIGHT/2 + sizeY/2,Reference.COLOR_GUI_DARKER.getColor());
     }
 
     public void setBounds(int min,int max)

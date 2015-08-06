@@ -46,7 +46,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 {
 	public static int MATTER_STORAGE = 1024;
 	public static int ENERGY_STORAGE = 512000;
-    public static  final  int MATTER_EXTRACT_SPEED = 100;
+    public static  final int MATTER_EXTRACT_SPEED = 128;
     public static  final float FAIL_CHANGE = 0.05f;
 
     public static int DECEOPOSE_SPEED_PER_MATTER = 80;

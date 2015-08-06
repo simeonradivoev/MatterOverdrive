@@ -121,9 +121,7 @@ public class ItemRendererPhaserRifle implements IItemRenderer
     {
         glPushMatrix();
         glScaled(SCALE_DROP, SCALE_DROP, SCALE_DROP);
-        glTranslated(0, 0, 0);
-        //glRotated(-130,0,1,0);
-        //glRotated(15, 1, 0, 0);
+        glTranslated(0, 0, -0.7);
         RenderGun(ItemRenderType.ENTITY,item);
         glPopMatrix();
     }
@@ -165,26 +163,6 @@ public class ItemRendererPhaserRifle implements IItemRenderer
         glPushMatrix();
         glScaled(SCALE, SCALE, SCALE);
 
-        if(Minecraft.getMinecraft().thePlayer.isUsingItem())
-        {
-            //glTranslated(-1.05, 1.0, 0.3);
-            //glRotated(135, 0, 1, 0);
-            //glRotated(0, 1, 0, 0);
-
-            //glTranslated(0.03, 0.5, 0.08);
-            //glRotated(149, 0, 1, 0);
-            //glRotated(-10, 1, 0, 0);
-            //glRotated(-10, 1, 0, 1);
-        }
-        else
-        {
-            //glRotated(90, 0, 1, 0);
-            //glRotated(-30, 1, 0, 0);
-            //glTranslated(0, -0.4, 1.2);
-            //glScaled(1, 1, 0.7);
-            //glRotated(0, 1, 0, 0);
-        }
-
         glRotated(MOMathHelper.Lerp(30, 25, zoomValue), 0, 0, 1);
         glRotated(MOMathHelper.Lerp(90, 85, zoomValue), 0, 1, 0);
 
@@ -194,18 +172,6 @@ public class ItemRendererPhaserRifle implements IItemRenderer
         glTranslatef(0, -recoilValue * 0.03f * RECOIL_AMOUNT, -recoilValue * 0.05f * RECOIL_AMOUNT);
         glRotated(recoilValue * 2 * RECOIL_AMOUNT, -1, 0, 0);
 
-        /*if (SHOOT_TIME > 0) {
-            SHOOT_TIME-=0.5;
-            float timePercent = SHOOT_TIME / 4f;
-            if (isRifleZoomed(item)) {
-                glTranslatef(0, -timePercent * 0.03f, -timePercent * 0.05f);
-                glRotated(timePercent * 2, -1, 0, 0);
-            }else
-            {
-                glTranslatef(0, -timePercent * 0.1f, -timePercent * 0.2f);
-                glRotated(timePercent * 5,-1,0,0);
-            }
-        }*/
         RenderGun(ItemRenderType.EQUIPPED_FIRST_PERSON,item);
         glPopMatrix();
 
@@ -254,8 +220,6 @@ public class ItemRendererPhaserRifle implements IItemRenderer
             }
         }
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
         Minecraft.getMinecraft().renderEngine.bindTexture(phaserTexture);
         phaserModel.renderAll();

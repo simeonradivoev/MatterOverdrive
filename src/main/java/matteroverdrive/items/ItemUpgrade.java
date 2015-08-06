@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.items;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -29,7 +47,7 @@ import java.util.Map;
  */
 public class ItemUpgrade extends MOBaseItem implements IUpgrade
 {
-    public static final String[] subItemNames = {"base","speed","power","failsafe","range","power_storage"};
+    public static final String[] subItemNames = {"base","speed","power","failsafe","range","power_storage","hyper_speed"};
     @SideOnly(Side.CLIENT)
     private IIcon[] icons;
 
@@ -70,9 +88,11 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
         //power
         GameRegistry.addRecipe(new ItemStack(this,1,2),new Object[]{" B ","RUR"," C ",'U',new ItemStack(this,1,0),'B',MatterOverdriveItems.battery,'R',Items.redstone,'C',Items.quartz});
         //failsafe
-        GameRegistry.addRecipe(new ItemStack(this,1,3),new Object[]{" D ","RUR"," G ",'U',new ItemStack(this,1,0),'D',Items.diamond,'R',Items.redstone,'G',Items.gold_ingot});
+        GameRegistry.addRecipe(new ItemStack(this, 1, 3), new Object[]{" D ", "RUR", " G ", 'U', new ItemStack(this, 1, 0), 'D', Items.diamond, 'R', Items.redstone, 'G', Items.gold_ingot});
         //range
-        GameRegistry.addRecipe(new ItemStack(this,1,4),new Object[]{" E ","RUR"," G ",'U',new ItemStack(this,1,0),'E',Items.ender_pearl,'R',Items.redstone,'G',Items.gold_ingot});
+        GameRegistry.addRecipe(new ItemStack(this, 1, 4), new Object[]{" E ", "RUR", " G ", 'U', new ItemStack(this, 1, 0), 'E', Items.ender_pearl, 'R', Items.redstone, 'G', Items.gold_ingot});
+        //hyper speed
+        GameRegistry.addRecipe(new ItemStack(this,1,6),new Object[]{" D ","GUG"," E ",'U',new ItemStack(this,1,0),'G',Items.glowstone_dust,'D',MatterOverdriveItems.dilithium_ctystal,'E',Items.nether_star});
     }
 
     @Override
@@ -124,14 +144,14 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
             case 1:
                 //the speed upgrade
                 upgrades.put(UpgradeTypes.Speed,0.75);
-                upgrades.put(UpgradeTypes.PowerUsage,1.5);
+                upgrades.put(UpgradeTypes.PowerUsage,1.25);
                 upgrades.put(UpgradeTypes.Fail,1.25);
                 break;
             case 2:
                 //less power upgrade
                 upgrades.put(UpgradeTypes.Speed,1.5);
                 upgrades.put(UpgradeTypes.PowerUsage,0.75);
-                upgrades.put(UpgradeTypes.Fail,1.5);
+                upgrades.put(UpgradeTypes.Fail,1.25);
                 break;
             case 3:
                 //less chance to fail upgrade
@@ -147,6 +167,11 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
             case 5:
                 upgrades.put(UpgradeTypes.PowerStorage,2d);
                 break;
+                //hyper speed
+            case 6:
+                upgrades.put(UpgradeTypes.Speed,0.15);
+                upgrades.put(UpgradeTypes.PowerUsage,2d);
+                upgrades.put(UpgradeTypes.Fail,1.25);
         }
         return upgrades;
     }
