@@ -94,7 +94,7 @@ public class MatterOverdrive
 		MatterOverdriveEntities.init(event, configHandler);
 		MatterOverdriveBlocks.register(event);
 		MatterOverdriveItems.register(event);
-		MatterOverdriveEntities.register(event);
+		MatterOverdriveEnchantments.init(event,configHandler);
 		moWorld.register();
 		MatterNetworkRegistry.register();
         packetPipeline.registerPackets();
@@ -116,11 +116,8 @@ public class MatterOverdrive
         guiHandler.register(event.getSide());
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 		MinecraftForge.EVENT_BUS.register(entityHandler);
-		MatterOverdriveItems.addToDungons();
 		proxy.init(event);
-
 		configHandler.init();
-
 		MatterOverdriveCompat.init(event);
 	}
 	
@@ -128,6 +125,8 @@ public class MatterOverdrive
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		MatterOverdriveCompat.postInit(event);
+		MatterOverdriveEntities.register(event);
+		MatterOverdriveItems.addToDungons();
 	}
 
 

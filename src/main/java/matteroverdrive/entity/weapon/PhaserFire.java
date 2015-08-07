@@ -53,6 +53,7 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
     private Block block;
     private int life;
     private int color;
+    private float fireDamageMultiply;
 
     public PhaserFire(World p_i1753_1_)
     {
@@ -222,6 +223,11 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
                         }
                     }
 
+                    if (fireDamageMultiply > 0)
+                    {
+                        movingobjectposition.entityHit.setFire((int)(80 * fireDamageMultiply));
+                    }
+
                     if (!(movingobjectposition.entityHit instanceof EntityEnderman))
                     {
                         this.setDead();
@@ -387,5 +393,10 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
     @Override
     public boolean isAffectedByAnomaly() {
         return false;
+    }
+
+    public void setFireDamageMultiply(float fiery)
+    {
+        this.fireDamageMultiply = fiery;
     }
 }

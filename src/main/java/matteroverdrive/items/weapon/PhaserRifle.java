@@ -42,6 +42,7 @@ import java.util.List;
  */
 public class PhaserRifle extends EnergyWeapon
 {
+
     private static final int HEAT_PER_SHOT = 20;
     private static final int MAX_HEAT = 80;
     private static final int MAX_USE_TIME = 512;
@@ -165,7 +166,7 @@ public class PhaserRifle extends EnergyWeapon
                 Minecraft.getMinecraft().entityRenderer.itemRenderer.updateEquippedItem();
         }
 
-        super.onUpdate(itemStack,world,entity,p_77663_4_,p_77663_5_);
+        super.onUpdate(itemStack, world, entity, p_77663_4_, p_77663_5_);
     }
 
     @Override
@@ -175,9 +176,7 @@ public class PhaserRifle extends EnergyWeapon
         float newHeat =  (getHeat(weapon)+4) * 2f;
         setHeat(weapon, newHeat);
         manageOverheat(weapon, entityPlayer.worldObj, entityPlayer);
-        PhaserFire fire = new PhaserFire(entityPlayer.worldObj, entityPlayer, getWeaponScaledDamage(weapon), 2, getAccuracy(weapon, zoomed), getRange(weapon), WeaponHelper.getColor(weapon).getColor(), zoomed,seed);
-        //fire.setInvisible(true);
-        entityPlayer.worldObj.spawnEntityInWorld(fire);
+        PhaserFire fire = spawnProjectile(weapon,entityPlayer,zoomed,seed);
         weapon.getTagCompound().setLong("LastShot", entityPlayer.worldObj.getTotalWorldTime());
         fire.simulate(latency);
         entityPlayer.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
@@ -195,10 +194,16 @@ public class PhaserRifle extends EnergyWeapon
 
         //ClientProxy.weaponHandler.addShootDelay(this);
         ItemRendererPhaserRifle.RECOIL_TIME = 1;
-        player.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot",0.3f + itemRand.nextFloat() * 0.2f,0.9f + itemRand.nextFloat() * 0.2f);
-        PhaserFire fire = new PhaserFire(player.worldObj, player, getWeaponScaledDamage(weapon), 2, getAccuracy(weapon, zoomed), getRange(weapon), WeaponHelper.getColor(weapon).getColor(), zoomed,seed);
-        //fire.setInvisible(true);
-        player.worldObj.spawnEntityInWorld(fire);
+        player.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+        spawnProjectile(weapon,player,zoomed,seed);
+    }
+
+    public PhaserFire spawnProjectile(ItemStack weapon,EntityPlayer entityPlayer,boolean zoomed,int seed)
+    {
+        PhaserFire fire = new PhaserFire(entityPlayer.worldObj, entityPlayer, getWeaponScaledDamage(weapon), 2, getAccuracy(weapon, zoomed), getRange(weapon), WeaponHelper.getColor(weapon).getColor(), zoomed,seed);
+        fire.setFireDamageMultiply((float) WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE, weapon));
+        entityPlayer.worldObj.spawnEntityInWorld(fire);
+        return fire;
     }
 
     @Override
@@ -233,7 +238,7 @@ public class PhaserRifle extends EnergyWeapon
     @Override
     public boolean canFire(ItemStack weapon,World world)
     {
-        return DrainEnergy(weapon,1,true) && !weapon.getTagCompound().getBoolean("Overheated");
+        return DrainEnergy(weapon, 1, true) && !weapon.getTagCompound().getBoolean("Overheated");
     }
 
     public float getAccuracy(ItemStack weapon,boolean zoomed)

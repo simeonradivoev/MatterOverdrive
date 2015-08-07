@@ -27,6 +27,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
+import matteroverdrive.init.MatterOverdriveEnchantments;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.network.packet.server.PacketReloadEnergyWeapon;
 import matteroverdrive.proxy.ClientProxy;
@@ -36,6 +37,8 @@ import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.animation.MOEasing;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -45,6 +48,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +58,8 @@ import java.util.Map;
 public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWeapon {
 
     private final int defaultRange;
+    @SideOnly(Side.CLIENT)
+    private DecimalFormat damageFormater = new DecimalFormat("#.##");
 
     public EnergyWeapon(String name, int capacity, int maxReceive, int maxExtract,int defaultRange) {
         super(name, capacity, maxReceive, maxExtract);
@@ -86,9 +92,21 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public void addDetails(ItemStack weapon, EntityPlayer player, List infos)
     {
         super.addDetails(weapon, player, infos);
-        infos.add(EnumChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(getEnergyUse(weapon)) + "/t");
-        infos.add(EnumChatFormatting.DARK_GREEN + "Damage: " + getWeaponScaledDamage(weapon));
-        infos.add(EnumChatFormatting.DARK_RED + "Heat: " + getHeat(weapon));
+        String energyInfo = EnumChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(getEnergyUse(weapon));
+        float energyMultiply = (float)getEnergyUse(weapon) / (float)getBaseEnergyUse(weapon);
+        if (energyMultiply != 1)
+        {
+            energyInfo += " (" + DecimalFormat.getPercentInstance().format(energyMultiply) + ")";
+        }
+        infos.add(energyInfo);
+        String damageInfo = EnumChatFormatting.DARK_GREEN + "Damage: " + damageFormater.format(getWeaponScaledDamage(weapon));
+        double damageModify = getWeaponScaledDamage(weapon) / getWeaponBaseDamage(weapon);
+        if (damageModify != 1)
+        {
+            damageInfo += " (" + DecimalFormat.getPercentInstance().format(damageModify) + ")";
+        }
+        infos.add(damageInfo);
+        infos.add(EnumChatFormatting.DARK_RED + "Heat: " + DecimalFormat.getPercentInstance().format(getHeat(weapon) / getMaxHeat(weapon)));
         addCustomDetails(weapon,player,infos);
         AddModuleDetails(weapon, infos);
     }
@@ -106,7 +124,9 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
             {
                 for (final Map.Entry<Integer, Double> entry : ((Map<Integer,Double>) statsObject).entrySet())
                 {
-                    infos.add("    " + MOStringHelper.weaponStatToInfo(entry.getKey(), entry.getValue()));
+                    if (entry.getKey() != Reference.WS_DAMAGE && entry.getKey() != Reference.WS_AMMO) {
+                        infos.add("    " + MOStringHelper.weaponStatToInfo(entry.getKey(), entry.getValue()));
+                    }
                 }
             }
         }
@@ -293,12 +313,12 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     protected double getPowerMultiply(ItemStack weapon)
     {
-        return WeaponHelper.getStatMultiply(Reference.WS_AMMO, weapon);
+        return WeaponHelper.getStatMultiply(Reference.WS_AMMO, weapon) + EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId,weapon) * 0.04f;
     }
 
-    protected float getDamageMultiplay(ItemStack phaser)
+    protected float getDamageMultiplay(ItemStack weapon)
     {
-        return (float)WeaponHelper.getStatMultiply(Reference.WS_DAMAGE, phaser);
+        return (float)WeaponHelper.getStatMultiply(Reference.WS_DAMAGE, weapon) + EnchantmentHelper.getEnchantmentLevel(MatterOverdriveEnchantments.overclock.effectId,weapon) * 0.04f;
     }
 
     protected float getMaxHeatMultiply(ItemStack weapon)
@@ -407,6 +427,18 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public boolean needsRecharge(ItemStack weapon)
     {
         return !DrainEnergy(weapon,1,true);
+    }
+
+    @Override
+    public int getItemEnchantability()
+    {
+        return ToolMaterial.IRON.getEnchantability();
+    }
+
+    @Override
+    public boolean isItemTool(ItemStack p_77616_1_)
+    {
+        return true;
     }
     //endregion
 }

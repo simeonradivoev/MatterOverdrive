@@ -48,7 +48,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
         int randomID = EntityRegistry.findGlobalUniqueEntityId();
         EntityRegistry.registerGlobalEntityID(entityClass, name, randomID);
         EntityRegistry.registerModEntity(entityClass, name, randomID, MatterOverdrive.instance, 64, 1, true);
-        spawnListEntry = new BiomeGenBase.SpawnListEntry(entityClass,3,1,2);
+        spawnListEntry = new BiomeGenBase.SpawnListEntry(entityClass,5,1,2);
         addInBiome(BiomeGenBase.getBiomeGenArray());
         createEgg(randomID, solidColor, spotColor);
     }
@@ -84,7 +84,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         if (spawnListEntry != null)
         {
-            spawnListEntry.itemWeight = config.config.getInt("rogue_android.spawn.chance", ConfigurationHandler.CATEGORY_WORLD_GEN,3,0,100,"The spawn change of the Rogue Android");
+            spawnListEntry.itemWeight = config.config.getInt("rogue_android.spawn.chance", ConfigurationHandler.CATEGORY_WORLD_GEN,5,0,100,"The spawn change of the Rogue Android");
             loadBlacklist(config);
         }
     }

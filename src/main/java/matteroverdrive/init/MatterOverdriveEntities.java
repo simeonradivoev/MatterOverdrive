@@ -18,6 +18,7 @@
 
 package matteroverdrive.init;
 
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
@@ -45,7 +46,7 @@ public class MatterOverdriveEntities
         configurationHandler.subscribe(rogueandroid);
     }
 
-    public static void register(FMLPreInitializationEvent event)
+    public static void register(FMLPostInitializationEvent event)
     {
         addEntity(EntityFailedPig.class,"failed_pig",15771042,0x33CC33);
         addEntity(EntityFailedCow.class,"failed_cow",4470310,0x33CC33);

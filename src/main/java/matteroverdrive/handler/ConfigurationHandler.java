@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.handler;
 
 import cpw.mods.fml.client.config.IConfigElement;
@@ -33,6 +51,7 @@ public class ConfigurationHandler
     public static final String CATEGORY_CLIENT = "client";
     public static final String CATEGORY_STARMAP = "starmap";
     public static final String CATEGORY_SERVER = "server";
+    public static final String CATEGORY_ENCHANTMENTS = "enchantments";
 
     public static final String KEY_AUTOMATIC_RECIPE_CALCULATION = "automatic matter calculation from recipe";
     public static final String KEY_MAX_BROADCASTS = "max broadcasts per tick";
@@ -124,6 +143,11 @@ public class ConfigurationHandler
     public int getInt(String key,String category,Integer def)
     {
         return getInt(key, category, def, "");
+    }
+
+    public void setInt(String key,String category,Integer def)
+    {
+        config.get(category,key,def).set(def);
     }
 
     public String[] getStringList(String category,String key)

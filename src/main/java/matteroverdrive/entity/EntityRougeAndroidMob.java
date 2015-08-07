@@ -101,7 +101,7 @@ public class EntityRougeAndroidMob extends EntityMob
 
             if (this.recentlyHit > 0)
             {
-                j = this.rand.nextInt(100) - i;
+                j = this.rand.nextInt(100) - i*3;
 
                 if (j < 20)
                 {
