@@ -398,7 +398,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     }
 
     @Override
-    public boolean isActive()
+    public boolean getServerActive()
     {
         return  transportTimer > 0;
     }

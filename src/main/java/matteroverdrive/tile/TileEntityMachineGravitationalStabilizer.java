@@ -143,7 +143,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     }
 
     @Override
-    public boolean isActive() {
+    public boolean getServerActive() {
         return hit != null;
     }
 

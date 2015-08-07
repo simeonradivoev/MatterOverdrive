@@ -95,7 +95,7 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     }
 
     @Override
-    public boolean isActive() {
+    public boolean getServerActive() {
         return false;
     }
 

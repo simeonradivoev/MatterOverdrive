@@ -220,7 +220,7 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     }
 
     @Override
-    public boolean isActive() {
+    public boolean getServerActive() {
         return isRecycling() && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick();
     }
 

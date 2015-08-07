@@ -420,7 +420,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public boolean isActive()
+    public boolean getServerActive()
     {
         return energyStorage.getEnergyStored() > 0;
     }

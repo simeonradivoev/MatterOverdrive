@@ -173,7 +173,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     }
 
     @Override
-    public boolean isActive()
+    public boolean getServerActive()
     {
         return isDecomposing() && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick();
     }

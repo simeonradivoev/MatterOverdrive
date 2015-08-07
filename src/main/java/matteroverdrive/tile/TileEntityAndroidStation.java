@@ -91,7 +91,7 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     }
 
     @Override
-    public boolean isActive() {
+    public boolean getServerActive() {
         return false;
     }
 

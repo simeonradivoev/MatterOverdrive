@@ -93,7 +93,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     }
 
     @Override
-    public boolean isActive()
+    public boolean getServerActive()
     {
         if (!worldObj.provider.hasNoSky)
         {

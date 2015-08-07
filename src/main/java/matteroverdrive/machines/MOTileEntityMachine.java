@@ -68,7 +68,8 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     protected static Random random = new Random();
 
     //client syncs
-    protected boolean lastActive;
+    private boolean lastActive;
+    private boolean activeState;
 
     @SideOnly(Side.CLIENT)
     protected MachineSound sound;
@@ -114,6 +115,16 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 
             return;
         }
+        else
+        {
+            activeState = getServerActive();
+            if (lastActive != activeState)
+            {
+                ForceSync();
+                onActiveChange();
+                lastActive = activeState;
+            }
+        }
 
         manageRedstoneState();
         manageClientSync();
@@ -150,7 +161,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
     public abstract String getSound();
     public abstract boolean hasSound();
-    public abstract boolean isActive();
+    public abstract boolean getServerActive();
     public abstract float soundVolume();
     public void onContainerOpen(Side side)
     {
@@ -171,7 +182,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @SideOnly(Side.CLIENT)
     protected void manageSound()
     {
-        if(hasSound())
+        if(hasSound() && soundVolume() > 0)
         {
             if (isActive() && !isInvalid())
             {
@@ -181,8 +192,10 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                     {
                         soundMultiply = ((MOBlockMachine) getBlockType()).volume;
                     }
-                    sound = new MachineSound(soundRes, xCoord, yCoord, zCoord, soundVolume() * soundMultiply, 1);
-                    FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
+                    if (soundMultiply > 0) {
+                        sound = new MachineSound(soundRes, xCoord, yCoord, zCoord, soundVolume() * soundMultiply, 1);
+                        FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
+                    }
                 }
                 else if (FMLClientHandler.instance().getClient().getSoundHandler().isSoundPlaying(sound))
                 {
@@ -190,7 +203,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                 }
                 else
                 {
-                    sound.startPlaying();
+                    sound = null;
                 }
             }
             else if (sound != null)
@@ -232,6 +245,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         {
             redstoneState = nbt.getBoolean("redstoneState");
             forceClientUpdate = nbt.getBoolean("forceClientUpdate");
+            activeState = nbt.getBoolean("activeState");
             if (nbt.hasKey("Owner", 8) && !nbt.getString("Owner").isEmpty()) {
                 try {
                     owner = UUID.fromString(nbt.getString("Owner"));
@@ -261,6 +275,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         {
             nbt.setBoolean("forceClientUpdate", forceClientUpdate);
             nbt.setBoolean("redstoneState", redstoneState);
+            nbt.setBoolean("activeState",activeState);
             if (owner != null)
                 nbt.setString("Owner", owner.toString());
             else if (nbt.hasKey("Owner", 6)) {
@@ -539,6 +554,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         forceClientUpdate = true;
     }
 
+    @SideOnly(Side.CLIENT)
     public void sendConfigsToServer()
     {
         MatterOverdrive.packetPipeline.sendToServer(new PacketSaveConfigs(this));
@@ -712,5 +728,13 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     public boolean hasPlayerSlotsHotbar(){return playerSlotsHotbar;}
     public boolean hasPlayerSlotsMain(){return playerSlotsMain;}
     public float getProgress(){return 0;}
+    public boolean isActive()
+    {
+        return activeState;
+    }
+    public void setActive(boolean active)
+    {
+        activeState = active;
+    }
     //endregion
 }

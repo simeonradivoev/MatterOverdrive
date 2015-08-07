@@ -53,7 +53,7 @@ import java.util.ArrayList;
  */
 public abstract class MOBlockMachine extends MOBlockContainer implements IDismantleable, IConfigSubscriber
 {
-    public float volume;
+    public float volume = 1;
     public boolean hasGui;
 
     public MOBlockMachine(Material material, String name)

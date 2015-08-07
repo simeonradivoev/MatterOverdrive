@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.blocks;
 
 import cofh.lib.util.helpers.BlockHelper;
@@ -93,6 +111,7 @@ public class BlockDecomposer extends MOMatterEnergyStorageBlock
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
+        super.onConfigChanged(config);
         config.initMachineCategory(getUnlocalizedName());
         TileEntityMachineDecomposer.MATTER_STORAGE = config.getMachineInt(getUnlocalizedName(),"storage.matter",1024,String.format("How much matter can the %s hold",getLocalizedName()));
         TileEntityMachineDecomposer.ENERGY_STORAGE = config.getMachineInt(getUnlocalizedName(),"storage.energy",512000,String.format("How much energy can the %s hold",getLocalizedName()));

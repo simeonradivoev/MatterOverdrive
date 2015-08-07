@@ -94,7 +94,7 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     }
 
     @Override
-    public boolean isActive() {
+    public boolean getServerActive() {
         return false;
     }
 

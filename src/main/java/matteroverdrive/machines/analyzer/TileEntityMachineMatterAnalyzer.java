@@ -350,7 +350,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public int getEnergyDrainPerTick() {return getEnergyDrainMax() / getSpeed();}
     public int getEnergyDrainMax() {return MathHelper.round(ENERGY_DRAIN_PER_ITEM * getUpgradeMultiply(UpgradeTypes.PowerUsage));}
     @Override
-    public  boolean isActive() {return isActive;}
+    public  boolean getServerActive() {return isActive;}
     @Override
     public String getSound() {return "analyzer";}
     @Override

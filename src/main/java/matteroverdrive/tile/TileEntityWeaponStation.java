@@ -102,7 +102,7 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
     }
 
     @Override
-    public boolean isActive() {
+    public boolean getServerActive() {
         return false;
     }
 

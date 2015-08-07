@@ -179,7 +179,7 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     }
 
     @Override
-    public boolean isActive()
+    public boolean getServerActive()
     {
         return packetQueue.size() > 0;
     }

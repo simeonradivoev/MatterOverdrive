@@ -87,7 +87,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
     }
 
     @Override
-    public boolean isActive()
+    public boolean getServerActive()
     {
         return false;
     }

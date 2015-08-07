@@ -169,7 +169,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     }
 
     @Override
-    public boolean isActive() {
+    public boolean getServerActive() {
         return isValidStructure() &&
                 isGeneratingPower();
     }
