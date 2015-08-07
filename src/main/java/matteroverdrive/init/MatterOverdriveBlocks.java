@@ -60,12 +60,13 @@ public class MatterOverdriveBlocks {
     public static BlockAndroidStation androidStation;
     public static BlockStarMap starMap;
     public static BlockChargingStation chargingStation;
+    public static BlockMatterPipe heavy_matter_pipe;
 
     public static void init(FMLPreInitializationEvent event) {
         replicator = new BlockReplicator(Material.iron, "replicator");
         decomposer = new BlockDecomposer(Material.iron, "decomposer");
         transporter = new BlockTransporter(Material.iron, "transporter");
-        matter_pipe = new BlockMatterPipe(Material.iron, "matter_pipe");
+        matter_pipe = new BlockMatterPipe(Material.iron, "matter_pipe",32,20);
         network_pipe = new BlockNetworkPipe(Material.iron, "network_pipe");
         network_router = new BlockNetworkRouter(Material.iron, "network_router");
         matter_analyzer = new BlockMatterAnalyzer(Material.iron, "matter_analyzer");
@@ -98,6 +99,7 @@ public class MatterOverdriveBlocks {
         androidStation = new BlockAndroidStation(Material.iron, "android_station");
         starMap = new BlockStarMap(Material.iron, "star_map");
         chargingStation = new BlockChargingStation(Material.iron, "charging_station");
+        heavy_matter_pipe = new BlockMatterPipe(Material.iron, "heavy_matter_pipe",64,10);
     }
 
     public static void register(FMLPreInitializationEvent event) {
@@ -141,6 +143,7 @@ public class MatterOverdriveBlocks {
         MatterOverdrive.configHandler.subscribe(starMap);
         chargingStation.register();
         MatterOverdrive.configHandler.subscribe(chargingStation);
+        heavy_matter_pipe.register();
 
         if (event.getSide() == Side.CLIENT) {
             MatterOverdriveQuide.Register(replicator);
@@ -153,8 +156,8 @@ public class MatterOverdriveBlocks {
         GameRegistry.addRecipe(new ItemStack(replicator), "TCT", "IHI", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'H', MatterOverdriveItems.h_compensator, 'I', Items.iron_ingot, 'N', MatterOverdriveItems.integration_matrix, 'T', MatterOverdriveItems.tritanium_plate);
         GameRegistry.addRecipe(new ItemStack(network_router), "IGI", "CDC", "OMO", 'M', MatterOverdriveItems.machine_casing, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'I', Items.iron_ingot, 'G', Blocks.glass, 'D', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1));
         GameRegistry.addRecipe(new ItemStack(network_switch), " G ", "C C", "OMO", 'M', MatterOverdriveItems.machine_casing, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'G', Blocks.glass);
-        GameRegistry.addRecipe(new ItemStack(matter_pipe, 8), "IGI", "M M", "IGI", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'I', Items.iron_ingot);
-        GameRegistry.addRecipe(new ItemStack(network_pipe, 4), "IGI", "BCB", "IGI", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'I', Items.iron_ingot, 'B', Items.gold_ingot, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0));
+        GameRegistry.addRecipe(new ItemStack(matter_pipe, 8), " G ", "IMI", " G ", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'I', Items.iron_ingot);
+        GameRegistry.addRecipe(new ItemStack(network_pipe, 16), "IGI", "BCB", "IGI", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'I', Items.iron_ingot, 'B', Items.gold_ingot, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0));
         GameRegistry.addRecipe(new ItemStack(matter_analyzer), " C ", "IMI", "ONO", 'O', Blocks.iron_block, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'I', Items.iron_ingot);
         GameRegistry.addRecipe(new ItemStack(tritanium_block), "TTT", "TTT", "TTT", 'T', MatterOverdriveItems.tritanium_ingot);
         GameRegistry.addRecipe(new ItemStack(machine_hull), " T ", "T T", " T ", 'T', MatterOverdriveItems.tritanium_plate);
@@ -170,6 +173,8 @@ public class MatterOverdriveBlocks {
         GameRegistry.addRecipe(new ItemStack(androidStation), "THA", "2F3", "GMR", '3', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), '2', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'F', MatterOverdriveItems.forceFieldEmitter, 'G', Items.glowstone_dust, 'R', Items.redstone, 'M', MatterOverdriveItems.machine_casing, 'H', new ItemStack(MatterOverdriveItems.androidParts, 1, 0), 'T', new ItemStack(MatterOverdriveItems.androidParts, 1, 3), 'A', new ItemStack(MatterOverdriveItems.androidParts, 1, 1));
         GameRegistry.addRecipe(new ItemStack(starMap), " S ", "CFC", "GMR", 'S', MatterOverdriveItems.security_protocol, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.machine_casing, 'F', MatterOverdriveItems.forceFieldEmitter, 'G', Items.glowstone_dust, 'R', Items.redstone);
         GameRegistry.addRecipe(new ItemStack(chargingStation), " F ", "EDR", "BMB", 'M', MatterOverdriveItems.machine_casing, 'B', MatterOverdriveItems.hc_battery, 'E', Items.ender_eye, 'R', Items.repeater, 'F', MatterOverdriveItems.forceFieldEmitter, 'D', MatterOverdriveItems.dilithium_ctystal);
+        GameRegistry.addRecipe(new ItemStack(matter_pipe, 8), "RMR", "TMT", "RMR", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'T', MatterOverdriveItems.tritanium_plate,'R',Items.redstone);
+
 
         OreDictionary.registerOre("oreTritanium", tritaniumOre);
         OreDictionary.registerOre("oreDilithium",dilithium_ore);

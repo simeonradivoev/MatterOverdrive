@@ -168,7 +168,7 @@ public class RendererPhaserBeam implements IWorldLastRenderer
     {
         if (!soundMap.containsKey(entity))
         {
-            PhaserSound sound = new PhaserSound(phaserSoundLocation,(float)entity.posX,(float)entity.posY,(float)entity.posZ,random.nextFloat() * 0.1f + 0.3f,1);
+            PhaserSound sound = new PhaserSound(phaserSoundLocation,(float)entity.posX,(float)entity.posY,(float)entity.posZ,random.nextFloat() * 0.05f + 0.2f,1);
             soundMap.put(entity,sound);
             Minecraft.getMinecraft().getSoundHandler().playSound(sound);
         }

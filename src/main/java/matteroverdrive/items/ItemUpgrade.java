@@ -47,7 +47,7 @@ import java.util.Map;
  */
 public class ItemUpgrade extends MOBaseItem implements IUpgrade
 {
-    public static final String[] subItemNames = {"base","speed","power","failsafe","range","power_storage","hyper_speed"};
+    public static final String[] subItemNames = {"base","speed","power","failsafe","range","power_storage","hyper_speed","matter_storage"};
     @SideOnly(Side.CLIENT)
     private IIcon[] icons;
 
@@ -82,17 +82,21 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
     public void register(String name)
     {
         super.register(name);
-        GameRegistry.addRecipe(new ItemStack(this, 1, 0), new Object[]{" R ", " C ", " T ", 'G', Blocks.glass, 'R', Items.redstone, 'T', MatterOverdriveItems.tritanium_plate, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0)});
+        GameRegistry.addRecipe(new ItemStack(this, 1, 0), " R ", " C ", " T ", 'G', Blocks.glass, 'R', Items.redstone, 'T', MatterOverdriveItems.tritanium_plate, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0));
         //speed
-        GameRegistry.addRecipe(new ItemStack(this,1,1),new Object[]{" R ","GUG"," E ",'U',new ItemStack(this,1,0),'G',Items.glowstone_dust,'R',Items.redstone,'E',Items.emerald});
+        GameRegistry.addRecipe(new ItemStack(this,1,1)," R ","GUG"," E ",'U',this,'G',Items.glowstone_dust,'R',Items.redstone,'E',Items.emerald);
         //power
-        GameRegistry.addRecipe(new ItemStack(this,1,2),new Object[]{" B ","RUR"," C ",'U',new ItemStack(this,1,0),'B',MatterOverdriveItems.battery,'R',Items.redstone,'C',Items.quartz});
+        GameRegistry.addRecipe(new ItemStack(this,1,2)," B ","RUR"," C ",'U',this,'B',MatterOverdriveItems.battery,'R',Items.redstone,'C',Items.quartz);
         //failsafe
-        GameRegistry.addRecipe(new ItemStack(this, 1, 3), new Object[]{" D ", "RUR", " G ", 'U', new ItemStack(this, 1, 0), 'D', Items.diamond, 'R', Items.redstone, 'G', Items.gold_ingot});
+        GameRegistry.addRecipe(new ItemStack(this, 1, 3), " D ", "RUR", " G ", 'U', this, 'D', Items.diamond, 'R', Items.redstone, 'G', Items.gold_ingot);
         //range
-        GameRegistry.addRecipe(new ItemStack(this, 1, 4), new Object[]{" E ", "RUR", " G ", 'U', new ItemStack(this, 1, 0), 'E', Items.ender_pearl, 'R', Items.redstone, 'G', Items.gold_ingot});
+        GameRegistry.addRecipe(new ItemStack(this, 1, 4), " E ", "RUR", " G ", 'U', this, 'E', Items.ender_pearl, 'R', Items.redstone, 'G', Items.gold_ingot);
+        //power storage
+        GameRegistry.addRecipe(new ItemStack(this, 1, 5), " B ", "RUR", " B ", 'U', this, 'B', MatterOverdriveItems.hc_battery, 'R', Items.redstone, 'G', Items.gold_ingot);
         //hyper speed
-        GameRegistry.addRecipe(new ItemStack(this,1,6),new Object[]{" D ","GUG"," E ",'U',new ItemStack(this,1,0),'G',Items.glowstone_dust,'D',MatterOverdriveItems.dilithium_ctystal,'E',Items.nether_star});
+        GameRegistry.addRecipe(new ItemStack(this, 1, 6), " D ", "GUG", " E ", 'U', this, 'G', Items.glowstone_dust, 'D', MatterOverdriveItems.dilithium_ctystal, 'E', Items.nether_star);
+        //matter storage
+        GameRegistry.addRecipe(new ItemStack(this, 1, 7), " R ", "MUM", " R ", 'U', this, 'M', MatterOverdriveItems.s_magnet, 'R',Items.redstone);
     }
 
     @Override
@@ -172,6 +176,9 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
                 upgrades.put(UpgradeTypes.Speed,0.15);
                 upgrades.put(UpgradeTypes.PowerUsage,2d);
                 upgrades.put(UpgradeTypes.Fail,1.25);
+                break;
+            case 7:
+                upgrades.put(UpgradeTypes.MatterStorage,2d);
         }
         return upgrades;
     }

@@ -209,6 +209,8 @@ public class MatterOverdriveItems
         OreDictionary.registerOre("dustTritanium", tritanium_dust);
         OreDictionary.registerOre("ingotTritanium",tritanium_ingot);
         OreDictionary.registerOre("gemDilithium",dilithium_ctystal);
+        OreDictionary.registerOre("matterDust",matter_dust);
+        OreDictionary.registerOre("matterDustRefined",matter_dust_refined);
 	}
 
     public static void addToDungons()

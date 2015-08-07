@@ -45,22 +45,22 @@ import java.util.Random;
 /**
  * Created by Simeon on 3/7/2015.
  */
-public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConnection, IMatterHandler
+public class TileEntityMatterPipe extends TileEntityPipe implements IMatterConnection, IMatterHandler
 {
-    public  static  final int MATTER_STORAGE = 32;
-    public  static  final int TRANSFER_SPEED = 20;
     public  ForgeDirection lastDir = ForgeDirection.WEST;
     private MatterStorage storage;
     public  static Random rand = new Random();
+    private int transferSpeed;
     TimeTracker t;
 
     @SideOnly(Side.CLIENT)
     private boolean matterVisible;
 
-    public TileEntityMatterPipe()
+    public TileEntityMatterPipe(int matterStorage,int transferSpeed)
     {
         t = new TimeTracker();
-        storage = new MatterStorage(MATTER_STORAGE);
+        storage = new MatterStorage(matterStorage);
+        this.transferSpeed = transferSpeed;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
         super.updateEntity();
         if(!worldObj.isRemote)
         {
-            if (t.hasDelayPassed(worldObj, TRANSFER_SPEED))
+            if (t.hasDelayPassed(worldObj, transferSpeed))
             {
                 Transfer();
             }
@@ -98,7 +98,7 @@ public class TileEntityMatterPipe extends  TileEntityPipe implements IMatterConn
                 if (e != null && e instanceof IMatterHandler)
                 {
                     IMatterHandler to = (IMatterHandler)e;
-                    int transferAmount = MatterHelper.Transfer(dir.dir,MATTER_STORAGE,this,to);
+                    int transferAmount = MatterHelper.Transfer(dir.dir,storage.getMaxExtract(),this,to);
                 }
             }
         }

@@ -93,7 +93,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     {
         super(5);
         energyStorage.setCapacity(ENERGY_STORAGE);
-        energyStorage.setMaxTransfer(MAX_ENERGY_EXTRACT);
+        energyStorage.setMaxExtract(MAX_ENERGY_EXTRACT);
         matterStorage.setCapacity(512);
         locations = new ArrayList<>();
         selectedLocation = 0;
@@ -230,7 +230,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
                             transportTracker = worldObj.getTotalWorldTime() + getTransportDelay();
                         }
 
-                        energyStorage.setEnergyStored(energyStorage.getEnergyStored() - getEnergyDrain());
+                        energyStorage.modifyEnergyStored(getEnergyDrain());
 
                         transportTimer = 0;
                         MatterOverdrive.packetPipeline.sendToDimention(new PacketSyncTransportProgress(this),worldObj);

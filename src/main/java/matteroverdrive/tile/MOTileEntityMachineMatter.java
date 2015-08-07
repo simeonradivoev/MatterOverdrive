@@ -23,7 +23,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.api.matter.IMatterStorage;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
-import matteroverdrive.data.MatterStorage;
+import matteroverdrive.data.MachineMatterStorage;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.client.PacketMatterUpdate;
 import matteroverdrive.util.MatterHelper;
@@ -40,12 +40,12 @@ import java.util.List;
 
 public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IMatterHandler, IWailaBodyProvider
 {
-	protected MatterStorage matterStorage;
+	protected MachineMatterStorage matterStorage;
 	
 	public MOTileEntityMachineMatter(int upgradesCount)
 	{
         super(upgradesCount);
-		matterStorage = new MatterStorage();
+		matterStorage = new MachineMatterStorage(this,32768);
 	}
 	
 	@Override

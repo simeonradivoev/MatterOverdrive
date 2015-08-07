@@ -18,7 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyStorage;
@@ -28,6 +27,7 @@ import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.Inventory;
+import matteroverdrive.data.MachineEnergyStorage;
 import matteroverdrive.data.inventory.EnergySlot;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
@@ -48,13 +48,13 @@ import java.util.List;
  */
 public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler, ITileInfo
 {
-    protected EnergyStorage energyStorage;
+    protected MachineEnergyStorage energyStorage;
     protected int energySlotID;
 
     public MOTileEntityMachineEnergy(int upgradeCount)
     {
         super(upgradeCount);
-        this.energyStorage = new EnergyStorage(512);
+        this.energyStorage = new MachineEnergyStorage(this,512);
     }
 
     @Override
@@ -211,7 +211,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 
                 energyStorage.writeToNBT(itemStack.getTagCompound());
                 itemStack.getTagCompound().setInteger("MaxEnergy",energyStorage.getMaxEnergyStored());
-                itemStack.getTagCompound().setInteger("PowerSend",energyStorage.getMaxExtract());
+                itemStack.getTagCompound().setInteger("PowerSend", energyStorage.getMaxExtract());
                 itemStack.getTagCompound().setInteger("PowerReceive",energyStorage.getMaxReceive());
             }
         }

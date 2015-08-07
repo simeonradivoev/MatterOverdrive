@@ -74,6 +74,7 @@ item.upgrade.failsafe.name=Fail Safe Upgrade
 item.upgrade.range.name=Range Upgrade
 item.upgrade.power_storage.name=Power Storage Upgrade
 item.upgrade.hyper_speed.name=Hyper Speed Upgrade
+item.upgrade.matter_storage.name=Matter Storage Upgrade
 
 item.weapon_module_color.name=Color Module
 item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
@@ -120,6 +121,8 @@ tile.matter_analyzer.details=Analyzes Items Patterns
 tile.dilithium_ore.name=Dilithium Ore
 tile.tritanium_ore.name=Tritanium Ore
 tile.tritanium_block.name=Tritanium Block
+tile.heavy_matter_pipe.name=Heavy Duty Matter Transport Pipe
+tile.heavy_matter_pipe.details=Transports Matter Plasma
 
 //////////// Pattern Storage ////////////
 tile.pattern_storage.name=Pattern Storage
@@ -204,6 +207,7 @@ upgradetype.SecondOutput.name=Secondary Output
 upgradetype.Fail.name=Failure
 upgradetype.Range.name=Range
 upgradetype.PowerStorage.name=Power Storage
+upgradetype.MatterStorage.name=Matter Storage
 
 ##########################################################################################################
 # Weapon Stats
