@@ -66,7 +66,7 @@ public class ElementGrid extends ElementBaseGroup
 
         for (ElementBase element : elements)
         {
-            if (shouldBeDisplayed(element))
+            if (element != null && shouldBeDisplayed(element))
             {
 
                 if (widthCount > this.maxWidth - element.getWidth()) {
