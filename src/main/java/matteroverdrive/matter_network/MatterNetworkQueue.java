@@ -18,12 +18,10 @@
 
 package matteroverdrive.matter_network;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.api.network.MatterNetworkTask;
-import matteroverdrive.util.MOLog;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +55,7 @@ public abstract class MatterNetworkQueue <T>
             }
             catch (Exception e)
             {
-                MOLog.log(Level.ERROR,e,"Could not add element to Queue");
+				MatterOverdrive.log.error("Could not add element to queue", e);
                 return false;
             }
         }

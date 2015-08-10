@@ -18,17 +18,16 @@
 
 package matteroverdrive.handler;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.android.IAndroidStatRegistry;
 import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.api.events.MOEventRegisterAndroidStat;
 import matteroverdrive.data.biostats.*;
 import matteroverdrive.init.MatterOverdriveItems;
-import matteroverdrive.util.MOLog;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.logging.log4j.Level;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -57,7 +56,7 @@ public class AndroidStatRegistry implements IAndroidStatRegistry
     {
         if (stats.containsKey(stat.getUnlocalizedName()))
         {
-            MOLog.log(Level.WARN,"Stat with the name '%s' is already present!",stat.getUnlocalizedName());
+            MatterOverdrive.log.warn("Stat with the name '%s' is already present!", stat.getUnlocalizedName());
         }
         else
         {

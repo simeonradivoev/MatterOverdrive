@@ -18,39 +18,23 @@
 
 package matteroverdrive.handler;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import jdk.nashorn.internal.parser.DateParser;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.thread.VersionCheckThread;
 import matteroverdrive.util.IConfigSubscriber;
-import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
-import org.apache.logging.log4j.Level;
-import scala.util.parsing.json.JSON;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.*;
 
 /**
@@ -104,9 +88,9 @@ public class VersionCheckerHandler implements IConfigSubscriber {
             try {
                 result = download.get();
             } catch (InterruptedException e) {
-                MOLog.log(Level.ERROR, e, "Version Checking from '%1$s' was interrupted",mirrors[currentMirror - 1]);
+				MatterOverdrive.log.error(String.format("Version checking from '%1$s' was interrupted", mirrors[currentMirror - 1]), e);
             } catch (ExecutionException e) {
-                MOLog.log(Level.ERROR, e, "Version Checking from '%1$s' has failed",mirrors[currentMirror-1]);
+				MatterOverdrive.log.error(String.format("Version checking from '%1$s' has failed", mirrors[currentMirror - 1]), e);
             } finally {
                 if (result != null)
                 {
@@ -133,12 +117,12 @@ public class VersionCheckerHandler implements IConfigSubscriber {
             websiteDate = websiteDatePraser.parse(websiteDateString);
         } catch (ParseException e)
         {
-            MOLog.log(Level.WARN, e, "Website Date was incorrect");
+			MatterOverdrive.log.warn("Website date was incorrect", e);
         }
         try {
             modDate = modDateFormat.parse(Reference.VERSION_DATE);
         } catch (ParseException e) {
-            MOLog.log(Level.WARN, e, "Mod version Date was incorrect");
+			MatterOverdrive.log.warn("Mod version date was incorrect", e);
         }
 
         if (modDate != null && websiteDate != null ) {
@@ -169,7 +153,7 @@ public class VersionCheckerHandler implements IConfigSubscriber {
 
             } else
             {
-                MOLog.log(Level.INFO, "Matter Overdrive Version %1$s is up to date. From '%2$s'", root.get("title").getAsString(), mirrors[currentMirror - 1]);
+				MatterOverdrive.log.info("Matter Overdrive Version %1$s is up to date. From '%2$s'", root.get("title").getAsString(), mirrors[currentMirror - 1]);
             }
         }
         return false;

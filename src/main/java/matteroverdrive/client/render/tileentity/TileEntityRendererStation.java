@@ -19,11 +19,11 @@
 package matteroverdrive.client.render.tileentity;
 
 import cofh.lib.gui.GuiColor;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.IConfigSubscriber;
-import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
@@ -34,7 +34,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.Level;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -209,7 +208,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
             try {
                 renderHologram((T) tileEntity, x, y, z, ticks, t);
             } catch (ClassCastException e) {
-                MOLog.log(Level.WARN,e,"Could not cast to desired station class");
+				MatterOverdrive.log.warn("Could not cast to desired station class", e);
             }
             glDisable(GL_BLEND);
             glEnable(GL_ALPHA_TEST);
@@ -218,7 +217,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         }
         catch (Exception e)
         {
-            MOLog.log(Level.WARN,e,"Error while rendering a Station");
+			MatterOverdrive.log.warn("Error while render a station", e);
         }
 
         if (drawHoloLights())

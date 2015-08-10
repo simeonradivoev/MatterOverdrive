@@ -25,7 +25,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import matteroverdrive.commands.AndoidCommands;
+import matteroverdrive.command.AndoidCommands;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.handler.*;
 import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
@@ -34,9 +34,9 @@ import matteroverdrive.init.*;
 import matteroverdrive.matter_network.MatterNetworkRegistry;
 import matteroverdrive.network.PacketPipeline;
 import matteroverdrive.proxy.CommonProxy;
-import matteroverdrive.util.MOLog;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
@@ -66,6 +66,8 @@ public class MatterOverdrive
 	public static EntityHandler entityHandler;
 	public static MatterRegistry matterRegistry;
 	public static AndroidStatRegistry statRegistry;
+
+	public static Logger log = LogManager.getLogger("MatterOverdrive");
 
 	
 	@EventHandler
@@ -184,7 +186,7 @@ public class MatterOverdrive
         double version = Double.parseDouble(versionString.substring(0, pos));
         if (version < 1.8)
         {
-            MOLog.log(Level.WARN,"MatterOverdrive only supports Java 8 and above. Please Update your Java version. Your Java version is: " + version);
+			MatterOverdrive.log.warn("Matter Overdrive only supports Java 8 and above. Please update your Java version. You are currently using: " + version);
         }
 	}
 }

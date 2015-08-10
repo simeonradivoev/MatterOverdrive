@@ -20,6 +20,7 @@ package matteroverdrive.handler;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.*;
 import matteroverdrive.gui.*;
 import matteroverdrive.machines.MOTileEntityMachine;
@@ -27,11 +28,9 @@ import matteroverdrive.machines.analyzer.TileEntityMachineMatterAnalyzer;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import matteroverdrive.tile.*;
-import matteroverdrive.util.MOLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -121,11 +120,11 @@ public class GuiHandler implements IGuiHandler
                     }
                 }
             } catch (InvocationTargetException e) {
-                MOLog.log(Level.WARN, e, "Could not call Tile Entity Constructor in Server GUI handling");
+				MatterOverdrive.log.warn("Could not call TileEntity constructor in server GUI handler", e);
             } catch (InstantiationException e) {
-                MOLog.log(Level.WARN, e, "Could not instantiate Tile Entity in Server GUI handling");
+				MatterOverdrive.log.warn("Could not instantiate TileEntity in server GUI handler", e);
             } catch (IllegalAccessException e) {
-                MOLog.log(Level.WARN, e, "No Rights to access Tile Entity Constructor in Server GUI handling");
+				MatterOverdrive.log.warn("Could not access TileEntity constructor in server GUI handler", e);
             }
         }else if (entity instanceof MOTileEntityMachine)
         {
@@ -166,11 +165,11 @@ public class GuiHandler implements IGuiHandler
                     }
                 }
             } catch (InvocationTargetException e) {
-                MOLog.log(Level.WARN, e, "Could not call Tile Entity Constructor in Client GUI handling");
+				MatterOverdrive.log.warn("Could not call TileEntity constructor in client GUI handler", e);
             } catch (InstantiationException e) {
-                MOLog.log(Level.WARN, e, "Could not instantiate Tile Entity in Client GUI handling");
+				MatterOverdrive.log.warn("Could not instantiate the TileEntity in client GUI handler", e);
             } catch (IllegalAccessException e) {
-                MOLog.log(Level.WARN, e, "No Rights to access Tile Entity Constructor in Client GUI handling");
+				MatterOverdrive.log.warn("Could not access TileEntity constructor in client GUI handler");
             }
         }
         return null;

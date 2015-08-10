@@ -26,7 +26,6 @@ import matteroverdrive.api.starmap.*;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.starmap.GalaxyGenerator;
 import matteroverdrive.starmap.gen.ISpaceBodyGen;
-import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -265,7 +264,7 @@ public class Planet extends SpaceBody implements IInventory
                     addBuilding(buildingStack);
                 }else
                 {
-                    MOLog.log(Level.ERROR,"There was a problem loading a building from NBT of planet %s",getName());
+					MatterOverdrive.log.error("There was a problem loading a building from NBT of planet %s", getName());
                 }
             }
         }
@@ -280,7 +279,7 @@ public class Planet extends SpaceBody implements IInventory
                     addShip(shipStack);
                 }else
                 {
-                    MOLog.log(Level.ERROR,"There was a problem loading a ship from NBT of planet %s",getName());
+					MatterOverdrive.log.error("There was a problem loading a ship from NBT of planet %s", getName());
                 }
             }
         }
@@ -361,11 +360,11 @@ public class Planet extends SpaceBody implements IInventory
                 fleet.add(ship);
             }else
             {
-                MOLog.log(Level.ERROR,"Trying to add an itemstack to ships, that does not contain a Ship Item");
+				MatterOverdrive.log.error("Trying to add an itemstack to ships, that does not contain a Ship Item");
             }
         }else
         {
-            MOLog.log(Level.ERROR,"Trying to add a null Ship itemstack to %s",getName());
+			MatterOverdrive.log.error("Trying to add a null Ship itemstack to %s", getName());
         }
     }
     public boolean canAddShip(ItemStack ship,@Nullable EntityPlayer player)
@@ -396,11 +395,11 @@ public class Planet extends SpaceBody implements IInventory
                 this.buildings.add(building);
             }else
             {
-                MOLog.log(Level.ERROR,"Trying to add a stack to buildings, that does not contain a Building Item");
+				MatterOverdrive.log.error("Trying to add a stack to buildings, that does not contain a Building Item");
             }
         }else
         {
-            MOLog.log(Level.ERROR,"Trying to add a null building to planet %s",getName());
+			MatterOverdrive.log.error("Trying to add a null building to planet %s", getName());
         }
     }
     public int fleetCount(){return fleet.size();}

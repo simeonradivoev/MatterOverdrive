@@ -3,13 +3,12 @@ package matteroverdrive.starmap.data;
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
-import matteroverdrive.util.MOLog;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import org.apache.logging.log4j.Level;
 
 /**
  * Created by Simeon on 6/28/2015.
@@ -80,7 +79,7 @@ public class TravelEvent
                 ship = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("Ship"));
             }catch (Exception e)
             {
-                MOLog.log(Level.WARN,e,"Could not load ship from NBT in travel event");
+				MatterOverdrive.log.warn("Could not load ship from NBT in travel event", e);
             }
         }
         timeLength = tagCompound.getInteger("TimeLength");
