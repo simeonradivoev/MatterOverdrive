@@ -25,7 +25,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import matteroverdrive.command.AndoidCommands;
+import matteroverdrive.commands.AndoidCommands;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.handler.*;
 import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
