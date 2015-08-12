@@ -5,7 +5,8 @@
 <a href='http://simeon.co.vu/Mods/MatterOverdrive/'>Website</a> | 
 <a href='http://simeon.co.vu/Mods/MatterOverdrive/category/gettingstarted/'>Getting Started</a> |
 <a href='http://simeon.co.vu/Mods/MatterOverdrive/category/faq/'>FAQ</a> | 
-<a href='http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/'>Downloads</a>
+<a href='http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/'>Downloads</a> | 
+<a href='http://ci.rx14.co.uk/job/shadowfacts/job/MatterOverdrive/'>Jenkins Builds</a>
 </h2>
 
 Matter Overdrive is a Minecraft mod, inspired by the popular Sci-fi TV series Star Trek. It dwells in the concept of replicating and transforming one type matter into another.
