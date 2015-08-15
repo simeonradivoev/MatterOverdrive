@@ -42,7 +42,7 @@ import java.util.*;
 
 public class MatterRegistry implements IMatterRegistry
 {
-    private static final boolean REGISTRATION_DEBUG = false;
+    private static final boolean REGISTRATION_DEBUG = true;
     public boolean hasComplitedRegistration = false;
     private static final int MAX_DEPTH = 8;
     public int basicEntries = 0;
@@ -277,6 +277,7 @@ public class MatterRegistry implements IMatterRegistry
                 MatterEntry e = entries.get(item.getUnlocalizedName());
                 if (e == null)
                 {
+                    if (REGISTRATION_DEBUG && e == null) MatterOverdrive.log.debug("Could not find matter entry for: %s", item.getUnlocalizedName());
                     e = getOreDicionaryEntry(item);
                     if (REGISTRATION_DEBUG && e == null) MatterOverdrive.log.debug("Could not find ore dictionary entry for: %s", item.getUnlocalizedName());
                 }
@@ -314,7 +315,17 @@ public class MatterRegistry implements IMatterRegistry
         MatterEntry e;
         int[] ids = OreDictionary.getOreIDs(stack);
 
-        if (REGISTRATION_DEBUG && ids.length <= 0) MatterOverdrive.log.debug("No OreDictionary support for: %s", stack.getUnlocalizedName());
+        if (ids.length <= 0)
+        {
+            if (stack.getItemDamage() == Short.MAX_VALUE)
+            {
+                stack.setItemDamage(0);
+                if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("Messed up damage for: %s. Resetting damage to 0", stack.getUnlocalizedName());
+            }else
+            {
+                if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("No OreDictionary support for: %s", stack.getUnlocalizedName());
+            }
+        }
         for (int id : ids)
         {
             String entryName = OreDictionary.getOreName(id);
@@ -452,6 +463,12 @@ public class MatterRegistry implements IMatterRegistry
                                 return 0;
                             }
                         }
+                        //if it's not recursive then check if any item in recipe is not replicatable
+                        else
+                        {
+                            if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("%s cannot be replicated. Contains 0 matter", stack.getUnlocalizedName());
+                            return 0;
+                        }
                     }
                 }
                 //this is checking if it's a list of items stack
@@ -567,6 +584,17 @@ public class MatterRegistry implements IMatterRegistry
         }
 
         return 0;
+    }
+
+    public void clearCaluclatedEntries()
+    {
+        Iterator<Map.Entry<String,MatterEntry>> iter = entries.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String,MatterEntry> entry = iter.next();
+            if(entry.getValue().getCalculated()){
+                iter.remove();
+            }
+        }
     }
 
     public Map<String,MatterEntry> getEntries()

@@ -21,6 +21,7 @@ package matteroverdrive.init;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.handler.MatterEntry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -38,6 +39,8 @@ public class MatterOverdriveMatter
 	{
         registerBasicItems(c);
         registerBasicBlocks(c);
+
+        registerBasicCompoundItems(c);
 	}
 
     public static void registerFromConfig(ConfigurationHandler c)
@@ -56,6 +59,7 @@ public class MatterOverdriveMatter
         reg(c,Blocks.wool, 2,16);
         reg(c,Blocks.grass, 5);
         reg(c,"cobblestone", 1);
+        reg(c,Blocks.cobblestone,1);
         reg(c,"logWood", 16);
         reg(c,"sand", 2);
         reg(c,Blocks.gravel, 2);
@@ -63,8 +67,10 @@ public class MatterOverdriveMatter
         reg(c,Blocks.clay,4);
         reg(c,Blocks.cactus,4);
         reg(c,"plankWood",4);
+        reg(c,Blocks.planks,4,6);
         reg(c, Blocks.end_stone, 6);
         reg(c,"stone",1);
+        reg(c,Blocks.stone,1);
         reg(c,Blocks.soul_sand,4);
         reg(c,Blocks.snow,2);
         reg(c,Blocks.pumpkin,2);
@@ -74,6 +80,7 @@ public class MatterOverdriveMatter
         reg(c,Blocks.ice,3);
         reg(c,Blocks.packed_ice,4);
         reg(c,"blockGlass",3);
+        reg(c,"glass",3);
         reg(c,"paneGlass",1);
         reg(c,Blocks.bedrock,1024);
         reg(c,Blocks.sponge,8);
@@ -86,17 +93,6 @@ public class MatterOverdriveMatter
         reg(c,Blocks.stonebrick,2,4);
         reg(c,Blocks.skull,8,5);
         reg(c,Blocks.cobblestone_wall,1);
-
-        //region Ore
-        reg(c,"oreDiamond",512);
-        reg(c,"oreEmerald",512);
-        reg(c,"oreCoal",16);
-        reg(c,"oreRedstone",16);
-        reg(c,"oreLapis",4);
-        reg(c,"oreIron",64);
-        reg(c,"oreGold",84);
-        reg(c,"oreQuartz",6);
-        //endregion
 
         //region flowers
         reg(c,Blocks.red_flower,1,9);
@@ -126,9 +122,7 @@ public class MatterOverdriveMatter
         reg(c, Items.coal, 8);
         reg(c,new ItemStack(Items.coal,1,1),5);
         reg(c, Items.cooked_beef, 3);
-        reg(c, "gemDiamond", 256);
         reg(c, Items.egg, 1);
-        reg(c, "gemEmerald", 256);
         reg(c, "dye", 1);
         reg(c, Items.ender_pearl, 8);
         reg(c, Items.feather, 1);
@@ -146,12 +140,10 @@ public class MatterOverdriveMatter
         reg(c, Items.string, 1);
         reg(c, "stickWood", 1);
         reg(c, "dustRedstone", 4);
-        reg(c, "gemLapis", 4);
         reg(c, "dustGlowstone", 2);
         reg(c, Items.spider_eye, 1);
         reg(c, Items.saddle, 18);
         reg(c, Items.reeds, 1);
-        reg(c, "gemQuartz", 3);
         reg(c, "cropPotato", 1);
         reg(c, Items.leather, 3);
         reg(c, Items.pumpkin_seeds, 1);
@@ -176,31 +168,38 @@ public class MatterOverdriveMatter
         reg(c, "dustSaltpeter", 2);
         reg(c, "dustSulfur", 2);
         reg(c,Items.name_tag,32);
-        reg(c,Items.skull,16,5);
+        reg(c,"itemSkull",16);
         reg(c,Items.glass_bottle,3);
+        reg(c,"silicon",2);
+
+        //region Gems
+        reg(c, "gemDiamond", 256);
+        reg(c, "gemQuartz", 3);
+        reg(c, "gemLapis", 4);
+        reg(c, "gemEmerald", 256);
+        reg(c,"gemRuby",64);
+        reg(c,"gemRupee",64);
+        reg(c,"gemSapphire",64);
+        //endregion
 
         //region Ingots
         reg(c, "ingotBrick", 2);
         reg(c, "ingotIron", 32);
-        reg(c, "dustIron", 32);
         reg(c, "ingotGold", 42);
-        reg(c, "dustGold", 42);
         reg(c,"ingotTin", 28);
-        reg(c, "dustTin", 28);
         reg(c, "ingotCopper", 28);
-        reg(c,"dustCopper",28);
         reg(c, "ingotAluminum", 26);
-        reg(c, "dustAluminum", 26);
         reg(c, "ingotSilver", 30);
-        reg(c, "dustSilver", 30);
         reg(c, "ingotLead", 32);
-        reg(c, "dustLead", 32);
         reg(c, "ingotNickel", 32);
-        reg(c, "dustNickel", 32);
         reg(c, "ingotInvar", 38);
-        reg(c, "dustInvar", 38);
         reg(c, "ingotPlatinum", 64);
         reg(c, "ingotBronze", 28);
+        reg(c,"ingotRedAlloy",24);
+        reg(c,"ingotUranium",64);
+        reg(c,"ingotZinc",30);
+        reg(c,"ingotQuartz",24);
+        reg(c,"ingotSteel",38);
         //endregion
 
         //region Plants
@@ -220,10 +219,125 @@ public class MatterOverdriveMatter
         //endregion
     }
 
+    public static void registerBasicCompoundItems(ConfigurationHandler c)
+    {
+        reg(c,"dustObsidian",0,Blocks.obsidian);
+        reg(c,"dustCharcoal",0,new ItemStack(Items.coal,1,1));
+        reg(c,"dustCoal",0,Items.coal);
+        reg(c,"dustDiamond",0,"gemDiamond");
+        reg(c,"dustFlour",0,"cropWheat");
+        reg(c,"dustNetherQuartz",0,"oreQuartz");
+        reg(c,"gemGreenSapphire",0,"gemEmerald");
+        reg(c,"dustEmerald",0,"gemEmerald");
+
+
+        //region dusts
+        reg(c,"dustIron",0,"ingotIron");
+        reg(c, "dustGold", 0,"ingotGold");
+        reg(c, "dustTin", 0,"ingotTin");
+        reg(c,"dustCopper",0,"ingotCopper");
+        reg(c, "dustAluminum", 0,"ingotAluminum");
+        reg(c, "dustSilver", 0,"ingotSilver");
+        reg(c, "dustLead", 0,"ingotLead");
+        reg(c, "dustNickel", 0,"ingotNickel");
+        reg(c, "dustInvar", 0,"ingotInvar");
+        reg(c, "dustPlatinum", 0,"ingotPlatinum");
+        reg(c,"dustBronze",0,"ingotBronze");
+        //endregion
+
+        //region Ore
+        regOre(c, "oreDiamond", 2, "gemDiamond");
+        regOre(c, "oreEmerald", 2, "gemEmerald");
+        regOre(c,"oreCoal",2,Items.coal);
+        regOre(c, "oreRedstone", 4, "dustRedstone");
+        regOre(c, "oreLapis", 4, "gemLapis");
+        regOre(c, "oreIron", 2, "ingotIron");
+        regOre(c, "oreGold", 2, "ingotGold");
+        regOre(c, "oreQuartz", 2, "gemQuartz");
+        regOre(c, "oreTin", 2, "ingotTin");
+        regOre(c,"oreSilver",2,"ingotSilver");
+        regOre(c,"oreLead",2,"ingorLead");
+        regOre(c,"oreCopper",2,"ingotCopper");
+        regOre(c,"oreNikel",2,"ingotNikel");
+        regOre(c,"oreAluminum",2,"ingotAluminum");
+        regOre(c,"oreUranium",2,"ingotUranium");
+        regOre(c,"oreRuby",2,"gemRuby");
+        regOre(c,"oreZinc",2,"ingotZinc");
+        regOre(c,"oreQuartz",2,"ingotQuartz");
+        //endregion
+
+        //region thermal Expansion
+        reg(c,"bucketRedstone",MatterOverdrive.matterRegistry.getEntry("dustRedstone").getMatter()*10);
+        reg(c,"bucketGlowstone",MatterOverdrive.matterRegistry.getEntry("dustGlowstone").getMatter()*10);
+        reg(c,"bucketCoal",MatterOverdrive.matterRegistry.getEntry(Items.coal).getMatter()*10);
+        reg(c,"bucketEnder",MatterOverdrive.matterRegistry.getEntry(Items.ender_pearl).getMatter()*10);
+        //endregion
+
+        //region ender io
+        reg(c,"enderio.electricalSteel",0,"ingotIron","silicon","dustCoal");
+        reg(c,"enderio.energeticAlloy",0,"dustRedstone","ingotGold","dustGlowstone");
+        reg(c,"enderio.phasedGold",0,"enderio.energeticAlloy",Items.ender_pearl);
+        reg(c,"enderio.redstoneAlloy",0,"silicon","dustRedstone");
+        reg(c,"enderio.conductiveIron",0,"ingotIron","dustRedstone");
+        reg(c,"enderio.phasedIron",0,Items.ender_pearl,"ingotIron");
+        reg(c,"enderio.darkSteel",0,"ingotIron","dustCoal",Blocks.obsidian);
+        reg(c,"enderio.soularium",0,Blocks.soul_sand,"ingotGold");
+        reg(c,"enderio.silicon",0,"silicon");
+        reg(c,"enderio.conduitBinder",1);
+        //endregion
+    }
+
 	private static void reg(ConfigurationHandler c,String name,int matter)
 	{
         MatterOverdrive.matterRegistry.register(name,matter);
 	}
+    private static void regOre(ConfigurationHandler c,String name,int multiply,String ingot)
+    {
+        MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(ingot);
+        if (entry != null)
+        {
+            MatterOverdrive.matterRegistry.register(name,entry.getMatter()*multiply);
+        }
+    }
+    private static void regOre(ConfigurationHandler c,String name,int multiply,Item ingot)
+    {
+        MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(ingot);
+        if (entry != null)
+        {
+            MatterOverdrive.matterRegistry.register(name,entry.getMatter()*multiply);
+        }
+    }
+    private static void reg(ConfigurationHandler c,String name,int matter,Object... items)
+    {
+        for (int i = 0;i < items.length;i++)
+        {
+            MatterEntry entry = null;
+
+            if (items[i] instanceof String)
+            {
+                entry = MatterOverdrive.matterRegistry.getEntry((String)items[i]);
+            }else if (items[i] instanceof Item)
+            {
+                entry = MatterOverdrive.matterRegistry.getEntry((Item)items[i]);
+            }else if (items[i] instanceof Block)
+            {
+                entry = MatterOverdrive.matterRegistry.getEntry((Block)items[i]);
+            }else if (items[i] instanceof ItemStack)
+            {
+                entry = MatterOverdrive.matterRegistry.getEntry((ItemStack)items[i]);
+            }
+
+            if (entry != null)
+            {
+                matter+= entry.getMatter();
+            }
+        }
+
+        if (matter > 0)
+        {
+            reg(c,name,matter);
+        }
+    }
 
     private static void reg(ConfigurationHandler c,ItemStack itemStack,int matter)
     {
