@@ -26,6 +26,7 @@ import matteroverdrive.network.packet.server.PacketFirePhaserRifle;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -140,7 +141,7 @@ public class PhaserRifle extends EnergyWeapon
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
     {
         if (world.isRemote
-                && entity instanceof EntityPlayer
+                && entity instanceof EntityClientPlayerMP
                 && ((EntityPlayer) entity).getHeldItem() != null
                 && ((EntityPlayer) entity).getHeldItem().getItem() == this
                 && Minecraft.getMinecraft().currentScreen == null)
@@ -151,6 +152,13 @@ public class PhaserRifle extends EnergyWeapon
                     int seed = itemRand.nextInt();
                     MatterOverdrive.packetPipeline.sendToServer(new PacketFirePhaserRifle(Mouse.isButtonDown(1),entity.getEntityId(),seed));
                     itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
+                    if (Mouse.isButtonDown(1)) {
+                        ItemRendererPhaserRifle.RECOIL_AMOUNT = 0.5f + (getHeat(itemStack) / getMaxHeat(itemStack)) * 3;
+                    }else
+                    {
+                        ItemRendererPhaserRifle.RECOIL_AMOUNT = 2 + (getHeat(itemStack) / getMaxHeat(itemStack)) * 6;
+                    }
+                    ItemRendererPhaserRifle.RECOIL_TIME = 1;
                     onClientFire(itemStack,(EntityPlayer)entity,Mouse.isButtonDown(1),seed);
                     ClientProxy.weaponHandler.addShootDelay(this);
                 }else if (ClientProxy.weaponHandler.shootDelayPassed(this) && needsRecharge(itemStack))
@@ -185,15 +193,7 @@ public class PhaserRifle extends EnergyWeapon
 
     public void onClientFire(ItemStack weapon, EntityPlayer player, boolean zoomed,int seed)
     {
-        if (zoomed) {
-            ItemRendererPhaserRifle.RECOIL_AMOUNT = 0.5f + (getHeat(weapon) / getMaxHeat(weapon)) * 3;
-        }else
-        {
-            ItemRendererPhaserRifle.RECOIL_AMOUNT = 2 + (getHeat(weapon) / getMaxHeat(weapon)) * 6;
-        }
-
         //ClientProxy.weaponHandler.addShootDelay(this);
-        ItemRendererPhaserRifle.RECOIL_TIME = 1;
         player.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
         spawnProjectile(weapon,player,zoomed,seed);
     }
@@ -201,7 +201,9 @@ public class PhaserRifle extends EnergyWeapon
     public PhaserFire spawnProjectile(ItemStack weapon,EntityPlayer entityPlayer,boolean zoomed,int seed)
     {
         PhaserFire fire = new PhaserFire(entityPlayer.worldObj, entityPlayer, getWeaponScaledDamage(weapon), 2, getAccuracy(weapon, zoomed), getRange(weapon), WeaponHelper.getColor(weapon).getColor(), zoomed,seed);
-        fire.setFireDamageMultiply((float) WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE, weapon));
+        if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon)) {
+            fire.setFireDamageMultiply((float) WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE, weapon));
+        }
         entityPlayer.worldObj.spawnEntityInWorld(fire);
         return fire;
     }

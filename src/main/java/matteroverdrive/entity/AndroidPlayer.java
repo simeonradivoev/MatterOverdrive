@@ -375,7 +375,6 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
                         manageHasPower();
                         managePotionEffects();
-                        manageSwimming();
                     } else if (getEnergyStored() <= 0) {
                         manageOutOfPower();
                     }
@@ -392,6 +391,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             if (androidPlayer.isAndroid())
             {
                 manageGlitch();
+                manageSwimming();
 
                 for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
                     int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
@@ -594,7 +594,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         if (player.isInWater())
         {
-            player.motionY = player.motionY - 0.017;
+            player.motionY = player.motionY - 0.007;
             player.setAir(300);
         }
     }
@@ -626,8 +626,11 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 effects.removeTag(EFFECT_KEY_TURNING);
                 setAndroid(true);
                 playGlitchSound(this, player.worldObj.rand, 0.8f);
-                player.attackEntityFrom(fake, Integer.MAX_VALUE);
-                player.setDead();
+                if (!player.capabilities.isCreativeMode)
+                {
+                    player.attackEntityFrom(fake, Integer.MAX_VALUE);
+                    player.setDead();
+                }
             }
 
             sync(PacketSyncAndroid.SYNC_EFFECTS);
