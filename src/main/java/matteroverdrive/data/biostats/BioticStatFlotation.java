@@ -36,7 +36,7 @@ public class BioticStatFlotation extends AbstractBioticStat
     public void onAndroidUpdate(AndroidPlayer android, int level)
     {
         if (android.getPlayer().isInWater()) {
-            android.getPlayer().motionY = android.getPlayer().motionY + 0.025;
+            android.getPlayer().motionY = android.getPlayer().motionY + 0.007;
         }
     }
 

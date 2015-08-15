@@ -1,35 +1,63 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.entity;
 
-import cofh.lib.audio.SoundBase;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.Reference;
-import matteroverdrive.init.MatterOverdriveItems;
-import matteroverdrive.util.MOStringHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.dialog.IDialogMessage;
+import matteroverdrive.api.dialog.IDialogNpc;
+import matteroverdrive.api.dialog.IDialogRegistry;
+import matteroverdrive.client.render.conversation.DialogShot;
+import matteroverdrive.dialog.DialogMessage;
+import matteroverdrive.dialog.DialogMessageAndroidTransformation;
+import matteroverdrive.dialog.DialogMessageRandom;
+import matteroverdrive.dialog.DialogMessageTrade;
+import matteroverdrive.entity.tasks.EntityAITalkToPlayer;
+import matteroverdrive.entity.tasks.EntityAIWatchDialogPlayer;
+import matteroverdrive.init.MatterOverdriveDialogs;
+import matteroverdrive.network.packet.server.PacketManageConversation;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 5/30/2015.
  */
-public class EntityVillagerMadScientist extends EntityVillager
+public class EntityVillagerMadScientist extends EntityVillager implements IDialogNpc
 {
+    //EntityDialogSystem dialogSystem;
+    private static DialogMessageRandom mainHumanMessage;
+    private static DialogMessageRandom mainAndroidMessage;
+    private EntityPlayer dialogPlayer;
 
-    public EntityVillagerMadScientist(World p_i1748_1_)
+    public EntityVillagerMadScientist(World world)
     {
-        super(p_i1748_1_, 666);
+        super(world, 666);
+        //dialogSystem = new EntityDialogSystem(this);
+        this.tasks.addTask(1,new EntityAITalkToPlayer(this));
+        this.tasks.addTask(1, new EntityAIWatchDialogPlayer(this));
     }
 
     @Override
@@ -50,74 +78,116 @@ public class EntityVillagerMadScientist extends EntityVillager
     @Override
     public boolean interact(EntityPlayer player)
     {
-        AndroidPlayer androidPlayer = AndroidPlayer.get(player);
-        if (androidPlayer != null && androidPlayer.isAndroid())
+        if (worldObj.isRemote)
         {
-            return super.interact(player);
+            MatterOverdrive.packetPipeline.sendToServer(new PacketManageConversation(this, true));
+            return true;
         }
-        else if (!androidPlayer.isTurning())
-        {
-            if (player.worldObj.isRemote)
-            {
-                IChatComponent chatComponent = new ChatComponentText(EnumChatFormatting.GOLD + "<Mad Scientist>" + EnumChatFormatting.RESET + MOStringHelper.translateToLocal("entity.mad_scientist.line." + rand.nextInt(3)));
-                player.addChatMessage(chatComponent);
-            }
 
-            tryConvertToAndroid(player);
-        }
         return false;
-    }
-
-    void tryConvertToAndroid(EntityPlayer player)
-    {
-        boolean[] hasParts = new boolean[4];
-        int[] slots = new int[4];
-
-        for (int i = 0; i < player.inventory.getSizeInventory();i++)
-        {
-            if(player.inventory.getStackInSlot(i) != null && player.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.androidParts)
-            {
-                int damage = player.inventory.getStackInSlot(i).getItemDamage();
-                if (damage < hasParts.length)
-                {
-                    hasParts[damage] = true;
-                    slots[damage] = i;
-                }
-            }
-        }
-
-        for (int i = 0;i < hasParts.length;i++)
-        {
-            if (!hasParts[i])
-            {
-                if (!player.worldObj.isRemote) {
-                    ChatComponentText componentText = new ChatComponentText(EnumChatFormatting.GOLD + "<Mad Scientist>" + EnumChatFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + rand.nextInt(4)));
-                    componentText.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
-                    player.addChatMessage(componentText);
-                }
-                return;
-            }
-        }
-
-        if (!player.worldObj.isRemote) {
-            for (int i = 0; i < slots.length; i++)
-            {
-                player.inventory.decrStackSize(slots[i],1);
-            }
-        }
-
-        if (player.worldObj.isRemote)
-        {
-            ChatComponentText componentText = new ChatComponentText(EnumChatFormatting.GOLD + "<Mad Scientist>" + EnumChatFormatting.GREEN + MOStringHelper.translateToLocal("entity.mad_scientist.line.success." + rand.nextInt(4)));
-            componentText.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN));
-            player.addChatMessage(componentText);
-        }
-
-        AndroidPlayer.get(player).startConversion();
     }
 
     public MerchantRecipeList getRecipes(EntityPlayer player)
     {
         return super.getRecipes(player);
     }
+
+    //region Dialog Functions
+    public static void registerDialogMessages(IDialogRegistry registry, Side side)
+    {
+        //region Human
+        DialogMessageAndroidTransformation convertMe = new DialogMessageAndroidTransformation("");
+        convertMe.loadQuestionFromLocalization("dialog.mad_scientist.convert.question");
+
+        DialogMessage canYouConvert = new DialogMessage("");
+        canYouConvert.loadMessageFromLocalization("dialog.mad_scientist.requirements.line");
+        canYouConvert.loadQuestionFromLocalization("dialog.mad_scientist.requirements.question");
+        canYouConvert.addOption(convertMe);
+        canYouConvert.addOption(MatterOverdriveDialogs.backMessage);
+
+        mainHumanMessage = new DialogMessageRandom("");
+        mainHumanMessage.loadMessageFromLocalization("dialog.mad_scientist.main.line.human");
+        mainHumanMessage.addOption(canYouConvert);
+        mainHumanMessage.addOption(MatterOverdriveDialogs.quitMessage);
+        //endregion
+
+        //region Android
+        DialogMessageTrade trade = new DialogMessageTrade("");
+        trade.loadQuestionFromLocalization("dialog.generic.trade.questions");
+
+        DialogMessage undo = new DialogMessage("");
+        undo.loadMessageFromLocalization("dialog.mad_scientist.undo.line");
+        undo.loadQuestionFromLocalization("dialog.mad_scientist.undo.question");
+        undo.addOption(trade);
+        undo.addOption(MatterOverdriveDialogs.backMessage);
+
+        DialogMessage whatDidYouDo = new DialogMessage("");
+        whatDidYouDo.loadMessageFromLocalization("dialog.mad_scientist.whatDidYouDo.line");
+        whatDidYouDo.loadQuestionFromLocalization("dialog.mad_scientist.whatDidYouDo.question");
+        whatDidYouDo.addOption(undo);
+        whatDidYouDo.addOption(MatterOverdriveDialogs.backMessage);
+
+        mainAndroidMessage = new DialogMessageRandom("");
+        mainAndroidMessage.loadMessageFromLocalization("dialog.mad_scientist.main.line.android");
+        mainAndroidMessage.addOption(whatDidYouDo);
+        mainAndroidMessage.addOption(trade);
+        mainAndroidMessage.addOption(MatterOverdriveDialogs.quitMessage);
+        //endregion
+
+        whatDidYouDo.setParent(mainAndroidMessage);
+        undo.setParent(whatDidYouDo);
+        canYouConvert.setParent(mainHumanMessage);
+        convertMe.setParent(canYouConvert);
+        trade.setParent(mainAndroidMessage);
+
+        if (side == Side.CLIENT)
+        {
+            trade.setHoloIcon("trade");
+            canYouConvert.setShots(DialogShot.closeUp);
+            undo.setShots(DialogShot.closeUp);
+            whatDidYouDo.setShots(DialogShot.fromBehindLeftClose);
+        }
+    }
+
+    @Override
+    public IDialogMessage getStartDialogMessage(EntityPlayer player)
+    {
+        if (AndroidPlayer.get(player).isAndroid())
+        {
+            return mainAndroidMessage;
+
+        }
+        else
+        {
+            return mainHumanMessage;
+        }
+    }
+
+    @Override
+    public void setDialogPlayer(EntityPlayer player) {
+        dialogPlayer = player;
+    }
+
+    @Override
+    public EntityPlayer getDialogPlayer() {
+        return dialogPlayer;
+    }
+
+    @Override
+    public boolean canTalkTo(EntityPlayer player)
+    {
+        return AndroidPlayer.get(player) == null || !AndroidPlayer.get(player).isTurning();
+    }
+
+    @Override
+    public EntityLiving getEntity() {
+        return this;
+    }
+
+    @Override
+    public boolean onPlayerInteract(EntityPlayer player)
+    {
+        return true;
+    }
+    //endregion
 }

@@ -70,6 +70,8 @@ public class RenderHandler
     private List<IWorldLastRenderer> customRenderers;
     private AndroidStatRenderRegistry statRenderRegistry;
     private StarmapRenderRegistry starmapRenderRegistry;
+    private RenderDialogSystem renderDialogSystem;
+    private RenderStarmap renderStarmap;
 
     //region Block Renderers
     private MOBlockRenderer blockRenderer;
@@ -117,20 +119,25 @@ public class RenderHandler
     private TileEntityRendererAndroidStation tileEntityRendererAndroidStation;
     private TileEntityRendererStarMap tileEntityRendererStarMap;
     private TileEntityRendererChargingStation tileEntityRendererChargingStation;
+    private TileEntityRendererHoloSign tileEntityRendererHoloSign;
     //endregion
 
     public RenderHandler(World world,TextureManager textureManager)
     {
-        customRenderers = new ArrayList<IWorldLastRenderer>();
+        customRenderers = new ArrayList<>();
         matterScannerInfoHandler = new RenderMatterScannerInfoHandler();
         renderParticlesHandler = new RenderParticlesHandler(world,textureManager);
         rendererPhaserBeam = new RendererPhaserBeam();
         statRenderRegistry = new AndroidStatRenderRegistry();
         starmapRenderRegistry = new StarmapRenderRegistry();
+        renderDialogSystem = new RenderDialogSystem();
+        renderStarmap = new RenderStarmap();
 
         addCustomRenderer(matterScannerInfoHandler);
         addCustomRenderer(renderParticlesHandler);
         addCustomRenderer(rendererPhaserBeam);
+        addCustomRenderer(renderDialogSystem);
+        addCustomRenderer(renderStarmap);
     }
 
     @SubscribeEvent
@@ -175,6 +182,7 @@ public class RenderHandler
         tileEntityRendererAndroidStation = new TileEntityRendererAndroidStation();
         tileEntityRendererStarMap = new TileEntityRendererStarMap();
         tileEntityRendererChargingStation = new TileEntityRendererChargingStation();
+        tileEntityRendererHoloSign = new TileEntityRendererHoloSign();
 
         configHandler.subscribe(tileEntityRendererAndroidStation);
         configHandler.subscribe(tileEntityRendererWeaponStation);
@@ -212,6 +220,7 @@ public class RenderHandler
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAndroidStation.class, tileEntityRendererAndroidStation);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineStarMap.class, tileEntityRendererStarMap);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineChargingStation.class, tileEntityRendererChargingStation);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHoloSign.class,tileEntityRendererHoloSign);
     }
 
     public void createItemRenderers()

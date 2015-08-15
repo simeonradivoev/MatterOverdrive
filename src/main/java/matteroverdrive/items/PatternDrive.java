@@ -109,14 +109,24 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
                 for (int i = 0;i < list.tagCount();i++)
                 {
                     int progress = MatterDatabaseHelper.GetProgressFromNBT(list.getCompoundTagAt(i));
+                    ItemStack stack = MatterDatabaseHelper.GetItemStackFromNBT(list.getCompoundTagAt(i));
                     String displayName = "Unknown";
                     try {
                         displayName = MatterDatabaseHelper.GetItemStackFromNBT(list.getCompoundTagAt(i)).getDisplayName();
-                    }catch (Exception e)
+                    }
+                    catch (Exception e)
                     {
 
                     }
-                    infos.add(MatterDatabaseHelper.getPatternInfoColor(progress) + displayName + " [" + progress + "%]");
+
+                    if (MatterHelper.getMatterAmountFromItem(stack) > 0)
+                    {
+                        infos.add(MatterDatabaseHelper.getPatternInfoColor(progress) + displayName + " [" + progress + "%]");
+                    }
+                    else
+                    {
+                        infos.add(EnumChatFormatting.RED + "[Invalid] " + MatterDatabaseHelper.getPatternInfoColor(progress) + displayName + " [" + progress + "%]");
+                    }
                     if (i > 8)
                     {
                         infos.add(EnumChatFormatting.YELLOW + String.format("...and %s more patterns.",list.tagCount()-9));
@@ -127,8 +137,7 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
         }
     }
 
-
-
+    @Override
     public void InitTagCompount(ItemStack stack)
     {
         NBTTagCompound tagCompound = new NBTTagCompound();

@@ -152,25 +152,29 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             ItemStack newItem = MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage);
             int time = getSpeed(newItem);
 
-            if (!worldObj.isRemote)
-            {
-                if (energyStorage.getEnergyStored() >= getEnergyDrainPerTick()) {
+            if (!worldObj.isRemote) {
+                if (taskQueueProcessing.peek().isValid(worldObj)) {
+                    if (energyStorage.getEnergyStored() >= getEnergyDrainPerTick()) {
 
-                    taskQueueProcessing.peek().setState(MatterNetworkTaskState.PROCESSING);
-                    this.replicateTime++;
-                    this.extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(), false);
 
-                    if (this.replicateTime >= time) {
-                        this.replicateTime = 0;
-                        this.replicateItem(internalPatternStorage, newItem);
-                        MatterOverdrive.packetPipeline.sendToDimention(new PacketReplicationComplete(this), worldObj);
-                        SoundHandler.PlaySoundAt(worldObj, "replicate_success", this.xCoord, this.yCoord, this.zCoord, 0.25F * getBlockType(BlockReplicator.class).replication_volume, 1.0F, 0.2F, 0.8F);
+                        taskQueueProcessing.peek().setState(MatterNetworkTaskState.PROCESSING);
+                        this.replicateTime++;
+                        this.extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(), false);
+
+                        if (this.replicateTime >= time) {
+                            this.replicateTime = 0;
+                            this.replicateItem(internalPatternStorage, newItem);
+                            MatterOverdrive.packetPipeline.sendToDimention(new PacketReplicationComplete(this), worldObj);
+                            SoundHandler.PlaySoundAt(worldObj, "replicate_success", this.xCoord, this.yCoord, this.zCoord, 0.25F * getBlockType(BlockReplicator.class).replication_volume, 1.0F, 0.2F, 0.8F);
+                        }
+                        if (timeTracker.hasDelayPassed(worldObj, RADIATION_DAMAGE_DELAY)) {
+                            manageRadiation();
+                        }
+
+                        replicateProgress = (float) replicateTime / (float) time;
                     }
-                    if (timeTracker.hasDelayPassed(worldObj, RADIATION_DAMAGE_DELAY)) {
-                        manageRadiation();
-                    }
-
-                    replicateProgress = (float) replicateTime / (float) time;
+                } else {
+                    taskQueueProcessing.dequeue();
                 }
             }
             else
@@ -624,7 +628,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         return taskReplicatePattern != null
                 && internalPatternStorage != null
                 && taskReplicatePattern.getItemID() == internalPatternStorage.getShort("id")
-                && internalPatternStorage.getShort("Damage") == taskReplicatePattern.getItemMetadata();
+                && internalPatternStorage.getShort("Damage") == taskReplicatePattern.getItemMetadata()
+                && taskReplicatePattern.isValid(worldObj);
     }
 
     @Override

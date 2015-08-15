@@ -49,7 +49,7 @@ public class HoloIcons
             "page_icon_galaxy","page_icon_quadrant","page_icon_star","page_icon_planet","energy","arrow_right",
             "travel_icon","icon_search","icon_size","icon_shuttle","icon_stats","icon_scount_planet","icon_attack",
             "up_arrow","crosshair","up_arrow_large","android_feature_icon_bg","android_feature_icon_bg_active",
-            "health","black_circle","connections","ammo","temperature","flash_drive"};
+            "health","black_circle","connections","ammo","temperature","flash_drive","trade","mini_quit","mini_back"};
 
 
     public HoloIcons()

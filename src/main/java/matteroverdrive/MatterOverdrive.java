@@ -26,7 +26,9 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import matteroverdrive.commands.AndoidCommands;
+import matteroverdrive.commands.MatterRegistryCommands;
 import matteroverdrive.compat.MatterOverdriveCompat;
+import matteroverdrive.dialog.DialogRegistry;
 import matteroverdrive.handler.*;
 import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
 import matteroverdrive.imc.MOIMCHandler;
@@ -34,9 +36,8 @@ import matteroverdrive.init.*;
 import matteroverdrive.matter_network.MatterNetworkRegistry;
 import matteroverdrive.network.PacketPipeline;
 import matteroverdrive.proxy.CommonProxy;
+import matteroverdrive.util.MOLog;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
@@ -66,8 +67,9 @@ public class MatterOverdrive
 	public static EntityHandler entityHandler;
 	public static MatterRegistry matterRegistry;
 	public static AndroidStatRegistry statRegistry;
+	public static DialogRegistry dialogRegistry;
 
-	public static Logger log = LogManager.getLogger("MatterOverdrive");
+	public static MOLog log = new MOLog();
 
 	
 	@EventHandler
@@ -76,7 +78,8 @@ public class MatterOverdrive
         checkJavaVersion();
 		matterRegistry = new MatterRegistry();
 		statRegistry = new AndroidStatRegistry();
-		registryPath = event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + "Registry" + ".reg";
+		dialogRegistry = new DialogRegistry();
+		registryPath = event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + "Registry" + ".matter";
         guiHandler = new GuiHandler();
         craftingHandler = new CraftingHandler();
 		packetPipeline = new PacketPipeline();
@@ -97,6 +100,7 @@ public class MatterOverdrive
 		MatterOverdriveBlocks.register(event);
 		MatterOverdriveItems.register(event);
 		MatterOverdriveEnchantments.init(event,configHandler);
+		MatterOverdriveDialogs.init(event,configHandler,dialogRegistry);
 		moWorld.register();
 		MatterNetworkRegistry.register();
         packetPipeline.registerPackets();
@@ -136,6 +140,7 @@ public class MatterOverdrive
 	public void serverStarting(FMLServerStartingEvent event)
 	{
 		event.registerServerCommand(new AndoidCommands());
+		event.registerServerCommand(new MatterRegistryCommands());
 	}
 
     @EventHandler

@@ -24,6 +24,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMOApi;
 import matteroverdrive.api.android.IAndroidStatRegistry;
 import matteroverdrive.api.android.IAndroidStatRenderRegistry;
+import matteroverdrive.api.dialog.IDialogRegistry;
 import matteroverdrive.api.matter.IMatterRegistry;
 import matteroverdrive.api.starmap.IStarmapRenderRegistry;
 import matteroverdrive.proxy.ClientProxy;
@@ -42,6 +43,12 @@ public class Api implements IMOApi
     }
     @Override
     public IAndroidStatRegistry getAndroidStatRegistry() {return MatterOverdrive.statRegistry;}
+
+    @Override
+    public IDialogRegistry getDialogRegistry()
+    {
+        return MatterOverdrive.dialogRegistry;
+    }
 
     @Override
     @SideOnly(Side.CLIENT)

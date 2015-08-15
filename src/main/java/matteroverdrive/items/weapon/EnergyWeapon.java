@@ -58,7 +58,6 @@ import java.util.Map;
 public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWeapon {
 
     private final int defaultRange;
-    @SideOnly(Side.CLIENT)
     private DecimalFormat damageFormater = new DecimalFormat("#.##");
 
     public EnergyWeapon(String name, int capacity, int maxReceive, int maxExtract,int defaultRange) {

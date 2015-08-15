@@ -21,7 +21,6 @@ package matteroverdrive.gui;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
-import matteroverdrive.client.render.StarMapEntityRenderer;
 import matteroverdrive.container.ContainerStarMap;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.data.ScaleTexture;
@@ -34,7 +33,6 @@ import matteroverdrive.starmap.data.TravelEvent;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
@@ -53,8 +51,6 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
     public static ScaleTexture BG = new ScaleTexture(new ResourceLocation(Reference.PATH_GUI + "star_map.png"),255,141).setOffsets(213,34,42,94);
     Minecraft mc;
     IModelCustom sphere;
-    public static EntityRenderer prevRenderer;
-    public static StarMapEntityRenderer renderer;
     PagePlanetMenu planetPage;
     PageQuadrant pageQuadrant;
     PageStar pageStar;
@@ -165,29 +161,12 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         super.initGui();
         indicator.setVisible(false);
 
-        if (renderer == null)
-        {
-            renderer = new StarMapEntityRenderer(Minecraft.getMinecraft());
-        }
-        if (mc.entityRenderer != renderer)
-        {
-            prevRenderer = mc.entityRenderer;
-            mc.entityRenderer = renderer;
-            renderer.setStarMap(machine);
-        }
-
         AddMainPlayerSlots(inventorySlots, this,"holo_with_BG",new GuiColor(Reference.COLOR_HOLO.getIntR()/3,Reference.COLOR_HOLO.getIntG()/3,Reference.COLOR_HOLO.getIntB()/3),45,ySize - 104);
         AddHotbarPlayerSlots(inventorySlots, this,"holo_with_BG",new GuiColor(Reference.COLOR_HOLO.getIntR()/2,Reference.COLOR_HOLO.getIntG()/2,Reference.COLOR_HOLO.getIntB()/2),45,ySize - 25);
     }
 
     public void onGuiClosed()
     {
-        if (prevRenderer != null && mc.entityRenderer != prevRenderer)
-        {
-            mc.entityRenderer = prevRenderer;
-            prevRenderer = null;
-        }
-
         machine.SyncCommandsToServer();
     }
 

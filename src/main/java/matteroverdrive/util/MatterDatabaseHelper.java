@@ -49,25 +49,7 @@ public class MatterDatabaseHelper
 		NBTTagList items = new NBTTagList();
 		scanner.setTagInfo(ITEMS_TAG_NAME, items);
 	}
-	
-	public static Item GetItem(World world,int x,int y,int z)
-	{
-		return world.getBlock(x, y, z).getItem(world, x, y, z);
-	}
-	
-	private static NBTTagCompound newNBTTagCompoundDatabase()
-	{
-		NBTTagCompound comp = new NBTTagCompound();
-		return comp;
-	}
 
-	public static int GetPatternCapacity(ItemStack storage)
-	{
-		if(storage != null) {
-			return GetPatternCapacity(storage.getTagCompound());
-		}
-		return 0;
-	}
 	public static int GetPatternCapacity(NBTTagCompound storageCompund)
 	{
 		if (storageCompund != null)

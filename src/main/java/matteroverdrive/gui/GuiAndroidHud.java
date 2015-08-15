@@ -111,7 +111,13 @@ public class GuiAndroidHud extends Gui
     {
         AndroidPlayer android = AndroidPlayer.get(mc.thePlayer);
 
-        if (android.isAndroid() && (event.type == RenderGameOverlayEvent.ElementType.FOOD || event.type == RenderGameOverlayEvent.ElementType.AIR || event.type == RenderGameOverlayEvent.ElementType.HEALTH))
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiDialog && !event.type.equals(RenderGameOverlayEvent.ElementType.ALL) && event.isCancelable())
+        {
+            event.setCanceled(true);
+            return;
+        }
+
+        if ((android.isAndroid() && (event.type == RenderGameOverlayEvent.ElementType.FOOD || event.type == RenderGameOverlayEvent.ElementType.AIR || event.type == RenderGameOverlayEvent.ElementType.HEALTH)))
         {
             event.setCanceled(true);
             return;

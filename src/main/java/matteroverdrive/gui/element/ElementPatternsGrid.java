@@ -22,7 +22,10 @@ import cofh.lib.gui.element.ElementBase;
 import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.gui.MOGuiBase;
+import matteroverdrive.util.MatterDatabaseHelper;
+import matteroverdrive.util.MatterHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
@@ -44,6 +47,7 @@ public class ElementPatternsGrid extends ElementGrid
 
     public void updateStackList(HashSet<BlockPosition> positions)
     {
+        ItemStack stack;
         elements.clear();
 
         for (BlockPosition position : positions)
@@ -57,7 +61,10 @@ public class ElementPatternsGrid extends ElementGrid
 
                     for (int p = 0; p < list.tagCount(); p++)
                     {
-                        addElement(new ElementMonitorItemPattern(gui,list.getCompoundTagAt(p),(MOGuiBase)gui));
+                        stack = MatterDatabaseHelper.GetItemStackFromNBT(list.getCompoundTagAt(p));
+                        if (MatterHelper.getMatterAmountFromItem(stack) > 0) {
+                            addElement(new ElementMonitorItemPattern(gui, list.getCompoundTagAt(p), (MOGuiBase) gui));
+                        }
                     }
                 }
             }

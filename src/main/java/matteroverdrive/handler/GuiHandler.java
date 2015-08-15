@@ -39,6 +39,7 @@ import java.util.Map;
 
 public class GuiHandler implements IGuiHandler
 {
+    public static final int GIALOG_ID = 1;
     private Map<Class<? extends MOTileEntity>,Class<? extends MOGuiBase>> tileEntityGuiList;
     private Map<Class<? extends MOTileEntity>,Class<? extends MOBaseContainer>> tileEntityContainerList;
 
@@ -58,6 +59,7 @@ public class GuiHandler implements IGuiHandler
             registerContainer(TileEntityMachineFusionReactorController.class,ContainerFusionReactor.class);
             registerContainer(TileEntityAndroidStation.class,ContainerAndroidStation.class);
             registerContainer(TileEntityMachineStarMap.class,ContainerStarMap.class);
+            registerContainer(TileEntityHoloSign.class,ContainerHoloSign.class);
         }
         else
         {
@@ -67,15 +69,16 @@ public class GuiHandler implements IGuiHandler
             registerGui(TileEntityMachineNetworkRouter.class, GuiNetworkRouter.class);
             registerGui(TileEntityMachineMatterAnalyzer.class, GuiMatterAnalyzer.class);
             registerGui(TileEntityMachinePatternStorage.class, GuiPatternStorage.class);
-            registerGuiAndContainer(TileEntityMachineSolarPanel.class, GuiSolarPanel.class,ContainerSolarPanel.class);
-            registerGuiAndContainer(TileEntityWeaponStation.class, GuiWeaponStation.class,ContainerWeaponStation.class);
+            registerGuiAndContainer(TileEntityMachineSolarPanel.class, GuiSolarPanel.class, ContainerSolarPanel.class);
+            registerGuiAndContainer(TileEntityWeaponStation.class, GuiWeaponStation.class, ContainerWeaponStation.class);
             registerGui(TileEntityMachinePatternMonitor.class, GuiPatternMonitor.class);
             registerGui(TileEntityMachineNetworkSwitch.class, GuiNetworkSwitch.class);
             registerGui(TileEntityMachineTransporter.class,GuiTransporter.class);
             registerGui(TileEntityMachineMatterRecycler.class, GuiRecycler.class);
-            registerGuiAndContainer(TileEntityMachineFusionReactorController.class,GuiFusionReactor.class,ContainerFusionReactor.class);
+            registerGuiAndContainer(TileEntityMachineFusionReactorController.class, GuiFusionReactor.class, ContainerFusionReactor.class);
             registerGuiAndContainer(TileEntityAndroidStation.class,GuiAndroidStation.class,ContainerAndroidStation.class);
             registerGuiAndContainer(TileEntityMachineStarMap.class,GuiStarMap.class,ContainerStarMap.class);
+            registerGuiAndContainer(TileEntityHoloSign.class,GuiHoloSign.class,ContainerHoloSign.class);
         }
     }
 
@@ -99,36 +102,40 @@ public class GuiHandler implements IGuiHandler
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
 
-		TileEntity entity = world.getTileEntity(x, y, z);
+        switch (ID)
+        {
+            default:
+                TileEntity entity = world.getTileEntity(x, y, z);
 
-        if (entity != null && tileEntityContainerList.containsKey(entity.getClass()))
-        {
-            try
-            {
-                Class<? extends MOBaseContainer> containerClass = tileEntityContainerList.get(entity.getClass());
-                Constructor[] constructors = containerClass.getDeclaredConstructors();
-                for (Constructor constructor : constructors)
+                if (entity != null && tileEntityContainerList.containsKey(entity.getClass()))
                 {
-                    Class[] parameterTypes = constructor.getParameterTypes();
-                    if (parameterTypes.length == 2)
+                    try
                     {
-                        if (parameterTypes[0].isInstance(player.inventory) && parameterTypes[1].isInstance(entity))
+                        Class<? extends MOBaseContainer> containerClass = tileEntityContainerList.get(entity.getClass());
+                        Constructor[] constructors = containerClass.getDeclaredConstructors();
+                        for (Constructor constructor : constructors)
                         {
-                            onContainerOpen(entity,Side.SERVER);
-                            return constructor.newInstance(player.inventory, entity);
+                            Class[] parameterTypes = constructor.getParameterTypes();
+                            if (parameterTypes.length == 2)
+                            {
+                                if (parameterTypes[0].isInstance(player.inventory) && parameterTypes[1].isInstance(entity))
+                                {
+                                    onContainerOpen(entity,Side.SERVER);
+                                    return constructor.newInstance(player.inventory, entity);
+                                }
+                            }
                         }
+                    } catch (InvocationTargetException e) {
+                        MatterOverdrive.log.warn("Could not call TileEntity constructor in server GUI handler", e);
+                    } catch (InstantiationException e) {
+                        MatterOverdrive.log.warn("Could not instantiate TileEntity in server GUI handler", e);
+                    } catch (IllegalAccessException e) {
+                        MatterOverdrive.log.warn("Could not access TileEntity constructor in server GUI handler", e);
                     }
+                }else if (entity instanceof MOTileEntityMachine)
+                {
+                    return ContainerFactory.createMachineContainer((MOTileEntityMachine)entity,player.inventory);
                 }
-            } catch (InvocationTargetException e) {
-				MatterOverdrive.log.warn("Could not call TileEntity constructor in server GUI handler", e);
-            } catch (InstantiationException e) {
-				MatterOverdrive.log.warn("Could not instantiate TileEntity in server GUI handler", e);
-            } catch (IllegalAccessException e) {
-				MatterOverdrive.log.warn("Could not access TileEntity constructor in server GUI handler", e);
-            }
-        }else if (entity instanceof MOTileEntityMachine)
-        {
-            return ContainerFactory.createMachineContainer((MOTileEntityMachine)entity,player.inventory);
         }
 		return null;
 	}
@@ -144,33 +151,32 @@ public class GuiHandler implements IGuiHandler
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
-		TileEntity entity = world.getTileEntity(x, y, z);
+        switch (ID) {
+            default:
+                TileEntity entity = world.getTileEntity(x, y, z);
 
-        if (tileEntityGuiList.containsKey(entity.getClass()))
-        {
-            try {
+                if (tileEntityGuiList.containsKey(entity.getClass())) {
+                    try {
 
-                Class<? extends MOGuiBase> containerClass = tileEntityGuiList.get(entity.getClass());
-                Constructor[] constructors = containerClass.getDeclaredConstructors();
-                for (Constructor constructor : constructors)
-                {
-                    Class[] parameterTypes = constructor.getParameterTypes();
-                    if (parameterTypes.length == 2)
-                    {
-                        if (parameterTypes[0].isInstance(player.inventory) && parameterTypes[1].isInstance(entity))
-                        {
-                            onContainerOpen(entity,Side.CLIENT);
-                            return constructor.newInstance(player.inventory, entity);
+                        Class<? extends MOGuiBase> containerClass = tileEntityGuiList.get(entity.getClass());
+                        Constructor[] constructors = containerClass.getDeclaredConstructors();
+                        for (Constructor constructor : constructors) {
+                            Class[] parameterTypes = constructor.getParameterTypes();
+                            if (parameterTypes.length == 2) {
+                                if (parameterTypes[0].isInstance(player.inventory) && parameterTypes[1].isInstance(entity)) {
+                                    onContainerOpen(entity, Side.CLIENT);
+                                    return constructor.newInstance(player.inventory, entity);
+                                }
+                            }
                         }
+                    } catch (InvocationTargetException e) {
+                        MatterOverdrive.log.warn("Could not call TileEntity constructor in client GUI handler", e);
+                    } catch (InstantiationException e) {
+                        MatterOverdrive.log.warn("Could not instantiate the TileEntity in client GUI handler", e);
+                    } catch (IllegalAccessException e) {
+                        MatterOverdrive.log.warn("Could not access TileEntity constructor in client GUI handler");
                     }
                 }
-            } catch (InvocationTargetException e) {
-				MatterOverdrive.log.warn("Could not call TileEntity constructor in client GUI handler", e);
-            } catch (InstantiationException e) {
-				MatterOverdrive.log.warn("Could not instantiate the TileEntity in client GUI handler", e);
-            } catch (IllegalAccessException e) {
-				MatterOverdrive.log.warn("Could not access TileEntity constructor in client GUI handler");
-            }
         }
         return null;
 	}

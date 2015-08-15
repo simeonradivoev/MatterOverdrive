@@ -52,5 +52,7 @@
     "phaser_rifle_shot": {"category": "player","sounds": [{"name": "phaser_rifle/phaser_rifle_shot", "stream": false}]},
     "overheat_alarm": {"category": "player","sounds": [{"name": "weapon/overheat_alarm", "stream": false}]},
     "overheat": {"category": "player","sounds": [{"name": "weapon/overheat_med", "stream": false}]},
-    "reload": {"category": "player","sounds": [{"name": "weapon/reload", "stream": false}]}
+    "reload": {"category": "player","sounds": [{"name": "weapon/reload", "stream": false}]},
+    "night_vision": {"category": "player","sounds": [{"name": "night_vision", "stream": false}]},
+    "power_down": {"category": "player","sounds": [{"name": "power_down", "stream": false}]}
 }

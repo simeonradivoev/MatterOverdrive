@@ -397,8 +397,16 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     protected void onAwake(Side side)
     {
-        if (side.isServer()) {
+        if (side.isServer())
+        {
             MatterNetworkHelper.broadcastConnection(worldObj, this);
+            for (int slotId : pattern_storage_slots)
+            {
+                if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotId)))
+                {
+                    //MatterDatabaseHelper.validatePatterns(inventory.getStackInSlot(slotId));
+                }
+            }
         }
     }
 

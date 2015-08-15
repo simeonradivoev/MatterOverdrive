@@ -197,7 +197,7 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new ItemStack(wrench),"T T"," Y "," T ",'T',tritanium_ingot,'Y',new ItemStack(Blocks.wool,1,4));
         GameRegistry.addRecipe(new ItemStack(spacetime_equalizer), " M ", "EHE", " M ", 'M', s_magnet, 'E', Items.ender_pearl, 'H', h_compensator);
         GameRegistry.addRecipe(new ItemStack(forceFieldEmitter), "CDC", "CDC", "P1P", 'P', tritanium_plate, 'E', Items.ender_pearl, 'D', dilithium_ctystal, '1', new ItemStack(isolinear_circuit, 1), 'C', s_magnet);
-        GameRegistry.addRecipe(new ItemStack(networkFlashDrive),"RCR",'I',Items.iron_ingot,'R',Items.redstone,'C',new ItemStack(isolinear_circuit,1,0));
+        GameRegistry.addRecipe(new ItemStack(networkFlashDrive),"RCR",'R',Items.redstone,'C',new ItemStack(isolinear_circuit,1,0));
         GameRegistry.addRecipe(new ItemStack(transportFlashDrive)," I ","ECR"," I",'I',Items.iron_ingot,'R',Items.redstone,'C',new ItemStack(isolinear_circuit,1,0));
         GameRegistry.addRecipe(new EnergyPackRecipe(new ItemStack(tritanium_plate), new ItemStack(battery), new ItemStack(Items.gunpowder)));
         GameRegistry.addRecipe(new EnergyPackRecipe(new ItemStack(tritanium_plate), new ItemStack(hc_battery), new ItemStack(Items.gunpowder)));

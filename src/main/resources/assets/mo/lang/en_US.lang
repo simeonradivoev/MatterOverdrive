@@ -173,21 +173,25 @@ entity.failed_pig.name=Failed Pig
 entity.failed_chicken.name=Failed Chicken
 entity.failed_cow.name=Failed Cow
 entity.failed_sheep.name=Failed Sheep
+entity.mad_scientist.name=Mad Scientist
+
+##########################################################################################################
+# Dialogs
+
+dialog.generic.quit.questions=See you later.;I must go.;I'm in a hurry.;Goodbye.;Farewell.;Bye.
+dialog.generic.back.questions=Never mind.;Let's talk about something else.;I don't care.
+dialog.generic.trade.questions=I want to trade.;Let's trade.;Let me see your goods.;What do you have for sale?;
 
 //////////// Mad Scientist ///////////////
-entity.mad_scientist.name=Mad Scientist
-entity.mad_scientist.line.fail.0=You don't have all the Android Parts!
-entity.mad_scientist.line.fail.1=I'm not giving you any of my parts!
-entity.mad_scientist.line.fail.2=You need all Android Parts, or you'll die!
-entity.mad_scientist.line.fail.3=I can't do the procedure without all the Android parts!
-entity.mad_scientist.line.0=I don't deal with humans. But fortunately if you bring me a set of Android parts I can help you escape that fleshy body!
-entity.mad_scientist.line.1=NO! I can even look at you. So fragile! Bring me a set of Android parts and before it's to late!
-entity.mad_scientist.line.2=Are you ok ? You look trapped! How can you stand that flesh? Maybe you bring me a set of Android Parts, and maybe I can help you, with your problem.
-entity.mad_scientist.line.success.0=It is done. Now go and spread the word!
-entity.mad_scientist.line.success.1=It's ALIVE! It's ALIVE! Muaha ha ha ha! It's ALIVE!
-entity.mad_scientist.line.success.2=You are now one of us! Go my child!
-entity.mad_scientist.line.success.3=It all looks good, just forgot to put you nose on.
-
+dialog.mad_scientist.convert.question=I have all the parts!
+dialog.mad_scientist.requirements.line=Finally!<br>Getting rid of that fragile body is the best choice.<br>The only problem is that I need you to bring me a set of Android parts, before we begin.
+dialog.mad_scientist.requirements.question=I want to become an android.
+dialog.mad_scientist.main.line.human=I don't deal with humans.;NO! I can even look at you. So fragile!;Are you ok ? You look trapped! How can you stand that flesh?
+dialog.mad_scientist.main.line.android=Ah %1$s, good to see you! What brings you here?;Hello there. You look splendid today!;It seems your left eye is out of alignment. I'll be glad to fixe it.
+dialog.mad_scientist.undo.line=Why would you want to do that? The only way is by swallowing a blue pill. It can be found in dungeons, but your best bet is to buy it from someone. I think I had some in my workshop. I'll have to check.
+dialog.mad_scientist.undo.question=How do I reverse it!
+dialog.mad_scientist.whatDidYouDo.line=You are now an Android! You will no longer need food, sleep or oxygen. You can upgrade yourself with wonderful abilities in an Android Station and you will be able to see and do things you never imagined.
+dialog.mad_scientist.whatDidYouDo.question=What did you do to me?
 
 ##########################################################################################################
 # Creative Panels

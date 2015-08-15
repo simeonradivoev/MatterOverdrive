@@ -84,9 +84,9 @@ public class PlayerEventHandler
 
                 if (itemstack != null && Minecraft.getMinecraft().currentScreen == null) {
                     if (event.player.getItemInUse().isItemEqual(itemstack)) {
-                        event.player.itemInUse = itemstack;
+                        event.player.setItemInUse(itemstack,event.player.getItemInUseCount());
                     } else {
-                        System.out.println(String.format("%s not equal to %s", itemstack, event.player.itemInUse));
+                        System.out.println(String.format("%s not equal to %s", itemstack, event.player.getItemInUse()));
                     }
                 } else {
                     event.player.clearItemInUse();
