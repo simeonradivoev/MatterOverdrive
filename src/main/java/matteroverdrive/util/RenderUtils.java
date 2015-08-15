@@ -304,7 +304,7 @@ public class RenderUtils
 
 	public static void applyColor(int color)
 	{
-		glColor4f((float)(color >> 16 & 255) / 255f,(float)(color >> 8 & 255) / 255f,(float)(color >> 0 & 255) / 256f,(float)(color >> 24 & 255)/255f);
+		glColor4f((float) (color >> 16 & 255) / 255f, (float) (color >> 8 & 255) / 255f, (float) (color >> 0 & 255) / 256f, (float) (color >> 24 & 255) / 255f);
 	}
 
 	public static void applyColor(GuiColor color) {
@@ -371,11 +371,43 @@ public class RenderUtils
         glPushMatrix();
         glTranslated(0,0,-0.03);
         glScaled(0.01, 0.01, 0.01);
-        int height = info.length * 12;
-        for (int i = 0;i < info.length;i++) {
+        int height = 0;
+		int maxWidth = 0;
 
+		for (int i = 0;i < info.length;i++)
+		{
+			float scaleFactor = 1;
+			int width = fontRenderer.getStringWidth(info[i]);
+			if (width > 0) {
+				scaleFactor = MathHelper.clamp_float((float) 80 / (float) width,0.02f,4f);
+			}
+			int scaledHeight = (int)(fontRenderer.FONT_HEIGHT * scaleFactor);
+
+			if (maxWidth < fontRenderer.getStringWidth(info[i]))
+			{
+				maxWidth = fontRenderer.getStringWidth(info[i]);
+			}
+
+			height += scaledHeight;
+		}
+
+		int yCount = 0;
+        for (int i = 0;i < info.length;i++)
+		{
+			glPushMatrix();
+			float scaleFactor = 1;
             int width = fontRenderer.getStringWidth(info[i]);
-            fontRenderer.drawString(info[i], 50 - (width / 2), (52 - height / 2) + 12 * i, color.getColor());
+			if (width > 0) {
+				scaleFactor = MathHelper.clamp_float((float) 80 / (float) width,0.02f,4f);
+			}
+			int scaledHeight = (int)(fontRenderer.FONT_HEIGHT * scaleFactor);
+
+			glTranslated(50,52 + yCount + scaledHeight/2 - height/2,0);
+			glScaled(scaleFactor, scaleFactor, 0);
+            fontRenderer.drawString(info[i], -width / 2, -fontRenderer.FONT_HEIGHT / 2, color.getColor());
+			glPopMatrix();
+
+			yCount += scaledHeight;
         }
         glPopMatrix();
     }

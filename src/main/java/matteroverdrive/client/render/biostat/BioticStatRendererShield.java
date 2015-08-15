@@ -28,6 +28,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
@@ -81,6 +82,8 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
             glDisable(GL_ALPHA_TEST);
             glDisable(GL_CULL_FACE);
             glBlendFunc(GL_ONE, GL_ONE);
+            Vec3 playerPosition = player.getPosition(event.partialTicks);
+            Vec3 clientPosition = Minecraft.getMinecraft().thePlayer.getPosition(event.partialTicks);
             RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.2f * getOpacityLerp(player));
             Minecraft.getMinecraft().renderEngine.bindTexture(shield_texture);
             if (!isClient(player))
@@ -93,7 +96,7 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
                     glEnable(GL_CULL_FACE);
                 }
             }
-            glTranslated(player.posX - Minecraft.getMinecraft().thePlayer.posX,player.posY - Minecraft.getMinecraft().thePlayer.posY,player.posZ - Minecraft.getMinecraft().thePlayer.posZ);
+            glTranslated(playerPosition.xCoord - clientPosition.xCoord,playerPosition.yCoord - clientPosition.yCoord,playerPosition.zCoord - clientPosition.zCoord);
             glTranslated(0, -0.5, 0);
             glScaled(3, 3, 3);
             glRotated(player.motionZ * 45, -1, 0, 0);

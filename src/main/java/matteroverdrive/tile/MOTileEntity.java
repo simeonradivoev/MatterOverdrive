@@ -19,7 +19,9 @@
 package matteroverdrive.tile;
 
 import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.network.packet.server.PacketSendMachineNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -73,6 +75,14 @@ public abstract class MOTileEntity extends TileEntity implements IMOTileEntity
     public abstract void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories);
 
     public abstract void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories);
+
+    public void sendNBTToServer(EnumSet<MachineNBTCategory> categories)
+    {
+        if (!worldObj.isRemote)
+        {
+            MatterOverdrive.packetPipeline.sendToServer(new PacketSendMachineNBT(categories,this));
+        }
+    }
 
     protected abstract void onAwake(Side side);
 }

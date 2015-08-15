@@ -61,6 +61,7 @@ public class MatterOverdriveBlocks {
     public static BlockStarMap starMap;
     public static BlockChargingStation chargingStation;
     public static BlockMatterPipe heavy_matter_pipe;
+    public static BlockHoloSign holoSign;
 
     public static void init(FMLPreInitializationEvent event) {
         replicator = new BlockReplicator(Material.iron, "replicator");
@@ -100,6 +101,7 @@ public class MatterOverdriveBlocks {
         starMap = new BlockStarMap(Material.iron, "star_map");
         chargingStation = new BlockChargingStation(Material.iron, "charging_station");
         heavy_matter_pipe = new BlockMatterPipe(Material.iron, "heavy_matter_pipe",64,10);
+        holoSign = new BlockHoloSign(Material.iron,"holo_sign");
     }
 
     public static void register(FMLPreInitializationEvent event) {
@@ -144,6 +146,7 @@ public class MatterOverdriveBlocks {
         chargingStation.register();
         MatterOverdrive.configHandler.subscribe(chargingStation);
         heavy_matter_pipe.register();
+        holoSign.register();
 
         if (event.getSide() == Side.CLIENT) {
             MatterOverdriveQuide.Register(replicator);
