@@ -218,7 +218,8 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         return this;
     }
 
-    public void handleElementButtonClick(String buttonName, int mouseButton)
+    @Override
+    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
     {
 
     }

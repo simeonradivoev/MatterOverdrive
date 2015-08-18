@@ -123,6 +123,7 @@ tile.tritanium_ore.name=Tritanium Ore
 tile.tritanium_block.name=Tritanium Block
 tile.heavy_matter_pipe.name=Heavy Duty Matter Transport Pipe
 tile.heavy_matter_pipe.details=Transports Matter Plasma
+tile.holo_sign.name=Holographic Sign
 
 //////////// Pattern Storage ////////////
 tile.pattern_storage.name=Pattern Storage
@@ -295,6 +296,7 @@ gui.label.button.scout=Send Scout
 gui.label.button.new=New
 gui.label.button.import=Import
 gui.label.button.import.too_far=Destination Too Far
+gui.label.auto_line_size=Auto Line Size
 
 ### GUI Tooltips ###
 gui.tooltip.starmap.no_ship_space=Not enough ship spaces

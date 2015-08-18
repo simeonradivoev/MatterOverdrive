@@ -62,30 +62,21 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
         this.setSize(0.5F, 0.5F);
     }
 
-    public PhaserFire(World world, EntityLivingBase entityLivingBase,float damage, float speed,float accuracy,int color,boolean isAiming,int seed)
+    public PhaserFire(World world, EntityLivingBase entityLivingBase,Vec3 position,Vec3 dir,float damage, float speed,float accuracy,int color,boolean isAiming,int seed)
     {
-        this(world, entityLivingBase,damage, speed, accuracy, 60, color, isAiming,seed);
+        this(world, entityLivingBase,position,dir,damage, speed, accuracy, 60, color, isAiming,seed);
     }
 
-    public PhaserFire(World world, EntityLivingBase entityLivingBase,float damage, float speed,float accuracy,int life,int color,boolean isAiming,int seed) {
+    public PhaserFire(World world, EntityLivingBase entityLivingBase,Vec3 position,Vec3 dir,float damage, float speed,float accuracy,int life,int color,boolean isAiming,int seed) {
         super(world);
         rand.setSeed(seed);
         this.renderDistanceWeight = 10.0D;
         this.shootingEntity = entityLivingBase;
         this.setSize(0.5F, 0.5F);
-        this.setLocationAndAngles(entityLivingBase.posX, entityLivingBase.posY + (double) entityLivingBase.getEyeHeight(), entityLivingBase.posZ, entityLivingBase.rotationYaw, entityLivingBase.rotationPitch);
-        this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-        this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-        this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
-        if (!isAiming) {
-            this.posX -= (double) (MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * 0.16F);
-            this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * 0.16F);
-        }
-        this.posY -= 0.10000000149011612D;
-        this.posX += motionX;
-        this.posY += motionY;
-        this.posZ += motionZ;
-        this.setPosition(this.posX, this.posY, this.posZ);
+        this.setLocationAndAngles(position.xCoord, position.yCoord, position.zCoord, entityLivingBase.rotationYaw, entityLivingBase.rotationPitch);
+        this.motionX = dir.xCoord;
+        this.motionY = dir.yCoord;
+        this.motionZ = dir.zCoord;
         this.yOffset = 0.0F;
         this.life = life;
         this.damage = damage;

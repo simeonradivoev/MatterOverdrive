@@ -20,6 +20,7 @@ package matteroverdrive.api.weapon;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Vec3;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
@@ -31,7 +32,7 @@ public interface IWeapon
     Vector2f getModuleScreenPosition(int slot,ItemStack weapon);
     boolean supportsModule(int slot,ItemStack weapon);
     boolean onLeftClick(ItemStack weapon,EntityPlayer entityPlayer);
-    boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, boolean zoomed,int seed,int latency);
+    boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, boolean zoomed,int seed,int latency,Vec3 position,Vec3 dir);
     boolean isAlwaysEquipped(ItemStack weapon);
     float getHeat(ItemStack weapon);
     float getMaxHeat(ItemStack itemStack);

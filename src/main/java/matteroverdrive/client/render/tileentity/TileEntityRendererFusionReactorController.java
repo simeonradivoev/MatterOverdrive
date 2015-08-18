@@ -83,13 +83,7 @@ public class TileEntityRendererFusionReactorController extends TileEntitySpecial
 
         String[] info = controller.getMonitorInfo().split(" ");
 
-        if (controller.isValidStructure())
-        {
-            RenderUtils.drawScreenInfo(info, color,side);
-        } else {
-
-            RenderUtils.drawScreenInfo(info,color,side);
-        }
+        RenderUtils.drawScreenInfoWithGlobalAutoSize(info,color,side,10,10,4);
 
         RenderUtils.endDrawinngBlockScreen();
 

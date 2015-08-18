@@ -26,11 +26,13 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
+import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.machines.MachineComponentAbstract;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.configs.IConfigProperty;
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -272,7 +274,14 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
             throw new IllegalArgumentException("Argument 1 must be a number from 0 to 2");
         }
 
-        machine.setRedstoneMode((byte) i);
+        IConfigProperty property = machine.getConfigs().getProperty(Reference.CONFIG_KEY_REDSTONE_MODE);
+        if (property != null)
+        {
+            property.setValue(i);
+        }else
+        {
+            throw new IllegalArgumentException("No redstone mode config found for machine");
+        }
 
         return null;
     }

@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui.element;
 
 import matteroverdrive.api.network.MatterNetworkTask;
@@ -113,7 +131,7 @@ public class ElementTaskList extends MOElementListBox
 
         if (mouseY > 22 && mouseX < 50)
         {
-            buttonHandler.handleElementButtonClick("DropTask",index);
+            buttonHandler.handleElementButtonClick(null,"DropTask",index);
             System.out.println("Remove");
         }
     }
@@ -147,7 +165,7 @@ public class ElementTaskList extends MOElementListBox
                 gui.drawSizedTexturedModalRect(x,y,0,0,width,height,width,height*2);
             }
             MatterNetworkTask task = taskQueue.getAt(i);
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(task.getName(), x + 8, y + 7, 0xFFFFFF);
+            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(task.getKey(), x + 8, y + 7, 0xFFFFFF);
         }
     }*/
 

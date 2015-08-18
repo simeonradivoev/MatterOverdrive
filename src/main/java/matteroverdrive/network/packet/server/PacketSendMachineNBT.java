@@ -22,6 +22,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.AbstractBiPacketHandler;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
@@ -39,12 +40,14 @@ public class PacketSendMachineNBT extends TileEntityUpdatePacket
 {
     NBTTagCompound data;
     int cattegories;
+    boolean forceUpdate;
 
     public PacketSendMachineNBT(){}
-    public PacketSendMachineNBT(EnumSet<MachineNBTCategory> categories,MOTileEntity tileEntity)
+    public PacketSendMachineNBT(EnumSet<MachineNBTCategory> categories,MOTileEntity tileEntity,boolean forceUpdate)
     {
         super(tileEntity);
         data = new NBTTagCompound();
+        this.forceUpdate = forceUpdate;
         tileEntity.writeCustomNBT(data,categories);
         this.cattegories = MachineNBTCategory.encode(categories);
     }
@@ -55,6 +58,7 @@ public class PacketSendMachineNBT extends TileEntityUpdatePacket
         super.fromBytes(buf);
         data = ByteBufUtils.readTag(buf);
         cattegories = buf.readInt();
+        forceUpdate = buf.readBoolean();
     }
 
     @Override
@@ -63,6 +67,7 @@ public class PacketSendMachineNBT extends TileEntityUpdatePacket
         super.toBytes(buf);
         ByteBufUtils.writeTag(buf, data);
         buf.writeInt(cattegories);
+        buf.writeBoolean(forceUpdate);
     }
 
     public static class BiHandler extends AbstractBiPacketHandler<PacketSendMachineNBT>
@@ -85,6 +90,15 @@ public class PacketSendMachineNBT extends TileEntityUpdatePacket
             if (tileEntity instanceof MOTileEntity)
             {
                 ((MOTileEntity) tileEntity).readCustomNBT(message.data,MachineNBTCategory.decode(message.cattegories));
+                if (message.forceUpdate)
+                {
+                    if (tileEntity instanceof MOTileEntityMachine) {
+                        ((MOTileEntityMachine) tileEntity).ForceSync();
+                    }else
+                    {
+                        player.worldObj.markBlockForUpdate(tileEntity.xCoord,tileEntity.yCoord,tileEntity.zCoord);
+                    }
+                }
             }
             return null;
         }

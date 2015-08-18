@@ -28,6 +28,7 @@ import matteroverdrive.network.packet.AbstractBiPacketHandler;
 import matteroverdrive.network.packet.PacketAbstract;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.Vec3;
 
 /**
  * Created by Simeon on 7/25/2015.
@@ -38,13 +39,17 @@ public class PacketFirePhaserRifle extends PacketAbstract
     private boolean isAiming;
     private int sender;
     private long timestamp;
+    private Vec3 position;
+    private Vec3 direction;
 
     public PacketFirePhaserRifle(){}
-    public PacketFirePhaserRifle(boolean isAiming,int sender,int seed)
+    public PacketFirePhaserRifle(boolean isAiming,int sender,int seed,Vec3 pos,Vec3 dir)
     {
         this.isAiming = isAiming;
         this.sender = sender;
         this.seed = seed;
+        this.position = pos;
+        this.direction = dir;
     }
 
     @Override
@@ -54,6 +59,8 @@ public class PacketFirePhaserRifle extends PacketAbstract
         this.sender = buf.readInt();
         this.seed = buf.readInt();
         this.timestamp = buf.readLong();
+        this.position = Vec3.createVectorHelper(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        this.direction = Vec3.createVectorHelper(buf.readDouble(),buf.readDouble(),buf.readDouble());
     }
 
     @Override
@@ -62,6 +69,12 @@ public class PacketFirePhaserRifle extends PacketAbstract
         buf.writeInt(sender);
         buf.writeInt(seed);
         buf.writeLong(System.currentTimeMillis());
+        buf.writeDouble(position.xCoord);
+        buf.writeDouble(position.yCoord);
+        buf.writeDouble(position.zCoord);
+        buf.writeDouble(direction.xCoord);
+        buf.writeDouble(direction.yCoord);
+        buf.writeDouble(direction.zCoord);
     }
 
     public static class BiHandler extends AbstractBiPacketHandler<PacketFirePhaserRifle>
@@ -73,7 +86,7 @@ public class PacketFirePhaserRifle extends PacketAbstract
             {
                 Entity entity = player.worldObj.getEntityByID(message.sender);
                 if (entity != null && entity instanceof EntityPlayer && ((EntityPlayer)entity).getHeldItem() != null && ((EntityPlayer)entity).getHeldItem().getItem() instanceof PhaserRifle) {
-                    MatterOverdriveItems.phaserRifle.onClientFire(((EntityPlayer)entity).getHeldItem(), (EntityPlayer)entity, message.isAiming,message.seed);
+                    MatterOverdriveItems.phaserRifle.onClientFire(((EntityPlayer)entity).getHeldItem(), (EntityPlayer)entity, message.isAiming,message.seed,message.position,message.direction);
                 }
             }
             return null;
@@ -84,7 +97,7 @@ public class PacketFirePhaserRifle extends PacketAbstract
         {
             if (player.getHeldItem() != null && player.getHeldItem().getItem() == MatterOverdriveItems.phaserRifle && MatterOverdriveItems.phaserRifle.canFire(player.getHeldItem(),player.worldObj))
             {
-                MatterOverdriveItems.phaserRifle.onServerFire(player.getHeldItem(), player, message.isAiming,message.seed, (int)(System.currentTimeMillis() - message.timestamp));
+                MatterOverdriveItems.phaserRifle.onServerFire(player.getHeldItem(), player, message.isAiming,message.seed, (int)(System.currentTimeMillis() - message.timestamp),message.position,message.direction);
                 MatterOverdrive.packetPipeline.sendToAllAround(message,player,128);
             }
             return null;

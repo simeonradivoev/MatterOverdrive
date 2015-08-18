@@ -59,7 +59,6 @@ public class GuiHandler implements IGuiHandler
             registerContainer(TileEntityMachineFusionReactorController.class,ContainerFusionReactor.class);
             registerContainer(TileEntityAndroidStation.class,ContainerAndroidStation.class);
             registerContainer(TileEntityMachineStarMap.class,ContainerStarMap.class);
-            registerContainer(TileEntityHoloSign.class,ContainerHoloSign.class);
         }
         else
         {
@@ -78,7 +77,7 @@ public class GuiHandler implements IGuiHandler
             registerGuiAndContainer(TileEntityMachineFusionReactorController.class, GuiFusionReactor.class, ContainerFusionReactor.class);
             registerGuiAndContainer(TileEntityAndroidStation.class,GuiAndroidStation.class,ContainerAndroidStation.class);
             registerGuiAndContainer(TileEntityMachineStarMap.class,GuiStarMap.class,ContainerStarMap.class);
-            registerGuiAndContainer(TileEntityHoloSign.class,GuiHoloSign.class,ContainerHoloSign.class);
+            registerGui(TileEntityHoloSign.class,GuiHoloSign.class);
         }
     }
 

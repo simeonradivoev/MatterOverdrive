@@ -20,7 +20,6 @@ package matteroverdrive.tile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.entity.AndroidPlayer;
 import net.minecraft.entity.EntityLivingBase;
@@ -48,7 +47,6 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
         energyStorage.setCapacity(ENERGY_CAPACITY);
         energyStorage.setMaxExtract(ENERGY_TRANSFER);
         energyStorage.setMaxReceive(ENERGY_TRANSFER);
-        redstoneMode = Reference.MODE_REDSTONE_LOW;
     }
 
     @Override
@@ -56,11 +54,6 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     {
         super.updateEntity();
         manageAndroidCharging();
-    }
-
-    @Override
-    protected void registerComponents() {
-
     }
 
     private void manageAndroidCharging()

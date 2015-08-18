@@ -19,6 +19,7 @@
 package matteroverdrive.tile;
 
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.server.PacketSendMachineNBT;
@@ -76,11 +77,12 @@ public abstract class MOTileEntity extends TileEntity implements IMOTileEntity
 
     public abstract void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories);
 
-    public void sendNBTToServer(EnumSet<MachineNBTCategory> categories)
+    @SideOnly(Side.CLIENT)
+    public void sendNBTToServer(EnumSet<MachineNBTCategory> categories,boolean forceUpdate)
     {
-        if (!worldObj.isRemote)
+        if (worldObj.isRemote)
         {
-            MatterOverdrive.packetPipeline.sendToServer(new PacketSendMachineNBT(categories,this));
+            MatterOverdrive.packetPipeline.sendToServer(new PacketSendMachineNBT(categories,this,forceUpdate));
         }
     }
 

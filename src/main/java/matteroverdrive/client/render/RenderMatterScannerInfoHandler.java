@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.client.render;
 
 import matteroverdrive.Reference;
@@ -55,7 +73,7 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
     {
         MatterScanner scannerItem = (MatterScanner)scanner.getItem();
         MovingObjectPosition position = scannerItem.getScanningPos(player);
-        renderInfo(player,position,scanner,ticks);
+        renderInfo(player, position, scanner, ticks);
     }
 
     private void renderInfo(EntityPlayer player,MovingObjectPosition position,ItemStack scanner,float ticks)
@@ -154,10 +172,10 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
         glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, (float)count / (float)maxCount);
-        glColor3f(Reference.COLOR_HOLO.getFloatR() * 0.5f, Reference.COLOR_HOLO.getFloatG()* 0.5f, Reference.COLOR_HOLO.getFloatB()* 0.5f);
+        glAlphaFunc(GL_GREATER, (float) count / (float) maxCount);
+        glColor3f(Reference.COLOR_HOLO.getFloatR() * 0.5f, Reference.COLOR_HOLO.getFloatG() * 0.5f, Reference.COLOR_HOLO.getFloatB() * 0.5f);
         glTranslated(0.35,0.45,-0.1);
-        glScaled(0.3,0.3,0.3);
+        glScaled(0.3, 0.3, 0.3);
         RenderUtils.drawPlane(1);
         //glDisable(GL_ALPHA_TEST);
         glDisable(GL_BLEND);
@@ -176,24 +194,20 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         if (entity instanceof EntityLivingBase)
         {
             entityPos = ((EntityLivingBase) entity).getPosition(ticks);
-            entityPos.yCoord += + entity.getEyeHeight();
+            entityPos.yCoord += +entity.getEyeHeight();
             infos.add("Health: " + ((EntityLivingBase) entity).getHealth() + " / " + ((EntityLivingBase) entity).getMaxHealth());
-        }
-        else
-        {
-            entityPos = Vec3.createVectorHelper(entity.posX,entity.posY + entity.getEyeHeight(),entity.posZ);
-        }
 
-        glPushMatrix();
-        glTranslated(entityPos.xCoord - playerPos.xCoord, entityPos.yCoord - playerPos.yCoord, entityPos.zCoord - playerPos.zCoord);
-        glRotated(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * ticks , 0, -1, 0);
-        glRotated(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * ticks, 1, 0, 0);
-        glTranslated(1, 0, 0);
-        glRotated(180, 0, 0, 1);
-        glTranslated(-0.5, -0.5, -offset);
-        drawInfoPlane(0.5);
-        drawInfoList(name, infos);
-        glPopMatrix();
+            glPushMatrix();
+            glTranslated(entityPos.xCoord - playerPos.xCoord, entityPos.yCoord - playerPos.yCoord, entityPos.zCoord - playerPos.zCoord);
+            glRotated(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * ticks, 0, -1, 0);
+            glRotated(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * ticks, 1, 0, 0);
+            glTranslated(1, 0, 0);
+            glRotated(180, 0, 0, 1);
+            glTranslated(-0.5, -0.5, -offset);
+            drawInfoPlane(0.5);
+            drawInfoList(name, infos);
+            glPopMatrix();
+        }
     }
 
     private void drawInfoPlane(double opacity) {

@@ -31,7 +31,6 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.transport.ITransportList;
@@ -97,7 +96,6 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         matterStorage.setCapacity(512);
         locations = new ArrayList<>();
         selectedLocation = 0;
-        redstoneMode = Reference.MODE_REDSTONE_LOW;
         playerSlotsHotbar = true;
     }
 
@@ -206,6 +204,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     @Override
     protected void registerComponents()
     {
+        super.registerComponents();
         computerComponent = new ComponentComputers(this);
         addComponent(computerComponent);
     }

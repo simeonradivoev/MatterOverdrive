@@ -28,7 +28,7 @@ import matteroverdrive.data.inventory.UpgradeSlot;
 import matteroverdrive.gui.element.ElementBaseGroup;
 import matteroverdrive.gui.element.ElementIndicator;
 import matteroverdrive.gui.element.ElementSlotsList;
-import matteroverdrive.gui.pages.ConfigPage;
+import matteroverdrive.gui.pages.AutoConfigPage;
 import matteroverdrive.gui.pages.PageUpgrades;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.proxy.ClientProxy;
@@ -66,7 +66,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     {
         ElementBaseGroup homePage = new ElementBaseGroup(this,0,0,xSize,ySize);
         homePage.setName("Home");
-        ConfigPage configPage = new ConfigPage(this,0,0,xSize,ySize);
+        AutoConfigPage configPage = new AutoConfigPage(this,0,0,xSize,ySize,machine.getConfigs());
         configPage.setName("Configurations");
 
         AddPage(homePage, ClientProxy.holoIcons.getIcon("page_icon_home"),MOStringHelper.translateToLocal("gui.tooltip.page.home")).setIconColor(Reference.COLOR_MATTER);
@@ -109,12 +109,6 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         {
             indicator.setIndication(0);
         }
-    }
-
-    @Override
-    public void handleElementButtonClick(String buttonName, int mouseButton)
-    {
-        super.handleElementButtonClick(buttonName, mouseButton);
     }
 
     @Override

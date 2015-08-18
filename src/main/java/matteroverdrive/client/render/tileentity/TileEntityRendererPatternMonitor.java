@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.Reference;
@@ -27,32 +45,13 @@ public class TileEntityRendererPatternMonitor extends TileEntitySpecialRenderer
         int meta = tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         ForgeDirection direction = ForgeDirection.getOrientation(meta);
 
-        /*float thickness = 5f * (1f / 16f);
-
-        if (direction == ForgeDirection.EAST) {
-            glTranslated(thickness, 1, 1);
-            glRotatef(90, 1, 0, 0);
-            glRotatef(-90, 0, 0, 1);
-        } else if (direction == ForgeDirection.WEST) {
-            glTranslated(1 - thickness, 1, 0);
-            glRotatef(90, 1, 0, 0);
-            glRotatef(90, 0, 0, 1);
-        } else if (direction == ForgeDirection.SOUTH) {
-            glTranslated(0, 1, thickness);
-            glRotatef(90, 1, 0, 0);
-        } else if (direction == ForgeDirection.NORTH) {
-            glTranslated(1, 1, 1 - thickness);
-            glRotatef(90, 1, 0, 0);
-            glRotatef(180, 0, 0, 1);
-        }*/
-
         glDisable(GL_LIGHTING);
         glDisable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
         RenderUtils.disableLightmap();
 
-        RenderUtils.beginDrawinngBlockScreen(x, y, z, direction, Reference.COLOR_HOLO, tileEntity, -0.65);
+        RenderUtils.beginDrawinngBlockScreen(x, y, z, direction, Reference.COLOR_HOLO, tileEntity, -0.65,1f);
         glTranslated(0, 0, -0.05);
         Minecraft.getMinecraft().renderEngine.bindTexture(screenTexture);
         glColor3f(Reference.COLOR_HOLO.getFloatR() * 0.7f, Reference.COLOR_HOLO.getFloatG() * 0.7f, Reference.COLOR_HOLO.getFloatB() * 0.7f);

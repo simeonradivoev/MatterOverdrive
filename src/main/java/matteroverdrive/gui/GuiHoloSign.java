@@ -18,10 +18,13 @@
 
 package matteroverdrive.gui;
 
-import matteroverdrive.container.ContainerHoloSign;
+import matteroverdrive.container.ContainerFactory;
+import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.element.MOElementTextField;
+import matteroverdrive.gui.pages.AutoConfigPage;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.components.ComponentConfigs;
 import matteroverdrive.tile.TileEntityHoloSign;
 import net.minecraft.entity.player.InventoryPlayer;
 
@@ -30,15 +33,14 @@ import java.util.EnumSet;
 /**
  * Created by Simeon on 8/15/2015.
  */
-public class GuiHoloSign extends MOGuiBase
+public class GuiHoloSign extends MOGuiMachine<TileEntityHoloSign>
 {
-    TileEntityHoloSign sign;
     MOElementTextField textField;
+    AutoConfigPage configPage;
 
     public GuiHoloSign(InventoryPlayer inventoryPlayer,TileEntityHoloSign sign)
     {
-        super(new ContainerHoloSign(inventoryPlayer,sign));
-        this.sign = sign;
+        super(ContainerFactory.createMachineContainer(sign,inventoryPlayer),sign);
         textField = new MOElementTextField(this,this,50,36,150,115);
         textField.setBackground(MOElementButton.HOVER_TEXTURE_DARK);
         textField.setMultiline(true);
@@ -50,8 +52,17 @@ public class GuiHoloSign extends MOGuiBase
     public void initGui()
     {
         super.initGui();
-        addElement(textField);
-        textField.setText(sign.getText());
+        pages.get(0).addElement(textField);
+        textField.setText(machine.getText());
+    }
+
+    @Override
+    public void registerPages(MOBaseContainer container,TileEntityHoloSign machine)
+    {
+        super.registerPages(container, machine);
+        configPage = new AutoConfigPage(this,0,0,xSize,ySize,machine.getComponent(ComponentConfigs.class));
+        elements.remove(pages.get(1));
+        pages.set(1, configPage);
     }
 
     @Override
@@ -63,7 +74,13 @@ public class GuiHoloSign extends MOGuiBase
     @Override
     public void textChanged(String elementName, String text, boolean typed)
     {
-        sign.setText(text);
-        sign.sendNBTToServer(EnumSet.of(MachineNBTCategory.GUI));
+        machine.setText(text);
+    }
+
+    @Override
+    public void onGuiClosed()
+    {
+        super.onGuiClosed();
+        machine.sendNBTToServer(EnumSet.of(MachineNBTCategory.GUI),true);
     }
 }

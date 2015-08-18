@@ -24,26 +24,30 @@ import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.element.MOElementTextField;
 import matteroverdrive.gui.events.ITextHandler;
+import matteroverdrive.machines.components.ComponentConfigs;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 
 
 /**
  * Created by Simeon on 7/17/2015.
  */
-public class MatterNetworkConfigPage extends ConfigPage implements ITextHandler
+public class MatterNetworkConfigPage extends AutoConfigPage implements ITextHandler
 {
     ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
     ElementInventorySlot filterSlot;
     MOElementTextField destinationTextField;
 
-    public MatterNetworkConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height,ComponentMatterNetworkConfigs componentMatterNetworkConfigs) {
-        super(gui, posX, posY, width, height);
-        destinationTextField = new MOElementTextField(gui,this,64,84,96,16);
+    public MatterNetworkConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height,ComponentMatterNetworkConfigs componentMatterNetworkConfigs,ComponentConfigs configurable) {
+        super(gui, posX, posY, width, height,configurable);
+        destinationTextField = new MOElementTextField(gui,this,64,54,96,16);
         destinationTextField.setName("Destination");
         destinationTextField.setBackground(MOElementButton.HOVER_TEXTURE_DARK);
         destinationTextField.setTextOffset(4, 3);
         this.componentMatterNetworkConfigs = componentMatterNetworkConfigs;
-        filterSlot = new ElementInventorySlot(gui,(MOSlot)machineGui.inventorySlots.getSlot(componentMatterNetworkConfigs.getDestinationFilterSlot()),164,80,22,22,"big");
+        filterSlot = new ElementInventorySlot(gui,(MOSlot)machineGui.inventorySlots.getSlot(componentMatterNetworkConfigs.getDestinationFilterSlot()),164,50,22,22,"big");
+
+        yStart = 80;
+        xStart = 60;
     }
 
     @Override
@@ -62,7 +66,7 @@ public class MatterNetworkConfigPage extends ConfigPage implements ITextHandler
     public void drawForeground(int mouseX, int mouseY)
     {
         super.drawForeground(mouseX, mouseY);
-        getFontRenderer().drawString("Destination Address:", 64, 70, 0xFFFFFF);
+        getFontRenderer().drawString("Destination Address:", 64, 38, 0xFFFFFF);
     }
 
     @Override
@@ -72,7 +76,7 @@ public class MatterNetworkConfigPage extends ConfigPage implements ITextHandler
         {
             if (componentMatterNetworkConfigs != null) {
                 componentMatterNetworkConfigs.setDestinationFilter(text);
-                machineGui.getMachine().sendConfigsToServer();
+                machineGui.getMachine().sendConfigsToServer(false);
             }
         }
     }

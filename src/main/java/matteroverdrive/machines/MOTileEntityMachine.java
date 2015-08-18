@@ -22,7 +22,6 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IUpgradeable;
 import matteroverdrive.api.inventory.IUpgrade;
@@ -35,9 +34,11 @@ import matteroverdrive.data.TileEntityInventory;
 import matteroverdrive.data.inventory.UpgradeSlot;
 import matteroverdrive.fx.VentParticle;
 import matteroverdrive.items.SecurityProtocol;
-import matteroverdrive.network.packet.server.PacketSaveConfigs;
+import matteroverdrive.machines.components.ComponentConfigs;
+import matteroverdrive.machines.configs.ConfigPropertyStringList;
 import matteroverdrive.tile.IMOTileEntity;
 import matteroverdrive.tile.MOTileEntity;
+import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
@@ -77,7 +78,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     protected ResourceLocation soundRes;
     protected boolean redstoneState;
     protected boolean redstoneStateDirty = true;
-    protected byte redstoneMode;
     protected boolean forceClientUpdate;
     protected UUID owner;
 
@@ -86,6 +86,8 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     private int[] upgrade_slots;
     protected List<IMachineComponent> components;
     protected boolean playerSlotsHotbar,playerSlotsMain;
+
+    protected ComponentConfigs configs;
 
     public MOTileEntityMachine(int upgradeCount)
     {
@@ -153,7 +155,20 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
     }
 
-    protected abstract void registerComponents();
+    protected void registerComponents()
+    {
+        configs = new ComponentConfigs(this);
+        configs.addProperty(new ConfigPropertyStringList(
+                "redstoneMode",
+                "gui.config.redstone",
+                new String[]{
+                        MOStringHelper.translateToLocal("gui.redstone_mode.high"),
+                        MOStringHelper.translateToLocal("gui.redstone_mode.low"),
+                        MOStringHelper.translateToLocal("gui.redstone_mode.disabled")},
+                1
+        ));
+        addComponent(configs);
+    }
 
     private static ResourceLocation getSoundFor(String sound)
     {
@@ -169,10 +184,10 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
     public boolean getRedstoneActive()
     {
-        if (redstoneMode == Reference.MODE_REDSTONE_HIGH)
+        if (getRedstoneMode() == Reference.MODE_REDSTONE_HIGH)
         {
             return redstoneState;
-        }else if (redstoneMode == Reference.MODE_REDSTONE_LOW)
+        }else if (getRedstoneMode() == Reference.MODE_REDSTONE_LOW)
         {
             return !redstoneState;
         }
@@ -238,9 +253,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public void readCustomNBT(NBTTagCompound nbt,EnumSet<MachineNBTCategory> categories)
     {
-        if (categories.contains(MachineNBTCategory.CONFIGS)) {
-            redstoneMode = nbt.getByte("redstoneMode");
-        }
         if (categories.contains(MachineNBTCategory.DATA))
         {
             redstoneState = nbt.getBoolean("redstoneState");
@@ -267,10 +279,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public void  writeCustomNBT(NBTTagCompound nbt,EnumSet<MachineNBTCategory> categories)
     {
-        if (categories.contains(MachineNBTCategory.CONFIGS))
-        {
-            nbt.setByte("redstoneMode", redstoneMode);
-        }
         if (categories.contains(MachineNBTCategory.DATA))
         {
             nbt.setBoolean("forceClientUpdate", forceClientUpdate);
@@ -313,7 +321,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
         machineTag.setTag("Items", itemTagList);
         writeCustomNBT(machineTag, EnumSet.of(MachineNBTCategory.CONFIGS, MachineNBTCategory.DATA));
-        machineTag.setByte("redstoneMode", redstoneMode);
         if (hasOwner())
             machineTag.setString("Owner", owner.toString());
 
@@ -334,7 +341,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                 inventory.setInventorySlotContents(b0, ItemStack.loadItemStackFromNBT(itemTag));
             }
             readCustomNBT(machineTag, EnumSet.of(MachineNBTCategory.CONFIGS, MachineNBTCategory.DATA));
-            this.redstoneMode = machineTag.getByte("redstoneMode");
             if (machineTag.hasKey("Owner", 8)) {
                 try {
                     this.owner = UUID.fromString(machineTag.getString("Owner"));
@@ -555,9 +561,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @SideOnly(Side.CLIENT)
-    public void sendConfigsToServer()
+    public void sendConfigsToServer(boolean forceUpdate)
     {
-        MatterOverdrive.packetPipeline.sendToServer(new PacketSaveConfigs(this));
+        sendNBTToServer(EnumSet.of(MachineNBTCategory.CONFIGS),forceUpdate);
     }
 
     //region Upgrades
@@ -646,12 +652,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
         return null;
     }
-    public byte getRedstoneMode() {
-        return redstoneMode;
-    }
-
-    public void setRedstoneMode(byte redstoneMode) {
-        this.redstoneMode = redstoneMode;
+    public int getRedstoneMode()
+    {
+        return getConfigs().getInteger("redstoneMode", 1);
     }
 
     public UUID getOwner()
@@ -736,5 +739,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         activeState = active;
     }
+    public ComponentConfigs getConfigs(){return configs;}
     //endregion
 }

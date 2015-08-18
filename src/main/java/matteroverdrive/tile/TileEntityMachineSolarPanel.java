@@ -21,7 +21,6 @@ package matteroverdrive.tile;
 import cofh.lib.util.helpers.EnergyHelper;
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.EnumSkyBlock;
@@ -45,7 +44,6 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
         energyStorage.setCapacity(ENERGY_STORAGE);
         energyStorage.setMaxExtract(MAX_ENERGY_EXTRACT);
         energyStorage.setMaxReceive(0);
-        redstoneMode = Reference.MODE_REDSTONE_LOW;
     }
 
     @Override
@@ -58,12 +56,6 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
         }
 
         super.updateEntity();
-    }
-
-    @Override
-    protected void registerComponents()
-    {
-
     }
 
     @Override

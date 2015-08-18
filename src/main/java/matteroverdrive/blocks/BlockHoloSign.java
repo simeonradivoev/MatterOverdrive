@@ -18,6 +18,7 @@
 
 package matteroverdrive.blocks;
 
+import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,6 +27,7 @@ import matteroverdrive.blocks.includes.MOBlockContainer;
 import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityHoloSign;
+import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,12 +36,15 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 8/15/2015.
  */
 public class BlockHoloSign extends MOBlockContainer
 {
+
+
     public BlockHoloSign(Material material, String name)
     {
         super(material, name);
@@ -57,6 +62,31 @@ public class BlockHoloSign extends MOBlockContainer
             return MatterOverdriveIcons.Monitor_back;
         }
         return MatterOverdriveIcons.Base;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
+    {
+        int meta = world.getBlockMetadata(x,y,z);
+        if (meta == side)
+        {
+            int type = 0;
+            ForgeDirection direction = ForgeDirection.getOrientation(BlockHelper.getAboveSide(side));
+            if (world.getBlock(x+direction.offsetX,y+direction.offsetY,z+direction.offsetZ) instanceof BlockHoloSign)
+                type =MOMathHelper.setBoolean(type,0,true);
+            direction = ForgeDirection.getOrientation(BlockHelper.getBelowSide(side));
+            if(world.getBlock(x+direction.offsetX,y+direction.offsetY,z+direction.offsetZ) instanceof BlockHoloSign)
+                type = MOMathHelper.setBoolean(type,1,true);
+            direction = ForgeDirection.getOrientation(BlockHelper.getLeftSide(side));
+            if(world.getBlock(x+direction.offsetX,y+direction.offsetY,z+direction.offsetZ) instanceof BlockHoloSign)
+                type = MOMathHelper.setBoolean(type,2,true);
+            direction = ForgeDirection.getOrientation(BlockHelper.getRightSide(side));
+            if (world.getBlock(x+direction.offsetX,y+direction.offsetY,z+direction.offsetZ) instanceof BlockHoloSign)
+                type = MOMathHelper.setBoolean(type,3,true);
+            MatterOverdriveIcons.Monitor_back.setType(type);
+            return MatterOverdriveIcons.Monitor_back;
+        }
+        return this.getIcon(side, meta);
     }
 
     @Override

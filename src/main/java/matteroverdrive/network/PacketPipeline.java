@@ -67,7 +67,6 @@ public class PacketPipeline
         registerPacket(PacketSyncTransportProgress.ClientHandler.class,PacketSyncTransportProgress.class);
         registerBiPacket(PacketMatterScannerGetDatabase.Handler.class, PacketMatterScannerGetDatabase.class);
         registerPacket(PacketUpdateMatterRegistry.ClientHandler.class, PacketUpdateMatterRegistry.class);
-        registerPacket(PacketChangeRedstoneMode.ServerHandler.class,PacketChangeRedstoneMode.class);
         registerPacket(PacketSyncAndroid.ClientHandler.class,PacketSyncAndroid.class);
         registerPacket(PacketUnlockBioticStat.ServerHandler.class,PacketUnlockBioticStat.class);
         registerPacket(PacketTeleportPlayer.ServerHandler.class,PacketTeleportPlayer.class);
@@ -79,7 +78,6 @@ public class PacketPipeline
         registerPacket(PacketStarMapAttack.ServerHandler.class,PacketStarMapAttack.class);
         registerPacket(PacketUpdateTravelEvents.ClientHandler.class,PacketUpdateTravelEvents.class);
         registerPacket(PacketAndroidChangeAbility.ServerHandler.class,PacketAndroidChangeAbility.class);
-        registerPacket(PacketSaveConfigs.ServerHandler.class,PacketSaveConfigs.class);
         registerBiPacket(PacketFirePhaserRifle.BiHandler.class, PacketFirePhaserRifle.class);
         registerPacket(PacketReloadEnergyWeapon.ServerHandler.class, PacketReloadEnergyWeapon.class);
         registerBiPacket(PacketManageConversation.BiHandler.class, PacketManageConversation.class);

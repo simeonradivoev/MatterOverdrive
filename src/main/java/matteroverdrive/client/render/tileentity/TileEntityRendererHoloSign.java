@@ -18,7 +18,9 @@
 
 package matteroverdrive.client.render.tileentity;
 
+import cofh.lib.util.helpers.BlockHelper;
 import matteroverdrive.Reference;
+import matteroverdrive.blocks.BlockHoloSign;
 import matteroverdrive.tile.TileEntityHoloSign;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -36,7 +38,7 @@ public class TileEntityRendererHoloSign extends TileEntitySpecialRenderer
         int meta = tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         ForgeDirection side = ForgeDirection.getOrientation(meta);
 
-        RenderUtils.beginDrawinngBlockScreen(x, y, z, side, Reference.COLOR_HOLO, tileEntity, -0.8375);
+        RenderUtils.beginDrawinngBlockScreen(x, y, z, side, Reference.COLOR_HOLO, tileEntity, -0.8375, 0.2f);
 
         if (tileEntity instanceof TileEntityHoloSign)
         {
@@ -44,7 +46,29 @@ public class TileEntityRendererHoloSign extends TileEntitySpecialRenderer
             if (text != null)
             {
                 String[] infos = text.split("\n");
-                RenderUtils.drawScreenInfo(infos, Reference.COLOR_HOLO, side);
+                int leftMargin = 10;
+                int rightMargin = 10;
+                float maxSize = 4f;
+                ForgeDirection leftSide = ForgeDirection.getOrientation(BlockHelper.getLeftSide(meta));
+                if (tileEntity.getWorldObj().getBlock(tileEntity.xCoord + leftSide.offsetY, tileEntity.yCoord + leftSide.offsetY, tileEntity.zCoord + leftSide.offsetZ) instanceof BlockHoloSign)
+                {
+                    leftMargin = 0;
+                    maxSize = 8;
+                }
+                ForgeDirection rightSide = ForgeDirection.getOrientation(BlockHelper.getRightSide(meta));
+                if (tileEntity.getWorldObj().getBlock(tileEntity.xCoord + rightSide.offsetY, tileEntity.yCoord + rightSide.offsetY, tileEntity.zCoord + rightSide.offsetZ) instanceof BlockHoloSign)
+                {
+                    rightMargin = 0;
+                    maxSize = 8;
+                }
+
+                if (((TileEntityHoloSign) tileEntity).getConfigs().getBoolean("AutoLineSize", false))
+                {
+                    RenderUtils.drawScreenInfoWithLocalAutoSize(infos, Reference.COLOR_HOLO, side,leftMargin,rightMargin,maxSize);
+                }else
+                {
+                    RenderUtils.drawScreenInfoWithGlobalAutoSize(infos, Reference.COLOR_HOLO, side,leftMargin,rightMargin,maxSize);
+                }
             }
         }
 

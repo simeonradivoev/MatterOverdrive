@@ -23,7 +23,6 @@ import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.Reference;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
@@ -76,7 +75,6 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
         this.taskQueueProcessing = new MatterNetworkPacketQueue(this,1);
-        redstoneMode = Reference.MODE_REDSTONE_LOW;
         networkComponent = new MatterNetworkComponentPatternStorage(this);
         playerSlotsHotbar = true;
         playerSlotsMain = true;
@@ -118,6 +116,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     protected void registerComponents()
     {
+        super.registerComponents();
         componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
         addComponent(componentMatterNetworkConfigs);
     }

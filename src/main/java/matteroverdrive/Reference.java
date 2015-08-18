@@ -132,4 +132,8 @@ public class Reference
 	public static final String MODEL_PATTERN_STORAGE = Reference.PATH_MODEL_BLOCKS + "pattern_storage.obj";
 	public static final String MODEL_REPLICATOR = Reference.PATH_MODEL_BLOCKS + "replicator.obj";
 	//endregion
+
+	//region config keys
+	public static final String CONFIG_KEY_REDSTONE_MODE = "redstoneMode";
+	//endregion
 }

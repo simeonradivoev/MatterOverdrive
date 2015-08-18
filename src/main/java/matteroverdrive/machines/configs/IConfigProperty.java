@@ -16,28 +16,16 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.container;
-
-import matteroverdrive.tile.TileEntityHoloSign;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
+package matteroverdrive.machines.configs;
 
 /**
- * Created by Simeon on 8/15/2015.
+ * Created by Simeon on 8/16/2015.
  */
-public class ContainerHoloSign extends MOBaseContainer {
-
-    private TileEntityHoloSign sign;
-
-    public ContainerHoloSign(InventoryPlayer inventory,TileEntityHoloSign sign)
-    {
-        super(inventory);
-        this.sign = sign;
-    }
-
-    @Override
-    public boolean canInteractWith(EntityPlayer p_75145_1_)
-    {
-        return true;
-    }
+public interface IConfigProperty
+{
+    String getKey();
+    String getUnlocalizedName();
+    Object getValue();
+    void setValue(Object value);
+    Class getType();
 }

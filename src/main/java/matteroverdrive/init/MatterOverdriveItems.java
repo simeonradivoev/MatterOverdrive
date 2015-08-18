@@ -192,7 +192,7 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new ItemStack(me_conversion_matrix),"EIE","CDC","EIE",'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'I',Items.iron_ingot,'D',MatterOverdriveItems.dilithium_ctystal);
         GameRegistry.addRecipe(new ItemStack(tritanium_plate),"TTT",'T',new ItemStack(tritanium_ingot));
         GameRegistry.addRecipe(new ItemStack(phaser),"IGI","IDI","WCW",'I',Items.iron_ingot,'G',Blocks.glass,'D',dilithium_ctystal,'W',Blocks.wool,'C',new ItemStack(isolinear_circuit,1,3));
-        GameRegistry.addRecipe(new ItemStack(pattern_drive)," M ", "RER"," C ",'M',machine_casing,'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'R',Items.redstone);
+        GameRegistry.addRecipe(new ItemStack(pattern_drive)," E ", "RMR"," C ",'M',machine_casing,'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'R',Items.redstone);
         GameRegistry.addRecipe(new ItemStack(security_protocol),"PP", "CP",'P',Items.paper,'C',new ItemStack(isolinear_circuit,1,0));
         GameRegistry.addRecipe(new ItemStack(wrench),"T T"," Y "," T ",'T',tritanium_ingot,'Y',new ItemStack(Blocks.wool,1,4));
         GameRegistry.addRecipe(new ItemStack(spacetime_equalizer), " M ", "EHE", " M ", 'M', s_magnet, 'E', Items.ender_pearl, 'H', h_compensator);

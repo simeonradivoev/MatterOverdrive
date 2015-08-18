@@ -130,6 +130,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     protected void registerComponents()
     {
+        super.registerComponents();
         componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
         addComponent(componentMatterNetworkConfigs);
     }

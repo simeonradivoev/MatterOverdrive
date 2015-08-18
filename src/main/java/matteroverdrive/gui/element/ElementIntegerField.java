@@ -18,6 +18,7 @@
 
 package matteroverdrive.gui.element;
 
+import cofh.lib.gui.element.ElementBase;
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
@@ -86,10 +87,8 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
     }
 
     @Override
-    public void handleElementButtonClick(String buttonName, int mouseButton)
+    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
     {
-        super.handleElementButtonClick(buttonName,mouseButton);
-
         if (buttonName == "Inc")
         {
             int value = 1;
@@ -99,7 +98,7 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
                 value = 16;
 
             setNumber(getNumber()+value);
-            buttonHandler.handleElementButtonClick(getName(),value);
+            buttonHandler.handleElementButtonClick(this,getName(),value);
         }
         else if (buttonName == "Dec")
         {
@@ -110,7 +109,7 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
                 value = -16;
 
             setNumber(getNumber()+value);
-            buttonHandler.handleElementButtonClick(getName(),value);
+            buttonHandler.handleElementButtonClick(this,getName(),value);
         }
     }
 

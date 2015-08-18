@@ -21,7 +21,6 @@ package matteroverdrive.tile;
 import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
@@ -54,7 +53,6 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
         super(upgradeCount);
         packetQueue = new MatterNetworkPacketQueue(this,TASK_QUEUE_SIZE);
         connections = new BlockPosition[6];
-        redstoneMode = Reference.MODE_REDSTONE_NONE;
         networkComponent = new MatterNetworkComponentQueue(this);
     }
 

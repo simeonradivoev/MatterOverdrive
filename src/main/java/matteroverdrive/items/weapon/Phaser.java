@@ -409,7 +409,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
-    public boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, boolean zoomed,int seed,int latency)
+    public boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, boolean zoomed,int seed,int latency,Vec3 position,Vec3 dir)
     {
         return false;
     }

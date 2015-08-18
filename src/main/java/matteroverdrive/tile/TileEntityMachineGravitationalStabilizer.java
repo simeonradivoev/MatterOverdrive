@@ -62,11 +62,6 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     }
 
     @Override
-    protected void registerComponents() {
-
-    }
-
-    @Override
     protected void onAwake(Side side) {
 
     }

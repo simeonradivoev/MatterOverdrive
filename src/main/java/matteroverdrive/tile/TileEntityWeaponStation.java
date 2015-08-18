@@ -73,13 +73,7 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
         SIGHTS_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_SIGHTS));
         OTHER_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_OTHER));
         INPUT_SLOT = inventory.AddSlot(new WeaponSlot(true));
-        redstoneMode = Reference.MODE_REDSTONE_LOW;
         super.RegisterSlots(inventory);
-    }
-
-    @Override
-    protected void registerComponents() {
-
     }
 
     public IInventory getActiveInventory()

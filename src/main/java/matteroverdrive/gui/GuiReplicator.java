@@ -18,6 +18,7 @@
 
 package matteroverdrive.gui;
 
+import cofh.lib.gui.element.ElementBase;
 import cofh.lib.gui.element.ElementDualScaled;
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.MatterOverdrive;
@@ -186,9 +187,9 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
     }
 
     @Override
-    public void handleElementButtonClick(String buttonName, int mouseButton)
+    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
     {
-        super.handleElementButtonClick(buttonName,mouseButton);
+        super.handleElementButtonClick(element,buttonName,mouseButton);
         if (buttonName.equals("DropTask"))
         {
             NBTTagCompound tagCompound = new NBTTagCompound();

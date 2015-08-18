@@ -21,7 +21,6 @@ package matteroverdrive.tile;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.matter.IMatterHandler;
@@ -70,7 +69,6 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         this.matterStorage.setMaxReceive(MATTER_STORAGE);
         this.matterStorage.setMaxExtract(MATTER_STORAGE);
         time = new TimeTracker();
-        redstoneMode = Reference.MODE_REDSTONE_LOW;
         playerSlotsMain = true;
         playerSlotsHotbar = true;
 	}
@@ -81,11 +79,6 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         INPUT_SLOT_ID = inventory.AddSlot(new MatterSlot(true));
         OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
         super.RegisterSlots(inventory);
-    }
-
-    @Override
-    protected void registerComponents() {
-
     }
 
     @Override

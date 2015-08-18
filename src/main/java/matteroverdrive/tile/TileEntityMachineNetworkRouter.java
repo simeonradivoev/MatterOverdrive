@@ -42,11 +42,6 @@ public class TileEntityMachineNetworkRouter extends TileEntityMachinePacketQueue
     }
 
     @Override
-    protected void registerComponents() {
-
-    }
-
-    @Override
     protected void onActiveChange() {
 
     }

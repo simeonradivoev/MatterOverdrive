@@ -37,7 +37,6 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.init.MatterOverdriveBlocks;
@@ -99,7 +98,6 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         matterStorage.setCapacity(MATTER_STORAGE);
         matterStorage.setMaxExtract(MATTER_STORAGE);
         matterStorage.setMaxReceive(MATTER_STORAGE);
-        redstoneMode = Reference.MODE_REDSTONE_LOW;
     }
 
     @Override
@@ -159,6 +157,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     @Override
     protected void registerComponents()
     {
+        super.registerComponents();
         componentComputers = new ComponentComputers(this);
         addComponent(componentComputers);
     }

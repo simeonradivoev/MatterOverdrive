@@ -18,6 +18,7 @@
 
 package matteroverdrive.gui;
 
+import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.init.MatterOverdriveItems;
@@ -154,10 +155,8 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
     }
 
     @Override
-    public void handleElementButtonClick(String buttonName, int mouseButton)
+    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
     {
-        super.handleElementButtonClick(buttonName,mouseButton);
-
         if (buttonName == "Import")
         {
             ItemStack usb = machine.getStackInSlot(machine.usbSlotID);
@@ -166,7 +165,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
                 if (MatterOverdriveItems.transportFlashDrive.hasTarget(usb))
                 {
                     machine.setSelectedLocation(MatterOverdriveItems.transportFlashDrive.getTargetX(usb),MatterOverdriveItems.transportFlashDrive.getTargetY(usb)+1,MatterOverdriveItems.transportFlashDrive.getTargetZ(usb),name.getText());
-                    machine.sendConfigsToServer();
+                    machine.sendConfigsToServer(true);
                     updateInfo();
                 }
             }
@@ -174,26 +173,26 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         else if (buttonName == "New")
         {
             machine.addNewLocation(machine.xCoord, machine.yCoord, machine.zCoord, name.getText());
-            machine.sendConfigsToServer();
+            machine.sendConfigsToServer(true);
             updateInfo();
             list.setSelectedIndex(list.getElementCount() - 1);
         }
         else if (buttonName == "Reset")
         {
             machine.setSelectedLocation(machine.xCoord,machine.yCoord,machine.zCoord,machine.getSelectedLocation().name);
-            machine.sendConfigsToServer();
+            machine.sendConfigsToServer(true);
             updateInfo();
         }
         else if (buttonName == "Remove")
         {
             machine.removeLocation(list.getSelectedIndex());
-            machine.sendConfigsToServer();
+            machine.sendConfigsToServer(true);
             updateInfo();
         }
         else if (buttonName.equals("XCoord") || buttonName.equals("YCoord") || buttonName.equals("ZCoord"))
         {
             machine.setSelectedLocation(xCoords.getNumber(), yCoords.getNumber(), zCoords.getNumber(), name.getText());
-            machine.sendConfigsToServer();
+            machine.sendConfigsToServer(true);
         }
     }
 
@@ -237,7 +236,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         {
             updateInfo();
             machine.selectedLocation = selected;
-            machine.sendConfigsToServer();
+            machine.sendConfigsToServer(true);
             list.setSelectedIndex(machine.selectedLocation);
         }
     }
@@ -248,7 +247,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         if (typed) {
             if (elementName.equals("LocationName")) {
                 machine.setSelectedLocation(xCoords.getNumber(), yCoords.getNumber(), zCoords.getNumber(), name.getText());
-                machine.sendConfigsToServer();
+                machine.sendConfigsToServer(true);
                 //updateInfo();
             }
         }

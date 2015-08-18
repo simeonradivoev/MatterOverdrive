@@ -327,10 +327,10 @@ public class RenderUtils
 
     public static void beginDrawinngBlockScreen(double x, double y, double z,ForgeDirection side,GuiColor color,TileEntity entity)
     {
-        beginDrawinngBlockScreen(x, y, z, side, color, entity, 0.05);
+        beginDrawinngBlockScreen(x, y, z, side, color, entity, 0.05, 1);
     }
 
-    public static void beginDrawinngBlockScreen(double x, double y, double z,ForgeDirection side,GuiColor color,TileEntity entity,double offset)
+    public static void beginDrawinngBlockScreen(double x, double y, double z,ForgeDirection side,GuiColor color,TileEntity entity,double offset,float glowAlpha)
     {
         glEnable(GL_BLEND);
         glDisable(GL_LIGHTING);
@@ -354,7 +354,7 @@ public class RenderUtils
 
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
 
-        double multiply = MOMathHelper.noise(entity.xCoord,entity.getWorldObj().getWorldTime() * 0.01,entity.zCoord) * 0.5 + 0.5;
+        double multiply = (MOMathHelper.noise(entity.xCoord,entity.getWorldObj().getWorldTime() * 0.01,entity.zCoord) * 0.5 + 0.5) * glowAlpha;
         glColor3d(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply);
         Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityRendererPatternMonitor.screenTextureGlow);
         RenderUtils.drawPlane(1);
@@ -365,7 +365,69 @@ public class RenderUtils
         RenderUtils.drawPlane(1);
     }
 
-    public static void drawScreenInfo(String[] info,GuiColor color,ForgeDirection side)
+    public static void drawScreenInfoWithGlobalAutoSize(String[] info,GuiColor color,ForgeDirection side,int leftMargin,int rightMargin,float maxScaleFactor)
+    {
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glPushMatrix();
+        glTranslated(0,0,-0.03);
+        glScaled(0.01, 0.01, 0.01);
+        int height = 0;
+        int maxWidth = 0;
+
+        int sizeX = 100 - leftMargin - rightMargin;
+        int sizeY = 80;
+
+        float scaleFactor = 1;
+
+        for (int i = 0;i < info.length;i++)
+        {
+            if (maxWidth < fontRenderer.getStringWidth(info[i]))
+            {
+                maxWidth = fontRenderer.getStringWidth(info[i]);
+            }
+        }
+
+        if (maxWidth > 0) {
+            scaleFactor = MathHelper.clamp_float((float) sizeX / (float) maxWidth, 0.02f, maxScaleFactor);
+        }
+
+        for (int i = 0;i < info.length;i++)
+        {
+            int scaledHeight = (int)(fontRenderer.FONT_HEIGHT * scaleFactor);
+
+            if (height + scaledHeight < sizeY) {
+                height += scaledHeight;
+            }
+        }
+
+        height = MathHelper.clamp_int(height,0,sizeY);
+
+        int yCount = 0;
+        for (int i = 0;i < info.length;i++)
+        {
+            glPushMatrix();
+            int scaledHeight = (int)(fontRenderer.FONT_HEIGHT * scaleFactor);
+
+            if (yCount + scaledHeight < sizeY)
+            {
+                int width = fontRenderer.getStringWidth(info[i]);
+                glTranslated(leftMargin + sizeX/2, 50 + yCount + scaledHeight / 2 - height / 2, 0);
+                glScaled(scaleFactor, scaleFactor, 0);
+                fontRenderer.drawString(info[i], -width / 2, -fontRenderer.FONT_HEIGHT / 2, color.getColor());
+
+            }else
+            {
+                glPopMatrix();
+                break;
+            }
+
+            glPopMatrix();
+            yCount += scaledHeight;
+        }
+        glPopMatrix();
+    }
+
+    public static void drawScreenInfoWithLocalAutoSize(String[] info,GuiColor color,ForgeDirection side,int leftMargin,int rightMargin,float maxScaleFactor)
     {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
@@ -374,12 +436,15 @@ public class RenderUtils
         int height = 0;
 		int maxWidth = 0;
 
+        int sizeX = 100 - leftMargin - rightMargin;
+        int sizeY = 80;
+
 		for (int i = 0;i < info.length;i++)
 		{
 			float scaleFactor = 1;
 			int width = fontRenderer.getStringWidth(info[i]);
 			if (width > 0) {
-				scaleFactor = MathHelper.clamp_float((float) 80 / (float) width,0.02f,4f);
+				scaleFactor = MathHelper.clamp_float((float) sizeX / (float) width, 0.02f, maxScaleFactor);
 			}
 			int scaledHeight = (int)(fontRenderer.FONT_HEIGHT * scaleFactor);
 
@@ -388,25 +453,38 @@ public class RenderUtils
 				maxWidth = fontRenderer.getStringWidth(info[i]);
 			}
 
-			height += scaledHeight;
+            if (height + scaledHeight < sizeY) {
+                height += scaledHeight;
+            }
 		}
+
+        height = MathHelper.clamp_int(height,0,sizeY);
 
 		int yCount = 0;
         for (int i = 0;i < info.length;i++)
 		{
+
 			glPushMatrix();
 			float scaleFactor = 1;
             int width = fontRenderer.getStringWidth(info[i]);
 			if (width > 0) {
-				scaleFactor = MathHelper.clamp_float((float) 80 / (float) width,0.02f,4f);
+				scaleFactor = MathHelper.clamp_float((float) sizeX / (float) width,0.02f,maxScaleFactor);
 			}
 			int scaledHeight = (int)(fontRenderer.FONT_HEIGHT * scaleFactor);
 
-			glTranslated(50,52 + yCount + scaledHeight/2 - height/2,0);
-			glScaled(scaleFactor, scaleFactor, 0);
-            fontRenderer.drawString(info[i], -width / 2, -fontRenderer.FONT_HEIGHT / 2, color.getColor());
-			glPopMatrix();
+            if (yCount + scaledHeight < sizeY)
+            {
+                glTranslated(leftMargin + sizeX/2, 50 + yCount + scaledHeight / 2 - height / 2, 0);
+                glScaled(scaleFactor, scaleFactor, 0);
+                fontRenderer.drawString(info[i], -width / 2, -fontRenderer.FONT_HEIGHT / 2, color.getColor());
 
+            }else
+            {
+                glPopMatrix();
+                break;
+            }
+
+            glPopMatrix();
 			yCount += scaledHeight;
         }
         glPopMatrix();

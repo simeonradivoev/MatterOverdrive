@@ -20,7 +20,6 @@ package matteroverdrive.tile;
 
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IRecyclable;
 import matteroverdrive.data.Inventory;
@@ -54,7 +53,6 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
         this.energyStorage.setCapacity(ENERGY_STORAGE);
         this.energyStorage.setMaxExtract(ENERGY_STORAGE);
         this.energyStorage.setMaxReceive(ENERGY_STORAGE);
-        redstoneMode = Reference.MODE_REDSTONE_LOW;
         playerSlotsHotbar = true;
         playerSlotsMain = true;
     }
@@ -65,11 +63,6 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
         INPUT_SLOT_ID = inventory.AddSlot(new SlotRecycler(true));
         OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
         super.RegisterSlots(inventory);
-    }
-
-    @Override
-    protected void registerComponents() {
-
     }
 
     @Override

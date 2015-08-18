@@ -66,13 +66,7 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
         CHEST_SLOT = inventory.AddSlot(new ModuleSlot(false,Reference.BIONIC_CHEST));
         OTHER_SLOT = inventory.AddSlot(new ModuleSlot(false,Reference.BIONIC_OTHER));
         BATTERY_SLOT = inventory.AddSlot(new EnergySlot(false));
-        redstoneMode = Reference.MODE_REDSTONE_LOW;
         super.RegisterSlots(inventory);
-    }
-
-    @Override
-    protected void registerComponents() {
-
     }
 
     public IInventory getActiveInventory()

@@ -89,12 +89,6 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     }
 
     @Override
-    protected void registerComponents()
-    {
-
-    }
-
-    @Override
     public boolean getServerActive() {
         return false;
     }

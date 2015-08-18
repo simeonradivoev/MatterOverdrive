@@ -72,6 +72,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
 
     @Override
     protected void registerComponents() {
+        super.registerComponents();
         componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
         addComponent(componentMatterNetworkConfigs);
     }

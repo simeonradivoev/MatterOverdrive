@@ -1,7 +1,26 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.init;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.Reference;
+import matteroverdrive.client.render.IconConnectedTexture;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
@@ -20,7 +39,7 @@ public class MatterOverdriveIcons
     public static IIcon Matter_tank_empty;
     public static IIcon Transperant;
     public static IIcon Network_port_square;
-    public static IIcon Monitor_back;
+    public static IconConnectedTexture Monitor_back;
     public static IIcon YellowStripes;
     public static IIcon Coil;
     public static IIcon charging_station;
@@ -52,7 +71,7 @@ public class MatterOverdriveIcons
         Transperant = register(r, "transperant");
         Network_port_square = register(r,"network_port");
         Vent2 = register(r,"vent2");
-        Monitor_back = register(r,"holo_monitor");
+        Monitor_back = new IconConnectedTexture(register(r,"holo_monitor"));
         YellowStripes = register(r,"base_stripes");
         Recycler = register(r,"recycler_side");
         Coil = register(r,"base_coil");
