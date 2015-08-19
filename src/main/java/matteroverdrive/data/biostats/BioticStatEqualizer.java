@@ -18,7 +18,10 @@
 
 package matteroverdrive.data.biostats;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.entity.AndroidPlayer;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -34,6 +37,13 @@ public class BioticStatEqualizer extends AbstractBioticStat
 
     @Override
     public void onAndroidUpdate(AndroidPlayer android, int level) {
+
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    {
 
     }
 

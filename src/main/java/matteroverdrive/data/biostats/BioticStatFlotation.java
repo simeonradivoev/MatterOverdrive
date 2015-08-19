@@ -18,7 +18,10 @@
 
 package matteroverdrive.data.biostats;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.entity.AndroidPlayer;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -38,6 +41,13 @@ public class BioticStatFlotation extends AbstractBioticStat
         if (android.getPlayer().isInWater()) {
             android.getPlayer().motionY = android.getPlayer().motionY + 0.007;
         }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    {
+
     }
 
     @Override

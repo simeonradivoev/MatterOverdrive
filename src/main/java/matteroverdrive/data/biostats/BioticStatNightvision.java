@@ -25,13 +25,12 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
-import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
@@ -80,7 +79,7 @@ public class BioticStatNightvision extends AbstractBioticStat implements IConfig
     {
         if (isActive(android, level))
         {
-            android.getPlayer().addPotionEffect(new PotionEffect(Potion.nightVision.id,500));
+            android.getPlayer().addPotionEffect(new PotionEffect(Potion.nightVision.id, 500));
         }
     }
 
@@ -93,23 +92,27 @@ public class BioticStatNightvision extends AbstractBioticStat implements IConfig
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
     {
-        if (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(this) && keycode == ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode())
+        if (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(this))
         {
-            if (down)
+            androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_NIGHTVISION, !androidPlayer.getEffects().getBoolean("Nightvision"));
+            if (!androidPlayer.getEffects().getBoolean("Nightvision"))
             {
-                androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_NIGHTVISION, !androidPlayer.getEffects().getBoolean("Nightvision"));
-                if (!androidPlayer.getEffects().getBoolean("Nightvision"))
-                {
-                    Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":" + "night_vision", 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
-                }
-                else
-                {
-                    Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":" + "power_down", 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
-                }
+                Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":" + "night_vision", 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
+            }
+            else
+            {
+                Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":" + "power_down", 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
             }
         }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
+    {
+
     }
 
     @Override

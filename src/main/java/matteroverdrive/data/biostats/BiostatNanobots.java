@@ -18,9 +18,12 @@
 
 package matteroverdrive.data.biostats;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -47,6 +50,13 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
                 android.extractEnergy(ENERGY_PER_REGEN * 20, false);
             }
         }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    {
+
     }
 
     @Override

@@ -18,8 +18,11 @@
 
 package matteroverdrive.api.android;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.entity.AndroidPlayer;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -35,6 +38,9 @@ public interface IBionicStat
     String getDisplayName(AndroidPlayer androidPlayer,int level);
     boolean canBeUnlocked(AndroidPlayer android,int level);
     void onAndroidUpdate(AndroidPlayer android, int level);
+    @SideOnly(Side.CLIENT)
+    void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding);
+    @SideOnly(Side.CLIENT)
     void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down);
     void onLivingEvent(AndroidPlayer androidPlayer,int level,LivingEvent event);
     void onUnlock(AndroidPlayer android,int level);

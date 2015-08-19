@@ -18,16 +18,17 @@
 
 package matteroverdrive.data.biostats;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
-import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -74,6 +75,17 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
         }
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    {
+        if (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(this))
+        {
+            boolean cloak = !androidPlayer.getEffects().getBoolean("Cloaked");
+            androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_CLOAK, cloak);
+        }
+    }
+
     public void setActive(AndroidPlayer android, int level,boolean active)
     {
         android.getEffects().setBoolean("Cloaked", active);
@@ -83,14 +95,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     @Override
     public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
     {
-        if (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(this) && keycode == ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode())
-        {
-            if (down)
-            {
-                boolean cloak = !androidPlayer.getEffects().getBoolean("Cloaked");
-                androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_CLOAK, cloak);
-            }
-        }
+
     }
 
     @Override

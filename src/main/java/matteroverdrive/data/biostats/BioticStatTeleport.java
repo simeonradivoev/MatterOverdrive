@@ -29,6 +29,7 @@ import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOPhysicsHelper;
 import net.minecraft.block.Block;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -70,25 +71,41 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     @Override
     public void onAndroidUpdate(AndroidPlayer android, int level)
     {
+        if (android.getPlayer().worldObj.isRemote)
+        {
+            manageActivate(android);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void manageActivate(AndroidPlayer androidPlayer)
+    {
+        if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed() && androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(this))
+        {
+            hasPressedKey = true;
+        }
+        else if (hasPressedKey)
+        {
+            Vec3 pos = getPos(androidPlayer);
+            if (pos != null) {
+                MatterOverdrive.packetPipeline.sendToServer(new PacketTeleportPlayer(pos.xCoord, pos.yCoord, pos.zCoord));
+                hasPressedKey = false;
+            }
+            hasPressedKey = false;
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    {
 
     }
 
     @Override
     public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
     {
-        if (keycode == ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode())
-        {
-            if (!down && hasPressedKey) {
-                Vec3 pos = getPos(androidPlayer);
-                if (pos != null) {
-                    MatterOverdrive.packetPipeline.sendToServer(new PacketTeleportPlayer(pos.xCoord, pos.yCoord, pos.zCoord));
-                    hasPressedKey = false;
-                }
-            }else
-            {
-                hasPressedKey = true;
-            }
-        }
+
     }
 
     public Vec3 getPos(AndroidPlayer androidPlayer) {

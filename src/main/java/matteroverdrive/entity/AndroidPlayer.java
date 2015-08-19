@@ -22,7 +22,6 @@ import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyStorage;
 import cofh.lib.audio.SoundBase;
 import cofh.lib.util.helpers.MathHelper;
-import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -441,12 +440,6 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             int receivedAmount = ((IEnergyContainerItem) player.getHeldItem().getItem()).extractEnergy(player.getHeldItem(), freeEnergy, false);
             receiveEnergy(receivedAmount, false);
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public  void onKeyInput(InputEvent.KeyInputEvent event)
-    {
-
     }
 
     @SideOnly(Side.CLIENT)

@@ -31,6 +31,7 @@ import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.nbt.NBTTagCompound;
@@ -120,6 +121,13 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    {
+
+    }
+
+    @Override
     public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
     {
 
@@ -133,7 +141,15 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
 
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()));
+        String key = "Unknown";
+        try
+        {
+            key = Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode());
+        }catch (Exception e)
+        {
+
+        }
+        return String.format(super.getDetails(level), key);
     }
 
     public boolean getShieldState(AndroidPlayer androidPlayer)
