@@ -95,4 +95,10 @@ public class AutoConfigPage extends ElementBaseGroup
             }
         }
     }
+
+    public void setStart(int x,int y)
+    {
+        this.xStart = x;
+        this.yStart = y;
+    }
 }

@@ -104,7 +104,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         pages.get(0).addElement(removeLocation);
         pages.get(0).addElement(newLocationButton);
 
-        pages.get(1).getElements().get(0).setPosition(120, 150);
+        pages.get(1).getElements().get(0).setPosition(60, 150);
 
         xCoords.init();
         yCoords.init();
@@ -157,6 +157,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
     @Override
     public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
     {
+        super.handleElementButtonClick(element,buttonName,mouseButton);
         if (buttonName == "Import")
         {
             ItemStack usb = machine.getStackInSlot(machine.usbSlotID);
