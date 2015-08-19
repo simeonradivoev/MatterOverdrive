@@ -31,11 +31,15 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
+import org.apache.logging.log4j.Level;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by Simeon on 5/7/2015.
@@ -88,13 +92,18 @@ public class VersionCheckerHandler implements IConfigSubscriber {
             try {
                 result = download.get();
             } catch (InterruptedException e) {
-				MatterOverdrive.log.error(String.format("Version checking from '%1$s' was interrupted", mirrors[currentMirror - 1]), e);
+				MatterOverdrive.log.log(Level.ERROR,e,"Version checking from '%1$s' was interrupted", mirrors[currentMirror - 1]);
             } catch (ExecutionException e) {
-				MatterOverdrive.log.error(String.format("Version checking from '%1$s' has failed", mirrors[currentMirror - 1]), e);
+				MatterOverdrive.log.log(Level.ERROR,e,"Version checking from '%1$s' has failed", mirrors[currentMirror - 1]);
             } finally {
                 if (result != null)
                 {
-                    updateInfoDisplayed = constructVersionAndCheck(result, event.player);
+                    try {
+                        updateInfoDisplayed = constructVersionAndCheck(result, event.player);
+                    }catch (Exception e)
+                    {
+                        MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while decoding the update info from website.");
+                    }
                 }
 
                 download.cancel(false);
