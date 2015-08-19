@@ -32,6 +32,7 @@ import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.BionicSlot;
 import matteroverdrive.data.inventory.EnergySlot;
 import matteroverdrive.gui.GuiAndroidHud;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketAndroidChangeAbility;
@@ -108,7 +109,8 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         unlocked = new NBTTagCompound();
         effects = new NBTTagCompound();
 
-        player.getDataWatcher().addObject(ENERGY_WATCHER,this.maxEnergy);
+        int energyWatchID = MatterOverdrive.configHandler.getInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID, ConfigurationHandler.CATEGORY_ABILITIES,ENERGY_WATCHER);
+        player.getDataWatcher().addObject(energyWatchID, this.maxEnergy);
     }
 
     public static void register(EntityPlayer player)

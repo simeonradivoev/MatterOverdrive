@@ -63,6 +63,7 @@ public class ConfigurationHandler
     public static final String KEY_GRAVITATIONAL_ANOMALY_SPAWN_CHANCE = "gravitational anomaly spawn chance";
     public static final String KEY_GRAVITATIONAL_ANOMALY_VANILLA_FLUIDS = "gravitational anomaly vanilla fluids";
     public static final String KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS = "gravitational anomaly forge fluids";
+    public static final String KEY_ANDROID_ENERGY_WATCH_ID = "android energy watch id";
 
     public ConfigurationHandler(File file)
     {
