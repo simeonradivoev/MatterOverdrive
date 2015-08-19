@@ -51,6 +51,7 @@ public class MatterOverdriveMatter
     public static void registerBlacklistFromConfig(ConfigurationHandler c)
     {
         MatterOverdrive.matterRegistry.loadBlacklistFromConfig(c);
+        MatterOverdrive.matterRegistry.loadModBlacklistFromConfig(c);
     }
 
     public static void registerBasicBlocks(ConfigurationHandler c)

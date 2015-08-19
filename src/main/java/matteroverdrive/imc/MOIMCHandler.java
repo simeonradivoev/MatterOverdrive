@@ -35,6 +35,9 @@ public class MOIMCHandler {
 		switch (msg.key) {
 			case IMC.MATTER_REGISTRY_BLACKLIST:
 				MatterOverdrive.matterRegistry.addToBlacklist(msg.getItemStackValue());
+				break;
+			case IMC.MATTER_REGISTRY_BLACKLIST_MOD:
+				MatterOverdrive.matterRegistry.addModToBlacklist(msg.getStringValue());
 			// case IMC.MATTER_REGISTRY_REGISTER
 				// MatterRegistry.register()
 		}

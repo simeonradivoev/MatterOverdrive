@@ -18,7 +18,6 @@
 
 package matteroverdrive.api.matter;
 
-import matteroverdrive.handler.MatterEntry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,9 +35,10 @@ public interface IMatterRegistry
     boolean blacklisted(Item item);
     boolean blacklisted(ItemStack itemStack);
     boolean blacklisted(String key);
-    MatterEntry register(Block block,int matter);
-    MatterEntry register(Item item,int matter);
-    MatterEntry register(ItemStack itemStack,int matter);
-    MatterEntry register(String key,int matter);
+    IMatterEntry register(Block block,int matter);
+    IMatterEntry register(Item item,int matter);
+    IMatterEntry register(ItemStack itemStack,int matter);
+    IMatterEntry register(String key,int matter);
     int getMatterFromRecipe(ItemStack item,boolean recursive,int depth,boolean calculated);
+    void addModToBlacklist(String modID);
 }

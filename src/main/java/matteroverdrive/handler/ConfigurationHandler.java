@@ -56,6 +56,7 @@ public class ConfigurationHandler
     public static final String KEY_AUTOMATIC_RECIPE_CALCULATION = "automatic matter calculation from recipe";
     public static final String KEY_MAX_BROADCASTS = "max broadcasts per tick";
     public static final String KEY_MBLACKLIST = "blacklist";
+    public static final String KEY_BLACKLIST_MODS = "mod_blacklist";
     public static final String KEY_VERSION_CHECK = "version_check";
     public static final String KEY_GRAVITATIONAL_ANOMALY_FALLING_BLOCKS = "gravitational anomaly falling blocks";
     public static final String KEY_GRAVITATIONAL_ANOMALY_BLOCK_ENTITIES = "gravitational anomaly block entities";
@@ -76,6 +77,7 @@ public class ConfigurationHandler
         category.setComment("Configuration for the Matter Network");
         updateCategoryLang(category);
         config.get(CATEGORY_MATTER,KEY_MBLACKLIST,new String[0]).comment = "Blacklist for items in the matter registry. Automatic Recipe calculation will ignore recipes with these items. Just add the unlocalized name or the ore dictionary name in the list.";
+        config.get(CATEGORY_MATTER,KEY_BLACKLIST_MODS,new String[0]).comment = "Blacklist for mods (mod ID). Automatic Recipe calculation will ignore recipes with items from this mod";
         category = config.getCategory(CATEGORY_NEW_ITEMS);
         category.setComment("Registration of new items and the amount of matter they contain. Add them like so: I:[unlocalized name or ore Dictionary name]=[matter amount]");
         updateCategoryLang(category);

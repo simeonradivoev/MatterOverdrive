@@ -71,7 +71,7 @@ public class RegisterItemsFromRecipes implements Runnable {
 
                 try {
                     ItemStack itemStack = recipe.getRecipeOutput();
-                    if (itemStack != null) {
+                    if (itemStack != null && !MatterOverdrive.matterRegistry.blacklisted(itemStack) && !MatterOverdrive.matterRegistry.blacklistedFromMod(itemStack)) {
                         if (DEBUG)
                             MatterOverdrive.log.debug("Calculating Recipe for: %s", recipe.getRecipeOutput().getUnlocalizedName());
                         MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(itemStack);
@@ -91,6 +91,10 @@ public class RegisterItemsFromRecipes implements Runnable {
                             if (DEBUG)
                                 MatterOverdrive.log.debug("Entry for: %s is already present", recipe.getRecipeOutput().getUnlocalizedName());
                         }
+                    }else
+                    {
+                        if (DEBUG)
+                            MatterOverdrive.log.debug("% was blacklisted. Skipping matter calculation", recipe.getRecipeOutput().getUnlocalizedName());
                     }
                 } catch (Exception e) {
                     if (recipe.getRecipeOutput() != null) {

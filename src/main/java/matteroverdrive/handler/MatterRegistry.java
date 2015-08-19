@@ -19,6 +19,7 @@
 package matteroverdrive.handler;
 
 import cofh.lib.util.helpers.MathHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.MOEventRegisterMatterEntry;
@@ -48,6 +49,7 @@ public class MatterRegistry implements IMatterRegistry
     public int basicEntries = 0;
 	private Map<String,MatterEntry> entries = new HashMap<>();
     private Set<String> blacklist = Collections.synchronizedSet(new HashSet<>());
+    private Set<String> modBlacklist = Collections.synchronizedSet(new HashSet<String>());
 
 	public MatterEntry register(MatterEntry entry)
 	{
@@ -71,6 +73,7 @@ public class MatterRegistry implements IMatterRegistry
         outputStream.writeInt(CraftingManager.getInstance().getRecipeList().size());
         outputStream.writeInt(basicEntries);
         outputStream.writeInt(blacklist.size());
+        outputStream.writeInt(modBlacklist.size());
         outputStream.close();
         fileOutputStream.close();
     }
@@ -100,6 +103,7 @@ public class MatterRegistry implements IMatterRegistry
             int recipeCount = inputStream.readInt();
             int basicEntries = inputStream.readInt();
             int blackListSize = inputStream.readInt();
+            int modBlacklistSize = inputStream.readInt();
             inputStream.close();
             fileInputStream.close();
 
@@ -111,7 +115,7 @@ public class MatterRegistry implements IMatterRegistry
                 {
                     if (basicEntries == this.basicEntries)
                     {
-                        if (blackListSize == blacklist.size()) {
+                        if (blackListSize == blacklist.size() && modBlacklistSize == modBlacklist.size()) {
 
                             for (Map.Entry<String, MatterEntry> entry : entires.entrySet())
                             {
@@ -171,6 +175,15 @@ public class MatterRegistry implements IMatterRegistry
     public boolean blacklisted(String key)
     {
         return blacklist.contains(key);
+    }
+    public boolean blacklistedFromMod(ItemStack stack)
+    {
+        Item item = stack.getItem();
+        if (item != null)
+        {
+            return modBlacklist.contains(GameRegistry.findUniqueIdentifierFor(item).modId);
+        }
+        return false;
     }
     public String getKey(Block block) {return getKey(new ItemStack(block));}
     public String getKey(Item item) {return getKey(new ItemStack(item));}
@@ -372,6 +385,12 @@ public class MatterRegistry implements IMatterRegistry
         return matter;
     }
 
+    @Override
+    public void addModToBlacklist(String modID)
+    {
+        modBlacklist.add(modID);
+    }
+
     public void loadNewItemsFromConfig(ConfigurationHandler c)
     {
         List<Property> category = c.getCategory(ConfigurationHandler.CATEGORY_NEW_ITEMS).getOrderedValues();
@@ -392,6 +411,15 @@ public class MatterRegistry implements IMatterRegistry
         for (String value : list)
         {
             addToBlacklist(value);
+        }
+    }
+
+    public void loadModBlacklistFromConfig(ConfigurationHandler c)
+    {
+        String[] list = c.getStringList(ConfigurationHandler.CATEGORY_MATTER, ConfigurationHandler.KEY_BLACKLIST_MODS);
+        for (String value : list)
+        {
+            addModToBlacklist(value);
         }
     }
 
@@ -428,7 +456,7 @@ public class MatterRegistry implements IMatterRegistry
                         stack = new ItemStack((Item)s);
                     }
 
-                    if (stack == null || blacklisted(stack)) {
+                    if (stack == null || blacklisted(stack) || blacklistedFromMod(stack)) {
                         if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("%s is blacklisted.", item.getUnlocalizedName());
                         return -1;
                     }
