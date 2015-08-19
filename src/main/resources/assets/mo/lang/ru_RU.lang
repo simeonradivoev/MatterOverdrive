@@ -123,6 +123,8 @@ tile.tritanium_ore.name=Тритановая руда
 tile.tritanium_block.name=Тритановый блок
 tile.heavy_matter_pipe.name=Сверхмощная материально-транспортная труба
 tile.heavy_matter_pipe.details=Транспортирует плазменную материя
+tile.holo_sign.name=Голографическая табличка
+tile.force_glass.name=Тритановое стекло
 
 ## Хранилище шаблонов ##
 tile.pattern_storage.name=Хранилище шаблонов
@@ -295,6 +297,7 @@ gui.label.button.scout=Отправить разведчика
 gui.label.button.new=Новый
 gui.label.button.import=Импорт
 gui.label.button.import.too_far=Направление слишком далеко
+gui.label.auto_line_size=Размер авто-линии
 
 ### Подсказки в графическом интерфейсе ###
 gui.tooltip.starmap.no_ship_space=Не хватает мест для постройки короблей
