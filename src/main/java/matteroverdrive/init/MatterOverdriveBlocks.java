@@ -21,6 +21,7 @@ package matteroverdrive.init;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.ForceGlass;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.*;
@@ -63,6 +64,7 @@ public class MatterOverdriveBlocks {
     public static BlockChargingStation chargingStation;
     public static BlockMatterPipe heavy_matter_pipe;
     public static BlockHoloSign holoSign;
+    public static ForceGlass forceGlass;
 
     public static void init(FMLPreInitializationEvent event) {
         replicator = new BlockReplicator(Material.iron, "replicator");
@@ -103,6 +105,7 @@ public class MatterOverdriveBlocks {
         chargingStation = new BlockChargingStation(Material.iron, "charging_station");
         heavy_matter_pipe = new BlockMatterPipe(Material.iron, "heavy_matter_pipe",64,10);
         holoSign = new BlockHoloSign(Material.iron,"holo_sign");
+        forceGlass = new ForceGlass(Material.glass,"force_glass");
     }
 
     public static void register(FMLPreInitializationEvent event) {
@@ -148,6 +151,7 @@ public class MatterOverdriveBlocks {
         MatterOverdrive.configHandler.subscribe(chargingStation);
         heavy_matter_pipe.register();
         holoSign.register();
+        forceGlass.register();
 
         if (event.getSide() == Side.CLIENT) {
             MatterOverdriveQuide.Register(replicator);
@@ -179,6 +183,7 @@ public class MatterOverdriveBlocks {
         GameRegistry.addRecipe(new ItemStack(chargingStation), " F ", "EDR", "BMB", 'M', MatterOverdriveItems.machine_casing, 'B', MatterOverdriveItems.hc_battery, 'E', Items.ender_eye, 'R', Items.repeater, 'F', MatterOverdriveItems.forceFieldEmitter, 'D', MatterOverdriveItems.dilithium_ctystal);
         GameRegistry.addRecipe(new ItemStack(heavy_matter_pipe, 8), "RMR", "TMT", "RMR", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'T', MatterOverdriveItems.tritanium_plate,'R',Items.redstone);
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(holoSign), "GGG", "g0g", " T ", 'G', "glass", 'g', Items.glowstone_dust, '0', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'T', MatterOverdriveItems.tritanium_plate));
+        GameRegistry.addRecipe(new ItemStack(forceGlass,4)," G ","GTG"," G ",'G',Blocks.glass,'T',MatterOverdriveItems.tritanium_plate);
 
         OreDictionary.registerOre("oreTritanium", tritaniumOre);
         OreDictionary.registerOre("oreDilithium",dilithium_ore);

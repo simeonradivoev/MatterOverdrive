@@ -317,6 +317,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                 if (MathHelper.floor_float(matterDrain) >= 1)
                 {
                     matterStorage.extractMatter(MathHelper.floor_float(matterDrain),false);
+                    updateClientMatter();
                     matterDrain -= MathHelper.floor_float(matterDrain);
                 }
             }

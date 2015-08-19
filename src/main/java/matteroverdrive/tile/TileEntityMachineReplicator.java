@@ -86,7 +86,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 	public static int REPLICATE_ENERGY_PER_MATTER = 16000;
     public static final int RADIATION_DAMAGE_DELAY = 5;
     public static final int RADIATION_RANGE = 8;
-    public static double FAIL_CHANCE = 0.05;
+    public static final double FAIL_CHANCE = 0.005;
 
     @SideOnly(Side.CLIENT)
     private boolean isPlayingReplicateAnimation;

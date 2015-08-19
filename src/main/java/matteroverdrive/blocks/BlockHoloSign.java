@@ -18,32 +18,37 @@
 
 package matteroverdrive.blocks;
 
-import cofh.lib.util.helpers.BlockHelper;
+import cofh.api.block.IDismantleable;
+import cofh.lib.util.helpers.InventoryHelper;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.blocks.includes.MOBlockContainer;
+import matteroverdrive.client.render.IconConnectedTexture;
 import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.init.MatterOverdriveIcons;
+import matteroverdrive.tile.IMOTileEntity;
 import matteroverdrive.tile.TileEntityHoloSign;
-import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.ArrayList;
 
 /**
  * Created by Simeon on 8/15/2015.
  */
-public class BlockHoloSign extends MOBlockContainer
+public class BlockHoloSign extends BlockCT implements IDismantleable, ITileEntityProvider
 {
-
 
     public BlockHoloSign(Material material, String name)
     {
@@ -51,6 +56,19 @@ public class BlockHoloSign extends MOBlockContainer
         float f = 0.25F;
         float f1 = 1.0F;
         this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
+        this.isBlockContainer = true;
+        this.setHardness(20f);
+    }
+
+    @Override
+    public void register()
+    {
+        super.register();
+        TileEntity e = createNewTileEntity(null,0);
+        if(e != null)
+        {
+            GameRegistry.registerTileEntity(e.getClass(), this.getUnlocalizedName().substring(5));
+        }
     }
 
     @Override
@@ -59,34 +77,35 @@ public class BlockHoloSign extends MOBlockContainer
     {
         if (side == meta)
         {
+            MatterOverdriveIcons.Monitor_back.setType(0);
             return MatterOverdriveIcons.Monitor_back;
         }
         return MatterOverdriveIcons.Base;
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
-    public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
+    public IconConnectedTexture getIconConnectedTexture(int meta,int side)
     {
-        int meta = world.getBlockMetadata(x,y,z);
-        if (meta == side)
-        {
-            int type = 0;
-            ForgeDirection direction = ForgeDirection.getOrientation(BlockHelper.getAboveSide(side));
-            if (world.getBlock(x+direction.offsetX,y+direction.offsetY,z+direction.offsetZ) instanceof BlockHoloSign)
-                type =MOMathHelper.setBoolean(type,0,true);
-            direction = ForgeDirection.getOrientation(BlockHelper.getBelowSide(side));
-            if(world.getBlock(x+direction.offsetX,y+direction.offsetY,z+direction.offsetZ) instanceof BlockHoloSign)
-                type = MOMathHelper.setBoolean(type,1,true);
-            direction = ForgeDirection.getOrientation(BlockHelper.getLeftSide(side));
-            if(world.getBlock(x+direction.offsetX,y+direction.offsetY,z+direction.offsetZ) instanceof BlockHoloSign)
-                type = MOMathHelper.setBoolean(type,2,true);
-            direction = ForgeDirection.getOrientation(BlockHelper.getRightSide(side));
-            if (world.getBlock(x+direction.offsetX,y+direction.offsetY,z+direction.offsetZ) instanceof BlockHoloSign)
-                type = MOMathHelper.setBoolean(type,3,true);
-            MatterOverdriveIcons.Monitor_back.setType(type);
-            return MatterOverdriveIcons.Monitor_back;
-        }
-        return this.getIcon(side, meta);
+        return MatterOverdriveIcons.Monitor_back;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerBlockIcons(IIconRegister iconRegister)
+    {
+        this.blockIcon = MatterOverdriveIcons.Monitor_back;
+        iconConnectedTexture = new IconConnectedTexture(this.blockIcon);
+    }
+
+    @Override
+    public boolean canConnect(IBlockAccess world, Block block, int x, int y, int z) {
+        return block instanceof BlockHoloSign;
+    }
+
+    @Override
+    public boolean isSideCT(IBlockAccess world, int x, int y, int z, int side) {
+        return world.getBlockMetadata(x,y,z) == side;
     }
 
     @Override
@@ -232,5 +251,41 @@ public class BlockHoloSign extends MOBlockContainer
         }
 
         return false;
+    }
+
+    @Override
+    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops)
+    {
+        Block block = world.getBlock(x, y, z);
+        int l = world.getBlockMetadata(x, y, z);
+        boolean flag = block.removedByPlayer(world, player, x, y, z, true);
+        ItemStack blockItem = new ItemStack(getItemDropped(l,world.rand,1));
+
+        if (!returnDrops)
+        {
+            dropBlockAsItem(world, x, y, z, blockItem);
+        }
+        else
+        {
+            InventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
+        }
+
+        ArrayList list = new ArrayList();
+        list.add(blockItem);
+        return list;
+    }
+
+    @Override
+    public boolean canDismantle(EntityPlayer entityPlayer, World world, int i, int i1, int i2) {
+        return true;
+    }
+
+    @Override
+    public void onBlockPreDestroy(World world, int x, int y, int z, int meta)
+    {
+        super.onBlockPreDestroy(world,x,y,z,meta);
+        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x,y,z);
+        if(tileEntity != null)
+            tileEntity.onDestroyed();
     }
 }
