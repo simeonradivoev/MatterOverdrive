@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 public class RegisterItemsFromRecipes implements Runnable {
 
     String savePath;
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     public RegisterItemsFromRecipes(String savePath)
     {
@@ -72,8 +72,7 @@ public class RegisterItemsFromRecipes implements Runnable {
                 try {
                     ItemStack itemStack = recipe.getRecipeOutput();
                     if (itemStack != null && !MatterOverdrive.matterRegistry.blacklisted(itemStack) && !MatterOverdrive.matterRegistry.blacklistedFromMod(itemStack)) {
-                        if (DEBUG)
-                            MatterOverdrive.log.debug("Calculating Recipe for: %s", recipe.getRecipeOutput().getUnlocalizedName());
+                        if (DEBUG) MatterOverdrive.log.debug("Calculating Recipe for: %s", recipe.getRecipeOutput().getUnlocalizedName());
                         MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(itemStack);
                         int matter = 0;
 
