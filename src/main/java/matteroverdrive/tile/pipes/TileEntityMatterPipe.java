@@ -24,6 +24,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.data.MatterStorage;
+import matteroverdrive.fluids.FluidMatterPlasma;
+import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.math.MOMathHelper;
@@ -36,6 +38,10 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -60,7 +66,7 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterConne
     {
         t = new TimeTracker();
         storage = new MatterStorage(32);
-        this.transferSpeed = 20;
+        this.transferSpeed = 10;
     }
 
     @Override
@@ -79,7 +85,14 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterConne
     @Override
     public boolean canConnectTo(TileEntity entity,ForgeDirection direction)
     {
-        return entity instanceof IMatterConnection && ((IMatterConnection) entity).canConnectFrom(direction);
+        if (entity != null)
+        {
+            if (entity instanceof IFluidHandler)
+            {
+                return ((IFluidHandler) entity).canDrain(direction, MatterOverdriveFluids.matterPlasma) || ((IFluidHandler) entity).canFill(direction,MatterOverdriveFluids.matterPlasma);
+            }
+        }
+        return false;
     }
 
     public  void  Transfer()
@@ -95,9 +108,9 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterConne
 
                 TileEntity e = worldObj.getTileEntity(xCoord + dir.dir.offsetX, yCoord + dir.dir.offsetY, zCoord + dir.dir.offsetZ);
 
-                if (e != null && e instanceof IMatterHandler)
+                if (e != null && e instanceof IFluidHandler && ((IFluidHandler) e).canFill(dir.dir,MatterOverdriveFluids.matterPlasma))
                 {
-                    IMatterHandler to = (IMatterHandler)e;
+                    IFluidHandler to = (IFluidHandler)e;
                     int transferAmount = MatterHelper.Transfer(dir.dir,storage.getMaxExtract(),this,to);
                 }
             }
@@ -196,7 +209,7 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterConne
             if(received > 0)
             {
                 //MatterOverdrive.packetPipeline.sendToAll(new PacketMatterPipeUpdate(xCoord,yCoord,zCoord,getMatterStored() > 0));
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
                 lastDir = side;
                 t.markTime(worldObj);
             }
@@ -258,5 +271,35 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterConne
     @Override
     public void readFromPlaceItem(ItemStack itemStack) {
 
+    }
+
+    @Override
+    public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+        return storage.fill(resource,doFill);
+    }
+
+    @Override
+    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+        return storage.drain(resource.amount,doDrain);
+    }
+
+    @Override
+    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+        return storage.drain(maxDrain,doDrain);
+    }
+
+    @Override
+    public boolean canFill(ForgeDirection from, Fluid fluid) {
+        return fluid instanceof FluidMatterPlasma;
+    }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid) {
+        return fluid instanceof FluidMatterPlasma;
+    }
+
+    @Override
+    public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+        return new FluidTankInfo[]{storage.getInfo()};
     }
 }

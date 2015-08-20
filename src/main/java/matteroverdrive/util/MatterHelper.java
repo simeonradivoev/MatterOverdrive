@@ -23,10 +23,10 @@ import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.matter.IMatterItem;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.api.matter.IMatterProvider;
-import matteroverdrive.api.matter.IMatterReceiver;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.handler.MatterEntry;
+import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.items.MatterScanner;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
@@ -41,6 +41,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.List;
 
@@ -85,11 +87,11 @@ public class MatterHelper
 
 
 
-    public static int Transfer(ForgeDirection toDir,int amount,IMatterProvider from,IMatterReceiver to)
+    public static int Transfer(ForgeDirection toDir,int amount,IMatterProvider from,IFluidHandler to)
     {
         ForgeDirection oposite = toDir.getOpposite();
         int extract = from.extractMatter(toDir,amount,true);
-        int recived = to.receiveMatter(oposite, extract, false);
+        int recived = to.fill(oposite, new FluidStack(MatterOverdriveFluids.matterPlasma,extract), true);
         from.extractMatter(toDir,recived,false);
         return  recived;
     }

@@ -63,6 +63,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.EnumSet;
@@ -641,6 +642,12 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public float getProgress()
     {
         return replicateProgress;
+    }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid)
+    {
+        return false;
     }
     //endregion
 }

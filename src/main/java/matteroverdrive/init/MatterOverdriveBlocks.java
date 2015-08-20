@@ -18,6 +18,7 @@
 
 package matteroverdrive.init;
 
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -64,6 +65,7 @@ public class MatterOverdriveBlocks {
     public static BlockMatterPipe heavy_matter_pipe;
     public static BlockHoloSign holoSign;
     public static ForceGlass forceGlass;
+    public static BlockFluidMatterPlasma blockMatterPlasma;
 
     public static void init(FMLPreInitializationEvent event) {
         replicator = new BlockReplicator(Material.iron, "replicator");
@@ -105,9 +107,11 @@ public class MatterOverdriveBlocks {
         heavy_matter_pipe = new BlockHeavyMatterPipe(Material.iron, "heavy_matter_pipe");
         holoSign = new BlockHoloSign(Material.iron,"holo_sign");
         forceGlass = new ForceGlass(Material.glass,"force_glass");
+        blockMatterPlasma = new BlockFluidMatterPlasma(MatterOverdriveFluids.matterPlasma, Material.water);
+        blockMatterPlasma.setBlockName("matter_plasma");
     }
 
-    public static void register(FMLPreInitializationEvent event) {
+    public static void register(FMLInitializationEvent event) {
         replicator.register();
         MatterOverdrive.configHandler.subscribe(replicator);
         transporter.register();
@@ -151,6 +155,7 @@ public class MatterOverdriveBlocks {
         heavy_matter_pipe.register();
         holoSign.register();
         forceGlass.register();
+        GameRegistry.registerBlock(blockMatterPlasma, "matter_plasma");
 
         if (event.getSide() == Side.CLIENT) {
             MatterOverdriveQuide.Register(replicator);

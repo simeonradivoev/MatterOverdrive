@@ -19,12 +19,14 @@
 package matteroverdrive.matter_network.components;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.Level;
 
 /**
  * Created by Simeon on 7/16/2015.
@@ -51,7 +53,14 @@ public abstract class MatterNetworkComponentClientDispatcher <K extends MatterNe
         if (phase.equals(dispatchPhase))
         {
             if (getTaskQueue(0).peek() != null) {
-                return manageTopQueue(world, getTaskQueue(0).peek());
+                try
+                {
+                    return manageTopQueue(world, getTaskQueue(0).peek());
+                }
+                catch (Exception e)
+                {
+                    MatterOverdrive.log.log(Level.ERROR,e,"Where was a problem while trying to get task from Queue from %s",getClass());
+                }
             }
         }
         return 0;

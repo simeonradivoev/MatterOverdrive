@@ -67,6 +67,8 @@ item.energy_pack.details=Used for rapid charging\nTo 'reload' energy weapons
 item.phaser_rifle.name=Phaser Rifle
 item.transport_flash_drive.name=Transport Flash Drive
 item.transport_flash_drive.details=Used to mark locations for quick use with Teleporter
+item.matter_container.name=Empty Matter Container
+item.matter_container_full.name=Full Matter Container
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade
@@ -427,3 +429,7 @@ alert.starmap.on_build=§3%1$s §rwas built at §3%2$s§r!
 # Enchantments
 
 enchantment.matteroverdrive.weapon.damage=Overclock
+
+###############################################################################################################
+# Fluids
+fluid.matter_plasma.name

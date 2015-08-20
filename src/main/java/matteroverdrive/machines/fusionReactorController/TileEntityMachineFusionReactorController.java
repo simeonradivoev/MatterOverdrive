@@ -54,6 +54,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 
 import java.util.EnumSet;
 
@@ -466,7 +467,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     @Override
     public void rotateDirectlyTo(int facing)
     {
-        worldObj.setBlockMetadataWithNotify(xCoord,yCoord,zCoord,facing,3);
+        worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, facing, 3);
     }
 
     @Override
@@ -500,6 +501,12 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     @Override
     public void onDestroyed() {
 
+    }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid)
+    {
+        return false;
     }
 
     //region All Computers

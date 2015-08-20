@@ -267,13 +267,6 @@ public class MatterOverdriveMatter
         regOre(c,"oreQuartz",2,"ingotQuartz");
         //endregion
 
-        //region thermal Expansion
-        reg(c,"bucketRedstone",MatterOverdrive.matterRegistry.getEntry("dustRedstone").getMatter()*10);
-        reg(c,"bucketGlowstone",MatterOverdrive.matterRegistry.getEntry("dustGlowstone").getMatter()*10);
-        reg(c,"bucketCoal",MatterOverdrive.matterRegistry.getEntry(Items.coal).getMatter()*10);
-        reg(c,"bucketEnder",MatterOverdrive.matterRegistry.getEntry(Items.ender_pearl).getMatter()*10);
-        //endregion
-
         //region ender io
         reg(c,"enderio.electricalSteel",0,"ingotIron","silicon","dustCoal");
         reg(c,"enderio.energeticAlloy",0,"dustRedstone","ingotGold","dustGlowstone");

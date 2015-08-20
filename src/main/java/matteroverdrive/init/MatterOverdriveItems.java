@@ -18,6 +18,7 @@
 
 package matteroverdrive.init;
 
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
@@ -45,6 +46,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class MatterOverdriveItems 
 {
@@ -87,6 +89,8 @@ public class MatterOverdriveItems
     public static PhaserRifle phaserRifle;
     public static EnergyPack energyPack;
     public static TransportFlashDrive transportFlashDrive;
+    public static MatterContainer matterContainerFull;
+    public static MatterContainer matterContainer;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -130,9 +134,11 @@ public class MatterOverdriveItems
         phaserRifle = new PhaserRifle("phaser_rifle");
         energyPack = new EnergyPack("energy_pack");
         transportFlashDrive = new TransportFlashDrive("transport_flash_drive",Reference.COLOR_HOLO_GREEN);
+        matterContainer = new MatterContainer("matter_container",false);
+        matterContainerFull = new MatterContainer("matter_container_full",true);
 	}
 	
-	public static void register(FMLPreInitializationEvent event)
+	public static void register(FMLInitializationEvent event)
 	{
 		GameRegistry.registerItem(emergency_ration, emergency_ration.getUnlocalizedName().substring(5));
 
@@ -178,6 +184,8 @@ public class MatterOverdriveItems
         phaserRifle.register();
         energyPack.register();
         transportFlashDrive.register();
+        matterContainer.register();
+        matterContainerFull.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);
@@ -202,6 +210,7 @@ public class MatterOverdriveItems
         GameRegistry.addRecipe(new EnergyPackRecipe(new ItemStack(tritanium_plate), new ItemStack(battery), new ItemStack(Items.gunpowder)));
         GameRegistry.addRecipe(new EnergyPackRecipe(new ItemStack(tritanium_plate), new ItemStack(hc_battery), new ItemStack(Items.gunpowder)));
         GameRegistry.addRecipe(new ItemStack(phaserRifle),"III","GCF"," WB",'I',Items.iron_ingot,'C',new ItemStack(isolinear_circuit,1,3),'W',Blocks.wool,'G',Blocks.glass,'D',dilithium_ctystal,'F',forceFieldEmitter,'B',battery);
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(matterContainer,6),"G G"," T ",'T',tritanium_plate,'G',"glass"));
         MatterOverdrive.matterRegistry.register(emergency_ration, 3);
         MatterOverdrive.matterRegistry.register(earl_gray_tea, 2);
         MatterOverdrive.matterRegistry.register(romulan_ale, 2);

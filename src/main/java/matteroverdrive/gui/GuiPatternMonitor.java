@@ -91,6 +91,7 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
 
     public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
     {
+        super.handleElementButtonClick(element,buttonName,mouseButton);
         if (buttonName.equals("Refresh"))
         {
             MatterOverdrive.packetPipeline.sendToServer(new PacketPatternMonitorCommands(machine,0,null));

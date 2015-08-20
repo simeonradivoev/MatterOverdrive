@@ -60,6 +60,7 @@ public class MatterOverdrive
     public static CraftingHandler craftingHandler;
     public static GuiHandler guiHandler;
     public static PacketPipeline packetPipeline;
+	public static BucketHandler bucketHandler;
 	@Instance(Reference.MOD_ID)
 	public static MatterOverdrive instance;
 	public static String registryPath;
@@ -86,6 +87,7 @@ public class MatterOverdrive
 		entityHandler = new EntityHandler();
         configHandler = new ConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
 		playerEventHandler = new PlayerEventHandler(configHandler);
+		bucketHandler = new BucketHandler();
 
 		FMLCommonHandler.instance().bus().register(configHandler);
 		tickHandler = new TickHandler(configHandler,playerEventHandler);
@@ -93,13 +95,13 @@ public class MatterOverdrive
         FMLCommonHandler.instance().bus().register(playerEventHandler);
         FMLCommonHandler.instance().bus().register(craftingHandler);
 		MinecraftForge.EVENT_BUS.register(playerEventHandler);
+		MinecraftForge.EVENT_BUS.register(bucketHandler);
+		MatterOverdriveFluids.init(event);
         MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
 		moWorld = new MatterOverdriveWorld(configHandler);
 		MatterOverdriveEntities.init(event, configHandler);
-		MatterOverdriveBlocks.register(event);
-		MatterOverdriveItems.register(event);
-		MatterOverdriveEnchantments.init(event,configHandler);
+		MatterOverdriveEnchantments.init(event, configHandler);
 		MatterOverdriveDialogs.init(event,configHandler,dialogRegistry);
 		moWorld.register();
 		MatterNetworkRegistry.register();
@@ -125,6 +127,10 @@ public class MatterOverdrive
 		proxy.init(event);
 		configHandler.init();
 		MatterOverdriveCompat.init(event);
+
+		MatterOverdriveBlocks.register(event);
+		MatterOverdriveItems.register(event);
+		MatterOverdriveFluids.register(event);
 	}
 	
 	@EventHandler

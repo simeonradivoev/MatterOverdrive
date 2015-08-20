@@ -37,6 +37,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -45,7 +46,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 {
 	public static int MATTER_STORAGE = 1024;
 	public static int ENERGY_STORAGE = 512000;
-    public static final int MATTER_EXTRACT_SPEED = 128;
+    public static final int MATTER_EXTRACT_SPEED = 32;
     public static final float FAIL_CHANGE = 0.005f;
 
     public static int DECEOPOSE_SPEED_PER_MATTER = 80;
@@ -339,5 +340,11 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     public float getProgress()
     {
         return (float) (decomposeTime) / (float) getSpeed();
+    }
+
+    @Override
+    public boolean canFill(ForgeDirection from, Fluid fluid)
+    {
+        return false;
     }
 }

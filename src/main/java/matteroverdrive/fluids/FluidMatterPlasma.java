@@ -16,21 +16,30 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.tile.pipes;
+package matteroverdrive.fluids;
 
-import cofh.lib.util.TimeTracker;
+import matteroverdrive.init.MatterOverdriveIcons;
+import net.minecraft.util.IIcon;
+import net.minecraftforge.fluids.Fluid;
 
 /**
  * Created by Simeon on 8/20/2015.
  */
-public class TileEntityHeavyMatterPipe extends TileEntityMatterPipe
+public class FluidMatterPlasma extends Fluid
 {
-    public TileEntityHeavyMatterPipe()
+    public FluidMatterPlasma(String fluidName) {
+        super(fluidName);
+    }
+
+    @Override
+    public IIcon getStillIcon()
     {
-        t = new TimeTracker();
-        storage.setCapacity(128);
-        storage.setMaxExtract(128);
-        storage.setMaxReceive(128);
-        transferSpeed = 5;
+        return MatterOverdriveIcons.matter_plasma_still;
+    }
+
+    @Override
+    public IIcon getFlowingIcon()
+    {
+        return MatterOverdriveIcons.matter_plasma_flowing;
     }
 }

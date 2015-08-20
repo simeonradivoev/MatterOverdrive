@@ -24,6 +24,7 @@ import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.api.matter.IMatterStorage;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.MachineMatterStorage;
+import matteroverdrive.fluids.FluidMatterPlasma;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.client.PacketMatterUpdate;
 import matteroverdrive.util.MatterHelper;
@@ -34,11 +35,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.EnumSet;
 import java.util.List;
 
-public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IMatterHandler, IWailaBodyProvider
+public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IMatterHandler, IWailaBodyProvider, IFluidHandler
 {
 	protected MachineMatterStorage matterStorage;
 	
@@ -100,6 +105,51 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 			worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
 		}
 		return extracted;
+	}
+
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		int received = this.matterStorage.fill(resource, doFill);
+		if (doFill && received != 0)
+		{
+			updateClientMatter();
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+		return received;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		if (canDrain(from,resource.getFluid())) {
+			return this.matterStorage.drain(resource.amount, doDrain);
+		}
+		return this.matterStorage.getFluid();
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		return this.matterStorage.drain(maxDrain, doDrain);
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return fluid instanceof FluidMatterPlasma;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return fluid instanceof FluidMatterPlasma;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	{
+		return new FluidTankInfo[]{matterStorage.getInfo()};
 	}
 	
 	public IMatterStorage getMatterStorage()
@@ -170,5 +220,4 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 
 		return currenttip;
 	}
-
 }
