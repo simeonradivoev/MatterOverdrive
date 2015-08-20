@@ -18,28 +18,23 @@
 
 package matteroverdrive.blocks;
 
-import cofh.lib.util.helpers.BlockHelper;
-import matteroverdrive.tile.pipes.TileEntityMatterPipe;
+import matteroverdrive.tile.pipes.TileEntityHeavyMatterPipe;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 /**
- * Created by Simeon on 3/7/2015.
+ * Created by Simeon on 8/20/2015.
  */
-public class BlockMatterPipe extends BlockPipe
+public class BlockHeavyMatterPipe extends BlockMatterPipe
 {
-    public BlockMatterPipe(Material material, String name)
-    {
+    public BlockHeavyMatterPipe(Material material, String name) {
         super(material, name);
-        setHardness(10.0F);
-        this.setResistance(5.0f);
-        setRotationType(BlockHelper.RotationType.PREVENT);
     }
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta)
     {
-        return new TileEntityMatterPipe();
+        return new TileEntityHeavyMatterPipe();
     }
 }

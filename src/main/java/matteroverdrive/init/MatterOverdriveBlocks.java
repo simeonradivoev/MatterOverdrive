@@ -69,7 +69,7 @@ public class MatterOverdriveBlocks {
         replicator = new BlockReplicator(Material.iron, "replicator");
         decomposer = new BlockDecomposer(Material.iron, "decomposer");
         transporter = new BlockTransporter(Material.iron, "transporter");
-        matter_pipe = new BlockMatterPipe(Material.iron, "matter_pipe",32,20);
+        matter_pipe = new BlockMatterPipe(Material.iron, "matter_pipe");
         network_pipe = new BlockNetworkPipe(Material.iron, "network_pipe");
         network_router = new BlockNetworkRouter(Material.iron, "network_router");
         matter_analyzer = new BlockMatterAnalyzer(Material.iron, "matter_analyzer");
@@ -102,7 +102,7 @@ public class MatterOverdriveBlocks {
         androidStation = new BlockAndroidStation(Material.iron, "android_station");
         starMap = new BlockStarMap(Material.iron, "star_map");
         chargingStation = new BlockChargingStation(Material.iron, "charging_station");
-        heavy_matter_pipe = new BlockMatterPipe(Material.iron, "heavy_matter_pipe",64,10);
+        heavy_matter_pipe = new BlockHeavyMatterPipe(Material.iron, "heavy_matter_pipe");
         holoSign = new BlockHoloSign(Material.iron,"holo_sign");
         forceGlass = new ForceGlass(Material.glass,"force_glass");
     }

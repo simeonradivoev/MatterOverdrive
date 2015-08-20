@@ -16,30 +16,19 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.blocks;
+package matteroverdrive.tile.pipes;
 
-import cofh.lib.util.helpers.BlockHelper;
-import matteroverdrive.tile.pipes.TileEntityMatterPipe;
-import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import cofh.lib.util.TimeTracker;
 
 /**
- * Created by Simeon on 3/7/2015.
+ * Created by Simeon on 8/20/2015.
  */
-public class BlockMatterPipe extends BlockPipe
+public class TileEntityHeavyMatterPipe extends TileEntityMatterPipe
 {
-    public BlockMatterPipe(Material material, String name)
+    public TileEntityHeavyMatterPipe()
     {
-        super(material, name);
-        setHardness(10.0F);
-        this.setResistance(5.0f);
-        setRotationType(BlockHelper.RotationType.PREVENT);
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMatterPipe();
+        t = new TimeTracker();
+        storage.setCapacity(64);
+        transferSpeed = 10;
     }
 }

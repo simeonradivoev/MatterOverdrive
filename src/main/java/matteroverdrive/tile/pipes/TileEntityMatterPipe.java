@@ -48,19 +48,19 @@ import java.util.Random;
 public class TileEntityMatterPipe extends TileEntityPipe implements IMatterConnection, IMatterHandler
 {
     public  ForgeDirection lastDir = ForgeDirection.WEST;
-    private MatterStorage storage;
+    protected MatterStorage storage;
     public  static Random rand = new Random();
-    private int transferSpeed;
+    protected int transferSpeed;
     TimeTracker t;
 
     @SideOnly(Side.CLIENT)
     private boolean matterVisible;
 
-    public TileEntityMatterPipe(int matterStorage,int transferSpeed)
+    public TileEntityMatterPipe()
     {
         t = new TimeTracker();
-        storage = new MatterStorage(matterStorage);
-        this.transferSpeed = transferSpeed;
+        storage = new MatterStorage(32);
+        this.transferSpeed = 20;
     }
 
     @Override
