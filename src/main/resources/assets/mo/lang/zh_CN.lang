@@ -73,7 +73,7 @@ item.upgrade.power.name=能耗升级
 item.upgrade.failsafe.name=故障保护升级
 item.upgrade.range.name=范围升级
 item.upgrade.power_storage.name=储能升级
-item.upgrade.hyper_speed.name=Hyper Speed Upgrade
+item.upgrade.hyper_speed.name=高级速度升级
 item.upgrade.matter_storage.name=物质存储升级
 
 item.weapon_module_color.name=颜色模块
