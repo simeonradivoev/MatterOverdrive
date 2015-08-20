@@ -67,6 +67,8 @@ item.energy_pack.details=Используется для быстрой подз
 item.phaser_rifle.name=Фазерная винтовка
 item.transport_flash_drive.name=Транспортный флэш-накопитель
 item.transport_flash_drive.details=Используется для обозначения места для быстрого использования Транспортера
+item.matter_container.name=Контейнер материи (Пустой)
+item.matter_container_full.name=Контейнер материи (Полный)
 
 item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
@@ -341,7 +343,7 @@ biopart.battery.name=Батарейка
 biotic_stat.teleport.name=Эндер-телепорт
 biotic_stat.teleport.details=Позволяет делать короткие телепорты, нажав '%1$s' клавишу /n/Каждый телепорт тратит %2$s /n/Требуется %2$s заряда аккумулятора
 biotic_stat.nanobots.name=Наноботы
-biotic_stat.nanobots.details=Лечит с помощью материальной плазмы и энергии
+biotic_stat.nanobots.details=Лечат с помощью материальной плазмы и энергии
 biotic_stat.nano_armor.name=Нано-броня
 biotic_stat.nano_armor.details=Поглощает %1$s урона
 biotic_stat.floatation.name=Воздушные мешки
@@ -419,11 +421,15 @@ alert.no_access_default=Access denied to $0
 alert.not_android=Биологическое существо обнаружено! Доступ закрыт!
 alert.no_rights.brake=Только владелец может останавливать $0
 alert.no_rights.dismantle=Только владелец может демонтировать $0
-alert.new_update=Доступна новая версия! 
+alert.new_update=Доступна новая версия!
 alert.starmap.ship_arrive=§3%1$s §rприбыл на §3%2$s!
 alert.starmap.on_build=§3%1$s §rбыл построен на §3%2$s§r!
 
 ==========================================================================================================
 # Зачарования
 
-enchantment.matteroverdrive.weapon.damage=Разгон 
+enchantment.matteroverdrive.weapon.damage=Разгон
+
+==========================================================================================================
+# Жидкости
+fluid.matter_plasma.name=Материальная плазма
