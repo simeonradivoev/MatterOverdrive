@@ -43,7 +43,7 @@ import java.util.*;
 
 public class MatterRegistry implements IMatterRegistry
 {
-    private static final boolean REGISTRATION_DEBUG = true;
+    private static final boolean REGISTRATION_DEBUG = false;
     public boolean hasComplitedRegistration = false;
     private static final int MAX_DEPTH = 8;
     public int basicEntries = 0;
@@ -55,7 +55,7 @@ public class MatterRegistry implements IMatterRegistry
 	{
         if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterMatterEntry(entry)))
         {
-			MatterOverdrive.log.info("Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
+			if (REGISTRATION_DEBUG)MatterOverdrive.log.info("Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
             entries.put(entry.getName(), entry);
         }
 		return entry;
@@ -301,7 +301,7 @@ public class MatterRegistry implements IMatterRegistry
             }
         }catch (Exception e)
         {
-			MatterOverdrive.log.error(String.format("There was a problem getting a Matter Entry for: %s", item.getUnlocalizedName()), e);
+			MatterOverdrive.log.error(String.format("There was a problem getting a Matter Entry."), e);
             return null;
         }
     }
