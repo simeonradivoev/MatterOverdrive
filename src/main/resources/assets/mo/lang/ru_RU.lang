@@ -412,6 +412,8 @@ config.server.name=Настройки сервера
 config.starmap.name=Настройки звездной карты
 config.ore_gen_blacklist.name=Ore Dimension Blacklist
 сonfig.abilities.name=Способности Андроида
+config.entities.name=Существа
+config.debug.name=Отладка
  
 ==========================================================================================================
 # Чат-оповещения
