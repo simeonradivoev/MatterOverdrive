@@ -71,7 +71,7 @@ public class RegisterItemsFromRecipes implements Runnable {
                 try {
                     ItemStack itemStack = recipe.getRecipeOutput();
                     if (itemStack != null && !MatterOverdrive.matterRegistry.blacklisted(itemStack) && !MatterOverdrive.matterRegistry.blacklistedFromMod(itemStack)) {
-                        debug("Calculating Recipe for: %s", recipe.getRecipeOutput().getUnlocalizedName());
+                        debug("Calculating Recipe for: %s", recipe.getRecipeOutput());
                         MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(itemStack);
                         int matter = 0;
 
@@ -82,18 +82,18 @@ public class RegisterItemsFromRecipes implements Runnable {
                                 MatterEntry e = MatterOverdrive.matterRegistry.register(itemStack, matter);
                                 e.setCalculated(true);
                             } else {
-                                debug("Could not calculate recipe for: %s. Matter from recipe is 0.", recipe.getRecipeOutput().getUnlocalizedName());
+                                debug("Could not calculate recipe for: %s. Matter from recipe is 0.", recipe.getRecipeOutput());
                             }
                         } else {
-                            debug("Entry for: %s is already present", recipe.getRecipeOutput().getUnlocalizedName());
+                            debug("Entry for: %s is already present", recipe.getRecipeOutput());
                         }
                     }else
                     {
-                        debug("% was blacklisted. Skipping matter calculation", recipe.getRecipeOutput().getUnlocalizedName());
+                        debug("% was blacklisted. Skipping matter calculation", recipe.getRecipeOutput());
                     }
                 } catch (Exception e) {
                     if (recipe.getRecipeOutput() != null) {
-                        MatterOverdrive.log.error(String.format("There was a problem calculating matter from recipe for %s", recipe.getRecipeOutput().getUnlocalizedName()), e);
+                        MatterOverdrive.log.error(String.format("There was a problem calculating matter from recipe for %s", recipe.getRecipeOutput().getItem()), e);
                     } else {
                         MatterOverdrive.log.error("There was a problem calculating matter from recipe", e);
                     }
@@ -196,6 +196,18 @@ public class RegisterItemsFromRecipes implements Runnable {
     {
         if (MatterOverdrive.matterRegistry.CALCULATION_DEBUG)
         {
+            for (int i = 0;i < params.length;i++)
+            {
+                if (params[i] instanceof ItemStack)
+                {
+                    try {
+                        params[i] = ((ItemStack)params[i]).getUnlocalizedName();
+                    }catch (Exception e)
+                    {
+                        MatterOverdrive.log.log(Level.ERROR,e,"There was a problem getting the name of item %s",((ItemStack)params[i]).getItem());
+                    }
+                }
+            }
             MatterOverdrive.log.debug(debug,params);
         }
     }
