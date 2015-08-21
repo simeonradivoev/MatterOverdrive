@@ -412,6 +412,8 @@ config.server.name=Server Options
 config.starmap.name=Star Map Options
 config.ore_gen_blacklist.name=Ore Dimension Blacklist
 config.abilities.name=Android Abilities
+config.entities.name=Entities
+config.debug.name=Debug
 
 ##########################################################################################################
 # Chat Alerts

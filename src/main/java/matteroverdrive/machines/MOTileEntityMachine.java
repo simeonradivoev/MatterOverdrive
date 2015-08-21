@@ -22,6 +22,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IUpgradeable;
 import matteroverdrive.api.inventory.IUpgrade;
@@ -139,7 +140,12 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 
         for (IMachineComponent component : components)
         {
-            component.update(this);
+            try {
+                component.update(this);
+            }catch (Exception e)
+            {
+                MatterOverdrive.log.log(Level.FATAL,e,"There was a problem while ticking %s component %s",this,component);
+            }
         }
     }
 

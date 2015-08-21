@@ -19,6 +19,7 @@
 package matteroverdrive.handler;
 
 import cofh.lib.util.helpers.MathHelper;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
@@ -43,7 +44,8 @@ import java.util.*;
 
 public class MatterRegistry implements IMatterRegistry
 {
-    private static final boolean REGISTRATION_DEBUG = false;
+    private boolean REGISTRATION_DEBUG = false;
+    public boolean CALCULATION_DEBUG = false;
     public boolean hasComplitedRegistration = false;
     private static final int MAX_DEPTH = 8;
     public int basicEntries = 0;
@@ -51,11 +53,17 @@ public class MatterRegistry implements IMatterRegistry
     private Set<String> blacklist = Collections.synchronizedSet(new HashSet<>());
     private Set<String> modBlacklist = Collections.synchronizedSet(new HashSet<String>());
 
+    public void preInit(FMLPreInitializationEvent event,ConfigurationHandler configurationHandler)
+    {
+        REGISTRATION_DEBUG = configurationHandler.getBool(ConfigurationHandler.KEY_MATTER_REGISTRATION_DEBUG,ConfigurationHandler.CATEGORY_DEBUG,false,"Enabled Debug logging for Matter Registration");
+        CALCULATION_DEBUG = configurationHandler.getBool(ConfigurationHandler.KEY_MATTER_CALCULATION_DEBUG,ConfigurationHandler.CATEGORY_DEBUG,false,"Enabled Debug logging for Matter Calculation");
+    }
+
 	public MatterEntry register(MatterEntry entry)
 	{
         if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterMatterEntry(entry)))
         {
-			if (REGISTRATION_DEBUG)MatterOverdrive.log.info("Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
+			debug("Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
             entries.put(entry.getName(), entry);
         }
 		return entry;
@@ -247,7 +255,6 @@ public class MatterRegistry implements IMatterRegistry
         }
         return null;
     }
-    public MatterEntry registerFromRecipe(Item item) {return registerFromRecipe(new ItemStack(item));}
     public int checkInConfig(String key){
         if (MatterOverdrive.configHandler.config.hasKey(ConfigurationHandler.CATEGORY_OVERRIDE_MATTER, key))
         {
@@ -266,18 +273,6 @@ public class MatterRegistry implements IMatterRegistry
         }
     }
 
-    public MatterEntry registerFromRecipe(Block block)
-    {
-        int matter = getMatterFromRecipe(block, false, 0,true);
-
-        if(matter > 0)
-            return register(new MatterEntry(getKey(block),matter,(byte)1));
-        else {
-            //System.out.println("Could not register "+Block.blockRegistry.getNameForObject(block)+" from recipe");
-            return null;
-        }
-    }
-
 	public MatterEntry getEntry(Block block) {return getEntry(new ItemStack(block));}
 
 	public MatterEntry getEntry(Item item) {return getEntry(new ItemStack(item));}
@@ -290,9 +285,9 @@ public class MatterRegistry implements IMatterRegistry
                 MatterEntry e = entries.get(item.getUnlocalizedName());
                 if (e == null)
                 {
-                    if (REGISTRATION_DEBUG && e == null) MatterOverdrive.log.debug("Could not find matter entry for: %s", item.getUnlocalizedName());
+                    if (e == null) debug("Could not find matter entry for: %s", item);
                     e = getOreDicionaryEntry(item);
-                    if (REGISTRATION_DEBUG && e == null) MatterOverdrive.log.debug("Could not find ore dictionary entry for: %s", item.getUnlocalizedName());
+                    if (e == null) debug("Could not find ore dictionary entry for: %s", item);
                 }
                 return e;
             }else
@@ -333,16 +328,16 @@ public class MatterRegistry implements IMatterRegistry
             if (stack.getItemDamage() == Short.MAX_VALUE)
             {
                 stack.setItemDamage(0);
-                if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("Messed up damage for: %s. Resetting damage to 0", stack.getUnlocalizedName());
+                debug("Messed up damage for: %s. Resetting damage to 0", stack);
             }else
             {
-                if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("No OreDictionary support for: %s", stack.getUnlocalizedName());
+                debug("No OreDictionary support for: %s", stack);
             }
         }
         for (int id : ids)
         {
             String entryName = OreDictionary.getOreName(id);
-            if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("Searching for OreDictionary key with name: %s for item: %s", entryName, stack.getUnlocalizedName());
+            debug("Searching for OreDictionary key with name: %s for item: %s", entryName, stack);
             e = entries.get(entryName);
 
             if(e != null)
@@ -457,7 +452,7 @@ public class MatterRegistry implements IMatterRegistry
                     }
 
                     if (stack == null || blacklisted(stack) || blacklistedFromMod(stack)) {
-                        if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("%s is blacklisted.", item.getUnlocalizedName());
+                        debug("%s is blacklisted.", item);
                         return -1;
                     }
 
@@ -473,7 +468,7 @@ public class MatterRegistry implements IMatterRegistry
                         //if there is no entry for item and recursive is true, then continue searching to it's recipe list
                         else if (recursive) {
                             tempMatter = getMatterFromRecipe(stack, true, ++depth,calculated);
-                            if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("searching %s in depth: %s", stack.getUnlocalizedName(), depth - 1);
+                            debug("searching %s in depth: %s", stack.getUnlocalizedName(), depth - 1);
 
                             //if the matter is higher than 0 that means the recipe search was successful.
                             //registration now helps to remove it from future checks
@@ -482,19 +477,19 @@ public class MatterRegistry implements IMatterRegistry
                             }
                             else if (tempMatter < 0) {
                                 //that means the item had a recipe with a blacklisted item
-                                if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("%s has a blacklisted item in it's recipe", stack.getUnlocalizedName());
+                                debug("%s has a blacklisted item in it's recipe", stack);
                                 return -1;
                             }
                             else
                             {
-                                if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("%s cannot be replicated. Contains 0 matter", stack.getUnlocalizedName());
+                                debug("%s cannot be replicated. Contains 0 matter", stack);
                                 return 0;
                             }
                         }
                         //if it's not recursive then check if any item in recipe is not replicatable
                         else
                         {
-                            if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("%s cannot be replicated. Contains 0 matter", stack.getUnlocalizedName());
+                            debug("%s cannot be replicated. Contains 0 matter", stack);
                             return 0;
                         }
                     }
@@ -539,14 +534,14 @@ public class MatterRegistry implements IMatterRegistry
                                     first = false;
                                 }else
                                 {
-                                    if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("entry for %s, found in recipe for: %s was blacklisted or costs lower then previous", stack.getUnlocalizedName(), item.getUnlocalizedName());
+                                    debug("entry for %s, found in recipe for: %s was blacklisted or costs lower then previous", stack, item);
                                 }
 
                             }
                             //here we use the recursion to calculate it's matter from any recipes it has
                             else if (recursive)
                             {
-								MatterOverdrive.log.debug("Could not find Matter entry for %s, found in recipe for: %s", stack.getUnlocalizedName(), item.getUnlocalizedName());
+								debug("Could not find Matter entry for %s, found in recipe for: %s", stack, item);
                                 int m = getMatterFromRecipe(stack,true,++depth,calculated);
                                 //if the item has matter, has lower matter than the previous
                                 //if the item was first there is no previous so store that amount
@@ -556,24 +551,24 @@ public class MatterRegistry implements IMatterRegistry
                                     first = false;
                                 }else
                                 {
-                                    if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("entry for %s, found in recipe for: %s was blacklisted or costs lower then previous", stack.getUnlocalizedName(), item.getUnlocalizedName());
+                                    debug("entry for %s, found in recipe for: %s was blacklisted or costs lower then previous", stack, item);
                                 }
                             }
                         }else
                         {
-                            if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("Found another type of object in list ot type: %s", element.getClass().toString());
+                            debug("Found another type of object in list ot type: %s", element.getClass().toString());
                         }
                     }
 
                     //if for same reason the item is invalid, that can't really happen
                     if (tempMatter < 0)
                     {
-                        if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("%s is invalid.", item.getDisplayName());
+                        debug("%s is invalid.", item);
                         return -1;
                     }
                     //if all the items in the list have not matter return as empty
                     else if (tempMatter == 0) {
-                        if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("%s has no items with matter in recipe.", item.getDisplayName());
+                        debug("%s has no items with matter in recipe.", item);
                         return 0;
                     }
                 }
@@ -581,7 +576,7 @@ public class MatterRegistry implements IMatterRegistry
                 //may be used if there are strings to OreDictionary items i don't really know
                 else
                 {
-                    if (REGISTRATION_DEBUG) MatterOverdrive.log.debug("Element in list is unknown type: %s", s);
+                    debug("Element in list is unknown type: %s", s);
                     tempEntry = getEntry(s.toString());
                     if (tempEntry != null)
                     {
@@ -633,5 +628,27 @@ public class MatterRegistry implements IMatterRegistry
     public void setEntries(Map<String,MatterEntry> entries)
     {
         this.entries = entries;
+    }
+
+    public void debug(String debug,Object... params)
+    {
+        if (REGISTRATION_DEBUG)
+        {
+            for (int i = 0;i < params.length;i++)
+            {
+                if (params[i] instanceof ItemStack)
+                {
+                    try
+                    {
+                        params[i] = ((ItemStack)params[i]).getUnlocalizedName();
+                    }
+                    catch (Exception e)
+                    {
+                        MatterOverdrive.log.warn("There was a problem getting ItemStack's name");
+                    }
+                }
+            }
+            MatterOverdrive.log.debug(debug,params);
+        }
     }
 }

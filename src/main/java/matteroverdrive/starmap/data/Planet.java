@@ -542,12 +542,15 @@ public class Planet extends SpaceBody implements IInventory
     }
 
     @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) {
-        inventory[slot] = stack;
-
-        if(stack != null && stack.stackSize > this.getInventoryStackLimit())
+    public void setInventorySlotContents(int slot, ItemStack stack)
+    {
+        if (slot < inventory.length)
         {
-            stack.stackSize = this.getInventoryStackLimit();
+            inventory[slot] = stack;
+
+            if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
+                stack.stackSize = this.getInventoryStackLimit();
+            }
         }
     }
 

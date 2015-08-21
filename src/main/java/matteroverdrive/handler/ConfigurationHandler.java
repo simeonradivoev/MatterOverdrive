@@ -52,6 +52,8 @@ public class ConfigurationHandler
     public static final String CATEGORY_STARMAP = "starmap";
     public static final String CATEGORY_SERVER = "server";
     public static final String CATEGORY_ENCHANTMENTS = "enchantments";
+    public static final String CATEGORY_ENTITIES = "entities";
+    public static final String CATEGORY_DEBUG = "debug";
 
     public static final String KEY_AUTOMATIC_RECIPE_CALCULATION = "automatic matter calculation from recipe";
     public static final String KEY_MAX_BROADCASTS = "max broadcasts per tick";
@@ -64,6 +66,8 @@ public class ConfigurationHandler
     public static final String KEY_GRAVITATIONAL_ANOMALY_VANILLA_FLUIDS = "gravitational anomaly vanilla fluids";
     public static final String KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS = "gravitational anomaly forge fluids";
     public static final String KEY_ANDROID_ENERGY_WATCH_ID = "android energy watch id";
+    public static final String KEY_MATTER_REGISTRATION_DEBUG = "matter registation";
+    public static final String KEY_MATTER_CALCULATION_DEBUG = "matter registation";
 
     public ConfigurationHandler(File file)
     {
@@ -91,6 +95,12 @@ public class ConfigurationHandler
         category = config.getCategory(CATEGORY_SERVER);
         updateCategoryLang(category);
         category.setComment("Options form the Matter Overdrive server");
+        category = config.getCategory(CATEGORY_ENTITIES);
+        updateCategoryLang(category);
+        category.setComment("Options for Matter Overdrive Entities. Such as their Entity IDs.");
+        category = config.getCategory(CATEGORY_DEBUG);
+        updateCategoryLang(category);
+        category.setComment("Debug Options. Such as Debug Log for Matter Recipe Calculation");
 
         category = config.getCategory(CATEGORY_MACHINES);
         category.setComment("Machine Options.");
@@ -114,12 +124,18 @@ public class ConfigurationHandler
 
         config.getBoolean(KEY_AUTOMATIC_RECIPE_CALCULATION, CATEGORY_MATTER, true, "Shoud Matter be automaticly calculated from Recipes");
 
+        save();
+	}
+
+    public void postInit()
+    {
+        config.load();
         for (IConfigSubscriber subscriber : subscribers)
         {
             subscriber.onConfigChanged(this);
         }
         save();
-	}
+    }
 
     public void updateCategoryLang(ConfigCategory category)
     {
@@ -240,5 +256,7 @@ public class ConfigurationHandler
         list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_MATTER)));
         list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_STARMAP)));
         list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_ABILITIES)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_ENTITIES)));
+        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_DEBUG)));
     }
 }

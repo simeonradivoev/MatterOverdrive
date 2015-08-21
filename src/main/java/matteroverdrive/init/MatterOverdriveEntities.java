@@ -48,7 +48,9 @@ public class MatterOverdriveEntities
 
     public static void register(FMLPostInitializationEvent event)
     {
-        addEntity(EntityFailedPig.class,"failed_pig",15771042,0x33CC33);
+        MatterOverdrive.configHandler.config.load();
+
+        addEntity(EntityFailedPig.class, "failed_pig", 15771042, 0x33CC33);
         addEntity(EntityFailedCow.class,"failed_cow",4470310,0x33CC33);
         addEntity(EntityFailedChicken.class,"failed_chicken",10592673,0x33CC33);
         addEntity(EntityFailedSheep.class, "failed_sheep", 15198183, 0x33CC33);
@@ -60,9 +62,9 @@ public class MatterOverdriveEntities
         VillagerRegistry.instance().registerVillageCreationHandler(creatationMadScientist);
         rogueandroid.registerEntity();
 
-        int phaserFireID = EntityRegistry.findGlobalUniqueEntityId();
+        int phaserFireID = registerEntityGlobalIDSafe(PhaserFire.class,"phaser_fire");
         EntityRegistry.registerGlobalEntityID(PhaserFire.class, "phaser_fire", phaserFireID);
-        //EntityRegistry.registerModEntity(PhaserFire.class, "phaser_fire", phaserFireID, MatterOverdrive.instance, 64, 20, true);
+        MatterOverdrive.configHandler.save();
     }
 
     public static void addViligger(int id,String texture,VillagerRegistry.IVillageTradeHandler tradeHandler)
@@ -74,15 +76,47 @@ public class MatterOverdriveEntities
 
     public static int addEntity(Class<? extends Entity> enityClass,String name,int mainColor,int spotsColor)
     {
-        int entityID = EntityRegistry.findGlobalUniqueEntityId();
-        EntityRegistry.registerGlobalEntityID(enityClass,name,entityID);
-        EntityRegistry.registerModEntity(enityClass,name,entityID, MatterOverdrive.instance,64,1,true);
-        createEgg(entityID,mainColor,spotsColor);
-        return entityID;
+        int id = registerEntityGlobalIDSafe(enityClass,name);
+        EntityRegistry.registerModEntity(enityClass, name, id, MatterOverdrive.instance, 64, 1, true);
+        createEgg(id, mainColor, spotsColor);
+        return id;
     }
 
     public static void createEgg(int id,int solidColor,int spotColor)
     {
-        EntityList.entityEggs.put(Integer.valueOf(id),new EntityList.EntityEggInfo(id,solidColor,spotColor));
+        EntityList.entityEggs.put(Integer.valueOf(id), new EntityList.EntityEggInfo(id, solidColor, spotColor));
+    }
+
+    public static int registerEntityGlobalIDSafe(Class<? extends Entity> entityClass,String name)
+    {
+        int id = EntityRegistry.findGlobalUniqueEntityId();
+        if(MatterOverdrive.configHandler.config.hasKey(ConfigurationHandler.CATEGORY_ENTITIES,getEntityConfigKey(name)))
+        {
+            id = MatterOverdrive.configHandler.getInt(getEntityConfigKey(name),ConfigurationHandler.CATEGORY_ENTITIES,171);
+        }
+
+        while (id < 256)
+        {
+            try
+            {
+                EntityRegistry.registerGlobalEntityID(entityClass,name,id);
+                break;
+            }catch (Exception e)
+            {
+                id++;
+                if (id == 256)
+                {
+                    throw new RuntimeException("Could not find a free Entity ID for: " + entityClass);
+                }
+            }
+
+        }
+        MatterOverdrive.configHandler.setInt(getEntityConfigKey(name), ConfigurationHandler.CATEGORY_ENTITIES, id);
+        return id;
+    }
+
+    private static String getEntityConfigKey(String name)
+    {
+        return "entity." + name + ".id";
     }
 }

@@ -21,6 +21,7 @@ package matteroverdrive.entity;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.init.MatterOverdriveEntities;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -45,7 +46,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
 
     public static void  createEntity(Class<? extends EntityLiving> entityClass,String name,int solidColor,int spotColor)
     {
-        int randomID = EntityRegistry.findGlobalUniqueEntityId();
+        int randomID = MatterOverdriveEntities.registerEntityGlobalIDSafe(entityClass,name);
         EntityRegistry.registerGlobalEntityID(entityClass, name, randomID);
         EntityRegistry.registerModEntity(entityClass, name, randomID, MatterOverdrive.instance, 64, 1, true);
         spawnListEntry = new BiomeGenBase.SpawnListEntry(entityClass,5,1,2);

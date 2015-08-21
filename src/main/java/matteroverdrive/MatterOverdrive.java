@@ -57,7 +57,6 @@ public class MatterOverdrive
     public static TickHandler tickHandler;
     public static PlayerEventHandler playerEventHandler;
 	public static ConfigurationHandler configHandler;
-    public static CraftingHandler craftingHandler;
     public static GuiHandler guiHandler;
     public static PacketPipeline packetPipeline;
 	public static BucketHandler bucketHandler;
@@ -82,7 +81,6 @@ public class MatterOverdrive
 		dialogRegistry = new DialogRegistry();
 		registryPath = event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + "Registry" + ".matter";
         guiHandler = new GuiHandler();
-        craftingHandler = new CraftingHandler();
 		packetPipeline = new PacketPipeline();
 		entityHandler = new EntityHandler();
         configHandler = new ConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
@@ -93,7 +91,6 @@ public class MatterOverdrive
 		tickHandler = new TickHandler(configHandler,playerEventHandler);
         FMLCommonHandler.instance().bus().register(tickHandler);
         FMLCommonHandler.instance().bus().register(playerEventHandler);
-        FMLCommonHandler.instance().bus().register(craftingHandler);
 		MinecraftForge.EVENT_BUS.register(playerEventHandler);
 		MinecraftForge.EVENT_BUS.register(bucketHandler);
 		MatterOverdriveFluids.init(event);
@@ -102,7 +99,7 @@ public class MatterOverdrive
 		moWorld = new MatterOverdriveWorld(configHandler);
 		MatterOverdriveEntities.init(event, configHandler);
 		MatterOverdriveEnchantments.init(event, configHandler);
-		MatterOverdriveDialogs.init(event,configHandler,dialogRegistry);
+		MatterOverdriveDialogs.init(event, configHandler, dialogRegistry);
 		moWorld.register();
 		MatterNetworkRegistry.register();
         packetPipeline.registerPackets();
@@ -112,6 +109,7 @@ public class MatterOverdrive
 		MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);
 		MatterOverdriveMatter.registerFromConfig(configHandler);
 		MatterOverdriveMatter.registerBasic(configHandler);
+		matterRegistry.preInit(event,configHandler);
 		UpdateTabs();
 
 		proxy.registerCompatModules();
@@ -139,6 +137,8 @@ public class MatterOverdrive
 		MatterOverdriveCompat.postInit(event);
 		MatterOverdriveEntities.register(event);
 		MatterOverdriveItems.addToDungons();
+
+		configHandler.postInit();
 	}
 
 

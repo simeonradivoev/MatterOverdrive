@@ -43,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 public class RegisterItemsFromRecipes implements Runnable {
 
     String savePath;
-    public static final boolean DEBUG = false;
 
     public RegisterItemsFromRecipes(String savePath)
     {
@@ -72,7 +71,7 @@ public class RegisterItemsFromRecipes implements Runnable {
                 try {
                     ItemStack itemStack = recipe.getRecipeOutput();
                     if (itemStack != null && !MatterOverdrive.matterRegistry.blacklisted(itemStack) && !MatterOverdrive.matterRegistry.blacklistedFromMod(itemStack)) {
-                        if (DEBUG) MatterOverdrive.log.debug("Calculating Recipe for: %s", recipe.getRecipeOutput().getUnlocalizedName());
+                        debug("Calculating Recipe for: %s", recipe.getRecipeOutput().getUnlocalizedName());
                         MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(itemStack);
                         int matter = 0;
 
@@ -83,17 +82,14 @@ public class RegisterItemsFromRecipes implements Runnable {
                                 MatterEntry e = MatterOverdrive.matterRegistry.register(itemStack, matter);
                                 e.setCalculated(true);
                             } else {
-                                if (DEBUG)
-                                    MatterOverdrive.log.debug("Could not calculate recipe for: %s. Matter from recipe is 0.", recipe.getRecipeOutput().getUnlocalizedName());
+                                debug("Could not calculate recipe for: %s. Matter from recipe is 0.", recipe.getRecipeOutput().getUnlocalizedName());
                             }
                         } else {
-                            if (DEBUG)
-                                MatterOverdrive.log.debug("Entry for: %s is already present", recipe.getRecipeOutput().getUnlocalizedName());
+                            debug("Entry for: %s is already present", recipe.getRecipeOutput().getUnlocalizedName());
                         }
                     }else
                     {
-                        if (DEBUG)
-                            MatterOverdrive.log.debug("% was blacklisted. Skipping matter calculation", recipe.getRecipeOutput().getUnlocalizedName());
+                        debug("% was blacklisted. Skipping matter calculation", recipe.getRecipeOutput().getUnlocalizedName());
                     }
                 } catch (Exception e) {
                     if (recipe.getRecipeOutput() != null) {
@@ -167,7 +163,7 @@ public class RegisterItemsFromRecipes implements Runnable {
     private void onItemLoop(ItemStack itemStack)
     {
         float matterPerFuel = (float)MatterOverdrive.matterRegistry.getEntry(Items.coal).getMatter() / (float)GameRegistry.getFuelValue(new ItemStack(Items.coal));
-        tryRegisterFuel(itemStack,matterPerFuel);
+        tryRegisterFuel(itemStack, matterPerFuel);
     }
 
     private void registerFromFurnace()
@@ -194,5 +190,13 @@ public class RegisterItemsFromRecipes implements Runnable {
             return true;
         }
         return false;
+    }
+
+    private void debug(String debug,Object... params)
+    {
+        if (MatterOverdrive.matterRegistry.CALCULATION_DEBUG)
+        {
+            MatterOverdrive.log.debug(debug,params);
+        }
     }
 }
