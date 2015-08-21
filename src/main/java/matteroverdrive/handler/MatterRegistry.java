@@ -468,7 +468,7 @@ public class MatterRegistry implements IMatterRegistry
                         //if there is no entry for item and recursive is true, then continue searching to it's recipe list
                         else if (recursive) {
                             tempMatter = getMatterFromRecipe(stack, true, ++depth,calculated);
-                            debug("searching %s in depth: %s", stack.getUnlocalizedName(), depth - 1);
+                            debug("searching %s in depth: %s", stack, depth - 1);
 
                             //if the matter is higher than 0 that means the recipe search was successful.
                             //registration now helps to remove it from future checks
