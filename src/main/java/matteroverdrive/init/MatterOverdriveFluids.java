@@ -44,7 +44,5 @@ public class MatterOverdriveFluids
     public static void register(FMLInitializationEvent event)
     {
         FluidContainerRegistry.registerFluidContainer(new FluidStack(matterPlasma,32),new ItemStack(MatterOverdriveItems.matterContainerFull),new ItemStack(MatterOverdriveItems.matterContainer));
-        matterPlasma.setFlowingIcon(MatterOverdriveIcons.matter_plasma_flowing);
-        matterPlasma.setStillIcon(MatterOverdriveIcons.matter_plasma_still);
     }
 }
