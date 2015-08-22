@@ -18,13 +18,10 @@
 
 package matteroverdrive.handler.thread;
 
-import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.handler.MatterEntry;
 import matteroverdrive.util.MatterHelper;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -32,7 +29,6 @@ import net.minecraft.item.crafting.IRecipe;
 import org.apache.logging.log4j.Level;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -52,118 +48,88 @@ public class RegisterItemsFromRecipes implements Runnable {
     @Override
     public void run() {
 
-        int passesCount = 8;
         long startTime = System.nanoTime();
         int startEntriesCount = MatterOverdrive.matterRegistry.getEntries().size();
-		MatterOverdrive.log.info("Calculation Required! Starting Matter Recipe Calculation !");
 
-        for (int pass = 0;pass < passesCount;pass++)
+        if (MatterOverdrive.matterRegistry.CALCULATE_RECIPES)
         {
-            long passStartTime = System.nanoTime();
-            int passStartRecipeCount = MatterOverdrive.matterRegistry.getEntries().size();
+            int passesCount = 8;
+            MatterOverdrive.log.info("Starting Matter Recipe Calculation !");
 
-            List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-            MatterOverdrive.log.info("Matter Recipe Calculation Started for %s recipes at pass %s, with %s matter entries",recipes.size(),pass+1,passStartRecipeCount);
-            for (IRecipe recipe : recipes) {
-                if (recipe == null)
-                    continue;
+            for (int pass = 0; pass < passesCount; pass++) {
+                long passStartTime = System.nanoTime();
+                int passStartRecipeCount = MatterOverdrive.matterRegistry.getEntries().size();
 
-                try {
-                    ItemStack itemStack = recipe.getRecipeOutput();
-                    if (itemStack != null && !MatterOverdrive.matterRegistry.blacklisted(itemStack) && !MatterOverdrive.matterRegistry.blacklistedFromMod(itemStack)) {
-                        debug("Calculating Recipe for: %s", recipe.getRecipeOutput());
-                        MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(itemStack);
-                        int matter = 0;
+                List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+                MatterOverdrive.log.info("Matter Recipe Calculation Started for %s recipes at pass %s, with %s matter entries", recipes.size(), pass + 1, passStartRecipeCount);
+                for (IRecipe recipe : recipes) {
+                    if (recipe == null)
+                        continue;
 
-                        if (entry == null) {
-                            matter += MatterOverdrive.matterRegistry.getMatterFromRecipe(itemStack, false, 0, true);
+                    try {
+                        ItemStack itemStack = recipe.getRecipeOutput();
+                        if (itemStack != null && !MatterOverdrive.matterRegistry.blacklisted(itemStack) && !MatterOverdrive.matterRegistry.blacklistedFromMod(itemStack)) {
+                            debug("Calculating Recipe for: %s", recipe.getRecipeOutput());
+                            MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(itemStack);
+                            int matter = 0;
 
-                            if (matter > 0) {
-                                MatterEntry e = MatterOverdrive.matterRegistry.register(itemStack, matter);
-                                e.setCalculated(true);
+                            if (entry == null) {
+                                matter += MatterOverdrive.matterRegistry.getMatterFromRecipe(itemStack, false, 0, true);
+
+                                if (matter > 0) {
+                                    MatterEntry e = MatterOverdrive.matterRegistry.register(itemStack, matter);
+                                    e.setCalculated(true);
+                                } else {
+                                    debug("Could not calculate recipe for: %s. Matter from recipe is 0.", recipe.getRecipeOutput());
+                                }
                             } else {
-                                debug("Could not calculate recipe for: %s. Matter from recipe is 0.", recipe.getRecipeOutput());
+                                debug("Entry for: %s is already present", recipe.getRecipeOutput());
                             }
                         } else {
-                            debug("Entry for: %s is already present", recipe.getRecipeOutput());
+                            debug("% was blacklisted. Skipping matter calculation", recipe.getRecipeOutput());
                         }
-                    }else
-                    {
-                        debug("% was blacklisted. Skipping matter calculation", recipe.getRecipeOutput());
+                    } catch (Exception e) {
+                        if (recipe.getRecipeOutput() != null) {
+                            MatterOverdrive.log.error(String.format("There was a problem calculating matter from recipe for %s", recipe.getRecipeOutput().getItem()), e);
+                        } else {
+                            MatterOverdrive.log.error("There was a problem calculating matter from recipe", e);
+                        }
                     }
-                } catch (Exception e) {
-                    if (recipe.getRecipeOutput() != null) {
-                        MatterOverdrive.log.error(String.format("There was a problem calculating matter from recipe for %s", recipe.getRecipeOutput().getItem()), e);
-                    } else {
-                        MatterOverdrive.log.error("There was a problem calculating matter from recipe", e);
-                    }
+                }
+
+                MatterOverdrive.log.info("Matter Recipe Calculation for pass %s complete. Took %s milliseconds. Registered %s recipes", pass + 1, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - passStartTime), MatterOverdrive.matterRegistry.getEntries().size() - passStartRecipeCount);
+                if (MatterOverdrive.matterRegistry.getEntries().size() - passStartRecipeCount <= 0) {
+                    break;
                 }
             }
 
-            MatterOverdrive.log.info("Matter Recipe Calculation for pass %s complete. Took %s milliseconds. Registered %s recipes",pass+1,TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - passStartTime),MatterOverdrive.matterRegistry.getEntries().size() - passStartRecipeCount);
-            if (MatterOverdrive.matterRegistry.getEntries().size() - passStartRecipeCount <= 0)
-            {
-                break;
+            MatterOverdrive.log.info("Matter Recipe Calculation, Complete ! Took %s Milliseconds. Registered total of %s items", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime), MatterOverdrive.matterRegistry.getEntries().size() - startEntriesCount);
+        }
+
+        if (MatterOverdrive.matterRegistry.CALCULATE_FURNACE)
+        {
+            startTime = System.nanoTime();
+            startEntriesCount = MatterOverdrive.matterRegistry.getEntries().size();
+
+            MatterOverdrive.log.info("Matter Furnace Calculation Started");
+            registerFromFurnace();
+            MatterOverdrive.log.info("Matter Furnace Calculation Complete. Took %s Milliseconds. Registered %s entries", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime), MatterOverdrive.matterRegistry.getEntries().size() - startEntriesCount);
+        }
+
+        if (MatterOverdrive.matterRegistry.CALCULATE_FURNACE || MatterOverdrive.matterRegistry.CALCULATE_RECIPES)
+        {
+            startTime = System.nanoTime();
+
+            MatterOverdrive.log.info("Saving Registry to Disk");
+            try {
+                MatterOverdrive.matterRegistry.saveToFile(savePath);
+                MatterOverdrive.log.info("Registry saved at: %s. Took %s Milliseconds.", savePath, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
+            } catch (IOException e) {
+                MatterOverdrive.log.log(Level.ERROR, e, "Could not save registry to: %s", savePath);
             }
-        }
-
-		MatterOverdrive.log.info("Matter Recipe Calculation, Complete ! Took %s Milliseconds. Registered total of %s items",TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime),MatterOverdrive.matterRegistry.getEntries().size() - startEntriesCount);
-        startTime = System.nanoTime();
-        startEntriesCount = MatterOverdrive.matterRegistry.getEntries().size();
-
-        MatterOverdrive.log.info("Matter Furnace Calculation Started");
-        registerFromFurnace();
-        MatterOverdrive.log.info("Matter Furnace Calculation Complete. Took %s Milliseconds. Registered %s entries", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime), MatterOverdrive.matterRegistry.getEntries().size() - startEntriesCount);
-
-        ItemLoop();
-
-        startTime = System.nanoTime();
-
-		MatterOverdrive.log.info("Saving Registry to Disk");
-        try
-        {
-            MatterOverdrive.matterRegistry.saveToFile(savePath);
-			MatterOverdrive.log.info("Registry saved at: %s. Took %s Milliseconds.",savePath,TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
-        }
-        catch (IOException e)
-        {
-			MatterOverdrive.log.log(Level.ERROR,e, "Could not save registry to: %s", savePath);
         }
         MatterOverdrive.matterRegistry.hasComplitedRegistration = true;
 
-    }
-
-    private void ItemLoop()
-    {
-        int startEntriesCount = MatterOverdrive.matterRegistry.getEntries().size();
-        MatterOverdrive.log.info("Matter Fuel Calculation Started");
-
-        Iterator<Item> itemIterator = GameData.getItemRegistry().iterator();
-        while (itemIterator.hasNext())
-        {
-            Item item = itemIterator.next();
-            if (item.getHasSubtypes())
-            {
-                for (int i = 0;i < item.getMaxDamage();i++)
-                {
-                    ItemStack stack = new ItemStack(item,1,i);
-                    onItemLoop(stack);
-
-                }
-            }else
-            {
-                ItemStack stack = new ItemStack(item);
-                onItemLoop(stack);
-            }
-        }
-
-        MatterOverdrive.log.info("Matter Fuel Calculation Complete. Registered %s entries",MatterOverdrive.matterRegistry.getEntries().size() - startEntriesCount);
-    }
-
-    private void onItemLoop(ItemStack itemStack)
-    {
-        float matterPerFuel = (float)MatterOverdrive.matterRegistry.getEntry(Items.coal).getMatter() / (float)GameRegistry.getFuelValue(new ItemStack(Items.coal));
-        tryRegisterFuel(itemStack, matterPerFuel);
     }
 
     private void registerFromFurnace()

@@ -19,7 +19,6 @@
 package matteroverdrive.commands;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
 import matteroverdrive.init.MatterOverdriveMatter;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -57,8 +56,7 @@ public class MatterRegistryCommands extends CommandBase
             {
                 MatterOverdrive.matterRegistry.getEntries().clear();
                 MatterOverdriveMatter.registerBasic(MatterOverdrive.configHandler);
-                Thread registerItemsThread = new Thread(new RegisterItemsFromRecipes(MatterOverdrive.registryPath));
-                registerItemsThread.run();
+                MatterOverdrive.matterRegistrationHandler.runCalculationThread();
             }
         }
     }

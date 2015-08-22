@@ -46,6 +46,8 @@ public class MatterRegistry implements IMatterRegistry
 {
     private boolean REGISTRATION_DEBUG = false;
     public boolean CALCULATION_DEBUG = false;
+    public boolean CALCULATE_RECIPES = true;
+    public boolean CALCULATE_FURNACE = true;
     public boolean hasComplitedRegistration = false;
     private static final int MAX_DEPTH = 8;
     public int basicEntries = 0;
@@ -55,8 +57,10 @@ public class MatterRegistry implements IMatterRegistry
 
     public void preInit(FMLPreInitializationEvent event,ConfigurationHandler configurationHandler)
     {
-        REGISTRATION_DEBUG = configurationHandler.getBool(ConfigurationHandler.KEY_MATTER_REGISTRATION_DEBUG,ConfigurationHandler.CATEGORY_DEBUG,false,"Enabled Debug logging for Matter Registration");
-        CALCULATION_DEBUG = configurationHandler.getBool(ConfigurationHandler.KEY_MATTER_CALCULATION_DEBUG,ConfigurationHandler.CATEGORY_DEBUG,false,"Enabled Debug logging for Matter Calculation");
+        REGISTRATION_DEBUG = configurationHandler.getBool(ConfigurationHandler.KEY_MATTER_REGISTRATION_DEBUG,ConfigurationHandler.CATEGORY_DEBUG,false,"Enables Debug logging for Matter Registration");
+        CALCULATION_DEBUG = configurationHandler.getBool(ConfigurationHandler.KEY_MATTER_CALCULATION_DEBUG,ConfigurationHandler.CATEGORY_DEBUG,false,"Enables Debug logging for Matter Calculation");
+        CALCULATE_RECIPES = configurationHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_RECIPE_CALCULATION,ConfigurationHandler.CATEGORY_MATTER,true,"Enables Automatic Matter Calculation from recipes");
+        CALCULATE_FURNACE = configurationHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_FURNACE_CALCULATION,configurationHandler.CATEGORY_MATTER,true,"Enables Automatic Matter Calculation from furnace recipes");
     }
 
 	public MatterEntry register(MatterEntry entry)

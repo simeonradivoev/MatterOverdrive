@@ -37,8 +37,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -51,11 +49,6 @@ public class VersionCheckerHandler implements IConfigSubscriber {
     private int currentMirror = 0;
     int lastPoll = 400;
     private boolean checkForUpdates;
-    ExecutorService threadPool;
-
-    public VersionCheckerHandler() {
-        threadPool = Executors.newFixedThreadPool(2);
-    }
 
     //Called when a player ticks.
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -81,7 +74,7 @@ public class VersionCheckerHandler implements IConfigSubscriber {
 
         if (currentMirror < mirrors.length) {
             if (download == null) {
-                download = threadPool.submit(new VersionCheckThread(mirrors[currentMirror]));
+                download = MatterOverdrive.threadPool.submit(new VersionCheckThread(mirrors[currentMirror]));
                 currentMirror++;
             }
         }

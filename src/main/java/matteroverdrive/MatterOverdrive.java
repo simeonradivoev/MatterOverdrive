@@ -30,7 +30,6 @@ import matteroverdrive.commands.MatterRegistryCommands;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.dialog.DialogRegistry;
 import matteroverdrive.handler.*;
-import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
 import matteroverdrive.imc.MOIMCHandler;
 import matteroverdrive.init.*;
 import matteroverdrive.matter_network.MatterNetworkRegistry;
@@ -40,6 +39,8 @@ import matteroverdrive.util.MOLog;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, guiFactory = Reference.GUI_FACTORY_CLASS, dependencies = Reference.DEPEDNENCIES)
 public class MatterOverdrive 
@@ -62,12 +63,13 @@ public class MatterOverdrive
 	public static BucketHandler bucketHandler;
 	@Instance(Reference.MOD_ID)
 	public static MatterOverdrive instance;
-	public static String registryPath;
 	public static MatterOverdriveWorld moWorld;
 	public static EntityHandler entityHandler;
 	public static MatterRegistry matterRegistry;
 	public static AndroidStatRegistry statRegistry;
 	public static DialogRegistry dialogRegistry;
+    public static MatterRegistrationHandler matterRegistrationHandler;
+	public static final ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
 	public static MOLog log = new MOLog();
 
@@ -79,13 +81,13 @@ public class MatterOverdrive
 		matterRegistry = new MatterRegistry();
 		statRegistry = new AndroidStatRegistry();
 		dialogRegistry = new DialogRegistry();
-		registryPath = event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + "Registry" + ".matter";
         guiHandler = new GuiHandler();
 		packetPipeline = new PacketPipeline();
 		entityHandler = new EntityHandler();
         configHandler = new ConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
 		playerEventHandler = new PlayerEventHandler(configHandler);
 		bucketHandler = new BucketHandler();
+        matterRegistrationHandler = new MatterRegistrationHandler(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + "Registry" + ".matter");
 
 		FMLCommonHandler.instance().bus().register(configHandler);
 		tickHandler = new TickHandler(configHandler,playerEventHandler);
@@ -152,26 +154,9 @@ public class MatterOverdrive
     @EventHandler
     public void serverStart(FMLServerStartedEvent event)
     {
-        if (configHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_RECIPE_CALCULATION, ConfigurationHandler.CATEGORY_MATTER,true))
-		{
-            try {
-                if (matterRegistry.needsCalculation(registryPath))
-                {
-                    Thread registerItemsThread = new Thread(new RegisterItemsFromRecipes(registryPath));
-                    registerItemsThread.run();
-                }else
-                {
-					matterRegistry.loadFromFile(registryPath);
-                }
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-                Thread registerItemsThread = new Thread(new RegisterItemsFromRecipes(registryPath));
-                registerItemsThread.run();
-            }
 
-			tickHandler.onServerStart(event);
-        }
+
+		tickHandler.onServerStart(event);
     }
 
 	@EventHandler

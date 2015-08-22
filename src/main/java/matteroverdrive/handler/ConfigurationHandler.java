@@ -56,6 +56,7 @@ public class ConfigurationHandler
     public static final String CATEGORY_DEBUG = "debug";
 
     public static final String KEY_AUTOMATIC_RECIPE_CALCULATION = "automatic matter calculation from recipe";
+    public static final String KEY_AUTOMATIC_FURNACE_CALCULATION = "automatic matter calculation from furnace";
     public static final String KEY_MAX_BROADCASTS = "max broadcasts per tick";
     public static final String KEY_MBLACKLIST = "blacklist";
     public static final String KEY_BLACKLIST_MODS = "mod_blacklist";
@@ -67,7 +68,7 @@ public class ConfigurationHandler
     public static final String KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS = "gravitational anomaly forge fluids";
     public static final String KEY_ANDROID_ENERGY_WATCH_ID = "android energy watch id";
     public static final String KEY_MATTER_REGISTRATION_DEBUG = "matter registation";
-    public static final String KEY_MATTER_CALCULATION_DEBUG = "matter registation";
+    public static final String KEY_MATTER_CALCULATION_DEBUG = "matter calculation";
 
     public ConfigurationHandler(File file)
     {
