@@ -38,6 +38,11 @@ public class MatterRegistryCommands extends CommandBase
         return "matter_registry";
     }
 
+    public int getRequiredPermissionLevel()
+    {
+        return 2;
+    }
+
     @Override
     public String getCommandUsage(ICommandSender p_71518_1_) {
         return "matter_registry <command> <value>";

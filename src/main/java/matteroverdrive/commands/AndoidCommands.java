@@ -42,6 +42,11 @@ public class AndoidCommands extends CommandBase
         return "android";
     }
 
+    public int getRequiredPermissionLevel()
+    {
+        return 2;
+    }
+
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
