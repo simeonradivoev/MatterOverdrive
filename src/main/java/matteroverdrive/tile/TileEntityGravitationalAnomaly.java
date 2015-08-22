@@ -56,6 +56,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidBlock;
+import org.apache.logging.log4j.Level;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.text.DecimalFormat;
@@ -425,9 +426,15 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                         continue;
                     }
                 }
-                if (solidCount < MAX_BLOCKS_PER_HARVEST) {
-                    if (brakeBlock(world,position.x, position.y, position.z,strength,eventHorizon,range)) {
-                        solidCount++;
+                if (solidCount < MAX_BLOCKS_PER_HARVEST)
+                {
+                    try {
+                        if (brakeBlock(world, position.x, position.y, position.z, strength, eventHorizon, range)) {
+                            solidCount++;
+                        }
+                    }catch (Exception e)
+                    {
+                        MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while trying to brake block %s",block);
                     }
                 }
             }
