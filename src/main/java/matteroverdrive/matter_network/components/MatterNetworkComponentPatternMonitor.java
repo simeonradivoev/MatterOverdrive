@@ -24,12 +24,10 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterDatabase;
-import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
-import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.network.packet.client.PacketPatternMonitorSync;
 import matteroverdrive.tile.TileEntityMachinePatternMonitor;
@@ -55,6 +53,18 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
     }
 
     @Override
+    protected void executePacket(MatterNetworkPacket packet)
+    {
+        if (packet instanceof MatterNetworkResponsePacket)
+        {
+            executeResponses((MatterNetworkResponsePacket)packet);
+        }else if (packet instanceof MatterNetworkRequestPacket)
+        {
+            executeBasicRequestPackets((MatterNetworkRequestPacket)packet);
+        }
+    }
+
+    @Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
         if (super.canPreform(packet)) {
@@ -68,17 +78,11 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
         return false;
     }
 
-    @Override
-    public void queuePacket(MatterNetworkPacket packet, ForgeDirection from) {
-        manageBasicPacketsQueuing(rootClient, rootClient.getWorldObj(), packet, from);
-    }
-
-    @Override
-    protected void manageResponsesQueuing(MatterNetworkResponsePacket packet)
+    protected void executeResponses(MatterNetworkResponsePacket packet)
     {
         if (packet.fits(Reference.PACKET_RESPONCE_VALID,Reference.PACKET_REQUEST_CONNECTION))
         {
-            if(!rootClient.getDatabases().contains(packet.getSender(rootClient.getWorldObj()).getPosition()))
+            if(!rootClient.getDatabases().contains(packet.getSender(getWorldObj()).getPosition()))
             {
                 rootClient.getDatabases().add(packet.getSender(rootClient.getWorldObj()).getPosition());
                 rootClient.SyncDatabasesWithClient();
@@ -87,15 +91,12 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
     }
 
     @Override
-    protected void manageTaskPacketQueuing(MatterNetworkTaskPacket packet, MatterNetworkTask task) {}
-    @Override
-    protected void manageRequestsQueuing(MatterNetworkRequestPacket packet) {}
-
-    @Override
-    public int onNetworkTick(World world, TickEvent.Phase phase) {
+    public int onNetworkTick(World world, TickEvent.Phase phase)
+    {
+        int broadcasts = super.onNetworkTick(world,phase);
         manageDatabaseValidation(world);
         manageSearch(world, phase);
-        return manageTaskBroadcast(world, phase);
+        return broadcasts + manageTaskBroadcast(world, phase);
     }
 
     private void manageSearch(World world,TickEvent.Phase phase)
@@ -108,7 +109,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
 
                 for (int i = 0; i < 6; i++) {
                     MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_CONNECTION,ForgeDirection.getOrientation(i),rootClient.getFilter(), IMatterDatabase.class);
-                    MatterNetworkHelper.broadcastTaskInDirection(world, packet, rootClient, ForgeDirection.getOrientation(i));
+                    MatterNetworkHelper.broadcastPacketInDirection(world, packet, rootClient, ForgeDirection.getOrientation(i));
                 }
                 needsSearchRefresh = false;
             }
@@ -147,7 +148,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
                 } else {
                     if (!task.isAlive() && broadcastTracker.hasDelayPassed(world, TileEntityMachinePatternMonitor.BROADCAST_WEATING_DELAY)) {
                         for (int i = 0; i < 6; i++) {
-                            if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i),rootClient.getFilter())) {
+                            if (MatterNetworkHelper.broadcastPacketInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i), rootClient.getFilter())) {
                                 task.setState(MatterNetworkTaskState.WAITING);
                                 broadcastCount++;
                             }

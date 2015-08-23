@@ -22,6 +22,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,11 +143,11 @@ public abstract class MatterNetworkQueue <T>
             }
             catch (InstantiationException e)
             {
-                e.printStackTrace();
+                MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while loading a packet of type %s",getElementClassFromNBT(tagList.getCompoundTagAt(i)));
             }
             catch (IllegalAccessException e)
             {
-                e.printStackTrace();
+                MatterOverdrive.log.log(Level.ERROR, e, "There was a problem while loading a packet of type %s", getElementClassFromNBT(tagList.getCompoundTagAt(i)));
             }
         }
     }
@@ -165,5 +166,9 @@ public abstract class MatterNetworkQueue <T>
             taskList.appendTag(taskNBT);
         }
         tagCompound.setTag(name,taskList);
+    }
+    public IMatterNetworkConnection getConnection()
+    {
+        return connection;
     }
 }

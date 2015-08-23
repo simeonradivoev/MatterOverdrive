@@ -21,6 +21,7 @@ package matteroverdrive.tile;
 import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
@@ -44,22 +45,35 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
 {
     public static int BROADCAST_DELAY = 2;
     public static int TASK_QUEUE_SIZE = 16;
-    private MatterNetworkPacketQueue<MatterNetworkPacket> packetQueue;
-    private MatterNetworkComponentQueue networkComponent;
+    protected MatterNetworkComponentQueue networkComponent;
     private BlockPosition[] connections;
+    @SideOnly(Side.CLIENT)
+    public int flashTime;
 
     public TileEntityMachinePacketQueue(int upgradeCount)
     {
         super(upgradeCount);
-        packetQueue = new MatterNetworkPacketQueue(this,TASK_QUEUE_SIZE);
         connections = new BlockPosition[6];
+    }
+
+    protected void registerComponents()
+    {
+        super.registerComponents();
         networkComponent = new MatterNetworkComponentQueue(this);
+        addComponent(networkComponent);
     }
 
     @Override
     public void updateEntity()
     {
         super.updateEntity();
+        if (worldObj.isRemote)
+        {
+            if (flashTime > 0)
+            {
+                flashTime--;
+            }
+        }
     }
 
     @Override
@@ -80,7 +94,6 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     {
         super.readCustomNBT(nbt, categories);
         if (categories.contains(MachineNBTCategory.DATA)) {
-            packetQueue.readFromNBT(nbt);
             for (int i = 0; i < connections.length; i++) {
                 if (nbt.hasKey("Connection" + i)) {
                     BlockPosition position = new BlockPosition(nbt.getCompoundTag("Connection" + i));
@@ -100,7 +113,6 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     {
         super.writeCustomNBT(nbt, categories);
         if (categories.contains(MachineNBTCategory.DATA)) {
-            packetQueue.writeToNBT(nbt);
             for (int i = 0; i < connections.length; i++) {
                 if (getConnection(i) != null) {
                     NBTTagCompound tagCompound = new NBTTagCompound();
@@ -137,9 +149,9 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
         return new BlockPosition(xCoord,yCoord,zCoord);
     }
 
-    public MatterNetworkPacketQueue<MatterNetworkPacket> getPacketQueue()
-    {
-        return packetQueue;
+    @Override
+    public MatterNetworkPacketQueue getPacketQueue(int queueID) {
+        return networkComponent.getPacketQueue(queueID);
     }
     //endregion
 
@@ -160,7 +172,8 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     }
 
     @Override
-    protected void onAwake(Side side) {
+    protected void onAwake(Side side)
+    {
 
     }
     //endregion
@@ -179,7 +192,7 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     @Override
     public boolean getServerActive()
     {
-        return packetQueue.size() > 0;
+        return false;
     }
 
     @Override
@@ -207,6 +220,18 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     public BlockPosition[] getConnections()
     {
         return connections;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared()
+    {
+        return 1024.0D;
+    }
+
+    @Override
+    public int getPacketQueueCount() {
+        return networkComponent.getPacketQueueCount();
     }
     //endregion
 }

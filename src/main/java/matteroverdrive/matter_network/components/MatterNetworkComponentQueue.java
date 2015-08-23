@@ -21,6 +21,7 @@ package matteroverdrive.matter_network.components;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.MatterNetworkTask;
@@ -28,8 +29,9 @@ import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
-import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
+import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
+import matteroverdrive.network.packet.client.PacketSendQueueFlash;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
 import matteroverdrive.util.MatterNetworkHelper;
 import net.minecraft.world.World;
@@ -47,21 +49,6 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     {
         super(queue);
         broadcastTracker = new TimeTracker();
-    }
-
-    @Override
-    protected void manageResponsesQueuing(MatterNetworkResponsePacket packet) {
-
-    }
-
-    @Override
-    protected void manageTaskPacketQueuing(MatterNetworkTaskPacket packet, MatterNetworkTask task) {
-
-    }
-
-    @Override
-    protected void manageRequestsQueuing(MatterNetworkRequestPacket packet) {
-
     }
 
     @Override
@@ -85,9 +72,9 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     @Override
     public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
     {
-        if (packet.isValid(rootClient.getWorldObj()))
+        if (canPreform(packet) && packet.isValid(getWorldObj()))
         {
-            if (packet instanceof MatterNetworkTaskPacket && !isInValidState(((MatterNetworkTaskPacket) packet).getTask(rootClient.getWorldObj()))) {
+            if (packet instanceof MatterNetworkTaskPacket && !isInValidState(((MatterNetworkTaskPacket) packet).getTask(getWorldObj()))) {
                 return;
             }
             if (packet instanceof MatterNetworkBroadcastPacket)
@@ -101,13 +88,20 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
                     return;
             }
 
-            if (rootClient.getPacketQueue().queue(packet))
+            if (getPacketQueue(0).queue(packet))
             {
                 packet.addToPath(rootClient, from);
-                broadcastTracker.markTime(rootClient.getWorldObj());
-                rootClient.ForceSync();
+                packet.tickAlive(getWorldObj(),true);
+                broadcastTracker.markTime(getWorldObj());
+                MatterOverdrive.packetPipeline.sendToAllAround(new PacketSendQueueFlash(rootClient), rootClient, 32);
             }
         }
+    }
+
+    @Override
+    protected void executePacket(MatterNetworkPacket packet)
+    {
+
     }
 
     protected int handlePacketBroadcast(World world,MatterNetworkPacket packet)
@@ -117,7 +111,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
             if (packet instanceof MatterNetworkTaskPacket && !isInValidState(((MatterNetworkTaskPacket) packet).getTask(world)))
                 continue;
 
-            if (MatterNetworkHelper.broadcastTaskInDirection(rootClient.getWorldObj(), packet, rootClient, ForgeDirection.getOrientation(directions[i]))) {
+            if (MatterNetworkHelper.broadcastPacketInDirection(world, packet, rootClient, ForgeDirection.getOrientation(directions[i]))) {
                 broadcastCount++;
             }
         }
@@ -128,8 +122,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     {
         if (packet.getResponseType() == Reference.PACKET_RESPONCE_VALID && packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION)
         {
-            rootClient.setConnection(direction.ordinal(),packet.getSender(rootClient.getWorldObj()).getPosition());
-            rootClient.ForceSync();
+            rootClient.setConnection(direction.ordinal(), packet.getSender(getWorldObj()).getPosition());
             return true;
         }
         return false;
@@ -139,8 +132,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     {
         if ((packet.getBroadcastType() == Reference.PACKET_BROADCAST_CONNECTION))
         {
-            rootClient.setConnection(direction.ordinal(),packet.getSender(rootClient.getWorldObj()).getPosition());
-            rootClient.ForceSync();
+            rootClient.setConnection(direction.ordinal(), packet.getSender(getWorldObj()).getPosition());
             return true;
         }
         return false;
@@ -165,19 +157,17 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
         int broadcastCount = 0;
         if (phase == TickEvent.Phase.END)
         {
-            rootClient.getPacketQueue().tickAllAlive(world, true);
+            for (int i = 0;i < getPacketQueueCount();i++) {
+                getPacketQueue(i).tickAllAlive(world, true);
 
-            if (broadcastTracker.hasDelayPassed(rootClient.getWorldObj(), getBroadcastDelay()))
-            {
-                MatterNetworkPacket packet = rootClient.getPacketQueue().dequeue();
-                if (packet != null)
-                {
-                    if (packet.isValid(rootClient.getWorldObj())) {
+                if (broadcastTracker.hasDelayPassed(world, getBroadcastDelay())) {
+                    MatterNetworkPacket packet = getPacketQueue(i).dequeue();
+                    if (packet != null) {
+                        if (packet.isValid(world)) {
 
-                        broadcastCount += handlePacketBroadcast(world,packet);
+                            broadcastCount += handlePacketBroadcast(world, packet);
+                        }
                     }
-
-                    rootClient.ForceSync();
                 }
             }
         }

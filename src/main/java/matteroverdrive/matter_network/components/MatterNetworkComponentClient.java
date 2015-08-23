@@ -19,87 +19,107 @@
 package matteroverdrive.matter_network.components;
 
 import cofh.lib.util.position.BlockPosition;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkFilter;
-import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.data.Inventory;
+import matteroverdrive.machines.IMachineComponent;
+import matteroverdrive.machines.MOTileEntityMachine;
+import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.MatterNetworkPacket;
+import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
-import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
-import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
+import matteroverdrive.util.MatterNetworkHelper;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.apache.logging.log4j.Level;
+
+import java.util.EnumSet;
 
 /**
  * Created by Simeon on 7/15/2015.
  */
-public abstract class MatterNetworkComponentClient<T extends IMatterNetworkConnection> implements IMatterNetworkClient
+public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine & IMatterNetworkConnection> implements IMatterNetworkClient, IMachineComponent<T>
 {
+    protected MatterNetworkPacketQueue<MatterNetworkPacket> packetQueue;
     protected T rootClient;
 
     public MatterNetworkComponentClient(T rootClient)
     {
         this.rootClient = rootClient;
+        packetQueue = new MatterNetworkPacketQueue(rootClient);
     }
 
-    public boolean manageBasicRequestPacketsResponses(IMatterNetworkConnection connection, World world, MatterNetworkRequestPacket packet, ForgeDirection direction)
+    public boolean executeBasicRequestPackets(MatterNetworkRequestPacket packet)
     {
-        IMatterNetworkConnection sender = packet.getSender(world);
+        IMatterNetworkConnection sender = packet.getSender(getWorldObj());
 
         if (packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION || packet.getRequestType() == Reference.PACKET_REQUEST_CONNECTION) {
 
             if (packet.getRequest() instanceof Class)
             {
-                if (((Class)packet.getRequest()).isInstance(connection))
+                if (((Class)packet.getRequest()).isInstance(rootClient))
                 {
-                    if (sender instanceof IMatterNetworkClient) {
-                        MatterNetworkResponsePacket responsePacket = new MatterNetworkResponsePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
-
-                        if (((IMatterNetworkClient) sender).canPreform(responsePacket)) {
-                            ((IMatterNetworkClient) sender).queuePacket(responsePacket, packet.getSenderPort());
-
-                        }
-                    }
+                    MatterNetworkHelper.respondToRequest(getWorldObj(),rootClient,packet,Reference.PACKET_RESPONCE_VALID,null);
                     return true;
                 }
             } else {
-                if (sender instanceof IMatterNetworkClient) {
-                    MatterNetworkResponsePacket responsePacket = new MatterNetworkResponsePacket(connection, Reference.PACKET_RESPONCE_VALID, packet.getRequestType(), null,direction);
-                    if (((IMatterNetworkClient) sender).canPreform(responsePacket)) {
-                        ((IMatterNetworkClient) sender).queuePacket(responsePacket, packet.getSenderPort());
-
-                    }
-                }
+                MatterNetworkHelper.respondToRequest(getWorldObj(),rootClient,packet,Reference.PACKET_RESPONCE_VALID,null);
                 return true;
             }
         }
         return false;
     }
 
-    protected abstract void manageResponsesQueuing(MatterNetworkResponsePacket packet);
-    protected abstract void manageTaskPacketQueuing(MatterNetworkTaskPacket packet,MatterNetworkTask task);
-    protected abstract void manageRequestsQueuing(MatterNetworkRequestPacket packet);
-
-    public void manageBasicPacketsQueuing(IMatterNetworkConnection connection,World world,MatterNetworkPacket packet,ForgeDirection direction)
+    @Override
+    public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
     {
-        packet.addToPath(rootClient, direction);
+        if (canPreform(packet) && packet.isValid(getWorldObj()))
+        {
+            getPacketQueue(0).queue(packet);
+            packet.tickAlive(getWorldObj(), true);
+            packet.onAddedToQueue(getWorldObj(),getPacketQueue(0),0);
+        }
+    }
 
-        if (packet instanceof MatterNetworkRequestPacket)
+    protected void manageTopPacket()
+    {
+        for (int i = 0;i < getPacketQueueCount();i++)
         {
-            manageRequestsQueuing((MatterNetworkRequestPacket)packet);
-            manageBasicRequestPacketsResponses(connection, world, (MatterNetworkRequestPacket) packet, direction);
+            if (getPacketQueue(i).peek() != null)
+            {
+                try {
+                    executePacket(getPacketQueue(i).peek());
+                }catch (Exception e)
+                {
+                    MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while executing packet %s from queue %s",getPacketQueue(i).peek(),i);
+                }finally
+                {
+                    getPacketQueue(i).dequeue();
+                    getPacketQueue(i).tickAllAlive(getWorldObj(),true);
+                }
+            }
         }
-        else if (packet instanceof MatterNetworkResponsePacket)
+    }
+
+    protected abstract void executePacket(MatterNetworkPacket packet);
+
+    public int onNetworkTick(World world, TickEvent.Phase phase)
+    {
+        if (phase == TickEvent.Phase.END)
         {
-            manageResponsesQueuing((MatterNetworkResponsePacket)packet);
+            manageTopPacket();
         }
-        else if (packet instanceof MatterNetworkTaskPacket)
-        {
-            manageTaskPacketQueuing((MatterNetworkTaskPacket) packet, ((MatterNetworkTaskPacket) packet).getTask(world));
-        }
+        return 0;
     }
 
     @Override
@@ -132,6 +152,78 @@ public abstract class MatterNetworkComponentClient<T extends IMatterNetworkConne
     public boolean canConnectFromSide(ForgeDirection side)
     {
         return rootClient.canConnectFromSide(side);
+    }
+
+    @Override
+    public MatterNetworkPacketQueue<MatterNetworkPacket> getPacketQueue(int queueID)
+    {
+        return packetQueue;
+    }
+
+    public World getWorldObj()
+    {
+        return rootClient.getWorldObj();
+    }
+
+    @Override
+    public int getPacketQueueCount()
+    {
+        return 1;
+    }
+    //endregion
+
+    //Machine Component
+    @Override
+    public void readFromNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    {
+        if (categories.contains(MachineNBTCategory.DATA))
+        {
+            packetQueue.readFromNBT(nbt);
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    {
+        if (categories.contains(MachineNBTCategory.DATA))
+        {
+            packetQueue.writeToNBT(nbt);
+        }
+    }
+
+    @Override
+    public void registerSlots(Inventory inventory) {
+
+    }
+
+    @Override
+    public void update(T machine) {
+
+    }
+
+    @Override
+    public boolean isAffectedByUpgrade(UpgradeTypes type) {
+        return false;
+    }
+
+    @Override
+    public boolean isActive() {
+        return false;
+    }
+
+    @Override
+    public void onActiveChange(T machine) {
+
+    }
+
+    @Override
+    public void onAwake(T machine, Side side) {
+
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving, T machine) {
+
     }
     //endregion
 }

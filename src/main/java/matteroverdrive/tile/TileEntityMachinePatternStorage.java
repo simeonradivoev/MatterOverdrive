@@ -75,7 +75,6 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
         this.taskQueueProcessing = new MatterNetworkPacketQueue(this,1);
-        networkComponent = new MatterNetworkComponentPatternStorage(this);
         playerSlotsHotbar = true;
         playerSlotsMain = true;
     }
@@ -118,7 +117,9 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     {
         super.registerComponents();
         componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+        networkComponent = new MatterNetworkComponentPatternStorage(this);
         addComponent(componentMatterNetworkConfigs);
+        addComponent(networkComponent);
     }
 
     protected void manageLinking()
@@ -355,6 +356,16 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
+    public MatterNetworkPacketQueue getPacketQueue(int queueID) {
+        return networkComponent.getPacketQueue(queueID);
+    }
+
+    @Override
+    public int getPacketQueueCount() {
+        return networkComponent.getPacketQueueCount();
+    }
+
+    @Override
     public BlockPosition getPosition()
     {
         return new BlockPosition(this);
@@ -368,7 +379,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     public int onNetworkTick(World world,TickEvent.Phase phase)
     {
-        return 0;
+        return networkComponent.onNetworkTick(world,phase);
     }
     //endregion
 

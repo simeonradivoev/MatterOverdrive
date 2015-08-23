@@ -29,6 +29,7 @@ import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
+import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.MatterSlot;
@@ -38,6 +39,7 @@ import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.analyzer.components.MatterNetworkComponentAnalyzer;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 import matteroverdrive.matter_network.MatterNetworkPacket;
+import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
 import matteroverdrive.tile.MOTileEntityMachineEnergy;
@@ -58,7 +60,7 @@ import java.util.EnumSet;
 public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy implements ISidedInventory, IMatterNetworkDispatcher<MatterNetworkTaskStorePattern>, IMatterNetworkClient, IMatterNetworkBroadcaster
 {
     public static final int BROADCAST_DELAY = 60;
-    public static final int BROADCAST_WEATING_DELAY = 180;
+    public static final int BROADCAST_WEATING_DELAY = 2;
     public static final int VALID_LOCATION_CHECK_DELAY = 200;
 
     public static final int PROGRESS_AMOUNT_PER_ITEM = 20;
@@ -70,11 +72,9 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public int input_slot = 0;
     public int database_slot = 1;
     public int analyzeTime;
-    private boolean isActive = false;
     private MatterNetworkTaskQueue<MatterNetworkTaskStorePattern> taskQueueSending;
     private MatterNetworkComponentAnalyzer networkComponent;
     private ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
-    private boolean hasValidPatternDestination;
 
     public TileEntityMachineMatterAnalyzer()
     {
@@ -83,7 +83,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
         this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
         taskQueueSending = new MatterNetworkTaskQueue<>(this,1);
-        networkComponent = new MatterNetworkComponentAnalyzer(this);
         playerSlotsHotbar = true;
         playerSlotsMain = true;
     }
@@ -101,7 +100,10 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         super.registerComponents();
         componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+        networkComponent = new MatterNetworkComponentAnalyzer(this);
+
         addComponent(componentMatterNetworkConfigs);
+        addComponent(networkComponent);
     }
 
     @Override
@@ -115,9 +117,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         if(!worldObj.isRemote)
         {
-            boolean isAnalyzing = isAnalyzing();
-
-            if (isAnalyzing && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick())
+            if (isActive() && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick())
             {
                 this.energyStorage.extractEnergy(getEnergyDrainPerTick(),false);
 
@@ -128,13 +128,10 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
                     analyzeItem();
                     analyzeTime = 0;
                 }
-
-                isActive = true;
             }
 
-            if (!isAnalyzing())
+            if (!isActive())
             {
-                isActive = false;
                 analyzeTime = 0;
             }
         }
@@ -151,7 +148,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
             }
             else
             {
-                if (taskQueueSending.remaintingCapacity() > 0 && hasValidPatternDestination)
+                if (taskQueueSending.remaintingCapacity() > 0 && networkComponent.getConnection() != null)
                 {
                     return  true;
                 }
@@ -212,18 +209,21 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
                 //if the scanner cannot take the item for some reason
                 //then just queue the analyzed item as a task
                 MatterNetworkTaskStorePattern storePattern = new MatterNetworkTaskStorePattern(this,itemStack,PROGRESS_AMOUNT_PER_ITEM);
+                storePattern.setState(MatterNetworkTaskState.WAITING);
                 taskQueueSending.queue(storePattern);
             }
         }
         else
         {
             MatterNetworkTaskStorePattern storePattern = new MatterNetworkTaskStorePattern(this,itemStack,PROGRESS_AMOUNT_PER_ITEM);
+            storePattern.setState(MatterNetworkTaskState.WAITING);
             taskQueueSending.queue(storePattern);
         }
 
         decrStackSize(input_slot, 1);
         forceClientUpdate = true;
         markDirty();
+        networkComponent.resetValidLocation();
     }
 
     @Override
@@ -239,7 +239,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         super.readCustomNBT(tagCompound, categories);
         if (categories.contains(MachineNBTCategory.DATA)) {
             analyzeTime = tagCompound.getShort("AnalyzeTime");
-            isActive = tagCompound.getBoolean("IsActive");
             taskQueueSending.readFromNBT(tagCompound);
         }
     }
@@ -250,7 +249,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         super.writeCustomNBT(tagCompound, categories);
         if (categories.contains(MachineNBTCategory.DATA)) {
             tagCompound.setShort("AnalyzeTime", (short) analyzeTime);
-            tagCompound.setBoolean("IsActive", isActive);
             taskQueueSending.writeToNBT(tagCompound);
         }
     }
@@ -303,6 +301,11 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     }
 
     @Override
+    public int getTaskQueueCount() {
+        return 1;
+    }
+
+    @Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
         return networkComponent.canPreform(packet);
@@ -312,6 +315,17 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
     {
         networkComponent.queuePacket(packet,from);
+    }
+
+    @Override
+    public MatterNetworkPacketQueue<MatterNetworkPacket> getPacketQueue(int queueID)
+    {
+        return networkComponent.getPacketQueue(queueID);
+    }
+
+    @Override
+    public int getPacketQueueCount() {
+        return networkComponent.getPacketQueueCount();
     }
     //endregion
 
@@ -349,15 +363,13 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     public int getEnergyDrainPerTick() {return getEnergyDrainMax() / getSpeed();}
     public int getEnergyDrainMax() {return MathHelper.round(ENERGY_DRAIN_PER_ITEM * getUpgradeMultiply(UpgradeTypes.PowerUsage));}
     @Override
-    public  boolean getServerActive() {return isActive;}
+    public  boolean getServerActive() {return isAnalyzing();}
     @Override
     public String getSound() {return "analyzer";}
     @Override
     public boolean hasSound() {return true;}
     @Override
     public float soundVolume() { return 0.3f;}
-    public void setHasValidPatternDestination(boolean hasValidPatternDestination){this.hasValidPatternDestination = hasValidPatternDestination;}
-    public boolean getHasValidPatternDestination(){return hasValidPatternDestination;}
 
     @Override
     public NBTTagCompound getFilter() {

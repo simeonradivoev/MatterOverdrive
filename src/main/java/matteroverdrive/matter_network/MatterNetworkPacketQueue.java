@@ -33,12 +33,18 @@ public class MatterNetworkPacketQueue<T extends MatterNetworkPacket> extends Mat
         super("TaskPackets",connection,capacity);
     }
 
+    public MatterNetworkPacketQueue(IMatterNetworkConnection connection)
+    {
+        this(connection,256);
+    }
+
     public void tickAllAlive(World world,boolean alive)
     {
         for (int i = 0;i < elements.size();i++)
         {
-            if (elements.get(i).isValid(world)) {
-                //tasks.get(i).getTask(world).setAlive(alive);
+            if (elements.get(i).isValid(world))
+            {
+                elements.get(i).tickAlive(world,alive);
             }
         }
     }

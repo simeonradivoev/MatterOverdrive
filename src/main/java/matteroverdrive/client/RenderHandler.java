@@ -120,6 +120,7 @@ public class RenderHandler
     private TileEntityRendererStarMap tileEntityRendererStarMap;
     private TileEntityRendererChargingStation tileEntityRendererChargingStation;
     private TileEntityRendererHoloSign tileEntityRendererHoloSign;
+    private TileEntityRendererPacketQueue tileEntityRendererPacketQueue;
     //endregion
 
     public RenderHandler(World world,TextureManager textureManager)
@@ -183,6 +184,7 @@ public class RenderHandler
         tileEntityRendererStarMap = new TileEntityRendererStarMap();
         tileEntityRendererChargingStation = new TileEntityRendererChargingStation();
         tileEntityRendererHoloSign = new TileEntityRendererHoloSign();
+        tileEntityRendererPacketQueue = new TileEntityRendererPacketQueue();
 
         configHandler.subscribe(tileEntityRendererAndroidStation);
         configHandler.subscribe(tileEntityRendererWeaponStation);
@@ -221,6 +223,7 @@ public class RenderHandler
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineStarMap.class, tileEntityRendererStarMap);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineChargingStation.class, tileEntityRendererChargingStation);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHoloSign.class,tileEntityRendererHoloSign);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePacketQueue.class,tileEntityRendererPacketQueue);
     }
 
     public void createItemRenderers()

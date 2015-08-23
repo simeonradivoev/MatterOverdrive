@@ -59,18 +59,30 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
             } else if (packet instanceof MatterNetworkRequestPacket) {
                 return ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_CONNECTION || ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
             }
+            else if (packet instanceof MatterNetworkResponsePacket)
+            {
+                return ((MatterNetworkResponsePacket)packet).getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH && ((MatterNetworkResponsePacket)packet).getResponseType() == Reference.PACKET_RESPONCE_VALID;
+            }
         }
         return false;
     }
 
     @Override
-    public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
+    protected void executePacket(MatterNetworkPacket packet)
     {
-        manageBasicPacketsQueuing(rootClient, rootClient.getWorldObj(), packet, from);
+        if (packet instanceof MatterNetworkTaskPacket)
+        {
+            executeTasks((MatterNetworkTaskPacket)packet,((MatterNetworkTaskPacket)packet).getTask(getWorldObj()));
+        }else if (packet instanceof MatterNetworkResponsePacket)
+        {
+            executeResponses((MatterNetworkResponsePacket)packet);
+        }else if (packet instanceof MatterNetworkRequestPacket)
+        {
+            executeBasicRequestPackets((MatterNetworkRequestPacket)packet);
+        }
     }
 
-    @Override
-    protected void manageTaskPacketQueuing(MatterNetworkTaskPacket packet,MatterNetworkTask task)
+    protected void executeTasks(MatterNetworkTaskPacket packet,MatterNetworkTask task)
     {
         if (task instanceof MatterNetworkTaskReplicatePattern)
         {
@@ -83,14 +95,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
         }
     }
 
-    @Override
-    protected void manageRequestsQueuing(MatterNetworkRequestPacket packet)
-    {
-
-    }
-
-    @Override
-    protected void manageResponsesQueuing(MatterNetworkResponsePacket packet)
+    protected void executeResponses(MatterNetworkResponsePacket packet)
     {
         //Request pattern search response
         if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH && packet.getResponseType() == Reference.PACKET_RESPONCE_VALID)
@@ -118,7 +123,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
     }
 
     @Override
-    public int manageTopQueue(World world,MatterNetworkTaskReplicatePattern task)
+    public int manageTopQueue(World world,int queueID,MatterNetworkTaskReplicatePattern task)
     {
         int broadcasts = 0;
 
@@ -126,7 +131,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
             if (task != null) {
                 for (int i = 0; i < 6; i++) {
                     MatterNetworkRequestPacket requestPacket = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_PATTERN_SEARCH,ForgeDirection.getOrientation(i),rootClient.getFilter(), new int[]{task.getItemID(), task.getItemMetadata()});
-                    if (MatterNetworkHelper.broadcastTaskInDirection(world, requestPacket, rootClient, ForgeDirection.getOrientation(i)))
+                    if (MatterNetworkHelper.broadcastPacketInDirection(world, requestPacket, rootClient, ForgeDirection.getOrientation(i)))
                     {
                         broadcasts++;
                     }

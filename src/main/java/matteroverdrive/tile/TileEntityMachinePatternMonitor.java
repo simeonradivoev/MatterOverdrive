@@ -32,6 +32,7 @@ import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 import matteroverdrive.matter_network.MatterNetworkPacket;
+import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentPatternMonitor;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
@@ -66,7 +67,6 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
         taskQueue = new MatterNetworkTaskQueue<>(this,TASK_QUEUE_SIZE);
         databases = new HashSet<>();
         searchDelayTracker = new TimeTracker();
-        networkComponent = new MatterNetworkComponentPatternMonitor(this);
         playerSlotsHotbar = true;
     }
 
@@ -74,7 +74,9 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
     protected void registerComponents() {
         super.registerComponents();
         componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+        networkComponent = new MatterNetworkComponentPatternMonitor(this);
         addComponent(componentMatterNetworkConfigs);
+        addComponent(networkComponent);
     }
 
     @Override
@@ -115,6 +117,11 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
     public MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> getTaskQueue(int id)
     {
         return taskQueue;
+    }
+
+    @Override
+    public int getTaskQueueCount() {
+        return 1;
     }
 
     public void SyncDatabasesWithClient()
@@ -208,6 +215,17 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
     public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
     {
         networkComponent.queuePacket(packet,from);
+    }
+
+    @Override
+    public MatterNetworkPacketQueue getPacketQueue(int queueID)
+    {
+        return networkComponent.getPacketQueue(queueID);
+    }
+
+    @Override
+    public int getPacketQueueCount() {
+        return networkComponent.getPacketQueueCount();
     }
 
     @Override

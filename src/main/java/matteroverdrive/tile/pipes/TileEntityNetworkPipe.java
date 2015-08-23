@@ -118,7 +118,7 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
             for (int i = 0; i < 6; i++)
             {
                 if (direction.getOpposite().ordinal() != i)
-                    MatterNetworkHelper.broadcastTaskInDirection(worldObj, task, this, ForgeDirection.getOrientation(i));
+                    MatterNetworkHelper.broadcastPacketInDirection(worldObj, task, this, ForgeDirection.getOrientation(i));
             }
         }
     }

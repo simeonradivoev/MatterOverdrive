@@ -21,6 +21,8 @@ package matteroverdrive.machines.analyzer.components;
 import cofh.lib.util.TimeTracker;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
+import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.machines.analyzer.TileEntityMachineMatterAnalyzer;
@@ -28,9 +30,10 @@ import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.components.MatterNetworkComponentClientDispatcher;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
-import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
+import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterNetworkHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -40,6 +43,8 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClientDispatcher<MatterNetworkTaskStorePattern,TileEntityMachineMatterAnalyzer>
 {
+    private IMatterNetworkConnection connection;
+    private boolean badLocation;
     private TimeTracker broadcastTracker,validDestinationTracker;
 
     public MatterNetworkComponentAnalyzer(TileEntityMachineMatterAnalyzer analyzer)
@@ -66,19 +71,43 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
     }
 
     @Override
-    public void queuePacket(MatterNetworkPacket packet, ForgeDirection from) {
-        manageBasicPacketsQueuing(rootClient, rootClient.getWorldObj(), packet, from);
+    protected void executePacket(MatterNetworkPacket packet)
+    {
+        if (packet instanceof MatterNetworkResponsePacket)
+        {
+            executeResponses((MatterNetworkResponsePacket)packet);
+        }else if (packet instanceof MatterNetworkRequestPacket)
+        {
+            executeBasicRequestPackets((MatterNetworkRequestPacket)packet);
+        }
+    }
+
+    protected void executeResponses(MatterNetworkResponsePacket packet)
+    {
+        if (packet.fits(Reference.PACKET_RESPONCE_INVALID,Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION))
+        {
+            badLocation = true;
+            connection = null;
+        }else if (packet.fits(Reference.PACKET_RESPONCE_VALID,Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION) && !badLocation)
+        {
+            if (isConnectionBetter(connection,packet)) {
+                connection = packet.getSender(rootClient.getWorldObj());
+            }
+        }
     }
 
     @Override
-    public int manageTopQueue(World world, MatterNetworkTaskStorePattern task) {
+    public int manageTopQueue(World world,int queueID, MatterNetworkTaskStorePattern task) {
         int broadcastCount = 0;
-        if (task.getState() == MatterNetworkTaskState.FINISHED) {
+        if (task.getState() == MatterNetworkTaskState.FINISHED)
+        {
             onTaskComplete(rootClient.getTaskQueue(0).dequeue());
-        } else {
+        }
+        else
+        {
             if (canBroadcastTask(world, task)) {
                 for (int i = 0; i < 6; i++) {
-                    if (MatterNetworkHelper.broadcastTaskInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i))) {
+                    if (MatterNetworkHelper.broadcastPacketInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i), connection != null ? MatterNetworkHelper.getFilterFromPositions(connection.getPosition()) : null)) {
                         onTaskBroadcast(world, task, ForgeDirection.getOrientation(i));
                         broadcastCount++;
                     }
@@ -86,7 +115,7 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
                 }
             }
         }
-        rootClient.getTaskQueue(0).tickAllAlive(world, false);
+        rootClient.getTaskQueue(queueID).tickAllAlive(world, false);
         return broadcastCount;
     }
 
@@ -101,31 +130,39 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
         return broadcasts;
     }
 
-    @Override
-    protected void manageTaskPacketQueuing(MatterNetworkTaskPacket packet, MatterNetworkTask task)
+    private boolean isConnectionBetter(IMatterNetworkConnection one,MatterNetworkResponsePacket two)
     {
+        if (one == null && two != null)
+            return true;
+        if (one == null && two == null)
+            return false;
+        if (!(two.getSender(rootClient.getWorldObj()) instanceof IMatterDatabase))
+            return false;
 
-    }
-
-    @Override
-    protected void manageRequestsQueuing(MatterNetworkRequestPacket packet)
-    {
-
-    }
-
-    @Override
-    protected void manageResponsesQueuing(MatterNetworkResponsePacket packet)
-    {
-        if (packet.fits(Reference.PACKET_RESPONCE_INVALID,Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION))
+        NBTTagCompound packetPattern = two.getResponse();
+        ItemStack packetPatternStack = MatterDatabaseHelper.GetItemStackFromNBT(packetPattern);
+        if (packetPattern != null && packetPatternStack != null)
         {
-            rootClient.setHasValidPatternDestination(false);
+            if (one instanceof IMatterDatabase) {
+                NBTTagCompound patternOne = ((IMatterDatabase) one).getItemAsNBT(packetPatternStack);
+                int oneProgress = MatterDatabaseHelper.GetProgressFromNBT(patternOne);
+                int twoProgress = MatterDatabaseHelper.GetProgressFromNBT(packetPattern);
+                if (oneProgress < twoProgress)
+                {
+                    return true;
+                }
+            }else
+            {
+                return true;
+            }
         }
+        return false;
     }
 
     private int manageValidDestinationCheck(World world)
     {
         int broadcastCount = 0;
-        if (rootClient.getInventory().getStackInSlot(rootClient.input_slot) != null)
+        if (rootClient.getInventory().getStackInSlot(rootClient.input_slot) != null || (getTaskQueue(0).size() > 0 && connection == null))
         {
             if (validDestinationTracker.hasDelayPassed(world, TileEntityMachineMatterAnalyzer.VALID_LOCATION_CHECK_DELAY))
             {
@@ -133,9 +170,9 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
                     NBTTagCompound itemTag = new NBTTagCompound();
                     rootClient.getInventory().getStackInSlot(rootClient.input_slot).writeToNBT(itemTag);
                     MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION,ForgeDirection.getOrientation(i),rootClient.getFilter(), itemTag);
-                    if (MatterNetworkHelper.broadcastTaskInDirection(world, packet, rootClient, ForgeDirection.getOrientation(i)))
+                    if (MatterNetworkHelper.broadcastPacketInDirection(world, packet, rootClient, ForgeDirection.getOrientation(i)))
                     {
-                        onValidDestinationBroadcast(world, packet, ForgeDirection.getOrientation(i));
+                        resetValidLocation();
                         broadcastCount++;
                     }
                 }
@@ -144,9 +181,16 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
         return broadcastCount;
     }
 
+    public void resetValidLocation()
+    {
+        connection = null;
+        badLocation = false;
+    }
+
     private boolean canBroadcastTask(World world,MatterNetworkTask task)
     {
-        return !task.isAlive() && broadcastTracker.hasDelayPassed(world, task.getState() == MatterNetworkTaskState.WAITING ? TileEntityMachineMatterAnalyzer.BROADCAST_WEATING_DELAY : TileEntityMachineMatterAnalyzer.BROADCAST_DELAY);
+        return !task.isAlive() &&
+                broadcastTracker.hasDelayPassed(world, task.getState() == MatterNetworkTaskState.WAITING ? TileEntityMachineMatterAnalyzer.BROADCAST_WEATING_DELAY : TileEntityMachineMatterAnalyzer.BROADCAST_DELAY);
     }
 
     //region Events
@@ -160,10 +204,12 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
         task.setState(MatterNetworkTaskState.WAITING);
     }
 
-    private void onValidDestinationBroadcast(World world,MatterNetworkRequestPacket packet,ForgeDirection direction)
-    {
-        rootClient.setHasValidPatternDestination(true);
-    }
+    //endregion
 
+    //region Getters and Setters
+    public IMatterNetworkConnection getConnection()
+    {
+        return connection;
+    }
     //endregion
 }

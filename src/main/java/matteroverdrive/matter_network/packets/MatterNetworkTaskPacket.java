@@ -24,6 +24,7 @@ import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
+import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -119,5 +120,23 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
     public String getName()
     {
         return "Task Packet";
+    }
+
+    @Override
+    public void tickAlive(World world,boolean isAlive)
+    {
+        super.tickAlive(world,isAlive);
+        getTask(world).setAlive(isAlive);
+    }
+
+    @Override
+    public void onAddedToQueue(World world,MatterNetworkPacketQueue packetQueue,int queueID)
+    {
+        super.onAddedToQueue(world, packetQueue, queueID);
+        MatterNetworkTask task = getTask(world);
+        if (task != null)
+        {
+            task.setState(MatterNetworkTaskState.QUEUED);
+        }
     }
 }

@@ -123,4 +123,14 @@ public abstract class MatterNetworkPacket
     {
         return senderPos.orientation;
     }
+
+    public void tickAlive(World world,boolean isAlive)
+    {
+
+    }
+
+    public void onAddedToQueue(World world,MatterNetworkPacketQueue packetQueue,int queueID)
+    {
+
+    }
 }

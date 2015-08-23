@@ -43,6 +43,7 @@ import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 import matteroverdrive.matter_network.MatterNetworkPacket;
+import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentReplicator;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
@@ -113,7 +114,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         this.matterStorage.setMaxReceive(MATTER_TRANSFER);
         this.matterStorage.setMaxExtract(MATTER_TRANSFER);
         taskQueueProcessing = new MatterNetworkTaskQueue<>(this,1);
-        networkComponent = new MatterNetworkComponentReplicator(this);
         timeTracker = new TimeTracker();
         playerSlotsMain = true;
         playerSlotsHotbar = true;
@@ -133,7 +133,9 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         super.registerComponents();
         componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+        networkComponent = new MatterNetworkComponentReplicator(this);
         addComponent(componentMatterNetworkConfigs);
+        addComponent(networkComponent);
     }
 
     @Override
@@ -498,6 +500,17 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
 
     @Override
+    public MatterNetworkPacketQueue getPacketQueue(int queueID) {
+        return networkComponent.getPacketQueue(queueID);
+    }
+
+    @Override
+    public int getPacketQueueCount()
+    {
+        return networkComponent.getPacketQueueCount();
+    }
+
+    @Override
     public BlockPosition getPosition() {
         return new BlockPosition(this);
     }
@@ -519,6 +532,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> getTaskQueue(int queueID)
     {
         return taskQueueProcessing;
+    }
+
+    @Override
+    public int getTaskQueueCount() {
+        return 1;
     }
     //endregion
 

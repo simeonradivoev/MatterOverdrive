@@ -50,21 +50,26 @@ public abstract class MatterNetworkComponentClientDispatcher <K extends MatterNe
     @Override
     public int onNetworkTick(World world, TickEvent.Phase phase)
     {
+        super.onNetworkTick(world,phase);
         if (phase.equals(dispatchPhase))
         {
-            if (getTaskQueue(0).peek() != null) {
-                try
-                {
-                    return manageTopQueue(world, getTaskQueue(0).peek());
-                }
-                catch (Exception e)
-                {
-                    MatterOverdrive.log.log(Level.ERROR,e,"Where was a problem while trying to get task from Queue from %s",getClass());
+            for (int i = 0;i < getTaskQueueCount();i++)
+            {
+                if (getTaskQueue(i).peek() != null) {
+                    try {
+                        return manageTopQueue(world,i, getTaskQueue(i).peek());
+                    } catch (Exception e) {
+                        MatterOverdrive.log.log(Level.ERROR, e, "Where was a problem while trying to get task from Queue from %s", getClass());
+                    }
                 }
             }
         }
         return 0;
     }
 
-    public abstract int manageTopQueue(World world,K element);
+    public abstract int manageTopQueue(World world,int queueID,K element);
+    public int getTaskQueueCount()
+    {
+        return  rootClient.getTaskQueueCount();
+    }
 }

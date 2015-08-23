@@ -162,48 +162,53 @@ public class RenderUtils
 
 	public static void drawCube(double x,double y,double z,double sizeX,double sizeY,double sizeZ,GuiColor color)
 	{
+		drawCube(x,y,z,sizeX,sizeY,sizeZ,0,0,1,1,color);
+	}
+
+	public static void drawCube(double x,double y,double z,double sizeX,double sizeY,double sizeZ,double minU,double minV,double maxU,double maxV,GuiColor color)
+	{
 		Tessellator tessellator = Tessellator.instance;
 
 		tessellator.startDrawingQuads();
 		if (color != null)
 			tessellator.setColorRGBA(color.getIntR(), color.getIntG(), color.getIntB(), color.getIntA());
-		tessellator.setBrightness(255);
+		//tessellator.setBrightness(255);
 
 		//base
-		tessellator.addVertexWithUV(x, y, 0, 0, 0);
-		tessellator.addVertexWithUV(x + sizeX, y, 0, 1, 0);
-		tessellator.addVertexWithUV(x + sizeX, y, sizeZ, 1, 1);
-		tessellator.addVertexWithUV(x, y, sizeZ, 0, 1);
+		tessellator.addVertexWithUV(x, y, z, minU, minV);
+		tessellator.addVertexWithUV(x + sizeX, y, z, maxU, minV);
+		tessellator.addVertexWithUV(x + sizeX, y, z + sizeZ, maxU, maxV);
+		tessellator.addVertexWithUV(x, y, z + sizeZ, minU, maxV);
 
 		//top
-		tessellator.addVertexWithUV(x + sizeX, y + sizeY, 0, 1, 0);
-		tessellator.addVertexWithUV(x, y + sizeY, 0, 0, 0);
-		tessellator.addVertexWithUV(x, y + sizeY, sizeZ, 0, 1);
-		tessellator.addVertexWithUV(x + sizeX, y + sizeY, sizeZ, 1, 1);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, z, maxU, minV);
+		tessellator.addVertexWithUV(x, y + sizeY, z, minU, minV);
+		tessellator.addVertexWithUV(x, y + sizeY, z + sizeZ, minU, maxV);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, z + sizeZ, maxU, maxV);
 
 		//west
-		tessellator.addVertexWithUV(x, y, 0, 0, 0);
-		tessellator.addVertexWithUV(x, y, sizeZ, 1, 0);
-		tessellator.addVertexWithUV(x, y + sizeY, sizeZ, 1, 1);
-		tessellator.addVertexWithUV(x, y + sizeY, 0, 0, 1);
+		tessellator.addVertexWithUV(x, y, z, minU, minV);
+		tessellator.addVertexWithUV(x, y, z + sizeZ, maxU, minV);
+		tessellator.addVertexWithUV(x, y + sizeY, z + sizeZ, maxU, maxV);
+		tessellator.addVertexWithUV(x, y + sizeY, z, minU, maxV);
 
 		//east
-		tessellator.addVertexWithUV(x + sizeX, y, sizeZ, 1, 0);
-		tessellator.addVertexWithUV(x + sizeX, y, 0, 0, 0);
-		tessellator.addVertexWithUV(x + sizeX, y + sizeY, 0, 0, 1);
-		tessellator.addVertexWithUV(x + sizeX, y + sizeY, sizeZ, 1, 1);
+		tessellator.addVertexWithUV(x + sizeX, y, z + sizeZ, maxU, minV);
+		tessellator.addVertexWithUV(x + sizeX, y, z, minU, minV);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, z, minU, maxV);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, z + sizeZ, maxU, maxV);
 
 		//north
-		tessellator.addVertexWithUV(x, y, 0, 0, 0);
-		tessellator.addVertexWithUV(x, y + sizeY, 0, 0, 1);
-		tessellator.addVertexWithUV(x + sizeX, y + sizeY, 0, 1, 1);
-		tessellator.addVertexWithUV(x + sizeX, y, 0, 1, 0);
+		tessellator.addVertexWithUV(x, y, z, minU, minV);
+		tessellator.addVertexWithUV(x, y + sizeY, z, minU, maxV);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, z, maxU, maxV);
+		tessellator.addVertexWithUV(x + sizeX, y, z, maxU, minV);
 
 		//south
-		tessellator.addVertexWithUV(x, y + sizeY, sizeZ, 0, 1);
-		tessellator.addVertexWithUV(x, y,sizeZ, 0, 0);
-		tessellator.addVertexWithUV(x + sizeX, y, sizeZ, 1, 0);
-		tessellator.addVertexWithUV(x + sizeX, y + sizeY, sizeZ, 1, 1);
+		tessellator.addVertexWithUV(x, y + sizeY, z + sizeZ, minU, maxV);
+		tessellator.addVertexWithUV(x, y,z + sizeZ, minU, minV);
+		tessellator.addVertexWithUV(x + sizeX, y, z + sizeZ, maxU, minV);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, z + sizeZ, maxU, maxV);
 
 		tessellator.draw();
 	}
