@@ -436,7 +436,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
-        return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Speed || type == UpgradeTypes.Fail || type == UpgradeTypes.PowerUsage;
+        return type == UpgradeTypes.PowerStorage || type == UpgradeTypes.Speed || type == UpgradeTypes.Fail || type == UpgradeTypes.PowerUsage || type == UpgradeTypes.MatterStorage;
     }
 
     //region NBT
