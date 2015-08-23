@@ -21,6 +21,7 @@ package matteroverdrive.gui.pages;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.api.machines.IUpgradeHandler;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.container.slot.SlotInventory;
 import matteroverdrive.data.Inventory;
@@ -77,6 +78,7 @@ public class PageUpgrades extends ElementBaseGroup
     public void DrawUpgradeStats()
     {
         Map<UpgradeTypes,Double> upgradesMap = new HashMap<>();
+        IUpgradeHandler upgradeHandler = guiMachine.getMachine().getUpgradeHandler();
 
         for (int i = 0;i < container.inventorySlots.size();i++)
         {
@@ -89,12 +91,15 @@ public class PageUpgrades extends ElementBaseGroup
                     Map<UpgradeTypes,Double> upgradeMap = upgrade.getUpgrades(upgradeItem);
                     for (final Map.Entry<UpgradeTypes, Double> entry : upgradeMap.entrySet())
                     {
-                        if (guiMachine.getMachine().isAffectedByUpgrade(entry.getKey())) {
+                        if (guiMachine.getMachine().isAffectedByUpgrade(entry.getKey()))
+                        {
+                            double multiply = upgradeHandler != null ? upgradeHandler.affectUpgrade(entry.getKey(),entry.getValue()) : entry.getValue();
                             if (upgradesMap.containsKey(entry.getKey())) {
                                 double previusValue = upgradesMap.get(entry.getKey());
-                                upgradesMap.put(entry.getKey(), previusValue * entry.getValue());
+                                    multiply = upgradeHandler.affectUpgrade(entry.getKey(),upgradeHandler != null ? upgradeHandler.affectUpgrade(entry.getKey(),previusValue * multiply) : previusValue * multiply);
+                                upgradesMap.put(entry.getKey(), multiply);
                             } else {
-                                upgradesMap.put(entry.getKey(), entry.getValue());
+                                upgradesMap.put(entry.getKey(), multiply);
                             }
                         }
                     }

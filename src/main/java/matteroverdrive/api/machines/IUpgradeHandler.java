@@ -16,16 +16,14 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api;
+package matteroverdrive.api.machines;
 
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.machines.IUpgradeHandler;
 
 /**
- * Created by Simeon on 6/12/2015.
+ * Created by Simeon on 8/23/2015.
  */
-public interface IUpgradeable
+public interface IUpgradeHandler
 {
-    boolean isAffectedByUpgrade(UpgradeTypes type);
-    IUpgradeHandler getUpgradeHandler();
+    double affectUpgrade(UpgradeTypes type,double multiply);
 }

@@ -102,7 +102,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 		int extracted = this.matterStorage.extractMatter(direction, amount, simulate);
 		if (!simulate && extracted != 0) {
 			updateClientMatter();
-			worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 		return extracted;
 	}
@@ -122,8 +122,14 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (canDrain(from,resource.getFluid())) {
-			return this.matterStorage.drain(resource.amount, doDrain);
+		if (canDrain(from,resource.getFluid()))
+		{
+			FluidStack drainStack = this.matterStorage.drain(resource.amount, doDrain);
+			if (drainStack != null && drainStack.amount > 0 && doDrain) {
+				updateClientMatter();
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			}
+			return drainStack;
 		}
 		return this.matterStorage.getFluid();
 	}
@@ -131,7 +137,13 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return this.matterStorage.drain(maxDrain, doDrain);
+		FluidStack drainStack = this.matterStorage.drain(maxDrain, doDrain);
+		if (drainStack != null && drainStack.amount > 0 && doDrain)
+		{
+			updateClientMatter();
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+		return drainStack;
 	}
 
 	@Override

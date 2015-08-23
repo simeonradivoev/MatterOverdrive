@@ -27,6 +27,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.IUpgradeable;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.api.machines.IUpgradeHandler;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.client.sound.MachineSound;
@@ -68,6 +69,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 {
 
     protected static Random random = new Random();
+    protected static UpgradeHandlerMinimum basicUpgradeHandler = new UpgradeHandlerMinimum(0.05).addUpgradeMinimum(UpgradeTypes.Speed,0.1);;
 
     //client syncs
     private boolean lastActive;
@@ -591,8 +593,12 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                     }
                 }
             }
-        }
 
+            if (getUpgradeHandler() != null)
+            {
+                multiply = getUpgradeHandler().affectUpgrade(type,multiply);
+            }
+        }
         return multiply;
     }
     //endregion
@@ -746,5 +752,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         activeState = active;
     }
     public ComponentConfigs getConfigs(){return configs;}
+    public IUpgradeHandler getUpgradeHandler(){return basicUpgradeHandler;}
     //endregion
 }

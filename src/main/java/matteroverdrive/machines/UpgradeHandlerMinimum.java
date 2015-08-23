@@ -16,16 +16,41 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api;
+package matteroverdrive.machines;
 
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.machines.IUpgradeHandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Created by Simeon on 6/12/2015.
+ * Created by Simeon on 8/23/2015.
  */
-public interface IUpgradeable
+public class UpgradeHandlerMinimum implements IUpgradeHandler
 {
-    boolean isAffectedByUpgrade(UpgradeTypes type);
-    IUpgradeHandler getUpgradeHandler();
+    double totalMinimum;
+    Map<UpgradeTypes,Double> mins;
+
+    public UpgradeHandlerMinimum(double totalMinimum)
+    {
+        mins = new HashMap<>();
+        this.totalMinimum = totalMinimum;
+    }
+
+    public UpgradeHandlerMinimum addUpgradeMinimum(UpgradeTypes type,double minimum)
+    {
+        mins.put(type,minimum);
+        return this;
+    }
+
+    @Override
+    public double affectUpgrade(UpgradeTypes type,double multiply)
+    {
+        if (mins.containsKey(type))
+        {
+            multiply = Math.max(multiply,mins.get(type));
+        }
+        return Math.max(multiply, totalMinimum);
+    }
 }
