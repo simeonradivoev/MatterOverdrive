@@ -154,8 +154,7 @@ public class MatterOverdrive
     @EventHandler
     public void serverStart(FMLServerStartedEvent event)
     {
-
-
+		matterRegistrationHandler.serverStart(event);
 		tickHandler.onServerStart(event);
     }
 

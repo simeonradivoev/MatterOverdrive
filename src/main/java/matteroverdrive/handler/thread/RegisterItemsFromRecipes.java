@@ -129,7 +129,7 @@ public class RegisterItemsFromRecipes implements Runnable {
             }
         }
         MatterOverdrive.matterRegistry.hasComplitedRegistration = true;
-
+        MatterOverdrive.matterRegistrationHandler.onRegistrationComplete();
     }
 
     private void registerFromFurnace()
