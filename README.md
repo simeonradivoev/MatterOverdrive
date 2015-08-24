@@ -10,7 +10,6 @@
 </h2>
 
 ## Table of Contents
-----------------------------------------
 * [About](#about)
 * [Features](#features)
 * [Contacts](#contacts)
@@ -19,18 +18,13 @@
 * [Donations](#donations)
 
 ## About
-----------------------------------------
-
 Matter Overdrive is a Minecraft mod, inspired by the popular Sci-fi TV series Star Trek. It dwells in the concept of replicating and transforming one type matter into another.
 Although, it may seem overpowered, Matter Overdrive takes a more realistic approach and requires the player to build up to a complex system, before even the simplest replication can be achieved.
 
 ## Contacts
-----------------------------------------
 * [Simeon Radivoev](simeonradivoev@gmail.com)
 
 ## Features
-----------------------------------------
-
 * [Matter Scanner](http://simeon.co.vu/Mods/MatterOverdrive/items/matter_scanner/), for scanning matter patterns for replication.
 * [Replicator](http://simeon.co.vu/Mods/MatterOverdrive/items/replicator/), for transforming materials.
 * [Decomposer](http://simeon.co.vu/Mods/MatterOverdrive/items/decomposer/), for braking down materials to basic form.
@@ -45,12 +39,10 @@ Although, it may seem overpowered, Matter Overdrive takes a more realistic appro
 ![Matter Overdrive Blocks and Items](http://simeon.co.vu/Mods/MatterOverdrive/wp-content/uploads/2015/05/main_screenshot.png)
 
 ## Issues
----------------------------------------
 If you have any crashes, problems or suggestions just open a [new Issue](https://github.com/simeonradivoev/MatterOverdrive/issues/new).
 If your crash or problem was fixed, but is not yet realised as a public download you can always download a The latest [Dev Build](http://simeon.co.vu/Mods/MatterOverdrive/builds/).
 
 ## Building
----------------------------------------
 1. Clone this repository via 
   - SSH `git clone git@github.com:simeonradivoev/MatterOverdrive.git` or 
   - HTTPS `git clone https://github.com/simeonradivoev/MatterOverdrive.git`
@@ -64,7 +56,6 @@ If your crash or problem was fixed, but is not yet realised as a public download
   - Eclipse: execute `gradlew eclipse`
 
 ## Donations
----------------------------------------
 Donations will go a long way to helping me continue working on Matter Overdrive. Making exiting new features.
 
 [![Donate](http://simeon.co.vu/Mods/MatterOverdrive/wp-content/uploads/2015/06/paypal1.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KGKJSVXZQXWXS)
