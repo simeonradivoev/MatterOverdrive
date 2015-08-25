@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.blocks;
 
 import cpw.mods.fml.relauncher.Side;
@@ -126,5 +144,7 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
         TileEntityGravitationalAnomaly.FALLING_BLOCKS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FALLING_BLOCKS, ConfigurationHandler.CATEGORY_SERVER,true,"Should blocks be turned into falling blocks when broken");
         TileEntityGravitationalAnomaly.VANILLA_FLUIDS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_VANILLA_FLUIDS, ConfigurationHandler.CATEGORY_SERVER,true,"Should vanilla fluid block such as water and lava be consumed by the anomaly");
         TileEntityGravitationalAnomaly.FORGE_FLUIDS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS, ConfigurationHandler.CATEGORY_SERVER,true,"Should other mod fluid blocks be consumed by the anomaly");
+        TileEntityGravitationalAnomaly.BLOCK_DESTRUCTION = config.getBool("gravitational anomaly destroys blocks",ConfigurationHandler.CATEGORY_SERVER,true,"Should the gravitational anomaly destroy blocks");
+        TileEntityGravitationalAnomaly.GRAVITATION = config.getBool("gravitational anomaly gravitational pull",ConfigurationHandler.CATEGORY_SERVER,true,"Should the gravitational entity pull entities towards it");
     }
 }
