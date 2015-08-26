@@ -19,6 +19,8 @@
 package matteroverdrive.items.weapon;
 
 import cofh.lib.util.helpers.MathHelper;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.sound.PhaserSound;
@@ -37,6 +39,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
@@ -123,6 +126,9 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 
             if (hit.entityHit != null && hit.entityHit instanceof EntityLivingBase)
             {
+
+				if (hit.entityHit instanceof EntityPlayer && FMLCommonHandler.instance().getSide() == Side.SERVER && !MinecraftServer.getServer().isPVPEnabled()) return;
+
                 DamageSource damageInfo = getDamageSource(item,player);
                 float damage = getWeaponScaledDamage(item);
 
