@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.world;
 
 import cpw.mods.fml.common.IWorldGenerator;
@@ -25,7 +43,6 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     public static final int TRITANIUM_VEIN_SIZE = 6;
     public static final int DILITHIUM_VEINS_PER_CHUNK = 4;
     public static final int DILITHIUM_VEIN_SIZE = 3;
-    HashSet<Integer> gravitationalAnomalyDimensions;
     HashSet<Integer> oreDimentionsBlacklist;
 
     boolean generateTritanium;
@@ -37,7 +54,6 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         tritaniumGen = new WorldGenMinable(MatterOverdriveBlocks.tritaniumOre,TRITANIUM_VEIN_SIZE);
         dilithiumGen = new WorldGenMinable(MatterOverdriveBlocks.dilithium_ore,DILITHIUM_VEIN_SIZE);
         anomalyGen = new WorldGenGravitationalAnomaly(0.005f,2048,2048 + 8192);
-        gravitationalAnomalyDimensions = new HashSet<>();
         oreDimentionsBlacklist = new HashSet<>();
 
         configurationHandler.subscribe(anomalyGen);
@@ -114,14 +130,12 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     {
         if (generateAnomalies)
         {
-            if (gravitationalAnomalyDimensions.contains(dimention)) {
-                int x = chunkX + random.nextInt(16);
-                int z = chunkZ + random.nextInt(16);
-                int y = random.nextInt(60) + 4;
+            int x = chunkX + random.nextInt(16);
+            int z = chunkZ + random.nextInt(16);
+            int y = random.nextInt(60) + 4;
 
-                if (anomalyGen.generate(world, random, x, y, z)) {
+            if (anomalyGen.generate(world, random, x, y, z)) {
 
-                }
             }
         }
     }
@@ -142,14 +156,6 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         Property shouldGenerateOthers = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN, ConfigurationHandler.CATEGORY_WORLD_SPAWN_OTHER, true);
         shouldGenerateOthers.comment = "Should other Matter Overdrive World Blocks be Generated?";
         generateAnomalies = shouldGenerate(MatterOverdriveBlocks.gravitational_anomaly, config) && shouldGenerateOthers.getBoolean(true);
-        gravitationalAnomalyDimensions.clear();
-        Property gravitationalAnomalyDimsPropery = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN,"gravitational_anomaly_dimensions",new int[]{-1,0,2});
-        gravitationalAnomalyDimsPropery.comment = "Dimension id's in which the gravitational anomaly should spawn in";
-        int[] gravitationalAnomalyDims = gravitationalAnomalyDimsPropery.getIntList();
-        for (int i = 0;i < gravitationalAnomalyDims.length;i++)
-        {
-            gravitationalAnomalyDimensions.add(gravitationalAnomalyDims[i]);
-        }
         this.oreDimentionsBlacklist.clear();
         Property oreDimentionBlacklistProp = config.config.get(config.CATEGORY_WORLD_GEN,"ore_gen_blacklist",new int[]{-1,2});
         oreDimentionBlacklistProp.comment = "A blacklist of all the Dimensions ores shouldn't spawn in";

@@ -74,6 +74,8 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public static boolean BLOCK_ENTETIES = true;
     public static boolean VANILLA_FLUIDS = true;
     public static boolean FORGE_FLUIDS = true;
+    public static boolean BLOCK_DESTRUCTION = true;
+    public static boolean GRAVITATION = true;
     public static final float MAX_VOLUME = 0.5f;
     public static final int BLOCK_DESTORY_DELAY = 6;
     public static final int MAX_BLOCKS_PER_HARVEST = 6;
@@ -180,6 +182,9 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     public void manageEntityGravitation(World world,float ticks)
     {
+        if (!GRAVITATION)
+            return;
+
         if (world.isRemote)
             consumedCount = 0;
 
@@ -373,6 +378,9 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     public void manageBlockDestory(World world)
     {
+        if (!BLOCK_DESTRUCTION)
+            return;
+
         Vec3 pos = Vec3.createVectorHelper(xCoord, yCoord, zCoord);
         int solidCount = 0;
         int liquidCount = 0;

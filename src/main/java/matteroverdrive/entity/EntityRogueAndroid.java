@@ -27,6 +27,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.config.Property;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +38,9 @@ import java.util.List;
 public class EntityRogueAndroid implements IConfigSubscriber
 {
     private static HashSet<String> biomesBlacklist = new HashSet();
+    private static HashSet<String> biomesWhitelist = new HashSet<>();
+    public static HashSet<Integer> dimentionBlacklist = new HashSet<>();
+    public static HashSet<Integer> dimentionWhitelist = new HashSet<>();
     private static BiomeGenBase.SpawnListEntry spawnListEntry;
 
     public static void registerEntity()
@@ -56,7 +60,8 @@ public class EntityRogueAndroid implements IConfigSubscriber
 
     private static void addInBiome(BiomeGenBase[] biomes)
     {
-        loadBlacklist(MatterOverdrive.configHandler);
+        loadBiomeBlacklist(MatterOverdrive.configHandler);
+        loadBiomesWhitelist(MatterOverdrive.configHandler);
 
         for (int i = 0;i < biomes.length;i++)
         {
@@ -72,7 +77,14 @@ public class EntityRogueAndroid implements IConfigSubscriber
 
     private static boolean isBiomeValid(BiomeGenBase biome)
     {
-        return biome != null && !biomesBlacklist.contains(biome.biomeName.toLowerCase());
+        if (biome != null) {
+            if (biomesWhitelist.size() > 0) {
+                return biomesWhitelist.contains(biome);
+            } else {
+                return !biomesBlacklist.contains(biome.biomeName.toLowerCase());
+            }
+        }
+        return false;
     }
 
     public static void createEgg(int id,int solidColor,int spotColor)
@@ -85,18 +97,56 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         if (spawnListEntry != null)
         {
-            spawnListEntry.itemWeight = config.config.getInt("rogue_android.spawn.chance", ConfigurationHandler.CATEGORY_WORLD_GEN,5,0,100,"The spawn change of the Rogue Android");
-            loadBlacklist(config);
+            spawnListEntry.itemWeight = config.config.getInt("spawn_chance", ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android",5,0,100,"The spawn change of the Rogue Android");
         }
+
+        loadDimensionBlacklist(config);
+        loadDimesionWhitelist(config);
+        loadBiomeBlacklist(config);
+        loadBiomesWhitelist(config);
     }
 
-    private static void loadBlacklist(ConfigurationHandler config)
+    private static void loadBiomeBlacklist(ConfigurationHandler config)
     {
         biomesBlacklist.clear();
-        String[] blacklist = config.config.getStringList("rouge.biome.blacklist", ConfigurationHandler.CATEGORY_WORLD_GEN,new String[]{"Hell","Sky"},"The blacklist for Android spawn biomes");
+        String[] blacklist = config.config.getStringList("biome.blacklist", ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android",new String[]{"Hell","Sky"},"Rouge Android biome blacklist");
         for (int i = 0;i < blacklist.length;i++)
         {
             biomesBlacklist.add(blacklist[i].toLowerCase());
+        }
+    }
+
+    private static void loadBiomesWhitelist(ConfigurationHandler configurationHandler)
+    {
+        biomesWhitelist.clear();
+        String[] whitelist = configurationHandler.config.getStringList("biome.whitelist",ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android",new String[0],"Rouge Android biome whitelist");
+        for (int i = 0;i < whitelist.length;i++)
+        {
+            biomesBlacklist.add(whitelist[i].toLowerCase());
+        }
+    }
+
+    private static void loadDimensionBlacklist(ConfigurationHandler configurationHandler)
+    {
+        dimentionBlacklist.clear();
+        Property blacklistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android","dimension.blacklist",new int[]{1});
+        blacklistProp.comment = "Rouge Android Dimension ID blacklist";
+        int[] blacklist = blacklistProp.getIntList();
+        for (int i = 0;i < blacklist.length;i++)
+        {
+            dimentionBlacklist.add(blacklist[i]);
+        }
+    }
+
+    private static void loadDimesionWhitelist(ConfigurationHandler configurationHandler)
+    {
+        dimentionWhitelist.clear();
+        Property whitelistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android", "dimension.whitelist", new int[0]);
+        whitelistProp.comment = "Rouge Android Dimension ID whitelist";
+        int[] whitelist = whitelistProp.getIntList();
+        for (int i = 0;i < whitelist.length;i++)
+        {
+            dimentionWhitelist.add(whitelist[i]);
         }
     }
 }

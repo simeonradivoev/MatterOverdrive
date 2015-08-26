@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.blocks;
 
 import cofh.lib.util.helpers.BlockHelper;
@@ -61,7 +79,7 @@ public class BlockPatternStorage extends MOBlockMachine
     public void onConfigChanged(ConfigurationHandler config)
     {
         super.onConfigChanged(config);
-        hasVentParticles = config.getMachineBool(getUnlocalizedName(),"particles.vent", true, "Sould vent particles be displayed");
+        hasVentParticles = config.getMachineBool(getUnlocalizedName(),"particles.vent", true, "Should vent particles be displayed");
         TileEntityMachinePatternStorage.ENERGY_CAPACITY = config.getMachineInt(getUnlocalizedName(), "storage.energy", 64000, String.format("How much energy can the %s hold", getLocalizedName()));
         TileEntityMachinePatternStorage.ENERGY_TRANSFER = config.getMachineInt(getUnlocalizedName(),"transfer.energy",128,String.format("The Transfer speed of the %s",getLocalizedName()));
     }

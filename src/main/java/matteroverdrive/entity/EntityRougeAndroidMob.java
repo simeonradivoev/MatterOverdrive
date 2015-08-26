@@ -116,4 +116,30 @@ public class EntityRougeAndroidMob extends EntityMob
     {
         return false;
     }
+
+    public boolean getCanSpawnHere()
+    {
+        if (EntityRogueAndroid.dimentionWhitelist.size() > 0)
+        {
+            if (EntityRogueAndroid.dimentionWhitelist.contains(worldObj.provider.dimensionId))
+            {
+                return inDimensionBlacklist();
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return inDimensionBlacklist();
+    }
+
+    private boolean inDimensionBlacklist()
+    {
+        if (!EntityRogueAndroid.dimentionBlacklist.contains(worldObj.provider.dimensionId))
+        {
+            return super.getCanSpawnHere();
+        }
+        return false;
+    }
 }
