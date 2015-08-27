@@ -78,4 +78,7 @@ dependencies {
 
     // OpenComputers
     compile group: 'li.cil.oc', name: 'OpenComputers', version: "${config.oc_version}", classifier:  'dev'
+
+    // AE2
+    compile group: "appeng", name: "appliedenergistics2", version: "${config.ae2_version}", classifier: "dev"
 }
