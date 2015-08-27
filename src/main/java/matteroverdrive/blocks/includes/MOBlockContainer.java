@@ -20,11 +20,7 @@ public abstract class MOBlockContainer extends MOBlock implements ITileEntityPro
     public void register()
     {
         super.register();
-        TileEntity e = createNewTileEntity(null,0);
-        if(e != null)
-        {
-            GameRegistry.registerTileEntity(e.getClass(), this.getUnlocalizedName().substring(5));
-        }
+		GameRegistry.registerTileEntity(createNewTileEntity(null, 0).getClass(), this.getUnlocalizedName().substring(5));
     }
 
     @Override

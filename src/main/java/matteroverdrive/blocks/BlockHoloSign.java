@@ -64,11 +64,7 @@ public class BlockHoloSign extends BlockCT implements IDismantleable, ITileEntit
     public void register()
     {
         super.register();
-        TileEntity e = createNewTileEntity(null,0);
-        if(e != null)
-        {
-            GameRegistry.registerTileEntity(e.getClass(), this.getUnlocalizedName().substring(5));
-        }
+		GameRegistry.registerTileEntity(TileEntityHoloSign.class, this.getUnlocalizedName().substring(5));
     }
 
     @Override
