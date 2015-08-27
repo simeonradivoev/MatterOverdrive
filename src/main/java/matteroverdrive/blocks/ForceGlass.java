@@ -20,12 +20,15 @@ package matteroverdrive.blocks;
 
 import cofh.api.block.IDismantleable;
 import cofh.lib.util.helpers.InventoryHelper;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import crazypants.enderio.conduit.IConduitBundle;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -44,8 +47,16 @@ public class ForceGlass extends BlockCT implements IDismantleable
 
     @Override
     public boolean canConnect(IBlockAccess world, Block block, int x, int y, int z) {
-        return block instanceof ForceGlass;
+		boolean eio = false;
+		if (Loader.isModLoaded("EnderIO")) eio = checkEIO(world, block, x, y, z);
+        return block instanceof ForceGlass || eio;
     }
+
+//	Check if the block is an EIO conduit facade painted with Tritanium Glass
+	private boolean checkEIO(IBlockAccess world, Block block, int x, int y, int z) {
+		TileEntity te = world.getTileEntity(x, y, z);
+		return te instanceof IConduitBundle && ((IConduitBundle) te).getFacadeId() instanceof ForceGlass;
+	}
 
     @Override
     public boolean isSideCT(IBlockAccess world, int x, int y, int z, int side) {
@@ -65,10 +76,10 @@ public class ForceGlass extends BlockCT implements IDismantleable
     }
 
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
+    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
     {
-        Block block = blockAccess.getBlock(x, y, z);
-        if (block instanceof ForceGlass)
+        Block block = world.getBlock(x, y, z);
+        if (block instanceof ForceGlass || checkEIO(world, block, x, y, z))
         {
             return false;
         }
