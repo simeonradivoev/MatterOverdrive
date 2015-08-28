@@ -167,7 +167,8 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     public void chargeFromEnergyPack(ItemStack weapon,EntityPlayer player)
     {
-        if (!player.worldObj.isRemote) {
+        if (!player.worldObj.isRemote)
+        {
             for (int i = 0;i < player.inventory.mainInventory.length;i++) {
                 if (player.inventory.mainInventory[i] != null && player.inventory.mainInventory[i].getItem() instanceof IEnergyPack && player.inventory.mainInventory[i].stackSize > 0) {
                     player.inventory.mainInventory[i].stackSize--;
@@ -178,6 +179,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
                     {
                         player.inventory.mainInventory[i] = null;
                     }
+                    return;
                 }
             }
         }else
