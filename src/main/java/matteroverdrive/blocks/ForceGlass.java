@@ -21,6 +21,7 @@ package matteroverdrive.blocks;
 import cofh.api.block.IDismantleable;
 import cofh.lib.util.helpers.InventoryHelper;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderio.conduit.IConduitBundle;
@@ -53,6 +54,7 @@ public class ForceGlass extends BlockCT implements IDismantleable
     }
 
 //	Check if the block is an EIO conduit facade painted with Tritanium Glass
+	@Optional.Method(modid = "EnderIO")
 	private boolean checkEIO(IBlockAccess world, Block block, int x, int y, int z) {
 		TileEntity te = world.getTileEntity(x, y, z);
 		return te instanceof IConduitBundle && ((IConduitBundle) te).getFacadeId() instanceof ForceGlass;
