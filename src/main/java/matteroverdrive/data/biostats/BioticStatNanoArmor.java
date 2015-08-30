@@ -73,7 +73,7 @@ public class BioticStatNanoArmor extends AbstractBioticStat
         if (event instanceof LivingHurtEvent)
         {
             if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,androidPlayer))) {
-                ((LivingHurtEvent) event).ammount *= getDamageNegate(level);
+                ((LivingHurtEvent) event).ammount *= (1 - getDamageNegate(level));
             }
         }
     }
