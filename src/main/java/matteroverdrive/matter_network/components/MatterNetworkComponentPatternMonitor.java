@@ -142,10 +142,10 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
             MatterNetworkTaskReplicatePattern task = rootClient.getTaskQueue(0).peek();
 
             if (task != null) {
-                if (task.getState() == MatterNetworkTaskState.FINISHED || task.getState() == MatterNetworkTaskState.PROCESSING || task.getState() == MatterNetworkTaskState.QUEUED) {
+                if (task.getState() == MatterNetworkTaskState.FINISHED || task.getState() == MatterNetworkTaskState.PROCESSING) {
                     rootClient.getTaskQueue(0).dequeue();
                     rootClient.ForceSync();
-                } else {
+                } else{
                     if (!task.isAlive() && broadcastTracker.hasDelayPassed(world, TileEntityMachinePatternMonitor.BROADCAST_WEATING_DELAY)) {
                         for (int i = 0; i < 6; i++) {
                             if (MatterNetworkHelper.broadcastPacketInDirection(world, (byte) 0, task, rootClient, ForgeDirection.getOrientation(i), rootClient.getFilter())) {
