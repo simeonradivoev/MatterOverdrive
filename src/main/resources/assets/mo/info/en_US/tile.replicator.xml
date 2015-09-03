@@ -1,0 +1,40 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">The Replicator</title>
+        <text class="matter-text text-block">$itemName, is a machine, that uses transporter technology to materialize item patterns into their physical counterpart. It works by rearranging subatomic particles on a larger scale by using [guide name=matter_plasma]. In short, it replicates items and blocks, since it's name, $itemName.</text>
+        <image width="256" height="90" src="guide/replicator.png"></image>
+    </page>
+    <page style="margin-left:8px;margin-right:8px;margin-top:6px">
+        <title size="2" class="matter-text small-title">How To Use</title>
+        <text class="matter-text text-block">Before you can replicate an item, you must have it's pattern. It can be obtained by using a [item name=matter_scanner] or a [item name=matter_analyzer]. Unfortunately the scanning process destroys the item.
+            Every time the item is scanned, it's progress will increase. A Redstone signal, may required to start the replication process, depending on the redstone setting of the machine.
+            [guide name=matter_plasma] is also required to replicate items. How much depends on the item itself.</text>
+        <text class="matter-text">Be warned! The replication process produces high amounts of radiation. Without protective plating any living creature will receive large doses of radiation followed by a ton of negative potion effects, such as Hunger, Nausea, Fatigue,Weakness and Poison. To protect against radiation, a maximum of 5 [item name=tritanium_plate] can be used to protect the user from the deadly radiation. Each plate also decreases the area of effect.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title ">Matter Network</title>
+        <text class="matter-text text-block">The $itemName can only be connected to it's back side. Once connected to a network, the [item name=pattern_monitor] can be used to issue replication tasks, to all replicators connected.
+            The $itemName once given a replication task, will search the Local Network for valid patterns.
+            A [item name=network_flash_drive] can be used to filter machines with which the $itemName can communicate with.</text>
+        <image width="64" height="64" src="guide/replicator_connection.png" style="float:left;margin-right:8px"></image>
+        <image width="64" height="64" src="guide/replicator_network_filter.png" style="float:left"></image>
+    </page>
+</entry>
