@@ -51,7 +51,7 @@ import java.util.HashMap;
 })
 public class ComponentComputers extends MachineComponentAbstract<TileEntityMachineTransporter> implements IPeripheral
 {
-    private String[] methodNames = new String[] {
+    private static String[] methodNames = new String[] {
             "getLocations",
             "getSelectedLocation",
             "getLocation",
@@ -298,7 +298,7 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     @Override
     @Optional.Method(modid = "ComputerCraft")
     public String[] getMethodNames() {
-        return getMachine().getMethodNames();
+        return methodNames;
     }
 
     @Override
