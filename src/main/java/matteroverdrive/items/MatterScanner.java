@@ -37,6 +37,7 @@ import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -92,7 +93,7 @@ public class MatterScanner extends MOBaseItem
 			else
 			{
 				infos.add(MOStringHelper.MORE_INFO);
-				infos.add("Press '"+ EnumChatFormatting.YELLOW + Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(KeyHandler.MATTER_SCANNER_KEY).getKeyCode()) + EnumChatFormatting.GRAY + "' to open GUI");
+				infos.add("Press '"+ EnumChatFormatting.YELLOW + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.MATTER_SCANNER_KEY).getKeyCode()) + EnumChatFormatting.GRAY + "' to open GUI");
 			}
 		}
 	}

@@ -29,6 +29,7 @@ import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOPhysicsHelper;
 import net.minecraft.block.Block;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
@@ -37,7 +38,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fluids.IFluidBlock;
-import org.lwjgl.input.Keyboard;
 
 import java.util.HashSet;
 
@@ -65,7 +65,8 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level),Keyboard.getKeyName(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()),EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + EnumChatFormatting.GRAY);
+        String keyName = GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode());
+        return String.format(super.getDetails(level),keyName,EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + EnumChatFormatting.GRAY);
     }
 
     @Override
