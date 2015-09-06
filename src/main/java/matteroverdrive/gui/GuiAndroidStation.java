@@ -33,11 +33,15 @@ import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,21 +150,13 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
-        super.drawGuiContainerForegroundLayer(x,y);
+        super.drawGuiContainerForegroundLayer(x, y);
 
         if (pages.get(0).isVisible()) {
-            glEnable(GL_BLEND);
-            //glBlendFunc(GL_ONE, GL_ONE);
-            glEnable(GL_LIGHTING);
-            glPushMatrix();
-            glTranslated(280, ySize - 110, 100);
-            glScaled(50, 50, 50);
-            glRotated(180, 0, 0, 1);
-            glRotated(Minecraft.getMinecraft().theWorld.getWorldTime(), 0, 1, 0);
-            RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 1.0f);
-            RenderManager.instance.func_147939_a(Minecraft.getMinecraft().thePlayer, 0, 0, 0, 0, 0, true);
-            glPopMatrix();
-            glDisable(GL_BLEND);
+			glPushMatrix();
+			glTranslatef(0, 0, 100);
+			drawEntityOnScreen(280, ySize - 25, 50, -mouseX + 280, -mouseY + ySize - 100, Minecraft.getMinecraft().thePlayer);
+			glPopMatrix();
 
             String info = Minecraft.getMinecraft().thePlayer.experienceLevel + " XP";
             glDisable(GL_LIGHTING);
@@ -168,4 +164,50 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
             fontRendererObj.drawString(EnumChatFormatting.GREEN + info, 280 - width / 2, ySize - 20, 0xFFFFFF);
         }
     }
+
+	/**
+	 * Draws an entity on the screen
+	 * Copied from {@link net.minecraft.client.gui.inventory.GuiInventory}
+	 * @param x
+	 * @param y
+	 * @param scale
+	 * @param mouseX
+	 * @param mouseY
+	 * @param entity
+	 */
+	private void drawEntityOnScreen(int x, int y, int scale, float mouseX, float mouseY, EntityLivingBase entity) {
+		glEnable(GL_COLOR_MATERIAL);
+		glPushMatrix();
+		glTranslatef((float)x, (float)y, 50.0F);
+		glScalef((float)(-scale), (float)scale, (float)scale);
+		glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
+		float f2 = entity.renderYawOffset;
+		float f3 = entity.rotationYaw;
+		float f4 = entity.rotationPitch;
+		float f5 = entity.prevRotationYawHead;
+		float f6 = entity.rotationYawHead;
+		glRotatef(135.0F, 0.0F, 1.0F, 0.0F);
+		RenderHelper.enableStandardItemLighting();
+		glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
+		glRotatef(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+		entity.renderYawOffset = (float)Math.atan((double)(mouseX / 40.0F)) * 20.0F;
+		entity.rotationYaw = (float)Math.atan((double)(mouseX / 40.0F)) * 40.0F;
+		entity.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
+		entity.rotationYawHead = entity.rotationYaw;
+		entity.prevRotationYawHead = entity.rotationYaw;
+		glTranslatef(0.0F, entity.yOffset, 0.0F);
+		RenderManager.instance.playerViewY = 180.0F;
+		RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+		entity.renderYawOffset = f2;
+		entity.rotationYaw = f3;
+		entity.rotationPitch = f4;
+		entity.prevRotationYawHead = f5;
+		entity.rotationYawHead = f6;
+		glPopMatrix();
+		RenderHelper.disableStandardItemLighting();
+		glDisable(GL12.GL_RESCALE_NORMAL);
+		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		glDisable(GL_TEXTURE_2D);
+		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+	}
 }
