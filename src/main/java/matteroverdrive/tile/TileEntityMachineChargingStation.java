@@ -18,6 +18,7 @@
 
 package matteroverdrive.tile;
 
+import cofh.repack.codechicken.lib.vec.BlockCoord;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
@@ -30,12 +31,13 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Simeon on 7/8/2015.
  */
-public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy {
+public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy implements IMultiBlockTileEntity {
 
     public static final int ENERGY_CAPACITY = 512000;
     public static final int ENERGY_TRANSFER = 1024;
@@ -131,4 +133,14 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     {
         return 8192.0D;
     }
+
+	@Override
+	public List<BlockCoord> getBoundingBlocks() {
+		List<BlockCoord> coords = new ArrayList<>();
+
+		coords.add(new BlockCoord(xCoord, yCoord + 1, zCoord));
+		coords.add(new BlockCoord(xCoord, yCoord + 2, zCoord));
+
+		return coords;
+	}
 }

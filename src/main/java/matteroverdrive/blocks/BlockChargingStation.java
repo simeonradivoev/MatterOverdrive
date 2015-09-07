@@ -23,19 +23,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.client.render.block.RendererBlockChargingStation;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineChargingStation;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 7/8/2015.
  */
-public class BlockChargingStation extends MOBlockMachine
-{
+public class BlockChargingStation extends MOBlockMachine {
     public BlockChargingStation(Material material, String name)
     {
         super(material, name);
@@ -43,26 +43,42 @@ public class BlockChargingStation extends MOBlockMachine
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
         lightValue = 10;
-        setBlockBounds(0,0,0,1,2.3f,1);
         setHasGui(true);
     }
 
-    @Override
+
+//	Multiblock
+
+	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+		return world.getBlock(x, y, z).isReplaceable(world, x, y, z) &&
+				world.getBlock(x, y + 1, z).isReplaceable(world, x, y + 1, z) &&
+				world.getBlock(x, y + 2, z).isReplaceable(world, x, y + 2, z);
+	}
+
+	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
+		world.setBlock(x, y + 1, z, MatterOverdriveBlocks.boundingBox);
+		world.setBlock(x, y + 2, z, MatterOverdriveBlocks.boundingBox);
+
+		return meta;
+	}
+
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te instanceof TileEntityMachineChargingStation) {
+			TileEntityMachineChargingStation chargingStation = (TileEntityMachineChargingStation)te;
+			chargingStation.getBoundingBlocks().forEach(coord -> {
+				world.setBlockToAir(coord.x, coord.y, coord.z);
+			});
+		}
+
+		super.breakBlock(world, x, y, z, block, meta);
+	}
+
+	@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metadata)
     {
         return MatterOverdriveIcons.Base;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World p_149633_1_, int x, int y, int z)
-    {
-        return AxisAlignedBB.getBoundingBox((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
-    }
-
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int x, int y, int z)
-    {
-        return AxisAlignedBB.getBoundingBox((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
     }
 
     @Override
@@ -89,4 +105,5 @@ public class BlockChargingStation extends MOBlockMachine
         super.onConfigChanged(config);
         TileEntityMachineChargingStation.RANGE = config.getInt("charge station range",config.CATEGORY_MACHINES,16,"The range of the Charge Station");
     }
+
 }

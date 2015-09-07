@@ -8,6 +8,7 @@ import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.compat.Compat;
 import matteroverdrive.gui.GuiStarMap;
+import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 
@@ -23,6 +24,7 @@ public class CompatNEI implements INEIGuiHandler {
 	@Compat.PreInit
 	public static void preInit(FMLPreInitializationEvent event) {
 		API.registerNEIGuiHandler(new CompatNEI());
+		API.hideItem(new ItemStack(MatterOverdriveBlocks.boundingBox));
 	}
 
 	@Override

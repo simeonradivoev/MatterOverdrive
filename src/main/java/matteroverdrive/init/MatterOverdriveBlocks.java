@@ -66,6 +66,7 @@ public class MatterOverdriveBlocks {
     public static BlockHoloSign holoSign;
     public static ForceGlass forceGlass;
     public static BlockFluidMatterPlasma blockMatterPlasma;
+	public static BlockBoundingBox boundingBox;
 
     public static void init(FMLPreInitializationEvent event) {
         replicator = new BlockReplicator(Material.iron, "replicator");
@@ -109,6 +110,7 @@ public class MatterOverdriveBlocks {
         forceGlass = new ForceGlass(Material.glass,"force_glass");
         blockMatterPlasma = new BlockFluidMatterPlasma(MatterOverdriveFluids.matterPlasma, Material.water);
         blockMatterPlasma.setBlockName("matter_plasma");
+		boundingBox = new BlockBoundingBox(Material.air, "bounding_box");
     }
 
     public static void register(FMLInitializationEvent event) {
@@ -156,6 +158,7 @@ public class MatterOverdriveBlocks {
         holoSign.register();
         forceGlass.register();
         GameRegistry.registerBlock(blockMatterPlasma, "matter_plasma");
+		boundingBox.register();
 
         if (event.getSide() == Side.CLIENT) {
             MatterOverdriveQuide.Register(replicator);
