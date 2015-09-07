@@ -60,20 +60,21 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
 
     private void manageAndroidCharging()
     {
-        if (!worldObj.isRemote) {
+        if (!worldObj.isRemote && getEnergyStored(ForgeDirection.UNKNOWN) > 0) {
             AxisAlignedBB radius = AxisAlignedBB.getBoundingBox(xCoord - RANGE, yCoord - RANGE, zCoord - RANGE, xCoord + RANGE, yCoord + RANGE, zCoord + RANGE);
             List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, radius);
             for (EntityPlayer player : players) {
                 if (AndroidPlayer.get(player).isAndroid()) {
-                    int energy = getReqiredEnergy(player);
-                    int availableEnergy = Math.min(energy,extractEnergy(ForgeDirection.UNKNOWN, ENERGY_TRANSFER, true));
-                    extractEnergy(ForgeDirection.UNKNOWN, AndroidPlayer.get(player).receiveEnergy(availableEnergy, false), false);
+					int required = getRequiredEnergy(player);
+					int max = Math.min(getEnergyStored(ForgeDirection.UNKNOWN), ENERGY_TRANSFER);
+					int toExtract = Math.min(required, max);
+					extractEnergy(ForgeDirection.UNKNOWN, AndroidPlayer.get(player).receiveEnergy(toExtract, false), false);
                 }
             }
         }
     }
 
-    private int getReqiredEnergy(EntityPlayer player)
+    private int getRequiredEnergy(EntityPlayer player)
     {
         return (int)(ENERGY_TRANSFER * (1.0D - MathHelper.clamp_double((Vec3.createVectorHelper(player.posX,player.posY,player.posZ).subtract(Vec3.createVectorHelper(xCoord,yCoord,zCoord)).lengthVector() / (double)RANGE),0,1)));
     }
