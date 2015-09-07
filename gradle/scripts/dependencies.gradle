@@ -91,6 +91,7 @@ dependencies {
 	compile group: 'cofh', name: 'ThermalDynamics', version: "[${config.mc_version}]${config.cofh_td_version}", ext: 'jar'
 	
 	// EnderIO
+	compile group: 'com.enderio.core', name: 'EnderCore', version: "${config.mc_version}-${config.endercore_version}", classifier: 'dev'
 	compile group: 'com.enderio', name: 'EnderIO', version: "${config.mc_version}-${config.enderio_version}", classifier: 'dev'
 	
 	// Extra Utilities
