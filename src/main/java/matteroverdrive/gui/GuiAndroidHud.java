@@ -33,7 +33,11 @@ import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.gui.android.*;
+import matteroverdrive.gui.config.EnumConfigProperty;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
@@ -46,6 +50,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.config.Property;
 import org.lwjgl.input.Mouse;
 
 import java.text.DecimalFormat;
@@ -59,9 +64,8 @@ import static org.lwjgl.opengl.GL11.*;
  * Created by Simeon on 5/26/2015.
  */
 @SideOnly(Side.CLIENT)
-public class GuiAndroidHud extends Gui
+public class GuiAndroidHud extends Gui implements IConfigSubscriber
 {
-    public static final int STATS_PER_ROW = 6;
     public static final ResourceLocation glitch_tex = new ResourceLocation(Reference.PATH_GUI + "glitch.png");
     public static final ResourceLocation spinner_tex = new ResourceLocation(Reference.PATH_ELEMENTS + "spinner.png");
     public static final ResourceLocation top_element_bg = new ResourceLocation(Reference.PATH_ELEMENTS + "android_bg_element.png");
@@ -75,6 +79,12 @@ public class GuiAndroidHud extends Gui
     public static double radialDeltaX,radialDeltaY,radialAngle;
     private static double radialAnimationTime;
     private IIcon crosshairIcon;
+    private List<IAndroidHudElement> hudElements;
+    public final AndroidHudMinimap hudMinimap;
+    public final AndroidHudStats hudStats;
+    public final AndroidHudBionicStats bionicStats;
+    public GuiColor baseGuiColor;
+    public float opacity;
 
     public GuiAndroidHud(Minecraft mc)
     {
@@ -92,7 +102,17 @@ public class GuiAndroidHud extends Gui
 
         info = MOStringHelper.translateToLocal("gui.android_hud.transforming.line.final");
         textTyping.addSeqmentSequential(new AnimationSegmentText(info, 0, 1).setLengthPerCharacter(2));
-        textTyping.addSeqmentSequential(new AnimationSegmentText(info,AndroidPlayer.TRANSFORM_TIME,0));
+        textTyping.addSeqmentSequential(new AnimationSegmentText(info, AndroidPlayer.TRANSFORM_TIME, 0));
+
+        hudElements = new ArrayList<>();
+        hudMinimap = new AndroidHudMinimap(AndroidHudPosition.BOTTOM_LEFT,"android_minimap");
+        hudStats = new AndroidHudStats(AndroidHudPosition.TOP_LEFT,"android_stats");
+        bionicStats = new AndroidHudBionicStats(AndroidHudPosition.TOP_RIGHT,"android_biotic_stats");
+        hudElements.add(hudMinimap);
+        hudElements.add(hudStats);
+        hudElements.add(bionicStats);
+
+        baseGuiColor = Reference.COLOR_HOLO.multiply(0.5f);
     }
 
     @SubscribeEvent
@@ -169,7 +189,7 @@ public class GuiAndroidHud extends Gui
         glEnable(GL_ALPHA_TEST);
         //RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
         glColor3d(1, 1, 1);
-        crosshairIcon = ClientProxy.holoIcons.getIcon("crosshair");
+        crosshairIcon = ClientProxy.holoIcons.getIcon("crosshair").getIcon();
         glTranslated(event.resolution.getScaledWidth() / 2, event.resolution.getScaledHeight() / 2, 0);
         glPushMatrix();
         ClientProxy.holoIcons.bindSheet();
@@ -210,7 +230,7 @@ public class GuiAndroidHud extends Gui
         glBlendFunc(GL_ONE, GL_ONE);
         glPushMatrix();
         glRotated(radialAngle, 0, 0, -1);
-        RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.4f);
+        RenderUtils.applyColorWithMultipy(baseGuiColor, 0.4f);
         ClientProxy.holoIcons.renderIcon("up_arrow_large", -9, -50);
         glPopMatrix();
 
@@ -281,20 +301,20 @@ public class GuiAndroidHud extends Gui
             {
                 if (androidPlayer.getActiveStat().equals(stat))
                 {
-                    RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 1);
+                    RenderUtils.applyColorWithMultipy(baseGuiColor, 1);
                     x = Math.sin(angle) * radius;
                     y = Math.cos(angle) * radius;
                     RenderHelper.renderIcon(-12 + x, -12 + y, 10, stat.getIcon(0), 24, 24);
                     String statName = stat.getDisplayName(androidPlayer, androidPlayer.getUnlockedLevel(stat));
                     int statNameWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(statName);
                     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                    Minecraft.getMinecraft().fontRenderer.drawString(statName, -statNameWidth / 2, -5, Reference.COLOR_HOLO.getColor());
+                    Minecraft.getMinecraft().fontRenderer.drawString(statName, -statNameWidth / 2, -5, baseGuiColor.getColor());
                 }
                 else
                 {
                     x = Math.sin(angle) * radius;
                     y = Math.cos(angle) * radius;
-                    RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.2f);
+                    RenderUtils.applyColorWithMultipy(baseGuiColor, 0.2f);
                     RenderHelper.renderIcon(-12 + x, -12 + y, 10, stat.getIcon(0), 24, 24);
                 }
             }
@@ -314,12 +334,8 @@ public class GuiAndroidHud extends Gui
         if (android != null) {
 
             if (android.isAndroid()) {
+
                 glPushMatrix();
-                int x = 12;
-                double energy_perc = (double) android.getEnergyStored() / (double) android.getMaxEnergyStored();
-                double health_perc = android.getPlayer().getHealth() / android.getPlayer().getMaxHealth();
-                GuiColor enabledColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 2, Reference.COLOR_HOLO.getIntG() / 2, Reference.COLOR_HOLO.getIntB() / 2, Reference.COLOR_HOLO.getIntA());
-                GuiColor color = enabledColor;
 
                 if (MatterOverdrive.statRegistry.cloak.isActive(android,0)) {
                     glDepthMask(false);
@@ -336,74 +352,23 @@ public class GuiAndroidHud extends Gui
                 hudRotationPitchSmooth = hudRotationPitchSmooth * 0.4f + mc.thePlayer.rotationPitch * 0.6f;
                 glTranslated((hudRotationYawSmooth - mc.thePlayer.rotationYaw) * 6, (hudRotationPitchSmooth - mc.thePlayer.rotationPitch) * 6, 0);
 
-                glColor3f(color.getFloatR() / 2, color.getFloatG() / 2, color.getFloatB() / 2);
-                mc.renderEngine.bindTexture(top_element_bg);
-                func_146110_a(0, 10, 0, 0, 174, 11, 174, 11);
-
-                mc.renderEngine.bindTexture(top_element_bg);
-                func_146110_a(event.resolution.getScaledWidth() - 174, 10, 0, 0, 174, 11, 174, 11);
+                for (IAndroidHudElement element : hudElements)
+                {
+                    if (element.isVisible())
+                    {
+                        glPushMatrix();
+                        int elementWidth =  (int)(element.getWidth(event.resolution) * element.getPosition().x);
+                        glTranslated(element.getPosition().x * event.resolution.getScaledWidth_double() - elementWidth, element.getPosition().y * event.resolution.getScaledHeight_double() - element.getHeight(event.resolution) * element.getPosition().y, 0);
+                        element.setBaseColor(baseGuiColor);
+                        element.drawElement(android, event.mouseX, event.mouseY, event.resolution, event.partialTicks);
+                        glPopMatrix();
+                    }
+                }
 
                 ClientProxy.holoIcons.bindSheet();
-
-                //region Health
-                GuiColor healthColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, enabledColor, (float) health_perc);
-                RenderUtils.applyColor(healthColor);
-                ClientProxy.holoIcons.renderIcon("health", x, 22);
-                x += 18;
-                String info = DecimalFormat.getPercentInstance().format(health_perc);
-                mc.fontRenderer.drawString(info, 32, 28, healthColor.getColor());
-                x += mc.fontRenderer.getStringWidth(info) + 5;
-                //endregion
-
-                //region energy
-                GuiColor energyColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, enabledColor, (float) energy_perc);
-                RenderUtils.applyColor(energyColor);
-                ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(x, 20, 0, ClientProxy.holoIcons.getIcon("battery"), 22, 22);
-                x += 22;
-                info = DecimalFormat.getPercentInstance().format(energy_perc);
-                mc.fontRenderer.drawString(info, x, 28, energyColor.getColor());
-                x += mc.fontRenderer.getStringWidth(info) + 5;
-                //endregion
-
-                //region speed
-                glColor3f(enabledColor.getFloatR(), enabledColor.getFloatG(), enabledColor.getFloatB());
-                ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(x, 22, 0, ClientProxy.holoIcons.getIcon("person"), 18, 18);
-                x += 18;
-                info = DecimalFormat.getPercentInstance().format(android.getSpeedMultiply());
-                mc.fontRenderer.drawString(info, x, 28, enabledColor.getColor());
-                //endregion
 
                 if (android.getPlayer().getHeldItem() != null && android.getPlayer().getHeldItem().getItem() instanceof IWeapon) {
-                    renderWeaponHud(event,(IWeapon)android.getPlayer().getHeldItem().getItem(),android.getPlayer().getHeldItem(),enabledColor);
-                }
-
-                int count = 0;
-                for (int i = 0; i < android.getSizeInventory(); i++) {
-                    if (android.getStackInSlot(i) != null) {
-                        drawAndroidPart(android.getStackInSlot(i), enabledColor, event.resolution.getScaledWidth() - getX(count), getY(count));
-                        count++;
-                    }
-                }
-
-                for (Object object : android.getUnlocked().func_150296_c()) {
-                    IBionicStat stat = MatterOverdrive.statRegistry.getStat(object.toString());
-                    if (stat != null) {
-                        int level = android.getUnlockedLevel(stat);
-                        if (stat.showOnHud(android, level))
-                        {
-                            if (!stat.isEnabled(android,level))
-                            {
-                                color = Reference.COLOR_HOLO_RED;
-                            }else
-                            {
-                                color = enabledColor;
-                            }
-                            drawBioticStat(stat,android, level, color, event.resolution.getScaledWidth() - getX(count), getY(count));
-                            count++;
-                        }
-                    }
+                    renderWeaponHud(event,(IWeapon)android.getPlayer().getHeldItem().getItem(),android.getPlayer().getHeldItem(),baseGuiColor);
                 }
 
                 glAlphaFunc(GL_GREATER, 0.5f);
@@ -430,9 +395,8 @@ public class GuiAndroidHud extends Gui
         //region Ammo
         float percent = (float)weapon.getAmmo(weaponStack) / (float)weapon.getMaxAmmo(weaponStack);
         GuiColor lerpedColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, color, percent);
-        RenderUtils.applyColor(lerpedColor);
-        ClientProxy.holoIcons.bindSheet();
-        RenderHelper.renderIcon(x, y, 0, ClientProxy.holoIcons.getIcon("ammo"), 18, 18);
+        RenderUtils.applyColorWithAlpha(lerpedColor);
+        ClientProxy.holoIcons.renderIcon("ammo",x,y);
         x += 18;
         String info = DecimalFormat.getPercentInstance().format(percent);
         mc.fontRenderer.drawString(info, x, y+4, lerpedColor.getColor());
@@ -454,9 +418,8 @@ public class GuiAndroidHud extends Gui
         if (weapon.getMaxHeat(weaponStack) > 0) {
             percent = weapon.getHeat(weaponStack) / weapon.getMaxHeat(weaponStack);
             lerpedColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, color, 1-percent);
-            RenderUtils.applyColor(lerpedColor);
-            ClientProxy.holoIcons.bindSheet();
-            RenderHelper.renderIcon(x, y, 0, ClientProxy.holoIcons.getIcon("temperature"), 18, 18);
+            RenderUtils.applyColorWithAlpha(lerpedColor);
+            ClientProxy.holoIcons.renderIcon("temperature",x,y);
             x += 18;
             info = DecimalFormat.getPercentInstance().format(percent);
             mc.fontRenderer.drawString(info, x, y + 4, lerpedColor.getColor());
@@ -550,55 +513,40 @@ public class GuiAndroidHud extends Gui
         glDisable(GL_BLEND);
     }
 
-    private int getX(int count)
+    @Override
+    public void onConfigChanged(ConfigurationHandler config)
     {
-        return 44 + (24 * (count % STATS_PER_ROW));
-    }
+        Property prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,hudMinimap.getName()+".position",hudMinimap.getDefaultPosition().ordinal());
+        prop.setConfigEntryClass(EnumConfigProperty.class);
+        prop.setValidValues(AndroidHudPosition.getNames());
+        prop.setLanguageKey("config.android_hud.minimap.position");
+        hudMinimap.setHudPosition(AndroidHudPosition.values()[prop.getInt()]);
 
-    private int getY(int count)
-    {
-        return 23 + 24 * (count / STATS_PER_ROW);
-    }
+        prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,hudStats.getName()+".position",hudStats.getDefaultPosition().ordinal());
+        prop.setConfigEntryClass(EnumConfigProperty.class);
+        prop.setValidValues(AndroidHudPosition.getNames());
+        prop.setLanguageKey("config.android_hud.stats.position");
+        hudStats.setHudPosition(AndroidHudPosition.values()[prop.getInt()]);
 
-    private void drawAndroidPart(ItemStack stack,GuiColor color,int x,int y)
-    {
-        drawNormalBG(color,x,y);
-        glEnable(GL_BLEND);
-        glColor4f(1, 1, 1, 0.5f);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        RenderHelper.bindItemTexture(stack);
-        RenderUtils.renderStack(x + 2, y + 2, stack);
-        glDisable(GL_BLEND);
-        //drawTexturedModelRectFromIcon(x + 1, y + 1, stack.getIconIndex(), 18, 18);
-    }
+        prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,bionicStats.getName()+".position",bionicStats.getDefaultPosition().ordinal());
+        prop.setConfigEntryClass(EnumConfigProperty.class);
+        prop.setValidValues(AndroidHudPosition.getNames());
+        prop.setLanguageKey("config.android_hud.bionicStats.position");
+        bionicStats.setHudPosition(AndroidHudPosition.values()[prop.getInt()]);
 
-    private void drawBioticStat(IBionicStat stat,AndroidPlayer androidPlayer,int level,GuiColor color,int x,int y)
-    {
-        if (stat.isActive(androidPlayer,level))
-            drawActiveBG(color,x,y);
-        else
-            drawNormalBG(color, x, y);
-        glEnable(GL_BLEND);
-        ClientProxy.holoIcons.bindSheet();
-        RenderHelper.renderIcon(x + 2, y + 2, 0, stat.getIcon(level), 18, 18);
-        glDisable(GL_BLEND);
-    }
+        GuiColor color = Reference.COLOR_HOLO;
+        prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,"hud_color",Integer.toHexString(color.getColor()));
+        prop.setLanguageKey("config.android_hud.color");
+        try {
+            baseGuiColor = new GuiColor(Integer.parseInt(prop.getString(),16));
+        }
+        catch (Exception e)
+        {
+            baseGuiColor = Reference.COLOR_HOLO;
+        }
 
-    private void drawNormalBG(GuiColor color,int x,int y)
-    {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        glColor3f(color.getFloatR(), color.getFloatG(), color.getFloatB());
-        ClientProxy.holoIcons.renderIcon("android_feature_icon_bg", x, y, 22, 22);
-        glDisable(GL_BLEND);
-    }
-
-    private void drawActiveBG(GuiColor color,int x,int y)
-    {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        glColor3f(color.getFloatR(), color.getFloatG(), color.getFloatB());
-        ClientProxy.holoIcons.renderIcon("android_feature_icon_bg_active", x, y, 22, 22);
-        glDisable(GL_BLEND);
+        prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,"hud_opacity",0.5f,"The Opacity of the HUD in %",0,1);
+        prop.setLanguageKey("config.android_hud.opacity");
+        baseGuiColor = new GuiColor(baseGuiColor.getIntR(),baseGuiColor.getIntG(),baseGuiColor.getIntB(),(int)(255 * prop.getDouble()));
     }
 }

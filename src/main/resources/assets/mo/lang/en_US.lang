@@ -414,6 +414,12 @@ config.ore_gen_blacklist.name=Ore Dimension Blacklist
 config.abilities.name=Android Abilities
 config.entities.name=Entities
 config.debug.name=Debug
+config.android_hud.name=Android HUD
+config.android_hud.stats.position=Stats Position
+config.android_hud.bionicStats.position=Bionic Abilities Position
+config.android_hud.minimap.position=Minimap Position
+config.android_hud.color=HUD Color
+config.android_hud.opacity=HUD Opacity
 
 ##########################################################################################################
 # Chat Alerts
@@ -435,3 +441,37 @@ enchantment.matteroverdrive.weapon.damage=Overclock
 ###############################################################################################################
 # Fluids
 fluid.matter_plasma.name
+
+##########################################################################################################
+# Guides
+guide.group.machines.name=Machines
+guide.group.ore.name=Ore
+guide.group.matter.name=Matter
+guide.group.matter_network.name=Network
+guide.group.weapons.name=Weapons
+guide.group.parts.name=Parts
+guide.group.items.name=Items
+guide.group.power.name=Power
+guide.group.blocks.name=Blocks
+guide.group.drinks.name=Drinks
+guide.group.food.name=Food
+
+guide.entry.matter_fail.name=Matter Replication Failure
+guide.entry.matter_plasma.name=Matter Plasma
+guide.entry.matter_transport.name=Matter Transport
+guide.entry.weapon.modules.barrels.name=Weapon Barrels
+guide.entry.weapon.modules.colors.name=Weapon Colors
+guide.entry.android.pills.name=Pills
+guide.entry.android.parts.name=Rouge Android Parts
+guide.entry.fusion_reactor.name=Fusion Reactor
+guide.entry.batteries.name=Batteries
+guide.entry.food.name=Food
+guide.entry.drinks.name=Drinks
+guide.entry.upgrades.name=Upgrades
+
+###############################################################################################################
+# modifiers
+
+modifier.bionic.max_health=Max Health
+modifier.bionic.glitch_time=Glitch Time
+

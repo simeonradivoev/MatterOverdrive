@@ -117,7 +117,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     {
         if(!worldObj.isRemote)
         {
-            if (isActive() && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick())
+            if (isActive() && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick() && networkComponent.getConnection() != null)
             {
                 this.energyStorage.extractEnergy(getEnergyDrainPerTick(),false);
 
@@ -148,9 +148,9 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
             }
             else
             {
-                if (taskQueueSending.remaintingCapacity() > 0 && networkComponent.getConnection() != null)
+                if (taskQueueSending.remaintingCapacity() > 0)
                 {
-                    return  true;
+                    return true;
                 }
             }
         }

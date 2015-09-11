@@ -24,6 +24,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.items.*;
+import matteroverdrive.items.android.TritaniumSpine;
 import matteroverdrive.items.food.AndroidPill;
 import matteroverdrive.items.food.EarlGrayTea;
 import matteroverdrive.items.food.RomulanAle;
@@ -33,20 +34,16 @@ import matteroverdrive.items.starmap.ItemColonizerShip;
 import matteroverdrive.items.starmap.ItemScoutShip;
 import matteroverdrive.items.starmap.ShipFactory;
 import matteroverdrive.items.weapon.EnergyPack;
-import matteroverdrive.items.weapon.EnergyPackRecipe;
 import matteroverdrive.items.weapon.Phaser;
 import matteroverdrive.items.weapon.PhaserRifle;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class MatterOverdriveItems 
 {
@@ -91,6 +88,8 @@ public class MatterOverdriveItems
     public static TransportFlashDrive transportFlashDrive;
     public static MatterContainer matterContainerFull;
     public static MatterContainer matterContainer;
+    public static DataPad dataPad;
+    public static TritaniumSpine tritaniumSpine;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -136,6 +135,8 @@ public class MatterOverdriveItems
         transportFlashDrive = new TransportFlashDrive("transport_flash_drive",Reference.COLOR_HOLO_GREEN);
         matterContainer = new MatterContainer("matter_container",false);
         matterContainerFull = new MatterContainer("matter_container_full",true);
+        dataPad = new DataPad("data_pad");
+        tritaniumSpine = new TritaniumSpine("tritainum_spine");
 	}
 	
 	public static void register(FMLInitializationEvent event)
@@ -186,34 +187,11 @@ public class MatterOverdriveItems
         transportFlashDrive.register();
         matterContainer.register();
         matterContainerFull.register();
+        dataPad.register();
+        tritaniumSpine.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);
-
-		GameRegistry.addRecipe(new ItemStack(battery), " R ", "TGT", "TDT", 'T', tritanium_ingot, 'D', MatterOverdriveItems.dilithium_ctystal, 'R', Items.redstone, 'G', Items.gold_ingot);
-        GameRegistry.addRecipe(new ItemStack(hc_battery)," P ","DBD"," P ",'B',battery,'D',dilithium_ctystal,'P',tritanium_plate);
-		GameRegistry.addRecipe(new ItemStack(matter_scanner), "III","GDG","IRI", 'I',Items.iron_ingot, 'D',new ItemStack(isolinear_circuit,1,2),'R',Items.redstone,'G',Items.gold_ingot);
-        GameRegistry.addRecipe(new ItemStack(h_compensator)," M ","CPC","DED",'D', MatterOverdriveItems.dilithium_ctystal,'M',machine_casing,'I',Items.iron_ingot,'C',new ItemStack(isolinear_circuit,1,0),'P',new ItemStack(isolinear_circuit,1,1),'E',Items.ender_eye);
-        GameRegistry.addRecipe(new ItemStack(integration_matrix)," M ","GPG","DED",'G', Blocks.glass,'M',machine_casing,'I',Items.iron_ingot,'P',new ItemStack(isolinear_circuit,1,1),'E',Items.ender_pearl,'D',MatterOverdriveItems.dilithium_ctystal);
-        GameRegistry.addRecipe(new ItemStack(machine_casing)," T ","I I","GRG",'G', Items.gold_ingot,'T',tritanium_plate,'I',tritanium_ingot,'R',Items.redstone);
-        GameRegistry.addRecipe(new ItemStack(s_magnet),"RRR","ETE","RRR",'E',Items.ender_pearl,'T',tritanium_ingot,'R',Items.redstone);
-        GameRegistry.addRecipe(new ItemStack(me_conversion_matrix),"EIE","CDC","EIE",'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'I',Items.iron_ingot,'D',MatterOverdriveItems.dilithium_ctystal);
-        GameRegistry.addRecipe(new ItemStack(tritanium_plate),"TTT",'T',new ItemStack(tritanium_ingot));
-        GameRegistry.addRecipe(new ItemStack(phaser),"IGI","IDI","WCW",'I',Items.iron_ingot,'G',Blocks.glass,'D',dilithium_ctystal,'W',Blocks.wool,'C',new ItemStack(isolinear_circuit,1,3));
-        GameRegistry.addRecipe(new ItemStack(pattern_drive)," E ", "RMR"," C ",'M',machine_casing,'E',Items.ender_pearl,'C',new ItemStack(isolinear_circuit,1,1),'R',Items.redstone);
-        GameRegistry.addRecipe(new ItemStack(security_protocol),"PP", "CP",'P',Items.paper,'C',new ItemStack(isolinear_circuit,1,0));
-        GameRegistry.addRecipe(new ItemStack(wrench),"T T"," Y "," T ",'T',tritanium_ingot,'Y',new ItemStack(Blocks.wool,1,4));
-        GameRegistry.addRecipe(new ItemStack(spacetime_equalizer), " M ", "EHE", " M ", 'M', s_magnet, 'E', Items.ender_pearl, 'H', h_compensator);
-        GameRegistry.addRecipe(new ItemStack(forceFieldEmitter), "CDC", "CDC", "P1P", 'P', tritanium_plate, 'E', Items.ender_pearl, 'D', dilithium_ctystal, '1', new ItemStack(isolinear_circuit, 1), 'C', s_magnet);
-        GameRegistry.addRecipe(new ItemStack(networkFlashDrive),"RCR",'R',Items.redstone,'C',new ItemStack(isolinear_circuit,1,0));
-        GameRegistry.addRecipe(new ItemStack(transportFlashDrive)," I ","ECR"," I",'I',Items.iron_ingot,'R',Items.redstone,'C',new ItemStack(isolinear_circuit,1,0));
-        GameRegistry.addRecipe(new EnergyPackRecipe(new ItemStack(tritanium_plate), new ItemStack(battery), new ItemStack(Items.gunpowder)));
-        GameRegistry.addRecipe(new EnergyPackRecipe(new ItemStack(tritanium_plate), new ItemStack(hc_battery), new ItemStack(Items.gunpowder)));
-        GameRegistry.addRecipe(new ItemStack(phaserRifle),"III","GCF"," WB",'I',Items.iron_ingot,'C',new ItemStack(isolinear_circuit,1,3),'W',Blocks.wool,'G',Blocks.glass,'D',dilithium_ctystal,'F',forceFieldEmitter,'B',battery);
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(matterContainer,6),"G G"," T ",'T',tritanium_plate,'G',"glass"));
-        MatterOverdrive.matterRegistry.register(emergency_ration, 3);
-        MatterOverdrive.matterRegistry.register(earl_gray_tea, 2);
-        MatterOverdrive.matterRegistry.register(romulan_ale, 2);
 
         OreDictionary.registerOre("dustTritanium", tritanium_dust);
         OreDictionary.registerOre("ingotTritanium",tritanium_ingot);

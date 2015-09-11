@@ -218,6 +218,12 @@ public class MatterOverdriveMatter
         reg(c,new ItemStack(MatterOverdriveItems.androidParts,1,Reference.BIONIC_LEGS),64 * 6);
         reg(c,new ItemStack(MatterOverdriveItems.androidParts,1,Reference.BIONIC_CHEST),64 * 9);
         //endregion
+
+        //region Matter Overdrive Basic Items
+        MatterOverdrive.matterRegistry.register(MatterOverdriveItems.emergency_ration, 3);
+        MatterOverdrive.matterRegistry.register(MatterOverdriveItems.earl_gray_tea, 2);
+        MatterOverdrive.matterRegistry.register(MatterOverdriveItems.romulan_ale, 2);
+        //endregion
     }
 
     public static void registerBasicCompoundItems(ConfigurationHandler c)

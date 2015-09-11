@@ -49,6 +49,7 @@ public class ConfigurationHandler
     public static final String CATEGORY_WORLD_SPAWN = "spawn";
     public static final String CATEGORY_ABILITIES = "abilities";
     public static final String CATEGORY_CLIENT = "client";
+    public static final String CATEGORY_ANDROID_HUD = CATEGORY_CLIENT + "." + "android_hud";
     public static final String CATEGORY_STARMAP = "starmap";
     public static final String CATEGORY_SERVER = "server";
     public static final String CATEGORY_ENCHANTMENTS = "enchantments";
@@ -102,6 +103,9 @@ public class ConfigurationHandler
         category = config.getCategory(CATEGORY_DEBUG);
         updateCategoryLang(category);
         category.setComment("Debug Options. Such as Debug Log for Matter Recipe Calculation");
+        category = config.getCategory(CATEGORY_ANDROID_HUD);
+        updateCategoryLang(category);
+        category.setComment("Positioning and colors of Android HUD elements");
 
         category = config.getCategory(CATEGORY_MACHINES);
         category.setComment("Machine Options.");

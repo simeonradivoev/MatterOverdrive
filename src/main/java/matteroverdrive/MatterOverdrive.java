@@ -131,11 +131,15 @@ public class MatterOverdrive
 		MatterOverdriveBlocks.register(event);
 		MatterOverdriveItems.register(event);
 		MatterOverdriveFluids.register(event);
+
+		MatterOverdriveRecipes.registerBlockRecipes(event);
+		MatterOverdriveRecipes.registerItemRecipes(event);
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		proxy.postInit(event);
 		MatterOverdriveCompat.postInit(event);
 		MatterOverdriveEntities.register(event);
 		MatterOverdriveItems.addToDungons();

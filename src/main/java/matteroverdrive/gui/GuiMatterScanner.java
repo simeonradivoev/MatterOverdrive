@@ -23,7 +23,6 @@ import cofh.lib.util.TimeTracker;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerMatterScanner;
 import matteroverdrive.gui.element.MOElementButton;
-import matteroverdrive.gui.pages.PageInfo;
 import matteroverdrive.gui.pages.PageScanInfo;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.network.packet.bi.PacketMatterScannerGetDatabase;
@@ -46,7 +45,6 @@ public class GuiMatterScanner extends MOGuiBase
 
 	int lastPage = 0;
 	PageScanInfo pageScanInfo;
-	PageInfo pageInfo;
 	TimeTracker refreshTimeTracker;
 	NBTTagCompound lastSelected;
 
@@ -85,10 +83,8 @@ public class GuiMatterScanner extends MOGuiBase
 		pageScanInfo = new PageScanInfo(this,0,0,"Scan Info",null,scanner);
 		updateSelected(scanner);
 		pageScanInfo.setSize(this.xSize, this.ySize);
-		pageInfo = new PageInfo(this,0,0,xSize,ySize,"Info Database");
 
 		AddPage(pageScanInfo, ClientProxy.holoIcons.getIcon("page_icon_info"), MOStringHelper.translateToLocal("gui.tooltip.page.scan_info"));
-		AddPage(pageInfo,ClientProxy.holoIcons.getIcon("page_icon_search"),MOStringHelper.translateToLocal("gui.tooltip.page.info_database"));
 	}
 
 	@Override
@@ -97,7 +93,7 @@ public class GuiMatterScanner extends MOGuiBase
 		super.updateElementInformation();
 		if(refreshTimeTracker.hasDelayPassed(Minecraft.getMinecraft().theWorld,REFRESH_DEPLAY))
 		{
-			System.out.println("Refreshed");
+			//System.out.println("Refreshed");
 			updateSelected(scanner);
 		}
 	}
@@ -149,7 +145,7 @@ public class GuiMatterScanner extends MOGuiBase
 	{
 		if(listName == QUIDE_ELEMENTS_NAME)
 		{
-			pageInfo.OpenQuide(element);
+			//guideDescription.OpenGuide(element);
 		}
 	}
 
