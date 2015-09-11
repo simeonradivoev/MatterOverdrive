@@ -18,7 +18,7 @@
 
 package matteroverdrive.tile;
 
-import cofh.repack.codechicken.lib.vec.BlockCoord;
+import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
@@ -136,11 +136,11 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     }
 
 	@Override
-	public List<BlockCoord> getBoundingBlocks() {
-		List<BlockCoord> coords = new ArrayList<>();
+	public List<BlockPosition> getBoundingBlocks() {
+		List<BlockPosition> coords = new ArrayList<>();
 
-		coords.add(new BlockCoord(xCoord, yCoord + 1, zCoord));
-		coords.add(new BlockCoord(xCoord, yCoord + 2, zCoord));
+		coords.add(new BlockPosition(xCoord, yCoord + 1, zCoord));
+		coords.add(new BlockPosition(xCoord, yCoord + 2, zCoord));
 
 		return coords;
 	}
