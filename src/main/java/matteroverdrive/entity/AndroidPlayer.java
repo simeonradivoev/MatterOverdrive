@@ -421,6 +421,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             {
                 manageGlitch();
                 manageSwimming();
+                manageAir();
 
                 for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
                     int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
@@ -733,7 +734,14 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         if (player.isInWater())
         {
             player.motionY = player.motionY - 0.007;
-            player.setAir(300);
+        }
+    }
+
+    private void manageAir()
+    {
+        if (player.getAir() < 0)
+        {
+            player.setAir(0);
         }
     }
 
