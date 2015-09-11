@@ -1,0 +1,36 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">The Decomposer</title>
+        <text class="matter-text text-block">Used to deconstruct items and blocks into [guide name=matter_plasma]. Used in conjunction with the [item name=replicator] to provide [guide name=matter_plasma] for replication.</text>
+        <image width="256" height="93" src="guide/decomposer.png" style="text-align:center"></image>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">How to use</title>
+        <image width="64" height="64" style="float:left;margin-right:8px;margin-bottom:8px" src="guide/decomposer_input_slot.png"></image>
+        <text class="matter-text text-block" style="width:200px">Put an item that can be replicated, int the input slot. After the item is broken down the internal tank will be filled with proportional amount of matter. You can use [item name=matter_pipe] or any other fluid pipe to transfer the matter to other machines.</text>
+        <image width="64" height="64" style="float:left;margin-right:8px" src="guide/decomposer_tank_info.png"></image>
+        <text class="matter-text text-block" style="width:200px">To see how much matter an item contains, hold Shift while the item tooltip is active. You can view more information about the energy cost and matter drain of the decomposing item, by hovering over the matter or energy tank.</text>
+    </page>
+    <page class="padded-page">
+        <text class="matter-text text-block">By using a [item name=tritanium_wrench] you can pick the machine up with all of it's matter and energy as well as all of it's upgrades and configurations intact.</text>
+        <recipe style="text-align:center"></recipe>
+    </page>
+</entry>

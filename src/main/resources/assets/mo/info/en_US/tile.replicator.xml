@@ -19,7 +19,7 @@
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
         <title size="2" class="matter-text small-title">The Replicator</title>
-        <text class="matter-text text-block">$itemName, is a machine, that uses transporter technology to materialize item patterns into their physical counterpart. It works by rearranging subatomic particles on a larger scale by using [guide name=matter_plasma]. In short, it replicates items and blocks, since it's name, $itemName.</text>
+        <text class="matter-text text-block">$itemName, is a machine, that uses transporter technology to materialize item patterns into their physical counterpart. It works by rearranging subatomic particles on a larger scale, by using [guide name=matter_plasma]. In short, it replicates items and blocks, thus its name, $itemName.</text>
         <image width="256" height="90" src="guide/replicator.png"></image>
     </page>
     <page style="margin-left:8px;margin-right:8px;margin-top:6px">
@@ -31,10 +31,13 @@
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title ">Matter Network</title>
-        <text class="matter-text text-block">The $itemName can only be connected to it's back side. Once connected to a network, the [item name=pattern_monitor] can be used to issue replication tasks, to all replicators connected.
+        <text class="matter-text text-block">The $itemName can only be connected to its back side. Once connected to a network, the [item name=pattern_monitor] can be used to issue replication tasks, to all replicators connected.
             The $itemName once given a replication task, will search the Local Network for valid patterns.
-            A [item name=network_flash_drive] can be used to filter machines with which the $itemName can communicate with.</text>
+            A [item name=network_flash_drive] can be used to filter machines with which the $itemName can communicate.</text>
         <image width="64" height="64" src="guide/replicator_connection.png" style="float:left;margin-right:8px"></image>
         <image width="64" height="64" src="guide/replicator_network_filter.png" style="float:left"></image>
+    </page>
+    <page class="padded-page">
+        <recipe style="text-align:center"></recipe>
     </page>
 </entry>

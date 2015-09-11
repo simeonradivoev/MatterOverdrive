@@ -1,0 +1,26 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry>
+    <page style="margin-left:8px;margin-right:8px;margin-top:6px">
+        <title size="2" style="margin-bottom:6px">The $itemName</title>
+        <preview size="8" style="text-align:center;margin-bottom:-14px;margin-top:-8px"></preview>
+        <text>The $itemName is a rapid fire Energy weapon, that fires phaser bolts. It can also use [type=item,name=energy_pack] to recharge itself.</text>
+        <text>The Rifle can also overheat if fired constantly without giving it time to cool down.</text>
+    </page>
+</entry>

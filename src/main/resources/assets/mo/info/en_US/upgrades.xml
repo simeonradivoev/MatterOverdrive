@@ -1,0 +1,71 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Machine Upgrades</title>
+        <text class="matter-text text-block">Most machines in Matter Overdrive can be upgraded. There are all sorts for upgrades.
+            From efficiency upgrades to speed upgrades.
+            They are all constructed from [item name=upgrade].</text>
+        <recipe item="[item name=upgrade]"></recipe>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Speed Upgrade</title>
+        <text class="matter-text text-block">The Speed Upgrade is used to speed up machines. It can be used in almost every Matter Overdrive machine.</text>
+        <recipe item="[item name=upgrade damage=1]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=1]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Power Upgrade</title>
+        <text class="matter-text text-block">The Power Upgrade can be used to decrease the power usage of most machines in Matter Overdrive.</text>
+        <recipe item="[item name=upgrade damage=2]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=2]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Fail-Safe Upgrade</title>
+        <text class="matter-text text-block">The Fail Safe Upgrade is used to lower the chance of failure.
+            It can be used in [block name=replicator] and the [block name=decomposer],
+            to lower the chance of failure and byproduct production in the form of [item name=matter_dust] instead of an Item or [guide name=matter_plasma].</text>
+        <recipe item="[item name=upgrade damage=3]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=3]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Range Upgrade</title>
+        <text class="matter-text text-block">The range upgrade is used to increase the range of machines such as the [block name=transporter]</text>
+        <recipe item="[item name=upgrade damage=4]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=4]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Power Storage Upgrade</title>
+        <text class="matter-text text-block">The Power Storage Upgrade is used to increase the Energy Storage of Machines.</text>
+        <recipe item="[item name=upgrade damage=5]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=5]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Hyper Speed Upgrade</title>
+        <text class="matter-text text-block">The Hyper Speed Upgrade is the advanced version of the Speed Upgrade.</text>
+        <recipe item="[item name=upgrade damage=6]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=6]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Matter Storage Upgrade</title>
+        <text class="matter-text text-block">The Matter Storage Upgrade is used to increase the Matter Storage of Machinese.</text>
+        <recipe item="[item name=upgrade damage=7]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=7]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+</entry>
