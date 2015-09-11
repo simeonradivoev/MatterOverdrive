@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
@@ -62,10 +80,12 @@ public class MOElementButtonScaled extends MOElementButton
         {
             if (icon != null)
             {
-                int width = getFontRenderer().getStringWidth(text) - icon.getIconWidth();
+                int width = getFontRenderer().getStringWidth(text) - icon.getOriginalWidth();
                 getFontRenderer().drawString(text,posX + sizeX / 2 - (width / 2),posY + sizeY / 2 - 3,labelColor);
+                if (color != null)
+                    RenderUtils.applyColor(color);
                 ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(posX + sizeX / 2 - icon.getIconWidth() - width/2,posY + sizeY / 2 - icon.getIconHeight()/2,0,icon,icon.getIconWidth(),icon.getIconHeight());
+                RenderHelper.renderIcon(posX + sizeX / 2 - icon.getOriginalWidth() - width/2,posY + sizeY / 2 - icon.getOriginalHeight()/2,0,icon.getIcon(),icon.getOriginalWidth(),icon.getOriginalHeight());
             }else
             {
                 int width = getFontRenderer().getStringWidth(text);
@@ -74,8 +94,10 @@ public class MOElementButtonScaled extends MOElementButton
         }else
         {
             if (icon != null) {
+                if (color != null)
+                    RenderUtils.applyColor(color);
                 ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(posX + sizeX / 2 - icon.getIconWidth()/2,posY + sizeY / 2 - icon.getIconHeight()/2,0,icon,icon.getIconWidth(),icon.getIconHeight());
+                RenderHelper.renderIcon(posX + sizeX / 2 - icon.getOriginalWidth()/2,posY + sizeY / 2 - icon.getOriginalHeight()/2,0,icon.getIcon(),icon.getOriginalWidth(),icon.getOriginalHeight());
             }
         }
     }

@@ -19,8 +19,8 @@
 package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
-import cofh.lib.render.RenderHelper;
 import matteroverdrive.Reference;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
@@ -30,7 +30,6 @@ import matteroverdrive.starmap.data.SpaceBody;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -49,7 +48,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
     public static ScaleTexture BG_CIRCLE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_circle.png"),32,32).setOffsets(15,15,15,15);
     protected T spaceBody;
     protected ElementGroupList groupList;
-    protected IIcon travelIcon,searchIcon;
+    protected HoloIcon travelIcon,searchIcon;
 
     public ElementAbstractStarMapEntry(GuiStarMap gui, ElementGroupList groupList, int width, int height, T spaceBody)
     {
@@ -125,7 +124,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
 
                 RenderUtils.applyColorWithMultipy(color, multiply);
                 ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(posX + sizeX - 32 + 6, posY + 5, 0, travelIcon, travelIcon.getIconWidth(), travelIcon.getIconHeight());
+                ClientProxy.holoIcons.renderIcon(travelIcon,posX + sizeX - 32 + 6, posY + 5);
                 iconsX +=32;
             }
 
@@ -137,20 +136,19 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
 
                 RenderUtils.applyColorWithMultipy(color, multiply);
                 ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(posX + sizeX - 64 + searchIcon.getIconWidth() / 2, posY + searchIcon.getIconHeight() / 2, 0, searchIcon, searchIcon.getIconWidth(), searchIcon.getIconHeight());
+                ClientProxy.holoIcons.renderIcon(searchIcon, posX + sizeX - 64 + searchIcon.getOriginalWidth() / 2, posY + searchIcon.getOriginalHeight() / 2);
                 iconsX+=32;
             }
 
             multiply = 0.8f;
-            Map<IIcon,Integer> icons = getIcons(spaceBody);
+            Map<HoloIcon,Integer> icons = getIcons(spaceBody);
             if (icons != null) {
-                for (Map.Entry<IIcon,Integer> entry : icons.entrySet()) {
+                for (Map.Entry<HoloIcon,Integer> entry : icons.entrySet()) {
                     if (entry.getValue() != 0) {
                         GL11.glEnable(GL11.GL_BLEND);
                         RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply);
                         BG_CIRCLE.Render(posX + 128 + iconsX, posY, 32, 32);
-                        ClientProxy.holoIcons.bindSheet();
-                        RenderHelper.renderIcon(posX + iconsX + 128 + 16 - entry.getKey().getIconWidth() / 2, posY + 16 - entry.getKey().getIconHeight() / 2, 0, entry.getKey(), entry.getKey().getIconWidth(), entry.getKey().getIconHeight());
+                        ClientProxy.holoIcons.renderIcon(entry.getKey(),posX + iconsX + 128 + 16 - entry.getKey().getOriginalWidth() / 2, posY + 16 - entry.getKey().getOriginalHeight() / 2);
                         if (entry.getValue() > 0)
                             RenderUtils.drawString(String.valueOf(entry.getValue()), posX + iconsX + 128 + 16 + 3, posY + 16 + 3, Reference.COLOR_HOLO,1);
                         iconsX += 32;
@@ -161,15 +159,14 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
         {
             drawElementName(spaceBody,getSpaceBodyColor(spaceBody),0.3f);
             int x = 0;
-            Map<IIcon,Integer> icons = getIcons(spaceBody);
+            Map<HoloIcon,Integer> icons = getIcons(spaceBody);
             if (icons != null) {
-                for (Map.Entry<IIcon,Integer> entry : icons.entrySet()) {
+                for (Map.Entry<HoloIcon,Integer> entry : icons.entrySet()) {
                     if (entry.getValue() != 0) {
                         GL11.glEnable(GL11.GL_BLEND);
                         RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), 0.3f);
                         BG_CIRCLE.Render(posX + 128 + x, posY, 32, 32);
-                        ClientProxy.holoIcons.bindSheet();
-                        RenderHelper.renderIcon(posX + x + 128 + 16 - entry.getKey().getIconWidth() / 2, posY + 16 - entry.getKey().getIconHeight() / 2, 0, entry.getKey(), entry.getKey().getIconWidth(), entry.getKey().getIconHeight());
+                        ClientProxy.holoIcons.renderIcon(entry.getKey(),posX + x + 128 + 16 - entry.getKey().getOriginalWidth() / 2, posY + 16 - entry.getKey().getOriginalHeight() / 2);
                         if (entry.getValue() > 0)
                             RenderUtils.drawString(String.valueOf(entry.getValue()), posX + x + 128 + 16 + 3, posY + 16 + 3, getSpaceBodyColor(spaceBody),0.6f);
                         x += 32;
@@ -180,7 +177,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
     }
 
     protected abstract void drawElementName(T spaceBody,GuiColor color,float multiply);
-    protected abstract Map<IIcon,Integer> getIcons(T spaceBody);
+    protected abstract Map<HoloIcon,Integer> getIcons(T spaceBody);
 
     @Override
     public boolean onMousePressed(int mouseX, int mouseY, int mouseButton) {

@@ -22,10 +22,10 @@ import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementButton;
 import matteroverdrive.Reference;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.util.RenderUtils;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -48,7 +48,7 @@ public class MOElementButton extends ElementButton
     protected GuiColor color;
     int labelColor = 0xFFFFFF;
     IButtonHandler buttonHandler;
-    IIcon icon;
+    HoloIcon icon;
 
     public MOElementButton(GuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int sizeX, int sizeY, String texture) {
         super(gui, posX, posY, name, sheetX, sheetY, hoverX, hoverY, sizeX, sizeY, texture);
@@ -138,6 +138,6 @@ public class MOElementButton extends ElementButton
 
     public void setTextColor(int color){this.labelColor = color;}
     public int getTextColor(){return this.labelColor;}
-    public void setIcon(IIcon icon){this.icon = icon;}
-    public IIcon getIcon(){return this.icon;}
+    public void setIcon(HoloIcon icon){this.icon = icon;}
+    public HoloIcon getIcon(){return this.icon;}
 }

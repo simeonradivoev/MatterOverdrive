@@ -20,9 +20,9 @@ package matteroverdrive.data.inventory;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 /**
  * Created by Simeon on 7/19/2015.
@@ -42,7 +42,7 @@ public class DestinationFilterSlot extends Slot
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon getHoloIcon()
+    public HoloIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("connections");
     }

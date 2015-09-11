@@ -19,7 +19,6 @@
 package matteroverdrive.client.render.tileentity.starmap;
 
 import cofh.lib.gui.GuiColor;
-import cofh.lib.render.RenderHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
@@ -97,20 +96,17 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
         int freeSystemCount = galaxy.getStarCount() - ownedSystemCount - enemySystemCount;
         GuiColor color = Reference.COLOR_HOLO_GREEN;
         RenderUtils.applyColorWithMultipy(color, opacity);
-        ClientProxy.holoIcons.bindSheet();
-        RenderHelper.renderIcon(0, -30, 0, ClientProxy.holoIcons.getIcon("page_icon_star"), 20, 20);
+        ClientProxy.holoIcons.renderIcon("page_icon_star", 0, -30);
         RenderUtils.drawString(String.format("x%s",ownedSystemCount),24,-23,color,opacity);
 
         color = Reference.COLOR_HOLO_RED;
         RenderUtils.applyColorWithMultipy(color, opacity);
-        ClientProxy.holoIcons.bindSheet();
-        RenderHelper.renderIcon(64, -30, 0, ClientProxy.holoIcons.getIcon("page_icon_star"), 20, 20);
+        ClientProxy.holoIcons.renderIcon("page_icon_star",64,-30);
         RenderUtils.drawString(String.format("x%s",enemySystemCount),88,-23,color,opacity);
 
         color = Reference.COLOR_HOLO;
         RenderUtils.applyColorWithMultipy(color, opacity);
-        ClientProxy.holoIcons.bindSheet();
-        RenderHelper.renderIcon(128, -30, 0, ClientProxy.holoIcons.getIcon("page_icon_star"), 20, 20);
+        ClientProxy.holoIcons.renderIcon("page_icon_star",128,-30);
         RenderUtils.drawString(String.format("x%s", freeSystemCount), 152, -23, color, opacity);
 
         for (int i = 0;i < galaxy.getTravelEvents().size();i++)

@@ -19,7 +19,6 @@
 package matteroverdrive.client.render.tileentity.starmap;
 
 import cofh.lib.gui.GuiColor;
-import cofh.lib.render.RenderHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
@@ -74,8 +73,7 @@ public class StarMapRendererQuadrant extends StarMapRendererStars {
                 color = Reference.COLOR_HOLO_RED;
             }
             RenderUtils.applyColorWithMultipy(color, opacity);
-            ClientProxy.holoIcons.bindSheet();
-            RenderHelper.renderIcon(0, -32, 0, ClientProxy.holoIcons.getIcon("page_icon_planet"), 24, 24);
+            ClientProxy.holoIcons.renderIcon("page_icon_planet",0, -32);
             RenderUtils.drawString(String.format("x%s", planetCount), 28, -21, color, opacity);
 
 

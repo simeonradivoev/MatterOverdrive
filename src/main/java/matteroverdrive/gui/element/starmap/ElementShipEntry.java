@@ -21,6 +21,7 @@ package matteroverdrive.gui.element.starmap;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.IShip;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
 import matteroverdrive.proxy.ClientProxy;
@@ -30,7 +31,6 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 import java.util.Map;
 
@@ -57,7 +57,7 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     }
 
     @Override
-    protected Map<IIcon,Integer> getIcons(Planet spaceBody)
+    protected Map<HoloIcon,Integer> getIcons(Planet spaceBody)
     {
         return null;
     }

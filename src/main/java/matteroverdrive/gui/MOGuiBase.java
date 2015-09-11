@@ -23,6 +23,7 @@ import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementBase;
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.container.slot.SlotPlayerInventory;
@@ -31,7 +32,6 @@ import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.gui.events.ITextHandler;
 import net.minecraft.inventory.Container;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -249,7 +249,7 @@ public abstract class MOGuiBase extends GuiBase implements IButtonHandler,ITextH
         }
     }
 
-    public MOElementIconButton AddPage(ElementBaseGroup page,IIcon icon,String tooltip)
+    public MOElementIconButton AddPage(ElementBaseGroup page,HoloIcon icon,String tooltip)
     {
         pages.add(page);
         MOElementIconButton button = new MOElementIconButton(this,this,0,0,page.getName(),0,0,24,0,24,0,24,24,"",icon);

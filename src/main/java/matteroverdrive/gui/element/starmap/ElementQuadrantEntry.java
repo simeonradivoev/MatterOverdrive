@@ -21,6 +21,7 @@ package matteroverdrive.gui.element.starmap;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.GalacticPosition;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
 import matteroverdrive.proxy.ClientProxy;
@@ -29,7 +30,6 @@ import matteroverdrive.starmap.data.Star;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.IIcon;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,10 +51,10 @@ public class ElementQuadrantEntry extends ElementAbstractStarMapEntry<Quadrant>
     }
 
     @Override
-    protected Map<IIcon,Integer> getIcons(Quadrant spaceBody)
+    protected Map<HoloIcon,Integer> getIcons(Quadrant spaceBody)
     {
-        HashMap<IIcon,Integer> icons = new HashMap<>();
-        IIcon homeIcon = ClientProxy.holoIcons.getIcon("home_icon");
+        HashMap<HoloIcon,Integer> icons = new HashMap<>();
+        HoloIcon homeIcon = ClientProxy.holoIcons.getIcon("home_icon");
         for (Star star : spaceBody.getStars())
         {
             if (star.isClaimed(Minecraft.getMinecraft().thePlayer) >= 2)

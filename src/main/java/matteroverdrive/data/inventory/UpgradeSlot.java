@@ -23,9 +23,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.IUpgradeable;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 import java.util.Map;
 
@@ -61,7 +61,7 @@ public class UpgradeSlot extends Slot
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon getHoloIcon()
+    public HoloIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("upgrade");
     }

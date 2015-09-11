@@ -20,10 +20,10 @@ package matteroverdrive.container.slot;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.client.render.HoloIcon;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 /**
  * Created by Simeon on 4/8/2015.
@@ -63,7 +63,7 @@ public class MOSlot extends Slot
     }
 
     @SideOnly(Side.CLIENT)
-    public IIcon getHoloIcon()
+    public HoloIcon getHoloIcon()
     {
         return null;
     }

@@ -19,11 +19,10 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.render.RenderHelper;
 import cofh.lib.util.helpers.StringHelper;
 import matteroverdrive.Reference;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -34,14 +33,14 @@ import java.util.List;
  */
 public class ElementSlot extends MOElementBase
 {
-    protected IIcon icon;
+    protected HoloIcon icon;
     protected String type = "small";
     protected int iconOffsetX;
     protected int iconOffsetY;
 
     protected String info = "";
 
-    public ElementSlot(GuiBase gui, int posX, int posY,int width,int height,String type,IIcon icon)
+    public ElementSlot(GuiBase gui, int posX, int posY,int width,int height,String type,HoloIcon icon)
     {
         super(gui, posX, posY,width,height);
         iconOffsetX = ((sizeX - 16) / 2);
@@ -79,21 +78,21 @@ public class ElementSlot extends MOElementBase
 
     }
 
-    public void drawSlotIcon(IIcon icon,int x,int y)
+    public void drawSlotIcon(HoloIcon icon,int x,int y)
     {
         if(icon != null && canDrawIcon(icon))
         {
             GL11.glEnable(GL11.GL_BLEND);
             ApplyColor();
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             ClientProxy.holoIcons.bindSheet();
-            RenderHelper.renderIcon(x,y,0,icon,16,16);
+            ClientProxy.holoIcons.renderIcon(icon,x,y);
             GL11.glDisable(GL11.GL_BLEND);
             ResetColor();
         }
     }
 
-    protected boolean canDrawIcon(IIcon icon)
+    protected boolean canDrawIcon(HoloIcon icon)
     {
         return true;
     }
@@ -118,11 +117,11 @@ public class ElementSlot extends MOElementBase
         this.info = info;
     }
 
-    public IIcon getIcon() {
+    public HoloIcon getIcon() {
         return icon;
     }
 
-    public void setIcon(IIcon icon) {
+    public void setIcon(HoloIcon icon) {
         this.icon = icon;
     }
 

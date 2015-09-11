@@ -23,10 +23,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 /**
  * Created by Simeon on 4/13/2015.
@@ -62,7 +62,7 @@ public class ModuleSlot extends Slot
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon getHoloIcon()
+    public HoloIcon getHoloIcon()
     {
         switch (type)
         {

@@ -21,9 +21,9 @@ package matteroverdrive.data.inventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.IBionicPart;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -50,7 +50,7 @@ public class BionicSlot extends Slot
     }
 
     @Override
-    public IIcon getHoloIcon()
+    public HoloIcon getHoloIcon()
     {
         if (type < names.length) {
             return ClientProxy.holoIcons.getIcon("android_slot_" + names[type]);

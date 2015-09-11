@@ -20,8 +20,8 @@ package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
 import cofh.lib.util.helpers.StringHelper;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.slot.MOSlot;
-import net.minecraft.util.IIcon;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class ElementInventorySlot extends ElementSlot
 {
     MOSlot slot;
 
-    public ElementInventorySlot(GuiBase gui,MOSlot slot, int posX, int posY,int width,int height, String type,IIcon icon)
+    public ElementInventorySlot(GuiBase gui,MOSlot slot, int posX, int posY,int width,int height, String type,HoloIcon icon)
     {
         super(gui, posX, posY,width,height, type,icon);
         this.slot = slot;
@@ -44,7 +44,7 @@ public class ElementInventorySlot extends ElementSlot
         this(gui,slot, posX, posY,width,height, type,slot.getHoloIcon());
     }
 
-    public ElementInventorySlot(GuiBase gui,MOSlot slot,int width,int height, String type,IIcon icon) {
+    public ElementInventorySlot(GuiBase gui,MOSlot slot,int width,int height, String type,HoloIcon icon) {
         this(gui,slot, slot.xDisplayPosition, slot.yDisplayPosition, width,height,type,icon);
     }
 
@@ -78,7 +78,7 @@ public class ElementInventorySlot extends ElementSlot
     }
 
     @Override
-    protected boolean canDrawIcon(IIcon icon)
+    protected boolean canDrawIcon(HoloIcon icon)
     {
         return !slot.getHasStack();
     }

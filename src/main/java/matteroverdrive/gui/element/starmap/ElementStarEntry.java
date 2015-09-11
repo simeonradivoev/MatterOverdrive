@@ -21,6 +21,7 @@ package matteroverdrive.gui.element.starmap;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IShip;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.client.render.tileentity.starmap.StarMapRendererStars;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
@@ -33,7 +34,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 
 import java.util.HashMap;
 import java.util.List;
@@ -75,12 +75,12 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
     }
 
     @Override
-    protected Map<IIcon,Integer> getIcons(Star star)
+    protected Map<HoloIcon,Integer> getIcons(Star star)
     {
-        HashMap<IIcon,Integer> icons = new HashMap<>();
-        IIcon homeIcon = ClientProxy.holoIcons.getIcon("home_icon");
-        IIcon shipIcon = ClientProxy.holoIcons.getIcon("icon_shuttle");
-        IIcon factoryIcon = ClientProxy.holoIcons.getIcon("factory");
+        HashMap<HoloIcon,Integer> icons = new HashMap<>();
+        HoloIcon homeIcon = ClientProxy.holoIcons.getIcon("home_icon");
+        HoloIcon shipIcon = ClientProxy.holoIcons.getIcon("icon_shuttle");
+        HoloIcon factoryIcon = ClientProxy.holoIcons.getIcon("factory");
         icons.put(shipIcon,0);
         icons.put(factoryIcon,0);
         for (Planet planet : star.getPlanets())

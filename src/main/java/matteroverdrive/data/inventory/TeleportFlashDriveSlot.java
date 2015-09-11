@@ -20,10 +20,10 @@ package matteroverdrive.data.inventory;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 /**
  * Created by Simeon on 8/5/2015.
@@ -41,7 +41,7 @@ public class TeleportFlashDriveSlot extends Slot
     }
 
     @SideOnly(Side.CLIENT)
-    public IIcon getHoloIcon()
+    public HoloIcon getHoloIcon()
     {
         return ClientProxy.holoIcons.getIcon("flash_drive");
     }

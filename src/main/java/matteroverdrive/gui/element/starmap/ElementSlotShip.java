@@ -21,13 +21,13 @@ package matteroverdrive.gui.element.starmap;
 import cofh.lib.gui.GuiBase;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.IShip;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class ElementSlotShip extends ElementInventorySlot
 {
     TileEntityMachineStarMap starMap;
 
-    public ElementSlotShip(GuiBase gui, MOSlot slot, int posX, int posY, int width, int height, String type, IIcon icon,TileEntityMachineStarMap starMap) {
+    public ElementSlotShip(GuiBase gui, MOSlot slot, int posX, int posY, int width, int height, String type, HoloIcon icon,TileEntityMachineStarMap starMap) {
         super(gui, slot, posX, posY, width, height, type, icon);
         this.starMap = starMap;
     }

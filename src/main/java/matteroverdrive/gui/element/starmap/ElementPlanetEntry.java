@@ -21,6 +21,7 @@ package matteroverdrive.gui.element.starmap;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IShip;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
@@ -32,7 +33,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,10 +65,10 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
     }
 
     @Override
-    protected Map<IIcon,Integer> getIcons(Planet planet)
+    protected Map<HoloIcon,Integer> getIcons(Planet planet)
     {
-        HashMap<IIcon,Integer> icons = new HashMap<>();
-        IIcon shipIcon = ClientProxy.holoIcons.getIcon("icon_shuttle");
+        HashMap<HoloIcon,Integer> icons = new HashMap<>();
+        HoloIcon shipIcon = ClientProxy.holoIcons.getIcon("icon_shuttle");
         icons.put(shipIcon,0);
 
         if (planet.isOwner(Minecraft.getMinecraft().thePlayer))
