@@ -54,10 +54,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -201,6 +203,9 @@ public class RenderHandler
     @SubscribeEvent
     public void onPlayerRender(RenderPlayerEvent.Post event)
     {
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glColor3f(1,1,1);
+
         AndroidPlayer androidPlayer = AndroidPlayer.get(event.entityPlayer);
         if (androidPlayer != null && androidPlayer.isAndroid()) {
             for (int i = 0; i < 5; i++)
@@ -209,8 +214,17 @@ public class RenderHandler
                 if (part != null && part.getItem() instanceof IBionicPart)
                 {
                     IBionicPartRenderer renderer = bionicPartRenderRegistry.getRenderer(((IBionicPart) part.getItem()).getClass());
-                    if (renderer != null)
+                    if (renderer != null) {
+                        GL11.glPushMatrix();
+                        if (event.entityPlayer != Minecraft.getMinecraft().thePlayer)
+                        {
+                            Vec3 clientPos = Minecraft.getMinecraft().thePlayer.getPosition(event.partialRenderTick);
+                            Vec3 pos = event.entityPlayer.getPosition(event.partialRenderTick);
+                            GL11.glTranslated(pos.xCoord - clientPos.xCoord,pos.yCoord - clientPos.yCoord + event.entityPlayer.getEyeHeight()-0.2,pos.zCoord - clientPos.zCoord);
+                        }
                         renderer.renderPart(part, event.entityPlayer, event.renderer);
+                        GL11.glPopMatrix();
+                    }
                 }
             }
         }

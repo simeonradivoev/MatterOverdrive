@@ -88,9 +88,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public final static int ENERGY_PER_EXOST = 16;
     public final static int MINIMAP_SEND_TIMEOUT = 20*2;
     public final static AttributeModifier outOfPowerSpeedModifyer = new AttributeModifier(UUID.fromString("ec778ddc-9711-498b-b9aa-8e5adc436e00"),"Android Out of Power",-0.5,2).setSaved(false);
-    @SideOnly(Side.CLIENT)
     private static List<IBionicStat> wheelStats = new ArrayList<>();
-    @SideOnly(Side.CLIENT)
     private static Map<Integer,MinimapEntityInfo> entityInfoMap = new HashMap<>();
     private ItemStack[] previousBionicPatts = new ItemStack[5];
 
@@ -511,7 +509,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             List<MinimapEntityInfo> entityList = new ArrayList<>();
             for (Object entityObject : event.player.worldObj.loadedEntityList) {
                 if (entityObject instanceof EntityLivingBase) {
-                    if (isVisibleOnMinimap((EntityLivingBase) entityObject, player, ((EntityLivingBase) entityObject).getPosition(1).subtract(player.getPosition(1))) && MinimapEntityInfo.hasInfo((EntityLivingBase)entityObject,player)) {
+                    if (isVisibleOnMinimap((EntityLivingBase) entityObject, player, Vec3.createVectorHelper(((EntityLivingBase) entityObject).posX,((EntityLivingBase) entityObject).posY,((EntityLivingBase) entityObject).posZ).subtract(Vec3.createVectorHelper(player.posX,player.posY,player.posZ))) && MinimapEntityInfo.hasInfo((EntityLivingBase)entityObject,player)) {
                         entityList.add(new MinimapEntityInfo((EntityLivingBase) entityObject,event.player));
                     }
                 }
@@ -524,7 +522,14 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public static boolean isVisibleOnMinimap(EntityLivingBase entityLivingBase,EntityPlayer player,Vec3 relativePosition)
     {
-        return !entityLivingBase.isInvisibleToPlayer(player) && Math.abs(relativePosition.yCoord) < 16 && entityLivingBase.isInRangeToRenderDist(256);
+        return !entityLivingBase.isInvisible() && Math.abs(relativePosition.yCoord) < 16 && isInRangeToRenderDist(entityLivingBase,256);
+    }
+
+    private static boolean isInRangeToRenderDist(EntityLivingBase entityLivingBase,double p_70112_1_)
+    {
+        double d1 = entityLivingBase.boundingBox.getAverageEdgeLength();
+        d1 *= 64.0D * entityLivingBase.renderDistanceWeight;
+        return p_70112_1_ < d1 * d1;
     }
 
     public void manageOutOfPower()
@@ -857,7 +862,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @Override
     public void markDirty()
     {
-        sync(PacketSyncAndroid.SYNC_ALL);
+        sync(PacketSyncAndroid.SYNC_ALL,true);
     }
 
     @Override
