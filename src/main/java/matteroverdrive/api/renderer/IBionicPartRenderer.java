@@ -16,18 +16,16 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api.inventory;
+package matteroverdrive.api.renderer;
 
-import com.google.common.collect.Multimap;
-import matteroverdrive.entity.AndroidPlayer;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by Simeon on 5/26/2015.
+ * Created by Simeon on 9/10/2015.
  */
-public interface IBionicPart
+public interface IBionicPartRenderer
 {
-    int getType(ItemStack itemStack);
-    boolean affectAndroid(AndroidPlayer player,ItemStack itemStack);
-    Multimap getModifiers(AndroidPlayer player,ItemStack itemStack);
+    void renderPart(ItemStack partStack,EntityPlayer entityPlayer,RenderPlayer renderPlayer);
 }

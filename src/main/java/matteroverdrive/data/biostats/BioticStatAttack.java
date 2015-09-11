@@ -18,13 +18,14 @@
 
 package matteroverdrive.data.biostats;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.data.MOAttributeModifier;
 import matteroverdrive.entity.AndroidPlayer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -36,12 +37,11 @@ import java.util.UUID;
  */
 public class BioticStatAttack extends AbstractBioticStat
 {
-    UUID modiferID;
+    public final UUID modiferID = UUID.fromString("caf3f2ba-75f5-4f2f-84b9-ddfab1fcef25");
 
     public BioticStatAttack(String name, int xp) {
         super(name, xp);
         setMaxLevel(4);
-        modiferID = UUID.fromString("caf3f2ba-75f5-4f2f-84b9-ddfab1fcef25");
     }
 
     @Override
@@ -70,23 +70,14 @@ public class BioticStatAttack extends AbstractBioticStat
     @Override
     public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
     {
-        AttributeModifier instance = androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.attackDamage).getModifier(modiferID);
-        if (instance == null)
-        {
-            if (enabled) {
-                AttributeModifier modifier = new MOAttributeModifier(modiferID, "Android Attack Damage", 5 * getAttackPower(level), 2).setSaved(false);
-                androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.attackDamage).applyModifier(modifier);
-            }
-        }
-        else if (instance instanceof MOAttributeModifier)
-        {
-            if (enabled) {
-                ((MOAttributeModifier) instance).setAmount(5 * getAttackPower(level));
-            }else
-            {
-                androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.attackDamage).removeModifier(instance);
-            }
-        }
+        
+    }
+
+    @Override
+    public Multimap attributes(AndroidPlayer androidPlayer, int level) {
+        Multimap multimap = HashMultimap.create();
+        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(),new MOAttributeModifier(modiferID, "Android Attack Damage", getAttackPower(level), 1).setSaved(false));
+        return multimap;
     }
 
     @Override

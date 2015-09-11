@@ -20,6 +20,7 @@ package matteroverdrive.proxy;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.compat.MatterOverdriveCompat;
@@ -54,4 +55,6 @@ public class CommonProxy
     {
         registerProxies();
     }
+
+    public void postInit(FMLPostInitializationEvent event){}
 }

@@ -83,7 +83,9 @@ public class PacketPipeline
         registerBiPacket(PacketManageConversation.BiHandler.class, PacketManageConversation.class);
         registerPacket(PacketConversationInteract.ServerHandler.class, PacketConversationInteract.class);
         registerBiPacket(PacketSendMachineNBT.BiHandler.class, PacketSendMachineNBT.class);
-        registerPacket(PacketSendQueueFlash.ClientHandler.class,PacketSendQueueFlash.class);
+        registerPacket(PacketSendQueueFlash.ClientHandler.class, PacketSendQueueFlash.class);
+        registerPacket(PacketDataPadCommands.ServerHandler.class,PacketDataPadCommands.class);
+        registerPacket(PacketSendMinimapInfo.ClientHandler.class,PacketSendMinimapInfo.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

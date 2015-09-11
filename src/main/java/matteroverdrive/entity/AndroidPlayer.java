@@ -22,18 +22,22 @@ import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyStorage;
 import cofh.lib.audio.SoundBase;
 import cofh.lib.util.helpers.MathHelper;
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.data.Inventory;
+import matteroverdrive.data.MinimapEntityInfo;
 import matteroverdrive.data.inventory.BionicSlot;
 import matteroverdrive.data.inventory.EnergySlot;
 import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
+import matteroverdrive.network.packet.client.PacketSendMinimapInfo;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketAndroidChangeAbility;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
@@ -41,8 +45,10 @@ import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -51,16 +57,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Simeon on 5/26/2015.
@@ -81,8 +86,13 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public final static float SPEED_MULTIPLY = 1.25f;
     public final static float POERLESS_SPEED_MULTIPLY = 0.25f;
     public final static int ENERGY_PER_EXOST = 16;
+    public final static int MINIMAP_SEND_TIMEOUT = 20*2;
     public final static AttributeModifier outOfPowerSpeedModifyer = new AttributeModifier(UUID.fromString("ec778ddc-9711-498b-b9aa-8e5adc436e00"),"Android Out of Power",-0.5,2).setSaved(false);
-    private static List<IBionicStat> stats = new ArrayList<>();
+    @SideOnly(Side.CLIENT)
+    private static List<IBionicStat> wheelStats = new ArrayList<>();
+    @SideOnly(Side.CLIENT)
+    private static Map<Integer,MinimapEntityInfo> entityInfoMap = new HashMap<>();
+    private ItemStack[] previousBionicPatts = new ItemStack[5];
 
 
     public final int ENERGY_SLOT;
@@ -98,7 +108,6 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         this.player = player;
         this.maxEnergy = 512000;
-        isAndroid = false;
         inventory = new Inventory("Android");
         inventory.AddSlot(new BionicSlot(false, Reference.BIONIC_HEAD));
         inventory.AddSlot(new BionicSlot(false, Reference.BIONIC_ARMS));
@@ -111,11 +120,19 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
         int energyWatchID = MatterOverdrive.configHandler.getInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID, ConfigurationHandler.CATEGORY_ABILITIES,ENERGY_WATCHER);
         player.getDataWatcher().addObject(energyWatchID, this.maxEnergy);
+
+        registerAttributes(player);
+    }
+
+    public void registerAttributes(EntityPlayer player)
+    {
+        player.getAttributeMap().registerAttribute(AndroidAttributes.attributeGlitchTime);
+        player.getAttributeMap().registerAttribute(AndroidAttributes.attributeBatteryUse);
     }
 
     public static void register(EntityPlayer player)
     {
-        player.registerExtendedProperties(EXT_PROP_NAME,new AndroidPlayer(player));
+        player.registerExtendedProperties(EXT_PROP_NAME, new AndroidPlayer(player));
     }
 
     public static AndroidPlayer get(EntityPlayer player)
@@ -155,8 +172,9 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     }
 
     @Override
-    public void init(Entity entity, World world) {
-
+    public void init(Entity entity, World world)
+    {
+        manageStatAttributeModifiers();
     }
 
     public int extractEnergy(int amount,boolean simulate)
@@ -217,9 +235,11 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public void unlock(IBionicStat stat,int level)
     {
+        clearAllStatAttributeModifiers();
         this.unlocked.setInteger(stat.getUnlocalizedName(), level);
         stat.onUnlock(this,level);
         sync(PacketSyncAndroid.SYNC_STATS);
+        manageStatAttributeModifiers();
     }
 
     @Override
@@ -280,6 +300,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         this.isAndroid = isAndroid;
         sync(PacketSyncAndroid.SYNC_ALL);
+        manageStatAttributeModifiers();
     }
 
     public boolean isAndroid()
@@ -327,6 +348,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         NBTTagCompound tagCompound = new NBTTagCompound();
         player.saveNBTData(tagCompound);
         loadNBTData(tagCompound);
+        manageStatAttributeModifiers();
     }
 
     public Inventory getInventory()
@@ -343,7 +365,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         this.unlocked = new NBTTagCompound();
         sync(PacketSyncAndroid.SYNC_STATS);
-        player.getEntityAttribute(SharedMonsterAttributes.movementSpeed).removeAllModifiers();
+        clearAllStatAttributeModifiers();
     }
     public void reset(IBionicStat stat)
     {
@@ -351,6 +373,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         {
             getUnlocked().removeTag(stat.getUnlocalizedName());
             sync(PacketSyncAndroid.SYNC_STATS);
+            manageStatAttributeModifiers();
         }
     }
 
@@ -381,6 +404,12 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                     }
 
                     manageCharging();
+                    manageEquipmentAttributeModifiers();
+
+                    if (!event.player.worldObj.isRemote)
+                    {
+                        manageMinimapInfo(event);
+                    }
                 }
 
                 manageTurning();
@@ -389,6 +418,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             {
                 manageAbilityWheel();
             }
+
             if (androidPlayer.isAndroid())
             {
                 manageGlitch();
@@ -407,6 +437,94 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 }
             }
         }
+    }
+
+    public void onPlayerLoad(PlayerEvent.LoadFromFile event)
+    {
+        manageStatAttributeModifiers();
+    }
+
+    private void manageEquipmentAttributeModifiers()
+    {
+        for (int j = 0; j < 5; ++j)
+        {
+            ItemStack itemstack = this.previousBionicPatts[j];
+            ItemStack itemstack1 = this.inventory.getStackInSlot(j);
+
+            if (!ItemStack.areItemStacksEqual(itemstack1, itemstack))
+            {
+                //((WorldServer)player.worldObj).getEntityTracker().func_151247_a(player, new S04PacketEntityEquipment(player.getEntityId(), j, itemstack1));
+
+                if (itemstack != null && itemstack.getItem() instanceof IBionicPart)
+                {
+                    player.getAttributeMap().removeAttributeModifiers(((IBionicPart) itemstack.getItem()).getModifiers(this,itemstack));
+                }
+
+                if (itemstack1 != null && itemstack1.getItem() instanceof IBionicPart)
+                {
+                    player.getAttributeMap().applyAttributeModifiers(((IBionicPart) itemstack1.getItem()).getModifiers(this,itemstack1));
+                }
+
+                this.previousBionicPatts[j] = itemstack1 == null ? null : itemstack1.copy();
+            }
+        }
+    }
+
+    private void clearAllStatAttributeModifiers()
+    {
+        for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
+            int unlockedLevel = getUnlockedLevel(stat);
+            Multimap multimap = stat.attributes(this,unlockedLevel);
+            if (multimap != null) {
+                player.getAttributeMap().removeAttributeModifiers(multimap);
+            }
+        }
+    }
+
+    private void manageStatAttributeModifiers()
+    {
+        for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
+            int unlockedLevel = getUnlockedLevel(stat);
+            Multimap multimap = stat.attributes(this,unlockedLevel);
+            if (multimap != null) {
+                if (isAndroid()) {
+                    if (unlockedLevel > 0) {
+                        if (stat.isEnabled(this, unlockedLevel)) {
+                            player.getAttributeMap().applyAttributeModifiers(multimap);
+                        } else {
+                            player.getAttributeMap().removeAttributeModifiers(multimap);
+                        }
+                    } else {
+                        player.getAttributeMap().removeAttributeModifiers(multimap);
+                    }
+                } else {
+                    player.getAttributeMap().removeAttributeModifiers(multimap);
+                }
+            }
+        }
+    }
+
+    private void manageMinimapInfo(TickEvent.PlayerTickEvent event)
+    {
+        if (event.player instanceof EntityPlayerMP && event.player.worldObj.getWorldTime() % MINIMAP_SEND_TIMEOUT == 0)
+        {
+            List<MinimapEntityInfo> entityList = new ArrayList<>();
+            for (Object entityObject : event.player.worldObj.loadedEntityList) {
+                if (entityObject instanceof EntityLivingBase) {
+                    if (isVisibleOnMinimap((EntityLivingBase) entityObject, player, ((EntityLivingBase) entityObject).getPosition(1).subtract(player.getPosition(1))) && MinimapEntityInfo.hasInfo((EntityLivingBase)entityObject,player)) {
+                        entityList.add(new MinimapEntityInfo((EntityLivingBase) entityObject,event.player));
+                    }
+                }
+            }
+
+            if (entityList.size() > 0)
+                MatterOverdrive.packetPipeline.sendTo(new PacketSendMinimapInfo(entityList),(EntityPlayerMP)event.player);
+        }
+    }
+
+    public static boolean isVisibleOnMinimap(EntityLivingBase entityLivingBase,EntityPlayer player,Vec3 relativePosition)
+    {
+        return !entityLivingBase.isInvisibleToPlayer(player) && Math.abs(relativePosition.yCoord) < 16 && entityLivingBase.isInRangeToRenderDist(256);
     }
 
     public void manageOutOfPower()
@@ -482,11 +600,11 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 mag = Math.round(mag);
             }
 
-            stats.clear();
+            wheelStats.clear();
             for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
                 if (stat.showOnWheel(this,getUnlockedLevel(stat)) && isUnlocked(stat,0))
                 {
-                    stats.add(stat);
+                    wheelStats.add(stat);
                 }
             }
 
@@ -495,16 +613,16 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 GuiAndroidHud.radialAngle = radialAngle;
             }
 
-            if (stats.size() <= 0)
+            if (wheelStats.size() <= 0)
             {
                 GuiAndroidHud.showRadial = false;
                 return;
             }
 
             int i = 0;
-            for (IBionicStat stat : stats)
+            for (IBionicStat stat : wheelStats)
             {
-                float leeway = 360f / stats.size();
+                float leeway = 360f / wheelStats.size();
                 if (mag > magAcceptance && (i == 0 && (radialAngle < (leeway / 2) && radialAngle >= 0F || radialAngle > (360F) - (leeway / 2)) || i != 0 && radialAngle < (leeway * i) + (leeway / 2) && radialAngle > (leeway * i) - (leeway / 2)))
                 {
                     if (activeStat != stat)
@@ -546,7 +664,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void onEntityHurt(LivingHurtEvent event)
     {
         if (isAndroid() && !event.isCanceled()) {
-            effects.setInteger("GlitchTime", 10);
+            effects.setInteger("GlitchTime", moddify(10, AndroidAttributes.attributeGlitchTime));
             sync(PacketSyncAndroid.SYNC_EFFECTS);
                 player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "gui.glitch_" + player.worldObj.rand.nextInt(11), 0.2f, 0.9f + player.worldObj.rand.nextFloat() * 0.2f);
         }
@@ -583,6 +701,26 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 effects.removeTag("GlitchTime");
             }
         }
+    }
+
+    public int moddify(int amount,IAttribute attribute)
+    {
+        IAttributeInstance glitchAttribute = player.getEntityAttribute(attribute);
+        if (glitchAttribute != null)
+        {
+            amount = (int)(amount * glitchAttribute.getAttributeValue());
+        }
+        return amount;
+    }
+
+    public float moddify(float amount,IAttribute attribute)
+    {
+        IAttributeInstance glitchAttribute = player.getEntityAttribute(attribute);
+        if (glitchAttribute != null)
+        {
+            amount = (int)(amount * glitchAttribute.getAttributeValue());
+        }
+        return amount;
     }
 
     private void manageSwimming()
@@ -637,7 +775,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     }
 
     @SideOnly(Side.CLIENT)
-    public void  playGlitchSoundClient(Random random,float amount)
+    public void playGlitchSoundClient(Random random,float amount)
     {
         Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":" + "gui.glitch_" + random.nextInt(11), amount, 0.9f + random.nextFloat() * 0.2f));
     }
@@ -687,7 +825,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     @Override
     public ItemStack decrStackSize(int slot, int amount) {
-        return inventory.decrStackSize(slot,amount);
+        return inventory.decrStackSize(slot, amount);
     }
 
     @Override
@@ -740,6 +878,22 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         return inventory.isItemValidForSlot(slot,stack);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void setMinimapEntityInfo(List<MinimapEntityInfo> entityInfo)
+    {
+        entityInfoMap.clear();
+        for (MinimapEntityInfo info : entityInfo)
+        {
+            entityInfoMap.put(info.getEntityID(),info);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static MinimapEntityInfo getMinimapEntityInfo(EntityLivingBase entityLivingBase)
+    {
+        return entityInfoMap.get(entityLivingBase.getEntityId());
     }
 
     //endregion

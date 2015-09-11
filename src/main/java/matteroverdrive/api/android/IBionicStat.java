@@ -18,6 +18,7 @@
 
 package matteroverdrive.api.android;
 
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.entity.AndroidPlayer;
@@ -46,6 +47,7 @@ public interface IBionicStat
     void onUnlock(AndroidPlayer android,int level);
     void onTooltip(AndroidPlayer android, int level, List<String> list, int mouseX, int mouseY);
     void changeAndroidStats(AndroidPlayer androidPlayer,int level,boolean enabled);
+    Multimap attributes(AndroidPlayer androidPlayer,int level);
     IBionicStat getRoot();
     List<ItemStack> getRequiredItems();
     boolean isEnabled(AndroidPlayer android, int level);

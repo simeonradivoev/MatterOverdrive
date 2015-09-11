@@ -16,18 +16,33 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api.inventory;
+package matteroverdrive.client.render;
 
-import com.google.common.collect.Multimap;
-import matteroverdrive.entity.AndroidPlayer;
-import net.minecraft.item.ItemStack;
+import matteroverdrive.api.inventory.IBionicPart;
+import matteroverdrive.api.renderer.IBionicPartRenderer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by Simeon on 5/26/2015.
+ * Created by Simeon on 9/10/2015.
  */
-public interface IBionicPart
+public class AndroidBionicPartRenderRegistry
 {
-    int getType(ItemStack itemStack);
-    boolean affectAndroid(AndroidPlayer player,ItemStack itemStack);
-    Multimap getModifiers(AndroidPlayer player,ItemStack itemStack);
+    Map<Class<? extends IBionicPart>,IBionicPartRenderer> rendererMap;
+
+    public AndroidBionicPartRenderRegistry()
+    {
+        rendererMap = new HashMap<>();
+    }
+
+    public void register(Class<? extends IBionicPart> partClass,IBionicPartRenderer renderer)
+    {
+        rendererMap.put(partClass,renderer);
+    }
+
+    public IBionicPartRenderer getRenderer(Class<? extends IBionicPart> partClass)
+    {
+        return rendererMap.get(partClass);
+    }
 }

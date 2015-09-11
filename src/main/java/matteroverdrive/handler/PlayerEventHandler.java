@@ -95,6 +95,15 @@ public class PlayerEventHandler
         }
     }
 
+    @SubscribeEvent
+    public void onPlayerLoadFromFile(net.minecraftforge.event.entity.player.PlayerEvent.LoadFromFile event)
+    {
+        AndroidPlayer player = AndroidPlayer.get(event.entityPlayer);
+        if (player != null) {
+            player.onPlayerLoad(event);
+        }
+    }
+
     public void onServerTick(TickEvent.ServerTickEvent event)
     {
         if (MatterOverdrive.matterRegistry.hasComplitedRegistration)

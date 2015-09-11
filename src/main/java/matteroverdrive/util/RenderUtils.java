@@ -56,18 +56,33 @@ public class RenderUtils
 	private static FontRenderer   fontRenderer = Minecraft.getMinecraft().fontRenderer;
 	private static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 	private static RenderItem     renderItem   = new RenderItem();
-	
-	public static void renderStack(int x, int y, ItemStack stack) {
+
+	public static void renderStack(int x, int y, ItemStack stack)
+	{
+		renderStack(x,y,stack,false);
+	}
+
+	public static void renderStack(int x, int y, ItemStack stack,boolean renderOverlay) {
 		if (stack != null && stack.getItem() != null) {
-			glColor3f(1, 1, 1);
-			//glDisable(GL_CULL_FACE);
-			glDepthMask(true);
-			//RenderHelper.enableGUIStandardItemLighting();
+			glPushMatrix();
+			glColor3f(1,1,1);
+			RenderHelper.enableGUIStandardItemLighting();
 			glEnable(GL_LIGHTING);
-			renderItem.renderItemIntoGUI(fontRenderer, textureManager, stack, x, y);
+			glEnable(GL_DEPTH_TEST);
+			GL11.glTranslatef(0.0F, 0.0F, 32.0F);
+			//this.zLevel = 200.0F;
+			renderItem.zLevel = 200.0F;
+			FontRenderer font = null;
+			if (stack != null) font = stack.getItem().getFontRenderer(stack);
+			if (font == null) font = Minecraft.getMinecraft().fontRenderer;
+			renderItem.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), stack, x, y);
+			if (renderOverlay)
+				renderItem.renderItemOverlayIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), stack, x, y, stack.stackSize > 1 ? Integer.toString(stack.stackSize) : null);
+			renderItem.zLevel = 0.0F;
+
+			glEnable(GL_ALPHA_TEST);
 			glDisable(GL_LIGHTING);
-			//RenderHelper.disableStandardItemLighting();
-			//glEnable(GL_CULL_FACE);
+			glPopMatrix();
 		}
 	}
 
@@ -128,26 +143,62 @@ public class RenderUtils
 		}
 	}
 
+	public static void drawCircle(double radius,int segments)
+	{
+		glBegin(GL_POLYGON);
+		for (int i = 0;i < segments;i++)
+		{
+			glVertex3d(Math.sin((i/(double)segments)*Math.PI*2) * radius,Math.cos((i/(double)segments)*Math.PI*2) * radius,0);
+		}
+		glEnd();
+	}
+
 	public static void drawPlane(double size)
 	{
 		drawPlane(size, size);
 	}
-
+	public static void drawPlane(double x,double y,double z,double sizeX,double sizeY)
+	{
+		drawPlaneWithUV(x, y, z, sizeX, sizeY, 0, 0, 1, 1);
+	}
 	public static void drawPlane(double sizeX,double sizeY)
 	{
-		drawPlaneWithUV(sizeX, sizeY, 0, 0, 1, 1);
+		drawPlaneWithUV(0, 0, 0, sizeX, sizeY, 0, 0, 1, 1);
 	}
-
 	public static void drawPlaneWithUV(double sizeX,double sizeY,double uStart,double vStart,double uSize,double vSize)
+	{
+		drawPlaneWithUV(0,0,0,sizeX,sizeY,uStart,vStart,uSize,vSize);
+	}
+	public static void drawPlaneWithUV(double x,double y,double z,double sizeX,double sizeY,double uStart,double vStart,double uSize,double vSize)
 	{
 		Tessellator tessellator = Tessellator.instance;
 
 		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(sizeX, sizeY, 0, uStart + uSize, vStart + vSize);
-		tessellator.addVertexWithUV(sizeX, 0, 0, uStart + uSize, vStart);
-		tessellator.addVertexWithUV(0, 0, 0, uStart, vStart);
-		tessellator.addVertexWithUV(0, sizeY, 0, uStart, vStart + vSize);
+		tessellator.addVertexWithUV(x + sizeX, y + sizeY, z, uStart + uSize, vStart + vSize);
+		tessellator.addVertexWithUV(x + sizeX, y, z, uStart + uSize, vStart);
+		tessellator.addVertexWithUV(x, y, z, uStart, vStart);
+		tessellator.addVertexWithUV(x, y + sizeY, z, uStart, vStart + vSize);
 		tessellator.draw();
+	}
+
+	public static void drawStencil(int xMin, int yMin, int xMax, int yMax, int mask) {
+		GL11.glDisable(3553);
+		GL11.glStencilFunc(519, mask, mask);
+		GL11.glStencilOp(0, 0, 7681);
+		GL11.glStencilMask(1);
+		GL11.glColorMask(false, false, false, false);
+		GL11.glDepthMask(false);
+		Tessellator.instance.startDrawingQuads();
+		Tessellator.instance.addVertex((double)xMin, (double)yMax, 0.0D);
+		Tessellator.instance.addVertex((double)xMax, (double)yMax, 0.0D);
+		Tessellator.instance.addVertex((double)xMax, (double)yMin, 0.0D);
+		Tessellator.instance.addVertex((double)xMin, (double)yMin, 0.0D);
+		Tessellator.instance.draw();
+		GL11.glEnable(3553);
+		GL11.glStencilFunc(514, mask, mask);
+		GL11.glStencilMask(0);
+		GL11.glColorMask(true, true, true, true);
+		GL11.glDepthMask(true);
 	}
 
 	public static void drawCube(double sizeX,double sizeY,double sizeZ,GuiColor color)
@@ -304,7 +355,7 @@ public class RenderUtils
 
 	public static GuiColor lerp(GuiColor a,GuiColor b,float lerp)
 	{
-		return new GuiColor(lerp(a.getColor(),b.getColor(),lerp));
+		return new GuiColor(lerp(a.getIntR(),b.getIntR(),lerp),lerp(a.getIntG(),b.getIntG(),lerp),lerp(a.getIntB(),b.getIntB(),lerp),lerp(a.getIntA(),b.getIntA(),lerp));
 	}
 
 	public static void applyColor(int color)
@@ -325,6 +376,10 @@ public class RenderUtils
         glColor3f(color.getFloatR() + add, color.getFloatG() + add, color.getFloatB() + add);
     }
 
+	public static void applyColorWithAlpha(GuiColor color,float alphaMultiply)
+	{
+		glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA()*alphaMultiply);
+	}
 	public static void applyColorWithAlpha(GuiColor color)
 	{
 		glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());

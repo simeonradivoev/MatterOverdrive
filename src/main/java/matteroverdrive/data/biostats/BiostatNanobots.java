@@ -18,6 +18,7 @@
 
 package matteroverdrive.data.biostats;
 
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.entity.AndroidPlayer;
@@ -75,6 +76,11 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
     public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
     {
 
+    }
+
+    @Override
+    public Multimap attributes(AndroidPlayer androidPlayer,int level) {
+        return null;
     }
 
     @Override

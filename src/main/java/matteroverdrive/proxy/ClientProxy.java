@@ -20,6 +20,7 @@ package matteroverdrive.proxy;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.RenderHandler;
@@ -30,6 +31,7 @@ import matteroverdrive.handler.ClientWeaponHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.MouseHandler;
 import matteroverdrive.handler.TooltipHandler;
+import matteroverdrive.init.MatterOverdriveGuides;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.starmap.GalaxyClient;
@@ -72,8 +74,11 @@ public class ClientProxy extends CommonProxy
         renderHandler.registerItemRenderers();
         renderHandler.registerEntityRenderers();
         renderHandler.registerBioticStatRenderers();
+        renderHandler.registerBionicPartRenderers();
         renderHandler.registerStarmapRenderers();
         //endregion
+
+        MatterOverdrive.configHandler.subscribe(androidHud);
 	}
 
     private void registerSubscribtions()
@@ -110,5 +115,13 @@ public class ClientProxy extends CommonProxy
         super.init(event);
         weaponHandler.registerWeapon(MatterOverdriveItems.phaserRifle);
         weaponHandler.registerWeapon(MatterOverdriveItems.phaser);
+
+        MatterOverdriveGuides.registerGuideElements(event);
+    }
+
+    @Override
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        MatterOverdriveGuides.registerGuides(event);
     }
 }

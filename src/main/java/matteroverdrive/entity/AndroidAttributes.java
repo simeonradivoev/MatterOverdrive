@@ -16,18 +16,16 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api.inventory;
+package matteroverdrive.entity;
 
-import com.google.common.collect.Multimap;
-import matteroverdrive.entity.AndroidPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.RangedAttribute;
 
 /**
- * Created by Simeon on 5/26/2015.
+ * Created by Simeon on 9/8/2015.
  */
-public interface IBionicPart
+public class AndroidAttributes
 {
-    int getType(ItemStack itemStack);
-    boolean affectAndroid(AndroidPlayer player,ItemStack itemStack);
-    Multimap getModifiers(AndroidPlayer player,ItemStack itemStack);
+    public static final IAttribute attributeGlitchTime = new RangedAttribute("android.glitchTime",1,0,1).setDescription("Glitch Time Percent");
+    public static final IAttribute attributeBatteryUse = new RangedAttribute("android.batteryUse",1,0,10).setDescription("Battery Use Percent");
 }

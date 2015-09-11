@@ -18,13 +18,14 @@
 
 package matteroverdrive.data.biostats;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.data.MOAttributeModifier;
 import matteroverdrive.entity.AndroidPlayer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -79,24 +80,15 @@ public class BioticStatSpeed extends AbstractBioticStat
     @Override
     public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
     {
-        AttributeModifier instance = androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.movementSpeed).getModifier(modiferID);
 
-        if (instance == null)
-        {
-            if (enabled) {
-                AttributeModifier modifier = new MOAttributeModifier(modiferID, "Android Speed", getSpeedModify(level), 2).setSaved(false);
-                androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.movementSpeed).applyModifier(modifier);
-            }
-        }
-        else if (instance instanceof MOAttributeModifier)
-        {
-            if (enabled) {
-                ((MOAttributeModifier) instance).setAmount(getSpeedModify(level));
-            }else
-            {
-                androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.movementSpeed).removeModifier(instance);
-            }
-        }
+    }
+
+    @Override
+    public Multimap attributes(AndroidPlayer androidPlayer, int level)
+    {
+        Multimap multimap = HashMultimap.create();
+        multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(),new MOAttributeModifier(modiferID, "Android Speed", getSpeedModify(level), 2).setSaved(false));
+        return multimap;
     }
 
     @Override

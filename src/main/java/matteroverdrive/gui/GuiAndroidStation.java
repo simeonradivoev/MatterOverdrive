@@ -18,6 +18,7 @@
 
 package matteroverdrive.gui;
 
+import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
@@ -29,6 +30,8 @@ import matteroverdrive.entity.EntityRougeAndroidMob;
 import matteroverdrive.gui.element.ElementBioStat;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementSlot;
+import matteroverdrive.gui.element.MOElementButtonScaled;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import matteroverdrive.util.RenderUtils;
@@ -36,10 +39,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL12;
 
@@ -54,6 +60,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 {
     private EntityRougeAndroidMob mob;
+    private MOElementButtonScaled hudConfigs;
     ElementSlot[] parts_slots = new ElementSlot[Reference.BIONIC_BATTERY+1];
     List<ElementBioStat> stats = new ArrayList<>(MatterOverdrive.statRegistry.getStats().size());
 
@@ -96,6 +103,9 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 
         mob = new EntityRougeAndroidMob(Minecraft.getMinecraft().theWorld);
         mob.getEntityData().setBoolean("Hologram",true);
+
+        hudConfigs = new MOElementButtonScaled(this,this,48,64,"hud_configs",128,24);
+        hudConfigs.setText("HUD Options");
     }
 
     public void addStat(AndroidPlayer androidPlayer,IBionicStat stat,int x,int y,ForgeDirection direction)
@@ -119,6 +129,8 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         {
             pages.get(0).addElement(stat);
         }
+
+        pages.get(1).addElement(hudConfigs);
 
         AddMainPlayerSlots(inventorySlots, this);
         AddHotbarPlayerSlots(inventorySlots, this);
@@ -155,13 +167,22 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         if (pages.get(0).isVisible()) {
 			glPushMatrix();
 			glTranslatef(0, 0, 100);
-			drawEntityOnScreen(280, ySize - 25, 50, -mouseX + 280, -mouseY + ySize - 100, Minecraft.getMinecraft().thePlayer);
+			drawEntityOnScreen(280, ySize - 25, 50, -mouseX + 280, -mouseY + ySize - 100, mc.thePlayer);
 			glPopMatrix();
 
             String info = Minecraft.getMinecraft().thePlayer.experienceLevel + " XP";
             glDisable(GL_LIGHTING);
             int width = fontRendererObj.getStringWidth(info);
             fontRendererObj.drawString(EnumChatFormatting.GREEN + info, 280 - width / 2, ySize - 20, 0xFFFFFF);
+        }
+    }
+
+    public void handleElementButtonClick(ElementBase element,String elementName, int mouseButton)
+    {
+        super.handleElementButtonClick(element,elementName,mouseButton);
+        if (element.equals(hudConfigs))
+        {
+            Minecraft.getMinecraft().displayGuiScreen(new GuiConfig(this, ConfigurationHandler.CATEGORY_ANDROID_HUD));
         }
     }
 
@@ -175,7 +196,8 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 	 * @param mouseY
 	 * @param entity
 	 */
-	private void drawEntityOnScreen(int x, int y, int scale, float mouseX, float mouseY, EntityLivingBase entity) {
+	private void drawEntityOnScreen(int x, int y, int scale, float mouseX, float mouseY, EntityPlayer entity)
+    {
 		glEnable(GL_COLOR_MATERIAL);
 		glPushMatrix();
 		glTranslatef((float)x, (float)y, 50.0F);
@@ -189,15 +211,18 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 		glRotatef(135.0F, 0.0F, 1.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
 		glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
-		glRotatef(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
-		entity.renderYawOffset = (float)Math.atan((double)(mouseX / 40.0F)) * 20.0F;
-		entity.rotationYaw = (float)Math.atan((double)(mouseX / 40.0F)) * 40.0F;
+		entity.renderYawOffset = mc.theWorld.getWorldTime();
+		entity.rotationYaw = mc.theWorld.getWorldTime();
 		entity.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
 		entity.rotationYawHead = entity.rotationYaw;
 		entity.prevRotationYawHead = entity.rotationYaw;
 		glTranslatef(0.0F, entity.yOffset, 0.0F);
 		RenderManager.instance.playerViewY = 180.0F;
+
+        MinecraftForge.EVENT_BUS.post(new RenderPlayerEvent.Pre(entity,(RenderPlayer)RenderManager.instance.getEntityRenderObject(entity),1));
 		RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+        MinecraftForge.EVENT_BUS.post(new RenderPlayerEvent.Post(entity, (RenderPlayer) RenderManager.instance.getEntityRenderObject(entity), 1));
+
 		entity.renderYawOffset = f2;
 		entity.rotationYaw = f3;
 		entity.rotationPitch = f4;

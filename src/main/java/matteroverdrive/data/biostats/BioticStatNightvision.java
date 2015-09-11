@@ -19,6 +19,7 @@
 package matteroverdrive.data.biostats;
 
 import cofh.lib.audio.SoundBase;
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
@@ -127,6 +128,11 @@ public class BioticStatNightvision extends AbstractBioticStat implements IConfig
         {
             androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_NIGHTVISION, false);
         }
+    }
+
+    @Override
+    public Multimap attributes(AndroidPlayer androidPlayer, int level) {
+        return null;
     }
 
     @Override

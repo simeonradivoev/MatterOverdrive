@@ -18,6 +18,7 @@
 
 package matteroverdrive.data.biostats;
 
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
@@ -187,6 +188,11 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
                 hasPressedKey = false;
             }
         }
+    }
+
+    @Override
+    public Multimap attributes(AndroidPlayer androidPlayer, int level) {
+        return null;
     }
 
     @Override

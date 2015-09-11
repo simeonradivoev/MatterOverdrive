@@ -19,6 +19,8 @@
 package matteroverdrive.data.biostats;
 
 import cofh.lib.audio.SoundBase;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
@@ -222,24 +224,13 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     {
         if (!androidPlayer.getEffects().getBoolean(TAG_SHIELD))
         {
-            if (androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.movementSpeed).getModifier(modifyer.getID()) != null)
-            {
-                androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.movementSpeed).removeModifier(modifyer);
-            }
-
             if (androidPlayer.getPlayer().worldObj.isRemote)
             {
                 stopShieldSound();
 
             }
-
         }else
         {
-            if (androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.movementSpeed).getModifier(modifyer.getID()) == null)
-            {
-                androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.movementSpeed).applyModifier(modifyer);
-            }
-
             if (androidPlayer.getPlayer().worldObj.isRemote)
             {
                 playShieldSound();
@@ -252,6 +243,14 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
                 }
             }
         }
+    }
+
+    @Override
+    public Multimap attributes(AndroidPlayer androidPlayer, int level)
+    {
+        Multimap multimap = HashMultimap.create();
+        multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(),modifyer);
+        return multimap;
     }
 
     @SideOnly(Side.CLIENT)

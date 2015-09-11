@@ -18,6 +18,7 @@
 
 package matteroverdrive.data.biostats;
 
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
@@ -111,6 +112,11 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
         {
             androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_CLOAK, false);
         }
+    }
+
+    @Override
+    public Multimap attributes(AndroidPlayer androidPlayer, int level) {
+        return null;
     }
 
     @Override
