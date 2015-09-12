@@ -127,6 +127,7 @@ tile.heavy_matter_pipe.name=Heavy Duty Matter Transport Pipe
 tile.heavy_matter_pipe.details=Transports Matter Plasma
 tile.holo_sign.name=Holographic Sign
 tile.force_glass.name=Tritanium Glass
+tile.bounding_box.name=Bounding Block
 
 //////////// Pattern Storage ////////////
 tile.pattern_storage.name=Pattern Storage

@@ -1,7 +1,9 @@
 package matteroverdrive.blocks;
 
 import matteroverdrive.blocks.includes.MOBlock;
+import matteroverdrive.init.MatterOverdriveIcons;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.IIcon;
 
 /**
  * @author shadowfacts
@@ -11,6 +13,11 @@ public class BlockBoundingBox extends MOBlock {
 	public BlockBoundingBox(Material material, String name) {
 		super(material, name);
 		setBlockUnbreakable();
+	}
+
+	@Override
+	public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
+		return MatterOverdriveIcons.Base;
 	}
 
 	@Override

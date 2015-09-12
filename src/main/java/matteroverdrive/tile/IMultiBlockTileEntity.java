@@ -23,7 +23,7 @@ import cofh.lib.util.position.BlockPosition;
 import java.util.List;
 
 /**
- * Used by
+ * Used by TileEntities belonging to blocks with bounding boxes greater than 1m^3
  *
  * @author shadowfacts
  */
