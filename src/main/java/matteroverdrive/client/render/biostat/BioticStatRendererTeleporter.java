@@ -18,13 +18,13 @@
 
 package matteroverdrive.client.render.biostat;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.client.render.tileentity.TileEntityRendererGravitationalAnomaly;
 import matteroverdrive.data.biostats.BioticStatTeleport;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.KeyHandler;
+import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -44,7 +44,7 @@ public class BioticStatRendererTeleporter implements IBioticStatRenderer<BioticS
         AndroidPlayer androidPlayer = AndroidPlayer.get(Minecraft.getMinecraft().thePlayer);
         Vec3 playerPos = androidPlayer.getPlayer().getPosition(event.partialTicks);
 
-        if (androidPlayer != null && androidPlayer.isAndroid() && androidPlayer.isUnlocked(MatterOverdrive.statRegistry.teleport,MatterOverdrive.statRegistry.teleport.maxLevel()) && MatterOverdrive.statRegistry.teleport.isEnabled(androidPlayer,0) && MatterOverdrive.statRegistry.teleport.getHasPressedKey())
+        if (androidPlayer != null && androidPlayer.isAndroid() && androidPlayer.isUnlocked(MatterOverdriveBioticStats.teleport,MatterOverdriveBioticStats.teleport.maxLevel()) && MatterOverdriveBioticStats.teleport.isEnabled(androidPlayer,0) && MatterOverdriveBioticStats.teleport.getHasPressedKey())
         {
             if(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed())
             {
@@ -56,7 +56,7 @@ public class BioticStatRendererTeleporter implements IBioticStatRenderer<BioticS
 
                 //mob.rotationYawHead = androidPlayer.getPlayer().rotationYawHead;
 
-                Vec3 pos = MatterOverdrive.statRegistry.teleport.getPos(androidPlayer);
+                Vec3 pos = MatterOverdriveBioticStats.teleport.getPos(androidPlayer);
                 if (pos != null)
                 {
                     Minecraft.getMinecraft().renderEngine.bindTexture(TileEntityRendererGravitationalAnomaly.glow);

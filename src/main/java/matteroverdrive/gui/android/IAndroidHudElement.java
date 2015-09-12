@@ -27,7 +27,7 @@ import net.minecraft.client.gui.ScaledResolution;
  */
 public interface IAndroidHudElement
 {
-    boolean isVisible();
+    boolean isVisible(AndroidPlayer android);
     void drawElement(AndroidPlayer androidPlayer,int mouseX,int mouseY,ScaledResolution resolution,float ticks);
     int getWidth(ScaledResolution resolution);
     int getHeight(ScaledResolution resolution);

@@ -26,6 +26,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.data.biostats.BioticStatTeleport;
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.PacketSpawnParticle;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
@@ -82,7 +83,7 @@ public class PacketTeleportPlayer extends PacketAbstract {
             AndroidPlayer androidPlayer = AndroidPlayer.get(player);
             if (androidPlayer != null && androidPlayer.isAndroid())
             {
-                if(!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(MatterOverdrive.statRegistry.teleport, androidPlayer.getUnlockedLevel(MatterOverdrive.statRegistry.teleport), androidPlayer)))
+                if(!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(MatterOverdriveBioticStats.teleport, androidPlayer.getUnlockedLevel(MatterOverdriveBioticStats.teleport), androidPlayer)))
                 {
                     MatterOverdrive.packetPipeline.sendToAllAround(new PacketSpawnParticle("teleport", player.posX, player.posY + 1, player.posZ, 1, 0), player, 64);
                     player.worldObj.playSoundToNearExcept(player, Reference.MOD_ID + ":" + "android_teleport", 0.2f, 0.8f + 0.4f * player.worldObj.rand.nextFloat());

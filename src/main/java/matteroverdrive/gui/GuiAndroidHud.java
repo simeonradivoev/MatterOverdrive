@@ -36,6 +36,7 @@ import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.gui.android.*;
 import matteroverdrive.gui.config.EnumConfigProperty;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOStringHelper;
@@ -337,7 +338,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
                 glPushMatrix();
 
-                if (MatterOverdrive.statRegistry.cloak.isActive(android,0)) {
+                if (MatterOverdriveBioticStats.cloak.isActive(android,0)) {
                     glDepthMask(false);
                     glBlendFunc(GL_DST_COLOR, GL_ZERO);
                     mc.renderEngine.bindTexture(cloak_overlay);
@@ -354,7 +355,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
                 for (IAndroidHudElement element : hudElements)
                 {
-                    if (element.isVisible())
+                    if (element.isVisible(android))
                     {
                         glPushMatrix();
                         int elementWidth =  (int)(element.getWidth(event.resolution) * element.getPosition().x);

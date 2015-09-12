@@ -105,8 +105,7 @@ public class MatterOverdrive
 		moWorld.register();
 		MatterNetworkRegistry.register();
         packetPipeline.registerPackets();
-		statRegistry.init();
-		statRegistry.registerAll(configHandler);
+		MatterOverdriveBioticStats.init(event);
 		MatterOverdriveMatter.init(configHandler);
 		MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);
 		MatterOverdriveMatter.registerFromConfig(configHandler);
@@ -131,6 +130,8 @@ public class MatterOverdrive
 		MatterOverdriveBlocks.register(event);
 		MatterOverdriveItems.register(event);
 		MatterOverdriveFluids.register(event);
+		MatterOverdriveBioticStats.register(event);
+		MatterOverdriveBioticStats.registerAll(configHandler, MatterOverdrive.statRegistry);
 
 		MatterOverdriveRecipes.registerBlockRecipes(event);
 		MatterOverdriveRecipes.registerItemRecipes(event);

@@ -362,6 +362,8 @@ biotic_stat.cloak.name=Cloak
 biotic_stat.cloak.details=Allows the player to go invisible. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
 biotic_stat.nightvision.name=Night Vision
 biotic_stat.nightvision.details=Allows the player to see in the dark. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
+biotic_stat.minimap.name=Minimap
+biotic_stat.minimap.details=Adds a minimap on the HUD
 
 ##########################################################################################################
 # Deaths

@@ -22,6 +22,7 @@ import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.data.MinimapEntityInfo;
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityCreature;
@@ -55,8 +56,9 @@ public class AndroidHudMinimap extends AndroidHudElement
     }
 
     @Override
-    public boolean isVisible() {
-        return true;
+    public boolean isVisible(AndroidPlayer android)
+    {
+        return android.isUnlocked(MatterOverdriveBioticStats.minimap,0);
     }
 
     @Override

@@ -42,6 +42,7 @@ import matteroverdrive.client.render.tileentity.starmap.*;
 import matteroverdrive.entity.*;
 import matteroverdrive.entity.weapon.PhaserFire;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.android.TritaniumSpine;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
@@ -207,7 +208,7 @@ public class RenderHandler
         GL11.glColor3f(1,1,1);
 
         AndroidPlayer androidPlayer = AndroidPlayer.get(event.entityPlayer);
-        if (androidPlayer != null && androidPlayer.isAndroid()) {
+        if (androidPlayer != null && androidPlayer.isAndroid() && !event.entityPlayer.isInvisible()) {
             for (int i = 0; i < 5; i++)
             {
                 ItemStack part = androidPlayer.getStackInSlot(i);
@@ -308,8 +309,8 @@ public class RenderHandler
 
     public void registerBioticStatRenderers()
     {
-        statRenderRegistry.registerRenderer(MatterOverdrive.statRegistry.shield.getClass(),biostatRendererShield);
-        statRenderRegistry.registerRenderer(MatterOverdrive.statRegistry.teleport.getClass(),rendererTeleporter);
+        statRenderRegistry.registerRenderer(MatterOverdriveBioticStats.shield.getClass(),biostatRendererShield);
+        statRenderRegistry.registerRenderer(MatterOverdriveBioticStats.teleport.getClass(),rendererTeleporter);
     }
 
     public void registerBionicPartRenderers()

@@ -32,6 +32,7 @@ import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementSlot;
 import matteroverdrive.gui.element.MOElementButtonScaled;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import matteroverdrive.util.RenderUtils;
@@ -89,17 +90,18 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         parts_slots[Reference.BIONIC_BATTERY].setPosition(320,ySize - 50);
         parts_slots[Reference.BIONIC_BATTERY].setIcon(ClientProxy.holoIcons.getIcon("battery"));
 
-        addStat(androidPlayer, MatterOverdrive.statRegistry.teleport, 0, 0, ForgeDirection.UNKNOWN);
-        addStat(androidPlayer, MatterOverdrive.statRegistry.nanobots, 1, 1, ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,MatterOverdrive.statRegistry.nanoArmor,0,1,ForgeDirection.EAST);
-        addStat(androidPlayer,MatterOverdrive.statRegistry.flotation,2,0,ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,MatterOverdrive.statRegistry.speed,3,0,ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,MatterOverdrive.statRegistry.highJump,3,1,ForgeDirection.UP);
-        addStat(androidPlayer,MatterOverdrive.statRegistry.equalizer,3,2,ForgeDirection.UP);
-        addStat(androidPlayer,MatterOverdrive.statRegistry.shield,0,2,ForgeDirection.UP);
-        addStat(androidPlayer,MatterOverdrive.statRegistry.attack,2,1,ForgeDirection.WEST);
-        addStat(androidPlayer,MatterOverdrive.statRegistry.cloak,0,3,ForgeDirection.UP);
-        addStat(androidPlayer,MatterOverdrive.statRegistry.nightvision,1,0,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer, MatterOverdriveBioticStats.teleport, 0, 0, ForgeDirection.UNKNOWN);
+        addStat(androidPlayer, MatterOverdriveBioticStats.nanobots, 1, 1, ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,MatterOverdriveBioticStats.nanoArmor,0,1,ForgeDirection.EAST);
+        addStat(androidPlayer,MatterOverdriveBioticStats.flotation,2,0,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,MatterOverdriveBioticStats.speed,3,0,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,MatterOverdriveBioticStats.highJump,3,1,ForgeDirection.UP);
+        addStat(androidPlayer,MatterOverdriveBioticStats.equalizer,3,2,ForgeDirection.UP);
+        addStat(androidPlayer,MatterOverdriveBioticStats.shield,0,2,ForgeDirection.UP);
+        addStat(androidPlayer,MatterOverdriveBioticStats.attack,2,1,ForgeDirection.WEST);
+        addStat(androidPlayer,MatterOverdriveBioticStats.cloak,0,3,ForgeDirection.UP);
+        addStat(androidPlayer,MatterOverdriveBioticStats.nightvision,1,0,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,MatterOverdriveBioticStats.minimap,1,2,ForgeDirection.UNKNOWN);
 
         mob = new EntityRougeAndroidMob(Minecraft.getMinecraft().theWorld);
         mob.getEntityData().setBoolean("Hologram",true);

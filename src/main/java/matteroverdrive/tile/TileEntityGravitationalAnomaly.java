@@ -31,6 +31,7 @@ import matteroverdrive.api.IScannable;
 import matteroverdrive.client.sound.GravitationalAnomalySound;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.fx.GravitationalAnomalyParticle;
+import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.items.SpacetimeEqualizer;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MatterHelper;
@@ -196,7 +197,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
             if (entityObject instanceof EntityPlayer)
             {
                 AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)entityObject);
-                if (((EntityPlayer)entityObject).capabilities.isCreativeMode || androidPlayer.isUnlocked(MatterOverdrive.statRegistry.equalizer,1))
+                if (((EntityPlayer)entityObject).capabilities.isCreativeMode || androidPlayer.isUnlocked(MatterOverdriveBioticStats.equalizer,1))
                     continue;
             }
 

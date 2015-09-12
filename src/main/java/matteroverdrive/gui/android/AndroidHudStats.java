@@ -43,7 +43,7 @@ public class AndroidHudStats extends AndroidHudElement
     }
 
     @Override
-    public boolean isVisible() {
+    public boolean isVisible(AndroidPlayer android) {
         return true;
     }
 

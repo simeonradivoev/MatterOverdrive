@@ -18,11 +18,11 @@
 
 package matteroverdrive.client.render.biostat;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.data.biostats.BioticStatShield;
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -127,7 +127,7 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
 
     private boolean manageOpacityLerp(AndroidPlayer androidPlayer,float partialTicks)
     {
-        if (MatterOverdrive.statRegistry.shield.getShieldState(androidPlayer))
+        if (MatterOverdriveBioticStats.shield.getShieldState(androidPlayer))
         {
             if (isClient(androidPlayer.getPlayer()))
             {

@@ -45,7 +45,7 @@ public class AndroidHudBionicStats extends AndroidHudElement
     }
 
     @Override
-    public boolean isVisible() {
+    public boolean isVisible(AndroidPlayer android) {
         return true;
     }
 
