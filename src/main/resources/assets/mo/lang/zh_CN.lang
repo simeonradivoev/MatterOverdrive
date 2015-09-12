@@ -67,6 +67,8 @@ item.energy_pack.details=用于快速充电\n让能量武器'重装弹药'
 item.phaser_rifle.name=相位来复枪
 item.transport_flash_drive.name=传送闪存驱动器
 item.transport_flash_drive.details=记录地点以便快速使用传送器
+item.matter_container.name=空物质仓
+item.matter_container_full.name=满物质仓
 
 item.upgrade.speed.name=速度升级
 item.upgrade.power.name=能耗升级
@@ -125,6 +127,7 @@ tile.heavy_matter_pipe.name=重型物质运输管道
 tile.heavy_matter_pipe.details=运输等离子态物质
 tile.holo_sign.name=全息显示板
 tile.force_glass.name=钛金玻璃
+tile.bounding_box.name=Bounding Block
 
 //////////// Pattern Storage ////////////
 tile.pattern_storage.name=模式存储仓
@@ -360,6 +363,8 @@ biotic_stat.cloak.name=隐形斗篷
 biotic_stat.cloak.details=允许玩家隐形. /n/激活时, 消耗 %1$s 每tick /n/需要一个输出超过 %1$s 的电池
 biotic_stat.nightvision.name=夜视
 biotic_stat.nightvision.details=允许玩家看穿黑暗. /n/激活时, 消耗 %1$s 每tick /n/需要一个输出超过 %1$s 的电池
+biotic_stat.minimap.name=小地图
+biotic_stat.minimap.details=在HUD上添加小地图
 
 ##########################################################################################################
 # Deaths
@@ -410,6 +415,14 @@ config.server.name=服务器选项
 config.starmap.name=星图选项
 config.ore_gen_blacklist.name=矿物黑名单
 config.abilities.name=机器人能力
+config.entities.name=生物
+config.debug.name=Debug
+config.android_hud.name=机器人HUD
+config.android_hud.stats.position=状态位置
+config.android_hud.bionicStats.position=仿生能力位置
+config.android_hud.minimap.position=小地图位置
+config.android_hud.color=HUD颜色
+config.android_hud.opacity=HUD透明度
 
 ##########################################################################################################
 # Chat Alerts
@@ -427,3 +440,40 @@ alert.starmap.on_build=§3%1$s §r 已在 §3%2$s§r 建立!
 # Enchantments
 
 enchantment.matteroverdrive.weapon.damage=超频
+
+###############################################################################################################
+# Fluids
+fluid.matter_plasma.name=等离子物质
+
+##########################################################################################################
+# Guides
+guide.group.machines.name=机器
+guide.group.ore.name=矿物
+guide.group.matter.name=物质
+guide.group.matter_network.name=网络
+guide.group.weapons.name=武器
+guide.group.parts.name=部件
+guide.group.items.name=物品
+guide.group.power.name=能源
+guide.group.blocks.name=方块
+guide.group.drinks.name=饮品
+guide.group.food.name=食物
+
+guide.entry.matter_fail.name=物质重组失败
+guide.entry.matter_plasma.name=等离子物质
+guide.entry.matter_transport.name=物质传输
+guide.entry.weapon.modules.barrels.name=武器枪管
+guide.entry.weapon.modules.colors.name=武器颜色
+guide.entry.android.pills.name=药片
+guide.entry.android.parts.name=残暴机器人部件
+guide.entry.fusion_reactor.name=聚变反应堆
+guide.entry.batteries.name=能量单元
+guide.entry.food.name=食物
+guide.entry.drinks.name=饮品
+guide.entry.upgrades.name=升级
+
+###############################################################################################################
+# modifiers
+
+modifier.bionic.max_health=生命上限
+modifier.bionic.glitch_time=Glitch Time
