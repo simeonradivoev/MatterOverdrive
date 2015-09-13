@@ -127,6 +127,7 @@ tile.heavy_matter_pipe.name=Сверхмощная материально-тра
 tile.heavy_matter_pipe.details=Транспортирует плазменную материя
 tile.holo_sign.name=Голографическая табличка
 tile.force_glass.name=Тритановое стекло
+tile.bounding_box.name=Ограничительный блок
 
 ## Хранилище шаблонов ##
 tile.pattern_storage.name=Хранилище шаблонов
@@ -362,6 +363,8 @@ biotic_stat.cloak.name=Плащ
 biotic_stat.cloak.details=Позволяет игроку становиться невидимым. /n/В активном состоянии тратит %1$s за тик /n/Требуется %1$s заряда аккумулятора
 biotic_stat.nightvision.name=Ночное зрение
 biotic_stat.nightvision.details=Позволяет игроку видеть в темноте. /n/В активном состоянии тратит %1$s за тик /n/Требуется %1$s заряда аккумулятора
+biotic_stat.minimap.name=Мини-карта
+biotic_stat.minimap.details=Добавляет мини-карту в интерфейс
 
 ==========================================================================================================
 # Смерти
@@ -414,6 +417,12 @@ config.ore_gen_blacklist.name=Ore Dimension Blacklist
 сonfig.abilities.name=Способности Андроида
 config.entities.name=Существа
 config.debug.name=Отладка
+config.android_hud.name=Интерфейс Андроида
+config.android_hud.stats.position=Позиция статистик
+config.android_hud.bionicStats.position=Позиция биостатистик
+config.android_hud.minimap.position=Позиция мини-карты
+config.android_hud.color=Цвет интерфейса
+config.android_hud.opacity=Непрозрачность интерфейса
  
 ==========================================================================================================
 # Чат-оповещения
@@ -435,3 +444,36 @@ enchantment.matteroverdrive.weapon.damage=Разгон
 ==========================================================================================================
 # Жидкости
 fluid.matter_plasma.name=Материальная плазма
+
+==========================================================================================================
+# Путеводители
+guide.group.machines.name=Машины
+guide.group.ore.name=Руды
+guide.group.matter.name=Материя
+guide.group.matter_network.name=Сеть
+guide.group.weapons.name=Оружия
+guide.group.parts.name=Части
+guide.group.items.name=Предметы
+guide.group.power.name=Питание
+guide.group.blocks.name=Блоки
+guide.group.drinks.name=Напитки
+guide.group.food.name=Еда
+
+guide.entry.matter_fail.name=Matter Replication Failure
+guide.entry.matter_plasma.name=Matter Plasma
+guide.entry.matter_transport.name=Matter Transport
+guide.entry.weapon.modules.barrels.name=Weapon Barrels
+guide.entry.weapon.modules.colors.name=Weapon Colors
+guide.entry.android.pills.name=Пилюли
+guide.entry.android.parts.name=Части бродящего Андроида
+guide.entry.fusion_reactor.name=Термоядерный реактор
+guide.entry.batteries.name=Батареи
+guide.entry.food.name=Еда
+guide.entry.drinks.name=Напитки
+guide.entry.upgrades.name=Улучшения
+
+==========================================================================================================
+# Модификаторы
+
+modifier.bionic.max_health=Максимальное здоровье
+modifier.bionic.glitch_time=Glitch Time
