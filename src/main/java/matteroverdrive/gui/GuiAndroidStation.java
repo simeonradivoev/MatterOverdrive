@@ -40,13 +40,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL12;
 
@@ -221,9 +218,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 		glTranslatef(0.0F, entity.yOffset, 0.0F);
 		RenderManager.instance.playerViewY = 180.0F;
 
-        MinecraftForge.EVENT_BUS.post(new RenderPlayerEvent.Pre(entity,(RenderPlayer)RenderManager.instance.getEntityRenderObject(entity),1));
 		RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-        MinecraftForge.EVENT_BUS.post(new RenderPlayerEvent.Post(entity, (RenderPlayer) RenderManager.instance.getEntityRenderObject(entity), 1));
 
 		entity.renderYawOffset = f2;
 		entity.rotationYaw = f3;
