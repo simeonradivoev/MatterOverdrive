@@ -20,9 +20,7 @@ package matteroverdrive.entity;
 
 import matteroverdrive.entity.ai.AndoidTargetSelector;
 import matteroverdrive.init.MatterOverdriveItems;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityMob;
@@ -30,7 +28,6 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
@@ -53,7 +50,7 @@ public class EntityRougeAndroidMob extends EntityMob
         this.tasks.addTask(8, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true,false,targetSelector));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, targetSelector));
     }
 
     @Override
@@ -82,32 +79,16 @@ public class EntityRougeAndroidMob extends EntityMob
 
     }
 
-    public void onDeath(DamageSource damage)
+    protected void dropFewItems(boolean hit, int looting)
     {
-        super.onDeath(damage);
-        int i = 0;
-
-        Entity entity = damage.getEntity();
-        if (entity instanceof EntityPlayer)
+        float lootingModifyer = (Math.min(looting,10) / 10f);
+        if (rand.nextFloat() < 0.01f * (looting+1))
         {
-            i = EnchantmentHelper.getLootingModifier((EntityLivingBase) entity);
+            this.entityDropItem(new ItemStack(MatterOverdriveItems.tritaniumSpine), 0.0F);
         }
-        int j = 0;
-
-        if (this.func_146066_aG() && this.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot"))
+        if (rand.nextFloat() < (0.1f + lootingModifyer))
         {
-            this.dropFewItems(this.recentlyHit > 0, i);
-            this.dropEquipment(this.recentlyHit > 0, i);
-
-            if (this.recentlyHit > 0)
-            {
-                j = this.rand.nextInt(100) - i*3;
-
-                if (j < 20)
-                {
-                    this.entityDropItem(new ItemStack(MatterOverdriveItems.androidParts, 1, rand.nextInt(4)), 0.0F);
-                }
-            }
+            this.entityDropItem(new ItemStack(MatterOverdriveItems.androidParts, 1, rand.nextInt(4)), 0.0F);
         }
     }
 

@@ -69,6 +69,9 @@ item.transport_flash_drive.name=Transport Flash Drive
 item.transport_flash_drive.details=Used to mark locations for quick use with Teleporter
 item.matter_container.name=Empty Matter Container
 item.matter_container_full.name=Full Matter Container
+item.tritanium_nugget.name=Tritanium Nugget
+item.tritanium_spine.name=Tritanium Spine
+item.data_pad.name=Data Pad
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade

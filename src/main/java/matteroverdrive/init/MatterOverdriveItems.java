@@ -90,6 +90,7 @@ public class MatterOverdriveItems
     public static MatterContainer matterContainer;
     public static DataPad dataPad;
     public static TritaniumSpine tritaniumSpine;
+    public static MOBaseItem tritanium_nugget;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -137,6 +138,7 @@ public class MatterOverdriveItems
         matterContainerFull = new MatterContainer("matter_container_full",true);
         dataPad = new DataPad("data_pad");
         tritaniumSpine = new TritaniumSpine("tritainum_spine");
+        tritanium_nugget = new MOBaseItem("tritanium_nugget");
 	}
 	
 	public static void register(FMLInitializationEvent event)
@@ -189,6 +191,7 @@ public class MatterOverdriveItems
         matterContainerFull.register();
         dataPad.register();
         tritaniumSpine.register();
+        tritanium_nugget.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);
@@ -198,6 +201,7 @@ public class MatterOverdriveItems
         OreDictionary.registerOre("gemDilithium",dilithium_ctystal);
         OreDictionary.registerOre("matterDust",matter_dust);
         OreDictionary.registerOre("matterDustRefined",matter_dust_refined);
+        OreDictionary.registerOre("nuggetTritanium",tritanium_nugget);
 	}
 
     public static void addToDungons()
