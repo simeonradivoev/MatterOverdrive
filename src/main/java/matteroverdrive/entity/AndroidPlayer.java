@@ -64,6 +64,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import org.apache.logging.log4j.Level;
 
 import java.util.*;
 
@@ -117,7 +118,30 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         effects = new NBTTagCompound();
 
         int energyWatchID = MatterOverdrive.configHandler.getInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID, ConfigurationHandler.CATEGORY_ABILITIES,ENERGY_WATCHER);
-        player.getDataWatcher().addObject(energyWatchID, this.maxEnergy);
+        try
+        {
+            player.getDataWatcher().addObject(energyWatchID, this.maxEnergy);
+        }
+        catch (IllegalArgumentException e)
+        {
+            energyWatchID = 8;
+            MatterOverdrive.log.log(Level.ERROR,e,"Android Energy Watch ID taken. Starting id iteration.");
+            while (energyWatchID <= 31)
+            {
+                try
+                {
+                    player.getDataWatcher().addObject(energyWatchID, this.maxEnergy);
+                    break;
+                }
+                catch (IllegalArgumentException ex)
+                {
+                    MatterOverdrive.log.log(Level.ERROR,ex,"Android Energy Watch ID '%s' taken.",energyWatchID);
+                    energyWatchID++;
+                }
+            }
+        }
+
+        MatterOverdrive.configHandler.setInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID,ConfigurationHandler.CATEGORY_ABILITIES,energyWatchID);
 
         registerAttributes(player);
     }
