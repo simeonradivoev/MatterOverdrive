@@ -465,8 +465,8 @@ guide.entry.matter_transport.name=Matter Transport
 guide.entry.weapon.modules.barrels.name=Weapon Barrels
 guide.entry.weapon.modules.colors.name=Weapon Colors
 guide.entry.android.pills.name=Пилюли
-guide.entry.android.parts.name=Rouge Android Parts
-guide.entry.fusion_reactor.name=Fusion Reactor
+guide.entry.android.parts.name=Части бродящего Андроида
+guide.entry.fusion_reactor.name=Термоядерный реактор
 guide.entry.batteries.name=Батареи
 guide.entry.food.name=Еда
 guide.entry.drinks.name=Напитки
@@ -475,5 +475,5 @@ guide.entry.upgrades.name=Улучшения
 ==========================================================================================================
 # Модификаторы
 
-modifier.bionic.max_health=Max Health
+modifier.bionic.max_health=Максимальное здоровье
 modifier.bionic.glitch_time=Glitch Time
