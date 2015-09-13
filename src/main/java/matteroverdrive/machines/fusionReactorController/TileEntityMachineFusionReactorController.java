@@ -56,6 +56,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 
+import java.text.DecimalFormat;
 import java.util.EnumSet;
 
 /**
@@ -237,14 +238,14 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                         if (anomalyDistance > MAX_GRAVITATIONAL_ANOMALY_DISTANCE)
                         {
                             validStructure = false;
-                            info = "GRAVITATIONAL ANOMALY TOO FAR";
+                            info = "GRAVITATIONAL\nANOMALY\nTOO\nFAR";
                             break;
                         }
                         anomalyPosition = new BlockPosition((int)offset.xCoord + anomalyOffset.x,(int)offset.yCoord + anomalyOffset.y,(int)offset.zCoord + anomalyOffset.z);
                     }else
                     {
                         validStructure = false;
-                        info = "NO GRAVITATIONAL ANOMALY";
+                        info = "NO\nGRAVITATIONAL\nANOMALY";
                         anomalyPosition = null;
                         break;
                     }
@@ -257,18 +258,18 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                 else {
                     if (position.getBlock(worldObj) == Blocks.air) {
                         validStructure = false;
-                        info = "INVALID STRUCTURE";
+                        info = "INVALID\nSTRUCTURE";
                         break;
                     } else if (position.getBlock(worldObj) == MatterOverdriveBlocks.machine_hull) {
                         if (blocks[i] == 1) {
                             validStructure = false;
-                            info = "NEED MORE COILS";
+                            info = "NEED\nMORE\nCOILS";
                             break;
                         }
                     } else if (position.getBlock(worldObj) == MatterOverdriveBlocks.fusion_reactor_coil) {
                         if (blocks[i] == 0) {
                             validStructure = false;
-                            info = "INVALID MATERIALS";
+                            info = "INVALID\nMATERIALS";
                             break;
                         }
                     } else if (position.getBlock(worldObj) == MatterOverdriveBlocks.decomposer)
@@ -276,13 +277,13 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                         if (blocks[i] != 2)
                         {
                             validStructure = false;
-                            info = "INVALID MATERIALS";
+                            info = "INVALID\nMATERIALS";
                             break;
                         }
                     }
                     else {
                         validStructure = false;
-                        info = "INVALID MATERIALS";
+                        info = "INVALID\nMATERIALS";
                         break;
                     }
                 }
@@ -290,7 +291,9 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
             if (validStructure)
             {
-                info = "VALID POWERx" + Math.round((1f - ((float)anomalyDistance / (float)(MAX_GRAVITATIONAL_ANOMALY_DISTANCE+1))) * 100) + "%";
+                info = "POWER " + Math.round((1f - ((float)anomalyDistance / (float)(MAX_GRAVITATIONAL_ANOMALY_DISTANCE+1))) * 100) + "%";
+                info += "\nCHARGE " + DecimalFormat.getPercentInstance().format((double)getEnergyStored(ForgeDirection.UNKNOWN)/(double)getMaxEnergyStored(ForgeDirection.UNKNOWN));
+                info += "\nMATTER " + DecimalFormat.getPercentInstance().format((double)getMatterStored()/(double)getMatterCapacity());
             }else
             {
                 energyEfficiency = 0;
