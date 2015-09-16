@@ -36,6 +36,7 @@ import matteroverdrive.client.render.block.*;
 import matteroverdrive.client.render.entity.*;
 import matteroverdrive.client.render.item.ItemRendererPhaser;
 import matteroverdrive.client.render.item.ItemRendererPhaserRifle;
+import matteroverdrive.client.render.parts.RougeAndroidPartsRender;
 import matteroverdrive.client.render.parts.TritaniumSpineRenderer;
 import matteroverdrive.client.render.tileentity.*;
 import matteroverdrive.client.render.tileentity.starmap.*;
@@ -44,6 +45,7 @@ import matteroverdrive.entity.weapon.PhaserFire;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.items.RougeAndroidParts;
 import matteroverdrive.items.android.TritaniumSpine;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import matteroverdrive.starmap.data.Galaxy;
@@ -223,7 +225,7 @@ public class RenderHandler
                             Vec3 pos = event.entityPlayer.getPosition(event.partialRenderTick);
                             GL11.glTranslated(pos.xCoord - clientPos.xCoord,pos.yCoord - clientPos.yCoord + event.entityPlayer.getEyeHeight()-0.2,pos.zCoord - clientPos.zCoord);
                         }
-                        renderer.renderPart(part, event.entityPlayer, event.renderer);
+                        renderer.renderPart(part, androidPlayer, event.renderer,event.partialRenderTick);
                         GL11.glPopMatrix();
                     }
                 }
@@ -316,6 +318,7 @@ public class RenderHandler
     public void registerBionicPartRenderers()
     {
         bionicPartRenderRegistry.register(TritaniumSpine.class,new TritaniumSpineRenderer());
+        bionicPartRenderRegistry.register(RougeAndroidParts.class, new RougeAndroidPartsRender());
     }
 
     public void createStarmapRenderers()

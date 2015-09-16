@@ -480,12 +480,16 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
                 if (itemstack != null && itemstack.getItem() instanceof IBionicPart)
                 {
-                    player.getAttributeMap().removeAttributeModifiers(((IBionicPart) itemstack.getItem()).getModifiers(this,itemstack));
+                    Multimap multimap = ((IBionicPart) itemstack.getItem()).getModifiers(this, itemstack);
+                    if (multimap != null)
+                        player.getAttributeMap().removeAttributeModifiers(multimap);
                 }
 
                 if (itemstack1 != null && itemstack1.getItem() instanceof IBionicPart)
                 {
-                    player.getAttributeMap().applyAttributeModifiers(((IBionicPart) itemstack1.getItem()).getModifiers(this,itemstack1));
+                    Multimap multimap = ((IBionicPart) itemstack1.getItem()).getModifiers(this, itemstack1);
+                    if (multimap != null)
+                        player.getAttributeMap().applyAttributeModifiers(multimap);
                 }
 
                 this.previousBionicPatts[j] = itemstack1 == null ? null : itemstack1.copy();

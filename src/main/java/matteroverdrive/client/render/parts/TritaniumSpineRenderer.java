@@ -20,10 +20,10 @@ package matteroverdrive.client.render.parts;
 
 import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.IBionicPartRenderer;
+import matteroverdrive.entity.AndroidPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -37,14 +37,13 @@ public class TritaniumSpineRenderer implements IBionicPartRenderer
     public static ResourceLocation texture = new ResourceLocation(Reference.PATH_ARMOR + "tritanium_spline.png");
 
     @Override
-    public void renderPart(ItemStack partStack,EntityPlayer entityPlayer, RenderPlayer renderPlayer)
+    public void renderPart(ItemStack partStack,AndroidPlayer androidPlayer, RenderPlayer renderPlayer,float ticks)
     {
-
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 
         for (int i = 0;i < 4;i++) {
             glPushMatrix();
-            glRotated(entityPlayer.renderYawOffset, 0, -1, 0);
+            glRotated(androidPlayer.getPlayer().renderYawOffset, 0, -1, 0);
             glTranslated(-0.05, -0.75 + i * 0.15, -0.2 - Math.sin(((i+1) / 5d) * Math.PI) * 0.05);
             glRotated(25, 1, 0, 0);
             renderSpline(0, 0, 0);

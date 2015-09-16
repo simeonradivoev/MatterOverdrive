@@ -18,8 +18,8 @@
 
 package matteroverdrive.api.renderer;
 
+import matteroverdrive.entity.AndroidPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -27,5 +27,5 @@ import net.minecraft.item.ItemStack;
  */
 public interface IBionicPartRenderer
 {
-    void renderPart(ItemStack partStack,EntityPlayer entityPlayer,RenderPlayer renderPlayer);
+    void renderPart(ItemStack partStack,AndroidPlayer androidPlayer,RenderPlayer renderPlayer,float ticks);
 }
