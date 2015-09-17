@@ -16,12 +16,12 @@
   ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
   -->
 
-<entry>
-    <page>
-        <text>$itemName, является единственным источником [type=item,name=dilithium_crystal,mod=mo].</text>
-        <creates to="[type=item,name=dilithium_crystal,mod=mo]"></creates>
-        <text>Обычное колличество выпадения - 1 кристалл, а максимальное - 3 кристалла, с зачарованием "Удача III".</text>
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <text class="matter-text text-block">$itemName, является единственным источником [item name=dilithium_crystal].</text>
+        <creates to="[item name=dilithium_crystal]"></creates>
+        <text class="matter-text text-block">Обычное колличество выпадения - 1 кристалл, а максимальное - 3 кристалла, с зачарованием "Удача III".</text>
         <depth min="0" max="32"></depth>
-        <text>Руда может быть найдена ниже 32 уровня по оси Y.</text>
+        <text class="matter-text text-block">Руда может быть найдена ниже 32 уровня по оси Y.</text>
     </page>
 </entry>
