@@ -1,0 +1,34 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Rouge Android Parts</title>
+        <text class="matter-text text-block">Rouge Androids can drop [guide name=android.parts]. They consist of 4 parts. The [item name=rouge_android_part damage=0], [item name=rouge_android_part damage=1], [item name=rouge_android_part damage=2] and the [item name=rouge_android_part damage=3].</text>
+        <image src="guide/mad_scientist_conversation.png" style="float:left" width="167" height="100"></image>
+        <text class="matter-text text-block" style="width:33%;margin-left:8px">They are used in the process of Android Transformation. When the player collects a full set of android parts and brings them to a Mad Scientist in a Village, the player can be transformed into an Android.</text>
+    </page>
+    <page class="padded-page">
+        <image src="guide/android_bionic_parts_thirdperson.png" width="139" height="100" style="text-align:center"></image>
+        <text class="matter-text text-block" style="margin-top:8px">Once an Android the player can wear the parts by putting them in the appropriate slots in the [block name=android_station].</text>
+    </page>
+    <page class="padded-page">
+        <image src="guide/android_bionic_parts_gui.png" style="text-align:center" width="180" height="127" ></image>
+        <text class="matter-text text-block" style="margin-top:8px">They will replace the player's default skin parts with the Rouge Android's texture.</text>
+    </page>
+</entry>

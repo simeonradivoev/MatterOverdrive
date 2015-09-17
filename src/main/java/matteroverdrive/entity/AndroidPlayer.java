@@ -322,7 +322,14 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         this.isAndroid = isAndroid;
         sync(PacketSyncAndroid.SYNC_ALL);
-        manageStatAttributeModifiers();
+        if (isAndroid) {
+            previousBionicPatts = new ItemStack[5];
+            manageStatAttributeModifiers();
+        }
+        else {
+            clearAllStatAttributeModifiers();
+            clearAllEquipmentAttributeModifiers();
+        }
     }
 
     public boolean isAndroid()
@@ -465,6 +472,25 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void onPlayerLoad(PlayerEvent.LoadFromFile event)
     {
         manageStatAttributeModifiers();
+    }
+
+    private void clearAllEquipmentAttributeModifiers()
+    {
+        for (int j = 0; j < 5; ++j)
+        {
+            ItemStack itemstack = this.previousBionicPatts[j];
+            ItemStack itemstack1 = this.inventory.getStackInSlot(j);
+
+            if (itemstack1 != null)
+            {
+                if (itemstack1 != null && itemstack1.getItem() instanceof IBionicPart)
+                {
+                    Multimap multimap = ((IBionicPart) itemstack1.getItem()).getModifiers(this, itemstack1);
+                    if (multimap != null)
+                        player.getAttributeMap().removeAttributeModifiers(multimap);
+                }
+            }
+        }
     }
 
     private void manageEquipmentAttributeModifiers()

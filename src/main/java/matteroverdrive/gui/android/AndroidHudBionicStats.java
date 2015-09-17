@@ -104,7 +104,7 @@ public class AndroidHudBionicStats extends AndroidHudElement
         glColor4f(1, 1, 1, 0.5f);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         RenderHelper.bindItemTexture(stack);
-        RenderUtils.renderStack(x + 2, y + 2, stack);
+        RenderUtils.renderStack(x + 3, y + 3, stack);
         glDisable(GL_BLEND);
     }
 

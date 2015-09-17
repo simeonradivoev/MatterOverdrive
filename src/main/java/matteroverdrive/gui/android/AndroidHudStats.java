@@ -24,6 +24,7 @@ import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 
 import java.text.DecimalFormat;
@@ -58,7 +59,7 @@ public class AndroidHudStats extends AndroidHudElement
         RenderUtils.drawPlane(0, 10,0,174,11);
 
         double energy_perc = (double) androidPlayer.getEnergyStored() / (double) androidPlayer.getMaxEnergyStored();
-        double health_perc = androidPlayer.getPlayer().getHealth() / androidPlayer.getPlayer().getMaxHealth();
+        double health_perc = androidPlayer.getPlayer().getHealth() / androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.maxHealth).getBaseValue();
         int x = 12;
 
         //region Health

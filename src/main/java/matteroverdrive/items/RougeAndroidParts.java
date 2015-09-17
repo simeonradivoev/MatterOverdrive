@@ -18,28 +18,34 @@
 
 package matteroverdrive.items;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.items.includes.MOBaseItem;
+import matteroverdrive.items.android.BionicPart;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Simeon on 5/28/2015.
  */
-public class RougeAndroidParts extends MOBaseItem implements IBionicPart
+public class RougeAndroidParts extends BionicPart implements IBionicPart
 {
     String[] names = new String[]{"head","arms","legs","chest"};
+    String[] healtModifiersIDs = new String[]{"1bb8df41-63d1-4f58-92c4-43adea7528b2","73983b14-e605-40be-8567-36a9dec51d4f","29419afc-63ad-4b74-87e2-38219e867119","e4b38c80-7407-48fd-b837-8f36ae516c4d"};
     IIcon[] icons = new IIcon[names.length];
 
     public RougeAndroidParts(String name)
@@ -89,11 +95,13 @@ public class RougeAndroidParts extends MOBaseItem implements IBionicPart
 
     @Override
     public boolean affectAndroid(AndroidPlayer player, ItemStack itemStack) {
-        return false;
+        return true;
     }
 
     @Override
     public Multimap getModifiers(AndroidPlayer player, ItemStack itemStack) {
-        return null;
+        Multimap multimap = HashMultimap.create();
+        multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(),new AttributeModifier(UUID.fromString(healtModifiersIDs[itemStack.getItemDamage()]),MOStringHelper.translateToLocal("modifier.bionic.max_health"),1f,0));
+        return multimap;
     }
 }

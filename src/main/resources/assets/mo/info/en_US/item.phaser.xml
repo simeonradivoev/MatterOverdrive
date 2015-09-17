@@ -18,10 +18,10 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page style="margin-left:8px;margin-right:8px;margin-top:6px">
-        <title size="2" style="margin-bottom:6px">The $itemName</title>
-        <text>A $itemName, is an energy weapon, capable of stunning or killing an living being. The $itemName has 2 main settings and levels between them.</text>
+        <title size="2" style="margin-bottom:6px" class="matter-text small-title">The $itemName</title>
+        <text class="matter-text text-block">A $itemName, is an energy weapon, capable of stunning or killing an living being. The $itemName has 2 main settings and levels between them.</text>
         <preview size="6" style="text-align:center;margin-bottom:-10px;margin-top:-10px"></preview>
-        <text>The $itemName also requires power to function and can hold up to 64K RF on it’s own. It can also use any RF Energy Storage, such as a Battery.
+        <text class="matter-text text-block">The $itemName also requires power to function and can hold up to 64K RF on it’s own. It can also use any RF Energy Storage, such as a Battery.
             The $itemName can also be upgraded with Weapon Modules at the [block name=weapon_station]</text>
     </page>
 </entry>
