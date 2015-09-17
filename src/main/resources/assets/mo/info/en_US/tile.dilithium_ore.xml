@@ -16,12 +16,12 @@
   ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
   -->
 
-<entry>
-    <page>
-        <text>$itemName, is the only source of [type=item,name=dilithium_crystal,mod=mo].</text>
-        <creates to="[type=item,name=dilithium_crystal,mod=mo]"></creates>
-        <text>The normal drop amount is 1 crystal and a maximum of 3 crystals with a maximum Fortune enchantment.</text>
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <text class="matter-text text-block">$itemName, is the only source of [item name=dilithium_crystal].</text>
+        <creates to="[item name=dilithium_crystal]"></creates>
+        <text class="matter-text text-block">The normal drop amount is 1 crystal and a maximum of 3 crystals with a maximum Fortune enchantment.</text>
         <depth min="0" max="32"></depth>
-        <text>The ore can be found beneath Y level of 32.</text>
+        <text class="matter-text text-block">The ore can be found beneath Y level of 32.</text>
     </page>
 </entry>

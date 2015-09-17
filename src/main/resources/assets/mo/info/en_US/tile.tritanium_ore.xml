@@ -16,10 +16,10 @@
   ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
   -->
 
-<entry>
-    <page>
-        <text>$itemName is the only source of [type=item,name=tritanium_ingot,mod=mo].</text>
-        <infogram type="depth" min="0" max="64"></infogram>
-        <text>It can be found below Y level of 64.</text>
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <text class="matter-text text-block">$itemName is the only source of [item name=tritanium_ingot].</text>
+        <depth min="0" max="64"></depth>
+        <text class="matter-text text-block">It can be found below Y level of 64.</text>
     </page>
 </entry>
