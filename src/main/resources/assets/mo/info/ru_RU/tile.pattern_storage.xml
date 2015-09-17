@@ -1,0 +1,39 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">The $itemName</title>
+        <text class="matter-text text-block">The $itemName serves as a container for [item name=pattern_drive]. Each storage houses 6 [item name=pattern_drive].
+            It's the only way to store item patters and make them available to other machines trough the matter network.
+            The [block name=replicator] for example, requires the $itemName to acquire patterns for replication. </text>
+        <image width="64" height="64" src="guide/pattern_storage_small.png" style="float:left;margin-right:4px"></image>
+        <image width="156" height="64" src="guide/pattern_storage_wide.png"></image>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">How to use</title>
+        <text class="matter-text text-block">Connect the $itemName to a Matter Network using [block name=network_pipe] trough the back.
+            Machines like the [block name=matter_analyzer] or [block name=replicator] will try to find the first available $itemName.
+            The [block name=pattern_monitor] will show patterns stored in each [item name=pattern_drive] of the $itemName.</text>
+        <image width="64" height="64" src="guide/pattern_storage_connection.png" style="float:left;margin-right:4px"></image>
+        <image width="186" height="64" src="guide/matter_analyzer_wide.png"></image>
+    </page>
+    <page class="padded-page">
+        <recipe style="text-align:center"></recipe>
+    </page>
+</entry>

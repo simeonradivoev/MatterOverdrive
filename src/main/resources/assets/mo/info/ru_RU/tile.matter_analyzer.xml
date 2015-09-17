@@ -1,0 +1,40 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+      <title size="2" class="matter-text small-title">The $itemName</title>
+      <text class="matter-text text-block">The $itemName, is the block equivalent to the [item name=matter_scanner]. The main difference is, the $itemName is the only way to scan items. It also scans items and blocks twice as much as the [item name=matter_scanner], increasing their progress by 20%.</text>
+      <image width="64" height="64" src="guide/matter_analyzer_small.png" style="float:left;margin-right:4px"></image>
+      <image width="186" height="64" src="guide/matter_analyzer_wide.png"></image>
+    </page>
+  <page class="padded-page">
+    <title size="2" class="matter-text small-title">How to use</title>
+    <text class="matter-text text-block">The $itemName requires power, in order to function. When an item is placed in the input slot, the analyzer will search for valid destinations.
+      It will need to find a valid [item name=pattern_drive] to use as storage. The drives will be housed in [item name=pattern_storage]. The $itemName must be connected to a Matter Network to search for free pattern storage. It can only be connected trough it's back side.</text>
+    <image width="128" height="64" src="guide/matter_analyzer_progression.png" style="float:left;margin-right:8px"></image>
+    <image width="64" height="64" src="guide/matter_analyzer_connection.png"></image>
+  </page>
+  <page class="padded-page">
+    <text class="matter-text text-block">The Analyzer is smart enough to hold progression when pattern storage is not found. A [item name=network_flash_drive] can be used to limit the pattern storage blocks the Analyzer can interact with, by putting it in the network filter slot in the configurations tab.</text>
+    <image width="64" height="64" src="guide/replicator_network_filter.png"></image>
+  </page>
+  <page class="padded-page">
+    <recipe style="text-align:center"></recipe>
+  </page>
+</entry>

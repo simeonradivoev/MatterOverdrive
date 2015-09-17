@@ -1,0 +1,37 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">$itemName</title>
+        <text class="matter-text text-block">The $itemName acts similarly to the Vanilla Minecraft Signs. When placed beside another $itemName (horizontally), it will connect with them and allow you to write text with no margin spaces between the signs.</text>
+        <image style="float:left;margin-right:4px" width="90" height="90" src="guide/sign_small.png"></image>
+        <image width="158" height="90" src="guide/sign_wide.png"></image>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">How to use</title>
+        <text class="matter-text text-block">The $itemName sign is a multi-line sign.
+            In the configurations panel you can choose if each line has a automatic size based on it’s length, or if it has a line length maximum and all other lines have the same size.</text>
+        <image style="margin-right:4px;float:left" width="64" height="64" src="guide/sign_configs.png"></image>
+        <image style="margin-right:4px;float:left" width="64" height="64" src="guide/sign_small.png"></image>
+        <image style="margin-right:4px" width="64" height="64" src="guide/sign_small_none_autosize.png"></image>
+    </page>
+    <page class="padded-page">
+        <recipe></recipe>
+    </page>
+</entry>

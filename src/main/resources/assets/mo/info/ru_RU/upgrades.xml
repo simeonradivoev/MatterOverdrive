@@ -1,0 +1,71 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Machine Upgrades</title>
+        <text class="matter-text text-block">Most machines in Matter Overdrive can be upgraded. There are all sorts for upgrades.
+            From efficiency upgrades to speed upgrades.
+            They are all constructed from [item name=upgrade].</text>
+        <recipe item="[item name=upgrade]"></recipe>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Улучшение «Скорость»</title>
+        <text class="matter-text text-block">Улучшение «Скорость» используется для ускорения машин. Он может быть использован практически в каждой машине в Matter Overdrive.</text>
+        <recipe item="[item name=upgrade damage=1]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=1]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Улучшение «Мощность»</title>
+        <text class="matter-text text-block">Улучшение «Мощность» может быть использовано для уменьшения энергопотребления большинства машин в Matter Overdrive.</text>
+        <recipe item="[item name=upgrade damage=2]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=2]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Улучшение «Отказоустойчивость»</title>
+        <text class="matter-text text-block">Улучшение «Отказоустойчивость» используется для снижения вероятность отказа.
+            Он может быть использован в [block name=replicator] и [block name=decomposer],
+            чтобы снизить вероятность неудачи и побочных продуктов производства в виде [item name=matter_dust] вместо предметов или [guide name=matter_plasma].</text>
+        <recipe item="[item name=upgrade damage=3]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=3]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Улучшение «Диапазон»</title>
+        <text class="matter-text text-block">Улучшение «Диапазон» используется для увеличения диапазона машин, таких как [block name=transporter]</text>
+        <recipe item="[item name=upgrade damage=4]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=4]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Улучшение «Хранимая мощность»</title>
+        <text class="matter-text text-block">Улучшение «Хранимая мощность» используется для увеличения хранимой энергии в машинах.</text>
+        <recipe item="[item name=upgrade damage=5]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=5]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Улучшение «Гипер-скорость»</title>
+        <text class="matter-text text-block">Улучшение «Гипер-скорость» это усовершенствованная версия улучшения «Скорость».</text>
+        <recipe item="[item name=upgrade damage=6]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=6]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Улучшение «Хранимая материя»</title>
+        <text class="matter-text text-block">Улучшение «Хранимая материя» используется для увеличения хранимой материи в машинах.</text>
+        <recipe item="[item name=upgrade damage=7]" style="float:left"></recipe>
+        <details item="[item name=upgrade damage=7]" style="margin-left:16px;margin-top:8px"></details>
+    </page>
+</entry>
