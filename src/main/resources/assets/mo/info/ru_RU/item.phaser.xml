@@ -1,0 +1,27 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page style="margin-left:8px;margin-right:8px;margin-top:6px">
+        <title size="2" style="margin-bottom:6px">The $itemName</title>
+        <text>A $itemName, is an energy weapon, capable of stunning or killing an living being. The $itemName has 2 main settings and levels between them.</text>
+        <preview size="6" style="text-align:center;margin-bottom:-10px;margin-top:-10px"></preview>
+        <text>The $itemName also requires power to function and can hold up to 64K RF on it’s own. It can also use any RF Energy Storage, such as a Battery.
+            The $itemName can also be upgraded with Weapon Modules at the [type=block,name=weapon_station]</text>
+    </page>
+</entry>

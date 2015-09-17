@@ -77,9 +77,9 @@ item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
 item.upgrade.failsafe.name=Улучшение «Отказоустойчивость»
 item.upgrade.range.name=Улучшение «Диапазон»
-item.upgrade.power_storage.name=Улучшение «Мощность хранения»
+item.upgrade.power_storage.name=Улучшение «Хранимая мощность»
 item.upgrade.hyper_speed.name=Улучшение «Гипер-скорость»
-item.upgrade.matter_storage.name=Улучшение «Хранилище материи»
+item.upgrade.matter_storage.name=Улучшение «Хранимая материя»
 
 item.weapon_module_color.name=Модуль «Цвет»
 item.weapon_module_barrel.damage.name=Дилитиевая фокусирующая матрица
