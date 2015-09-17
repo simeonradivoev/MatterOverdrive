@@ -62,12 +62,24 @@ item.creative_pattern_drive.name=Plan d'entrainement créatif
 item.creative_pattern_drive.details=Contains most replicatable items\nRight Click while sneaking to reload
 item.network_flash_drive.name=Mémoire flash réseau
 item.network_flash_drive.details=utilisé comme filtre dans les dispositifs du réseau de matière
+item.energy_pack.name=Paquet d'énergie
+item.energy_pack.details=Utilisable pour le chargement rapide\nPour 'recharger' les armes énergétiques
+item.phaser_rifle.name=Fusil phaseur
+item.transport_flash_drive.name=Disque flash de transport
+item.transport_flash_drive.details=Utilisable pour marquer des emplacements pour une utilisation rapide avec le téléporteur
+item.matter_container.name=Conteneur de matière vide
+item.matter_container_full.name=Conteneur de matière plein
+item.tritanium_nugget.name=Pépite de tritanium
+item.tritanium_spine.name=Épine de tritanium
+item.data_pad.name=Atténuateur de données
 
 item.upgrade.speed.name=Amélioration de vitesse
 item.upgrade.power.name=Amélioration de puissance
 item.upgrade.failsafe.name=Amélioration de survie
 item.upgrade.range.name=Amélioration de portée
 item.upgrade.power_storage.name=Amélioration de stockage d'énergie
+item.upgrade.hyper_speed.name=Amélioration d'hyper vitesse
+item.upgrade.matter_storage.name=Amélioration du stockage de matière
 
 item.weapon_module_color.name=Module de couleur
 item.weapon_module_barrel.damage.name=Matrice de concentration en dilithium 
@@ -114,6 +126,11 @@ tile.matter_analyzer.details=Analyse les modèles d'éléments
 tile.dilithium_ore.name=Minerai de dilithium
 tile.tritanium_ore.name=Minerai de tritanium
 tile.tritanium_block.name=Bloc de tritanium
+tile.heavy_matter_pipe.name=Tuyau de transport lourd de matière
+tile.heavy_matter_pipe.details=Transporte le plasma de matière
+tile.holo_sign.name=Signe holographique
+tile.force_glass.name=Verre en tritanium
+tile.bounding_box.name=Bloc de limitation
 
 //////////// Pattern Storage ////////////
 tile.pattern_storage.name=Stockage de modèles
@@ -164,21 +181,25 @@ entity.failed_pig.name=Cochon raté
 entity.failed_chicken.name=Poule ratée
 entity.failed_cow.name=Vache ratée
 entity.failed_sheep.name=Mouton raté
+entity.mad_scientist.name=Scientifique fou
+
+##########################################################################################################
+# Dialogs
+
+dialog.generic.quit.questions=A plus tard.;Je dois y aller.;Je suis pressé.;Au revoir.;Adieu.;Salut.
+dialog.generic.back.questions=Tant pis.;Parlons d'autre chose.;Je m'en fiche.
+dialog.generic.trade.questions=Je veux échanger.;Négocions.;Montrez-moi vos biens.;Qu'avez-vous a vendre ?;
 
 //////////// Mad Scientist ///////////////
-entity.mad_scientist.name=Scientifique fou
-entity.mad_scientist.line.fail.0=Vous n'avez pas toutes les parties de l'androïde !
-entity.mad_scientist.line.fail.1=Je ne vous donnerai pas orte laquelle de mes parties !
-entity.mad_scientist.line.fail.2=You need all Android Parts, or you'll die!
-entity.mad_scientist.line.fail.3=I can't do the procedure without all the Android parts!
-entity.mad_scientist.line.0=Je ne traite pas avec les humains. But fortunately if you bring me a set of Android parts I can help you escape that fleshy body!
-entity.mad_scientist.line.1=NO! I can even look at you. So fragile! Bring me a set of Android parts and before it's to late!
-entity.mad_scientist.line.2=Are you ok ? You look trapped! How can you stand that flesh? Maybe you bring me a set of Android Parts, and maybe I can help you, with your problem.
-entity.mad_scientist.line.success.0=C'est fait. Allez maintenant et faite passer le mot !
-entity.mad_scientist.line.success.1=Il VIE! Il VIE! Mouha ha ha ha! Il VIE!
-entity.mad_scientist.line.success.2=Vous etes maintenant l'un des notres ! Allez mon enfant !
-entity.mad_scientist.line.success.3=Tout semble bon, on a juste oublié de vous mettre le nez.
-
+dialog.mad_scientist.convert.question=J'ai toutes les parties!
+dialog.mad_scientist.requirements.line=Finalement !<br>Vous libérez de ce corps fragile fut le meilleur choix.<br>Le seul problème est que j'ai besoin de vous pour m'apporter un ensemble de parties d'androïde, avant que nous ne commencions.
+dialog.mad_scientist.requirements.question=Je veux devenir un androïde.
+dialog.mad_scientist.main.line.human=Je ne traite pas avec les humains.;NON ! Je peux à peine vous regarder. Si fragile !;Vous allez bien ? Vous semblez emprisonner ! Comment pouvez-vous supporter cette chair ?
+dialog.mad_scientist.main.line.android=Ah %1$s, heureux de vous voir ! Que m'apportez vous ici ?;Bonjour. Vous avez l'air splendides aujourd'hui !;Il semblerait que votre oeil gauche est hors alignement. Je serai heureux de le réparer.
+dialog.mad_scientist.undo.line=Pourquoi voudriez-vous le faire ? La seule façon est en avalant une pilule bleue. Elle peut être trouvée dans les donjons, mais votre meilleure option est de l'acheter à quelqu'un. Je pense en avoir quelques unes dans mon magasin. Je devrai vérifier.
+dialog.mad_scientist.undo.question=Comment inverser le processus ?
+dialog.mad_scientist.whatDidYouDo.line=Vous êtes un androïde maintenant ! Vous n'aurez plus besoin de nourriture, de dormir ou d'oxygène. Vous pouvez vous améliorer avec de merveilleuses capacités dans une station d'androïde et vous serez capable de voir et faire des choses que vous n'auriez jamais imaginé.
+dialog.mad_scientist.whatDidYouDo.question=Qu'avez-vous fait de moi ?
 
 ##########################################################################################################
 # Creative Panels
@@ -197,7 +218,8 @@ upgradetype.Output.name=Sortie
 upgradetype.SecondOutput.name=Sortie secondaire
 upgradetype.Fail.name=Échec
 upgradetype.Range.name=Portée
-upgradetype.PowerStorage.name=Stockage
+upgradetype.PowerStorage.name=Stockage d'énergie
+upgradetype.MatterStorage.name=Stockage de matière
 
 ##########################################################################################################
 # Weapon Stats
@@ -278,6 +300,10 @@ gui.label.button.remove=Supprimer
 gui.label.button.add=Ajouter
 gui.label.button.reset=Mettre à zéro
 gui.label.button.scout=Envoyer l'éclaireur
+gui.label.button.new=Nouveau
+gui.label.button.import=Importer
+gui.label.button.import.too_far=Destination trop loin
+gui.label.auto_line_size=Taille de ligne auto
 
 ### GUI Tooltips ###
 gui.tooltip.starmap.no_ship_space=Pas assez d'espace de vaiseau
@@ -318,28 +344,30 @@ biopart.battery.name=Batterie
 ##########################################################################################################
 # Biostats
 
-biotic_stat.teleport.name=Ender Teleporter
-biotic_stat.teleport.details=Allows for short teleports by hitting the '%1$s' key /n/Each Teleport takes %2$s /n/A battery capable of extracting %2$s is required
+biotic_stat.teleport.name=Téléporteur du Néant
+biotic_stat.teleport.details=Permet de courtes téléportation en tappant la touche '%1$s'/n/Chaque téléportation coûte %2$s /n/Une batterie capable d'extraire du %2$s est demandée
 biotic_stat.nanobots.name=Nanobots
-biotic_stat.nanobots.details=Heals woulds by using Matter Plasma and Energy
-biotic_stat.nano_armor.name=Nano Armor
-biotic_stat.nano_armor.details=Absorbs %1$s of incoming damage
-biotic_stat.floatation.name=Air Bags
-biotic_stat.floatation.details=Enables floating when in water
-biotic_stat.speed.name=Limb Overclocking
-biotic_stat.speed.details=Increases movement speed by %1$s
-biotic_stat.high_jump.name=High Jump
-biotic_stat.high_jump.details=Enables higher jumping while sneaking /n/Each jump drains %1$s /n/A battery capable of extracting %1$s is required
-biotic_stat.equalizer.name=Space-Time Equalizer
-biotic_stat.equalizer.details=Internal Space-Time Equalizer /n/that negates the gravitational effects of /n/Gravitational Anomalies
-biotic_stat.shield.name=Plasma Shield
-biotic_stat.shield.details=Protects the player from projectiles
-biotic_stat.attack.name=Attack Boost
-biotic_stat.attack.details=Increases attack power by %1$s
-biotic_stat.cloak.name=Cloak
-biotic_stat.cloak.details=Allows the player to go invisible. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
-biotic_stat.nightvision.name=Night Vision
-biotic_stat.nightvision.details=Allows the player to see in the dark. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
+biotic_stat.nanobots.details=Guérit à l'aide de plasma de matière et d'énergie
+biotic_stat.nano_armor.name=Armure Nano
+biotic_stat.nano_armor.details=Absorbe %1$s des dégâts reçus
+biotic_stat.floatation.name=Sacs d'air
+biotic_stat.floatation.details=Permet de flotter sur l'eau
+biotic_stat.speed.name=Surcadencement de membre
+biotic_stat.speed.details=Augmente la vitesse de mouvement par %1$s
+biotic_stat.high_jump.name=Saut haut
+biotic_stat.high_jump.details=Permet de sauter plus haut en s'accroupissant /n/Chaque saut draine %1$s /n/Une batterie capable d'extraire du %1$s est demandée
+biotic_stat.equalizer.name=Égaliseur espace-temps
+biotic_stat.equalizer.details=Égaliseur espace-temps interne /n/qui inverse les effets des /n/anomalies gravitationnelles
+biotic_stat.shield.name=Bouclier plasma
+biotic_stat.shield.details=Protège le joueur des projectiles
+biotic_stat.attack.name=Augmentation d'attaque
+biotic_stat.attack.details=Augmente la puissance d'attaque par %1$s
+biotic_stat.cloak.name=Manteau
+biotic_stat.cloak.details=Permet au joueur de devenir invisible. /n/Actif, il draine %1$s par tic /n/Une batterie capable d'extraire du %1$s est demandée
+biotic_stat.nightvision.name=Vision nocturne
+biotic_stat.nightvision.details=Permet au joueur de voir dans l'obscurité. /n/Actif, il draine %1$s par tic /n/Une batterie capable d'extraire du %1$s est demandée
+biotic_stat.minimap.name=Mini carte
+biotic_stat.minimap.details=Ajoute une mini carte sur l'afficheur à l'écran
 
 ##########################################################################################################
 # Deaths
@@ -389,16 +417,67 @@ config.client.name=Options client
 config.server.name=Options serveur
 config.starmap.name=Options de la carte des étoiles
 config.ore_gen_blacklist.name=Ore Dimension Blacklist
-config.abilities.name=Android Abilities
+config.abilities.name=Capacités d'androïde
+config.entities.name=Entités
+config.debug.name=Déboguer
+config.android_hud.name=Afficheur à l'écran de l'androïde
+config.android_hud.stats.position=Position des stats
+config.android_hud.bionicStats.position=Positions de capacités bioniques
+config.android_hud.minimap.position=Position de la mini carte
+config.android_hud.color=Couleur de l'afficheur à l'écran
+config.android_hud.opacity=Opacité de l'afficheur à l'écran
 
 ##########################################################################################################
 # Chat Alerts
 
-alert.no_rights=No Rights to Access the $0
-alert.no_access_default=Access denied to $0
-alert.not_android=Biological Entity Detected! Access Denied!
-alert.no_rights.brake=Only the owner can brake the $0
-alert.no_rights.dismantle=Only the owner can dismantle the $0
-alert.new_update=A new version is available!
-alert.starmap.ship_arrive=§3%1$s §rhas arrived at §3%2$s§r!
-alert.starmap.on_build=§3%1$s §rwas built at §3%2$s§r!
+alert.no_rights=Pas de droits d'accès à $0
+alert.no_access_default=Accès interdit à $0
+alert.not_android=Entité biologique détectée ! Accès refusé !
+alert.no_rights.brake=Seul le propriétaire peut freiner le $0
+alert.no_rights.dismantle=Seul le propriétaire peut démanteler le $0
+alert.new_update=Une nouvelle version est difponible !
+alert.starmap.ship_arrive=§3%1$s §rest arrivé à §3%2$s§r!
+alert.starmap.on_build=§3%1$s §ra été construit à §3%2$s§r!
+
+#############################################################################################################
+# Enchantments
+
+enchantment.matteroverdrive.weapon.damage=Surcadencement
+
+###############################################################################################################
+# Fluids
+fluid.matter_plasma.name=Plasma
+
+##########################################################################################################
+# Guides
+guide.group.machines.name=Machines
+guide.group.ore.name=Minerai
+guide.group.matter.name=Matière
+guide.group.matter_network.name=Réseau
+guide.group.weapons.name=Armes
+guide.group.parts.name=Pièces
+guide.group.items.name=Éléments
+guide.group.power.name=Énergie
+guide.group.blocks.name=Blocs
+guide.group.drinks.name=Boissons
+guide.group.food.name=Nouriture
+
+guide.entry.matter_fail.name=Échec de réplication de matière
+guide.entry.matter_plasma.name=Plasma de matière
+guide.entry.matter_transport.name=Transport de matière
+guide.entry.weapon.modules.barrels.name=Couleurs de barils
+guide.entry.weapon.modules.colors.name=Couleurs d'armes
+guide.entry.android.pills.name=Pilules
+guide.entry.android.parts.name=Pièces d'androïde rouge
+guide.entry.fusion_reactor.name=Réacteur à fusion
+guide.entry.batteries.name=Batteries
+guide.entry.food.name=Nouriture
+guide.entry.drinks.name=Boissons
+guide.entry.upgrades.name=Améliorations
+
+###############################################################################################################
+# modifiers
+
+modifier.bionic.max_health=Santé maxi
+modifier.bionic.glitch_time=Temps du problème
+
