@@ -63,12 +63,15 @@ item.creative_pattern_drive.details=Содержит наиболее воспр
 item.network_flash_drive.name=Сетевой флэш-накопитель
 item.network_flash_drive.details=Используется в качестве фильтра в устройствах материальной сети
 item.energy_pack.name=Энергетический ранец
-item.energy_pack.details=Используется для быстрой подзарядки\nДля "перезагрузки" энергетических оружий
+item.energy_pack.details=Используется для быстрой подзарядки. Для "перезагрузки" энергетических оружий
 item.phaser_rifle.name=Фазерная винтовка
 item.transport_flash_drive.name=Транспортный флэш-накопитель
 item.transport_flash_drive.details=Используется для обозначения места для быстрого использования Транспортера
 item.matter_container.name=Контейнер материи (Пустой)
 item.matter_container_full.name=Контейнер материи (Полный)
+item.tritanium_nugget.name=Тритановый самородок
+item.tritanium_spine.name=Тритановый позвоночник
+item.data_pad.name=Data Pad
 
 item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
@@ -460,7 +463,7 @@ guide.group.drinks.name=Напитки
 guide.group.food.name=Еда
 
 guide.entry.matter_fail.name=Matter Replication Failure
-guide.entry.matter_plasma.name=Matter Plasma
+guide.entry.matter_plasma.name=Материальная плазма
 guide.entry.matter_transport.name=Matter Transport
 guide.entry.weapon.modules.barrels.name=Weapon Barrels
 guide.entry.weapon.modules.colors.name=Weapon Colors
