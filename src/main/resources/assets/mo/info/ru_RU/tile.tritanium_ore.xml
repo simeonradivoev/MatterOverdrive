@@ -16,10 +16,10 @@
   ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
   -->
 
-<entry>
-    <page>
-        <text>$itemName, является единственным источником [type=item,name=tritanium_ingot,mod=mo].</text>
-        <infogram type="depth" min="0" max="64"></infogram>
-        <text>>Руда может быть найдена ниже 64 уровня по оси Y.</text>
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <text class="matter-text text-block">$itemName, является единственным источником [item name=tritanium_ingot].</text>
+        <depth min="0" max="64"></depth>
+        <text class="matter-text text-block">Руда может быть найдена ниже 64 уровня по оси Y.</text>
     </page>
 </entry>
