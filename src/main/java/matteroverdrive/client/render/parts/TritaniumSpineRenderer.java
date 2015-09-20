@@ -19,7 +19,6 @@
 package matteroverdrive.client.render.parts;
 
 import matteroverdrive.Reference;
-import matteroverdrive.api.renderer.IBionicPartRenderer;
 import matteroverdrive.entity.AndroidPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -32,13 +31,14 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by Simeon on 9/10/2015.
  */
-public class TritaniumSpineRenderer implements IBionicPartRenderer
+public class TritaniumSpineRenderer extends BionicPartRenderer
 {
     public static ResourceLocation texture = new ResourceLocation(Reference.PATH_ARMOR + "tritanium_spline.png");
 
     @Override
     public void renderPart(ItemStack partStack,AndroidPlayer androidPlayer, RenderPlayer renderPlayer,float ticks)
     {
+        translateFromPlayer(androidPlayer.getPlayer(),ticks);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 
         for (int i = 0;i < 4;i++) {

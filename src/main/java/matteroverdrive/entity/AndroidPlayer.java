@@ -347,17 +347,17 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         this.sync(player, part,others);
     }
 
-    private void sync(EntityPlayer player,int syncPart,boolean toOthers)
+    public void sync(EntityPlayer player,int syncPart,boolean toOthers)
     {
         if (player instanceof EntityPlayerMP)
         {
             if (toOthers)
             {
-                MatterOverdrive.packetPipeline.sendToAllAround(new PacketSyncAndroid(this, syncPart, true), player, 64);
+                MatterOverdrive.packetPipeline.sendToAllAround(new PacketSyncAndroid(this, syncPart), player, 64);
             }
             else
             {
-                MatterOverdrive.packetPipeline.sendTo(new PacketSyncAndroid(this, syncPart, false), (EntityPlayerMP) player);
+                MatterOverdrive.packetPipeline.sendTo(new PacketSyncAndroid(this, syncPart), (EntityPlayerMP) player);
             }
         }
     }
@@ -495,6 +495,8 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     private void manageEquipmentAttributeModifiers()
     {
+        boolean needsSync = false;
+
         for (int j = 0; j < 5; ++j)
         {
             ItemStack itemstack = this.previousBionicPatts[j];
@@ -519,7 +521,13 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 }
 
                 this.previousBionicPatts[j] = itemstack1 == null ? null : itemstack1.copy();
+                needsSync = true;
             }
+        }
+
+        if (needsSync)
+        {
+            sync(PacketSyncAndroid.SYNC_INVENTORY,true);
         }
     }
 
@@ -924,7 +932,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @Override
     public void markDirty()
     {
-        sync(PacketSyncAndroid.SYNC_ALL,true);
+        //sync(PacketSyncAndroid.SYNC_INVENTORY,true);
     }
 
     @Override

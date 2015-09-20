@@ -57,11 +57,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -218,15 +218,15 @@ public class RenderHandler
                 {
                     IBionicPartRenderer renderer = bionicPartRenderRegistry.getRenderer(((IBionicPart) part.getItem()).getClass());
                     if (renderer != null) {
-                        GL11.glPushMatrix();
-                        if (event.entityPlayer != Minecraft.getMinecraft().thePlayer)
-                        {
-                            Vec3 clientPos = Minecraft.getMinecraft().thePlayer.getPosition(event.partialRenderTick);
-                            Vec3 pos = event.entityPlayer.getPosition(event.partialRenderTick);
-                            GL11.glTranslated(pos.xCoord - clientPos.xCoord,pos.yCoord - clientPos.yCoord + event.entityPlayer.getEyeHeight()-0.2,pos.zCoord - clientPos.zCoord);
+                        try {
+                            GL11.glPushMatrix();
+                            renderer.renderPart(part, androidPlayer, event.renderer,event.partialRenderTick);
+                            GL11.glPopMatrix();
                         }
-                        renderer.renderPart(part, androidPlayer, event.renderer,event.partialRenderTick);
-                        GL11.glPopMatrix();
+                        catch (Exception e)
+                        {
+                            MatterOverdrive.log.log(Level.ERROR,e,"An Error occurred while rendering bionic part");
+                        }
                     }
                 }
             }

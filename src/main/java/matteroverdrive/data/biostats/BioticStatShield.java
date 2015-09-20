@@ -19,7 +19,6 @@
 package matteroverdrive.data.biostats;
 
 import cofh.lib.audio.SoundBase;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -34,7 +33,6 @@ import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -248,9 +246,10 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     @Override
     public Multimap attributes(AndroidPlayer androidPlayer, int level)
     {
-        Multimap multimap = HashMultimap.create();
-        multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(),modifyer);
-        return multimap;
+        //Multimap multimap = HashMultimap.create();
+        //multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(),modifyer);
+        //return multimap;
+        return null;
     }
 
     @SideOnly(Side.CLIENT)

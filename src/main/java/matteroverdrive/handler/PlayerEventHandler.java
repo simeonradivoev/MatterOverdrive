@@ -25,8 +25,10 @@ import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -101,6 +103,19 @@ public class PlayerEventHandler
         AndroidPlayer player = AndroidPlayer.get(event.entityPlayer);
         if (player != null) {
             player.onPlayerLoad(event);
+        }
+    }
+
+    @SubscribeEvent
+    public void onStartTracking(net.minecraftforge.event.entity.player.PlayerEvent.StartTracking event)
+    {
+        if (event.target instanceof EntityPlayer)
+        {
+            AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.target);
+            if (androidPlayer != null && androidPlayer.isAndroid())
+            {
+                androidPlayer.sync(event.entityPlayer, PacketSyncAndroid.SYNC_ALL,false);
+            }
         }
     }
 

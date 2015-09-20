@@ -91,11 +91,17 @@ public class MatterOverdriveRecipes
         addRecipe(new ShapedOreRecipe(new ItemStack(MatterOverdriveItems.matterContainer, 6), "G G", " T ", 'T', MatterOverdriveItems.tritanium_plate, 'G', "glass"));
         addRecipe(new ShapedOreRecipe(new ItemStack(MatterOverdriveItems.tritanium_ingot), "###", "###", "###", '#', "nuggetTritanium"));
         addRecipe(new ShapelessOreRecipe(new ItemStack(MatterOverdriveItems.tritanium_nugget,9),"ingotTritanium"));
+        addShapelessRecipe(new ItemStack(MatterOverdriveItems.dataPad),Items.book,new ItemStack(MatterOverdriveItems.isolinear_circuit,0));
     }
 
     public static void addShapedRecipe(ItemStack output,Object... params)
     {
         recipes.add(GameRegistry.addShapedRecipe(output, params));
+    }
+
+    public static void addShapelessRecipe(ItemStack output,Object... items)
+    {
+        GameRegistry.addShapelessRecipe(output, items);
     }
 
     public static void addRecipe(IRecipe recipe)

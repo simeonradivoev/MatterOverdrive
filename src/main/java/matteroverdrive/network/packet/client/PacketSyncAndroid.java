@@ -40,17 +40,17 @@ public class PacketSyncAndroid extends PacketAbstract
     public static final int SYNC_EFFECTS = 1;
     public static final int SYNC_STATS = 2;
     public static final int SYNC_ACTIVE_ABILITY = 3;
+    public static final int SYNC_INVENTORY = 4;
     NBTTagCompound data;
     int syncPart;
     int playerID;
-    boolean others;
 
     public PacketSyncAndroid()
     {
         data = new NBTTagCompound();
     }
 
-    public PacketSyncAndroid(AndroidPlayer player,int syncPart,boolean others)
+    public PacketSyncAndroid(AndroidPlayer player,int syncPart)
     {
         switch (syncPart)
         {
@@ -73,13 +73,17 @@ public class PacketSyncAndroid extends PacketAbstract
                 {
                     data.setString("Ability",player.getActiveStat().getUnlocalizedName());
                 }
+                break;
+            case SYNC_INVENTORY:
+                data = new NBTTagCompound();
+                player.getInventory().writeToNBT(data);
+                break;
             default:
                 data = new NBTTagCompound();
                 player.saveNBTData(data);
         }
         this.syncPart = syncPart;
         this.playerID = player.getPlayer().getEntityId();
-        this.others = others;
     }
 
     @Override
@@ -88,7 +92,6 @@ public class PacketSyncAndroid extends PacketAbstract
         data = ByteBufUtils.readTag(buf);
         syncPart = buf.readInt();
         playerID = buf.readInt();
-        others = buf.readBoolean();
     }
 
     @Override
@@ -97,7 +100,6 @@ public class PacketSyncAndroid extends PacketAbstract
         ByteBufUtils.writeTag(buf,data);
         buf.writeInt(syncPart);
         buf.writeInt(playerID);
-        buf.writeBoolean(others);
     }
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketSyncAndroid>
@@ -106,10 +108,6 @@ public class PacketSyncAndroid extends PacketAbstract
         public IMessage handleClientMessage(EntityPlayer player, PacketSyncAndroid message, MessageContext ctx)
         {
             Entity entity = player.worldObj.getEntityByID(message.playerID);
-            if (!message.others)
-            {
-                entity = player;
-            }
 
             if (entity instanceof EntityPlayer) {
                 EntityPlayer source = (EntityPlayer) entity;
@@ -135,6 +133,10 @@ public class PacketSyncAndroid extends PacketAbstract
                             } else {
                                 ex.setActiveStat(null);
                             }
+                            break;
+                        case SYNC_INVENTORY:
+                            ex.getInventory().readFromNBT(message.data);
+                            break;
                         default:
                             ex.loadNBTData(message.data);
                     }
