@@ -13,6 +13,7 @@ public class BlockBoundingBox extends MOBlock {
 	public BlockBoundingBox(Material material, String name) {
 		super(material, name);
 		setBlockUnbreakable();
+		setCreativeTab(null);
 	}
 
 	@Override
