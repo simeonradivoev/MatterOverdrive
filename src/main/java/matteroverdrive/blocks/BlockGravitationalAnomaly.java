@@ -140,11 +140,11 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
-        TileEntityGravitationalAnomaly.BLOCK_ENTETIES = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_BLOCK_ENTITIES, ConfigurationHandler.CATEGORY_SERVER + "." + unlocalizedName, true, "Should the blocks drop entities or be directly consumed when destroyed by the gravitational anomaly");
-        TileEntityGravitationalAnomaly.FALLING_BLOCKS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FALLING_BLOCKS, ConfigurationHandler.CATEGORY_SERVER + "." + unlocalizedName,true,"Should blocks be turned into falling blocks when broken");
-        TileEntityGravitationalAnomaly.VANILLA_FLUIDS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_VANILLA_FLUIDS, ConfigurationHandler.CATEGORY_SERVER + "." + unlocalizedName,true,"Should vanilla fluid block such as water and lava be consumed by the anomaly");
-        TileEntityGravitationalAnomaly.FORGE_FLUIDS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS, ConfigurationHandler.CATEGORY_SERVER + "." + unlocalizedName,true,"Should other mod fluid blocks be consumed by the anomaly");
-        TileEntityGravitationalAnomaly.BLOCK_DESTRUCTION = config.getBool("block destruction",ConfigurationHandler.CATEGORY_SERVER + "." + unlocalizedName,true,"Should the gravitational anomaly destroy blocks");
-        TileEntityGravitationalAnomaly.GRAVITATION = config.getBool("gravitational pull",ConfigurationHandler.CATEGORY_SERVER + "." + unlocalizedName,true,"Should the gravitational entity pull entities towards it");
+        TileEntityGravitationalAnomaly.BLOCK_ENTETIES = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_BLOCK_ENTITIES, ConfigurationHandler.CATEGORY_SERVER + "." + getUnlocalizedName().substring(5), true, "Should the blocks drop entities or be directly consumed when destroyed by the gravitational anomaly");
+        TileEntityGravitationalAnomaly.FALLING_BLOCKS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FALLING_BLOCKS, ConfigurationHandler.CATEGORY_SERVER + "." + getUnlocalizedName().substring(5),true,"Should blocks be turned into falling blocks when broken");
+        TileEntityGravitationalAnomaly.VANILLA_FLUIDS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_VANILLA_FLUIDS, ConfigurationHandler.CATEGORY_SERVER + "." + getUnlocalizedName().substring(5),true,"Should vanilla fluid block such as water and lava be consumed by the anomaly");
+        TileEntityGravitationalAnomaly.FORGE_FLUIDS = config.getBool(ConfigurationHandler.KEY_GRAVITATIONAL_ANOMALY_FORGE_FLUIDS, ConfigurationHandler.CATEGORY_SERVER + "." + getUnlocalizedName().substring(5),true,"Should other mod fluid blocks be consumed by the anomaly");
+        TileEntityGravitationalAnomaly.BLOCK_DESTRUCTION = config.getBool("block destruction",ConfigurationHandler.CATEGORY_SERVER + "." + getUnlocalizedName().substring(5),true,"Should the gravitational anomaly destroy blocks");
+        TileEntityGravitationalAnomaly.GRAVITATION = config.getBool("gravitational pull",ConfigurationHandler.CATEGORY_SERVER + "." + getUnlocalizedName().substring(5),true,"Should the gravitational entity pull entities towards it");
     }
 }
