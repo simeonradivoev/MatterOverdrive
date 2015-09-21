@@ -22,6 +22,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.entity.AndroidPlayer;
@@ -76,7 +77,12 @@ public class PlayerEventHandler
 
         AndroidPlayer player = AndroidPlayer.get(event.player);
         if (player != null) {
-            player.onPlayerTick(event);
+            if (event.side == Side.CLIENT) {
+                onAndroidTickClient(player, event);
+
+            } else {
+                onAndroidServerTick(player, event);
+            }
         }
 
         //used to stop the item refreshing when using weapons and changing their data
@@ -95,6 +101,20 @@ public class PlayerEventHandler
                 }
             }
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void onAndroidTickClient(AndroidPlayer androidPlayer,TickEvent.PlayerTickEvent event)
+    {
+        if (event.player == Minecraft.getMinecraft().thePlayer)
+        {
+            androidPlayer.onPlayerTick(event);
+        }
+    }
+
+    private void onAndroidServerTick(AndroidPlayer androidPlayer,TickEvent.PlayerTickEvent event)
+    {
+        androidPlayer.onPlayerTick(event);
     }
 
     @SubscribeEvent
