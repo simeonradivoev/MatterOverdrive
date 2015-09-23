@@ -69,6 +69,9 @@ item.transport_flash_drive.name=传送闪存驱动器
 item.transport_flash_drive.details=记录地点以便快速使用传送器
 item.matter_container.name=空物质仓
 item.matter_container_full.name=满物质仓
+item.tritanium_nugget.name=钛金粒
+item.tritanium_spine.name=钛金脊椎
+item.data_pad.name=便携数据仪
 
 item.upgrade.speed.name=速度升级
 item.upgrade.power.name=能耗升级
