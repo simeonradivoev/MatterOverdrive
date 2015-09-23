@@ -1,0 +1,43 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">物质重组仓</title>
+        <text class="matter-text text-block">$itemName, 是一个使用传送技术将物品模板重组为物理实体的机器. 通过使用[guide name=matter_plasma], 能够将亚原子粒子的大规模重新排布. 简单来说, 它能够重组物品和方块, 就像它的名字一样 $itemName.</text>
+        <image width="256" height="90" src="guide/replicator.png"></image>
+    </page>
+    <page style="margin-left:8px;margin-right:8px;margin-top:6px">
+        <title size="2" class="matter-text small-title">如何使用</title>
+        <text class="matter-text text-block">在你想要重组物品之前, 你首先需要一个物品模板. 它可以通过[item name=matter_scanner]或[item name=matter_analyzer]来进行获取. 不幸的是扫描过程会摧毁掉物品.
+            物品的每次扫描, 都会加快它的过程. 根据机器的红石设定, 重组过程可能需要一个红石信号.
+            [guide name=matter_plasma]同样会被用于物质重组. 至于多少就取决于物品本身了.</text>
+        <text class="matter-text">警告! 物质重组过程将释放大量辐射. 在没有防护措施的情况下, 生物会受到高剂量辐射并伴有严重的负面效果, 例如饥饿, 恶心, 疲倦, 虚弱还有中毒. 为了抵御辐射, 你可以使用最多5层[item name=tritanium_plate]来保护玩家. 每层板都会降低一些范围效果.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title ">物质网络</title>
+        <text class="matter-text text-block">$itemName 可以从后面进行连接. 一旦接入网路, [item name=pattern_monitor]就可以被用于给所有连接的重组仓发送重组任务.
+            $itemName 接到重组任务后, 将会在本地网络中搜索有效模板.
+            [item name=network_flash_drive]可以被用于限制 $itemName 所能访问到的机器.</text>
+        <image width="64" height="64" src="guide/replicator_connection.png" style="float:left;margin-right:8px"></image>
+        <image width="64" height="64" src="guide/replicator_network_filter.png" style="float:left"></image>
+    </page>
+    <page class="padded-page">
+        <recipe style="text-align:center"></recipe>
+    </page>
+</entry>
