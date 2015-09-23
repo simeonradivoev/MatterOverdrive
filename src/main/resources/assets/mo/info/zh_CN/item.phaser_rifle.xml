@@ -1,0 +1,26 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page style="margin-left:8px;margin-right:8px;margin-top:6px">
+        <title size="2" class="matter-text small-title" style="margin-bottom:6px">$itemName</title>
+        <preview size="8" style="text-align:center;margin-bottom:-14px;margin-top:-8px"></preview>
+        <text class="matter-text text-block">$itemName 是一种速射能量武器, 能够发射能量弹. 它可以使用[item name=energy_pack]对自身进行充能.</text>
+        <text class="matter-text text-block">来复枪在长时间开火且没有冷却时间的情况下会发生过热现象.</text>
+    </page>
+</entry>
