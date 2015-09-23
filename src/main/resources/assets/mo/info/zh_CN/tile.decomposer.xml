@@ -1,0 +1,36 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">物质分解仓</title>
+        <text class="matter-text text-block">用于将物质或方块分解成[guide name=matter_plasma]. 可以同[item name=replicator]一起使用将产生的[guide name=matter_plasma]用于重组过程.</text>
+        <image width="256" height="93" src="guide/decomposer.png" style="text-align:center"></image>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">如何使用</title>
+        <image width="64" height="64" style="float:left;margin-right:8px;margin-bottom:8px" src="guide/decomposer_input_slot.png"></image>
+        <text class="matter-text text-block" style="width:200px">将一个可被重组的物品放置在输入槽中. 待物品被分解后内部液体槽会充满等量的物质. 你可以使用[item name=matter_pipe]或者其他液体管道将物质传输至其他机器.</text>
+        <image width="64" height="64" style="float:left;margin-right:8px" src="guide/decomposer_tank_info.png"></image>
+        <text class="matter-text text-block" style="width:200px">想要了解一个物品含有多少物质, 按住Shift激活物品的提示框. 将鼠标停留其上方, 你就可以浏览更多有关能耗或物质含量的信息.</text>
+    </page>
+    <page class="padded-page">
+        <text class="matter-text text-block">通过使用[item name=tritanium_wrench], 你可以拾取一个机器, 同时它会保留其中的物质与能量, 以及它所有的升级和配置.</text>
+        <recipe style="text-align:center"></recipe>
+    </page>
+</entry>

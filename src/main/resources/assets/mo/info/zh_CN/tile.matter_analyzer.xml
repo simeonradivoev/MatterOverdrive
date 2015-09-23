@@ -1,0 +1,40 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+      <title size="2" class="matter-text small-title">$itemName</title>
+      <text class="matter-text text-block">$itemName, 是一种和[item name=matter_scanner]功能类似的方块. 主要区别在于, $itemName 是扫描物品的唯一途径. 相比于[item name=matter_scanner], 它还能扫描两倍数量的物品及方块并 加快处理速度20%.</text>
+      <image width="64" height="64" src="guide/matter_analyzer_small.png" style="float:left;margin-right:4px"></image>
+      <image width="186" height="64" src="guide/matter_analyzer_wide.png"></image>
+    </page>
+  <page class="padded-page">
+    <title size="2" class="matter-text small-title">如何使用</title>
+    <text class="matter-text text-block">$itemName 需要能量驱动. 当一个物品被放置到输入槽时, 分析仪会搜寻有效存储空间.
+      它需要寻找一个有效的[item name=pattern_drive]来进行存储. 存储单元需要被放置在[item name=pattern_storage]中. $itemName 必须被接入物质网络以进行存储空间搜索. 管线仅能够从它的后面进行连接.</text>
+    <image width="128" height="64" src="guide/matter_analyzer_progression.png" style="float:left;margin-right:8px"></image>
+    <image width="64" height="64" src="guide/matter_analyzer_connection.png"></image>
+  </page>
+  <page class="padded-page">
+    <text class="matter-text text-block">当没有空闲存储空间时, 分析仪会保持扫描进度. 一个[item name=network_flash_drive]可以用于限制分析仪能够接入的模式 存储仓数量,只需将其放置在配置栏的过滤槽中即可.</text>
+    <image width="64" height="64" src="guide/replicator_network_filter.png"></image>
+  </page>
+  <page class="padded-page">
+    <recipe style="text-align:center"></recipe>
+  </page>
+</entry>

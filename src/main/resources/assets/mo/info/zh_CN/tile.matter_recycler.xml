@@ -1,0 +1,34 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">$itemName</title>
+        <text class="matter-text text-block">$itemName 可用于将[item name=matter_dust]提纯至[item name=matter_dust_refined]. 它能够将分解或重组所产生的[item name=matter_dust]进行再次循环利用.</text>
+        <image width="64" height="64" src="guide/matter_recycler_small.png" style="float:left;margin-right:4px"></image>
+        <image width="159" height="64" src="guide/matter_recycler_wide.png"></image>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">如何使用</title>
+        <creates from="[item name=matter_dust]" to="[item name=matter_dust_refined]"></creates>
+        <text class="matter-text text-block">将[item name=matter_dust]放置在输入槽并为$itemName 提供能量. 你可以将[item name=matter_dust_refined]放置在[item name=decomposer]中将它们分解为[guide name=matter_plasma].</text>
+    </page>
+    <page class="padded-page">
+        <recipe style="text-align:center"></recipe>
+    </page>
+</entry>
