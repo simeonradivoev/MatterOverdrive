@@ -1,0 +1,27 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page style="margin-left:8px;margin-right:8px;margin-top:6px">
+        <title size="2" style="margin-bottom:6px" class="matter-text small-title">$itemName</title>
+        <text class="matter-text text-block">$itemName 是一种能量武器, 能够眩晕甚至杀掉生物. $itemName 拥有两种主要设定, 每种都有着对应的等级.</text>
+        <preview size="6" style="text-align:center;margin-bottom:-10px;margin-top:-10px"></preview>
+        <text class="matter-text text-block">$itemName 同样需要能量来运行, 它本身能够存储64K RF. 它也可以使用一些RF能量存储单元, 例如电池.
+            $itemName 可以在[block name=weapon_station]中通过使用武器模块进行升级</text>
+    </page>
+</entry>
