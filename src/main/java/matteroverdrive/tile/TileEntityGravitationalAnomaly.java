@@ -285,7 +285,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
             playSounds();
         }else
         {
-            sound.setVolume(Math.min(MAX_VOLUME,getBreakStrength() * 0.1f));
+            sound.setVolume(Math.min(MAX_VOLUME,getBreakStrength(0,(float)getMaxRange()) * 0.1f));
             sound.setRange(getMaxRange());
         }
     }
@@ -388,7 +388,6 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         int range = MathHelper.floor(getBlockBreakRange());
         double distance;
         double eventHorizon = getEventHorizon();
-        float strength = getBreakStrength();
         int blockPosX,blockPosY,blockPosZ;
         float hardness;
         Block block;
@@ -414,6 +413,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                             hardness = 1;
                         }
 
+                        float strength = getBreakStrength((float)distance,range);
                         if (block != null && block != Blocks.air && distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
                         {
                             blocks.add(new PositionWrapper(blockPosX,blockPosY,blockPosZ));
@@ -438,6 +438,8 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 if (solidCount < MAX_BLOCKS_PER_HARVEST)
                 {
                     try {
+                        distance = MOMathHelper.distance(position.x,position.y,position.z,xCoord,yCoord,zCoord);
+                        float strength = getBreakStrength((float)distance,range);
                         if (brakeBlock(world, position.x, position.y, position.z, strength, eventHorizon, range)) {
                             solidCount++;
                         }
@@ -484,6 +486,23 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         return Math.log1p(mass * STREHGTH_MULTIPLYER);
     }
 
+    public float getBreakStrength(float distance,float maxRange)
+    {
+        return ((float)getRealMass() * 4 * suppression) * getDistanceFalloff(distance,maxRange);
+    }
+
+    /**
+     * Get the Falloff based on the distance and max range of the anomaly
+     * Used in conjunction with brake strength
+     * @param distance the distance of the object
+     * @param maxRange the range (max distance) of the anomaly
+     * @return the falloff (1 - 0) in percent
+     */
+    public float getDistanceFalloff(float distance,float maxRange)
+    {
+        return (1 - (distance / maxRange));
+    }
+
     public float getBreakStrength()
     {
         return (float)getRealMass() * 4 * suppression;
@@ -491,6 +510,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     public void consume(Entity entity) {
         int matter = 1;
+        float strength = getBreakStrength((float)entity.getDistance(xCoord,yCoord,zCoord),(float)getMaxRange());
 
         if (!entity.isDead) {
             if (entity instanceof EntityItem) {
@@ -506,18 +526,18 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 entity.setDead();
                 worldObj.removeEntity(entity);
             } else if (entity instanceof EntityPlayer) {
-                matter += Math.min(((EntityLivingBase) entity).getHealth(), getBreakStrength());
+                matter += Math.min(((EntityLivingBase) entity).getHealth(), strength);
                 DamageSource damageSource = new DamageSource("blackHole");
-                entity.attackEntityFrom(damageSource, getBreakStrength());
+                entity.attackEntityFrom(damageSource, strength);
             } else if (entity instanceof EntityLivingBase) {
-                matter += Math.min(((EntityLivingBase) entity).getHealth(), getBreakStrength());
-                if (((EntityLivingBase) entity).getHealth() <= getBreakStrength()) {
+                matter += Math.min(((EntityLivingBase) entity).getHealth(), strength);
+                if (((EntityLivingBase) entity).getHealth() <= strength) {
                     entity.setDead();
                     worldObj.removeEntity(entity);
                 }
 
                 DamageSource damageSource = new DamageSource("blackHole");
-                entity.attackEntityFrom(damageSource, getBreakStrength());
+                entity.attackEntityFrom(damageSource, strength);
             }
 
             mass += matter;
