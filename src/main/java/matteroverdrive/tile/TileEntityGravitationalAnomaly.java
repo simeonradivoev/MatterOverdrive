@@ -20,6 +20,7 @@ package matteroverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.MathHelper;
+import com.google.common.math.BigIntegerMath;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -28,6 +29,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IGravityEntity;
 import matteroverdrive.api.IScannable;
+import matteroverdrive.api.events.anomaly.MOEventGravitationalAnomalyConsume;
 import matteroverdrive.client.sound.GravitationalAnomalySound;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.fx.GravitationalAnomalyParticle;
@@ -56,10 +58,14 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -483,7 +489,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     public double getRealMassUnsuppressed()
     {
-        return Math.log1p(mass * STREHGTH_MULTIPLYER);
+        return Math.log1p(Math.max(mass,0) * STREHGTH_MULTIPLYER);
     }
 
     public float getBreakStrength(float distance,float maxRange)
@@ -509,40 +515,92 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     }
 
     public void consume(Entity entity) {
-        int matter = 1;
-        float strength = getBreakStrength((float)entity.getDistance(xCoord,yCoord,zCoord),(float)getMaxRange());
+        if (!entity.isDead && onEntityConsume(entity,true)) {
 
-        if (!entity.isDead) {
+            boolean consumedFlag = false;
+
             if (entity instanceof EntityItem) {
-                ItemStack itemStack = ((EntityItem) entity).getEntityItem();
-                if (itemStack != null) {
-                    matter = MatterHelper.getMatterAmountFromItem(itemStack) * itemStack.stackSize;
-                }
-                entity.setDead();
-                worldObj.removeEntity(entity);
+                consumedFlag |= consumeEntityItem((EntityItem)entity);
             } else if (entity instanceof EntityFallingBlock) {
-                ItemStack itemStack = new ItemStack(((EntityFallingBlock) entity).func_145805_f());
-                matter = MatterHelper.getMatterAmountFromItem(itemStack) * itemStack.stackSize;
-                entity.setDead();
-                worldObj.removeEntity(entity);
-            } else if (entity instanceof EntityPlayer) {
-                matter += Math.min(((EntityLivingBase) entity).getHealth(), strength);
-                DamageSource damageSource = new DamageSource("blackHole");
-                entity.attackEntityFrom(damageSource, strength);
-            } else if (entity instanceof EntityLivingBase) {
-                matter += Math.min(((EntityLivingBase) entity).getHealth(), strength);
-                if (((EntityLivingBase) entity).getHealth() <= strength) {
-                    entity.setDead();
-                    worldObj.removeEntity(entity);
-                }
-
-                DamageSource damageSource = new DamageSource("blackHole");
-                entity.attackEntityFrom(damageSource, strength);
+                consumedFlag |= consumeFallingBlock((EntityFallingBlock)entity);
+            } else if (entity instanceof EntityLivingBase)
+            {
+                consumedFlag |= consumeLivingEntity((EntityLivingBase)entity,getBreakStrength((float)entity.getDistance(xCoord,yCoord,zCoord),(float)getMaxRange()));
             }
 
-            mass += matter;
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            if (consumedFlag)
+            {
+                onEntityConsume(entity, false);
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
         }
+    }
+
+    private boolean consumeEntityItem(EntityItem entityItem)
+    {
+        ItemStack itemStack = entityItem.getEntityItem();
+        if (itemStack != null) {
+            try {
+                mass = Math.addExact(mass,(long)MatterHelper.getMatterAmountFromItem(itemStack) * (long)itemStack.stackSize);
+            }catch (ArithmeticException e)
+            {
+                return false;
+            }
+
+            entityItem.setDead();
+            worldObj.removeEntity(entityItem);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean consumeFallingBlock(EntityFallingBlock fallingBlock)
+    {
+        ItemStack itemStack = new ItemStack(fallingBlock.func_145805_f(),1,fallingBlock.field_145814_a);
+        if (itemStack != null) {
+            try {
+                mass = Math.addExact(mass, (long) MatterHelper.getMatterAmountFromItem(itemStack) * (long) itemStack.stackSize);
+            } catch (ArithmeticException e) {
+                return false;
+            }
+
+            fallingBlock.setDead();
+            worldObj.removeEntity(fallingBlock);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean consumeLivingEntity(EntityLivingBase entity,float strength)
+    {
+        try {
+            mass = Math.addExact(mass,(long)Math.min(entity.getHealth(), strength));
+        }catch (ArithmeticException e)
+        {
+            return false;
+        }
+
+        if (entity.getHealth() <= strength && !(entity instanceof EntityPlayer)) {
+            entity.setDead();
+            worldObj.removeEntity(entity);
+        }
+
+        DamageSource damageSource = new DamageSource("blackHole");
+        entity.attackEntityFrom(damageSource, strength);
+        return true;
+    }
+
+    private boolean onEntityConsume(Entity entity,boolean pre)
+    {
+        if (pre)
+        {
+            MinecraftForge.EVENT_BUS.post(new MOEventGravitationalAnomalyConsume.Pre(entity,xCoord,yCoord,zCoord));
+        }else
+        {
+            MinecraftForge.EVENT_BUS.post(new MOEventGravitationalAnomalyConsume.Post(entity,xCoord,yCoord,zCoord));
+        }
+
+        return true;
     }
 
     @SideOnly(Side.CLIENT)
@@ -601,15 +659,17 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
                 List<EntityItem> result = worldObj.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x - 2, y - 2, z - 2, x + 3, y + 3, z + 3));
                 for (EntityItem entityItem : result) {
-                    EntityItem entity = entityItem;
-                    if (entity.isDead || entity.getEntityItem().stackSize <= 0) {
-                        continue;
-                    }
-                    matter += MatterHelper.getMatterAmountFromItem(entity.getEntityItem());
-                    entity.worldObj.removeEntity(entity);
+                    consumeEntityItem(entityItem);
                 }
 
-                mass += matter;
+                try {
+                    mass = Math.addExact(mass,matter);
+                }
+                catch (ArithmeticException e)
+                {
+                    return false;
+                }
+
                 world.setBlock(x, y, z, Blocks.air, 0, 10);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
                 return true;
