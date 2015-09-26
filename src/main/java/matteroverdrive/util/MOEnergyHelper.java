@@ -61,27 +61,4 @@ public class MOEnergyHelper
         }
         return true;
     }
-
-    public static boolean extractExactAmount(IEnergyContainerItem provider,ItemStack itemStack,int amount,boolean simulate)
-    {
-        int hasEnergy = provider.getEnergyStored(itemStack);
-        if (hasEnergy >= amount)
-        {
-            while (amount > 0)
-            {
-                if (provider.extractEnergy(itemStack,amount, true) > 0)
-                {
-                    amount -= provider.extractEnergy(itemStack,amount,simulate);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }else
-        {
-            return false;
-        }
-        return true;
-    }
 }

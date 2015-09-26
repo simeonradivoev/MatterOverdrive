@@ -232,22 +232,27 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         }
     }
 
+    //Returns 0 to disable extraction from outside sources
     @Override
     public int extractEnergy(ItemStack container, int maxExtract, boolean simulate)
     {
+        return 0;
+    }
 
-        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
+    public int extractEnergyCustom(ItemStack weapon,int maxExtract,boolean simulate)
+    {
+        ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, weapon);
         if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
         {
             IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
             int energy = e.extractEnergy(energy_module, maxReceive, simulate);
             if (!simulate)
-                WeaponHelper.setModuleAtSlot(Reference.MODULE_BATTERY,container,energy_module);
+                WeaponHelper.setModuleAtSlot(Reference.MODULE_BATTERY,weapon,energy_module);
             return energy;
         }
         else
         {
-            return super.extractEnergy(container, maxReceive, simulate);
+            return super.extractEnergy(weapon, maxReceive, simulate);
         }
     }
 
@@ -299,7 +304,26 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     protected boolean DrainEnergy(ItemStack item,int ticks,boolean simulate)
     {
-        return MOEnergyHelper.extractExactAmount(this, item, getEnergyUse(item) * ticks, simulate);
+        int amount = getEnergyUse(item) * ticks;
+        int hasEnergy = getEnergyStored(item);
+        if (hasEnergy >= amount)
+        {
+            while (amount > 0)
+            {
+                if (extractEnergyCustom(item, amount, true) > 0)
+                {
+                    amount -= extractEnergyCustom(item,amount,simulate);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }else
+        {
+            return false;
+        }
+        return true;
     }
 
     //endregion
