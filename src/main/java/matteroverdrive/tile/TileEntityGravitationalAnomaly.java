@@ -20,7 +20,6 @@ package matteroverdrive.tile;
 
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.MathHelper;
-import com.google.common.math.BigIntegerMath;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -47,6 +46,7 @@ import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -63,9 +63,6 @@ import net.minecraftforge.fluids.IFluidBlock;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -541,14 +538,21 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         ItemStack itemStack = entityItem.getEntityItem();
         if (itemStack != null) {
             try {
-                mass = Math.addExact(mass,(long)MatterHelper.getMatterAmountFromItem(itemStack) * (long)itemStack.stackSize);
-            }catch (ArithmeticException e)
+                mass = Math.addExact(mass, (long) MatterHelper.getMatterAmountFromItem(itemStack) * (long) itemStack.stackSize);
+            }
+            catch (ArithmeticException e)
             {
                 return false;
             }
 
             entityItem.setDead();
             worldObj.removeEntity(entityItem);
+
+            //Todo made the gravitational anomaly collapse on Antimatter
+            if (entityItem.getEntityItem().getItem().equals(Items.nether_star))
+            {
+                colapse();
+            }
             return true;
         }
         return false;
@@ -726,6 +730,12 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         }
 
         return false;
+    }
+
+    public void colapse()
+    {
+        worldObj.setBlockToAir(xCoord,yCoord,zCoord);
+        worldObj.createExplosion(null,xCoord,yCoord,zCoord,(float)getRealMassUnsuppressed()*2,true);
     }
 
     public boolean cleanFlowingLiquids(Block block,int x,int y,int z) {
