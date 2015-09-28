@@ -38,6 +38,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.apache.logging.log4j.Level;
 
 import java.io.*;
 import java.util.*;
@@ -300,7 +301,7 @@ public class MatterRegistry implements IMatterRegistry
             }
         }catch (Exception e)
         {
-			MatterOverdrive.log.error(String.format("There was a problem getting a Matter Entry."), e);
+			MatterOverdrive.log.log(Level.ERROR,e,String.format("There was a problem getting a Matter Entry."));
             return null;
         }
     }
