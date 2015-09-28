@@ -24,6 +24,7 @@ import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import net.minecraft.item.ItemStack;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,14 +69,14 @@ public class WeaponHelper
         if (MatterHelper.isWeapon(weapon))
         {
             Map<Integer,Double> stats;
-            for (ItemStack module : MOInventoryHelper.getStacks(weapon))
-            {
-                stats = getStatsFromModule(module,weapon);
-                if (stats != null)
-                {
-                    if (stats.containsKey(stat))
-                    {
-                        multiply *= stats.get(stat);
+            List<ItemStack> itemStacks = MOInventoryHelper.getStacks(weapon);
+            if (itemStacks != null) {
+                for (ItemStack module : itemStacks) {
+                    stats = getStatsFromModule(module, weapon);
+                    if (stats != null) {
+                        if (stats.containsKey(stat)) {
+                            multiply *= stats.get(stat);
+                        }
                     }
                 }
             }
