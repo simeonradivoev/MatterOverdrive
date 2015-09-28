@@ -27,6 +27,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,10 +85,17 @@ public class MatterRegistryCommands extends CommandBase
                         key = MatterOverdrive.matterRegistry.getKey(stack.getItem());
                     } else if (parameters[1].equalsIgnoreCase("ore"))
                     {
-                        key = parameters[2];
+                        int[] orenames = OreDictionary.getOreIDs(stack);
+                        if (orenames != null && orenames.length > 0)
+                        {
+                            key = OreDictionary.getOreName(orenames[0]);
+                        }else
+                        {
+                            throw new CommandException("Could not find an ore dictionary entry", new Object[]{parameters[1]});
+                        }
                     }
                     else {
-                        throw new CommandException("invalid type of item", new Object[]{parameters[1]});
+                        throw new CommandException("Invalid type of item. Use either item,itemstack or ore.");
                     }
 
                     MatterOverdrive.matterRegistry.addToBlacklist(key);
@@ -99,7 +107,7 @@ public class MatterRegistryCommands extends CommandBase
                     commandSender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "["+key+"]" + EnumChatFormatting.RESET + " Added $s to matter blacklist and config.\nYou must recalculate the registry for changes to take effect.\nUse /matter_registry recalculate."));
                 }else
                 {
-                    throw new CommandException("player not holding any item", new Object[]{parameters[1]});
+                    throw new CommandException("Player not holding any item", new Object[]{parameters[1]});
                 }
             }
         }
@@ -128,11 +136,18 @@ public class MatterRegistryCommands extends CommandBase
                     }
                     else if (parameters[1].equalsIgnoreCase("ore"))
                     {
-                        key = parameters[2];
+                        int[] orenames = OreDictionary.getOreIDs(stack);
+                        if (orenames != null && orenames.length > 0)
+                        {
+                            key = OreDictionary.getOreName(orenames[0]);
+                        }else
+                        {
+                            throw new CommandException("Could not find an ore dictionary entry!");
+                        }
                     }
                     else
                     {
-                        throw new CommandException("invalid type of item", new Object[]{parameters[1]});
+                        throw new CommandException("Invalid type of item. Use either item,itemstack or ore.");
                     }
 
                     MatterOverdrive.matterRegistry.register(key, matter);
