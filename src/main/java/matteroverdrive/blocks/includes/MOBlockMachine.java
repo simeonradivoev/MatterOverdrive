@@ -26,7 +26,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.items.includes.MOEnergyMatterBlockItem;
+import matteroverdrive.items.includes.MOMachineBlockItem;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.tile.IMOTileEntity;
 import matteroverdrive.util.IConfigSubscriber;
@@ -64,7 +64,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     @Override
     protected void registerBlock()
     {
-        GameRegistry.registerBlock(this, MOEnergyMatterBlockItem.class, this.getUnlocalizedName().substring(5));
+        GameRegistry.registerBlock(this, MOMachineBlockItem.class, this.getUnlocalizedName().substring(5));
     }
 
     public boolean doNormalDrops(World world, int x, int y, int z)

@@ -1,9 +1,26 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.items.includes;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.IUpgrade;
-import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;
@@ -13,15 +30,14 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.util.Constants;
 import org.lwjgl.input.Keyboard;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class MOEnergyMatterBlockItem extends ItemBlock
+public class MOMachineBlockItem extends ItemBlock
 {
-	public MOEnergyMatterBlockItem(Block block)
+	public MOMachineBlockItem(Block block)
 	{
 		super(block);
 	}
@@ -52,7 +68,7 @@ public class MOEnergyMatterBlockItem extends ItemBlock
 					}
 				}
 
-				showUpgrades(stack,player,infos);
+				showItems(stack, player, infos);
 			}
 		}
 		else
@@ -61,6 +77,16 @@ public class MOEnergyMatterBlockItem extends ItemBlock
 		}
 
 
+	}
+
+	public String getItemStackDisplayName(ItemStack itemStack)
+	{
+		if (itemStack.hasTagCompound()) {
+			return super.getItemStackDisplayName(itemStack) + String.format(EnumChatFormatting.AQUA + " [%s]" + EnumChatFormatting.RESET, MOStringHelper.translateToLocal("item.info.configured"));
+		}else
+		{
+			return super.getItemStackDisplayName(itemStack);
+		}
 	}
 	
 	@Override
@@ -89,44 +115,23 @@ public class MOEnergyMatterBlockItem extends ItemBlock
 		return 0;
 	}
 
-	private void showUpgrades(ItemStack itemStack,EntityPlayer player, List infos)
+	private void showItems(ItemStack itemStack, EntityPlayer player, List infos)
 	{
-		NBTTagList upgrades = itemStack.getTagCompound().getTagList("Upgrades",10);
+		NBTTagList stackTagList = itemStack.getTagCompound().getCompoundTag("Machine").getTagList("Items", Constants.NBT.TAG_COMPOUND);
 
-		if (upgrades.tagCount() > 0) {
+		if (stackTagList.tagCount() > 0) {
 			infos.add("");
-			infos.add("Upgrades:");
-
-			Map<UpgradeTypes,Double> upgradesMap = new HashMap<UpgradeTypes, Double>();
-
-			for (int i = 0; i < upgrades.tagCount(); i++) {
-				ItemStack upgradeItem = ItemStack.loadItemStackFromNBT(upgrades.getCompoundTagAt(i));
-
-				if (upgradeItem != null && MatterHelper.isUpgrade(upgradeItem)) {
-					IUpgrade upgrade = (IUpgrade) upgradeItem.getItem();
-					Map<UpgradeTypes, Double> upgradeMap = upgrade.getUpgrades(upgradeItem);
-					for (final Map.Entry<UpgradeTypes, Double> entry : upgradeMap.entrySet()) {
-						if (upgradesMap.containsKey(entry.getKey())) {
-							double previusValue = upgradesMap.get(entry.getKey());
-							upgradesMap.put(entry.getKey(), previusValue * entry.getValue());
-						} else {
-							upgradesMap.put(entry.getKey(), entry.getValue());
-						}
-					}
+			infos.add(EnumChatFormatting.YELLOW + "Inventory:");
+			for (int i = 0; i < stackTagList.tagCount(); i++) {
+				ItemStack stack = ItemStack.loadItemStackFromNBT(stackTagList.getCompoundTagAt(i));
+				if (stack.getItem() instanceof IUpgrade)
+				{
+					infos.add("   " + EnumChatFormatting.GREEN + stack.getDisplayName());
+				}else {
+					infos.add("   " + infos.add(stack.getDisplayName()));
 				}
 			}
-
-			for (final Map.Entry<UpgradeTypes, Double> entry : upgradesMap.entrySet()) {
-				infos.add("   " + MOStringHelper.toInfo(entry.getKey(), entry.getValue()));
-			}
 		}
-
-		/*if (upgrades.tagCount() > 0) {
-			for (int i = 0; i < upgrades.tagCount(); i++) {
-
-				infos.add(ItemStack.loadItemStackFromNBT(upgrades.getCompoundTagAt(i)).getDisplayName());
-			}
-		}*/
 	}
 	
 	@Override

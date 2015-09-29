@@ -87,6 +87,8 @@ item.weapon_module_barrel.fire.name=Incendiary Filter
 item.weapon_module_barrel.explosion.name=Burst Inductive Drum
 item.weapon_module_barrel.heal.name=Regenerative Converter
 
+item.info.configured=Configured
+
 ##########################################################################################################
 # Tile Entities
 

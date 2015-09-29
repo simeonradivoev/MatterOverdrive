@@ -312,6 +312,8 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public void writeToDropItem(ItemStack itemStack)
     {
+        boolean saveTagFlag = false;
+
         if (!itemStack.hasTagCompound())
             itemStack.setTagCompound(new NBTTagCompound());
 
@@ -325,12 +327,17 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                 itemTag.setByte("Slot", (byte)i);
                 getStackInSlot(i).writeToNBT(itemTag);
                 itemTagList.appendTag(itemTag);
+                saveTagFlag = true;
             }
         }
-        machineTag.setTag("Items", itemTagList);
+        if (saveTagFlag)
+            machineTag.setTag("Items", itemTagList);
+
         writeCustomNBT(machineTag, EnumSet.of(MachineNBTCategory.CONFIGS, MachineNBTCategory.DATA));
-        if (hasOwner())
+        if (hasOwner()) {
             machineTag.setString("Owner", owner.toString());
+            saveTagFlag = true;
+        }
 
         itemStack.getTagCompound().setTag("Machine", machineTag);
     }
