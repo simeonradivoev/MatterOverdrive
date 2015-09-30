@@ -834,7 +834,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 effects.removeTag(EFFECT_KEY_TURNING);
                 setAndroid(true);
                 playGlitchSound(this, player.worldObj.rand, 0.8f);
-                if (!player.capabilities.isCreativeMode)
+                if (!player.capabilities.isCreativeMode && !player.worldObj.getWorldInfo().isHardcoreModeEnabled())
                 {
                     player.attackEntityFrom(fake, Integer.MAX_VALUE);
                     player.setDead();
