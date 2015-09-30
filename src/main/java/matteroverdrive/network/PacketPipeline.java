@@ -86,6 +86,7 @@ public class PacketPipeline
         registerPacket(PacketSendQueueFlash.ClientHandler.class, PacketSendQueueFlash.class);
         registerPacket(PacketDataPadCommands.ServerHandler.class,PacketDataPadCommands.class);
         registerPacket(PacketSendMinimapInfo.ClientHandler.class,PacketSendMinimapInfo.class);
+        registerPacket(PacketResetBioStats.ServerHandler.class,PacketResetBioStats.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

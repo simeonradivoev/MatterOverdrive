@@ -220,9 +220,11 @@ public class MatterOverdriveMatter
         //endregion
 
         //region Matter Overdrive Basic Items
-        MatterOverdrive.matterRegistry.register(MatterOverdriveItems.emergency_ration, 3);
-        MatterOverdrive.matterRegistry.register(MatterOverdriveItems.earl_gray_tea, 2);
-        MatterOverdrive.matterRegistry.register(MatterOverdriveItems.romulan_ale, 2);
+        reg(c, MatterOverdriveItems.emergency_ration, 3);
+        reg(c, MatterOverdriveItems.earl_gray_tea, 2);
+        reg(c, MatterOverdriveItems.romulan_ale, 2);
+        reg(c, new ItemStack(MatterOverdriveItems.androidPill, 1, 1), 64);
+        reg(c,new ItemStack(MatterOverdriveItems.androidPill,1,2),32);
         //endregion
     }
 

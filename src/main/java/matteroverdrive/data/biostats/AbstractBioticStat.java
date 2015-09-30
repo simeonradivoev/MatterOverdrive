@@ -315,4 +315,10 @@ public abstract class AbstractBioticStat implements IBionicStat
     {
         return icon;
     }
+
+    @Override
+    public int getXP(AndroidPlayer androidPlayer,int level)
+    {
+        return xp;
+    }
 }

@@ -72,6 +72,8 @@ item.matter_container_full.name=Full Matter Container
 item.tritanium_nugget.name=Tritanium Nugget
 item.tritanium_spine.name=Tritanium Spine
 item.data_pad.name=Data Pad
+item.android_pill_yellow.name=Yellow Pill
+item.android_pill_yellow.details=Used to reset all unlocked Android Abilities
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade

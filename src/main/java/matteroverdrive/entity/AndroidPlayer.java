@@ -390,11 +390,24 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         return unlocked;
     }
     public void setUnlocked(NBTTagCompound unlocked){this.unlocked = unlocked;}
-    public void resetUnlocked()
+    public int resetUnlocked()
     {
+        int xp = getResetXPRequired();
         this.unlocked = new NBTTagCompound();
         sync(PacketSyncAndroid.SYNC_STATS);
         clearAllStatAttributeModifiers();
+        return xp;
+    }
+    public int getResetXPRequired()
+    {
+        int calculatedXP = 0;
+        for (Object key : this.unlocked.func_150296_c())
+        {
+            IBionicStat stat = MatterOverdrive.statRegistry.getStat(key.toString());
+            int unlocked = this.unlocked.getInteger(key.toString());
+            calculatedXP += stat.getXP(this,unlocked);
+        }
+        return calculatedXP/2;
     }
     public void reset(IBionicStat stat)
     {

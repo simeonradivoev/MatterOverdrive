@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.handler.village;
 
 import cpw.mods.fml.common.registry.VillagerRegistry;
@@ -26,6 +44,7 @@ public class TradeHandlerMadScientist implements VillagerRegistry.IVillageTradeH
             addSellPart(recipeList, random, 3, 0.2f, 32 * 2, 8 * 2);
 
             addSellItemStack(recipeList,random,new ItemStack(MatterOverdriveItems.androidPill,1,1),1,16,16);
+            addSellItemStack(recipeList,random,new ItemStack(MatterOverdriveItems.androidPill,1,2),1,16,16);
             addSellItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.h_compensator), 0.5f, 32, 18);
             addBuyItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.dilithium_ctystal), 1, 8, 8);
             addSellItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.weapon_module_barrel, 1, 0), 1, 8, 4);

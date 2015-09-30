@@ -45,7 +45,7 @@ import java.util.List;
  */
 public class AndroidPill extends ItemFood
 {
-    IIcon bluePillIcon;
+    IIcon overlay;
 
     public AndroidPill(String name)
     {
@@ -67,6 +67,16 @@ public class AndroidPill extends ItemFood
         {
             infos.add(MOStringHelper.MORE_INFO);
         }
+
+        if (itemstack.getItemDamage() == 2) {
+            AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+            if (androidPlayer != null && androidPlayer.isAndroid()) {
+
+                infos.add(EnumChatFormatting.GREEN + "XP:" + androidPlayer.getResetXPRequired());
+            } else {
+                infos.add(EnumChatFormatting.RED + "Not an Android.");
+            }
+        }
     }
 
     public void addToDunguns()
@@ -80,6 +90,9 @@ public class AndroidPill extends ItemFood
         if (itemStack.getItemDamage() == 1)
         {
             return getUnlocalizedName() + "_blue";
+        }else if (itemStack.getItemDamage() == 2)
+        {
+            return getUnlocalizedName() + "_yellow";
         }
         return getUnlocalizedName() + "_red";
     }
@@ -88,19 +101,15 @@ public class AndroidPill extends ItemFood
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
-        this.itemIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "red_pill");
-        bluePillIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "blue_pill");
+        this.itemIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "pill_bottom");
+        this.overlay = iconRegister.registerIcon(Reference.MOD_ID + ":" + "pill_top");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int damage)
+    public boolean requiresMultipleRenderPasses()
     {
-        if (damage == 1)
-        {
-            return bluePillIcon;
-        }
-        return this.itemIcon;
+        return true;
     }
 
     @SideOnly(Side.CLIENT)
@@ -108,19 +117,62 @@ public class AndroidPill extends ItemFood
     {
         list.add(new ItemStack(item, 1, 0));
         list.add(new ItemStack(item, 1, 1));
+        list.add(new ItemStack(item,1,2));
+    }
+
+    @Override
+    public int getRenderPasses(int metadata)
+    {
+        return 2;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconFromDamageForRenderPass(int damage, int pass)
+    {
+        if (pass == 1)
+        {
+            return overlay;
+        }else
+        {
+            return itemIcon;
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getColorFromItemStack(ItemStack itemStack, int pass)
+    {
+        if (pass == 1)
+        {
+            if (itemStack.getItemDamage() == 0)
+            {
+                return 0xd00000;
+            }
+            else if (itemStack.getItemDamage() == 1)
+            {
+                return 0x019fea;
+            }
+            else if (itemStack.getItemDamage() == 2)
+            {
+                return 0xffe400;
+            }
+        }
+        return super.getColorFromItemStack(itemStack,pass);
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
     {
         AndroidPlayer androidPlayer = AndroidPlayer.get(player);
-        if (itemStack.getItemDamage() == 1)
+        if (itemStack.getItemDamage() >= 1)
         {
             if (!androidPlayer.isTurning() && androidPlayer.isAndroid())
             {
                 player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
             }
-        }else
+        }
+        else
         {
             if (!androidPlayer.isAndroid() && !androidPlayer.isTurning())
             {
@@ -139,13 +191,25 @@ public class AndroidPill extends ItemFood
     @Override
     protected void onFoodEaten(ItemStack itemStack, World world, EntityPlayer player)
     {
+        if (world.isRemote)
+            return;
+
         AndroidPlayer androidPlayer = AndroidPlayer.get(player);
         if (itemStack.getItemDamage() == 0)
         {
             androidPlayer.startConversion();
-        }else
+        }
+        else if (itemStack.getItemDamage() == 1)
         {
             androidPlayer.setAndroid(false);
+        }
+        else if (itemStack.getItemDamage() == 2)
+        {
+            if (!androidPlayer.isTurning() && androidPlayer.isAndroid())
+            {
+                int xpLevels = androidPlayer.resetUnlocked();
+                player.addExperienceLevel(xpLevels);
+            }
         }
     }
 }

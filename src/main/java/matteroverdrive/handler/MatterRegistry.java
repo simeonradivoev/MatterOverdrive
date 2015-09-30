@@ -285,9 +285,9 @@ public class MatterRegistry implements IMatterRegistry
     public MatterEntry getEntry(ItemStack item)
     {
         try {
-            if (!blacklist.contains(item.getUnlocalizedName()))
+            if (!blacklist.contains(getKey(item)))
             {
-                MatterEntry e = entries.get(item.getUnlocalizedName());
+                MatterEntry e = entries.get(getKey(item));
                 if (e == null)
                 {
                     if (e == null) debug("Could not find matter entry for: %s", item);
@@ -645,7 +645,7 @@ public class MatterRegistry implements IMatterRegistry
                 {
                     try
                     {
-                        params[i] = ((ItemStack)params[i]).getUnlocalizedName();
+                        params[i] = getKey(((ItemStack)params[i]));
                     }
                     catch (Exception e)
                     {
