@@ -54,6 +54,7 @@ public class ConfigurationHandler
     public static final String CATEGORY_SERVER = "server";
     public static final String CATEGORY_ENCHANTMENTS = "enchantments";
     public static final String CATEGORY_ENTITIES = "entities";
+    public static final String CATEGORY_ANDROID_PLAYER = CATEGORY_ENTITIES + "." + "android_player";
     public static final String CATEGORY_DEBUG = "debug";
 
     public static final String KEY_AUTOMATIC_RECIPE_CALCULATION = "automatic matter calculation from recipe";

@@ -81,13 +81,9 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public final static int ENERGY_FOOD_MULTIPLY = 256;
     public final static int ENERGY_PER_JUMP = 512;
     public final static float FALL_NEGATE = 0.5f;
-    public final float DEFAULT_WLAK_SPEED = 0.1f;
-    public final float DEFAULT_FLY_SPEED = 0.05f;
-    public final float DEFAULT_JUMP_MOVEMENT_FACTOR = 0.02F;
-    public final static float SPEED_MULTIPLY = 1.25f;
-    public final static float POERLESS_SPEED_MULTIPLY = 0.25f;
-    public final static int ENERGY_PER_EXOST = 16;
     public final static int MINIMAP_SEND_TIMEOUT = 20*2;
+    public static boolean TRANSFORMATION_DEATH = true;
+    public static boolean REMOVE_POTION_EFFECTS = true;
     public final static AttributeModifier outOfPowerSpeedModifyer = new AttributeModifier(UUID.fromString("ec778ddc-9711-498b-b9aa-8e5adc436e00"),"Android Out of Power",-0.5,2).setSaved(false);
     private static List<IBionicStat> wheelStats = new ArrayList<>();
     private static Map<Integer,MinimapEntityInfo> entityInfoMap = new HashMap<>();
@@ -160,6 +156,12 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public static AndroidPlayer get(EntityPlayer player)
     {
         return (AndroidPlayer) player.getExtendedProperties(EXT_PROP_NAME);
+    }
+
+    public static void loadConfigs(ConfigurationHandler configurationHandler)
+    {
+        TRANSFORMATION_DEATH = configurationHandler.getBool("transformation_death",ConfigurationHandler.CATEGORY_ANDROID_PLAYER,true,"Should the player die after an Android transformation");
+        REMOVE_POTION_EFFECTS = configurationHandler.getBool("remove_potion_effects",ConfigurationHandler.CATEGORY_ANDROID_PLAYER,true,"Remove all potion effects while an Android");
     }
 
     @Override
@@ -761,7 +763,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     private void managePotionEffects()
     {
-        if (isAndroid())
+        if (isAndroid() && REMOVE_POTION_EFFECTS)
         {
             player.clearActivePotions();
         }
@@ -847,7 +849,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 effects.removeTag(EFFECT_KEY_TURNING);
                 setAndroid(true);
                 playGlitchSound(this, player.worldObj.rand, 0.8f);
-                if (!player.capabilities.isCreativeMode && !player.worldObj.getWorldInfo().isHardcoreModeEnabled())
+                if (!player.capabilities.isCreativeMode && !player.worldObj.getWorldInfo().isHardcoreModeEnabled() && TRANSFORMATION_DEATH)
                 {
                     player.attackEntityFrom(fake, Integer.MAX_VALUE);
                     player.setDead();
