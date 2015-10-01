@@ -72,6 +72,8 @@ item.matter_container_full.name=Контейнер материи (Полный)
 item.tritanium_nugget.name=Тритановый самородок
 item.tritanium_spine.name=Тритановый позвоночник
 item.data_pad.name=Датапад
+item.android_pill_yellow.name=Жёлтая пилюля
+item.android_pill_yellow.details=Используется для сброса всех разблокированных способностей Андроида
 
 item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
@@ -86,6 +88,8 @@ item.weapon_module_barrel.damage.name=Дилитиевая фокусирующ�
 item.weapon_module_barrel.fire.name=Зажигательный фильтр
 item.weapon_module_barrel.explosion.name=Взрыво-индуктивный барабан
 item.weapon_module_barrel.heal.name=Восстанавливающий конвертер
+
+item.info.configured=Настроен
 
 ==========================================================================================================
 # Плитка объектов
@@ -446,7 +450,7 @@ enchantment.matteroverdrive.weapon.damage=Разгон
 
 ==========================================================================================================
 # Жидкости
-fluid.matter_plasma.name=Материальная плазма
+fluid.matter_plasma.name=Плазменная материя
 
 ==========================================================================================================
 # Путеводители
@@ -463,8 +467,8 @@ guide.group.drinks.name=Напитки
 guide.group.food.name=Еда
 
 guide.entry.matter_fail.name=Matter Replication Failure
-guide.entry.matter_plasma.name=Материальная плазма
-guide.entry.matter_transport.name=Matter Transport
+guide.entry.matter_plasma.name=Плазменная материя
+guide.entry.matter_transport.name=Транспортировка материи
 guide.entry.weapon.modules.barrels.name=Модули для оружий
 guide.entry.weapon.modules.colors.name=Раскраски оружий
 guide.entry.android.pills.name=Пилюли
