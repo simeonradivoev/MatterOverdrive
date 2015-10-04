@@ -74,9 +74,11 @@ public class GuideElementRecipe extends GuideElementAbstract
                         }else if (recipeItems[index] instanceof List)
                         {
                             List stacks = (List)recipeItems[index];
-                            int stackIndex = (int)((Minecraft.getMinecraft().theWorld.getWorldTime()/100)%(stacks.size()));
-                            if (stackIndex < stacks.size() && stacks.get(stackIndex) instanceof ItemStack) {
-                                renderStack((ItemStack)stacks.get(stackIndex), x, y);
+                            if (stacks.size() > 0) {
+                                int stackIndex = (int) ((Minecraft.getMinecraft().theWorld.getWorldTime() / 100) % (stacks.size()));
+                                if (stackIndex < stacks.size() && stacks.get(stackIndex) instanceof ItemStack) {
+                                    renderStack((ItemStack) stacks.get(stackIndex), x, y);
+                                }
                             }
                         }
                     }

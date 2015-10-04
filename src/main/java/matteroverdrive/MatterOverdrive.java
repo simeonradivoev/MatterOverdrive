@@ -29,6 +29,7 @@ import matteroverdrive.commands.AndoidCommands;
 import matteroverdrive.commands.MatterRegistryCommands;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.dialog.DialogRegistry;
+import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.handler.*;
 import matteroverdrive.imc.MOIMCHandler;
 import matteroverdrive.init.*;
@@ -135,6 +136,8 @@ public class MatterOverdrive
 
 		MatterOverdriveRecipes.registerBlockRecipes(event);
 		MatterOverdriveRecipes.registerItemRecipes(event);
+
+		AndroidPlayer.loadConfigs(configHandler);
 	}
 	
 	@EventHandler
