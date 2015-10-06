@@ -77,7 +77,8 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public final static int TRANSFORM_TIME = 20 * 34;
     public final static String EFFECT_KEY_TURNING = "Turning";
     public final static String EXT_PROP_NAME = "AndroidPlayer";
-    public final static int ENERGY_WATCHER = 29;
+    public final static int ENERGY_WATCHER_DEFAULT = 29;
+    private static int energyWatchID;
     public final static int ENERGY_FOOD_MULTIPLY = 256;
     public final static int ENERGY_PER_JUMP = 512;
     public final static float FALL_NEGATE = 0.5f;
@@ -113,7 +114,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         unlocked = new NBTTagCompound();
         effects = new NBTTagCompound();
 
-        int energyWatchID = MatterOverdrive.configHandler.getInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID, ConfigurationHandler.CATEGORY_ABILITIES,ENERGY_WATCHER);
+        int energyWatchID = MatterOverdrive.configHandler.getInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID, ConfigurationHandler.CATEGORY_ABILITIES,ENERGY_WATCHER_DEFAULT);
         try
         {
             player.getDataWatcher().addObject(energyWatchID, this.maxEnergy);
@@ -138,6 +139,8 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         }
 
         MatterOverdrive.configHandler.setInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID,ConfigurationHandler.CATEGORY_ABILITIES,energyWatchID);
+        MatterOverdrive.configHandler.save();
+        AndroidPlayer.energyWatchID = energyWatchID;
 
         registerAttributes(player);
     }
@@ -168,7 +171,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void saveNBTData(NBTTagCompound compound)
     {
         NBTTagCompound prop = new NBTTagCompound();
-        prop.setInteger("Energy", player.getDataWatcher().getWatchableObjectInt(ENERGY_WATCHER));
+        prop.setInteger("Energy", player.getDataWatcher().getWatchableObjectInt(energyWatchID));
         prop.setInteger("MaxEnergy", this.maxEnergy);
         prop.setBoolean("isAndroid", isAndroid);
         prop.setTag("Stats",unlocked);
@@ -183,7 +186,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void loadNBTData(NBTTagCompound compound)
     {
         NBTTagCompound prop = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
-        player.getDataWatcher().updateObject(ENERGY_WATCHER, prop.getInteger("Energy"));
+        player.getDataWatcher().updateObject(energyWatchID, prop.getInteger("Energy"));
         this.maxEnergy = prop.getInteger("MaxEnergy");
         this.isAndroid = prop.getBoolean("isAndroid");
         unlocked = prop.getCompoundTag("Stats");
@@ -219,13 +222,13 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         }
         else
         {
-            int energy = this.player.getDataWatcher().getWatchableObjectInt(ENERGY_WATCHER);
+            int energy = this.player.getDataWatcher().getWatchableObjectInt(energyWatchID);
             energyExtracted = Math.min(Math.min(energy, amount),BUILTIN_ENERGY_TRANSFER);
 
             if (!simulate) {
                 energy -= energyExtracted;
                 energy = MathHelper.clampI(energy,0,getMaxEnergyStored());
-                this.player.getDataWatcher().updateObject(ENERGY_WATCHER,energy);
+                this.player.getDataWatcher().updateObject(energyWatchID,energy);
             }
         }
 
@@ -279,7 +282,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         }
         else
         {
-            return this.player.getDataWatcher().getWatchableObjectInt(ENERGY_WATCHER);
+            return this.player.getDataWatcher().getWatchableObjectInt(energyWatchID);
         }
     }
 
@@ -308,13 +311,13 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         }
         else
         {
-            int energy = this.player.getDataWatcher().getWatchableObjectInt(ENERGY_WATCHER);
+            int energy = this.player.getDataWatcher().getWatchableObjectInt(energyWatchID);
             energyReceived = Math.min(Math.min(getMaxEnergyStored() - energy, amount),BUILTIN_ENERGY_TRANSFER);
 
             if (!simulate) {
                 energy += energyReceived;
                 energy = MathHelper.clampI(energy,0,getMaxEnergyStored());
-                this.player.getDataWatcher().updateObject(ENERGY_WATCHER,energy);
+                this.player.getDataWatcher().updateObject(energyWatchID,energy);
             }
         }
         return energyReceived;
