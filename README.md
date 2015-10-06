@@ -23,6 +23,7 @@ Although, it may seem overpowered, Matter Overdrive takes a more realistic appro
 
 ## Contacts
 * [Simeon Radivoev](simeonradivoev@gmail.com)
+* IRC: **#matteroverdrive** at **irc.esper.net**
 
 ## Features
 * [Matter Scanner](http://simeon.co.vu/Mods/MatterOverdrive/items/matter_scanner/), for scanning matter patterns for replication.
