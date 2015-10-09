@@ -265,6 +265,7 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
             if (averageTickTime > 0) {
                 int simulationCount = (int) (delay / averageTickTime);
                 for (int i = 0; i < simulationCount; i++) {
+                    MatterOverdrive.log.debug("Phaser Fire Latency Compensation: %s ticks.",simulationCount);
                     onUpdate();
                 }
             }
