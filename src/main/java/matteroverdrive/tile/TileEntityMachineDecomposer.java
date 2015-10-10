@@ -161,7 +161,8 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         int matter = MatterHelper.getMatterAmountFromItem(this.getStackInSlot(INPUT_SLOT_ID));
         return getRedstoneActive()
                 && this.getStackInSlot(INPUT_SLOT_ID) != null
-                && isItemValidForSlot(0, getStackInSlot(INPUT_SLOT_ID))
+                && MatterHelper.containsMatter(this.getStackInSlot(INPUT_SLOT_ID))
+                && isItemValidForSlot(INPUT_SLOT_ID, getStackInSlot(INPUT_SLOT_ID))
                 && matter <= this.getMatterCapacity() - this.getMatterStored()
                 && canPutInOutput(matter);
     }
@@ -189,7 +190,11 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     public int getEnergyDrainPerTick()
     {
         int maxEnergy = getEnergyDrainMax();
-        return maxEnergy / getSpeed();
+        int speed = getSpeed();
+        if (speed > 0) {
+            return maxEnergy / speed;
+        }
+        return 0;
     }
 
     public int getEnergyDrainMax()
@@ -339,7 +344,11 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     @Override
     public float getProgress()
     {
-        return (float) (decomposeTime) / (float) getSpeed();
+        float speed = (float) getSpeed();
+        if (speed > 0) {
+            return (float) (decomposeTime) / speed;
+        }
+        return 0;
     }
 
     @Override
