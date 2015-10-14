@@ -23,13 +23,25 @@ import net.minecraft.entity.Entity;
 
 /**
  * Created by Simeon on 9/26/2015.
+ * Triggered when a {@link matteroverdrive.tile.TileEntityGravitationalAnomaly} consumes an entity or an item.
  */
 public class MOEventGravitationalAnomalyConsume extends Event
 {
-
+    /**
+     * The entity being consumed.
+     */
     public final Entity entity;
+    /**
+     * The X coordinate of the anomaly.
+     */
     public final int anomalyX;
+    /**
+     * The Y coordinate of the anomaly.
+     */
     public final int anomalyY;
+    /**
+     * The Z coordinate of the anomaly.
+     */
     public final int anomalyZ;
 
     public MOEventGravitationalAnomalyConsume(Entity entity,int x,int y,int z)

@@ -24,10 +24,39 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Created by Simeon on 5/26/2015.
+ * This class represents parts that can be worn by Android players.
+ * By equipping them in the Android Station.
  */
 public interface IBionicPart
 {
+    /**
+     * The type of part. At witch part for the body can the Bionic part be worn.
+     * <ol>
+     *     <li>Head</li>
+     *     <li>Arms</li>
+     *     <li>Legs</li>
+     *     <li>Chest</li>
+     *     <li>Other</li>
+     *     <li>Battery</li>
+     * </ol>
+     * @param itemStack The bionic Items Stack.
+     * @return The type of bionic part.
+     */
     int getType(ItemStack itemStack);
+
+    /**
+     * Does the bionic part affect the given android player.
+     * @param player The android player.
+     * @param itemStack The bionic item stack.
+     * @return Does the part affect the android player.
+     */
     boolean affectAndroid(AndroidPlayer player,ItemStack itemStack);
+
+    /**
+     * A Multimap of modifiers similar to vanilla armor modifiers.
+     * @param player The android player.
+     * @param itemStack The Bionic part item stack.
+     * @return A multimap of modifiers.
+     */
     Multimap getModifiers(AndroidPlayer player,ItemStack itemStack);
 }

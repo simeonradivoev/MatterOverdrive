@@ -48,6 +48,11 @@ public class AndroidStatRenderRegistry implements IAndroidStatRenderRegistry
     }
 
     @Override
+    public Collection<IBioticStatRenderer> removeAllRenderersFor(Class<? extends IBionicStat> stat) {
+        return map.remove(stat);
+    }
+
+    @Override
     public boolean registerRenderer(Class<? extends IBionicStat> stat, IBioticStatRenderer renderer)
     {
         if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterAndroidStatRenderer(stat,renderer))) {

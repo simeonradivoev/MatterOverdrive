@@ -25,12 +25,21 @@ import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Created by Simeon on 5/5/2015.
+ * Stores coordinates and the name of transport locations.
+ * Used by the transporter.
  */
 public class TransportLocation
 {
+    /**
+     * The X,Y,Z coordinates of the location.
+     */
     public int x,y,z;
+    /**
+     * The name of the location.
+     */
     public String name;
 
+    //region constructors
     public TransportLocation(int x,int y,int z,String name)
     {
         this.x = x;
@@ -57,7 +66,8 @@ public class TransportLocation
             name = nbt.getString("tl_name");
         }
     }
-
+    //endregion
+    //region Buffer and NBT
     public void writeToBuffer(ByteBuf buf)
     {
         buf.writeInt(x);
@@ -73,12 +83,23 @@ public class TransportLocation
         nbtTagCompound.setInteger("tl_z", z);
         nbtTagCompound.setString("tl_name", name);
     }
+    //endregion
 
+    /**
+     * Sets the name of the transport location.
+     * @param name the new transport location name.
+     */
     public void setName(String name)
     {
         this.name = name;
     }
 
+    /**
+     * Sets the transport location coordinates.
+     * @param x the X coordinate of the location.
+     * @param y the Y coordinate of the location.
+     * @param z the Z coordinate of the location.
+     */
     public void setPosition(int x,int y,int z)
     {
         this.x = x;
@@ -86,6 +107,13 @@ public class TransportLocation
         this.z = z;
     }
 
+    /**
+     * Calculates and returns the distance between this location and the given coordinates.
+     * @param x1 the given X coordinate.
+     * @param y1 the given Y coordinate.
+     * @param z1 the given Z coordinate.
+     * @return the distance between this transport location and the provided coordinates.
+     */
     public int getDistance(int x1,int y1,int z1)
     {
         return MathHelper.round(Math.sqrt((x-x1)*(x-x1) + (y-y1)*(y-y1) + (z-z1)*(z-z1)));

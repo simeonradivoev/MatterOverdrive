@@ -26,6 +26,7 @@ import java.util.Map;
 
 /**
  * Created by Simeon on 8/23/2015.
+ * This Implementation of the {@link IUpgradeHandler} handles Machine stat that need ot have a lower value by clamping to that value.
  */
 public class UpgradeHandlerMinimum implements IUpgradeHandler
 {

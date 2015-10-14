@@ -26,9 +26,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.api.IGravityEntity;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.events.anomaly.MOEventGravitationalAnomalyConsume;
+import matteroverdrive.api.gravity.IGravitationalAnomaly;
+import matteroverdrive.api.gravity.IGravityEntity;
 import matteroverdrive.client.sound.GravitationalAnomalySound;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.fx.GravitationalAnomalyParticle;
@@ -72,7 +73,7 @@ import java.util.PriorityQueue;
 /**
  * Created by Simeon on 5/11/2015.
  */
-public class TileEntityGravitationalAnomaly extends MOTileEntity implements IScannable, IMOTickable
+public class TileEntityGravitationalAnomaly extends MOTileEntity implements IScannable, IMOTickable,IGravitationalAnomaly
 {
     public static boolean FALLING_BLOCKS = true;
     public static boolean BLOCK_ENTETIES = true;
@@ -89,7 +90,6 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public static final double G2 = G * 2;
     public static final double C = 2.99792458;
     public static final double CC = C * C;
-    public static final int ENTITY_DAMAGE = 6;
 
     @SideOnly(Side.CLIENT)
     private GravitationalAnomalySound sound;
@@ -101,6 +101,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     private float tmpSuppression;
     private float suppression;
 
+    //region Constructors
     public TileEntityGravitationalAnomaly()
     {
         blockDestoryTimer = new TimeTracker();
@@ -112,49 +113,9 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         this();
         this.mass = mass;
     }
+    //endregion
 
-    @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
-    {
-        if (categories.contains(MachineNBTCategory.DATA)) {
-            nbt.setLong("Mass", mass);
-            nbt.setFloat("Suppression", suppression);
-        }
-    }
-
-    @Override
-    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
-    {
-        if (categories.contains(MachineNBTCategory.DATA)) {
-            mass = nbt.getLong("Mass");
-            suppression = nbt.getFloat("Suppression");
-        }
-    }
-
-    @Override
-    protected void onAwake(Side side) {
-
-    }
-
-    @Override
-    public Packet getDescriptionPacket()
-    {
-        NBTTagCompound syncData = new NBTTagCompound();
-        writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
-    {
-        //System.out.println("Receiving Packet From Server");
-        NBTTagCompound syncData = pkt.func_148857_g();
-        if(syncData != null)
-        {
-            readCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
-        }
-    }
-
+    //region Updates
     @Override
     public void updateEntity()
     {
@@ -166,14 +127,27 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         }
     }
 
-    public void invalidate()
+    @Override
+    public void onServerTick(TickEvent.WorldTickEvent event)
     {
-        super.invalidate();
-        if (worldObj.isRemote)
+        if (worldObj == null)
+            return;
+
+        if (event.phase.equals(TickEvent.Phase.END))
         {
-            stopSounds();
+            manageEntityGravitation(worldObj, 0);
+            manageBlockDestory(worldObj);
+
+            if (tmpSuppression != suppression)
+            {
+                suppression = tmpSuppression;
+                worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+            }
+
+            tmpSuppression = 1;
         }
     }
+    //endregion
 
     @SideOnly(Side.CLIENT)
     public void spawnParticles(World world)
@@ -209,7 +183,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 Entity entity = (Entity)entityObject;
                 if (entity instanceof IGravityEntity)
                 {
-                    if (!((IGravityEntity) entity).isAffectedByAnomaly())
+                    if (!((IGravityEntity) entity).isAffectedByAnomaly(this))
                     {
                         continue;
                     }
@@ -245,14 +219,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         }
     }
 
-    public void onChunkUnload()
-    {
-        if (worldObj.isRemote)
-        {
-            stopSounds();
-        }
-    }
-
+    //region Sounds
     @SideOnly(Side.CLIENT)
     public void stopSounds()
     {
@@ -292,34 +259,9 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
             sound.setRange(getMaxRange());
         }
     }
+    //endregion
 
-    @Override
-    public void onServerTick(TickEvent.WorldTickEvent event)
-    {
-        if (worldObj == null)
-            return;
-
-        if (event.phase.equals(TickEvent.Phase.END))
-        {
-            manageEntityGravitation(worldObj, 0);
-            manageBlockDestory(worldObj);
-
-            if (tmpSuppression != suppression)
-            {
-                suppression = tmpSuppression;
-                worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
-            }
-
-            tmpSuppression = 1;
-        }
-    }
-
-    @Override
-    public int getPhase()
-    {
-        return 1;
-    }
-
+    //region Super Events
     @Override
     public void onAdded(World world, int x, int y, int z) {
 
@@ -350,42 +292,77 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     }
 
-    public  static class BlockComparitor implements Comparator<PositionWrapper>
+    @Override
+    public void onScan(World world, double x, double y, double z, EntityPlayer player, ItemStack scanner) {
+
+    }
+
+    public void onChunkUnload()
     {
-        int posX,posY,posZ;
-
-        public BlockComparitor(int x,int y,int z)
+        if (worldObj.isRemote)
         {
-            posX = x;
-            posY = y;
-            posZ = z;
-        }
-
-        @Override
-        public int compare(PositionWrapper o1, PositionWrapper o2)
-        {
-            return Double.compare(MOMathHelper.distanceSqured(o1.x, o1.y, o1.z, posX, posY, posZ),MOMathHelper.distanceSqured(o2.x, o2.y, o2.z, posX, posY, posZ));
+            stopSounds();
         }
     }
 
-    public static class PositionWrapper
-    {
-        int x,y,z;
+    @Override
+    protected void onAwake(Side side) {
 
-        public PositionWrapper(int x,int y,int z)
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound syncData = new NBTTagCompound();
+        writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
+        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+    {
+        NBTTagCompound syncData = pkt.func_148857_g();
+        if(syncData != null)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            readCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
         }
     }
+
+    @Override
+    public void invalidate()
+    {
+        super.invalidate();
+        if (worldObj.isRemote)
+        {
+            stopSounds();
+        }
+    }
+    //endregion
+
+    //region Events
+    private boolean onEntityConsume(Entity entity,boolean pre)
+    {
+        if (entity instanceof IGravityEntity)
+        {
+            ((IGravityEntity) entity).onEntityConsumed(this);
+        }
+        if (pre)
+        {
+            MinecraftForge.EVENT_BUS.post(new MOEventGravitationalAnomalyConsume.Pre(entity,xCoord,yCoord,zCoord));
+        }else
+        {
+            MinecraftForge.EVENT_BUS.post(new MOEventGravitationalAnomalyConsume.Post(entity,xCoord,yCoord,zCoord));
+        }
+
+        return true;
+    }
+    //endregion
 
     public void manageBlockDestory(World world)
     {
         if (!BLOCK_DESTRUCTION)
             return;
 
-        Vec3 pos = Vec3.createVectorHelper(xCoord, yCoord, zCoord);
         int solidCount = 0;
         int liquidCount = 0;
         int range = MathHelper.floor(getBlockBreakRange());
@@ -455,62 +432,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         }
     }
 
-    public Block getBlock(World world,int x,int y,int z)
-    {
-        return world.getBlock(x,y,z);
-    }
-
-    public double getEventHorizon()
-    {
-        return (G2 * getRealMass()) / CC;
-    }
-
-    public double getBlockBreakRange()
-    {
-        return getMaxRange() / 2;
-    }
-
-    public double getMaxRange()
-    {
-        return Math.sqrt((G * getRealMass() / 0.005));
-    }
-
-    public double getAcceleration(double range)
-    {
-        return (getRealMass() / range);
-    }
-
-    public double getRealMass() {
-         return getRealMassUnsuppressed() * suppression;
-    }
-
-    public double getRealMassUnsuppressed()
-    {
-        return Math.log1p(Math.max(mass,0) * STREHGTH_MULTIPLYER);
-    }
-
-    public float getBreakStrength(float distance,float maxRange)
-    {
-        return ((float)getRealMass() * 4 * suppression) * getDistanceFalloff(distance,maxRange);
-    }
-
-    /**
-     * Get the Falloff based on the distance and max range of the anomaly
-     * Used in conjunction with brake strength
-     * @param distance the distance of the object
-     * @param maxRange the range (max distance) of the anomaly
-     * @return the falloff (1 - 0) in percent
-     */
-    public float getDistanceFalloff(float distance,float maxRange)
-    {
-        return (1 - (distance / maxRange));
-    }
-
-    public float getBreakStrength()
-    {
-        return (float)getRealMass() * 4 * suppression;
-    }
-
+    //region Consume Type Handlers
     public void consume(Entity entity) {
         if (!entity.isDead && onEntityConsume(entity,true)) {
 
@@ -551,7 +473,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
             //Todo made the gravitational anomaly collapse on Antimatter
             if (entityItem.getEntityItem().getItem().equals(Items.nether_star))
             {
-                colapse();
+                collapse();
             }
             return true;
         }
@@ -593,25 +515,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         entity.attackEntityFrom(damageSource, strength);
         return true;
     }
-
-    private boolean onEntityConsume(Entity entity,boolean pre)
-    {
-        if (pre)
-        {
-            MinecraftForge.EVENT_BUS.post(new MOEventGravitationalAnomalyConsume.Pre(entity,xCoord,yCoord,zCoord));
-        }else
-        {
-            MinecraftForge.EVENT_BUS.post(new MOEventGravitationalAnomalyConsume.Post(entity,xCoord,yCoord,zCoord));
-        }
-
-        return true;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
-        return Math.pow(getMaxRange(),3);
-    }
+    //endregion
 
     public boolean brakeBlock(World world,int x,int y,int z,float strength,double eventHorizon,int range)
     {
@@ -683,6 +587,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         return false;
     }
 
+    //region Helper Methods
     protected ItemStack createStackedBlock(Block block,int meta)
     {
         if (block != null) {
@@ -732,12 +637,6 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         return false;
     }
 
-    public void colapse()
-    {
-        worldObj.setBlockToAir(xCoord,yCoord,zCoord);
-        worldObj.createExplosion(null,xCoord,yCoord,zCoord,(float)getRealMassUnsuppressed()*2,true);
-    }
-
     public boolean cleanFlowingLiquids(Block block,int x,int y,int z) {
         if (VANILLA_FLUIDS) {
             if (block == Blocks.flowing_water || block == Blocks.flowing_lava) {
@@ -745,6 +644,13 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
             }
         }
         return false;
+    }
+    //endregion
+
+    public void collapse()
+    {
+        worldObj.setBlockToAir(xCoord,yCoord,zCoord);
+        worldObj.createExplosion(null,xCoord,yCoord,zCoord,(float)getRealMassUnsuppressed()*2,true);
     }
 
     @Override
@@ -758,14 +664,139 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         infos.add("Brake Lvl: " + format.format(getBreakStrength()));
     }
 
-    @Override
-    public void onScan(World world, double x, double y, double z, EntityPlayer player, ItemStack scanner) {
-
-    }
-
-    public void supress(double amount)
+    public void suppress(double amount)
     {
         tmpSuppression -= amount;
         tmpSuppression = Math.max(0,tmpSuppression);
     }
+
+    //region NBT
+    @Override
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    {
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            nbt.setLong("Mass", mass);
+            nbt.setFloat("Suppression", suppression);
+        }
+    }
+
+    @Override
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    {
+        if (categories.contains(MachineNBTCategory.DATA)) {
+            mass = nbt.getLong("Mass");
+            suppression = nbt.getFloat("Suppression");
+        }
+    }
+    //endregion
+
+    //region Getters and Setters
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared()
+    {
+        return Math.pow(getMaxRange(),3);
+    }
+
+    @Override
+    public int getPhase()
+    {
+        return 1;
+    }
+
+    public Block getBlock(World world,int x,int y,int z)
+    {
+        return world.getBlock(x,y,z);
+    }
+
+    @Override
+    public int getX() {
+        return xCoord;
+    }
+
+    @Override
+    public int getY() {
+        return yCoord;
+    }
+
+    @Override
+    public int getZ() {
+        return zCoord;
+    }
+
+    public double getEventHorizon()
+    {
+        return (G2 * getRealMass()) / CC;
+    }
+
+    public double getBlockBreakRange()
+    {
+        return getMaxRange() / 2;
+    }
+
+    public double getMaxRange()
+    {
+        return Math.sqrt((G * getRealMass() / 0.005));
+    }
+
+    public double getAcceleration(double distance)
+    {
+        return (getRealMass() / distance);
+    }
+
+    public double getRealMass() {
+        return getRealMassUnsuppressed() * suppression;
+    }
+
+    public double getRealMassUnsuppressed()
+    {
+        return Math.log1p(Math.max(mass,0) * STREHGTH_MULTIPLYER);
+    }
+
+    public float getBreakStrength(float distance,float maxRange)
+    {
+        return ((float)getRealMass() * 4 * suppression) * getDistanceFalloff(distance,maxRange);
+    }
+
+    public float getDistanceFalloff(float distance,float maxRange)
+    {
+        return (1 - (distance / maxRange));
+    }
+
+    public float getBreakStrength()
+    {
+        return (float)getRealMass() * 4 * suppression;
+    }
+    //endregion
+
+    //region Sub Classes
+    public static class PositionWrapper
+    {
+        int x,y,z;
+
+        public PositionWrapper(int x,int y,int z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+    }
+
+    public  static class BlockComparitor implements Comparator<PositionWrapper>
+    {
+        int posX,posY,posZ;
+
+        public BlockComparitor(int x,int y,int z)
+        {
+            posX = x;
+            posY = y;
+            posZ = z;
+        }
+
+        @Override
+        public int compare(PositionWrapper o1, PositionWrapper o2)
+        {
+            return Double.compare(MOMathHelper.distanceSqured(o1.x, o1.y, o1.z, posX, posY, posZ),MOMathHelper.distanceSqured(o2.x, o2.y, o2.z, posX, posY, posZ));
+        }
+    }
+    //endregion
 }

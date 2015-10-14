@@ -85,7 +85,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
         hit = seacrhForAnomalies(world);
         if (hit != null && world.getTileEntity(hit.blockX,hit.blockY,hit.blockZ) instanceof TileEntityGravitationalAnomaly)
         {
-            ((TileEntityGravitationalAnomaly) world.getTileEntity(hit.blockX,hit.blockY,hit.blockZ)).supress(1d / 7d);
+            ((TileEntityGravitationalAnomaly) world.getTileEntity(hit.blockX,hit.blockY,hit.blockZ)).suppress(1d / 7d);
         }
     }
 

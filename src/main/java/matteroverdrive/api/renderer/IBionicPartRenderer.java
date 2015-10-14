@@ -24,6 +24,8 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Created by Simeon on 9/10/2015.
+ * Used by Bionic parts to handle special rendering.
+ * This is used in the
  */
 public interface IBionicPartRenderer
 {

@@ -103,22 +103,22 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     }
 
     @Override
-    public void broadcast(MatterNetworkPacket task,ForgeDirection direction)
+    public void broadcast(MatterNetworkPacket packet,ForgeDirection direction)
     {
         if (isValid())
         {
-            if (task == null)
+            if (packet == null)
             {
                 System.out.println("Task is null");
             }
 
-            if (task instanceof MatterNetworkTaskPacket && ((MatterNetworkTaskPacket) task).getTask(worldObj).getState().above(MatterNetworkTaskState.WAITING))
+            if (packet instanceof MatterNetworkTaskPacket && ((MatterNetworkTaskPacket) packet).getTask(worldObj).getState().above(MatterNetworkTaskState.WAITING))
                 return;
 
             for (int i = 0; i < 6; i++)
             {
                 if (direction.getOpposite().ordinal() != i)
-                    MatterNetworkHelper.broadcastPacketInDirection(worldObj, task, this, ForgeDirection.getOrientation(i));
+                    MatterNetworkHelper.broadcastPacketInDirection(worldObj, packet, this, ForgeDirection.getOrientation(i));
             }
         }
     }

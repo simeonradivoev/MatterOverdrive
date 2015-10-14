@@ -416,9 +416,9 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     }
 
     @Override
-    public float getMaxHeat(ItemStack itemStack)
+    public float getMaxHeat(ItemStack weapon)
     {
-        return getBaseMaxHeat(itemStack) * getMaxHeatMultiply(itemStack);
+        return getBaseMaxHeat(weapon) * getMaxHeatMultiply(weapon);
     }
 
     public boolean isOverheated(ItemStack weapon)

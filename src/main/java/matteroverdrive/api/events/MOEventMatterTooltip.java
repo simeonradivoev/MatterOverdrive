@@ -24,6 +24,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 
 /**
  * Created by Simeon on 7/21/2015.
+ * This event is triggered when you hold shift while the item tooltip is active.
+ * It is connected to showing the matter values for all items.
+ * When canceled, the matter info will not be shown.
  */
 public class MOEventMatterTooltip extends PlayerEvent
 {

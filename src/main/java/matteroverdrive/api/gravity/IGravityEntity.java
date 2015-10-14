@@ -16,20 +16,23 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api.inventory;
-
-import net.minecraft.item.ItemStack;
+package matteroverdrive.api.gravity;
 
 /**
- * Created by Simeon on 8/2/2015.
- * Used by energy weapons as one use charging items (Ammo).
+ * Created by Simeon on 8/1/2015.
+ * Entities that implement this interface can disable gravitational effect on them.
  */
-public interface IEnergyPack
+public interface IGravityEntity
 {
     /**
-     * The amount of energy the item restores.
-     * @param pack The Item Stack
-     * @return The amount of energy restored.
+     * Is the entity affected by the gravitational anomaly.
+     * @param anomaly the anomaly
+     * @return is the entity affected by the gravitational anomaly.
      */
-    int getEnergyAmount(ItemStack pack);
+    boolean isAffectedByAnomaly(IGravitationalAnomaly anomaly);
+    /**
+     * Called when the entity is consumed by the anomaly.
+     * @param anomaly the anomaly
+     */
+    void onEntityConsumed(IGravitationalAnomaly anomaly);
 }

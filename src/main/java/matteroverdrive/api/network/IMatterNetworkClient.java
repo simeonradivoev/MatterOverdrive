@@ -24,11 +24,35 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 4/19/2015.
+ * Used by Machine that can receive and complete Packets.
  */
 public interface IMatterNetworkClient extends IMatterNetworkConnection,IMatterNetworkHandler
 {
+    /**
+     * Can the given packet be preformed by the machine.
+     * This is also where the packet filter is handled.
+     * @param packet The packet.
+     * @return can the packet be preformed.
+     */
     boolean canPreform(MatterNetworkPacket packet);
+
+    /**
+     * Used to queue the received packet into the machine's queue.
+     * @param packet the packet being queued.
+     * @param from the side from which the packed was received.
+     */
     void queuePacket(MatterNetworkPacket packet,ForgeDirection from);
+
+    /**
+     * Gets the Packet Queue of the machine at the specified queue ID.
+     * @param queueID the ID of the Queue.
+     * @return the Packet Queue at the given ID.
+     */
     MatterNetworkPacketQueue<MatterNetworkPacket> getPacketQueue(int queueID);
+
+    /**
+     * Gets the count of all queues the machine has.
+     * @return the number of queues in the machine.
+     */
     int getPacketQueueCount();
 }

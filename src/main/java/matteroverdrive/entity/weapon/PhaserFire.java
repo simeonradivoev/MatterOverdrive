@@ -21,7 +21,8 @@ package matteroverdrive.entity.weapon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.IGravityEntity;
+import matteroverdrive.api.gravity.IGravitationalAnomaly;
+import matteroverdrive.api.gravity.IGravityEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -367,8 +368,14 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
     }
 
     @Override
-    public boolean isAffectedByAnomaly() {
+    public boolean isAffectedByAnomaly(IGravitationalAnomaly anomaly) {
         return false;
+    }
+
+    @Override
+    public void onEntityConsumed(IGravitationalAnomaly anomaly)
+    {
+
     }
 
     public void setFireDamageMultiply(float fiery)

@@ -23,9 +23,14 @@ import matteroverdrive.api.android.IBionicStat;
 
 /**
  * Created by Simeon on 7/21/2015.
+ * Triggered when an Android Ability is registered.
+ * When canceled, the ability will not be registered.
  */
 public class MOEventRegisterAndroidStat extends Event
 {
+    /**
+     * The Bionic Stat to be registered
+     */
     public final IBionicStat stat;
     public MOEventRegisterAndroidStat(IBionicStat stat)
     {
