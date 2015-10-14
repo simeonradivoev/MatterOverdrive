@@ -37,6 +37,7 @@ import matteroverdrive.matter_network.MatterNetworkRegistry;
 import matteroverdrive.network.PacketPipeline;
 import matteroverdrive.proxy.CommonProxy;
 import matteroverdrive.util.MOLog;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
@@ -55,6 +56,7 @@ public class MatterOverdrive
 	public static final MatterOverdriveTab tabMatterOverdrive_food = new MatterOverdriveTab("tabMatterOverdrive_food");
 	public static final MatterOverdriveTab tabMatterOverdrive_ships = new MatterOverdriveTab("tabMatterOverdrive_ships");
 	public static final MatterOverdriveTab tabMatterOverdrive_buildings = new MatterOverdriveTab("tabMatterOverdrive_buildings");
+	public static final MatterOverdriveTab tabMatterOverdrive_decorative = new MatterOverdriveTab("tabMatterOverdrive_decorative");
 
     public static TickHandler tickHandler;
     public static PlayerEventHandler playerEventHandler;
@@ -179,6 +181,7 @@ public class MatterOverdrive
 		tabMatterOverdrive_food.item = MatterOverdriveItems.earl_gray_tea;
 		tabMatterOverdrive_ships.item = MatterOverdriveItems.colonizerShip;
 		tabMatterOverdrive_buildings.item = MatterOverdriveItems.buildingBase;
+		tabMatterOverdrive_decorative.item = new ItemBlock(MatterOverdriveBlocks.decorative_stripes);
 	}
 
 	private void checkJavaVersion()

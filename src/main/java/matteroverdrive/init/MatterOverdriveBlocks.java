@@ -66,6 +66,24 @@ public class MatterOverdriveBlocks {
     public static BlockFluidMatterPlasma blockMatterPlasma;
 	public static BlockBoundingBox boundingBox;
 
+    public static BlockDecorative decorative_stripes;
+    public static BlockDecorative decorative_coils;
+    public static BlockDecorative decorative_clean;
+    public static BlockDecorative decorative_vent_dark;
+    public static BlockDecorative decorative_vent_bright;
+    public static BlockDecorative decorative_holo_matrix;
+    public static BlockDecorative decorative_tritanium_plate;
+    public static BlockDecorative decorative_carbon_fiber_plate;
+    public static BlockDecorative decorative_matter_tube;
+    public static BlockDecorative decorative_beams;
+    public static BlockDecorative decorative_floor_tiles;
+    public static BlockDecorative decorative_floor_tiles_green;
+    public static BlockDecorative decorative_floor_noise;
+    public static BlockDecorative decorative_tritanium_plate_stripe;
+    public static BlockDecorative decorative_floot_tile_white;
+    public static BlockDecorative decorative_white_plate;
+    public static BlockDecorative decorative_separator;
+
     public static final List<IRecipe> recipes = new ArrayList<>();
 
     public static void init(FMLPreInitializationEvent event) {
@@ -111,6 +129,24 @@ public class MatterOverdriveBlocks {
         blockMatterPlasma = new BlockFluidMatterPlasma(MatterOverdriveFluids.matterPlasma, Material.water);
         blockMatterPlasma.setBlockName("matter_plasma");
 		boundingBox = new BlockBoundingBox(Material.air, "bounding_box");
+
+        decorative_stripes = new BlockDecorative(Material.iron,"decorative.stripes","base_stripes",5,1,8);
+        decorative_coils = new BlockDecorative(Material.iron,"decorative.coils","base_coil",5,1,8);
+        decorative_clean = new BlockDecorative(Material.iron,"decorative.clean","transporter_side",5,1,8);
+        decorative_vent_dark = new BlockDecorative(Material.iron,"decorative.vent.dark","vent",5,1,8);
+        decorative_vent_bright = new BlockDecorative(Material.iron,"decorative.vent.bright","vent2",5,1,8);
+        decorative_holo_matrix = new BlockDecorative(Material.iron,"decorative.holo_matrix","weapon_station_top",3,1,4);
+        decorative_tritanium_plate = new BlockDecorative(Material.iron,"decorative.tritanium_plate","tritanium_plate",10,1,10);
+        decorative_carbon_fiber_plate = new BlockDecorative(Material.iron,"decorative.carbon_fiber_plate","carbon_fiber_plate",10,1,12);
+        decorative_matter_tube = new BlockDecorative(Material.glass,"decorative.matter_tube","matter_tube",3,1,4);
+        decorative_beams = new BlockDecorative(Material.iron,"decorative.beams","beams",8,1,8);
+        decorative_floor_tiles = new BlockDecorative(Material.clay,"decorative.floor_tiles","floor_tiles",4,0,4);
+        decorative_floor_tiles_green = new BlockDecorative(Material.clay,"decorative.floor_tiles_green","floor_tiles_green",4,0,4);
+        decorative_floor_noise = new BlockDecorative(Material.clay,"decorative.floor_noise","floor_noise",4,0,4);
+        decorative_tritanium_plate_stripe = new BlockDecorative(Material.iron,"decorative.tritanium_plate_stripe","tritanium_plate_yellow_stripe",10,1,10);
+        decorative_floot_tile_white = new BlockDecorative(Material.clay,"decorative.floor_tile_white","floor_tile_white",4,0,4);
+        decorative_white_plate = new BlockDecorative(Material.iron,"decorative.white_plate","white_plate",8,1,8);
+        decorative_separator = new BlockDecorative(Material.iron,"decorative.separator","separator",8,1,8);
     }
 
     public static void register(FMLInitializationEvent event) {
@@ -159,6 +195,24 @@ public class MatterOverdriveBlocks {
         forceGlass.register();
         GameRegistry.registerBlock(blockMatterPlasma, "matter_plasma");
 		boundingBox.register();
+
+        decorative_stripes.register();
+        decorative_coils.register();
+        decorative_clean.register();
+        decorative_vent_dark.register();
+        decorative_vent_bright.register();
+        decorative_holo_matrix.register();
+        decorative_tritanium_plate.register();
+        decorative_carbon_fiber_plate.register();
+        decorative_matter_tube.register();
+        decorative_beams.register();
+        decorative_floor_tiles.register();
+        decorative_floor_tiles_green.register();
+        decorative_floor_noise.register();
+        decorative_tritanium_plate_stripe.register();
+        decorative_floot_tile_white.register();
+        decorative_white_plate.register();
+        decorative_separator.register();
 
         OreDictionary.registerOre("oreTritanium", tritaniumOre);
         OreDictionary.registerOre("oreDilithium",dilithium_ore);

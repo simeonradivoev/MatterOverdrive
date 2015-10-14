@@ -16,12 +16,25 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api;
+package matteroverdrive.blocks;
+
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.Reference;
+import matteroverdrive.blocks.includes.MOBlock;
+import net.minecraft.block.material.Material;
 
 /**
- * Created by Simeon on 8/1/2015.
+ * Created by Simeon on 10/6/2015.
+ * @since 0.4.0
  */
-public interface IGravityEntity
-{
-    boolean isAffectedByAnomaly();
+public class BlockDecorative extends MOBlock {
+
+    public BlockDecorative(Material material, String name,String iconName,float hardness,int harvestLevel,float resistance) {
+        super(material, name);
+        setHardness(hardness);
+        setHarvestLevel("pickaxe",harvestLevel);
+        setResistance(resistance);
+        this.setBlockTextureName(Reference.MOD_ID + ":" + iconName);
+        setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative);
+    }
 }

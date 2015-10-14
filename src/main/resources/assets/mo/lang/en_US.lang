@@ -156,6 +156,7 @@ tile.gravitational_stabilizer.name=Gravitational Stabilizer
 tile.gravitational_stabilizer.details=Used to suppress the effects of Gravitational Anomalies
 tile.matter_recycler.name=Matter Recycler
 tile.matter_recycler.details=Used to recycle items, ready for decomposing
+tile.matter_plasma.name=Matter Plasma
 
 //////////// Fusion Reactor ////////////
 tile.fusion_reactor_controller.name=Fusion Reactor Controller
@@ -186,6 +187,25 @@ entity.failed_chicken.name=Failed Chicken
 entity.failed_cow.name=Failed Cow
 entity.failed_sheep.name=Failed Sheep
 entity.mad_scientist.name=Mad Scientist
+
+///////////// Decorative ////////////////////
+tile.decorative.stripes.name=Yellow Stripes
+tile.decorative.coils.name=Coils
+tile.decorative.clean.name=Tritanium Smooth Plate
+tile.decorative.vent.dark.name=Dark Vent
+tile.decorative.vent.bright.name=Vent
+tile.decorative.holo_matrix.name=Holographic Matrix
+tile.decorative.tritanium_plate.name=Tritanium Plate
+tile.decorative.carbon_fiber_plate.name=Carbon Fiber Plate
+tile.decorative.matter_tube.name=Matter Tube
+tile.decorative.beams.name=Tritanium Grate
+tile.decorative.floor_tiles.name=Floor Tiles
+tile.decorative.floor_tiles_green.name=Green Floor Tiles
+tile.decorative.floor_noise.name=Linoleum Floor
+tile.decorative.tritanium_plate_stripe.name=Tritanium Plate Guided
+tile.decorative.floor_tile_white.name=White Floor Tiles
+tile.decorative.white_plate.name=Soft Wall Plates
+tile.decorative.separator.name=Tritanium Rail
 
 ##########################################################################################################
 # Dialogs
