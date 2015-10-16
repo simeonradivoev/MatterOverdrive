@@ -223,7 +223,6 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         decrStackSize(input_slot, 1);
         forceClientUpdate = true;
         markDirty();
-        networkComponent.resetValidLocation();
     }
 
     @Override

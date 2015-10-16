@@ -18,6 +18,8 @@
 
 package matteroverdrive.machines.configs;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 /**
  * Created by Simeon on 8/16/2015.
  */
@@ -45,6 +47,16 @@ public class ConfigPropertyBoolean extends ConfigPropertyAbstract {
     public void setValue(Object value)
     {
         this.value = (boolean)value;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setBoolean(getUnlocalizedName(),value);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        value = nbt.getBoolean(getUnlocalizedName());
     }
 
     @Override

@@ -16,28 +16,23 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.machines.configs;
+package matteroverdrive.api;
+
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 /**
- * Created by Simeon on 8/16/2015.
+ * @author Simeon
+ * @since 3/6/2015
+ * Implemented by all Matter overdrive Tile Entities
  */
-public class ConfigPropertyStringList extends ConfigPropertyInteger
+public interface IMOTileEntity
 {
-    String[] names;
-
-    public ConfigPropertyStringList(String key, String unlocalizedName, String[] names, int def)
-    {
-        super(key, unlocalizedName,0,names.length-1,def);
-        this.names = names;
-    }
-
-    @Override
-    public Class getType() {
-        return Enum.class;
-    }
-
-    public String[] getList()
-    {
-        return names;
-    }
+    void onAdded(World world,int x,int y,int z);
+    void onPlaced(World world,EntityLivingBase entityLiving);
+    void onDestroyed();
+    void onNeighborBlockChange();
+    void writeToDropItem(ItemStack itemStack);
+    void readFromPlaceItem(ItemStack itemStack);
 }

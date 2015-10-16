@@ -52,22 +52,7 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
         super(analyzer,TickEvent.Phase.START);
         broadcastTracker = new TimeTracker();
         validDestinationTracker = new TimeTracker();
-    }
-
-    @Override
-    public boolean canPreform(MatterNetworkPacket packet)
-    {
-        if (super.canPreform(packet)) {
-            if (packet instanceof MatterNetworkResponsePacket) {
-                return true;
-            } else if (packet instanceof MatterNetworkRequestPacket) {
-                if (((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_CONNECTION
-                        || ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        handlers.add(BASIC_CONNECTIONS_HANDLER);
     }
 
     @Override
@@ -76,9 +61,6 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
         if (packet instanceof MatterNetworkResponsePacket)
         {
             executeResponses((MatterNetworkResponsePacket)packet);
-        }else if (packet instanceof MatterNetworkRequestPacket)
-        {
-            executeBasicRequestPackets((MatterNetworkRequestPacket)packet);
         }
     }
 

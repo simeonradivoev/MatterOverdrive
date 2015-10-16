@@ -29,7 +29,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.common.block.Item;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.network.*;
 import matteroverdrive.blocks.BlockReplicator;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
@@ -71,7 +70,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 
-public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterConnection, IMatterNetworkClient, IMatterNetworkHandler, IMatterNetworkDispatcher<MatterNetworkTaskReplicatePattern>,IMatterNetworkBroadcaster,IWailaBodyProvider
+public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterNetworkClient, IMatterNetworkHandler, IMatterNetworkDispatcher<MatterNetworkTaskReplicatePattern>,IMatterNetworkBroadcaster,IWailaBodyProvider
 {
 	public static int MATTER_STORAGE = 1024;
 	public static int ENERGY_STORAGE = 512000;
@@ -80,7 +79,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public static final int REPLICATION_ANIMATION_TIME = 60;
 
     public int OUTPUT_SLOT_ID = 0;
-    public int SECOUND_OUTPUT_SLOT_ID = 1;
+    public int SECOND_OUTPUT_SLOT_ID = 1;
     public int DATABASE_SLOT_ID = 2;
     public int SHIELDING_SLOT_ID = 3;
 
@@ -100,8 +99,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
     private MatterNetworkComponentReplicator networkComponent;
     private ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
-    private MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueueProcessing;
-    private TimeTracker timeTracker;
+    private final MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueueProcessing;
+    private final TimeTracker timeTracker;
     private NBTTagCompound internalPatternStorage;
 	
 	public TileEntityMachineReplicator()
@@ -122,7 +121,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     protected void RegisterSlots(Inventory inventory)
     {
         OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
-        SECOUND_OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
+        SECOND_OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
         DATABASE_SLOT_ID = inventory.AddSlot(new DatabaseSlot(true));
         SHIELDING_SLOT_ID = inventory.AddSlot(new ShieldingSlot(true));
         super.RegisterSlots(inventory);
@@ -192,6 +191,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         } else {
             this.replicateTime = 0;
             replicateProgress = 0;
+            internalPatternStorage = null;
         }
 
     }
@@ -282,13 +282,13 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
     private boolean failReplicate(int amount)
     {
-        ItemStack stack = getStackInSlot(SECOUND_OUTPUT_SLOT_ID);
+        ItemStack stack = getStackInSlot(SECOND_OUTPUT_SLOT_ID);
 
         if(stack == null)
         {
             stack = new ItemStack(MatterOverdriveItems.matter_dust);
             MatterOverdriveItems.matter_dust.setMatter(stack,amount);
-            setInventorySlotContents(SECOUND_OUTPUT_SLOT_ID, stack);
+            setInventorySlotContents(SECOND_OUTPUT_SLOT_ID, stack);
             return true;
         }
         else
@@ -329,11 +329,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public boolean canCompleteTask()
     {
         MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
-        if (task != null && internalPatternStorage != null && task.getItemID() == internalPatternStorage.getShort("id") && internalPatternStorage.getShort("Damage") == task.getItemMetadata())
-        {
-            return true;
-        }
-        return false;
+        return task != null && internalPatternStorage != null && task.getItemID() == internalPatternStorage.getShort("id") && internalPatternStorage.getShort("Damage") == task.getItemMetadata();
     }
 
     @Override
@@ -368,7 +364,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                 distance = 1.0 - distance;
                 distance *= 5 - shielding;
 
-                int value = 0;
                 PotionEffect[] effects = new PotionEffect[4];
                 //confusion
                 effects[0] = new PotionEffect(9, MathHelper.round(Math.pow(5,distance)), 0);
@@ -412,7 +407,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
     private boolean canReplicateIntoSecoundOutput(int matter)
     {
-        ItemStack stack = getStackInSlot(SECOUND_OUTPUT_SLOT_ID);
+        ItemStack stack = getStackInSlot(SECOND_OUTPUT_SLOT_ID);
 
         if (stack == null)
         {
@@ -425,12 +420,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean canConnectFrom(ForgeDirection dir)
-    {
-        return true;
     }
 
     @Override
@@ -469,7 +458,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     public int[] getAccessibleSlotsFromSide(int side)
     {
-        return new int[]{OUTPUT_SLOT_ID,SECOUND_OUTPUT_SLOT_ID};
+        return new int[]{OUTPUT_SLOT_ID, SECOND_OUTPUT_SLOT_ID};
     }
 
     @Override
@@ -626,7 +615,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         double progressChance = 1.0 - ((double) MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) / (double)MatterDatabaseHelper.MAX_ITEM_PROGRESS);
         double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.Fail);
-        //this does not nagate all fail chance if item is not fully scanned
+        //this does not negate all fail chance if item is not fully scanned
         return FAIL_CHANCE * upgradeMultiply + progressChance * 0.5 + (progressChance * 0.5) * upgradeMultiply;
     }
 

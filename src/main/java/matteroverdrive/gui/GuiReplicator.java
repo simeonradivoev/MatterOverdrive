@@ -65,7 +65,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
 		energyElement = new MOElementEnergy(this,167,39,machine.getEnergyStorage());
 		replicate_progress = new ElementDualScaled(this,32,52);
         outputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),70,52,22,22,"big");
-        seccoundOutputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.SECOUND_OUTPUT_SLOT_ID),96,52,22,22,"big");
+        seccoundOutputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.SECOND_OUTPUT_SLOT_ID),96,52,22,22,"big");
 
         itemPattern = new ElementItemPattern(this, entity.getInternalPatternStorage(), "big_main", 37, 22);
         slotsList.setPosition(5, 49);

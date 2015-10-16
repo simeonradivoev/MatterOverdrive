@@ -22,10 +22,8 @@ import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.network.IMatterNetworkCable;
 import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.MatterNetworkPacket;
-import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.util.MatterNetworkHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.entity.EntityLivingBase;
@@ -107,14 +105,6 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     {
         if (isValid())
         {
-            if (packet == null)
-            {
-                System.out.println("Task is null");
-            }
-
-            if (packet instanceof MatterNetworkTaskPacket && ((MatterNetworkTaskPacket) packet).getTask(worldObj).getState().above(MatterNetworkTaskState.WAITING))
-                return;
-
             for (int i = 0; i < 6; i++)
             {
                 if (direction.getOpposite().ordinal() != i)

@@ -24,13 +24,9 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.network.MatterNetworkTask;
-import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
-import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
-import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.network.packet.client.PacketSendQueueFlash;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
 import matteroverdrive.util.MatterNetworkHelper;
@@ -54,19 +50,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     @Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
-        if (rootClient.getRedstoneActive())
-        {
-            if (packet instanceof MatterNetworkRequestPacket)
-            {
-                if (((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION)
-                    return false;
-            }
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return rootClient.getRedstoneActive();
     }
 
     @Override
@@ -74,9 +58,6 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     {
         if (canPreform(packet) && packet.isValid(getWorldObj()))
         {
-            if (packet instanceof MatterNetworkTaskPacket && !isInValidState(((MatterNetworkTaskPacket) packet).getTask(getWorldObj()))) {
-                return;
-            }
             if (packet instanceof MatterNetworkBroadcastPacket)
             {
                 if (manageBroadcastPacket((MatterNetworkBroadcastPacket)packet,from))
@@ -108,9 +89,6 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     {
         int broadcastCount = 0;
         for (int i = 0; i < directions.length; i++) {
-            if (packet instanceof MatterNetworkTaskPacket && !isInValidState(((MatterNetworkTaskPacket) packet).getTask(world)))
-                continue;
-
             if (MatterNetworkHelper.broadcastPacketInDirection(world, packet, rootClient, ForgeDirection.getOrientation(directions[i]))) {
                 broadcastCount++;
             }
@@ -123,6 +101,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
         if (packet.getResponseType() == Reference.PACKET_RESPONCE_VALID && packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION)
         {
             rootClient.setConnection(direction.ordinal(), packet.getSender(getWorldObj()).getPosition());
+            rootClient.ForceSync();
             return true;
         }
         return false;
@@ -133,6 +112,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
         if ((packet.getBroadcastType() == Reference.PACKET_BROADCAST_CONNECTION))
         {
             rootClient.setConnection(direction.ordinal(), packet.getSender(getWorldObj()).getPosition());
+            rootClient.ForceSync();
             return true;
         }
         return false;
@@ -141,14 +121,6 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     private int getBroadcastDelay()
     {
         return MathHelper.round(TileEntityMachinePacketQueue.BROADCAST_DELAY * rootClient.getUpgradeMultiply(UpgradeTypes.Speed));
-    }
-
-    private boolean isInValidState(MatterNetworkTask task)
-    {
-        if (task != null) {
-            return task.getState() == MatterNetworkTaskState.WAITING;
-        }
-        return false;
     }
 
     @Override

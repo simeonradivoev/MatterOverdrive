@@ -21,6 +21,7 @@ package matteroverdrive.tile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.server.PacketSendMachineNBT;
 import net.minecraft.nbt.NBTTagCompound;

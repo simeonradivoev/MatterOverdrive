@@ -24,13 +24,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 4/19/2015.
- * Used by Machine that can receive and complete Packets.
  */
 public interface IMatterNetworkClient extends IMatterNetworkConnection,IMatterNetworkHandler
 {
     /**
      * Can the given packet be preformed by the machine.
-     * This is also where the packet filter is handled.
+     * This is also where the packet filtering is handled.
+     * This determines if a packet should be queued for processing in the client.
+     * Processing of packets does not mean that the packet has to be preformed bt the client. Packets can just be ignored in the processing stage.
      * @param packet The packet.
      * @return can the packet be preformed.
      */
@@ -38,6 +39,8 @@ public interface IMatterNetworkClient extends IMatterNetworkConnection,IMatterNe
 
     /**
      * Used to queue the received packet into the machine's queue.
+     * In most machines queueing is the same. Packets are added to the queue and later processed.
+     * {@link #canPreform(MatterNetworkPacket)} determines if the packet can even reach the queueing stage.
      * @param packet the packet being queued.
      * @param from the side from which the packed was received.
      */
@@ -45,6 +48,7 @@ public interface IMatterNetworkClient extends IMatterNetworkConnection,IMatterNe
 
     /**
      * Gets the Packet Queue of the machine at the specified queue ID.
+     * This allows the implementation of multiple packet queues in the client.
      * @param queueID the ID of the Queue.
      * @return the Packet Queue at the given ID.
      */

@@ -45,17 +45,19 @@ public class MatterNetworkComponentPatternStorage extends MatterNetworkComponent
     {
         super(patternStorage);
         taskProcessingTracker = new TimeTracker();
+        handlers.add(BASIC_CONNECTIONS_HANDLER);
     }
 
     @Override
     protected void executePacket(MatterNetworkPacket packet)
     {
+        super.executePacket(packet);
+
         if (packet instanceof MatterNetworkTaskPacket)
         {
             executeTasks((MatterNetworkTaskPacket)packet,((MatterNetworkTaskPacket)packet).getTask(getWorldObj()));
         }else if (packet instanceof MatterNetworkRequestPacket)
         {
-            executeBasicRequestPackets((MatterNetworkRequestPacket)packet);
             executeRequests((MatterNetworkRequestPacket) packet);
         }
     }
@@ -109,21 +111,6 @@ public class MatterNetworkComponentPatternStorage extends MatterNetworkComponent
 
     @Override
     public boolean canPreform(MatterNetworkPacket packet) {
-        if (super.canPreform(packet) && rootClient.getRedstoneActive())
-        {
-            if (packet instanceof MatterNetworkTaskPacket) {
-                if (((MatterNetworkTaskPacket) packet).getTask(rootClient.getWorldObj()) instanceof MatterNetworkTaskStorePattern) {
-                    MatterNetworkTaskStorePattern task = (MatterNetworkTaskStorePattern) ((MatterNetworkTaskPacket) packet).getTask(rootClient.getWorldObj());
-                    return rootClient.addItem(task.getItemStack(), task.getProgress(), true, null);
-                }
-            } else if (packet instanceof MatterNetworkRequestPacket) {
-                MatterNetworkRequestPacket requestPacket = (MatterNetworkRequestPacket) packet;
-                return requestPacket.getRequestType() == Reference.PACKET_REQUEST_CONNECTION
-                        || requestPacket.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH
-                        || requestPacket.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION
-                        || requestPacket.getRequestType() == Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION;
-            }
-        }
-        return false;
+        return super.canPreform(packet) && rootClient.getRedstoneActive();
     }
 }

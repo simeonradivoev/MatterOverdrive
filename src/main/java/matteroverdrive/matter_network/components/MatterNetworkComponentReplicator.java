@@ -46,6 +46,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
     {
         super(replicator, TickEvent.Phase.END);
         patternSearchTracker = new TimeTracker();
+        handlers.add(BASIC_CONNECTIONS_HANDLER);
     }
 
     @Override
@@ -56,29 +57,25 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
                 if (((MatterNetworkTaskPacket) packet).getTask(rootClient.getWorldObj()) instanceof MatterNetworkTaskReplicatePattern) {
                     return rootClient.getTaskQueue(0).remaintingCapacity() > 0;
                 }
-            } else if (packet instanceof MatterNetworkRequestPacket) {
-                return ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_CONNECTION || ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
             }
-            else if (packet instanceof MatterNetworkResponsePacket)
-            {
-                return ((MatterNetworkResponsePacket)packet).getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH && ((MatterNetworkResponsePacket)packet).getResponseType() == Reference.PACKET_RESPONCE_VALID;
-            }
+            return true;
+        }else
+        {
+            return false;
         }
-        return false;
     }
 
     @Override
     protected void executePacket(MatterNetworkPacket packet)
     {
+        super.executePacket(packet);
+
         if (packet instanceof MatterNetworkTaskPacket)
         {
             executeTasks((MatterNetworkTaskPacket)packet,((MatterNetworkTaskPacket)packet).getTask(getWorldObj()));
         }else if (packet instanceof MatterNetworkResponsePacket)
         {
             executeResponses((MatterNetworkResponsePacket)packet);
-        }else if (packet instanceof MatterNetworkRequestPacket)
-        {
-            executeBasicRequestPackets((MatterNetworkRequestPacket)packet);
         }
     }
 
@@ -88,7 +85,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
         {
             if (rootClient.getTaskQueue(0).queue((MatterNetworkTaskReplicatePattern)task))
             {
-                task.setState(MatterNetworkTaskState.QUEUED);
+                task.setState(MatterNetworkTaskState.PROCESSING);
                 task.setAlive(true);
                 rootClient.ForceSync();
             }

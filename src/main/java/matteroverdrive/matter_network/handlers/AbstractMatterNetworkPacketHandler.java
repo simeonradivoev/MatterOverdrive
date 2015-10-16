@@ -16,28 +16,28 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.machines.configs;
+package matteroverdrive.matter_network.handlers;
+
+import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.matter_network.MatterNetworkPacket;
+import net.minecraft.world.World;
 
 /**
- * Created by Simeon on 8/16/2015.
+ * Created by Simeon on 10/16/2015.
  */
-public class ConfigPropertyStringList extends ConfigPropertyInteger
+public abstract class AbstractMatterNetworkPacketHandler
 {
-    String[] names;
+    public abstract void processPacket(MatterNetworkPacket packet,Context context);
 
-    public ConfigPropertyStringList(String key, String unlocalizedName, String[] names, int def)
+    public static class Context
     {
-        super(key, unlocalizedName,0,names.length-1,def);
-        this.names = names;
-    }
+        public final World world;
+        public final IMatterNetworkConnection connection;
 
-    @Override
-    public Class getType() {
-        return Enum.class;
-    }
-
-    public String[] getList()
-    {
-        return names;
+        public Context(World world,IMatterNetworkConnection connection)
+        {
+            this.world = world;
+            this.connection = connection;
+        }
     }
 }

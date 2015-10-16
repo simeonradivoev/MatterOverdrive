@@ -24,6 +24,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.api.IUpgradeable;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.inventory.UpgradeTypes;
@@ -38,7 +39,6 @@ import matteroverdrive.fx.VentParticle;
 import matteroverdrive.items.SecurityProtocol;
 import matteroverdrive.machines.components.ComponentConfigs;
 import matteroverdrive.machines.configs.ConfigPropertyStringList;
-import matteroverdrive.tile.IMOTileEntity;
 import matteroverdrive.tile.MOTileEntity;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;
@@ -63,7 +63,8 @@ import org.lwjgl.util.vector.Vector4f;
 import java.util.*;
 
 /**
- * Created by Simeon on 3/11/2015.
+ * @autor Simeon
+ * @since 3/11/2015
  */
 public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTileEntity, ISidedInventory, IUpgradeable
 {
@@ -673,7 +674,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
     public int getRedstoneMode()
     {
-        return getConfigs().getInteger("redstoneMode", 1);
+        return getConfigs().getEnum("redstoneMode", 0);
     }
 
     public UUID getOwner()

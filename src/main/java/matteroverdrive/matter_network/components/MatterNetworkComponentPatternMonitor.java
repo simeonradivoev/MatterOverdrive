@@ -50,32 +50,18 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
         super(patternMonitor);
         broadcastTracker = new TimeTracker();
         validateTracker = new TimeTracker();
+        handlers.add(BASIC_CONNECTIONS_HANDLER);
     }
 
     @Override
     protected void executePacket(MatterNetworkPacket packet)
     {
+        super.executePacket(packet);
+
         if (packet instanceof MatterNetworkResponsePacket)
         {
             executeResponses((MatterNetworkResponsePacket)packet);
-        }else if (packet instanceof MatterNetworkRequestPacket)
-        {
-            executeBasicRequestPackets((MatterNetworkRequestPacket)packet);
         }
-    }
-
-    @Override
-    public boolean canPreform(MatterNetworkPacket packet)
-    {
-        if (super.canPreform(packet)) {
-            if (packet instanceof MatterNetworkResponsePacket) {
-                return true;
-            } else if (packet instanceof MatterNetworkRequestPacket) {
-                return ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_CONNECTION
-                        || ((MatterNetworkRequestPacket) packet).getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION;
-            }
-        }
-        return false;
     }
 
     protected void executeResponses(MatterNetworkResponsePacket packet)

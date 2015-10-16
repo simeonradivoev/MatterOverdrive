@@ -22,7 +22,6 @@ import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
@@ -33,8 +32,8 @@ import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkPacketQueue;
-import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
-import matteroverdrive.util.MatterNetworkHelper;
+import matteroverdrive.matter_network.handlers.AbstractMatterNetworkPacketHandler;
+import matteroverdrive.matter_network.handlers.PacketHandlerBasicConnections;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -43,13 +42,17 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.logging.log4j.Level;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Created by Simeon on 7/15/2015.
  */
 public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine & IMatterNetworkConnection> implements IMatterNetworkClient, IMachineComponent<T>
 {
+    protected static PacketHandlerBasicConnections BASIC_CONNECTIONS_HANDLER = new PacketHandlerBasicConnections();
+    protected List<AbstractMatterNetworkPacketHandler> handlers;
     protected MatterNetworkPacketQueue<MatterNetworkPacket> packetQueue;
     protected T rootClient;
 
@@ -57,27 +60,7 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
     {
         this.rootClient = rootClient;
         packetQueue = new MatterNetworkPacketQueue(rootClient);
-    }
-
-    public boolean executeBasicRequestPackets(MatterNetworkRequestPacket packet)
-    {
-        IMatterNetworkConnection sender = packet.getSender(getWorldObj());
-
-        if (packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION || packet.getRequestType() == Reference.PACKET_REQUEST_CONNECTION) {
-
-            if (packet.getRequest() instanceof Class)
-            {
-                if (((Class)packet.getRequest()).isInstance(rootClient))
-                {
-                    MatterNetworkHelper.respondToRequest(getWorldObj(),rootClient,packet,Reference.PACKET_RESPONCE_VALID,null);
-                    return true;
-                }
-            } else {
-                MatterNetworkHelper.respondToRequest(getWorldObj(),rootClient,packet,Reference.PACKET_RESPONCE_VALID,null);
-                return true;
-            }
-        }
-        return false;
+        handlers = new ArrayList<>();
     }
 
     @Override
@@ -111,7 +94,13 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
         }
     }
 
-    protected abstract void executePacket(MatterNetworkPacket packet);
+    protected void executePacket(MatterNetworkPacket packet)
+    {
+        for (AbstractMatterNetworkPacketHandler handler : handlers)
+        {
+            handler.processPacket(packet,new AbstractMatterNetworkPacketHandler.Context(getWorldObj(),rootClient));
+        }
+    }
 
     public int onNetworkTick(World world, TickEvent.Phase phase)
     {

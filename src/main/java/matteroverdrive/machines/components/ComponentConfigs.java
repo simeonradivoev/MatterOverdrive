@@ -52,14 +52,7 @@ public class ComponentConfigs extends MachineComponentAbstract<MOTileEntityMachi
     {
         if (categories.contains(MachineNBTCategory.CONFIGS)) {
             for (IConfigProperty property : propertyMap.values()) {
-                if (nbt.hasKey(property.getKey())) {
-                    if (property.getType().equals(Integer.class))
-                        property.setValue(nbt.getInteger(property.getKey()));
-                    else if (property.getType().equals(String.class))
-                        property.setValue(nbt.getString(property.getKey()));
-                    else if (property.getType().equals(Boolean.class))
-                        property.setValue(nbt.getBoolean(property.getKey()));
-                }
+                property.readFromNBT(nbt);
             }
         }
     }
@@ -71,15 +64,7 @@ public class ComponentConfigs extends MachineComponentAbstract<MOTileEntityMachi
         {
             for (IConfigProperty property : propertyMap.values())
             {
-                if (property.getType().equals(Integer.class))
-                    nbt.setInteger(property.getKey(),(int) property.getValue());
-                else if (property.getType().equals(String.class))
-                {
-                    nbt.setString(property.getKey(),(String)property.getValue());
-                }else if (property.getType().equals(Boolean.class))
-                {
-                    nbt.setBoolean(property.getKey(), (Boolean) property.getValue());
-                }
+                property.writeToNBT(nbt);
             }
         }
     }
@@ -153,6 +138,18 @@ public class ComponentConfigs extends MachineComponentAbstract<MOTileEntityMachi
         if (propertyMap.containsKey(key))
         {
             if (propertyMap.get(key).getType().equals(Integer.class))
+            {
+                return (Integer)propertyMap.get(key).getValue();
+            }
+        }
+        return def;
+    }
+
+    public Integer getEnum(String key,int def)
+    {
+        if (propertyMap.containsKey(key))
+        {
+            if (propertyMap.get(key).getType().equals(Enum.class))
             {
                 return (Integer)propertyMap.get(key).getValue();
             }
