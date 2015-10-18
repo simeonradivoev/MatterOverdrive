@@ -33,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,6 +136,22 @@ public class PlayerEventHandler
             if (androidPlayer != null && androidPlayer.isAndroid())
             {
                 androidPlayer.sync(event.entityPlayer, PacketSyncAndroid.SYNC_ALL,false);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerDeath(LivingDeathEvent deathEvent)
+    {
+        if (deathEvent.entityLiving instanceof EntityPlayer)
+        {
+            if (!((EntityPlayer) deathEvent.entityLiving).worldObj.isRemote)
+            {
+                AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)deathEvent.entityLiving);
+                if (androidPlayer != null && androidPlayer.isAndroid())
+                {
+                    androidPlayer.onPlayerDeath(deathEvent);
+                }
             }
         }
     }

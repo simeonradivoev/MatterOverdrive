@@ -60,6 +60,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -490,6 +491,19 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void onPlayerLoad(PlayerEvent.LoadFromFile event)
     {
         manageStatAttributeModifiers();
+    }
+
+    public void onPlayerDeath(LivingDeathEvent event)
+    {
+
+    }
+
+    public void onPlayerRespawn()
+    {
+        while (getEnergyStored() < getMaxEnergyStored())
+        {
+            receiveEnergy(getMaxEnergyStored(),false);
+        }
     }
 
     private void clearAllEquipmentAttributeModifiers()

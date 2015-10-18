@@ -86,6 +86,9 @@ public class EntityHandler
     public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event)
     {
         AndroidPlayer.get(event.entityPlayer).copy(AndroidPlayer.get(event.original));
+        if (event.wasDeath) {
+            AndroidPlayer.get(event.entityPlayer).onPlayerRespawn();
+        }
         AndroidPlayer.get(event.entityPlayer).sync(PacketSyncAndroid.SYNC_ALL);
     }
 
