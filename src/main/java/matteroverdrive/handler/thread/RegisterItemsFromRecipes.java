@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Level;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -60,7 +61,8 @@ public class RegisterItemsFromRecipes implements Runnable {
                 long passStartTime = System.nanoTime();
                 int passStartRecipeCount = MatterOverdrive.matterRegistry.getEntries().size();
 
-                List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+                List<IRecipe> recipes = new CopyOnWriteArrayList(CraftingManager.getInstance().getRecipeList());
+
                 MatterOverdrive.log.info("Matter Recipe Calculation Started for %s recipes at pass %s, with %s matter entries", recipes.size(), pass + 1, passStartRecipeCount);
                 for (IRecipe recipe : recipes) {
                     if (recipe == null || recipe.getRecipeOutput() == null)
