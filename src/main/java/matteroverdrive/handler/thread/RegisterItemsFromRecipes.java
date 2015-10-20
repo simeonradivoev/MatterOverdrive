@@ -66,6 +66,9 @@ public class RegisterItemsFromRecipes implements Runnable {
                     if (recipe == null)
                         continue;
 
+                    if (Thread.interrupted())
+                        return;
+
                     try {
                         ItemStack itemStack = recipe.getRecipeOutput();
                         if (itemStack != null && !MatterOverdrive.matterRegistry.blacklisted(itemStack) && !MatterOverdrive.matterRegistry.blacklistedFromMod(itemStack)) {

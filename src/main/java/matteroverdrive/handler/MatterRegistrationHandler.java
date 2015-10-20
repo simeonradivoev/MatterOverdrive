@@ -27,6 +27,7 @@ import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.Level;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * Created by Simeon on 8/22/2015.
@@ -34,6 +35,7 @@ import java.util.List;
 public class MatterRegistrationHandler
 {
     public final String registryPath;
+    private Future matterCalculationThread;
 
     public MatterRegistrationHandler(String registryPath)
     {
@@ -69,7 +71,12 @@ public class MatterRegistrationHandler
 
     public void runCalculationThread()
     {
-        MatterOverdrive.threadPool.submit(new RegisterItemsFromRecipes(registryPath));
+        if (matterCalculationThread != null)
+        {
+            matterCalculationThread.cancel(true);
+            matterCalculationThread = null;
+        }
+        matterCalculationThread = MatterOverdrive.threadPool.submit(new RegisterItemsFromRecipes(registryPath));
     }
 
     public void onRegistrationComplete()
