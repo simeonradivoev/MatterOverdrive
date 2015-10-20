@@ -63,7 +63,7 @@ public class RegisterItemsFromRecipes implements Runnable {
                 List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
                 MatterOverdrive.log.info("Matter Recipe Calculation Started for %s recipes at pass %s, with %s matter entries", recipes.size(), pass + 1, passStartRecipeCount);
                 for (IRecipe recipe : recipes) {
-                    if (recipe == null)
+                    if (recipe == null || recipe.getRecipeOutput() == null)
                         continue;
 
                     if (Thread.interrupted())
@@ -161,6 +161,26 @@ public class RegisterItemsFromRecipes implements Runnable {
             return true;
         }
         return false;
+    }
+
+    private void debug(String debug,Exception ex,Object... params)
+    {
+        if (MatterOverdrive.matterRegistry.CALCULATION_DEBUG)
+        {
+            for (int i = 0;i < params.length;i++)
+            {
+                if (params[i] instanceof ItemStack)
+                {
+                    try {
+                        params[i] = ((ItemStack)params[i]).getUnlocalizedName();
+                    }catch (Exception e)
+                    {
+                        MatterOverdrive.log.log(Level.ERROR,e,"There was a problem getting the name of item %s",((ItemStack)params[i]).getItem());
+                    }
+                }
+            }
+            MatterOverdrive.log.log(Level.DEBUG,ex,debug,params);
+        }
     }
 
     private void debug(String debug,Object... params)
