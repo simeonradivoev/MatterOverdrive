@@ -89,10 +89,11 @@ public class RegisterItemsFromRecipes implements Runnable {
                             debug("% was blacklisted. Skipping matter calculation", recipe.getRecipeOutput());
                         }
                     } catch (Exception e) {
-                        if (recipe.getRecipeOutput() != null) {
-                            MatterOverdrive.log.error(String.format("There was a problem calculating matter from recipe for %s", recipe.getRecipeOutput().getItem()), e);
+                        if (recipe.getRecipeOutput() != null)
+                        {
+                            debug("Recipe missing output",e);
                         } else {
-                            MatterOverdrive.log.error("There was a problem calculating matter from recipe", e);
+                            debug("There was a problem calculating matter from recipe", e);
                         }
                     }
                 }
@@ -137,11 +138,12 @@ public class RegisterItemsFromRecipes implements Runnable {
         Map<ItemStack,ItemStack> smeltingMap = (Map<ItemStack,ItemStack>)FurnaceRecipes.smelting().getSmeltingList();
         for (Map.Entry<ItemStack,ItemStack> entry : smeltingMap.entrySet())
         {
-            int keyMatter = (MatterHelper.getMatterAmountFromItem(entry.getKey()) * entry.getKey().stackSize) / entry.getValue().stackSize;
-            int valueMatter = MatterHelper.getMatterAmountFromItem(entry.getValue());
-            if (keyMatter > 0 && valueMatter <= 0)
-            {
-                MatterOverdrive.matterRegistry.register(entry.getValue(),keyMatter);
+            if (entry.getKey() != null && entry.getValue() != null) {
+                int keyMatter = (MatterHelper.getMatterAmountFromItem(entry.getKey()) * entry.getKey().stackSize) / entry.getValue().stackSize;
+                int valueMatter = MatterHelper.getMatterAmountFromItem(entry.getValue());
+                if (keyMatter > 0 && valueMatter <= 0) {
+                    MatterOverdrive.matterRegistry.register(entry.getValue(), keyMatter);
+                }
             }
         }
     }
