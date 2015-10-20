@@ -169,7 +169,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
         super.updateElementInformation();
 
         MatterNetworkTaskReplicatePattern task = machine.getTaskQueue((byte) 0).peek();
-        if (task != null)
+        if (task != null && machine.getInternalPatternStorage() != null)
         {
             NBTTagCompound nbt = machine.getInternalPatternStorage();
             itemPattern.setAmount(task.getAmount());

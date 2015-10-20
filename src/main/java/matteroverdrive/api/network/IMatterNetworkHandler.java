@@ -19,6 +19,7 @@
 package matteroverdrive.api.network;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
+import matteroverdrive.tile.IMOTickable;
 import net.minecraft.world.World;
 
 /**
@@ -26,7 +27,7 @@ import net.minecraft.world.World;
  * This is used by all Matter Network Machines.
  * This is just for calling the custom tick method for all Matter Network Machines.
  */
-public interface IMatterNetworkHandler
+public interface IMatterNetworkHandler extends IMOTickable
 {
     /**
      * Called each matter Network tick.
@@ -44,4 +45,8 @@ public interface IMatterNetworkHandler
      * Used to limit the interaction per World tick.
      */
     int onNetworkTick(World world,TickEvent.Phase phase);
+    default void onServerTick(TickEvent.Phase phase,World world)
+    {
+        onNetworkTick(world,phase);
+    }
 }

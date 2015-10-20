@@ -179,21 +179,15 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     }
 
     @Override
-    public void onServerTick(TickEvent.WorldTickEvent event)
+    public void onServerTick(TickEvent.Phase phase,World world)
     {
         if (worldObj == null)
             return;
 
-        if (event.phase.equals(TickEvent.Phase.START))
+        if (phase.equals(TickEvent.Phase.START))
         {
             manageAnomalies(worldObj);
         }
-    }
-
-    @Override
-    public int getPhase()
-    {
-        return 0;
     }
 
     @Override

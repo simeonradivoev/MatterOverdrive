@@ -52,7 +52,7 @@ import java.util.HashSet;
 public class TileEntityMachinePatternMonitor extends MOTileEntityMachine implements IMatterNetworkDispatcher, IMatterNetworkClient, IMatterNetworkBroadcaster
 {
     public static final int BROADCAST_WEATING_DELAY = 80;
-    public static final int SEARCH_DELAY = 120;
+    public static final int SEARCH_DELAY = 20;
     public static final int VALIDATE_DELAY = 120;
     public static final int TASK_QUEUE_SIZE = 16;
     HashSet<BlockPosition> databases;

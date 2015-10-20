@@ -22,29 +22,32 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.api.network.IMatterNetworkHandler;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.IMOTickable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import java.util.Iterator;
+
 /**
  * Created by Simeon on 4/26/2015.
  */
 public class TickHandler
 {
-    private MatterNetworkTickHandler networkTick;
+    private MatterNetworkTickHandler matterNetworkTickHandler;
     private PlayerEventHandler playerEventHandler;
     private boolean worldStartFired = false;
     private long lastTickTime;
     private int lastTickLength;
+    private boolean phaseTracker;
 
     public TickHandler(ConfigurationHandler configurationHandler,PlayerEventHandler playerEventHandler)
     {
-        networkTick = new MatterNetworkTickHandler();
         this.playerEventHandler = playerEventHandler;
-
-        configurationHandler.subscribe(networkTick);
+        this.matterNetworkTickHandler = new MatterNetworkTickHandler();
+        configurationHandler.subscribe(matterNetworkTickHandler);
     }
 
     //Called when the client ticks.
@@ -89,16 +92,33 @@ public class TickHandler
             onWorldStart(event.side,event.world);
             worldStartFired = true;
         }
-        networkTick.onWorldTick(event);
 
-        if (event.side.isServer()) {
-            for (int i = 0;i < event.world.loadedTileEntityList.size();i++) {
-                TileEntity tileentity = (TileEntity) event.world.loadedTileEntityList.get(i);
+        if (event.side.isServer() && event.phase.equals(TickEvent.Phase.END)) {
 
-                if (tileentity instanceof IMOTickable && !tileentity.isInvalid() && tileentity.hasWorldObj() && event.world.blockExists(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord)) {
-                    ((IMOTickable) tileentity).onServerTick(event);
+            TickEvent.Phase phase = phaseTracker ? TickEvent.Phase.START : TickEvent.Phase.END;
+            matterNetworkTickHandler.onWorldTickPre(phase, event.world);
+
+            Iterator<TileEntity> iterator = event.world.loadedTileEntityList.iterator();
+
+            while (iterator.hasNext())
+            {
+                TileEntity tileEntity = iterator.next();
+                if (tileEntity instanceof IMOTickable)
+                {
+                    if (tileEntity instanceof IMatterNetworkHandler)
+                    {
+                        matterNetworkTickHandler.updateHandler((IMatterNetworkHandler) tileEntity, phase,event.world);
+                    }
+                    else
+                    {
+                        ((IMOTickable) tileEntity).onServerTick(phase,event.world);
+                    }
+
                 }
             }
+
+            matterNetworkTickHandler.onWorldTickPost(phase, event.world);
+            phaseTracker = !phaseTracker;
         }
 
     }

@@ -19,13 +19,11 @@
 package matteroverdrive.handler;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.network.IMatterNetworkHandler;
 import matteroverdrive.util.IConfigSubscriber;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
-
-import java.util.List;
 
 /**
  * Created by Simeon on 4/26/2015.
@@ -33,31 +31,46 @@ import java.util.List;
 public class MatterNetworkTickHandler implements IConfigSubscriber
 {
     private int max_broadcasts;
-    int lastID = 0;
+    private int broadcastCount;
+    int id_count;
+    int last_ID;
 
-    public void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (event.side == Side.SERVER) {
+    public void updateHandler(IMatterNetworkHandler handler,TickEvent.Phase phase,World world) {
 
-            int broadcastCount = 0;
-            List tiles = event.world.loadedTileEntityList;
-
-            for (int i = lastID; i < tiles.size(); i++) {
-                if (tiles.get(i) instanceof IMatterNetworkHandler)
-                {
-                    try {
-                        broadcastCount += ((IMatterNetworkHandler) tiles.get(i)).onNetworkTick(event.world, event.phase);
-                    }catch (Exception e)
-                    {
-                        MatterOverdrive.log.log(Level.FATAL,e,"There was a problem while ticking MatterNetworkHandler %s",tiles.get(i));
-                    }
-
-                    if (broadcastCount >= max_broadcasts) {
-                        return;
-                    }
+        if (broadcastCount < max_broadcasts)
+        {
+            if (id_count >= last_ID)
+            {
+                try {
+                    broadcastCount += handler.onNetworkTick(world, phase);
+                } catch (Exception e) {
+                    MatterOverdrive.log.log(Level.FATAL, e, "There was a problem while ticking MatterNetworkHandler %s", handler);
                 }
             }
 
-            lastID = 0;
+            id_count++;
+        }
+    }
+
+    public void onWorldTickPre(TickEvent.Phase phase,World world)
+    {
+        //reset the broadcast counting each tick
+        broadcastCount = 0;
+        id_count = 0;
+    }
+
+    public void onWorldTickPost(TickEvent.Phase phase,World world)
+    {
+        if (broadcastCount >= max_broadcasts)
+        {
+            //if the broadcast count exceeded the maximum then store the last ID from the ID count.
+            //this will restart the broadcasting next tick from the last broadcaster not the beginning.
+            last_ID = id_count;
+        }else
+        {
+            //resets the last ID if broadcast did not exceed the maximum.
+            //this will start the broadcasting from beginning next tick.
+            last_ID = 0;
         }
     }
 

@@ -88,7 +88,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
     private void manageSearch(World world,TickEvent.Phase phase)
     {
         if (phase.equals(TickEvent.Phase.END)) {
-            if (rootClient.needsRefresh())
+            if (needsSearchRefresh)
             {
                 rootClient.getDatabases().clear();
                 MatterOverdrive.packetPipeline.sendToAllAround(new PacketPatternMonitorSync(rootClient), rootClient, 64);

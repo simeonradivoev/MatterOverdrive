@@ -128,12 +128,12 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     }
 
     @Override
-    public void onServerTick(TickEvent.WorldTickEvent event)
+    public void onServerTick(TickEvent.Phase phase,World world)
     {
         if (worldObj == null)
             return;
 
-        if (event.phase.equals(TickEvent.Phase.END))
+        if (phase.equals(TickEvent.Phase.END))
         {
             manageEntityGravitation(worldObj, 0);
             manageBlockDestory(worldObj);
@@ -695,12 +695,6 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public double getMaxRenderDistanceSquared()
     {
         return Math.pow(getMaxRange(),3);
-    }
-
-    @Override
-    public int getPhase()
-    {
-        return 1;
     }
 
     public Block getBlock(World world,int x,int y,int z)
