@@ -54,7 +54,6 @@ public class ForceGlass extends BlockCT implements IDismantleable
     }
 
 //	Check if the block is an EIO conduit facade painted with Tritanium Glass
-	@Optional.Method(modid = "EnderIO")
 	private boolean checkEIO(IBlockAccess world, Block block, int x, int y, int z) {
 		TileEntity te = world.getTileEntity(x, y, z);
 		return te instanceof IConduitBundle && ((IConduitBundle) te).getFacadeId() instanceof ForceGlass;
