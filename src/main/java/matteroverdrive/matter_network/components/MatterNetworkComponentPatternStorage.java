@@ -73,7 +73,7 @@ public class MatterNetworkComponentPatternStorage extends MatterNetworkComponent
                 } else {
                     //if the item could not be added to the database for some reason, and has passed the canProcess check
                     //then reset the task and set it to waiting
-                    task.setState(MatterNetworkTaskState.WAITING);
+                    //task.setState(MatterNetworkTaskState.WAITING);
                 }
             }
         }
