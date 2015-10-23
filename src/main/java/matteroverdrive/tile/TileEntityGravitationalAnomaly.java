@@ -759,7 +759,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     public double getEventHorizon()
     {
-        return (G2 * getRealMass()) / CC;
+        return Math.max((G2 * getRealMass()) / CC,0.5);
     }
 
     public double getBlockBreakRange()
