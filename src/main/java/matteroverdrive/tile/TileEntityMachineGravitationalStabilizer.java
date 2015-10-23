@@ -22,6 +22,7 @@ import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.api.gravity.AnomalySuppressor;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.blocks.BlockGravitationalAnomaly;
 import matteroverdrive.client.render.RenderParticlesHandler;
@@ -85,7 +86,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
         hit = seacrhForAnomalies(world);
         if (hit != null && world.getTileEntity(hit.blockX,hit.blockY,hit.blockZ) instanceof TileEntityGravitationalAnomaly)
         {
-            ((TileEntityGravitationalAnomaly) world.getTileEntity(hit.blockX,hit.blockY,hit.blockZ)).suppress(1d / 7d);
+            ((TileEntityGravitationalAnomaly) world.getTileEntity(hit.blockX,hit.blockY,hit.blockZ)).suppress(new AnomalySuppressor(xCoord,yCoord,zCoord,20,0.7f));
         }
     }
 
@@ -184,7 +185,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
         if (worldObj == null)
             return;
 
-        if (phase.equals(TickEvent.Phase.START))
+        if (phase.equals(TickEvent.Phase.START) && getRedstoneActive())
         {
             manageAnomalies(worldObj);
         }

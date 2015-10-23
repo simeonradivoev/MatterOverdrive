@@ -28,6 +28,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.events.anomaly.MOEventGravitationalAnomalyConsume;
+import matteroverdrive.api.gravity.AnomalySuppressor;
 import matteroverdrive.api.gravity.IGravitationalAnomaly;
 import matteroverdrive.api.gravity.IGravityEntity;
 import matteroverdrive.client.sound.GravitationalAnomalySound;
@@ -51,6 +52,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -60,15 +62,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.IFluidBlock;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.text.DecimalFormat;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * Created by Simeon on 5/11/2015.
@@ -98,7 +98,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     @SideOnly(Side.CLIENT)
     public int consumedCount;
     PriorityQueue<PositionWrapper> blocks;
-    private float tmpSuppression;
+    List<AnomalySuppressor> supressors;
     private float suppression;
 
     //region Constructors
@@ -106,6 +106,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     {
         blockDestoryTimer = new TimeTracker();
         this.mass = 2048 + MathHelper.round(Math.random() * 8192);
+        supressors = new ArrayList<>();
     }
 
     public TileEntityGravitationalAnomaly(int mass)
@@ -138,13 +139,12 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
             manageEntityGravitation(worldObj, 0);
             manageBlockDestory(worldObj);
 
+            float tmpSuppression = calculateSuppression();
             if (tmpSuppression != suppression)
             {
                 suppression = tmpSuppression;
                 worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
             }
-
-            tmpSuppression = 1;
         }
     }
     //endregion
@@ -664,10 +664,34 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         infos.add("Brake Lvl: " + format.format(getBreakStrength()));
     }
 
-    public void suppress(double amount)
+    public void suppress(AnomalySuppressor suppressor)
     {
-        tmpSuppression -= amount;
-        tmpSuppression = Math.max(0,tmpSuppression);
+        for (AnomalySuppressor s : supressors)
+        {
+            if (s.update(suppressor))
+            {
+                return;
+            }
+        }
+
+        supressors.add(suppressor);
+    }
+
+    private float calculateSuppression()
+    {
+        float suppression = 1;
+        Iterator<AnomalySuppressor> iterator = supressors.iterator();
+        while (iterator.hasNext())
+        {
+            AnomalySuppressor s = iterator.next();
+            if (!s.isValid())
+            {
+                iterator.remove();
+            }
+            s.tick();
+            suppression *= s.getAmount();
+        }
+        return suppression;
     }
 
     //region NBT
@@ -677,6 +701,14 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         if (categories.contains(MachineNBTCategory.DATA)) {
             nbt.setLong("Mass", mass);
             nbt.setFloat("Suppression", suppression);
+            NBTTagList suppressors = new NBTTagList();
+            for (AnomalySuppressor s : this.supressors)
+            {
+                NBTTagCompound suppressorTag = new NBTTagCompound();
+                s.writeToNBT(suppressorTag);
+                suppressors.appendTag(suppressorTag);
+            }
+            nbt.setTag("suppressors",suppressors);
         }
     }
 
@@ -684,8 +716,16 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
         if (categories.contains(MachineNBTCategory.DATA)) {
+            this.supressors.clear();
             mass = nbt.getLong("Mass");
             suppression = nbt.getFloat("Suppression");
+            NBTTagList suppressors = nbt.getTagList("suppressors", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0;i < supressors.size();i++)
+            {
+                NBTTagCompound suppressorTag = suppressors.getCompoundTagAt(i);
+                AnomalySuppressor s = new AnomalySuppressor(suppressorTag);
+                this.supressors.add(s);
+            }
         }
     }
     //endregion
@@ -729,12 +769,12 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     public double getMaxRange()
     {
-        return Math.sqrt((G * getRealMass() / 0.005));
+        return Math.sqrt(getRealMass()*(G/0.01));
     }
 
     public double getAcceleration(double distance)
     {
-        return (getRealMass() / distance);
+        return G * (getRealMass() / (distance*distance));
     }
 
     public double getRealMass() {

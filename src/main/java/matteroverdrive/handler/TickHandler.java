@@ -29,6 +29,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 /**
@@ -93,27 +94,29 @@ public class TickHandler
             worldStartFired = true;
         }
 
-        if (event.side.isServer() && event.phase.equals(TickEvent.Phase.END)) {
+        if (event.side.isServer() && event.phase.equals(TickEvent.Phase.START)) {
 
-            TickEvent.Phase phase = phaseTracker ? TickEvent.Phase.START : TickEvent.Phase.END;
+            TickEvent.Phase phase = phaseTracker ? TickEvent.Phase.END : TickEvent.Phase.START;
             matterNetworkTickHandler.onWorldTickPre(phase, event.world);
 
             Iterator<TileEntity> iterator = event.world.loadedTileEntityList.iterator();
 
             while (iterator.hasNext())
             {
-                TileEntity tileEntity = iterator.next();
-                if (tileEntity instanceof IMOTickable)
-                {
-                    if (tileEntity instanceof IMatterNetworkHandler)
-                    {
-                        matterNetworkTickHandler.updateHandler((IMatterNetworkHandler) tileEntity, phase,event.world);
-                    }
-                    else
-                    {
-                        ((IMOTickable) tileEntity).onServerTick(phase,event.world);
-                    }
+                try {
+                    TileEntity tileEntity = iterator.next();
+                    if (tileEntity instanceof IMOTickable) {
+                        if (tileEntity instanceof IMatterNetworkHandler) {
+                            matterNetworkTickHandler.updateHandler((IMatterNetworkHandler) tileEntity, phase, event.world);
+                        } else {
+                            ((IMOTickable) tileEntity).onServerTick(phase, event.world);
+                        }
 
+                    }
+                }catch (ConcurrentModificationException e)
+                {
+                    //MatterOverdrive.log.log(Level.ERROR,e,"There was an Error while updating Matter Overdrive Tile Entities.");
+                    return;
                 }
             }
 
