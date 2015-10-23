@@ -27,7 +27,7 @@ import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementModelPreview;
 import matteroverdrive.gui.element.ElementSlot;
 import matteroverdrive.tile.TileEntityWeaponStation;
-import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -93,7 +93,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         ItemStack item = machine.getStackInSlot(machine.INPUT_SLOT);
         weaponPreview.setItemStack(item);
 
-        if (MatterHelper.isWeapon(item))
+        if (WeaponHelper.isWeapon(item))
         {
             IWeapon weapon = (IWeapon)item.getItem();
             IItemRenderer renderer = MinecraftForgeClient.getItemRenderer(item, IItemRenderer.ItemRenderType.INVENTORY);
@@ -139,7 +139,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         super.drawGuiContainerForegroundLayer(x, y);
 
         ItemStack item = machine.getStackInSlot(machine.INPUT_SLOT);
-        if (MatterHelper.isWeapon(item) && pages.get(0).isVisible())
+        if (WeaponHelper.isWeapon(item) && pages.get(0).isVisible())
         {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glPushMatrix();

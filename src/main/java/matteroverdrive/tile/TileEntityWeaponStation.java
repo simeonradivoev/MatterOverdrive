@@ -29,7 +29,7 @@ import matteroverdrive.data.ItemInventoryWrapper;
 import matteroverdrive.data.inventory.ModuleSlot;
 import matteroverdrive.data.inventory.WeaponSlot;
 import matteroverdrive.machines.MOTileEntityMachine;
-import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.WeaponHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.EntityLivingBase;
@@ -78,7 +78,7 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
 
     public IInventory getActiveInventory()
     {
-        if (inventory.getSlot(INPUT_SLOT).getItem() != null && MatterHelper.isWeapon(inventory.getSlot(INPUT_SLOT).getItem()))
+        if (inventory.getSlot(INPUT_SLOT).getItem() != null && WeaponHelper.isWeapon(inventory.getSlot(INPUT_SLOT).getItem()))
         {
             return new ItemInventoryWrapper(inventory.getSlot(INPUT_SLOT).getItem(),5);
         }

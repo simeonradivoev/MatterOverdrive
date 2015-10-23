@@ -18,7 +18,7 @@
 
 package matteroverdrive.data.inventory;
 
-import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.WeaponHelper;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -33,7 +33,7 @@ public class WeaponSlot extends Slot
 
     public boolean isValidForSlot(ItemStack item)
     {
-        return MatterHelper.isWeapon(item);
+        return WeaponHelper.isWeapon(item);
     }
 
     @Override

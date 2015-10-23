@@ -20,6 +20,7 @@ package matteroverdrive.util;
 
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
+import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import net.minecraft.item.ItemStack;
@@ -33,7 +34,7 @@ import java.util.Map;
 public class WeaponHelper
 {
     public static ItemStack getModuleAtSlot(int slot,ItemStack weapon) {
-        if (MatterHelper.isWeapon(weapon))
+        if (isWeapon(weapon))
         {
             return MOInventoryHelper.getStackInSlot(weapon,slot);
         }
@@ -42,7 +43,7 @@ public class WeaponHelper
 
     public static void setModuleAtSlot(int slot,ItemStack weapon,ItemStack module)
     {
-        if (MatterHelper.isWeapon(weapon))
+        if (isWeapon(weapon))
         {
             MOInventoryHelper.setInventorySlotContents(weapon,slot,module);
         }
@@ -51,7 +52,7 @@ public class WeaponHelper
     public static GuiColor getColor(ItemStack weapon)
     {
         ItemStack module = getModuleAtSlot(Reference.MODULE_COLOR,weapon);
-        if (module != null && MatterHelper.isWeaponModule(module))
+        if (module != null && isWeaponModule(module))
         {
             Object value = ((IWeaponModule)module.getItem()).getValue(module);
             if (value instanceof GuiColor)
@@ -66,7 +67,7 @@ public class WeaponHelper
     {
         double multiply = 1;
 
-        if (MatterHelper.isWeapon(weapon))
+        if (isWeapon(weapon))
         {
             Map<Integer,Double> stats;
             List<ItemStack> itemStacks = MOInventoryHelper.getStacks(weapon);
@@ -86,7 +87,7 @@ public class WeaponHelper
 
     public static boolean hasStat(int stat,ItemStack weapon)
     {
-        if (MatterHelper.isWeapon(weapon))
+        if (isWeapon(weapon))
         {
             Map<Integer,Double> stats;
             for (ItemStack module : MOInventoryHelper.getStacks(weapon))
@@ -106,7 +107,7 @@ public class WeaponHelper
 
     public static Map<Integer,Double> getStatsFromModule(ItemStack module,ItemStack weapon)
     {
-        if (weapon != null && module != null && MatterHelper.isWeapon(weapon) && MatterHelper.isWeaponModule(module))
+        if (weapon != null && module != null && isWeapon(weapon) && isWeaponModule(module))
         {
             Object mapObject = ((IWeaponModule)module.getItem()).getValue(module);
             if (mapObject instanceof Map)
@@ -119,11 +120,21 @@ public class WeaponHelper
 
     public static Map<Integer,Double> getStatsFromModule(int module,ItemStack weapon)
     {
-        if (weapon != null && MatterHelper.isWeapon(weapon))
+        if (weapon != null && isWeapon(weapon))
         {
             ItemStack m = getModuleAtSlot(module,weapon);
             return getStatsFromModule(m,weapon);
         }
         return null;
+    }
+
+    public static boolean isWeaponModule(ItemStack itemStack)
+    {
+        return itemStack != null && itemStack.getItem() != null && itemStack.getItem() instanceof IWeaponModule;
+    }
+
+    public static boolean isWeapon(ItemStack itemStack)
+    {
+        return itemStack != null && itemStack.getItem() != null  && itemStack.getItem() instanceof IWeapon;
     }
 }

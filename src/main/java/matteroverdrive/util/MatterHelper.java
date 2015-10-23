@@ -23,8 +23,6 @@ import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.matter.IMatterItem;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.api.matter.IMatterProvider;
-import matteroverdrive.api.weapon.IWeapon;
-import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.handler.MatterEntry;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.items.MatterScanner;
@@ -116,16 +114,6 @@ public class MatterHelper
 		
 		return null;
 	}
-
-    public static boolean isWeaponModule(ItemStack itemStack)
-    {
-        return itemStack != null && itemStack.getItem() != null && itemStack.getItem() instanceof IWeaponModule;
-    }
-
-    public static boolean isWeapon(ItemStack itemStack)
-    {
-        return itemStack != null && itemStack.getItem() != null  && itemStack.getItem() instanceof IWeapon;
-    }
 
 	public static boolean isMatterScanner(ItemStack item)
 	{

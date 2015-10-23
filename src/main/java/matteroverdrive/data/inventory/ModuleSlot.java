@@ -25,7 +25,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.WeaponHelper;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -47,9 +47,9 @@ public class ModuleSlot extends Slot
         switch (type)
         {
             case Reference.MODULE_BATTERY:
-                return EnergyHelper.isEnergyContainerItem(item);
+                return EnergyHelper.isEnergyContainerItem(item) && !WeaponHelper.isWeapon(item);
             default:
-                if(MatterHelper.isWeaponModule(item))
+                if(WeaponHelper.isWeaponModule(item))
                 {
                     if (((IWeaponModule)item.getItem()).getSlot(item) == type)
                     {
