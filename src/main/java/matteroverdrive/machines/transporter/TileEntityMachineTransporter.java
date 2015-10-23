@@ -229,7 +229,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
                             transportTracker = worldObj.getTotalWorldTime() + getTransportDelay();
                         }
 
-                        energyStorage.modifyEnergyStored(getEnergyDrain());
+                        energyStorage.modifyEnergyStored(-getEnergyDrain());
 
                         transportTimer = 0;
                         MatterOverdrive.packetPipeline.sendToDimention(new PacketSyncTransportProgress(this),worldObj);
