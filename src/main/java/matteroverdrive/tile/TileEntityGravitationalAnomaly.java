@@ -774,7 +774,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     public double getAcceleration(double distance)
     {
-        return G * (getRealMass() / (distance*distance));
+        return G * (getRealMass() / Math.max((distance*distance),0.0001f));
     }
 
     public double getRealMass() {
