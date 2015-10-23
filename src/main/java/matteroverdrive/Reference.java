@@ -142,6 +142,10 @@ public class Reference
 	//endregion
 
 	//region other mods
-	public static final boolean eioLoaded = Loader.isModLoaded("EnderIO");
+	private static Boolean eioLoaded;
+	public static boolean eioLoaded() {
+		if (eioLoaded == null) eioLoaded = Loader.isModLoaded("EnderIO");
+		return eioLoaded;
+	}
 	//endregion
 }

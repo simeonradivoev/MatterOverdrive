@@ -56,7 +56,7 @@ public class ForceGlass extends BlockCT implements IDismantleable
 
 //	Check if the block is an EIO conduit facade painted with Tritanium Glass
 	private boolean checkEIO(IBlockAccess world, Block block, int x, int y, int z) {
-        if (Reference.eioLoaded) {
+        if (Reference.eioLoaded()) {
             TileEntity te = world.getTileEntity(x, y, z);
             return te instanceof IConduitBundle && ((IConduitBundle) te).getFacadeId() instanceof ForceGlass;
         }
@@ -84,12 +84,7 @@ public class ForceGlass extends BlockCT implements IDismantleable
     public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
     {
         Block block = world.getBlock(x, y, z);
-        if (block instanceof ForceGlass || checkEIO(world, block, x, y, z))
-        {
-            return false;
-        }
-
-        return true;
+        return !(block instanceof ForceGlass || checkEIO(world, block, x, y, z));
     }
 
     @Override
