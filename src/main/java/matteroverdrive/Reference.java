@@ -105,6 +105,7 @@ public class Reference
 	public static final int WS_FIRE_RATE = 7;
 	public static final int WS_HEAL = 8;
 	public static final int WS_MAX_HEAT = 9;
+	public static final int WS_ACCURACY = 10;
 	//endregion
 
 	//region Request Packet Type
@@ -125,9 +126,9 @@ public class Reference
     //endregion
 
 	//region machine mods
-	public static final byte MODE_REDSTONE_HIGH = 0;
-	public static final byte MODE_REDSTONE_LOW = 1;
 	public static final byte MODE_REDSTONE_NONE = 2;
+	public static final byte MODE_REDSTONE_HIGH = 1;
+	public static final byte MODE_REDSTONE_LOW = 0;
 	//endregion
 
 	//region models
