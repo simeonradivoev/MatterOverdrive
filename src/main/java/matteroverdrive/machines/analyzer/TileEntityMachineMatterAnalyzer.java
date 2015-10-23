@@ -119,7 +119,8 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         {
             if (isActive() && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick() && networkComponent.getConnection() != null)
             {
-                this.energyStorage.extractEnergy(getEnergyDrainPerTick(),false);
+                energyStorage.modifyEnergyStored(-getEnergyDrainPerTick());
+                UpdateClientPower();
 
                 if (analyzeTime < getSpeed())
                 {
@@ -139,7 +140,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     public boolean isAnalyzing()
     {
-        if (getRedstoneActive() && inventory.getSlot(input_slot).getItem() != null)
+        if (getRedstoneActive() && inventory.getSlot(input_slot).getItem() != null && getEnergyStored(ForgeDirection.UNKNOWN) > 0)
         {
             if (inventory.getSlot(database_slot).getItem() != null)
             {
