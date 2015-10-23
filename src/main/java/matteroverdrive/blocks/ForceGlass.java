@@ -25,6 +25,7 @@ import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderio.conduit.IConduitBundle;
+import matteroverdrive.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,14 +50,17 @@ public class ForceGlass extends BlockCT implements IDismantleable
     @Override
     public boolean canConnect(IBlockAccess world, Block block, int x, int y, int z) {
 		boolean eio = false;
-		if (Loader.isModLoaded("EnderIO")) eio = checkEIO(world, block, x, y, z);
+		eio = checkEIO(world, block, x, y, z);
         return block instanceof ForceGlass || eio;
     }
 
 //	Check if the block is an EIO conduit facade painted with Tritanium Glass
 	private boolean checkEIO(IBlockAccess world, Block block, int x, int y, int z) {
-		TileEntity te = world.getTileEntity(x, y, z);
-		return te instanceof IConduitBundle && ((IConduitBundle) te).getFacadeId() instanceof ForceGlass;
+        if (Reference.eioLoaded) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            return te instanceof IConduitBundle && ((IConduitBundle) te).getFacadeId() instanceof ForceGlass;
+        }
+        return false;
 	}
 
     @Override

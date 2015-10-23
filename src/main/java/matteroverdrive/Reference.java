@@ -19,6 +19,7 @@
 package matteroverdrive;
 
 import cofh.lib.gui.GuiColor;
+import cpw.mods.fml.common.Loader;
 
 public class Reference
 {
@@ -138,5 +139,9 @@ public class Reference
 
 	//region config keys
 	public static final String CONFIG_KEY_REDSTONE_MODE = "redstoneMode";
+	//endregion
+
+	//region other mods
+	public static final boolean eioLoaded = Loader.isModLoaded("EnderIO");
 	//endregion
 }
