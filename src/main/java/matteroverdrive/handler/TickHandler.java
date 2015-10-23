@@ -22,15 +22,14 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.network.IMatterNetworkHandler;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.IMOTickable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
+import org.apache.logging.log4j.Level;
 
 /**
  * Created by Simeon on 4/26/2015.
@@ -42,7 +41,6 @@ public class TickHandler
     private boolean worldStartFired = false;
     private long lastTickTime;
     private int lastTickLength;
-    private boolean phaseTracker;
 
     public TickHandler(ConfigurationHandler configurationHandler,PlayerEventHandler playerEventHandler)
     {
@@ -94,34 +92,31 @@ public class TickHandler
             worldStartFired = true;
         }
 
-        if (event.side.isServer() && event.phase.equals(TickEvent.Phase.START)) {
+        if (event.side.isServer()) {
 
-            TickEvent.Phase phase = phaseTracker ? TickEvent.Phase.END : TickEvent.Phase.START;
-            matterNetworkTickHandler.onWorldTickPre(phase, event.world);
+            matterNetworkTickHandler.onWorldTickPre(event.phase, event.world);
+            int tileEntityListSize = event.world.loadedTileEntityList.size();
 
-            Iterator<TileEntity> iterator = event.world.loadedTileEntityList.iterator();
-
-            while (iterator.hasNext())
+            for (int i = 0;i < tileEntityListSize;i++)
             {
                 try {
-                    TileEntity tileEntity = iterator.next();
+                    TileEntity tileEntity = (TileEntity)event.world.loadedTileEntityList.get(i);
                     if (tileEntity instanceof IMOTickable) {
                         if (tileEntity instanceof IMatterNetworkHandler) {
-                            matterNetworkTickHandler.updateHandler((IMatterNetworkHandler) tileEntity, phase, event.world);
+                            matterNetworkTickHandler.updateHandler((IMatterNetworkHandler) tileEntity, event.phase, event.world);
                         } else {
-                            ((IMOTickable) tileEntity).onServerTick(phase, event.world);
+                            ((IMOTickable) tileEntity).onServerTick(event.phase, event.world);
                         }
 
                     }
-                }catch (ConcurrentModificationException e)
+                }catch (Throwable e)
                 {
-                    //MatterOverdrive.log.log(Level.ERROR,e,"There was an Error while updating Matter Overdrive Tile Entities.");
+                    MatterOverdrive.log.log(Level.ERROR,e,"There was an Error while updating Matter Overdrive Tile Entities.");
                     return;
                 }
             }
 
-            matterNetworkTickHandler.onWorldTickPost(phase, event.world);
-            phaseTracker = !phaseTracker;
+            matterNetworkTickHandler.onWorldTickPost(event.phase, event.world);
         }
 
     }

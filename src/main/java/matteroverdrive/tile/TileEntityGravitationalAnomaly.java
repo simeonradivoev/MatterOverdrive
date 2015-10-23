@@ -136,15 +136,15 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
         if (phase.equals(TickEvent.Phase.END))
         {
-            manageEntityGravitation(worldObj, 0);
-            manageBlockDestory(worldObj);
-
             float tmpSuppression = calculateSuppression();
             if (tmpSuppression != suppression)
             {
                 suppression = tmpSuppression;
                 worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
             }
+
+            manageEntityGravitation(worldObj, 0);
+            manageBlockDestory(worldObj);
         }
     }
     //endregion
