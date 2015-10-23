@@ -70,7 +70,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 {
 
     protected static Random random = new Random();
-    protected static UpgradeHandlerMinimum basicUpgradeHandler = new UpgradeHandlerMinimum(0.05).addUpgradeMinimum(UpgradeTypes.Speed,0.1);;
+    protected static UpgradeHandlerMinimum basicUpgradeHandler = new UpgradeHandlerMinimum(0.05).addUpgradeMinimum(UpgradeTypes.Speed,0.1);
 
     //client syncs
     private boolean lastActive;
@@ -171,10 +171,10 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                 "redstoneMode",
                 "gui.config.redstone",
                 new String[]{
-                        MOStringHelper.translateToLocal("gui.redstone_mode.high"),
                         MOStringHelper.translateToLocal("gui.redstone_mode.low"),
+                        MOStringHelper.translateToLocal("gui.redstone_mode.high"),
                         MOStringHelper.translateToLocal("gui.redstone_mode.disabled")},
-                1
+                0
         ));
         addComponent(configs);
     }
@@ -418,6 +418,12 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         {
             manageSound();
         }
+    }
+
+    public void markDirty()
+    {
+        super.markDirty();
+        ForceSync();
     }
 
     protected abstract void onActiveChange();
