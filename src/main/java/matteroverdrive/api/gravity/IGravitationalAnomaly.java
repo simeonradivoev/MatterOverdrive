@@ -115,7 +115,7 @@ public interface IGravitationalAnomaly
 
     /**
      * Used to suppress the gravitational anomaly by a given value.
-     * @param amount the amount of suppression. Usually ranges from 0 - 1, but higher values can be used to increase the size of the anomaly.
+     * @param suppressor Info on the suppressor, including the amount of suppression. Usually ranges from 0 - 1, but higher values can be used to increase the size of the anomaly.
      */
-    void suppress(double amount);
+    void suppress(AnomalySuppressor suppressor);
 }

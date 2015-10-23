@@ -195,12 +195,15 @@ public class Planet extends SpaceBody implements IInventory
         UUID ownerID = buildable.getOwnerID(buildableStack);
         if (ownerID != null)
         {
-            world.func_152378_a(ownerID).addChatMessage(
-                    new ChatComponentText(
-                            EnumChatFormatting.GOLD + "["+Reference.MOD_NAME+"]" +
-                            EnumChatFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.on_build"),buildableStack.getDisplayName(),name)
-                    )
-            );
+            EntityPlayer entityPlayer = world.func_152378_a(ownerID);
+            if(entityPlayer != null) {
+                entityPlayer.addChatMessage(
+                        new ChatComponentText(
+                                EnumChatFormatting.GOLD + "[" + Reference.MOD_NAME + "]" +
+                                        EnumChatFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.on_build"), buildableStack.getDisplayName(), name)
+                        )
+                );
+            }
         }
     }
     //endregion

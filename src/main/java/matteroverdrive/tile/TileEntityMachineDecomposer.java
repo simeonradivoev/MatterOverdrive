@@ -27,6 +27,7 @@ import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.MatterSlot;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
+import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MatterHelper;
@@ -38,6 +39,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -67,7 +69,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
         this.energyStorage.setMaxReceive(ENERGY_STORAGE);
 
         this.matterStorage.setCapacity(MATTER_STORAGE);
-        this.matterStorage.setMaxReceive(MATTER_STORAGE);
+        this.matterStorage.setMaxReceive(0);
         this.matterStorage.setMaxExtract(MATTER_STORAGE);
         time = new TimeTracker();
         playerSlotsMain = true;
@@ -120,8 +122,11 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
                     TileEntity e = worldObj.getTileEntity(this.xCoord + dir.offsetX,this.yCoord + dir.offsetY,this.zCoord + dir.offsetZ);
                     if(e instanceof IMatterHandler)
                     {
-                        if (MatterHelper.Transfer(dir, MATTER_STORAGE, this, (IMatterHandler) e) != 0)
+                        ForgeDirection oposite = dir.getOpposite();
+                        int recived = ((IMatterHandler)e).fill(oposite, new FluidStack(MatterOverdriveFluids.matterPlasma,matterStorage.getFluidAmount()), true);
+                        if(recived != 0)
                         {
+                            matterStorage.setMatterStored(Math.max(0,matterStorage.getMatterStored()-recived));
                             updateClientMatter();
                         }
                     }

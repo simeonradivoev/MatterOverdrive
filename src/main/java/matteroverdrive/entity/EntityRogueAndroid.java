@@ -130,7 +130,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         dimentionBlacklist.clear();
         Property blacklistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android","dimension.blacklist",new int[]{1});
-        blacklistProp.comment = "Rouge Android Dimension ID blacklist";
+        blacklistProp.comment = "Rogue Android Dimension ID blacklist";
         int[] blacklist = blacklistProp.getIntList();
         for (int i = 0;i < blacklist.length;i++)
         {
@@ -142,7 +142,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         dimentionWhitelist.clear();
         Property whitelistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android", "dimension.whitelist", new int[0]);
-        whitelistProp.comment = "Rouge Android Dimension ID whitelist";
+        whitelistProp.comment = "Rogue Android Dimension ID whitelist";
         int[] whitelist = whitelistProp.getIntList();
         for (int i = 0;i < whitelist.length;i++)
         {

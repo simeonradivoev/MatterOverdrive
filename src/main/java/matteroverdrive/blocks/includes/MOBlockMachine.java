@@ -92,21 +92,25 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
-        super.breakBlock(world, x, y, z, block, meta);
-
         //drops inventory
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof MOTileEntityMachine) {
-			MOTileEntityMachine machine = (MOTileEntityMachine) world.getTileEntity(x, y, z);
-			if (machine != null) {
-				MatterHelper.DropInventory(world, (MOTileEntityMachine) world.getTileEntity(x, y, z), x, y, z);
-			}
-		}
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof MOTileEntityMachine) {
+            MOTileEntityMachine machine = (MOTileEntityMachine) world.getTileEntity(x, y, z);
+            if (machine != null) {
+                MatterHelper.DropInventory(world, (MOTileEntityMachine) world.getTileEntity(x, y, z), x, y, z);
+            }
+        }
+
+        super.breakBlock(world, x, y, z, block, meta);
     }
 
     @Override
     public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
     {
+        if (world.isRemote)
+        {
+            return true;
+        }
         if(!world.isRemote && hasGui)
         {
             TileEntity tileEntity = world.getTileEntity(x,y,z);
