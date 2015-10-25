@@ -72,6 +72,8 @@ item.matter_container_full.name=Контейнер материи (Полный)
 item.tritanium_nugget.name=Тритановый самородок
 item.tritanium_spine.name=Тритановый позвоночник
 item.data_pad.name=Датапад
+item.data_pad.details=Содержит информацию о всём в Matter Overdrive
+item.omni_tool.name=Омнитул
 item.android_pill_yellow.name=Жёлтая пилюля
 item.android_pill_yellow.details=Используется для сброса всех разблокированных способностей Андроида
 
