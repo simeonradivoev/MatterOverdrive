@@ -54,5 +54,8 @@
     "overheat": {"category": "player","sounds": [{"name": "weapon/overheat_med", "stream": false}]},
     "reload": {"category": "player","sounds": [{"name": "weapon/reload", "stream": false}]},
     "night_vision": {"category": "player","sounds": [{"name": "night_vision", "stream": false}]},
-    "power_down": {"category": "player","sounds": [{"name": "power_down", "stream": false}]}
+    "power_down": {"category": "player","sounds": [{"name": "power_down", "stream": false}]},
+    "bolt_hit_0": {"category": "player","sounds": [{"name": "weapon/bolt_hit_0", "stream": false}]},
+    "sizzle": {"category": "player","sounds": [{"name": "weapon/sizzle", "stream": false}]},
+    "omni_tool_hum": {"category": "player","sounds": [{"name": "weapon/omni_tool_hum", "stream": false}]}
 }

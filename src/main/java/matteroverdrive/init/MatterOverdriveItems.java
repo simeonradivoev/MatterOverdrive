@@ -34,6 +34,7 @@ import matteroverdrive.items.starmap.ItemColonizerShip;
 import matteroverdrive.items.starmap.ItemScoutShip;
 import matteroverdrive.items.starmap.ShipFactory;
 import matteroverdrive.items.weapon.EnergyPack;
+import matteroverdrive.items.weapon.OmniTool;
 import matteroverdrive.items.weapon.Phaser;
 import matteroverdrive.items.weapon.PhaserRifle;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
@@ -91,6 +92,7 @@ public class MatterOverdriveItems
     public static DataPad dataPad;
     public static TritaniumSpine tritaniumSpine;
     public static MOBaseItem tritanium_nugget;
+    public static OmniTool omniTool;
 	
 	public static void init(FMLPreInitializationEvent event)
 	{
@@ -139,6 +141,7 @@ public class MatterOverdriveItems
         dataPad = new DataPad("data_pad");
         tritaniumSpine = new TritaniumSpine("tritainum_spine");
         tritanium_nugget = new MOBaseItem("tritanium_nugget");
+        omniTool = new OmniTool("omni_tool");
 	}
 	
 	public static void register(FMLInitializationEvent event)
@@ -192,6 +195,7 @@ public class MatterOverdriveItems
         dataPad.register();
         tritaniumSpine.register();
         tritanium_nugget.register();
+        omniTool.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);

@@ -16,15 +16,14 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.client.render.item;
+package matteroverdrive.client.render.item;/* Created by Simeon on 10/17/2015. */
 
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
-import matteroverdrive.api.weapon.IWeaponModule;
-import matteroverdrive.items.weapon.Phaser;
-import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
+import matteroverdrive.util.animation.MOEasing;
+import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -36,39 +35,33 @@ import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;
 
-/**
- * Created by Simeon on 3/11/2015.
- */
-public class ItemRendererPhaser implements IItemRenderer
+public class ItemRendererOmniTool implements IItemRenderer
 {
-    public static final String TEXTURE = Reference.PATH_ITEM + "phaser2.png";
-    private static final String TEXTURE_COLOR_MASK = Reference.PATH_ITEM + "phaser_color_mask.png";
-    public static final String MODEL = Reference.PATH_MODEL + "item/phaser2.obj";
-    public static final float SCALE = 6.0f;
+    public static final String TEXTURE = Reference.PATH_ITEM + "wielder.png";
+    public static final String MODEL = Reference.PATH_MODEL + "item/wielder.obj";
+    public static final float SCALE = 7f;
     public static final float THIRD_PERSON_SCALE = 3f;
     public static final float ITEM_SCALE = 3;
     public static final float SCALE_DROP = 2.5f;
+    public static float RECOIL_TIME = 0;
+    public static float RECOIL_AMOUNT = 0;
 
-    public static IModelCustom phaserModel;
-    public static ResourceLocation phaserTexture;
-    public static ResourceLocation phaserTextureColorMask;
+    public static IModelCustom omniToolModel;
+    public static ResourceLocation omniToolTexture;
 
-    public ItemRendererPhaser()
+    public ItemRendererOmniTool()
     {
-    	phaserTexture = new ResourceLocation(TEXTURE);
-        phaserTextureColorMask = new ResourceLocation(TEXTURE_COLOR_MASK);
-        phaserModel = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL));
+        omniToolModel = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL));
+        omniToolTexture = new ResourceLocation(TEXTURE);
     }
 
     @Override
-    public boolean handleRenderType(ItemStack item, ItemRenderType type)
-    {
+    public boolean handleRenderType(ItemStack item, ItemRenderType type) {
         return true;
     }
 
     @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
-    {
+    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
         return true;
     }
 
@@ -77,43 +70,43 @@ public class ItemRendererPhaser implements IItemRenderer
     {
         if(type == ItemRenderType.EQUIPPED_FIRST_PERSON)
         {
-        	RenderFirstPerson(item);
+            RenderFirstPerson(item);
         }
         else if(type == ItemRenderType.INVENTORY)
         {
-        	RenderItem(item);
+            RenderItem(item);
         }
         else if(type == ItemRenderType.ENTITY)
         {
-        	RenderDrop(item);
+            RenderDrop(item);
         }
         else
         {
-        	RenderThirdPerson(type,item);
+            RenderThirdPerson(type,item);
         }
     }
-    
+
     void RenderItem(ItemStack item)
     {
-    	glPushMatrix();
+        glPushMatrix();
         glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
-        glTranslated(0.00, -0, -0.15);
-        glRotated(0, 0, 1, 0);
+        glTranslated(0, 0, -0.25);
+        glRotated(180, 0, 1, 0);
         RenderGun(ItemRenderType.INVENTORY,item);
         glPopMatrix();
     }
-    
+
     void RenderThirdPerson(ItemRenderType renderType,ItemStack item)
     {
         glPushMatrix();
         glScaled(THIRD_PERSON_SCALE, THIRD_PERSON_SCALE, THIRD_PERSON_SCALE);
-        glTranslated(0.32, 0.23, 0.32);
-        glRotated(-135, 0, 1, 0);
-        glRotated(60, 1, 0, 0);
+        glTranslated(0.3, 0.3, 0.3);
+        glRotated(60, -1, 0, 1);
+        glRotated(40, 0, 1, 0);
         RenderGun(renderType,item);
         glPopMatrix();
     }
-    
+
     void RenderDrop(ItemStack item)
     {
         glPushMatrix();
@@ -128,27 +121,51 @@ public class ItemRendererPhaser implements IItemRenderer
     void RenderFirstPerson(ItemStack item)
     {
         glPushMatrix();
+        RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME,0,0.1f);
+        float recoilValue = MOEasing.Quad.easeInOut(RECOIL_TIME, 0, 1, 1f);
+
+        glTranslatef(0, 0, recoilValue * 0.01f * RECOIL_AMOUNT);
+        glRotated(recoilValue * 2 * RECOIL_AMOUNT, 1, 0, 0);
+
+        glColor3f(1,1,1);
         renderHand();
-        glPopMatrix();
 
         glPushMatrix();
         glScaled(SCALE, SCALE, SCALE);
         if(Minecraft.getMinecraft().thePlayer.isUsingItem())
         {
-            glTranslated(0.3, -0.07, 0);
-            glRotated(150, 0, 1, 0);
-            glRotated(-26, 1, 0, 0);
-            glRotated(-5, 1, 0, 1);
+            glTranslated(0.15, 0.03, -0.0);
+            glRotated(35, 0, -1, 0);
+            glRotated(25, 1, 0, 0);
+            glScaled(1, 1, 0.7);
         }
         else
         {
-            glTranslated(0.15, -0.06, 0.05);
-            glRotated(137.5, 0, 1, 0);
-            glRotated(-6, 1, 0, 0);
+            glTranslated(0.15, 0.03, -0.0);
+            glRotated(40, 0, -1, 0);
+            glRotated(5, 1, 0, 0);
+            glScaled(1,1,0.7);
         }
-
         RenderGun(ItemRenderType.EQUIPPED_FIRST_PERSON,item);
         glPopMatrix();
+        glPopMatrix();
+    }
+
+    void RenderGun(ItemRenderType renderType,ItemStack item)
+    {
+        glEnable(GL_NORMALIZE);
+        Minecraft.getMinecraft().renderEngine.bindTexture(omniToolTexture);
+        omniToolModel.renderAllExcept("hull","sights_rail","side_rail","indicator","dig_effect");
+
+        GuiColor color = WeaponHelper.getColor(item);
+        RenderUtils.applyColor(color);
+        omniToolModel.renderOnly("hull", "sights_rail","side_rail");
+
+        glDisable(GL_LIGHTING);
+        RenderUtils.disableLightmap();
+        glColor3f(1,1,1);
+        omniToolModel.renderPart("indicator");
+        glEnable(GL_LIGHTING);
     }
 
     void renderHand()
@@ -159,7 +176,7 @@ public class ItemRendererPhaser implements IItemRenderer
 
         glTranslated(-0.2, 0.2f, 0.7);
         glRotated(45, 0, 1, 0);
-        glRotated(100, 0, 0, -1);
+        glRotated(90, 0, 0, -1);
         double length = 1.8;
         double width = 0.9;
         double depth = 0.7;
@@ -179,67 +196,5 @@ public class ItemRendererPhaser implements IItemRenderer
         Tessellator.instance.addVertexWithUV(0, length, 0, 44f / 64f, 1f);
         Tessellator.instance.draw();
         GL11.glPopMatrix();
-    }
-    
-    void RenderGun(ItemRenderType renderType,ItemStack item)
-    {
-        //org.lwjgl.util.glu.GLU.gluPerspective(80,1,0.01f,10000f);
-        //glClear(GL_COLOR_BUFFER_BIT);
-
-        Minecraft.getMinecraft().renderEngine.bindTexture(phaserTexture);
-        phaserModel.renderOnly("grip", "Tip");
-
-        GuiColor color = WeaponModuleColor.defaultColor;
-        ItemStack color_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_COLOR, item);
-        if (color_module != null)
-        {
-            IWeaponModule module = (IWeaponModule)color_module.getItem();
-            Object colorObject = module.getValue(color_module);
-            if(colorObject instanceof GuiColor)
-            {
-                color = (GuiColor)colorObject;
-            }
-        }
-
-        RenderUtils.applyColor(color);
-    	phaserModel.renderOnly("Base","display");
-        glColor3f(1,1,1);
-
-        glDisable(GL_LIGHTING);
-        RenderUtils.disableLightmap();
-        renderLevelSlider(item);
-        glEnable(GL_LIGHTING);
-        glColor3f(1,1,1);
-    }
-
-    private void renderLevelSlider(ItemStack item)
-    {
-        glDisable(GL_TEXTURE_2D);
-
-        glDisable(GL_LIGHTING);
-        glDisable(GL_BLEND);
-        glColor4f(0, 0, 0, 1);
-        phaserModel.renderPart("level_bg");
-        setIndicatorColor(item);
-        glPushMatrix();
-        double power = ((double)item.getTagCompound().getByte("power") + 1) / (double) Phaser.MAX_LEVEL;
-        glTranslated(0.035, 0, 0);
-        glScaled(power, 1, 1);
-        phaserModel.renderPart("level_slider");
-        glPopMatrix();
-        glEnable(GL_LIGHTING);
-        glEnable(GL_TEXTURE_2D);
-    }
-
-    private void setIndicatorColor(ItemStack item)
-    {
-        if (Phaser.isKillMode(item))
-        {
-            glColor3d(1, 0, 0);
-        }
-        else
-        {
-            glColor3d(0, 1, 0);
-        }
     }
 }

@@ -21,9 +21,11 @@ package matteroverdrive.items.weapon;
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
-import matteroverdrive.client.sound.PhaserSound;
+import matteroverdrive.api.weapon.WeaponShot;
+import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.handler.SoundHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MOPhysicsHelper;
@@ -63,7 +65,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     private static final int STUN_SLEEP_MULTIPLY = 5;
     public static final int RANGE = 24;
 
-    Map<EntityPlayer,PhaserSound> soundMap;
+    Map<EntityPlayer,WeaponSound> soundMap;
 	
 	public Phaser(String name) {
 		super(name,32000,128,128,RANGE);
@@ -213,18 +215,23 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     public Vec3 getPlayerLook(EntityPlayer player,ItemStack weapon)
     {
         Vec3 dir = player.getLookVec();
-        Vec3 rot = getBeamRotation(weapon,player.worldObj);
+        Vec3 rot = getBeamRotation(weapon,player);
         dir.rotateAroundX((float)rot.xCoord);
         dir.rotateAroundY((float) rot.yCoord);
         dir.rotateAroundZ((float)rot.zCoord);
         return dir;
     }
 
-    public Vec3 getBeamRotation(ItemStack weapon,World world)
+    public Vec3 getBeamRotation(ItemStack weapon,EntityPlayer entityPlayer)
     {
-        float accuracy = getHeat(weapon) / getMaxHeat(weapon);
-        double rotationY = (float)Math.toRadians(5) * MOEasing.Quart.easeIn(accuracy,0,1,1);
+        double rotationY = (float)Math.toRadians(5) * MOEasing.Quart.easeIn(getAccuracy(weapon,entityPlayer,false),0,1,1);
         return Vec3.createVectorHelper(0,rotationY,0);
+    }
+
+    @Override
+    public float getWeaponBaseAccuracy(ItemStack weapon,boolean zoomed)
+    {
+        return getHeat(weapon) / getMaxHeat(weapon);
     }
 
 	@Override
@@ -313,6 +320,12 @@ public class Phaser extends EnergyWeapon implements IWeapon{
         return !isOverheated(itemStack) && DrainEnergy(itemStack,1,true);
     }
 
+    @Override
+    public void onClientShot(ItemStack weapon, EntityPlayer player, Vec3 position, Vec3 dir,WeaponShot shot)
+    {
+
+    }
+
     private int GetSleepTime(ItemStack item)
     {
         this.TagCompountCheck(item);
@@ -352,16 +365,18 @@ public class Phaser extends EnergyWeapon implements IWeapon{
         switch(slot)
         {
             case Reference.MODULE_BATTERY:
-                return new Vector2f(165,85);
+                return new Vector2f(165,90);
             case Reference.MODULE_COLOR:
                 return new Vector2f(100,80);
             case Reference.MODULE_BARREL:
-                return new Vector2f(85,100);
+                return new Vector2f(85,90);
         }
         return getSlotPosition(slot,weapon);
     }
 
-    public void spawnParticle(MovingObjectPosition hit,ItemStack weapon,World world)
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onProjectileHit(MovingObjectPosition hit, ItemStack weapon, World world,float amount)
     {
         Block b = world.getBlock(hit.blockX,hit.blockY,hit.blockZ);
         if (hit.entityHit != null && hit.entityHit instanceof EntityLivingBase)
@@ -415,7 +430,12 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
-    public boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, boolean zoomed,int seed,int latency,Vec3 position,Vec3 dir)
+    public boolean onLeftClickTick(ItemStack weapon, EntityPlayer entityPlayer) {
+        return false;
+    }
+
+    @Override
+    public boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, WeaponShot shot,Vec3 position,Vec3 dir)
     {
         return false;
     }
@@ -428,6 +448,18 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     @Override
     public int getShootCooldown() {
         return 0;
+    }
+
+    @Override
+    public boolean isWeaponZoomed(ItemStack weapon) {
+        return false;
+    }
+
+    @Override
+    public String getFireSound(ItemStack weapon,EntityLivingBase entity)
+    {
+        return Reference.MOD_ID + ":" +"phaser_beam_1";
+        //return new WeaponSound(new ResourceLocation(),(float)entity.posX,(float)entity.posY,(float)entity.posZ,itemRand.nextFloat() * 0.05f + 0.2f,1);
     }
 
     public byte getPowerLevel(ItemStack weapon)

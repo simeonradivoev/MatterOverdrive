@@ -1,0 +1,82 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
+package matteroverdrive.api.weapon;/* Created by Simeon on 10/22/2015. */
+
+import io.netty.buffer.ByteBuf;
+
+public class WeaponShot
+{
+    protected int seed;
+    protected float damage;
+    protected float accuracy;
+    protected int color;
+
+
+    public WeaponShot(ByteBuf buf)
+    {
+        this(buf.readInt(),buf.readFloat(),buf.readFloat(),buf.readInt());
+    }
+    public WeaponShot(int seed,float damage,float accuracy,int color)
+    {
+        this.seed = seed;
+        this.damage = damage;
+        this.accuracy = accuracy;
+        this.color = color;
+    }
+
+    public void writeTo(ByteBuf buf)
+    {
+        buf.writeInt(seed);
+        buf.writeFloat(damage);
+        buf.writeFloat(accuracy);
+        buf.writeInt(color);
+    }
+
+    public int getSeed() {
+        return seed;
+    }
+
+    public void setSeed(int seed) {
+        this.seed = seed;
+    }
+
+    public float getDamage() {
+        return damage;
+    }
+
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
+    public float getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(float accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+}

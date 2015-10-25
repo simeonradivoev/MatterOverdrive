@@ -25,7 +25,7 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.*;
-import matteroverdrive.entity.weapon.PhaserFire;
+import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.village.TradeHandlerMadScientist;
 import matteroverdrive.handler.village.VillageCreatationMadScientist;
@@ -62,8 +62,11 @@ public class MatterOverdriveEntities
         VillagerRegistry.instance().registerVillageCreationHandler(creatationMadScientist);
         rogueandroid.registerEntity();
 
-        int phaserFireID = registerEntityGlobalIDSafe(PhaserFire.class,"phaser_fire");
-        EntityRegistry.registerGlobalEntityID(PhaserFire.class, "phaser_fire", phaserFireID);
+        int phaserFireID = registerEntityGlobalIDSafe(PlasmaBolt.class,"phaser_fire");
+        EntityRegistry.registerGlobalEntityID(PlasmaBolt.class, "phaser_fire", phaserFireID);
+        //EntityRegistry.registerModEntity(PlasmaBolt.class,"phaser_fire",phaserFireID,MatterOverdrive.instance,64,1,true);
+        //EntityRegistry.EntityRegistration entityRegistration = EntityRegistry.instance().lookupModSpawn(PlasmaBolt.class,false);
+        //entityRegistration.setCustomSpawning(null,true);
         MatterOverdrive.configHandler.save();
     }
 

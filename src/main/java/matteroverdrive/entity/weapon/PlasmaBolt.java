@@ -18,36 +18,43 @@
 
 package matteroverdrive.entity.weapon;
 
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.MatterOverdrive;
+import io.netty.buffer.ByteBuf;
+import matteroverdrive.api.events.weapon.MOEventPlasmaBlotHit;
 import matteroverdrive.api.gravity.IGravitationalAnomaly;
 import matteroverdrive.api.gravity.IGravityEntity;
+import matteroverdrive.api.weapon.WeaponShot;
+import matteroverdrive.items.weapon.EnergyWeapon;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockTNT;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Simeon on 7/25/2015.
  */
-public class PhaserFire extends Entity implements IProjectile, IGravityEntity
+public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, IEntityAdditionalSpawnData
 {
-    private int field_145791_d = -1;
-    private int field_145792_e = -1;
-    private int field_145789_f = -1;
+    private int blockX = -1;
+    private int blockY = -1;
+    private int blockZ = -1;
     private int ticksInAir;
     private float damage;
     public Entity shootingEntity;
@@ -55,22 +62,24 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
     private int life;
     private int color;
     private float fireDamageMultiply;
+    private ItemStack weapon;
 
-    public PhaserFire(World p_i1753_1_)
+    public PlasmaBolt(World p_i1753_1_)
     {
         super(p_i1753_1_);
         this.renderDistanceWeight = 10.0D;
         this.setSize(0.5F, 0.5F);
     }
 
-    public PhaserFire(World world, EntityLivingBase entityLivingBase,Vec3 position,Vec3 dir,float damage, float speed,float accuracy,int color,boolean isAiming,int seed)
+    public PlasmaBolt(World world, EntityLivingBase entityLivingBase, Vec3 position, Vec3 dir, WeaponShot shot,float speed)
     {
-        this(world, entityLivingBase,position,dir,damage, speed, accuracy, 60, color, isAiming,seed);
+        this(world, entityLivingBase,position,dir,shot,speed,60);
     }
 
-    public PhaserFire(World world, EntityLivingBase entityLivingBase,Vec3 position,Vec3 dir,float damage, float speed,float accuracy,int life,int color,boolean isAiming,int seed) {
+    public PlasmaBolt(World world, EntityLivingBase entityLivingBase, Vec3 position, Vec3 dir, WeaponShot shot,float speed,int life) {
         super(world);
-        rand.setSeed(seed);
+        rand.setSeed(shot.getSeed());
+        this.setEntityId(rand.nextInt(Integer.MAX_VALUE));
         this.renderDistanceWeight = 10.0D;
         this.shootingEntity = entityLivingBase;
         this.setSize(0.5F, 0.5F);
@@ -80,11 +89,12 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
         this.motionZ = dir.zCoord;
         this.yOffset = 0.0F;
         this.life = life;
-        this.damage = damage;
-        this.color = color;
-        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, speed * 1.5F, accuracy);
+        this.damage = shot.getDamage();
+        this.color = shot.getColor();
+        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ,speed * 1.5F, shot.getAccuracy());
     }
 
+    @Override
     public void setThrowableHeading(double x, double y, double z, float speed, float accuracy)
     {
         float dirLength = MathHelper.sqrt_double(x * x + y * y + z * z);
@@ -107,7 +117,7 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
 
     protected void entityInit()
     {
-        this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
+
     }
 
     public void onUpdate() {
@@ -119,11 +129,11 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
             this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(this.motionY, (double) f) * 180.0D / Math.PI);
         }
 
-        Block block = this.worldObj.getBlock(this.field_145791_d, this.field_145792_e, this.field_145789_f);
+        Block block = this.worldObj.getBlock(this.blockX, this.blockY, this.blockZ);
 
         if (block.getMaterial() != Material.air) {
-            block.setBlockBoundsBasedOnState(this.worldObj, this.field_145791_d, this.field_145792_e, this.field_145789_f);
-            AxisAlignedBB axisalignedbb = block.getCollisionBoundingBoxFromPool(this.worldObj, this.field_145791_d, this.field_145792_e, this.field_145789_f);
+            block.setBlockBoundsBasedOnState(this.worldObj, this.blockX, this.blockY, this.blockZ);
+            AxisAlignedBB axisalignedbb = block.getCollisionBoundingBoxFromPool(this.worldObj, this.blockX, this.blockY, this.blockZ);
 
             if (axisalignedbb != null && axisalignedbb.isVecInside(Vec3.createVectorHelper(this.posX, this.posY, this.posZ))) {
                 setDead();
@@ -234,18 +244,36 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
                     }
                     this.setDead();
                 }
+
+                if (weapon != null && weapon.getItem() instanceof EnergyWeapon)
+                {
+                    if (worldObj.isRemote)
+                        ((EnergyWeapon) weapon.getItem()).onProjectileHit(movingobjectposition, weapon, worldObj,5);
+
+                    MinecraftForge.EVENT_BUS.post(new MOEventPlasmaBlotHit(weapon,movingobjectposition,this,worldObj.isRemote ? Side.CLIENT : Side.SERVER));
+                }
             } else {
-                this.field_145791_d = movingobjectposition.blockX;
-                this.field_145792_e = movingobjectposition.blockY;
-                this.field_145789_f = movingobjectposition.blockZ;
-                this.block = this.worldObj.getBlock(this.field_145791_d, this.field_145792_e, this.field_145789_f);
+                this.blockX = movingobjectposition.blockX;
+                this.blockY = movingobjectposition.blockY;
+                this.blockZ = movingobjectposition.blockZ;
+                this.block = this.worldObj.getBlock(this.blockX, this.blockY, this.blockZ);
 
                 if (this.block.getMaterial() != Material.air) {
-                    this.block.onEntityCollidedWithBlock(this.worldObj, this.field_145791_d, this.field_145792_e, this.field_145789_f, this);
+                    this.block.onEntityCollidedWithBlock(this.worldObj, this.blockX, this.blockY, this.blockZ, this);
+                    if (this.block instanceof BlockTNT)
+                    {
+                        worldObj.setBlockToAir(blockX, blockY, blockZ);
+                        EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(worldObj, (double)((float)blockX + 0.5F), (double)((float)blockY + 0.5F), (double)((float)blockZ + 0.5F), shootingEntity instanceof EntityLivingBase ? (EntityLivingBase) shootingEntity : null);
+                        entitytntprimed.fuse = 0;
+                        worldObj.spawnEntityInWorld(entitytntprimed);
+                    }
                 }
-                for (int s = 0;s < 10;s++)
+                if (weapon != null && weapon.getItem() instanceof EnergyWeapon)
                 {
-                    worldObj.spawnParticle("smoke", movingobjectposition.hitVec.xCoord,movingobjectposition.hitVec.yCoord,movingobjectposition.hitVec.zCoord, 0, 0, 0);
+                    if (worldObj.isRemote)
+                        ((EnergyWeapon) weapon.getItem()).onProjectileHit(movingobjectposition, weapon, worldObj,5);
+
+                    MinecraftForge.EVENT_BUS.post(new MOEventPlasmaBlotHit(weapon,movingobjectposition,this,worldObj.isRemote ? Side.CLIENT : Side.SERVER));
                 }
                 this.setDead();
             }
@@ -258,30 +286,15 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
         this.func_145775_I();
     }
 
-    public void simulate(long delay)
-    {
-        if (!worldObj.isRemote)
-        {
-            long averageTickTime = TimeUnit.NANOSECONDS.toMillis(MatterOverdrive.tickHandler.getLastTickLength());
-            if (averageTickTime > 0) {
-                int simulationCount = (int) (delay / averageTickTime);
-                for (int i = 0; i < simulationCount; i++) {
-                    MatterOverdrive.log.debug("Phaser Fire Latency Compensation: %s ticks.",simulationCount);
-                    onUpdate();
-                }
-            }
-        }
-    }
-
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
      */
     @Override
     public void writeEntityToNBT(NBTTagCompound tagCompound)
     {
-        tagCompound.setShort("xTile", (short) this.field_145791_d);
-        tagCompound.setShort("yTile", (short) this.field_145792_e);
-        tagCompound.setShort("zTile", (short) this.field_145789_f);
+        tagCompound.setShort("xTile", (short) this.blockX);
+        tagCompound.setShort("yTile", (short) this.blockY);
+        tagCompound.setShort("zTile", (short) this.blockZ);
         tagCompound.setFloat("damage", this.damage);
         tagCompound.setInteger("ticksInAir", this.ticksInAir);
         tagCompound.setInteger("life", this.life);
@@ -294,9 +307,9 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
     @Override
     public void readEntityFromNBT(NBTTagCompound tagCompound)
     {
-        this.field_145791_d = tagCompound.getShort("xTile");
-        this.field_145792_e = tagCompound.getShort("yTile");
-        this.field_145789_f = tagCompound.getShort("zTile");
+        this.blockX = tagCompound.getShort("xTile");
+        this.blockY = tagCompound.getShort("yTile");
+        this.blockZ = tagCompound.getShort("zTile");
 
         if (tagCompound.hasKey("damage", 99))
         {
@@ -357,6 +370,10 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
         return false;
     }
 
+    public void setWeapon(ItemStack weapon)
+    {
+        this.weapon = weapon;
+    }
 
     public int getColor()
     {
@@ -381,5 +398,23 @@ public class PhaserFire extends Entity implements IProjectile, IGravityEntity
     public void setFireDamageMultiply(float fiery)
     {
         this.fireDamageMultiply = fiery;
+    }
+
+    @Override
+    public void writeSpawnData(ByteBuf buffer)
+    {
+        buffer.writeFloat(damage);
+        buffer.writeInt(color);
+        buffer.writeFloat(fireDamageMultiply);
+        buffer.writeInt(life);
+    }
+
+    @Override
+    public void readSpawnData(ByteBuf additionalData)
+    {
+        damage = additionalData.readFloat();
+        color = additionalData.readInt();
+        fireDamageMultiply = additionalData.readFloat();
+        life = additionalData.readInt();
     }
 }

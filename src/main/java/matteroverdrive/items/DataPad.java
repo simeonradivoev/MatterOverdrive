@@ -48,6 +48,12 @@ public class DataPad extends MOBaseItem
         return itemstack;
     }
 
+    @Override
+    public boolean hasDetails(ItemStack stack)
+    {
+        return true;
+    }
+
     @SideOnly(Side.CLIENT)
     private void openGui(ItemStack stack)
     {

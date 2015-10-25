@@ -213,7 +213,10 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
         RenderUtils.beginStencil();
+        //glColor4f(1,1,1,1);
         RenderUtils.drawStencil(posX, posY, posX + sizeX, posY + sizeY, 1);
+        RenderUtils.endStencil();
+        glEnable(GL_STENCIL_TEST);
         glEnable(GL_BLEND);
         glDisable(GL_ALPHA_TEST);
         glColor4d(1,1,1,0.1);
@@ -221,7 +224,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
         RenderUtils.drawPlane(sizeX / 2 - 512 + scrollX / 2, sizeY / 2 - 512 + scrollY / 2, 0, 1024, 1024);
         glEnable(GL_ALPHA_TEST);
         super.drawBackground(mouseX, mouseY, gameTicks);
-        RenderUtils.endStencil();
+        glDisable(GL_STENCIL_TEST);
     }
 
     @Override

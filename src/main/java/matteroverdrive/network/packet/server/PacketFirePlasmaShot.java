@@ -22,42 +22,41 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.init.MatterOverdriveItems;
-import matteroverdrive.items.weapon.PhaserRifle;
+import matteroverdrive.api.weapon.WeaponShot;
+import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.network.packet.AbstractBiPacketHandler;
 import matteroverdrive.network.packet.PacketAbstract;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
 
 /**
  * Created by Simeon on 7/25/2015.
  */
-public class PacketFirePhaserRifle extends PacketAbstract
+public class PacketFirePlasmaShot extends PacketAbstract
 {
-    private int seed;
-    private boolean isAiming;
+    WeaponShot shot;
     private int sender;
     private long timestamp;
     private Vec3 position;
     private Vec3 direction;
 
-    public PacketFirePhaserRifle(){}
-    public PacketFirePhaserRifle(boolean isAiming,int sender,int seed,Vec3 pos,Vec3 dir)
+    public PacketFirePlasmaShot(){}
+    public PacketFirePlasmaShot(int sender, Vec3 pos, Vec3 dir,WeaponShot shot)
     {
-        this.isAiming = isAiming;
+        this.shot = shot;
         this.sender = sender;
-        this.seed = seed;
         this.position = pos;
         this.direction = dir;
+        this.timestamp = System.nanoTime();
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        this.isAiming = buf.readBoolean();
+        this.shot = new WeaponShot(buf);
         this.sender = buf.readInt();
-        this.seed = buf.readInt();
         this.timestamp = buf.readLong();
         this.position = Vec3.createVectorHelper(buf.readDouble(), buf.readDouble(), buf.readDouble());
         this.direction = Vec3.createVectorHelper(buf.readDouble(),buf.readDouble(),buf.readDouble());
@@ -65,10 +64,9 @@ public class PacketFirePhaserRifle extends PacketAbstract
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeBoolean(isAiming);
+        shot.writeTo(buf);
         buf.writeInt(sender);
-        buf.writeInt(seed);
-        buf.writeLong(System.currentTimeMillis());
+        buf.writeLong(timestamp);
         buf.writeDouble(position.xCoord);
         buf.writeDouble(position.yCoord);
         buf.writeDouble(position.zCoord);
@@ -77,27 +75,28 @@ public class PacketFirePhaserRifle extends PacketAbstract
         buf.writeDouble(direction.zCoord);
     }
 
-    public static class BiHandler extends AbstractBiPacketHandler<PacketFirePhaserRifle>
+    public static class BiHandler extends AbstractBiPacketHandler<PacketFirePlasmaShot>
     {
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketFirePhaserRifle message, MessageContext ctx)
+        public IMessage handleClientMessage(EntityPlayer player, PacketFirePlasmaShot message, MessageContext ctx)
         {
             if (player.getEntityId() != message.sender)
             {
                 Entity entity = player.worldObj.getEntityByID(message.sender);
-                if (entity != null && entity instanceof EntityPlayer && ((EntityPlayer)entity).getHeldItem() != null && ((EntityPlayer)entity).getHeldItem().getItem() instanceof PhaserRifle) {
-                    MatterOverdriveItems.phaserRifle.onClientFire(((EntityPlayer)entity).getHeldItem(), (EntityPlayer)entity, message.isAiming,message.seed,message.position,message.direction);
+                if (entity != null && entity instanceof EntityPlayer && ((EntityPlayer)entity).getHeldItem() != null && ((EntityPlayer)entity).getHeldItem().getItem() instanceof EnergyWeapon) {
+                    ((EnergyWeapon)((EntityPlayer)entity).getHeldItem().getItem()).onClientShot(((EntityPlayer) entity).getHeldItem(), (EntityPlayer) entity, message.position, message.direction,message.shot);
                 }
             }
             return null;
         }
 
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketFirePhaserRifle message, MessageContext ctx)
+        public IMessage handleServerMessage(EntityPlayer player, PacketFirePlasmaShot message, MessageContext ctx)
         {
-            if (player.getHeldItem() != null && player.getHeldItem().getItem() == MatterOverdriveItems.phaserRifle && MatterOverdriveItems.phaserRifle.canFire(player.getHeldItem(),player.worldObj))
+            ItemStack heldItem = player.getHeldItem();
+            if (heldItem != null && heldItem.getItem() instanceof EnergyWeapon && ((EnergyWeapon)heldItem.getItem()).canFire(player.getHeldItem(),player.worldObj))
             {
-                MatterOverdriveItems.phaserRifle.onServerFire(player.getHeldItem(), player, message.isAiming,message.seed, (int)(System.currentTimeMillis() - message.timestamp),message.position,message.direction);
+                ((EnergyWeapon)heldItem.getItem()).onServerFire(heldItem, player,message.shot, message.position, message.direction);
                 MatterOverdrive.packetPipeline.sendToAllAround(message,player,128);
             }
             return null;

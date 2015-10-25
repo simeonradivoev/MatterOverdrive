@@ -100,11 +100,11 @@ public class ClientWeaponHandler
         if (shotTracker.containsKey(weapon))
             shotTracker.put(weapon,shotTracker.get(weapon) + delay);
     }
-    public float getEquippedWeaponHeatPercent(EntityPlayer entityPlayer)
+    public float getEquippedWeaponAccuracyPercent(EntityPlayer entityPlayer)
     {
         if (entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof IWeapon)
         {
-            return ((IWeapon) entityPlayer.getHeldItem().getItem()).getHeat(entityPlayer.getHeldItem()) / ((IWeapon) entityPlayer.getHeldItem().getItem()).getMaxHeat(entityPlayer.getHeldItem());
+            return ((IWeapon) entityPlayer.getHeldItem().getItem()).getAccuracy(entityPlayer.getHeldItem(), entityPlayer, ((IWeapon) entityPlayer.getHeldItem().getItem()).isWeaponZoomed(entityPlayer.getHeldItem())) / ((IWeapon) entityPlayer.getHeldItem().getItem()).getMaxHeat(entityPlayer.getHeldItem());
         }
         return 0;
     }

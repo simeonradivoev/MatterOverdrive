@@ -27,6 +27,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
+import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.init.MatterOverdriveEnchantments;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.network.packet.server.PacketReloadEnergyWeapon;
@@ -46,6 +47,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import java.text.DecimalFormat;
@@ -206,11 +209,17 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     }
 
     //region Abstract Functions
+    @SideOnly(Side.CLIENT)
     protected abstract void addCustomDetails(ItemStack weapon,EntityPlayer player,List infos);
     protected abstract int getBaseEnergyUse(ItemStack item);
     protected abstract int getBaseMaxHeat(ItemStack item);
     public abstract float getWeaponBaseDamage(ItemStack weapon);
+    public abstract float getWeaponBaseAccuracy(ItemStack weapon,boolean zoomed);
     public abstract boolean canFire(ItemStack itemStack,World world);
+    @SideOnly(Side.CLIENT)
+    public abstract void onClientShot(ItemStack weapon, EntityPlayer player, Vec3 position, Vec3 dir,WeaponShot shot);
+    @SideOnly(Side.CLIENT)
+    public abstract void onProjectileHit(MovingObjectPosition hit, ItemStack weapon, World world,float amount);
     //endregion
 
     //region Energy Functions
@@ -302,9 +311,9 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         }
     }
 
-    protected boolean DrainEnergy(ItemStack item,int ticks,boolean simulate)
+    protected boolean DrainEnergy(ItemStack item,float ticks,boolean simulate)
     {
-        int amount = getEnergyUse(item) * ticks;
+        int amount = (int)(getEnergyUse(item) * ticks);
         int hasEnergy = getEnergyStored(item);
         if (hasEnergy >= amount)
         {
@@ -336,6 +345,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         return  range;
     }
 
+    //region get multiplies
     protected double getPowerMultiply(ItemStack weapon)
     {
         return WeaponHelper.getStatMultiply(Reference.WS_AMMO, weapon) + EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId,weapon) * 0.04f;
@@ -351,10 +361,16 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         return (float)WeaponHelper.getStatMultiply(Reference.WS_MAX_HEAT,weapon);
     }
 
-    protected double getRangeMultiply(ItemStack phaser)
+    protected double getRangeMultiply(ItemStack weapon)
     {
-        return WeaponHelper.getStatMultiply(Reference.WS_RANGE,phaser);
+        return WeaponHelper.getStatMultiply(Reference.WS_RANGE,weapon);
     }
+
+    protected float getAccuracyMultiply(ItemStack weapon)
+    {
+        return (float)WeaponHelper.getStatMultiply(Reference.WS_ACCURACY,weapon);
+    }
+    //endregion
 
     @Override
     public int getItemStackLimit(ItemStack item)
@@ -442,6 +458,15 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public int getAmmo(ItemStack weapon)
     {
         return getEnergyStored(weapon);
+    }
+
+    public float getAccuracy(ItemStack weapon,EntityPlayer player,boolean zoomed)
+    {
+        float accuracy = getWeaponBaseAccuracy(weapon,zoomed);
+        accuracy += (float)Vec3.createVectorHelper(player.motionX,player.motionY*0.1,player.motionZ).lengthVector() * 10;
+        accuracy *= player.isSneaking() ? 0.6f: 1;
+        accuracy *= getAccuracyMultiply(weapon);
+        return accuracy;
     }
 
     @Override

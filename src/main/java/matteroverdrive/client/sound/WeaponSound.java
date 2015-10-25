@@ -25,11 +25,11 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by Simeon on 4/16/2015.
  */
-public class PhaserSound extends PositionedSound implements ITickableSound
+public class WeaponSound extends PositionedSound implements ITickableSound
 {
     private boolean donePlaying;
 
-    public PhaserSound(ResourceLocation sound,float x,float y,float z,float volume,float pitch)
+    public WeaponSound(ResourceLocation sound, float x, float y, float z, float volume, float pitch)
     {
         super(sound);
         setPosition(x,y,z);
@@ -37,6 +37,11 @@ public class PhaserSound extends PositionedSound implements ITickableSound
         super.field_147663_c = pitch;
         super.repeat = true;
         super.field_147665_h = 0;
+    }
+
+    public void setRepeat(boolean repeat)
+    {
+        this.repeat = repeat;
     }
 
     @Override

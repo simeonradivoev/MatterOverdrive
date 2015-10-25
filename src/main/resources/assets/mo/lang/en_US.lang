@@ -72,6 +72,8 @@ item.matter_container_full.name=Full Matter Container
 item.tritanium_nugget.name=Tritanium Nugget
 item.tritanium_spine.name=Tritanium Spine
 item.data_pad.name=Data Pad
+item.data_pad.details=Holds information on all of Matter Overdrive
+item.omni_tool.name=Omni Tool
 item.android_pill_yellow.name=Yellow Pill
 item.android_pill_yellow.details=Used to reset all unlocked Android Abilities
 

@@ -182,9 +182,9 @@ public class RenderUtils
 	}
 
 	public static void drawStencil(int xMin, int yMin, int xMax, int yMax, int mask) {
-		GL11.glDisable(3553);
-		GL11.glStencilFunc(519, mask, mask);
-		GL11.glStencilOp(0, 0, 7681);
+		GL11.glDisable(GL_TEXTURE_2D);
+		GL11.glStencilFunc(GL_ALWAYS, mask, mask);
+		GL11.glStencilOp(0, 0, GL_REPLACE);
 		GL11.glStencilMask(1);
 		GL11.glColorMask(false, false, false, false);
 		GL11.glDepthMask(false);
@@ -194,8 +194,8 @@ public class RenderUtils
 		Tessellator.instance.addVertex((double)xMax, (double)yMin, 0.0D);
 		Tessellator.instance.addVertex((double)xMin, (double)yMin, 0.0D);
 		Tessellator.instance.draw();
-		GL11.glEnable(3553);
-		GL11.glStencilFunc(514, mask, mask);
+		GL11.glEnable(GL_TEXTURE_2D);
+		GL11.glStencilFunc(GL_EQUAL, mask, mask);
 		GL11.glStencilMask(0);
 		GL11.glColorMask(true, true, true, true);
 		GL11.glDepthMask(true);

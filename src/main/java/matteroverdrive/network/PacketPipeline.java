@@ -78,7 +78,7 @@ public class PacketPipeline
         registerPacket(PacketStarMapAttack.ServerHandler.class,PacketStarMapAttack.class);
         registerPacket(PacketUpdateTravelEvents.ClientHandler.class,PacketUpdateTravelEvents.class);
         registerPacket(PacketAndroidChangeAbility.ServerHandler.class,PacketAndroidChangeAbility.class);
-        registerBiPacket(PacketFirePhaserRifle.BiHandler.class, PacketFirePhaserRifle.class);
+        registerBiPacket(PacketFirePlasmaShot.BiHandler.class, PacketFirePlasmaShot.class);
         registerPacket(PacketReloadEnergyWeapon.ServerHandler.class, PacketReloadEnergyWeapon.class);
         registerBiPacket(PacketManageConversation.BiHandler.class, PacketManageConversation.class);
         registerPacket(PacketConversationInteract.ServerHandler.class, PacketConversationInteract.class);
@@ -87,6 +87,7 @@ public class PacketPipeline
         registerPacket(PacketDataPadCommands.ServerHandler.class,PacketDataPadCommands.class);
         registerPacket(PacketSendMinimapInfo.ClientHandler.class,PacketSendMinimapInfo.class);
         registerPacket(PacketResetBioStats.ServerHandler.class,PacketResetBioStats.class);
+        registerPacket(PacketDigBlock.ServerHandler.class,PacketDigBlock.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

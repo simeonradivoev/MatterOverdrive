@@ -137,7 +137,8 @@ public class ItemRendererPhaserRifle implements IItemRenderer
         ResourceLocation skin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
         Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
 
-        glTranslated(2.0, MOMathHelper.Lerp(-0.4f, MOMathHelper.Lerp(-0.3f,-0.4f,zoomValue), recoilValue), MOMathHelper.Lerp(-1, -1.1f, zoomValue));
+        glTranslated(2.0, MOMathHelper.Lerp(-0.3f,-0.4f,zoomValue), MOMathHelper.Lerp(-1, -1.1f, zoomValue));
+        glTranslatef(0,recoilValue * 0.05f * RECOIL_AMOUNT,0);
         glRotated(MOMathHelper.Lerp(45, 0, zoomValue), 1, 1, 0);
         glRotated(MOMathHelper.Lerp(0, MOMathHelper.Lerp(3,0,zoomValue), recoilValue), 0, 0, 1);
         double length = 1.8;
@@ -169,7 +170,7 @@ public class ItemRendererPhaserRifle implements IItemRenderer
         glTranslated(MOMathHelper.Lerp(0, 0.86f, zoomValue), MOMathHelper.Lerp(-0.4f, -0.05f, zoomValue), MOMathHelper.Lerp(1.2f, 0.6f, zoomValue));
         glScaled(1, 1, 0.6);
 
-        glTranslatef(0, -recoilValue * 0.03f * RECOIL_AMOUNT, -recoilValue * 0.05f * RECOIL_AMOUNT);
+        glTranslatef(0, -recoilValue * 0.05f * RECOIL_AMOUNT, -recoilValue * 0.05f * RECOIL_AMOUNT);
         glRotated(recoilValue * 2 * RECOIL_AMOUNT, -1, 0, 0);
 
         RenderGun(ItemRenderType.EQUIPPED_FIRST_PERSON,item);

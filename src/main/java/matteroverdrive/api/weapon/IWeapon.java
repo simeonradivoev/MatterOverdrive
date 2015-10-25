@@ -20,6 +20,7 @@ package matteroverdrive.api.weapon;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
@@ -81,6 +82,9 @@ public interface IWeapon
     @SideOnly(Side.CLIENT)
     boolean onLeftClick(ItemStack weapon,EntityPlayer entityPlayer);
 
+    @SideOnly(Side.CLIENT)
+    boolean onLeftClickTick(ItemStack weapon,EntityPlayer entityPlayer);
+
     /**
      * Called when the weapon is fired by the player.
      * This is called after the player fires in his client.
@@ -88,15 +92,12 @@ public interface IWeapon
      * That's when this method is called. On the server side.
      * @param weapon the weapon stack being fired.
      * @param entityPlayer the player firing the weapon.
-     * @param zoomed is the weapon zoomed.
-     * @param seed the seed of the shot.
-     *             This is used in random generation, so that most players perceive the same properties of bullets.
-     * @param latency the latency of the firing command from the client to the server.
+     * @param shot all information about the shot.
      * @param position the position of the fired shot/bullet.
      * @param dir the direction of the weapon/bullet.
      * @return was the fire successful.
      */
-    boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, boolean zoomed,int seed,int latency,Vec3 position,Vec3 dir);
+    boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, WeaponShot shot,Vec3 position,Vec3 dir);
 
     /**
      * Shows if the gun is always equipped like a bow in third person.
@@ -145,4 +146,37 @@ public interface IWeapon
      * @return the cooldown time in ticks after each shot.
      */
     int getShootCooldown();
+
+    /**
+     * Gets the range of the weapon.
+     * @param weapon the weapon stack.
+     * @return the range.
+     */
+    int getRange(ItemStack weapon);
+
+    /**
+     * Gets the accuracy pf the weapon.
+     * @param weapon the weapon stack
+     * @param entityPlayer the player holding the weapon.
+     * @param zoomed is the weapon zoomed.
+     * @return the accuracy of the weapon. Ranges from 0 - infinity
+     */
+    float getAccuracy(ItemStack weapon,EntityPlayer entityPlayer,boolean zoomed);
+
+    /**
+     * Returns if the weapon is currently zoomed.
+     * This method works only in the client.
+     * @param weapon the weapon stack.
+     * @return is the weapon zoomed.
+     */
+    @SideOnly(Side.CLIENT)
+    boolean isWeaponZoomed(ItemStack weapon);
+
+    /**
+     * Gets the sound of the weapon when firing.
+     * @param weapon the weapon stack.
+     * @return the weapon firing sound.
+     */
+    @SideOnly(Side.CLIENT)
+    String getFireSound(ItemStack weapon,EntityLivingBase entity);
 }

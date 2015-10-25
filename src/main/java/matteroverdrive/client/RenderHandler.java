@@ -34,6 +34,7 @@ import matteroverdrive.client.render.biostat.BioticStatRendererShield;
 import matteroverdrive.client.render.biostat.BioticStatRendererTeleporter;
 import matteroverdrive.client.render.block.*;
 import matteroverdrive.client.render.entity.*;
+import matteroverdrive.client.render.item.ItemRendererOmniTool;
 import matteroverdrive.client.render.item.ItemRendererPhaser;
 import matteroverdrive.client.render.item.ItemRendererPhaserRifle;
 import matteroverdrive.client.render.parts.RougeAndroidPartsRender;
@@ -41,7 +42,7 @@ import matteroverdrive.client.render.parts.TritaniumSpineRenderer;
 import matteroverdrive.client.render.tileentity.*;
 import matteroverdrive.client.render.tileentity.starmap.*;
 import matteroverdrive.entity.*;
-import matteroverdrive.entity.weapon.PhaserFire;
+import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.init.MatterOverdriveItems;
@@ -77,7 +78,7 @@ public class RenderHandler
     private Random random = new Random();
     private RenderMatterScannerInfoHandler matterScannerInfoHandler;
     private RenderParticlesHandler renderParticlesHandler;
-    private RendererPhaserBeam rendererPhaserBeam;
+    private RenderWeaponsBeam renderWeaponsBeam;
     private List<IWorldLastRenderer> customRenderers;
     private AndroidStatRenderRegistry statRenderRegistry;
     private StarmapRenderRegistry starmapRenderRegistry;
@@ -107,6 +108,7 @@ public class RenderHandler
     //region Item Renderers
     private static ItemRendererPhaser rendererPhaser;
     private static ItemRendererPhaserRifle rendererPhaserRifle;
+    private static ItemRendererOmniTool rendererOmniTool;
     //endregion
     //region Entity Renderers
     private EntityRendererRougeAndroid rendererRougeAndroid;
@@ -140,7 +142,7 @@ public class RenderHandler
         customRenderers = new ArrayList<>();
         matterScannerInfoHandler = new RenderMatterScannerInfoHandler();
         renderParticlesHandler = new RenderParticlesHandler(world,textureManager);
-        rendererPhaserBeam = new RendererPhaserBeam();
+        renderWeaponsBeam = new RenderWeaponsBeam();
         statRenderRegistry = new AndroidStatRenderRegistry();
         starmapRenderRegistry = new StarmapRenderRegistry();
         renderDialogSystem = new RenderDialogSystem();
@@ -149,7 +151,7 @@ public class RenderHandler
 
         addCustomRenderer(matterScannerInfoHandler);
         addCustomRenderer(renderParticlesHandler);
-        addCustomRenderer(rendererPhaserBeam);
+        addCustomRenderer(renderWeaponsBeam);
         addCustomRenderer(renderDialogSystem);
         addCustomRenderer(renderStarmap);
     }
@@ -273,12 +275,14 @@ public class RenderHandler
     {
         rendererPhaser = new ItemRendererPhaser();
         rendererPhaserRifle = new ItemRendererPhaserRifle();
+        rendererOmniTool = new ItemRendererOmniTool();
     }
 
     public void registerItemRenderers()
     {
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser, rendererPhaser);
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaserRifle,rendererPhaserRifle);
+        MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.omniTool,rendererOmniTool);
     }
 
     public void createEntityRenderers()
@@ -300,7 +304,7 @@ public class RenderHandler
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedChicken.class,rendererFailedChicken);
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedSheep.class,rendererFailedSheep);
         RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class, rendererMadScientist);
-        RenderingRegistry.registerEntityRenderingHandler(PhaserFire.class, rendererPhaserFire);
+        RenderingRegistry.registerEntityRenderingHandler(PlasmaBolt.class, rendererPhaserFire);
     }
 
     public void createBioticStatRenderers()
