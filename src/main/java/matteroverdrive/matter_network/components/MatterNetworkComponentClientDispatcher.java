@@ -60,6 +60,13 @@ public abstract class MatterNetworkComponentClientDispatcher <K extends MatterNe
                         return manageTopQueue(world,i, getTaskQueue(i).peek());
                     } catch (Exception e) {
                         MatterOverdrive.log.log(Level.ERROR, e, "Where was a problem while trying to get task from Queue from %s", getClass());
+                        try {
+                            getTaskQueue(i).dequeue();
+                        }catch (Exception e1)
+                        {
+                            MatterOverdrive.log.log(Level.ERROR, e1, "Could not deque bad task from dispatcher!");
+                            getTaskQueue(i).clear();
+                        }
                     }
                 }
             }

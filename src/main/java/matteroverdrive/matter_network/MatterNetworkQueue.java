@@ -111,6 +111,11 @@ public abstract class MatterNetworkQueue <T>
         return null;
     }
 
+    public void clear()
+    {
+        elements.clear();
+    }
+
     public boolean remove(T task)
     {
         return elements.remove(task);

@@ -144,7 +144,7 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
     private int manageValidDestinationCheck(World world)
     {
         int broadcastCount = 0;
-        if (rootClient.getInventory().getStackInSlot(rootClient.input_slot) != null || (getTaskQueue(0).size() > 0 && connection == null))
+        if (rootClient.isActive() || (getTaskQueue(0).size() > 0 && connection == null))
         {
             if (validDestinationTracker.hasDelayPassed(world, TileEntityMachineMatterAnalyzer.VALID_LOCATION_CHECK_DELAY))
             {
