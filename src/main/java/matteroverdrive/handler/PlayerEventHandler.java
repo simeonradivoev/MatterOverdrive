@@ -77,7 +77,7 @@ public class PlayerEventHandler
         }
 
         AndroidPlayer player = AndroidPlayer.get(event.player);
-        if (player != null) {
+        if (player != null && event.phase.equals(TickEvent.Phase.START)) {
             if (event.side == Side.CLIENT) {
                 onAndroidTickClient(player, event);
 
@@ -87,18 +87,17 @@ public class PlayerEventHandler
         }
 
         //used to stop the item refreshing when using weapons and changing their data
-        if(event.player.worldObj.isRemote) {
-            if (event.player.getItemInUse() != null && event.player.getItemInUse().getItem() instanceof IWeapon) {
-                ItemStack itemstack = event.player.inventory.getCurrentItem();
+        //this also happens on SMP and stops the beam weapons from working properly
+        //Minecraft stops he using of items each time they change their NBT. This makes is so the weapons refresh and gutter.
+        if (event.player.isUsingItem()) {
+            ItemStack itemstack = event.player.inventory.getCurrentItem();
+            if (itemstack != null && itemstack.getItem() instanceof IWeapon)
+            {
+                event.player.setItemInUse(itemstack,itemstack.getItem().getMaxItemUseDuration(itemstack));
 
-                if (itemstack != null && Minecraft.getMinecraft().currentScreen == null) {
-                    if (event.player.getItemInUse().isItemEqual(itemstack)) {
-                        event.player.setItemInUse(itemstack,event.player.getItemInUseCount());
-                    } else {
-                        System.out.println(String.format("%s not equal to %s", itemstack, event.player.getItemInUse()));
-                    }
-                } else {
-                    event.player.clearItemInUse();
+                if (event.player.worldObj.isRemote) {
+                    if (Minecraft.getMinecraft().currentScreen != null && event.player.equals(Minecraft.getMinecraft().thePlayer))
+                        event.player.clearItemInUse();
                 }
             }
         }
@@ -109,13 +108,13 @@ public class PlayerEventHandler
     {
         if (event.player == Minecraft.getMinecraft().thePlayer)
         {
-            androidPlayer.onPlayerTick(event);
+            androidPlayer.onAndroidTick(event.side);
         }
     }
 
     private void onAndroidServerTick(AndroidPlayer androidPlayer,TickEvent.PlayerTickEvent event)
     {
-        androidPlayer.onPlayerTick(event);
+        androidPlayer.onAndroidTick(event.side);
     }
 
     @SubscribeEvent

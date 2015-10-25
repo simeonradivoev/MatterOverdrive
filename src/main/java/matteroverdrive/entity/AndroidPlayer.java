@@ -23,7 +23,6 @@ import cofh.api.energy.IEnergyStorage;
 import cofh.lib.audio.SoundBase;
 import cofh.lib.util.helpers.MathHelper;
 import com.google.common.collect.Multimap;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
@@ -428,60 +427,55 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public NBTTagCompound getEffects(){return effects;}
     public void setEffects(NBTTagCompound effects){this.effects = effects;}
 
-    public void onPlayerTick(TickEvent.PlayerTickEvent event)
+    public void onAndroidTick(Side side)
     {
-        AndroidPlayer androidPlayer = AndroidPlayer.get(event.player);
-
-        if (androidPlayer != null)
+        if (side.isServer())
         {
-            if (event.side.isServer() && event.phase == TickEvent.Phase.START)
+            if (isAndroid())
             {
-                if (androidPlayer.isAndroid())
-                {
-                    if (getEnergyStored() > 0) {
-                        if (event.player.getFoodStats().needFood() && androidPlayer.getEnergyStored() > 0) {
-                            int foodNeeded = 20 - event.player.getFoodStats().getFoodLevel();
-                            int extractedEnergy = androidPlayer.extractEnergy(foodNeeded * ENERGY_FOOD_MULTIPLY, false);
-                            event.player.getFoodStats().addStats(extractedEnergy / ENERGY_FOOD_MULTIPLY, 0);
-                        }
-
-                        manageHasPower();
-                        managePotionEffects();
-                    } else if (getEnergyStored() <= 0) {
-                        manageOutOfPower();
+                if (getEnergyStored() > 0) {
+                    if (getPlayer().getFoodStats().needFood() && getEnergyStored() > 0) {
+                        int foodNeeded = 20 - getPlayer().getFoodStats().getFoodLevel();
+                        int extractedEnergy = extractEnergy(foodNeeded * ENERGY_FOOD_MULTIPLY, false);
+                        getPlayer().getFoodStats().addStats(extractedEnergy / ENERGY_FOOD_MULTIPLY, 0);
                     }
 
-                    manageCharging();
-                    manageEquipmentAttributeModifiers();
-
-                    if (!event.player.worldObj.isRemote)
-                    {
-                        manageMinimapInfo(event);
-                    }
+                    manageHasPower();
+                    managePotionEffects();
+                } else if (getEnergyStored() <= 0) {
+                    manageOutOfPower();
                 }
 
-                manageTurning();
-            }
-            if (event.side.isClient() && androidPlayer.isAndroid())
-            {
-                manageAbilityWheel();
+                manageCharging();
+                manageEquipmentAttributeModifiers();
+
+                if (!getPlayer().worldObj.isRemote)
+                {
+                    manageMinimapInfo();
+                }
             }
 
-            if (androidPlayer.isAndroid())
-            {
-                manageGlitch();
-                manageSwimming();
-                manageAir();
+            manageTurning();
+        }
+        if (side.isClient() && isAndroid())
+        {
+            manageAbilityWheel();
+        }
 
-                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
-                    int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
-                    if (unlockedLevel > 0) {
-                        if (stat.isEnabled(androidPlayer, unlockedLevel)) {
-                            stat.changeAndroidStats(androidPlayer, unlockedLevel, true);
-                            stat.onAndroidUpdate(androidPlayer, unlockedLevel);
-                        } else {
-                            stat.changeAndroidStats(androidPlayer, unlockedLevel, false);
-                        }
+        if (isAndroid())
+        {
+            manageGlitch();
+            manageSwimming();
+            manageAir();
+
+            for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
+                int unlockedLevel = getUnlockedLevel(stat);
+                if (unlockedLevel > 0) {
+                    if (stat.isEnabled(this, unlockedLevel)) {
+                        stat.changeAndroidStats(this, unlockedLevel, true);
+                        stat.onAndroidUpdate(this, unlockedLevel);
+                    } else {
+                        stat.changeAndroidStats(this, unlockedLevel, false);
                     }
                 }
             }
@@ -597,21 +591,21 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         }
     }
 
-    private void manageMinimapInfo(TickEvent.PlayerTickEvent event)
+    private void manageMinimapInfo()
     {
-        if (event.player instanceof EntityPlayerMP && event.player.worldObj.getWorldTime() % MINIMAP_SEND_TIMEOUT == 0)
+        if (getPlayer() instanceof EntityPlayerMP && getPlayer().worldObj.getWorldTime() % MINIMAP_SEND_TIMEOUT == 0)
         {
             List<MinimapEntityInfo> entityList = new ArrayList<>();
-            for (Object entityObject : event.player.worldObj.loadedEntityList) {
+            for (Object entityObject : getPlayer().worldObj.loadedEntityList) {
                 if (entityObject instanceof EntityLivingBase) {
                     if (isVisibleOnMinimap((EntityLivingBase) entityObject, player, Vec3.createVectorHelper(((EntityLivingBase) entityObject).posX,((EntityLivingBase) entityObject).posY,((EntityLivingBase) entityObject).posZ).subtract(Vec3.createVectorHelper(player.posX,player.posY,player.posZ))) && MinimapEntityInfo.hasInfo((EntityLivingBase)entityObject,player)) {
-                        entityList.add(new MinimapEntityInfo((EntityLivingBase) entityObject,event.player));
+                        entityList.add(new MinimapEntityInfo((EntityLivingBase) entityObject,getPlayer()));
                     }
                 }
             }
 
             if (entityList.size() > 0)
-                MatterOverdrive.packetPipeline.sendTo(new PacketSendMinimapInfo(entityList),(EntityPlayerMP)event.player);
+                MatterOverdrive.packetPipeline.sendTo(new PacketSendMinimapInfo(entityList),(EntityPlayerMP)getPlayer());
         }
     }
 
