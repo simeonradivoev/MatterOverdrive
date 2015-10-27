@@ -102,18 +102,20 @@ public class MatterOverdriveGuides
         //Weapons
         addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.phaser).setGroup("weapons"),4,0);
         addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.phaserRifle).setGroup("weapons"),5,0);
+        addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.omniTool).setGroup("weapons"),4,1);
         //Parts
         addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.energyPack).setGroup("parts"),1,0);
         addEntry(weaponsCategory,new MOGuideEntry("weapon.modules.barrels").setStackIcons(MatterOverdriveItems.weapon_module_barrel).setGroup("parts"),2,0);
         addEntry(weaponsCategory,new MOGuideEntry("weapon.modules.colors").setStackIcons(MatterOverdriveItems.weapon_module_color).setGroup("parts"),1,1);
         //Machines
-        addEntry(weaponsCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.weapon_station).setGroup("machines"),4,2);
+        addEntry(weaponsCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.weapon_station).setGroup("machines"),4,3);
         //endregion
 
         //region Android
         //Items
         addEntry(androidCategory,new MOGuideEntry("android.pills").setStackIcons(MatterOverdriveItems.androidPill).setGroup("items"),5,1);
         addEntry(androidCategory,new MOGuideEntry("android.parts").setStackIcons(MatterOverdriveItems.androidParts).setGroup("items"),5,2);
+        addEntry(androidCategory,new MOGuideEntryItem(MatterOverdriveItems.tritaniumSpine).setGroup("items"),5,3);
         //Machines
         addEntry(androidCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.androidStation).setGroup("machines"),2,2);
         addEntry(androidCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.chargingStation).setGroup("machines"),3,2);

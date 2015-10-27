@@ -476,6 +476,10 @@ fluid.matter_plasma.name
 
 ##########################################################################################################
 # Guides
+guide.category.general.name=Basic
+guide.category.weapons.name=Weapons
+guide.category.android.name=Android
+
 guide.group.machines.name=Machines
 guide.group.ore.name=Ore
 guide.group.matter.name=Matter

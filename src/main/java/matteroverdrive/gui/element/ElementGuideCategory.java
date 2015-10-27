@@ -34,6 +34,7 @@ public class ElementGuideCategory extends MOElementButtonScaled
         super(gui, handler, posX, posY, name, sizeX, sizeY);
         this.category = category;
         this.icon = category.getHoloIcon();
+        this.setToolTip(category.getDisplayName());
     }
 
     public GuideCategory getCategory()
