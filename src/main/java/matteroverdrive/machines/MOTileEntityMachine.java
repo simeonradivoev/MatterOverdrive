@@ -420,12 +420,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
     }
 
-    public void markDirty()
-    {
-        super.markDirty();
-        ForceSync();
-    }
-
     protected abstract void onActiveChange();
 
     @Override
