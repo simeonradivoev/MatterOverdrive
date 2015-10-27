@@ -39,6 +39,7 @@ import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -212,26 +213,35 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        RenderUtils.beginStencil();
-        //glColor4f(1,1,1,1);
-        RenderUtils.drawStencil(posX, posY, posX + sizeX, posY + sizeY, 1);
-        RenderUtils.endStencil();
-        glEnable(GL_STENCIL_TEST);
+        //begin depth masking by clearing depth buffer
+        //and enabling depth masking. this is where the mask will be drawn
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glClearDepth(1f);
+        GL11.glDepthFunc(GL11.GL_LESS);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        glDepthMask(true);
+        glColorMask(false,false,false,false);
+        glDisable(GL_TEXTURE_2D);
+        //draws an invisible square mask that will sit on top of everything
+        RenderUtils.drawPlane(posX,posY,200,sizeX,sizeY);
+        glEnable(GL_TEXTURE_2D);
+
+        //disable the drawing of the mask and start the drawing of the masked elements
+        //while still having the depth test active
+        glDepthMask(false);
+        glColorMask(true,true,true,true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthFunc(GL11.GL_GREATER);
+        gui.bindTexture(this.background);
+        double aspect = (double)sizeY/(double)sizeX;
         glEnable(GL_BLEND);
         glDisable(GL_ALPHA_TEST);
-        glColor4d(1,1,1,0.1);
-        gui.bindTexture(background);
-        RenderUtils.drawPlane(sizeX / 2 - 512 + scrollX / 2, sizeY / 2 - 512 + scrollY / 2, 0, 1024, 1024);
+        glColor4d(1, 1, 1, 0.1);
+        RenderUtils.drawPlaneWithUV(posX, posY, 0, sizeX, sizeY, 0.5 - scrollX*0.001, 0.5 -(double)scrollY*0.0003, 0.5, 0.5*aspect);
+        RenderUtils.drawPlaneWithUV(posX, posY, 0, sizeX, sizeY, 0.2 - scrollX*0.001, 0.2 -(double)scrollY*0.0005, 0.3, 0.3*aspect);
         glEnable(GL_ALPHA_TEST);
         super.drawBackground(mouseX, mouseY, gameTicks);
-        glDisable(GL_STENCIL_TEST);
-    }
 
-    @Override
-    public void drawForeground(int mouseX, int mouseY)
-    {
-        RenderUtils.beginStencil();
-        RenderUtils.drawStencil(posX, posY, posX + sizeX, posY + sizeY, 1);
         if(orderButtonElement.getSelectedState() > 1) {
             for (Map.Entry<String, Bounds> group : groups.entrySet()) {
                 getFontRenderer().setUnicodeFlag(true);
@@ -244,8 +254,33 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
                 getFontRenderer().setUnicodeFlag(false);
             }
         }
+
+        //reset the depth check function to prevent the masking of other elements as well as the depth testing
+        glDepthFunc(GL_LEQUAL);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+    }
+
+    @Override
+    public void drawForeground(int mouseX, int mouseY)
+    {
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glClearDepth(1f);
+        GL11.glDepthFunc(GL11.GL_LESS);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        glDepthMask(true);
+        glColorMask(false,false,false,false);
+        glDisable(GL_TEXTURE_2D);
+        RenderUtils.drawPlane(posX,posY,400,sizeX,sizeY);
+        glEnable(GL_TEXTURE_2D);
+
+        glDepthMask(false);
+        glColorMask(true,true,true,true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthFunc(GL11.GL_GREATER);
         super.drawForeground(mouseX, mouseY);
-        RenderUtils.endStencil();
+        glDepthFunc(GL_LEQUAL);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        glDepthMask(false);
     }
 
     @Override
