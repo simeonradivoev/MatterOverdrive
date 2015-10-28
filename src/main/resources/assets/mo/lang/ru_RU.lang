@@ -476,6 +476,10 @@ fluid.matter_plasma.name=Плазменная материя
 
 ============================================================
 # Путеводители/Guides
+guide.category.general.name=Основное
+guide.category.weapons.name=Оружия
+guide.category.android.name=Андроид
+
 guide.group.machines.name=Машины
 guide.group.ore.name=Руды
 guide.group.matter.name=Материя
