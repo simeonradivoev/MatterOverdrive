@@ -109,10 +109,6 @@ public class MatterOverdrive
 		MatterNetworkRegistry.register();
         packetPipeline.registerPackets();
 		MatterOverdriveBioticStats.init(event);
-		MatterOverdriveMatter.init(configHandler);
-		MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);
-		MatterOverdriveMatter.registerFromConfig(configHandler);
-		MatterOverdriveMatter.registerBasic(configHandler);
 		matterRegistry.preInit(event,configHandler);
 		UpdateTabs();
 
@@ -149,6 +145,11 @@ public class MatterOverdrive
 		MatterOverdriveCompat.postInit(event);
 		MatterOverdriveEntities.register(event);
 		MatterOverdriveItems.addToDungons();
+
+		MatterOverdriveMatter.init(configHandler);
+		MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);
+		MatterOverdriveMatter.registerFromConfig(configHandler);
+		MatterOverdriveMatter.registerBasic(configHandler);
 
 		configHandler.postInit();
 	}

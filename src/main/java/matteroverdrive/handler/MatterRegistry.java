@@ -20,6 +20,7 @@ package matteroverdrive.handler;
 
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
@@ -202,7 +203,18 @@ public class MatterRegistry implements IMatterRegistry
     public String getKey(Item item) {return getKey(new ItemStack(item));}
     public String getKey(ItemStack itemStack) {
         try {
-            return itemStack.getUnlocalizedName();
+            if (itemStack.getHasSubtypes())
+            {
+                if (itemStack.getItemDamage() > 0)
+                {
+                    return GameData.getItemRegistry().getNameForObject(itemStack.getItem()) + itemStack.getItemDamage();
+                }
+
+                return GameData.getItemRegistry().getNameForObject(itemStack.getItem());
+            }else
+            {
+                return GameData.getItemRegistry().getNameForObject(itemStack.getItem());
+            }
         } catch (Exception e)
         {
             if (itemStack.getItem() != null)
@@ -332,12 +344,12 @@ public class MatterRegistry implements IMatterRegistry
         {
             if (stack.getItemDamage() == Short.MAX_VALUE)
             {
-                stack.setItemDamage(0);
-                debug("Messed up damage for: %s. Resetting damage to 0", stack);
+                debug("Messed up damage for: %s.", stack);
             }else
             {
                 debug("No OreDictionary support for: %s", stack);
             }
+            return null;
         }
         for (int id : ids)
         {

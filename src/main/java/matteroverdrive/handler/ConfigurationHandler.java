@@ -87,10 +87,10 @@ public class ConfigurationHandler
         config.get(CATEGORY_MATTER,KEY_MBLACKLIST,new String[0]).comment = "Blacklist for items in the matter registry. Automatic Recipe calculation will ignore recipes with these items. Just add the unlocalized name or the ore dictionary name in the list.";
         config.get(CATEGORY_MATTER,KEY_BLACKLIST_MODS,new String[0]).comment = "Blacklist for mods (mod ID). Automatic Recipe calculation will ignore recipes with items from this mod";
         category = config.getCategory(CATEGORY_NEW_ITEMS);
-        category.setComment("Registration of new items and the amount of matter they contain. Add them like so: I:[unlocalized name or ore Dictionary name]=[matter amount]");
+        category.setComment("Registration of new items and the amount of matter they contain. Add them like so: I:[registered name or ore Dictionary name](meta)=[matter amount]. () - optional parameter. Example I:dye2=10 I:egg=29");
         updateCategoryLang(category);
         category = config.getCategory(CATEGORY_OVERRIDE_MATTER);
-        category.setComment("Overriding of existing items and the amount of matter they contain. Add them like so: I:[unlocalized name or ore Dictionary name]=[matter amount]");
+        category.setComment("Overriding of existing items and the amount of matter they contain. Add them like so: I:[registered name or ore Dictionary name](meta)=[matter amount] () - optional parameter. Example I:dye2=10 I:egg=29");
         updateCategoryLang(category);
         category = config.getCategory(CATEGORY_CLIENT);
         updateCategoryLang(category);

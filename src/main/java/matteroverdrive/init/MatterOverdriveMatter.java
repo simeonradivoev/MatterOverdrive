@@ -56,26 +56,23 @@ public class MatterOverdriveMatter
 
     public static void registerBasicBlocks(ConfigurationHandler c)
     {
-        reg(c,Blocks.dirt, 1,3);
-        reg(c,Blocks.wool, 2,16);
-        reg(c,Blocks.grass, 5);
+        reg(c,"dirt", 1,3);
+        reg(c,"blockWool", 2,16);
+        reg(c,"blockGlass", 5);
         reg(c,"cobblestone", 1);
-        reg(c,Blocks.cobblestone,1);
         reg(c,"logWood", 16);
         reg(c,"sand", 2);
-        reg(c,Blocks.gravel, 2);
+        reg(c,"gravel", 2);
         reg(c,"sandstone",4);
         reg(c,Blocks.clay,4);
         reg(c,Blocks.cactus,4);
         reg(c,"plankWood",4);
-        reg(c,Blocks.planks,4,6);
         reg(c, Blocks.end_stone, 6);
         reg(c,"stone",1);
-        reg(c,Blocks.stone,1);
         reg(c,Blocks.soul_sand,4);
         reg(c,Blocks.snow,2);
         reg(c,Blocks.pumpkin,2);
-        reg(c,Blocks.obsidian,16);
+        reg(c,"blockObsidian",16);
         reg(c,"treeLeaves",1);
         reg(c,Blocks.mycelium,5);
         reg(c,Blocks.ice,3);
@@ -89,7 +86,7 @@ public class MatterOverdriveMatter
         reg(c,Blocks.tallgrass,1);
         reg(c,Blocks.mossy_cobblestone,2);
         reg(c,Blocks.netherrack,1);
-        reg(c,Blocks.stained_hardened_clay,3,16);
+        reg(c,"blockStainedHardenedClay",3,16);
         reg(c, Blocks.hardened_clay, 3);
         reg(c,Blocks.stonebrick,2,4);
         reg(c,Blocks.skull,8,5);
@@ -104,7 +101,7 @@ public class MatterOverdriveMatter
         reg(c,Blocks.red_mushroom_block,1);
         reg(c,Blocks.deadbush,1);
         reg(c,Blocks.waterlily,1);
-        reg(c,Blocks.sapling,2,6);
+        reg(c,"treeSapling",2,6);
         reg(c,Blocks.double_plant,1,6);
         //endregion
     }
