@@ -96,6 +96,14 @@ public class MatterStorage implements IMatterStorage, IFluidTank
         return maxFill;
     }
 
+    public int modifyMatterStored(int amount)
+    {
+        int lastAmount = getFluid().amount;
+        getFluid().amount += amount;
+        getFluid().amount = net.minecraft.util.MathHelper.clamp_int(getFluid().amount,0,getCapacity());
+        return lastAmount - amount;
+    }
+
 
     @Override
     public FluidStack getFluid()

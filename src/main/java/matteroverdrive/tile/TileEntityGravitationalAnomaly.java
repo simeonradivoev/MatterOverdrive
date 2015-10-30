@@ -190,7 +190,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 }
                 Vec3 pos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
 
-                pos.yCoord += entity.getEyeHeight();
+                //pos.yCoord += entity.getEyeHeight();
                 Vec3 blockPos = Vec3.createVectorHelper(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
                 Vec3 dir = pos.subtract(blockPos).normalize();
                 double distance = pos.distanceTo(blockPos);

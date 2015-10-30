@@ -21,7 +21,6 @@ package matteroverdrive.tile;
 import cpw.mods.fml.common.Optional;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.matter.IMatterHandler;
-import matteroverdrive.api.matter.IMatterStorage;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.MachineMatterStorage;
 import matteroverdrive.fluids.FluidMatterPlasma;
@@ -57,8 +56,8 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
 	{
 		super.writeCustomNBT(nbt, categories);
-		if (categories.contains(MachineNBTCategory.DATA)) {
-			matterStorage.writeToNBT(nbt);
+		if (categories.contains(MachineNBTCategory.DATA) && getMatterStorage() != null) {
+			getMatterStorage().writeToNBT(nbt);
 		}
 
 	}
@@ -67,83 +66,76 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
 	{
 		super.readCustomNBT(nbt, categories);
-		if (categories.contains(MachineNBTCategory.DATA)) {
-			matterStorage.readFromNBT(nbt);
+		if (categories.contains(MachineNBTCategory.DATA) && getMatterStorage() != null) {
+			getMatterStorage().readFromNBT(nbt);
 		}
 
 	}
 	
 	@Override
-	public int getMatterStored() {
-		return this.matterStorage.getMatterStored();
+	public int getMatterStored()
+	{
+		if (getMatterStorage() != null)
+			return this.getMatterStorage().getMatterStored();
+		return 0;
 	}
 
 	@Override
-	public int getMatterCapacity() {
-		return this.matterStorage.getCapacity();
+	public int getMatterCapacity()
+	{
+		if (getMatterStorage() != null)
+			return getMatterStorage().getCapacity();
+		return 0;
 	}
 
 	@Override
 	public int receiveMatter(ForgeDirection side, int amount, boolean simulate)
-    {
-        int received = this.matterStorage.receiveMatter(side, amount, simulate);
-		if (!simulate && received != 0)
-		{
-			updateClientMatter();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
-        return received;
+	{
+		if (getMatterStorage() != null)
+			return getMatterStorage().receiveMatter(side,amount,simulate);
+		return 0;
 	}
 
 	@Override
-	public int extractMatter(ForgeDirection direction, int amount,
-			boolean simulate)
-    {
-		int extracted = this.matterStorage.extractMatter(direction, amount, simulate);
-		if (!simulate && extracted != 0) {
-			updateClientMatter();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
-		return extracted;
+	public int extractMatter(ForgeDirection direction, int amount, boolean simulate)
+	{
+		if (getMatterStorage() != null)
+			return getMatterStorage().extractMatter(direction,amount,simulate);
+		return 0;
 	}
+
+    protected int modifyEnergyStored(int amount)
+    {
+        int energyModified = energyStorage.modifyEnergyStored(amount);
+        if (energyModified != 0)
+        {
+            UpdateClientPower();
+        }
+        return energyModified;
+    }
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		int received = this.matterStorage.fill(resource, doFill);
-		if (doFill && received != 0)
-		{
-			updateClientMatter();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
-		return received;
+		if (getMatterStorage() != null)
+			return getMatterStorage().fill(resource,doFill);
+		return 0;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (canDrain(from,resource.getFluid()))
-		{
-			FluidStack drainStack = this.matterStorage.drain(resource.amount, doDrain);
-			if (drainStack != null && drainStack.amount > 0 && doDrain) {
-				updateClientMatter();
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			}
-			return drainStack;
-		}
-		return this.matterStorage.getFluid();
+		if (getMatterStorage() != null)
+			return getMatterStorage().drain(resource.amount,doDrain);
+		else return null;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		FluidStack drainStack = this.matterStorage.drain(maxDrain, doDrain);
-		if (drainStack != null && drainStack.amount > 0 && doDrain)
-		{
-			updateClientMatter();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
-		return drainStack;
+		if (getMatterStorage() != null)
+			return getMatterStorage().drain(maxDrain,doDrain);
+		return null;
 	}
 
 	@Override
@@ -161,22 +153,20 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
-		return new FluidTankInfo[]{matterStorage.getInfo()};
+		if (getMatterStorage() != null)
+			return new FluidTankInfo[]{getMatterStorage().getInfo()};
+		return new FluidTankInfo[0];
 	}
 	
-	public IMatterStorage getMatterStorage()
+	public MachineMatterStorage getMatterStorage()
 	{
 		return this.matterStorage;
 	}
 
 	public void setMatterStored(int matter)
 	{
-		int lastMatter = getMatterStorage().getMatterStored();
-		getMatterStorage().setMatterStored(matter);
-		if (lastMatter != matter) {
-			ForceSync();
-			worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
-		}
+		if (getMatterStorage() != null)
+			getMatterStorage().setMatterStored(matter);
 	}
 
 	public void updateClientMatter()
@@ -189,11 +179,11 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	{
 		super.readFromPlaceItem(itemStack);
 
-		if(itemStack != null)
+		if(itemStack != null && getMatterStorage() != null)
 		{
 			if(itemStack.hasTagCompound())
 			{
-				matterStorage.readFromNBT(itemStack.getTagCompound());
+				getMatterStorage().readFromNBT(itemStack.getTagCompound());
 			}
 		}
 	}
@@ -203,13 +193,13 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	{
 		super.writeToDropItem(itemStack);
 
-		if(itemStack != null)
+		if(itemStack != null && getMatterStorage() != null)
 		{
-			if(matterStorage.getMatterStored() > 0) {
+			if(getMatterStorage().getMatterStored() > 0) {
 				if (!itemStack.hasTagCompound())
 					itemStack.setTagCompound(new NBTTagCompound());
 
-				matterStorage.writeToNBT(itemStack.getTagCompound());
+				getMatterStorage().writeToNBT(itemStack.getTagCompound());
 				itemStack.getTagCompound().setInteger("MaxMatter", matterStorage.getCapacity());
 				itemStack.getTagCompound().setInteger("MatterSend", matterStorage.getMaxExtract());
 				itemStack.getTagCompound().setInteger("MatterReceive", matterStorage.getMaxReceive());

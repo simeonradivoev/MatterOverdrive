@@ -37,12 +37,17 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.fusionReactorController.components.ComponentComputers;
+import matteroverdrive.multiblock.IMultiBlockTile;
+import matteroverdrive.multiblock.MultiBlockTileStructureMachine;
+import matteroverdrive.tile.MOTileEntityMachineEnergy;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
+import matteroverdrive.tile.TileEntityFusionReactorPart;
 import matteroverdrive.tile.TileEntityGravitationalAnomaly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -88,6 +93,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     private float matterPerTick;
     private float matterDrain;
     private ComponentComputers componentComputers;
+    private MultiBlockTileStructureMachine multiBlock;
 
 
     public TileEntityMachineFusionReactorController() {
@@ -96,10 +102,13 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         structureCheckTimer = new TimeTracker();
         energyStorage.setCapacity(ENERGY_STORAGE);
         energyStorage.setMaxTransfer(ENERGY_STORAGE);
+        energyStorage.setMaxReceive(0);
 
         matterStorage.setCapacity(MATTER_STORAGE);
-        matterStorage.setMaxExtract(MATTER_STORAGE);
+        matterStorage.setMaxExtract(0);
         matterStorage.setMaxReceive(MATTER_STORAGE);
+
+        multiBlock = new MultiBlockTileStructureMachine(this);
     }
 
     @Override
@@ -214,9 +223,18 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         return null;
     }
 
+    @Override
+    public void invalidate()
+    {
+        super.invalidate();
+        multiBlock.invalidate();
+    }
+
     public void manageStructure()
     {
-        if (structureCheckTimer.hasDelayPassed(worldObj, STRUCTURE_CHECK_DELAY)) {
+        if (structureCheckTimer.hasDelayPassed(worldObj, STRUCTURE_CHECK_DELAY))
+        {
+            multiBlock.update();
             int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
             int anomalyDistance = MAX_GRAVITATIONAL_ANOMALY_DISTANCE+1;
             boolean validStructure = true;
@@ -256,23 +274,26 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                     matterPerTick = (float)(MATTER_DRAIN_PER_TICK * energyMultipy);
                 }
                 else {
-                    if (position.getBlock(worldObj) == Blocks.air) {
+                    Block block = position.getBlock(worldObj);
+                    TileEntity tileEntity = position.getTileEntity(worldObj);
+
+                    if (block == Blocks.air) {
                         validStructure = false;
                         info = "INVALID\nSTRUCTURE";
                         break;
-                    } else if (position.getBlock(worldObj) == MatterOverdriveBlocks.machine_hull) {
+                    } else if (block == MatterOverdriveBlocks.machine_hull) {
                         if (blocks[i] == 1) {
                             validStructure = false;
                             info = "NEED\nMORE\nCOILS";
                             break;
                         }
-                    } else if (position.getBlock(worldObj) == MatterOverdriveBlocks.fusion_reactor_coil) {
+                    } else if (block == MatterOverdriveBlocks.fusion_reactor_coil || tileEntity instanceof IMultiBlockTile) {
                         if (blocks[i] == 0) {
                             validStructure = false;
                             info = "INVALID\nMATERIALS";
                             break;
                         }
-                    } else if (position.getBlock(worldObj) == MatterOverdriveBlocks.decomposer)
+                    } else if (block == MatterOverdriveBlocks.decomposer)
                     {
                         if (blocks[i] != 2)
                         {
@@ -285,6 +306,12 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                         validStructure = false;
                         info = "INVALID\nMATERIALS";
                         break;
+                    }
+
+                    MatterOverdrive.log.info("test");
+                    if (tileEntity instanceof IMultiBlockTile)
+                    {
+                        multiBlock.addMultiBlockTile((IMultiBlockTile)tileEntity);
                     }
                 }
             }
@@ -314,14 +341,13 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         if (isActive())
         {
             int energyPerTick = getEnergyPerTick();
-            int energyRecived = energyStorage.receiveEnergy(energyPerTick,false);
-            if (energyRecived > 0)
+            int energyRecived = energyStorage.modifyEnergyStored(energyPerTick);
+            if (energyRecived != 0)
             {
                 matterDrain += getMatterDrainPerTick() * ((float)energyRecived / (float)energyPerTick);
                 if (MathHelper.floor_float(matterDrain) >= 1)
                 {
-                    matterStorage.extractMatter(MathHelper.floor_float(matterDrain),false);
-                    updateClientMatter();
+                    matterStorage.modifyMatterStored(-MathHelper.floor_float(matterDrain));
                     matterDrain -= MathHelper.floor_float(matterDrain);
                 }
             }
@@ -332,25 +358,36 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     {
         if (energyStorage.getEnergyStored() > 0)
         {
-            TileEntity entity;
-            int energy;
-            int startDir = random.nextInt(6);
-
-            for (int i = 0;i < 6;i++)
+            for (IMultiBlockTile tile : multiBlock.getTiles())
             {
-                energy = Math.min(energyStorage.getEnergyStored(),energyStorage.getMaxExtract());
-                ForgeDirection dir = ForgeDirection.getOrientation((i + startDir) % 6);
-                entity = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
-
-                if (entity instanceof IEnergyConnection)
+                if (tile instanceof TileEntityFusionReactorPart)
                 {
-                    ((IEnergyConnection) entity).canConnectEnergy(dir.getOpposite());
+                    manageExtractFrom((TileEntityFusionReactorPart)tile);
                 }
+            }
+        }
 
-                if (entity instanceof IEnergyReceiver)
-                {
-                    energyStorage.extractEnergy(((IEnergyReceiver) entity).receiveEnergy(dir.getOpposite(),energy,false),false);
-                }
+        manageExtractFrom(this);
+    }
+
+    private void manageExtractFrom(MOTileEntityMachineEnergy source)
+    {
+        TileEntity entity;
+        int energy;
+        int startDir = random.nextInt(6);
+
+        for (int i = 0; i < 6; i++) {
+            energy = Math.min(energyStorage.getEnergyStored(), ENERGY_STORAGE);
+            ForgeDirection dir = ForgeDirection.getOrientation((i + startDir) % 6);
+            entity = worldObj.getTileEntity(source.xCoord + dir.offsetX, source.yCoord + dir.offsetY, source.zCoord + dir.offsetZ);
+
+            if (entity instanceof IEnergyConnection) {
+                ((IEnergyConnection) entity).canConnectEnergy(dir.getOpposite());
+            }
+
+            if (entity instanceof IEnergyReceiver) {
+                int receivedEnergy = ((IEnergyReceiver) entity).receiveEnergy(dir.getOpposite(), energy, false);
+                modifyEnergyStored(-receivedEnergy);
             }
         }
     }
@@ -370,7 +407,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
             {
                 int maxExtracted = Math.min(energyStorage.getMaxExtract(),energyStorage.getEnergyStored());
                 int extracted = EnergyHelper.insertEnergyIntoContainer(this.inventory.getStackInSlot(energySlotID),maxExtracted,false);
-                energyStorage.extractEnergy(extracted,false);
+                modifyEnergyStored(extracted);
             }
         }
     }

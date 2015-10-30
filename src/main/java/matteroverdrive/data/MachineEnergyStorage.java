@@ -22,6 +22,7 @@ import cofh.api.energy.IEnergyStorage;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.machines.MOTileEntityMachine;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 
 /**
  * Created by Simeon on 8/7/2015.
@@ -56,14 +57,10 @@ public class MachineEnergyStorage<T extends MOTileEntityMachine> implements IEne
         tagCompound.setInteger("Energy",energy);
     }
 
-    public void modifyEnergyStored(int amount) {
-        this.energy += amount;
-        if(this.energy > getMaxEnergyStored()) {
-            this.energy = getEnergyStored();
-        } else if(this.energy < 0) {
-            this.energy = 0;
-        }
-
+    public int modifyEnergyStored(int amount) {
+        int lastEnergy = this.energy;
+        this.energy = MathHelper.clamp_int(this.energy + amount,0,getMaxEnergyStored());
+        return this.energy - lastEnergy;
     }
 
     @Override

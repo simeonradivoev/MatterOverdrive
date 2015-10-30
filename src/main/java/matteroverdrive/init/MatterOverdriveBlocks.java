@@ -65,6 +65,7 @@ public class MatterOverdriveBlocks {
     public static ForceGlass forceGlass;
     public static BlockFluidMatterPlasma blockMatterPlasma;
 	public static BlockBoundingBox boundingBox;
+    public static BlockFusionReactorIO fusionReactorIO;
 
     public static BlockDecorative decorative_stripes;
     public static BlockDecorative decorative_coils;
@@ -129,6 +130,7 @@ public class MatterOverdriveBlocks {
         blockMatterPlasma = new BlockFluidMatterPlasma(MatterOverdriveFluids.matterPlasma, Material.water);
         blockMatterPlasma.setBlockName("matter_plasma");
 		boundingBox = new BlockBoundingBox(Material.air, "bounding_box");
+        fusionReactorIO = new BlockFusionReactorIO(Material.iron,"fusion_reactor_io");
 
         decorative_stripes = new BlockDecorative(Material.iron,"decorative.stripes","base_stripes",5,1,8);
         decorative_coils = new BlockDecorative(Material.iron,"decorative.coils","base_coil",5,1,8);
@@ -195,6 +197,7 @@ public class MatterOverdriveBlocks {
         forceGlass.register();
         GameRegistry.registerBlock(blockMatterPlasma, "matter_plasma");
 		boundingBox.register();
+        fusionReactorIO.register();
 
         decorative_stripes.register();
         decorative_coils.register();
