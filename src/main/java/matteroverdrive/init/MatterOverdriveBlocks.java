@@ -96,7 +96,7 @@ public class MatterOverdriveBlocks {
         matter_analyzer = new BlockMatterAnalyzer(Material.iron, "matter_analyzer");
         dilithium_ore = new DilithiumOre(Material.rock, "dilithium_ore");
         tritaniumOre = new MOBlock(Material.rock, "tritanium_ore");
-        tritaniumOre.setHardness(15.0F);
+        tritaniumOre.setHardness(8f);
         tritaniumOre.setResistance(5.0F);
         tritaniumOre.setHarvestLevel("pickaxe", 2);
         tritaniumOre.setStepSound(Block.soundTypePiston);

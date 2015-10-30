@@ -54,10 +54,10 @@ public class IsolinearCircuit extends MOBaseItem
     public void register(String name)
     {
         super.register(name);
-        GameRegistry.addRecipe(new ItemStack(this, 1, 0), new Object[]{"II ", "RR ", "GG ", 'G', Item.getItemFromBlock(Blocks.glass), 'R', Items.redstone, 'I', Items.iron_ingot});
-        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 1), new Object[]{new ItemStack(this, 1, 0), Items.gold_ingot, Items.gold_ingot});
-        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 2), new Object[]{new ItemStack(this, 1, 1), Items.diamond, Items.diamond});
-        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 3), new Object[]{new ItemStack(this, 1, 2), Items.emerald, Items.emerald});
+        GameRegistry.addRecipe(new ItemStack(this, 1, 0), new Object[]{"I ", "R ", "G ", 'G', Item.getItemFromBlock(Blocks.glass), 'R', Items.redstone, 'I', Items.iron_ingot});
+        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 1), new Object[]{new ItemStack(this, 1, 0), Items.gold_ingot});
+        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 2), new Object[]{new ItemStack(this, 1, 1), Items.diamond});
+        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 3), new Object[]{new ItemStack(this, 1, 2), Items.emerald});
     }
 
     @SideOnly(Side.CLIENT)
