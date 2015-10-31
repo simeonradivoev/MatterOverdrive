@@ -40,6 +40,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fluids.IFluidBlock;
 
+import java.util.Collections;
 import java.util.HashSet;
 
 /**
@@ -67,7 +68,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     public String getDetails(int level)
     {
         String keyName = GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode());
-        return String.format(super.getDetails(level),keyName,EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + EnumChatFormatting.GRAY);
+        return String.format(super.getDetails(level), keyName, EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + EnumChatFormatting.GRAY);
     }
 
     @Override
@@ -121,7 +122,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
             return null;
         }
 
-        position = MOPhysicsHelper.rayTrace(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, 6, 0, Vec3.createVectorHelper(0, 0, 0),true,true);
+        position = MOPhysicsHelper.rayTrace(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, 6, 0, Vec3.createVectorHelper(0, 0, 0), true, true);
         if (position != null)
         {
             return position.hitVec;
@@ -129,7 +130,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
         return null;
     }
 
-    public Vec3 getTopSafeBlock(World world,int x,int y,int z,int side)
+    public Vec3 getTopSafeBlock(World world, int x, int y, int z, int side)
     {
         int airBlockCount = 0;
         int heightCheck = MAX_TELEPORT_HEIGHT_CHECK;
@@ -139,16 +140,16 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
         }
         int height = Math.min(y + heightCheck, world.getActualHeight());
         Block block;
-        for (int i = y;i < height;i++)
+        for (int i = y; i < height; i++)
         {
-            block = world.getBlock(x,i,z);
+            block = world.getBlock(x, i, z);
             String unlocalizedName = block.getUnlocalizedName().substring(5);
             if (blackListedBlocks.contains(unlocalizedName))
             {
                 return null;
             }
 
-            if (!block.isBlockSolid(world,x,i,z,world.getBlockMetadata(x,i,z)) || block instanceof IFluidBlock)
+            if (!block.isBlockSolid(world, x, i, z, world.getBlockMetadata(x, i, z)) || block instanceof IFluidBlock)
             {
                 airBlockCount++;
             }else
@@ -158,7 +159,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
 
             if (airBlockCount >= 2)
             {
-                return Vec3.createVectorHelper(x,i-1,z);
+                return Vec3.createVectorHelper(x, i - 1, z);
             }
         }
 
@@ -167,9 +168,9 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
         y += direction.offsetY;
         z += direction.offsetZ;
 
-        if (!world.getBlock(x,y+1,z).isBlockSolid(world,x,y,z,world.getBlockMetadata(x,y+1,z)) && !world.getBlock(x,y+2,z).isBlockSolid(world,x,y,z,world.getBlockMetadata(x,y+2,z)))
+        if (!world.getBlock(x, y + 1, z).isBlockSolid(world, x, y, z, world.getBlockMetadata(x, y + 1, z)) && !world.getBlock(x, y + 2, z).isBlockSolid(world, x, y, z, world.getBlockMetadata(x, y + 2, z)))
         {
-            return Vec3.createVectorHelper(x,y,z);
+            return Vec3.createVectorHelper(x, y, z);
         }
 
         return null;
@@ -223,13 +224,10 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     public void onConfigChanged(ConfigurationHandler config)
     {
         this.blackListedBlocks.clear();
-        String[] blackListedBlocks = config.config.getStringList("teleport_blacklist",config.CATEGORY_ABILITIES,new String[]{"hellsand","barrier","bedrock"},"The Unlocalized names of the blacklist blocks that the player can't teleport to");
-        for (String block : blackListedBlocks)
-        {
-            this.blackListedBlocks.add(block);
-        }
-        MAX_TELEPORT_HEIGHT_CHECK = config.getInt("teleport_max_height_check",config.CATEGORY_ABILITIES,8,"The max height amount that the teleport ability checks if there is no 2 blocks air space");
-        ENERGY_PER_TELEPORT = config.getInt("teleport_energy_cost",config.CATEGORY_ABILITIES,4096,"The Energy cost of each Teleportation");
-        MAX_TELEPORT_DISTANCE = config.getInt("teleport_max_distance",config.CATEGORY_ABILITIES,32,"The maximum distance in blocks, the player can teleport to");
+        String[] blackListedBlocks = config.config.getStringList("teleport_blacklist", ConfigurationHandler.CATEGORY_ABILITIES,new String[]{"hellsand","barrier","bedrock"}, "The Unlocalized names of the blacklist blocks that the player can't teleport to");
+        Collections.addAll(this.blackListedBlocks, blackListedBlocks);
+        MAX_TELEPORT_HEIGHT_CHECK = config.getInt("teleport_max_height_check", ConfigurationHandler.CATEGORY_ABILITIES, 8, "The max height amount that the teleport ability checks if there is no 2 blocks air space");
+        ENERGY_PER_TELEPORT = config.getInt("teleport_energy_cost", ConfigurationHandler.CATEGORY_ABILITIES, 4096, "The Energy cost of each Teleportation");
+        MAX_TELEPORT_DISTANCE = config.getInt("teleport_max_distance", ConfigurationHandler.CATEGORY_ABILITIES, 32, "The maximum distance in blocks, the player can teleport to");
     }
 }

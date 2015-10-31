@@ -70,64 +70,63 @@ public class ItemRendererOmniTool implements IItemRenderer
     {
         if(type == ItemRenderType.EQUIPPED_FIRST_PERSON)
         {
-            RenderFirstPerson(item);
+            renderFirstPerson(item);
         }
         else if(type == ItemRenderType.INVENTORY)
         {
-            RenderItem(item);
+            renderItem(item);
         }
         else if(type == ItemRenderType.ENTITY)
         {
-            RenderDrop(item);
+            renderDrop(item);
         }
         else
         {
-            RenderThirdPerson(type,item);
+            renderThirdPerson(type,item);
         }
     }
 
-    void RenderItem(ItemStack item)
+    void renderItem(ItemStack item)
     {
         glPushMatrix();
         glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
         glTranslated(0, 0, -0.25);
         glRotated(180, 0, 1, 0);
-        RenderGun(ItemRenderType.INVENTORY,item);
+        renderGun(ItemRenderType.INVENTORY,item);
         glPopMatrix();
     }
 
-    void RenderThirdPerson(ItemRenderType renderType,ItemStack item)
+    void renderThirdPerson(ItemRenderType renderType, ItemStack item)
     {
         glPushMatrix();
         glScaled(THIRD_PERSON_SCALE, THIRD_PERSON_SCALE, THIRD_PERSON_SCALE);
         glTranslated(0.3, 0.3, 0.3);
         glRotated(60, -1, 0, 1);
         glRotated(40, 0, 1, 0);
-        RenderGun(renderType,item);
+        renderGun(renderType,item);
         glPopMatrix();
     }
 
-    void RenderDrop(ItemStack item)
+    void renderDrop(ItemStack item)
     {
         glPushMatrix();
         glScaled(SCALE_DROP, SCALE_DROP, SCALE_DROP);
         glTranslated(0, 0, 0);
-        //glRotated(-130,0,1,0);
         glRotated(15, 1, 0, 0);
-        RenderGun(ItemRenderType.ENTITY,item);
+        renderGun(ItemRenderType.ENTITY,item);
         glPopMatrix();
     }
 
-    void RenderFirstPerson(ItemStack item)
+    void renderFirstPerson(ItemStack item)
     {
         glPushMatrix();
-        RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME,0,0.1f);
+        RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME, 0, 0.1f);
         float recoilValue = MOEasing.Quad.easeInOut(RECOIL_TIME, 0, 1, 1f);
 
         glTranslatef(0, 0, recoilValue * 0.01f * RECOIL_AMOUNT);
         glRotated(recoilValue * 2 * RECOIL_AMOUNT, 1, 0, 0);
 
-        glColor3f(1,1,1);
+        glColor3f(1, 1, 1);
         renderHand();
 
         glPushMatrix();
@@ -144,18 +143,18 @@ public class ItemRendererOmniTool implements IItemRenderer
             glTranslated(0.15, 0.03, -0.0);
             glRotated(40, 0, -1, 0);
             glRotated(5, 1, 0, 0);
-            glScaled(1,1,0.7);
+            glScaled(1, 1, 0.7);
         }
-        RenderGun(ItemRenderType.EQUIPPED_FIRST_PERSON,item);
+        renderGun(ItemRenderType.EQUIPPED_FIRST_PERSON,item);
         glPopMatrix();
         glPopMatrix();
     }
 
-    void RenderGun(ItemRenderType renderType,ItemStack item)
+    void renderGun(ItemRenderType renderType, ItemStack item)
     {
         glEnable(GL_NORMALIZE);
         Minecraft.getMinecraft().renderEngine.bindTexture(omniToolTexture);
-        omniToolModel.renderAllExcept("hull","sights_rail","side_rail","indicator","dig_effect");
+        omniToolModel.renderAllExcept("hull", "sights_rail" ,"side_rail", "indicator", "dig_effect");
 
         GuiColor color = WeaponHelper.getColor(item);
         RenderUtils.applyColor(color);

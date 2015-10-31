@@ -38,7 +38,7 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class TileEntityRendererPacketQueue extends TileEntitySpecialRenderer
 {
-    Block fakeBlock = new BlockNetworkSwitch(Material.iron,"fake_block");
+    Block fakeBlock = new BlockNetworkSwitch(Material.iron, "fake_block");
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks)
@@ -56,7 +56,7 @@ public class TileEntityRendererPacketQueue extends TileEntitySpecialRenderer
         glPopMatrix();
     }
 
-    private void renderBlock(Block block,RenderBlocks renderer)
+    private void renderBlock(Block block, RenderBlocks renderer)
     {
         IIcon icon = MatterOverdriveIcons.packet_queue_active;
         float distance = 0.1f;

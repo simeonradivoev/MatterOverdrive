@@ -65,7 +65,7 @@ public class MOElementListBox extends MOElementBase {
 
 		_elements.remove(index);
 	}
-	
+
 	public void clear()
 	{
 		_elements.clear();
@@ -195,7 +195,7 @@ public class MOElementListBox extends MOElementBase {
 	}
 
 	@Override
-	public boolean onMousePressed(int mouseX, int mouseY, int mouseButton) 
+	public boolean onMousePressed(int mouseX, int mouseY, int mouseButton)
 	{
 		int heightChecked = 0;
 		for (int i = _firstIndexDisplayed; i < getElementCount(); i++)
@@ -307,7 +307,7 @@ public class MOElementListBox extends MOElementBase {
 		return -1;
 	}
 
-	public IMOListBoxElement getSelectedElement() 
+	public IMOListBoxElement getSelectedElement()
 	{
 		if(_selectedIndex < getElementCount())
 			return getElement(MathHelper.clamp_int(_selectedIndex, 0, _elements.size()));

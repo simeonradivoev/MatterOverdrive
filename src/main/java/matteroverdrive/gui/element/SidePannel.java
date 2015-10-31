@@ -67,7 +67,7 @@ public class SidePannel extends ElementBaseGroup
         {
             if (isOpen) {
                 GL11.glColor3f(1, 1, 1);
-                BACKGROUND_TEXTURE.Render(posX, posY, 37, sizeY);
+                BACKGROUND_TEXTURE.render(posX, posY, 37, sizeY);
                 button.setPosition(32, 0);
             } else {
                 button.setPosition(0, 0);

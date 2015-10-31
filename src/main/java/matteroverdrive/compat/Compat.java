@@ -12,7 +12,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Compat {
+public @interface Compat
+{
 
 	/**
 	 * The mod id that this compat module is for.

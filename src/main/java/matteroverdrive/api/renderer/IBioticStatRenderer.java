@@ -39,5 +39,5 @@ public interface IBioticStatRenderer<T extends IBionicStat>
      * @param level the unlocked level of the stat/ability.
      * @param event the world render event. This event holds useful information such as the partial render ticks.
      */
-    void onWorldRender(T stat,int level,RenderWorldLastEvent event);
+    void onWorldRender(T stat, int level, RenderWorldLastEvent event);
 }

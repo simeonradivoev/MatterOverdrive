@@ -45,9 +45,9 @@ public class ElementTransportList extends MOElementListBox
         if (BG)
         {
             if (selected && transporter.isLocationValid(position))
-                MOElementButton.NORMAL_TEXTURE.Render(x,y,getElementWidth(i),getElementHeight(i));
+                MOElementButton.NORMAL_TEXTURE.render(x,y,getElementWidth(i),getElementHeight(i));
             else {
-                MOElementButton.HOVER_TEXTURE_DARK.Render(x, y, getElementWidth(i), getElementHeight(i));
+                MOElementButton.HOVER_TEXTURE_DARK.render(x, y, getElementWidth(i), getElementHeight(i));
             }
         }
         else

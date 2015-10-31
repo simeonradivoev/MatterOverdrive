@@ -64,10 +64,10 @@ public class TileEntityRendererHoloSign extends TileEntitySpecialRenderer
 
                 if (((TileEntityHoloSign) tileEntity).getConfigs().getBoolean("AutoLineSize", false))
                 {
-                    RenderUtils.drawScreenInfoWithLocalAutoSize(infos, Reference.COLOR_HOLO, side,leftMargin,rightMargin,maxSize);
+                    RenderUtils.drawScreenInfoWithLocalAutoSize(infos, Reference.COLOR_HOLO, side, leftMargin, rightMargin, maxSize);
                 }else
                 {
-                    RenderUtils.drawScreenInfoWithGlobalAutoSize(infos, Reference.COLOR_HOLO, side,leftMargin,rightMargin,maxSize);
+                    RenderUtils.drawScreenInfoWithGlobalAutoSize(infos, Reference.COLOR_HOLO, side, leftMargin, rightMargin, maxSize);
                 }
             }
         }

@@ -19,17 +19,21 @@ import java.util.List;
  */
 @Compat("NotEnoughItems")
 @Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = "NotEnoughItems")
-public class CompatNEI implements INEIGuiHandler {
+public class CompatNEI implements INEIGuiHandler
+{
 
 	@Compat.PreInit
-	public static void preInit(FMLPreInitializationEvent event) {
+	public static void preInit(FMLPreInitializationEvent event)
+	{
 		API.registerNEIGuiHandler(new CompatNEI());
 		API.hideItem(new ItemStack(MatterOverdriveBlocks.boundingBox));
 	}
 
 	@Override
-	public VisiblityData modifyVisiblity(GuiContainer guiContainer, VisiblityData visiblityData) {
-		if (guiContainer instanceof GuiStarMap) {
+	public VisiblityData modifyVisiblity(GuiContainer guiContainer, VisiblityData visiblityData)
+	{
+		if (guiContainer instanceof GuiStarMap)
+		{
 			visiblityData.showNEI = false;
 		}
 		return visiblityData;

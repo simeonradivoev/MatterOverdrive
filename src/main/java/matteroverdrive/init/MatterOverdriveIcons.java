@@ -35,9 +35,9 @@ public class MatterOverdriveIcons
     public static IIcon Recycler;
     public static IIcon Vent;
     public static IIcon Vent2;
-    public static IIcon Matter_tank_full;
-    public static IIcon Matter_tank_empty;
-    public static IIcon Transperant;
+    public static IIcon matter_tank_full;
+    public static IIcon matter_tank_empty;
+    public static IIcon Transparent;
     public static IIcon Network_port_square;
     public static IconConnectedTexture Monitor_back;
     public static IIcon YellowStripes;
@@ -69,9 +69,9 @@ public class MatterOverdriveIcons
     {
         Vent = register(r, "vent");
         Base = register(r, "base");
-        Matter_tank_empty = register(r, "tank_empty");
-        Matter_tank_full = register(r, "tank_full");
-        Transperant = register(r, "transperant");
+        matter_tank_empty = register(r, "tank_empty");
+        matter_tank_full = register(r, "tank_full");
+        Transparent = register(r, "transperant");
         Network_port_square = register(r,"network_port");
         Vent2 = register(r,"vent2");
         Monitor_back = new IconConnectedTexture(register(r,"holo_monitor"));

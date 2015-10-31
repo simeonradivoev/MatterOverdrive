@@ -39,7 +39,7 @@ public interface IScannable
      * @param infos the info lines list.
      *              Here is where you add the info lines you want displayed.
      */
-    void addInfo(World world,double x,double y,double z,List<String> infos);
+    void addInfo(World world, double x, double y, double z, List<String> infos);
 
     /**
      * Called when the target is scanned.
@@ -51,5 +51,5 @@ public interface IScannable
      * @param player the player who scanned the target.
      * @param scanner the scanner item stack.
      */
-    void onScan(World world,double x,double y,double z,EntityPlayer player,ItemStack scanner);
+    void onScan(World world, double x, double y, double z, EntityPlayer player, ItemStack scanner);
 }

@@ -41,7 +41,7 @@ import java.util.Map;
 public class HoloIcons {
     Map<String, HoloIcon> iconMap;
     public TextureMap textureMap;
-    public int SheetSize = 256;
+    public int sheetSize = 256;
     public ResourceLocation sheet = new ResourceLocation(Reference.MOD_ID, "textures/gui/holo_icons.png");
 
     public HoloIcons() {
@@ -54,7 +54,6 @@ public class HoloIcons {
         reg("holo_home", 14);
         reg("holo_dotted_circle", 20);
         reg("holo_factory", 14);
-        //reg("holo_galaxy",14,14);
         reg("person", 18);
         reg("android_slot_arms", 16);
         reg("android_slot_chest", 16);
@@ -139,28 +138,28 @@ public class HoloIcons {
 
     public void renderIcon(HoloIcon icon, int x, int y)
     {
-        renderIcon(icon,x,y,icon.getOriginalWidth(),icon.getOriginalHeight());
+        renderIcon(icon, x, y, icon.getOriginalWidth(), icon.getOriginalHeight());
     }
 
     public void renderIcon(HoloIcon icon, int x, int y, int width, int height)
     {
         bindSheet();
-        RenderHelper.renderIcon(x,y,0,icon.getIcon(),width,height);
+        RenderHelper.renderIcon(x, y, 0, icon.getIcon(), width, height);
     }
 
-    public static void tessalateParticleIcon(IIcon icon,double x,double y,double z,float size,GuiColor color)
+    public static void tessalateParticleIcon(IIcon icon, double x, double y, double z, float size, GuiColor color)
     {
         RenderUtils.tessalateParticle(Minecraft.getMinecraft().renderViewEntity, icon, size, Vec3.createVectorHelper(x, y, z), color);
     }
 
-    public static void tessalateStaticIcon(IIcon icon,double x,double y,double z,float size,GuiColor color)
+    public static void tessalateStaticIcon(IIcon icon, double x, double y, double z, float size, GuiColor color)
     {
-        tessalateStaticIcon(icon,x,y,z,size,color,1);
+        tessalateStaticIcon(icon, x, y, z, size, color, 1);
     }
 
-    public static void tessalateStaticIcon(IIcon icon,double x,double y,double z,float size,GuiColor color,float multiply)
+    public static void tessalateStaticIcon(IIcon icon, double x, double y, double z, float size, GuiColor color, float multiply)
     {
-        float halfSize = size/2;
+        float halfSize = size / 2;
         float uMin = icon.getMinU();
         float uMax = icon.getMaxU();
         float vMin = icon.getMinV();
@@ -173,10 +172,10 @@ public class HoloIcons {
         Tessellator.instance.addVertexWithUV(x - halfSize,y + halfSize,z,uMax,vMin);
     }
 
-    public ElementButton getIconButton(GuiBase gui,String name,IIcon icon,int x,int y,int sizeX,int sizeY)
+    public ElementButton getIconButton(GuiBase gui, String name, IIcon icon, int x, int y, int sizeX, int sizeY)
     {
         ElementButton button = new ElementButton(gui,x,y,name, (int)(icon.getMinU() * 256),(int)(icon.getMinV() * 256),(int)(icon.getMinU() * 256),(int)(icon.getMinV() * 256),sizeX,sizeY,"");
-        button.setTexture(sheet.toString(),256,256);
+        button.setTexture(sheet.toString(), 256, 256);
         return button;
     }
 }

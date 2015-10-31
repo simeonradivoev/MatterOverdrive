@@ -35,7 +35,7 @@ public class Reference
 	public static final String VERSIONS_CHECK_URL = "http://simeon.co.vu/Mods/MatterOverdrive/wp-json/posts?type[]=mo_download&filter[posts_per_page]=1";
 	public static final String DOWNLOAD_URL = "http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/";
 
-	
+
 	//region GUI
 	public static final String PATH_GFX = "mo:textures/";
 	public static final String PATH_ARMOR = PATH_GFX + "armor/";

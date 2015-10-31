@@ -274,7 +274,7 @@ public class MatterScanner extends MOBaseItem
         return null;
     }
 
-	
+
 	@Override
 	public void InitTagCompount(ItemStack stack)
 	{

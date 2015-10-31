@@ -38,7 +38,7 @@ public class EntityRendererPhaserFire extends Render
     /**
      * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
      * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-     * (Render<T extends Entity) and this method has signature public void func_76986_a(T entity, double d, double d1,
+     * (Render<T extends Entity>) and this method has signature public void func_76986_a(T entity, double d, double d1,
      * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
      */
     public void doRender(PlasmaBolt plasmaBolt, double x, double y, double z, float p_76986_8_, float p_76986_9_)
@@ -57,7 +57,7 @@ public class EntityRendererPhaserFire extends Render
         byte b0 = 0;
         float f2 = 0.0F;
         float f3 = 0.5F;
-        float f4 = (float)(0 + b0 * 10) / 32.0F;
+        float f4 = (float)(b0 * 10) / 32.0F;
         float f5 = (float)(5 + b0 * 10) / 32.0F;
         float f6 = 0.0F;
         float f7 = 0.15625F;

@@ -99,7 +99,7 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
     }
 
     @Override
-    public Multimap getModifiers(AndroidPlayer player, ItemStack itemStack) {
+    public Multimap<String, AttributeModifier> getModifiers(AndroidPlayer player, ItemStack itemStack) {
         Multimap multimap = HashMultimap.create();
         multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(),new AttributeModifier(UUID.fromString(healtModifiersIDs[itemStack.getItemDamage()]),MOStringHelper.translateToLocal("modifier.bionic.max_health"),1f,0));
         return multimap;

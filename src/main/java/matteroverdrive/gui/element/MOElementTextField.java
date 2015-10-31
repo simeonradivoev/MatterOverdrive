@@ -47,12 +47,12 @@ public class MOElementTextField extends ElementTextFieldFiltered
 	{
 		this(gui, gui, posX, posY, width, height);
 	}
-	
+
 	@Override
-	public void drawBackground(int mouseX, int mouseY, float gameTicks) 
+	public void drawBackground(int mouseX, int mouseY, float gameTicks)
 	{
         if (background != null) {
-            background.Render(posX - textOffsetX, posY - textOffsetY, sizeX + textOffsetX, sizeY + textOffsetY);
+            background.render(posX - textOffsetX, posY - textOffsetY, sizeX + textOffsetX, sizeY + textOffsetY);
         }
 	}
 

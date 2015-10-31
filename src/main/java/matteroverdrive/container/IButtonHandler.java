@@ -25,5 +25,5 @@ import cofh.lib.gui.element.ElementBase;
  */
 public interface IButtonHandler
 {
-    void handleElementButtonClick(ElementBase element,String elementName, int mouseButton);
+    void handleElementButtonClick(ElementBase element, String elementName, int mouseButton);
 }

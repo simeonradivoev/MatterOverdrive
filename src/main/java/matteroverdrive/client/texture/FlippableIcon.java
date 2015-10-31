@@ -29,8 +29,8 @@ public class FlippableIcon implements IIcon
 
 	public FlippableIcon(IIcon o) {
 
-		if ( o == null )
-			throw new RuntimeException( "Cannot create a wrapper holoIcon with a null holoIcon." );
+		if (o == null)
+			throw new RuntimeException("Cannot create a wrapper holoIcon with a null holoIcon.");
 
 		this.original = o;
 		this.flip_u = false;
@@ -52,7 +52,7 @@ public class FlippableIcon implements IIcon
 	@Override
 	public float getMinU()
 	{
-		if ( this.flip_u )
+		if (flip_u)
 			return this.original.getMaxU();
 		return this.original.getMinU();
 	}
@@ -60,7 +60,7 @@ public class FlippableIcon implements IIcon
 	@Override
 	public float getMaxU()
 	{
-		if ( this.flip_u )
+		if (flip_u)
 			return this.original.getMinU();
 		return this.original.getMaxU();
 	}
@@ -68,7 +68,7 @@ public class FlippableIcon implements IIcon
 	@Override
 	public float getInterpolatedU(double px)
 	{
-		if ( this.flip_u )
+		if (flip_u)
 			return this.original.getInterpolatedU( 16 - px );
 		return this.original.getInterpolatedU( px );
 	}
@@ -76,7 +76,7 @@ public class FlippableIcon implements IIcon
 	@Override
 	public float getMinV()
 	{
-		if ( this.flip_v )
+		if (flip_v)
 			return this.original.getMaxV();
 		return this.original.getMinV();
 	}
@@ -84,7 +84,7 @@ public class FlippableIcon implements IIcon
 	@Override
 	public float getMaxV()
 	{
-		if ( this.flip_v )
+		if (flip_v)
 			return this.original.getMinV();
 		return this.original.getMaxV();
 	}
@@ -92,7 +92,7 @@ public class FlippableIcon implements IIcon
 	@Override
 	public float getInterpolatedV(double px)
 	{
-		if ( this.flip_v )
+		if (flip_v)
 			return this.original.getInterpolatedV( 16 - px );
 		return this.original.getInterpolatedV( px );
 	}
@@ -110,14 +110,14 @@ public class FlippableIcon implements IIcon
 
 	public void setFlip(boolean u, boolean v)
 	{
-		this.flip_u = u;
-		this.flip_v = v;
+		flip_u = u;
+		flip_v = v;
 	}
 
 	public int setFlip(int orientation)
 	{
-		this.flip_u = (orientation & 8) == 8;
-		this.flip_v = (orientation & 16) == 16;
+		flip_u = (orientation & 8) == 8;
+		flip_v = (orientation & 16) == 16;
 		return orientation & 7;
 	}
 

@@ -45,13 +45,13 @@ import java.util.List;
 public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IMatterHandler, IWailaBodyProvider, IFluidHandler
 {
 	protected MachineMatterStorage matterStorage;
-	
+
 	public MOTileEntityMachineMatter(int upgradesCount)
 	{
         super(upgradesCount);
 		matterStorage = new MachineMatterStorage(this,32768);
 	}
-	
+
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
 	{
@@ -61,7 +61,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 		}
 
 	}
-	
+
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
 	{
@@ -71,7 +71,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 		}
 
 	}
-	
+
 	@Override
 	public int getMatterStored()
 	{
@@ -159,6 +159,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	}
 	
 	public MachineMatterStorage getMatterStorage()
+
 	{
 		return this.matterStorage;
 	}

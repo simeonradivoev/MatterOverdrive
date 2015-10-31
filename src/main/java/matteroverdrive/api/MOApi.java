@@ -40,11 +40,15 @@ public class MOApi
         }
         catch (ClassNotFoundException e)
         {
-            throw new CoreInaccessibleException("MatterOverdrive API tried  to access the %s class, without it being declared",CORE_API_CLASS);
-        } catch (IllegalAccessException e) {
-            throw new CoreInaccessibleException("MatterOverdrive API tried to access the %s field in %s without it being declared.",CORE_API_FIELD,CORE_API_CLASS);
-        } catch (NoSuchFieldException e) {
-            throw new CoreInaccessibleException("MatterOverdrive API tried to access the %s field in %s without enough access permissions.",CORE_API_FIELD,CORE_API_CLASS);
+            throw new CoreInaccessibleException("MatterOverdrive API tried  to access the %s class, without it being declared", CORE_API_CLASS);
+        }
+		catch (IllegalAccessException e)
+        {
+            throw new CoreInaccessibleException("MatterOverdrive API tried to access the %s field in %s without it being declared.", CORE_API_FIELD, CORE_API_CLASS);
+        }
+		catch (NoSuchFieldException e)
+        {
+            throw new CoreInaccessibleException("MatterOverdrive API tried to access the %s field in %s without enough access permissions.", CORE_API_FIELD, CORE_API_CLASS);
         }
     }
 

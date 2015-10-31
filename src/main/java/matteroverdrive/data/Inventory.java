@@ -36,24 +36,24 @@ public class Inventory implements IInventory
 {
     List<Slot> slots;
     String name;
-    IUseableCondition useableCondition;
+    IUsableCondition usableCondition;
 
     //region Constructors
     public Inventory(String name)
     {
-        this(name,new ArrayList<Slot>());
+        this(name, new ArrayList<>());
     }
 
     public Inventory(String name,Collection<Slot> slots)
     {
-        this(name,slots,null);
+        this(name, slots, null);
     }
 
-    public Inventory(String name,Collection<Slot> slots,IUseableCondition useableCondition)
+    public Inventory(String name,Collection<Slot> slots, IUsableCondition usableCondition)
     {
-        this.slots = new ArrayList<Slot>(slots);
+        this.slots = new ArrayList<>(slots);
         this.name = name;
-        this.useableCondition = useableCondition;
+        this.usableCondition = usableCondition;
     }
 
 
@@ -63,15 +63,15 @@ public class Inventory implements IInventory
     {
         if(slots.add(slot))
         {
-            slot.setId(slots.size()-1);
-            return slots.size()-1;
+            slot.setId(slots.size() - 1);
+            return slots.size() - 1;
         }
         return 0;
     }
 
-    public void setUseableCondition(IUseableCondition condition)
+    public void setUsableCondition(IUsableCondition condition)
     {
-        this.useableCondition = condition;
+        this.usableCondition = condition;
     }
 
     public void readFromNBT(NBTTagCompound compound)
@@ -137,7 +137,6 @@ public class Inventory implements IInventory
                 itemstack = this.slots.get(slot).getItem();
                 this.slots.get(slot).setItem(null);
 
-                //entity.updateContainingBlockInfo();
                 return itemstack;
             }
             else
@@ -149,7 +148,6 @@ public class Inventory implements IInventory
                     this.slots.get(slot).setItem(null);
                 }
 
-                //entity.updateContainingBlockInfo();
                 return itemstack;
             }
         }
@@ -191,7 +189,7 @@ public class Inventory implements IInventory
     @Override
     public boolean hasCustomInventoryName()
     {
-        return name != null && name != "";
+        return name != null && !name.isEmpty();
     }
 
     @Override
@@ -241,7 +239,7 @@ public class Inventory implements IInventory
 
     public int getLastSlotId()
     {
-        return slots.size()-1;
+        return slots.size() - 1;
     }
 
     public List<Slot> getSlots() {

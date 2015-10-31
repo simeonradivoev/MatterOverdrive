@@ -23,16 +23,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Used by matter receivers to receive matter.
  */
-public interface IMatterReceiver 
+public interface IMatterReceiver
 {
 	/**
-	 * The amount of matter stored.
 	 * @return the matter stored.
 	 */
 	int getMatterStored();
 
 	/**
-	 * The matter capacity
 	 * @return matter capacity.
 	 */
 	int getMatterCapacity();

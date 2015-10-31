@@ -34,7 +34,7 @@ public class TileEntityRendererAndroidStation extends TileEntityRendererStation<
             glBlendFunc(GL_ONE, GL_ONE);
             glPushMatrix();
             glTranslated(x + 0.5, y + 0.8, z + 0.5);
-            rotate(station,noise);
+            rotate(station, noise);
 
             RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.3f);
 
@@ -44,7 +44,7 @@ public class TileEntityRendererAndroidStation extends TileEntityRendererStation<
             glPopMatrix();
         }else
         {
-            super.renderHologram(station,x,y,z,partialTicks, noise);
+            super.renderHologram(station, x, y, z, partialTicks, noise);
         }
     }
 }

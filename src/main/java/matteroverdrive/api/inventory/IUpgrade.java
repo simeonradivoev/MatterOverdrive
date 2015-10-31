@@ -33,5 +33,5 @@ public interface IUpgrade
      * @param itemStack The Upgrade Item Stack.
      * @return A map fo Upgrade Types.
      */
-    Map<UpgradeTypes,Double> getUpgrades(ItemStack itemStack);
+    Map<UpgradeTypes, Double> getUpgrades(ItemStack itemStack);
 }

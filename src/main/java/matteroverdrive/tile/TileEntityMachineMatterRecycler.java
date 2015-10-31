@@ -89,7 +89,7 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     @Override
     protected void onActiveChange()
     {
-        ForceSync();
+        forceSync();
     }
 
     @Override
@@ -198,7 +198,7 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
             }
 
             decrStackSize(INPUT_SLOT_ID,1);
-            ForceSync();
+            forceSync();
         }
     }
 

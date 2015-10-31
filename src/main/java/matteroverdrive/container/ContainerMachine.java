@@ -47,7 +47,7 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
         super();
     }
 
-    public ContainerMachine(InventoryPlayer inventory,T machine)
+    public ContainerMachine(InventoryPlayer inventory, T machine)
     {
         super(inventory);
         this.machine = machine;
@@ -56,7 +56,6 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 
     protected void init(InventoryPlayer inventory)
     {
-        //AddUpgradeSlots(machine.getInventoryContainer(), 77, 52);
     }
 
     public void detectAndSendChanges()
@@ -82,20 +81,20 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer p_75145_1_) {
+    public boolean canInteractWith(EntityPlayer player) {
         return true;
     }
 
-    public void AddUpgradeSlots(Inventory inventory)
+    public void addUpgradeSlots(Inventory inventory)
     {
-        AddUpgradeSlots(inventory,0,0);
+        addUpgradeSlots(inventory, 0, 0);
     }
 
-    public void AddUpgradeSlots(Inventory inventory,int x, int y)
+    public void addUpgradeSlots(Inventory inventory, int x, int y)
     {
         int upgradeSlotIndex = 0;
 
-        for (int i = 0;i < inventory.getSizeInventory();i++)
+        for (int i = 0; i < inventory.getSizeInventory(); i++)
         {
             if (inventory.getSlot(i) instanceof UpgradeSlot)
             {
@@ -109,7 +108,7 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
     {
         for (matteroverdrive.data.inventory.Slot slot : inventory.getSlots())
         {
-            addSlotToContainer(new SlotInventory(inventory,inventory.getSlot(slot.getId()),0,0));
+            addSlotToContainer(new SlotInventory(inventory, inventory.getSlot(slot.getId()), 0, 0));
         }
     }
 
@@ -130,7 +129,7 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
             }
             else if(slotID >= machine.getSizeInventory())
             {
-                tryAndPutInMachineSlots(itemstack1,machine);
+                tryAndPutInMachineSlots(itemstack1, machine);
             }
 
             if (itemstack1.stackSize == 0)
@@ -155,12 +154,12 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 
     protected boolean putInPlayerInventory(ItemStack itemStack)
     {
-        return InventoryHelper.mergeItemStack((List<Slot>)inventorySlots,itemStack,machine.getSizeInventory(),inventorySlots.size() - machine.getSizeInventory(),true,true);
+        return InventoryHelper.mergeItemStack((List<Slot>)inventorySlots, itemStack, machine.getSizeInventory(), inventorySlots.size() - machine.getSizeInventory(), true, true);
     }
 
     protected boolean tryAndPutInMachineSlots(ItemStack itemStack,IInventory inventory)
     {
-        return InventoryHelper.mergeItemStack((List<Slot>)inventorySlots,itemStack,0,inventory.getSizeInventory(),false,true);
+        return InventoryHelper.mergeItemStack((List<Slot>)inventorySlots, itemStack, 0, inventory.getSizeInventory(), false, true);
     }
 
     public T getMachine()

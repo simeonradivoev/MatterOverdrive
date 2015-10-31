@@ -62,7 +62,7 @@ public class PacketStarMapClientCommands extends TileEntityUpdatePacket
                 ((TileEntityMachineStarMap) tileEntity).setZoomLevel(message.zoomLevel);
                 ((TileEntityMachineStarMap) tileEntity).setGalaxticPosition(message.position);
                 ((TileEntityMachineStarMap)tileEntity).setDestination(message.destination);
-                ((TileEntityMachineStarMap) tileEntity).ForceSync();
+                ((TileEntityMachineStarMap) tileEntity).forceSync();
             }
             return null;
         }

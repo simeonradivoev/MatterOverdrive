@@ -42,10 +42,10 @@ public class BioticStatRendererTeleporter implements IBioticStatRenderer<BioticS
     public void onWorldRender(BioticStatTeleport stat,int level,RenderWorldLastEvent event)
     {
         AndroidPlayer androidPlayer = AndroidPlayer.get(Minecraft.getMinecraft().thePlayer);
-        Vec3 playerPos = androidPlayer.getPlayer().getPosition(event.partialTicks);
 
-        if (androidPlayer != null && androidPlayer.isAndroid() && androidPlayer.isUnlocked(MatterOverdriveBioticStats.teleport,MatterOverdriveBioticStats.teleport.maxLevel()) && MatterOverdriveBioticStats.teleport.isEnabled(androidPlayer,0) && MatterOverdriveBioticStats.teleport.getHasPressedKey())
+        if (androidPlayer != null && androidPlayer.isAndroid() && androidPlayer.isUnlocked(MatterOverdriveBioticStats.teleport, MatterOverdriveBioticStats.teleport.maxLevel()) && MatterOverdriveBioticStats.teleport.isEnabled(androidPlayer, 0) && MatterOverdriveBioticStats.teleport.getHasPressedKey())
         {
+            Vec3 playerPos = androidPlayer.getPlayer().getPosition(event.partialTicks);
             if(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed())
             {
                 glPushMatrix();
@@ -61,12 +61,11 @@ public class BioticStatRendererTeleporter implements IBioticStatRenderer<BioticS
                 {
                     Minecraft.getMinecraft().renderEngine.bindTexture(TileEntityRendererGravitationalAnomaly.glow);
                     glTranslated(pos.xCoord, pos.yCoord, pos.zCoord);
-                    glRotated(androidPlayer.getPlayer().rotationYaw,0,-1,0);
-                    glRotated(androidPlayer.getPlayer().rotationPitch,1,0,0);
-                    glRotated(Minecraft.getMinecraft().theWorld.getWorldTime() * 10,0,0,1);
-                    glTranslated(-0.5,-0.5,0);
+                    glRotated(androidPlayer.getPlayer().rotationYaw, 0, -1, 0);
+                    glRotated(androidPlayer.getPlayer().rotationPitch, 1, 0, 0);
+                    glRotated(Minecraft.getMinecraft().theWorld.getWorldTime() * 10, 0, 0, 1);
+                    glTranslated(-0.5, -0.5, 0);
                     RenderUtils.drawPlane(1);
-                    //RenderManager.instance.func_147939_a(mob,0,0,0,0,0,true);
                 }
 
                 glDisable(GL_BLEND);

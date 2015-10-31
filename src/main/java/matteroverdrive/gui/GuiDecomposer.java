@@ -52,7 +52,7 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 		decompose_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
 		energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
 	}
-	
+
 	@Override
 	public void initGui()
 	{
@@ -69,7 +69,7 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
-			int p_146976_2_, int p_146976_3_) 
+			int p_146976_2_, int p_146976_3_)
 	{
 		super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
 		decompose_progress.setQuantity(MathHelper.round((((ContainerMachine)getContainer()).getProgress() * 24)));

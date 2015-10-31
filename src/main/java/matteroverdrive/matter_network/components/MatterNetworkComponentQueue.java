@@ -101,7 +101,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
         if (packet.getResponseType() == Reference.PACKET_RESPONCE_VALID && packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION)
         {
             rootClient.setConnection(direction.ordinal(), packet.getSender(getWorldObj()).getPosition());
-            rootClient.ForceSync();
+            rootClient.forceSync();
             return true;
         }
         return false;
@@ -112,7 +112,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
         if ((packet.getBroadcastType() == Reference.PACKET_BROADCAST_CONNECTION))
         {
             rootClient.setConnection(direction.ordinal(), packet.getSender(getWorldObj()).getPosition());
-            rootClient.ForceSync();
+            rootClient.forceSync();
             return true;
         }
         return false;

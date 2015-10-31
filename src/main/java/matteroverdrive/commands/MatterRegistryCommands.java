@@ -64,50 +64,60 @@ public class MatterRegistryCommands extends CommandBase
                 MatterOverdriveMatter.registerBasic(MatterOverdrive.configHandler);
                 MatterOverdrive.matterRegistrationHandler.runCalculationThread();
             }
-        }else if (parameters.length == 2)
+        }
+        else if (parameters.length == 2)
         {
             if (parameters[0].equalsIgnoreCase("blacklist"))
             {
                 ItemStack stack;
-                if (parameters.length >= 4) {
+                if (parameters.length >= 4)
+				{
                     stack = getPlayer(commandSender, parameters[3]).getCurrentEquippedItem();
-                }else
+                }
+				else
                 {
                     stack = getPlayer(commandSender,commandSender.getCommandSenderName()).getCurrentEquippedItem();
                 }
 
                 String key;
-                if (stack != null) {
-                    if (parameters[1].equalsIgnoreCase("itemstack")) {
+                if (stack != null)
+				{
+                    if (parameters[1].equalsIgnoreCase("itemstack"))
+					{
                         key = MatterOverdrive.matterRegistry.getKey(stack);
 
-                    } else if (parameters[1].equalsIgnoreCase("item")) {
+                    }
+					else if (parameters[1].equalsIgnoreCase("item")) {
                         key = MatterOverdrive.matterRegistry.getKey(stack.getItem());
-                    } else if (parameters[1].equalsIgnoreCase("ore"))
+                    }
+					else if (parameters[1].equalsIgnoreCase("ore"))
                     {
                         int[] orenames = OreDictionary.getOreIDs(stack);
                         if (orenames != null && orenames.length > 0)
                         {
                             key = OreDictionary.getOreName(orenames[0]);
-                        }else
+                        }
+						else
                         {
-                            throw new CommandException("Could not find an ore dictionary entry", new Object[]{parameters[1]});
+                            throw new CommandException("Could not find an ore dictionary entry", parameters[1]);
                         }
                     }
-                    else {
-                        throw new CommandException("Invalid type of item. Use either item,itemstack or ore.");
+                    else
+					{
+                        throw new CommandException("Invalid type of item. Use either item, itemstack or ore.");
                     }
 
                     MatterOverdrive.matterRegistry.addToBlacklist(key);
-                    String[] oldBlacklist = MatterOverdrive.configHandler.getStringList(ConfigurationHandler.CATEGORY_MATTER,ConfigurationHandler.KEY_MBLACKLIST);
-                    String[] newBlacklist = new String[oldBlacklist != null ? oldBlacklist.length+1 : 1];
+                    String[] oldBlacklist = MatterOverdrive.configHandler.getStringList(ConfigurationHandler.CATEGORY_MATTER, ConfigurationHandler.KEY_MBLACKLIST);
+                    String[] newBlacklist = new String[oldBlacklist != null ? oldBlacklist.length + 1 : 1];
                     newBlacklist[oldBlacklist.length] = key;
-                    MatterOverdrive.configHandler.config.get(ConfigurationHandler.CATEGORY_MATTER,ConfigurationHandler.KEY_MBLACKLIST,new String[]{},"").set(newBlacklist);
+                    MatterOverdrive.configHandler.config.get(ConfigurationHandler.CATEGORY_MATTER, ConfigurationHandler.KEY_MBLACKLIST, new String[]{}, "").set(newBlacklist);
                     MatterOverdrive.configHandler.save();
-                    commandSender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "["+key+"]" + EnumChatFormatting.RESET + " Added $s to matter blacklist and config.\nYou must recalculate the registry for changes to take effect.\nUse /matter_registry recalculate."));
-                }else
+                    commandSender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "[" + key + "]" + EnumChatFormatting.RESET + " Added $s to matter blacklist and config.\nYou must recalculate the registry for changes to take effect.\nUse /matter_registry recalculate."));
+                }
+				else
                 {
-                    throw new CommandException("Player not holding any item", new Object[]{parameters[1]});
+                    throw new CommandException("Player not holding any item", parameters[1]);
                 }
             }
         }
@@ -115,16 +125,19 @@ public class MatterRegistryCommands extends CommandBase
         {
             if (parameters[0].equalsIgnoreCase("register"))
             {
-                int matter = parseInt(commandSender,parameters[2]);
+                int matter = parseInt(commandSender, parameters[2]);
                 ItemStack stack;
-                if (parameters.length >= 4) {
+                if (parameters.length >= 4)
+				{
                     stack = getPlayer(commandSender, parameters[3]).getCurrentEquippedItem();
-                }else
+                }
+				else
                 {
                     stack = getPlayer(commandSender,commandSender.getCommandSenderName()).getCurrentEquippedItem();
                 }
 
-                if (stack != null) {
+                if (stack != null)
+				{
                     String key;
                     if (parameters[1].equalsIgnoreCase("itemstack"))
                     {
@@ -136,10 +149,10 @@ public class MatterRegistryCommands extends CommandBase
                     }
                     else if (parameters[1].equalsIgnoreCase("ore"))
                     {
-                        int[] orenames = OreDictionary.getOreIDs(stack);
-                        if (orenames != null && orenames.length > 0)
+                        int[] oreNames = OreDictionary.getOreIDs(stack);
+                        if (oreNames != null && oreNames.length > 0)
                         {
-                            key = OreDictionary.getOreName(orenames[0]);
+                            key = OreDictionary.getOreName(oreNames[0]);
                         }else
                         {
                             throw new CommandException("Could not find an ore dictionary entry!");
@@ -153,10 +166,11 @@ public class MatterRegistryCommands extends CommandBase
                     MatterOverdrive.matterRegistry.register(key, matter);
                     MatterOverdrive.configHandler.setInt(key, ConfigurationHandler.CATEGORY_NEW_ITEMS,matter);
                     MatterOverdrive.configHandler.save();
-                    commandSender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "["+key+"]"+ EnumChatFormatting.RESET +" Added $s to matter registry and config.\nYou can now recalculated the registry.\nUse /matter_registry recalculate."));
-                }else
+                    commandSender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "[" + key + "]"+ EnumChatFormatting.RESET +" Added $s to matter registry and config.\nYou can now recalculated the registry.\nUse /matter_registry recalculate."));
+                }
+				else
                 {
-                    throw new CommandException("player not holding any item", new Object[]{parameters[1]});
+                    throw new CommandException("player not holding any item", parameters[1]);
                 }
             }
         }
@@ -172,7 +186,8 @@ public class MatterRegistryCommands extends CommandBase
             commands.add("recalculate");
             commands.add("register");
             commands.add("blacklist");
-        }else if (parameters.length == 2 && (parameters[0].equalsIgnoreCase("register") || parameters[0].equalsIgnoreCase("blacklist")))
+        }
+		else if (parameters.length == 2 && (parameters[0].equalsIgnoreCase("register") || parameters[0].equalsIgnoreCase("blacklist")))
         {
             commands.add("itemstack");
             commands.add("item");

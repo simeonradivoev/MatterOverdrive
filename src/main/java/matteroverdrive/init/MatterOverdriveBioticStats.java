@@ -42,7 +42,7 @@ public class MatterOverdriveBioticStats
     public static BioticStatShield shield;
     public static BioticStatAttack attack;
     public static BioticStatCloak cloak;
-    public static BioticStatNightvision nightvision;
+    public static BioticStatNightVision nightvision;
     public static BioticStatMinimap minimap;
 
     public static void init(FMLPreInitializationEvent event)
@@ -59,7 +59,7 @@ public class MatterOverdriveBioticStats
         shield = new BioticStatShield("shield",36);
         attack = new BioticStatAttack("attack",30);
         cloak = new BioticStatCloak("cloak",36);
-        nightvision = new BioticStatNightvision("nightvision",28);
+        nightvision = new BioticStatNightVision("nightvision",28);
         minimap = new BioticStatMinimap("minimap",18);
     }
 

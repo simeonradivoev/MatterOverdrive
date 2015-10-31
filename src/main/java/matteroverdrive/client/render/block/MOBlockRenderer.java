@@ -42,7 +42,7 @@ public class MOBlockRenderer implements ISimpleBlockRenderingHandler
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
     {
         metadata = 3;
-        float  p_147800_3_= 1.0f;
+        float f1= 1.0f;
 
         Tessellator tessellator = Tessellator.instance;
         block.setBlockBoundsForItemRender();
@@ -60,7 +60,7 @@ public class MOBlockRenderer implements ISimpleBlockRenderingHandler
             float f2 = (float)(k >> 16 & 255) / 255.0F;
             float f3 = (float)(k >> 8 & 255) / 255.0F;
             float f4 = (float)(k & 255) / 255.0F;
-            GL11.glColor4f(f2 * p_147800_3_, f3 * p_147800_3_, f4 * p_147800_3_, 1.0F);
+            GL11.glColor4f(f2 * f1, f3 * f1, f4 * f1, 1.0F);
         }
 
         tessellator.startDrawingQuads();
@@ -70,7 +70,7 @@ public class MOBlockRenderer implements ISimpleBlockRenderingHandler
 
         if (renderer.useInventoryTint)
         {
-            GL11.glColor4f(p_147800_3_, p_147800_3_, p_147800_3_, 1.0F);
+            GL11.glColor4f(f1, f1, f1, 1.0F);
         }
 
         tessellator.startDrawingQuads();
@@ -95,7 +95,7 @@ public class MOBlockRenderer implements ISimpleBlockRenderingHandler
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
     {
-        renderer.renderStandardBlock(block,x,y,z);
+        renderer.renderStandardBlock(block, x, y, z);
         return true;
     }
 

@@ -64,7 +64,7 @@ public abstract class BlockCT extends MOBlock
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int sideId)
     {
         int type = 0;
-        if (isSideCT(world,x,y,z,sideId)) {
+        if (isSideCT(world, x, y, z, sideId)) {
             ForgeDirection side = ForgeDirection.getOrientation(sideId);
             if (side != ForgeDirection.UP && side != ForgeDirection.DOWN) {
                 ForgeDirection direction = ForgeDirection.getOrientation(BlockHelper.getAboveSide(sideId));
@@ -103,10 +103,13 @@ public abstract class BlockCT extends MOBlock
     }
 
     public abstract boolean canConnect(IBlockAccess world,Block block,int x,int y,int z);
+
     public abstract boolean isSideCT(IBlockAccess world,int x,int y,int z,int side);
+
     @SideOnly(Side.CLIENT)
     public IconConnectedTexture getIconConnectedTexture(int meta,int side)
     {
         return iconConnectedTexture;
     }
+
 }

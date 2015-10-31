@@ -20,8 +20,6 @@ package matteroverdrive.blocks;
 
 import cofh.api.block.IDismantleable;
 import cofh.lib.util.helpers.InventoryHelper;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderio.conduit.IConduitBundle;
@@ -48,14 +46,16 @@ public class ForceGlass extends BlockCT implements IDismantleable
     }
 
     @Override
-    public boolean canConnect(IBlockAccess world, Block block, int x, int y, int z) {
+    public boolean canConnect(IBlockAccess world, Block block, int x, int y, int z)
+    {
 		boolean eio = false;
 		eio = checkEIO(world, block, x, y, z);
         return block instanceof ForceGlass || eio;
     }
 
 //	Check if the block is an EIO conduit facade painted with Tritanium Glass
-	private boolean checkEIO(IBlockAccess world, Block block, int x, int y, int z) {
+	private boolean checkEIO(IBlockAccess world, Block block, int x, int y, int z)
+    {
         if (Reference.eioLoaded()) {
             TileEntity te = world.getTileEntity(x, y, z);
             return te instanceof IConduitBundle && ((IConduitBundle) te).getFacadeId() instanceof ForceGlass;
@@ -93,7 +93,7 @@ public class ForceGlass extends BlockCT implements IDismantleable
         Block block = world.getBlock(x, y, z);
         int l = world.getBlockMetadata(x, y, z);
         boolean flag = block.removedByPlayer(world, player, x, y, z, true);
-        ItemStack blockItem = new ItemStack(getItemDropped(l,world.rand,1));
+        ItemStack blockItem = new ItemStack(getItemDropped(l, world.rand, 1));
 
         if (!returnDrops)
         {
@@ -104,13 +104,13 @@ public class ForceGlass extends BlockCT implements IDismantleable
             InventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
         }
 
-        ArrayList list = new ArrayList();
+        ArrayList<ItemStack> list = new ArrayList<>();
         list.add(blockItem);
         return list;
     }
 
     @Override
-    public boolean canDismantle(EntityPlayer entityPlayer, World world, int i, int i1, int i2) {
+    public boolean canDismantle(EntityPlayer entityPlayer, World world, int x, int y, int z) {
         return true;
     }
 }

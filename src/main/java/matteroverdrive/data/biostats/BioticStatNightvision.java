@@ -41,11 +41,11 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 /**
  * Created by Simeon on 7/11/2015.
  */
-public class BioticStatNightvision extends AbstractBioticStat implements IConfigSubscriber
+public class BioticStatNightVision extends AbstractBioticStat implements IConfigSubscriber
 {
     public static int ENERGY_PER_TICK = 16;
 
-    public BioticStatNightvision(String name, int xp) {
+    public BioticStatNightVision(String name, int xp) {
         super(name, xp);
         setShowOnWheel(true);
         setShowOnHud(true);
@@ -100,11 +100,11 @@ public class BioticStatNightvision extends AbstractBioticStat implements IConfig
             androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_NIGHTVISION, !androidPlayer.getEffects().getBoolean("Nightvision"));
             if (!androidPlayer.getEffects().getBoolean("Nightvision"))
             {
-                Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":" + "night_vision", 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
+                Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":night_vision", 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
             }
             else
             {
-                Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":" + "power_down", 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
+                Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":power_down", 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
             }
         }
     }
@@ -149,6 +149,6 @@ public class BioticStatNightvision extends AbstractBioticStat implements IConfig
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
-        ENERGY_PER_TICK = config.getInt("nighvision_energy_per_tick",ConfigurationHandler.CATEGORY_ABILITIES,16,"The energy cost of the Nightvision");
+        ENERGY_PER_TICK = config.getInt("nighvision_energy_per_tick", ConfigurationHandler.CATEGORY_ABILITIES, 16, "The energy cost of the Nightvision");
     }
 }

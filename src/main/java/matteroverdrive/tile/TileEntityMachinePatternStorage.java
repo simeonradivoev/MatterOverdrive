@@ -258,7 +258,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
                 {
                     progress = MathHelper.clampI(progress + amount, 0, MatterDatabaseHelper.MAX_ITEM_PROGRESS);
                     MatterDatabaseHelper.SetProgressToNBT(hasItem, (byte) progress);
-                    ForceSync();
+                    forceSync();
                 }
                 if (info != null)
                     info.append(String.format("%s added to Pattern Storage. Progress is now at %s",EnumChatFormatting.GREEN + itemStack.getDisplayName(),progress + "%"));
@@ -280,7 +280,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
                     if (storage.addItem(inventory.getStackInSlot(slotId), itemStack, amount, simulate))
                     {
                         if (!simulate)
-                            ForceSync();
+                            forceSync();
                         if (info != null)
                             info.append(String.format("%s added to Pattern Storage. Progress is now at %s",EnumChatFormatting.GREEN + itemStack.getDisplayName(),amount + "%"));
                         return true;

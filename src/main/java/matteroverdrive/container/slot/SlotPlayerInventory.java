@@ -9,7 +9,7 @@ public class SlotPlayerInventory extends MOSlot
 {
     boolean isHotbar;
 
-    public SlotPlayerInventory(IInventory inventory, int slot, int x, int y,boolean isHotbar)
+    public SlotPlayerInventory(IInventory inventory, int slot, int x, int y, boolean isHotbar)
     {
         super(inventory, slot, x, y);
         this.isHotbar = isHotbar;

@@ -36,7 +36,7 @@ public class MOEventPlasmaBlotHit extends Event
     public final PlasmaBolt plasmaBolt;
     public final Side side;
 
-    public MOEventPlasmaBlotHit(ItemStack weapon,MovingObjectPosition hit,PlasmaBolt plasmaBolt,Side side)
+    public MOEventPlasmaBlotHit(ItemStack weapon, MovingObjectPosition hit, PlasmaBolt plasmaBolt, Side side)
     {
         this.weapon = weapon;
         this.hit = hit;

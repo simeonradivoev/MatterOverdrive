@@ -37,9 +37,10 @@ public class ShieldingSlot extends Slot
     @Override
     public boolean isValidForSlot(ItemStack itemStack)
     {
-        if(this.getItem() == null || this.getItem().stackSize < 4) {
-
-            if (itemStack != null && itemStack.getItem() != null) {
+        if(this.getItem() == null || this.getItem().stackSize < 4)
+		{
+            if (itemStack != null && itemStack.getItem() != null)
+			{
                 return itemStack.getItem() == MatterOverdriveItems.tritanium_plate;
             }
         }
@@ -57,7 +58,10 @@ public class ShieldingSlot extends Slot
     public int getMaxStackSize(){return 5;}
 
     @Override
-    public boolean keepOnDismatle(){return true;}
+    public boolean keepOnDismantle()
+    {
+        return true;
+    }
 
     @Override
     public String getUnlocalizedTooltip(){

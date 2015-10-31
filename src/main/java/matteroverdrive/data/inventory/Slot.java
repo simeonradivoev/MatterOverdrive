@@ -33,8 +33,13 @@ public class Slot
     private boolean drops = true;
     private boolean isMainSlot = false;
 
-    public Slot(boolean isMainSlot) {this.isMainSlot = isMainSlot;}
-    public boolean isValidForSlot(ItemStack item) {return true;}
+    public Slot(boolean isMainSlot) {
+        this.isMainSlot = isMainSlot;
+    }
+    public boolean isValidForSlot(ItemStack item)
+    {
+        return true;
+    }
     @SideOnly(Side.CLIENT)
     public HoloIcon getHoloIcon()
     {
@@ -46,7 +51,10 @@ public class Slot
     public void setItem(ItemStack item) {
         this.item = item;
     }
-    public int getId() {return id;}
+    public int getId()
+    {
+        return id;
+    }
     public void setId(int id) {
         this.id = id;
     }
@@ -56,7 +64,10 @@ public class Slot
     public void setDrops(boolean drops) {
         this.drops = drops;
     }
-    public boolean keepOnDismatle(){return false;}
+    public boolean keepOnDismantle()
+    {
+        return false;
+    }
     public boolean isMainSlot()
     {
         return isMainSlot;
@@ -65,6 +76,12 @@ public class Slot
     {
         this.isMainSlot = mainSlot;
     }
-    public int getMaxStackSize(){return 64;}
-    public String getUnlocalizedTooltip(){return null;}
+    public int getMaxStackSize()
+    {
+        return 64;
+    }
+    public String getUnlocalizedTooltip()
+    {
+        return null;
+    }
 }

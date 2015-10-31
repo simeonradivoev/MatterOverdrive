@@ -24,6 +24,7 @@ import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -43,12 +44,15 @@ public class DialogMessageRandom extends DialogMessage implements IDialogMessage
         super();
         init();
     }
-    public DialogMessageRandom(String message, String question) {
+
+    public DialogMessageRandom(String message, String question)
+    {
         super(message, question);
         init();
     }
 
-    public DialogMessageRandom(String message) {
+    public DialogMessageRandom(String message)
+    {
         super(message);
         init();
     }
@@ -67,10 +71,7 @@ public class DialogMessageRandom extends DialogMessage implements IDialogMessage
 
     public DialogMessageRandom addQuestionVariation(String... questions)
     {
-        for (String question : questions)
-        {
-            this.questions.add(question);
-        }
+        Collections.addAll(this.questions, questions);
         return this;
     }
 
@@ -82,29 +83,26 @@ public class DialogMessageRandom extends DialogMessage implements IDialogMessage
 
     public DialogMessageRandom addMessageVariation(String... messages)
     {
-        for (String message : messages)
-        {
-            this.messages.add(message);
-        }
+        Collections.addAll(this.messages, messages);
         return this;
     }
 
     @Override
-    public String getMessageText(IDialogNpc npc,EntityPlayer player)
+    public String getMessageText(IDialogNpc npc, EntityPlayer player)
     {
         if (messages.size() > 0) {
             random.setSeed(seed);
-            return formatMessage(messages.get(random.nextInt(messages.size())),npc,player);
+            return formatMessage(messages.get(random.nextInt(messages.size())), npc, player);
         }
         return message;
     }
 
     @Override
-    public String getQuestionText(IDialogNpc npc,EntityPlayer player)
+    public String getQuestionText(IDialogNpc npc, EntityPlayer player)
     {
         if (questions.size() > 0) {
             random.setSeed(seed);
-            return formatQuestion(questions.get(random.nextInt(questions.size())),npc,player);
+            return formatQuestion(questions.get(random.nextInt(questions.size())), npc, player);
         }
         return question;
     }

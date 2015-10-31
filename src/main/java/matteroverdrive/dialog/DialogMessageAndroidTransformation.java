@@ -42,7 +42,7 @@ public class DialogMessageAndroidTransformation extends DialogMessage
     }
 
     @Override
-    public boolean canInteract(IDialogNpc npc,EntityPlayer player)
+    public boolean canInteract(IDialogNpc npc, EntityPlayer player)
     {
         boolean[] hasParts = new boolean[4];
         int[] slots = new int[4];
@@ -60,10 +60,8 @@ public class DialogMessageAndroidTransformation extends DialogMessage
             }
         }
 
-        for (int i = 0;i < hasParts.length;i++)
-        {
-            if (!hasParts[i])
-            {
+        for (boolean hasPart : hasParts) {
+            if (!hasPart) {
                 return false;
             }
         }
@@ -72,7 +70,7 @@ public class DialogMessageAndroidTransformation extends DialogMessage
     }
 
     @Override
-    public void onInteract(IDialogNpc npc,EntityPlayer player)
+    public void onInteract(IDialogNpc npc, EntityPlayer player)
     {
         boolean[] hasParts = new boolean[4];
         int[] slots = new int[4];
@@ -90,10 +88,8 @@ public class DialogMessageAndroidTransformation extends DialogMessage
             }
         }
 
-        for (int i = 0;i < hasParts.length;i++)
-        {
-            if (!hasParts[i])
-            {
+        for (boolean hasPart : hasParts) {
+            if (!hasPart) {
                 if (!player.worldObj.isRemote) {
                     ChatComponentText componentText = new ChatComponentText(EnumChatFormatting.GOLD + "<Mad Scientist>" + EnumChatFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + player.getRNG().nextInt(4)));
                     componentText.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
@@ -104,15 +100,9 @@ public class DialogMessageAndroidTransformation extends DialogMessage
         }
 
         if (!player.worldObj.isRemote) {
-            for (int i = 0; i < slots.length; i++)
-            {
-                player.inventory.decrStackSize(slots[i],1);
+            for (int slot : slots) {
+                player.inventory.decrStackSize(slot, 1);
             }
-        }
-
-        if (player.worldObj.isRemote)
-        {
-
         }
 
         AndroidPlayer.get(player).startConversion();
@@ -120,7 +110,7 @@ public class DialogMessageAndroidTransformation extends DialogMessage
     }
 
     @Override
-    public boolean isVisible(IDialogNpc npc,EntityPlayer player)
+    public boolean isVisible(IDialogNpc npc, EntityPlayer player)
     {
         return AndroidPlayer.get(player) == null || !AndroidPlayer.get(player).isAndroid();
     }

@@ -39,7 +39,7 @@ public interface IMatterNetworkConnection
     /**
      * Can the Matter Connection connect form a given side.
      * @param side the side of the tested connection.
-     * @return cna the connection be made trough the given side.
+     * @return can the connection be made trough the given side.
      */
     boolean canConnectFromSide(ForgeDirection side);
 }

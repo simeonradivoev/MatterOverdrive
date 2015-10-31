@@ -14,9 +14,9 @@ public class EntityRendererRougeAndroid extends RendererLivingEntity
     public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTITIES + "android.png");
     public static final ResourceLocation texture_hologram = new ResourceLocation(Reference.PATH_ENTITIES + "android_holo.png");
 
-    public EntityRendererRougeAndroid(ModelBase modelBase, float p_i1261_2_)
+    public EntityRendererRougeAndroid(ModelBase modelBase, float f)
     {
-        super(modelBase, p_i1261_2_);
+        super(modelBase, f);
     }
 
     @Override

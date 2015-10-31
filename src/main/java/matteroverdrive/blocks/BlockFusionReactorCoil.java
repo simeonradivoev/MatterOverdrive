@@ -16,7 +16,8 @@ import java.util.ArrayList;
 /**
  * Created by Simeon on 5/14/2015.
  */
-public class BlockFusionReactorCoil extends MOBlock implements IDismantleable {
+public class BlockFusionReactorCoil extends MOBlock implements IDismantleable
+{
 
     public BlockFusionReactorCoil(Material material, String name) {
         super(material, name);
@@ -36,8 +37,8 @@ public class BlockFusionReactorCoil extends MOBlock implements IDismantleable {
     {
         if (!returnDrops)
         {
-            world.setBlockToAir(x,y,z);
-            dropBlockAsItem(world,x,y,z,world.getBlockMetadata(x,y,z),0);
+            world.setBlockToAir(x, y, z);
+            dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
         }
 
         return null;
@@ -47,4 +48,5 @@ public class BlockFusionReactorCoil extends MOBlock implements IDismantleable {
     public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
         return true;
     }
+
 }

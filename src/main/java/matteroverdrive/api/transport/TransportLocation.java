@@ -33,14 +33,14 @@ public class TransportLocation
     /**
      * The X,Y,Z coordinates of the location.
      */
-    public int x,y,z;
+    public int x, y, z;
     /**
      * The name of the location.
      */
     public String name;
 
     //region constructors
-    public TransportLocation(int x,int y,int z,String name)
+    public TransportLocation(int x, int y, int z, String name)
     {
         this.x = x;
         this.y = y;
@@ -100,7 +100,7 @@ public class TransportLocation
      * @param y the Y coordinate of the location.
      * @param z the Z coordinate of the location.
      */
-    public void setPosition(int x,int y,int z)
+    public void setPosition(int x, int y, int z)
     {
         this.x = x;
         this.y = y;
@@ -114,8 +114,8 @@ public class TransportLocation
      * @param z1 the given Z coordinate.
      * @return the distance between this transport location and the provided coordinates.
      */
-    public int getDistance(int x1,int y1,int z1)
+    public int getDistance(int x1, int y1, int z1)
     {
-        return MathHelper.round(Math.sqrt((x-x1)*(x-x1) + (y-y1)*(y-y1) + (z-z1)*(z-z1)));
+        return MathHelper.round(Math.sqrt((x-x1) * (x-x1) + (y-y1) * (y-y1) + (z-z1) * (z-z1)));
     }
 }

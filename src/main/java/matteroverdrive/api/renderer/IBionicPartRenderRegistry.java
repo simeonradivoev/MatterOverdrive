@@ -40,5 +40,10 @@ public interface IBionicPartRenderRegistry
      * @return the bionic part's renderer. Returns Null if there is no renderer.
      */
     IBionicPartRenderer removeRenderer(Class<? extends IBionicPart> partClass);
-    IBionicPartRenderer getRenderer(Class<? extends IBionicPart> partClass);
+
+	/**
+	 * @param partClass
+	 * @return the renderer for the given part
+	 */
+	IBionicPartRenderer getRenderer(Class<? extends IBionicPart> partClass);
 }

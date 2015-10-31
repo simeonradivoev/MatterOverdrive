@@ -31,9 +31,9 @@ public class MinimapEntityInfo
     boolean isAttacking;
     int entityID;
 
-    public MinimapEntityInfo(){}
+    public MinimapEntityInfo() {}
 
-    public MinimapEntityInfo(EntityLivingBase entityLivingBase,EntityPlayer player)
+    public MinimapEntityInfo(EntityLivingBase entityLivingBase, EntityPlayer player)
     {
         if (entityLivingBase instanceof EntityLiving && ((EntityLiving) entityLivingBase).getAttackTarget() != null)
         {

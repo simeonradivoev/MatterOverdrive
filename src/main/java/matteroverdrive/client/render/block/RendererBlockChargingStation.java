@@ -56,7 +56,7 @@ public class RendererBlockChargingStation implements ISimpleBlockRenderingHandle
         rot.scale(new Vector3f(0.6f, 0.6f, 0.6f));
         Tessellator.instance.startDrawingQuads();
         RenderUtils.tesseleteModelAsBlock(rot, ((WavefrontObject) model).groupObjects.get(0), MatterOverdriveIcons.charging_station, 0, 0, 0, 240, true, null);
-        RenderUtils.tesseleteModelAsBlock(rot, ((WavefrontObject) model).groupObjects.get(1), MatterOverdriveIcons.charging_station, 0, 0, 0, -1,true,null);
+        RenderUtils.tesseleteModelAsBlock(rot, ((WavefrontObject) model).groupObjects.get(1), MatterOverdriveIcons.charging_station, 0, 0, 0, -1, true, null);
         Tessellator.instance.draw();
     }
 
@@ -64,8 +64,8 @@ public class RendererBlockChargingStation implements ISimpleBlockRenderingHandle
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
     {
         Matrix4f rot = new Matrix4f();
-        RenderUtils.rotateFromBlock(rot,world,x,y,z);
-        RenderUtils.tesseleteModelAsBlock(rot, ((WavefrontObject) model).groupObjects.get(0), MatterOverdriveIcons.charging_station, x, y, z, block.getMixedBrightnessForBlock(world, x, y, z),true,null);
+        RenderUtils.rotateFromBlock(rot, world, x, y, z);
+        RenderUtils.tesseleteModelAsBlock(rot, ((WavefrontObject) model).groupObjects.get(0), MatterOverdriveIcons.charging_station, x, y, z, block.getMixedBrightnessForBlock(world, x, y, z), true, null);
         return true;
     }
 

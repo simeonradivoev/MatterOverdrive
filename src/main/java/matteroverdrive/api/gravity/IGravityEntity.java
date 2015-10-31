@@ -25,8 +25,7 @@ package matteroverdrive.api.gravity;
 public interface IGravityEntity
 {
     /**
-     * Is the entity affected by the gravitational anomaly.
-     * @param anomaly the anomaly
+     * @param anomaly
      * @return is the entity affected by the gravitational anomaly.
      */
     boolean isAffectedByAnomaly(IGravitationalAnomaly anomaly);

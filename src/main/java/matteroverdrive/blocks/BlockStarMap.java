@@ -20,6 +20,7 @@ public class BlockStarMap extends MOBlockMachine
 {
     private IIcon topIcon;
     private IIcon bottomIcon;
+
     public BlockStarMap(Material material, String name)
     {
         super(material, name);
@@ -59,15 +60,16 @@ public class BlockStarMap extends MOBlockMachine
     }
 
     @Override
-    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
         if (player.isSneaking()) {
             TileEntityMachineStarMap starMap = (TileEntityMachineStarMap) world.getTileEntity(x, y, z);
             starMap.zoom();
             return true;
-        }else
+        }
+		else
         {
-            return super.onBlockActivated(world,x,y,z,player,side,hitX,hitY,hitZ);
+            return super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
         }
     }
 
@@ -84,7 +86,10 @@ public class BlockStarMap extends MOBlockMachine
     }
 
     @Override
-    public boolean renderAsNormalBlock(){return false;}
+    public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
 
     @Override
     public int getRenderType()

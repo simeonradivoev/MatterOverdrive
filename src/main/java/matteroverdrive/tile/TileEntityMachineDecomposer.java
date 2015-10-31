@@ -60,7 +60,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     private TimeTracker time;
     private static Random random = new Random();
 	public int decomposeTime;
-	
+
 	public TileEntityMachineDecomposer()
 	{
 		super(4);
@@ -249,8 +249,8 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
             setInventorySlotContents(OUTPUT_SLOT_ID, stack);
         }
     }
-	
-	private void decomposeItem() 
+
+	private void decomposeItem()
 	{
         int matterAmount = MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
 
@@ -268,7 +268,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
             }
 
             this.decrStackSize(INPUT_SLOT_ID, 1);
-            ForceSync();
+            forceSync();
 		}
 	}
 
@@ -301,14 +301,14 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     }
 
     @Override
-	public int[] getAccessibleSlotsFromSide(int side) 
+	public int[] getAccessibleSlotsFromSide(int side)
 	{
         return new int[]{INPUT_SLOT_ID,OUTPUT_SLOT_ID};
 	}
 
 	@Override
 	public boolean canExtractItem(int i, ItemStack item,
-			int j) 
+			int j)
 	{
 		return i != INPUT_SLOT_ID;
 	}

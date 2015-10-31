@@ -54,6 +54,7 @@ import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.starmap.data.Star;
 import matteroverdrive.tile.*;
+import matteroverdrive.util.MOLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -113,7 +114,7 @@ public class RenderHandler
     //region Entity Renderers
     private EntityRendererRougeAndroid rendererRougeAndroid;
     private EntityRendererMadScientist rendererMadScientist;
-    private EntityRendererFaildCow rendererFaildCow;
+    private EntityRendererFailedCow rendererFailedCow;
     private EntityRendererFailedChicken rendererFailedChicken;
     private EntityRendererFailedPig rendererFailedPig;
     private EntityRendererFailedSheep rendererFailedSheep;
@@ -137,11 +138,11 @@ public class RenderHandler
     private TileEntityRendererPacketQueue tileEntityRendererPacketQueue;
     //endregion
 
-    public RenderHandler(World world,TextureManager textureManager)
+    public RenderHandler(World world, TextureManager textureManager)
     {
         customRenderers = new ArrayList<>();
         matterScannerInfoHandler = new RenderMatterScannerInfoHandler();
-        renderParticlesHandler = new RenderParticlesHandler(world,textureManager);
+        renderParticlesHandler = new RenderParticlesHandler(world, textureManager);
         renderWeaponsBeam = new RenderWeaponsBeam();
         statRenderRegistry = new AndroidStatRenderRegistry();
         starmapRenderRegistry = new StarmapRenderRegistry();
@@ -159,9 +160,8 @@ public class RenderHandler
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event)
     {
-        for (int i = 0;i < customRenderers.size();i++)
-        {
-            customRenderers.get(i).onRenderWorldLast(this,event);
+        for (IWorldLastRenderer renderer : customRenderers) {
+            renderer.onRenderWorldLast(this, event);
         }
         for (IBionicStat stat : MatterOverdrive.statRegistry.getStats())
         {
@@ -170,7 +170,7 @@ public class RenderHandler
             {
                 for (IBioticStatRenderer renderer : statRendererCollection)
                 {
-                    renderer.onWorldRender(stat,AndroidPlayer.get(Minecraft.getMinecraft().thePlayer).getUnlockedLevel(stat),event);
+                    renderer.onWorldRender(stat, AndroidPlayer.get(Minecraft.getMinecraft().thePlayer).getUnlockedLevel(stat), event);
                 }
             }
         }
@@ -209,7 +209,7 @@ public class RenderHandler
     public void onPlayerRender(RenderPlayerEvent.Post event)
     {
         GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glColor3f(1,1,1);
+        GL11.glColor3f(1, 1, 1);
 
         AndroidPlayer androidPlayer = AndroidPlayer.get(event.entityPlayer);
         if (androidPlayer != null && androidPlayer.isAndroid() && !event.entityPlayer.isInvisible()) {
@@ -222,12 +222,12 @@ public class RenderHandler
                     if (renderer != null) {
                         try {
                             GL11.glPushMatrix();
-                            renderer.renderPart(part, androidPlayer, event.renderer,event.partialRenderTick);
+                            renderer.renderPart(part, androidPlayer, event.renderer, event.partialRenderTick);
                             GL11.glPopMatrix();
                         }
                         catch (Exception e)
                         {
-                            MatterOverdrive.log.log(Level.ERROR,e,"An Error occurred while rendering bionic part");
+                            MOLog.log(Level.ERROR,e,"An Error occurred while rendering bionic part");
                         }
                     }
                 }
@@ -287,12 +287,12 @@ public class RenderHandler
 
     public void createEntityRenderers()
     {
-        rendererRougeAndroid = new EntityRendererRougeAndroid(new ModelBiped(),0);
+        rendererRougeAndroid = new EntityRendererRougeAndroid(new ModelBiped(), 0);
         rendererMadScientist = new EntityRendererMadScientist();
-        rendererFailedPig = new EntityRendererFailedPig(new ModelPig(),new ModelPig(0.5f),0.7F);
-        rendererFaildCow = new EntityRendererFaildCow(new ModelCow(),0.7f);
-        rendererFailedChicken = new EntityRendererFailedChicken(new ModelChicken(),0.3f);
-        rendererFailedSheep = new EntityRendererFailedSheep(new ModelSheep2(),new ModelSheep1(),0.7f);
+        rendererFailedPig = new EntityRendererFailedPig(new ModelPig(),new ModelPig(0.5f), 0.7F);
+        rendererFailedCow = new EntityRendererFailedCow(new ModelCow(), 0.7f);
+        rendererFailedChicken = new EntityRendererFailedChicken(new ModelChicken(), 0.3f);
+        rendererFailedSheep = new EntityRendererFailedSheep(new ModelSheep2(), new ModelSheep1(), 0.7f);
         rendererPhaserFire = new EntityRendererPhaserFire();
     }
 
@@ -300,7 +300,7 @@ public class RenderHandler
     {
         RenderingRegistry.registerEntityRenderingHandler(EntityRougeAndroidMob.class, rendererRougeAndroid);
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedPig.class,rendererFailedPig);
-        RenderingRegistry.registerEntityRenderingHandler(EntityFailedCow.class,rendererFaildCow);
+        RenderingRegistry.registerEntityRenderingHandler(EntityFailedCow.class, rendererFailedCow);
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedChicken.class,rendererFailedChicken);
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedSheep.class,rendererFailedSheep);
         RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class, rendererMadScientist);
@@ -336,24 +336,45 @@ public class RenderHandler
 
     public void registerStarmapRenderers()
     {
-        starmapRenderRegistry.registerRenderer(Planet.class,starMapRendererPlanet);
-        starmapRenderRegistry.registerRenderer(Quadrant.class,starMapRendererQuadrant);
-        starmapRenderRegistry.registerRenderer(Star.class,starMapRendererStar);
-        starmapRenderRegistry.registerRenderer(Galaxy.class,starMapRenderGalaxy);
-        starmapRenderRegistry.registerRenderer(Planet.class,starMapRenderPlanetStats);
+        starmapRenderRegistry.registerRenderer(Planet.class, starMapRendererPlanet);
+        starmapRenderRegistry.registerRenderer(Quadrant.class, starMapRendererQuadrant);
+        starmapRenderRegistry.registerRenderer(Star.class, starMapRendererStar);
+        starmapRenderRegistry.registerRenderer(Galaxy.class, starMapRenderGalaxy);
+        starmapRenderRegistry.registerRenderer(Planet.class, starMapRenderPlanetStats);
     }
 
     public RenderParticlesHandler getRenderParticlesHandler()
     {
         return renderParticlesHandler;
     }
+
     public TileEntityRendererStarMap getTileEntityRendererStarMap()
     {
         return tileEntityRendererStarMap;
     }
-    public IAndroidStatRenderRegistry getStatRenderRegistry(){return statRenderRegistry;}
-    public IStarmapRenderRegistry getStarmapRenderRegistry(){return starmapRenderRegistry;}
-    public AndroidBionicPartRenderRegistry getBionicPartRenderRegistry(){return bionicPartRenderRegistry;}
-    public Random getRandom(){return random;}
-    public void addCustomRenderer(IWorldLastRenderer renderer){customRenderers.add(renderer);}
+
+    public IAndroidStatRenderRegistry getStatRenderRegistry()
+    {
+        return statRenderRegistry;
+    }
+
+    public IStarmapRenderRegistry getStarmapRenderRegistry()
+    {
+        return starmapRenderRegistry;
+    }
+
+    public AndroidBionicPartRenderRegistry getBionicPartRenderRegistry()
+    {
+        return bionicPartRenderRegistry;
+    }
+
+    public Random getRandom()
+    {
+        return random;
+    }
+
+    public void addCustomRenderer(IWorldLastRenderer renderer)
+    {
+        customRenderers.add(renderer);
+    }
 }

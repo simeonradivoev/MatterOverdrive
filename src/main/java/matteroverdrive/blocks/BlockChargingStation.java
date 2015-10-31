@@ -35,7 +35,9 @@ import net.minecraft.world.World;
 /**
  * Created by Simeon on 7/8/2015.
  */
-public class BlockChargingStation extends MOBlockMachine {
+public class BlockChargingStation extends MOBlockMachine
+{
+
     public BlockChargingStation(Material material, String name)
     {
         super(material, name);
@@ -103,7 +105,7 @@ public class BlockChargingStation extends MOBlockMachine {
     public void onConfigChanged(ConfigurationHandler config)
     {
         super.onConfigChanged(config);
-        TileEntityMachineChargingStation.RANGE = config.getInt("charge station range",config.CATEGORY_MACHINES,16,"The range of the Charge Station");
+        TileEntityMachineChargingStation.RANGE = config.getInt("charge station range", ConfigurationHandler.CATEGORY_MACHINES, 16, "The range of the Charge Station");
     }
 
 }

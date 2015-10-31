@@ -75,7 +75,7 @@ public class GuiMatterAnalyzer extends MOGuiNetworkMachine<TileEntityMachineMatt
         super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
 
         scanProgress.setProgress(((ContainerMachine)getContainer()).getProgress());
-        
+
         if(this.machine.getStackInSlot(machine.input_slot) != null)
         {
             scanProgress.setSeed(Item.getIdFromItem(this.machine.getStackInSlot(machine.input_slot).getItem()));

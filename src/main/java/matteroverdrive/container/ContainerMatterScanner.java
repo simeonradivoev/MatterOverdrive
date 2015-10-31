@@ -14,7 +14,7 @@ public class ContainerMatterScanner extends MOBaseContainer
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer p_75145_1_) {
+    public boolean canInteractWith(EntityPlayer player) {
         return false;
     }
 }

@@ -28,8 +28,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public interface IMatterNetworkCable extends IMatterNetworkConnection
 {
     /**
-     * Is the Matter Network cable valid.
-     * @return is it valid.
+     * @return is the cable valid.
      */
     boolean isValid();
 

@@ -80,53 +80,53 @@ public class ItemRendererPhaserRifle implements IItemRenderer
     {
         if(type == ItemRenderType.EQUIPPED_FIRST_PERSON)
         {
-            RenderFirstPerson(item);
+            renderFirstPerson(item);
         }
         else if(type == ItemRenderType.INVENTORY)
         {
-            RenderItem(item);
+            renderItem(item);
         }
         else if(type == ItemRenderType.ENTITY)
         {
-            RenderDrop(item);
+            renderDrop(item);
         }
         else
         {
-            RenderThirdPerson(type,item);
+            renderThirdPerson(type,item);
         }
     }
 
-    void RenderItem(ItemStack item)
+    void renderItem(ItemStack item)
     {
         glPushMatrix();
         glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
         glTranslated(0, 0.03, -0.7);
         glRotated(0, 0, 1, 0);
-        RenderGun(ItemRenderType.INVENTORY,item);
+        renderGun(ItemRenderType.INVENTORY,item);
         glPopMatrix();
     }
 
-    void RenderThirdPerson(ItemRenderType renderType,ItemStack item)
+    void renderThirdPerson(ItemRenderType renderType, ItemStack item)
     {
         glPushMatrix();
         glScaled(THIRD_PERSON_SCALE, THIRD_PERSON_SCALE, THIRD_PERSON_SCALE);
         glTranslated(1, 0.83, 1);
         glRotated(-135, 0, 1, 0);
         glRotated(60, 1, 0, 0);
-        RenderGun(renderType,item);
+        renderGun(renderType,item);
         glPopMatrix();
     }
 
-    void RenderDrop(ItemStack item)
+    void renderDrop(ItemStack item)
     {
         glPushMatrix();
         glScaled(SCALE_DROP, SCALE_DROP, SCALE_DROP);
         glTranslated(0, 0, -0.7);
-        RenderGun(ItemRenderType.ENTITY,item);
+        renderGun(ItemRenderType.ENTITY,item);
         glPopMatrix();
     }
 
-    void RenderFirstPerson(ItemStack item)
+    void renderFirstPerson(ItemStack item)
     {
         ZOOM_TIME = MOMathHelper.Lerp(ZOOM_TIME,Minecraft.getMinecraft().thePlayer.isUsingItem() ? 1f : 0,0.2f);
         RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME,0,0.1f);
@@ -173,7 +173,7 @@ public class ItemRendererPhaserRifle implements IItemRenderer
         glTranslatef(0, -recoilValue * 0.05f * RECOIL_AMOUNT, -recoilValue * 0.05f * RECOIL_AMOUNT);
         glRotated(recoilValue * 2 * RECOIL_AMOUNT, -1, 0, 0);
 
-        RenderGun(ItemRenderType.EQUIPPED_FIRST_PERSON,item);
+        renderGun(ItemRenderType.EQUIPPED_FIRST_PERSON,item);
         glPopMatrix();
 
         renderMuzzle(item, recoilValue, zoomValue);
@@ -207,7 +207,7 @@ public class ItemRendererPhaserRifle implements IItemRenderer
         glPopMatrix();
     }
 
-    void RenderGun(ItemRenderType renderType,ItemStack item)
+    void renderGun(ItemRenderType renderType, ItemStack item)
     {
         GuiColor color = WeaponHelper.getColor(item);
         ItemStack color_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_COLOR, item);

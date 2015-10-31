@@ -34,7 +34,7 @@ public class MatterOverdriveMatter
 	{
 
 	}
-	
+
 	public static void registerBasic(ConfigurationHandler c)
 	{
         registerBasicItems(c);

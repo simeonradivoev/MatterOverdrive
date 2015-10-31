@@ -15,10 +15,12 @@ import static matteroverdrive.init.MatterOverdriveItems.*;
  * @author shadowfacts
  */
 @Compat("ThermalExpansion")
-public class CompatThermalExpansion {
+public class CompatThermalExpansion
+{
 
 	@Compat.Init
-	public static void init(FMLInitializationEvent event) {
+	public static void init(FMLInitializationEvent event)
+	{
 //		1 Tritanium Ore		->	2 Tritanium Dust
 		ThermalExpansionHelper.addPulverizerRecipe(8000,
 				new ItemStack(tritaniumOre),

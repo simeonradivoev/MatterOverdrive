@@ -88,7 +88,7 @@ public class MOMachineBlockItem extends ItemBlock
 			return super.getItemStackDisplayName(itemStack);
 		}
 	}
-	
+
 	@Override
 	public int getDamage(ItemStack stack)
 	 {
@@ -98,13 +98,13 @@ public class MOMachineBlockItem extends ItemBlock
 		}
 		return 0;
 	 }
-	
+
 	@Override
 	public int getDisplayDamage(ItemStack stack)
     {
         return this.getDamage(stack);
     }
-	
+
 	@Override
 	public int getMaxDamage(ItemStack stack)
 	{
@@ -133,7 +133,7 @@ public class MOMachineBlockItem extends ItemBlock
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean showDurabilityBar(ItemStack stack)
     {

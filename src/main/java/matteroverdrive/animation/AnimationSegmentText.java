@@ -12,7 +12,7 @@ public class AnimationSegmentText extends AnimationSegment
 
     public AnimationSegmentText(String string, int begin, int length, int animationType)
     {
-        super(begin,length);
+        super(begin, length);
         this.string = string;
         this.animationType = animationType;
     }
@@ -22,9 +22,9 @@ public class AnimationSegmentText extends AnimationSegment
         this(string,0,length, animationType);
     }
 
-    public AnimationSegmentText setLengthPerCharacter(int lenght)
+    public AnimationSegmentText setLengthPerCharacter(int length)
     {
-        this.length = string.length() * lenght;
+        this.length = string.length() * length;
         return this;
     }
 

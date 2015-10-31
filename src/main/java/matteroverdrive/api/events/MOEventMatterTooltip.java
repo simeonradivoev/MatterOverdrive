@@ -33,7 +33,7 @@ public class MOEventMatterTooltip extends PlayerEvent
     public final ItemStack itemStack;
     public int matter;
 
-    public MOEventMatterTooltip(ItemStack itemStack,int matter,EntityPlayer player)
+    public MOEventMatterTooltip(ItemStack itemStack, int matter, EntityPlayer player)
     {
         super(player);
         this.itemStack = itemStack;

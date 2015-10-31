@@ -30,8 +30,7 @@ import java.util.List;
 public interface IDialogMessage
 {
     /**
-     * The individual ID of each Dialog Message
-     * @return
+     * @return the individual ID of each Dialog Message
      */
     int getID();
 
@@ -41,7 +40,7 @@ public interface IDialogMessage
      * @param player The Player.
      * @return The Parent message.
      */
-    IDialogMessage getParent(IDialogNpc npc,EntityPlayer player);
+    IDialogMessage getParent(IDialogNpc npc, EntityPlayer player);
 
     /**
      * A list of Dialog Message Children.
@@ -51,7 +50,7 @@ public interface IDialogMessage
      * @param player The Player
      * @return A list of children (options) messages.
      */
-    List<IDialogMessage> getOptions(IDialogNpc npc,EntityPlayer player);
+    List<IDialogMessage> getOptions(IDialogNpc npc, EntityPlayer player);
 
     /**
      * Used to get the Text of the Message.
@@ -62,7 +61,7 @@ public interface IDialogMessage
      * @param player The Player.
      * @return The message text.
      */
-    String getMessageText(IDialogNpc npc,EntityPlayer player);
+    String getMessageText(IDialogNpc npc, EntityPlayer player);
 
     /**
      * Used to display the question (option) the message reprisents.
@@ -71,7 +70,7 @@ public interface IDialogMessage
      * @param player The Player
      * @return The question (option) text.
      */
-    String getQuestionText(IDialogNpc npc,EntityPlayer player);
+    String getQuestionText(IDialogNpc npc, EntityPlayer player);
 
     /**
      * Called when an option is chosen from the message's children.
@@ -81,7 +80,7 @@ public interface IDialogMessage
      * @param player The Player
      * @param option The Option that was chosen. Not the option (message ID), but the ordering index of the child from {@link matteroverdrive.api.dialog.IDialogMessage#getOptions(IDialogNpc, EntityPlayer)}.
      */
-    void onInteract(IDialogNpc npc,EntityPlayer player,int option);
+    void onInteract(IDialogNpc npc, EntityPlayer player, int option);
 
     /**
      * Called when the message is chosen from all the option of the patten from {@link matteroverdrive.api.dialog.IDialogMessage#getOptions(IDialogNpc, EntityPlayer)}.
@@ -90,7 +89,7 @@ public interface IDialogMessage
      * @param npc
      * @param player
      */
-    void onInteract(IDialogNpc npc,EntityPlayer player);
+    void onInteract(IDialogNpc npc, EntityPlayer player);
 
     /**
      * Can the player interact with this message. Can it be chosen as the next active message from the parent's options.
@@ -98,7 +97,7 @@ public interface IDialogMessage
      * @param player The Player
      * @return Can the message be clicked (chosen) as an option.
      */
-    boolean canInteract(IDialogNpc npc,EntityPlayer player);
+    boolean canInteract(IDialogNpc npc, EntityPlayer player);
 
     /**
      * Is the message visible as an option in the parent's {@link matteroverdrive.api.dialog.IDialogMessage#getOptions(IDialogNpc, EntityPlayer)}.
@@ -106,7 +105,7 @@ public interface IDialogMessage
      * @param player The Player.
      * @return Is the message visible as an option.
      */
-    boolean isVisible(IDialogNpc npc,EntityPlayer player);
+    boolean isVisible(IDialogNpc npc, EntityPlayer player);
 
     /**
      * Returns the list of available Camera shots the conversation can have once active.
@@ -117,10 +116,9 @@ public interface IDialogMessage
     IDialogShot[] getShots(IDialogNpc npc, EntityPlayer player);
 
     /**
-     * Does the message have a Holo Icon
      * @param npc
      * @param player
-     * @return
+     * @return The holo icon, {@code null} if there isn't one
      */
     String getHoloIcon(IDialogNpc npc, EntityPlayer player);
 }

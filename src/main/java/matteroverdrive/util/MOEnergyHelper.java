@@ -18,12 +18,10 @@
 
 package matteroverdrive.util;
 
-import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyProvider;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class MOEnergyHelper 
+public class MOEnergyHelper
 {
     public static final String ENERGY_UNIT = " RF";
 

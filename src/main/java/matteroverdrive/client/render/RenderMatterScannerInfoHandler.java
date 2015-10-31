@@ -55,28 +55,28 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
 
     public void onRenderWorldLast(RenderHandler renderHandler,RenderWorldLastEvent event)
     {
-        ItemStack helditem = Minecraft.getMinecraft().thePlayer.getHeldItem();
+        ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem();
 
-        if (helditem != null && helditem.getItem() instanceof MatterScanner && Minecraft.getMinecraft().thePlayer.isUsingItem())
+        if (heldItem != null && heldItem.getItem() instanceof MatterScanner && Minecraft.getMinecraft().thePlayer.isUsingItem())
         {
             glPushMatrix();
-            renderInfo(Minecraft.getMinecraft().thePlayer,helditem,event.partialTicks);
+            renderInfo(Minecraft.getMinecraft().thePlayer, heldItem, event.partialTicks);
             glPopMatrix();
         }
         else if (AndroidPlayer.get(Minecraft.getMinecraft().thePlayer).isAndroid())
         {
-            renderInfo(Minecraft.getMinecraft().thePlayer,Minecraft.getMinecraft().objectMouseOver,null,event.partialTicks);
+            renderInfo(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().objectMouseOver, null, event.partialTicks);
         }
     }
 
-    private void renderInfo(EntityPlayer player,ItemStack scanner,float ticks)
+    private void renderInfo(EntityPlayer player, ItemStack scanner, float ticks)
     {
         MatterScanner scannerItem = (MatterScanner)scanner.getItem();
         MovingObjectPosition position = scannerItem.getScanningPos(player);
         renderInfo(player, position, scanner, ticks);
     }
 
-    private void renderInfo(EntityPlayer player,MovingObjectPosition position,ItemStack scanner,float ticks)
+    private void renderInfo(EntityPlayer player, MovingObjectPosition position, ItemStack scanner, float ticks)
     {
         Vec3 playerPos = player.getPosition(ticks);
 
@@ -89,33 +89,33 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
                 Block block = player.worldObj.getBlock(position.blockX, position.blockY, position.blockZ);
                 if (block != null)
                 {
-                    renderBlockInfo(block,position,player,playerPos,scanner,scanner == null);
+                    renderBlockInfo(block, position, player, playerPos, scanner, scanner == null);
                 }
             }
             else if (position.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY)
             {
                 if (position.entityHit != null)
                 {
-                    renderEntityInfo(position.entityHit,position,player,playerPos,ticks);
+                    renderEntityInfo(position.entityHit, position, player, playerPos, ticks);
                 }
             }
         }
         glEnable(GL_DEPTH_TEST);
     }
 
-    private void renderBlockInfo(Block block,MovingObjectPosition position,EntityPlayer player,Vec3 playerPos,ItemStack scanner,boolean infoOnly)
+    private void renderBlockInfo(Block block, MovingObjectPosition position, EntityPlayer player, Vec3 playerPos, ItemStack scanner, boolean infoOnly)
     {
         double offset = 0.1;
         ForgeDirection side = ForgeDirection.getOrientation(position.sideHit);
-        List<String> infos = new ArrayList<String>();
+        List<String> infos = new ArrayList<>();
         if (block instanceof IScannable)
         {
-            ((IScannable) block).addInfo(player.worldObj,position.blockX,position.blockY,position.blockZ,infos);
+            ((IScannable) block).addInfo(player.worldObj, position.blockX, position.blockY, position.blockZ, infos);
 
         }
-        else if (player.worldObj.getTileEntity(position.blockX,position.blockY,position.blockZ) instanceof IScannable)
+        else if (player.worldObj.getTileEntity(position.blockX, position.blockY, position.blockZ) instanceof IScannable)
         {
-            ((IScannable) player.worldObj.getTileEntity(position.blockX,position.blockY,position.blockZ)).addInfo(player.worldObj,position.blockX,position.blockY,position.blockZ,infos);
+            ((IScannable) player.worldObj.getTileEntity(position.blockX, position.blockY, position.blockZ)).addInfo(player.worldObj, position.blockX, position.blockY, position.blockZ, infos);
         }
         else if (infoOnly)
         {
@@ -145,7 +145,7 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
                 blockName = player.worldObj.getBlock(position.blockX, position.blockY, position.blockZ).getLocalizedName();
             }
         }
-        catch (Exception exeption)
+        catch (Exception e)
         {
             blockName = player.worldObj.getBlock(position.blockX, position.blockY, position.blockZ).getLocalizedName();
         }
@@ -156,12 +156,12 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
 
         if (!(block instanceof IScannable) && scanner != null)
         {
-            drawProgressBar(scanner,player);
+            drawProgressBar(scanner, player);
         }
         glPopMatrix();
     }
 
-    private void drawProgressBar(ItemStack scanner,EntityPlayer player)
+    private void drawProgressBar(ItemStack scanner, EntityPlayer player)
     {
         glPushMatrix();
         renderer().bindTexture(spinnerTexture);
@@ -177,13 +177,12 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         glTranslated(0.35,0.45,-0.1);
         glScaled(0.3, 0.3, 0.3);
         RenderUtils.drawPlane(1);
-        //glDisable(GL_ALPHA_TEST);
         glDisable(GL_BLEND);
         glAlphaFunc(GL_GREATER, 0.5f);
         glPopMatrix();
     }
 
-    private void renderEntityInfo(Entity entity,MovingObjectPosition position,EntityPlayer player,Vec3 playerPos,float ticks)
+    private void renderEntityInfo(Entity entity, MovingObjectPosition position, EntityPlayer player, Vec3 playerPos, float ticks)
     {
         double offset = 0.1;
         ForgeDirection side = ForgeDirection.getOrientation(position.subHit);
@@ -231,16 +230,13 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         renderer().bindTexture(TileEntityRendererPatternMonitor.screenTextureBack);
         RenderUtils.drawPlane(1);
 
-        //Minecraft.getMinecraft().renderEngine.bindTexture(TileEntityRendererPatternMonitor.screenTexture);
-        //glColor3f(Reference.COLOR_HOLO.getFloatR() * 0.7f, Reference.COLOR_HOLO.getFloatG() * 0.7f, Reference.COLOR_HOLO.getFloatB() * 0.7f);
-        //drawPlane();
 
         glDisable(GL_BLEND);
         glPopMatrix();
 
     }
 
-    private void drawInfoList(String name,List<String> infos)
+    private void drawInfoList(String name, List<String> infos)
     {
         glPushMatrix();
         int width = fontRenderer().getStringWidth(name);
@@ -256,15 +252,15 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         glPopMatrix();
     }
 
-    public static void rotateFromSide(ForgeDirection side,float Yaw)
+    public static void rotateFromSide(ForgeDirection side, float yaw)
     {
         if (side == ForgeDirection.UP)
         {
-            glRotatef(Math.round(Yaw / 90) * 90 - 180, 0, -1, 0);
+            glRotatef(Math.round(yaw / 90) * 90 - 180, 0, -1, 0);
             glRotated(90,1,0,0);
         }else if (side == ForgeDirection.DOWN)
         {
-            glRotatef(Math.round(Yaw / 90) * 90 - 180, 0, -1, 0);
+            glRotatef(Math.round(yaw / 90) * 90 - 180, 0, -1, 0);
             glRotated(-90, 1, 0, 0);
         }else if (side == ForgeDirection.WEST)
         {

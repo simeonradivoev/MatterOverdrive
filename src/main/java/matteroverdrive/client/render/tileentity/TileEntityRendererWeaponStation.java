@@ -18,15 +18,19 @@ public class TileEntityRendererWeaponStation extends TileEntityRendererStation<T
     }
 
     @Override
-    protected void renderHologram(TileEntityWeaponStation weaponStation, double x, double y, double z,float partialTicks,double noise)
+    protected void renderHologram(TileEntityWeaponStation weaponStation, double x, double y, double z, float partialTicks, double noise)
     {
         if (isUsable(weaponStation))
         {
             ItemStack stack = weaponStation.getStackInSlot(weaponStation.INPUT_SLOT);
-            if (stack != null) {
-                if (itemEntity == null) {
+            if (stack != null)
+            {
+                if (itemEntity == null)
+                {
                     itemEntity = new EntityItem(weaponStation.getWorldObj(), weaponStation.xCoord, weaponStation.yCoord, weaponStation.zCoord, stack);
-                } else if (!ItemStack.areItemStacksEqual(itemEntity.getEntityItem(), stack)) {
+                }
+                else if (!ItemStack.areItemStacksEqual(itemEntity.getEntityItem(), stack))
+                {
                     itemEntity.setEntityItemStack(stack);
                 }
 
@@ -37,7 +41,7 @@ public class TileEntityRendererWeaponStation extends TileEntityRendererStation<T
             }
         }else
         {
-            super.renderHologram(weaponStation,x,y,z,partialTicks, noise);
+            super.renderHologram(weaponStation, x, y, z, partialTicks, noise);
         }
     }
 }

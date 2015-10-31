@@ -66,13 +66,13 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     public static final int RANGE = 24;
 
     Map<EntityPlayer,WeaponSound> soundMap;
-	
+
 	public Phaser(String name) {
 		super(name,32000,128,128,RANGE);
 		this.bFull3D = true;
         soundMap = new HashMap<>();
 	}
-	
+
 	public void registerIcons(IIconRegister iconRegistry)
     {
 
@@ -105,7 +105,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     {
         return MAX_USE_TIME;
     }
-	
+
 	public static boolean isKillMode(ItemStack item)
 	{
 		if(!item.hasTagCompound())
@@ -114,7 +114,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 		}
 		return item.getTagCompound().getByte("power") >= KILL_MODE_LEVEL;
 	}
-	
+
 	private void ManageShooting(ItemStack item, World w, EntityPlayer player)
 	{
         if (w.isRemote)
@@ -255,7 +255,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
             }
             return item;
 		}
-		
+
 		return item;
 	}
 
@@ -288,7 +288,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
         //addHeat(itemStack, getMaxItemUseDuration(itemStack) - count);
         //DrainEnergy(itemStack, getMaxItemUseDuration(itemStack) - count, false);
     }
-	
+
 	private void SwitchModes(World world,EntityPlayer player,ItemStack item)
 	{
 		this.TagCompountCheck(item);

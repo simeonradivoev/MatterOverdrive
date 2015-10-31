@@ -36,12 +36,12 @@ import java.util.UUID;
  */
 public class BioticStatSpeed extends AbstractBioticStat
 {
-    UUID modiferID;
+    UUID modifierID;
 
     public BioticStatSpeed(String name, int xp) {
         super(name, xp);
         setMaxLevel(4);
-        modiferID = UUID.fromString("d13345c8-14f7-48fd-bc52-c787c9857a6c");
+        modifierID = UUID.fromString("d13345c8-14f7-48fd-bc52-c787c9857a6c");
     }
 
     @Override
@@ -87,7 +87,7 @@ public class BioticStatSpeed extends AbstractBioticStat
     public Multimap attributes(AndroidPlayer androidPlayer, int level)
     {
         Multimap multimap = HashMultimap.create();
-        multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(),new MOAttributeModifier(modiferID, "Android Speed", getSpeedModify(level), 2).setSaved(false));
+        multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(), new MOAttributeModifier(modifierID, "Android Speed", getSpeedModify(level), 2).setSaved(false));
         return multimap;
     }
 

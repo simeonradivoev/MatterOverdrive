@@ -39,7 +39,8 @@ public class TileEntityRendererPatternMonitor extends TileEntitySpecialRenderer
     public static ResourceLocation screenTextureGlow = new ResourceLocation(Reference.PATH_FX + "holo_monitor_glow.png");
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks) {
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks)
+    {
         glPushMatrix();
 
         int meta = tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);

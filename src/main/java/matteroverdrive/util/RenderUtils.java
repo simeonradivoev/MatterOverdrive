@@ -51,7 +51,7 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class RenderUtils 
+public class RenderUtils
 {
 	private static FontRenderer   fontRenderer = Minecraft.getMinecraft().fontRenderer;
 	private static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
@@ -425,7 +425,7 @@ public class RenderUtils
         RenderUtils.drawPlane(1);
     }
 
-    public static void drawScreenInfoWithGlobalAutoSize(String[] info,GuiColor color,ForgeDirection side,int leftMargin,int rightMargin,float maxScaleFactor)
+    public static void drawScreenInfoWithGlobalAutoSize(String[] info, GuiColor color, ForgeDirection side, int leftMargin, int rightMargin, float maxScaleFactor)
     {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
@@ -561,7 +561,7 @@ public class RenderUtils
 	{
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 	}
-	
+
 	public static void DrawMultilineInfo(List infos,int x,int y, int maxLines,int maxLineWidth,int color)
 	{
 		try
@@ -637,13 +637,13 @@ public class RenderUtils
 		Tessellator.instance.addVertexWithUV((double)(x + f1 * scale + f3 * scale), (double)(y + f5 * scale), (double)(z + f2 * scale + f4 * scale), (double)uMin, (double)vMin);
 		Tessellator.instance.addVertexWithUV((double)(x + f1 * scale - f3 * scale), (double)(y - f5 * scale), (double)(z + f2 * scale - f4 * scale), (double)uMin, (double)vMax);
 	}
-	
+
 	public static void enable3DRender() {
 		 GL11.glEnable(GL11.GL_LIGHTING);
 		 GL11.glEnable(GL11.GL_DEPTH_TEST);
 		 GL11.glDisable(GL11.GL_CULL_FACE);
 	 }
-		 
+
 	 public static void enable2DRender() {
 		 GL11.glDisable(GL11.GL_LIGHTING);
 		 GL11.glDisable(GL11.GL_DEPTH_TEST);

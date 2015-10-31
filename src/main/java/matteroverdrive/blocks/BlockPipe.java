@@ -15,12 +15,12 @@ import java.util.List;
 public abstract class BlockPipe extends MOBlockContainer
 {
 
-	public BlockPipe(Material material, String name) 
+	public BlockPipe(Material material, String name)
 	{
 		super(material, name);
 		this.useNeighborBrightness = true;
 		float pixel = 1f/16f;
-		
+
 		float size = 0.34375f;
 
         float xMin = size;
@@ -30,7 +30,7 @@ public abstract class BlockPipe extends MOBlockContainer
         float xMax = 1 - size;
         float yMax = 1 - size;
         float zMax = 1 - size;
-        
+
         //this.setBlockBounds(xMin, yMin, zMin, xMax, yMax, zMax);
 	}
 
@@ -55,7 +55,7 @@ public abstract class BlockPipe extends MOBlockContainer
             ForgeDirection dir = ForgeDirection.values()[i];
             if(isConnectableSide(dir,world,x,y,z))
             {
-	            if(dir != null) 
+	            if(dir != null)
 	            {
 	                float xMinNew = xMin + size * dir.offsetX;
                     float xMaxNew = xMax + size * dir.offsetX;
@@ -72,7 +72,7 @@ public abstract class BlockPipe extends MOBlockContainer
     }
 
 	@Override
-    public void setBlockBoundsBasedOnState(IBlockAccess worldAccess, int x, int y, int z)
+    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
     {
         float size = 0.34375f;
 
@@ -87,22 +87,22 @@ public abstract class BlockPipe extends MOBlockContainer
         for(int i = 0;i < 6;i++)
         {
             ForgeDirection dir = ForgeDirection.values()[i];
-            if(isConnectableSide(dir,worldAccess,x,y,z))
+            if(isConnectableSide(dir, world, x, y, z))
             {
-	            if(dir != null) 
+	            if(dir != null)
 	            {
 	                if (dir.offsetX < 0) {
 	                    xMin = 0;
 	                } else if (dir.offsetX > 0) {
 	                    xMax = 1;
 	                }
-	
+
 	                if (dir.offsetY < 0) {
 	                    yMin = 0;
 	                } else if (dir.offsetY > 0) {
 	                    yMax = 1;
 	                }
-	
+
 	                if (dir.offsetZ < 0) {
 	                    zMin = 0;
 	                } else if (dir.offsetZ > 0) {
@@ -115,14 +115,9 @@ public abstract class BlockPipe extends MOBlockContainer
         this.setBlockBounds(xMin, yMin, zMin, xMax, yMax, zMax);
     }
 
-    public boolean isConnectableSide(ForgeDirection dir,IBlockAccess world,int x,int y,int z)
-    {
-        TileEntityPipe pipe = (TileEntityPipe)world.getTileEntity(x,y,z);
-        if(pipe != null)
-        {
-            return pipe.isConnectableSide(dir);
-        }
-        return  false;
+    public boolean isConnectableSide(ForgeDirection dir, IBlockAccess world, int x, int y, int z) {
+        TileEntityPipe pipe = (TileEntityPipe) world.getTileEntity(x, y, z);
+        return pipe != null && pipe.isConnectableSide(dir);
     }
 
     @Override

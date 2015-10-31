@@ -20,7 +20,7 @@ public class MissingIcon implements IIcon
 	public IIcon getMissing()
 	{
 		return ((TextureMap) Minecraft.getMinecraft().getTextureManager()
-				.getTexture( this.isBlock ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture )).getAtlasSprite( "missingno" );
+				.getTexture(this.isBlock ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture)).getAtlasSprite("missingno");
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class MissingIcon implements IIcon
 	@Override
 	public float getInterpolatedU(double var1)
 	{
-		return this.getMissing().getInterpolatedU( var1 );
+		return this.getMissing().getInterpolatedU(var1);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class MissingIcon implements IIcon
 	@Override
 	public float getInterpolatedV(double var1)
 	{
-		return this.getMissing().getInterpolatedV( var1 );
+		return this.getMissing().getInterpolatedV(var1);
 	}
 
 	@Override

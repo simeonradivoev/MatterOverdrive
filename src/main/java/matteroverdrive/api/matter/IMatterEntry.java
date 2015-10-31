@@ -38,15 +38,13 @@ public interface IMatterEntry
     void setMatter(int matter);
 
     /**
-     * Gets the name (key) of the matter entry.
-     * @return
+     * @return the name (key) of the matter entry
      */
     String getName();
 
     /**
      * Is the matter entry calculated or added by configs or by Matter overdrive.
      * Used to show if the matter entry was created by the automatic recipe calculation process.
-     * @return
      */
     boolean getCalculated();
 }

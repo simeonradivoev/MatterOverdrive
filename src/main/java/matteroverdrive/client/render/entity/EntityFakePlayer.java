@@ -29,18 +29,18 @@ import net.minecraft.world.World;
  */
 public class EntityFakePlayer extends EntityPlayer
 {
-    public EntityFakePlayer(World p_i45324_1_, GameProfile p_i45324_2_)
+    public EntityFakePlayer(World world, GameProfile gameProfile)
     {
-        super(p_i45324_1_, p_i45324_2_);
+        super(world, gameProfile);
     }
 
     @Override
-    public void addChatMessage(IChatComponent p_145747_1_) {
+    public void addChatMessage(IChatComponent chatComponent) {
 
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_) {
+    public boolean canCommandSenderUseCommand(int permissionLevel, String command) {
         return false;
     }
 

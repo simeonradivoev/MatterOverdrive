@@ -73,19 +73,18 @@ public class StarMapRendererQuadrant extends StarMapRendererStars {
                 color = Reference.COLOR_HOLO_RED;
             }
             RenderUtils.applyColorWithMultipy(color, opacity);
-            ClientProxy.holoIcons.renderIcon("page_icon_planet",0, -32);
+            ClientProxy.holoIcons.renderIcon("page_icon_planet", 0, -32);
             RenderUtils.drawString(String.format("x%s", planetCount), 28, -21, color, opacity);
 
 
             DecimalFormat format = new DecimalFormat("#");
-            if (GalaxyClient.getInstance().canSeeStarInfo(star,Minecraft.getMinecraft().thePlayer)) {
+            if (GalaxyClient.getInstance().canSeeStarInfo(star, Minecraft.getMinecraft().thePlayer)) {
                 RenderUtils.drawString(star.getName(), 0, -52, Reference.COLOR_HOLO, opacity);
             } else {
                 RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer, star.getName(), 0, -52, Reference.COLOR_HOLO, opacity);
             }
 
-            ClientProxy.holoIcons.renderIcon("icon_size",48,-28);
-            //RenderUtils.drawString(star.getName(), 82, -30, Reference.COLOR_HOLO,opacity);
+            ClientProxy.holoIcons.renderIcon("icon_size", 48, -28);
             RenderUtils.drawString(DecimalFormat.getPercentInstance().format(star.getSize()), 68, -23, Reference.COLOR_HOLO,opacity);
 
             if (origin != null)

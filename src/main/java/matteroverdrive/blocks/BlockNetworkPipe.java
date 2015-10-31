@@ -36,20 +36,20 @@ public class BlockNetworkPipe extends BlockPipe implements IDismantleable
     @Override
     public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops)
     {
-        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> items = new ArrayList<>();
         Block block = world.getBlock(x, y, z);
         int l = world.getBlockMetadata(x, y, z);
 
         if (!returnDrops)
         {
-            block.harvestBlock(world,player,x,y,z,l);
+            block.harvestBlock(world, player, x, y, z, l);
             block.removedByPlayer(world, player, x, y, z, true);
         }
         else
         {
             block.removedByPlayer(world, player, x, y, z, true);
             block.breakBlock(world, x, y, z, block, l);
-            for (ItemStack itemStack : getDrops(world,x,y,z,l,0))
+            for (ItemStack itemStack : getDrops(world, x, y, z, l, 0))
                 InventoryHelper.insertItemStackIntoInventory(player.inventory, itemStack, 0);
         }
 

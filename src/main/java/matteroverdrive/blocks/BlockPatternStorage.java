@@ -79,8 +79,8 @@ public class BlockPatternStorage extends MOBlockMachine
     public void onConfigChanged(ConfigurationHandler config)
     {
         super.onConfigChanged(config);
-        hasVentParticles = config.getMachineBool(getUnlocalizedName(),"particles.vent", true, "Should vent particles be displayed");
+        hasVentParticles = config.getMachineBool(getUnlocalizedName(), "particles.vent", true, "Should vent particles be displayed");
         TileEntityMachinePatternStorage.ENERGY_CAPACITY = config.getMachineInt(getUnlocalizedName(), "storage.energy", 64000, String.format("How much energy can the %s hold", getLocalizedName()));
-        TileEntityMachinePatternStorage.ENERGY_TRANSFER = config.getMachineInt(getUnlocalizedName(),"transfer.energy",128,String.format("The Transfer speed of the %s",getLocalizedName()));
+        TileEntityMachinePatternStorage.ENERGY_TRANSFER = config.getMachineInt(getUnlocalizedName(), "transfer.energy", 128, String.format("The Transfer speed of the %s", getLocalizedName()));
     }
 }

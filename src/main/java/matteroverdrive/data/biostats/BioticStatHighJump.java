@@ -51,7 +51,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level),EnumChatFormatting.YELLOW.toString() + ENERGY_PER_JUMP + " RF" + EnumChatFormatting.GRAY);
+        return String.format(super.getDetails(level), EnumChatFormatting.YELLOW.toString() + ENERGY_PER_JUMP + " RF" + EnumChatFormatting.GRAY);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     {
         if (event instanceof LivingEvent.LivingJumpEvent)
         {
-            if (event.entityLiving.isSneaking() && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,androidPlayer)))
+            if (event.entityLiving.isSneaking() && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this, level, androidPlayer)))
             {
                 if (!event.entity.worldObj.isRemote)
                     androidPlayer.extractEnergy(ENERGY_PER_JUMP, false);
@@ -87,14 +87,14 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     }
 
     @Override
-    public Multimap attributes(AndroidPlayer androidPlayer,int level) {
+    public Multimap attributes(AndroidPlayer androidPlayer, int level) {
         return null;
     }
 
     @Override
     public boolean isEnabled(AndroidPlayer android, int level)
     {
-        return super.isEnabled(android,level) && android.extractEnergy(ENERGY_PER_JUMP,true) == ENERGY_PER_JUMP;
+        return super.isEnabled(android,level) && android.extractEnergy(ENERGY_PER_JUMP, true) == ENERGY_PER_JUMP;
     }
 
     @Override
@@ -106,6 +106,6 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
-        ENERGY_PER_JUMP = config.getInt("high_jump_energy",config.CATEGORY_ABILITIES,1024,"The energy cost of each High Jump");
+        ENERGY_PER_JUMP = config.getInt("high_jump_energy", ConfigurationHandler.CATEGORY_ABILITIES, 1024, "The energy cost of each High Jump");
     }
 }

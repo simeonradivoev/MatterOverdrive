@@ -26,9 +26,11 @@ import java.util.List;
  * Used by Transporters.
  */
 public interface ITransportList {
+
     /**
      * Gets a list of transportable locations.
      * @return the list of transport locations.
      */
     List<TransportLocation> getPositions();
+
 }

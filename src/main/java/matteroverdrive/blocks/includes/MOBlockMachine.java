@@ -105,13 +105,12 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     }
 
     @Override
-    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
         if (world.isRemote)
         {
             return true;
-        }
-        if(!world.isRemote && hasGui)
+        } else if (hasGui)
         {
             TileEntity tileEntity = world.getTileEntity(x,y,z);
             if (tileEntity instanceof MOTileEntityMachine)
@@ -119,7 +118,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
                 if (((MOTileEntityMachine) tileEntity).isUseableByPlayer(player)) {
                     FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, x, y, z);
                     return true;
-                }else
+                } else
                 {
                     ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal(getUnlocalizedMessage(0)).replace("$0", getLocalizedName()));
                     message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
@@ -148,7 +147,8 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
         TileEntity tileEntity = world.getTileEntity(x,y,z);
         if (tileEntity != null && tileEntity instanceof MOTileEntityMachine)
         {
-            if (!player.capabilities.isCreativeMode && ((MOTileEntityMachine) tileEntity).hasOwner() && !((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getId()))
+            if (!player.capabilities.isCreativeMode &&
+					((MOTileEntityMachine) tileEntity).hasOwner() && !((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getId()))
             {
                     ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.brake").replace("$0",getLocalizedName()));
                     message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
@@ -161,7 +161,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
 
     public ItemStack getNBTDrop(World world, int x, int y, int z, IMOTileEntity te)
     {
-        int meta = damageDropped(world.getBlockMetadata(x,y,z));
+        int meta = damageDropped(world.getBlockMetadata(x, y, z));
         ItemStack itemStack = new ItemStack(this, 1, meta);
         if(te != null)
             te.writeToDropItem(itemStack);
@@ -181,13 +181,13 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     {
         ArrayList<ItemStack> items = new ArrayList<>();
         ItemStack blockItem = getNBTDrop(world, x, y, z, (IMOTileEntity) world.getTileEntity(x, y, z));
-        MOTileEntityMachine machine = (MOTileEntityMachine)world.getTileEntity(x,y,z);
+        MOTileEntityMachine machine = (MOTileEntityMachine)world.getTileEntity(x, y, z);
         items.add(blockItem);
 
         Block block = world.getBlock(x, y, z);
         int l = world.getBlockMetadata(x, y, z);
         boolean flag = block.removedByPlayer(world, player, x, y, z, true);
-        super.breakBlock(world,x,y,z,block,l);
+        super.breakBlock(world, x, y, z, block, l);
 
         if (flag)
         {
@@ -201,7 +201,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
                 Slot slot = machine.getInventoryContainer().getSlot(i1);
                 ItemStack itemstack = slot.getItem();
 
-                if (itemstack != null && !slot.keepOnDismatle())
+                if (itemstack != null && !slot.keepOnDismantle())
                 {
                     float f = world.rand.nextFloat() * 0.8F + 0.1F;
                     float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
@@ -245,7 +245,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     @Override
     public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
     {
-        TileEntity tileEntity = world.getTileEntity(x,y,z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof MOTileEntityMachine)
         {
             if (player.capabilities.isCreativeMode || !((MOTileEntityMachine) tileEntity).hasOwner())
@@ -274,6 +274,6 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     public void onConfigChanged(ConfigurationHandler config)
     {
         config.initMachineCategory(getUnlocalizedName());
-        volume = (float)config.getMachineDouble(getUnlocalizedName(), "volume",1,"The volume of the Machine");
+        volume = (float)config.getMachineDouble(getUnlocalizedName(), "volume", 1, "The volume of the Machine");
     }
 }

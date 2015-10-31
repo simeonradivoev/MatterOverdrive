@@ -35,9 +35,9 @@ public class BlockWeaponStation extends MOBlockMachine
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         super.registerBlockIcons(iconRegister);
-        topIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "weapon_station_top");
-        bottomIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "weapon_station_bottom");
-        blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "weapon_station_side");
+        topIcon = iconRegister.registerIcon(Reference.MOD_ID + ":weapon_station_top");
+        bottomIcon = iconRegister.registerIcon(Reference.MOD_ID + ":weapon_station_bottom");
+        blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":weapon_station_side");
     }
 
     @Override

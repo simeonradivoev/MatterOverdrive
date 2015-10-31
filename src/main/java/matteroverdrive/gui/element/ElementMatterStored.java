@@ -80,7 +80,7 @@ public class ElementMatterStored extends MOElementBase
 
 	protected int getScaled() {
 
-		if (storage.getCapacity() <= 0) 
+		if (storage.getCapacity() <= 0)
 		{
 			return sizeY;
 		}

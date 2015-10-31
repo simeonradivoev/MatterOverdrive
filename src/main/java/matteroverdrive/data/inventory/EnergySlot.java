@@ -48,7 +48,10 @@ public class EnergySlot extends Slot
     }
 
     @Override
-    public boolean keepOnDismatle(){return true;}
+    public boolean keepOnDismantle()
+    {
+        return true;
+    }
 
     @Override
     public String getUnlocalizedTooltip(){

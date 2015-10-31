@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by Simeon on 3/16/2015.
  */
-public interface IUseableCondition
+public interface IUsableCondition
 {
-    public boolean usableByPlayer(EntityPlayer player);
+    boolean usableByPlayer(EntityPlayer player);
 }

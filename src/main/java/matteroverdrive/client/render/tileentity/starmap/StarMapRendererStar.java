@@ -86,7 +86,8 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
             glPointSize(10 / (float) Math.max(0.1, distance));
 
             sphere_model.renderAll();
-            if (Minecraft.getMinecraft().theWorld.getWorldTime() % 120 > 80) {
+            if (Minecraft.getMinecraft().theWorld.getWorldTime() % 120 > 80)
+            {
                 double t = ((Minecraft.getMinecraft().theWorld.getWorldTime() % 120) - 80) / 40d;
                 RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO_YELLOW, (float) MOMathHelper.easeIn(1 - t, 0, 0.1, 1));
                 s = MOMathHelper.easeIn(t, 0.0, 10, 1);
@@ -167,9 +168,11 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
             Planet planet = galaxy.getPlanet(starMap.getDestination());
             if (planet != null)
             {
-                if (GalaxyClient.getInstance().canSeePlanetInfo(planet,Minecraft.getMinecraft().thePlayer)) {
+                if (GalaxyClient.getInstance().canSeePlanetInfo(planet,Minecraft.getMinecraft().thePlayer))
+                {
                     RenderUtils.drawString(planet.getName(), 72, -42, Reference.COLOR_HOLO, opacity);
-                }else
+                }
+                else
                 {
                     RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer,planet.getName(), 72, -42, Reference.COLOR_HOLO, opacity);
                 }
@@ -239,12 +242,12 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
         glDisable(GL_TEXTURE_2D);
         glPolygonMode(GL_FRONT, GL_LINE);
         Tessellator.instance.startDrawing(GL_LINES);
-        Tessellator.instance.setColorRGBA_F(Planet.getGuiColor(planet).getFloatR() * 0.1f,Planet.getGuiColor(planet).getFloatG()* 0.1f,Planet.getGuiColor(planet).getFloatB()* 0.1f,Planet.getGuiColor(planet).getFloatA()* 0.1f);
-        for (int i = 0;i < 32;i++)
+        Tessellator.instance.setColorRGBA_F(Planet.getGuiColor(planet).getFloatR() * 0.1f, Planet.getGuiColor(planet).getFloatG() * 0.1f, Planet.getGuiColor(planet).getFloatB() * 0.1f, Planet.getGuiColor(planet).getFloatA() * 0.1f);
+        for (int i = 0; i < 32; i++)
         {
-            double angleStep = (Math.PI*2) / 32;
-            Tessellator.instance.addVertex(Math.sin(angleStep * i) * radius,0,Math.cos(angleStep * i) * radius);
-            Tessellator.instance.addVertex(Math.sin(angleStep * (i+1)) * radius,0,Math.cos(angleStep * (i+1)) * radius);
+            double angleStep = (Math.PI * 2) / 32;
+            Tessellator.instance.addVertex(Math.sin(angleStep * i) * radius, 0, Math.cos(angleStep * i) * radius);
+            Tessellator.instance.addVertex(Math.sin(angleStep * (i + 1)) * radius, 0, Math.cos(angleStep * (i + 1)) * radius);
         }
         Tessellator.instance.draw();
     }

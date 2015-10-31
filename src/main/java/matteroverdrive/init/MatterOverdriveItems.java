@@ -46,7 +46,7 @@ import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class MatterOverdriveItems 
+public class MatterOverdriveItems
 {
 	public static MOBaseItem matter_scanner;
 	public static ItemFood emergency_ration;
@@ -93,7 +93,7 @@ public class MatterOverdriveItems
     public static TritaniumSpine tritaniumSpine;
     public static MOBaseItem tritanium_nugget;
     public static OmniTool omniTool;
-	
+
 	public static void init(FMLPreInitializationEvent event)
 	{
 		matter_dust = new MatterDust("matter_dust",false);
@@ -143,7 +143,7 @@ public class MatterOverdriveItems
         tritanium_nugget = new MOBaseItem("tritanium_nugget");
         omniTool = new OmniTool("omni_tool");
 	}
-	
+
 	public static void register(FMLInitializationEvent event)
 	{
 		GameRegistry.registerItem(emergency_ration, emergency_ration.getUnlocalizedName().substring(5));

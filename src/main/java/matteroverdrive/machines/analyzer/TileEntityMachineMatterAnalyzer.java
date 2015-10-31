@@ -353,7 +353,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     @Override
     public void onActiveChange()
     {
-        ForceSync();
+        forceSync();
     }
     //endregion
 

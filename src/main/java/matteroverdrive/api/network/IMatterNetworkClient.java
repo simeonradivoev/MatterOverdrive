@@ -25,7 +25,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Simeon on 4/19/2015.
  */
-public interface IMatterNetworkClient extends IMatterNetworkConnection,IMatterNetworkHandler
+public interface IMatterNetworkClient extends IMatterNetworkConnection, IMatterNetworkHandler
 {
     /**
      * Can the given packet be preformed by the machine.
@@ -55,7 +55,6 @@ public interface IMatterNetworkClient extends IMatterNetworkConnection,IMatterNe
     MatterNetworkPacketQueue<MatterNetworkPacket> getPacketQueue(int queueID);
 
     /**
-     * Gets the count of all queues the machine has.
      * @return the number of queues in the machine.
      */
     int getPacketQueueCount();

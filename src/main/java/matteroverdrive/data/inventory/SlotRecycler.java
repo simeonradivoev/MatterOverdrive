@@ -32,11 +32,7 @@ public class SlotRecycler extends Slot
 
     public boolean isValidForSlot(ItemStack item)
     {
-        if (item.getItem() instanceof IRecyclable)
-        {
-            return ((IRecyclable) item.getItem()).canRecycle(item);
-        }
-        return false;
+        return item.getItem() instanceof IRecyclable && ((IRecyclable) item.getItem()).canRecycle(item);
     }
 
     @Override

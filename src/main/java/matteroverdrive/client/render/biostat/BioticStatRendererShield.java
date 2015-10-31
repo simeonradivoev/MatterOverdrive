@@ -46,8 +46,10 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
     public static final ResourceLocation forcefield_plasma_tex = new ResourceLocation(Reference.PATH_FX + "forcefield_plasma_2.png");
     public static final ResourceLocation shield_texture = new ResourceLocation(Reference.PATH_FX + "shield.png");
     public static final ResourceLocation model_path = new ResourceLocation(Reference.PATH_MODEL + "shield_sphere.obj");
+
     IModelCustom normal_sphere;
     IModelCustom shield_model;
+
     float opacityLerp;
 
     public BioticStatRendererShield()
@@ -62,12 +64,11 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
     {
         for (Object entity : Minecraft.getMinecraft().theWorld.playerEntities)
         {
-            renderPlayerShield(event,(EntityPlayer)entity);
+            renderPlayerShield(event, (EntityPlayer)entity);
         }
-
     }
 
-    private void renderPlayerShield(RenderWorldLastEvent event,EntityPlayer player)
+    private void renderPlayerShield(RenderWorldLastEvent event, EntityPlayer player)
     {
         AndroidPlayer androidPlayer = AndroidPlayer.get(player);
         boolean isVisible = manageOpacityLerp(androidPlayer,event.partialTicks);
@@ -96,7 +97,7 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
                     glEnable(GL_CULL_FACE);
                 }
             }
-            glTranslated(playerPosition.xCoord - clientPosition.xCoord,playerPosition.yCoord - clientPosition.yCoord,playerPosition.zCoord - clientPosition.zCoord);
+            glTranslated(playerPosition.xCoord - clientPosition.xCoord, playerPosition.yCoord - clientPosition.yCoord, playerPosition.zCoord - clientPosition.zCoord);
             glTranslated(0, -0.5, 0);
             glScaled(3, 3, 3);
             glRotated(player.motionZ * 45, -1, 0, 0);
@@ -125,7 +126,7 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
         }
     }
 
-    private boolean manageOpacityLerp(AndroidPlayer androidPlayer,float partialTicks)
+    private boolean manageOpacityLerp(AndroidPlayer androidPlayer, float partialTicks)
     {
         if (MatterOverdriveBioticStats.shield.getShieldState(androidPlayer))
         {
@@ -137,13 +138,15 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
             }
 
             return true;
-        }else
+        }
+		else
         {
             if (isClient(androidPlayer.getPlayer()) && opacityLerp > 0)
             {
                 opacityLerp = Math.max(0,opacityLerp - partialTicks * 0.2f);
                 return true;
-            }else
+            }
+			else
             {
                 return false;
             }
@@ -171,7 +174,7 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
         {
             NBTTagList hits = androidPlayer.getEffects().getTagList(BioticStatShield.TAG_HITS, 10);
             for (int i = 0; i < hits.tagCount(); i++) {
-                renderAttack(new Vector3f(hits.getCompoundTagAt(i).getFloat("x"), -hits.getCompoundTagAt(i).getFloat("y"), -hits.getCompoundTagAt(i).getFloat("z")).normalise(null),(hits.getCompoundTagAt(i).getInteger("time") / 10f) * opacity);
+                renderAttack(new Vector3f(hits.getCompoundTagAt(i).getFloat("x"), -hits.getCompoundTagAt(i).getFloat("y"), -hits.getCompoundTagAt(i).getFloat("z")).normalise(null), (hits.getCompoundTagAt(i).getInteger("time") / 10f) * opacity);
             }
         }
     }

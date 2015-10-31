@@ -35,7 +35,7 @@ public class ModuleSlot extends Slot
 {
     int type;
 
-    public ModuleSlot(boolean isMainSlot,int type)
+    public ModuleSlot(boolean isMainSlot, int type)
     {
         super(isMainSlot);
         this.type = type;

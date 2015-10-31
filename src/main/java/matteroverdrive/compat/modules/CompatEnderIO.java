@@ -19,7 +19,8 @@ public class CompatEnderIO {
 	/**
 	 * EnderIO IMC message names
 	 */
-	private class IMC {
+	private class IMC
+	{
 		public static final String VAT_RECIPE = "recipe:vat";
 		public static final String SAG_RECIPE = "recipe:sagmill";
 		public static final String ALLOY_RECIPE = "recipe:alloysmelter";
@@ -39,10 +40,11 @@ public class CompatEnderIO {
 
 	private static StringBuilder sb = new StringBuilder();
 
-	private static ArrayList<String> recipes = new ArrayList<String>();
+	private static ArrayList<String> recipes = new ArrayList<>();
 
 	@Compat.Init
-	public static void init(FMLInitializationEvent event) {
+	public static void init(FMLInitializationEvent event)
+	{
 		addAllRecipes();
 
 		sb.append("<SAGMillRecipes>");
@@ -57,7 +59,8 @@ public class CompatEnderIO {
 		System.out.println(new ItemStack(MatterOverdriveItems.dilithium_ctystal).getUnlocalizedName());
 	}
 
-	private static void addAllRecipes() {
+	private static void addAllRecipes()
+	{
 //		1 Dilithium Ore		->	1 Dilithium Crystal
 		recipes.add("<recipe name=\"DilithiumOre\" energyCost=\"2000\">" +
 					"	<input>" +

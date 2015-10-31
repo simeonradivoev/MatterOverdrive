@@ -42,8 +42,12 @@ public class Api implements IMOApi
     {
         return MatterOverdrive.matterRegistry;
     }
+
     @Override
-    public IAndroidStatRegistry getAndroidStatRegistry() {return MatterOverdrive.statRegistry;}
+    public IAndroidStatRegistry getAndroidStatRegistry()
+    {
+		return MatterOverdrive.statRegistry;
+	}
 
     @Override
     public IDialogRegistry getDialogRegistry()
@@ -53,7 +57,8 @@ public class Api implements IMOApi
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IAndroidStatRenderRegistry getAndroidStatRenderRegistry() {
+    public IAndroidStatRenderRegistry getAndroidStatRenderRegistry()
+	{
         return ClientProxy.renderHandler.getStatRenderRegistry();
     }
 
@@ -65,7 +70,8 @@ public class Api implements IMOApi
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IStarmapRenderRegistry getStarmapRenrerRegistry() {
+    public IStarmapRenderRegistry getStarmapRenderRegistry()
+	{
         return ClientProxy.renderHandler.getStarmapRenderRegistry();
     }
 }

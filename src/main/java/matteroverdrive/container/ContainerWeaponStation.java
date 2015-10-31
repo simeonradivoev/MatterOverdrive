@@ -41,10 +41,10 @@ public class ContainerWeaponStation extends ContainerMachine<TileEntityWeaponSta
         addSlotToContainer(new MOSlot(machine, machine.INPUT_SLOT, 8, 55));
         for (int i = 0;i < 5;i++)
         {
-            addSlotToContainer(new SlotWeaponModule(machine, i,0,0, i));
+            addSlotToContainer(new SlotWeaponModule(machine, i, 0, 0, i));
         }
 
-        AddUpgradeSlots(machine.getInventoryContainer());
+        addUpgradeSlots(machine.getInventoryContainer());
         MOContainerHelper.AddPlayerSlots(inventory, this, 45, 150, true, true);
     }
 

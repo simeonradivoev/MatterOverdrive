@@ -9,15 +9,16 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by Simeon on 5/28/2015.
  */
-public class EntityRendererFaildCow extends RenderCow {
+public class EntityRendererFailedCow extends RenderCow {
 
     private static final ResourceLocation cowTextures = new ResourceLocation(Reference.PATH_ENTITIES + "failed_cow.png");
-    public EntityRendererFaildCow(ModelBase p_i1253_1_, float p_i1253_2_)
+
+    public EntityRendererFailedCow(ModelBase model, float f)
     {
-        super(p_i1253_1_, p_i1253_2_);
+        super(model, f);
     }
 
-    protected ResourceLocation getEntityTexture(EntityCow p_110775_1_)
+    protected ResourceLocation getEntityTexture(EntityCow entity)
     {
         return cowTextures;
     }

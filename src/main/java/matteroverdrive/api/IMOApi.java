@@ -33,12 +33,18 @@ import matteroverdrive.api.starmap.IStarmapRenderRegistry;
 public interface IMOApi
 {
     IMatterRegistry getMatterRegistry();
+
     IAndroidStatRegistry getAndroidStatRegistry();
+
     IDialogRegistry getDialogRegistry();
+
     @SideOnly(Side.CLIENT)
     IAndroidStatRenderRegistry getAndroidStatRenderRegistry();
+
     @SideOnly(Side.CLIENT)
     IBionicPartRenderRegistry getBionicStatRenderRegistry();
+
     @SideOnly(Side.CLIENT)
-    IStarmapRenderRegistry getStarmapRenrerRegistry();
+    IStarmapRenderRegistry getStarmapRenderRegistry();
+
 }

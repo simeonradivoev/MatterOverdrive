@@ -27,7 +27,10 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class DialogMessageHumanOnly extends DialogMessageRandom
 {
-    public DialogMessageHumanOnly(){super();}
+    public DialogMessageHumanOnly()
+    {
+        super();
+    }
     public DialogMessageHumanOnly(String message) {
         super(message);
     }

@@ -41,6 +41,7 @@ import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketAndroidChangeAbility;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.MOLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.entity.Entity;
@@ -67,6 +68,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import org.apache.logging.log4j.Level;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Simeon on 5/26/2015.
@@ -85,7 +87,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public final static int MINIMAP_SEND_TIMEOUT = 20*2;
     public static boolean TRANSFORMATION_DEATH = true;
     public static boolean REMOVE_POTION_EFFECTS = true;
-    public final static AttributeModifier outOfPowerSpeedModifyer = new AttributeModifier(UUID.fromString("ec778ddc-9711-498b-b9aa-8e5adc436e00"),"Android Out of Power",-0.5,2).setSaved(false);
+    public final static AttributeModifier outOfPowerSpeedModifier = new AttributeModifier(UUID.fromString("ec778ddc-9711-498b-b9aa-8e5adc436e00"), "Android Out of Power", -0.5, 2).setSaved(false);
     private static List<IBionicStat> wheelStats = new ArrayList<>();
     private static Map<Integer,MinimapEntityInfo> entityInfoMap = new HashMap<>();
     private ItemStack[] previousBionicPatts = new ItemStack[5];
@@ -122,7 +124,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         catch (IllegalArgumentException e)
         {
             energyWatchID = 8;
-            MatterOverdrive.log.log(Level.ERROR,e,"Android Energy Watch ID taken. Starting id iteration.");
+            MOLog.log(Level.ERROR,e,"Android Energy Watch ID taken. Starting id iteration.");
             while (energyWatchID <= 31)
             {
                 try
@@ -132,13 +134,13 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 }
                 catch (IllegalArgumentException ex)
                 {
-                    MatterOverdrive.log.log(Level.ERROR,ex,"Android Energy Watch ID '%s' taken.",energyWatchID);
+                    MOLog.log(Level.ERROR,ex,"Android Energy Watch ID '%s' taken.", energyWatchID);
                     energyWatchID++;
                 }
             }
         }
 
-        MatterOverdrive.configHandler.setInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID,ConfigurationHandler.CATEGORY_ABILITIES,energyWatchID);
+        MatterOverdrive.configHandler.setInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID, ConfigurationHandler.CATEGORY_ABILITIES, energyWatchID);
         MatterOverdrive.configHandler.save();
         AndroidPlayer.energyWatchID = energyWatchID;
 
@@ -163,8 +165,8 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public static void loadConfigs(ConfigurationHandler configurationHandler)
     {
-        TRANSFORMATION_DEATH = configurationHandler.getBool("transformation_death",ConfigurationHandler.CATEGORY_ANDROID_PLAYER,true,"Should the player die after an Android transformation");
-        REMOVE_POTION_EFFECTS = configurationHandler.getBool("remove_potion_effects",ConfigurationHandler.CATEGORY_ANDROID_PLAYER,true,"Remove all potion effects while an Android");
+        TRANSFORMATION_DEATH = configurationHandler.getBool("transformation_death", ConfigurationHandler.CATEGORY_ANDROID_PLAYER, true, "Should the player die after an Android transformation");
+        REMOVE_POTION_EFFECTS = configurationHandler.getBool("remove_potion_effects", ConfigurationHandler.CATEGORY_ANDROID_PLAYER, true, "Remove all potion effects while an Android");
     }
 
     @Override
@@ -174,10 +176,10 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         prop.setInteger("Energy", player.getDataWatcher().getWatchableObjectInt(energyWatchID));
         prop.setInteger("MaxEnergy", this.maxEnergy);
         prop.setBoolean("isAndroid", isAndroid);
-        prop.setTag("Stats",unlocked);
+        prop.setTag("Stats", unlocked);
         prop.setTag("Effects", effects);
         if (activeStat != null)
-            prop.setString("ActiveAbility",activeStat.getUnlocalizedName());
+            prop.setString("ActiveAbility", activeStat.getUnlocalizedName());
         inventory.writeToNBT(prop);
         compound.setTag(EXT_PROP_NAME, prop);
     }
@@ -235,7 +237,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         return energyExtracted;
     }
 
-    public boolean isUnlocked(IBionicStat stat,int level)
+    public boolean isUnlocked(IBionicStat stat, int level)
     {
         return unlocked.hasKey(stat.getUnlocalizedName()) && unlocked.getInteger(stat.getUnlocalizedName()) >= level;
     }
@@ -312,12 +314,12 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         else
         {
             int energy = this.player.getDataWatcher().getWatchableObjectInt(energyWatchID);
-            energyReceived = Math.min(Math.min(getMaxEnergyStored() - energy, amount),BUILTIN_ENERGY_TRANSFER);
+            energyReceived = Math.min(Math.min(getMaxEnergyStored() - energy, amount), BUILTIN_ENERGY_TRANSFER);
 
             if (!simulate) {
                 energy += energyReceived;
-                energy = MathHelper.clampI(energy,0,getMaxEnergyStored());
-                this.player.getDataWatcher().updateObject(energyWatchID,energy);
+                energy = MathHelper.clampI(energy, 0, getMaxEnergyStored());
+                this.player.getDataWatcher().updateObject(energyWatchID, energy);
             }
         }
         return energyReceived;
@@ -394,7 +396,10 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         return unlocked;
     }
-    public void setUnlocked(NBTTagCompound unlocked){this.unlocked = unlocked;}
+    public void setUnlocked(NBTTagCompound unlocked)
+    {
+        this.unlocked = unlocked;
+    }
     public int resetUnlocked()
     {
         int xp = getResetXPRequired();
@@ -412,7 +417,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             int unlocked = this.unlocked.getInteger(key.toString());
             calculatedXP += stat.getXP(this,unlocked);
         }
-        return calculatedXP/2;
+        return calculatedXP / 2;
     }
     public void reset(IBionicStat stat)
     {
@@ -424,8 +429,14 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         }
     }
 
-    public NBTTagCompound getEffects(){return effects;}
-    public void setEffects(NBTTagCompound effects){this.effects = effects;}
+    public NBTTagCompound getEffects()
+	{
+		return effects;
+	}
+    public void setEffects(NBTTagCompound effects)
+	{
+		this.effects = effects;
+	}
 
     public void onAndroidTick(Side side)
     {
@@ -507,14 +518,11 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             ItemStack itemstack = this.previousBionicPatts[j];
             ItemStack itemstack1 = this.inventory.getStackInSlot(j);
 
-            if (itemstack1 != null)
+            if (itemstack1 != null && itemstack1.getItem() instanceof IBionicPart)
             {
-                if (itemstack1 != null && itemstack1.getItem() instanceof IBionicPart)
-                {
-                    Multimap multimap = ((IBionicPart) itemstack1.getItem()).getModifiers(this, itemstack1);
-                    if (multimap != null)
-                        player.getAttributeMap().removeAttributeModifiers(multimap);
-                }
+                Multimap multimap = ((IBionicPart) itemstack1.getItem()).getModifiers(this, itemstack1);
+                if (multimap != null)
+                    player.getAttributeMap().removeAttributeModifiers(multimap);
             }
         }
     }
@@ -561,7 +569,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
             int unlockedLevel = getUnlockedLevel(stat);
-            Multimap multimap = stat.attributes(this,unlockedLevel);
+            Multimap multimap = stat.attributes(this, unlockedLevel);
             if (multimap != null) {
                 player.getAttributeMap().removeAttributeModifiers(multimap);
             }
@@ -598,41 +606,41 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             List<MinimapEntityInfo> entityList = new ArrayList<>();
             for (Object entityObject : getPlayer().worldObj.loadedEntityList) {
                 if (entityObject instanceof EntityLivingBase) {
-                    if (isVisibleOnMinimap((EntityLivingBase) entityObject, player, Vec3.createVectorHelper(((EntityLivingBase) entityObject).posX,((EntityLivingBase) entityObject).posY,((EntityLivingBase) entityObject).posZ).subtract(Vec3.createVectorHelper(player.posX,player.posY,player.posZ))) && MinimapEntityInfo.hasInfo((EntityLivingBase)entityObject,player)) {
-                        entityList.add(new MinimapEntityInfo((EntityLivingBase) entityObject,getPlayer()));
+                    if (isVisibleOnMinimap((EntityLivingBase) entityObject, player, Vec3.createVectorHelper(((EntityLivingBase) entityObject).posX, ((EntityLivingBase) entityObject).posY, ((EntityLivingBase) entityObject).posZ).subtract(Vec3.createVectorHelper(player.posX, player.posY, player.posZ))) && MinimapEntityInfo.hasInfo((EntityLivingBase)entityObject, player)) {
+                        entityList.add(new MinimapEntityInfo((EntityLivingBase)entityObject, getPlayer()));
                     }
                 }
             }
 
             if (entityList.size() > 0)
-                MatterOverdrive.packetPipeline.sendTo(new PacketSendMinimapInfo(entityList),(EntityPlayerMP)getPlayer());
+                MatterOverdrive.packetPipeline.sendTo(new PacketSendMinimapInfo(entityList), (EntityPlayerMP)getPlayer());
         }
     }
 
-    public static boolean isVisibleOnMinimap(EntityLivingBase entityLivingBase,EntityPlayer player,Vec3 relativePosition)
+    public static boolean isVisibleOnMinimap(EntityLivingBase entityLivingBase, EntityPlayer player, Vec3 relativePosition)
     {
-        return !entityLivingBase.isInvisible() && Math.abs(relativePosition.yCoord) < 16 && isInRangeToRenderDist(entityLivingBase,256);
+        return !entityLivingBase.isInvisible() && Math.abs(relativePosition.yCoord) < 16 && isInRangeToRenderDist(entityLivingBase, 256);
     }
 
-    private static boolean isInRangeToRenderDist(EntityLivingBase entityLivingBase,double p_70112_1_)
+    private static boolean isInRangeToRenderDist(EntityLivingBase entity, double distance)
     {
-        double d1 = entityLivingBase.boundingBox.getAverageEdgeLength();
-        d1 *= 64.0D * entityLivingBase.renderDistanceWeight;
-        return p_70112_1_ < d1 * d1;
+        double d1 = entity.boundingBox.getAverageEdgeLength();
+        d1 *= 64.0D * entity.renderDistanceWeight;
+        return distance < d1 * d1;
     }
 
     public void manageOutOfPower()
     {
         IAttributeInstance speed = player.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-        if (speed.getModifier(outOfPowerSpeedModifyer.getID()) == null)
+        if (speed.getModifier(outOfPowerSpeedModifier.getID()) == null)
         {
-            speed.applyModifier(outOfPowerSpeedModifyer);
+            speed.applyModifier(outOfPowerSpeedModifier);
         }
 
         if (player.worldObj.isRemote)
         {
             if (player.worldObj.getWorldTime() % 60 == 0) {
-                getEffects().setInteger("GlitchTime",5);
+                getEffects().setInteger("GlitchTime", 5);
                 playGlitchSoundClient(player.worldObj.rand, 0.2f);
             }
         }
@@ -641,9 +649,9 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void manageHasPower()
     {
         IAttributeInstance speed = player.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-        if (speed.getModifier(outOfPowerSpeedModifyer.getID()) != null)
+        if (speed.getModifier(outOfPowerSpeedModifier.getID()) != null)
         {
-            speed.removeModifier(outOfPowerSpeedModifyer);
+            speed.removeModifier(outOfPowerSpeedModifier);
         }
     }
 
@@ -695,12 +703,9 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             }
 
             wheelStats.clear();
-            for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
-                if (stat.showOnWheel(this,getUnlockedLevel(stat)) && isUnlocked(stat,0))
-                {
-                    wheelStats.add(stat);
-                }
-            }
+			wheelStats.addAll(MatterOverdrive.statRegistry.getStats().stream()
+					.filter(stat -> stat.showOnWheel(this, getUnlockedLevel(stat)) && isUnlocked(stat, 0))
+					.collect(Collectors.toList()));
 
             if (mag > magAcceptance)
             {
@@ -747,7 +752,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @SideOnly(Side.CLIENT)
     private void playTransformMusic()
     {
-        SoundBase transform_music = new SoundBase(Reference.MOD_ID + ":" + "transformation_music", 1, 1,false,0,0,0,0, ISound.AttenuationType.NONE);
+        SoundBase transform_music = new SoundBase(Reference.MOD_ID + ":transformation_music", 1, 1, false, 0, 0, 0, 0, ISound.AttenuationType.NONE);
 
         if (!Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(transform_music))
         {
@@ -758,7 +763,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void onEntityHurt(LivingHurtEvent event)
     {
         if (isAndroid() && !event.isCanceled()) {
-            effects.setInteger("GlitchTime", moddify(10, AndroidAttributes.attributeGlitchTime));
+            effects.setInteger("GlitchTime", modify(10, AndroidAttributes.attributeGlitchTime));
             sync(PacketSyncAndroid.SYNC_EFFECTS);
                 player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "gui.glitch_" + player.worldObj.rand.nextInt(11), 0.2f, 0.9f + player.worldObj.rand.nextFloat() * 0.2f);
         }
@@ -797,7 +802,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         }
     }
 
-    public int moddify(int amount,IAttribute attribute)
+    public int modify(int amount, IAttribute attribute)
     {
         IAttributeInstance glitchAttribute = player.getEntityAttribute(attribute);
         if (glitchAttribute != null)
@@ -807,7 +812,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         return amount;
     }
 
-    public float moddify(float amount,IAttribute attribute)
+    public float modify(float amount, IAttribute attribute)
     {
         IAttributeInstance glitchAttribute = player.getEntityAttribute(attribute);
         if (glitchAttribute != null)
@@ -852,7 +857,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 if (effects.getInteger(EFFECT_KEY_TURNING) % 40 == 0) {
                     player.attackEntityFrom(fake, 0.1f);
                     if (player.worldObj.isRemote) {
-                        playGlitchSound(this,player.worldObj.rand, 0.2f);
+                        playGlitchSound(this, player.worldObj.rand, 0.2f);
                     }
                 }
             }else
@@ -872,7 +877,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     }
 
     public void playGlitchSound(AndroidPlayer player,Random random,float amount) {
-        player.getPlayer().worldObj.playSoundEffect(player.getPlayer().posX,player.getPlayer().posY,player.getPlayer().posY,Reference.MOD_ID + ":" + "gui.glitch_" + random.nextInt(11), amount, 0.9f + random.nextFloat() * 0.2f);
+        player.getPlayer().worldObj.playSoundEffect(player.getPlayer().posX,player.getPlayer().posY,player.getPlayer().posY,Reference.MOD_ID + ":gui.glitch_" + random.nextInt(11), amount, 0.9f + random.nextFloat() * 0.2f);
     }
 
     @SideOnly(Side.CLIENT)
@@ -909,8 +914,14 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         return getEffects().getLong(effect);
     }
-    public IBionicStat getActiveStat(){return activeStat;}
-    public void setActiveStat(IBionicStat stat){this.activeStat = stat;}
+    public IBionicStat getActiveStat()
+	{
+		return activeStat;
+	}
+    public void setActiveStat(IBionicStat stat)
+	{
+		this.activeStat = stat;
+	}
     //endregion
 
     //region inventory

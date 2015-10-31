@@ -11,19 +11,21 @@ import matteroverdrive.compat.modules.CompatNEI;
 import matteroverdrive.compat.modules.CompatThermalExpansion;
 import matteroverdrive.compat.modules.computercraft.CompatComputerCraft;
 import matteroverdrive.compat.modules.waila.CompatWaila;
+import matteroverdrive.util.MOLog;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 /**
- *
+ * Compatibility manager for Matter Overdrive.
  *
  * @author shadowfacts
  */
-public class MatterOverdriveCompat {
+public class MatterOverdriveCompat
+{
 
-	private static ArrayList<Class> modules = new ArrayList<Class>();
+	private static ArrayList<Class> modules = new ArrayList<>();
 
 	//	Add additional modules that need to run on the Server and/or Client here
 	public static void registerModules()
@@ -49,16 +51,16 @@ public class MatterOverdriveCompat {
 				modules.add(clazz);
 				return true;
 			} else {
-				MatterOverdrive.log.info("The mod %s was not loaded, skipping compatibility module.", annotation.value());
+				MOLog.info("The mod %s was not loaded, skipping compatibility module.", annotation.value());
 				return false;
 			}
 		}
-		MatterOverdrive.log.error("There was a problem register a compatibility module!");
+		MOLog.error("There was a problem register a compatibility module!");
 		return false;
 	}
 
 	public static void preInit(FMLPreInitializationEvent event) {
-		MatterOverdrive.log.info("Attempting to run pre-initialization methods for all registered compatibility modules.");
+		MOLog.info("Attempting to run pre-initialization methods for all registered compatibility modules.");
 		for (Class clazz : modules) {
 			for (Method m : clazz.getMethods()) {
 				if (m.isAnnotationPresent(Compat.PreInit.class) && Modifier.isStatic(m.getModifiers())) {
@@ -66,7 +68,7 @@ public class MatterOverdriveCompat {
 						m.invoke(null, event);
 					} catch (ReflectiveOperationException e) {
 						Compat annotation = (Compat)clazz.getAnnotation(Compat.class);
-						MatterOverdrive.log.error(String.format("There was an error trying to invoke the pre-initialization method of the compatibility module for %1$s", annotation.value()), e);
+						MOLog.error(String.format("There was an error trying to invoke the pre-initialization method of the compatibility module for %1$s", annotation.value()), e);
 					}
 				}
 			}
@@ -74,7 +76,7 @@ public class MatterOverdriveCompat {
 	}
 
 	public static void init(FMLInitializationEvent event) {
-		MatterOverdrive.log.info("Attempting to run initialization methods for all registered compatibility modules.");
+		MOLog.info("Attempting to run initialization methods for all registered compatibility modules.");
 		for (Class clazz : modules) {
 			for (Method m : clazz.getMethods()) {
 				if (m.isAnnotationPresent(Compat.Init.class) && Modifier.isStatic(m.getModifiers())) {
@@ -82,7 +84,7 @@ public class MatterOverdriveCompat {
 						m.invoke(null, event);
 					} catch (ReflectiveOperationException e) {
 						Compat annotation = (Compat)clazz.getAnnotation(Compat.class);
-						MatterOverdrive.log.error(String.format("There was an error trying to invoke the initialization method of the compatibility module for %1$s", annotation.value()), e);
+						MOLog.error(String.format("There was an error trying to invoke the initialization method of the compatibility module for %1$s", annotation.value()), e);
 					}
 				}
 			}
@@ -90,7 +92,7 @@ public class MatterOverdriveCompat {
 	}
 
 	public static void postInit(FMLPostInitializationEvent event) {
-		MatterOverdrive.log.info("Attempting to run post-initialization methods for all registered compatibility modules.");
+		MOLog.info("Attempting to run post-initialization methods for all registered compatibility modules.");
 		for (Class clazz : modules) {
 			for (Method m : clazz.getMethods()) {
 				if (m.isAnnotationPresent(Compat.PostInit.class) && Modifier.isStatic(m.getModifiers())) {
@@ -98,7 +100,7 @@ public class MatterOverdriveCompat {
 						m.invoke(null, event);
 					} catch (ReflectiveOperationException e) {
 						Compat annotation = (Compat)clazz.getAnnotation(Compat.class);
-						MatterOverdrive.log.error(String.format("There was an error trying to invoke the post-initialization method of the compatibility module %1$s", annotation.value()), e);
+						MOLog.error(String.format("There was an error trying to invoke the post-initialization method of the compatibility module %1$s", annotation.value()), e);
 					}
 				}
 			}

@@ -42,27 +42,27 @@ public class CreativeBattery extends Battery
 		ItemStack unpowered = new ItemStack(item);
 		list.add(unpowered);
 	}
-	
+
 	@Override
-	public int getEnergyStored(ItemStack container) 
+	public int getEnergyStored(ItemStack container)
 	{
 		return capacity;
 	}
-	
+
 	@Override
 	public void setEnergyStored(ItemStack container,int amount)
 	{
 		EnergyHelper.setDefaultEnergyTag(container, capacity);
 	}
-	
+
 	@Override
-	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) 
+	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate)
 	{
 		return Math.min(this.maxExtract, maxExtract);
 	}
-	
+
 	@Override
-	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) 
+	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate)
 	{
 		return 0;
 	}

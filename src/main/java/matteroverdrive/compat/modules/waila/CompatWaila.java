@@ -36,14 +36,17 @@ import mcp.mobius.waila.api.IWailaRegistrar;
  * @author shadowfacts
  */
 @Compat("Waila")
-public class CompatWaila {
+public class CompatWaila
+{
 
 	@Compat.Init
-	public static void init(FMLInitializationEvent event) {
+	public static void init(FMLInitializationEvent event)
+	{
 		FMLInterModComms.sendMessage("Waila", "register", "matteroverdrive.compat.modules.waila.CompatWaila.registerCallback");
 	}
 
-	public static void registerCallback(IWailaRegistrar registrar) {
+	public static void registerCallback(IWailaRegistrar registrar)
+	{
 		registrar.registerBodyProvider(new TileEntityWeaponStation(), BlockWeaponStation.class);
 		registrar.registerBodyProvider(new TileEntityMachineStarMap(), BlockStarMap.class);
 		registrar.registerBodyProvider(new TileEntityMachineTransporter(), BlockTransporter.class);

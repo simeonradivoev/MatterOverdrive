@@ -41,13 +41,13 @@ public class ContainerAndroidStation extends ContainerMachine<TileEntityAndroidS
     {
         AndroidPlayer android = AndroidPlayer.get(inventory.player);
 
-        for (int i = 0;i < Reference.BIONIC_OTHER+1;i++)
+        for (int i = 0; i < Reference.BIONIC_OTHER+1; i++)
         {
-            addSlotToContainer(new SlotInventory(android,android.getInventory().getSlot(i),0,0));
+            addSlotToContainer(new SlotInventory(android, android.getInventory().getSlot(i), 0, 0));
         }
         addSlotToContainer(new SlotEnergy(android.getInventory(), Reference.BIONIC_BATTERY, 8, 55));
 
-        AddUpgradeSlots(machine.getInventoryContainer());
+        addUpgradeSlots(machine.getInventoryContainer());
         MOContainerHelper.AddPlayerSlots(inventory, this, 45, 150, true, true);
     }
 }

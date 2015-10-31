@@ -20,6 +20,7 @@ package matteroverdrive.api.inventory;
 
 import com.google.common.collect.Multimap;
 import matteroverdrive.entity.AndroidPlayer;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -45,12 +46,11 @@ public interface IBionicPart
     int getType(ItemStack itemStack);
 
     /**
-     * Does the bionic part affect the given android player.
      * @param player The android player.
      * @param itemStack The bionic item stack.
-     * @return Does the part affect the android player.
+     * @return Does the bionic part affect the android player.
      */
-    boolean affectAndroid(AndroidPlayer player,ItemStack itemStack);
+    boolean affectAndroid(AndroidPlayer player, ItemStack itemStack);
 
     /**
      * A Multimap of modifiers similar to vanilla armor modifiers.
@@ -58,5 +58,5 @@ public interface IBionicPart
      * @param itemStack The Bionic part item stack.
      * @return A multimap of modifiers.
      */
-    Multimap getModifiers(AndroidPlayer player,ItemStack itemStack);
+    Multimap<String, AttributeModifier> getModifiers(AndroidPlayer player, ItemStack itemStack);
 }

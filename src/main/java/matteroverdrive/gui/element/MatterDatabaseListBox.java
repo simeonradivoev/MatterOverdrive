@@ -38,19 +38,19 @@ public class MatterDatabaseListBox extends MOElementListBox
 	private static final ResourceLocation SLOT_BG = ElementSlot.getTexture("big");
 	public ItemStack scanner;
 	public String filter = "";
-	
-	
+
+
 	public MatterDatabaseListBox(MOGuiBase gui,int x,int y,int width,int height, ItemStack scanner)
 	{
 		super(gui,x,y,width,height);
 		this.scanner = scanner;
 	}
-	
+
 	class MatterDatabaseEntry implements IMOListBoxElement
 	{
 		NBTTagCompound itemComp;
 		String name;
-		
+
 		public MatterDatabaseEntry(NBTTagCompound itemComp)
 		{
 			this.itemComp = itemComp;
@@ -74,7 +74,7 @@ public class MatterDatabaseListBox extends MOElementListBox
 		}
 
 		@Override
-		public Object getValue() 
+		public Object getValue()
 		{
 			return itemComp;
 		}
@@ -99,8 +99,8 @@ public class MatterDatabaseListBox extends MOElementListBox
 			}
 		}
 
-		
-		public void drawToolTop(MOElementListBox listBox, int x, int y) 
+
+		public void drawToolTop(MOElementListBox listBox, int x, int y)
 		{
 			ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemComp);
 			List tooltip = item.getTooltip(Minecraft.getMinecraft().thePlayer, false);
@@ -110,8 +110,8 @@ public class MatterDatabaseListBox extends MOElementListBox
 			GL11.glColor4f(1, 1, 1, 1);
 		}
 	}
-	
-	public MOGuiBase getGui() 
+
+	public MOGuiBase getGui()
 	{
 		return (MOGuiBase)this.gui;
 	}
@@ -126,14 +126,14 @@ public class MatterDatabaseListBox extends MOElementListBox
 	{
 		return element.getName().toLowerCase().contains(filter.toLowerCase());
 	}
-	
+
 	public String getFilter()
 	{
 		return this.filter;
 	}
-	
-	
-	
+
+
+
 	public void updateList(NBTTagList itemList) {
 		//System.out.println("List Updated");
 		this.clear();
@@ -151,12 +151,12 @@ public class MatterDatabaseListBox extends MOElementListBox
 	}
 
 	@Override
-	protected void onSelectionChanged(int newIndex, IMOListBoxElement newElement) 
+	protected void onSelectionChanged(int newIndex, IMOListBoxElement newElement)
 	{
 		MatterDatabaseEntry entry = (MatterDatabaseEntry) newElement;
 		MatterScanner.setSelected(scanner, entry.itemComp);
 		//updateList(this.filter);
 		((MOGuiBase)gui).handleElementButtonClick(this,this.name,newIndex);
 	}
-	
+
 }

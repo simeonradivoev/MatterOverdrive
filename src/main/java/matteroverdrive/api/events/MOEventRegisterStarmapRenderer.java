@@ -36,7 +36,7 @@ public class MOEventRegisterStarmapRenderer extends Event
      * The Space body render itself.
      */
     public final ISpaceBodyHoloRenderer renderer;
-    public MOEventRegisterStarmapRenderer(Class<? extends SpaceBody> spaceBodyType,ISpaceBodyHoloRenderer renderer)
+    public MOEventRegisterStarmapRenderer(Class<? extends SpaceBody> spaceBodyType, ISpaceBodyHoloRenderer renderer)
     {
         this.spaceBodyType = spaceBodyType;
         this.renderer = renderer;

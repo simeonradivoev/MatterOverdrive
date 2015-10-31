@@ -51,7 +51,7 @@ public class DestinationFilterSlot extends Slot
     public int getMaxStackSize(){return 1;}
 
     @Override
-    public boolean keepOnDismatle(){return true;}
+    public boolean keepOnDismantle(){return true;}
 
     @Override
     public String getUnlocalizedTooltip(){

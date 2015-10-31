@@ -50,13 +50,13 @@ public class ElementMonitorItemPattern extends ElementItemPattern
         if (expanded)
         {
             ApplyColor();
-            MOElementButton.NORMAL_TEXTURE.Render(posX + 22, posY + 2, 18, 18);
+            MOElementButton.NORMAL_TEXTURE.render(posX + 22, posY + 2, 18, 18);
             getFontRenderer().drawString(EnumChatFormatting.BOLD + "+", posX + 28, posY + 7, Reference.COLOR_MATTER.getColor());
             ApplyColor();
-            MOElementButton.NORMAL_TEXTURE.Render(posX + 22, posY + 22, 18, 18);
+            MOElementButton.NORMAL_TEXTURE.render(posX + 22, posY + 22, 18, 18);
             getFontRenderer().drawString(EnumChatFormatting.BOLD + "-", posX + 28, posY + 28, Reference.COLOR_MATTER.getColor());
             ApplyColor();
-            MOElementButton.HOVER_TEXTURE_DARK.Render(posX + 2, posY + 22, 18, 18);
+            MOElementButton.HOVER_TEXTURE_DARK.render(posX + 2, posY + 22, 18, 18);
             gui.drawCenteredString(getFontRenderer(), Integer.toString(amount), posX + 11, posY + 28, Reference.COLOR_MATTER.getColor());
         }
         ResetColor();

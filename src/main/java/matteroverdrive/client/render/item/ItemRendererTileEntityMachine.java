@@ -23,13 +23,13 @@ public class ItemRendererTileEntityMachine implements IItemRenderer
         this.tileEntity = tileEntity;
     }
 
-    public ItemRendererTileEntityMachine(TileEntitySpecialRenderer renderer, TileEntity tileEntity,double scale)
+    public ItemRendererTileEntityMachine(TileEntitySpecialRenderer renderer, TileEntity tileEntity, double scale)
     {
         this(renderer,tileEntity);
         this.scale = scale;
     }
 
-    public ItemRendererTileEntityMachine(TileEntitySpecialRenderer renderer, TileEntity tileEntity,double scale,Vec3 offfset)
+    public ItemRendererTileEntityMachine(TileEntitySpecialRenderer renderer, TileEntity tileEntity, double scale, Vec3 offfset)
     {
         this(renderer,tileEntity,scale);
         this.offfset = offfset;
@@ -53,7 +53,7 @@ public class ItemRendererTileEntityMachine implements IItemRenderer
         glPushMatrix();
         if (type == ItemRenderType.EQUIPPED || type == ItemRenderType.EQUIPPED_FIRST_PERSON)
         {
-            renderer.renderTileEntityAt(tileEntity,0,0,0,0);
+            renderer.renderTileEntityAt(tileEntity, 0, 0, 0, 0);
         }
         else
         {

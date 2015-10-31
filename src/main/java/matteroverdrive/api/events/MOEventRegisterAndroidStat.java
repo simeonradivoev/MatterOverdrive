@@ -32,10 +32,12 @@ public class MOEventRegisterAndroidStat extends Event
      * The Bionic Stat to be registered
      */
     public final IBionicStat stat;
+
     public MOEventRegisterAndroidStat(IBionicStat stat)
     {
         this.stat = stat;
     }
+
     public boolean isCancelable()
     {
         return true;

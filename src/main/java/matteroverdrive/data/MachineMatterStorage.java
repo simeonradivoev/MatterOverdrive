@@ -25,38 +25,42 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends MatterStorage
 {
 	protected final T machine;
-	
-	public MachineMatterStorage(T machine,int capacity)
+	protected int matter;
+	protected int capacity;
+	protected int maxExtract;
+	protected int maxReceive;
+
+	public MachineMatterStorage(T machine, int capacity)
 	{
-        this(machine,capacity,capacity,capacity);
+        	this(machine, capacity, capacity, capacity);
 	}
 
-    public MachineMatterStorage(T machine,int capacity, int maxExtract)
+    public MachineMatterStorage(T machine, int capacity, int maxExtract)
     {
-        this(machine,capacity,maxExtract,maxExtract);
+        this(machine, capacity, maxExtract, maxExtract);
     }
 
-    public MachineMatterStorage(T machine,int capacity, int maxExtract, int maxReceive)
+    public MachineMatterStorage(T machine, int capacity, int maxExtract, int maxReceive)
     {
-		super(capacity,maxExtract,maxReceive);
+		super(capacity, maxExtract, maxReceive);
 		this.machine = machine;
     }
 
 	@Override
-	public int getCapacity() 
+	public int getCapacity()
 	{
-		return Math.max(0, (int) (super.getCapacity() * machine.getUpgradeMultiply(UpgradeTypes.MatterStorage)));
+		return Math.max(0, (int)(super.getCapacity() * machine.getUpgradeMultiply(UpgradeTypes.MatterStorage)));
 	}
 
 	@Override
 	public int getMaxExtract()
 	{
-		return Math.max(0,(int)(super.getMaxExtract() * machine.getUpgradeMultiply(UpgradeTypes.MatterTransfer)));
+		return Math.max(0, (int)(super.getMaxExtract() * machine.getUpgradeMultiply(UpgradeTypes.MatterTransfer)));
 	}
 
 	@Override
 	public int getMaxReceive() {
-		return Math.max(0,(int)(super.getMaxReceive() * machine.getUpgradeMultiply(UpgradeTypes.MatterTransfer)));
+		return Math.max(0, (int)(super.getMaxReceive() * machine.getUpgradeMultiply(UpgradeTypes.MatterTransfer)));
 	}
 
 	@Override
@@ -90,7 +94,7 @@ public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends M
 		int lastMatter = super.getMatterStored();
 		super.setMatterStored(amount);
 		if (lastMatter != amount) {
-			machine.ForceSync();
+			machine.forceSync();
 			if (machine.hasWorldObj())
 				machine.getWorldObj().markBlockForUpdate(machine.xCoord, machine.yCoord,machine.zCoord);
 		}
@@ -102,7 +106,7 @@ public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends M
 		int modifiedAmount = super.modifyMatterStored(amount);
 		if (modifiedAmount != 0)
 		{
-			machine.ForceSync();
+			machine.forceSync();
 			if (machine.hasWorldObj())
 				machine.getWorldObj().markBlockForUpdate(machine.xCoord, machine.yCoord,machine.zCoord);
 		}

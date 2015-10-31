@@ -47,7 +47,6 @@ import net.minecraft.world.World;
  */
 public class EntityVillagerMadScientist extends EntityVillager implements IDialogNpc
 {
-    //EntityDialogSystem dialogSystem;
     private static DialogMessageRandom mainHumanMessage;
     private static DialogMessageRandom mainAndroidMessage;
     private EntityPlayer dialogPlayer;
@@ -55,24 +54,23 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
     public EntityVillagerMadScientist(World world)
     {
         super(world, 666);
-        //dialogSystem = new EntityDialogSystem(this);
         this.tasks.addTask(1,new EntityAITalkToPlayer(this));
         this.tasks.addTask(1, new EntityAIWatchDialogPlayer(this));
     }
 
     @Override
-    public IEntityLivingData onSpawnWithEgg(IEntityLivingData p_110161_1_)
+    public IEntityLivingData onSpawnWithEgg(IEntityLivingData data)
     {
         this.getEntityAttribute(SharedMonsterAttributes.followRange).applyModifier(new AttributeModifier("Random spawn bonus", this.rand.nextGaussian() * 0.05D, 1));
-        return p_110161_1_;
+        return data;
     }
 
     @Override
-    public EntityVillager createChild(EntityAgeable p_90011_1_)
+    public EntityVillager createChild(EntityAgeable entity)
     {
-        EntityVillagerMadScientist entityvillager = new EntityVillagerMadScientist(this.worldObj);
-        entityvillager.onSpawnWithEgg(null);
-        return entityvillager;
+        EntityVillagerMadScientist villager = new EntityVillagerMadScientist(this.worldObj);
+        villager.onSpawnWithEgg(null);
+        return villager;
     }
 
     @Override
@@ -152,15 +150,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
     @Override
     public IDialogMessage getStartDialogMessage(EntityPlayer player)
     {
-        if (AndroidPlayer.get(player).isAndroid())
-        {
-            return mainAndroidMessage;
-
-        }
-        else
-        {
-            return mainHumanMessage;
-        }
+        return AndroidPlayer.get(player).isAndroid ? mainAndroidMessage : mainHumanMessage;
     }
 
     @Override

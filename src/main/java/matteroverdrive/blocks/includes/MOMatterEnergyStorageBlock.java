@@ -17,8 +17,8 @@ public abstract class MOMatterEnergyStorageBlock extends MOBlockMachine
 	private boolean keepsMatter;
 	private boolean keepsEnergy;
 	protected boolean dropsItself;
-	
-	public MOMatterEnergyStorageBlock(Material material, String name,boolean keepsEnergy,boolean keepsMatter) 
+
+	public MOMatterEnergyStorageBlock(Material material, String name,boolean keepsEnergy,boolean keepsMatter)
 	{
 		super(material, name);
 		this.keepsEnergy = keepsEnergy;
@@ -29,22 +29,22 @@ public abstract class MOMatterEnergyStorageBlock extends MOBlockMachine
     {
         TileEntity entity = world.getTileEntity(x,y,z);
 
-        if(entity instanceof IMatterHandler && entity != null)
+        if (entity != null && entity instanceof IMatterHandler)
         {
             if(((IMatterHandler) entity).getMatterStored() > 0)
             {
-                return MatterOverdriveIcons.Matter_tank_full;
+                return MatterOverdriveIcons.matter_tank_full;
             }
         }
-        return MatterOverdriveIcons.Matter_tank_empty;
+        return MatterOverdriveIcons.matter_tank_empty;
     }
-	
+
 	@Override
 	 public void onBlockPlacedBy(World World, int x, int y, int z, EntityLivingBase player, ItemStack item)
 	    {
 	    	super.onBlockPlacedBy(World, x, y, z, player, item);
             if(item.hasTagCompound()) {
-                TileEntity entity = World.getTileEntity(x,y,z);
+                TileEntity entity = World.getTileEntity(x, y, z);
 
                 if (entity instanceof MOTileEntityMachineEnergy) {
                     if(this.keepsEnergy)

@@ -73,7 +73,7 @@ public class ElementItemPattern extends ElementSlot
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        texture.Render(posX, posY, sizeX, sizeY);
+        texture.render(posX, posY, sizeX, sizeY);
     }
 
     @Override

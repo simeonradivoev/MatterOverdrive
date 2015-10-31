@@ -37,7 +37,7 @@ public class StarMapEntityRenderer extends EntityRenderer
 
     public StarMapEntityRenderer(Minecraft mc)
     {
-        super(mc,mc.getResourceManager());
+        super(mc, mc.getResourceManager());
         this.mc = mc;
     }
 
@@ -55,7 +55,7 @@ public class StarMapEntityRenderer extends EntityRenderer
 
         if (renderEntity == null)
         {
-            renderEntity = new EntityFakePlayer(mc.theWorld,mc.thePlayer.getGameProfile());
+            renderEntity = new EntityFakePlayer(mc.theWorld, mc.thePlayer.getGameProfile());
         }
 
         float lastFov = mc.gameSettings.fovSetting;
@@ -87,9 +87,12 @@ public class StarMapEntityRenderer extends EntityRenderer
             {
                 Star star = starMap.getStar();
                 float maxDistance = 0;
-                if (star != null) {
-                    for (Planet planet : star.getPlanets()) {
-                        if (maxDistance < planet.getOrbit()) {
+                if (star != null)
+                {
+                    for (Planet planet : star.getPlanets())
+                    {
+                        if (maxDistance < planet.getOrbit())
+                        {
                             maxDistance = planet.getOrbit();
                         }
                     }

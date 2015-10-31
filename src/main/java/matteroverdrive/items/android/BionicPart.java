@@ -28,6 +28,7 @@ import net.minecraft.item.ItemStack;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by Simeon on 9/10/2015.
@@ -40,29 +41,23 @@ public abstract class BionicPart extends MOBaseItem implements IBionicPart
 
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
-        super.addDetails(itemstack,player,infos);
-        Multimap multimap = getModifiers(AndroidPlayer.get(player),itemstack);
+        super.addDetails(itemstack, player, infos);
+        Multimap<String, AttributeModifier> multimap = getModifiers(AndroidPlayer.get(player), itemstack);
         if (multimap != null)
         {
-            for (Object entry : multimap.values())
-            {
-                if (entry instanceof AttributeModifier)
-                {
-                    AttributeModifier modifier = (AttributeModifier)entry;
-                    if (modifier.getOperation() == 0)
-                    {
-                        infos.add(String.format("%s : +%s",modifier.getName(),modifier.getAmount()));
-                    }
-                    else if (modifier.getOperation() == 1)
-                    {
-                        infos.add(String.format("%s : +%s", modifier.getName(), DecimalFormat.getPercentInstance().format(modifier.getAmount())));
-                    }else
-                    {
-                        infos.add(String.format("%s : %s", modifier.getName(), DecimalFormat.getPercentInstance().format(1+modifier.getAmount())));
-                    }
-
-                }
-            }
+            multimap.values().stream()
+					.forEach(modifier -> {
+						switch (modifier.getOperation()) {
+							case 0:
+								infos.add(String.format("%s: +%s", modifier.getName(), modifier.getAmount()));
+								break;
+							case 1:
+								infos.add(String.format("%s: +%s", modifier.getName(), modifier.getAmount()));
+								break;
+							default:
+								infos.add(String.format("%s: %s", modifier.getName(), DecimalFormat.getPercentInstance().format(modifier.getAmount() + 1)));
+						}
+					});
         }
     }
 

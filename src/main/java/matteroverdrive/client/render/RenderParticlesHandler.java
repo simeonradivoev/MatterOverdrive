@@ -40,11 +40,11 @@ public class RenderParticlesHandler implements IWorldLastRenderer
         fxes = new List[Blending.values().length];
         for (int i = 0;i < Blending.values().length;i++)
         {
-            fxes[i] = new ArrayList<EntityFX>();
+            fxes[i] = new ArrayList<>();
         }
     }
 
-    public void onRenderWorldLast(RenderHandler renderHandler,RenderWorldLastEvent event)
+    public void onRenderWorldLast(RenderHandler renderHandler, RenderWorldLastEvent event)
     {
         renderParticles(Minecraft.getMinecraft().thePlayer, event.partialTicks);
     }
@@ -56,7 +56,7 @@ public class RenderParticlesHandler implements IWorldLastRenderer
         }
     }
 
-    public void addEffect(EntityFX entityFX,Blending blendingLayer)
+    public void addEffect(EntityFX entityFX, Blending blendingLayer)
     {
         fxes[blendingLayer.ordinal()].add(entityFX);
     }
@@ -100,16 +100,16 @@ public class RenderParticlesHandler implements IWorldLastRenderer
         }
     }
 
-    public void renderParticles(Entity p_78874_1_, float p_78874_2_)
+    public void renderParticles(Entity entity, float f)
     {
         float f1 = ActiveRenderInfo.rotationX;
         float f2 = ActiveRenderInfo.rotationZ;
         float f3 = ActiveRenderInfo.rotationYZ;
         float f4 = ActiveRenderInfo.rotationXY;
         float f5 = ActiveRenderInfo.rotationXZ;
-        EntityFX.interpPosX = p_78874_1_.lastTickPosX + (p_78874_1_.posX - p_78874_1_.lastTickPosX) * (double)p_78874_2_;
-        EntityFX.interpPosY = p_78874_1_.lastTickPosY + (p_78874_1_.posY - p_78874_1_.lastTickPosY) * (double)p_78874_2_;
-        EntityFX.interpPosZ = p_78874_1_.lastTickPosZ + (p_78874_1_.posZ - p_78874_1_.lastTickPosZ) * (double)p_78874_2_;
+        EntityFX.interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)f;
+        EntityFX.interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)f;
+        EntityFX.interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)f;
 
         for (int k = 0; k < fxes.length; ++k)
         {
@@ -135,24 +135,17 @@ public class RenderParticlesHandler implements IWorldLastRenderer
                 {
                     final EntityFX entityfx = this.fxes[k].get(j);
                     if (entityfx == null) continue;
-                    tessellator.setBrightness(entityfx.getBrightnessForRender(p_78874_2_));
+                    tessellator.setBrightness(entityfx.getBrightnessForRender(f));
 
                     try
                     {
-                        entityfx.renderParticle(tessellator, p_78874_2_, f1, f5, f2, f3, f4);
+                        entityfx.renderParticle(tessellator, f, f1, f5, f2, f3, f4);
                     }
                     catch (Throwable throwable)
                     {
                         CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Rendering Particle");
                         CrashReportCategory crashreportcategory = crashreport.makeCategory("Particle being rendered");
-                        crashreportcategory.addCrashSectionCallable("Particle", new Callable()
-                        {
-                            private static final String __OBFID = "CL_00000918";
-                            public String call()
-                            {
-                                return entityfx.toString();
-                            }
-                        });
+                        crashreportcategory.addCrashSectionCallable("Particle", entityfx::toString);
                         throw new ReportedException(crashreport);
                     }
                 }

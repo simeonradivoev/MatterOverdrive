@@ -58,18 +58,18 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     {
         if (!android.getPlayer().worldObj.isRemote)
         {
-            if (isActive(android, level) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,android)))
+            if (isActive(android, level) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this, level, android)))
             {
                 if (!android.getPlayer().isInvisible())
                 {
-                    android.getPlayer().worldObj.playSoundAtEntity(android.getPlayer(),Reference.MOD_ID + ":" + "cloak_on", 1, 1);
+                    android.getPlayer().worldObj.playSoundAtEntity(android.getPlayer(), Reference.MOD_ID + ":cloak_on", 1, 1);
                 }
                 android.getPlayer().setInvisible(true);
-                android.extractEnergy(ENERGY_PER_TICK,false);
+                android.extractEnergy(ENERGY_PER_TICK, false);
             } else {
                 if (android.getPlayer().isInvisible())
                 {
-                    android.getPlayer().worldObj.playSoundAtEntity(android.getPlayer(),Reference.MOD_ID + ":" + "cloak_off", 1, 1);
+                    android.getPlayer().worldObj.playSoundAtEntity(android.getPlayer(),Reference.MOD_ID + ":cloak_off", 1, 1);
                 }
                 android.getPlayer().setInvisible(false);
             }
@@ -87,10 +87,10 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
         }
     }
 
-    public void setActive(AndroidPlayer android, int level,boolean active)
+    public void setActive(AndroidPlayer android, int level, boolean active)
     {
         android.getEffects().setBoolean("Cloaked", active);
-        android.sync(PacketSyncAndroid.SYNC_EFFECTS,true);
+        android.sync(PacketSyncAndroid.SYNC_EFFECTS, true);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     @Override
     public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
     {
-        if (!isEnabled(androidPlayer,level) && isActive(androidPlayer,level))
+        if (!isEnabled(androidPlayer, level) && isActive(androidPlayer, level))
         {
             androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_CLOAK, false);
         }
@@ -126,7 +126,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     }
 
     @Override
-    public boolean isEnabled(AndroidPlayer androidPlayer,int level)
+    public boolean isEnabled(AndroidPlayer androidPlayer, int level)
     {
         return super.isEnabled(androidPlayer,level) && androidPlayer.extractEnergy(ENERGY_PER_TICK,true) >= ENERGY_PER_TICK;
     }
@@ -134,6 +134,6 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
-        ENERGY_PER_TICK = config.getInt("cloak_energy_per_tick",ConfigurationHandler.CATEGORY_ABILITIES,128,"The energy cost of the Cloak");
+        ENERGY_PER_TICK = config.getInt("cloak_energy_per_tick", ConfigurationHandler.CATEGORY_ABILITIES, 128, "The energy cost of the Cloak");
     }
 }

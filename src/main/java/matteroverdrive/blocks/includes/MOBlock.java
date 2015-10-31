@@ -67,23 +67,22 @@ public class MOBlock extends Block
     public void onBlockAdded(World world, int x, int y, int z)
     {
         super.onBlockAdded(world, x, y, z);
-        //this.SetDefaultRotation(world, x, y, z);
 
-        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x,y,z);
+        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x, y, z);
         if(tileEntity != null)
-            tileEntity.onAdded(world,x,y,z);
+            tileEntity.onAdded(world, x, y, z);
     }
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
     {
         super.onNeighborBlockChange(world, x, y, z, block);
-        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x,y,z);
+        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x, y, z);
         if(tileEntity != null)
             tileEntity.onNeighborBlockChange();
     }
 
-    protected void SetDefaultRotation(World world, int x, int y, int z)
+    protected void setDefaultRotation(World world, int x, int y, int z)
     {
         if (!world.isRemote)
         {
@@ -156,11 +155,11 @@ public class MOBlock extends Block
 
     public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
-        if (hasTileEntity(meta) && world.getTileEntity(x,y,z) != null && world.getTileEntity(x,y,z) instanceof MOTileEntity)
+        if (hasTileEntity(meta) && world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof MOTileEntity)
         {
-            ((MOTileEntity) world.getTileEntity(x,y,z)).onDestroyed();
+            ((MOTileEntity) world.getTileEntity(x, y, z)).onDestroyed();
         }
-        super.breakBlock(world,x,y,z,block,meta);
+        super.breakBlock(world, x, y, z, block, meta);
     }
 
     public void setRotationType(int type)

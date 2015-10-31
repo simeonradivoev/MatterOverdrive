@@ -39,7 +39,7 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
         {
             if(itemEntity == null)
             {
-                itemEntity = new EntityItem(replicator.getWorldObj(),x,y,z,stack);
+                itemEntity = new EntityItem(replicator.getWorldObj(), x, y, z, stack);
             }
             else if(!ItemStack.areItemStacksEqual(itemEntity.getEntityItem(), stack))
             {
@@ -48,7 +48,7 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer
 
             itemEntity.hoverStart = (float)(Math.PI / 2);
 
-            RenderManager.instance.renderEntityWithPosYaw(itemEntity,x + 0.5d,y + 0.25,z + 0.5,0,0);
+            RenderManager.instance.renderEntityWithPosYaw(itemEntity, x + 0.5d, y + 0.25, z + 0.5, 0, 0);
         }
     }
 }

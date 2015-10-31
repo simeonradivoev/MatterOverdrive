@@ -52,12 +52,12 @@ public class ElementConnections extends MOElementBase
             {
                 String info = ForgeDirection.getOrientation(i).name() + " : " + connection.getTileEntity(machine.getWorldObj()).getBlockType().getLocalizedName();
 
-                MOElementButton.NORMAL_TEXTURE.Render(x - 6,y - 6,sizeX + 12,19);
+                MOElementButton.NORMAL_TEXTURE.render(x - 6,y - 6,sizeX + 12,19);
                 getFontRenderer().drawString(info,x,y,0xFFFFFF);
             }
             else
             {
-                MOElementButton.HOVER_TEXTURE_DARK.Render(x - 6,y - 6,80,19);
+                MOElementButton.HOVER_TEXTURE_DARK.render(x - 6,y - 6,80,19);
                 getFontRenderer().drawString(ForgeDirection.getOrientation(i).name() + " : None", x, y, 0xFFFFFF);
             }
         }

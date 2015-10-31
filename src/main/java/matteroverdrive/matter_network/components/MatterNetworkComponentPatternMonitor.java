@@ -130,7 +130,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
             if (task != null) {
                 if (task.getState() == MatterNetworkTaskState.FINISHED || task.getState() == MatterNetworkTaskState.PROCESSING) {
                     rootClient.getTaskQueue(0).dequeue();
-                    rootClient.ForceSync();
+                    rootClient.forceSync();
                 } else{
                     if (!task.isAlive() && broadcastTracker.hasDelayPassed(world, TileEntityMachinePatternMonitor.BROADCAST_WEATING_DELAY)) {
                         for (int i = 0; i < 6; i++) {
@@ -159,7 +159,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
             if (rootClient.getTaskQueue(0).queue(task));
         }
 
-        rootClient.ForceSync();
+        rootClient.forceSync();
     }
 
     public boolean getNeedsSearchRefresh()

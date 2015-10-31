@@ -2,7 +2,7 @@ package matteroverdrive.util;
 
 import net.minecraft.util.MathHelper;
 
-public class Vector3 
+public class Vector3
 {
 	/** X coordinate of Vec3D */
     public double x;
@@ -10,12 +10,12 @@ public class Vector3
     public double y;
     /** Z coordinate of Vec3D */
     public double z;
-    
+
     public Vector3(double x,double y,double z)
     {
     	this.set(x, y, z);
     }
-    
+
     public Vector3 add(Vector3 vec)
     {
     	this.x += vec.x;
@@ -23,7 +23,7 @@ public class Vector3
     	this.z += vec.z;
     	return this;
     }
-    
+
     public Vector3 subtract(Vector3 vec)
     {
     	this.x -= vec.x;
@@ -31,7 +31,7 @@ public class Vector3
     	this.z -= vec.z;
     	return this;
     }
-    
+
     public Vector3 scale(double value)
     {
     	this.x *= value;
@@ -39,7 +39,7 @@ public class Vector3
     	this.z *= value;
     	return this;
     }
-    
+
     public Vector3 scale(Vector3 value)
     {
     	this.x *= value.x;
@@ -47,13 +47,13 @@ public class Vector3
     	this.z *= value.z;
     	return this;
     }
-    
+
     public Vector3 cross(Vector3 value)
     {
     	this.set(this.y * value.z - this.z * value.y, this.z * value.x - this.x * value.z, this.x * value.y - this.y * value.x);
     	return this;
     }
-    
+
     public double distanceTo(Vector3 value)
     {
         double d0 = value.x - this.x;
@@ -61,7 +61,7 @@ public class Vector3
         double d2 = value.z - this.z;
         return (double)MathHelper.sqrt_double(d0 * d0 + d1 * d1 + d2 * d2);
     }
-    
+
     public double squareDistanceTo(Vector3 value)
     {
         double d0 = value.x - this.x;
@@ -69,39 +69,39 @@ public class Vector3
         double d2 = value.z - this.z;
         return d0 * d0 + d1 * d1 + d2 * d2;
     }
-    
+
     public double length()
     {
         return (double)MathHelper.sqrt_double(this.x * this.x + this.y * this.y + this.z * this.z);
     }
-    
+
     public String toString()
     {
         return "(" + this.x + ", " + this.y + ", " + this.z + ")";
     }
-    
+
     public double dot(Vector3 value)
     {
         return this.x * value.x + this.y * value.y + this.z * value.z;
     }
-    
+
     public Vector3 normalize()
     {
     	 double d0 = (double)MathHelper.sqrt_double(this.x * this.x + this.y * this.y + this.z * this.z);
     	 if(d0 < 1.0E-4D)
     	 {
     		 this.set(0.0D, 0.0D, 0.0D);
-    	 } 
+    	 }
     	 else
     	 {
     		 this.x /= d0;
     	     this.y /= d0;
-    	     this.z /= d0; 
-    	 } 
-    	     
+    	     this.z /= d0;
+    	 }
+
     	return this;
     }
-    
+
     public Vector3 set(double x,double y,double z)
     {
     	this.x = x;
@@ -109,7 +109,7 @@ public class Vector3
     	this.z = z;
     	return this;
     }
-    
+
 	public double getX() {
 		return x;
 	}
@@ -128,7 +128,7 @@ public class Vector3
 	public void setZ(double z) {
 		this.z = z;
 	}
-	
+
 	/**
      * Rotates the vector around the x axis by the specified angle.
      */

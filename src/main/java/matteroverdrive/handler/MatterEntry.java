@@ -88,5 +88,5 @@ public class MatterEntry implements Serializable, IMatterEntry
 			return true;
 		return false;
 	}
-	
+
 }

@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class IconHolder implements IIcon
 {
-    public float minX,minY,maxX,maxY;
+    public float minX, minY, maxX, maxY;
     public int width;
     public int height;
     public int canvasWidth;
@@ -16,7 +16,7 @@ public class IconHolder implements IIcon
     ResourceLocation canvas;
     String name;
 
-    public IconHolder(float minX,float minY,float maxX,float maxY,int width,int height)
+    public IconHolder(float minX, float minY, float maxX, float maxY, int width, int height)
     {
         this.minX = minX;
         this.minY = minY;

@@ -178,7 +178,7 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
     //region Events
     private void onTaskComplete(MatterNetworkTask task)
     {
-        rootClient.ForceSync();
+        rootClient.forceSync();
     }
 
     private void onTaskBroadcast(World world,MatterNetworkTask task,ForgeDirection direction)

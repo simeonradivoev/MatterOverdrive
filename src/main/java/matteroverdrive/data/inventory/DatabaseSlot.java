@@ -48,7 +48,10 @@ public class DatabaseSlot extends Slot
     }
 
     @Override
-    public int getMaxStackSize(){return 1;}
+    public int getMaxStackSize()
+    {
+        return 1;
+    }
 
     @Override
     public String getUnlocalizedTooltip(){

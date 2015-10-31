@@ -54,12 +54,10 @@ public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolar
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
-        for(int i = 0;i < this.crafters.size();i++)
-        {
-            ICrafting icrafting = (ICrafting)this.crafters.get(i);
+        for (Object crafter : this.crafters) {
+            ICrafting icrafting = (ICrafting) crafter;
 
-            if(this.lastChargeAmount != this.machine.getChargeAmount())
-            {
+            if (this.lastChargeAmount != this.machine.getChargeAmount()) {
                 icrafting.sendProgressBarUpdate(this, 0, this.machine.getChargeAmount());
             }
 
@@ -75,7 +73,7 @@ public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolar
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer p_75145_1_)
+    public boolean canInteractWith(EntityPlayer player)
     {
         return true;
     }

@@ -26,6 +26,7 @@ import java.util.Collection;
 
 /**
  * Created by Simeon on 7/24/2015.
+ * Primary implementation is in {@link matteroverdrive.client.render.AndroidStatRenderRegistry}
  */
 @SideOnly(Side.CLIENT)
 public interface IAndroidStatRenderRegistry
@@ -52,5 +53,5 @@ public interface IAndroidStatRenderRegistry
      * @param renderer The Render Handler.
      * @return Did the Render Handler register.
      */
-    boolean registerRenderer(Class<? extends IBionicStat> stat,IBioticStatRenderer renderer);
+    boolean registerRenderer(Class<? extends IBionicStat> stat, IBioticStatRenderer renderer);
 }

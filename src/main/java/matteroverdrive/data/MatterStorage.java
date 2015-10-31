@@ -39,17 +39,17 @@ public class MatterStorage implements IMatterStorage, IFluidTank
 
     public MatterStorage(int capacity)
     {
-        this(capacity,capacity,capacity);
+        this(capacity, capacity, capacity);
     }
 
     public MatterStorage(int capacity, int maxExtract)
     {
-        this(capacity,maxExtract,maxExtract);
+        this(capacity, maxExtract, maxExtract);
     }
 
     public MatterStorage(int capacity, int maxExtract, int maxReceive)
     {
-        fluidStack = new FluidStack(MatterOverdriveFluids.matterPlasma,0);
+        fluidStack = new FluidStack(MatterOverdriveFluids.matterPlasma, 0);
         this.maxExtract = maxExtract;
         this.maxReceive = maxReceive;
         this.capacity = capacity;
@@ -66,12 +66,12 @@ public class MatterStorage implements IMatterStorage, IFluidTank
     }
 
     @Override
-    public int extractMatter(ForgeDirection direction,int amount,boolean simulate)
+    public int extractMatter(ForgeDirection direction, int amount, boolean simulate)
     {
-        return extractMatter(amount,simulate);
+        return extractMatter(amount, simulate);
     }
 
-    public int extractMatter(int amount,boolean simulate)
+    public int extractMatter(int amount, boolean simulate)
     {
         int maxDrain = MathHelper.clampI(Math.min(amount, getMaxExtract()), 0, getFluid().amount);
 
@@ -84,9 +84,9 @@ public class MatterStorage implements IMatterStorage, IFluidTank
     }
 
     @Override
-    public int receiveMatter(ForgeDirection side,int amount,boolean simulate)
+    public int receiveMatter(ForgeDirection side, int amount, boolean simulate)
     {
-        int maxFill = MathHelper.clampI(Math.min(amount, getMaxReceive()),0,getCapacity() - getFluid().amount);
+        int maxFill = MathHelper.clampI(Math.min(amount, getMaxReceive()), 0, getCapacity() - getFluid().amount);
 
         if(!simulate)
         {
@@ -146,7 +146,7 @@ public class MatterStorage implements IMatterStorage, IFluidTank
             return 0;
         }
 
-        return receiveMatter(ForgeDirection.UNKNOWN,resource.amount,!doFill);
+        return receiveMatter(ForgeDirection.UNKNOWN, resource.amount, !doFill);
     }
 
     @Override
@@ -157,11 +157,11 @@ public class MatterStorage implements IMatterStorage, IFluidTank
             return null;
         }
 
-        int drained = extractMatter(ForgeDirection.UNKNOWN,maxDrain,!doDrain);
+        int drained = extractMatter(ForgeDirection.UNKNOWN, maxDrain, !doDrain);
         if (drained <= 0)
             return null;
         else
-            return new FluidStack(MatterOverdriveFluids.matterPlasma,drained);
+            return new FluidStack(MatterOverdriveFluids.matterPlasma, drained);
     }
 
     public void writeToNBT(NBTTagCompound nbt)

@@ -22,7 +22,7 @@ public class DilithiumOre extends MOBlock
         super(material,name);
         this.setHardness(4.0f);
         this.setResistance(5.0f);
-        this.setHarvestLevel("pickaxe",3);
+        this.setHarvestLevel("pickaxe", 3);
         this.setStepSound(Block.soundTypePiston);
     }
 

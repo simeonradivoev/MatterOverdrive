@@ -36,7 +36,7 @@ public class BlockReplicator extends MOMatterEnergyStorageBlock
 {
 	public float replication_volume;
     public boolean hasVentParticles;
-	
+
 	public BlockReplicator(Material material, String name)
 	{
 		super(material, name, true, true);
@@ -52,24 +52,24 @@ public class BlockReplicator extends MOMatterEnergyStorageBlock
     {
         return MatterOverdriveIcons.Base;
     }
-	 
+
 	 @Override
 	 public boolean isOpaqueCube()
 	    {
 	        return false;
 	    }
-	 
+
 	 @Override
 	 public boolean canPlaceTorchOnTop(World world, int x, int y, int z)
 	 {
 		 return true;
 	 }
-	 
+
 	 public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	 {
 		 return true;
 	 }
-	 
+
 	 @Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
@@ -90,7 +90,7 @@ public class BlockReplicator extends MOMatterEnergyStorageBlock
 	public void onConfigChanged(ConfigurationHandler config)
 	{
 		super.onConfigChanged(config);
-		replication_volume = (float)config.getMachineDouble(getUnlocalizedName(),"volume.replicate", 1, "The volume of the replication animation");
+		replication_volume = (float)config.getMachineDouble(getUnlocalizedName(), "volume.replicate", 1, "The volume of the replication animation");
         hasVentParticles = config.getMachineBool(getUnlocalizedName(), "particles.vent", true, "Should vent particles be displayed");
 		TileEntityMachineReplicator.MATTER_STORAGE = config.getMachineInt(getUnlocalizedName(), "storage.matter", 1024, "How much matter can the replicator hold");
 		TileEntityMachineReplicator.ENERGY_STORAGE = config.getMachineInt(getUnlocalizedName(), "storage.energy", 512000, "How much energy can the replicator hold");

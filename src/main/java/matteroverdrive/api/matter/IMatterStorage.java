@@ -23,17 +23,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Used as a interface for all matter storage entities or components.
  */
-public interface IMatterStorage 
+public interface IMatterStorage
 {
 	/**
-	 * The amount of matter currently stored.
-	 * @return the matter stored.
+	 * @return the current matter stored.
 	 */
 	int getMatterStored();
 
 	/**
-	 * The maximum capacity of matter that can be stored.
-	 * @return the matter capacity.
+	 * @return the maximum capacity.
 	 */
 	int getCapacity();
 
@@ -47,7 +45,7 @@ public interface IMatterStorage
 	 * @return the amount of matter received.
 	 * This is the same, not matter if the call is a simulation.
 	 */
-	int receiveMatter(ForgeDirection side,int amount, boolean simulate);
+	int receiveMatter(ForgeDirection side, int amount, boolean simulate);
 
 	/**
 	 * Used to extract matter.
@@ -58,6 +56,7 @@ public interface IMatterStorage
 	 * @return the amount of matter extracted.
 	 * This is the same, no matter if the call is a simulation.
 	 */
-	int extractMatter(ForgeDirection direction,int amount,boolean simulate);
+	int extractMatter(ForgeDirection direction, int amount, boolean simulate);
+
 	void setMatterStored(int amount);
 }

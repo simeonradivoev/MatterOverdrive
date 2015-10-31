@@ -39,7 +39,7 @@ public class ElementScanProgress extends MOElementBase
 
         random.setSeed(seed);
         int progress = MathHelper.floor(this.progress * 26);
-        
+
         int marginsTop = 8;
         int marginsLeft = 7;
         int maxHeight = 32;
@@ -55,14 +55,14 @@ public class ElementScanProgress extends MOElementBase
             	noiseValue = contrastFactor * (noiseValue - 0.5) + 0.5;
             	noiseValue = Math.pow(Math.min(noiseValue, 1), 2);
             	noiseValue = noiseValue * 0.8 + random.nextDouble() * 0.2;
-            	
+
                 newValue = (float)noiseValue;
                 int height = MathHelper.round(values[i] * maxHeight);
                 int x1 = marginsLeft + i * 4;
                 int y1 = maxHeight + marginsTop;
                 int x2 = x1 + 2;
                 int y2 = maxHeight-height + marginsTop;
-                
+
                 gui.drawSizedRect(x1, y1, x2, y2, color.getColor());
                 gui.drawSizedRect(x1, y2 - 1, x2, y2 - 2, color.getColor());
             }else

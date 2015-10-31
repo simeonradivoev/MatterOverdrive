@@ -17,14 +17,14 @@ public class TileEntityRendererNetworkPipe extends TileEntityRendererPipe
     }
 
     @Override
-    protected void drawCore(TileEntityPipe tile,double x,
-                            double y, double z, float f,int sides)
+    protected void drawCore(TileEntityPipe tile, double x,
+                            double y, double z, float f, int sides)
     {
-        super.drawCore(tile,x,y,z,f,sides);
+        super.drawCore(tile, x, y, z, f, sides);
     }
 
     @Override
-    protected void drawSide(TileEntityPipe tile,ForgeDirection dir)
+    protected void drawSide(TileEntityPipe tile, ForgeDirection dir)
     {
         super.drawSide(tile, dir);
     }

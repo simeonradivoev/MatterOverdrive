@@ -32,9 +32,9 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
 {
     protected int energyPerTick;
 
-    public ContainerFusionReactor(InventoryPlayer inventory,TileEntityMachineFusionReactorController machine)
+    public ContainerFusionReactor(InventoryPlayer inventory, TileEntityMachineFusionReactorController machine)
     {
-        super(inventory,machine);
+        super(inventory, machine);
     }
 
     @Override
@@ -55,12 +55,10 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
-        for(int i = 0;i < this.crafters.size();i++)
-        {
-            ICrafting icrafting = (ICrafting)this.crafters.get(i);
+        for (Object crafter : this.crafters) {
+            ICrafting icrafting = (ICrafting) crafter;
 
-            if(this.energyPerTick != this.machine.getEnergyPerTick())
-            {
+            if (this.energyPerTick != this.machine.getEnergyPerTick()) {
                 icrafting.sendProgressBarUpdate(this, 0, this.machine.getEnergyPerTick());
             }
 
@@ -69,7 +67,7 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
     }
 
     @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int slot,int newValue)
+    public void updateProgressBar(int slot, int newValue)
     {
         if(slot == 0)
             energyPerTick = newValue;

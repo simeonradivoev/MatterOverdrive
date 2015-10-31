@@ -24,7 +24,7 @@ package matteroverdrive.api;
  *
  * @author shadowfacts
  */
-public class IMC {
+public interface IMC {
 
 	/**
 	 * Adds the specified ItemStack to the Matter Registry blacklist

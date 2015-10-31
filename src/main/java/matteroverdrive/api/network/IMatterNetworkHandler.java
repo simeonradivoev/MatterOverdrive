@@ -44,8 +44,9 @@ public interface IMatterNetworkHandler extends IMOTickable
      * @return the number of interaction made this tick.
      * Used to limit the interaction per World tick.
      */
-    int onNetworkTick(World world,TickEvent.Phase phase);
-    default void onServerTick(TickEvent.Phase phase,World world)
+    int onNetworkTick(World world, TickEvent.Phase phase);
+
+    default void onServerTick(TickEvent.Phase phase, World world)
     {
         onNetworkTick(world,phase);
     }

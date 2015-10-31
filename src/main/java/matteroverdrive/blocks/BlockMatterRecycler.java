@@ -25,18 +25,18 @@ public class BlockMatterRecycler extends MOMatterEnergyStorageBlock {
 
     public BlockMatterRecycler(Material material, String name)
     {
-        super(material, name,true,true);
+        super(material, name, true, true);
         setHardness(20.0F);
         this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe",2);
+        this.setHarvestLevel("pickaxe", 2);
         setHasGui(true);
     }
 
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
-        this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":" + "decomposer_top");
-        this.iconSideAnim = iconRegister.registerIcon(Reference.MOD_ID + ":" + "recycler_side_anim");
+        this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":decomposer_top");
+        this.iconSideAnim = iconRegister.registerIcon(Reference.MOD_ID + ":recycler_side_anim");
     }
 
     @SideOnly(Side.CLIENT)
@@ -46,6 +46,7 @@ public class BlockMatterRecycler extends MOMatterEnergyStorageBlock {
         {
             return iconTop;
         }
+
         return MatterOverdriveIcons.Recycler;
     }
 
@@ -54,9 +55,9 @@ public class BlockMatterRecycler extends MOMatterEnergyStorageBlock {
     {
         if (side != BlockHelper.getAboveSide(blockAccess.getBlockMetadata(x, y, z)))
         {
-            if (blockAccess.getTileEntity(x,y,z) instanceof TileEntityMachineMatterRecycler)
+            if (blockAccess.getTileEntity(x, y, z) instanceof TileEntityMachineMatterRecycler)
             {
-                if (((TileEntityMachineMatterRecycler) blockAccess.getTileEntity(x,y,z)).isActive())
+                if (((TileEntityMachineMatterRecycler) blockAccess.getTileEntity(x, y, z)).isActive())
                 {
                     return iconSideAnim;
                 }

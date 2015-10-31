@@ -126,7 +126,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             activeState = getServerActive();
             if (lastActive != activeState)
             {
-                ForceSync();
+                forceSync();
                 onActiveChange();
                 lastActive = activeState;
             }
@@ -322,7 +322,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         NBTTagList itemTagList = new NBTTagList();
         for (int i = 0; i < getSizeInventory(); ++i)
         {
-            if (inventory.getSlot(i).keepOnDismatle() && inventory.getStackInSlot(i) != null)
+            if (inventory.getSlot(i).keepOnDismantle() && inventory.getStackInSlot(i) != null)
             {
                 NBTTagCompound itemTag = new NBTTagCompound();
                 itemTag.setByte("Slot", (byte)i);
@@ -571,7 +571,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
     //endregion
 
-    public void ForceSync()
+    public void forceSync()
     {
         forceClientUpdate = true;
     }
@@ -693,7 +693,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             if (owner == null) {
                 if (security_protocol.hasTagCompound() && security_protocol.getTagCompound().hasKey("Owner", 8)) {
                     owner = UUID.fromString(security_protocol.getTagCompound().getString("Owner"));
-                    ForceSync();
+                    forceSync();
                     return true;
                 }
             }
@@ -710,7 +710,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             if (owner != null) {
                 if (security_protocol.hasTagCompound() && security_protocol.getTagCompound().hasKey("Owner", 8) && owner.equals(UUID.fromString(security_protocol.getTagCompound().getString("Owner")))) {
                     owner = null;
-                    ForceSync();
+                    forceSync();
                     return true;
                 }
             }

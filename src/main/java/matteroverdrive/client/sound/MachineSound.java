@@ -11,15 +11,13 @@ public class MachineSound extends PositionedSound implements ITickableSound
 {
     private boolean donePlaying;
 
-    public MachineSound(ResourceLocation sound,float x,float y,float z,float volume,float pitch) {
+    public MachineSound(ResourceLocation sound, float x, float y, float z, float volume, float pitch) {
         super(sound);
-        super.xPosF = x;
-        super.yPosF = y;
-        super.zPosF = z;
-        super.volume = volume;
-        super.field_147663_c = pitch;
-        super.repeat = true;
-        super.field_147665_h = 0;
+        setPosition(x, y, z);
+        this.volume = volume;
+        this.field_147663_c = pitch;
+        this.repeat = true;
+        this.field_147665_h = 0;
     }
 
     @Override
@@ -48,9 +46,15 @@ public class MachineSound extends PositionedSound implements ITickableSound
         this.volume = volume;
     }
 
+    public void setPosition(float x,float y,float z)
+    {
+        this.xPosF = x;
+        this.yPosF = y;
+        this.zPosF = z;
+    }
+
     @Override
     public void update()
     {
-
     }
 }

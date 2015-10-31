@@ -39,7 +39,7 @@ public class BlockFluidMatterPlasma extends BlockFluidClassic
 
     @Override
     public IIcon getIcon(int side, int meta) {
-        return (side == 0 || side == 1)? this.getFluid().getStillIcon() : this.getFluid().getFlowingIcon();
+        return (side == 0 || side == 1) ? this.getFluid().getStillIcon() : this.getFluid().getFlowingIcon();
     }
 
     @SideOnly(Side.CLIENT)

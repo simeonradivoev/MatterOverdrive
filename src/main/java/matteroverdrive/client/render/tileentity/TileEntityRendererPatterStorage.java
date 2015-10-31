@@ -42,13 +42,13 @@ public class TileEntityRendererPatterStorage extends TileEntitySpecialRenderer
             RenderUtils.rotateFromBlock(patternStorage.getWorldObj(), patternStorage.xCoord, patternStorage.yCoord, patternStorage.zCoord);
             bindTexture(texture);
 
-            for (int i = 0; i < patternStorage.pattern_storage_slots.length;i++)
+            for (int i = 0; i < patternStorage.pattern_storage_slots.length; i++)
             {
                 ItemStack drive = patternStorage.getStackInSlot(patternStorage.pattern_storage_slots[i]);
                 if(drive != null)
                 {
                     GL11.glPushMatrix();
-                    GL11.glTranslatef(i >= 3 ? -0.3f : 0.3f,0.1f - 0.2f * (i % 3),-0.2f);
+                    GL11.glTranslatef(i >= 3 ? -0.3f : 0.3f, 0.1f - 0.2f * (i % 3), -0.2f);
                     model.renderPart("drive");
                     GL11.glPopMatrix();
                 }

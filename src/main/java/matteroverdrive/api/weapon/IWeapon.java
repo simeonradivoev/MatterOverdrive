@@ -48,7 +48,7 @@ public interface IWeapon
      * @param weapon the weapon stack.
      * @return the 2d GUI coordinate of the slot.
      */
-    Vector2f getSlotPosition(int slot,ItemStack weapon);
+    Vector2f getSlotPosition(int slot, ItemStack weapon);
 
     /**
      * Gets the Module position on the screen.
@@ -60,7 +60,7 @@ public interface IWeapon
      * @param weapon the weapon stack.
      * @return the 2d GUI position of the module.
      */
-    Vector2f getModuleScreenPosition(int slot,ItemStack weapon);
+    Vector2f getModuleScreenPosition(int slot, ItemStack weapon);
 
     /**
      * Checks if the weapon supports a module of a given type
@@ -69,7 +69,7 @@ public interface IWeapon
      * @param weapon the weapon stack.
      * @return is module/slot type supported by the weapon.
      */
-    boolean supportsModule(int slot,ItemStack weapon);
+    boolean supportsModule(int slot, ItemStack weapon);
 
     /**
      * Called when the player clicks the left mouse button while holding the weapon.
@@ -80,10 +80,10 @@ public interface IWeapon
      * @return
      */
     @SideOnly(Side.CLIENT)
-    boolean onLeftClick(ItemStack weapon,EntityPlayer entityPlayer);
+    boolean onLeftClick(ItemStack weapon, EntityPlayer entityPlayer);
 
     @SideOnly(Side.CLIENT)
-    boolean onLeftClickTick(ItemStack weapon,EntityPlayer entityPlayer);
+    boolean onLeftClickTick(ItemStack weapon, EntityPlayer entityPlayer);
 
     /**
      * Called when the weapon is fired by the player.
@@ -97,7 +97,7 @@ public interface IWeapon
      * @param dir the direction of the weapon/bullet.
      * @return was the fire successful.
      */
-    boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, WeaponShot shot,Vec3 position,Vec3 dir);
+    boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, WeaponShot shot, Vec3 position, Vec3 dir);
 
     /**
      * Shows if the gun is always equipped like a bow in third person.
@@ -155,13 +155,13 @@ public interface IWeapon
     int getRange(ItemStack weapon);
 
     /**
-     * Gets the accuracy pf the weapon.
+     * Gets the accuracy of the weapon.
      * @param weapon the weapon stack
      * @param entityPlayer the player holding the weapon.
      * @param zoomed is the weapon zoomed.
      * @return the accuracy of the weapon. Ranges from 0 - infinity
      */
-    float getAccuracy(ItemStack weapon,EntityPlayer entityPlayer,boolean zoomed);
+    float getAccuracy(ItemStack weapon, EntityPlayer entityPlayer,boolean zoomed);
 
     /**
      * Returns if the weapon is currently zoomed.
@@ -173,10 +173,9 @@ public interface IWeapon
     boolean isWeaponZoomed(ItemStack weapon);
 
     /**
-     * Gets the sound of the weapon when firing.
      * @param weapon the weapon stack.
      * @return the weapon firing sound.
      */
     @SideOnly(Side.CLIENT)
-    String getFireSound(ItemStack weapon,EntityLivingBase entity);
+    String getFireSound(ItemStack weapon, EntityLivingBase entity);
 }

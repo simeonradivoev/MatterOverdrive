@@ -46,6 +46,5 @@ public class ItemRendererPipe implements IItemRenderer
         }
 
         GL11.glScaled(size,size,size);
-        //renderer.renderTileEntityAt(pipe,0D,0D,0D,0F);
     }
 }

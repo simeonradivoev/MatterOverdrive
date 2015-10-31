@@ -31,6 +31,7 @@ import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Simeon on 5/26/2015.
@@ -125,7 +126,7 @@ public class AndoidCommands extends CommandBase
 
                     if (validCommand)
                     {
-                        androidPlayer.sync(PacketSyncAndroid.SYNC_ALL,false);
+                        androidPlayer.sync(PacketSyncAndroid.SYNC_ALL, false);
                         sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "["+ Reference.MOD_NAME+"] " + EnumChatFormatting.RESET + commandInfo));
                         return;
                     }
@@ -154,16 +155,11 @@ public class AndoidCommands extends CommandBase
             }
             else if (parameters[0].equalsIgnoreCase("unlock"))
             {
-                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats())
-                {
-                    commands.add(stat.getUnlocalizedName());
-                }
-            }else if (parameters[0].equalsIgnoreCase("forget"))
+                commands.addAll(MatterOverdrive.statRegistry.getStats().stream().map(IBionicStat::getUnlocalizedName).collect(Collectors.toList()));
+            }
+            else if (parameters[0].equalsIgnoreCase("forget"))
             {
-                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats())
-                {
-                    commands.add(stat.getUnlocalizedName());
-                }
+                commands.addAll(MatterOverdrive.statRegistry.getStats().stream().map(IBionicStat::getUnlocalizedName).collect(Collectors.toList()));
             }
         }else
         {

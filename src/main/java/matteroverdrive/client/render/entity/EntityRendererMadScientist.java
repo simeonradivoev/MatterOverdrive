@@ -13,7 +13,7 @@ public class EntityRendererMadScientist extends RenderVillager
     public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTITIES + "mad_scientist.png");
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity p_110775_1_)
+    protected ResourceLocation getEntityTexture(Entity entity)
     {
         return texture;
     }

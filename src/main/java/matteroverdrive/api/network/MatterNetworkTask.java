@@ -25,6 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,27 +40,32 @@ public abstract class MatterNetworkTask
      * The individual ID of each Task
      */
     long id;
+
     /**
      * Name of the task.
      * This is none localized name. It's different from the unlocalized name of the task.
      * This is used to display the name of the task in GUI.
      */
     String name;
+
     /**
      * The sender address
      */
     BlockPosition senderPos;
+
     /**
      * Is the task alive.
      * Used to indicate that no machines are currently handling the task.
      * This includes queueing and processing.
      */
     boolean isAlive;
+
     /**
      * Unlocalized name of the task.
      * This is mainly used to access the description from the lang file.
      */
     String unlocalizedName;
+
     /**
      * The current sate of the task.
      * This is used to determine what is currently being done with the task.
@@ -151,25 +157,21 @@ public abstract class MatterNetworkTask
     public void addInfo(List<String> list)
     {
         list.add(getColorForState(state) + "[ " + MOStringHelper.translateToLocal("task.state." + getState() + ".name") + " ]");
-        String descriptionUnlocilized = "task." + getUnlocalizedName() + ".state." + state + ".description";
+        String unlocalizedDescription = "task." + getUnlocalizedName() + ".state." + state + ".description";
         String[] infos;
-        if(MOStringHelper.hasTranslation(descriptionUnlocilized))
+        if(MOStringHelper.hasTranslation(unlocalizedDescription))
         {
-            infos = MOStringHelper.translateToLocal(descriptionUnlocilized).split("\n");
+            infos = MOStringHelper.translateToLocal(unlocalizedDescription).split("\n");
         }
         else
         {
             infos = MOStringHelper.translateToLocal("task.state." + state + ".description").split("\n");
         }
 
-        for (int i = 0;i < infos.length;i++)
-        {
-            list.add(infos[i]);
-        }
+		Collections.addAll(list, infos);
     }
 
     /**
-     * Return the chat color based on the state of the task.
      * @param state the state of the task.
      * @return the chat color based on the state.
      */
@@ -190,7 +192,7 @@ public abstract class MatterNetworkTask
         }
     }
 
-    //region Setters nad getters
+    //region Setters and getters
 
     /**
      * Gets the name of the task.
@@ -263,7 +265,10 @@ public abstract class MatterNetworkTask
      * Gets the individual id of the task.
      * @return the current state of the task.
      */
-    public long getId(){return id;}
+    public long getId()
+	{
+		return id;
+	}
 
     /**
      * Gets the current state of the task.

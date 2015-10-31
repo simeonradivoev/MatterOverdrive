@@ -35,7 +35,6 @@ import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,7 +57,7 @@ import static org.lwjgl.opengl.GL11.*;
 @SideOnly(Side.CLIENT)
 public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 {
-    Map<Entity,WeaponSound> soundMap = new HashMap();
+    Map<Entity, WeaponSound> soundMap = new HashMap<>();
     public static ResourceLocation beamTexture = new ResourceLocation(Reference.PATH_FX + "plasmabeam.png");
     public static ResourceLocation xbeam = new ResourceLocation(Reference.PATH_FX + "xbeam.png");
 
@@ -66,32 +65,33 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
     {
         glPushMatrix();
         glTranslated(-Minecraft.getMinecraft().thePlayer.posX, -Minecraft.getMinecraft().thePlayer.posY, -Minecraft.getMinecraft().thePlayer.posZ);
-        renderClient(renderHandler,event.partialTicks);
-        renderOthers(renderHandler,event.partialTicks);
+        renderClient(renderHandler, event.partialTicks);
+        renderOthers(renderHandler, event.partialTicks);
         glPopMatrix();
     }
 
-    public void renderOthers(RenderHandler renderHandler,float ticks)
+	@SuppressWarnings("unchecked")
+    public void renderOthers(RenderHandler renderHandler, float ticks)
     {
-        for (Object entityObject : Minecraft.getMinecraft().theWorld.getLoadedEntityList())
-        {
-            if (entityObject instanceof EntityPlayer && !entityObject.equals(Minecraft.getMinecraft().thePlayer))
-            {
-                if (shouldRenderBeam((EntityPlayer)entityObject))
-                {
-                    EntityPlayer entity = (EntityPlayer)entityObject;
-                    renderRaycastedBeam(entity.getPosition(ticks).addVector(0,entity.getEyeHeight(),0),entity.getLook(0),Vec3.createVectorHelper(-0.5, -0.3, 1), entity);
-                    //renderBeam(playerMP.getItemInUse(),playerMP,playerMP.worldObj,new Vector3f(-0.23f, 0.2f, 0.7f),playerMP.getEyeHeight() - 0.5f,-0.3f);
 
-                }else
-                {
-                    StopWeaponSound((EntityPlayer) entityObject);
-                }
-            }
-        }
+
+		Minecraft.getMinecraft().theWorld.getLoadedEntityList().stream()
+				.filter(o -> o instanceof EntityPlayer)
+				.filter(player -> !player.equals(Minecraft.getMinecraft().thePlayer))
+				.forEach(o -> {
+					EntityPlayer player = (EntityPlayer)o;
+					if (shouldRenderBeam(player))
+					{
+						renderRaycastedBeam(player.getPosition(ticks).addVector(0, player.getEyeHeight(), 0), player.getLook(0), Vec3.createVectorHelper(-0.5, -0.3, 1), player);
+					}
+					else
+					{
+						stopWeaponSound(player);
+					}
+				});
     }
 
-    public void renderClient(RenderHandler renderHandler,float ticks)
+    public void renderClient(RenderHandler renderHandler, float ticks)
     {
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 
@@ -99,43 +99,39 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
         {
             Vec3 pos = player.getPosition(1);
             Vec3 look = player.getLook(0);
-            renderRaycastedBeam(pos,look,Vec3.createVectorHelper(-0.1, -0.1, 0.15),player);
-            //renderBeam(player.getItemInUse(),player,player.worldObj,new Vector3f(-0.1f, -0.1f, 0.15f),0,0.25f);
-            //PlayWeaponsSound(player,renderHandler.getRandom());
+            renderRaycastedBeam(pos, look, Vec3.createVectorHelper(-0.1, -0.1, 0.15), player);
         }
         else
         {
-            StopWeaponSound(player);
+            stopWeaponSound(player);
         }
     }
 
-    private void PlayWeaponsSound(EntityPlayer player, Random random)
+    private void playWeaponSound(EntityPlayer player, Random random)
     {
         if (!soundMap.containsKey(player))
         {
             ItemStack weaponStack = player.getItemInUse();
             if (weaponStack != null && weaponStack.getItem() instanceof IWeapon)
             {
-                ISound sound = new WeaponSound(new ResourceLocation(((IWeapon) weaponStack.getItem()).getFireSound(weaponStack,player)),(float)player.posX,(float)player.posY,(float)player.posZ,random.nextFloat() * 0.05f + 0.2f,1);
-                if (sound != null && sound instanceof WeaponSound) {
-                    soundMap.put(player, (WeaponSound)sound);
-                    Minecraft.getMinecraft().getSoundHandler().playSound(sound);
-                }
-            }
+                WeaponSound sound = new WeaponSound(new ResourceLocation(((IWeapon)weaponStack.getItem()).getFireSound(weaponStack, player)), (float)player.posX, (float)player.posY, (float)player.posZ, random.nextFloat() * 0.05f + 0.2f, 1);
+				soundMap.put(player, sound);
+				Minecraft.getMinecraft().getSoundHandler().playSound(sound);
+			}
 
         }
         else if (soundMap.get(player).isDonePlaying())
         {
-            StopWeaponSound(player);
-            PlayWeaponsSound(player, random);
+            stopWeaponSound(player);
+            playWeaponSound(player, random);
         }
         else
         {
-            soundMap.get(player).setPosition((float)player.posX,(float)player.posY,(float)player.posZ);
+            soundMap.get(player).setPosition((float)player.posX, (float)player.posY, (float)player.posZ);
         }
     }
 
-    private void StopWeaponSound(EntityPlayer entity)
+    private void stopWeaponSound(EntityPlayer entity)
     {
         if (soundMap.containsKey(entity))
         {
@@ -149,48 +145,52 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 
     @Override
     protected boolean shouldRenderBeam(EntityPlayer entity) {
-        return entity.isUsingItem() && (entity.getItemInUse().getItem() instanceof Phaser || entity.getItemInUse().getItem() instanceof OmniTool);
+        return entity.isUsingItem() &&
+				(entity.getItemInUse().getItem() instanceof Phaser ||
+					entity.getItemInUse().getItem() instanceof OmniTool);
     }
 
     @Override
-    protected void onBeamRaycastHit(MovingObjectPosition hit,EntityPlayer caster)
+    protected void onBeamRaycastHit(MovingObjectPosition hit, EntityPlayer caster)
     {
         ItemStack weaponStack = caster.getItemInUse();
         if (weaponStack != null && weaponStack.getItem() instanceof EnergyWeapon)
         {
-            ((EnergyWeapon) weaponStack.getItem()).onProjectileHit(hit, weaponStack, caster.worldObj,1);
+            ((EnergyWeapon) weaponStack.getItem()).onProjectileHit(hit, weaponStack, caster.worldObj, 1);
             if (weaponStack.getItem() instanceof OmniTool && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
                 glPushMatrix();
-                RenderUtils.applyColorWithMultipy(getBeamColor(caster), 0.5f + (float)(1+Math.sin(caster.worldObj.getWorldTime()*0.5f)) * 0.5f);
+                RenderUtils.applyColorWithMultipy(getBeamColor(caster), 0.5f + (float)(1+Math.sin(caster.worldObj.getWorldTime() * 0.5f)) * 0.5f);
                 Minecraft.getMinecraft().renderEngine.bindTexture(TileEntityRendererStation.glowTexture);
                 glDisable(GL_LIGHTING);
                 glDisable(GL_CULL_FACE);
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE,GL_ONE);
-                //glTranslated(hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord);
                 ForgeDirection side = ForgeDirection.getOrientation(hit.sideHit);
-                //glTranslated(0,-0.2,0);
                 glTranslated(hit.blockX+0.5,hit.blockY+0.5,hit.blockZ+0.5);
                 glTranslated(side.offsetX*0.5,side.offsetY*0.5,side.offsetZ*0.5);
                 if (side == ForgeDirection.SOUTH)
                 {
-                    glRotated(90,1,0,0);
+                    glRotated(90, 1, 0, 0);
 
-                }else if (side == ForgeDirection.NORTH)
-                {
-                    glRotated(90,-1,0,0);
-                }else if (side == ForgeDirection.EAST)
-                {
-                    glRotated(90,0,0,-1);
-                }else if (side ==ForgeDirection.WEST)
-                {
-                    glRotated(90,0,0,1);
-                }else if (side == ForgeDirection.DOWN)
-                {
-                    glRotated(180,1,0,0);
                 }
-                glScaled(1,1.5+Math.sin(caster.worldObj.getWorldTime()*0.5)*0.5,1);
+				else if (side == ForgeDirection.NORTH)
+                {
+                    glRotated(90, -1, 0, 0);
+                }
+				else if (side == ForgeDirection.EAST)
+                {
+                    glRotated(90, 0, 0, -1);
+                }
+				else if (side ==ForgeDirection.WEST)
+                {
+                    glRotated(90, 0, 0, 1);
+                }
+				else if (side == ForgeDirection.DOWN)
+                {
+                    glRotated(180, 1, 0, 0);
+                }
+                glScaled(1, 1.5 + Math.sin(caster.worldObj.getWorldTime() * 0.5) * 0.5, 1);
                 ItemRendererOmniTool.omniToolModel.renderPart("dig_effect");
                 glDisable(GL_BLEND);
                 glEnable(GL_CULL_FACE);
@@ -202,7 +202,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
     @Override
     protected void onBeamRender(EntityPlayer caster)
     {
-        PlayWeaponsSound(caster, random);
+        playWeaponSound(caster, random);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
         {
             IWeaponModule module = (IWeaponModule)color_module.getItem();
             Object colorObject = module.getValue(color_module);
-            if(colorObject instanceof GuiColor)
+            if (colorObject instanceof GuiColor)
             {
                 color = (GuiColor)colorObject;
             }
@@ -253,7 +253,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
     }
 
     @Override
-    protected float getBeamTickness(EntityPlayer caster)
+    protected float getBeamThickness(EntityPlayer caster)
     {
         ItemStack weaponStack = caster.getItemInUse();
         if (weaponStack != null && weaponStack.getItem() instanceof IWeapon)
@@ -261,7 +261,8 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
             if (weaponStack.getItem() instanceof Phaser)
             {
                 return 0.03f;
-            }else if (weaponStack.getItem() instanceof OmniTool)
+            }
+			else if (weaponStack.getItem() instanceof OmniTool)
             {
                 return 0.07f;
             }

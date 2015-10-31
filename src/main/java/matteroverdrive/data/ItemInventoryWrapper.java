@@ -33,7 +33,7 @@ public class ItemInventoryWrapper implements IInventory
     int size;
     boolean dirty;
 
-    public ItemInventoryWrapper(ItemStack itemStack,int size)
+    public ItemInventoryWrapper(ItemStack itemStack, int size)
     {
         this.inventory = itemStack;
         this.size = size;
@@ -58,7 +58,7 @@ public class ItemInventoryWrapper implements IInventory
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
+    public ItemStack getStackInSlotOnClosing(int slot) {
         return null;
     }
 
@@ -68,7 +68,7 @@ public class ItemInventoryWrapper implements IInventory
         if (inventory.getTagCompound() == null)
             inventory.setTagCompound(new NBTTagCompound());
 
-        MOInventoryHelper.setInventorySlotContents(inventory,slot,stack);
+        MOInventoryHelper.setInventorySlotContents(inventory, slot, stack);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class ItemInventoryWrapper implements IInventory
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
+    public boolean isUseableByPlayer(EntityPlayer player) {
         return true;
     }
 

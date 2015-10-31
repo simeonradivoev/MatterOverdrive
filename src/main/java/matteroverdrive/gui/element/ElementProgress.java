@@ -28,8 +28,8 @@ public class ElementProgress extends ElementBase
 	int textY;
 	String text;
 	int textColor;
-	
-	public ElementProgress(GuiBase gui, int fillX,int fillY,int posX, int posY,int bgU,int bgV,int fillU,int fillV,int fillSizeX,int fillSizeY,int sizeX,int sizeY) 
+
+	public ElementProgress(GuiBase gui, int fillX,int fillY,int posX, int posY,int bgU,int bgV,int fillU,int fillV,int fillSizeX,int fillSizeY,int sizeX,int sizeY)
 	{
 		super(gui, posX, posY,sizeX,sizeY);
 		this.fillU = fillU;
@@ -41,14 +41,14 @@ public class ElementProgress extends ElementBase
 		this.fillX = fillX;
 		this.fillY = fillY;
 	}
-	
+
 	@Override
 	public void drawBackground(int mouseX, int mouseY, float gameTicks) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderHelper.bindTexture(texture);
 		drawTexturedModalRect(this.posX, this.posY, this.bgU, this.bgV, this.sizeX, this.sizeY);
 
-		FILL_TEXTURE.Render(this.fillX,this.fillY,this.Scale(this.fillSizeX),fillSizeY);
+		FILL_TEXTURE.render(this.fillX,this.fillY,this.Scale(this.fillSizeX),fillSizeY);
 		//drawTexturedModalRect(this.fillX,this.fillY,this.fillU,this.fillV,,this.fillSizeY);
 
 		if(this.isShowText())
@@ -58,16 +58,16 @@ public class ElementProgress extends ElementBase
 	}
 
 	@Override
-	public void drawForeground(int mouseX, int mouseY) 
+	public void drawForeground(int mouseX, int mouseY)
 	{
 	}
-	
+
 	public void setValue(float value)
 	{
 		this.value = value;
 	}
 
-	public float getValue() 
+	public float getValue()
 	{
 		return value;
 	}
@@ -75,12 +75,12 @@ public class ElementProgress extends ElementBase
 	public boolean isShowText() {
 		return showText;
 	}
-	
+
 	public void setShowText(boolean value)
 	{
 		this.showText = value;
 	}
-	
+
 	private int Scale(int value)
 	{
 		return (int)(value * (this.value/maxValue));
@@ -93,7 +93,7 @@ public class ElementProgress extends ElementBase
 	public void setMaxValue(float maxValue) {
 		this.maxValue = maxValue;
 	}
-	
+
 	public void SetTextPostition(int x,int y)
 	{
 		this.textX = x;

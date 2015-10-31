@@ -51,24 +51,24 @@ public class BlockGravitationalStabilizer extends MOBlockMachine
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+    public TileEntity createNewTileEntity(World world, int meta)
     {
         return new TileEntityMachineGravitationalStabilizer();
 
     }
 
     @Override
-    public void onBlockPlacedBy(World World, int x, int y, int z, EntityLivingBase player, ItemStack item)
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
     {
-        int l = BlockPistonBase.determineOrientation(World,x,y,z,player);
+        int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
 
         if (player.isSneaking())
         {
-            World.setBlockMetadataWithNotify(x,y,z, ForgeDirection.OPPOSITES[l],2);
+            world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.OPPOSITES[l], 2);
         }
         else
         {
-            World.setBlockMetadataWithNotify(x,y,z, l,2);
+            world.setBlockMetadataWithNotify(x, y, z, l, 2);
         }
 
     }

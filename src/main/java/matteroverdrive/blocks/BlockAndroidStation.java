@@ -35,9 +35,9 @@ public class BlockAndroidStation extends MOBlockMachine
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         super.registerBlockIcons(iconRegister);
-        topIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "weapon_station_top");
-        bottomIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "weapon_station_bottom");
-        blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "android_station_side");
+        topIcon = iconRegister.registerIcon(Reference.MOD_ID + ":weapon_station_top");
+        bottomIcon = iconRegister.registerIcon(Reference.MOD_ID + ":weapon_station_bottom");
+        blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":android_station_side");
     }
 
     @Override
@@ -83,7 +83,10 @@ public class BlockAndroidStation extends MOBlockMachine
     }
 
     @Override
-    public boolean renderAsNormalBlock(){return false;}
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
 
     @Override
     public int getRenderType()

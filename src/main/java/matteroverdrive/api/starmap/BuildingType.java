@@ -5,5 +5,9 @@ package matteroverdrive.api.starmap;
  */
 public enum  BuildingType
 {
-    BASE,SHIP_FACTORY,SHIELD,GENERATOR,REPLICATOR
+    BASE,
+    SHIP_FACTORY,
+	SHIELD,
+	GENERATOR,
+	REPLICATOR
 }

@@ -36,7 +36,7 @@ public class UpgradeSlot extends Slot
 {
     private IUpgradeable upgradeable;
 
-    public UpgradeSlot(boolean isMainSlot,IUpgradeable upgradeable) {
+    public UpgradeSlot(boolean isMainSlot, IUpgradeable upgradeable) {
         super(isMainSlot);
         this.upgradeable = upgradeable;
     }
@@ -47,7 +47,7 @@ public class UpgradeSlot extends Slot
         if (item.getItem() instanceof IUpgrade)
         {
             IUpgrade upgrade = (IUpgrade)item.getItem();
-            Map<UpgradeTypes,Double> upgradeMap = upgrade.getUpgrades(item);
+            Map<UpgradeTypes, Double> upgradeMap = upgrade.getUpgrades(item);
             for (final Map.Entry<UpgradeTypes, Double> entry : upgradeMap.entrySet())
             {
                 if (upgradeable.isAffectedByUpgrade(entry.getKey()))
@@ -67,10 +67,16 @@ public class UpgradeSlot extends Slot
     }
 
     @Override
-    public int getMaxStackSize(){return 1;}
+    public int getMaxStackSize()
+    {
+        return 1;
+    }
 
     @Override
-    public boolean keepOnDismatle(){return true;}
+    public boolean keepOnDismantle()
+    {
+        return true;
+    }
 
     @Override
     public String getUnlocalizedTooltip(){

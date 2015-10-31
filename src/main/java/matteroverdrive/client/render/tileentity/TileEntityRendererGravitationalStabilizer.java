@@ -41,14 +41,16 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by Simeon on 5/12/2015.
  */
-public class TileEntityRendererGravitationalStabilizer extends TileEntitySpecialRenderer {
+public class TileEntityRendererGravitationalStabilizer extends TileEntitySpecialRenderer
+{
     public static final ResourceLocation beam = new ResourceLocation(Reference.PATH_FX + "physbeam.png");
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks) {
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks)
+    {
         TileEntityMachineGravitationalStabilizer stabilizer = (TileEntityMachineGravitationalStabilizer) tileEntity;
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        ForgeDirection f = ForgeDirection.getOrientation(tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord,tileEntity.yCoord,tileEntity.zCoord));
+        ForgeDirection f = ForgeDirection.getOrientation(tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
 
         if (stabilizer.getHit() != null) {
             MovingObjectPosition hit = stabilizer.getHit();
@@ -120,7 +122,7 @@ public class TileEntityRendererGravitationalStabilizer extends TileEntitySpecial
 
         List<String> infos = new ArrayList<String>();
         anomaly.addInfo(anomaly.getWorldObj(), anomaly.xCoord, anomaly.yCoord, anomaly.zCoord, infos);
-        RenderUtils.drawScreenInfoWithGlobalAutoSize(infos.toArray(new String[]{}), Reference.COLOR_HOLO,side,10,10,4);
+        RenderUtils.drawScreenInfoWithGlobalAutoSize(infos.toArray(new String[infos.size()]), Reference.COLOR_HOLO, side, 10, 10, 4);
 
         RenderUtils.endDrawinngBlockScreen();
     }

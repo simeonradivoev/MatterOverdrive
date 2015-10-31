@@ -96,9 +96,9 @@ public class BlockMatterAnalyzer extends MOBlockMachine
     {
         if (side == blockAccess.getBlockMetadata(x, y, z))
         {
-            if (blockAccess.getTileEntity(x,y,z) instanceof TileEntityMachineMatterAnalyzer)
+            if (blockAccess.getTileEntity(x, y, z) instanceof TileEntityMachineMatterAnalyzer)
             {
-                if (((TileEntityMachineMatterAnalyzer) blockAccess.getTileEntity(x,y,z)).isActive())
+                if (((TileEntityMachineMatterAnalyzer) blockAccess.getTileEntity(x, y, z)).isActive())
                 {
                     return this.iconFronAnim;
                 }

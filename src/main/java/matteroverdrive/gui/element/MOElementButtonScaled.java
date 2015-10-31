@@ -54,20 +54,20 @@ public class MOElementButtonScaled extends MOElementButton
         if (isEnabled()) {
             if (!isDown) {
                 if (intersectsWith(mouseX, mouseY) && overTexture != null) {
-                    overTexture.Render(posX, posY, sizeX, sizeY);
+                    overTexture.render(posX, posY, sizeX, sizeY);
                 } else if (normalTexture != null) {
-                    normalTexture.Render(posX, posY, sizeX, sizeY);
+                    normalTexture.render(posX, posY, sizeX, sizeY);
                 }
             }else
             {
                 if (downTexture != null)
-                    downTexture.Render(posX,posY,sizeX,sizeY);
+                    downTexture.render(posX,posY,sizeX,sizeY);
             }
         } else if (disabledTexture != null){
-            disabledTexture.Render(posX,posY,sizeX,sizeY);
+            disabledTexture.render(posX,posY,sizeX,sizeY);
         }else if (normalTexture != null)
         {
-            normalTexture.Render(posX,posY,sizeX,sizeY);
+            normalTexture.render(posX,posY,sizeX,sizeY);
         }
 
         GL11.glDisable(GL11.GL_BLEND);

@@ -31,10 +31,10 @@ public class BlockNetworkSwitch extends MOBlockMachine
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister p_149651_1_)
+    public void registerBlockIcons(IIconRegister registrar)
     {
-        activeIcon = p_149651_1_.registerIcon(this.getTextureName() + "_active");
-        this.blockIcon = p_149651_1_.registerIcon(this.getTextureName());
+        activeIcon = registrar.registerIcon(this.getTextureName() + "_active");
+        this.blockIcon = registrar.registerIcon(this.getTextureName());
     }
 
     @Override

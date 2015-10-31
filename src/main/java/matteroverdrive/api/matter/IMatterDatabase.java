@@ -37,14 +37,12 @@ public interface IMatterDatabase
 	boolean hasItem(ItemStack item);
 
 	/**
-	 * Get an NBT list of all the item patterns in the database.
-	 * @return
+	 * @return an NBT list of all the item patterns in the database.
 	 */
 	NBTTagList getItemsAsNBT();
 
 	/**
-	 * Get all item patterns in the database as Item Stacks.
-	 * @return
+	 * @return all item patterns in the database as {@link net.minecraft.item.ItemStack}
 	 */
 	ItemStack[] getItems();
 
@@ -64,13 +62,11 @@ public interface IMatterDatabase
 	/**
 	 * Used to get the NBT item pattern of the specified Item stack.
 	 * @param item The item stack to search for.
-	 * @return The NBT pattern of the given Item Stack.
-	 * If the stack was not found, a null will be returned.
+	 * @return The NBT pattern of the given Item Stack, {@code null} if the stack wasn't found.
 	 */
 	NBTTagCompound getItemAsNBT(ItemStack item);
 
 	/**
-	 * Returns a list of all Pattern Storages in the Database if any.
 	 * @return a list of Pattern Storages in the database if any.
 	 */
 	ItemStack[] getPatternStorageList();

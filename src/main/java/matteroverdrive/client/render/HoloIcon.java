@@ -29,13 +29,13 @@ public class HoloIcon
     private int originalWidth;
     private int originalHeight;
 
-    public HoloIcon(IIcon icon,int originalX,int originalY)
+    public HoloIcon(IIcon icon, int originalX, int originalY)
     {
         this.icon = icon;
-        setOriginalSize(originalX,originalY);
+        setOriginalSize(originalX, originalY);
     }
 
-    public void setOriginalSize(int originalX,int originalY)
+    public void setOriginalSize(int originalX, int originalY)
     {
         this.originalWidth = originalX;
         this.originalHeight = originalY;

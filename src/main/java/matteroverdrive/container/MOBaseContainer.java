@@ -12,11 +12,11 @@ public abstract class MOBaseContainer extends Container
 {
     public MOBaseContainer(){}
 
-    public MOBaseContainer(InventoryPlayer inventoryPlayer){}
+    public MOBaseContainer(InventoryPlayer inventoryPlayer) {}
 
-    public Slot addSlotToContainer(Slot p_75146_1_)
+    public Slot addSlotToContainer(Slot slot)
     {
-        return super.addSlotToContainer(p_75146_1_);
+        return super.addSlotToContainer(slot);
     }
 
     public MOSlot getSlotAt(int id)

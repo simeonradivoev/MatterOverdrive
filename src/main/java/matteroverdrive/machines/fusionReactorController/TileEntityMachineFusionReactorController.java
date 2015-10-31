@@ -331,7 +331,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                 this.monitorInfo = info;
                 this.energyEfficiency = energyEfficiency;
                 this.matterPerTick = matterPerTick;
-                ForceSync();
+                forceSync();
             }
         }
     }

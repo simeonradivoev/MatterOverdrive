@@ -29,7 +29,6 @@ import net.minecraft.nbt.NBTTagList;
 public interface IMatterPatternStorage
 {
     /**
-     * Gets a NBT list of all the patterns in the given Item Stack.
      * @param storage the storage stack.
      * @return a list of NBT patterns.
      */
@@ -45,7 +44,7 @@ public interface IMatterPatternStorage
      *                 Used to check if a pattern can be stored without actually storing the pattern.
      * @return was the pattern stored.
      */
-    boolean addItem(ItemStack storage,ItemStack itemStack,int initialAmount,boolean simulate);
+    boolean addItem(ItemStack storage, ItemStack itemStack, int initialAmount, boolean simulate);
 
     /**
      * Gets a pattern as NBT tag for a given Item Stack.
@@ -54,7 +53,7 @@ public interface IMatterPatternStorage
      * @return The NBT tag pattern for a given Item Stack in storage.
      * Returns null if pattern is not present in the storage.
      */
-    NBTTagCompound getItemAsNBT(ItemStack storage,ItemStack item);
+    NBTTagCompound getItemAsNBT(ItemStack storage, ItemStack item);
 
     /**
      * Gets the capacity of the storage item.

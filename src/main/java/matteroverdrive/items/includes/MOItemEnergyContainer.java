@@ -20,7 +20,7 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 		this(name,32000);
 	}
 
-	public MOItemEnergyContainer(String name,int capacity) 
+	public MOItemEnergyContainer(String name,int capacity)
 	{
 		this(name,capacity, capacity, capacity);
 	}
@@ -36,13 +36,13 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 		this.maxReceive = maxReceive;
 		this.maxExtract = maxExtract;
 	}
-	
+
 	@Override
 	public int getMaxDamage(ItemStack stack)
 	{
 		return getMaxEnergyStored(stack);
 	}
-	
+
 	@Override
 	public boolean showDurabilityBar(ItemStack stack)
     {
@@ -53,7 +53,7 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	{
 		return getMaxEnergyStored(stack) - getEnergyStored(stack);
 	}
-	
+
 	@Override
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
 	 {
@@ -98,7 +98,7 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 		int energy = container.stackTagCompound.getInteger("Energy");
 		int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
 
-		if (!simulate) 
+		if (!simulate)
 		{
             energy += energyReceived;
 			container.stackTagCompound.setInteger("Energy", energy);
@@ -122,21 +122,21 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
         }
         return 0;
 	}
-	
+
 	protected void setEnergyStored(ItemStack container,int amount)
 	{
 		EnergyHelper.setDefaultEnergyTag(container, amount);
 	}
 
 	@Override
-	public int getEnergyStored(ItemStack container) 
+	public int getEnergyStored(ItemStack container)
 	{
 		this.TagCompountCheck(container);
 		return container.stackTagCompound.getInteger("Energy");
 	}
 
 	@Override
-	public int getMaxEnergyStored(ItemStack container) 
+	public int getMaxEnergyStored(ItemStack container)
 	{
 		return capacity;
 	}

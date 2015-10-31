@@ -18,7 +18,7 @@ public class AnimationTimeline <T extends AnimationSegment>
 
     public AnimationTimeline(boolean loopable,int duration)
     {
-        segments = new ArrayList<T>();
+        segments = new ArrayList<>();
         this.loopable = loopable;
         this.duration = duration;
     }
@@ -33,7 +33,7 @@ public class AnimationTimeline <T extends AnimationSegment>
         segments.add(segment);
     }
 
-    public void addSeqmentSequential(T segment)
+    public void addSegmentSequential(T segment)
     {
         segment.begin = lastSegmentBegin;
         lastSegmentBegin += segment.length;
@@ -42,11 +42,9 @@ public class AnimationTimeline <T extends AnimationSegment>
 
     public T getCurrentSegment()
     {
-        for (int i = 0;i < segments.size();i++)
-        {
-            if (MOMathHelper.animationInRange(time,segments.get(i).begin,segments.get(i).length))
-            {
-                return segments.get(i);
+        for (T segment : segments) {
+            if (MOMathHelper.animationInRange(time, segment.begin, segment.length)) {
+                return segment;
             }
         }
         return null;
@@ -57,7 +55,7 @@ public class AnimationTimeline <T extends AnimationSegment>
         if (time < duration)
         {
             time++;
-        }else if (loopable)
+        } else if (loopable)
         {
             time = 0;
         }

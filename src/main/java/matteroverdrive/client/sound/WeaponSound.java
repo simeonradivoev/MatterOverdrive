@@ -32,11 +32,11 @@ public class WeaponSound extends PositionedSound implements ITickableSound
     public WeaponSound(ResourceLocation sound, float x, float y, float z, float volume, float pitch)
     {
         super(sound);
-        setPosition(x,y,z);
-        super.volume = volume;
-        super.field_147663_c = pitch;
-        super.repeat = true;
-        super.field_147665_h = 0;
+        setPosition(x, y, z);
+        this.volume = volume;
+        this.field_147663_c = pitch;
+        this.repeat = true;
+        this.field_147665_h = 0;
     }
 
     public void setRepeat(boolean repeat)

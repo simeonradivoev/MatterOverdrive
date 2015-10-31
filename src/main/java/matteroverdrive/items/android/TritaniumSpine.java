@@ -54,7 +54,7 @@ public class TritaniumSpine extends BionicPart
     }
 
     @Override
-    public Multimap getModifiers(AndroidPlayer player, ItemStack itemStack)
+    public Multimap<String, AttributeModifier> getModifiers(AndroidPlayer player, ItemStack itemStack)
     {
         Multimap multimap = HashMultimap.create();
         multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(),new AttributeModifier(healthModifierID, MOStringHelper.translateToLocal("modifier.bionic.max_health"),2f,0));

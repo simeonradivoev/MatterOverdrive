@@ -15,27 +15,26 @@ public class GravitationalAnomalyParticle extends EntityFX
 {
     float smokeParticleScale;
     Vec3 center;
-    private static final String __OBFID = "CL_00000924";
 
-    public GravitationalAnomalyParticle(World p_i1225_1_, double p_i1225_2_, double p_i1225_4_, double p_i1225_6_, Vec3 center)
+    public GravitationalAnomalyParticle(World world, double x, double y, double z, Vec3 center)
     {
-        this(p_i1225_1_, p_i1225_2_, p_i1225_4_, p_i1225_6_, center, 1.0F);
+        this(world, x, y, z, center, 1.0F);
     }
 
-    public GravitationalAnomalyParticle(World p_i1226_1_, double p_i1226_2_, double p_i1226_4_, double p_i1226_6_, Vec3 center, float p_i1226_14_)
+    public GravitationalAnomalyParticle(World world, double x, double y, double z, Vec3 center, float f)
     {
-        super(p_i1226_1_, p_i1226_2_, p_i1226_4_, p_i1226_6_, 0.0D, 0.0D, 0.0D);
+        super(world, x, y, z, 0.0D, 0.0D, 0.0D);
         this.particleRed = this.particleGreen = this.particleBlue = (float)(Math.random() * 0.30000001192092896D);
         this.particleScale *= 0.75F;
-        this.particleScale *= p_i1226_14_;
+        this.particleScale *= f;
         this.smokeParticleScale = this.particleScale;
         this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D));
-        this.particleMaxAge = (int)((float)this.particleMaxAge * p_i1226_14_);
+        this.particleMaxAge = (int)((float)this.particleMaxAge * f);
         this.noClip = true;
         this.center = center;
     }
 
-    public void renderParticle(Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
+    public void renderParticle(Tessellator tessellator, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
     {
         float f6 = ((float)this.particleAge + p_70539_2_) / (float)this.particleMaxAge * 32.0F;
 
@@ -50,7 +49,7 @@ public class GravitationalAnomalyParticle extends EntityFX
         }
 
         this.particleScale = this.smokeParticleScale * f6;
-        super.renderParticle(p_70539_1_, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
+        super.renderParticle(tessellator, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
     }
 
     /**
@@ -68,7 +67,6 @@ public class GravitationalAnomalyParticle extends EntityFX
         }
 
         this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
-        //this.motionY += 0.004D;
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
 
         this.motionX = (center.xCoord - posX) * 0.1;

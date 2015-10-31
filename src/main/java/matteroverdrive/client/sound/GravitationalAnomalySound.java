@@ -15,16 +15,14 @@ public class GravitationalAnomalySound extends PositionedSound implements ITicka
     boolean donePlaying = false;
     double range;
 
-    public GravitationalAnomalySound(ResourceLocation p_i45103_1_,int x,int y,int z,float volume,double range)
+    public GravitationalAnomalySound(ResourceLocation sound, int x, int y, int z, float volume, double range)
     {
-        super(p_i45103_1_);
-        super.xPosF = x;
-        super.yPosF = y;
-        super.zPosF = z;
+        super(sound);
+        setPosition(x, y, z);
         this.volume = volume;
         this.range = range;
         field_147666_i = AttenuationType.NONE;
-        super.repeat = true;
+        this.repeat = true;
     }
 
     @Override
@@ -58,11 +56,18 @@ public class GravitationalAnomalySound extends PositionedSound implements ITicka
         this.range = range;
     }
 
+    public void setPosition(float x,float y,float z)
+    {
+        this.xPosF = x;
+        this.yPosF = y;
+        this.zPosF = z;
+    }
+
     @Override
     public void update()
     {
         EntityClientPlayerMP mp =  FMLClientHandler.instance().getClient().thePlayer;
-        double distance = Vec3.createVectorHelper(xPosF,yPosF,zPosF).distanceTo(mp.getPosition(0));
+        double distance = Vec3.createVectorHelper(xPosF, yPosF, zPosF).distanceTo(mp.getPosition(0));
         volume = 1 - (float)(distance / range);
     }
 }

@@ -38,7 +38,7 @@ public class ElementItemPreview extends MOElementBase
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        background.Render(posX,posY,sizeX,sizeY);
+        background.render(posX,posY,sizeX,sizeY);
     }
 
     @Override

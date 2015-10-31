@@ -16,10 +16,13 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.api.weapon;/* Created by Simeon on 10/22/2015. */
+package matteroverdrive.api.weapon;
 
 import io.netty.buffer.ByteBuf;
 
+/**
+ * Created by Simeon on 10/22/2015.
+ */
 public class WeaponShot
 {
     protected int seed;
@@ -30,9 +33,10 @@ public class WeaponShot
 
     public WeaponShot(ByteBuf buf)
     {
-        this(buf.readInt(),buf.readFloat(),buf.readFloat(),buf.readInt());
+        this(buf.readInt(), buf.readFloat(), buf.readFloat(), buf.readInt());
     }
-    public WeaponShot(int seed,float damage,float accuracy,int color)
+
+    public WeaponShot(int seed, float damage, float accuracy, int color)
     {
         this.seed = seed;
         this.damage = damage;

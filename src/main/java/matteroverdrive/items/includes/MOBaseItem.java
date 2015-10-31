@@ -37,7 +37,7 @@ public class MOBaseItem extends Item
 	{
 		this.init(name);
 	}
-	
+
 	protected void init(String name)
 	{
 		this.setUnlocalizedName(name);
@@ -71,22 +71,22 @@ public class MOBaseItem extends Item
 			}
 		}
 	}
-	
+
 	public void register(String name)
 	{
 		GameRegistry.registerItem(this, name);
 	}
-	
+
 	public void register()
 	{
 		this.register(this.getUnlocalizedName().substring(5));
 	}
-	
+
 	public void InitTagCompount(ItemStack stack)
 	{
 		stack.setTagCompound(new NBTTagCompound());
 	}
-	
+
 	public void TagCompountCheck(ItemStack stack)
 	{
 		if(!stack.hasTagCompound())

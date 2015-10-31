@@ -75,10 +75,9 @@ public interface IGravitationalAnomaly
     double getRealMass();
 
     /**
-     * Gets the unsuppressed mass of the anomaly.
      * This method will return the mass of the anomaly without any suppression by stabilisers.
      * To get the suppressed mass use {@link #getRealMass()}.
-     * @return
+     * @return the unsuppressed mass of the anomaly
      */
     double getRealMassUnsuppressed();
 

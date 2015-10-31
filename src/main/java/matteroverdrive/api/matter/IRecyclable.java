@@ -27,14 +27,12 @@ import net.minecraft.item.ItemStack;
 public interface IRecyclable
 {
     /**
-     * The Recycled output stack.
      * @param from the original stack being recycled.
      * @return the recycled output stack.
      */
     ItemStack getOutput(ItemStack from);
 
     /**
-     * Get the matter the recycled output has.
      * This is manly used to calculated power and speed requirements.
      * @param stack the stack being recycled.
      * @return the amount of matter the recycled output has.
@@ -42,7 +40,6 @@ public interface IRecyclable
     int getRecycleMatter(ItemStack stack);
 
     /**
-     * Can the given item stack be recycled.
      * @param stack the recycled item stack.
      * @return can be recycled.
      */

@@ -25,7 +25,7 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
         setHardness(20.0F);
         this.setResistance(5.0f);
-        this.setHarvestLevel("pickaxe",2);
+        this.setHarvestLevel("pickaxe", 2);
         setHasGui(true);
     }
 
@@ -37,21 +37,16 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
+    public void registerBlockIcons(IIconRegister registrar)
     {
-        this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":" + "solar_panel");
+        this.iconTop = registrar.registerIcon(Reference.MOD_ID + ":solar_panel");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metadata)
     {
-        if(side == 1)
-        {
-            return this.iconTop;
-        }
-
-        return MatterOverdriveIcons.Base;
+        return side == 1 ? iconTop : MatterOverdriveIcons.Base;
     }
 
     public boolean isOpaqueCube()
@@ -59,5 +54,8 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock
         return false;
     }
 
-    public boolean renderAsNormalBlock(){return false;}
+    public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
 }

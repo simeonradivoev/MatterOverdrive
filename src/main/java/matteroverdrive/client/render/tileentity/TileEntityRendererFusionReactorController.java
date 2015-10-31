@@ -55,7 +55,6 @@ public class TileEntityRendererFusionReactorController extends TileEntitySpecial
 
                 glPushMatrix();
                 glTranslated(pos.xCoord, pos.yCoord, pos.zCoord);
-                //glRotated(90, 1, 0, 0);
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE);
                 bindTexture(TileEntityRendererPatternMonitor.screenTextureBack);
@@ -71,7 +70,7 @@ public class TileEntityRendererFusionReactorController extends TileEntitySpecial
         renderInfo(x, y, z, controller);
     }
 
-    private void renderInfo(double x,double y,double z,TileEntityMachineFusionReactorController controller) {
+    private void renderInfo(double x, double y, double z, TileEntityMachineFusionReactorController controller) {
         int meta = controller.getWorldObj().getBlockMetadata(controller.xCoord, controller.yCoord, controller.zCoord);
         ForgeDirection side = ForgeDirection.getOrientation(meta);
 
@@ -79,11 +78,11 @@ public class TileEntityRendererFusionReactorController extends TileEntitySpecial
         if (!controller.isValidStructure())
             color = Reference.COLOR_HOLO_RED;
 
-        RenderUtils.beginDrawinngBlockScreen(x, y, z, side,color,controller);
+        RenderUtils.beginDrawinngBlockScreen(x, y, z, side, color, controller);
 
         String[] info = controller.getMonitorInfo().split("\n");
 
-        RenderUtils.drawScreenInfoWithGlobalAutoSize(info,color,side,10,10,4);
+        RenderUtils.drawScreenInfoWithGlobalAutoSize(info, color, side, 10, 10, 4);
 
         RenderUtils.endDrawinngBlockScreen();
 

@@ -14,16 +14,16 @@ public class TileEntityInventory extends Inventory
 {
     TileEntity entity;
 
-    public TileEntityInventory(TileEntity entity,String name) {
-        this(entity,name,new ArrayList<Slot>());
+    public TileEntityInventory(TileEntity entity, String name) {
+        this(entity, name, new ArrayList<>());
     }
 
-    public TileEntityInventory(TileEntity entity,String name, Collection<Slot> slots) {
+    public TileEntityInventory(TileEntity entity, String name, Collection<Slot> slots) {
         this(entity,name, slots,null);
     }
 
-    public TileEntityInventory(TileEntity entity,String name, Collection<Slot> slots, IUseableCondition useableCondition) {
-        super(name, slots, useableCondition);
+    public TileEntityInventory(TileEntity entity, String name, Collection<Slot> slots, IUsableCondition usableCondition) {
+        super(name, slots, usableCondition);
         this.entity = entity;
     }
 
@@ -40,9 +40,9 @@ public class TileEntityInventory extends Inventory
     @Override
     public boolean isUseableByPlayer(EntityPlayer player)
     {
-        if(useableCondition != null)
+        if(usableCondition != null)
         {
-            return useableCondition.usableByPlayer(player);
+            return usableCondition.usableByPlayer(player);
         }
         return entity.getWorldObj().getTileEntity(entity.xCoord, entity.yCoord, entity.zCoord) != entity ? false : player.getDistanceSq((double)entity.xCoord + 0.5D, (double)entity.yCoord + 0.5D, (double)entity.zCoord + 0.5D) <= 64.0D;
     }

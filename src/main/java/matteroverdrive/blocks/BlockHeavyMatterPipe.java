@@ -28,6 +28,7 @@ import net.minecraft.world.World;
  */
 public class BlockHeavyMatterPipe extends BlockMatterPipe
 {
+
     public BlockHeavyMatterPipe(Material material, String name) {
         super(material, name);
     }
@@ -37,4 +38,5 @@ public class BlockHeavyMatterPipe extends BlockMatterPipe
     {
         return new TileEntityHeavyMatterPipe();
     }
+
 }

@@ -44,7 +44,7 @@ public class MOEventGravitationalAnomalyConsume extends Event
      */
     public final int anomalyZ;
 
-    public MOEventGravitationalAnomalyConsume(Entity entity,int x,int y,int z)
+    public MOEventGravitationalAnomalyConsume(Entity entity, int x, int y, int z)
     {
         this.entity = entity;
         this.anomalyX = x;
@@ -67,7 +67,6 @@ public class MOEventGravitationalAnomalyConsume extends Event
 
     public static class Post extends MOEventGravitationalAnomalyConsume
     {
-
         public Post(Entity entity, int x, int y, int z) {
             super(entity, x, y, z);
         }

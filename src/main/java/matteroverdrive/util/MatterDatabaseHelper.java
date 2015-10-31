@@ -29,7 +29,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-public class MatterDatabaseHelper 
+public class MatterDatabaseHelper
 {
 	public static final int MAX_ITEM_PROGRESS = 100;
 	public static final String PROGRESS_TAG_NAME = "scan_progress";
@@ -43,7 +43,7 @@ public class MatterDatabaseHelper
         InitItemListTagCompound(scanner);
 
     }
-	
+
 	public static void InitItemListTagCompound(ItemStack scanner)
 	{
 		NBTTagList items = new NBTTagList();
@@ -109,7 +109,7 @@ public class MatterDatabaseHelper
 		}
 		return null;
 	}
-	
+
 	public static boolean HasItem(ItemStack scanner,ItemStack item)
 	{
 		return HasItem(scanner.getTagCompound(), item);
@@ -119,7 +119,7 @@ public class MatterDatabaseHelper
 			if(tagcompound != null)
 			{
 				NBTTagList itemList = tagcompound.getTagList(ITEMS_TAG_NAME, 10);
-				
+
 				for(int i = 0;i < itemList.tagCount();i++)
 				{
 					if(areEqual(GetItemStackFromNBT(itemList.getCompoundTagAt(i)), item))
@@ -128,7 +128,7 @@ public class MatterDatabaseHelper
 					}
 				}
 			}
-		
+
 		return false;
 	}
 	public static boolean HasItem(ItemStack scanner,String id)
@@ -157,7 +157,7 @@ public class MatterDatabaseHelper
 
 		return false;
 	}
-	public static boolean HasItem(ItemStack database, int id) 
+	public static boolean HasItem(ItemStack database, int id)
 	{
 		return HasItem(database.getTagCompound(),id);
 	}
@@ -166,11 +166,11 @@ public class MatterDatabaseHelper
 		if(tagcompound != null)
 		{
 			NBTTagCompound items = tagcompound;
-			
+
 			if(items != null)
 			{
 				NBTTagList itemList = items.getTagList(ITEMS_TAG_NAME, 10);
-				
+
 				for(int i = 0;i < itemList.tagCount();i++)
 				{
 					if(itemList.getCompoundTagAt(i).getShort("id") == id)
@@ -178,10 +178,10 @@ public class MatterDatabaseHelper
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public static int GetProgressFromNBT(NBTTagCompound itemNBT)
 	{
 		if(itemNBT != null)
@@ -194,19 +194,19 @@ public class MatterDatabaseHelper
 		if(itemNBT != null)
 			 itemNBT.setByte(PROGRESS_TAG_NAME, amount);
 	}
-	
+
 	public static int GetItemProgress(ItemStack storage, ItemStack item)
 	{
 		NBTTagCompound tag = GetItemAsNBT(storage,item);
-		
+
 		if(tag != null && tag.hasKey(PROGRESS_TAG_NAME))
 		{
 			return tag.getByte(PROGRESS_TAG_NAME);
 		}
-		
+
 		return -1;
 	}
-	
+
 	public static void writeToNBT(ItemStack patternStorage,ItemStack item,int progress)
 	{
         if (!patternStorage.hasTagCompound()) {
@@ -240,7 +240,7 @@ public class MatterDatabaseHelper
 			tagCompound.setByte("Count", (byte) 1);
 		}
     }
-	
+
 	public static ItemStack GetItemWithInfo(ItemStack scanner, int id)
 	{
 		NBTTagCompound itemCompound = GetItemAsNBT(scanner,id);
@@ -270,14 +270,14 @@ public class MatterDatabaseHelper
 	{
 		if(comp != null)
 			return ItemStack.loadItemStackFromNBT(comp);
-		else 
+		else
 			return null;
 	}
-	public static ItemStack GetItemAt(ItemStack scanner, int index) 
+	public static ItemStack GetItemAt(ItemStack scanner, int index)
 	{
 		return GetItemStackFromNBT(GetItemAsNBTAt(scanner,index));
 	}
-	
+
 	public static NBTTagCompound GetItemAsNBT(ItemStack patternStorage, ItemStack item)
 	{
 		NBTTagList itemList = GetItemsTagList(patternStorage);
@@ -296,7 +296,7 @@ public class MatterDatabaseHelper
                     return GetItemAsNBTAt(patternStorage, i);
             }
         }
-		
+
 		return null;
 	}
 	public static NBTTagCompound GetItemAsNBT(ItemStack patternStorage, String id)
@@ -321,19 +321,19 @@ public class MatterDatabaseHelper
         }
 		return null;
 	}
-	
+
 	public static int GetIndexOfItem(ItemStack scanner, Block block)
 	{
 		ItemStack item = new ItemStack(block);
 		return GetIndexOfItem(scanner,item);
 	}
-	
+
 	public static int GetIndexOfItem(ItemStack scanner, World world,int x,int y,int z)
 	{
 		ItemStack item = GetItemStackFromWorld(world,x,y,z);
 		return GetIndexOfItem(scanner,item);
 	}
-	
+
 	public static int GetIndexOfItem(ItemStack scanner, ItemStack item)
 	{
         NBTTagList itemList = GetItemsTagList(scanner);
@@ -344,7 +344,7 @@ public class MatterDatabaseHelper
                     return i;
             }
         }
-		
+
 		return -1;
 	}
 
@@ -377,7 +377,7 @@ public class MatterDatabaseHelper
 
 		return areEqual(ItemStack.loadItemStackFromNBT(one),ItemStack.loadItemStackFromNBT(two));
 	}
-	
+
 	public static NBTTagList GetItemsTagList(ItemStack patternStorage)
 	{
 		if (patternStorage.getItem() instanceof IMatterPatternStorage)
@@ -386,11 +386,11 @@ public class MatterDatabaseHelper
 		}
 		return null;
 	}
-	
+
 	public static ItemStack GetItemStackFromWorld(World world,int x, int y,int z)
 	{
 		Block b = world.getBlock(x, y, z);
-		
+
 		if(b != null && Item.getItemFromBlock(b) != null)
 		{
 			//Item bi = Item.getItemFromBlock(b);
@@ -398,9 +398,9 @@ public class MatterDatabaseHelper
 			//b.getSubBlocks(bi, null, subBlocks);
 			int meta = world.getBlockMetadata(x, y, z);
 			return new ItemStack(b,1,b.damageDropped(meta));
-			
+
 		}
-		
+
 		return new ItemStack(b);
 	}
 

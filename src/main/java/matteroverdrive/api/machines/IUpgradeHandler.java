@@ -34,5 +34,5 @@ public interface IUpgradeHandler
      * @param multiply The multiply amount of all the upgrades that change the given Upgrade Type
      * @return The affected and handled multiply of the original Multiply parameter.
      */
-    double affectUpgrade(UpgradeTypes type,double multiply);
+    double affectUpgrade(UpgradeTypes type, double multiply);
 }

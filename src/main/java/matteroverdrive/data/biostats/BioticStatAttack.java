@@ -37,7 +37,7 @@ import java.util.UUID;
  */
 public class BioticStatAttack extends AbstractBioticStat
 {
-    public final UUID modiferID = UUID.fromString("caf3f2ba-75f5-4f2f-84b9-ddfab1fcef25");
+    public final UUID modifierID = UUID.fromString("caf3f2ba-75f5-4f2f-84b9-ddfab1fcef25");
 
     public BioticStatAttack(String name, int xp) {
         super(name, xp);
@@ -70,13 +70,14 @@ public class BioticStatAttack extends AbstractBioticStat
     @Override
     public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
     {
-        
+
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Multimap attributes(AndroidPlayer androidPlayer, int level) {
         Multimap multimap = HashMultimap.create();
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(),new MOAttributeModifier(modiferID, "Android Attack Damage", getAttackPower(level), 1).setSaved(false));
+        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(),new MOAttributeModifier(modifierID, "Android Attack Damage", getAttackPower(level), 1).setSaved(false));
         return multimap;
     }
 

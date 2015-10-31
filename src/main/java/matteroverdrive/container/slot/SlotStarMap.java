@@ -30,7 +30,7 @@ public class SlotStarMap extends MOSlot
     EntityPlayer player;
     TileEntityMachineStarMap starMap;
 
-    public SlotStarMap(TileEntityMachineStarMap starMap, int slot,EntityPlayer player) {
+    public SlotStarMap(TileEntityMachineStarMap starMap, int slot, EntityPlayer player) {
         super(starMap, slot, 0, 0);
         this.player = player;
         this.starMap = starMap;
@@ -39,14 +39,14 @@ public class SlotStarMap extends MOSlot
     @Override
     public boolean isValid(ItemStack itemStack)
     {
-        return starMap.isItemValidForSlot(getSlotIndex(),itemStack,player);
+        return starMap.isItemValidForSlot(getSlotIndex(), itemStack, player);
     }
 
     @Override
     public void onPickupFromSlot(EntityPlayer player, ItemStack itemStack)
     {
-        starMap.onItemPickup(player,itemStack);
-        super.onPickupFromSlot(player,itemStack);
+        starMap.onItemPickup(player, itemStack);
+        super.onPickupFromSlot(player, itemStack);
     }
 
     @Override

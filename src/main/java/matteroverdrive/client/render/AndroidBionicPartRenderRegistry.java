@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class AndroidBionicPartRenderRegistry implements IBionicPartRenderRegistry
 {
-    Map<Class<? extends IBionicPart>,IBionicPartRenderer> rendererMap;
+    Map<Class<? extends IBionicPart>, IBionicPartRenderer> rendererMap;
 
     public AndroidBionicPartRenderRegistry()
     {
@@ -38,9 +38,9 @@ public class AndroidBionicPartRenderRegistry implements IBionicPartRenderRegistr
     }
 
     @Override
-    public void register(Class<? extends IBionicPart> partClass,IBionicPartRenderer renderer)
+    public void register(Class<? extends IBionicPart> partClass, IBionicPartRenderer renderer)
     {
-        rendererMap.put(partClass,renderer);
+        rendererMap.put(partClass, renderer);
     }
 
     @Override

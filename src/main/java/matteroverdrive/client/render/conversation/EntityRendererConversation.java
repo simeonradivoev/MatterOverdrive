@@ -51,7 +51,7 @@ public class EntityRendererConversation extends EntityRenderer
     {
         if (fakePlayer == null)
         {
-            fakePlayer = new EntityFakePlayer(mc.theWorld,mc.thePlayer.getGameProfile());
+            fakePlayer = new EntityFakePlayer(mc.theWorld, mc.thePlayer.getGameProfile());
         }
 
         boolean lastHideGui = mc.gameSettings.hideGUI;
@@ -74,7 +74,7 @@ public class EntityRendererConversation extends EntityRenderer
                 }
                 else
                 {
-                    DialogShot.wideNormal.positionCamera(guiDialog.getNpc().getEntity(), mc.thePlayer,ticks,this);
+                    DialogShot.wideNormal.positionCamera(guiDialog.getNpc().getEntity(), mc.thePlayer, ticks, this);
                 }
             }
             updateFakePlayerPositions();
@@ -84,16 +84,16 @@ public class EntityRendererConversation extends EntityRenderer
         mc.gameSettings.hideGUI = lastHideGui;
     }
 
-    public Vec3 getLook(EntityLivingBase active,EntityLivingBase other,float ticks)
+    public Vec3 getLook(EntityLivingBase active, EntityLivingBase other, float ticks)
     {
-        return getPosition(other,ticks,false).subtract(getPosition(active, ticks,false));
+        return getPosition(other, ticks, false).subtract(getPosition(active, ticks, false));
     }
 
-    public Vec3 getPosition(EntityLivingBase entityLivingBase,float ticks,boolean includeHeight)
+    public Vec3 getPosition(EntityLivingBase entityLivingBase, float ticks, boolean includeHeight)
     {
         Vec3 pos = entityLivingBase.getPosition(ticks);
         if (includeHeight)
-            pos.addVector(0,entityLivingBase.getEyeHeight(),0);
+            pos.addVector(0, entityLivingBase.getEyeHeight(), 0);
         return pos;
     }
 

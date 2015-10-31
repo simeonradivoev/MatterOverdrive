@@ -55,7 +55,7 @@ public class RendererBlockReplicator implements ISimpleBlockRenderingHandler
     {
         Tessellator.instance.startDrawing(GL11.GL_TRIANGLES);
         Matrix4f mat = new Matrix4f();
-        mat.translate(new Vector3f(-0.5f,0,-0.5f));
+        mat.translate(new Vector3f(-0.5f, 0, -0.5f));
         renderBlock(mat, 0, 0, 0, -1);
         Tessellator.instance.draw();
     }
@@ -64,9 +64,9 @@ public class RendererBlockReplicator implements ISimpleBlockRenderingHandler
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
     {
         Matrix4f rot = new Matrix4f();
-        rot.translate(new Vector3f(0,0.5f,0));
-        RenderUtils.rotateFromBlock(rot,world,x,y,z);
-        renderBlock(rot,x,y,z,block.getMixedBrightnessForBlock(world,x,y,z));
+        rot.translate(new Vector3f(0, 0.5f, 0));
+        RenderUtils.rotateFromBlock(rot, world, x, y, z);
+        renderBlock(rot, x, y, z, block.getMixedBrightnessForBlock(world, x, y, z));
         return true;
     }
 
@@ -83,9 +83,9 @@ public class RendererBlockReplicator implements ISimpleBlockRenderingHandler
 
         RenderUtils.tesseleteModelAsBlock(mat, front, MatterOverdriveIcons.replicator, x, y, z, brightness, true, null);
         RenderUtils.tesseleteModelAsBlock(mat, inside, MatterOverdriveIcons.replicator, x, y, z, brightness, true, null);
-        RenderUtils.tesseleteModelAsBlock(mat,vents,MatterOverdriveIcons.Vent,x,y,z,brightness,true,null);
-        RenderUtils.tesseleteModelAsBlock(mat,shell,MatterOverdriveIcons.Base,x,y,z,brightness,true,null);
-        RenderUtils.tesseleteModelAsBlock(mat,back,MatterOverdriveIcons.Network_port_square,x,y,z,brightness,true,null);
+        RenderUtils.tesseleteModelAsBlock(mat, vents, MatterOverdriveIcons.Vent, x, y, z, brightness, true, null);
+        RenderUtils.tesseleteModelAsBlock(mat, shell, MatterOverdriveIcons.Base, x, y, z, brightness, true, null);
+        RenderUtils.tesseleteModelAsBlock(mat, back, MatterOverdriveIcons.Network_port_square, x, y, z, brightness, true, null);
         Tessellator.instance.draw();
         Tessellator.instance.startDrawingQuads();
     }

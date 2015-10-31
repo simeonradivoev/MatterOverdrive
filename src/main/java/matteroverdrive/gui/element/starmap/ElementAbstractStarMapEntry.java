@@ -70,21 +70,21 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
         RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply);
         if (isSelected(spaceBody))
         {
-            getBG(spaceBody).Render(posX, posY, sizeX - 64, sizeY);
+            getBG(spaceBody).render(posX, posY, sizeX - 64, sizeY);
             if (canView(spaceBody,Minecraft.getMinecraft().thePlayer)) {
-                this.BG_MIDDLE_NORMAL.Render(posX + sizeX - 64, posY, 32, sizeY);
+                this.BG_MIDDLE_NORMAL.render(posX + sizeX - 64, posY, 32, sizeY);
             }
             if (canTravelTo(spaceBody, Minecraft.getMinecraft().thePlayer))
-                this.BG_FLIPPED.Render(posX + sizeX - 32, posY, 32, sizeY);
+                this.BG_FLIPPED.render(posX + sizeX - 32, posY, 32, sizeY);
             RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply * 0.75f);
 
         }else
         {
             if (intersectsWith(mouseX,mouseY))
             {
-                getBG(spaceBody).Render(posX, posY, sizeX - 64, sizeY);
+                getBG(spaceBody).render(posX, posY, sizeX - 64, sizeY);
             }else {
-                getBG(spaceBody).Render(posX, posY, sizeX - 64, sizeY);
+                getBG(spaceBody).render(posX, posY, sizeX - 64, sizeY);
             }
         }
         GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -147,7 +147,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
                     if (entry.getValue() != 0) {
                         GL11.glEnable(GL11.GL_BLEND);
                         RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply);
-                        BG_CIRCLE.Render(posX + 128 + iconsX, posY, 32, 32);
+                        BG_CIRCLE.render(posX + 128 + iconsX, posY, 32, 32);
                         ClientProxy.holoIcons.renderIcon(entry.getKey(),posX + iconsX + 128 + 16 - entry.getKey().getOriginalWidth() / 2, posY + 16 - entry.getKey().getOriginalHeight() / 2);
                         if (entry.getValue() > 0)
                             RenderUtils.drawString(String.valueOf(entry.getValue()), posX + iconsX + 128 + 16 + 3, posY + 16 + 3, Reference.COLOR_HOLO,1);
@@ -165,7 +165,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
                     if (entry.getValue() != 0) {
                         GL11.glEnable(GL11.GL_BLEND);
                         RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), 0.3f);
-                        BG_CIRCLE.Render(posX + 128 + x, posY, 32, 32);
+                        BG_CIRCLE.render(posX + 128 + x, posY, 32, 32);
                         ClientProxy.holoIcons.renderIcon(entry.getKey(),posX + x + 128 + 16 - entry.getKey().getOriginalWidth() / 2, posY + 16 - entry.getKey().getOriginalHeight() / 2);
                         if (entry.getValue() > 0)
                             RenderUtils.drawString(String.valueOf(entry.getValue()), posX + x + 128 + 16 + 3, posY + 16 + 3, getSpaceBodyColor(spaceBody),0.6f);

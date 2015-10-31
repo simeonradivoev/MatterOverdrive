@@ -38,21 +38,21 @@ public class BlockTransporter extends MOMatterEnergyStorageBlock
 
 	public BlockTransporter(Material material, String name)
 	{
-		super(material, name,true,true);
+		super(material, name, true, true);
 		setHardness(20.0F);
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);
 		this.setHasGui(true);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
-		this.blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "transporter_side");
-		this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":" + "transporter_top");
-		this.iconFront = iconRegister.registerIcon(Reference.MOD_ID + ":" + "transporter_front");
+		this.blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":transporter_side");
+		this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":transporter_top");
+		this.iconFront = iconRegister.registerIcon(Reference.MOD_ID + ":transporter_front");
 	}
-	
+
 	/**
      * Gets the block's texture. Args: side, meta
      */
@@ -67,12 +67,12 @@ public class BlockTransporter extends MOMatterEnergyStorageBlock
     	{
     		return this.iconFront;
     	}
-    	
+
     	return this.blockIcon;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+    public TileEntity createNewTileEntity(World world, int meta)
     {
         return new TileEntityMachineTransporter();
     }

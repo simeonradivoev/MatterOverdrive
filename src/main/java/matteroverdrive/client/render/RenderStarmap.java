@@ -49,7 +49,8 @@ public class RenderStarmap implements IWorldLastRenderer
 
             starMapEntityRenderer.setStarMap(((GuiStarMap) Minecraft.getMinecraft().currentScreen).getMachine());
             Minecraft.getMinecraft().entityRenderer = starMapEntityRenderer;
-        }else
+        }
+        else
         {
             if (lastEntityRenderer != null)
             {

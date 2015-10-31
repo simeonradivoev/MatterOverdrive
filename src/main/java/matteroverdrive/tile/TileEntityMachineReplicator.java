@@ -93,7 +93,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     private boolean isPlayingReplicateAnimation;
     @SideOnly(Side.CLIENT)
     private int replicateAnimationCounter;
-	
+
 	public int replicateTime;
     private float replicateProgress;
 
@@ -102,7 +102,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     private final MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueueProcessing;
     private final TimeTracker timeTracker;
     private NBTTagCompound internalPatternStorage;
-	
+
 	public TileEntityMachineReplicator()
 	{
         super(4);
@@ -217,11 +217,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             {
                 //sync with server so that the replicated item will be seen
                 isPlayingReplicateAnimation = false;
-                ForceSync();
+                forceSync();
             }
         }
     }
-	
+
 	private void replicateItem(NBTTagCompound itemAsNBT,ItemStack newItem)
 	{
 		if(isActive())
@@ -255,7 +255,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             }
 		}
 	}
-	
+
 	private boolean putInOutput(ItemStack item)
 	{
 		if(getStackInSlot(OUTPUT_SLOT_ID) == null)
@@ -268,7 +268,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 			if(getStackInSlot(OUTPUT_SLOT_ID).isStackable() && getStackInSlot(OUTPUT_SLOT_ID).getItemDamage() == item.getItemDamage() && getStackInSlot(OUTPUT_SLOT_ID).getItem() == item.getItem())
 			{
 				int newStackSize = getStackInSlot(OUTPUT_SLOT_ID).stackSize + 1;
-				
+
 				if(newStackSize <= getStackInSlot(OUTPUT_SLOT_ID).getMaxStackSize())
 				{
                     getStackInSlot(OUTPUT_SLOT_ID).stackSize = newStackSize;
@@ -276,7 +276,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -401,7 +401,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -470,7 +470,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     @Override
     public ItemStack decrStackSize(int slot, int size) {
         ItemStack s = super.decrStackSize(slot, size);
-        ForceSync();
+        forceSync();
         return s;
     }
     //endregion

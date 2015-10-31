@@ -13,11 +13,11 @@ public class EntityRendererFailedChicken extends RenderChicken
 {
     private static final ResourceLocation chickenTextures = new ResourceLocation(Reference.PATH_ENTITIES + "failed_chicken.png");
 
-    public EntityRendererFailedChicken(ModelBase p_i1252_1_, float p_i1252_2_) {
-        super(p_i1252_1_, p_i1252_2_);
+    public EntityRendererFailedChicken(ModelBase model, float f) {
+        super(model, f);
     }
 
-    protected ResourceLocation getEntityTexture(EntityChicken p_110775_1_)
+    protected ResourceLocation getEntityTexture(EntityChicken entity)
     {
         return chickenTextures;
     }

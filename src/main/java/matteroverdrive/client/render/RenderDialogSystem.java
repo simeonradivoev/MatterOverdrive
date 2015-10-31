@@ -35,7 +35,7 @@ public class RenderDialogSystem implements IWorldLastRenderer
 
     public RenderDialogSystem()
     {
-        entityRendererConversation = new EntityRendererConversation(Minecraft.getMinecraft(),Minecraft.getMinecraft().getResourceManager());
+        entityRendererConversation = new EntityRendererConversation(Minecraft.getMinecraft(), Minecraft.getMinecraft().getResourceManager());
     }
 
     @Override

@@ -2,7 +2,7 @@ package matteroverdrive.util;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class Platform 
+public class Platform
 {
 	public static ForgeDirection rotateAround(ForgeDirection forward, ForgeDirection axis)
 	{

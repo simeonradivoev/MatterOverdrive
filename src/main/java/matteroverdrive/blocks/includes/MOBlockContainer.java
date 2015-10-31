@@ -29,7 +29,7 @@ public abstract class MOBlockContainer extends MOBlock implements ITileEntityPro
 
 	public MOBlockContainer(Material material, String name)
     {
-        super(material,name);
+        super(material, name);
         this.isBlockContainer = true;
     }
 
@@ -43,8 +43,8 @@ public abstract class MOBlockContainer extends MOBlock implements ITileEntityPro
     @Override
     public void onBlockPreDestroy(World world, int x, int y, int z, int meta)
     {
-        super.onBlockPreDestroy(world,x,y,z,meta);
-        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x,y,z);
+        super.onBlockPreDestroy(world, x, y, z, meta);
+        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x, y, z);
         if(tileEntity != null)
             tileEntity.onDestroyed();
     }

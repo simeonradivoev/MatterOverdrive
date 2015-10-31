@@ -117,7 +117,7 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
         super.drawBackground(mouseX,mouseY,gameTicks);
-        numberBG.Render(posX + 16,posY,sizeX - 32,sizeY);
+        numberBG.render(posX + 16,posY,sizeX - 32,sizeY);
     }
 
     @Override

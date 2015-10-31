@@ -25,7 +25,7 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class AnomalySuppressor
 {
-    int x,y,z;
+    int x, y, z;
     int time;
     float amount;
 
@@ -34,7 +34,7 @@ public class AnomalySuppressor
 
     }
 
-    public AnomalySuppressor(int x,int y,int z,int time,float amount)
+    public AnomalySuppressor(int x, int y, int z, int time, float amount)
     {
         this.x = x;
         this.y = y;
@@ -57,11 +57,11 @@ public class AnomalySuppressor
 
     public void writeToNBT(NBTTagCompound tagCompound)
     {
-        tagCompound.setInteger("block_x",x);
-        tagCompound.setInteger("block_y",y);
-        tagCompound.setInteger("block_z",z);
-        tagCompound.setByte("time",(byte)time);
-        tagCompound.setFloat("amount",amount);
+        tagCompound.setInteger("block_x", x);
+        tagCompound.setInteger("block_y", y);
+        tagCompound.setInteger("block_z", z);
+        tagCompound.setByte("time", (byte)time);
+        tagCompound.setFloat("amount", amount);
     }
 
     public void readFromNBT(NBTTagCompound tagCompound)

@@ -13,7 +13,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import java.util.Random;
 
-public class MOMathHelper 
+public class MOMathHelper
 {
 	public static final double PI2 = Math.PI * 2;
 	public static double degreesToRadians = Math.PI / 180.0;
@@ -38,7 +38,7 @@ public class MOMathHelper
         double z = (radius * Math.cos(theta));
         return new Vector3f((float)x,0,(float)z);
     }
-	
+
 	public static boolean getBoolean(int number,int pos)
 	{
 
@@ -81,7 +81,7 @@ public class MOMathHelper
                 .normalize();
     }
 
-	
+
 	public static int setBoolean(int number,int pos,boolean value)
 	{
 		if(value)
@@ -163,7 +163,7 @@ public class MOMathHelper
         float newTime = MathHelper.clamp_float(time,0,1);
         return (1 - newTime) * form + newTime * to;
     }
-    
+
        // JAVA REFERENCE IMPLEMENTATION OF IMPROVED NOISE - COPYRIGHT 2002 KEN PERLIN.
        static public double noise(double x, double y, double z) {
           int X = (int)Math.floor(x) & 255,                  // FIND UNIT CUBE THAT

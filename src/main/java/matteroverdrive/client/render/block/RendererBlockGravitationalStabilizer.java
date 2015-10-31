@@ -21,13 +21,13 @@ public class RendererBlockGravitationalStabilizer extends MOBlockRenderer
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
     {
-        int meta = world.getBlockMetadata(x,y,z);
+        int meta = world.getBlockMetadata(x, y, z);
         if (meta == ForgeDirection.WEST.ordinal() || meta == ForgeDirection.EAST.ordinal())
         {
             renderer.uvRotateTop = 1;
             renderer.uvRotateBottom = 1;
         }
-        super.renderWorldBlock(world,x,y,z,block,modelId,renderer);
+        super.renderWorldBlock(world, x, y, z, block, modelId, renderer);
 
         renderer.uvRotateTop = 0;
         renderer.uvRotateBottom = 0;

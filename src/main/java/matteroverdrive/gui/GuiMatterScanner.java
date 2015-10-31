@@ -62,9 +62,9 @@ public class GuiMatterScanner extends MOGuiBase
 
 		MatterOverdrive.packetPipeline.sendToServer(new PacketMatterScannerGetDatabase(MatterScanner.getLinkPosition(scanner)));
 	}
-	
+
 	@Override
-	public void initGui() 
+	public void initGui()
 	{
 		currentPage = MatterScanner.getLastPage(scanner);
 		super.initGui();
@@ -113,7 +113,7 @@ public class GuiMatterScanner extends MOGuiBase
 		lastSelected = getSelectedFromDatabase(scanner);
 		pageScanInfo.setItemNBT(lastSelected);
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
 

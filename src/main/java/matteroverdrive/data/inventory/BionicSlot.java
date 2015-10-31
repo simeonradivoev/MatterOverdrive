@@ -30,11 +30,11 @@ import net.minecraft.util.ResourceLocation;
 public class BionicSlot extends Slot
 {
     int type;
-    public static String[] names = {"head","arms","legs","chest","other","battery"};
+    public static String[] names = {"head", "arms", "legs", "chest", "other", "battery"};
 
     public ResourceLocation[] icons = new ResourceLocation[]{,};
 
-    public BionicSlot(boolean isMainSlot,int type)
+    public BionicSlot(boolean isMainSlot, int type)
     {
         super(isMainSlot);
         this.type = type;

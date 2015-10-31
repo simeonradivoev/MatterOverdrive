@@ -20,16 +20,19 @@ public class GalacticPosition
 
     //region Constructors
     public GalacticPosition() {}
-    public GalacticPosition(int quadrantID,int starID,int planetID)
+
+    public GalacticPosition(int quadrantID, int starID, int planetID)
     {
         setPosition(quadrantID,starID,planetID);
     }
+
     public GalacticPosition(GalacticPosition other)
     {
         quadrantID = other.quadrantID;
         starID = other.starID;
         planetID = other.planetID;
     }
+
     public GalacticPosition(Star star)
     {
         this.starID = star.getId();
@@ -38,6 +41,7 @@ public class GalacticPosition
             quadrantID = star.getQuadrant().getId();
         }
     }
+
     public GalacticPosition(Planet planet)
     {
         this.planetID = planet.getId();
@@ -50,15 +54,18 @@ public class GalacticPosition
             }
         }
     }
+
     public GalacticPosition(Quadrant quadrant)
     {
         this.quadrantID = quadrant.getId();
     }
+
     public GalacticPosition(NBTTagCompound tagCompound)
     {
         super();
         readFromNBT(tagCompound);
     }
+
     public GalacticPosition(ByteBuf buf)
     {
         super();
@@ -108,6 +115,7 @@ public class GalacticPosition
         }
         return false;
     }
+
     public boolean equals(Planet planet)
     {
         if (planetID == planet.getId())
@@ -116,10 +124,12 @@ public class GalacticPosition
         }
         return false;
     }
+
     public boolean equals(Quadrant quadrant)
     {
         return quadrantID == quadrant.getId();
     }
+
     @Override
     public boolean equals(Object obj)
     {
@@ -136,16 +146,23 @@ public class GalacticPosition
         }
         return false;
     }
-    public int getStarID() {return starID;}
+
+    public int getStarID()
+    {
+        return starID;
+    }
+
     public int getQuadrantID()
     {
         return quadrantID;
     }
+
     public int getPlanetID()
     {
         return planetID;
     }
-    public int distanceToLY(Galaxy galaxy,GalacticPosition position)
+
+    public int distanceToLY(Galaxy galaxy, GalacticPosition position)
     {
         Star fromStar = galaxy.getStar(this);
         Star toStar = galaxy.getStar(position);
@@ -156,7 +173,8 @@ public class GalacticPosition
         }
         return 0;
     }
-    public int distanceToAU(Galaxy galaxy,GalacticPosition position)
+
+    public int distanceToAU(Galaxy galaxy, GalacticPosition position)
     {
         Planet fromPlanet = galaxy.getPlanet(this);
         Planet toPlanet = galaxy.getPlanet(position);
@@ -167,13 +185,15 @@ public class GalacticPosition
         }
         return 0;
     }
+
     public NBTTagCompound toNBT()
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
         writeToNBT(tagCompound);
         return tagCompound;
     }
-    public void setPosition(int quadrantID,int starID,int planetID)
+
+    public void setPosition(int quadrantID, int starID, int planetID)
     {
         this.quadrantID = quadrantID;
         this.starID = starID;

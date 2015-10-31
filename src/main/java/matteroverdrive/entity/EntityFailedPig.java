@@ -10,26 +10,26 @@ import net.minecraft.world.World;
  */
 public class EntityFailedPig extends EntityPig
 {
-    public EntityFailedPig(World p_i1689_1_)
+    public EntityFailedPig(World world)
     {
-        super(p_i1689_1_);
+        super(world);
     }
 
     @Override
     protected String getLivingSound()
     {
-        return Reference.MOD_ID + ":" + "failed_animal_idle_pig";
+        return Reference.MOD_ID + ":failed_animal_idle_pig";
     }
 
     protected String getHurtSound()
     {
-        return Reference.MOD_ID + ":" + "failed_animal_idle_pig";
+        return Reference.MOD_ID + ":failed_animal_idle_pig";
     }
 
     @Override
     protected String getDeathSound()
     {
-        return Reference.MOD_ID + ":" + "failed_animal_die_" + rand.nextInt(2);
+        return Reference.MOD_ID + ":failed_animal_die_" + rand.nextInt(2);
     }
 
     @Override
@@ -38,8 +38,8 @@ public class EntityFailedPig extends EntityPig
         return 1.0F;
     }
 
-    public EntityPig createChild(EntityAgeable p_90011_1_)
+    public EntityPig createChild(EntityAgeable entity)
     {
-        return new EntityFailedPig(this.worldObj);
+        return new EntityFailedPig(worldObj);
     }
 }

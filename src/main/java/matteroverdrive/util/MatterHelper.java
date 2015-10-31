@@ -44,15 +44,15 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.List;
 
-public class MatterHelper 
+public class MatterHelper
 {
 	public static final String MATTER_UNIT = " kM";
-	
+
 	public static boolean containsMatter(ItemStack item)
 	{
 		return getMatterAmountFromItem(item) > 0;
 	}
-	
+
 	public static int getMatterAmountFromItem(ItemStack item)
 	{
         if(item != null)
@@ -98,7 +98,7 @@ public class MatterHelper
     {
         return ForgeDirection.values()[ForgeDirection.OPPOSITES[dir.ordinal()]];
     }
-	
+
 	private static IRecipe GetRecipeOf(ItemStack item)
 	{
 		List recipes = CraftingManager.getInstance().getRecipeList();
@@ -111,7 +111,7 @@ public class MatterHelper
 				return recipe;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -129,24 +129,24 @@ public class MatterHelper
     {
         return itemStack != null && itemStack.getItem() instanceof IUpgrade;
     }
-	
+
 	public static boolean CanScan(ItemStack stack)
 	{
         if(MatterHelper.getMatterAmountFromItem(stack) <= 0)
             return false;
 
 		Item item = stack.getItem();
-		
+
 		if(item instanceof ItemBlock)
 		{
 			Block block = Block.getBlockFromItem(item);
-			
+
 			if(block == Blocks.bedrock || block == Blocks.air)
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 

@@ -29,10 +29,10 @@ import net.minecraft.block.material.Material;
  */
 public class BlockDecorative extends MOBlock {
 
-    public BlockDecorative(Material material, String name,String iconName,float hardness,int harvestLevel,float resistance) {
+    public BlockDecorative(Material material, String name, String iconName, float hardness, int harvestLevel, float resistance) {
         super(material, name);
         setHardness(hardness);
-        setHarvestLevel("pickaxe",harvestLevel);
+        setHarvestLevel("pickaxe", harvestLevel);
         setResistance(resistance);
         this.setBlockTextureName(Reference.MOD_ID + ":" + iconName);
         setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative);

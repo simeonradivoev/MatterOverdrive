@@ -31,7 +31,6 @@ public class BlockMicrowave extends MOBlock
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
-
         if (side == meta)
         {
             return frontIcon;
@@ -48,9 +47,9 @@ public class BlockMicrowave extends MOBlock
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
-        this.blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "microwave");
-        this.frontIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "microwave_front");
-        this.backIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "microwave_back");
+        this.blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":microwave");
+        this.frontIcon = iconRegister.registerIcon(Reference.MOD_ID + ":microwave_front");
+        this.backIcon = iconRegister.registerIcon(Reference.MOD_ID + ":microwave_back");
     }
 
     @Override
@@ -70,21 +69,21 @@ public class BlockMicrowave extends MOBlock
 
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
     {
-        int meta = world.getBlockMetadata(x,y,z);
-        float pixel = 1f/16f;
+        int meta = world.getBlockMetadata(x, y, z);
+        float pixel = 1f / 16f;
         ForgeDirection dir = ForgeDirection.getOrientation(meta);
 
         if (dir == ForgeDirection.WEST || dir == ForgeDirection.EAST)
         {
-            setBlockBounds(3 * pixel,0,1 * pixel,13 * pixel,10 * pixel,15 * pixel);
+            setBlockBounds(3 * pixel, 0, 1 * pixel, 13 * pixel, 10 * pixel, 15 * pixel);
         }
         else if (dir == ForgeDirection.NORTH || dir == ForgeDirection.SOUTH)
         {
-            setBlockBounds(1 * pixel,0,3 * pixel,15 * pixel,10 * pixel,13 * pixel);
+            setBlockBounds(1 * pixel, 0, 3 * pixel, 15 * pixel, 10 * pixel, 13 * pixel);
         }
         else
         {
-            setBlockBounds(1 * pixel,0,3 * pixel,15 * pixel,10 * pixel,13 * pixel);
+            setBlockBounds(1 * pixel, 0, 3 * pixel, 15 * pixel, 10 * pixel, 13 * pixel);
         }
     }
 }

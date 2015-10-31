@@ -11,7 +11,7 @@ public class EntityPosition
     int entityID;
     public double x,y,z;
 
-    public EntityPosition(int entityID,double x,double y,double z)
+    public EntityPosition(int entityID, double x, double y, double z)
     {
         this.entityID = entityID;
         this.x = x;

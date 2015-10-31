@@ -97,13 +97,13 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         for (int i = 0;i < 5;i++)
         {
             info = MOStringHelper.translateToLocal("gui.android_hud.transforming.line." + i);
-            textTyping.addSeqmentSequential(new AnimationSegmentText(info,0,1).setLengthPerCharacter(2));
-            textTyping.addSeqmentSequential(new AnimationSegmentText(info,0,0).setLengthPerCharacter(2));
+            textTyping.addSegmentSequential(new AnimationSegmentText(info,0,1).setLengthPerCharacter(2));
+            textTyping.addSegmentSequential(new AnimationSegmentText(info,0,0).setLengthPerCharacter(2));
         }
 
         info = MOStringHelper.translateToLocal("gui.android_hud.transforming.line.final");
-        textTyping.addSeqmentSequential(new AnimationSegmentText(info, 0, 1).setLengthPerCharacter(2));
-        textTyping.addSeqmentSequential(new AnimationSegmentText(info, AndroidPlayer.TRANSFORM_TIME, 0));
+        textTyping.addSegmentSequential(new AnimationSegmentText(info, 0, 1).setLengthPerCharacter(2));
+        textTyping.addSegmentSequential(new AnimationSegmentText(info, AndroidPlayer.TRANSFORM_TIME, 0));
 
         hudElements = new ArrayList<>();
         hudMinimap = new AndroidHudMinimap(AndroidHudPosition.BOTTOM_LEFT,"android_minimap");

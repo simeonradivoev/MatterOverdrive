@@ -39,7 +39,7 @@ public abstract class AbstractBioticStat implements IBionicStat
     String name;
     IBionicStat root;
     List<IBionicStat> competitors;
-    List<ItemStack> reqiredItems;
+    List<ItemStack> requiredItems;
     List<IBionicStat> enabledBlacklist;
     int maxLevel;
     boolean showOnHud;
@@ -51,7 +51,7 @@ public abstract class AbstractBioticStat implements IBionicStat
         this.name = name;
         this.xp = xp;
         competitors = new ArrayList<>();
-        reqiredItems = new ArrayList<>();
+        requiredItems = new ArrayList<>();
         enabledBlacklist = new ArrayList<>();
         maxLevel = 1;
     }
@@ -62,7 +62,7 @@ public abstract class AbstractBioticStat implements IBionicStat
     }
 
     @Override
-    public String getDisplayName(AndroidPlayer androidPlayer,int level)
+    public String getDisplayName(AndroidPlayer androidPlayer, int level)
     {
         return MOStringHelper.translateToLocal("biotic_stat." + name + ".name");
     }
@@ -79,43 +79,31 @@ public abstract class AbstractBioticStat implements IBionicStat
     }
 
     @Override
-    public boolean canBeUnlocked(AndroidPlayer android,int level)
-    {
+    public boolean canBeUnlocked(AndroidPlayer android,int level) {
         //if the root is not unlocked then this stat can't be unlocked
-        if (root != null && !android.isUnlocked(root,root.maxLevel()))
-        {
+        if (root != null && !android.isUnlocked(root, root.maxLevel())) {
             return false;
         }
         //if any of the competitors are unlocked then this stat can't be unlocked
-        if (competitors.size() > 0)
-        {
-            for (IBionicStat compeditor : competitors)
-            {
-                if (android.isUnlocked(compeditor,0))
-                {
+        if (competitors.size() > 0) {
+            for (IBionicStat competitor : competitors) {
+                if (android.isUnlocked(competitor, 0)) {
                     return false;
                 }
             }
         }
-        if (reqiredItems.size() > 0)
-        {
-            for (ItemStack item : reqiredItems)
-            {
+        if (requiredItems.size() > 0) {
+            for (ItemStack item : requiredItems) {
 
-                if (!hasItem(android, item))
-                {
+                if (!hasItem(android, item)) {
                     return false;
                 }
             }
         }
-        if (android.isAndroid())
-        {
-            return android.getPlayer().capabilities.isCreativeMode || android.getPlayer().experienceLevel >= xp;
-        }
-        return false;
+        return android.isAndroid() && (android.getPlayer().capabilities.isCreativeMode || android.getPlayer().experienceLevel >= xp);
     }
 
-    protected boolean hasItem(AndroidPlayer player,ItemStack stack)
+    protected boolean hasItem(AndroidPlayer player, ItemStack stack)
     {
         int amountCount = stack.stackSize;
         for (int i = 0;i < player.getPlayer().inventory.getSizeInventory();i++)
@@ -141,10 +129,10 @@ public abstract class AbstractBioticStat implements IBionicStat
     //does not check if the items exist
     protected void consumeItems(AndroidPlayer androidPlayer)
     {
-        for (ItemStack itemStack : reqiredItems)
+        for (ItemStack itemStack : requiredItems)
         {
             int itemCount = itemStack.stackSize;
-            for (int j = 0;j < androidPlayer.getPlayer().inventory.getSizeInventory();j++)
+            for (int j = 0; j < androidPlayer.getPlayer().inventory.getSizeInventory(); j++)
             {
                 ItemStack pStack = androidPlayer.getPlayer().inventory.getStackInSlot(j);
                 if (pStack != null && pStack.isItemEqual(itemStack))
@@ -176,33 +164,33 @@ public abstract class AbstractBioticStat implements IBionicStat
             list.add(EnumChatFormatting.GRAY + detail);
         }
 
-        String reqires = "";
+        String requires = "";
 
         if (root != null)
         {
-            reqires += EnumChatFormatting.GOLD+String.format("[%s%s]",root.getDisplayName(android,0),root.maxLevel() > 1 ? " " + root.maxLevel() : "");
+            requires += EnumChatFormatting.GOLD+String.format("[%s%s]",root.getDisplayName(android,0),root.maxLevel() > 1 ? " " + root.maxLevel() : "");
         }
 
-        if (reqiredItems.size() > 0)
+        if (requiredItems.size() > 0)
         {
-            for (ItemStack itemStack : reqiredItems)
+            for (ItemStack itemStack : requiredItems)
             {
-                if (!reqires.isEmpty())
+                if (!requires.isEmpty())
                 {
-                    reqires += EnumChatFormatting.GRAY + ", ";
+                    requires += EnumChatFormatting.GRAY + ", ";
                 }
                 if (itemStack.stackSize > 1)
                 {
-                    reqires += EnumChatFormatting.WHITE.toString() + itemStack.stackSize + "x";
+                    requires += EnumChatFormatting.WHITE.toString() + itemStack.stackSize + "x";
                 }
 
-                reqires += EnumChatFormatting.WHITE + "[" + itemStack.getDisplayName() + "]";
+                requires += EnumChatFormatting.WHITE + "[" + itemStack.getDisplayName() + "]";
             }
         }
 
-        if (!reqires.isEmpty())
+        if (!requires.isEmpty())
         {
-           list.add(MOStringHelper.translateToLocal("gui.tooltip.requires") + ": " + reqires);
+           list.add(MOStringHelper.translateToLocal("gui.tooltip.requires") + ": " + requires);
         }
 
         if (level <= maxLevel())
@@ -232,17 +220,17 @@ public abstract class AbstractBioticStat implements IBionicStat
 
     public void addReqiredItm(ItemStack stack)
     {
-        reqiredItems.add(stack);
+        requiredItems.add(stack);
     }
 
     @Override
-    public boolean showOnHud(AndroidPlayer android,int level)
+    public boolean showOnHud(AndroidPlayer android, int level)
     {
         return showOnHud;
     }
 
     @Override
-    public boolean showOnWheel(AndroidPlayer androidPlayer,int level)
+    public boolean showOnWheel(AndroidPlayer androidPlayer, int level)
     {
         return showOnWheel;
     }
@@ -297,7 +285,7 @@ public abstract class AbstractBioticStat implements IBionicStat
 
     public List<ItemStack> getRequiredItems()
     {
-        return reqiredItems;
+        return requiredItems;
     }
 
     public List<IBionicStat> getEnabledBlacklist()
@@ -317,7 +305,7 @@ public abstract class AbstractBioticStat implements IBionicStat
     }
 
     @Override
-    public int getXP(AndroidPlayer androidPlayer,int level)
+    public int getXP(AndroidPlayer androidPlayer, int level)
     {
         return xp;
     }

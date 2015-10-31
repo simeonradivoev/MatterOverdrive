@@ -26,7 +26,6 @@ import net.minecraft.world.World;
 public class PhaserBoltRecoil extends EntityFX
 {
     private float lavaParticleScale;
-    private static final String __OBFID = "CL_00000912";
 
     public PhaserBoltRecoil(World p_i1215_1_, double x, double y, double z,GuiColor color)
     {
@@ -45,9 +44,9 @@ public class PhaserBoltRecoil extends EntityFX
         this.setParticleTextureIndex(rand.nextInt(2));
     }
 
-    public int getBrightnessForRender(float p_70070_1_)
+    public int getBrightnessForRender(float f)
     {
-        float f1 = ((float)this.particleAge + p_70070_1_) / (float)this.particleMaxAge;
+        float f1 = ((float)this.particleAge + f) / (float)this.particleMaxAge;
 
         if (f1 < 0.0F)
         {
@@ -59,7 +58,7 @@ public class PhaserBoltRecoil extends EntityFX
             f1 = 1.0F;
         }
 
-        int i = super.getBrightnessForRender(p_70070_1_);
+        int i = super.getBrightnessForRender(f);
         short short1 = 240;
         int j = i >> 16 & 255;
         return short1 | j << 16;
@@ -68,16 +67,16 @@ public class PhaserBoltRecoil extends EntityFX
     /**
      * Gets how bright this entity is.
      */
-    public float getBrightness(float p_70013_1_)
+    public float getBrightness(float f)
     {
         return 1.0F;
     }
 
-    public void renderParticle(Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
+    public void renderParticle(Tessellator tessellator, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
     {
         float f6 = ((float)this.particleAge + p_70539_2_) / (float)this.particleMaxAge;
         this.particleScale = this.lavaParticleScale * (1.0F - f6 * f6);
-        super.renderParticle(p_70539_1_, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
+        super.renderParticle(tessellator, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
     }
 
     /**
@@ -95,11 +94,6 @@ public class PhaserBoltRecoil extends EntityFX
         }
 
         float f = (float)this.particleAge / (float)this.particleMaxAge;
-
-        if (this.rand.nextFloat() > f)
-        {
-            //this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, this.motionX, this.motionY, this.motionZ);
-        }
 
         this.motionY -= 0.03D;
         try {

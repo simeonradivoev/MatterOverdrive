@@ -4,7 +4,7 @@ import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-public class MatterOverdriveTab extends CreativeTabs 
+public class MatterOverdriveTab extends CreativeTabs
 {
 	Item item;
 
@@ -12,7 +12,7 @@ public class MatterOverdriveTab extends CreativeTabs
 	{
 		super(label);
 	}
-	
+
 	public Item getTabIconItem()
 	{
 		if (item == null)

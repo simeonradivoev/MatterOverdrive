@@ -75,7 +75,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
         replicate_progress.setSize(24, 16);
         replicate_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
 	}
-	
+
 	@Override
 	public void initGui() {
         super.initGui();
@@ -197,5 +197,5 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
             MatterOverdrive.packetPipeline.sendToServer(new PacketRemoveTask(machine,mouseButton,(byte)0, MatterNetworkTaskState.INVALID));
         }
     }
-	
+
 }

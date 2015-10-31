@@ -55,7 +55,7 @@ public class DialogMessage implements IDialogMessage
     {
         this(message, message);
     }
-    public DialogMessage(String message,String question)
+    public DialogMessage(String message, String question)
     {
         this.message = message;
         this.question = question;
@@ -74,30 +74,30 @@ public class DialogMessage implements IDialogMessage
     }
 
     @Override
-    public IDialogMessage getParent(IDialogNpc npc,EntityPlayer player) {
+    public IDialogMessage getParent(IDialogNpc npc, EntityPlayer player) {
         return parent;
     }
 
     @Override
-    public List<IDialogMessage> getOptions(IDialogNpc npc,EntityPlayer player)
+    public List<IDialogMessage> getOptions(IDialogNpc npc, EntityPlayer player)
     {
         return options;
     }
 
     @Override
-    public String getMessageText(IDialogNpc npc,EntityPlayer player)
+    public String getMessageText(IDialogNpc npc, EntityPlayer player)
     {
         return formatMessage(message, npc, player);
     }
 
     @Override
-    public String getQuestionText(IDialogNpc npc,EntityPlayer player)
+    public String getQuestionText(IDialogNpc npc, EntityPlayer player)
     {
-        return formatQuestion(question,npc,player);
+        return formatQuestion(question, npc, player);
     }
 
     @Override
-    public void onInteract(IDialogNpc npc,EntityPlayer player,int option)
+    public void onInteract(IDialogNpc npc, EntityPlayer player, int option)
     {
         if (option >= 0 && option < options.size())
         {
@@ -115,7 +115,7 @@ public class DialogMessage implements IDialogMessage
     }
 
     @SideOnly(Side.CLIENT)
-    private void setAsGuiActiveMessage(IDialogNpc npc,EntityPlayer player)
+    private void setAsGuiActiveMessage(IDialogNpc npc, EntityPlayer player)
     {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiDialog)
         {
@@ -124,12 +124,12 @@ public class DialogMessage implements IDialogMessage
     }
 
     @Override
-    public boolean canInteract(IDialogNpc npc,EntityPlayer player) {
+    public boolean canInteract(IDialogNpc npc, EntityPlayer player) {
         return true;
     }
 
     @Override
-    public boolean isVisible(IDialogNpc npc,EntityPlayer player)
+    public boolean isVisible(IDialogNpc npc, EntityPlayer player)
     {
         return true;
     }
@@ -174,7 +174,10 @@ public class DialogMessage implements IDialogMessage
     }
 
     @SideOnly(Side.CLIENT)
-    public DialogMessage setHoloIcon(String holoIcon){this.holoIcon = holoIcon; return this;}
+    public DialogMessage setHoloIcon(String holoIcon)
+    {
+        this.holoIcon = holoIcon; return this;
+    }
 
     public DialogMessage loadMessageFromLocalization(String key)
     {

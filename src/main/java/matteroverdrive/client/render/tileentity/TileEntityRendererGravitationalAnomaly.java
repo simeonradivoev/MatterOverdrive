@@ -46,7 +46,6 @@ public class TileEntityRendererGravitationalAnomaly extends TileEntitySpecialRen
 
         glPushMatrix();
         glDisable(GL_LIGHTING);
-        //RenderUtils.disableLightmap();
 
         glTranslated(x + 0.5, y + 0.5, z + 0.5);
         glScaled(radius, radius, radius);
@@ -59,7 +58,7 @@ public class TileEntityRendererGravitationalAnomaly extends TileEntitySpecialRen
 
         glEnable(GL_BLEND);
         glScaled(2, 2, 2);
-        glRotated(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * ticks , 0, -1, 0);
+        glRotated(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * ticks, 0, -1, 0);
         glRotated(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * ticks, 1, 0, 0);
         glRotated(time * speed, 0, 0, 1);
         glTranslated(-0.5, -0.5, 0);
@@ -67,7 +66,6 @@ public class TileEntityRendererGravitationalAnomaly extends TileEntitySpecialRen
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         bindTexture(core);
         RenderUtils.drawPlane(1);
-        //glBlendFunc(GL_ONE, GL_ONE);
         bindTexture(glow);
         RenderUtils.drawPlane(1);
 

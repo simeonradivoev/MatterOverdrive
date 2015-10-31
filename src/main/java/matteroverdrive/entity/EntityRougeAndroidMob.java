@@ -18,7 +18,7 @@
 
 package matteroverdrive.entity;
 
-import matteroverdrive.entity.ai.AndoidTargetSelector;
+import matteroverdrive.entity.ai.AndroidTargetSelector;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -35,7 +35,7 @@ import net.minecraft.world.World;
  */
 public class EntityRougeAndroidMob extends EntityMob
 {
-    public static final AndoidTargetSelector targetSelector = new AndoidTargetSelector();
+    public static final AndroidTargetSelector targetSelector = new AndroidTargetSelector();
 
     public EntityRougeAndroidMob(World world)
     {
@@ -57,9 +57,9 @@ public class EntityRougeAndroidMob extends EntityMob
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(SharedMonsterAttributes.maxHealth.clampValue(64.0D));
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(SharedMonsterAttributes.movementSpeed.clampValue(1.6D));
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(SharedMonsterAttributes.attackDamage.clampValue(4.0D));
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(SharedMonsterAttributes.maxHealth.clampValue(64.0D));
+        getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(SharedMonsterAttributes.movementSpeed.clampValue(1.6D));
+        getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(SharedMonsterAttributes.attackDamage.clampValue(4.0D));
     }
 
     @Override
@@ -74,53 +74,40 @@ public class EntityRougeAndroidMob extends EntityMob
     }
 
     @Override
-    protected void dropRareDrop(int p_70600_1_)
+    protected void dropRareDrop(int i)
     {
 
     }
 
     protected void dropFewItems(boolean hit, int looting)
     {
-        float lootingModifyer = (Math.min(looting,10) / 10f);
-        if (rand.nextFloat() < 0.01f * (looting+1))
+        float lootingModifier = (Math.min(looting, 10) / 10f);
+        if (rand.nextFloat() < 0.01f * (looting + 1))
         {
             this.entityDropItem(new ItemStack(MatterOverdriveItems.tritaniumSpine), 0.0F);
         }
-        if (rand.nextFloat() < (0.1f + lootingModifyer))
+        if (rand.nextFloat() < (0.1f + lootingModifier))
         {
             this.entityDropItem(new ItemStack(MatterOverdriveItems.androidParts, 1, rand.nextInt(4)), 0.0F);
         }
     }
 
     @Override
-    public boolean isPotionApplicable(PotionEffect p_70687_1_)
+    public boolean isPotionApplicable(PotionEffect potion)
     {
         return false;
     }
 
     public boolean getCanSpawnHere()
     {
-        if (EntityRogueAndroid.dimentionWhitelist.size() > 0)
-        {
-            if (EntityRogueAndroid.dimentionWhitelist.contains(worldObj.provider.dimensionId))
-            {
-                return inDimensionBlacklist();
-            }
-            else
-            {
-                return false;
-            }
+        if (EntityRogueAndroid.dimentionWhitelist.size() > 0) {
+            return EntityRogueAndroid.dimentionWhitelist.contains(worldObj.provider.dimensionId) && inDimensionBlacklist();
         }
 
         return inDimensionBlacklist();
     }
 
-    private boolean inDimensionBlacklist()
-    {
-        if (!EntityRogueAndroid.dimentionBlacklist.contains(worldObj.provider.dimensionId))
-        {
-            return super.getCanSpawnHere();
-        }
-        return false;
+    private boolean inDimensionBlacklist() {
+        return !EntityRogueAndroid.dimentionBlacklist.contains(worldObj.provider.dimensionId) && super.getCanSpawnHere();
     }
 }

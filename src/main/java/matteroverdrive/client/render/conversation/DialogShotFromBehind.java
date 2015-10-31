@@ -30,7 +30,8 @@ public class DialogShotFromBehind extends DialogShot
 {
     float distance;
     float sideOffset;
-    public DialogShotFromBehind(float distance,float sideOffset)
+
+    public DialogShotFromBehind(float distance, float sideOffset)
     {
         this.distance = distance;
         this.sideOffset = sideOffset;
@@ -51,11 +52,11 @@ public class DialogShotFromBehind extends DialogShot
             pos = position.hitVec;
         }else
         {
-            pos.addVector(look.xCoord * distance,look.yCoord * distance,look.zCoord * distance);
+            pos.addVector(look.xCoord * distance, look.yCoord * distance, look.zCoord * distance);
         }
         rendererConversation.setCameraPosition(pos);
-        Vec3 rotationLook = pos.subtract(rendererConversation.getPosition(active,ticks,true)).normalize();
-        rendererConversation.rotateCameraYawTo(rotationLook,-90);
+        Vec3 rotationLook = pos.subtract(rendererConversation.getPosition(active, ticks, true)).normalize();
+        rendererConversation.rotateCameraYawTo(rotationLook, -90);
         rendererConversation.setCameraPitch(0);
         return true;
     }

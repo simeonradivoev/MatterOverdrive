@@ -26,7 +26,10 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class DialogMessageQuit extends DialogMessageRandom
 {
-    public DialogMessageQuit(){super();}
+    public DialogMessageQuit()
+    {
+        super();
+    }
     public DialogMessageQuit(String message, String question) {
         super(message, question);
     }

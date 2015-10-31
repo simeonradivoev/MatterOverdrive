@@ -15,9 +15,9 @@ public class ContainerStarMap extends ContainerMachine<TileEntityMachineStarMap>
         super();
     }
 
-    public ContainerStarMap(InventoryPlayer inventory,TileEntityMachineStarMap machine)
+    public ContainerStarMap(InventoryPlayer inventory, TileEntityMachineStarMap machine)
     {
-        super(inventory,machine);
+        super(inventory, machine);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ContainerStarMap extends ContainerMachine<TileEntityMachineStarMap>
     {
         if (machine.getInventory() != null) {
             for (int i = 0; i < machine.getSizeInventory(); i++) {
-                addSlotToContainer(new SlotStarMap(machine, i,inventory.player));
+                addSlotToContainer(new SlotStarMap(machine, i, inventory.player));
             }
         }
 

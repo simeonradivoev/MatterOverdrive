@@ -24,7 +24,7 @@ import matteroverdrive.matter_network.MatterNetworkTaskQueue;
  * Created by Simeon on 4/20/2015.
  * This is used by Machines that can issue tasks (orders) to other Machines on the Matter Network.
  */
-public interface IMatterNetworkDispatcher<T extends MatterNetworkTask> extends IMatterNetworkConnection , IMatterNetworkHandler
+public interface IMatterNetworkDispatcher<T extends MatterNetworkTask> extends IMatterNetworkConnection, IMatterNetworkHandler
 {
     /**
      * Gets the Task queue of the Machine at the given ID.
@@ -34,7 +34,6 @@ public interface IMatterNetworkDispatcher<T extends MatterNetworkTask> extends I
     MatterNetworkTaskQueue<T> getTaskQueue(int queueID);
 
     /**
-     * The count of all task queues in the machine.
      * @return the number of task queues in the machine.
      */
     int getTaskQueueCount();

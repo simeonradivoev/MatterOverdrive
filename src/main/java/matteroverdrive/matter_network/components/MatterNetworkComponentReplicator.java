@@ -87,7 +87,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
             {
                 task.setState(MatterNetworkTaskState.PROCESSING);
                 task.setAlive(true);
-                rootClient.ForceSync();
+                rootClient.forceSync();
             }
         }
     }
@@ -114,7 +114,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
 
                 //save the pattern in the machine
                 rootClient.setInternalPatternStorage(responseTag);
-                rootClient.ForceSync();
+                rootClient.forceSync();
             }
         }
     }

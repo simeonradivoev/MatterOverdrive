@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class AndroidStatRenderRegistry implements IAndroidStatRenderRegistry
 {
-    Map<Class<? extends IBionicStat>,Collection<IBioticStatRenderer>> map;
+    Map<Class<? extends IBionicStat>, Collection<IBioticStatRenderer>> map;
 
     public AndroidStatRenderRegistry()
     {
@@ -55,7 +55,7 @@ public class AndroidStatRenderRegistry implements IAndroidStatRenderRegistry
     @Override
     public boolean registerRenderer(Class<? extends IBionicStat> stat, IBioticStatRenderer renderer)
     {
-        if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterAndroidStatRenderer(stat,renderer))) {
+        if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterAndroidStatRenderer(stat, renderer))) {
             Collection<IBioticStatRenderer> collection = map.get(stat);
             if (collection == null) {
                 collection = new ArrayList<>();

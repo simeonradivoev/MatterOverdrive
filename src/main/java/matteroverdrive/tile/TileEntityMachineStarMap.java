@@ -169,7 +169,7 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
         } else {
             setZoomLevel(0);
         }
-        ForceSync();
+        forceSync();
     }
 
     public void setZoomLevel(int zoomLevel)

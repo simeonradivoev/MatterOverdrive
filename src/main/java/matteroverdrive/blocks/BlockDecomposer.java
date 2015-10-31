@@ -38,7 +38,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class BlockDecomposer extends MOMatterEnergyStorageBlock
 {
 	public IIcon iconTop;
-	
+
 	public BlockDecomposer(Material material, String name)
 	{
 		super(material, name, true, true);
@@ -48,7 +48,7 @@ public class BlockDecomposer extends MOMatterEnergyStorageBlock
         setHasGui(true);
 	}
 
-	
+
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
@@ -64,10 +64,10 @@ public class BlockDecomposer extends MOMatterEnergyStorageBlock
 
         if(side == metadata)
         {
-            return GetIconBasedOnMatter(world,x,y,z);
+            return GetIconBasedOnMatter(world, x, y, z);
         }
 
-        return getIcon(side,metadata);
+        return getIcon(side, metadata);
     }
 
     @Override
@@ -79,23 +79,23 @@ public class BlockDecomposer extends MOMatterEnergyStorageBlock
         }
         else if(side == metadata)
         {
-            return MatterOverdriveIcons.Matter_tank_empty;
+            return MatterOverdriveIcons.matter_tank_empty;
         }
 
         return MatterOverdriveIcons.YellowStripes;
     }
-    
+
     @Override
 	 public boolean canPlaceTorchOnTop(World world, int x, int y, int z)
 	 {
 		 return true;
 	 }
-	 
+
 	 public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	 {
 		 return true;
 	 }
-	 
+
 	 @Override
 		public TileEntity createNewTileEntity(World world, int meta)
 		{
@@ -113,10 +113,10 @@ public class BlockDecomposer extends MOMatterEnergyStorageBlock
     {
         super.onConfigChanged(config);
         config.initMachineCategory(getUnlocalizedName());
-        TileEntityMachineDecomposer.MATTER_STORAGE = config.getMachineInt(getUnlocalizedName(),"storage.matter",1024,String.format("How much matter can the %s hold",getLocalizedName()));
-        TileEntityMachineDecomposer.ENERGY_STORAGE = config.getMachineInt(getUnlocalizedName(),"storage.energy",512000,String.format("How much energy can the %s hold",getLocalizedName()));
-        TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER = config.getMachineInt(getUnlocalizedName(),"speed.decompose",80,"The speed in ticks, of decomposing. (per matter)");
-        TileEntityMachineDecomposer.DECOMPOSE_ENERGY_PER_MATTER = config.getMachineInt(getUnlocalizedName(),"cost.decompose",8000,"Decomposing cost per matter");
+        TileEntityMachineDecomposer.MATTER_STORAGE = config.getMachineInt(getUnlocalizedName(), "storage.matter" ,1024, String.format("How much matter can the %s hold", getLocalizedName()));
+        TileEntityMachineDecomposer.ENERGY_STORAGE = config.getMachineInt(getUnlocalizedName(),"storage.energy", 512000, String.format("How much energy can the %s hold", getLocalizedName()));
+        TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER = config.getMachineInt(getUnlocalizedName(), "speed.decompose", 80, "The speed in ticks, of decomposing. (per matter)");
+        TileEntityMachineDecomposer.DECOMPOSE_ENERGY_PER_MATTER = config.getMachineInt(getUnlocalizedName(), "cost.decompose", 8000, "Decomposing cost per matter");
 
     }
 

@@ -39,7 +39,7 @@ public class MachineEnergyStorage<T extends MOTileEntityMachine> implements IEne
     {
         this(machine, capacity, capacity, capacity);
     }
-    public MachineEnergyStorage(T machine,int capacity,int maxReceive,int maxExtract)
+    public MachineEnergyStorage(T machine,int capacity, int maxReceive, int maxExtract)
     {
         this.machine = machine;
         this.capacity = capacity;
@@ -54,12 +54,12 @@ public class MachineEnergyStorage<T extends MOTileEntityMachine> implements IEne
 
     public void writeToNBT(NBTTagCompound tagCompound)
     {
-        tagCompound.setInteger("Energy",energy);
+        tagCompound.setInteger("Energy", energy);
     }
 
     public int modifyEnergyStored(int amount) {
         int lastEnergy = this.energy;
-        this.energy = MathHelper.clamp_int(this.energy + amount,0,getMaxEnergyStored());
+        this.energy = MathHelper.clamp_int(this.energy + amount, 0, getMaxEnergyStored());
         return this.energy - lastEnergy;
     }
 
@@ -85,7 +85,7 @@ public class MachineEnergyStorage<T extends MOTileEntityMachine> implements IEne
 
     public int getMaxReceive()
     {
-        return Math.max(0,(int)(maxReceive * machine.getUpgradeMultiply(UpgradeTypes.PowerTransfer)));
+        return Math.max(0, (int)(maxReceive * machine.getUpgradeMultiply(UpgradeTypes.PowerTransfer)));
     }
 
     public int getMaxExtract()

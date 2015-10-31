@@ -77,55 +77,54 @@ public class ItemRendererPhaser implements IItemRenderer
     {
         if(type == ItemRenderType.EQUIPPED_FIRST_PERSON)
         {
-        	RenderFirstPerson(item);
+        	renderFirstPerson(item);
         }
         else if(type == ItemRenderType.INVENTORY)
         {
-        	RenderItem(item);
+        	renderItem(item);
         }
         else if(type == ItemRenderType.ENTITY)
         {
-        	RenderDrop(item);
+        	renderDrop(item);
         }
         else
         {
-        	RenderThirdPerson(type,item);
+        	renderThirdPerson(type,item);
         }
     }
-    
-    void RenderItem(ItemStack item)
+
+    void renderItem(ItemStack item)
     {
     	glPushMatrix();
         glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
-        glTranslated(0.00, -0, -0.15);
+        glTranslated(0, -0, -0.15);
         glRotated(0, 0, 1, 0);
-        RenderGun(ItemRenderType.INVENTORY,item);
+        renderGun(ItemRenderType.INVENTORY,item);
         glPopMatrix();
     }
-    
-    void RenderThirdPerson(ItemRenderType renderType,ItemStack item)
+
+    void renderThirdPerson(ItemRenderType renderType, ItemStack item)
     {
         glPushMatrix();
         glScaled(THIRD_PERSON_SCALE, THIRD_PERSON_SCALE, THIRD_PERSON_SCALE);
         glTranslated(0.32, 0.23, 0.32);
         glRotated(-135, 0, 1, 0);
         glRotated(60, 1, 0, 0);
-        RenderGun(renderType,item);
+        renderGun(renderType,item);
         glPopMatrix();
     }
-    
-    void RenderDrop(ItemStack item)
+
+    void renderDrop(ItemStack item)
     {
         glPushMatrix();
         glScaled(SCALE_DROP, SCALE_DROP, SCALE_DROP);
         glTranslated(0, 0, 0);
-        //glRotated(-130,0,1,0);
         glRotated(15, 1, 0, 0);
-        RenderGun(ItemRenderType.ENTITY,item);
+        renderGun(ItemRenderType.ENTITY, item);
         glPopMatrix();
     }
 
-    void RenderFirstPerson(ItemStack item)
+    void renderFirstPerson(ItemStack item)
     {
         glPushMatrix();
         renderHand();
@@ -147,7 +146,7 @@ public class ItemRendererPhaser implements IItemRenderer
             glRotated(-6, 1, 0, 0);
         }
 
-        RenderGun(ItemRenderType.EQUIPPED_FIRST_PERSON,item);
+        renderGun(ItemRenderType.EQUIPPED_FIRST_PERSON,item);
         glPopMatrix();
     }
 
@@ -180,12 +179,9 @@ public class ItemRendererPhaser implements IItemRenderer
         Tessellator.instance.draw();
         GL11.glPopMatrix();
     }
-    
-    void RenderGun(ItemRenderType renderType,ItemStack item)
-    {
-        //org.lwjgl.util.glu.GLU.gluPerspective(80,1,0.01f,10000f);
-        //glClear(GL_COLOR_BUFFER_BIT);
 
+    void renderGun(ItemRenderType renderType, ItemStack item)
+    {
         Minecraft.getMinecraft().renderEngine.bindTexture(phaserTexture);
         phaserModel.renderOnly("grip", "Tip");
 

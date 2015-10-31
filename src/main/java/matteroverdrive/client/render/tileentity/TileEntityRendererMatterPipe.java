@@ -25,24 +25,24 @@ public class TileEntityRendererMatterPipe extends TileEntityRendererPipe
         {
             if(((TileEntityMatterPipe)entity).matterVisible())
             {
-                return  new Vector2f(0,1);
+                return  new Vector2f(0, 1);
             }
         }
 
-        return  new Vector2f(0,0);
+        return  new Vector2f(0, 0);
     }
 
     @Override
-    protected  Vector2f getSidesUV(TileEntity entity,ForgeDirection dir)
+    protected  Vector2f getSidesUV(TileEntity entity, ForgeDirection dir)
     {
         if(entity instanceof TileEntityMatterPipe)
         {
             if(((TileEntityMatterPipe)entity).matterVisible())
             {
-                return  new Vector2f(1,1);
+                return  new Vector2f(1, 1);
             }
         }
 
-        return  new Vector2f(1,0);
+        return  new Vector2f(1, 0);
     }
 }

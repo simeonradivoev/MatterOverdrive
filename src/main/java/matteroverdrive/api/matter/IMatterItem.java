@@ -29,7 +29,6 @@ import net.minecraft.item.ItemStack;
 public interface IMatterItem
 {
     /**
-     * The amount of matter the item stack has.
      * @param itemStack the item stack.
      * @return the matter of the Item stack.
      */

@@ -81,7 +81,7 @@ public class BlockHoloSign extends BlockCT implements IDismantleable, ITileEntit
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IconConnectedTexture getIconConnectedTexture(int meta,int side)
+    public IconConnectedTexture getIconConnectedTexture(int meta, int side)
     {
         return MatterOverdriveIcons.Monitor_back;
     }
@@ -101,11 +101,11 @@ public class BlockHoloSign extends BlockCT implements IDismantleable, ITileEntit
 
     @Override
     public boolean isSideCT(IBlockAccess world, int x, int y, int z, int side) {
-        return world.getBlockMetadata(x,y,z) == side;
+        return world.getBlockMetadata(x, y, z) == side;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_)
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
     {
         return null;
     }
@@ -117,9 +117,9 @@ public class BlockHoloSign extends BlockCT implements IDismantleable, ITileEntit
     }
 
     @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
+    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
     {
-        int l = blockAccess.getBlockMetadata(x, y, z);
+        int l = world.getBlockMetadata(x, y, z);
         setBounds(l);
     }
 
@@ -180,7 +180,7 @@ public class BlockHoloSign extends BlockCT implements IDismantleable, ITileEntit
     }
 
     @Override
-    public boolean getBlocksMovement(IBlockAccess worl, int x, int y, int z)
+    public boolean getBlocksMovement(IBlockAccess world, int x, int y, int z)
     {
         return true;
     }
@@ -198,47 +198,47 @@ public class BlockHoloSign extends BlockCT implements IDismantleable, ITileEntit
     }
 
     @Override
-    public void onNeighborBlockChange(World p_149695_1_, int p_149695_2_, int p_149695_3_, int p_149695_4_, Block p_149695_5_)
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
     {
         boolean flag;
-        int l = p_149695_1_.getBlockMetadata(p_149695_2_, p_149695_3_, p_149695_4_);
+        int l = world.getBlockMetadata(x, y, z);
         flag = true;
 
-        if (l == 2 && p_149695_1_.getBlock(p_149695_2_, p_149695_3_, p_149695_4_ + 1).getMaterial().isSolid())
+        if (l == 2 && world.getBlock(x, y, z + 1).getMaterial().isSolid())
         {
             flag = false;
         }
 
-        if (l == 3 && p_149695_1_.getBlock(p_149695_2_, p_149695_3_, p_149695_4_ - 1).getMaterial().isSolid())
+        if (l == 3 && world.getBlock(x, y, z - 1).getMaterial().isSolid())
         {
             flag = false;
         }
 
-        if (l == 4 && p_149695_1_.getBlock(p_149695_2_ + 1, p_149695_3_, p_149695_4_).getMaterial().isSolid())
+        if (l == 4 && world.getBlock(x + 1, y, z).getMaterial().isSolid())
         {
             flag = false;
         }
 
-        if (l == 5 && p_149695_1_.getBlock(p_149695_2_ - 1, p_149695_3_, p_149695_4_).getMaterial().isSolid())
+        if (l == 5 && world.getBlock(x - 1, y, z).getMaterial().isSolid())
         {
             flag = false;
         }
 
         if (flag)
         {
-            this.dropBlockAsItem(p_149695_1_, p_149695_2_, p_149695_3_, p_149695_4_, p_149695_1_.getBlockMetadata(p_149695_2_, p_149695_3_, p_149695_4_), 0);
-            p_149695_1_.setBlockToAir(p_149695_2_, p_149695_3_, p_149695_4_);
+            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            world.setBlockToAir(x, y, z);
         }
 
-        super.onNeighborBlockChange(p_149695_1_, p_149695_2_, p_149695_3_, p_149695_4_, p_149695_5_);
+        super.onNeighborBlockChange(world, x, y, z, block);
     }
 
     @Override
-    public boolean onBlockActivated(World world,int x,int y,int z,EntityPlayer player,int side,float hitX,float hitY,float hitZ)
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
         if(!world.isRemote)
         {
-            TileEntity tileEntity = world.getTileEntity(x,y,z);
+            TileEntity tileEntity = world.getTileEntity(x, y, z);
             if (tileEntity instanceof TileEntityHoloSign)
             {
                 FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, x, y, z);
@@ -266,21 +266,21 @@ public class BlockHoloSign extends BlockCT implements IDismantleable, ITileEntit
             InventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
         }
 
-        ArrayList list = new ArrayList();
+        ArrayList<ItemStack> list = new ArrayList<>();
         list.add(blockItem);
         return list;
     }
 
     @Override
-    public boolean canDismantle(EntityPlayer entityPlayer, World world, int i, int i1, int i2) {
+    public boolean canDismantle(EntityPlayer entityPlayer, World world, int x, int y, int z) {
         return true;
     }
 
     @Override
     public void onBlockPreDestroy(World world, int x, int y, int z, int meta)
     {
-        super.onBlockPreDestroy(world,x,y,z,meta);
-        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x,y,z);
+        super.onBlockPreDestroy(world, x, y, z, meta);
+        IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x, y, z);
         if(tileEntity != null)
             tileEntity.onDestroyed();
     }

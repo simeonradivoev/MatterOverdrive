@@ -43,7 +43,7 @@ public class MOEventBionicStat extends PlayerEvent
     public final int level;
 
 
-    public MOEventBionicStat(IBionicStat stat,int level,AndroidPlayer android) {
+    public MOEventBionicStat(IBionicStat stat, int level, AndroidPlayer android) {
         super(android.getPlayer());
         this.android = android;
         this.stat = stat;

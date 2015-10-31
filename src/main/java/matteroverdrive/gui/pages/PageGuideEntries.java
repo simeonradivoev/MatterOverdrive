@@ -247,7 +247,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
                 getFontRenderer().setUnicodeFlag(true);
                 Bounds b = group.getValue();
                 RenderUtils.applyColor(Reference.COLOR_MATTER);
-                groupBackground.Render(14 + b.getMinX(), 14 + b.getMinY(), b.getWidth(), b.getHeight());
+                groupBackground.render(14 + b.getMinX(), 14 + b.getMinY(), b.getWidth(), b.getHeight());
                 String groupName = MOStringHelper.translateToLocal(String.format("guide.group.%s.name", group.getKey()));
                 int groupNameWidth = getFontRenderer().getStringWidth(groupName);
                 getFontRenderer().drawString(groupName, 14 + scrollX + b.getMinX() + b.getWidth() / 2 - groupNameWidth / 2, 10 + b.getMinY(), Reference.COLOR_MATTER.getColor());

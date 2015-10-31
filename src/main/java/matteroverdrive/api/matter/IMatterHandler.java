@@ -24,17 +24,15 @@ import net.minecraftforge.fluids.IFluidHandler;
 /**
  * A wrapper for the {@link IFluidHandler}.
  */
-public interface IMatterHandler extends IMatterProvider,IMatterReceiver,IFluidHandler
+public interface IMatterHandler extends IMatterProvider, IMatterReceiver, IFluidHandler
 {
 	/**
-	 * Gets the matter stored
 	 * @return the matter stored
 	 */
 	@Override
 	int getMatterStored();
 
 	/**
-	 * Gets the matter capacity.
 	 * @return the matter capacity.
 	 */
 	@Override

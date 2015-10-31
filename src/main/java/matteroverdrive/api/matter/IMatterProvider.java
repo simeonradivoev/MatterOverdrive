@@ -21,24 +21,22 @@ package matteroverdrive.api.matter;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * Used of Matter Provides that provide matter.
+ * Used by any {@link net.minecraft.tileentity.TileEntity} that provides matter
  */
-public interface IMatterProvider 
+public interface IMatterProvider
 {
 	/**
-	 * The amount of matter stored.
-	 * @return The stored amount of matter.
+	 * @return stored matter.
 	 */
 	int getMatterStored();
 
 	/**
-	 * The matter Capacity.
-	 * @return capacity of matter.
+	 * @return the capacity
 	 */
 	int getMatterCapacity();
 
 	/**
-	 * Used ot extract matter.
+	 * Used to extract matter.
 	 * @param direction the extraction side.
 	 * @param amount amount of extracted matter.
 	 * @param simulate is this a simulation ?

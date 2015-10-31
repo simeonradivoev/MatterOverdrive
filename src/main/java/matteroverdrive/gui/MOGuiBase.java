@@ -83,7 +83,7 @@ public abstract class MOGuiBase extends GuiBase implements IButtonHandler,ITextH
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         //RenderUtils.drawSizeableBackground(guiLeft, guiTop, xSize, ySize, texW, texH, texture, this.zLevel, 57);
-        background.Render(guiLeft,guiTop,xSize,ySize);
+        background.render(guiLeft,guiTop,xSize,ySize);
 
         mouseX = x - guiLeft;
         mouseY = y - guiTop;

@@ -8,7 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by Simeon on 5/26/2015.
  */
-public class AndoidTargetSelector implements IEntitySelector {
+public class AndroidTargetSelector implements IEntitySelector
+{
     @Override
     public boolean isEntityApplicable(Entity entity)
     {
