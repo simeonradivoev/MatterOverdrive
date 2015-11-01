@@ -25,6 +25,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.items.*;
 import matteroverdrive.items.android.TritaniumSpine;
+import matteroverdrive.items.armour.TritaniumArmour;
 import matteroverdrive.items.food.AndroidPill;
 import matteroverdrive.items.food.EarlGrayTea;
 import matteroverdrive.items.food.RomulanAle;
@@ -33,17 +34,18 @@ import matteroverdrive.items.starmap.ItemBuildingBase;
 import matteroverdrive.items.starmap.ItemColonizerShip;
 import matteroverdrive.items.starmap.ItemScoutShip;
 import matteroverdrive.items.starmap.ShipFactory;
+import matteroverdrive.items.tools.TritaniumAxe;
+import matteroverdrive.items.tools.TritaniumPickaxe;
 import matteroverdrive.items.weapon.EnergyPack;
 import matteroverdrive.items.weapon.OmniTool;
 import matteroverdrive.items.weapon.Phaser;
 import matteroverdrive.items.weapon.PhaserRifle;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class MatterOverdriveItems
@@ -93,9 +95,23 @@ public class MatterOverdriveItems
     public static TritaniumSpine tritaniumSpine;
     public static MOBaseItem tritanium_nugget;
     public static OmniTool omniTool;
+    public static TritaniumAxe tritaniumAxe;
+    public static TritaniumPickaxe tritaniumPickaxe;
+    public static ItemSword tritaniumSword;
+    public static ItemHoe tritaniumHoe;
+    public static TritaniumArmour tritaniumHelemet;
+    public static TritaniumArmour tritaniumChestplate;
+    public static TritaniumArmour tritaniumLeggings;
+    public static TritaniumArmour tritaniumBoots;
+
+    public static Item.ToolMaterial toolMaterialTritanium;
+    public static ItemArmor.ArmorMaterial armorMaterialTritanium;
 
 	public static void init(FMLPreInitializationEvent event)
 	{
+        toolMaterialTritanium = EnumHelper.addToolMaterial("tritanium",2,3122,6f,2f,14);
+        armorMaterialTritanium = EnumHelper.addArmorMaterial("tritanium",66,new int[]{2, 6, 5, 2}, 9);
+
 		matter_dust = new MatterDust("matter_dust",false);
 		matter_dust_refined = new MatterDust("matter_dust_refined",true);
 		matter_scanner = new MatterScanner("matter_scanner");
@@ -116,6 +132,8 @@ public class MatterOverdriveItems
         s_magnet = new MOBaseItem("s_magnet");
         dilithium_ctystal = new MOBaseItem("dilithium_crystal");
         tritanium_ingot = new MOBaseItem("tritanium_ingot");
+        toolMaterialTritanium.setRepairItem(new ItemStack(tritanium_ingot));
+        armorMaterialTritanium.customCraftingMaterial = tritanium_ingot;
         tritanium_dust = new MOBaseItem("tritanium_dust");
         tritanium_plate = new MOBaseItem("tritanium_plate");
         pattern_drive = new PatternDrive("pattern_drive",2);
@@ -142,6 +160,14 @@ public class MatterOverdriveItems
         tritaniumSpine = new TritaniumSpine("tritainum_spine");
         tritanium_nugget = new MOBaseItem("tritanium_nugget");
         omniTool = new OmniTool("omni_tool");
+        tritaniumAxe = new TritaniumAxe("tritanium_axe");
+        tritaniumPickaxe = new TritaniumPickaxe("tritanium_pickaxe");
+        tritaniumSword = (ItemSword)new ItemSword(toolMaterialTritanium).setUnlocalizedName("tritanium_sword").setTextureName(Reference.MOD_ID + ":" + "tritanium_sword");
+        tritaniumHoe = (ItemHoe)new ItemHoe(toolMaterialTritanium).setUnlocalizedName("tritanium_hoe").setTextureName(Reference.MOD_ID + ":" + "tritanium_hoe");
+        tritaniumHelemet = (TritaniumArmour)new TritaniumArmour(armorMaterialTritanium,2,0).setUnlocalizedName("tritanium_helmet").setTextureName(Reference.MOD_ID + ":" + "tritanium_helmet");
+        tritaniumChestplate = (TritaniumArmour)new TritaniumArmour(armorMaterialTritanium,2,1).setUnlocalizedName("tritanium_chestplate").setTextureName(Reference.MOD_ID + ":" + "tritanium_chestplate");
+        tritaniumLeggings = (TritaniumArmour)new TritaniumArmour(armorMaterialTritanium,2,2).setUnlocalizedName("tritanium_leggings").setTextureName(Reference.MOD_ID + ":" + "tritanium_leggings");
+        tritaniumBoots = (TritaniumArmour)new TritaniumArmour(armorMaterialTritanium,2,3).setUnlocalizedName("tritanium_boots").setTextureName(Reference.MOD_ID + ":" + "tritanium_boots");
 	}
 
 	public static void register(FMLInitializationEvent event)
@@ -199,6 +225,15 @@ public class MatterOverdriveItems
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);
+
+        GameRegistry.registerItem(tritaniumAxe,"tritanium_axe");
+        GameRegistry.registerItem(tritaniumPickaxe,"tritanium_pickaxe");
+        GameRegistry.registerItem(tritaniumSword,"tritanium_sword");
+        GameRegistry.registerItem(tritaniumHoe,"tritanium_hoe");
+        GameRegistry.registerItem(tritaniumHelemet,"tritanium_helmet");
+        GameRegistry.registerItem(tritaniumChestplate,"tritanium_chestplate");
+        GameRegistry.registerItem(tritaniumLeggings,"tritanium_leggings");
+        GameRegistry.registerItem(tritaniumBoots,"tritanium_boots");
 
         OreDictionary.registerOre("dustTritanium", tritanium_dust);
         OreDictionary.registerOre("ingotTritanium",tritanium_ingot);

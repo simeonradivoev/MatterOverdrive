@@ -76,6 +76,14 @@ item.data_pad.details=Holds information on all of Matter Overdrive
 item.omni_tool.name=Omni Tool
 item.android_pill_yellow.name=Yellow Pill
 item.android_pill_yellow.details=Used to reset all unlocked Android Abilities
+item.tritanium_helmet.name=Tritanium Helmet
+item.tritanium_chestplate.name=Tritanium Chestplate
+item.tritanium_leggings.name=Tritanium Leggings
+item.tritanium_boots.name=Tritanium Boots
+item.tritanium_hoe.name=Tritanium Hoe
+item.tritanium_sword.name=Tritanium Sword
+item.tritanium_pickaxe.name=Tritanium Pickaxe
+item.tritanium_axe.name=Tritanium Axe
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade
@@ -158,7 +166,11 @@ tile.gravitational_stabilizer.name=Gravitational Stabilizer
 tile.gravitational_stabilizer.details=Used to suppress the effects of Gravitational Anomalies
 tile.matter_recycler.name=Matter Recycler
 tile.matter_recycler.details=Used to recycle items, ready for decomposing
+
+//////////// Fluids ////////////
 tile.matter_plasma.name=Matter Plasma
+tile.molten_tritanium.name=Molten Tritanium
+
 
 //////////// Fusion Reactor ////////////
 tile.fusion_reactor_controller.name=Fusion Reactor Controller
@@ -472,7 +484,8 @@ enchantment.matteroverdrive.weapon.damage=Overclock
 
 ###############################################################################################################
 # Fluids
-fluid.matter_plasma.name
+fluid.matter_plasma=Matter Plasma
+fluid.molten_tritanium=Molten Tritanium
 
 ##########################################################################################################
 # Guides
@@ -511,3 +524,6 @@ guide.entry.upgrades.name=Upgrades
 modifier.bionic.max_health=Max Health
 modifier.bionic.glitch_time=Glitch Time
 
+###############################################################################################################
+# others
+material.tritanium=Tritanium

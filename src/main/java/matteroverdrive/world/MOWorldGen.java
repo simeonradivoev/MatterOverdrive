@@ -41,8 +41,8 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     public static WorldGenGravitationalAnomaly anomalyGen;
     public static final int TRITANIUM_VEINS_PER_CHUNK = 10;
     public static final int TRITANIUM_VEIN_SIZE = 6;
-    public static final int DILITHIUM_VEINS_PER_CHUNK = 4;
-    public static final int DILITHIUM_VEIN_SIZE = 3;
+    public static final int DILITHIUM_VEINS_PER_CHUNK = 6;
+    public static final int DILITHIUM_VEIN_SIZE = 5;
     HashSet<Integer> oreDimentionsBlacklist;
 
     boolean generateTritanium;

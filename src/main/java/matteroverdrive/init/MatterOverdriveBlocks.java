@@ -29,6 +29,7 @@ import matteroverdrive.blocks.world.DilithiumOre;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class MatterOverdriveBlocks {
     public static BlockHoloSign holoSign;
     public static ForceGlass forceGlass;
     public static BlockFluidMatterPlasma blockMatterPlasma;
+    public static BlockFluidFinite blockMoltenTritanium;
 	public static BlockBoundingBox boundingBox;
     public static BlockFusionReactorIO fusionReactorIO;
 
@@ -128,6 +130,7 @@ public class MatterOverdriveBlocks {
         holoSign = new BlockHoloSign(Material.iron,"holo_sign");
         forceGlass = new ForceGlass(Material.glass,"force_glass");
         blockMatterPlasma = new BlockFluidMatterPlasma(MatterOverdriveFluids.matterPlasma, Material.water);
+        blockMoltenTritanium = (BlockFluidFinite)new BlockFluidFinite(MatterOverdriveFluids.moltenTritanium,Material.lava).setBlockName("molten_tritanium").setBlockTextureName(Reference.MOD_ID + ":" + "molten_tritanium_Still");
         blockMatterPlasma.setBlockName("matter_plasma");
 		boundingBox = new BlockBoundingBox(Material.air, "bounding_box");
         fusionReactorIO = new BlockFusionReactorIO(Material.iron,"fusion_reactor_io");
@@ -196,6 +199,7 @@ public class MatterOverdriveBlocks {
         holoSign.register();
         forceGlass.register();
         GameRegistry.registerBlock(blockMatterPlasma, "matter_plasma");
+        GameRegistry.registerBlock(blockMoltenTritanium,"molten_tritanium");
 		boundingBox.register();
         fusionReactorIO.register();
 

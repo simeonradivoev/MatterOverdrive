@@ -48,6 +48,8 @@ public class MatterOverdriveIcons
     public static IIcon matter_plasma_still;
     public static IIcon matter_plasma_flowing;
     public static IIcon packet_queue_active;
+    public static IIcon molten_tritanium_still;
+    public static IIcon molten_tritanium_flowing;
 
     public static IIcon particle_steam;
 
@@ -84,6 +86,8 @@ public class MatterOverdriveIcons
         matter_plasma_still = register(r,"matter_plasma_still");
         matter_plasma_flowing = register(r,"matter_plasma_flowing");
         packet_queue_active = register(r,"packet_queue_active");
+        molten_tritanium_still = register(r,"molten_tritanium_still");
+        molten_tritanium_flowing = register(r,"molten_tritanium_flowing");
     }
 
     private void initParticleIcons(IIconRegister r)

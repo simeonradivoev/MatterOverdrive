@@ -37,7 +37,6 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.init.MatterOverdriveBlocks;
@@ -308,7 +307,6 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                         break;
                     }
 
-                    MatterOverdrive.log.info("test");
                     if (tileEntity instanceof IMultiBlockTile)
                     {
                         multiBlock.addMultiBlockTile((IMultiBlockTile)tileEntity);
