@@ -246,7 +246,8 @@ itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Модули
 itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Улучшения
 itemGroup.tabMatterOverdrive_food=Matter Overdrive: Еда
 itemGroup.tabMatterOverdrive_ships=Matter Overdrive: Корабли
-itemGroup.tabMatterOverdrive_buildings=Matter Overdrive: Здания
+itemGroup.tabMatterOverdrive_buildings=Matter Overdrive: Постройки
+itemGroup.tabMatterOverdrive_decorative=Matter Overdrive: Декорации
 
 ============================================================
 # Типы улучшений/Upgrade Types
