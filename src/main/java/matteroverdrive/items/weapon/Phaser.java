@@ -42,10 +42,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Vector2f;
@@ -456,10 +453,10 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
-    public String getFireSound(ItemStack weapon,EntityLivingBase entity)
+    public WeaponSound getFireSound(ItemStack weapon,EntityLivingBase entity)
     {
-        return Reference.MOD_ID + ":" +"phaser_beam_1";
-        //return new WeaponSound(new ResourceLocation(),(float)entity.posX,(float)entity.posY,(float)entity.posZ,itemRand.nextFloat() * 0.05f + 0.2f,1);
+        //return Reference.MOD_ID + ":" +"phaser_beam_1";
+        return new WeaponSound(new ResourceLocation(Reference.MOD_ID + ":" +"phaser_beam_1"),(float)entity.posX,(float)entity.posY,(float)entity.posZ,itemRand.nextFloat() * 0.05f + 0.2f,1);
     }
 
     public byte getPowerLevel(ItemStack weapon)

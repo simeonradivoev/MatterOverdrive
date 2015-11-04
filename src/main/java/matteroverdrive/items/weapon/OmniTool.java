@@ -25,6 +25,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.client.render.item.ItemRendererOmniTool;
+import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.fx.PhaserBoltRecoil;
 import matteroverdrive.network.packet.server.PacketDigBlock;
@@ -42,6 +43,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import org.lwjgl.input.Mouse;
@@ -56,7 +58,7 @@ public class OmniTool extends EnergyWeapon
     public static final int RANGE = 16;
     private static final int MAX_USE_TIME = 240;
     private static final int ENERGY_PER_SHOT = 512;
-    private static final float DIG_POWER_MULTIPLY = 0.01f;
+    private static final float DIG_POWER_MULTIPLY = 0.007f;
 
     public OmniTool(String name)
     {
@@ -111,10 +113,10 @@ public class OmniTool extends EnergyWeapon
                     int z = movingObjectPosition.blockZ;
                     Block block = player.worldObj.getBlock(x, y, z);
 
-                    if (block != null && block.getMaterial() != Material.air && LAST_BRAKE_TIME <= 0) {
+                    if (block != null && block.getMaterial() != Material.air) {
 
                         float percent = (1-(float)count/(float)getMaxItemUseDuration(itemStack));
-                        MatterOverdrive.log.info("Percent %s",percent);
+                        //MatterOverdrive.log.info("Percent %s",percent);
 
                         ++STEP_SOUND_COUNTER;
                         LAST_SIDE = movingObjectPosition.sideHit;
@@ -128,25 +130,19 @@ public class OmniTool extends EnergyWeapon
                                 Minecraft.getMinecraft().playerController.onPlayerDestroyBlock(x, y, z, movingObjectPosition.sideHit);
                                 BLOCK_DAMAGE = 0.0F;
                                 STEP_SOUND_COUNTER = 0.0F;
-                                LAST_BRAKE_TIME = getDigCooldown();
                                 //this.blockHitDelay = 5;
                             }else if (BLOCK_DAMAGE == 0)
                             {
                                 MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(x,y,z,0,movingObjectPosition.sideHit));
                             }
 
-                            BLOCK_DAMAGE += block.getPlayerRelativeBlockHardness(player, player.worldObj, x, y, z);
+                            BLOCK_DAMAGE = MathHelper.clamp_float(BLOCK_DAMAGE+block.getPlayerRelativeBlockHardness(player, player.worldObj, x, y, z)*getDamageMultiplay(itemStack),0,1);
                             player.worldObj.destroyBlockInWorldPartially(player.getEntityId(), x, y, z, (int)(BLOCK_DAMAGE * 10));
                         }else
                         {
                             stopMiningLastBlock();
                             setLastBlock(x,y,z);
                         }
-                    }
-
-                    if (LAST_BRAKE_TIME > 0)
-                    {
-                        LAST_BRAKE_TIME--;
                     }
                 }
 
@@ -416,12 +412,11 @@ public class OmniTool extends EnergyWeapon
         return false;
     }
 
-    public int getDigCooldown(){return 5;}
-
     @Override
-    public String getFireSound(ItemStack weapon, EntityLivingBase entity)
+    @SideOnly(Side.CLIENT)
+    public WeaponSound getFireSound(ItemStack weapon, EntityLivingBase entity)
     {
-        return Reference.MOD_ID + ":" +"omni_tool_hum";
-        //return new WeaponSound(new ResourceLocation(),(float)entity.posX,(float)entity.posY,(float)entity.posZ,itemRand.nextFloat() * 0.05f + 0.2f,0.8f);
+        //return Reference.MOD_ID + ":" +"omni_tool_hum";
+        return new WeaponSound(new ResourceLocation(Reference.MOD_ID + ":" +"omni_tool_hum"),(float)entity.posX,(float)entity.posY,(float)entity.posZ,itemRand.nextFloat() * 0.04f + 0.06f,itemRand.nextFloat() * 0.1f + 0.95f);
     }
 }

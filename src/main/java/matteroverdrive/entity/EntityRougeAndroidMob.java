@@ -86,7 +86,7 @@ public class EntityRougeAndroidMob extends EntityMob
         {
             this.entityDropItem(new ItemStack(MatterOverdriveItems.tritaniumSpine), 0.0F);
         }
-        if (rand.nextFloat() < (0.1f + lootingModifier))
+        if (rand.nextFloat() < (0.2f + lootingModifier))
         {
             this.entityDropItem(new ItemStack(MatterOverdriveItems.androidParts, 1, rand.nextInt(4)), 0.0F);
         }

@@ -158,6 +158,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         }
 
         Entity entity = null;
+        Vec3 hit = null;
         List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
         double d0 = 0.0D;
         int i;
@@ -166,16 +167,22 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         for (i = 0; i < list.size(); ++i) {
             Entity entity1 = (Entity) list.get(i);
 
-            if (entity1.canBeCollidedWith() && entity1 != this.shootingEntity) {
+            if (entity1.canBeCollidedWith() && entity1 != this.shootingEntity && !entity1.isDead) {
                 f1 = 0.3F;
                 AxisAlignedBB axisalignedbb1 = entity1.boundingBox.expand((double) f1, (double) f1, (double) f1);
                 MovingObjectPosition movingobjectposition1 = axisalignedbb1.calculateIntercept(vec31, vec3);
 
                 if (movingobjectposition1 != null) {
+                    if (entity1 instanceof EntityLivingBase && ((EntityLivingBase)entity1).deathTime != 0) {
+                        //if the living entity is in the process of dying then do not hit
+                        continue;
+                    }
+
                     double d1 = vec31.distanceTo(movingobjectposition1.hitVec);
 
                     if (d1 < d0 || d0 == 0.0D) {
                         entity = entity1;
+                        hit = movingobjectposition1.hitVec;
                         d0 = d1;
                     }
                 }
@@ -183,7 +190,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         }
 
         if (entity != null && entity != this.shootingEntity) {
-            movingobjectposition = new MovingObjectPosition(entity);
+            movingobjectposition = new MovingObjectPosition(entity,hit);
         }
 
         if (movingobjectposition != null && movingobjectposition.entityHit != null && movingobjectposition.entityHit instanceof EntityPlayer) {
@@ -237,12 +244,14 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
                 }
                 else
                 {
-                    //client hit
-                    for (int s = 0;s < 10;s++)
+                    if (movingobjectposition.entityHit instanceof EntityLivingBase)
                     {
-                        worldObj.spawnParticle("reddust", posX,posY,posZ, 0, 0, 0);
+                        //client hit
+                        for (int s = 0; s < 10; s++) {
+                            worldObj.spawnParticle("reddust", movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord, 0, 0, 0);
+                        }
+                        this.setDead();
                     }
-                    this.setDead();
                 }
 
                 if (weapon != null && weapon.getItem() instanceof EnergyWeapon)

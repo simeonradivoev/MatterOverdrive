@@ -107,6 +107,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
         }
     }
 
+    @SideOnly(Side.CLIENT)
     private void playWeaponSound(EntityPlayer player, Random random)
     {
         if (!soundMap.containsKey(player))
@@ -114,8 +115,9 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
             ItemStack weaponStack = player.getItemInUse();
             if (weaponStack != null && weaponStack.getItem() instanceof IWeapon)
             {
-                WeaponSound sound = new WeaponSound(new ResourceLocation(((IWeapon)weaponStack.getItem()).getFireSound(weaponStack, player)), (float)player.posX, (float)player.posY, (float)player.posZ, random.nextFloat() * 0.05f + 0.2f, 1);
-				soundMap.put(player, sound);
+                //WeaponSound sound = new WeaponSound(new ResourceLocation(((IWeapon)weaponStack.getItem()).getFireSound(weaponStack, player)), (float)player.posX, (float)player.posY, (float)player.posZ, random.nextFloat() * 0.05f + 0.2f, 1);
+                WeaponSound sound = ((IWeapon) weaponStack.getItem()).getFireSound(weaponStack,player);
+                soundMap.put(player, sound);
 				Minecraft.getMinecraft().getSoundHandler().playSound(sound);
 			}
 

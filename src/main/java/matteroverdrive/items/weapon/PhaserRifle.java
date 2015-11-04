@@ -25,6 +25,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.client.render.item.ItemRendererPhaserRifle;
+import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.fx.PhaserBoltRecoil;
 import matteroverdrive.network.packet.server.PacketFirePlasmaShot;
@@ -160,8 +161,9 @@ public class PhaserRifle extends EnergyWeapon
     }
 
     @Override
-    public String getFireSound(ItemStack weapon, EntityLivingBase entity) {
-        return "";
+    @SideOnly(Side.CLIENT)
+    public WeaponSound getFireSound(ItemStack weapon, EntityLivingBase entity) {
+        return null;
     }
 
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_)

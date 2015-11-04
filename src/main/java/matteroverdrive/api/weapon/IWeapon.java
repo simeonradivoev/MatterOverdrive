@@ -20,6 +20,7 @@ package matteroverdrive.api.weapon;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.client.sound.WeaponSound;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -177,5 +178,5 @@ public interface IWeapon
      * @return the weapon firing sound.
      */
     @SideOnly(Side.CLIENT)
-    String getFireSound(ItemStack weapon, EntityLivingBase entity);
+    WeaponSound getFireSound(ItemStack weapon, EntityLivingBase entity);
 }
