@@ -76,6 +76,14 @@ item.data_pad.details=Содержит информацию о всём в Matte
 item.omni_tool.name=Омнитул
 item.android_pill_yellow.name=Жёлтая пилюля
 item.android_pill_yellow.details=Используется для сброса всех разблокированных способностей Андроида
+item.tritanium_helmet.name=Тритановый шлем
+item.tritanium_chestplate.name=Тритановый нагрудник
+item.tritanium_leggings.name=Тритановый поножи
+item.tritanium_boots.name=Тритановый ботинки
+item.tritanium_hoe.name=Тритановая мотыга
+item.tritanium_sword.name=Тритановый меч
+item.tritanium_pickaxe.name=Тритановая кирка
+item.tritanium_axe.name=Тритановый топор
 
 item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
@@ -104,7 +112,7 @@ tile.replicator.config.storage.matter=Хранилище материи
 tile.replicator.config.storage.energy=Хранилище энергии
 tile.replicator.config.cost.replication.energy=Стоимость электроэнергии за материю
 tile.replicator.config.speed.replication=Скорость выработки материи 
-tile.replicator.config.fail=Возможность неудачи
+tile.replicator.config.fail=Шанс неудач
 tile.replicator.details=Реплицирует предметы и блоки из плазменной материи
 tile.replicator_active.name=Репликатор материи
 
@@ -158,7 +166,10 @@ tile.gravitational_stabilizer.name=Гравитационный стабилиз
 tile.gravitational_stabilizer.details=Используется для подавления эффектов гравитационных аномалий
 tile.matter_recycler.name=Утилизатор материи
 tile.matter_recycler.details=Используется для переработки предметов, готовых для разложения
+
+## Жидкости ##
 tile.matter_plasma.name=Плазменная материя
+tile.molten_tritanium.name=Расплавленный тританиум
 
 ## Термоядерный реактор ##
 tile.fusion_reactor_controller.name=Контроллер термоядерного реактора
@@ -229,15 +240,18 @@ dialog.mad_scientist.whatDidYouDo.question=Что ты сделал со мно�
 
 ============================================================
 # Вкладки в творческом режиме/Creative Panels
+
 itemGroup.tabMatterOverdrive=Matter Overdrive
 itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Модули
 itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Улучшения
 itemGroup.tabMatterOverdrive_food=Matter Overdrive: Еда
 itemGroup.tabMatterOverdrive_ships=Matter Overdrive: Корабли
-itemGroup.tabMatterOverdrive_buildings=Matter Overdrive: Здания
+itemGroup.tabMatterOverdrive_buildings=Matter Overdrive: Постройки
+itemGroup.tabMatterOverdrive_decorative=Matter Overdrive: Декорации
 
 ============================================================
 # Типы улучшений/Upgrade Types
+
 upgradetype.Speed.name=Время
 upgradetype.PowerUsage.name=Потребляемая мощность
 upgradetype.Output.name=Выход
@@ -249,6 +263,7 @@ upgradetype.MatterStorage.name=Хранилище материи
 
 ============================================================
 # Оружейные статистики/Weapon Stats
+
 weaponstat.0.name=Урон
 weaponstat.1.name=Боеприпасы
 weaponstat.2.name=Эффект
@@ -431,6 +446,7 @@ info.mo.updater.hover=Нажмите, чтобы загрузить послед
 
 ============================================================
 # Конфигурация/Config
+
 config.machine_options.name=Машины
 config.world_gen.name=Генерация мира
 config.matter_network.name=Материальная сеть
@@ -442,7 +458,7 @@ config.spawn_ores.name=Спавн руд
 config.client.name=Настройки клиента
 config.server.name=Настройки сервера
 config.starmap.name=Настройки звездной карты
-config.ore_gen_blacklist.name=Ore Dimension Blacklist
+config.ore_gen_blacklist.name=Ore Dimension: Чёрный список
 сonfig.abilities.name=Способности Андроида
 config.entities.name=Существа
 config.debug.name=Отладка
@@ -472,10 +488,13 @@ enchantment.matteroverdrive.weapon.damage=Разгон
 
 ============================================================
 # Жидкости/Fluids
+
 fluid.matter_plasma.name=Плазменная материя
+fluid.molten_tritanium=Расплавленный тританиум
 
 ============================================================
 # Путеводители/Guides
+
 guide.category.general.name=Основное
 guide.category.weapons.name=Оружия
 guide.category.android.name=Андроид
@@ -492,7 +511,7 @@ guide.group.blocks.name=Блоки
 guide.group.drinks.name=Напитки
 guide.group.food.name=Еда
 
-guide.entry.matter_fail.name=Matter Replication Failure
+guide.entry.matter_fail.name=Отказоспособность репликации материя
 guide.entry.matter_plasma.name=Плазменная материя
 guide.entry.matter_transport.name=Транспортировка материи
 guide.entry.weapon.modules.barrels.name=Модули для оружий
@@ -509,4 +528,9 @@ guide.entry.upgrades.name=Улучшения
 # Модификаторы/Modifiers
 
 modifier.bionic.max_health=Максимальное здоровье
-modifier.bionic.glitch_time=Glitch Time
+modifier.bionic.glitch_time=Время глитча
+
+============================================================
+# Другое/Others
+
+material.tritanium=Тританиум
