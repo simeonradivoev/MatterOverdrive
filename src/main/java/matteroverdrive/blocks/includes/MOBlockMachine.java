@@ -25,6 +25,7 @@ import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMOTileEntity;
+import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.items.includes.MOMachineBlockItem;
@@ -35,10 +36,8 @@ import matteroverdrive.util.MatterHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
@@ -93,12 +92,10 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
         //drops inventory
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te instanceof MOTileEntityMachine) {
-            MOTileEntityMachine machine = (MOTileEntityMachine) world.getTileEntity(x, y, z);
-            if (machine != null) {
-                MatterHelper.DropInventory(world, (MOTileEntityMachine) world.getTileEntity(x, y, z), x, y, z);
-            }
+        Inventory inventory = getInventory(world,x,y,z);
+        if (inventory != null)
+        {
+            MatterHelper.DropInventory(world, inventory, x, y, z);
         }
 
         super.breakBlock(world, x, y, z, block, meta);
@@ -181,8 +178,24 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     {
         ArrayList<ItemStack> items = new ArrayList<>();
         ItemStack blockItem = getNBTDrop(world, x, y, z, (IMOTileEntity) world.getTileEntity(x, y, z));
-        MOTileEntityMachine machine = (MOTileEntityMachine)world.getTileEntity(x, y, z);
+        Inventory inventory = getInventory(world,x,y,z);
         items.add(blockItem);
+
+        //remove any items from the machine inventory so that breakBlock doesn't duplicate the items
+        if (inventory != null) {
+            for (int i1 = 0; i1 < inventory.getSizeInventory(); ++i1) {
+                Slot slot = inventory.getSlot(i1);
+                ItemStack itemstack = slot.getItem();
+
+                if (itemstack != null)
+                {
+                    if (slot.keepOnDismantle())
+                    {
+                        slot.setItem(null);
+                    }
+                }
+            }
+        }
 
         Block block = world.getBlock(x, y, z);
         int l = world.getBlockMetadata(x, y, z);
@@ -196,42 +209,6 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
 
         if (!returnDrops)
         {
-            for (int i1 = 0; i1 < machine.getInventoryContainer().getSizeInventory(); ++i1)
-            {
-                Slot slot = machine.getInventoryContainer().getSlot(i1);
-                ItemStack itemstack = slot.getItem();
-
-                if (itemstack != null && !slot.keepOnDismantle())
-                {
-                    float f = world.rand.nextFloat() * 0.8F + 0.1F;
-                    float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
-                    float f2 = world.rand.nextFloat() * 0.8F + 0.1F;
-
-                    while (itemstack.stackSize > 0)
-                    {
-                        int j1 = world.rand.nextInt(21) + 10;
-
-                        if (j1 > itemstack.stackSize)
-                        {
-                            j1 = itemstack.stackSize;
-                        }
-                        itemstack.stackSize -= j1;
-                        EntityItem entityitem = new EntityItem(world, (double)((float)x + f), (double)((float)y + f1), (double)((float)z + f2), new ItemStack(itemstack.getItem(), j1, itemstack.getItemDamage()));
-
-                        if (itemstack.hasTagCompound())
-                        {
-                            entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
-                        }
-
-                        float f3 = 0.05F;
-                        entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);
-                        entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);
-                        entityitem.motionZ = (double)((float)world.rand.nextGaussian() * f3);
-                        world.spawnEntityInWorld(entityitem);
-                    }
-                }
-            }
-
             dropBlockAsItem(world, x, y, z, blockItem);
         }
         else
@@ -240,6 +217,15 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
         }
 
         return items;
+    }
+
+    protected Inventory getInventory(World world,int x,int y,int z)
+    {
+        if (world.getTileEntity(x,y,z) instanceof MOTileEntityMachine) {
+            MOTileEntityMachine machine = (MOTileEntityMachine) world.getTileEntity(x, y, z);
+            return machine.getInventoryContainer();
+        }
+        return null;
     }
 
     @Override
