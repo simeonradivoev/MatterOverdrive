@@ -73,13 +73,12 @@ public class AndroidHudMinimap extends AndroidHudElement
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
         glPushMatrix();
-        glTranslated(x, y, 0);
+        glTranslated(x, y, -100);
         glRotated(ROTATION, 1, 0, 0);
         glScaled(scale, scale, scale);
         drawBackground(resolution);
 
-        RenderUtils.beginStencil();
-        drawStencil();
+        beginMask();
         glPopMatrix();
 
         for (Object entityObj : mc.theWorld.loadedEntityList)
@@ -99,6 +98,7 @@ public class AndroidHudMinimap extends AndroidHudElement
 
                         //region Push
                         glPushMatrix();
+                        glTranslated(0,0,-130);
                         drawEntity(entityLivingBase,scale,x,y,pos);
                         glPopMatrix();
                         //endregion
@@ -107,27 +107,38 @@ public class AndroidHudMinimap extends AndroidHudElement
             }
         }
 
-        RenderUtils.endStencil();
+        endMask();
 
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_ALPHA_TEST);
     }
 
-    private void drawStencil()
+    private void beginMask()
     {
-        GL11.glDisable(3553);
-        GL11.glStencilFunc(519, 1, 1);
-        GL11.glStencilOp(0, 0, 7681);
-        GL11.glStencilMask(1);
-        GL11.glColorMask(false, false, false, false);
-        GL11.glDepthMask(false);
+        glPushMatrix();
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glClearDepth(1f);
+        GL11.glDepthFunc(GL11.GL_LESS);
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(true);
+        glColorMask(false,false,false,false);
+        glDisable(GL_TEXTURE_2D);
+        glTranslated(0,0,1);
         RenderUtils.drawCircle(RADIUS, 32);
-        GL11.glEnable(3553);
-        GL11.glStencilFunc(514, 1, 1);
-        GL11.glStencilMask(0);
-        GL11.glColorMask(true, true, true, true);
-        GL11.glDepthMask(true);
+        glEnable(GL_TEXTURE_2D);
+
+        glDepthMask(false);
+        glColorMask(true,true,true,true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthFunc(GL11.GL_GREATER);
+        glPopMatrix();
+    }
+
+    private void endMask()
+    {
+        glDepthFunc(GL_LEQUAL);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
     }
 
     private void drawBackground(ScaledResolution resolution)
@@ -202,6 +213,7 @@ public class AndroidHudMinimap extends AndroidHudElement
             int size = getMinimapSize(entityLivingBase);
             GuiColor color = getMinimapColor(entityLivingBase);
             float opacity = mc.thePlayer.canEntityBeSeen(entityLivingBase) ? 1 : 0.7f;
+            opacity *= baseColor.getFloatA();
             glEnable(GL_TEXTURE_2D);
             RenderUtils.applyColorWithAlpha(color, OPACITY * opacity);
             glRotated(mc.renderViewEntity.rotationYaw, 0, 0, -1);

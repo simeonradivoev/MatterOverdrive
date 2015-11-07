@@ -56,38 +56,43 @@ public class AndroidHudStats extends AndroidHudElement
 
         RenderUtils.applyColorWithAlpha(baseColor);
         mc.renderEngine.bindTexture(top_element_bg);
-        RenderUtils.drawPlane(0, 10,0,174,11);
+        RenderUtils.drawPlane(0, Math.copySign(10,0.5-getPosition().y),0,174,11);
 
         double energy_perc = (double) androidPlayer.getEnergyStored() / (double) androidPlayer.getMaxEnergyStored();
         double health_perc = androidPlayer.getPlayer().getHealth() / androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.maxHealth).getBaseValue();
         int x = 12;
+        int y = 0;
+        if (this.getPosition().y > 0.5)
+        {
+            y = -48;
+        }
 
         //region Health
         GuiColor healthColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, baseColor, (float) Math.min(health_perc,1));
         RenderUtils.applyColorWithAlpha(healthColor);
-        ClientProxy.holoIcons.renderIcon("health", x, 22);
+        ClientProxy.holoIcons.renderIcon("health", x, y + 22);
         x += 18;
         String info = DecimalFormat.getPercentInstance().format(health_perc);
-        mc.fontRenderer.drawString(info, 32, 28, healthColor.getColor());
+        mc.fontRenderer.drawString(info, 32, y + 28, healthColor.getColor());
         x += mc.fontRenderer.getStringWidth(info) + 5;
         //endregion
 
         //region energy
         GuiColor energyColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, baseColor, (float) energy_perc);
         RenderUtils.applyColorWithAlpha(energyColor);
-        ClientProxy.holoIcons.renderIcon("battery", x, 20, 22, 22);
+        ClientProxy.holoIcons.renderIcon("battery", x, y + 20, 22, 22);
         x += 22;
         info = DecimalFormat.getPercentInstance().format(energy_perc);
-        mc.fontRenderer.drawString(info, x, 28, energyColor.getColor());
+        mc.fontRenderer.drawString(info, x, y + 28, energyColor.getColor());
         x += mc.fontRenderer.getStringWidth(info) + 5;
         //endregion
 
         //region speed
         RenderUtils.applyColorWithAlpha(baseColor);
-        ClientProxy.holoIcons.renderIcon("person",x,22,18,18);
+        ClientProxy.holoIcons.renderIcon("person",x,y + 22,18,18);
         x += 18;
         info = DecimalFormat.getPercentInstance().format(androidPlayer.getSpeedMultiply());
-        mc.fontRenderer.drawString(info, x, 28, baseColor.getColor());
+        mc.fontRenderer.drawString(info, x, y + 28, baseColor.getColor());
         //endregion
 
         glEnable(GL_ALPHA_TEST);
