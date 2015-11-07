@@ -198,12 +198,14 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             activeStat = MatterOverdrive.statRegistry.getStat(prop.getString("ActiveAbility"));
         }
         this.inventory.readFromNBT(prop);
+        init(this.player,this.player.worldObj);
     }
 
     @Override
     public void init(Entity entity, World world)
     {
         manageStatAttributeModifiers();
+        manageEquipmentAttributeModifiers();
     }
 
     public int extractEnergy(int amount,boolean simulate)
