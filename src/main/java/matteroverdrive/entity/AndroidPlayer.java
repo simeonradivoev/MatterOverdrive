@@ -75,6 +75,7 @@ import java.util.stream.Collectors;
  */
 public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage, IInventory
 {
+    public static boolean HURT_GLITCHING = true;
     public final static int BUILTIN_ENERGY_TRANSFER = 1024;
     public final static int TRANSFORM_TIME = 20 * 34;
     public final static String EFFECT_KEY_TURNING = "Turning";
@@ -167,6 +168,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         TRANSFORMATION_DEATH = configurationHandler.getBool("transformation_death", ConfigurationHandler.CATEGORY_ANDROID_PLAYER, true, "Should the player die after an Android transformation");
         REMOVE_POTION_EFFECTS = configurationHandler.getBool("remove_potion_effects", ConfigurationHandler.CATEGORY_ANDROID_PLAYER, true, "Remove all potion effects while an Android");
+        HURT_GLITCHING = configurationHandler.getBool("hurt_glitching",ConfigurationHandler.CATEGORY_ANDROID_PLAYER,true,"Should the glitch effect be displayed every time the player gets hurt");
     }
 
     @Override
@@ -764,7 +766,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public void onEntityHurt(LivingHurtEvent event)
     {
-        if (isAndroid() && !event.isCanceled()) {
+        if (isAndroid() && !event.isCanceled() && HURT_GLITCHING) {
             effects.setInteger("GlitchTime", modify(10, AndroidAttributes.attributeGlitchTime));
             sync(PacketSyncAndroid.SYNC_EFFECTS);
                 player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "gui.glitch_" + player.worldObj.rand.nextInt(11), 0.2f, 0.9f + player.worldObj.rand.nextFloat() * 0.2f);
