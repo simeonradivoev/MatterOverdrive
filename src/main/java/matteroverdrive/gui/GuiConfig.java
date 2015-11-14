@@ -34,6 +34,11 @@ import java.util.List;
 public class GuiConfig extends cpw.mods.fml.client.config.GuiConfig
 {
 
+    public GuiConfig(GuiScreen parent)
+    {
+        super(parent,getAllGuiCategories(),Reference.MOD_ID,false,false,"Matter Overdrive Configurations");
+    }
+
     public GuiConfig(GuiScreen parent,String category) {
         super(parent, getConfigElements(parent,category), Reference.MOD_ID, false, false, GuiConfig.getAbridgedConfigPath(MatterOverdrive.configHandler.toString()),Reference.MOD_NAME + " Configurations");
     }
@@ -42,6 +47,13 @@ public class GuiConfig extends cpw.mods.fml.client.config.GuiConfig
 
         List<IConfigElement> list = new ArrayList<IConfigElement>();
         list.add(new ConfigElement<ConfigCategory>(MatterOverdrive.configHandler.getCategory(category)));
+        return list;
+    }
+
+    private static List<IConfigElement> getAllGuiCategories()
+    {
+        List<IConfigElement> list = new ArrayList<IConfigElement>();
+        MatterOverdrive.configHandler.addCategoryToGui(list);
         return list;
     }
 }
