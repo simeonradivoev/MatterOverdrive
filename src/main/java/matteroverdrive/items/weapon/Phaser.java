@@ -53,14 +53,14 @@ import java.util.Map;
 
 public class Phaser extends EnergyWeapon implements IWeapon{
 
-	private static final double ENERGY_MULTIPLY = 2.5;
+	private static final double ENERGY_MULTIPLY = 2.1;
     private static final int MAX_USE_TIME = 60;
     private static final int MAX_HEAT = 80;
     public static final int MAX_LEVEL = 6;
     private static final int KILL_MODE_LEVEL = 3;
-    private static final float KILL_DAMAGE_MULTIPLY = 2.5f;
+    private static final float KILL_DAMAGE_MULTIPLY = 2f;
     private static final int STUN_SLEEP_MULTIPLY = 5;
-    public static final int RANGE = 24;
+    public static final int RANGE = 18;
 
     Map<EntityPlayer,WeaponSound> soundMap;
 
@@ -112,7 +112,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 		return item.getTagCompound().getByte("power") >= KILL_MODE_LEVEL;
 	}
 
-	private void ManageShooting(ItemStack item, World w, EntityPlayer player)
+	private void ManageShooting(ItemStack item, World w, EntityPlayer player,int useCount)
 	{
         if (w.isRemote)
             return;
@@ -199,7 +199,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
                 }
             }
 
-            if (isKillMode(item))
+            if (isKillMode(item) && useCount % getShootCooldown() == getShootCooldown()/2)
             {
                 if (WeaponHelper.hasStat(Reference.WS_EXPLOSION_DAMAGE, item))
                 {
@@ -273,7 +273,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
             int powerLevelMultiply = (getPowerLevel(itemStack)+1) / MAX_LEVEL;
             float newHeat =  (getHeat(itemStack)+1)*(1.1f + (0.05f*powerLevelMultiply));
             setHeat(itemStack, newHeat);
-            ManageShooting(itemStack, player.worldObj, player);
+            ManageShooting(itemStack, player.worldObj, player,count);
             manageOverheat(itemStack, player.worldObj, player);
         }
         else {
@@ -418,7 +418,16 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     public boolean supportsModule(int slot,ItemStack weapon)
     {
         return slot != Reference.MODULE_SIGHTS;
+    }
 
+    @Override
+    public boolean supportsModule(ItemStack weapon, ItemStack module)
+    {
+        if (module != null)
+        {
+            return module.getItem() == MatterOverdriveItems.weapon_module_barrel || module.getItem() == MatterOverdriveItems.weapon_module_color;
+        }
+        return false;
     }
 
     @Override
@@ -444,7 +453,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 
     @Override
     public int getShootCooldown() {
-        return 0;
+        return 10;
     }
 
     @Override

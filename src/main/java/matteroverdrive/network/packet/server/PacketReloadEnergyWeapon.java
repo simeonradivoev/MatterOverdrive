@@ -51,7 +51,7 @@ public class PacketReloadEnergyWeapon extends PacketAbstract
         {
             if (player.getHeldItem() != null && player.getHeldItem().getItem() instanceof EnergyWeapon)
             {
-                if (((EnergyWeapon) player.getHeldItem().getItem()).getEnergyStored(player.getHeldItem()) <= ((EnergyWeapon) player.getHeldItem().getItem()).getEnergyUse(player.getHeldItem()))
+                if (((EnergyWeapon) player.getHeldItem().getItem()).needsRecharge(player.getHeldItem()))
                 {
                     ((EnergyWeapon) player.getHeldItem().getItem()).chargeFromEnergyPack(player.getHeldItem(),player);
                 }

@@ -45,7 +45,10 @@ import java.util.Map;
  */
 public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
 {
-
+    public static final int DAMAGE_BARREL_ID = 0;
+    public static final int FIRE_BARREL_ID = 1;
+    public static final int EXPLOSION_BARREL_ID = 2;
+    public static final int HEAL_BARREL_ID = 3;
     public static final String[] names = {"damage","fire","explosion","heal"};
     private IIcon[] icons;
 
@@ -55,7 +58,7 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
         setCreativeTab(MatterOverdrive.tabMatterOverdrive_modules);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
-        this.setMaxStackSize(16);
+        this.setMaxStackSize(1);
     }
 
     public void register()

@@ -28,14 +28,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.client.model.obj.WavefrontObject;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class ItemRendererOmniTool implements IItemRenderer
+public class ItemRendererOmniTool extends WeaponItemRenderer
 {
     public static final String TEXTURE = Reference.PATH_ITEM + "wielder.png";
     public static final String MODEL = Reference.PATH_MODEL + "item/wielder.obj";
@@ -46,13 +45,9 @@ public class ItemRendererOmniTool implements IItemRenderer
     public static float RECOIL_TIME = 0;
     public static float RECOIL_AMOUNT = 0;
 
-    public static IModelCustom omniToolModel;
-    public static ResourceLocation omniToolTexture;
-
     public ItemRendererOmniTool()
     {
-        omniToolModel = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL));
-        omniToolTexture = new ResourceLocation(TEXTURE);
+        super((WavefrontObject) AdvancedModelLoader.loadModel(new ResourceLocation(MODEL)),new ResourceLocation(TEXTURE));
     }
 
     @Override
@@ -153,17 +148,18 @@ public class ItemRendererOmniTool implements IItemRenderer
     void renderGun(ItemRenderType renderType, ItemStack item)
     {
         glEnable(GL_NORMALIZE);
-        Minecraft.getMinecraft().renderEngine.bindTexture(omniToolTexture);
-        omniToolModel.renderAllExcept("hull", "sights_rail" ,"side_rail", "indicator", "dig_effect");
+        bindTexture(weaponTexture);
+        weaponModel.renderOnly("welder_arms_base","wielder_arms","grip");
+        renderBarrel(item);
 
         GuiColor color = WeaponHelper.getColor(item);
         RenderUtils.applyColor(color);
-        omniToolModel.renderOnly("hull", "sights_rail","side_rail");
+        weaponModel.renderOnly("hull", "sights_rail","side_rail");
 
         glDisable(GL_LIGHTING);
         RenderUtils.disableLightmap();
         glColor3f(1,1,1);
-        omniToolModel.renderPart("indicator");
+        weaponModel.renderPart("indicator");
         glEnable(GL_LIGHTING);
     }
 
@@ -195,5 +191,10 @@ public class ItemRendererOmniTool implements IItemRenderer
         Tessellator.instance.addVertexWithUV(0, length, 0, 44f / 64f, 1f);
         Tessellator.instance.draw();
         GL11.glPopMatrix();
+    }
+
+    public WavefrontObject getModel()
+    {
+        return weaponModel;
     }
 }

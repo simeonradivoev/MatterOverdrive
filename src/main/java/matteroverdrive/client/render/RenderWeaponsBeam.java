@@ -25,13 +25,13 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.client.RenderHandler;
-import matteroverdrive.client.render.item.ItemRendererOmniTool;
 import matteroverdrive.client.render.tileentity.TileEntityRendererStation;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.items.weapon.OmniTool;
 import matteroverdrive.items.weapon.Phaser;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
@@ -193,7 +193,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
                     glRotated(180, 1, 0, 0);
                 }
                 glScaled(1, 1.5 + Math.sin(caster.worldObj.getWorldTime() * 0.5) * 0.5, 1);
-                ItemRendererOmniTool.omniToolModel.renderPart("dig_effect");
+                ClientProxy.renderHandler.getRendererOmniTool().getModel().renderPart("dig_effect");
                 glDisable(GL_BLEND);
                 glEnable(GL_CULL_FACE);
                 glPopMatrix();

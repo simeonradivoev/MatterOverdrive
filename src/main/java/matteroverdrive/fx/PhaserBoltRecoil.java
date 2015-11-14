@@ -27,21 +27,28 @@ public class PhaserBoltRecoil extends EntityFX
 {
     private float lavaParticleScale;
 
-    public PhaserBoltRecoil(World p_i1215_1_, double x, double y, double z,GuiColor color)
+    public PhaserBoltRecoil(World world, double x, double y, double z,GuiColor color,double dirX,double dirY,double dirZ)
     {
-        super(p_i1215_1_, x, y, z, 0.0D, 0.0D, 0.0D);
-        this.motionX *= 0.800000011920929D;
-        this.motionY *= 0.800000011920929D;
-        this.motionZ *= 0.800000011920929D;
-        this.motionY = (double)(this.rand.nextFloat() * 0.4F + 0.05F);
+        super(world, x, y, z, dirX, dirY, dirZ);
+        //this.motionX *= 0.800000011920929D;
+        //this.motionY *= 0.800000011920929D;
+        //this.motionZ *= 0.800000011920929D;
+        this.motionY += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
+        this.motionX += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
+        this.motionZ += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
         this.particleRed = color.getFloatR();
         this.particleGreen = color.getFloatG();
         this.particleBlue = color.getFloatB();
         this.particleScale *= this.rand.nextFloat() * 0.5F + 1F;
         this.lavaParticleScale = this.particleScale;
         this.particleMaxAge = (int)(8d / (Math.random() * 0.8D + 0.2D));
-        this.noClip = true;
+        this.noClip = false;
         this.setParticleTextureIndex(rand.nextInt(2));
+    }
+
+    public PhaserBoltRecoil(World p_i1215_1_, double x, double y, double z,GuiColor color)
+    {
+        this(p_i1215_1_,x,y,z,color,0,0,0);
     }
 
     public int getBrightnessForRender(float f)

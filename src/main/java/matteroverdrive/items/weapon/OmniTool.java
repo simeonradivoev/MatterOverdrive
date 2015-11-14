@@ -28,6 +28,8 @@ import matteroverdrive.client.render.item.ItemRendererOmniTool;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.fx.PhaserBoltRecoil;
+import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.network.packet.server.PacketDigBlock;
 import matteroverdrive.network.packet.server.PacketFirePlasmaShot;
 import matteroverdrive.proxy.ClientProxy;
@@ -36,7 +38,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.particle.EntityExplodeFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,7 +56,7 @@ public class OmniTool extends EnergyWeapon
 {
     private static float BLOCK_DAMAGE,STEP_SOUND_COUNTER,LAST_BRAKE_TIME;
     private static int CURRENT_BLOCK_X,CURRENT_BLOCK_Y,CURRENT_BLOCK_Z,LAST_SIDE;
-    public static final int RANGE = 16;
+    public static final int RANGE = 24;
     private static final int MAX_USE_TIME = 240;
     private static final int ENERGY_PER_SHOT = 512;
     private static final float DIG_POWER_MULTIPLY = 0.007f;
@@ -192,7 +193,7 @@ public class OmniTool extends EnergyWeapon
 
     public PlasmaBolt spawnProjectile(ItemStack weapon,EntityPlayer entityPlayer,Vec3 position,Vec3 dir,WeaponShot shot)
     {
-        PlasmaBolt fire = new PlasmaBolt(entityPlayer.worldObj, entityPlayer,position,dir, shot,2);
+        PlasmaBolt fire = new PlasmaBolt(entityPlayer.worldObj, entityPlayer,position,dir, shot,3);
         fire.setWeapon(weapon);
         if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon)) {
             fire.setFireDamageMultiply((float) WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE, weapon));
@@ -202,10 +203,11 @@ public class OmniTool extends EnergyWeapon
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onClientShot(ItemStack weapon, EntityPlayer player, Vec3 position, Vec3 dir,WeaponShot shot)
     {
         //ClientProxy.weaponHandler.addShootDelay(this);
-        player.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 1.2f + itemRand.nextFloat() * 0.2f);
+        player.worldObj.playSound(position.xCoord,position.yCoord,position.zCoord,Reference.MOD_ID + ":" + "laser_fire_0", 0.15f + itemRand.nextFloat() * 0.15f, 1.2f + itemRand.nextFloat() * 0.2f,false);
         spawnProjectile(weapon,player,position,dir,shot);
     }
 
@@ -213,22 +215,11 @@ public class OmniTool extends EnergyWeapon
     @SideOnly(Side.CLIENT)
     public void onProjectileHit(MovingObjectPosition hit, ItemStack weapon, World world,float amount)
     {
-        if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+        if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && amount == 1) {
 
-            if (amount > 1) {
-                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityExplodeFX(world, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0));
-            }
             if (itemRand.nextFloat() < 0.8f)
             {
-                for (int i = 0; i < amount; i++) {
-                    Minecraft.getMinecraft().effectRenderer.addEffect(new PhaserBoltRecoil(world, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, new GuiColor(255, 255, 255)));
-                }
-                if (amount > 1)
-                    world.playSound(hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,Reference.MOD_ID + ":" + "sizzle",itemRand.nextFloat() * 0.2f + 0.4f,itemRand.nextFloat() * 0.6f + 0.7f,false);
-            }
-            if (amount > 1 && itemRand.nextFloat() < 0.5f)
-            {
-                world.playSound(hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, Reference.MOD_ID + ":" + "bolt_hit_0", itemRand.nextFloat() * 0.1f + 0.2f, itemRand.nextFloat() * 0.4f + 0.8f, false);
+                Minecraft.getMinecraft().effectRenderer.addEffect(new PhaserBoltRecoil(world, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, new GuiColor(255, 255, 255)));
             }
         }
     }
@@ -264,7 +255,7 @@ public class OmniTool extends EnergyWeapon
 
     @Override
     protected int getBaseEnergyUse(ItemStack item) {
-        return ENERGY_PER_SHOT;
+        return ENERGY_PER_SHOT / getShootCooldown();
     }
 
     @Override
@@ -274,12 +265,12 @@ public class OmniTool extends EnergyWeapon
 
     @Override
     public float getWeaponBaseDamage(ItemStack weapon) {
-        return 2;
+        return 7;
     }
 
     @Override
     public boolean canFire(ItemStack itemStack, World world) {
-        return !isOverheated(itemStack) && DrainEnergy(itemStack,1,true);
+        return !isOverheated(itemStack) && DrainEnergy(itemStack,getShootCooldown(),true);
     }
 
     public boolean canDig(ItemStack itemStack,World world)
@@ -322,6 +313,16 @@ public class OmniTool extends EnergyWeapon
         return slot != Reference.MODULE_SIGHTS;
     }
 
+    @Override
+    public boolean supportsModule(ItemStack weapon, ItemStack module)
+    {
+        if (module != null)
+        {
+            return module.getItem() == MatterOverdriveItems.weapon_module_color || (module.getItem() == MatterOverdriveItems.weapon_module_barrel && module.getItemDamage() != WeaponModuleBarrel.EXPLOSION_BARREL_ID && module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID);
+        }
+        return false;
+    }
+
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_) {
         super.onUpdate(itemStack,world,entity,p_77663_4_,p_77663_5_);
 
@@ -354,7 +355,7 @@ public class OmniTool extends EnergyWeapon
 
     public WeaponShot createShot(ItemStack weapon,EntityPlayer entityPlayer,boolean zoomed)
     {
-        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,entityPlayer,zoomed),WeaponHelper.getColor(weapon).getColor());
+        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,entityPlayer,zoomed),WeaponHelper.getColor(weapon).getColor(),getRange(weapon));
     }
 
     @Override
@@ -385,13 +386,13 @@ public class OmniTool extends EnergyWeapon
 
     @Override
     public boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, WeaponShot shot, Vec3 position, Vec3 dir) {
-        DrainEnergy(weapon, 1, false);
+        DrainEnergy(weapon, getShootCooldown(), false);
         float newHeat =  (getHeat(weapon)+4) * 2.7f;
         setHeat(weapon, newHeat);
         manageOverheat(weapon, entityPlayer.worldObj, entityPlayer);
         PlasmaBolt fire = spawnProjectile(weapon,entityPlayer,position,dir,shot);
         weapon.getTagCompound().setLong("LastShot", entityPlayer.worldObj.getTotalWorldTime());
-        entityPlayer.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+        //entityPlayer.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
         return true;
     }
 

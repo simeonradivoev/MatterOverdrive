@@ -18,7 +18,6 @@
 
 package matteroverdrive.items.weapon;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
@@ -27,13 +26,13 @@ import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.client.render.item.ItemRendererPhaserRifle;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
-import matteroverdrive.fx.PhaserBoltRecoil;
+import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.network.packet.server.PacketFirePlasmaShot;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.particle.EntityExplodeFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -59,7 +58,7 @@ public class PhaserRifle extends EnergyWeapon
     private static final int MAX_HEAT = 80;
     private static final int MAX_USE_TIME = 512;
     private static final int ENERGY_PER_SHOT = 1024;
-    public static final int RANGE = 24;
+    public static final int RANGE = 32;
 
     public PhaserRifle(String name) {
         super(name,32000,128,128,RANGE);
@@ -119,6 +118,16 @@ public class PhaserRifle extends EnergyWeapon
     {
         return true;
 
+    }
+
+    @Override
+    public boolean supportsModule(ItemStack weapon, ItemStack module)
+    {
+        if (module != null)
+        {
+            return module.getItem() == MatterOverdriveItems.weapon_module_color || (module.getItem() == MatterOverdriveItems.weapon_module_barrel && module.getItemDamage() != WeaponModuleBarrel.EXPLOSION_BARREL_ID && module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID);
+        }
+        return false;
     }
 
     @Override
@@ -226,7 +235,7 @@ public class PhaserRifle extends EnergyWeapon
     @Override
     public boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, WeaponShot shot,Vec3 position,Vec3 dir)
     {
-        DrainEnergy(weapon, 1, false);
+        DrainEnergy(weapon, getShootCooldown(), false);
         float newHeat =  (getHeat(weapon)+4) * 2f;
         setHeat(weapon, newHeat);
         manageOverheat(weapon, entityPlayer.worldObj, entityPlayer);
@@ -248,24 +257,13 @@ public class PhaserRifle extends EnergyWeapon
     @SideOnly(Side.CLIENT)
     public void onProjectileHit(MovingObjectPosition hit, ItemStack weapon, World world,float amount)
     {
-        if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            Minecraft.getMinecraft().effectRenderer.addEffect(new EntityExplodeFX(world, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0));
-            if (itemRand.nextFloat() < 0.8f) {
-                for (int i = 0; i < 5; i++) {
-                    Minecraft.getMinecraft().effectRenderer.addEffect(new PhaserBoltRecoil(world, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, new GuiColor(255, 255, 255)));
-                }
-                world.playSound(hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, Reference.MOD_ID + ":" + "sizzle", itemRand.nextFloat() * 0.2f + 0.4f, itemRand.nextFloat() * 0.6f + 0.7f, false);
-            }
-            if (itemRand.nextFloat() < 0.5f) {
-                world.playSound(hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, Reference.MOD_ID + ":" + "bolt_hit_0", itemRand.nextFloat() * 0.1f + 0.2f, itemRand.nextFloat() * 0.4f + 0.8f, false);
-            }
-        }
+
     }
 
     public PlasmaBolt spawnProjectile(ItemStack weapon,EntityPlayer entityPlayer,Vec3 position,Vec3 dir,WeaponShot shot)
     {
         //PlasmaBolt fire = new PlasmaBolt(entityPlayer.worldObj, entityPlayer,position,dir, getWeaponScaledDamage(weapon), 2, getAccuracy(weapon, zoomed), getRange(weapon), WeaponHelper.getColor(weapon).getColor(), zoomed,seed);
-        PlasmaBolt fire = new PlasmaBolt(entityPlayer.worldObj, entityPlayer,position,dir, shot,2);
+        PlasmaBolt fire = new PlasmaBolt(entityPlayer.worldObj, entityPlayer,position,dir, shot,4);
         fire.setWeapon(weapon);
         if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon)) {
             fire.setFireDamageMultiply((float) WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE, weapon));
@@ -276,7 +274,7 @@ public class PhaserRifle extends EnergyWeapon
 
     public WeaponShot createShot(ItemStack weapon,EntityPlayer entityPlayer,boolean zoomed)
     {
-        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,entityPlayer,zoomed),WeaponHelper.getColor(weapon).getColor());
+        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,entityPlayer,zoomed),WeaponHelper.getColor(weapon).getColor(),getRange(weapon));
     }
 
     @Override
@@ -294,7 +292,7 @@ public class PhaserRifle extends EnergyWeapon
     @Override
     public int getBaseEnergyUse(ItemStack item)
     {
-        return ENERGY_PER_SHOT;
+        return ENERGY_PER_SHOT / getShootCooldown();
     }
 
     @Override
@@ -305,13 +303,13 @@ public class PhaserRifle extends EnergyWeapon
 
     @Override
     public float getWeaponBaseDamage(ItemStack weapon) {
-        return 3;
+        return 8;
     }
 
     @Override
     public boolean canFire(ItemStack weapon,World world)
     {
-        return DrainEnergy(weapon, 1, true) && !weapon.getTagCompound().getBoolean("Overheated");
+        return DrainEnergy(weapon, getShootCooldown(), true) && !weapon.getTagCompound().getBoolean("Overheated");
     }
 
     @Override

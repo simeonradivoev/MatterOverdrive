@@ -29,9 +29,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.client.model.obj.WavefrontObject;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -39,25 +38,23 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by Simeon on 3/11/2015.
  */
-public class ItemRendererPhaser implements IItemRenderer
+public class ItemRendererPhaser extends WeaponItemRenderer
 {
     public static final String TEXTURE = Reference.PATH_ITEM + "phaser2.png";
     private static final String TEXTURE_COLOR_MASK = Reference.PATH_ITEM + "phaser_color_mask.png";
     public static final String MODEL = Reference.PATH_MODEL + "item/phaser2.obj";
+    public static final String MODEL_3DS = Reference.PATH_MODEL + "item/phaser2.3ds";
     public static final float SCALE = 6.0f;
     public static final float THIRD_PERSON_SCALE = 3f;
     public static final float ITEM_SCALE = 3;
     public static final float SCALE_DROP = 2.5f;
 
-    public static IModelCustom phaserModel;
-    public static ResourceLocation phaserTexture;
     public static ResourceLocation phaserTextureColorMask;
 
     public ItemRendererPhaser()
     {
-    	phaserTexture = new ResourceLocation(TEXTURE);
+        super((WavefrontObject)AdvancedModelLoader.loadModel(new ResourceLocation(MODEL)),new ResourceLocation(TEXTURE));
         phaserTextureColorMask = new ResourceLocation(TEXTURE_COLOR_MASK);
-        phaserModel = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL));
     }
 
     @Override
@@ -182,8 +179,10 @@ public class ItemRendererPhaser implements IItemRenderer
 
     void renderGun(ItemRenderType renderType, ItemStack item)
     {
-        Minecraft.getMinecraft().renderEngine.bindTexture(phaserTexture);
-        phaserModel.renderOnly("grip", "Tip");
+        bindTexture(weaponTexture);
+        weaponModel.renderOnly("grip");
+
+        renderBarrel(item);
 
         GuiColor color = WeaponModuleColor.defaultColor;
         ItemStack color_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_COLOR, item);
@@ -198,7 +197,7 @@ public class ItemRendererPhaser implements IItemRenderer
         }
 
         RenderUtils.applyColor(color);
-    	phaserModel.renderOnly("Base","display");
+        weaponModel.renderOnly("Base","display");
         glColor3f(1,1,1);
 
         glDisable(GL_LIGHTING);
@@ -215,13 +214,13 @@ public class ItemRendererPhaser implements IItemRenderer
         glDisable(GL_LIGHTING);
         glDisable(GL_BLEND);
         glColor4f(0, 0, 0, 1);
-        phaserModel.renderPart("level_bg");
+        weaponModel.renderPart("level_bg");
         setIndicatorColor(item);
         glPushMatrix();
         double power = ((double)item.getTagCompound().getByte("power") + 1) / (double) Phaser.MAX_LEVEL;
-        glTranslated(0.035, 0, 0);
+        glTranslated(0.042, 0, 0);
         glScaled(power, 1, 1);
-        phaserModel.renderPart("level_slider");
+        weaponModel.renderPart("level_slider");
         glPopMatrix();
         glEnable(GL_LIGHTING);
         glEnable(GL_TEXTURE_2D);

@@ -18,18 +18,23 @@
 
 package matteroverdrive.entity.weapon;
 
+import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.Reference;
 import matteroverdrive.api.events.weapon.MOEventPlasmaBlotHit;
 import matteroverdrive.api.gravity.IGravitationalAnomaly;
 import matteroverdrive.api.gravity.IGravityEntity;
 import matteroverdrive.api.weapon.WeaponShot;
+import matteroverdrive.fx.PhaserBoltRecoil;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityExplodeFX;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -44,6 +49,7 @@ import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
@@ -55,7 +61,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
     private int blockX = -1;
     private int blockY = -1;
     private int blockZ = -1;
-    private int ticksInAir;
+    private int distanceTraveled;
     private float damage;
     public Entity shootingEntity;
     private Block block;
@@ -71,12 +77,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         this.setSize(0.5F, 0.5F);
     }
 
-    public PlasmaBolt(World world, EntityLivingBase entityLivingBase, Vec3 position, Vec3 dir, WeaponShot shot,float speed)
-    {
-        this(world, entityLivingBase,position,dir,shot,speed,60);
-    }
-
-    public PlasmaBolt(World world, EntityLivingBase entityLivingBase, Vec3 position, Vec3 dir, WeaponShot shot,float speed,int life) {
+    public PlasmaBolt(World world, EntityLivingBase entityLivingBase, Vec3 position, Vec3 dir, WeaponShot shot,float speed) {
         super(world);
         rand.setSeed(shot.getSeed());
         this.setEntityId(rand.nextInt(Integer.MAX_VALUE));
@@ -88,7 +89,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         this.motionY = dir.yCoord;
         this.motionZ = dir.zCoord;
         this.yOffset = 0.0F;
-        this.life = life;
+        this.life = shot.getRange();
         this.damage = shot.getDamage();
         this.color = shot.getColor();
         this.setThrowableHeading(this.motionX, this.motionY, this.motionZ,speed * 1.5F, shot.getAccuracy());
@@ -140,13 +141,13 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
             }
         }
 
-        if (this.ticksInAir > this.life)
+        if (this.distanceTraveled > this.life)
         {
             setDead();
             return;
         }
 
-        ++this.ticksInAir;
+        distanceTraveled+=Vec3.createVectorHelper(motionX,motionX,motionZ).lengthVector();
         Vec3 vec31 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
         Vec3 vec3 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
         MovingObjectPosition movingobjectposition = this.worldObj.func_147447_a(vec31, vec3, false, true, false);
@@ -167,7 +168,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         for (i = 0; i < list.size(); ++i) {
             Entity entity1 = (Entity) list.get(i);
 
-            if (entity1.canBeCollidedWith() && entity1 != this.shootingEntity && !entity1.isDead) {
+            if (entity1.canBeCollidedWith() && entity1 != this.shootingEntity && !entity1.isDead && entity1 != this.shootingEntity.ridingEntity) {
                 f1 = 0.3F;
                 AxisAlignedBB axisalignedbb1 = entity1.boundingBox.expand((double) f1, (double) f1, (double) f1);
                 MovingObjectPosition movingobjectposition1 = axisalignedbb1.calculateIntercept(vec31, vec3);
@@ -201,14 +202,8 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
             }
         }
 
-        float f2;
-        float f4;
-
         if (movingobjectposition != null) {
             if (movingobjectposition.entityHit != null) {
-                f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-                int k = MathHelper.ceiling_double_int((double) f2 * this.damage);
-
                 DamageSource damagesource = null;
 
                 if (this.shootingEntity == null) {
@@ -217,7 +212,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
                     damagesource = DamageSource.causeThrownDamage(this, this.shootingEntity);
                 }
 
-                if (movingobjectposition.entityHit.attackEntityFrom(damagesource, (float) k))
+                if (movingobjectposition.entityHit.attackEntityFrom(damagesource, (float) this.damage))
                 {
                     if (movingobjectposition.entityHit instanceof EntityLivingBase) {
                         EntityLivingBase entitylivingbase = (EntityLivingBase) movingobjectposition.entityHit;
@@ -247,17 +242,16 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
                     if (movingobjectposition.entityHit instanceof EntityLivingBase)
                     {
                         //client hit
-                        for (int s = 0; s < 10; s++) {
-                            worldObj.spawnParticle("reddust", movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord, 0, 0, 0);
-                        }
                         this.setDead();
                     }
                 }
 
                 if (weapon != null && weapon.getItem() instanceof EnergyWeapon)
                 {
-                    if (worldObj.isRemote)
-                        ((EnergyWeapon) weapon.getItem()).onProjectileHit(movingobjectposition, weapon, worldObj,5);
+                    if (worldObj.isRemote) {
+                        ((EnergyWeapon) weapon.getItem()).onProjectileHit(movingobjectposition, weapon, worldObj, 5);
+                        onHit(movingobjectposition);
+                    }
 
                     MinecraftForge.EVENT_BUS.post(new MOEventPlasmaBlotHit(weapon,movingobjectposition,this,worldObj.isRemote ? Side.CLIENT : Side.SERVER));
                 }
@@ -279,8 +273,10 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
                 }
                 if (weapon != null && weapon.getItem() instanceof EnergyWeapon)
                 {
-                    if (worldObj.isRemote)
-                        ((EnergyWeapon) weapon.getItem()).onProjectileHit(movingobjectposition, weapon, worldObj,5);
+                    if (worldObj.isRemote) {
+                        ((EnergyWeapon) weapon.getItem()).onProjectileHit(movingobjectposition, weapon, worldObj, 5);
+                        onHit(movingobjectposition);
+                    }
 
                     MinecraftForge.EVENT_BUS.post(new MOEventPlasmaBlotHit(weapon,movingobjectposition,this,worldObj.isRemote ? Side.CLIENT : Side.SERVER));
                 }
@@ -295,6 +291,37 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         this.func_145775_I();
     }
 
+    @SideOnly(Side.CLIENT)
+    protected void onHit(MovingObjectPosition hit) {
+        Vec3 sideHit;
+        if (hit.typeOfHit.equals(MovingObjectPosition.MovingObjectType.BLOCK)) {
+            sideHit = Vec3.createVectorHelper(ForgeDirection.getOrientation(hit.sideHit).offsetX, ForgeDirection.getOrientation(hit.sideHit).offsetY, ForgeDirection.getOrientation(hit.sideHit).offsetZ);
+        } else {
+            sideHit = Vec3.createVectorHelper(-motionX, -motionY, -motionZ);
+        }
+        Minecraft.getMinecraft().effectRenderer.addEffect(new EntityExplodeFX(worldObj, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0));
+        if (rand.nextFloat() < 0.8f) {
+            int hitPraticles = Math.max(0, 30 - (15 * Minecraft.getMinecraft().gameSettings.particleSetting));
+            for (int i = 0; i < hitPraticles; i++) {
+                Minecraft.getMinecraft().effectRenderer.addEffect(new PhaserBoltRecoil(worldObj, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, new GuiColor(255, 255, 255), sideHit.xCoord * 30, sideHit.yCoord * 30, sideHit.zCoord * 30));
+            }
+            worldObj.playSound(hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, Reference.MOD_ID + ":" + "sizzle", rand.nextFloat() * 0.2f + 0.4f, rand.nextFloat() * 0.6f + 0.7f, false);
+            if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                worldObj.playSound(hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, Reference.MOD_ID + ":" + "laser_ricochet_" + rand.nextInt(2), rand.nextFloat() * 0.2f + 0.6f, rand.nextFloat() * 0.2f + 1f, false);
+            }
+        }
+
+        if (hit.typeOfHit.equals(MovingObjectPosition.MovingObjectType.ENTITY))
+        {
+            if (hit.entityHit instanceof EntityLivingBase)
+            {
+                for (int s = 0; s < Math.max(0,10 - (5 * Minecraft.getMinecraft().gameSettings.particleSetting)); s++) {
+                    worldObj.spawnParticle("reddust", hit.hitVec.xCoord+rand.nextDouble()*0.4-0.2, hit.hitVec.yCoord+rand.nextDouble()*0.4-0.2, hit.hitVec.zCoord+rand.nextDouble()*0.4-0.2, 0,0,0);
+                }
+            }
+        }
+    }
+
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
      */
@@ -305,7 +332,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         tagCompound.setShort("yTile", (short) this.blockY);
         tagCompound.setShort("zTile", (short) this.blockZ);
         tagCompound.setFloat("damage", this.damage);
-        tagCompound.setInteger("ticksInAir", this.ticksInAir);
+        tagCompound.setInteger("distanceTraveled", this.distanceTraveled);
         tagCompound.setInteger("life", this.life);
         tagCompound.setInteger("color", this.color);
     }
@@ -326,7 +353,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         }
         if (tagCompound.hasKey("ticksInAir", 99))
         {
-            this.ticksInAir = tagCompound.getInteger("ticksInAir");
+            this.distanceTraveled = tagCompound.getInteger("distanceTraveled");
         }
         if (tagCompound.hasKey("life", 99))
         {
@@ -425,5 +452,10 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         color = additionalData.readInt();
         fireDamageMultiply = additionalData.readFloat();
         life = additionalData.readInt();
+    }
+
+    public float getLife()
+    {
+        return 1f-((float)distanceTraveled/(float)life);
     }
 }

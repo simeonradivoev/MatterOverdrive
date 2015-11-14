@@ -73,6 +73,14 @@ public interface IWeapon
     boolean supportsModule(int slot, ItemStack weapon);
 
     /**
+     * Checks if weapon supports a specific module.
+     * @param weapon the weapon stack.
+     * @param module the module stack.
+     * @return is the module stack supported by the weapon.
+     */
+    boolean supportsModule(ItemStack weapon,ItemStack module);
+
+    /**
      * Called when the player clicks the left mouse button while holding the weapon.
      * If the methods returns true, then all other action made by left clicking will be canceled.
      * This method is only called on the client.
