@@ -18,15 +18,12 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -48,16 +45,6 @@ public class IsolinearCircuit extends MOBaseItem
         super(name);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
-    }
-
-    @Override
-    public void register(String name)
-    {
-        super.register(name);
-        GameRegistry.addRecipe(new ItemStack(this, 1, 0), new Object[]{"I ", "R ", "G ", 'G', Item.getItemFromBlock(Blocks.glass), 'R', Items.redstone, 'I', Items.iron_ingot});
-        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 1), new Object[]{new ItemStack(this, 1, 0), Items.gold_ingot});
-        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 2), new Object[]{new ItemStack(this, 1, 1), Items.diamond});
-        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 3), new Object[]{new ItemStack(this, 1, 2), Items.emerald});
     }
 
     @SideOnly(Side.CLIENT)

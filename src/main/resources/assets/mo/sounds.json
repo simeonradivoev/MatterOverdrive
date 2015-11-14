@@ -1,5 +1,4 @@
 {
-    
     "phaser_beam_0": {"category": "player","sounds": [{"name": "phaser/phaser_beam_0", "stream": false}]},
     "phaser_beam_1": {"category": "player","sounds": [{"name": "phaser/phaser_beam_1", "stream": false}]},
     "phaser_switch_mode": {"category": "player","sounds": [{"name": "phaser/phaser_switch_mode", "stream": false}]},
@@ -57,5 +56,10 @@
     "power_down": {"category": "player","sounds": [{"name": "power_down", "stream": false}]},
     "bolt_hit_0": {"category": "player","sounds": [{"name": "weapon/bolt_hit_0", "stream": false}]},
     "sizzle": {"category": "player","sounds": [{"name": "weapon/sizzle", "stream": false}]},
-    "omni_tool_hum": {"category": "player","sounds": [{"name": "weapon/omni_tool_hum", "stream": false}]}
+    "omni_tool_hum": {"category": "player","sounds": [{"name": "weapon/omni_tool_hum", "stream": false}]},
+    "crate_open": {"category": "block","sounds": [{"name": "blocks/crate_open", "stream": false}]},
+    "crate_close": {"category": "block","sounds": [{"name": "blocks/crate_close", "stream": false}]},
+    "laser_ricochet_0": {"category": "player","sounds": [{"name": "weapon/laser_ricochet_0", "stream": false}]},
+    "laser_ricochet_1": {"category": "player","sounds": [{"name": "weapon/laser_ricochet_1", "stream": false}]},
+    "laser_fire_0": {"category": "player","sounds": [{"name": "weapon/laser_fire_0", "stream": false}]}
 }

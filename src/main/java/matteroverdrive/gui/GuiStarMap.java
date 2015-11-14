@@ -25,7 +25,7 @@ import matteroverdrive.container.ContainerStarMap;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.element.ElementBaseGroup;
-import matteroverdrive.gui.pages.*;
+import matteroverdrive.gui.pages.starmap.*;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Planet;
@@ -158,6 +158,9 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
     @Override
     public void initGui()
     {
+        this.xSize = width;
+        this.ySize = height;
+
         super.initGui();
         indicator.setVisible(false);
 

@@ -136,6 +136,8 @@ public class Reference
 	public static final String MODEL_CHARGING_STATION = Reference.PATH_MODEL_BLOCKS + "charging_station.obj";
 	public static final String MODEL_PATTERN_STORAGE = Reference.PATH_MODEL_BLOCKS + "pattern_storage.obj";
 	public static final String MODEL_REPLICATOR = Reference.PATH_MODEL_BLOCKS + "replicator.obj";
+	public static final String MODEL_TRITANIUM_CRATE = Reference.PATH_MODEL_BLOCKS + "tritanium_crate.obj";
+	public static final String MODEL_INSCRIBER = Reference.PATH_MODEL_BLOCKS + "inscriber.obj";
 	//endregion
 
 	//region config keys

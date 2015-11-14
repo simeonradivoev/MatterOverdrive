@@ -20,9 +20,13 @@ package matteroverdrive.init;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import matteroverdrive.items.weapon.EnergyPackRecipe;
+import matteroverdrive.blocks.BlockTritaniumCrate;
+import matteroverdrive.data.recipes.EnergyPackRecipe;
+import matteroverdrive.data.recipes.InscriberRecipe;
+import matteroverdrive.handler.recipes.InscriberRecipes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -65,6 +69,8 @@ public class MatterOverdriveRecipes
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.heavy_matter_pipe, 8), "RMR", "TMT", "RMR", 'M', MatterOverdriveItems.s_magnet, 'G', Blocks.glass, 'T', MatterOverdriveItems.tritanium_plate, 'R', Items.redstone);
         addRecipe(new ShapedOreRecipe(new ItemStack(MatterOverdriveBlocks.holoSign), "GGG", "g0g", " T ", 'G', "glass", 'g', Items.glowstone_dust, '0', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'T', MatterOverdriveItems.tritanium_plate));
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.forceGlass, 4), " G ", "GTG", " G ", 'G', Blocks.glass, 'T', MatterOverdriveItems.tritanium_plate);
+        BlockTritaniumCrate.registerRecipes(MatterOverdriveBlocks.tritaniumCrate);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.inscriber),"IDI","TPT","RMR",'M',MatterOverdriveItems.machine_casing,'D',MatterOverdriveItems.dilithium_ctystal,'T',MatterOverdriveItems.tritanium_plate,'P',Blocks.piston,'R',Items.redstone,'I',Items.iron_ingot);
     }
 
     public static void registerItemRecipes(FMLInitializationEvent event)
@@ -77,7 +83,7 @@ public class MatterOverdriveRecipes
         addShapedRecipe(new ItemStack(MatterOverdriveItems.machine_casing), " T ", "I I", "GRG", 'G', Items.gold_ingot, 'T', MatterOverdriveItems.tritanium_plate, 'I', MatterOverdriveItems.tritanium_ingot, 'R', Items.redstone);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.s_magnet,4), "RRR", "TET", "RRR", 'E', Items.ender_pearl, 'T', MatterOverdriveItems.tritanium_ingot, 'R', Items.redstone);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.me_conversion_matrix), "EIE", "CDC", "EIE", 'E', Items.ender_pearl, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'I', Items.iron_ingot, 'D', MatterOverdriveItems.dilithium_ctystal);
-        addShapedRecipe(new ItemStack(MatterOverdriveItems.tritanium_plate), "TTT", 'T', new ItemStack(MatterOverdriveItems.tritanium_ingot));
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.tritanium_plate), "TT", 'T', new ItemStack(MatterOverdriveItems.tritanium_ingot));
         addShapedRecipe(new ItemStack(MatterOverdriveItems.phaser), "IGI", "IDI", "WCW", 'I', Items.iron_ingot, 'G', Blocks.glass, 'D', MatterOverdriveItems.dilithium_ctystal, 'W', Blocks.wool, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2));
         addShapedRecipe(new ItemStack(MatterOverdriveItems.pattern_drive), " E ", "RMR", " C ", 'M', MatterOverdriveItems.machine_casing, 'E', Items.ender_pearl, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'R', Items.redstone);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.security_protocol), "PP", "CP", 'P', Items.paper, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0));
@@ -102,6 +108,14 @@ public class MatterOverdriveRecipes
         addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumChestplate),"X X","XXX","XXX",'X',MatterOverdriveItems.tritanium_ingot);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumLeggings),"XXX","X X","X X",'X',MatterOverdriveItems.tritanium_ingot);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumBoots),"   ","X X","X X",'X',MatterOverdriveItems.tritanium_ingot);
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.isolinear_circuit),"I", "R", "G", 'G', Item.getItemFromBlock(Blocks.glass), 'R', Items.redstone, 'I', Items.iron_ingot);
+    }
+
+    public static void registerInscriberRecipes(FMLInitializationEvent event)
+    {
+        InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdriveItems.isolinear_circuit),new ItemStack(Items.gold_ingot),new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),64000,300));
+        InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),new ItemStack(Items.diamond),new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),88000,600));
+        InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),new ItemStack(Items.emerald),new ItemStack(MatterOverdriveItems.isolinear_circuit,1,3),11400,1200));
     }
 
     public static void addShapedRecipe(ItemStack output,Object... params)

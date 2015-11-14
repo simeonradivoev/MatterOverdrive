@@ -50,6 +50,9 @@ public class MatterOverdriveIcons
     public static IIcon packet_queue_active;
     public static IIcon molten_tritanium_still;
     public static IIcon molten_tritanium_flowing;
+    public static IIcon tritanium_crate_base;
+    public static IIcon tritanium_crate_overlay;
+    public static IIcon inscriber;
 
     public static IIcon particle_steam;
 
@@ -88,6 +91,9 @@ public class MatterOverdriveIcons
         packet_queue_active = register(r,"packet_queue_active");
         molten_tritanium_still = register(r,"molten_tritanium_still");
         molten_tritanium_flowing = register(r,"molten_tritanium_flowing");
+        tritanium_crate_base = register(r,"tritanium_crate_base");
+        tritanium_crate_overlay = register(r,"tritanium_crate_overlay");
+        inscriber = register(r,"inscriber");
     }
 
     private void initParticleIcons(IIconRegister r)

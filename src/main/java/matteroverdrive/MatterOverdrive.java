@@ -134,6 +134,7 @@ public class MatterOverdrive
 
 		MatterOverdriveRecipes.registerBlockRecipes(event);
 		MatterOverdriveRecipes.registerItemRecipes(event);
+		MatterOverdriveRecipes.registerInscriberRecipes(event);
 
 		AndroidPlayer.loadConfigs(configHandler);
 	}

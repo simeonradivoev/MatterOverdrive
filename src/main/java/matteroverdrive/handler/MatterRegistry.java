@@ -27,8 +27,10 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.events.MOEventRegisterMatterEntry;
 import matteroverdrive.api.matter.IMatterRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -205,7 +207,7 @@ public class MatterRegistry implements IMatterRegistry
         try {
             if (itemStack.getHasSubtypes())
             {
-                if (itemStack.getItemDamage() > 0)
+                if (itemStack.getItemDamage() > 0 && itemStack.getItemDamage() < Short.MAX_VALUE)
                 {
                     return GameData.getItemRegistry().getNameForObject(itemStack.getItem()) + itemStack.getItemDamage();
                 }
@@ -380,6 +382,10 @@ public class MatterRegistry implements IMatterRegistry
             if (recipeOutput != null && recipeOutput.isItemEqual(item)) {
                 int m = 0;
 
+                if (recipeOutput.getItem() instanceof ItemBlock && ((ItemBlock) recipeOutput.getItem()).field_150939_a == Blocks.quartz_stairs)
+                {
+                    MatterOverdrive.log.info("Bed");
+                }
                 if (recipe instanceof ShapedRecipes) {
                     m = getMatterFromList(recipeOutput, ((ShapedRecipes) recipe).recipeItems, recursive, ++depth, calculated);
                 } else if (recipe instanceof ShapelessRecipes) {
@@ -545,10 +551,12 @@ public class MatterRegistry implements IMatterRegistry
                             {
                                 //if the item has matter, has lower matter than the previous
                                 //if the item was first there is no previous so store that amount
-                                if ( tempEntry.getMatter() > 0 && (tempEntry.getMatter() < tempMatter || first))
+                                if ( tempEntry.getMatter() > 0)
                                 {
-                                    tempMatter = tempEntry.getMatter();
-                                    first = false;
+                                    if ((tempEntry.getMatter() < tempMatter || first)) {
+                                        tempMatter = tempEntry.getMatter();
+                                        first = false;
+                                    }
                                 }else
                                 {
                                     debug("entry for %s, found in recipe for: %s was blacklisted or costs lower then previous", stack, item);

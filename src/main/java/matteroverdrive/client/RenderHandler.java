@@ -94,6 +94,8 @@ public class RenderHandler
     private RendererBlockChargingStation rendererBlockChargingStation;
     private RendererBlockPatternStorage rendererBlockPatternStorage;
     private RendererBlockReplicator rendererBlockReplicator;
+    private RendererBlockTritaniumCrate rendererBlockTritaniumCrate;
+    private RendererBlockInscriber rendererBlockInscriber;
     //endregion
     //region Biostat Renderers
     private BioticStatRendererTeleporter rendererTeleporter;
@@ -136,6 +138,7 @@ public class RenderHandler
     private TileEntityRendererChargingStation tileEntityRendererChargingStation;
     private TileEntityRendererHoloSign tileEntityRendererHoloSign;
     private TileEntityRendererPacketQueue tileEntityRendererPacketQueue;
+    private TileEntityRendererInscriber tileEntityRendererInscriber;
     //endregion
 
     public RenderHandler(World world, TextureManager textureManager)
@@ -200,6 +203,7 @@ public class RenderHandler
         tileEntityRendererChargingStation = new TileEntityRendererChargingStation();
         tileEntityRendererHoloSign = new TileEntityRendererHoloSign();
         tileEntityRendererPacketQueue = new TileEntityRendererPacketQueue();
+        tileEntityRendererInscriber = new TileEntityRendererInscriber();
 
         configHandler.subscribe(tileEntityRendererAndroidStation);
         configHandler.subscribe(tileEntityRendererWeaponStation);
@@ -243,6 +247,8 @@ public class RenderHandler
         rendererBlockChargingStation = new RendererBlockChargingStation();
         rendererBlockPatternStorage = new RendererBlockPatternStorage();
         rendererBlockReplicator = new RendererBlockReplicator();
+        rendererBlockTritaniumCrate = new RendererBlockTritaniumCrate();
+        rendererBlockInscriber = new RendererBlockInscriber();
     }
 
     public void registerBlockRenderers()
@@ -253,6 +259,8 @@ public class RenderHandler
         RenderingRegistry.registerBlockHandler(rendererBlockChargingStation);
         RenderingRegistry.registerBlockHandler(rendererBlockPatternStorage);
         RenderingRegistry.registerBlockHandler(rendererBlockReplicator);
+        RenderingRegistry.registerBlockHandler(rendererBlockTritaniumCrate);
+        RenderingRegistry.registerBlockHandler(rendererBlockInscriber);
     }
 
     public void registerTileEntitySpecialRenderers()
@@ -269,6 +277,7 @@ public class RenderHandler
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineChargingStation.class, tileEntityRendererChargingStation);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHoloSign.class, tileEntityRendererHoloSign);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePacketQueue.class, tileEntityRendererPacketQueue);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInscriber.class,tileEntityRendererInscriber);
     }
 
     public void createItemRenderers()
@@ -362,6 +371,8 @@ public class RenderHandler
     {
         return starmapRenderRegistry;
     }
+
+    public ItemRendererOmniTool getRendererOmniTool(){return rendererOmniTool;}
 
     public AndroidBionicPartRenderRegistry getBionicPartRenderRegistry()
     {

@@ -47,12 +47,18 @@ public class UpgradeSlot extends Slot
         if (item.getItem() instanceof IUpgrade)
         {
             IUpgrade upgrade = (IUpgrade)item.getItem();
-            Map<UpgradeTypes, Double> upgradeMap = upgrade.getUpgrades(item);
-            for (final Map.Entry<UpgradeTypes, Double> entry : upgradeMap.entrySet())
+            UpgradeTypes mainUpgradeType = upgrade.getMainUpgrade(item);
+            if (mainUpgradeType != null)
             {
-                if (upgradeable.isAffectedByUpgrade(entry.getKey()))
-                {
-                    return true;
+                return upgradeable.isAffectedByUpgrade(mainUpgradeType);
+            }
+            else
+            {
+                Map<UpgradeTypes, Double> upgradeMap = upgrade.getUpgrades(item);
+                for (final Map.Entry<UpgradeTypes, Double> entry : upgradeMap.entrySet()) {
+                    if (upgradeable.isAffectedByUpgrade(entry.getKey())) {
+                        return true;
+                    }
                 }
             }
         }

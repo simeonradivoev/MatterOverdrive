@@ -56,13 +56,15 @@ public class MatterOverdriveMatter
 
     public static void registerBasicBlocks(ConfigurationHandler c)
     {
-        reg(c,"dirt", 1,3);
-        reg(c,"blockWool", 2,16);
+        reg(c,Blocks.dirt, 1,3);
+        reg(c,Blocks.grass,1,3);
+        reg(c,"blockWool", 2);
+        reg(c,"blockCloth", 2);
         reg(c,"blockGlass", 5);
         reg(c,"cobblestone", 1);
         reg(c,"logWood", 16);
         reg(c,"sand", 2);
-        reg(c,"gravel", 2);
+        reg(c,Blocks.gravel, 2);
         reg(c,"sandstone",4);
         reg(c,Blocks.clay,4);
         reg(c,Blocks.cactus,4);
@@ -72,13 +74,12 @@ public class MatterOverdriveMatter
         reg(c,Blocks.soul_sand,4);
         reg(c,Blocks.snow,2);
         reg(c,Blocks.pumpkin,2);
-        reg(c,"blockObsidian",16);
+        reg(c,Blocks.obsidian,16);
         reg(c,"treeLeaves",1);
         reg(c,Blocks.mycelium,5);
         reg(c,Blocks.ice,3);
         reg(c,Blocks.packed_ice,4);
         reg(c,"blockGlass",3);
-        reg(c,"glass",3);
         reg(c,"paneGlass",1);
         reg(c,Blocks.bedrock,1024);
         reg(c,Blocks.sponge,8);
@@ -86,11 +87,12 @@ public class MatterOverdriveMatter
         reg(c,Blocks.tallgrass,1);
         reg(c,Blocks.mossy_cobblestone,2);
         reg(c,Blocks.netherrack,1);
-        reg(c,"blockStainedHardenedClay",3,16);
+        reg(c,Blocks.clay,3,16);
         reg(c, Blocks.hardened_clay, 3);
         reg(c,Blocks.stonebrick,2,4);
         reg(c,Blocks.skull,8,5);
         reg(c,Blocks.cobblestone_wall,1);
+        reg(c,Blocks.web,1);
 
         //region flowers
         reg(c,Blocks.red_flower,1,9);
@@ -101,7 +103,7 @@ public class MatterOverdriveMatter
         reg(c,Blocks.red_mushroom_block,1);
         reg(c,Blocks.deadbush,1);
         reg(c,Blocks.waterlily,1);
-        reg(c,"treeSapling",2,6);
+        reg(c,"treeSapling",2);
         reg(c,Blocks.double_plant,1,6);
         //endregion
     }
@@ -119,15 +121,14 @@ public class MatterOverdriveMatter
         reg(c, Items.clay_ball, 1);
         reg(c, Items.coal, 8);
         reg(c,new ItemStack(Items.coal,1,1),5);
-        reg(c, Items.cooked_beef, 3);
         reg(c, Items.egg, 1);
-        reg(c, "dye", 1);
+        reg(c, new ItemStack(Items.dye,1,3), 1);
+        reg(c,new ItemStack(Items.dye,1,0),1);
         reg(c, Items.ender_pearl, 8);
         reg(c, Items.feather, 1);
         reg(c, Items.fermented_spider_eye, 1);
         reg(c, Items.flint, 1);
         reg(c, Items.fish, 1,4);
-        reg(c, Items.cooked_fished, 1);
         reg(c, Items.ghast_tear, 8);
         reg(c, "nuggetGold", 4);
         reg(c, Items.gunpowder, 2);

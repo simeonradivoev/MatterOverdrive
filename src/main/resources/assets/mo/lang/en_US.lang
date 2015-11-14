@@ -70,7 +70,7 @@ item.transport_flash_drive.details=Used to mark locations for quick use with Tel
 item.matter_container.name=Empty Matter Container
 item.matter_container_full.name=Full Matter Container
 item.tritanium_nugget.name=Tritanium Nugget
-item.tritanium_spine.name=Tritanium Spine
+item.tritainum_spine.name=Tritanium Spine
 item.data_pad.name=Data Pad
 item.data_pad.details=Holds information on all of Matter Overdrive
 item.omni_tool.name=Omni Tool
@@ -195,6 +195,24 @@ container.replicator.name=Replicator
 machine.tooltip.matter=Matter
 machine.tooltip.energy=Charged
 
+//////////// Tritanium Crate ////////////
+tile.tritanium_crate.black.name=Black Tritanium Crate
+tile.tritanium_crate.red.name=Red Tritanium Crate
+tile.tritanium_crate.green.name=Green Tritanium Crate
+tile.tritanium_crate.brown.name=Brown Tritanium Crate
+tile.tritanium_crate.blue.name=Blue Tritanium Crate
+tile.tritanium_crate.purple.name=Purple Tritanium Crate
+tile.tritanium_crate.cyan.name=Cyan Tritanium Crate
+tile.tritanium_crate.silver.name=Light Gray Tritanium Crate
+tile.tritanium_crate.gray.name=Gray Tritanium Crate
+tile.tritanium_crate.pink.name=Pink Tritanium Crate
+tile.tritanium_crate.lime.name=Lime Tritanium Crate
+tile.tritanium_crate.yellow=Yellow Tritanium Crate
+tile.tritanium_crate.lightBlue=Light Blue Tritanium Crate
+tile.tritanium_crate.magenta.name=Magenta Tritanium Crate
+tile.tritanium_crate.orange=Orange Tritanium Crate
+tile.tritanium_crate.white.name=White Tritanium Crate
+
 entity.rogue_android.name=Rogue Android
 entity.failed_pig.name=Failed Pig
 entity.failed_chicken.name=Failed Chicken
@@ -284,6 +302,8 @@ gui.pattern_monitor.name=Network Pattern Monitor
 gui.network_switch.name=Network Switch
 gui.recycler.name=Matter Recycler
 gui.fusion_reactor.name=Fusion Reactor
+gui.charging_station.name=Charging Station
+gui.weapon_station.name=Weapon Station
 gui.android_hud.transforming.line.0=Booting up System
 gui.android_hud.transforming.line.1=Constructing Neural Pathways
 gui.android_hud.transforming.line.2=Neural Configurations in Progress
@@ -527,3 +547,4 @@ modifier.bionic.glitch_time=Glitch Time
 ###############################################################################################################
 # others
 material.tritanium=Tritanium
+container.tritanium_crate=Tritanium Crate

@@ -29,6 +29,7 @@ import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionR
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import matteroverdrive.tile.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ContainerChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -39,7 +40,7 @@ import java.util.Map;
 
 public class GuiHandler implements IGuiHandler
 {
-    public static final int GIALOG_ID = 1;
+    public static final int TRITANIUM_CRATE = 1;
     private Map<Class<? extends MOTileEntity>,Class<? extends MOGuiBase>> tileEntityGuiList;
     private Map<Class<? extends MOTileEntity>,Class<? extends MOBaseContainer>> tileEntityContainerList;
 
@@ -59,6 +60,7 @@ public class GuiHandler implements IGuiHandler
             registerContainer(TileEntityMachineFusionReactorController.class,ContainerFusionReactor.class);
             registerContainer(TileEntityAndroidStation.class,ContainerAndroidStation.class);
             registerContainer(TileEntityMachineStarMap.class,ContainerStarMap.class);
+            registerContainer(TileEntityInscriber.class,ContainerInscriber.class);
         }
         else
         {
@@ -78,6 +80,8 @@ public class GuiHandler implements IGuiHandler
             registerGuiAndContainer(TileEntityAndroidStation.class,GuiAndroidStation.class,ContainerAndroidStation.class);
             registerGuiAndContainer(TileEntityMachineStarMap.class,GuiStarMap.class,ContainerStarMap.class);
             registerGui(TileEntityHoloSign.class,GuiHoloSign.class);
+            registerGui(TileEntityMachineChargingStation.class,GuiChargingStation.class);
+            registerGuiAndContainer(TileEntityInscriber.class,GuiInscriber.class,ContainerInscriber.class);
         }
     }
 
@@ -101,11 +105,18 @@ public class GuiHandler implements IGuiHandler
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
 
+        TileEntity entity = world.getTileEntity(x, y, z);
+
         switch (ID)
         {
-            default:
-                TileEntity entity = world.getTileEntity(x, y, z);
+            case TRITANIUM_CRATE:
+                if (entity instanceof TileEntityTritaniumCrate)
+                {
+                    return new ContainerChest(((TileEntityTritaniumCrate) entity).getInventory(),player.inventory);
+                }
 
+                break;
+            default:
                 if (entity != null && tileEntityContainerList.containsKey(entity.getClass()))
                 {
                     try
@@ -150,9 +161,16 @@ public class GuiHandler implements IGuiHandler
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
+
+        TileEntity entity = world.getTileEntity(x, y, z);
+
         switch (ID) {
+            case TRITANIUM_CRATE:
+                if (entity instanceof TileEntityTritaniumCrate)
+                    return new GuiTritaniumCrate(((TileEntityTritaniumCrate) entity).getInventory(),player.inventory);
+                break;
             default:
-                TileEntity entity = world.getTileEntity(x, y, z);
+
 
                 if (tileEntityGuiList.containsKey(entity.getClass())) {
                     try {
@@ -175,6 +193,9 @@ public class GuiHandler implements IGuiHandler
                     } catch (IllegalAccessException e) {
                         MatterOverdrive.log.warn("Could not access TileEntity constructor in client GUI handler");
                     }
+                }else if (entity instanceof MOTileEntityMachine)
+                {
+                    return new MOGuiMachine(ContainerFactory.createMachineContainer((MOTileEntityMachine)entity,player.inventory),(MOTileEntityMachine)entity);
                 }
         }
         return null;
