@@ -766,7 +766,10 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public void onEntityHurt(LivingHurtEvent event)
     {
-        if (isAndroid() && !event.isCanceled() && HURT_GLITCHING) {
+        if (isAndroid()
+                && !event.isCanceled()
+                && HURT_GLITCHING
+                && event.ammount > 0) {
             effects.setInteger("GlitchTime", modify(10, AndroidAttributes.attributeGlitchTime));
             sync(PacketSyncAndroid.SYNC_EFFECTS);
                 player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "gui.glitch_" + player.worldObj.rand.nextInt(11), 0.2f, 0.9f + player.worldObj.rand.nextFloat() * 0.2f);
