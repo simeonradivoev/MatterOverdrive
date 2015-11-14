@@ -36,6 +36,7 @@ import matteroverdrive.data.inventory.EnergySlot;
 import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
+import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.network.packet.client.PacketSendMinimapInfo;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketAndroidChangeAbility;
@@ -661,7 +662,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public void manageCharging()
     {
-        if (player.isSneaking() && player.getHeldItem() != null && player.getHeldItem().getItem() instanceof IEnergyContainerItem) {
+        if (player.isSneaking() && player.getHeldItem() != null && player.getHeldItem().getItem() == MatterOverdriveItems.battery || player.getHeldItem().getItem() == MatterOverdriveItems.hc_battery) {
             int freeEnergy = getMaxEnergyStored() - getEnergyStored();
             int receivedAmount = ((IEnergyContainerItem) player.getHeldItem().getItem()).extractEnergy(player.getHeldItem(), freeEnergy, false);
             receiveEnergy(receivedAmount, false);
