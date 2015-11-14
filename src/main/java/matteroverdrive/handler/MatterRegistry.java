@@ -27,10 +27,8 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.events.MOEventRegisterMatterEntry;
 import matteroverdrive.api.matter.IMatterRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -41,7 +39,6 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import org.apache.logging.log4j.Level;
 
 import java.io.*;
 import java.util.*;
@@ -315,7 +312,7 @@ public class MatterRegistry implements IMatterRegistry
             }
         }catch (Exception e)
         {
-			MatterOverdrive.log.log(Level.ERROR,e,String.format("There was a problem getting a Matter Entry."));
+            if (e == null) debug("There was a problem getting a Matter Entry for %s.", item);
             return null;
         }
     }
@@ -382,10 +379,6 @@ public class MatterRegistry implements IMatterRegistry
             if (recipeOutput != null && recipeOutput.isItemEqual(item)) {
                 int m = 0;
 
-                if (recipeOutput.getItem() instanceof ItemBlock && ((ItemBlock) recipeOutput.getItem()).field_150939_a == Blocks.quartz_stairs)
-                {
-                    MatterOverdrive.log.info("Bed");
-                }
                 if (recipe instanceof ShapedRecipes) {
                     m = getMatterFromList(recipeOutput, ((ShapedRecipes) recipe).recipeItems, recursive, ++depth, calculated);
                 } else if (recipe instanceof ShapelessRecipes) {
