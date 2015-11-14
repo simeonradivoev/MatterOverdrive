@@ -15,6 +15,7 @@
 * [Contacts](#contacts)
 * [Isues](#issues)
 * [Building](#building)
+* [IMC](#imc)
 * [Donations](#donations)
 
 ## About
@@ -55,6 +56,9 @@ If your crash or problem was fixed, but is not yet realised as a public download
 4. For core developer: Setup IDE
   - IntelliJ: Import into IDE and execute `gradlew genIntellijRuns` afterwards
   - Eclipse: execute `gradlew eclipse`
+  
+## IMC
+See the example on [IMC](https://github.com/simeonradivoev/MatterOverdrive/blob/master/src/main/java/matteroverdrive/api/IMC.java) or you can see the [IMC handler](https://github.com/simeonradivoev/MatterOverdrive/blob/master/src/main/java/matteroverdrive/imc/MOIMCHandler.java).
 
 ## Donations
 Donations will go a long way to helping me continue working on Matter Overdrive. Making exiting new features.
