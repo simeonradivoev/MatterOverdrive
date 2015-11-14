@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Level;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -140,9 +141,8 @@ public class RegisterItemsFromRecipes implements Runnable {
 
     private void registerFromFurnace()
     {
-        Map<ItemStack,ItemStack> smeltingMap = (Map<ItemStack,ItemStack>)FurnaceRecipes.smelting().getSmeltingList();
-        for (Map.Entry<ItemStack,ItemStack> entry : smeltingMap.entrySet())
-        {
+        Map<ItemStack,ItemStack> smeltingMap = new ConcurrentHashMap<>((Map<ItemStack,ItemStack>)FurnaceRecipes.smelting().getSmeltingList());
+        for (Map.Entry<ItemStack,ItemStack> entry : smeltingMap.entrySet()) {
             if (entry.getKey() != null && entry.getValue() != null) {
                 int keyMatter = (MatterHelper.getMatterAmountFromItem(entry.getKey()) * entry.getKey().stackSize) / entry.getValue().stackSize;
                 int valueMatter = MatterHelper.getMatterAmountFromItem(entry.getValue());
