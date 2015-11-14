@@ -194,7 +194,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
                 angle *= (Math.PI / 180);
                 int x = (int) (Math.cos(angle) * radius) - 10;
                 int y = (int) (Math.sin(angle) * radius) - 10;
-                RenderUtils.renderStack(x, y, planet.getBuildings().get(i));
+                RenderUtils.renderStack(x, y, planet.getBuildings().get(i),1);
                 GuiColor color = Reference.COLOR_HOLO_RED;
                 if (planet.getBuildings().get(i).getItem() instanceof IBuilding && !((IBuilding) planet.getBuildings().get(i).getItem()).isOwner(planet.getBuildings().get(i),Minecraft.getMinecraft().thePlayer))
                     color = Reference.COLOR_HOLO;

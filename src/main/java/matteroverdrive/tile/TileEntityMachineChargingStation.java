@@ -22,6 +22,7 @@ import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.api.machines.IUpgradeHandler;
 import matteroverdrive.entity.AndroidPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,15 +41,18 @@ import java.util.List;
 public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy implements IMultiBlockTileEntity {
 
     public static final int ENERGY_CAPACITY = 512000;
-    public static final int ENERGY_TRANSFER = 1024;
-    public static int RANGE = 16;
+    public static final int ENERGY_TRANSFER = 512;
+    public static int BASE_MAX_RANGE = 8;
+    private static UpgradeHandler upgradeHandler = new UpgradeHandler();
 
     public TileEntityMachineChargingStation()
     {
-        super(3);
+        super(2);
         energyStorage.setCapacity(ENERGY_CAPACITY);
         energyStorage.setMaxExtract(ENERGY_TRANSFER);
         energyStorage.setMaxReceive(ENERGY_TRANSFER);
+        playerSlotsHotbar = true;
+        playerSlotsMain = true;
     }
 
     @Override
@@ -61,12 +65,13 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     private void manageAndroidCharging()
     {
         if (!worldObj.isRemote && getEnergyStored(ForgeDirection.UNKNOWN) > 0) {
-            AxisAlignedBB radius = AxisAlignedBB.getBoundingBox(xCoord - RANGE, yCoord - RANGE, zCoord - RANGE, xCoord + RANGE, yCoord + RANGE, zCoord + RANGE);
+            int range = getRage();
+            AxisAlignedBB radius = AxisAlignedBB.getBoundingBox(xCoord - range, yCoord - range, zCoord - range, xCoord + range, yCoord + range, zCoord + range);
             List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, radius);
             for (EntityPlayer player : players) {
                 if (AndroidPlayer.get(player).isAndroid()) {
-					int required = getRequiredEnergy(player);
-					int max = Math.min(getEnergyStored(ForgeDirection.UNKNOWN), ENERGY_TRANSFER);
+					int required = getRequiredEnergy(player,range);
+					int max = Math.min(getEnergyStored(ForgeDirection.UNKNOWN),getMaxCharging());
 					int toExtract = Math.min(required, max);
 					extractEnergy(ForgeDirection.UNKNOWN, AndroidPlayer.get(player).receiveEnergy(toExtract, false), false);
                 }
@@ -74,9 +79,19 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
         }
     }
 
-    private int getRequiredEnergy(EntityPlayer player)
+    public int getRage()
     {
-        return (int)(ENERGY_TRANSFER * (1.0D - MathHelper.clamp_double((Vec3.createVectorHelper(player.posX,player.posY,player.posZ).subtract(Vec3.createVectorHelper(xCoord,yCoord,zCoord)).lengthVector() / (double)RANGE),0,1)));
+        return (int)(BASE_MAX_RANGE * getUpgradeMultiply(UpgradeTypes.Range));
+    }
+
+    public int getMaxCharging()
+    {
+        return (int)(ENERGY_TRANSFER / getUpgradeMultiply(UpgradeTypes.PowerUsage));
+    }
+
+    private int getRequiredEnergy(EntityPlayer player,int maxRange)
+    {
+        return (int)(ENERGY_TRANSFER * (1.0D - MathHelper.clamp_double((Vec3.createVectorHelper(player.posX,player.posY,player.posZ).subtract(Vec3.createVectorHelper(xCoord,yCoord,zCoord)).lengthVector() / (double)maxRange),0,1)));
     }
 
     @Override
@@ -120,8 +135,9 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     }
 
     @Override
-    public boolean isAffectedByUpgrade(UpgradeTypes type) {
-        return false;
+    public boolean isAffectedByUpgrade(UpgradeTypes type)
+    {
+        return type.equals(UpgradeTypes.Range) || type.equals(UpgradeTypes.PowerStorage) || type.equals(UpgradeTypes.PowerUsage);
     }
 
     @Override
@@ -144,4 +160,20 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
 
 		return coords;
 	}
+
+    public IUpgradeHandler getUpgradeHandler(){return upgradeHandler;}
+
+    public static class UpgradeHandler implements IUpgradeHandler
+    {
+
+        @Override
+        public double affectUpgrade(UpgradeTypes type, double multiply)
+        {
+            if (type.equals(UpgradeTypes.Range))
+            {
+                return Math.min(8,multiply);
+            }
+            return multiply;
+        }
+    }
 }

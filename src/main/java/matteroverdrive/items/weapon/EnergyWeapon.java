@@ -94,7 +94,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public void addDetails(ItemStack weapon, EntityPlayer player, List infos)
     {
         super.addDetails(weapon, player, infos);
-        String energyInfo = EnumChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(getEnergyUse(weapon));
+        String energyInfo = EnumChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(null,getEnergyUse(weapon) * 20) + "/s";
         float energyMultiply = (float)getEnergyUse(weapon) / (float)getBaseEnergyUse(weapon);
         if (energyMultiply != 1)
         {
@@ -105,9 +105,23 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         double damageModify = getWeaponScaledDamage(weapon) / getWeaponBaseDamage(weapon);
         if (damageModify != 1)
         {
-            damageInfo += " (" + DecimalFormat.getPercentInstance().format(damageModify) + ")";
+            damageInfo += String.format(" (%s)",DecimalFormat.getPercentInstance().format(damageModify));
         }
         infos.add(damageInfo);
+
+        String dpsInfo = EnumChatFormatting.DARK_GREEN + "DPS: " + damageFormater.format((getWeaponScaledDamage(weapon)/getShootCooldown()) * 20);
+        infos.add(dpsInfo);
+        String spsInfo = EnumChatFormatting.DARK_GREEN + "Speed: " + (int)(20d/getShootCooldown()*60) + " s/m";
+        infos.add(spsInfo);
+
+        String rangeInfo = EnumChatFormatting.DARK_GREEN + "Range: " + getRange(weapon) + " b";
+        double rangeMultiply = getRangeMultiply(weapon);
+        if (rangeMultiply != 1)
+        {
+            rangeInfo += String.format(" (%s)",DecimalFormat.getPercentInstance().format(rangeMultiply));
+        }
+        infos.add(rangeInfo);
+
         infos.add(EnumChatFormatting.DARK_RED + "Heat: " + DecimalFormat.getPercentInstance().format(getHeat(weapon) / getMaxHeat(weapon)));
         addCustomDetails(weapon,player,infos);
         AddModuleDetails(weapon, infos);
@@ -476,7 +490,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     public boolean needsRecharge(ItemStack weapon)
     {
-        return !DrainEnergy(weapon,1,true);
+        return !DrainEnergy(weapon,getShootCooldown(),true);
     }
 
     @Override

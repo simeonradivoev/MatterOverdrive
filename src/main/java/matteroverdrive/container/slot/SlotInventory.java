@@ -38,6 +38,7 @@ public class SlotInventory extends MOSlot {
         this.slot = slot;
     }
 
+    @Override
     public boolean isItemValid(ItemStack itemStack)
     {
         return slot.isValidForSlot(itemStack);

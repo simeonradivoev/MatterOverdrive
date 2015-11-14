@@ -1,4 +1,22 @@
-package matteroverdrive.gui.pages;
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
+package matteroverdrive.gui.pages.starmap;
 
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.client.render.tileentity.starmap.StarMapRendererStars;
@@ -24,7 +42,7 @@ public class PageQuadrant extends ElementBaseGroup implements IListHandler {
 
     public PageQuadrant(GuiStarMap gui, int posX, int posY, int width, int height,TileEntityMachineStarMap starMap) {
         super(gui, posX, posY, width, height);
-        starList = new ElementGroupList(gui,this,0,16,width,228);
+        starList = new ElementGroupList(gui,this,16,16,width,height-160);
         starList.setName("Stars");
         starList.setScroll(scroll);
         this.starMap = starMap;

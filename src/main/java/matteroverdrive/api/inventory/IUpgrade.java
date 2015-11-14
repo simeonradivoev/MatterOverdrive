@@ -34,4 +34,12 @@ public interface IUpgrade
      * @return A map fo Upgrade Types.
      */
     Map<UpgradeTypes, Double> getUpgrades(ItemStack itemStack);
+
+    /**
+     * Return the main Upgrade type for the given Upgrade.
+     * This is to check if an upgrade can even go in the upgrade slot.
+     * @param itemStack the upgrade stack.
+     * @return the main upgrade type
+     */
+    UpgradeTypes getMainUpgrade(ItemStack itemStack);
 }

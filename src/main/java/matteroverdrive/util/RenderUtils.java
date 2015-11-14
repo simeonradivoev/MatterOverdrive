@@ -59,17 +59,17 @@ public class RenderUtils
 
 	public static void renderStack(int x, int y, ItemStack stack)
 	{
-		renderStack(x,y,stack,false);
+		renderStack(x,y,32,stack,false);
 	}
 
-	public static void renderStack(int x, int y, ItemStack stack,boolean renderOverlay) {
+	public static void renderStack(int x, int y,int z, ItemStack stack,boolean renderOverlay) {
 		if (stack != null && stack.getItem() != null) {
 			glPushMatrix();
 			glColor3f(1,1,1);
 			RenderHelper.enableGUIStandardItemLighting();
 			glEnable(GL_LIGHTING);
 			glEnable(GL_DEPTH_TEST);
-			GL11.glTranslatef(0.0F, 0.0F, 32.0F);
+			GL11.glTranslatef(0.0F, 0.0F, z);
 			//this.zLevel = 200.0F;
 			renderItem.zLevel = 200.0F;
 			FontRenderer font = null;
@@ -324,10 +324,10 @@ public class RenderUtils
 						colorMul = 0.7f + 0.3f * Vector3f.dot(new Vector3f(face.faceNormal.x,face.faceNormal.y,face.faceNormal.z),new Vector3f(-0.3f,1,0));
 					}
 					if (color != null) {
-						Tessellator.instance.setColorRGBA_F(color.getFloatR() + colorMul, color.getFloatG() + colorMul, color.getFloatB() + colorMul, color.getFloatA());
+						Tessellator.instance.setColorOpaque_F(color.getFloatR() * colorMul, color.getFloatG() * colorMul, color.getFloatB() * colorMul);
 					}else
 					{
-						Tessellator.instance.setColorRGBA_F(colorMul, colorMul, colorMul, 1);
+						Tessellator.instance.setColorOpaque_F(colorMul, colorMul, colorMul);
 					}
 					if (brightness >= 0) {
 						Tessellator.instance.setBrightness(brightness);
@@ -369,6 +369,10 @@ public class RenderUtils
 
 	public static void applyColorWithMultipy(GuiColor color,float mul) {
 		glColor3f(color.getFloatR() * mul, color.getFloatG() * mul, color.getFloatB() * mul);
+	}
+
+	public static void applyColorWithMultipy(int color,float mul) {
+		glColor4f((float) ((color >> 16 & 255) / 255f) * mul, (float) ((color >> 8 & 255) / 255f) * mul, (float) ((color >> 0 & 255) / 256f) * mul, (float) (color >> 24 & 255) / 255f);
 	}
 
     public static void applyColorWithAdd(GuiColor color,float add)

@@ -22,6 +22,7 @@ import cofh.lib.util.helpers.EnergyHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
+import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
@@ -34,11 +35,13 @@ import net.minecraft.item.ItemStack;
 public class ModuleSlot extends Slot
 {
     int type;
+    WeaponSlot weaponSlot;
 
-    public ModuleSlot(boolean isMainSlot, int type)
+    public ModuleSlot(boolean isMainSlot, int type,WeaponSlot weaponSlot)
     {
         super(isMainSlot);
         this.type = type;
+        this.weaponSlot = weaponSlot;
     }
 
     @Override
@@ -53,6 +56,10 @@ public class ModuleSlot extends Slot
                 {
                     if (((IWeaponModule)item.getItem()).getSlot(item) == type)
                     {
+                        if (weaponSlot.getItem() != null && weaponSlot.getItem().getItem() instanceof IWeapon)
+                        {
+                            return ((IWeapon) weaponSlot.getItem().getItem()).supportsModule(weaponSlot.getItem(),item);
+                        }
                         return true;
                     }
                 }

@@ -19,7 +19,7 @@
 package matteroverdrive.container;
 
 import matteroverdrive.container.slot.MOSlot;
-import matteroverdrive.container.slot.SlotWeaponModule;
+import matteroverdrive.container.slot.SlotInventory;
 import matteroverdrive.tile.TileEntityWeaponStation;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -41,7 +41,7 @@ public class ContainerWeaponStation extends ContainerMachine<TileEntityWeaponSta
         addSlotToContainer(new MOSlot(machine, machine.INPUT_SLOT, 8, 55));
         for (int i = 0;i < 5;i++)
         {
-            addSlotToContainer(new SlotWeaponModule(machine, i, 0, 0, i));
+            addSlotToContainer(new SlotInventory(machine, machine.getInventoryContainer().getSlot(i),0,0));
         }
 
         addUpgradeSlots(machine.getInventoryContainer());

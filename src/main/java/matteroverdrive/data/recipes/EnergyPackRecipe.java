@@ -16,7 +16,7 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.items.weapon;
+package matteroverdrive.data.recipes;
 
 import cofh.api.energy.IEnergyContainerItem;
 import matteroverdrive.init.MatterOverdriveItems;

@@ -138,7 +138,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             return;
         }
 
-        if ((android.isAndroid() && (event.type == RenderGameOverlayEvent.ElementType.FOOD || event.type == RenderGameOverlayEvent.ElementType.AIR || event.type == RenderGameOverlayEvent.ElementType.HEALTH)))
+        if ((android.isAndroid() && (event.type == RenderGameOverlayEvent.ElementType.FOOD || event.type == RenderGameOverlayEvent.ElementType.AIR || event.type == RenderGameOverlayEvent.ElementType.HEALTH) && event.isCancelable()))
         {
             event.setCanceled(true);
             return;
@@ -155,28 +155,25 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
             mc.getTextureManager().bindTexture(Gui.icons);
         }
-
-        if (event.isCancelable() || event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE)
+        else if (android.isAndroid() && event.type == RenderGameOverlayEvent.ElementType.ALL)
         {
-            return;
-        }
+            renderHud(event);
 
-        renderHud(event);
+            //System.out.println(showRadial);
+            if (android.isAndroid())
+            {
+                if (showRadial)
+                {
+                    GuiAndroidHud.radialAnimationTime = Math.min(1,GuiAndroidHud.radialAnimationTime+event.partialTicks*0.2);
+                }else
+                {
+                    GuiAndroidHud.radialAnimationTime = Math.max(0,GuiAndroidHud.radialAnimationTime-event.partialTicks*0.2);
+                }
 
-        //System.out.println(showRadial);
-        if (android.isAndroid())
-        {
-            if (showRadial)
-            {
-                GuiAndroidHud.radialAnimationTime = Math.min(1,GuiAndroidHud.radialAnimationTime+event.partialTicks*0.2);
-            }else
-            {
-                GuiAndroidHud.radialAnimationTime = Math.max(0,GuiAndroidHud.radialAnimationTime-event.partialTicks*0.2);
-            }
-
-            if (GuiAndroidHud.radialAnimationTime > 0)
-            {
-                renderRadialMenu(event);
+                if (GuiAndroidHud.radialAnimationTime > 0)
+                {
+                    renderRadialMenu(event);
+                }
             }
         }
     }
@@ -195,15 +192,18 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         glPushMatrix();
         ClientProxy.holoIcons.bindSheet();
         glRotated(90, 0, 0, 1);
-        RenderHelper.renderIcon(-1.5,-scale,0,crosshairIcon,3,3);
+        RenderHelper.renderIcon(-1,-scale,0,crosshairIcon,3,3);
         glRotated(90, 0, 0, 1);
-        RenderHelper.renderIcon(-1.5,-scale,0,crosshairIcon,3,3);
+        RenderHelper.renderIcon(-2,-scale,0,crosshairIcon,3,3);
         glRotated(90,0,0,1);
-        RenderHelper.renderIcon(-1.5,-scale,0,crosshairIcon,3,3);
+        RenderHelper.renderIcon(-1.8,-scale+1,0,crosshairIcon,3,3);
         glRotated(90,0,0,1);
-        RenderHelper.renderIcon(-1.5,-scale,0,crosshairIcon,3,3);
+        RenderHelper.renderIcon(-1.0,-scale+1,0,crosshairIcon,3,3);
         glPopMatrix();
         glPopMatrix();
+
+        glDisable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_DST_ALPHA);
     }
 
     public void renderRadialMenu(RenderGameOverlayEvent event)
@@ -372,8 +372,9 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                     renderWeaponHud(event,(IWeapon)android.getPlayer().getHeldItem().getItem(),android.getPlayer().getHeldItem(),baseGuiColor);
                 }
 
-                glAlphaFunc(GL_GREATER, 0.5f);
+                //glAlphaFunc(GL_GREATER, 0.5f);
                 glEnable(GL_ALPHA_TEST);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 glDisable(GL_BLEND);
                 glPopMatrix();
 

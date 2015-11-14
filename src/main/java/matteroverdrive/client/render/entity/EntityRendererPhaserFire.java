@@ -21,6 +21,7 @@ package matteroverdrive.client.render.entity;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.util.RenderUtils;
+import matteroverdrive.util.animation.MOEasing;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
@@ -46,7 +47,7 @@ public class EntityRendererPhaserFire extends Render
         this.bindEntityTexture(plasmaBolt);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
-        RenderUtils.applyColor(plasmaBolt.getColor());
+        RenderUtils.applyColorWithMultipy(plasmaBolt.getColor(), MOEasing.Quad.easeOut(plasmaBolt.getLife(),0,1,1));
         GL11.glDisable(GL11.GL_LIGHTING);
         RenderUtils.disableLightmap();
         GL11.glPushMatrix();

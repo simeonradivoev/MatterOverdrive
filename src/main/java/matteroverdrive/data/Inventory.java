@@ -228,6 +228,16 @@ public class Inventory implements IInventory
     {
         if (slot >= 0 && slot < getSizeInventory() && slots.get(slot) != null)
         {
+            if (slots.get(slot).getItem() != null)
+            {
+                if (slots.get(slot).getItem().stackSize < slots.get(slot).getMaxStackSize())
+                {
+                    return slots.get(slot).isValidForSlot(item);
+                }else
+                {
+                    return false;
+                }
+            }
             return slots.get(slot).isValidForSlot(item);
         }
         return true;

@@ -25,7 +25,6 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.BionicSlot;
 import matteroverdrive.data.inventory.EnergySlot;
-import matteroverdrive.data.inventory.ModuleSlot;
 import matteroverdrive.entity.AndroidPlayer;
 import matteroverdrive.machines.MOTileEntityMachine;
 import net.minecraft.entity.EntityLivingBase;
@@ -62,9 +61,9 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     {
         HEAD_SLOT = inventory.AddSlot(new BionicSlot(false, Reference.BIONIC_HEAD));
         ARMS_SLOT = inventory.AddSlot(new BionicSlot(false,Reference.BIONIC_ARMS));
-        LEGS_SLOT = inventory.AddSlot(new ModuleSlot(false,Reference.BIONIC_LEGS));
-        CHEST_SLOT = inventory.AddSlot(new ModuleSlot(false,Reference.BIONIC_CHEST));
-        OTHER_SLOT = inventory.AddSlot(new ModuleSlot(false,Reference.BIONIC_OTHER));
+        LEGS_SLOT = inventory.AddSlot(new BionicSlot(false,Reference.BIONIC_LEGS));
+        CHEST_SLOT = inventory.AddSlot(new BionicSlot(false,Reference.BIONIC_CHEST));
+        OTHER_SLOT = inventory.AddSlot(new BionicSlot(false,Reference.BIONIC_OTHER));
         BATTERY_SLOT = inventory.AddSlot(new EnergySlot(false));
         super.RegisterSlots(inventory);
     }

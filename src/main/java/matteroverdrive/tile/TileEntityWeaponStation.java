@@ -67,12 +67,13 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
     @Override
     protected void RegisterSlots(Inventory inventory)
     {
-        BATTERY_MODULE = inventory.AddSlot(new ModuleSlot(false, Reference.MODULE_BATTERY));
-        COLOR_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_COLOR));
-        BARREL_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_BARREL));
-        SIGHTS_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_SIGHTS));
-        OTHER_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_OTHER));
-        INPUT_SLOT = inventory.AddSlot(new WeaponSlot(true));
+        WeaponSlot weaponSlot = new WeaponSlot(true);
+        BATTERY_MODULE = inventory.AddSlot(new ModuleSlot(false, Reference.MODULE_BATTERY,weaponSlot));
+        COLOR_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_COLOR,weaponSlot));
+        BARREL_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_BARREL,weaponSlot));
+        SIGHTS_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_SIGHTS,weaponSlot));
+        OTHER_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_OTHER,weaponSlot));
+        INPUT_SLOT = inventory.AddSlot(weaponSlot);
         super.RegisterSlots(inventory);
     }
 

@@ -53,6 +53,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         super(new ContainerWeaponStation(inventoryPlayer, machine), machine,255,237);
         texW = 255;
         texH = 237;
+        name = "weapon_station";
 
         background = BG;
         weaponPreview = new ElementModelPreview(this,130,90,xSize,ySize);

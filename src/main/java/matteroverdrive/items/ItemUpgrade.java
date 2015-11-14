@@ -92,7 +92,7 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
         //range
         GameRegistry.addRecipe(new ItemStack(this, 1, 4), " E ", "RUR", " G ", 'U', this, 'E', Items.ender_pearl, 'R', Items.redstone, 'G', Items.gold_ingot);
         //power storage
-        GameRegistry.addRecipe(new ItemStack(this, 1, 5), " B ", "RUR", " B ", 'U', this, 'B', MatterOverdriveItems.hc_battery, 'R', Items.redstone, 'G', Items.gold_ingot);
+        GameRegistry.addRecipe(new ItemStack(this, 1, 5), "   ", "RUR", " B ", 'U', this, 'B', MatterOverdriveItems.hc_battery, 'R', Items.redstone, 'G', Items.gold_ingot);
         //hyper speed
         GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 6), MatterOverdriveItems.dilithium_ctystal,Items.nether_star,new ItemStack(this,1,1));
         //matter storage
@@ -181,5 +181,33 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
                 upgrades.put(UpgradeTypes.MatterStorage,2d);
         }
         return upgrades;
+    }
+
+    @Override
+    public UpgradeTypes getMainUpgrade(ItemStack itemStack) {
+        int damage = itemStack.getItemDamage();
+        switch (damage)
+        {
+            case 1:
+                //the speed upgrade
+                return UpgradeTypes.Speed;
+            case 2:
+                //less power upgrade
+                return UpgradeTypes.PowerUsage;
+            case 3:
+                //less chance to fail upgrade
+                return UpgradeTypes.Fail;
+            case 4:
+                //range upgrade
+                return UpgradeTypes.Range;
+            case 5:
+                return UpgradeTypes.PowerStorage;
+            //hyper speed
+            case 6:
+                return UpgradeTypes.Speed;
+            case 7:
+                return UpgradeTypes.MatterStorage;
+        }
+        return null;
     }
 }

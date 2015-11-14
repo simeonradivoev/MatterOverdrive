@@ -138,6 +138,7 @@ public class AndroidHudMinimap extends AndroidHudElement
     private void endMask()
     {
         glDepthFunc(GL_LEQUAL);
+        glDepthMask(true);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
     }
 
