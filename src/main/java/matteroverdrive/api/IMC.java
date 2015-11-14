@@ -29,10 +29,11 @@ public interface IMC {
 	/**
 	 * Adds the specified ItemStack to the Matter Registry blacklist
 	 */
-	public static final String MATTER_REGISTRY_BLACKLIST = "registry:blacklist:add";
+	String MATTER_REGISTRY_BLACKLIST = "registry:blacklist:add";
 
-	public static final String MATTER_REGISTRY_BLACKLIST_MOD = "registry:blacklist:mod:add";
+	String MATTER_REGISTRY_BLACKLIST_MOD = "registry:blacklist:mod:add";
 
-	public static final String MATTER_REGISTRY_REGISTER = "registry:register";
+	String MATTER_REGISTER = "registry:matter:add";
 
+	String INSCRIBER_RECIPE = "registry:inscriber:recipe:add";
 }
