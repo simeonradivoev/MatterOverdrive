@@ -21,7 +21,7 @@ package matteroverdrive.api;
 /**
  * IMC message names for Matter Overdrive.
  * <b>Any changes other than additions are strictly forbidden.</b>
- * @<code>NBTTagCompound data = new NBTTagCompound();
+ * <pre><code><br>NBTTagCompound data = new NBTTagCompound();
 NBTTagCompound itemNBT = new NBTTagCompound();
 data.setTag("Main",new ItemStack(Items.carrot).writeToNBT(itemNBT));
 itemNBT = new NBTTagCompound();
@@ -40,7 +40,7 @@ FMLInterModComms.sendMessage("mo",IMC.MATTER_REGISTER,data);
 
 FMLInterModComms.sendMessage("mo",IMC.MATTER_REGISTRY_BLACKLIST,new ItemStack(Items.carrot));
 
-FMLInterModComms.sendMessage("mo",IMC.MATTER_REGISTRY_BLACKLIST_MOD,"modeID");</code>
+FMLInterModComms.sendMessage("mo",IMC.MATTER_REGISTRY_BLACKLIST_MOD,"modeID");</code></pre>
  * @author shadowfacts
  */
 public interface IMC {
