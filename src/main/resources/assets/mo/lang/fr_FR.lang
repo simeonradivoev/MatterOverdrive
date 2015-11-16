@@ -71,7 +71,19 @@ item.matter_container.name=Conteneur de matière vide
 item.matter_container_full.name=Conteneur de matière plein
 item.tritanium_nugget.name=Pépite de tritanium
 item.tritanium_spine.name=Épine de tritanium
-item.data_pad.name=Atténuateur de données
+item.data_pad.name=Bloc de données
+item.data_pad.details=Contient les informations de tout Matter Overdrive
+item.omni_tool.name=Omni-outil
+item.android_pill_yellow.name=Pilulle jaune
+item.android_pill_yellow.details=Utilisé pour débloquer toutes les capacités d'androïde
+item.tritanium_helmet.name=Casque en tritanium 
+item.tritanium_chestplate.name=Plastron en tritanium 
+item.tritanium_leggings.name=jambières en tritanium 
+item.tritanium_boots.name=Bottes en tritanium 
+item.tritanium_hoe.name=Houe en tritanium 
+item.tritanium_sword.name=Épée en tritanium 
+item.tritanium_pickaxe.name=Pioche en tritanium 
+item.tritanium_axe.name=hache en tritanium 
 
 item.upgrade.speed.name=Amélioration de vitesse
 item.upgrade.power.name=Amélioration de puissance
@@ -86,6 +98,8 @@ item.weapon_module_barrel.damage.name=Matrice de concentration en dilithium
 item.weapon_module_barrel.fire.name=Filtre incendiaire
 item.weapon_module_barrel.explosion.name=Tambour inductif à explosion
 item.weapon_module_barrel.heal.name=Converteur de régénération
+
+item.info.configured=Configuré
 
 ##########################################################################################################
 # Tile Entities
@@ -153,6 +167,11 @@ tile.gravitational_stabilizer.details=Utilisé pour supprimer les effets des ano
 tile.matter_recycler.name=Recycleur de matière
 tile.matter_recycler.details=Utilisé pour recycler des éléments, préparer à la décomposition
 
+//////////// Fluids ////////////
+tile.matter_plasma.name=Plasma
+tile.molten_tritanium.name=Tritanium fondu
+
+
 //////////// Fusion Reactor ////////////
 tile.fusion_reactor_controller.name=Contrôleur de réacteur à fusion
 tile.fusion_reactor_controller.config.storage.energy=Stockage d'énergie
@@ -176,12 +195,49 @@ container.replicator.name=Réplicateur
 machine.tooltip.matter=Matière
 machine.tooltip.energy=Chargé
 
+//////////// Tritanium Crate ////////////
+tile.tritanium_crate.black.name=Caisse de tritanium noire
+tile.tritanium_crate.red.name=Caisse de tritanium rouge
+tile.tritanium_crate.green.name=Caisse de tritanium verte
+tile.tritanium_crate.brown.name=Caisse de tritanium marron
+tile.tritanium_crate.blue.name=Caisse de tritanium bleue
+tile.tritanium_crate.purple.name=Caisse de tritanium violette
+tile.tritanium_crate.cyan.name=Caisse de tritanium cyan 
+tile.tritanium_crate.silver.name=Caisse de tritanium grise claire
+tile.tritanium_crate.gray.name=Caisse de tritanium grise
+tile.tritanium_crate.pink.name=Caisse de tritanium rose
+tile.tritanium_crate.lime.name=Caisse de tritanium verte claire
+tile.tritanium_crate.yellow=Caisse de tritanium jaune
+tile.tritanium_crate.lightBlue=Caisse de tritanium bleue claire
+tile.tritanium_crate.magenta.name=Caisse de tritanium magenta 
+tile.tritanium_crate.orange=Caisse de tritanium orange 
+tile.tritanium_crate.white.name=Caisse de tritanium blanche
+
 entity.rogue_android.name=Androïde dévoyé
 entity.failed_pig.name=Cochon raté
 entity.failed_chicken.name=Poule ratée
 entity.failed_cow.name=Vache ratée
 entity.failed_sheep.name=Mouton raté
 entity.mad_scientist.name=Scientifique fou
+
+///////////// Decorative ////////////////////
+tile.decorative.stripes.name=Bandes jaunes
+tile.decorative.coils.name=Bobines
+tile.decorative.clean.name=plaque de tritanium lisse
+tile.decorative.vent.dark.name=Ventilateur sombre
+tile.decorative.vent.bright.name=Ventilateur
+tile.decorative.holo_matrix.name=Matrice holographique
+tile.decorative.tritanium_plate.name=Plaque de tritanium
+tile.decorative.carbon_fiber_plate.name=Plaque de fibre de carbone
+tile.decorative.matter_tube.name=Tube de matière
+tile.decorative.beams.name=Caisse de tritanium
+tile.decorative.floor_tiles.name=Dalles de sol
+tile.decorative.floor_tiles_green.name=Dalles de sol vertes
+tile.decorative.floor_noise.name=Sol en linoléum
+tile.decorative.tritanium_plate_stripe.name=Plaque de tritanium guidée
+tile.decorative.floor_tile_white.name=Dalles de sol blanches
+tile.decorative.white_plate.name=Plaques murales douces
+tile.decorative.separator.name=Rail en tritanium
 
 ##########################################################################################################
 # Dialogs
@@ -246,6 +302,8 @@ gui.pattern_monitor.name=Moniteur de modèle
 gui.network_switch.name=Concentrateur réseau
 gui.recycler.name=Recycleur de matière
 gui.fusion_reactor.name=Réacteur à fusion
+gui.charging_station.name=Station de recharge
+gui.weapon_station.name=Station d'armement
 gui.android_hud.transforming.line.0=Démarrage système
 gui.android_hud.transforming.line.1=Construction des chemins neurales
 gui.android_hud.transforming.line.2=Configurations neurales en cours
@@ -318,7 +376,7 @@ module.battery.name=Module de batterie
 module.color.name=Module de couleur
 module.color.red=Rouge
 module.color.green=Vert
-module.color.lime_green=Citron
+module.color.lime_green=Vert clair
 module.color.brown=Marron
 module.color.pink=Rose
 module.color.blue=Bleu
@@ -447,9 +505,14 @@ enchantment.matteroverdrive.weapon.damage=Surcadencement
 ###############################################################################################################
 # Fluids
 fluid.matter_plasma.name=Plasma
+fluid.molten_tritanium=Tritanium fondu
 
 ##########################################################################################################
 # Guides
+guide.category.general.name=Bases
+guide.category.weapons.name=Armement
+guide.category.android.name=Androïde
+
 guide.group.machines.name=Machines
 guide.group.ore.name=Minerai
 guide.group.matter.name=Matière
@@ -481,3 +544,7 @@ guide.entry.upgrades.name=Améliorations
 modifier.bionic.max_health=Santé maxi
 modifier.bionic.glitch_time=Temps du problème
 
+###############################################################################################################
+# others
+material.tritanium=Tritanium
+container.tritanium_crate=Caisse de tritanium
