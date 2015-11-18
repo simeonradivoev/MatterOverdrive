@@ -2,68 +2,68 @@
 # Items
 
 item.matter_scanner.name=Scanner de matière
-item.emergency_ration.name=Ration de Secours
+item.emergency_ration.name=Ration de secours
 item.phaser.name=Phaseur
 item.battery.name=Batterie
-item.creative_battery.name=Batterie Créative
-item.me_conversion_matrix.name=Matice de Conversion Matière-Énergie
-item.isolinear_circuit.mk1.name=Circuit Isoliéaire Mk1
-item.isolinear_circuit.mk2.name=Circuit Isoliéaire Mk2
-item.isolinear_circuit.mk3.name=Circuit Isoliéaire Mk3
-item.isolinear_circuit.mk4.name=Circuit Isoliéaire Mk4
-item.upgrade.base.name=Amélioration de Coquille
-item.h_compensator.name=Compensateur Heisenberg
-item.integration_matrix.name=Matrice d'Intégration
-item.s_magnet.name=Aimant Supraconducteur
-item.matter_dust_refined.name=Poudre de Matière Raffinée
-item.matter_dust.name=Poudre de Matière
+item.creative_battery.name=Batterie créative
+item.me_conversion_matrix.name=Matice de conversion matière-énergie
+item.isolinear_circuit.mk1.name=Circuit isoliéaire Mk1
+item.isolinear_circuit.mk2.name=Circuit isoliéaire Mk2
+item.isolinear_circuit.mk3.name=Circuit isoliéaire Mk3
+item.isolinear_circuit.mk4.name=Circuit isoliéaire Mk4
+item.upgrade.base.name=Amélioration de coquille
+item.h_compensator.name=Compensateur heisenberg
+item.integration_matrix.name=Matrice d'intégration
+item.s_magnet.name=Aimant supraconducteur
+item.matter_dust_refined.name=Poudre de matière raffinée
+item.matter_dust.name=Poudre de matière
 item.matter_dust.details=Placez dans un recycleur pour raffiner
-item.machine_casing.name=Boitier de Machine
-item.dilithium_crystal.name=Cristal de Dilithium
-item.tritanium_ingot.name=Lingot de Tritanium
-item.tritanium_plate.name=Plaque de Tritanium
-item.tritanium_dust.name=Poudre de Tritanium
-item.pattern_drive.name=Disque de Modèle
-item.pattern_drive.details=Contient 2 Modèles d'Objet
+item.machine_casing.name=Boitier de machine
+item.dilithium_crystal.name=Cristal de dilithium
+item.tritanium_ingot.name=Lingot de tritanium
+item.tritanium_plate.name=Plaque de tritanium
+item.tritanium_dust.name=Poudre de tritanium
+item.pattern_drive.name=Disque de modèle
+item.pattern_drive.details=Contient 2 modèles d'objet
 item.earl_gray_tea.name=Thé. Earl Grey. Chaud.
 item.romulan_ale.name=Bière Romulienne
 item.romulan_ale.details=Boisson alcoolique hautement toxique d'origine Romulienne
-item.security_protocol.empty.name=Protocole de Sécurité
-item.security_protocol.claim.name=Protocole de Sécurité [Revendiquer]
-item.security_protocol.claim.description=Réclamez les Machines
-item.security_protocol.access.name=Protocole de Sécurité [Accéder]
-item.security_protocol.access.description=Autorisez l'accès aux Machines revendiquées
+item.security_protocol.empty.name=Protocole de sécurité
+item.security_protocol.claim.name=Protocole de sécurité [Revendiquer]
+item.security_protocol.claim.description=Réclamez les machines
+item.security_protocol.access.name=Protocole de sécurité [Accéder]
+item.security_protocol.access.description=Autorisez l'accès aux machines revendiquées
 item.security_protocol.remove.name=Protocole de sécurité [Supprimer]
-item.security_protocol.remove.description=Supprimez la Revendication des Machines
+item.security_protocol.remove.description=Supprimez la revendication des machines
 item.security_protocol.invalid=Protocole de sécurité invalide
 item.tritanium_wrench.name=Clé en tritanium
 item.tritanium_wrench.details=Désassemblez en sécurité et tournez les machines
-item.spacetime_equalizer.name=Égaliseur Spatio-Temporel
+item.spacetime_equalizer.name=Égaliseur spatio-temporel
 item.spacetime_equalizer.details=Peut être conseillé sur le coffre pour nier les forces gravitationnelles
-item.rouge_android_part.head.name=Tête d'Androïde
-item.rouge_android_part.arms.name=Bras d'Androïde
-item.rouge_android_part.legs.name=Jambe d'Androïde
-item.rouge_android_part.chest.name=Torse d'Androïde
+item.rouge_android_part.head.name=Tête d'androïde
+item.rouge_android_part.arms.name=Bras d'androïde
+item.rouge_android_part.legs.name=Jambe d'androïde
+item.rouge_android_part.chest.name=Torse d'androïde
 item.forcefield_emitter.name=Émetteur de champ de force
 item.hc_battery.name=Batterie haute capacité
 item.ship_factory.name=Usine à vaisseau
 item.ship_factory.details=Permet la construction de vaisseaux
-item.scout_ship.name=Vaiseau éclaireur
-item.scout_ship.details=Vaisseau rapide, Utilisé pour la reconnaissance
+item.scout_ship.name=Vaisseau éclaireur
+item.scout_ship.details=Vaisseau rapide, utilisé pour la reconnaissance
 item.ship_colonizer.name=Vaiseau colonisateur
 item.ship_colonizer.details=Utilisé pour revendiquer les planètes par la construction d'une base à son arrivée
 item.building_base.name=Base
 item.building_base.details=Construction principale, nécessaire pout tout
 item.android_pill_red.name=Pilule rouge
-item.android_pill_red.details=Prenez la pilule rouge et perdez ce que vous transportez
+item.android_pill_red.details=Prenez la pilule rouge et perdez ce qui vous retiens
 item.android_pill_blue.name=Pilule bleue
-item.android_pill_blue.details=Prenez la pilule bleue et réveillerez vous dans votre lit rien de plus sage
+item.android_pill_blue.details=Prenez la pilule bleue et vous vous réveillerez dans votre lit rien de plus sage
 item.creative_pattern_drive.name=Plan d'entrainement créatif
-item.creative_pattern_drive.details=Contains most replicatable items\nRight Click while sneaking to reload
+item.creative_pattern_drive.details=Contiens la plupart des objets réplicables\nCliquez-droit en tenant la touche majuscule pour recharger
 item.network_flash_drive.name=Mémoire flash réseau
-item.network_flash_drive.details=utilisé comme filtre dans les dispositifs du réseau de matière
+item.network_flash_drive.details=Utilisé comme filtre dans les dispositifs du réseau de matière
 item.energy_pack.name=Paquet d'énergie
-item.energy_pack.details=Utilisable pour le chargement rapide\nPour 'recharger' les armes énergétiques
+item.energy_pack.details=Utilisé pour le chargement rapide\nPour recharger les armes énergétiques
 item.phaser_rifle.name=Fusil phaseur
 item.transport_flash_drive.name=Disque flash de transport
 item.transport_flash_drive.details=Utilisable pour marquer des emplacements pour une utilisation rapide avec le téléporteur
@@ -75,7 +75,7 @@ item.data_pad.name=Bloc de données
 item.data_pad.details=Contient les informations à propos de Matter Overdrive
 item.omni_tool.name=Omni-outil
 item.android_pill_yellow.name=Pilule jaune
-item.android_pill_yellow.details=Utilisé pour débloquer toutes les capacités d'Androïde
+item.android_pill_yellow.details=Utilisé pour débloquer toutes les capacités d'androïde
 item.tritanium_helmet.name=Casque en tritanium 
 item.tritanium_chestplate.name=Plastron en tritanium 
 item.tritanium_leggings.name=Jambières en tritanium 
@@ -89,7 +89,7 @@ item.upgrade.speed.name=Amélioration de vitesse
 item.upgrade.power.name=Amélioration de puissance
 item.upgrade.failsafe.name=Amélioration de survie
 item.upgrade.range.name=Amélioration de portée
-item.upgrade.power_storage.name=Amélioration de stockage d'énergie
+item.upgrade.power_storage.name=Amélioration du stockage d'énergie
 item.upgrade.hyper_speed.name=Amélioration d'hyper vitesse
 item.upgrade.matter_storage.name=Amélioration du stockage de matière
 
@@ -97,7 +97,7 @@ item.weapon_module_color.name=Module de couleur
 item.weapon_module_barrel.damage.name=Matrice de concentration en dilithium 
 item.weapon_module_barrel.fire.name=Filtre incendiaire
 item.weapon_module_barrel.explosion.name=Tambour inductif à explosion
-item.weapon_module_barrel.heal.name=Converteur de régénération
+item.weapon_module_barrel.heal.name=Convertisseur de régénération
 
 item.info.configured=Configuré
 
@@ -118,7 +118,7 @@ tile.replicator_active.name=Réplicateur de matière
 
 //////////// Decomposer ////////////
 tile.decomposer.name=Décomposeur de matière
-tile.decomposer.details=Décompose les éléments en  plasma de matière
+tile.decomposer.details=Décompose les éléments en plasma de matière
 tile.decomposer.config.storage.matter=Stockage de matière
 tile.decomposer.config.storage.energy=Stockage d'énergie
 tile.decomposer.config.speed.decompose=Vitesse de décomposition
@@ -127,16 +127,16 @@ tile.decomposer.config.cost.decompose=Coût de décomposition
 
 tile.matter_pipe.name=Tuyau de transport de matière
 tile.matter_pipe.details=Transporte le plasma de matière
-tile.network_pipe.name=Câble du réseau de matière
+tile.network_pipe.name=Câble de réseau de matière
 tile.network_pipe.details=Connecte les dispositifs au réseau de matière
-tile.network_router.name=Routeur réseau de matière
-tile.network_router.details=Utilisé pour router les machines ou les concentrateurs d'un sous-réseau local à un autre
-tile.network_switch.name=Concentrateur réseau de matière
+tile.network_router.name=Routeur de réseau de matière
+tile.network_router.details=Utilisé pour router les machines ou les commutateurs d'un sous-réseau local à un autre
+tile.network_switch.name=Communtateur réseau de matière
 tile.network_switch.details=Utilisé pour connecter les machines dans un même réseau local
 tile.transporter.name=Transporteur
 tile.transporter.name=Téléporte les entités
 tile.matter_analyzer.name=Analyseur de matière
-tile.matter_analyzer.details=Analyse les modèles d'éléments
+tile.matter_analyzer.details=Analyse les modèles d'objets
 tile.dilithium_ore.name=Minerai de dilithium
 tile.tritanium_ore.name=Minerai de tritanium
 tile.tritanium_block.name=Bloc de tritanium
@@ -155,7 +155,7 @@ tile.pattern_storage.config.transfer.energy=Vitesse de transfert d"énergie
 
 tile.machine_hull.name=Coque de machine
 tile.solar_panel.name=Panneau solaire
-tile.solar_panel.details=Produit des RF à partir du soleil
+tile.solar_panel.details=Produit des RF à l'aide de rayon de soleil
 tile.weapon_station.name=Armurerie
 tile.weapon_station.details=Utilisée pour améliorer et charger les armes
 tile.microwave.name=Micro-ondes
@@ -180,7 +180,7 @@ tile.fusion_reactor_controller.config.output.energy=Sortie d'énergie
 tile.fusion_reactor_controller.config.drain.matter=Évacuation de matière
 tile.fusion_reactor_controller.config.distance.anomaly=Distance maxi de l'anomalie
 tile.fusion_reactor_controller.config.check.delay=Délai de vérification de la structure
-tile.fusion_reactor_controller.details=Contrôleur principal du réacteur à fusion
+tile.fusion_reactor_controller.details=Contrôleur principal de réacteur à fusion
 tile.fusion_reactor_coil.name=Bobine de réacteur à fusion
 tile.fusion_reactor_coil.details=Utilisé pour confiner le plasma dans le réacteur à fusion
 
@@ -188,7 +188,7 @@ tile.fusion_reactor_coil.details=Utilisé pour confiner le plasma dans le réact
 tile.android_station.name=Station d'Androïdes
 tile.android_station.details=Amélioration de gestion des androïdes
 tile.star_map.name=Carte des étoiles
-tile.star_map.details=Utilisé pour la Gestion de Galaxie
+tile.star_map.details=Utilisé pour la gestion de galaxie
 tile.charging_station.name=Station de Chargement
 tile.charging_station.details=Utilisé pour charger les androïdes
 container.replicator.name=Réplicateur
@@ -223,7 +223,7 @@ entity.mad_scientist.name=Scientifique fou
 ///////////// Decorative ////////////////////
 tile.decorative.stripes.name=Bandes jaunes
 tile.decorative.coils.name=Bobines
-tile.decorative.clean.name=plaque de tritanium lisse
+tile.decorative.clean.name=Plaque de tritanium lisse
 tile.decorative.vent.dark.name=Ventilateur sombre
 tile.decorative.vent.bright.name=Ventilateur
 tile.decorative.holo_matrix.name=Matrice holographique
@@ -242,18 +242,18 @@ tile.decorative.separator.name=Rail en tritanium
 ##########################################################################################################
 # Dialogs
 
-dialog.generic.quit.questions=A plus tard.;Je dois y aller.;Je suis pressé.;Au revoir.;Adieu.;Salut.
+dialog.generic.quit.questions=À plus tard.;Je dois y aller.;Je suis pressé.;Au revoir.;Adieu.;Salut.
 dialog.generic.back.questions=Tant pis.;Parlons d'autre chose.;Je m'en fiche.
 dialog.generic.trade.questions=Je veux échanger.;Négocions.;Montrez-moi vos biens.;Qu'avez-vous a vendre ?;
 
 //////////// Mad Scientist ///////////////
 dialog.mad_scientist.convert.question=J'ai toutes les parties!
-dialog.mad_scientist.requirements.line=Finalement !<br>Vous libérez de ce corps fragile fut le meilleur choix.<br>Le seul problème est que j'ai besoin de vous pour m'apporter un ensemble de parties d'Androïde, avant que nous ne commencions.
+dialog.mad_scientist.requirements.line=Finalement !<br>Vous libérer de ce corps fragile est le meilleur choix.<br>Le seul problème est que j'ai besoin que vous m'apportiez un ensemble de parties d'androïde avant que nous ne commencions.
 dialog.mad_scientist.requirements.question=Je veux devenir un androïde.
-dialog.mad_scientist.main.line.human=Je ne traite pas avec les humains.;NON ! Je peux à peine vous regarder. Si fragile !;Vous allez bien ? Vous semblez emprisonner ! Comment pouvez-vous supporter cette chair ?
-dialog.mad_scientist.main.line.android=Ah %1$s, heureux de vous voir ! Que m'apportez vous ici ?;Bonjour. Vous avez l'air splendides aujourd'hui !;Il semblerait que votre oeil gauche est hors alignement. Je serai heureux de le réparer.
-dialog.mad_scientist.undo.line=Pourquoi voudriez-vous le faire ? La seule façon est en avalant une pilule bleue. Elle peut être trouvée dans les donjons, mais votre meilleure option est de l'acheter à quelqu'un. Je pense en avoir quelques unes dans mon magasin. Je devrai vérifier.
-dialog.mad_scientist.undo.question=Comment inverser le processus ?
+dialog.mad_scientist.main.line.human=Je ne traite pas avec les humains.;NON ! J'ai peine à vous regarder. Si fragile !;Vous allez bien ? Vous semblez emprisonner ! Comment pouvez-vous supporter cette chair ?
+dialog.mad_scientist.main.line.android=Ah %1$s, heureux de vous voir ! Que m'apportez vous ici ?;Bonjour. Vous avez l'air splendides aujourd'hui !;Il semblerait que votre oeil gauche est désaligné. Je serai heureux de le réparer.
+dialog.mad_scientist.undo.line=Pourquoi voudriez-vous faire cela ? La seule façon est en avalant une pilule bleue. Elle peut être trouvée dans les donjons, mais votre meilleure option est de l'acheter de quelqu'un. Je pense en avoir quelques unes dans mon magasin. Je devrai vérifier.
+dialog.mad_scientist.undo.question=Comment est-ce que j'inverse le procéssus!
 dialog.mad_scientist.whatDidYouDo.line=Vous êtes un androïde maintenant ! Vous n'aurez plus besoin de nourriture, de dormir ou d'oxygène. Vous pouvez vous améliorer avec de merveilleuses capacités dans une station d'Androïde et vous serez capable de voir et faire des choses que vous n'auriez jamais imaginé.
 dialog.mad_scientist.whatDidYouDo.question=Qu'avez-vous fait de moi ?
 
@@ -299,7 +299,7 @@ gui.network_router.name=Routeur réseau
 gui.pattern_storage.name=Stockage de modèles
 gui.solar_panel.name=Panneau solaire
 gui.pattern_monitor.name=Moniteur de modèle
-gui.network_switch.name=Concentrateur réseau
+gui.network_switch.name=Commutateur réseau
 gui.recycler.name=Recycleur de matière
 gui.fusion_reactor.name=Réacteur à fusion
 gui.charging_station.name=Station de recharge
@@ -318,20 +318,20 @@ gui.tooltip.close=Fermer
 gui.tooltip.page.home=Début
 gui.tooltip.page.configurations=Configurations
 gui.tooltip.page.upgrades=Améliorations
-gui.tooltip.page.tasks=Taches
+gui.tooltip.page.tasks=Tâches
 gui.tooltip.page.scan_info=Info du scan
 gui.tooltip.page.galaxy=Galaxie
 gui.tooltip.page.quadrant=Quadrant
 gui.tooltip.page.star=Système planétaire
 gui.tooltip.page.planet=Planète
-gui.tooltip.page.planet_stats=Stats de la planète
+gui.tooltip.page.planet_stats=Information sur la planète
 gui.tooltip.button.refresh=Rafraîchir la Liste
 gui.tooltip.button.request=Envoyer les demandes
 gui.tooltip.matter=Matière
 gui.tooltip.matter.none=Aucune
 gui.tooltip.energy.io=Entrée/Sortie
 gui.tooltip.requires=Exigés
-gui.tooltip.scout_button=Envoyez des vaiseaux éclaireurs, pour découvrir la planète et commencer les constructions
+gui.tooltip.scout_button=Envoyez des vaisseaux éclaireurs afin d'explorer la planète et commencer la construction
 gui.tooltip.slot.bionic.head=Tête
 gui.tooltip.slot.bionic.arms=Bras
 gui.tooltip.slot.bionic.legs=Jambes
@@ -364,9 +364,9 @@ gui.label.button.import.too_far=Destination trop loin
 gui.label.auto_line_size=Taille de ligne auto
 
 ### GUI Tooltips ###
-gui.tooltip.starmap.no_ship_space=Pas assez d'espace de vaiseau
+gui.tooltip.starmap.no_ship_space=Pas assez d'espace de vaisseau
 gui.tooltip.starmap.no_building_space=Pas assez d'espace de construction
-gui.tooltip.starmap.no_ship_factory=Pas d'usine à vaiseau
+gui.tooltip.starmap.no_ship_factory=Pas d'usine à vaisseau
 gui.tooltip.starmap.has_base=Base déjà présente
 
 ##########################################################################################################
@@ -403,7 +403,7 @@ biopart.battery.name=Batterie
 # Biostats
 
 biotic_stat.teleport.name=Téléporteur du Néant
-biotic_stat.teleport.details=Permet de courtes téléportation en tappant la touche '%1$s'/n/Chaque téléportation coûte %2$s /n/Une batterie capable d'extraire du %2$s est demandée
+biotic_stat.teleport.details=Permet de courtes téléportation en tappant la touche '%1$s'/n/Chaque téléportation coûte %2$s /n/Une batterie capable d'extraire du %2$s est requise
 biotic_stat.nanobots.name=Nanobots
 biotic_stat.nanobots.details=Guérit à l'aide de plasma de matière et d'énergie
 biotic_stat.nano_armor.name=Armure Nano
@@ -413,7 +413,7 @@ biotic_stat.floatation.details=Permet de flotter sur l'eau
 biotic_stat.speed.name=Surcadencement de membre
 biotic_stat.speed.details=Augmente la vitesse de mouvement par %1$s
 biotic_stat.high_jump.name=Saut haut
-biotic_stat.high_jump.details=Permet de sauter plus haut en s'accroupissant /n/Chaque saut draine %1$s /n/Une batterie capable d'extraire du %1$s est demandée
+biotic_stat.high_jump.details=Permet de sauter plus haut en s'accroupissant /n/Chaque saut draine %1$s /n/Une batterie capable d'extraire du %1$s est requise
 biotic_stat.equalizer.name=Égaliseur espace-temps
 biotic_stat.equalizer.details=Égaliseur espace-temps interne /n/qui inverse les effets des /n/anomalies gravitationnelles
 biotic_stat.shield.name=Bouclier plasma
@@ -421,9 +421,9 @@ biotic_stat.shield.details=Protège le joueur des projectiles
 biotic_stat.attack.name=Augmentation d'attaque
 biotic_stat.attack.details=Augmente la puissance d'attaque par %1$s
 biotic_stat.cloak.name=Manteau
-biotic_stat.cloak.details=Permet au joueur de devenir invisible. /n/Actif, il draine %1$s par tic /n/Une batterie capable d'extraire du %1$s est demandée
+biotic_stat.cloak.details=Permet au joueur de devenir invisible. /n/Actif, il draine %1$s par tic /n/Une batterie capable d'extraire du %1$s est requise
 biotic_stat.nightvision.name=Vision nocturne
-biotic_stat.nightvision.details=Permet au joueur de voir dans l'obscurité. /n/Actif, il draine %1$s par tic /n/Une batterie capable d'extraire du %1$s est demandée
+biotic_stat.nightvision.details=Permet au joueur de voir dans l'obscurité. /n/Actif, il draine %1$s par tic /n/Une batterie capable d'extraire du %1$s est requise
 biotic_stat.minimap.name=Mini carte
 biotic_stat.minimap.details=Ajoute une mini carte sur l'afficheur à l'écran
 
@@ -433,13 +433,13 @@ biotic_stat.minimap.details=Ajoute une mini carte sur l'afficheur à l'écran
 death.attack.phaser=%1$s a été désintégré par %2$s
 death.attack.phaser.item=%1$s a été désintégré par %2$s avec %3$s
 death.attack.blackHole=%1$s a été écrasé par une anomalie gravitationnelle
-death.attack.android_transformation=%1$s a fini son existence biologique
+death.attack.android_transformation=%1$s a mis fin son existence biologique
 
 ##########################################################################################################
 # Tasks
 
 task.state.INVALID.name=Invalide
-task.state.INVALID.description=La tache n'est pas valide.
+task.state.INVALID.description=La tâche n'est pas valide.
 task.state.UNKNOWN.name=Inconnue
 task.state.UNKNOWN.description=Inconnue
 task.state.WAITING.name=En attente
@@ -449,14 +449,14 @@ task.state.QUEUED.description=Récepteur trouvé.\nTraitement en attente.
 task.state.PROCESSING.name=Traitement
 task.state.PROCESSING.description=En attente de la fin du traitement.
 task.state.FINISHED.name=Achevée
-task.state.FINISHED.description=La tache est achevée.
+task.state.FINISHED.description=La tâche est achevée.
 
-task.store_pattern.state.WAITING.description=Searching for Pattern Storage.
-task.store_pattern.state.QUEUED.description=Queued in Machine.\n Waiting to Processing.
-task.store_pattern.state.PROCESSING.description=Currently Storing Item Pattern.
-task.store_pattern.state.FINISHED.description=Item Pattern Successfully Stored.
+task.store_pattern.state.WAITING.description=En recherche de stockage de modèles.
+task.store_pattern.state.QUEUED.description=En attente dans la machine.\n Attente de traitement.
+task.store_pattern.state.PROCESSING.description=En stockage de modèle d'objet.
+task.store_pattern.state.FINISHED.description=Modèle d'objet stocké avec succès.
 
-task.replicate_pattern.state.WAITING.description=Searching for Available Replicators.
+task.replicate_pattern.state.WAITING.description=En recherche de réplicateurs disponible.
 
 info.mo.updater.download=téléchargement
 info.mo.updater.hover=Cliquez pour télécharger la dernière version.
@@ -467,35 +467,35 @@ config.machine_options.name=Machines
 config.world_gen.name=Génération du monde
 config.matter_network.name=Réseau de matière
 config.matter_registry.name=Registre de matière
-config.matter_registry.item_overrides.name=Ignorer
+config.matter_registry.item_overrides.name=Écraser
 config.matter_registry.new_items.name=Nouveau
 config.matter_registry.item_blacklist.name=Liste noire
-config.spawn_ores.name=Générer minérais
+config.spawn_ores.name=Générer des minérais
 config.client.name=Options client
 config.server.name=Options serveur
 config.starmap.name=Options de la carte des étoiles
-config.ore_gen_blacklist.name=Ore Dimension Blacklist
-config.abilities.name=Capacités d'Androïde
+config.ore_gen_blacklist.name=Liste noir des minerais par dimensions
+config.abilities.name=Capacités d'androïde
 config.entities.name=Entités
 config.debug.name=Déboguer
 config.android_hud.name=Afficheur à l'écran de l'androïde
-config.android_hud.stats.position=Position des stats
+config.android_hud.stats.position=Position des statistiques
 config.android_hud.bionicStats.position=Positions de capacités bioniques
 config.android_hud.minimap.position=Position de la mini carte
-config.android_hud.color=Couleur de l'afficheur à l'écran
-config.android_hud.opacity=Opacité de l'afficheur à l'écran
+config.android_hud.color=Couleur de l'afficheur sur l'écran
+config.android_hud.opacity=Opacité de l'afficheur sur l'écran
 
 ##########################################################################################################
 # Chat Alerts
 
-alert.no_rights=Pas de droits d'accès à $0
+alert.no_rights=Aucun droits d'accès à $0
 alert.no_access_default=Accès interdit à $0
 alert.not_android=Entité biologique détectée ! Accès refusé !
-alert.no_rights.brake=Seul le propriétaire peut freiner le $0
+alert.no_rights.break=Seul le propriétaire peut briser le $0
 alert.no_rights.dismantle=Seul le propriétaire peut démanteler le $0
 alert.new_update=Une nouvelle version est disponible !
-alert.starmap.ship_arrive=§3%1$s §rest arrivé à §3%2$s§r!
-alert.starmap.on_build=§3%1$s §ra été construit à §3%2$s§r!
+alert.starmap.ship_arrive=§3%1$s §rest arrivé à §3%2$s§r !
+alert.starmap.on_build=§3%1$s §ra été construit à §3%2$s§r !
 
 #############################################################################################################
 # Enchantments
@@ -504,7 +504,7 @@ enchantment.matteroverdrive.weapon.damage=Surcadencement
 
 ###############################################################################################################
 # Fluids
-fluid.matter_plasma.name=Plasma
+fluid.matter_plasma.name=Plasma de matière
 fluid.molten_tritanium=Tritanium fondu
 
 ##########################################################################################################
