@@ -147,7 +147,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
             if (!player.capabilities.isCreativeMode &&
 					((MOTileEntityMachine) tileEntity).hasOwner() && !((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getId()))
             {
-                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.brake").replace("$0",getLocalizedName()));
+                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.break").replace("$0",getLocalizedName()));
                     message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
                     player.addChatMessage(message);
                 return false;

@@ -39,7 +39,7 @@ item.security_protocol.invalid=Invalid Security Protocol
 item.tritanium_wrench.name=Tritanium Wrench
 item.tritanium_wrench.details=Safely disassembles and rotates machines
 item.spacetime_equalizer.name=Space-Time Equalizer
-item.spacetime_equalizer.details=Can be warn on the chest to negate Gravitational forces
+item.spacetime_equalizer.details=Can be worn on the chest to negate gravitational forces
 item.rouge_android_part.head.name=Android Head
 item.rouge_android_part.arms.name=Android Arm
 item.rouge_android_part.legs.name=Android Leg
@@ -87,7 +87,7 @@ item.tritanium_axe.name=Tritanium Axe
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade
-item.upgrade.failsafe.name=Fail Safe Upgrade
+item.upgrade.failsafe.name=Fail-Safe Upgrade
 item.upgrade.range.name=Range Upgrade
 item.upgrade.power_storage.name=Power Storage Upgrade
 item.upgrade.hyper_speed.name=Hyper Speed Upgrade
@@ -180,7 +180,7 @@ tile.fusion_reactor_controller.config.output.energy=Energy Output
 tile.fusion_reactor_controller.config.drain.matter=Matter Drain
 tile.fusion_reactor_controller.config.distance.anomaly=Max Anomaly Distance
 tile.fusion_reactor_controller.config.check.delay=Structure Check Delay
-tile.fusion_reactor_controller.details=Main Controller for Fusion Reactor
+tile.fusion_reactor_controller.details=Main Controller for Fusion Reactors
 tile.fusion_reactor_coil.name=Fusion Reactor Coil
 tile.fusion_reactor_coil.details=Used to confine the Plasma in Fusion Reactors
 
@@ -248,9 +248,9 @@ dialog.generic.trade.questions=I want to trade.;Let's trade.;Let me see your goo
 
 //////////// Mad Scientist ///////////////
 dialog.mad_scientist.convert.question=I have all the parts!
-dialog.mad_scientist.requirements.line=Finally!<br>Getting rid of that fragile body is the best choice.<br>The only problem is that I need you to bring me a set of Android parts, before we begin.
+dialog.mad_scientist.requirements.line=Finally!<br>Getting rid of that fragile body is the best choice.<br>The only problem is that I need you to bring me a set of Android parts before we begin.
 dialog.mad_scientist.requirements.question=I want to become an android.
-dialog.mad_scientist.main.line.human=I don't deal with humans.;NO! I can even look at you. So fragile!;Are you ok ? You look trapped! How can you stand that flesh?
+dialog.mad_scientist.main.line.human=I don't deal with humans.;NO! I can't even look at you. So fragile!;Are you ok ? You look trapped! How can you stand that flesh?
 dialog.mad_scientist.main.line.android=Ah %1$s, good to see you! What brings you here?;Hello there. You look splendid today!;It seems your left eye is out of alignment. I'll be glad to fix it.
 dialog.mad_scientist.undo.line=Why would you want to do that? The only way is by swallowing a blue pill. It can be found in dungeons, but your best bet is to buy it from someone. I think I had some in my workshop. I'll have to check.
 dialog.mad_scientist.undo.question=How do I reverse it!
@@ -331,7 +331,7 @@ gui.tooltip.matter=Matter
 gui.tooltip.matter.none=None
 gui.tooltip.energy.io=Input/Output
 gui.tooltip.requires=Requires
-gui.tooltip.scout_button=Send Scout Ships, to discover the planet and start building
+gui.tooltip.scout_button=Send Scout Ships to explore the planet and start building
 gui.tooltip.slot.bionic.head=Head
 gui.tooltip.slot.bionic.arms=Arms
 gui.tooltip.slot.bionic.legs=Legs
@@ -425,7 +425,7 @@ biotic_stat.cloak.details=Allows the player to go invisible. /n/While active, dr
 biotic_stat.nightvision.name=Night Vision
 biotic_stat.nightvision.details=Allows the player to see in the dark. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
 biotic_stat.minimap.name=Minimap
-biotic_stat.minimap.details=Adds a minimap on the HUD
+biotic_stat.minimap.details=Adds a minimap to the HUD
 
 ##########################################################################################################
 # Deaths
@@ -452,7 +452,7 @@ task.state.FINISHED.name=Finished
 task.state.FINISHED.description=Task is Complete.
 
 task.store_pattern.state.WAITING.description=Searching for Pattern Storage.
-task.store_pattern.state.QUEUED.description=Queued in Machine.\n Waiting to Processing.
+task.store_pattern.state.QUEUED.description=Queued in Machine.\n Waiting for Processing.
 task.store_pattern.state.PROCESSING.description=Currently Storing Item Pattern.
 task.store_pattern.state.FINISHED.description=Item Pattern Successfully Stored.
 
@@ -491,7 +491,7 @@ config.android_hud.opacity=HUD Opacity
 alert.no_rights=No Rights to Access the $0
 alert.no_access_default=Access denied to $0
 alert.not_android=Biological Entity Detected! Access Denied!
-alert.no_rights.brake=Only the owner can brake the $0
+alert.no_rights.break=Only the owner can break the $0
 alert.no_rights.dismantle=Only the owner can dismantle the $0
 alert.new_update=A new version is available!
 alert.starmap.ship_arrive=§3%1$s §rhas arrived at §3%2$s§r!
