@@ -18,7 +18,7 @@ item.s_magnet.name=Aimant supraconducteur
 item.matter_dust_refined.name=Poudre de matière raffinée
 item.matter_dust.name=Poudre de matière
 item.matter_dust.details=Placez dans un recycleur pour raffiner
-item.machine_casing.name=Boitier de machine
+item.machine_casing.name=Boîtier de machine
 item.dilithium_crystal.name=Cristal de dilithium
 item.tritanium_ingot.name=Lingot de tritanium
 item.tritanium_plate.name=Plaque de tritanium
@@ -168,7 +168,7 @@ tile.matter_recycler.name=Recycleur de matière
 tile.matter_recycler.details=Utilisé pour recycler des éléments, préparer à la décomposition
 
 //////////// Fluids ////////////
-tile.matter_plasma.name=Plasma
+tile.matter_plasma.name=Plasma de matière
 tile.molten_tritanium.name=Tritanium fondu
 
 
