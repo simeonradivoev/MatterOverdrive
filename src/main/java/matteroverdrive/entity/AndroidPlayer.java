@@ -662,7 +662,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public void manageCharging()
     {
-        if (player.isSneaking() && player.getHeldItem() != null && player.getHeldItem().getItem() == MatterOverdriveItems.battery || player.getHeldItem().getItem() == MatterOverdriveItems.hc_battery) {
+        if (player != null && player.isSneaking() && player.getHeldItem() != null && (player.getHeldItem().getItem() == MatterOverdriveItems.battery || player.getHeldItem().getItem() == MatterOverdriveItems.hc_battery)) {
             int freeEnergy = getMaxEnergyStored() - getEnergyStored();
             int receivedAmount = ((IEnergyContainerItem) player.getHeldItem().getItem()).extractEnergy(player.getHeldItem(), freeEnergy, false);
             receiveEnergy(receivedAmount, false);
