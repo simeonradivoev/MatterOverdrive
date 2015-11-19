@@ -19,8 +19,8 @@
 * [Donations](#donations)
 
 ## About
-Matter Overdrive is a Minecraft mod, inspired by the popular Sci-fi TV series Star Trek. It dwells in the concept of replicating and transforming one type matter into another.
-Although, it may seem overpowered, Matter Overdrive takes a more realistic approach and requires the player to build up to a complex system, before even the simplest replication can be achieved.
+Matter Overdrive is a Minecraft mod inspired by the popular Sci-fi TV series Star Trek. It dwells in the concept of replicating and transforming one type matter into another.
+Although it may seem overpowered, Matter Overdrive takes a more realistic approach and requires the player to build a complex system before even the simplest replication can be achieved.
 
 ## Contacts
 * [Simeon Radivoev](simeonradivoev@gmail.com)
@@ -42,7 +42,7 @@ Although, it may seem overpowered, Matter Overdrive takes a more realistic appro
 
 ## Issues
 If you have any crashes, problems or suggestions just open a [new Issue](https://github.com/simeonradivoev/MatterOverdrive/issues/new).
-If your crash or problem was fixed, but is not yet realised as a public download you can always download a The latest [Dev Build](http://simeon.co.vu/Mods/MatterOverdrive/builds/).
+If your crash or problem was fixed, but is not yet released as a public download you can always download the latest [Dev Build](http://simeon.co.vu/Mods/MatterOverdrive/builds/).
 
 ## Building
 1. Clone this repository via 
@@ -61,6 +61,6 @@ If your crash or problem was fixed, but is not yet realised as a public download
 See the example on [IMC](https://github.com/simeonradivoev/MatterOverdrive/blob/master/src/main/java/matteroverdrive/api/IMC.java) or you can see the [IMC handler](https://github.com/simeonradivoev/MatterOverdrive/blob/master/src/main/java/matteroverdrive/imc/MOIMCHandler.java).
 
 ## Donations
-Donations will go a long way to helping me continue working on Matter Overdrive. Making exiting new features.
+Donations go a long way to helping me continue working on Matter Overdrive, making exiting new features.
 
 [![Donate](http://simeon.co.vu/Mods/MatterOverdrive/wp-content/uploads/2015/06/paypal1.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KGKJSVXZQXWXS)

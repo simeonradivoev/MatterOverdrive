@@ -18,7 +18,7 @@ item.s_magnet.name=Aimant supraconducteur
 item.matter_dust_refined.name=Poudre de matière raffinée
 item.matter_dust.name=Poudre de matière
 item.matter_dust.details=Placez dans un recycleur pour raffiner
-item.machine_casing.name=Boitier de machine
+item.machine_casing.name=Boîtier de machine
 item.dilithium_crystal.name=Cristal de dilithium
 item.tritanium_ingot.name=Lingot de tritanium
 item.tritanium_plate.name=Plaque de tritanium
@@ -50,7 +50,7 @@ item.ship_factory.name=Usine à vaisseau
 item.ship_factory.details=Permet la construction de vaisseaux
 item.scout_ship.name=Vaisseau éclaireur
 item.scout_ship.details=Vaisseau rapide, utilisé pour la reconnaissance
-item.ship_colonizer.name=Vaiseau colonisateur
+item.ship_colonizer.name=Vaisseau colonisateur
 item.ship_colonizer.details=Utilisé pour revendiquer les planètes par la construction d'une base à son arrivée
 item.building_base.name=Base
 item.building_base.details=Construction principale, nécessaire pout tout
@@ -168,7 +168,7 @@ tile.matter_recycler.name=Recycleur de matière
 tile.matter_recycler.details=Utilisé pour recycler des éléments, préparer à la décomposition
 
 //////////// Fluids ////////////
-tile.matter_plasma.name=Plasma
+tile.matter_plasma.name=Plasma de matière
 tile.molten_tritanium.name=Tritanium fondu
 
 
@@ -190,7 +190,7 @@ tile.android_station.details=Amélioration de gestion des androïdes
 tile.star_map.name=Carte des étoiles
 tile.star_map.details=Utilisé pour la gestion de galaxie
 tile.charging_station.name=Station de Chargement
-tile.charging_station.details=Utilisé pour charger les androïdes
+tile.charging_station.details=Utilisez pour charger les androïdes
 container.replicator.name=Réplicateur
 machine.tooltip.matter=Matière
 machine.tooltip.energy=Chargé
@@ -262,7 +262,7 @@ dialog.mad_scientist.whatDidYouDo.question=Qu'avez-vous fait de moi ?
 itemGroup.tabMatterOverdrive=Matter Overdrive
 itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Modules
 itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Améliorations
-itemGroup.tabMatterOverdrive_food=Matter Overdrive: Nouriture
+itemGroup.tabMatterOverdrive_food=Matter Overdrive: Nourriture
 itemGroup.tabMatterOverdrive_ships=Matter Overdrive: Vaisseaux
 itemGroup.tabMatterOverdrive_buildings=Matter Overdrive: Constructions
 
@@ -534,7 +534,7 @@ guide.entry.android.pills.name=Pilules
 guide.entry.android.parts.name=Pièces d'Androïde rouge
 guide.entry.fusion_reactor.name=Réacteur à fusion
 guide.entry.batteries.name=Batteries
-guide.entry.food.name=Nouriture
+guide.entry.food.name=Nourriture
 guide.entry.drinks.name=Boissons
 guide.entry.upgrades.name=Améliorations
 
