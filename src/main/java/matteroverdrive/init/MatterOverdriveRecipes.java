@@ -71,6 +71,24 @@ public class MatterOverdriveRecipes
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.forceGlass, 4), " G ", "GTG", " G ", 'G', Blocks.glass, 'T', MatterOverdriveItems.tritanium_plate);
         BlockTritaniumCrate.registerRecipes(MatterOverdriveBlocks.tritaniumCrate);
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.inscriber),"IDI","TPT","RMR",'M',MatterOverdriveItems.machine_casing,'D',MatterOverdriveItems.dilithium_ctystal,'T',MatterOverdriveItems.tritanium_plate,'P',Blocks.piston,'R',Items.redstone,'I',Items.iron_ingot);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.fusionReactorIO), "TGT", "C C", "TGT", 'G', Items.gold_ingot, 'T', MatterOverdriveItems.tritanium_plate, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0));
+
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_tritanium_plate,12),"##","##",'#',MatterOverdriveItems.tritanium_plate);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_beams,6),"#","T","#",'#',MatterOverdriveItems.tritanium_plate,'T',MatterOverdriveItems.tritanium_ingot);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_tritanium_plate_stripe,8),"###","#Y#","###",'#',MatterOverdriveBlocks.decorative_tritanium_plate,'Y',new ItemStack(Items.dye,1,11));
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_holo_matrix,8),"###","#I#","###",'#',MatterOverdriveBlocks.decorative_tritanium_plate,'I',new ItemStack(MatterOverdriveItems.isolinear_circuit));
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_carbon_fiber_plate,8),"###","#C#","###",'#',MatterOverdriveBlocks.decorative_tritanium_plate,'C',new ItemStack(Items.coal));
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_vent_bright,6)," # ","T T"," # ",'#',MatterOverdriveItems.tritanium_plate,'T',MatterOverdriveItems.tritanium_ingot);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_vent_dark,8),"###","#B#","###",'#',MatterOverdriveBlocks.decorative_vent_bright,'B',new ItemStack(Items.dye));
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_clean,8),"TT","TT",'T',MatterOverdriveItems.tritanium_ingot);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_floor_tiles,12),"###","#Q#","###",'#',Blocks.clay,'Q',Items.quartz);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_floor_tiles_green,12),"#G#","#Q#","#G#",'#',Blocks.clay,'Q',Items.quartz,'G',new ItemStack(Items.dye,1,2));
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_floot_tile_white,12),"#W#","#Q#","#W#",'#',Blocks.clay,'Q',Items.quartz,'W',new ItemStack(Items.dye,1,15));
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_separator,8),"#N#","#N#","#N#",'#',MatterOverdriveBlocks.decorative_tritanium_plate,'N',MatterOverdriveItems.tritanium_nugget);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_floor_noise,12),"#G#","#Q#","#G#",'#',Blocks.clay,'B',Items.bone,'G',Blocks.gravel);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_white_plate,8),"#W#","###","#W#",'#',MatterOverdriveBlocks.decorative_tritanium_plate,'W',Blocks.wool);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_coils,9),"###","#C#","###",'#',MatterOverdriveBlocks.decorative_tritanium_plate,'C',MatterOverdriveItems.s_magnet);
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_stripes,8),"#B#","###","#Y#",'#',MatterOverdriveBlocks.decorative_tritanium_plate,'B',new ItemStack(Items.dye),'Y',new ItemStack(Items.dye,11));
     }
 
     public static void registerItemRecipes(FMLInitializationEvent event)
@@ -95,7 +113,7 @@ public class MatterOverdriveRecipes
         addRecipe(new EnergyPackRecipe(new ItemStack(MatterOverdriveItems.tritanium_plate), new ItemStack(MatterOverdriveItems.battery), new ItemStack(Items.gunpowder)));
         addRecipe(new EnergyPackRecipe(new ItemStack(MatterOverdriveItems.tritanium_plate), new ItemStack(MatterOverdriveItems.hc_battery), new ItemStack(Items.gunpowder)));
         addShapedRecipe(new ItemStack(MatterOverdriveItems.phaserRifle), "III", "GCF", " WB", 'I', Items.iron_ingot, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'W', Blocks.wool, 'G', Blocks.glass, 'D', MatterOverdriveItems.dilithium_ctystal, 'F', MatterOverdriveItems.forceFieldEmitter, 'B', MatterOverdriveItems.battery);
-        addRecipe(new ShapedOreRecipe(new ItemStack(MatterOverdriveItems.matterContainer, 6), "G G", " T ", 'T', MatterOverdriveItems.tritanium_plate, 'G', "blockGlass"));
+        addRecipe(new ShapedOreRecipe(new ItemStack(MatterOverdriveItems.matterContainer, 3), "TGT", " T ", 'T', MatterOverdriveItems.tritanium_ingot, 'G', "blockGlass"));
         addRecipe(new ShapedOreRecipe(new ItemStack(MatterOverdriveItems.tritanium_ingot), "###", "###", "###", '#', "nuggetTritanium"));
         addRecipe(new ShapelessOreRecipe(new ItemStack(MatterOverdriveItems.tritanium_nugget,9),"ingotTritanium"));
         addShapelessRecipe(new ItemStack(MatterOverdriveItems.dataPad),Items.book,new ItemStack(MatterOverdriveItems.isolinear_circuit,0));
