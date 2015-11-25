@@ -16,16 +16,25 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.entity;
+package matteroverdrive.blocks;
 
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.ai.attributes.RangedAttribute;
+import matteroverdrive.tile.TileEntityMachineContractMarket;
+import net.minecraft.block.material.Material;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 /**
- * Created by Simeon on 9/8/2015.
+ * Created by Simeon on 11/22/2015.
  */
-public class AndroidAttributes
+public class BlockContractMarket extends BlockMonitor
 {
-    public static final IAttribute attributeGlitchTime = new RangedAttribute("android.glitchTime",1,0,1).setDescription("Glitch Time Percent");
-    public static final IAttribute attributeBatteryUse = new RangedAttribute("android.batteryUse",1,0,10).setDescription("Battery Use Percent");
+    public BlockContractMarket(Material material, String name) {
+        super(material, name);
+        setHasGui(true);
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+        return new TileEntityMachineContractMarket();
+    }
 }

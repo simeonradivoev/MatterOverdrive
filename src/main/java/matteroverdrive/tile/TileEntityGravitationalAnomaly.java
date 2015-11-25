@@ -32,7 +32,7 @@ import matteroverdrive.api.gravity.AnomalySuppressor;
 import matteroverdrive.api.gravity.IGravitationalAnomaly;
 import matteroverdrive.api.gravity.IGravityEntity;
 import matteroverdrive.client.sound.GravitationalAnomalySound;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.fx.GravitationalAnomalyParticle;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.items.SpacetimeEqualizer;

@@ -27,6 +27,7 @@ import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.gui.GuiAndroidHud;
+import matteroverdrive.gui.GuiQuestHud;
 import matteroverdrive.handler.ClientWeaponHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.MouseHandler;
@@ -47,6 +48,7 @@ public class ClientProxy extends CommonProxy
     public static GuiAndroidHud androidHud;
     public static HoloIcons holoIcons;
     public static ClientWeaponHandler weaponHandler;
+    public static GuiQuestHud questHud;
 
     @Override
 	public void registerProxies()
@@ -59,6 +61,7 @@ public class ClientProxy extends CommonProxy
         mouseHandler = new MouseHandler();
         holoIcons = new HoloIcons();
         weaponHandler = new ClientWeaponHandler();
+        questHud = new GuiQuestHud();
 
         registerSubscribtions();
 
@@ -91,6 +94,7 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(new TooltipHandler());
         MinecraftForge.EVENT_BUS.register(androidHud);
         MinecraftForge.EVENT_BUS.register(mouseHandler);
+        MinecraftForge.EVENT_BUS.register(questHud);
         FMLCommonHandler.instance().bus().register(renderHandler);
         FMLCommonHandler.instance().bus().register(GalaxyClient.getInstance());
         FMLCommonHandler.instance().bus().register(androidHud);

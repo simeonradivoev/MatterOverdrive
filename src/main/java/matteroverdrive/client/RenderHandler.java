@@ -42,6 +42,9 @@ import matteroverdrive.client.render.parts.TritaniumSpineRenderer;
 import matteroverdrive.client.render.tileentity.*;
 import matteroverdrive.client.render.tileentity.starmap.*;
 import matteroverdrive.entity.*;
+import matteroverdrive.entity.monster.EntityRangedRougeAndroidMob;
+import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
@@ -115,12 +118,14 @@ public class RenderHandler
     //endregion
     //region Entity Renderers
     private EntityRendererRougeAndroid rendererRougeAndroid;
+    public EntityRendererRougeAndroid rendererRougeAndroidHologram;
     private EntityRendererMadScientist rendererMadScientist;
     private EntityRendererFailedCow rendererFailedCow;
     private EntityRendererFailedChicken rendererFailedChicken;
     private EntityRendererFailedPig rendererFailedPig;
     private EntityRendererFailedSheep rendererFailedSheep;
     private EntityRendererPhaserFire rendererPhaserFire;
+    private EntityRendererRangedRougeAndroid rendererRangedRougeAndroid;
     //endregion
     //region Tile Entity Renderers
     private TileEntityRendererReplicator tileEntityRendererReplicator;
@@ -139,6 +144,7 @@ public class RenderHandler
     private TileEntityRendererHoloSign tileEntityRendererHoloSign;
     private TileEntityRendererPacketQueue tileEntityRendererPacketQueue;
     private TileEntityRendererInscriber tileEntityRendererInscriber;
+    private TileEntityRendererContractMarket tileEntityRendererContractMarket;
     //endregion
 
     public RenderHandler(World world, TextureManager textureManager)
@@ -204,6 +210,7 @@ public class RenderHandler
         tileEntityRendererHoloSign = new TileEntityRendererHoloSign();
         tileEntityRendererPacketQueue = new TileEntityRendererPacketQueue();
         tileEntityRendererInscriber = new TileEntityRendererInscriber();
+        tileEntityRendererContractMarket = new TileEntityRendererContractMarket();
 
         configHandler.subscribe(tileEntityRendererAndroidStation);
         configHandler.subscribe(tileEntityRendererWeaponStation);
@@ -278,6 +285,7 @@ public class RenderHandler
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHoloSign.class, tileEntityRendererHoloSign);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePacketQueue.class, tileEntityRendererPacketQueue);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInscriber.class,tileEntityRendererInscriber);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineContractMarket.class,tileEntityRendererContractMarket);
     }
 
     public void createItemRenderers()
@@ -296,24 +304,28 @@ public class RenderHandler
 
     public void createEntityRenderers()
     {
-        rendererRougeAndroid = new EntityRendererRougeAndroid(new ModelBiped(), 0);
+        rendererRougeAndroid = new EntityRendererRougeAndroid(new ModelBiped(), 0,false);
         rendererMadScientist = new EntityRendererMadScientist();
         rendererFailedPig = new EntityRendererFailedPig(new ModelPig(),new ModelPig(0.5f), 0.7F);
         rendererFailedCow = new EntityRendererFailedCow(new ModelCow(), 0.7f);
         rendererFailedChicken = new EntityRendererFailedChicken(new ModelChicken(), 0.3f);
         rendererFailedSheep = new EntityRendererFailedSheep(new ModelSheep2(), new ModelSheep1(), 0.7f);
         rendererPhaserFire = new EntityRendererPhaserFire();
+        rendererRangedRougeAndroid = new EntityRendererRangedRougeAndroid(new ModelBiped(),0);
+        rendererRougeAndroidHologram = new EntityRendererRougeAndroid(new ModelBiped(),0,true);
     }
 
     public void registerEntityRenderers()
     {
-        RenderingRegistry.registerEntityRenderingHandler(EntityRougeAndroidMob.class, rendererRougeAndroid);
+        RenderingRegistry.registerEntityRenderingHandler(EntityMeleeRougeAndroidMob.class, rendererRougeAndroid);
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedPig.class,rendererFailedPig);
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedCow.class, rendererFailedCow);
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedChicken.class,rendererFailedChicken);
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedSheep.class,rendererFailedSheep);
         RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class, rendererMadScientist);
         RenderingRegistry.registerEntityRenderingHandler(PlasmaBolt.class, rendererPhaserFire);
+        RenderingRegistry.registerEntityRenderingHandler(EntityRangedRougeAndroidMob.class,rendererRangedRougeAndroid);
+        //RenderingRegistry.registerEntityRenderingHandler(EntityMeleeRougeAndroidMob.class,rendererRougeAndroidHologram);
     }
 
     public void createBioticStatRenderers()

@@ -22,7 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.client.render.tileentity.TileEntityRendererGravitationalAnomaly;
 import matteroverdrive.data.biostats.BioticStatTeleport;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.proxy.ClientProxy;

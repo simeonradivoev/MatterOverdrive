@@ -22,38 +22,20 @@ import matteroverdrive.Reference;
 import matteroverdrive.tile.TileEntityMachinePatternMonitor;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Simeon on 4/29/2015.
  */
-public class TileEntityRendererPatternMonitor extends TileEntitySpecialRenderer
+public class TileEntityRendererPatternMonitor extends TileEntityRendererMonitor
 {
     public static ResourceLocation screenTexture = new ResourceLocation(Reference.PATH_BLOCKS + "pattern_monitor_holo.png");
-    public static ResourceLocation screenTextureBack = new ResourceLocation(Reference.PATH_BLOCKS + "pattern_monitor_holo_back.png");
-    public static ResourceLocation screenTextureGlow = new ResourceLocation(Reference.PATH_FX + "holo_monitor_glow.png");
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks)
-    {
-        glPushMatrix();
-
-        int meta = tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-        ForgeDirection direction = ForgeDirection.getOrientation(meta);
-
-        glDisable(GL_LIGHTING);
-        glDisable(GL_CULL_FACE);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
-        RenderUtils.disableLightmap();
-
-        RenderUtils.beginDrawinngBlockScreen(x, y, z, direction, Reference.COLOR_HOLO, tileEntity, -0.65,1f);
-        glTranslated(0, 0, -0.05);
+    public void drawScreen(TileEntity tileEntity, float ticks) {
         Minecraft.getMinecraft().renderEngine.bindTexture(screenTexture);
         glColor3f(Reference.COLOR_HOLO.getFloatR() * 0.7f, Reference.COLOR_HOLO.getFloatG() * 0.7f, Reference.COLOR_HOLO.getFloatB() * 0.7f);
 
@@ -67,12 +49,5 @@ public class TileEntityRendererPatternMonitor extends TileEntitySpecialRenderer
             Minecraft.getMinecraft().fontRenderer.drawString(Integer.toString(monitor.getDatabases().size()), 0, 0, 0x78a1b3);
             glPopMatrix();
         }
-
-        RenderUtils.endDrawinngBlockScreen();
-
-        glDisable(GL_BLEND);
-        glEnable(GL_CULL_FACE);
-        glEnable(GL_LIGHTING);
-        glPopMatrix();
     }
 }

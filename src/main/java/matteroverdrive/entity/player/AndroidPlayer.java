@@ -16,7 +16,7 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.entity;
+package matteroverdrive.entity.player;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyStorage;
@@ -61,6 +61,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -175,33 +176,87 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @Override
     public void saveNBTData(NBTTagCompound compound)
     {
-        NBTTagCompound prop = new NBTTagCompound();
-        prop.setInteger("Energy", player.getDataWatcher().getWatchableObjectInt(energyWatchID));
-        prop.setInteger("MaxEnergy", this.maxEnergy);
-        prop.setBoolean("isAndroid", isAndroid);
-        prop.setTag("Stats", unlocked);
-        prop.setTag("Effects", effects);
-        if (activeStat != null)
-            prop.setString("ActiveAbility", activeStat.getUnlocalizedName());
-        inventory.writeToNBT(prop);
-        compound.setTag(EXT_PROP_NAME, prop);
+        writeToNBT(compound,EnumSet.allOf(DataType.class));
     }
 
     @Override
     public void loadNBTData(NBTTagCompound compound)
     {
-        NBTTagCompound prop = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
-        player.getDataWatcher().updateObject(energyWatchID, prop.getInteger("Energy"));
-        this.maxEnergy = prop.getInteger("MaxEnergy");
-        this.isAndroid = prop.getBoolean("isAndroid");
-        unlocked = prop.getCompoundTag("Stats");
-        effects = prop.getCompoundTag("Effects");
-        if (prop.hasKey("ActiveAbility"))
-        {
-            activeStat = MatterOverdrive.statRegistry.getStat(prop.getString("ActiveAbility"));
+        readFromNBT(compound,EnumSet.allOf(DataType.class));
+    }
+
+    public void writeToNBT(NBTTagCompound compound,EnumSet<DataType> dataTypes)
+    {
+        NBTTagCompound prop = new NBTTagCompound();
+        if (dataTypes.contains(DataType.ENERGY)) {
+            prop.setInteger("Energy", player.getDataWatcher().getWatchableObjectInt(energyWatchID));
+            prop.setInteger("MaxEnergy", this.maxEnergy);
         }
-        this.inventory.readFromNBT(prop);
-        init(this.player,this.player.worldObj);
+        if (dataTypes.contains(DataType.DATA)) {
+            prop.setBoolean("isAndroid", isAndroid);
+        }
+        if (dataTypes.contains(DataType.STATS)) {
+            prop.setTag("Stats", unlocked);
+        }
+        if (dataTypes.contains(DataType.EFFECTS)) {
+            prop.setTag("Effects", effects);
+        }
+        if (dataTypes.contains(DataType.ACTIVE_ABILITY)) {
+            if (activeStat != null)
+                prop.setString("ActiveAbility", activeStat.getUnlocalizedName());
+        }
+        if (dataTypes.contains(DataType.INVENTORY)) {
+            inventory.writeToNBT(prop);
+        }else if (dataTypes.contains(DataType.BATTERY))
+        {
+            if (inventory.getStackInSlot(ENERGY_SLOT) != null)
+            {
+                NBTTagCompound batteryTag = new NBTTagCompound();
+                inventory.getStackInSlot(ENERGY_SLOT).writeToNBT(batteryTag);
+                compound.setTag("Battery",batteryTag);
+            }
+        }
+            compound.setTag(EXT_PROP_NAME, prop);
+    }
+
+    public void readFromNBT(NBTTagCompound compound,EnumSet<DataType> dataTypes)
+    {
+        NBTTagCompound prop = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
+        if (prop != null) {
+            boolean initFlag = false;
+            if (dataTypes.contains(DataType.ENERGY)) {
+                player.getDataWatcher().updateObject(energyWatchID, prop.getInteger("Energy"));
+                this.maxEnergy = prop.getInteger("MaxEnergy");
+            }
+            if (dataTypes.contains(DataType.DATA)) {
+                this.isAndroid = prop.getBoolean("isAndroid");
+                initFlag = true;
+            }
+            if (dataTypes.contains(DataType.STATS)) {
+                unlocked = prop.getCompoundTag("Stats");
+            }
+            if (dataTypes.contains(DataType.EFFECTS)) {
+                effects = prop.getCompoundTag("Effects");
+            }
+            if (dataTypes.contains(DataType.ACTIVE_ABILITY)) {
+                if (prop.hasKey("ActiveAbility")) {
+                    activeStat = MatterOverdrive.statRegistry.getStat(prop.getString("ActiveAbility"));
+                }
+            }
+            if (dataTypes.contains(DataType.INVENTORY)) {
+                this.inventory.readFromNBT(prop);
+                initFlag = true;
+            } else if (dataTypes.contains(DataType.DATA.BATTERY)) {
+                inventory.setInventorySlotContents(ENERGY_SLOT, null);
+                if (compound.hasKey("Battery", Constants.NBT.TAG_COMPOUND)) {
+                    ItemStack battery = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("Battery"));
+                    inventory.setInventorySlotContents(ENERGY_SLOT, battery);
+                }
+            }
+            if (initFlag) {
+                init(this.player, this.player.worldObj);
+            }
+        }
     }
 
     @Override
@@ -225,7 +280,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             IEnergyContainerItem energyContainerItem = (IEnergyContainerItem)battery.getItem();
             energyExtracted = energyContainerItem.extractEnergy(battery,amount,simulate);
             if (energyExtracted > 0 && !simulate)
-                sync(PacketSyncAndroid.SYNC_BATTERY);
+                sync(EnumSet.of(DataType.BATTERY));
         }
         else
         {
@@ -272,7 +327,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         clearAllStatAttributeModifiers();
         this.unlocked.setInteger(stat.getUnlocalizedName(), level);
         stat.onUnlock(this,level);
-        sync(PacketSyncAndroid.SYNC_STATS);
+        sync(EnumSet.of(DataType.STATS));
         manageStatAttributeModifiers();
     }
 
@@ -314,7 +369,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
             ItemStack battery = getStackInSlot(ENERGY_SLOT);
             IEnergyContainerItem energyContainerItem = (IEnergyContainerItem)battery.getItem();
             energyReceived = energyContainerItem.receiveEnergy(battery,amount,simulate);
-            sync(PacketSyncAndroid.SYNC_BATTERY);
+            sync(EnumSet.of(DataType.BATTERY));
         }
         else
         {
@@ -333,7 +388,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     public void setAndroid(boolean isAndroid)
     {
         this.isAndroid = isAndroid;
-        sync(PacketSyncAndroid.SYNC_ALL);
+        sync(EnumSet.allOf(DataType.class));
         if (isAndroid) {
             previousBionicPatts = new ItemStack[5];
             manageStatAttributeModifiers();
@@ -349,17 +404,17 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         return isAndroid;
     }
 
-    public void sync(int part)
+    public void sync(EnumSet<DataType> part)
     {
         this.sync(player, part,false);
     }
 
-    public void sync(int part,boolean others)
+    public void sync(EnumSet<DataType> part,boolean others)
     {
         this.sync(player, part,others);
     }
 
-    public void sync(EntityPlayer player,int syncPart,boolean toOthers)
+    public void sync(EntityPlayer player,EnumSet<DataType> syncPart,boolean toOthers)
     {
         if (player instanceof EntityPlayerMP)
         {
@@ -409,7 +464,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         int xp = getResetXPRequired();
         this.unlocked = new NBTTagCompound();
-        sync(PacketSyncAndroid.SYNC_STATS);
+        sync(EnumSet.of(DataType.STATS));
         clearAllStatAttributeModifiers();
         return xp;
     }
@@ -429,7 +484,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         if (getUnlocked().hasKey(stat.getUnlocalizedName()))
         {
             getUnlocked().removeTag(stat.getUnlocalizedName());
-            sync(PacketSyncAndroid.SYNC_STATS);
+            sync(EnumSet.of(DataType.STATS));
             manageStatAttributeModifiers();
         }
     }
@@ -566,7 +621,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
         if (needsSync)
         {
-            sync(PacketSyncAndroid.SYNC_INVENTORY,true);
+            sync(EnumSet.of(DataType.INVENTORY),true);
         }
     }
 
@@ -772,7 +827,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 && HURT_GLITCHING
                 && event.ammount > 0) {
             effects.setInteger("GlitchTime", modify(10, AndroidAttributes.attributeGlitchTime));
-            sync(PacketSyncAndroid.SYNC_EFFECTS);
+            sync(EnumSet.of(DataType.EFFECTS));
                 player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "gui.glitch_" + player.worldObj.rand.nextInt(11), 0.2f, 0.9f + player.worldObj.rand.nextFloat() * 0.2f);
         }
     }
@@ -880,7 +935,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 }
             }
 
-            sync(PacketSyncAndroid.SYNC_EFFECTS);
+            sync(EnumSet.of(DataType.EFFECTS));
         }
     }
 
@@ -891,7 +946,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @SideOnly(Side.CLIENT)
     public void playGlitchSoundClient(Random random,float amount)
     {
-        Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":" + "gui.glitch_" + random.nextInt(11), amount, 0.9f + random.nextFloat() * 0.2f));
+        Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":" + "gui.glitch", amount, 0.9f + random.nextFloat() * 0.2f));
     }
 
     public boolean isTurning()
@@ -916,7 +971,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     private void startTurningToAndroid()
     {
         effects.setInteger("Turning",TRANSFORM_TIME);
-        sync(PacketSyncAndroid.SYNC_EFFECTS);
+        sync(EnumSet.of(DataType.EFFECTS));
     }
     public long getEffectLong(String effect)
     {
@@ -1017,4 +1072,9 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     }
 
     //endregion
+
+    public enum DataType
+    {
+        DATA,ENERGY,EFFECTS,STATS,ACTIVE_ABILITY,INVENTORY, BATTERY
+    }
 }

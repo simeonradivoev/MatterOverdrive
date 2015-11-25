@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
@@ -44,6 +44,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import org.lwjgl.input.Keyboard;
 
+import java.util.EnumSet;
 import java.util.Random;
 import java.util.UUID;
 
@@ -115,7 +116,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
                     android.getEffects().removeTag(TAG_HITS);
                 }
 
-                android.sync(PacketSyncAndroid.SYNC_EFFECTS,true);
+                android.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
             }
         }
     }
@@ -136,7 +137,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     public void setShield(AndroidPlayer androidPlayer,boolean on)
     {
         androidPlayer.getEffects().setBoolean(TAG_SHIELD,on);
-        androidPlayer.sync(PacketSyncAndroid.SYNC_EFFECTS,true);
+        androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
     }
 
     public String getDetails(int level)
@@ -179,8 +180,8 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
                         attack.setInteger("time", 10);
                         attackList.appendTag(attack);
                         androidPlayer.getEffects().setTag(TAG_HITS, attackList);
-                        androidPlayer.sync(PacketSyncAndroid.SYNC_EFFECTS,true);
-                        androidPlayer.getPlayer().worldObj.playSoundAtEntity(androidPlayer.getPlayer(),Reference.MOD_ID + ":" + "shield_hit_" + random.nextInt(2),0.5f,0.9f + random.nextFloat() * 0.2f);
+                        androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
+                        androidPlayer.getPlayer().worldObj.playSoundAtEntity(androidPlayer.getPlayer(),Reference.MOD_ID + ":" + "shield_hit",0.5f,0.9f + random.nextFloat() * 0.2f);
                     }
 
                     int energyExtracted = androidPlayer.extractEnergy(energyReqired, true);

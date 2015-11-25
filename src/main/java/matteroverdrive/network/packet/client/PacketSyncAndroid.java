@@ -22,13 +22,14 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.network.packet.PacketAbstract;
+import matteroverdrive.util.MOEnumHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.EnumSet;
 
 /**
  * Created by Simeon on 5/26/2015.
@@ -42,7 +43,7 @@ public class PacketSyncAndroid extends PacketAbstract
     public static final int SYNC_ACTIVE_ABILITY = 3;
     public static final int SYNC_INVENTORY = 4;
     NBTTagCompound data;
-    int syncPart;
+    int dataType;
     int playerID;
 
     public PacketSyncAndroid()
@@ -50,9 +51,9 @@ public class PacketSyncAndroid extends PacketAbstract
         data = new NBTTagCompound();
     }
 
-    public PacketSyncAndroid(AndroidPlayer player,int syncPart)
+    public PacketSyncAndroid(AndroidPlayer player, EnumSet<AndroidPlayer.DataType> dataTypes)
     {
-        switch (syncPart)
+       /* switch (syncPart)
         {
             case SYNC_BATTERY:
                 if (player.getStackInSlot(player.ENERGY_SLOT) != null)
@@ -81,25 +82,27 @@ public class PacketSyncAndroid extends PacketAbstract
             default:
                 data = new NBTTagCompound();
                 player.saveNBTData(data);
-        }
-        this.syncPart = syncPart;
+        }*/
+        this.dataType = MOEnumHelper.encode(dataTypes);
         this.playerID = player.getPlayer().getEntityId();
+        this.data = new NBTTagCompound();
+        player.writeToNBT(this.data,dataTypes);
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        data = ByteBufUtils.readTag(buf);
-        syncPart = buf.readInt();
+        dataType = buf.readInt();
         playerID = buf.readInt();
+        data = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        ByteBufUtils.writeTag(buf,data);
-        buf.writeInt(syncPart);
+        buf.writeInt(dataType);
         buf.writeInt(playerID);
+        ByteBufUtils.writeTag(buf,data);
     }
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketSyncAndroid>
@@ -113,7 +116,9 @@ public class PacketSyncAndroid extends PacketAbstract
                 EntityPlayer source = (EntityPlayer) entity;
                 AndroidPlayer ex = AndroidPlayer.get(source);
 
-                if (ex != null) {
+                ex.readFromNBT(message.data,MOEnumHelper.decode(message.dataType, AndroidPlayer.DataType.class));
+
+                /*if (ex != null) {
                     switch (message.syncPart) {
                         case SYNC_BATTERY:
                             if (ex.getStackInSlot(ex.ENERGY_SLOT) != null) {
@@ -140,7 +145,7 @@ public class PacketSyncAndroid extends PacketAbstract
                         default:
                             ex.loadNBTData(message.data);
                     }
-                }
+                }*/
             }
             return null;
         }

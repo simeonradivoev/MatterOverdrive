@@ -25,8 +25,8 @@ import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.container.ContainerAndroidStation;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.data.inventory.BionicSlot;
-import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.entity.EntityRougeAndroidMob;
+import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.gui.element.ElementBioStat;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementSlot;
@@ -57,7 +57,7 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 {
-    private EntityRougeAndroidMob mob;
+    private EntityMeleeRougeAndroidMob mob;
     private MOElementButtonScaled hudConfigs;
     ElementSlot[] parts_slots = new ElementSlot[Reference.BIONIC_BATTERY+1];
     List<ElementBioStat> stats = new ArrayList<>(MatterOverdrive.statRegistry.getStats().size());
@@ -100,7 +100,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         addStat(androidPlayer,MatterOverdriveBioticStats.nightvision,1,0,ForgeDirection.UNKNOWN);
         addStat(androidPlayer,MatterOverdriveBioticStats.minimap,1,2,ForgeDirection.UNKNOWN);
 
-        mob = new EntityRougeAndroidMob(Minecraft.getMinecraft().theWorld);
+        mob = new EntityMeleeRougeAndroidMob(Minecraft.getMinecraft().theWorld);
         mob.getEntityData().setBoolean("Hologram",true);
 
         hudConfigs = new MOElementButtonScaled(this,this,48,64,"hud_configs",128,24);
@@ -197,6 +197,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 	 */
 	private void drawEntityOnScreen(int x, int y, int scale, float mouseX, float mouseY, EntityPlayer entity)
     {
+        glPushAttrib(GL_LIGHTING_BIT);
 		glEnable(GL_COLOR_MATERIAL);
 		glPushMatrix();
 		glTranslatef((float)x, (float)y, 50.0F);
@@ -231,5 +232,6 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
 		glDisable(GL_TEXTURE_2D);
 		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        glPopAttrib();
 	}
 }

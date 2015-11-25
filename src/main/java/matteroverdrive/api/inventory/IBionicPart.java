@@ -19,7 +19,7 @@
 package matteroverdrive.api.inventory;
 
 import com.google.common.collect.Multimap;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemStack;
 

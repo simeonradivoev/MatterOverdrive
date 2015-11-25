@@ -25,8 +25,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.weapon.IWeapon;
-import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.network.packet.client.PacketSyncAndroid;
+import matteroverdrive.data.quest.PlayerQuestData;
+import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,6 +37,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -83,6 +85,18 @@ public class PlayerEventHandler
 
             } else {
                 onAndroidServerTick(player, event);
+            }
+        }
+
+        MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
+        if (extendedProperties != null && event.phase.equals(TickEvent.Phase.START))
+        {
+            if (event.side == Side.CLIENT)
+            {
+                extendedProperties.update(Side.CLIENT);
+            }else
+            {
+                extendedProperties.update(Side.SERVER);
             }
         }
 
@@ -134,7 +148,12 @@ public class PlayerEventHandler
             AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.target);
             if (androidPlayer != null && androidPlayer.isAndroid())
             {
-                androidPlayer.sync(event.entityPlayer, PacketSyncAndroid.SYNC_ALL,false);
+                androidPlayer.sync(event.entityPlayer, EnumSet.allOf(AndroidPlayer.DataType.class),false);
+            }
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get((EntityPlayer)event.target);
+            if (extendedProperties != null)
+            {
+                extendedProperties.sync(EnumSet.allOf(PlayerQuestData.DataType.class));
             }
         }
     }

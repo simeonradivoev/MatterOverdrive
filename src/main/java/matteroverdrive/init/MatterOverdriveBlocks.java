@@ -70,6 +70,7 @@ public class MatterOverdriveBlocks {
     public static BlockFusionReactorIO fusionReactorIO;
     public static BlockTritaniumCrate[] tritaniumCrate;
     public static BlockInscriber inscriber;
+    public static BlockContractMarket contractMarket;
 
     public static BlockDecorative decorative_stripes;
     public static BlockDecorative decorative_coils;
@@ -138,6 +139,7 @@ public class MatterOverdriveBlocks {
         fusionReactorIO = new BlockFusionReactorIO(Material.iron,"fusion_reactor_io");
         tritaniumCrate = BlockTritaniumCrate.createAllColors(Material.iron,"tritanium_crate");
         inscriber = new BlockInscriber(Material.iron,"inscriber");
+        contractMarket = new BlockContractMarket(Material.iron,"contract_market");
 
         decorative_stripes = new BlockDecorative(Material.iron,"decorative.stripes","base_stripes",5,1,8);
         decorative_coils = new BlockDecorative(Material.iron,"decorative.coils","base_coil",5,1,8);
@@ -208,6 +210,7 @@ public class MatterOverdriveBlocks {
         fusionReactorIO.register();
         BlockTritaniumCrate.registerAll(tritaniumCrate,"tritanium_crate");
         inscriber.register();
+        contractMarket.register();
 
         decorative_stripes.register();
         decorative_coils.register();

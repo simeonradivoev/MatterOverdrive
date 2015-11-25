@@ -32,7 +32,6 @@ import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.transport.ITransportList;
 import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
@@ -58,6 +57,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ import java.util.List;
 		@Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.SimpleComponent"),
 		@Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.ManagedPeripheral")
 })
-public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements IMatterConnection, ITransportList, IWailaBodyProvider, IPeripheral, SimpleComponent, ManagedPeripheral
+public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements ITransportList, IWailaBodyProvider, IPeripheral, SimpleComponent, ManagedPeripheral
 {
     public static final int MAX_ENTETIES_PRE_TRANSPORT = 3;
     public static final int TRANSPORT_TIME = 70;
@@ -408,9 +408,15 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     }
 
     @Override
-    public boolean canConnectFrom(ForgeDirection dir)
+    public boolean canFill(ForgeDirection from, Fluid fluid)
     {
-        return dir != ForgeDirection.UP;
+        return from != ForgeDirection.UP && super.canFill(from,fluid);
+    }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid)
+    {
+        return from != ForgeDirection.UP && super.canDrain(from,fluid);
     }
 
     @Override

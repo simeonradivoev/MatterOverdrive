@@ -24,6 +24,8 @@ import matteroverdrive.data.inventory.CrateSlot;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -33,7 +35,7 @@ import java.util.EnumSet;
 /**
  * Created by Simeon on 11/5/2015.
  */
-public class TileEntityTritaniumCrate extends MOTileEntity
+public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory
 {
     TileEntityInventory inventory;
 
@@ -116,5 +118,66 @@ public class TileEntityTritaniumCrate extends MOTileEntity
     public TileEntityInventory getInventory()
     {
         return inventory;
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return inventory.getSizeInventory();
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return inventory.getStackInSlot(slot);
+    }
+
+    @Override
+    public ItemStack decrStackSize(int slot, int amount) {
+        return inventory.decrStackSize(slot,amount);
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int slot) {
+        return inventory.getStackInSlotOnClosing(slot);
+    }
+
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        inventory.setInventorySlotContents(slot,stack);
+    }
+
+    @Override
+    public String getInventoryName()
+    {
+        return inventory.getInventoryName();
+    }
+
+    @Override
+    public boolean hasCustomInventoryName() {
+        return true;
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return inventory.getInventoryStackLimit();
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
+        return true;
+    }
+
+    @Override
+    public void openInventory() {
+        inventory.openInventory();
+    }
+
+    @Override
+    public void closeInventory() {
+        inventory.closeInventory();
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return inventory.isItemValidForSlot(slot,stack);
     }
 }

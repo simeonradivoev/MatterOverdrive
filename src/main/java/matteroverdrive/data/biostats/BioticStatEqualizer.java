@@ -21,7 +21,7 @@ package matteroverdrive.data.biostats;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.event.entity.living.LivingEvent;
 

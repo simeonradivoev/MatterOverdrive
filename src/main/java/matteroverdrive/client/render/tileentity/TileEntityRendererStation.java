@@ -19,7 +19,6 @@
 package matteroverdrive.client.render.tileentity;
 
 import cofh.lib.gui.GuiColor;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.machines.MOTileEntityMachine;
@@ -212,10 +211,9 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         try
 		{
             glPushMatrix();
+            glPushAttrib(GL_COLOR_BUFFER_BIT);
             glEnable(GL_BLEND);
-            glEnable(GL_ALPHA_TEST);
             glBlendFunc(GL_ONE, GL_ONE);
-            glDisable(GL_ALPHA_TEST);
 
             try
 			{
@@ -225,8 +223,8 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
 			{
 				MOLog.warn("Could not cast to desired station class", e);
             }
-            glDisable(GL_BLEND);
-            glEnable(GL_ALPHA_TEST);
+
+            glPopAttrib();
             glPopMatrix();
 
         }

@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
@@ -37,6 +37,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
+
+import java.util.EnumSet;
 
 /**
  * Created by Simeon on 7/11/2015.
@@ -88,7 +90,7 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     {
         androidPlayer.getPlayer().addPotionEffect(new PotionEffect(Potion.nightVision.id, 500));
         androidPlayer.getEffects().setBoolean("Nightvision", active);
-        androidPlayer.sync(PacketSyncAndroid.SYNC_EFFECTS,true);
+        androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
     }
 
     @Override

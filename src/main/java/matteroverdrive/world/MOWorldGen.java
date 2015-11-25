@@ -19,6 +19,8 @@
 package matteroverdrive.world;
 
 import cpw.mods.fml.common.IWorldGenerator;
+import matteroverdrive.Reference;
+import matteroverdrive.data.world.GenPositionWorldData;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.util.IConfigSubscriber;
@@ -38,7 +40,9 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
 {
     public static WorldGenMinable dilithiumGen;
     public static WorldGenMinable tritaniumGen;
+    public static MOAndroidHouseBuilding androidHouse;
     public static WorldGenGravitationalAnomaly anomalyGen;
+    public static MOSandPit sandPit;
     public static final int TRITANIUM_VEINS_PER_CHUNK = 10;
     public static final int TRITANIUM_VEIN_SIZE = 6;
     public static final int DILITHIUM_VEINS_PER_CHUNK = 6;
@@ -53,7 +57,9 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     {
         tritaniumGen = new WorldGenMinable(MatterOverdriveBlocks.tritaniumOre,TRITANIUM_VEIN_SIZE);
         dilithiumGen = new WorldGenMinable(MatterOverdriveBlocks.dilithium_ore,DILITHIUM_VEIN_SIZE);
-        anomalyGen = new WorldGenGravitationalAnomaly(0.005f,2048,2048 + 8192);
+        androidHouse = new MOAndroidHouseBuilding("android_house",0.025);
+        sandPit = new MOSandPit("sand_pit_house",0.05,3);
+        anomalyGen = new WorldGenGravitationalAnomaly("gravitational_anomaly",0.005f,2048,2048 + 8192);
         oreDimentionsBlacklist = new HashSet<>();
 
         configurationHandler.subscribe(anomalyGen);
@@ -78,6 +84,8 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
 
         generateGravitationalAnomalies(world, random, chunkX * 16, chunkZ * 16, world.provider.dimensionId);
         generateOres(world, random, chunkX * 16, chunkZ * 16, world.provider.dimensionId);
+        androidHouse.generate(random,chunkX,chunkZ,world,chunkGenerator,chunkProvider);
+        sandPit.generate(random,chunkX,chunkZ,world,chunkGenerator,chunkProvider);
     }
 
     public void generateOverworld(World world,Random random,int chunkX, int chunkZ)
@@ -165,5 +173,16 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         {
             this.oreDimentionsBlacklist.add(oreDimentionBlacklist[i]);
         }
+    }
+
+    public static GenPositionWorldData getWorldPositionData(World world)
+    {
+        GenPositionWorldData data = (GenPositionWorldData)world.loadItemData(GenPositionWorldData.class,Reference.WORLD_DATA_MO_GEN_POSITIONS);
+        if (data == null)
+        {
+            data = new GenPositionWorldData(Reference.WORLD_DATA_MO_GEN_POSITIONS);
+            world.setItemData(Reference.WORLD_DATA_MO_GEN_POSITIONS,data);
+        }
+        return data;
     }
 }

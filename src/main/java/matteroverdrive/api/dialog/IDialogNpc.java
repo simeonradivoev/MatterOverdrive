@@ -18,6 +18,7 @@
 
 package matteroverdrive.api.dialog;
 
+import matteroverdrive.dialog.DialogMessage;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -63,7 +64,7 @@ public interface IDialogNpc
     /**
      * Called when the player interacts with the NPC
      * @param player The Player
-     * @return Did the player interact successfully with the NPC.
+     * @param dialogMessage The dialog message the player interacted with.
      */
-    boolean onPlayerInteract(EntityPlayer player);
+    void onPlayerInteract(EntityPlayer player, DialogMessage dialogMessage);
 }

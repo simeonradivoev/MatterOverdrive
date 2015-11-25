@@ -19,7 +19,7 @@
 package matteroverdrive.dialog;
 
 import matteroverdrive.api.dialog.IDialogNpc;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;

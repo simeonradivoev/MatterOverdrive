@@ -20,7 +20,7 @@ package matteroverdrive.client.render.parts;
 
 import matteroverdrive.api.renderer.IBionicPartRenderer;
 import matteroverdrive.client.render.entity.EntityRendererRougeAndroid;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.items.RougeAndroidParts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

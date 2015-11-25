@@ -26,8 +26,11 @@ import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelHandler;
 import matteroverdrive.Reference;
 import matteroverdrive.network.packet.AbstractBiPacketHandler;
+import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
 import matteroverdrive.network.packet.bi.PacketMatterScannerGetDatabase;
 import matteroverdrive.network.packet.client.*;
+import matteroverdrive.network.packet.client.quest.PacketSyncQuests;
+import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
@@ -88,6 +91,8 @@ public class PacketPipeline
         registerPacket(PacketSendMinimapInfo.ClientHandler.class,PacketSendMinimapInfo.class);
         registerPacket(PacketResetBioStats.ServerHandler.class,PacketResetBioStats.class);
         registerPacket(PacketDigBlock.ServerHandler.class,PacketDigBlock.class);
+        registerPacket(PacketUpdateQuest.ClientHandler.class,PacketUpdateQuest.class);
+        registerPacket(PacketSyncQuests.ClientHandler.class,PacketSyncQuests.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

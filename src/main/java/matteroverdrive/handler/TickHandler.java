@@ -58,6 +58,10 @@ public class TickHandler
 
         if (ClientProxy.weaponHandler != null)
             ClientProxy.weaponHandler.onClientTick(event);
+
+        if (!Minecraft.getMinecraft().isGamePaused() && event.phase.equals(TickEvent.Phase.START)) {
+            ClientProxy.questHud.onTick();
+        }
     }
 
     //Called when the server ticks. Usually 20 ticks a second.

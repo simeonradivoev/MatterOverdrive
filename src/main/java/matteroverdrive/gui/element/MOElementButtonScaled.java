@@ -82,8 +82,7 @@ public class MOElementButtonScaled extends MOElementButton
             {
                 int width = getFontRenderer().getStringWidth(text) - icon.getOriginalWidth();
                 getFontRenderer().drawString(text,posX + sizeX / 2 - (width / 2),posY + sizeY / 2 - 3,labelColor);
-                if (color != null)
-                    RenderUtils.applyColor(color);
+                RenderUtils.applyColor(getTextColor());
                 ClientProxy.holoIcons.bindSheet();
                 RenderHelper.renderIcon(posX + sizeX / 2 - icon.getOriginalWidth() - width/2,posY + sizeY / 2 - icon.getOriginalHeight()/2,0,icon.getIcon(),icon.getOriginalWidth(),icon.getOriginalHeight());
             }else
@@ -94,8 +93,7 @@ public class MOElementButtonScaled extends MOElementButton
         }else
         {
             if (icon != null) {
-                if (color != null)
-                    RenderUtils.applyColor(color);
+                RenderUtils.applyColor(getTextColor());
                 ClientProxy.holoIcons.bindSheet();
                 RenderHelper.renderIcon(posX + sizeX / 2 - icon.getOriginalWidth()/2,posY + sizeY / 2 - icon.getOriginalHeight()/2,0,icon.getIcon(),icon.getOriginalWidth(),icon.getOriginalHeight());
             }

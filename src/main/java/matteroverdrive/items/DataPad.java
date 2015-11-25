@@ -83,6 +83,11 @@ public class DataPad extends MOBaseItem
         TagCompountCheck(stack);
         stack.getTagCompound().setString("Category",category);
     }
+    public void setSelectedActiveQuest(ItemStack itemStack,int quest)
+    {
+        TagCompountCheck(itemStack);
+        itemStack.getTagCompound().setShort("SelectedActiveQuest",(short) quest);
+    }
     //endregion
 
     //region Getters
@@ -120,6 +125,14 @@ public class DataPad extends MOBaseItem
             return stack.getTagCompound().getString("Category");
         }
         return "";
+    }
+    public int getActiveSelectedQuest(ItemStack stack)
+    {
+        if (stack.hasTagCompound())
+        {
+            return stack.getTagCompound().getShort("SelectedActiveQuest");
+        }
+        return 0;
     }
     //endregion
 }

@@ -25,7 +25,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.items.*;
 import matteroverdrive.items.android.TritaniumSpine;
-import matteroverdrive.items.armour.TritaniumArmour;
+import matteroverdrive.items.armour.TritaniumArmor;
 import matteroverdrive.items.food.AndroidPill;
 import matteroverdrive.items.food.EarlGrayTea;
 import matteroverdrive.items.food.RomulanAle;
@@ -99,10 +99,11 @@ public class MatterOverdriveItems
     public static TritaniumPickaxe tritaniumPickaxe;
     public static ItemSword tritaniumSword;
     public static ItemHoe tritaniumHoe;
-    public static TritaniumArmour tritaniumHelemet;
-    public static TritaniumArmour tritaniumChestplate;
-    public static TritaniumArmour tritaniumLeggings;
-    public static TritaniumArmour tritaniumBoots;
+    public static TritaniumArmor tritaniumHelemet;
+    public static TritaniumArmor tritaniumChestplate;
+    public static TritaniumArmor tritaniumLeggings;
+    public static TritaniumArmor tritaniumBoots;
+    public static Contract contract;
 
     public static Item.ToolMaterial toolMaterialTritanium;
     public static ItemArmor.ArmorMaterial armorMaterialTritanium;
@@ -164,10 +165,11 @@ public class MatterOverdriveItems
         tritaniumPickaxe = new TritaniumPickaxe("tritanium_pickaxe");
         tritaniumSword = (ItemSword)new ItemSword(toolMaterialTritanium).setUnlocalizedName("tritanium_sword").setTextureName(Reference.MOD_ID + ":" + "tritanium_sword");
         tritaniumHoe = (ItemHoe)new ItemHoe(toolMaterialTritanium).setUnlocalizedName("tritanium_hoe").setTextureName(Reference.MOD_ID + ":" + "tritanium_hoe");
-        tritaniumHelemet = (TritaniumArmour)new TritaniumArmour(armorMaterialTritanium,2,0).setUnlocalizedName("tritanium_helmet").setTextureName(Reference.MOD_ID + ":" + "tritanium_helmet");
-        tritaniumChestplate = (TritaniumArmour)new TritaniumArmour(armorMaterialTritanium,2,1).setUnlocalizedName("tritanium_chestplate").setTextureName(Reference.MOD_ID + ":" + "tritanium_chestplate");
-        tritaniumLeggings = (TritaniumArmour)new TritaniumArmour(armorMaterialTritanium,2,2).setUnlocalizedName("tritanium_leggings").setTextureName(Reference.MOD_ID + ":" + "tritanium_leggings");
-        tritaniumBoots = (TritaniumArmour)new TritaniumArmour(armorMaterialTritanium,2,3).setUnlocalizedName("tritanium_boots").setTextureName(Reference.MOD_ID + ":" + "tritanium_boots");
+        tritaniumHelemet = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,0).setUnlocalizedName("tritanium_helmet").setTextureName(Reference.MOD_ID + ":" + "tritanium_helmet");
+        tritaniumChestplate = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,1).setUnlocalizedName("tritanium_chestplate").setTextureName(Reference.MOD_ID + ":" + "tritanium_chestplate");
+        tritaniumLeggings = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,2).setUnlocalizedName("tritanium_leggings").setTextureName(Reference.MOD_ID + ":" + "tritanium_leggings");
+        tritaniumBoots = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,3).setUnlocalizedName("tritanium_boots").setTextureName(Reference.MOD_ID + ":" + "tritanium_boots");
+        contract = new Contract("contract");
 	}
 
 	public static void register(FMLInitializationEvent event)
@@ -222,6 +224,7 @@ public class MatterOverdriveItems
         tritaniumSpine.register();
         tritanium_nugget.register();
         omniTool.register();
+        contract.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);
@@ -250,6 +253,36 @@ public class MatterOverdriveItems
         addToDungons(emergency_ration, 1, 8, 6);
         addToDungons(earl_gray_tea, 1, 2, 2);
         addToDungons(romulan_ale, 1, 2, 2);
+    }
+
+    public static void addToMODungons()
+    {
+
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(emergency_ration),8,20,100));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(earl_gray_tea),4,10,50));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(romulan_ale),4,10,50));
+
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(isolinear_circuit,0,1,5,50));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(isolinear_circuit,1,1,4,40));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(isolinear_circuit,2,1,3,30));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(isolinear_circuit,3,1,2,20));
+
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(androidPill,1,1,2,10));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(androidPill,0,1,1,5));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(weapon_module_barrel,WeaponModuleBarrel.DAMAGE_BARREL_ID,1,1,10));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(weapon_module_barrel,WeaponModuleBarrel.FIRE_BARREL_ID,1,1,8));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(weapon_module_barrel,WeaponModuleBarrel.HEAL_BARREL_ID,1,1,10));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(weapon_module_barrel,WeaponModuleBarrel.EXPLOSION_BARREL_ID,1,1,5));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(tritaniumSpine),1,1,10));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(androidParts,0,1,2,15));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(androidParts,1,1,2,15));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(androidParts,2,1,2,15));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(androidParts,3,1,2,15));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(hc_battery),1,1,10));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(h_compensator),1,2,10));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(me_conversion_matrix),1,2,10));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(matterContainerFull),4,8,20));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(phaser),1,1,10));
     }
 
     private static void addToDungons(Item item,int min,int max,int chance)

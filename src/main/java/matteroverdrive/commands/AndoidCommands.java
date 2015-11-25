@@ -21,8 +21,7 @@ package matteroverdrive.commands;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
-import matteroverdrive.network.packet.client.PacketSyncAndroid;
+import matteroverdrive.entity.player.AndroidPlayer;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,6 +29,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -126,7 +126,7 @@ public class AndoidCommands extends CommandBase
 
                     if (validCommand)
                     {
-                        androidPlayer.sync(PacketSyncAndroid.SYNC_ALL, false);
+                        androidPlayer.sync(EnumSet.allOf(AndroidPlayer.DataType.class), false);
                         sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "["+ Reference.MOD_NAME+"] " + EnumChatFormatting.RESET + commandInfo));
                         return;
                     }

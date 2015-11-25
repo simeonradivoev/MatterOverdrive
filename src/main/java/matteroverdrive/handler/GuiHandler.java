@@ -82,6 +82,7 @@ public class GuiHandler implements IGuiHandler
             registerGui(TileEntityHoloSign.class,GuiHoloSign.class);
             registerGui(TileEntityMachineChargingStation.class,GuiChargingStation.class);
             registerGuiAndContainer(TileEntityInscriber.class,GuiInscriber.class,ContainerInscriber.class);
+            registerGui(TileEntityMachineContractMarket.class,GuiContractMarket.class);
         }
     }
 

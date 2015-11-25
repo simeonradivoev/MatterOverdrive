@@ -19,7 +19,7 @@
 package matteroverdrive.gui.android;
 
 import cofh.lib.gui.GuiColor;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import net.minecraft.client.gui.ScaledResolution;
 
 /**

@@ -21,7 +21,7 @@ package matteroverdrive.client.render.biostat;
 import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.data.biostats.BioticStatShield;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;

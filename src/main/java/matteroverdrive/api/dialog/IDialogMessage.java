@@ -30,11 +30,6 @@ import java.util.List;
 public interface IDialogMessage
 {
     /**
-     * @return the individual ID of each Dialog Message
-     */
-    int getID();
-
-    /**
      * The Parent Dialog Message.
      * @param npc The NPC Entity.
      * @param player The Player.
@@ -80,12 +75,12 @@ public interface IDialogMessage
      * @param player The Player
      * @param option The Option that was chosen. Not the option (message ID), but the ordering index of the child from {@link matteroverdrive.api.dialog.IDialogMessage#getOptions(IDialogNpc, EntityPlayer)}.
      */
-    void onInteract(IDialogNpc npc, EntityPlayer player, int option);
+    void onOptionsInteract(IDialogNpc npc, EntityPlayer player, int option);
 
     /**
      * Called when the message is chosen from all the option of the patten from {@link matteroverdrive.api.dialog.IDialogMessage#getOptions(IDialogNpc, EntityPlayer)}.
-     * Not to be confused with {@link matteroverdrive.api.dialog.IDialogMessage#onInteract(IDialogNpc, EntityPlayer, int)} which is called on the parent.
-     * This method is called after {@link matteroverdrive.api.dialog.IDialogMessage#onInteract(IDialogNpc, EntityPlayer, int)}.
+     * Not to be confused with {@link matteroverdrive.api.dialog.IDialogMessage#onOptionsInteract(IDialogNpc, EntityPlayer, int)} which is called on the parent.
+     * This method is called after {@link matteroverdrive.api.dialog.IDialogMessage#onOptionsInteract(IDialogNpc, EntityPlayer, int)}.
      * @param npc
      * @param player
      */

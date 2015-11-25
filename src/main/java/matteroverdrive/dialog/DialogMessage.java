@@ -20,14 +20,16 @@ package matteroverdrive.dialog;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.dialog.IDialogMessage;
 import matteroverdrive.api.dialog.IDialogNpc;
+import matteroverdrive.api.events.MOEventDialogInteract;
 import matteroverdrive.api.renderer.IDialogShot;
+import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.gui.GuiDialog;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,6 @@ import java.util.List;
  */
 public class DialogMessage implements IDialogMessage
 {
-    private int id;
     protected String message;
     protected String question;
     protected IDialogMessage parent;
@@ -65,12 +66,6 @@ public class DialogMessage implements IDialogMessage
     private void init()
     {
         options = new ArrayList<>();
-        id = MatterOverdrive.dialogRegistry.registerMessage(this);
-    }
-
-    @Override
-    public int getID() {
-        return id;
     }
 
     @Override
@@ -97,7 +92,7 @@ public class DialogMessage implements IDialogMessage
     }
 
     @Override
-    public void onInteract(IDialogNpc npc, EntityPlayer player, int option)
+    public void onOptionsInteract(IDialogNpc npc, EntityPlayer player, int option)
     {
         if (option >= 0 && option < options.size())
         {
@@ -108,14 +103,26 @@ public class DialogMessage implements IDialogMessage
     @Override
     public void onInteract(IDialogNpc npc,EntityPlayer player)
     {
-        if (npc != null && player != null && player.worldObj.isRemote)
+        if (npc != null && player != null)
         {
-            setAsGuiActiveMessage(npc, player);
+            if (player.worldObj.isRemote) {
+                setAsGuiActiveMessage(npc, player);
+            }else
+            {
+                npc.onPlayerInteract(player,this);
+                MOEventDialogInteract eventDialogInteract = new MOEventDialogInteract(player,npc,this);
+                MinecraftForge.EVENT_BUS.post(eventDialogInteract);
+                MOExtendedProperties extendedProperties = MOExtendedProperties.get(player);
+                if (extendedProperties != null)
+                {
+                    extendedProperties.onEvent(eventDialogInteract);
+                }
+            }
         }
     }
 
     @SideOnly(Side.CLIENT)
-    private void setAsGuiActiveMessage(IDialogNpc npc, EntityPlayer player)
+    protected void setAsGuiActiveMessage(IDialogNpc npc, EntityPlayer player)
     {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiDialog)
         {
@@ -193,11 +200,17 @@ public class DialogMessage implements IDialogMessage
 
     protected String formatMessage(String text,IDialogNpc npc,EntityPlayer player)
     {
-        return String.format(text,player.getDisplayName(),npc.getEntity().getCommandSenderName());
+        if (text != null) {
+            return String.format(text, player.getDisplayName(), npc.getEntity().getCommandSenderName());
+        }
+        return text;
     }
 
     protected String formatQuestion(String text,IDialogNpc npc,EntityPlayer player)
     {
-        return String.format(text,player.getDisplayName(),npc.getEntity().getCommandSenderName());
+        if (text != null) {
+            return String.format(text, player.getDisplayName(), npc.getEntity().getCommandSenderName());
+        }
+        return text;
     }
 }

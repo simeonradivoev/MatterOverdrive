@@ -32,7 +32,7 @@ import matteroverdrive.animation.AnimationTextTyping;
 import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.api.weapon.IWeapon;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.gui.android.*;
 import matteroverdrive.gui.config.EnumConfigProperty;
 import matteroverdrive.handler.ConfigurationHandler;
@@ -144,7 +144,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             return;
         }
 
-        if (android.isAndroid() && event.isCancelable() && event.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+        if ((android.isAndroid() || (mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof IWeapon)) && event.isCancelable() && event.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
         {
             event.setCanceled(true);
 
@@ -157,6 +157,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         }
         else if (android.isAndroid() && event.type == RenderGameOverlayEvent.ElementType.ALL)
         {
+            glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             renderHud(event);
 
             //System.out.println(showRadial);
@@ -175,13 +176,14 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                     renderRadialMenu(event);
                 }
             }
+            glPopAttrib();
         }
     }
 
     public void renderCrosshair(RenderGameOverlayEvent event)
     {
         glPushMatrix();
-        float scale = 8 + ClientProxy.weaponHandler.getEquippedWeaponAccuracyPercent(Minecraft.getMinecraft().thePlayer)*512;
+        float scale = 6 + ClientProxy.weaponHandler.getEquippedWeaponAccuracyPercent(Minecraft.getMinecraft().thePlayer)*256;
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
         glEnable(GL_ALPHA_TEST);
@@ -201,9 +203,6 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         RenderHelper.renderIcon(-1.0,-scale+1,0,crosshairIcon,3,3);
         glPopMatrix();
         glPopMatrix();
-
-        glDisable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_DST_ALPHA);
     }
 
     public void renderRadialMenu(RenderGameOverlayEvent event)
@@ -339,10 +338,14 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                 glPushMatrix();
 
                 if (MatterOverdriveBioticStats.cloak.isActive(android,0)) {
-                    glDepthMask(false);
+                    glPushMatrix();
+                    //glDepthMask(false);
+                    glTranslated(0,0,-100);
                     glBlendFunc(GL_DST_COLOR, GL_ZERO);
+                    glColor3f(1,1,1);
                     mc.renderEngine.bindTexture(cloak_overlay);
                     func_146110_a(0, 0, 0, 0, event.resolution.getScaledWidth(), event.resolution.getScaledHeight(), event.resolution.getScaledWidth(), event.resolution.getScaledHeight());
+                    glPopMatrix();
                 }
 
                 glEnable(GL_BLEND);

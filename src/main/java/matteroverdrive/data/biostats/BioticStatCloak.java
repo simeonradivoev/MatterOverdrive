@@ -23,7 +23,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
@@ -33,6 +33,8 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
+
+import java.util.EnumSet;
 
 /**
  * Created by Simeon on 7/10/2015.
@@ -90,7 +92,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     public void setActive(AndroidPlayer android, int level, boolean active)
     {
         android.getEffects().setBoolean("Cloaked", active);
-        android.sync(PacketSyncAndroid.SYNC_EFFECTS, true);
+        android.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS), true);
     }
 
     @Override

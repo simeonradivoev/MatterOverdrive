@@ -16,25 +16,16 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.items.armour;
+package matteroverdrive.entity.player;
 
-import matteroverdrive.Reference;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.RangedAttribute;
 
 /**
- * Created by Simeon on 11/1/2015.
+ * Created by Simeon on 9/8/2015.
  */
-public class TritaniumArmour extends ItemArmor
+public class AndroidAttributes
 {
-    public TritaniumArmour(ArmorMaterial armorMaterial, int renderIndex, int renderType) {
-        super(armorMaterial, renderIndex, renderType);
-    }
-
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
-    {
-        return String.format(Reference.PATH_ARMOR + "tritanium_layer_%d%s.png",(slot == 2 ? 2 : 1),type == null ? "" : String.format("_%s", type));
-    }
+    public static final IAttribute attributeGlitchTime = new RangedAttribute("android.glitchTime",1,0,1).setDescription("Glitch Time Percent");
+    public static final IAttribute attributeBatteryUse = new RangedAttribute("android.batteryUse",1,0,10).setDescription("Battery Use Percent");
 }

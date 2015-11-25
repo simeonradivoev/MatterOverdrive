@@ -20,7 +20,7 @@ package matteroverdrive.items.android;
 
 import com.google.common.collect.Multimap;
 import matteroverdrive.api.inventory.IBionicPart;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +28,6 @@ import net.minecraft.item.ItemStack;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Created by Simeon on 9/10/2015.
