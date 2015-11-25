@@ -19,6 +19,7 @@
 package matteroverdrive.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 
 /**
  * Created by Simeon on 5/1/2015.
@@ -34,5 +35,11 @@ public class ContainerFalse extends MOBaseContainer
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         return false;
+    }
+
+    @Override
+    public void putStackInSlot(int p_75141_1_, ItemStack p_75141_2_)
+    {
+
     }
 }
