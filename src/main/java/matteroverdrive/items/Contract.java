@@ -55,6 +55,7 @@ public class Contract extends MOBaseItem
     public boolean hasDetails(ItemStack stack){return true;}
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
         QuestStack questStack = QuestStack.loadFromNBT(itemstack.getTagCompound());
@@ -68,7 +69,7 @@ public class Contract extends MOBaseItem
     {
         if (itemStack.getTagCompound() != null)
         {
-            return QuestStack.loadFromNBT(itemStack.getTagCompound()).getTitle(Minecraft.getMinecraft().thePlayer);
+            return QuestStack.loadFromNBT(itemStack.getTagCompound()).getTitle();
         }
         return super.getItemStackDisplayName(itemStack);
     }
