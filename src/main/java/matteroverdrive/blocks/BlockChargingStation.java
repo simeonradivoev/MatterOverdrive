@@ -18,6 +18,7 @@
 
 package matteroverdrive.blocks;
 
+import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
@@ -50,20 +51,23 @@ public class BlockChargingStation extends MOBlockMachine
 
 
 //	Multiblock
-
+	@Override
 	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
 		return world.getBlock(x, y, z).isReplaceable(world, x, y, z) &&
 				world.getBlock(x, y + 1, z).isReplaceable(world, x, y + 1, z) &&
 				world.getBlock(x, y + 2, z).isReplaceable(world, x, y + 2, z);
 	}
 
+	@Override
 	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
-		world.setBlock(x, y + 1, z, MatterOverdriveBlocks.boundingBox);
-		world.setBlock(x, y + 2, z, MatterOverdriveBlocks.boundingBox);
+		BlockPosition ownerPos = new BlockPosition(x, y, z);
+		BlockBoundingBox.createBoundingBox(world, new BlockPosition(x, y + 1, z), ownerPos, this);
+		BlockBoundingBox.createBoundingBox(world, new BlockPosition(x, y + 2, z), ownerPos, this);
 
 		return meta;
 	}
 
+	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityMachineChargingStation) {
@@ -84,7 +88,7 @@ public class BlockChargingStation extends MOBlockMachine
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+    public TileEntity createNewTileEntity(World world, int meta)
     {
         return new TileEntityMachineChargingStation();
     }
