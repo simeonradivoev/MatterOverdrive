@@ -77,6 +77,7 @@ import java.util.stream.Collectors;
  */
 public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage, IInventory
 {
+    public static int RECHARGE_AMOUNT_ON_RESPAWN = 64000;
     public static boolean HURT_GLITCHING = true;
     public final static int BUILTIN_ENERGY_TRANSFER = 1024;
     public final static int TRANSFORM_TIME = 20 * 34;
@@ -171,6 +172,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         TRANSFORMATION_DEATH = configurationHandler.getBool("transformation_death", ConfigurationHandler.CATEGORY_ANDROID_PLAYER, true, "Should the player die after an Android transformation");
         REMOVE_POTION_EFFECTS = configurationHandler.getBool("remove_potion_effects", ConfigurationHandler.CATEGORY_ANDROID_PLAYER, true, "Remove all potion effects while an Android");
         HURT_GLITCHING = configurationHandler.getBool("hurt_glitching",ConfigurationHandler.CATEGORY_ANDROID_PLAYER,true,"Should the glitch effect be displayed every time the player gets hurt");
+        RECHARGE_AMOUNT_ON_RESPAWN = configurationHandler.getInt("recharge_amount_on_respawn",ConfigurationHandler.CATEGORY_ANDROID_PLAYER, RECHARGE_AMOUNT_ON_RESPAWN,"How much does the android player recharge after respawning");
     }
 
     @Override
@@ -565,9 +567,9 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public void onPlayerRespawn()
     {
-        while (getEnergyStored() < getMaxEnergyStored())
+        while (getEnergyStored() < RECHARGE_AMOUNT_ON_RESPAWN)
         {
-            receiveEnergy(getMaxEnergyStored(),false);
+            receiveEnergy(RECHARGE_AMOUNT_ON_RESPAWN,false);
         }
     }
 
