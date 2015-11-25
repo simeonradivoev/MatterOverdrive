@@ -38,4 +38,5 @@ public abstract class QuestLogic
     public abstract void initQuestStack(Random random,QuestStack questStack);
     public abstract boolean onEvent(QuestStack questStack, Event event,EntityPlayer entityPlayer);
     public abstract boolean areQuestStacksEqual(QuestStack questStackOne,QuestStack questStackTwo);
+    public abstract void onCompleted(QuestStack questStack,EntityPlayer entityPlayer);
 }

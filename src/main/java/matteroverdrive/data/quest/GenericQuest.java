@@ -106,6 +106,12 @@ public class GenericQuest extends Quest
         return questLogic.onEvent(questStack,event,entityPlayer);
     }
 
+    @Override
+    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    {
+        questLogic.onCompleted(questStack,entityPlayer);
+    }
+
     public String replaceVariables(String text,EntityPlayer entityPlayer)
     {
         if (entityPlayer != null)

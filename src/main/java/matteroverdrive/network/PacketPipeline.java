@@ -93,6 +93,7 @@ public class PacketPipeline
         registerPacket(PacketDigBlock.ServerHandler.class,PacketDigBlock.class);
         registerPacket(PacketUpdateQuest.ClientHandler.class,PacketUpdateQuest.class);
         registerPacket(PacketSyncQuests.ClientHandler.class,PacketSyncQuests.class);
+        registerPacket(PacketQuestActions.ServerHandler.class,PacketQuestActions.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

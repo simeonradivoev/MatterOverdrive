@@ -50,7 +50,8 @@ public class GuiDataPad extends MOGuiBase
     PageGuideEntries guideEntries;
     PageActiveQuests activeQuests;
     MOElementButtonScaled activeQuestsButton;
-    MOElementButtonScaled abondonQuestButton;
+    public MOElementButtonScaled abandonQuestButton;
+    public MOElementButtonScaled completeQuestButton;
     ItemStack dataPad;
 
     public GuiDataPad(ItemStack dataPadStack)
@@ -71,15 +72,22 @@ public class GuiDataPad extends MOGuiBase
         guideEntries = new PageGuideEntries(this,14,14,xSize-28,ySize-14-49,"Guide Entries",guideDescription);
         activeQuests = new PageActiveQuests(this,0,0,xSize-28,ySize-28,"Active Quests", MOExtendedProperties.get(Minecraft.getMinecraft().thePlayer));
 
-        activeQuestsButton = new MOElementButtonScaled(this,this,xSize - 72,ySize - 28,"",22,22);
+        activeQuestsButton = new MOElementButtonScaled(this,this,xSize - 96,ySize - 28,"",22,22);
         activeQuestsButton.setDisabledTexture(MOElementButton.HOVER_TEXTURE_DARK);
         activeQuestsButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.quest.active_quests"));
         activeQuestsButton.setIcon(ClientProxy.holoIcons.getIcon("question_mark"));
 
-        abondonQuestButton = new MOElementButtonScaled(this,activeQuests,xSize - 48,ySize - 24,"abondon_quest",16,16);
-        abondonQuestButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.quest.abandon"));
-        abondonQuestButton.setIcon(ClientProxy.holoIcons.getIcon("mini_quit"));
-        abondonQuestButton.setTextColor(Reference.COLOR_HOLO_RED.getColor());
+        completeQuestButton = new MOElementButtonScaled(this,activeQuests,xSize - 72,ySize - 28,"complete_quest",22,22);
+        completeQuestButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.quest.complete"));
+        completeQuestButton.setIcon(ClientProxy.holoIcons.getIcon("tick"));
+        completeQuestButton.setTextColor(Reference.COLOR_HOLO_GREEN.getColor());
+        completeQuestButton.setDisabledTexture(MOElementButton.HOVER_TEXTURE_DARK);
+
+        abandonQuestButton = new MOElementButtonScaled(this,activeQuests,xSize - 48,ySize - 24,"abandon_quest",16,16);
+        abandonQuestButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.quest.abandon"));
+        abandonQuestButton.setIcon(ClientProxy.holoIcons.getIcon("mini_quit"));
+        abandonQuestButton.setTextColor(Reference.COLOR_HOLO_RED.getColor());
+        abandonQuestButton.setDisabledTexture(MOElementButton.HOVER_TEXTURE_DARK);
 
         AddPage(guideEntries, ClientProxy.holoIcons.getIcon("page_icon_home"), "Guide Entries");
         AddPage(guideDescription, ClientProxy.holoIcons.getIcon("page_icon_search"), MOStringHelper.translateToLocal("gui.tooltip.page.info_database"));
@@ -97,7 +105,13 @@ public class GuiDataPad extends MOGuiBase
             addElement(category);
         }
         addElement(activeQuestsButton);
-        addElement(abondonQuestButton);
+        addElement(abandonQuestButton);
+        addElement(completeQuestButton);
+    }
+
+    public void refreshQuests(MOExtendedProperties extendedProperties)
+    {
+        activeQuests.refreshQuests(extendedProperties);
     }
 
     @Override
@@ -130,11 +144,13 @@ public class GuiDataPad extends MOGuiBase
         if (currentPage == 2)
         {
             activeQuestsButton.setEnabled(false);
-            abondonQuestButton.setVisible(true);
+            abandonQuestButton.setVisible(true);
+            completeQuestButton.setVisible(true);
         }else
         {
             activeQuestsButton.setEnabled(true);
-            abondonQuestButton.setVisible(false);
+            abandonQuestButton.setVisible(false);
+            completeQuestButton.setVisible(false);
         }
     }
 

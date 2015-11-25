@@ -214,13 +214,15 @@ tile.tritanium_crate.magenta.name=Magenta Tritanium Crate
 tile.tritanium_crate.orange=Orange Tritanium Crate
 tile.tritanium_crate.white.name=White Tritanium Crate
 
-entity.rogue_android.name=Rogue Android
+///////////// Entities /////////////////
+entity.rogue_android.name=Melee Rogue Android
 entity.failed_pig.name=Failed Pig
 entity.failed_chicken.name=Failed Chicken
 entity.failed_cow.name=Failed Cow
 entity.failed_sheep.name=Failed Sheep
 entity.mad_scientist.name=Mad Scientist
 entity.mad_scientist.junkie.name=Mad Scientist Junkie
+entity.ranged_rouge_android.name=Ranged Rouge Android
 
 ///////////// Decorative ////////////////////
 tile.decorative.stripes.name=Yellow Stripes
@@ -356,6 +358,7 @@ gui.tooltip.slot.weapon=Weapon
 gui.tooltip.quest.abandon=Abandon Selected Quest
 gui.tooltip.quest.active_quests=Current Quests
 gui.tooltip.quest.accept=Accept Quest
+gui.tooltip.quest.complete=Complete Quest
 
 ////////// Labels //////////////
 gui.label.button.save=Save
@@ -589,11 +592,17 @@ rarity.legendary=Legendary
 ###############################################################################################################
 # others
 quest.kill_androids.0.title=They will kill us all!
-quest.kill_androids.0.info=The are taking over the world! I know it! We must fight our machine overlords. If we don't, we will all perish. The fight starts with you %1$s! I need you to kill %2$s Rouge Androids before they get to us.
-quest.kill_androids.0.objective.0=Kill %3$s/%2$s Rouge Androids.
+quest.kill_androids.0.info=The are taking over the world! I know it! We must fight our machine overlords. If we don't, we will all perish. The fight starts with you %1$s! I need you to kill %2$s %3$s before they get to us.
+quest.kill_androids.0.objective.0=Kill %2$s/%3$s Rouge Androids.
 quest.cocktail_of_ascension.title=Cocktail of Ascension
 quest.cocktail_of_ascension.info=A Crazy scientist has asked you to bring him %2$s gunpowder from a shoveled creeper and %3$s red mushrooms from the darkest depths of the Nether, for his Cocktail Of Ascension.
 quest.cocktail_of_ascension.objective.0=Kill %2$s/%3$s creepers with a shovel
 quest.cocktail_of_ascension.objective.1=Pickup %2$s/%3$s gunpowder
 quest.cocktail_of_ascension.objective.2=Pickup %2$s/%3$s red mushrooms from the Nether
 quest.cocktail_of_ascension.objective.3=Talk to the crazy scientist junkie
+quest.sacrifice.title=Sacrifice
+quest.sacrifice.info=We are the Dark Vail. We have begun restoring an ancient artifact, the effects of which will remain a secret. All we need from you %1$s is to sacrifice %2$s %3$s newborns in the name of the dark lord, whose name strikes fear in the hearts of the innocent. Barry the dark lord. You will be compensated handsomely for your efforts.
+quest.sacrifice.objective.0=Kill %2$s/%3$s Baby %4$s
+quest.department_of_agriculture.title=Department of Agriculture
+quest.department_of_agriculture.info=To all willing hands. This is a job offer from the department of agriculture. We operate in the desolate world of Barus V and you can image the obstacles we face when it comes to growing %3$s. As our plans for hydroponic farms come to turn, our people starve to death. We are searching for capable parties to aid us in the supplying of %3$s to our citizens.
+quest.department_of_agriculture.objective.0=Gather %2$s/%3$s %4$s

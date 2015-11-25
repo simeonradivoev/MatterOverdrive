@@ -18,12 +18,13 @@
 
 package matteroverdrive.gui.pages;
 
+import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.gui.GuiAndroidHud;
-import matteroverdrive.gui.MOGuiBase;
+import matteroverdrive.gui.GuiDataPad;
 import matteroverdrive.gui.element.ElementBaseGroup;
 import matteroverdrive.gui.element.ElementTextList;
 import matteroverdrive.gui.element.IMOListBoxElement;
@@ -32,6 +33,7 @@ import matteroverdrive.gui.element.list.ListElementQuest;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.items.DataPad;
 import matteroverdrive.network.packet.server.PacketDataPadCommands;
+import matteroverdrive.network.packet.server.PacketQuestActions;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -53,7 +55,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
     MOElementListBox quests;
     ElementTextList questInfo;
 
-    public PageActiveQuests(MOGuiBase gui, int posX, int posY, int width, int height, String name, MOExtendedProperties extendedProperties)
+    public PageActiveQuests(GuiDataPad gui, int posX, int posY, int width, int height, String name, MOExtendedProperties extendedProperties)
     {
         super(gui, posX, posY, width, height);
         this.setName(name);
@@ -81,10 +83,17 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
 
     protected void loadQuests(MOExtendedProperties extendedProperties)
     {
+        quests.clear();
         for (QuestStack questStack : extendedProperties.getQuestData().getActiveQuests())
         {
             quests.add(new ListElementQuest(extendedProperties.getPlayer(),questStack,quests.getWidth()));
         }
+    }
+
+    public void refreshQuests(MOExtendedProperties extendedProperties)
+    {
+        loadQuests(extendedProperties);
+        loadSelectedQuestInfo();
     }
 
     @Override
@@ -95,9 +104,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
         glEnable(GL_BLEND);
         RenderUtils.applyColorWithAlpha(Reference.COLOR_HOLO,0.2f);
         Minecraft.getMinecraft().getTextureManager().bindTexture(GuiAndroidHud.top_element_bg);
-        //glDisable(GL_TEXTURE_2D);
         RenderUtils.drawPlane(60,sizeY/2 - 10,0,174,11);
-        //glEnable(GL_TEXTURE_2D);
     }
 
     @Override
@@ -137,7 +144,19 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
                     questInfo.addLine(EnumChatFormatting.DARK_GREEN + "□ " + objective);
                 }
             }
-
+            if (selectedQuest == null)
+            {
+                ((GuiDataPad)gui).completeQuestButton.setEnabled(false);
+                ((GuiDataPad)gui).abandonQuestButton.setEnabled(false);
+            }else
+            {
+                ((GuiDataPad)gui).completeQuestButton.setEnabled(QuestStack.canComplete(Minecraft.getMinecraft().thePlayer,selectedQuest));
+                ((GuiDataPad)gui).abandonQuestButton.setEnabled(true);
+            }
+        }else
+        {
+            ((GuiDataPad)gui).completeQuestButton.setEnabled(false);
+            ((GuiDataPad)gui).abandonQuestButton.setEnabled(false);
         }
     }
 
@@ -158,5 +177,19 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
             dataPadStack.getTagCompound().setShort("QuestInfoScroll",(short) questInfo.getScroll());
         }
         MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
+    }
+
+    @Override
+    public void handleElementButtonClick(ElementBase element, String elementName, int mouseButton)
+    {
+        super.handleElementButtonClick(element,elementName,mouseButton);
+        if (elementName.equalsIgnoreCase("complete_quest"))
+        {
+            MatterOverdrive.packetPipeline.sendToServer(new PacketQuestActions(PacketQuestActions.QUEST_ACTION_COMPLETE,quests.getSelectedIndex(),Minecraft.getMinecraft().thePlayer));
+        }
+        else if (elementName.equalsIgnoreCase("abandon_quest"))
+        {
+            MatterOverdrive.packetPipeline.sendToServer(new PacketQuestActions(PacketQuestActions.QUEST_ACTION_ABONDON,quests.getSelectedIndex(),Minecraft.getMinecraft().thePlayer));
+        }
     }
 }

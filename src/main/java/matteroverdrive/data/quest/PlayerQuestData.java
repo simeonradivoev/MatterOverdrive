@@ -21,7 +21,6 @@ package matteroverdrive.data.quest;
 import cpw.mods.fml.common.eventhandler.Event;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.player.MOExtendedProperties;
-import matteroverdrive.network.packet.client.quest.PacketSyncQuests;
 import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,7 +28,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.Level;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Created by Simeon on 11/19/2015.
@@ -181,9 +182,9 @@ public class PlayerQuestData
         activeQuests.remove(questStack);
     }
 
-    public void removeQuest(int id)
+    public QuestStack removeQuest(int id)
     {
-        activeQuests.remove(id);
+        return activeQuests.remove(id);
     }
 
     public List<QuestStack> getActiveQuests()

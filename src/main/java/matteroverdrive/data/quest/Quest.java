@@ -50,4 +50,5 @@ public abstract class Quest
     }
     public abstract void initQuestStack(Random random,QuestStack questStack);
     public abstract boolean onEvent(QuestStack questStack,Event event,EntityPlayer entityPlayer);
+    public abstract void onCompleted(QuestStack questStack,EntityPlayer entityPlayer);
 }

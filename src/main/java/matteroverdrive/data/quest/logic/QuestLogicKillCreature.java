@@ -19,10 +19,14 @@
 package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
@@ -33,13 +37,26 @@ import java.util.Random;
  */
 public class QuestLogicKillCreature extends QuestLogic
 {
+    ItemStack killWithItemStack;
+    Item killWithItem;
+    boolean explosionOnly;
+    boolean burnOnly;
+    boolean shootOnly;
+    boolean onlyChildren;
     int minKillCount;
     int maxKillCount;
-    Class<? extends EntityLivingBase> creatureClass;
+    Class<? extends EntityLivingBase>[] creatureClasses;
 
     public QuestLogicKillCreature(Class<? extends EntityLivingBase> creatureClass,int minKillCount,int maxKillCount)
     {
-        this.creatureClass = creatureClass;
+        this.creatureClasses = new Class[]{creatureClass};
+        this.minKillCount = minKillCount;
+        this.maxKillCount = maxKillCount;
+    }
+
+    public QuestLogicKillCreature(Class<? extends EntityLivingBase>[] creatureClasses,int minKillCount,int maxKillCount)
+    {
+        this.creatureClasses = creatureClasses;
         this.minKillCount = minKillCount;
         this.maxKillCount = maxKillCount;
     }
@@ -63,7 +80,7 @@ public class QuestLogicKillCreature extends QuestLogic
         {
             maxKillCount = questStack.getTagCompound().getInteger("MaxKillCount");
         }
-        return info.replace("%2$s",Integer.toString(maxKillCount));
+        return String.format(info,"",Integer.toString(maxKillCount), getTargetName(questStack));
     }
 
     @Override
@@ -89,7 +106,7 @@ public class QuestLogicKillCreature extends QuestLogic
             maxKillCount = questStack.getTagCompound().getInteger("MaxKillCount");
         }
 
-        return objetive.replace("%3$s",Integer.toString(killCount)).replace("%2$s",Integer.toString(maxKillCount));
+        return String.format(objetive,"",Integer.toString(killCount),Integer.toString(maxKillCount),getTargetName(questStack));
     }
 
     @Override
@@ -106,6 +123,7 @@ public class QuestLogicKillCreature extends QuestLogic
             questStack.setTagCompound(new NBTTagCompound());
         }
         questStack.getTagCompound().setInteger("MaxKillCount",minKillCount + random.nextInt(maxKillCount - minKillCount));
+        questStack.getTagCompound().setByte("KillType",(byte) random.nextInt(creatureClasses.length));
     }
 
     @Override
@@ -114,8 +132,22 @@ public class QuestLogicKillCreature extends QuestLogic
         if (event instanceof LivingDeathEvent)
         {
             LivingDeathEvent deathEvent = (LivingDeathEvent)event;
-            if (deathEvent.entityLiving != null && creatureClass.isInstance(deathEvent.entityLiving))
+            Class targetClass = creatureClasses[getKillType(questStack)];
+            if (deathEvent.entityLiving != null && targetClass.isInstance(deathEvent.entityLiving))
             {
+                if (shootOnly && !((LivingDeathEvent) event).source.isProjectile())
+                    return false;
+                if (burnOnly && !((LivingDeathEvent) event).source.isFireDamage())
+                    return false;
+                if (explosionOnly && !((LivingDeathEvent) event).source.isExplosion())
+                    return false;
+                if (killWithItem != null && (entityPlayer.getHeldItem() == null || entityPlayer.getHeldItem().getItem() != killWithItem))
+                    return false;
+                if (killWithItemStack != null && (entityPlayer.getHeldItem() == null || !ItemStack.areItemStacksEqual(entityPlayer.getHeldItem(),killWithItemStack)))
+                    return false;
+                if (onlyChildren && !((LivingDeathEvent) event).entityLiving.isChild())
+                    return false;
+
                 if (questStack.getTagCompound() == null)
                 {
                     questStack.setTagCompound(new NBTTagCompound());
@@ -142,14 +174,72 @@ public class QuestLogicKillCreature extends QuestLogic
         return false;
     }
 
-    public Class<? extends EntityLivingBase> getCreatureClass()
+    public int getKillType(QuestStack questStack)
     {
-        return creatureClass;
+        if (questStack.getTagCompound() != null)
+        {
+            return questStack.getTagCompound().getByte("KillType");
+        }
+        return 0;
+    }
+
+    public String getTargetName(QuestStack questStack)
+    {
+        Class<? extends EntityLivingBase> targetClass = creatureClasses[getKillType(questStack)];
+        EntityRegistry.EntityRegistration entityRegistration = EntityRegistry.instance().lookupModSpawn(targetClass,true);
+        if (entityRegistration != null)
+        {
+            return entityRegistration.getEntityName();
+        }
+        else
+        {
+            String name = (String) EntityList.classToStringMapping.get(targetClass);
+            if (name != null)
+            {
+                return name;
+            }
+        }
+        return "Unknown Target";
+    }
+
+    public Class<? extends EntityLivingBase>[] getCreatureClasses()
+    {
+        return creatureClasses;
     }
 
     @Override
     public boolean areQuestStacksEqual(QuestStack questStackOne, QuestStack questStackTwo)
     {
         return true;
+    }
+
+    @Override
+    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    {
+
+    }
+
+    public QuestLogicKillCreature setOnlyChildren(boolean onlyChildren)
+    {
+        this.onlyChildren = onlyChildren;
+        return this;
+    }
+
+    public QuestLogicKillCreature setShootOnly(boolean shootOnly)
+    {
+        this.shootOnly = shootOnly;
+        return this;
+    }
+
+    public QuestLogicKillCreature setBurnOnly(boolean burnOnly)
+    {
+        this.burnOnly = burnOnly;
+        return this;
+    }
+
+    public QuestLogicKillCreature setExplosionOnly(boolean explosionOnly)
+    {
+        this.explosionOnly = explosionOnly;
+        return this;
     }
 }

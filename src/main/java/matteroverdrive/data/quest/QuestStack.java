@@ -201,4 +201,16 @@ public class QuestStack
         contract.setTagCompound(questTag);
         return contract;
     }
+
+    public static boolean canComplete(EntityPlayer entityPlayer,QuestStack questStack)
+    {
+        for (int i = 0;i < questStack.getObjectivesCount(entityPlayer);i++)
+        {
+            if (!questStack.isObjectiveCompleted(entityPlayer,i))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }

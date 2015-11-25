@@ -19,7 +19,6 @@
 package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
-import li.cil.oc.common.block.Item;
 import matteroverdrive.api.events.MOEventDialogInteract;
 import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.entity.EntityVillagerMadScientist;
@@ -233,5 +232,11 @@ public class QuestLogicCocktailOfAscension extends QuestLogic
     @Override
     public boolean areQuestStacksEqual(QuestStack questStackOne, QuestStack questStackTwo) {
         return true;
+    }
+
+    @Override
+    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    {
+
     }
 }

@@ -25,9 +25,11 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.MOEventQuest;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.gui.GuiDataPad;
 import matteroverdrive.network.packet.client.quest.PacketSyncQuests;
 import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
 import matteroverdrive.proxy.ClientProxy;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -130,14 +132,36 @@ public class MOExtendedProperties implements IExtendedEntityProperties
     public void onQuestCompleted(QuestStack questStack,int index)
     {
         if (isServer()) {
-            MinecraftForge.EVENT_BUS.post(new MOEventQuest.Completed(questStack, player));
-            player.addChatMessage(new ChatComponentText(String.format("[Matter Overdrive] %1$s completed %s", player.getDisplayName(), questStack.getTitle(player))));
-            MatterOverdrive.packetPipeline.sendTo(new PacketUpdateQuest(index,questStack,PacketUpdateQuest.COMPLETE_QUEST),(EntityPlayerMP) player);
+            if (!MinecraftForge.EVENT_BUS.post(new MOEventQuest.Completed(questStack, player)))
+            {
+                questStack.getQuest().onCompleted(questStack,player);
+                player.addChatMessage(new ChatComponentText(String.format("[Matter Overdrive] %1$s completed %s", player.getDisplayName(), questStack.getTitle(player))));
+            }
+            MatterOverdrive.packetPipeline.sendTo(new PacketUpdateQuest(index, questStack, PacketUpdateQuest.COMPLETE_QUEST), (EntityPlayerMP) player);
         }else
         {
             ClientProxy.questHud.addCompletedQuest(questStack);
             getQuestData().getCompletedQuests().add(questStack);
             getQuestData().removeQuest(index);
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiDataPad)
+            {
+                ((GuiDataPad) Minecraft.getMinecraft().currentScreen).refreshQuests(this);
+            }
+        }
+    }
+
+    public void onQuestAbandoned(QuestStack questStack)
+    {
+        if (isServer())
+        {
+
+        }
+        else
+        {
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiDataPad)
+            {
+                ((GuiDataPad) Minecraft.getMinecraft().currentScreen).refreshQuests(this);
+            }
         }
     }
 
