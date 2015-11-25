@@ -41,6 +41,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
@@ -50,6 +51,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -60,6 +62,14 @@ import java.util.Map;
  */
 public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWeapon {
 
+    public static final String CUSTOM_DAMAGE_TAG = "CustomDamage";
+    public static final String CUSTOM_ACCURACY_TAG = "CustomAccuracy";
+    public static final String CUSTOM_RANGE_TAG = "CustomRange";
+    public static final String CUSTOM_SPEED_TAG = "CustomSpeed";
+    public static final String CUSTOM_DAMAGE_MULTIPLY_TAG = "CustomDamageMultiply";
+    public static final String CUSTOM_ACCURACY_MULTIPLY_TAG = "CustomAccuracyMultiply";
+    public static final String CUSTOM_RANGE_MULTIPLY_TAG = "CustomRangeMultiply";
+    public static final String CUSTOM_SPEED_MULTIPLY_TAG = "CustomSpeedMultiply";
     private final int defaultRange;
     private DecimalFormat damageFormater = new DecimalFormat("#.##");
 
@@ -101,30 +111,45 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
             energyInfo += " (" + DecimalFormat.getPercentInstance().format(energyMultiply) + ")";
         }
         infos.add(energyInfo);
-        String damageInfo = EnumChatFormatting.DARK_GREEN + "Damage: " + damageFormater.format(getWeaponScaledDamage(weapon));
-        double damageModify = getWeaponScaledDamage(weapon) / getWeaponBaseDamage(weapon);
-        if (damageModify != 1)
+        infos.add("");
+
+        infos.add(addStatWithMultiplyInfo("Damage",damageFormater.format(getWeaponScaledDamage(weapon)),getWeaponScaledDamage(weapon) / getWeaponBaseDamage(weapon),""));
+        infos.add(addStatWithMultiplyInfo("DPS",damageFormater.format((getWeaponScaledDamage(weapon)/getShootCooldown(weapon)) * 20),1,""));
+        infos.add(addStatWithMultiplyInfo("Speed",(int)(20d/getShootCooldown(weapon)*60),(double) getBaseShootCooldown(weapon) / (double)getShootCooldown(weapon)," s/m"));
+        infos.add(addStatWithMultiplyInfo("Range",getRange(weapon),(double)defaultRange / (double)getRange(weapon),"b"));
+        infos.add(addStatWithMultiplyInfo("Accuracy","",1d/(getAccuracyMultiply(weapon) * getCustomFloatStat(weapon,CUSTOM_ACCURACY_MULTIPLY_TAG,1)),""));
+
+        String heatInfo = EnumChatFormatting.DARK_RED + "Heat: ";
+        double heatPercent = getHeat(weapon) / getMaxHeat(weapon);
+        for (int i = 0;i < 32 * heatPercent;i++)
         {
-            damageInfo += String.format(" (%s)",DecimalFormat.getPercentInstance().format(damageModify));
+            heatInfo += "|";
         }
-        infos.add(damageInfo);
-
-        String dpsInfo = EnumChatFormatting.DARK_GREEN + "DPS: " + damageFormater.format((getWeaponScaledDamage(weapon)/getShootCooldown()) * 20);
-        infos.add(dpsInfo);
-        String spsInfo = EnumChatFormatting.DARK_GREEN + "Speed: " + (int)(20d/getShootCooldown()*60) + " s/m";
-        infos.add(spsInfo);
-
-        String rangeInfo = EnumChatFormatting.DARK_GREEN + "Range: " + getRange(weapon) + " b";
-        double rangeMultiply = getRangeMultiply(weapon);
-        if (rangeMultiply != 1)
-        {
-            rangeInfo += String.format(" (%s)",DecimalFormat.getPercentInstance().format(rangeMultiply));
-        }
-        infos.add(rangeInfo);
-
-        infos.add(EnumChatFormatting.DARK_RED + "Heat: " + DecimalFormat.getPercentInstance().format(getHeat(weapon) / getMaxHeat(weapon)));
+        infos.add(heatInfo);
+        infos.add("");
         addCustomDetails(weapon,player,infos);
         AddModuleDetails(weapon, infos);
+    }
+
+    private String addStatWithMultiplyInfo(String statName,Object value,double multiply,String units)
+    {
+        String info = String.format("%s: %s%s",statName,EnumChatFormatting.DARK_AQUA,value);
+        if (!units.isEmpty())
+        {
+            info += " " + units;
+        }
+        if (multiply != 1)
+        {
+            if (multiply > 1)
+            {
+                info += EnumChatFormatting.DARK_GREEN;
+            }else
+            {
+                info +=  EnumChatFormatting.DARK_RED;
+            }
+            info += String.format(" (%s) %s",DecimalFormat.getPercentInstance().format(multiply),EnumChatFormatting.RESET);
+        }
+        return info;
     }
 
     private void AddModuleDetails(ItemStack weapon,List infos)
@@ -132,7 +157,6 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         ItemStack module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BARREL, weapon);
         if (module != null)
         {
-            infos.add(EnumChatFormatting.GRAY + "");
             infos.add(EnumChatFormatting.GRAY + "Barrel:");
 
             Object statsObject = ((IWeaponModule)module.getItem()).getValue(module);
@@ -145,16 +169,18 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
                     }
                 }
             }
+
+            infos.add("");
         }
     }
 
-    protected void manageOverheat(ItemStack itemStack,World world,EntityPlayer entityPlayer)
+    protected void manageOverheat(ItemStack itemStack,World world,EntityLivingBase shooter)
     {
         if (getHeat(itemStack) >= getMaxHeat(itemStack))
         {
             itemStack.getTagCompound().setBoolean("Overheated", true);
-            world.playSoundAtEntity(entityPlayer, Reference.MOD_ID + ":" + "overheat", 1F, 1f);
-            world.playSoundAtEntity(entityPlayer,Reference.MOD_ID + ":" + "overheat_alarm",1,1);
+            world.playSoundAtEntity(shooter, Reference.MOD_ID + ":" + "overheat", 1F, 1f);
+            world.playSoundAtEntity(shooter,Reference.MOD_ID + ":" + "overheat_alarm",1,1);
         }
     }
 
@@ -214,7 +240,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     }
 
     @Override
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
+    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean isHolding)
     {
         if (!world.isRemote)
         {
@@ -229,9 +255,11 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     protected abstract int getBaseMaxHeat(ItemStack item);
     public abstract float getWeaponBaseDamage(ItemStack weapon);
     public abstract float getWeaponBaseAccuracy(ItemStack weapon,boolean zoomed);
-    public abstract boolean canFire(ItemStack itemStack,World world);
+    public abstract boolean canFire(ItemStack itemStack,World world,EntityLivingBase shooter);
+    public abstract float getShotSpeed(ItemStack weapon,EntityLivingBase shooter);
+    public abstract int getBaseShootCooldown(ItemStack weapon);
     @SideOnly(Side.CLIENT)
-    public abstract void onClientShot(ItemStack weapon, EntityPlayer player, Vec3 position, Vec3 dir,WeaponShot shot);
+    public abstract void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir,WeaponShot shot);
     @SideOnly(Side.CLIENT)
     public abstract void onProjectileHit(MovingObjectPosition hit, ItemStack weapon, World world,float amount);
     //endregion
@@ -295,6 +323,11 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     }
 
+    public void rechargeFully(ItemStack container)
+    {
+        setEnergyStored(container,getMaxEnergyStored(container));
+    }
+
     @Override
     public int getEnergyStored(ItemStack container)
     {
@@ -352,11 +385,25 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     //endregion
 
     //region Getters and setters
-    public int getRange(ItemStack phaser)
+    public int getRange(ItemStack weapon)
     {
         int range = defaultRange;
-        range = cofh.lib.util.helpers.MathHelper.round(range * getRangeMultiply(phaser));
+        range = cofh.lib.util.helpers.MathHelper.round(range * getRangeMultiply(weapon));
+        range *= getCustomIntStat(weapon,CUSTOM_RANGE_MULTIPLY_TAG,1);
         return  range;
+    }
+
+    public int getShootCooldown(ItemStack weapon)
+    {
+        int shootCooldown = getCustomIntStat(weapon,CUSTOM_SPEED_TAG,getBaseShootCooldown(weapon));
+        shootCooldown *= getShootCooldownMultiply(weapon);
+        shootCooldown *= getCustomFloatStat(weapon,CUSTOM_SPEED_MULTIPLY_TAG,1);
+        return shootCooldown;
+    }
+
+    public WeaponShot createShot(ItemStack weapon, EntityLivingBase shooter, boolean zoomed)
+    {
+        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,shooter,zoomed),WeaponHelper.getColor(weapon).getColor(),getRange(weapon));
     }
 
     //region get multiplies
@@ -380,6 +427,11 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         return WeaponHelper.getStatMultiply(Reference.WS_RANGE,weapon);
     }
 
+    public double getShootCooldownMultiply(ItemStack weapon)
+    {
+        return WeaponHelper.getStatMultiply(Reference.WS_SHOOT_COOLDOWN,weapon);
+    }
+
     protected float getAccuracyMultiply(ItemStack weapon)
     {
         return (float)WeaponHelper.getStatMultiply(Reference.WS_ACCURACY,weapon);
@@ -394,7 +446,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     public float getWeaponScaledDamage(ItemStack weapon)
     {
-        return getWeaponBaseDamage(weapon) * getDamageMultiplay(weapon);
+        return getCustomFloatStat(weapon,CUSTOM_DAMAGE_TAG,getWeaponBaseDamage(weapon)) * getDamageMultiplay(weapon) * getCustomFloatStat(weapon,CUSTOM_DAMAGE_MULTIPLY_TAG,1);
     }
 
     public DamageSource getDamageSource(ItemStack weapon,EntityPlayer player)
@@ -474,13 +526,42 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         return getEnergyStored(weapon);
     }
 
-    public float getAccuracy(ItemStack weapon,EntityPlayer player,boolean zoomed)
+    public float getAccuracy(ItemStack weapon,EntityLivingBase shooter,boolean zoomed)
     {
         float accuracy = getWeaponBaseAccuracy(weapon,zoomed);
-        accuracy += (float)Vec3.createVectorHelper(player.motionX,player.motionY*0.1,player.motionZ).lengthVector() * 10;
-        accuracy *= player.isSneaking() ? 0.6f: 1;
+        accuracy = getCustomFloatStat(weapon,CUSTOM_ACCURACY_TAG,accuracy);
+        accuracy += (float)Vec3.createVectorHelper(shooter.motionX,shooter.motionY*0.1,shooter.motionZ).lengthVector() * 10;
+        accuracy *= shooter.isSneaking() ? 0.6f: 1;
         accuracy *= getAccuracyMultiply(weapon);
+        accuracy *= getCustomFloatStat(weapon,CUSTOM_ACCURACY_MULTIPLY_TAG,1);
         return accuracy;
+    }
+
+    public void removeAllCustomStats(ItemStack weapon)
+    {
+        if (weapon.hasTagCompound())
+        {
+            weapon.getTagCompound().removeTag(CUSTOM_DAMAGE_TAG);
+            weapon.getTagCompound().removeTag(CUSTOM_ACCURACY_TAG);
+        }
+    }
+
+    public float getCustomFloatStat(ItemStack weapon,String name,float def)
+    {
+        if (weapon.hasTagCompound() && weapon.getTagCompound().hasKey(name, Constants.NBT.TAG_FLOAT))
+        {
+            return weapon.getTagCompound().getFloat(name);
+        }
+        return def;
+    }
+
+    public int getCustomIntStat(ItemStack weapon,String name,int def)
+    {
+        if (weapon.hasTagCompound() && weapon.getTagCompound().hasKey(name, Constants.NBT.TAG_INT))
+        {
+            return weapon.getTagCompound().getInteger(name);
+        }
+        return def;
     }
 
     @Override
@@ -490,7 +571,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     public boolean needsRecharge(ItemStack weapon)
     {
-        return !DrainEnergy(weapon,getShootCooldown(),true);
+        return !DrainEnergy(weapon,getShootCooldown(weapon),true);
     }
 
     @Override

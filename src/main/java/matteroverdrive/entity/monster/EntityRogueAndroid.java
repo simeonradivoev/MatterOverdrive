@@ -16,7 +16,7 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.entity;
+package matteroverdrive.entity.monster;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import matteroverdrive.MatterOverdrive;
@@ -45,7 +45,8 @@ public class EntityRogueAndroid implements IConfigSubscriber
 
     public static void registerEntity()
     {
-        createEntity(EntityRougeAndroidMob.class, "rogue_android", 0xFFFFF, 0);
+        createEntity(EntityMeleeRougeAndroidMob.class, "rogue_android", 0xFFFFF, 0);
+        createEntity(EntityRangedRougeAndroidMob.class,"ranged_rouge_android",0xFFFFF, 0);
     }
 
     public static void  createEntity(Class<? extends EntityLiving> entityClass, String name, int solidColor, int spotColor)
@@ -104,6 +105,8 @@ public class EntityRogueAndroid implements IConfigSubscriber
         loadDimesionWhitelist(config);
         loadBiomeBlacklist(config);
         loadBiomesWhitelist(config);
+
+        EntityRangedRougeAndroidMob.UNLIMITED_WEAPON_ENERGY = config.getBool(ConfigurationHandler.CATEGORY_ENTITIES + "rouge_android","unlimited_weapon_energy",true,"Do Ranged Rouge Androids have unlimited weapon energy in their weapons");
     }
 
     private static void loadBiomeBlacklist(ConfigurationHandler config)

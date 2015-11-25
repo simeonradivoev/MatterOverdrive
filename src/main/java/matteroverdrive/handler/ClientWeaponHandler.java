@@ -90,10 +90,10 @@ public class ClientWeaponHandler
     {
         return shotTracker.get(item) <= 0;
     }
-    public void addShootDelay(IWeapon item)
+    public void addShootDelay(IWeapon item,ItemStack weaponStack)
     {
         if (shotTracker.containsKey(item))
-            shotTracker.put(item,shotTracker.get(item) + item.getShootCooldown());
+            shotTracker.put(item,shotTracker.get(item) + item.getShootCooldown(weaponStack));
     }
     public void addReloadDelay(IWeapon weapon,int delay)
     {

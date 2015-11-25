@@ -32,12 +32,15 @@ public class Reference
 	public static final String CLIENT_PROXY_CLASS = "matteroverdrive.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "matteroverdrive.proxy.CommonProxy";
 	public static final String CHANNEL_NAME = MOD_ID + "_channel";
+	public static final String CHANNEL_WEAPONS_NAME = MOD_ID + "_channel:weapons";
+	public static final String CHANNEL_GUI_NAME = MOD_ID + "_channel:gui";
 	public static final String VERSIONS_CHECK_URL = "http://simeon.co.vu/Mods/MatterOverdrive/wp-json/posts?type[]=mo_download&filter[posts_per_page]=1";
 	public static final String DOWNLOAD_URL = "http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/";
 
 
 	//region GUI
 	public static final String PATH_GFX = "mo:textures/";
+	public static final String PATH_WORLD_TEXTURES = PATH_GFX + "world/";
 	public static final String PATH_ARMOR = PATH_GFX + "armor/";
 	public static final String PATH_PARTICLE = PATH_GFX + "particle/";
 	public static final String PATH_GUI = PATH_GFX + "gui/";
@@ -106,6 +109,7 @@ public class Reference
 	public static final int WS_HEAL = 8;
 	public static final int WS_MAX_HEAT = 9;
 	public static final int WS_ACCURACY = 10;
+	public static final int WS_SHOOT_COOLDOWN = 11;
 	//endregion
 
 	//region Request Packet Type
@@ -150,5 +154,10 @@ public class Reference
 		if (eioLoaded == null) eioLoaded = Loader.isModLoaded("EnderIO");
 		return eioLoaded;
 	}
+	//endregion
+
+	//region World Geb
+	public static final String CHEST_GEN_ANDROID_HOUSE = "android_house";
+	public static final String WORLD_DATA_MO_GEN_POSITIONS = "MOWorldGenPositions";
 	//endregion
 }
