@@ -83,7 +83,7 @@ public class TickHandler
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event)
     {
-
+        ClientProxy.weaponHandler.onTick(event);
     }
 
     //Called when the world ticks

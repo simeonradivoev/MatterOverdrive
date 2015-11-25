@@ -29,12 +29,11 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import org.lwjgl.input.Keyboard;
-
-import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Simeon on 11/20/2015.
@@ -139,34 +138,16 @@ public class GuiQuestHud
         }
     }
 
-    public void onTick()
-    {
-        if (Keyboard.isKeyDown(Keyboard.KEY_Z))
-        {
-            startCompleteQuestNotification(null);
-
-        }
-        else if (Keyboard.isKeyDown(Keyboard.KEY_C))
-        {
-            startNewQuestNotification(null);
-        }
-        else if (Keyboard.isKeyDown(Keyboard.KEY_V))
-        {
-            startObjectivesChanged(null,null);
-        }
-
-        if (!startedQuestQueue.isEmpty() && !startedQuestTimeline.isPlaying())
-        {
+    public void onTick() {
+        if (!startedQuestQueue.isEmpty() && !startedQuestTimeline.isPlaying()) {
             startNewQuestNotification(startedQuestQueue.poll());
         }
-        if (!completedQuestQueue.isEmpty() && !completeQuestTimeline.isPlaying())
-        {
+        if (!completedQuestQueue.isEmpty() && !completeQuestTimeline.isPlaying()) {
             startCompleteQuestNotification(completedQuestQueue.poll());
         }
-        if (!objectivesChangedQueue.isEmpty() && !objectivesTimeline.isPlaying())
-        {
+        if (!objectivesChangedQueue.isEmpty() && !objectivesTimeline.isPlaying()) {
             QuestStack[] questStacks = objectivesChangedQueue.poll();
-            startObjectivesChanged(questStacks[0],questStacks[1]);
+            startObjectivesChanged(questStacks[0], questStacks[1]);
         }
     }
 

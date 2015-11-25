@@ -22,6 +22,7 @@ import cofh.lib.util.position.BlockPosition;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.matter.IMatterDatabase;
@@ -46,6 +47,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -284,19 +286,21 @@ public class MatterScanner extends MOBaseItem
 	@SideOnly(Side.CLIENT)
     public static void DisplayGuiScreen()
     {
-		if(MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem()))
-		{
-			Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem(),Minecraft.getMinecraft().thePlayer.inventory.currentItem));
-			return;
-		}
-
-		for (int i = 0; i < Minecraft.getMinecraft().thePlayer.inventory.getSizeInventory(); i++)
-		{
-			if (MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i)))
-			{
-				Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i),i));
+		try {
+			if (MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem())) {
+				Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem(), Minecraft.getMinecraft().thePlayer.inventory.currentItem));
 				return;
 			}
+
+			for (int i = 0; i < Minecraft.getMinecraft().thePlayer.inventory.getSizeInventory(); i++) {
+				if (MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i))) {
+					Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i), i));
+					return;
+				}
+			}
+		}catch (Exception e)
+		{
+			MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while trying to open Matter Scanner GUI");
 		}
     }
 

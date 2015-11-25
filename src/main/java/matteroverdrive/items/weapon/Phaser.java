@@ -462,7 +462,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
-    public boolean isWeaponZoomed(ItemStack weapon) {
+    public boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon) {
         return false;
     }
 

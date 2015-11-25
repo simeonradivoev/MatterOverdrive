@@ -182,6 +182,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
     public void renderCrosshair(RenderGameOverlayEvent event)
     {
+        glPushAttrib(GL_COLOR_BUFFER_BIT);
         glPushMatrix();
         float scale = 6 + ClientProxy.weaponHandler.getEquippedWeaponAccuracyPercent(Minecraft.getMinecraft().thePlayer)*256;
         glEnable(GL_BLEND);
@@ -203,6 +204,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         RenderHelper.renderIcon(-1.0,-scale+1,0,crosshairIcon,3,3);
         glPopMatrix();
         glPopMatrix();
+        glPopAttrib();
     }
 
     public void renderRadialMenu(RenderGameOverlayEvent event)

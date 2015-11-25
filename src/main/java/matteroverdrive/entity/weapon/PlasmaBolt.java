@@ -284,10 +284,10 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
             }
         }
 
-        this.posX += this.motionX;
-        this.posY += this.motionY;
-        this.posZ += this.motionZ;
-        this.setPosition(this.posX, this.posY, this.posZ);
+        this.boundingBox.offset(this.motionX, this.motionY, this.motionZ);
+        this.posX = (this.boundingBox.minX + this.boundingBox.maxX) / 2.0D;
+        this.posY = this.boundingBox.minY + (double)this.yOffset - (double)this.ySize;
+        this.posZ = (this.boundingBox.minZ + this.boundingBox.maxZ) / 2.0D;
         this.func_145775_I();
     }
 

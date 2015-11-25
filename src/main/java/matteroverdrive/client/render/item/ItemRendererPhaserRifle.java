@@ -21,6 +21,7 @@ package matteroverdrive.client.render.item;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
+import matteroverdrive.handler.ClientWeaponHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.PhaserRifle;
 import matteroverdrive.util.RenderUtils;
@@ -52,7 +53,8 @@ public class ItemRendererPhaserRifle implements IItemRenderer
     public static final float SCALE_DROP = 0.5f;
     public static float RECOIL_TIME = 0;
     public static float RECOIL_AMOUNT = 0;
-    private static float ZOOM_TIME = 0;
+    private static float lastFov;
+    private static float lastSensitivity;
 
     public static IModelCustom phaserModel;
     public static ResourceLocation phaserTexture;
@@ -128,9 +130,8 @@ public class ItemRendererPhaserRifle implements IItemRenderer
 
     void renderFirstPerson(ItemStack item)
     {
-        ZOOM_TIME = MOMathHelper.Lerp(ZOOM_TIME,Minecraft.getMinecraft().thePlayer.isUsingItem() ? 1f : 0,0.2f);
         RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME,0,0.1f);
-        float zoomValue = MOEasing.Quart.easeOut(ZOOM_TIME, 0, 1, 1f);
+        float zoomValue = MOEasing.Sine.easeInOut(ClientWeaponHandler.ZOOM_TIME, 0, 1, 1f);
         float recoilValue = MOEasing.Quad.easeInOut(RECOIL_TIME, 0, 1, 1f);
 
         GL11.glPushMatrix();

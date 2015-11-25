@@ -68,12 +68,22 @@ public class MOLog
 
     public static void error(String format, Object... data)
     {
-        log(Level.DEBUG, format, data);
+        log(Level.ERROR, format, data);
+    }
+
+    public static void error(String format,Throwable t, Object... data)
+    {
+        log(Level.ERROR,t, format, data);
     }
 
     public static void fatal(String format, Object... data)
     {
         log(Level.FATAL, format, data);
+    }
+
+    public static void fatal(String format,Throwable t, Object... data)
+    {
+        log(Level.FATAL,t, format, data);
     }
 
     public static Logger getLogger()

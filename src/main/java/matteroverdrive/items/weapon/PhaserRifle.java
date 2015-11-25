@@ -164,8 +164,8 @@ public class PhaserRifle extends EnergyWeapon
     }
 
     @Override
-    public boolean isWeaponZoomed(ItemStack weapon) {
-        return Mouse.isButtonDown(1);
+    public boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon) {
+        return Mouse.isButtonDown(1) && entityPlayer.isUsingItem();
     }
 
     @Override
@@ -185,7 +185,8 @@ public class PhaserRifle extends EnergyWeapon
                 if (canFire(itemStack,world,(EntityLivingBase)entity) && ClientProxy.weaponHandler.shootDelayPassed(this))
                 {
                     itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
-                    if (isWeaponZoomed(itemStack)) {
+                    if (isWeaponZoomed((EntityPlayer) entity,itemStack))
+                    {
                         ItemRendererPhaserRifle.RECOIL_AMOUNT = 0.5f + getAccuracy(itemStack,(EntityPlayer)entity,true);
                         Minecraft.getMinecraft().renderViewEntity.hurtTime = 6 + (int)((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
                         Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 15;
@@ -198,8 +199,8 @@ public class PhaserRifle extends EnergyWeapon
 
                     ItemRendererPhaserRifle.RECOIL_TIME = 1;
                     Vec3 dir = ((EntityPlayer) entity).getLook(1);
-                    Vec3 pos = getFirePosition((EntityPlayer) entity, dir, isWeaponZoomed(itemStack));
-                    WeaponShot shot = createShot(itemStack,(EntityPlayer) entity, isWeaponZoomed(itemStack));
+                    Vec3 pos = getFirePosition((EntityPlayer) entity, dir, isWeaponZoomed((EntityPlayer) entity,itemStack));
+                    WeaponShot shot = createShot(itemStack,(EntityPlayer) entity, isWeaponZoomed((EntityPlayer) entity,itemStack));
                     onClientShot(itemStack, (EntityPlayer) entity, pos, dir, shot);
                     MatterOverdrive.packetPipeline.sendToServer(new PacketFirePlasmaShot(entity.getEntityId(),pos,dir,shot));
                     ClientProxy.weaponHandler.addShootDelay(this,itemStack);

@@ -339,7 +339,7 @@ public class OmniTool extends EnergyWeapon
                 if (canFire(itemStack,world,(EntityLivingBase)entity) && ClientProxy.weaponHandler.shootDelayPassed(this))
                 {
                     itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
-                    ItemRendererOmniTool.RECOIL_AMOUNT = 6 + getAccuracy(itemStack,(EntityPlayer)entity,isWeaponZoomed(itemStack)) * 2;
+                    ItemRendererOmniTool.RECOIL_AMOUNT = 6 + getAccuracy(itemStack,(EntityPlayer)entity,isWeaponZoomed((EntityPlayer) entity,itemStack)) * 2;
                     ItemRendererOmniTool.RECOIL_TIME = 1;
                     Minecraft.getMinecraft().renderViewEntity.hurtTime = 5;
                     Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 15;
@@ -407,7 +407,7 @@ public class OmniTool extends EnergyWeapon
 
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean isWeaponZoomed(ItemStack weapon)
+    public boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon)
     {
         return false;
     }

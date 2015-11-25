@@ -179,7 +179,7 @@ public interface IWeapon
      * @return is the weapon zoomed.
      */
     @SideOnly(Side.CLIENT)
-    boolean isWeaponZoomed(ItemStack weapon);
+    boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon);
 
     /**
      * @param weapon the weapon stack.
