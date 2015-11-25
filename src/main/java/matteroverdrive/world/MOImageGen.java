@@ -19,7 +19,6 @@
 package matteroverdrive.world;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -29,6 +28,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,7 +144,10 @@ public abstract class MOImageGen
 
     private void loadTexture(ResourceLocation textureLocation) throws RuntimeException {
         try {
-            BufferedImage image = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(textureLocation).getInputStream());
+
+            String path = "/assets/"+textureLocation.getResourceDomain()+"/" + textureLocation.getResourcePath();
+            InputStream imageStream = getClass().getResourceAsStream(path);
+            BufferedImage image = ImageIO.read(imageStream);
 
             textureWidth = image.getWidth();
             textureHeight = image.getHeight();

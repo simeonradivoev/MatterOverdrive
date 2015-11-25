@@ -57,7 +57,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     {
         tritaniumGen = new WorldGenMinable(MatterOverdriveBlocks.tritaniumOre,TRITANIUM_VEIN_SIZE);
         dilithiumGen = new WorldGenMinable(MatterOverdriveBlocks.dilithium_ore,DILITHIUM_VEIN_SIZE);
-        androidHouse = new MOAndroidHouseBuilding("android_house",0.025);
+        androidHouse = new MOAndroidHouseBuilding("android_house",0.01);
         sandPit = new MOSandPit("sand_pit_house",0.05,3);
         anomalyGen = new WorldGenGravitationalAnomaly("gravitational_anomaly",0.005f,2048,2048 + 8192);
         oreDimentionsBlacklist = new HashSet<>();
