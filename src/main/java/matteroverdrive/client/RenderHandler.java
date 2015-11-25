@@ -29,6 +29,7 @@ import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.api.renderer.IBionicPartRenderer;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.api.starmap.IStarmapRenderRegistry;
+import matteroverdrive.client.model.ModelTritaniumArmor;
 import matteroverdrive.client.render.*;
 import matteroverdrive.client.render.biostat.BioticStatRendererShield;
 import matteroverdrive.client.render.biostat.BioticStatRendererTeleporter;
@@ -42,8 +43,8 @@ import matteroverdrive.client.render.parts.TritaniumSpineRenderer;
 import matteroverdrive.client.render.tileentity.*;
 import matteroverdrive.client.render.tileentity.starmap.*;
 import matteroverdrive.entity.*;
-import matteroverdrive.entity.monster.EntityRangedRougeAndroidMob;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
+import matteroverdrive.entity.monster.EntityRangedRougeAndroidMob;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
@@ -145,6 +146,10 @@ public class RenderHandler
     private TileEntityRendererPacketQueue tileEntityRendererPacketQueue;
     private TileEntityRendererInscriber tileEntityRendererInscriber;
     private TileEntityRendererContractMarket tileEntityRendererContractMarket;
+    //endregion
+    //region Models
+    public ModelTritaniumArmor modelTritaniumArmor;
+    public ModelTritaniumArmor modelTritaniumArmorFeet;
     //endregion
 
     public RenderHandler(World world, TextureManager textureManager)
@@ -362,6 +367,12 @@ public class RenderHandler
         starmapRenderRegistry.registerRenderer(Star.class, starMapRendererStar);
         starmapRenderRegistry.registerRenderer(Galaxy.class, starMapRenderGalaxy);
         starmapRenderRegistry.registerRenderer(Planet.class, starMapRenderPlanetStats);
+    }
+
+    public void createModels()
+    {
+        modelTritaniumArmor = new ModelTritaniumArmor(0);
+        modelTritaniumArmorFeet = new ModelTritaniumArmor(0.5f);
     }
 
     public RenderParticlesHandler getRenderParticlesHandler()

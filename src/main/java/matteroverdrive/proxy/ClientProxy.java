@@ -66,12 +66,16 @@ public class ClientProxy extends CommonProxy
         registerSubscribtions();
 
         //region Render Handler Functions
+        //region Create
         renderHandler.createBlockRenderers();
         renderHandler.createTileEntityRenderers(MatterOverdrive.configHandler);
         renderHandler.createItemRenderers();
         renderHandler.createEntityRenderers();
         renderHandler.createBioticStatRenderers();
         renderHandler.createStarmapRenderers();
+        renderHandler.createModels();
+        //endregion
+        //region Register
         renderHandler.registerBlockRenderers();
         renderHandler.registerTileEntitySpecialRenderers();
         renderHandler.registerItemRenderers();
@@ -79,6 +83,7 @@ public class ClientProxy extends CommonProxy
         renderHandler.registerBioticStatRenderers();
         renderHandler.registerBionicPartRenderers();
         renderHandler.registerStarmapRenderers();
+        //endregion
         //endregion
 
         MatterOverdrive.configHandler.subscribe(androidHud);

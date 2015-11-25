@@ -22,13 +22,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.client.model.ModelTritaniumArmor;
+import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 
@@ -37,9 +37,6 @@ import net.minecraft.item.ItemStack;
  */
 public class TritaniumArmor extends ItemArmor
 {
-    public static final ModelTritaniumArmor armorModel = new ModelTritaniumArmor(0);
-    public static final ModelTritaniumArmor armorModelFeet = new ModelTritaniumArmor(0.5f);
-
     public TritaniumArmor(ArmorMaterial armorMaterial, int renderIndex, int renderType) {
         super(armorMaterial, renderIndex, renderType);
     }
@@ -55,7 +52,7 @@ public class TritaniumArmor extends ItemArmor
     @Override
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot)
     {
-        ModelTritaniumArmor armorModel = armorSlot == 3 ? TritaniumArmor.armorModelFeet : TritaniumArmor.armorModel;
+        ModelTritaniumArmor armorModel = armorSlot == 3 ? ClientProxy.renderHandler.modelTritaniumArmorFeet : ClientProxy.renderHandler.modelTritaniumArmor;
         armorModel.bipedHead.showModel = armorSlot == 0;
         armorModel.bipedHeadwear.showModel = armorSlot == 0;
         armorModel.bipedBody.showModel = armorSlot == 1;
@@ -77,10 +74,6 @@ public class TritaniumArmor extends ItemArmor
             ItemStack heldItem = entityLiving.getHeldItem();
         }
 
-        if (entityLiving instanceof EntityPlayer)
-        {
-
-        }
         return armorModel;
     }
 }
