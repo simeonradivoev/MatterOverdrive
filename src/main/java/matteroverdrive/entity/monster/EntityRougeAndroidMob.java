@@ -98,8 +98,8 @@ public class EntityRougeAndroidMob extends EntityMob
     @Override
     public boolean getCanSpawnHere()
     {
-        if (EntityRogueAndroid.dimentionWhitelist.size() > 0) {
-            return EntityRogueAndroid.dimentionWhitelist.contains(worldObj.provider.dimensionId) && inDimensionBlacklist();
+        if (EntityRogueAndroid.dimensionWhitelist.size() > 0) {
+            return EntityRogueAndroid.dimensionWhitelist.contains(worldObj.provider.dimensionId) && inDimensionBlacklist();
         }
         if (inDimensionBlacklist())
         {
@@ -110,7 +110,7 @@ public class EntityRougeAndroidMob extends EntityMob
     }
 
     private boolean inDimensionBlacklist() {
-        return EntityRogueAndroid.dimentionBlacklist.contains(worldObj.provider.dimensionId);
+        return EntityRogueAndroid.dimensionBlacklist.contains(worldObj.provider.dimensionId);
     }
 
     public void setAndroidLevel(int level)
