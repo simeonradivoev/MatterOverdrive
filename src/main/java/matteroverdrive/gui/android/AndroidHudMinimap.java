@@ -21,7 +21,7 @@ package matteroverdrive.gui.android;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.data.MinimapEntityInfo;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.gui.ScaledResolution;

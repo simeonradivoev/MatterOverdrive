@@ -22,6 +22,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.weapon.IWeapon;
+import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -35,7 +36,10 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class ClientWeaponHandler
 {
-    Map<IWeapon,Integer> shotTracker;
+    public static float ZOOM_TIME;
+    private Map<IWeapon,Integer> shotTracker;
+    private float lastFov;
+    private float lastMouseSensitivity;
 
     public ClientWeaponHandler()
     {
@@ -60,6 +64,35 @@ public class ClientWeaponHandler
             }
 
             manageWeaponView();
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void onTick(TickEvent.RenderTickEvent event)
+    {
+        if (Minecraft.getMinecraft().thePlayer != null)
+        {
+            EntityPlayer entityPlayer = Minecraft.getMinecraft().thePlayer;
+
+            if (entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof IWeapon)
+            {
+                ZOOM_TIME = MOMathHelper.Lerp(ZOOM_TIME, ((IWeapon) entityPlayer.getHeldItem().getItem()).isWeaponZoomed(entityPlayer,entityPlayer.getHeldItem()) ? 1f : 0, event.renderTickTime*0.2f);
+
+            }
+            else
+            {
+                ZOOM_TIME = MOMathHelper.Lerp(ZOOM_TIME, 0, 0.2f);
+            }
+
+            if (ZOOM_TIME == 0)
+            {
+                lastMouseSensitivity = Minecraft.getMinecraft().gameSettings.mouseSensitivity;
+                lastFov = Minecraft.getMinecraft().gameSettings.fovSetting;
+            }else
+            {
+                Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity*(1-(ZOOM_TIME*0.3f));
+                Minecraft.getMinecraft().gameSettings.fovSetting = lastFov - ZOOM_TIME * 15;
+            }
         }
     }
 
@@ -90,10 +123,10 @@ public class ClientWeaponHandler
     {
         return shotTracker.get(item) <= 0;
     }
-    public void addShootDelay(IWeapon item)
+    public void addShootDelay(IWeapon item,ItemStack weaponStack)
     {
         if (shotTracker.containsKey(item))
-            shotTracker.put(item,shotTracker.get(item) + item.getShootCooldown());
+            shotTracker.put(item,shotTracker.get(item) + item.getShootCooldown(weaponStack));
     }
     public void addReloadDelay(IWeapon weapon,int delay)
     {
@@ -104,7 +137,7 @@ public class ClientWeaponHandler
     {
         if (entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof IWeapon)
         {
-            return ((IWeapon) entityPlayer.getHeldItem().getItem()).getAccuracy(entityPlayer.getHeldItem(), entityPlayer, ((IWeapon) entityPlayer.getHeldItem().getItem()).isWeaponZoomed(entityPlayer.getHeldItem())) / ((IWeapon) entityPlayer.getHeldItem().getItem()).getMaxHeat(entityPlayer.getHeldItem());
+            return ((IWeapon) entityPlayer.getHeldItem().getItem()).getAccuracy(entityPlayer.getHeldItem(), entityPlayer, ((IWeapon) entityPlayer.getHeldItem().getItem()).isWeaponZoomed(entityPlayer,entityPlayer.getHeldItem())) / ((IWeapon) entityPlayer.getHeldItem().getItem()).getMaxHeat(entityPlayer.getHeldItem());
         }
         return 0;
     }

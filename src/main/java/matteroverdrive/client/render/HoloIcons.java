@@ -111,6 +111,7 @@ public class HoloIcons {
         reg("grid", 16);
         reg("sort_random", 16);
         reg("minimap_target",21);
+        reg("question_mark",20);
 
         MatterOverdrive.statRegistry.registerIcons(textureMap);
     }

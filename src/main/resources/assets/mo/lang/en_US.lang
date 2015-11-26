@@ -145,6 +145,7 @@ tile.heavy_matter_pipe.details=Transports Matter Plasma
 tile.holo_sign.name=Holographic Sign
 tile.force_glass.name=Tritanium Glass
 tile.bounding_box.name=Bounding Block
+tile.inscriber.name=Molecular Inscriber
 
 //////////// Pattern Storage ////////////
 tile.pattern_storage.name=Pattern Storage
@@ -213,12 +214,15 @@ tile.tritanium_crate.magenta.name=Magenta Tritanium Crate
 tile.tritanium_crate.orange=Orange Tritanium Crate
 tile.tritanium_crate.white.name=White Tritanium Crate
 
-entity.rogue_android.name=Rogue Android
+///////////// Entities /////////////////
+entity.rogue_android.name=Melee Rogue Android
 entity.failed_pig.name=Failed Pig
 entity.failed_chicken.name=Failed Chicken
 entity.failed_cow.name=Failed Cow
 entity.failed_sheep.name=Failed Sheep
 entity.mad_scientist.name=Mad Scientist
+entity.mad_scientist.junkie.name=Mad Scientist Junkie
+entity.ranged_rouge_android.name=Ranged Rouge Android
 
 ///////////// Decorative ////////////////////
 tile.decorative.stripes.name=Yellow Stripes
@@ -245,6 +249,7 @@ tile.decorative.separator.name=Tritanium Rail
 dialog.generic.quit.questions=See you later.;I must go.;I'm in a hurry.;Goodbye.;Farewell.;Bye.
 dialog.generic.back.questions=Never mind.;Let's talk about something else.;I don't care.
 dialog.generic.trade.questions=I want to trade.;Let's trade.;Let me see your goods.;What do you have for sale?;
+dialog.generic.back_home.questions=Never mind.;Let's talk about something else.;I don't care.
 
 //////////// Mad Scientist ///////////////
 dialog.mad_scientist.convert.question=I have all the parts!
@@ -256,6 +261,24 @@ dialog.mad_scientist.undo.line=Why would you want to do that? The only way is by
 dialog.mad_scientist.undo.question=How do I reverse it!
 dialog.mad_scientist.whatDidYouDo.line=You are now an Android! You will no longer need food, sleep or oxygen. You can upgrade yourself with wonderful abilities in an Android Station and you will be able to see and do things you never imagined.
 dialog.mad_scientist.whatDidYouDo.question=What did you do to me?
+dialog.mad_scientist.junkie.main.line=Hey there buddy [§6burp§r].;What's going on buddy.;
+dialog.mad_scientist.junkie.cocktail_quest.question=You said something about a cocktail?
+dialog.mad_scientist.junkie.cocktail_quest.question.accept=§aHell Yes!
+dialog.mad_scientist.junkie.cocktail_quest.question.decline=§cFuck NO!
+dialog.mad_scientist.junkie.cocktail_quest.0.line=You-you-you have to help me, buddy, you see.
+dialog.mad_scientist.junkie.cocktail_quest.1.line=I have-have this [§6burp§r] amazing recipe, buddy, just amazing things with stuff mixed together, buddy.
+dialog.mad_scientist.junkie.cocktail_quest.2.line=It - it's gonna be better than... no it's incomparable, buddy, it's the pinnacle of perfection, buddy [§6burp§r].
+dialog.mad_scientist.junkie.cocktail_quest.3.line=But you see I need these things, buddy! I-I need some of that creeper POWDER, buddy and-and [§6burp§r] some mushrooms from the NETHER!
+dialog.mad_scientist.junkie.cocktail_quest.4.question=[scratch your ass]
+dialog.mad_scientist.junkie.cocktail_quest.4.line=But see here now, buddy! Hey, stop scratching your ass, buddy, it's v-v-very important!
+dialog.mad_scientist.junkie.cocktail_quest.5.question=sorry.
+dialog.mad_scientist.junkie.cocktail_quest.5.line=That powder stuff from the creeper keeps its potency only if you kill it with a shovel, buddy.
+dialog.mad_scientist.junkie.cocktail_quest.6.question=A shovel ?
+dialog.mad_scientist.junkie.cocktail_quest.6.line=Yes, a fucking shovel, buddy, you-you have to smash its brains out, repeated blunt traumas, buddy, to get the good stuff!
+dialog.mad_scientist.junkie.cocktail_quest.7.line=Now, go, buddy, quickly, buddy, go!
+dialog.mad_scientist.junkie.cocktail_quest.complete.question=I have all the ingredients for your cocktail.
+dialog.mad_scientist.junkie.cocktail_quest.line=Ah yes, now let me get these thing out of you buddy, take the burden of your shoulders, let me just mix up a batch and.... [§6junkie scientist mixes up the ingredients and takes a snort....§r]
+dialog.mad_scientist.junkie.cocktail_quest.are_you_ok.question=Are you ok?
 
 ##########################################################################################################
 # Creative Panels
@@ -292,26 +315,11 @@ weaponstat.8.name=Heal
 ##########################################################################################################
 # GUI
 
-gui.replicator.name=Pattern Replicator
-gui.decomposer.name=Matter Decomposer
-gui.matter_analyzer.name=Matter Analyzer
-gui.network_router.name=Network Router
-gui.pattern_storage.name=Pattern Storage
-gui.solar_panel.name=Solar Panel
-gui.pattern_monitor.name=Network Pattern Monitor
-gui.network_switch.name=Network Switch
-gui.recycler.name=Matter Recycler
-gui.fusion_reactor.name=Fusion Reactor
-gui.charging_station.name=Charging Station
-gui.weapon_station.name=Weapon Station
-gui.android_hud.transforming.line.0=Booting up System
-gui.android_hud.transforming.line.1=Constructing Neural Pathways
-gui.android_hud.transforming.line.2=Neural Configurations in Progress
-gui.android_hud.transforming.line.3=Installing Drivers
-gui.android_hud.transforming.line.4=Adjusting Artificial Limbs
-gui.android_hud.transforming.line.5=Purging Biological Contaminants
-gui.android_hud.transforming.line.final=Transformation in Progress
-gui.hologram.access_denied=ACCESS DENIED
+//////////// tooltips ///////////////
+gui.tooltip.starmap.no_ship_space=Not enough ship spaces
+gui.tooltip.starmap.no_building_space=Not enough building spaces
+gui.tooltip.starmap.no_ship_factory=No ship factory
+gui.tooltip.starmap.has_base=Base building already present
 gui.tooltip.close_menu=Close Menu
 gui.tooltip.open_menu=Open Menu
 gui.tooltip.close=Close
@@ -347,12 +355,12 @@ gui.tooltip.slot.shielding=Shielding
 gui.tooltip.slot.upgrade=Upgrade
 gui.tooltip.slot.recycle=Recyclable
 gui.tooltip.slot.weapon=Weapon
-gui.redstone_mode.high=High
-gui.redstone_mode.low=Low
-gui.redstone_mode.disabled=Disabled
-gui.config.redstone=Redstone
-gui.config.owner=Owner
-gui.config.mnet.address=Address
+gui.tooltip.quest.abandon=Abandon Selected Quest
+gui.tooltip.quest.active_quests=Current Quests
+gui.tooltip.quest.accept=Accept Quest
+gui.tooltip.quest.complete=Complete Quest
+
+////////// Labels //////////////
 gui.label.button.save=Save
 gui.label.button.remove=Remove
 gui.label.button.add=Add
@@ -362,12 +370,41 @@ gui.label.button.new=New
 gui.label.button.import=Import
 gui.label.button.import.too_far=Destination Too Far
 gui.label.auto_line_size=Auto Line Size
+gui.label.accept=Accept
 
-### GUI Tooltips ###
-gui.tooltip.starmap.no_ship_space=Not enough ship spaces
-gui.tooltip.starmap.no_building_space=Not enough building spaces
-gui.tooltip.starmap.no_ship_factory=No ship factory
-gui.tooltip.starmap.has_base=Base building already present
+/////////// Machines /////////////
+gui.replicator.name=Pattern Replicator
+gui.decomposer.name=Matter Decomposer
+gui.matter_analyzer.name=Matter Analyzer
+gui.network_router.name=Network Router
+gui.pattern_storage.name=Pattern Storage
+gui.solar_panel.name=Solar Panel
+gui.pattern_monitor.name=Network Pattern Monitor
+gui.network_switch.name=Network Switch
+gui.recycler.name=Matter Recycler
+gui.fusion_reactor.name=Fusion Reactor
+gui.charging_station.name=Charging Station
+gui.weapon_station.name=Weapon Station
+gui.inscriber.name=Inscriber
+gui.contract_market.name=Contracts
+
+////////// Other ///////////////
+gui.redstone_mode.high=High
+gui.redstone_mode.low=Low
+gui.redstone_mode.disabled=Disabled
+gui.config.redstone=Redstone
+gui.config.owner=Owner
+gui.config.mnet.address=Address
+
+gui.android_hud.transforming.line.0=Booting up System
+gui.android_hud.transforming.line.1=Constructing Neural Pathways
+gui.android_hud.transforming.line.2=Neural Configurations in Progress
+gui.android_hud.transforming.line.3=Installing Drivers
+gui.android_hud.transforming.line.4=Adjusting Artificial Limbs
+gui.android_hud.transforming.line.5=Purging Biological Contaminants
+gui.android_hud.transforming.line.final=Transformation in Progress
+gui.hologram.access_denied=ACCESS DENIED
+gui.time_until_next_quest=Next Quest in: %1$s
 
 ##########################################################################################################
 # Modules
@@ -434,6 +471,8 @@ death.attack.phaser=%1$s was disintegrated by %2$s
 death.attack.phaser.item=%1$s was disintegrated by %2$s using %3$s
 death.attack.blackHole=%1$s was crushed by a Gravitational Anomaly
 death.attack.android_transformation=%1$s has ended his biological existence
+death.attack.plasmaBolt=%1$s was shot by %2$s
+death.attack.plasmaBolt.item=%1$s was shot by %2$s using %3$s
 
 ##########################################################################################################
 # Tasks
@@ -548,3 +587,22 @@ modifier.bionic.glitch_time=Glitch Time
 # others
 material.tritanium=Tritanium
 container.tritanium_crate=Tritanium Crate
+rarity.legendary=Legendary
+
+###############################################################################################################
+# others
+quest.kill_androids.0.title=They will kill us all!
+quest.kill_androids.0.info=The are taking over the world! I know it! We must fight our machine overlords. If we don't, we will all perish. The fight starts with you %1$s! I need you to kill %2$s %3$s before they get to us.
+quest.kill_androids.0.objective.0=Kill %2$s/%3$s Rouge Androids.
+quest.cocktail_of_ascension.title=Cocktail of Ascension
+quest.cocktail_of_ascension.info=A Crazy scientist has asked you to bring him %2$s gunpowder from a shoveled creeper and %3$s red mushrooms from the darkest depths of the Nether, for his Cocktail Of Ascension.
+quest.cocktail_of_ascension.objective.0=Kill %2$s/%3$s creepers with a shovel
+quest.cocktail_of_ascension.objective.1=Pickup %2$s/%3$s gunpowder
+quest.cocktail_of_ascension.objective.2=Pickup %2$s/%3$s red mushrooms from the Nether
+quest.cocktail_of_ascension.objective.3=Talk to the crazy scientist junkie
+quest.sacrifice.title=Sacrifice
+quest.sacrifice.info=We are the Dark Vail. We have begun restoring an ancient artifact, the effects of which will remain a secret. All we need from you %1$s is to sacrifice %2$s %3$s newborns in the name of the dark lord, whose name strikes fear in the hearts of the innocent. Barry the dark lord. You will be compensated handsomely for your efforts.
+quest.sacrifice.objective.0=Kill %2$s/%3$s Baby %4$s
+quest.department_of_agriculture.title=Department of Agriculture
+quest.department_of_agriculture.info=To all willing hands. This is a job offer from the department of agriculture. We operate in the desolate world of Barus V and you can image the obstacles we face when it comes to growing %3$s. As our plans for hydroponic farms come to turn, our people starve to death. We are searching for capable parties to aid us in the supplying of %3$s to our citizens.
+quest.department_of_agriculture.objective.0=Gather %2$s/%3$s %4$s

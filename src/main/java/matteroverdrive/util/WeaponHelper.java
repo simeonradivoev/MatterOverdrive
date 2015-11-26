@@ -43,7 +43,7 @@ public class WeaponHelper
 
     public static void setModuleAtSlot(int slot,ItemStack weapon,ItemStack module)
     {
-        if (isWeapon(weapon))
+        if (isWeapon(weapon) && module != null)
         {
             MOInventoryHelper.setInventorySlotContents(weapon,slot,module);
         }

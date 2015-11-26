@@ -73,7 +73,7 @@ public class PacketManageConversation extends PacketAbstract
             if (npcEntity instanceof IDialogNpc) {
                 if (message.start)
                 {
-                    ((IDialogNpc) npcEntity).onPlayerInteract(player);
+                    ((IDialogNpc) npcEntity).onPlayerInteract(player,null);
                     ((IDialogNpc) npcEntity).setDialogPlayer(player);
                     Minecraft.getMinecraft().displayGuiScreen(new GuiDialog((IDialogNpc) npcEntity, player));
                 }else

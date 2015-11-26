@@ -25,6 +25,7 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.*;
+import matteroverdrive.entity.monster.EntityRogueAndroid;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.village.TradeHandlerMadScientist;

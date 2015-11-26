@@ -199,7 +199,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
                 }
             }
 
-            if (isKillMode(item) && useCount % getShootCooldown() == getShootCooldown()/2)
+            if (isKillMode(item) && useCount % getShootCooldown(item) == getShootCooldown(item)/2)
             {
                 if (WeaponHelper.hasStat(Reference.WS_EXPLOSION_DAMAGE, item))
                 {
@@ -242,7 +242,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 		}
         else
         {
-            if (canFire(item, world))
+            if (canFire(item, world,player))
             {
                 player.setItemInUse(item, getMaxItemUseDuration(item));
             }
@@ -267,7 +267,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     @Override
     public void onUsingTick(ItemStack itemStack, EntityPlayer player, int count)
     {
-        if (canFire(itemStack,player.worldObj))
+        if (canFire(itemStack,player.worldObj,player))
         {
             DrainEnergy(itemStack,1,false);
             int powerLevelMultiply = (getPowerLevel(itemStack)+1) / MAX_LEVEL;
@@ -313,12 +313,17 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 	}
 
     @Override
-    public boolean canFire(ItemStack itemStack, World world) {
+    public boolean canFire(ItemStack itemStack, World world,EntityLivingBase shooter) {
         return !isOverheated(itemStack) && DrainEnergy(itemStack,1,true);
     }
 
     @Override
-    public void onClientShot(ItemStack weapon, EntityPlayer player, Vec3 position, Vec3 dir,WeaponShot shot)
+    public float getShotSpeed(ItemStack weapon, EntityLivingBase shooter) {
+        return 0;
+    }
+
+    @Override
+    public void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir,WeaponShot shot)
     {
 
     }
@@ -441,7 +446,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
-    public boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, WeaponShot shot,Vec3 position,Vec3 dir)
+    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot,Vec3 position,Vec3 dir)
     {
         return false;
     }
@@ -452,12 +457,12 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
-    public int getShootCooldown() {
+    public int getBaseShootCooldown(ItemStack weapon) {
         return 10;
     }
 
     @Override
-    public boolean isWeaponZoomed(ItemStack weapon) {
+    public boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon) {
         return false;
     }
 

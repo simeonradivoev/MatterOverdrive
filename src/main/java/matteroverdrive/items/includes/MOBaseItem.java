@@ -19,6 +19,8 @@
 package matteroverdrive.items.includes;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.util.MOStringHelper;
@@ -45,6 +47,7 @@ public class MOBaseItem extends Item
 		this.setTextureName(Reference.MOD_ID + ":" + name);
 	}
 
+	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
 	{
 		if(hasDetails(itemstack))
@@ -60,6 +63,7 @@ public class MOBaseItem extends Item
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
 	{
 		if (MOStringHelper.hasTranslation(getUnlocalizedName(itemstack) + ".details"))
@@ -95,5 +99,6 @@ public class MOBaseItem extends Item
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public boolean hasDetails(ItemStack stack){return false;}
 }

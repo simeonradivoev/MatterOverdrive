@@ -100,13 +100,13 @@ public interface IWeapon
      * After that, a command is send to the server that the player has fired that weapon.
      * That's when this method is called. On the server side.
      * @param weapon the weapon stack being fired.
-     * @param entityPlayer the player firing the weapon.
+     * @param shooter the player firing the weapon.
      * @param shot all information about the shot.
      * @param position the position of the fired shot/bullet.
      * @param dir the direction of the weapon/bullet.
      * @return was the fire successful.
      */
-    boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, WeaponShot shot, Vec3 position, Vec3 dir);
+    boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot, Vec3 position, Vec3 dir);
 
     /**
      * Shows if the gun is always equipped like a bow in third person.
@@ -154,7 +154,7 @@ public interface IWeapon
      * This controls how far apart each shot should be.
      * @return the cooldown time in ticks after each shot.
      */
-    int getShootCooldown();
+    int getShootCooldown(ItemStack weapon);
 
     /**
      * Gets the range of the weapon.
@@ -166,11 +166,11 @@ public interface IWeapon
     /**
      * Gets the accuracy of the weapon.
      * @param weapon the weapon stack
-     * @param entityPlayer the player holding the weapon.
+     * @param shooter the shooting entity holding the weapon.
      * @param zoomed is the weapon zoomed.
      * @return the accuracy of the weapon. Ranges from 0 - infinity
      */
-    float getAccuracy(ItemStack weapon, EntityPlayer entityPlayer,boolean zoomed);
+    float getAccuracy(ItemStack weapon, EntityLivingBase shooter,boolean zoomed);
 
     /**
      * Returns if the weapon is currently zoomed.
@@ -179,7 +179,7 @@ public interface IWeapon
      * @return is the weapon zoomed.
      */
     @SideOnly(Side.CLIENT)
-    boolean isWeaponZoomed(ItemStack weapon);
+    boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon);
 
     /**
      * @param weapon the weapon stack.

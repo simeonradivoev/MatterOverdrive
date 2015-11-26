@@ -27,7 +27,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;

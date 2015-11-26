@@ -46,6 +46,8 @@ public class MOInventoryHelper
         {
             NBTTagCompound itemTag = new NBTTagCompound();
             stack.writeToNBT(itemTag);
+            if (!container.hasTagCompound())
+                container.setTagCompound(new NBTTagCompound());
             container.getTagCompound().setTag("Slot" + slot, itemTag);
         }
     }

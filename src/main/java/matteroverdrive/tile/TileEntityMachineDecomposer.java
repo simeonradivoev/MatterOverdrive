@@ -22,7 +22,6 @@ import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.MatterSlot;
@@ -44,7 +43,7 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.EnumSet;
 import java.util.Random;
 
-public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter implements ISidedInventory, IMatterConnection
+public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter implements ISidedInventory
 {
 	public static int MATTER_STORAGE = 1024;
 	public static int ENERGY_STORAGE = 512000;
@@ -312,12 +311,6 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 	{
 		return i != INPUT_SLOT_ID;
 	}
-
-    @Override
-    public boolean canConnectFrom(ForgeDirection dir)
-    {
-        return true;
-    }
 
     @Override
     public int receiveMatter(ForgeDirection side, int amount, boolean simulate)

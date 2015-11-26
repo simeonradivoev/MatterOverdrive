@@ -41,6 +41,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 /**
  * Created by Simeon on 11/5/2015.
@@ -82,7 +83,8 @@ public class BlockTritaniumCrate extends MOBlockMachine
     {
         for (int i = 0;i < crates.length;i++)
         {
-            GameRegistry.addShapedRecipe(new ItemStack(crates[i])," D ","TCT"," T ",'D',new ItemStack(Items.dye,1,i),'T', MatterOverdriveItems.tritanium_plate,'C', Blocks.chest);
+            ShapedOreRecipe recipe = new ShapedOreRecipe(new ItemStack(crates[i])," D ","TCT"," T ",'D',new ItemStack(Items.dye,1,i),'T', MatterOverdriveItems.tritanium_plate,'C', Blocks.chest);
+            GameRegistry.addRecipe(recipe);
         }
     }
 

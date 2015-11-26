@@ -16,7 +16,7 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.network.packet.server;
+package matteroverdrive.network.packet.bi;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -27,6 +27,7 @@ import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.network.packet.AbstractBiPacketHandler;
 import matteroverdrive.network.packet.PacketAbstract;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
@@ -83,9 +84,14 @@ public class PacketFirePlasmaShot extends PacketAbstract
             if (player.getEntityId() != message.sender)
             {
                 Entity entity = player.worldObj.getEntityByID(message.sender);
-                if (entity != null && entity instanceof EntityPlayer && ((EntityPlayer)entity).getHeldItem() != null && ((EntityPlayer)entity).getHeldItem().getItem() instanceof EnergyWeapon) {
-                    ((EnergyWeapon)((EntityPlayer)entity).getHeldItem().getItem()).onClientShot(((EntityPlayer) entity).getHeldItem(), (EntityPlayer) entity, message.position, message.direction,message.shot);
+                if (entity != null && entity instanceof EntityLivingBase)
+                {
+                    EntityLivingBase livingBase = (EntityLivingBase)entity;
+                    if (livingBase.getHeldItem() != null && livingBase.getHeldItem().getItem() instanceof EnergyWeapon) {
+                        ((EnergyWeapon)livingBase.getHeldItem().getItem()).onClientShot(livingBase.getHeldItem(), livingBase, message.position, message.direction,message.shot);
+                    }
                 }
+
             }
             return null;
         }
@@ -94,7 +100,7 @@ public class PacketFirePlasmaShot extends PacketAbstract
         public IMessage handleServerMessage(EntityPlayer player, PacketFirePlasmaShot message, MessageContext ctx)
         {
             ItemStack heldItem = player.getHeldItem();
-            if (heldItem != null && heldItem.getItem() instanceof EnergyWeapon && ((EnergyWeapon)heldItem.getItem()).canFire(player.getHeldItem(),player.worldObj))
+            if (heldItem != null && heldItem.getItem() instanceof EnergyWeapon && ((EnergyWeapon)heldItem.getItem()).canFire(player.getHeldItem(),player.worldObj,player))
             {
                 ((EnergyWeapon)heldItem.getItem()).onServerFire(heldItem, player,message.shot, message.position, message.direction);
                 MatterOverdrive.packetPipeline.sendToAllAround(message,player,128);

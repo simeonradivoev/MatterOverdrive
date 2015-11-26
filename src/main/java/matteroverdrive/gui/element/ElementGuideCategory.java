@@ -19,6 +19,7 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
+import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.guide.GuideCategory;
 

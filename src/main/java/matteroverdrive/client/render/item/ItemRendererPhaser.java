@@ -149,32 +149,34 @@ public class ItemRendererPhaser extends WeaponItemRenderer
 
     void renderHand()
     {
-        GL11.glPushMatrix();
-        ResourceLocation skin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+        if (!Minecraft.getMinecraft().thePlayer.isInvisible()) {
+            GL11.glPushMatrix();
+            ResourceLocation skin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
+            Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
 
-        glTranslated(-0.2, 0.2f, 0.7);
-        glRotated(45, 0, 1, 0);
-        glRotated(100, 0, 0, -1);
-        double length = 1.8;
-        double width = 0.9;
-        double depth = 0.7;
+            glTranslated(-0.2, 0.2f, 0.7);
+            glRotated(45, 0, 1, 0);
+            glRotated(100, 0, 0, -1);
+            double length = 1.8;
+            double width = 0.9;
+            double depth = 0.7;
 
-        Tessellator.instance.startDrawingQuads();
-        Tessellator.instance.setNormal(0, 0, -1);
-        Tessellator.instance.addVertexWithUV(0, 0, 0, 44f / 64f, 20f / 32f);
-        Tessellator.instance.addVertexWithUV(0, length, 0, 44f / 64f, 1);
-        Tessellator.instance.addVertexWithUV(depth, length, 0, 48f / 64f, 1);
-        Tessellator.instance.addVertexWithUV(depth, 0, 0, 48f / 64f, 20f / 32f);
+            Tessellator.instance.startDrawingQuads();
+            Tessellator.instance.setNormal(0, 0, -1);
+            Tessellator.instance.addVertexWithUV(0, 0, 0, 44f / 64f, 20f / 32f);
+            Tessellator.instance.addVertexWithUV(0, length, 0, 44f / 64f, 1);
+            Tessellator.instance.addVertexWithUV(depth, length, 0, 48f / 64f, 1);
+            Tessellator.instance.addVertexWithUV(depth, 0, 0, 48f / 64f, 20f / 32f);
 
 
-        Tessellator.instance.setNormal(-1, 0, 0);
-        Tessellator.instance.addVertexWithUV(0, 0, 0, 44f/64f,20f/32f);
-        Tessellator.instance.addVertexWithUV(0, 0, width, 40f/64f,20f/32f);
-        Tessellator.instance.addVertexWithUV(0, length, width, 40f / 64f, 1f);
-        Tessellator.instance.addVertexWithUV(0, length, 0, 44f / 64f, 1f);
-        Tessellator.instance.draw();
-        GL11.glPopMatrix();
+            Tessellator.instance.setNormal(-1, 0, 0);
+            Tessellator.instance.addVertexWithUV(0, 0, 0, 44f / 64f, 20f / 32f);
+            Tessellator.instance.addVertexWithUV(0, 0, width, 40f / 64f, 20f / 32f);
+            Tessellator.instance.addVertexWithUV(0, length, width, 40f / 64f, 1f);
+            Tessellator.instance.addVertexWithUV(0, length, 0, 44f / 64f, 1f);
+            Tessellator.instance.draw();
+            GL11.glPopMatrix();
+        }
     }
 
     void renderGun(ItemRenderType renderType, ItemStack item)

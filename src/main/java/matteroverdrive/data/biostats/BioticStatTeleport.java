@@ -22,7 +22,7 @@ import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.server.PacketTeleportPlayer;

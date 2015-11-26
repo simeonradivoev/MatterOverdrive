@@ -20,7 +20,7 @@ package matteroverdrive.data.biostats;
 
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;

@@ -16,7 +16,7 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.entity;
+package matteroverdrive.entity.player;
 
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;

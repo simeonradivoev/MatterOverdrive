@@ -28,9 +28,8 @@ public interface IDialogRegistry
     /**
      * Register Message to Matter Overdrive Dialog Registry.
      * @param message The Dialog Message
-     * @return The individual ID assigned to the message.
      */
-    int registerMessage(IDialogMessage message);
+    void registerMessage(IDialogMessage message);
 
     /**
      * Gets a message by an ID.
@@ -38,4 +37,11 @@ public interface IDialogRegistry
      * @return The message that is assigned to the ID;
      */
     IDialogMessage getMessage(int uuid);
+
+    /**
+     * Gets the ID for a given Message
+     * @param dialogMessage the message
+     * @return the id of the message
+     */
+    int getMessageId(IDialogMessage dialogMessage);
 }

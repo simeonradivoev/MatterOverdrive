@@ -21,7 +21,7 @@ package matteroverdrive.container;
 import matteroverdrive.Reference;
 import matteroverdrive.container.slot.SlotEnergy;
 import matteroverdrive.container.slot.SlotInventory;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;

@@ -21,7 +21,7 @@ package matteroverdrive.gui;
 import cofh.lib.gui.element.ElementBase;
 import cofh.lib.util.TimeTracker;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.container.ContainerMatterScanner;
+import matteroverdrive.container.ContainerFalse;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.pages.PageScanInfo;
 import matteroverdrive.items.MatterScanner;
@@ -53,7 +53,7 @@ public class GuiMatterScanner extends MOGuiBase
 
 	public GuiMatterScanner(ItemStack scanner,int slot)
 	{
-		super(new ContainerMatterScanner(),300,230);
+		super(new ContainerFalse(),300,230);
 		this.scanner = scanner;
 		registerPages(this, scanner);
 		refreshTimeTracker = new TimeTracker();

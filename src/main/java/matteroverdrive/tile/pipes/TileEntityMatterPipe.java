@@ -21,7 +21,6 @@ package matteroverdrive.tile.pipes;
 import cofh.lib.util.TimeTracker;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.data.MatterStorage;
 import matteroverdrive.fluids.FluidMatterPlasma;
@@ -51,7 +50,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 3/7/2015.
  */
-public class TileEntityMatterPipe extends TileEntityPipe implements IMatterConnection, IMatterHandler
+public class TileEntityMatterPipe extends TileEntityPipe implements IMatterHandler
 {
     public  ForgeDirection lastDir = ForgeDirection.WEST;
     protected MatterStorage storage;
@@ -168,12 +167,6 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterConne
     @Override
     protected void onAwake(Side side) {
 
-    }
-
-    @Override
-    public boolean canConnectFrom(ForgeDirection dir)
-    {
-        return true;
     }
 
     @SideOnly(Side.CLIENT)

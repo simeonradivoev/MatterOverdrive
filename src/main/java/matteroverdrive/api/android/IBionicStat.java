@@ -21,7 +21,8 @@ package matteroverdrive.api.android;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidAttributes;
+import matteroverdrive.entity.player.AndroidPlayer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
@@ -128,7 +129,7 @@ public interface IBionicStat
      * @param androidPlayer The Android Player.
      * @param level The unlocked stat level.
      * @return A multimap of all {@link net.minecraft.entity.ai.attributes.AttributeModifier}.
-     * @see matteroverdrive.entity.AndroidAttributes
+     * @see AndroidAttributes
      * @see net.minecraft.entity.SharedMonsterAttributes
      */
     Multimap attributes(AndroidPlayer androidPlayer, int level);

@@ -181,6 +181,30 @@ public class Inventory implements IInventory
         }
     }
 
+    public void addItem(ItemStack itemStack)
+    {
+        for (int i = 0;i < slots.size();i++)
+        {
+            if (slots.get(i).isValidForSlot(itemStack))
+            {
+                if (slots.get(i).getItem() == null)
+                {
+                    slots.get(i).setItem(itemStack);
+                    return;
+                }else if (ItemStack.areItemStacksEqual(slots.get(i).getItem(),itemStack) && slots.get(i).getItem().stackSize < slots.get(i).getItem().getMaxStackSize())
+                {
+                    int newStackSize = Math.min(slots.get(i).getItem().stackSize+itemStack.stackSize,slots.get(i).getItem().getMaxStackSize());
+                    int leftStackSize =  slots.get(i).getItem().stackSize + itemStack.stackSize - newStackSize;
+                    slots.get(i).getItem().stackSize = newStackSize;
+                    if (leftStackSize <= 0)
+                        return;
+
+                    itemStack.stackSize=newStackSize;
+                }
+            }
+        }
+    }
+
     @Override
     public String getInventoryName() {
         return this.name;

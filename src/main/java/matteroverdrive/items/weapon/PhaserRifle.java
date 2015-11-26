@@ -28,11 +28,10 @@ import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
-import matteroverdrive.network.packet.server.PacketFirePlasmaShot;
+import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -160,13 +159,13 @@ public class PhaserRifle extends EnergyWeapon
     }
 
     @Override
-    public int getShootCooldown() {
+    public int getBaseShootCooldown(ItemStack weapon) {
         return 11;
     }
 
     @Override
-    public boolean isWeaponZoomed(ItemStack weapon) {
-        return Mouse.isButtonDown(1);
+    public boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon) {
+        return Mouse.isButtonDown(1) && entityPlayer.isUsingItem();
     }
 
     @Override
@@ -178,15 +177,16 @@ public class PhaserRifle extends EnergyWeapon
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
     {
         if (world.isRemote
-                && entity instanceof EntityClientPlayerMP
+                && entity instanceof EntityPlayer
                 && ((EntityPlayer) entity).getHeldItem() == itemStack
                 && Minecraft.getMinecraft().currentScreen == null)
         {
             if (Mouse.isButtonDown(0)) {
-                if (canFire(itemStack,world) && ClientProxy.weaponHandler.shootDelayPassed(this))
+                if (canFire(itemStack,world,(EntityLivingBase)entity) && ClientProxy.weaponHandler.shootDelayPassed(this))
                 {
                     itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
-                    if (isWeaponZoomed(itemStack)) {
+                    if (isWeaponZoomed((EntityPlayer) entity,itemStack))
+                    {
                         ItemRendererPhaserRifle.RECOIL_AMOUNT = 0.5f + getAccuracy(itemStack,(EntityPlayer)entity,true);
                         Minecraft.getMinecraft().renderViewEntity.hurtTime = 6 + (int)((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
                         Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 15;
@@ -199,11 +199,11 @@ public class PhaserRifle extends EnergyWeapon
 
                     ItemRendererPhaserRifle.RECOIL_TIME = 1;
                     Vec3 dir = ((EntityPlayer) entity).getLook(1);
-                    Vec3 pos = getFirePosition((EntityPlayer) entity, dir, isWeaponZoomed(itemStack));
-                    WeaponShot shot = createShot(itemStack,(EntityPlayer) entity, isWeaponZoomed(itemStack));
+                    Vec3 pos = getFirePosition((EntityPlayer) entity, dir, isWeaponZoomed((EntityPlayer) entity,itemStack));
+                    WeaponShot shot = createShot(itemStack,(EntityPlayer) entity, isWeaponZoomed((EntityPlayer) entity,itemStack));
                     onClientShot(itemStack, (EntityPlayer) entity, pos, dir, shot);
                     MatterOverdrive.packetPipeline.sendToServer(new PacketFirePlasmaShot(entity.getEntityId(),pos,dir,shot));
-                    ClientProxy.weaponHandler.addShootDelay(this);
+                    ClientProxy.weaponHandler.addShootDelay(this,itemStack);
                 }else if (ClientProxy.weaponHandler.shootDelayPassed(this) && needsRecharge(itemStack))
                 {
                     chargeFromEnergyPack(itemStack,(EntityPlayer)entity);
@@ -233,24 +233,24 @@ public class PhaserRifle extends EnergyWeapon
     }
 
     @Override
-    public boolean onServerFire(ItemStack weapon, EntityPlayer entityPlayer, WeaponShot shot,Vec3 position,Vec3 dir)
+    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot,Vec3 position,Vec3 dir)
     {
-        DrainEnergy(weapon, getShootCooldown(), false);
+        DrainEnergy(weapon, getShootCooldown(weapon), false);
         float newHeat =  (getHeat(weapon)+4) * 2f;
         setHeat(weapon, newHeat);
-        manageOverheat(weapon, entityPlayer.worldObj, entityPlayer);
-        PlasmaBolt fire = spawnProjectile(weapon,entityPlayer,position,dir,shot);
-        weapon.getTagCompound().setLong("LastShot", entityPlayer.worldObj.getTotalWorldTime());
-        entityPlayer.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+        manageOverheat(weapon, shooter.worldObj, shooter);
+        PlasmaBolt fire = spawnProjectile(weapon,shooter,position,dir,shot);
+        //weapon.getTagCompound().setLong("LastShot", shooter.worldObj.getTotalWorldTime());
+        shooter.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
         return true;
     }
 
     @Override
-    public void onClientShot(ItemStack weapon, EntityPlayer player, Vec3 position, Vec3 dir,WeaponShot shot)
+    public void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir,WeaponShot shot)
     {
         //ClientProxy.weaponHandler.addShootDelay(this);
-        player.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
-        spawnProjectile(weapon,player,position,dir,shot);
+        shooter.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+        spawnProjectile(weapon,shooter,position,dir,shot);
     }
 
     @Override
@@ -260,21 +260,16 @@ public class PhaserRifle extends EnergyWeapon
 
     }
 
-    public PlasmaBolt spawnProjectile(ItemStack weapon,EntityPlayer entityPlayer,Vec3 position,Vec3 dir,WeaponShot shot)
+    public PlasmaBolt spawnProjectile(ItemStack weapon,EntityLivingBase shooter,Vec3 position,Vec3 dir,WeaponShot shot)
     {
         //PlasmaBolt fire = new PlasmaBolt(entityPlayer.worldObj, entityPlayer,position,dir, getWeaponScaledDamage(weapon), 2, getAccuracy(weapon, zoomed), getRange(weapon), WeaponHelper.getColor(weapon).getColor(), zoomed,seed);
-        PlasmaBolt fire = new PlasmaBolt(entityPlayer.worldObj, entityPlayer,position,dir, shot,4);
+        PlasmaBolt fire = new PlasmaBolt(shooter.worldObj, shooter,position,dir, shot,getShotSpeed(weapon,shooter));
         fire.setWeapon(weapon);
         if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon)) {
             fire.setFireDamageMultiply((float) WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE, weapon));
         }
-        entityPlayer.worldObj.spawnEntityInWorld(fire);
+        shooter.worldObj.spawnEntityInWorld(fire);
         return fire;
-    }
-
-    public WeaponShot createShot(ItemStack weapon,EntityPlayer entityPlayer,boolean zoomed)
-    {
-        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,entityPlayer,zoomed),WeaponHelper.getColor(weapon).getColor(),getRange(weapon));
     }
 
     @Override
@@ -292,7 +287,7 @@ public class PhaserRifle extends EnergyWeapon
     @Override
     public int getBaseEnergyUse(ItemStack item)
     {
-        return ENERGY_PER_SHOT / getShootCooldown();
+        return ENERGY_PER_SHOT / getShootCooldown(item);
     }
 
     @Override
@@ -307,9 +302,14 @@ public class PhaserRifle extends EnergyWeapon
     }
 
     @Override
-    public boolean canFire(ItemStack weapon,World world)
+    public boolean canFire(ItemStack weapon,World world,EntityLivingBase shooter)
     {
-        return DrainEnergy(weapon, getShootCooldown(), true) && !weapon.getTagCompound().getBoolean("Overheated");
+        return DrainEnergy(weapon, getShootCooldown(weapon), true) && !weapon.getTagCompound().getBoolean("Overheated");
+    }
+
+    @Override
+    public float getShotSpeed(ItemStack weapon, EntityLivingBase shooter) {
+        return 4;
     }
 
     @Override

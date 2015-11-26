@@ -38,7 +38,6 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.matter.IMatterConnection;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.fusionReactorController.components.ComponentComputers;
@@ -71,7 +70,7 @@ import java.util.EnumSet;
 		@Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.SimpleComponent"),
 		@Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.ManagedPeripheral")
 })
-public class TileEntityMachineFusionReactorController extends MOTileEntityMachineMatter implements IRotateableTile, IMatterConnection, IPeripheral, SimpleComponent, ManagedPeripheral
+public class TileEntityMachineFusionReactorController extends MOTileEntityMachineMatter implements IRotateableTile, IPeripheral, SimpleComponent, ManagedPeripheral
 {
     public static int STRUCTURE_CHECK_DELAY = 40;
     public static final int[] positions = new int[]{0,5,1,0,2,0,3,1,4,2,5,3,5,4,5,5,5,6,5,7,4,8,3,9,2,10,1,10,0,10,-1,10,-2,10,-3,9,-4,8,-5,7,-5,6,-5,5,-5,4,-5,3,-4,2,-3,1,-2,0,-1,0};
@@ -511,13 +510,6 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     @Override
     public ForgeDirection getDirectionFacing() {
         return ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord,yCoord,zCoord));
-    }
-
-    @Override
-    public boolean canConnectFrom(ForgeDirection dir)
-    {
-        int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
-        return meta != dir.ordinal();
     }
 
     @Override

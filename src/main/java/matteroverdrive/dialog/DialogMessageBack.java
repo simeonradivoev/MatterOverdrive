@@ -36,21 +36,8 @@ public class DialogMessageBack extends DialogMessageRandom
         super(message);
     }
 
-    public DialogMessageBack(String message, String question) {
-        super(message, question);
-    }
-
-    @Override
-    public void onInteract(IDialogNpc npc,EntityPlayer player)
-    {
-        if (player.worldObj.isRemote)
-        {
-            returnGuiMessage(npc,player);
-        }
-    }
-
     @SideOnly(Side.CLIENT)
-    private void returnGuiMessage(IDialogNpc npc,EntityPlayer player)
+    protected void setAsGuiActiveMessage(IDialogNpc npc, EntityPlayer player)
     {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiDialog)
         {

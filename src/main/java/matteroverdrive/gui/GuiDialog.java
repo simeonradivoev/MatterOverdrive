@@ -44,12 +44,14 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class GuiDialog extends GuiScreen
 {
+    private static final int INTERACTION_DELAY = 20;
     public static final ResourceLocation separator_texture = new ResourceLocation(Reference.PATH_ELEMENTS + "dialog_separator.png");
     private IDialogNpc npc;
     private EntityPlayer player;
     private long seed;
     private static Random random = new Random();
     private IDialogMessage currentMessage;
+    private float lastInteractionTime;
 
     public GuiDialog(IDialogNpc npc, EntityPlayer player)
     {
@@ -68,6 +70,12 @@ public class GuiDialog extends GuiScreen
     {
         super.drawScreen(mouseX, mouseY, ticks);
 
+        if (npc == null || npc.getEntity().isDead)
+        {
+            player.closeScreen();
+            return;
+        }
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_TEXTURE_2D);
@@ -81,6 +89,11 @@ public class GuiDialog extends GuiScreen
         glEnable(GL_TEXTURE_2D);
 
         drawDialog(mouseX,mouseY,ticks);
+
+        if (lastInteractionTime > 0)
+        {
+            lastInteractionTime = Math.max(0,lastInteractionTime-ticks);
+        }
     }
 
     public void drawDialog(int mouseX,int mouseY, float ticks)
@@ -154,7 +167,8 @@ public class GuiDialog extends GuiScreen
                         RenderUtils.applyColor(Reference.COLOR_HOLO);
                         ClientProxy.holoIcons.renderIcon(option.getHoloIcon(npc, player), messageX - 18, messageY + fontRendererObj.FONT_HEIGHT / 2 - 8, 16, 16);
                     }
-                    fontRendererObj.drawString(option.getQuestionText(npc, player), messageX, messageY, canInteract ? Reference.COLOR_HOLO.getColor() : Reference.COLOR_HOLO_RED.getColor());
+                    String text = option.getQuestionText(npc, player);
+                    fontRendererObj.drawString(text, messageX, messageY, canInteract ? Reference.COLOR_HOLO.getColor() : Reference.COLOR_HOLO_RED.getColor());
                 }
                 optionPos++;
             }
@@ -198,8 +212,12 @@ public class GuiDialog extends GuiScreen
     }
 
     protected void onQuestionClick(IDialogMessage message,int option) {
-        message.onInteract(npc, player, option);
-        MatterOverdrive.packetPipeline.sendToServer(new PacketConversationInteract(npc,message,option));
+        if (lastInteractionTime <= 0)
+        {
+            lastInteractionTime = INTERACTION_DELAY;
+            message.onOptionsInteract(npc, player, option);
+            MatterOverdrive.packetPipeline.sendToServer(new PacketConversationInteract(npc, message, option));
+        }
     }
 
     public void onGuiClosed() {

@@ -23,7 +23,7 @@ import cofh.lib.render.RenderHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.network.packet.server.PacketUnlockBioticStat;
 import matteroverdrive.proxy.ClientProxy;

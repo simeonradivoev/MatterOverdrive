@@ -151,6 +151,7 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
                 break;
             case 1:
                 stats.put(Reference.WS_AMMO,0.5);
+                stats.put(Reference.WS_DAMAGE,0.75);
                 stats.put(Reference.WS_FIRE_DAMAGE,1.0);
                 break;
             case 2:

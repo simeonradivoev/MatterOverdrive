@@ -41,12 +41,12 @@ public class MOElementButton extends ElementButton
     public static final ScaleTexture HOVER_TEXTURE_DARK = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_over_dark.png"),18,18).setOffsets(7,7,7,7);
     public static final Random rand = new Random();
 
-    protected String[] sounds = new String[]{"button_soft_0","button_soft_1"};
+    protected String[] sounds = new String[]{"button_soft"};
     protected String text;
     protected boolean isDown;
     protected int lastMouseButton;
     protected GuiColor color;
-    int labelColor = 0xFFFFFF;
+    int labelColor = 0xFFFFFFFF;
     IButtonHandler buttonHandler;
     HoloIcon icon;
 

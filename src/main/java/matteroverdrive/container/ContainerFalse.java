@@ -16,25 +16,30 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.items.armour;
+package matteroverdrive.container;
 
-import matteroverdrive.Reference;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by Simeon on 11/1/2015.
+ * Created by Simeon on 5/1/2015.
  */
-public class TritaniumArmour extends ItemArmor
+public class ContainerFalse extends MOBaseContainer
 {
-    public TritaniumArmour(ArmorMaterial armorMaterial, int renderIndex, int renderType) {
-        super(armorMaterial, renderIndex, renderType);
+
+    public ContainerFalse()
+    {
+        super(null);
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
+    public boolean canInteractWith(EntityPlayer player) {
+        return false;
+    }
+
+    @Override
+    public void putStackInSlot(int p_75141_1_, ItemStack p_75141_2_)
     {
-        return String.format(Reference.PATH_ARMOR + "tritanium_layer_%d%s.png",(slot == 2 ? 2 : 1),type == null ? "" : String.format("_%s", type));
+
     }
 }

@@ -21,29 +21,41 @@ package matteroverdrive.dialog;
 import matteroverdrive.api.dialog.IDialogMessage;
 import matteroverdrive.api.dialog.IDialogRegistry;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Simeon on 8/13/2015.
  */
 public class DialogRegistry implements IDialogRegistry
 {
-    List<IDialogMessage> messages;
+    int nextMessageID = 0;
+    Map<Integer,IDialogMessage> messageMap;
+    Map<IDialogMessage,Integer> messageIntegerMap;
 
     public DialogRegistry()
     {
-        messages = new ArrayList<>();
+        messageMap = new HashMap<>();
+        messageIntegerMap = new HashMap<>();
     }
 
     public IDialogMessage getMessage(int id)
     {
-        return messages.get(id);
+        return messageMap.get(id);
     }
 
-    public int registerMessage(IDialogMessage message)
+    public int getMessageId(IDialogMessage dialogMessage)
     {
-        messages.add(message);
-        return messages.size()-1;
+        Integer id = messageIntegerMap.get(dialogMessage);
+        if (id == null)
+            return -1;
+        else return id;
+    }
+
+    public void registerMessage(IDialogMessage message)
+    {
+        messageMap.put(nextMessageID,message);
+        messageIntegerMap.put(message,nextMessageID);
+        nextMessageID++;
     }
 }

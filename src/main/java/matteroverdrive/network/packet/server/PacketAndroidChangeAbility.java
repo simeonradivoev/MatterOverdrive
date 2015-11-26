@@ -24,10 +24,11 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.network.packet.PacketAbstract;
-import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.EnumSet;
 
 /**
  * Created by Simeon on 7/9/2015.
@@ -71,7 +72,7 @@ public class PacketAndroidChangeAbility extends PacketAbstract
                 if (androidPlayer.isUnlocked(stat,0) && stat.showOnWheel(androidPlayer,androidPlayer.getUnlockedLevel(stat)))
                 {
                     androidPlayer.setActiveStat(stat);
-                    androidPlayer.sync(PacketSyncAndroid.SYNC_STATS);
+                    androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.STATS));
                 }
             }
             return null;

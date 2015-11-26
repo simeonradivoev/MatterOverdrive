@@ -16,35 +16,27 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.entity;
+package matteroverdrive.entity.monster;
 
-import matteroverdrive.entity.ai.AndroidTargetSelector;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 5/26/2015.
  */
-public class EntityRougeAndroidMob extends EntityMob
+public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
 {
-    public static final AndroidTargetSelector targetSelector = new AndroidTargetSelector();
-
-    public EntityRougeAndroidMob(World world)
+    public EntityMeleeRougeAndroidMob(World world)
     {
         super(world);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
-        this.tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0D, true));
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
-        this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
@@ -54,12 +46,18 @@ public class EntityRougeAndroidMob extends EntityMob
     }
 
     @Override
+    protected boolean isAIEnabled()
+    {
+        return true;
+    }
+
+    @Override
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(SharedMonsterAttributes.maxHealth.clampValue(64.0D));
-        getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(SharedMonsterAttributes.movementSpeed.clampValue(1.6D));
-        getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(SharedMonsterAttributes.attackDamage.clampValue(4.0D));
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(64.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4.0D);
     }
 
     @Override
@@ -79,6 +77,7 @@ public class EntityRougeAndroidMob extends EntityMob
 
     }
 
+    @Override
     protected void dropFewItems(boolean hit, int looting)
     {
         float lootingModifier = (Math.min(looting, 10) / 10f);
@@ -90,24 +89,5 @@ public class EntityRougeAndroidMob extends EntityMob
         {
             this.entityDropItem(new ItemStack(MatterOverdriveItems.androidParts, 1, rand.nextInt(4)), 0.0F);
         }
-    }
-
-    @Override
-    public boolean isPotionApplicable(PotionEffect potion)
-    {
-        return false;
-    }
-
-    public boolean getCanSpawnHere()
-    {
-        if (EntityRogueAndroid.dimentionWhitelist.size() > 0) {
-            return EntityRogueAndroid.dimentionWhitelist.contains(worldObj.provider.dimensionId) && inDimensionBlacklist();
-        }
-
-        return inDimensionBlacklist();
-    }
-
-    private boolean inDimensionBlacklist() {
-        return !EntityRogueAndroid.dimentionBlacklist.contains(worldObj.provider.dimensionId) && super.getCanSpawnHere();
     }
 }

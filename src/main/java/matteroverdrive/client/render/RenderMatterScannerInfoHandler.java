@@ -22,7 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.tileentity.TileEntityRendererPatternMonitor;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;

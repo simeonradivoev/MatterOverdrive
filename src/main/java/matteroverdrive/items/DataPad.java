@@ -20,6 +20,7 @@ package matteroverdrive.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.gui.GuiDataPad;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.client.Minecraft;
@@ -57,7 +58,14 @@ public class DataPad extends MOBaseItem
     @SideOnly(Side.CLIENT)
     private void openGui(ItemStack stack)
     {
-        Minecraft.getMinecraft().displayGuiScreen(new GuiDataPad(stack));
+        try {
+            Minecraft.getMinecraft().displayGuiScreen(new GuiDataPad(stack));
+        }
+        catch (Exception e)
+        {
+            MatterOverdrive.log.error("There was a problem while trying to open the Data Pad Gui",e);
+        }
+
     }
 
     //region Setters
@@ -82,6 +90,11 @@ public class DataPad extends MOBaseItem
     {
         TagCompountCheck(stack);
         stack.getTagCompound().setString("Category",category);
+    }
+    public void setSelectedActiveQuest(ItemStack itemStack,int quest)
+    {
+        TagCompountCheck(itemStack);
+        itemStack.getTagCompound().setShort("SelectedActiveQuest",(short) quest);
     }
     //endregion
 
@@ -120,6 +133,14 @@ public class DataPad extends MOBaseItem
             return stack.getTagCompound().getString("Category");
         }
         return "";
+    }
+    public int getActiveSelectedQuest(ItemStack stack)
+    {
+        if (stack.hasTagCompound())
+        {
+            return stack.getTagCompound().getShort("SelectedActiveQuest");
+        }
+        return 0;
     }
     //endregion
 }

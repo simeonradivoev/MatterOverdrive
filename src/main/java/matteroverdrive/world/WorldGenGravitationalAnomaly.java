@@ -18,6 +18,8 @@
 
 package matteroverdrive.world;
 
+import matteroverdrive.data.world.GenPositionWorldData;
+import matteroverdrive.data.world.WorldPosition2D;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.tile.TileEntityGravitationalAnomaly;
@@ -36,17 +38,19 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
 {
     private HashSet<Integer> blacklist = new HashSet<>();
     private HashSet<Integer> whitelist = new HashSet<>();
-    float defaultChance;
-    float chance;
-    int minMatter;
-    int maxMatter;
+    private float defaultChance;
+    private float chance;
+    private int minMatter;
+    private int maxMatter;
+    private String name;
 
-    public WorldGenGravitationalAnomaly(float chance,int minMatter,int maxMatter)
+    public WorldGenGravitationalAnomaly(String name,float chance,int minMatter,int maxMatter)
     {
         this.defaultChance = chance;
         this.chance = chance;
         this.minMatter = minMatter;
         this.maxMatter = maxMatter;
+        this.name = name;
     }
 
     @Override
@@ -58,6 +62,8 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
             {
                 TileEntityGravitationalAnomaly anomaly = new TileEntityGravitationalAnomaly(minMatter + random.nextInt(maxMatter - minMatter));
                 world.setTileEntity(x,y,z,anomaly);
+                GenPositionWorldData data = MOWorldGen.getWorldPositionData(world);
+                data.addPosition(name,new WorldPosition2D(x,y));
             }
         }
         return false;

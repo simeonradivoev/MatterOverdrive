@@ -19,7 +19,7 @@
 package matteroverdrive.api.events.bionicStats;
 
 import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.entity.AndroidPlayer;
+import matteroverdrive.entity.player.AndroidPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 /**

@@ -21,6 +21,7 @@ package matteroverdrive.client.render.item;
 import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
+import matteroverdrive.handler.ClientWeaponHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.PhaserRifle;
 import matteroverdrive.util.RenderUtils;
@@ -52,7 +53,8 @@ public class ItemRendererPhaserRifle implements IItemRenderer
     public static final float SCALE_DROP = 0.5f;
     public static float RECOIL_TIME = 0;
     public static float RECOIL_AMOUNT = 0;
-    private static float ZOOM_TIME = 0;
+    private static float lastFov;
+    private static float lastSensitivity;
 
     public static IModelCustom phaserModel;
     public static ResourceLocation phaserTexture;
@@ -128,37 +130,39 @@ public class ItemRendererPhaserRifle implements IItemRenderer
 
     void renderFirstPerson(ItemStack item)
     {
-        ZOOM_TIME = MOMathHelper.Lerp(ZOOM_TIME,Minecraft.getMinecraft().thePlayer.isUsingItem() ? 1f : 0,0.2f);
         RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME,0,0.1f);
-        float zoomValue = MOEasing.Quart.easeOut(ZOOM_TIME, 0, 1, 1f);
+        float zoomValue = MOEasing.Sine.easeInOut(ClientWeaponHandler.ZOOM_TIME, 0, 1, 1f);
         float recoilValue = MOEasing.Quad.easeInOut(RECOIL_TIME, 0, 1, 1f);
 
         GL11.glPushMatrix();
-        ResourceLocation skin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+            ResourceLocation skin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
+            Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
 
-        glTranslated(2.0, MOMathHelper.Lerp(-0.3f,-0.4f,zoomValue), MOMathHelper.Lerp(-1, -1.1f, zoomValue));
-        glTranslatef(0,recoilValue * 0.05f * RECOIL_AMOUNT,0);
-        glRotated(MOMathHelper.Lerp(45, 0, zoomValue), 1, 1, 0);
-        glRotated(MOMathHelper.Lerp(0, MOMathHelper.Lerp(3,0,zoomValue), recoilValue), 0, 0, 1);
-        double length = 1.8;
-        double width = 0.6;
-        double depth = 0.5;
+            glTranslated(2.0, MOMathHelper.Lerp(-0.3f, -0.4f, zoomValue), MOMathHelper.Lerp(-1, -1.1f, zoomValue));
+            glTranslatef(0, recoilValue * 0.05f * RECOIL_AMOUNT, 0);
+            glRotated(MOMathHelper.Lerp(45, 0, zoomValue), 1, 1, 0);
+            glRotated(MOMathHelper.Lerp(0, MOMathHelper.Lerp(3, 0, zoomValue), recoilValue), 0, 0, 1);
+            double length = 1.8;
+            double width = 0.6;
+            double depth = 0.5;
 
-        Tessellator.instance.startDrawingQuads();
-        Tessellator.instance.setNormal(0, 0, -1);
-        Tessellator.instance.addVertexWithUV(0, 0, 0, 44f / 64f, 20f / 32f);
-        Tessellator.instance.addVertexWithUV(0, length, 0, 44f / 64f, 1);
-        Tessellator.instance.addVertexWithUV(depth, length, 0, 48f / 64f, 1);
-        Tessellator.instance.addVertexWithUV(depth, 0, 0, 48f / 64f, 20f / 32f);
+        if (!Minecraft.getMinecraft().thePlayer.isInvisible()) {
+            Tessellator.instance.startDrawingQuads();
+            Tessellator.instance.setNormal(0, 0, -1);
+            Tessellator.instance.addVertexWithUV(0, 0, 0, 44f / 64f, 20f / 32f);
+            Tessellator.instance.addVertexWithUV(0, length, 0, 44f / 64f, 1);
+            Tessellator.instance.addVertexWithUV(depth, length, 0, 48f / 64f, 1);
+            Tessellator.instance.addVertexWithUV(depth, 0, 0, 48f / 64f, 20f / 32f);
 
 
-        Tessellator.instance.setNormal(-1, 0, 0);
-        Tessellator.instance.addVertexWithUV(0, 0, 0, 44f/64f,20f/32f);
-        Tessellator.instance.addVertexWithUV(0, 0, width, 40f/64f,20f/32f);
-        Tessellator.instance.addVertexWithUV(0, length, width, 40f / 64f, 1f);
-        Tessellator.instance.addVertexWithUV(0, length, 0, 44f / 64f, 1f);
-        Tessellator.instance.draw();
+            Tessellator.instance.setNormal(-1, 0, 0);
+            Tessellator.instance.addVertexWithUV(0, 0, 0, 44f / 64f, 20f / 32f);
+            Tessellator.instance.addVertexWithUV(0, 0, width, 40f / 64f, 20f / 32f);
+            Tessellator.instance.addVertexWithUV(0, length, width, 40f / 64f, 1f);
+            Tessellator.instance.addVertexWithUV(0, length, 0, 44f / 64f, 1f);
+            Tessellator.instance.draw();
+        }
+
         GL11.glPopMatrix();
 
         glPushMatrix();
