@@ -147,7 +147,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
             return;
         }
 
-        distanceTraveled+=Vec3.createVectorHelper(motionX,motionX,motionZ).lengthVector();
+        distanceTraveled+=Vec3.createVectorHelper(motionX,motionY,motionZ).lengthVector();
         Vec3 vec31 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
         Vec3 vec3 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
         MovingObjectPosition movingobjectposition = this.worldObj.func_147447_a(vec31, vec3, false, true, false);
