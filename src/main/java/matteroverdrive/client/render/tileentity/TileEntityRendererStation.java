@@ -19,6 +19,7 @@
 package matteroverdrive.client.render.tileentity;
 
 import cofh.lib.gui.GuiColor;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.machines.MOTileEntityMachine;
@@ -34,6 +35,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.apache.commons.io.IOUtils;
+import org.lwjgl.opengl.GLContext;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,36 +68,41 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
     {
         holoColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 4, Reference.COLOR_HOLO.getIntG() / 4, Reference.COLOR_HOLO.getIntB() / 4);
         red_holoColor = new GuiColor(Reference.COLOR_HOLO_RED.getIntR() / 4, Reference.COLOR_HOLO_RED.getIntG() / 4, Reference.COLOR_HOLO_RED.getIntB() / 4);
+        fliker = new Random();
 
+        if (GLContext.getCapabilities().OpenGL20) {
+            loadShader();
+        }else
+        {
+            validShader = false;
+            MatterOverdrive.log.warn("Your machine does not support OpenGL 2.0. The holographic shader will be disabled.");
+        }
+    }
+
+    private void loadShader()
+    {
         shaderProgram = glCreateProgram();
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
         fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        fliker = new Random();
 
-        try
-        {
+
+        try {
             InputStream descriptionStream = Minecraft.getMinecraft().getResourceManager().getResource(holo_shader_vert_loc).getInputStream();
             holo_shader_vert = IOUtils.toString(descriptionStream);
 
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try
-		{
+        try {
             InputStream descriptionStream = Minecraft.getMinecraft().getResourceManager().getResource(holo_shader_frag_loc).getInputStream();
             holo_shader_frag = IOUtils.toString(descriptionStream);
 
-        }
-		catch (IOException e)
-		{
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try
-		{
+        try {
             glShaderSource(vertexShader, holo_shader_vert);
             glCompileShader(vertexShader);
 
@@ -106,29 +113,24 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
             glAttachShader(shaderProgram, fragmentShader);
 
             glLinkProgram(shaderProgram);
-            if (glGetProgrami(vertexShader, GL_LINK_STATUS) == GL_FALSE)
-			{
+            if (glGetProgrami(vertexShader, GL_LINK_STATUS) == GL_FALSE) {
                 System.out.println("Could not link shader");
                 System.out.println(glGetProgramInfoLog(vertexShader, glGetProgrami(vertexShader, GL_INFO_LOG_LENGTH)));
                 validShader = false;
             }
 
             glValidateProgram(shaderProgram);
-            if (glGetProgrami(vertexShader, GL_VALIDATE_STATUS) == GL_FALSE)
-			{
+            if (glGetProgrami(vertexShader, GL_VALIDATE_STATUS) == GL_FALSE) {
                 System.out.println("Could not validate shader");
                 System.out.println(glGetProgramInfoLog(vertexShader, glGetProgrami(vertexShader, GL_INFO_LOG_LENGTH)));
                 validShader = false;
             }
 
-            if (glGetShaderi(vertexShader, GL_COMPILE_STATUS) == GL_FALSE)
-			{
+            if (glGetShaderi(vertexShader, GL_COMPILE_STATUS) == GL_FALSE) {
                 System.out.println("Could not compile shader");
                 validShader = false;
             }
-        }
-		catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             validShader = false;
         }
@@ -182,6 +184,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         glDisable(GL_BLEND);
         glEnable(GL_LIGHTING);
         glEnable(GL_CULL_FACE);
+        RenderUtils.enableLightmap();
     }
 
     protected double getLightHeight()
@@ -258,7 +261,9 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
 
     protected void endHolo()
     {
-        glUseProgram(0);
+        if (validShader) {
+            glUseProgram(0);
+        }
     }
 
     protected void rotate(T station,double noise)
