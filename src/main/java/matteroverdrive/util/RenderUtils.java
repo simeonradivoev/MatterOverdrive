@@ -56,6 +56,7 @@ public class RenderUtils
 	private static FontRenderer   fontRenderer = Minecraft.getMinecraft().fontRenderer;
 	private static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 	private static RenderItem     renderItem   = new RenderItem();
+	private static float lastLightMapX,lastLightMapY;
 
 	public static void renderStack(int x, int y, ItemStack stack)
 	{
@@ -563,7 +564,14 @@ public class RenderUtils
 
 	public static void disableLightmap()
 	{
+		lastLightMapX = OpenGlHelper.lastBrightnessX;
+		lastLightMapY = OpenGlHelper.lastBrightnessY;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+	}
+
+	public static void enableLightmap()
+	{
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastLightMapX, lastLightMapY);
 	}
 
 	public static void DrawMultilineInfo(List infos,int x,int y, int maxLines,int maxLineWidth,int color)
