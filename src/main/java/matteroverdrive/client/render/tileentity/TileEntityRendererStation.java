@@ -144,7 +144,6 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         glDepthMask(false);
         RenderUtils.disableLightmap();
         glDisable(GL_CULL_FACE);
-        float mul = (float)Math.sin(world.getWorldTime() * 0.2)  * 0.02f + 0.2f;
 
         Minecraft.getMinecraft().renderEngine.bindTexture(glowTexture);
 
@@ -155,7 +154,6 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         glPushMatrix();
         glTranslated(x,y + height,z);
         Tessellator.instance.startDrawingQuads();
-        GuiColor color = getHoloColor(entity);
 
         Tessellator.instance.setColorRGBA_F(getHoloColor(entity).getFloatR(), getHoloColor(entity).getFloatG(), getHoloColor(entity).getFloatB(), 1);
         Tessellator.instance.addVertexWithUV(0, 0, 0, 1, 1);
