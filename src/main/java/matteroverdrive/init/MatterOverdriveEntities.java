@@ -50,7 +50,6 @@ public class MatterOverdriveEntities
     public static void register(FMLPostInitializationEvent event)
     {
         MatterOverdrive.configHandler.config.load();
-
         addEntity(EntityFailedPig.class, "failed_pig", 15771042, 0x33CC33);
         addEntity(EntityFailedCow.class,"failed_cow",4470310,0x33CC33);
         addEntity(EntityFailedChicken.class,"failed_chicken",10592673,0x33CC33);
@@ -65,9 +64,6 @@ public class MatterOverdriveEntities
 
         int phaserFireID = registerEntityGlobalIDSafe(PlasmaBolt.class,"phaser_fire");
         EntityRegistry.registerGlobalEntityID(PlasmaBolt.class, "phaser_fire", phaserFireID);
-        //EntityRegistry.registerModEntity(PlasmaBolt.class,"phaser_fire",phaserFireID,MatterOverdrive.instance,64,1,true);
-        //EntityRegistry.EntityRegistration entityRegistration = EntityRegistry.instance().lookupModSpawn(PlasmaBolt.class,false);
-        //entityRegistration.setCustomSpawning(null,true);
         MatterOverdrive.configHandler.save();
     }
 
@@ -97,25 +93,22 @@ public class MatterOverdriveEntities
         if(MatterOverdrive.configHandler.config.hasKey(ConfigurationHandler.CATEGORY_ENTITIES,getEntityConfigKey(name)))
         {
             id = MatterOverdrive.configHandler.getInt(getEntityConfigKey(name),ConfigurationHandler.CATEGORY_ENTITIES,171);
-        }
-
-        while (id < 256)
+        }else
         {
-            try
-            {
-                EntityRegistry.registerGlobalEntityID(entityClass,name,id);
-                break;
-            }catch (Exception e)
-            {
-                id++;
-                if (id == 256)
-                {
-                    throw new RuntimeException("Could not find a free Entity ID for: " + entityClass);
+            while (id < 256) {
+                try {
+                    EntityRegistry.registerGlobalEntityID(entityClass, name, id);
+                    break;
+                } catch (Exception e) {
+                    id++;
+                    if (id == 256) {
+                        throw new RuntimeException("Could not find a free Entity ID for: " + entityClass);
+                    }
                 }
-            }
 
+            }
+            MatterOverdrive.configHandler.setInt(getEntityConfigKey(name), ConfigurationHandler.CATEGORY_ENTITIES, id);
         }
-        MatterOverdrive.configHandler.setInt(getEntityConfigKey(name), ConfigurationHandler.CATEGORY_ENTITIES, id);
         return id;
     }
 
