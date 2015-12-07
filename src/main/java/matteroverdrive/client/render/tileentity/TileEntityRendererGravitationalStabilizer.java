@@ -105,6 +105,7 @@ public class TileEntityRendererGravitationalStabilizer extends TileEntitySpecial
             glEnable(GL_CULL_FACE);
             glDisable(GL_BLEND);
             glEnable(GL_LIGHTING);
+            RenderUtils.enableLightmap();
             glPopMatrix();
 
             if (tileEntityHit != null && tileEntityHit instanceof TileEntityGravitationalAnomaly)

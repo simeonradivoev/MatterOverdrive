@@ -28,6 +28,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import matteroverdrive.commands.AndoidCommands;
 import matteroverdrive.commands.MatterRegistryCommands;
 import matteroverdrive.commands.QuestCommands;
+import matteroverdrive.commands.SaveWorldToImage;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.dialog.DialogRegistry;
 import matteroverdrive.entity.player.AndroidPlayer;
@@ -181,6 +182,7 @@ public class MatterOverdrive
 		event.registerServerCommand(new AndoidCommands());
 		event.registerServerCommand(new MatterRegistryCommands());
 		event.registerServerCommand(new QuestCommands());
+		event.registerServerCommand(new SaveWorldToImage());
 	}
 
     @EventHandler

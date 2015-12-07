@@ -89,6 +89,9 @@ public class MatterOverdriveBlocks {
     public static BlockDecorative decorative_floot_tile_white;
     public static BlockDecorative decorative_white_plate;
     public static BlockDecorative decorative_separator;
+    public static BlockDecorative decorative_tritanium_lamp;
+    public static BlockDecorative getDecorative_tritanium_plate_colored;
+    public static BlockDecorative decorative_engine_exhaust_plasma;
 
     public static final List<IRecipe> recipes = new ArrayList<>();
 
@@ -141,23 +144,26 @@ public class MatterOverdriveBlocks {
         inscriber = new BlockInscriber(Material.iron,"inscriber");
         contractMarket = new BlockContractMarket(Material.iron,"contract_market");
 
-        decorative_stripes = new BlockDecorative(Material.iron,"decorative.stripes","base_stripes",5,1,8);
-        decorative_coils = new BlockDecorative(Material.iron,"decorative.coils","base_coil",5,1,8);
-        decorative_clean = new BlockDecorative(Material.iron,"decorative.clean","transporter_side",5,1,8);
-        decorative_vent_dark = new BlockDecorative(Material.iron,"decorative.vent.dark","vent",5,1,8);
-        decorative_vent_bright = new BlockDecorative(Material.iron,"decorative.vent.bright","vent2",5,1,8);
-        decorative_holo_matrix = new BlockDecorative(Material.iron,"decorative.holo_matrix","weapon_station_top",3,1,4);
-        decorative_tritanium_plate = new BlockDecorative(Material.iron,"decorative.tritanium_plate","tritanium_plate",10,1,10);
-        decorative_carbon_fiber_plate = new BlockDecorative(Material.iron,"decorative.carbon_fiber_plate","carbon_fiber_plate",10,1,12);
-        decorative_matter_tube = new BlockDecorative(Material.glass,"decorative.matter_tube","matter_tube",3,1,4);
-        decorative_beams = new BlockDecorative(Material.iron,"decorative.beams","beams",8,1,8);
-        decorative_floor_tiles = new BlockDecorative(Material.clay,"decorative.floor_tiles","floor_tiles",4,0,4);
-        decorative_floor_tiles_green = new BlockDecorative(Material.clay,"decorative.floor_tiles_green","floor_tiles_green",4,0,4);
-        decorative_floor_noise = new BlockDecorative(Material.clay,"decorative.floor_noise","floor_noise",4,0,4);
-        decorative_tritanium_plate_stripe = new BlockDecorative(Material.iron,"decorative.tritanium_plate_stripe","tritanium_plate_yellow_stripe",10,1,10);
-        decorative_floot_tile_white = new BlockDecorative(Material.clay,"decorative.floor_tile_white","floor_tile_white",4,0,4);
-        decorative_white_plate = new BlockDecorative(Material.iron,"decorative.white_plate","white_plate",8,1,8);
-        decorative_separator = new BlockDecorative(Material.iron,"decorative.separator","separator",8,1,8);
+        decorative_stripes = new BlockDecorative(Material.iron,"decorative.stripes","base_stripes",5,1,8,0xd4b108);
+        decorative_coils = new BlockDecorative(Material.iron,"decorative.coils","base_coil",5,1,8,0xb6621e);
+        decorative_clean = new BlockDecorative(Material.iron,"decorative.clean","transporter_side",5,1,8,0x3b484b);
+        decorative_vent_dark = new BlockDecorative(Material.iron,"decorative.vent.dark","vent",5,1,8,0x32393c);
+        decorative_vent_bright = new BlockDecorative(Material.iron,"decorative.vent.bright","vent2",5,1,8,0x3f4b4e);
+        decorative_holo_matrix = new BlockDecorative(Material.iron,"decorative.holo_matrix","weapon_station_top",3,1,4,0x323b3a);
+        decorative_tritanium_plate = new BlockDecorative(Material.iron,"decorative.tritanium_plate","tritanium_plate",10,1,10,0x475459);
+        decorative_carbon_fiber_plate = new BlockDecorative(Material.iron,"decorative.carbon_fiber_plate","carbon_fiber_plate",10,1,12,0x1c1f20);
+        decorative_matter_tube = new BlockDecorative(Material.glass,"decorative.matter_tube","matter_tube",3,1,4,0x5088a5).setRotated(true);
+        decorative_beams = new BlockDecorative(Material.iron,"decorative.beams","beams",8,1,8,0x1e2220).setRotated(true);
+        decorative_floor_tiles = new BlockDecorative(Material.clay,"decorative.floor_tiles","floor_tiles",4,0,4,0x958d7c);
+        decorative_floor_tiles_green = new BlockDecorative(Material.clay,"decorative.floor_tiles_green","floor_tiles_green",4,0,4,0x53593f);
+        decorative_floor_noise = new BlockDecorative(Material.clay,"decorative.floor_noise","floor_noise",4,0,4,0x7f7e7b);
+        decorative_tritanium_plate_stripe = new BlockDecorative(Material.iron,"decorative.tritanium_plate_stripe",10,1,10,0x576468,new String[]{"tritanium_plate","tritanium_plate","tritanium_plate_yellow_stripe","tritanium_plate_yellow_stripe","tritanium_plate_yellow_stripe","tritanium_plate_yellow_stripe"});
+        decorative_floot_tile_white = new BlockDecorative(Material.clay,"decorative.floor_tile_white","floor_tile_white",4,0,4,0xa3a49c);
+        decorative_white_plate = new BlockDecorative(Material.iron,"decorative.white_plate","white_plate",8,1,8,0xe3e3e3);
+        decorative_separator = new BlockDecorative(Material.iron,"decorative.separator","separator",8,1,8,0x303837).setRotated(true);
+        decorative_tritanium_lamp = (BlockDecorative)new BlockDecorative(Material.iron,"decorative.tritanium_lamp",2,1,4,0xd4f8f5,new String[]{"tritanium_lamp_bottom","tritanium_lamp_top","tritanium_plate_yellow_stripe","tritanium_plate_yellow_stripe","tritanium_lamp_sides","tritanium_lamp_sides"}).setLightLevel(1);
+        getDecorative_tritanium_plate_colored = new BlockDecorative(Material.iron,"decorative.tritanium_plate_colored","tritanium_plate_colorless",10,1,10,0x505050).setColored(true);
+        decorative_engine_exhaust_plasma = (BlockDecorative)new BlockDecorative(Material.cactus,"decorative.engine_exhaust_plasma","engine_exhaust_plasma",1,1,1,0x387c9e).setLightLevel(1);
     }
 
     public static void register(FMLInitializationEvent event) {
@@ -229,6 +235,9 @@ public class MatterOverdriveBlocks {
         decorative_floot_tile_white.register();
         decorative_white_plate.register();
         decorative_separator.register();
+        decorative_tritanium_lamp.register();
+        getDecorative_tritanium_plate_colored.register();
+        decorative_engine_exhaust_plasma.register();
 
         OreDictionary.registerOre("oreTritanium", tritaniumOre);
         OreDictionary.registerOre("oreDilithium",dilithium_ore);

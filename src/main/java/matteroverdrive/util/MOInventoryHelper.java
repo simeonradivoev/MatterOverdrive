@@ -18,6 +18,7 @@
 
 package matteroverdrive.util;
 
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -93,7 +94,7 @@ public class MOInventoryHelper
             String s = (String)iterator.next();
             if (s.startsWith("Slot"))
             {
-                NBTBase nbtbase = (NBTBase)container.getTagCompound().getTag(s);
+                NBTBase nbtbase = container.getTagCompound().getTag(s);
                 if (nbtbase instanceof NBTTagCompound)
                 {
                     itemStacks.add(ItemStack.loadItemStackFromNBT((NBTTagCompound)nbtbase));
@@ -101,5 +102,37 @@ public class MOInventoryHelper
             }
         }
         return itemStacks;
+    }
+
+    public static ItemStack addItemInContainer(Container container, ItemStack itemStack)
+    {
+        for (int i = 0;i < container.inventorySlots.size();i++)
+        {
+            if (container.getSlot(i).isItemValid(itemStack))
+            {
+                if (container.getSlot(i).getStack() == null)
+                {
+                    container.getSlot(i).putStack(itemStack);
+                    if (itemStack.stackSize > itemStack.getMaxStackSize())
+                    {
+                        itemStack.stackSize = itemStack.getMaxStackSize();
+                    }else
+                    {
+                        return null;
+                    }
+                }
+                else if (ItemStack.areItemStacksEqual(container.getSlot(i).getStack(),itemStack) && container.getSlot(i).getStack().stackSize < container.getSlot(i).getStack().getMaxStackSize())
+                {
+                    int newStackSize = Math.min(container.getSlot(i).getStack().stackSize+itemStack.stackSize,container.getSlot(i).getStack().getMaxStackSize());
+                    int leftStackSize =  container.getSlot(i).getStack().stackSize + itemStack.stackSize - newStackSize;
+                    container.getSlot(i).getStack().stackSize = newStackSize;
+                    if (leftStackSize <= 0)
+                        return null;
+
+                    itemStack.stackSize=newStackSize;
+                }
+            }
+        }
+        return itemStack;
     }
 }

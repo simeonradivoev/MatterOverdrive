@@ -50,10 +50,10 @@ public class MatterOverdriveQuests
 
     public static void init(FMLPreInitializationEvent event)
     {
-        killAndroids = new RandomQuestText(new QuestLogicKillCreature(EntityRougeAndroidMob.class,3,6),"kill_androids",1);
-        cocktailOfAscension = new GenericQuest(new QuestLogicCocktailOfAscension(),"cocktail_of_ascension");
-        sacrifice = new GenericQuest(new QuestLogicKillCreature(new Class[]{EntityChicken.class, EntityCow.class,EntityCow.class},8,15).setOnlyChildren(true),"sacrifice");
-        departmentOfAgriculture = new GenericQuest(new QuestLogicCollectItem(new ItemStack[]{new ItemStack(Items.wheat),new ItemStack(Items.carrot),new ItemStack(Items.potato)},32,64),"department_of_agriculture");
+        killAndroids = new RandomQuestText(new QuestLogicKillCreature(EntityRougeAndroidMob.class,3,6,13),"kill_androids",1,0);
+        cocktailOfAscension = new GenericQuest(new QuestLogicCocktailOfAscension(),"cocktail_of_ascension",512);
+        sacrifice = new GenericQuest(new QuestLogicKillCreature(new Class[]{EntityChicken.class, EntityCow.class,EntityCow.class},8,15,7).setOnlyChildren(true),"sacrifice",0);
+        departmentOfAgriculture = new GenericQuest(new QuestLogicCollectItem(new ItemStack[]{new ItemStack(Items.wheat),new ItemStack(Items.carrot),new ItemStack(Items.potato)},32,64,1),"department_of_agriculture",0);
     }
 
     public static void register(FMLInitializationEvent event, Quests quests)
@@ -64,5 +64,7 @@ public class MatterOverdriveQuests
         quests.registerQuest("department_of_agriculture",departmentOfAgriculture);
 
         contractGeneration.add(new WeightedRandomQuest(killAndroids,100));
+        contractGeneration.add(new WeightedRandomQuest(sacrifice,100));
+        contractGeneration.add(new WeightedRandomQuest(departmentOfAgriculture,100));
     }
 }

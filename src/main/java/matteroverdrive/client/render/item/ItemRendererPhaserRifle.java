@@ -38,6 +38,8 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Random;
+
 import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by Simeon on 7/25/2015.
@@ -55,6 +57,7 @@ public class ItemRendererPhaserRifle implements IItemRenderer
     public static float RECOIL_AMOUNT = 0;
     private static float lastFov;
     private static float lastSensitivity;
+    private Random random;
 
     public static IModelCustom phaserModel;
     public static ResourceLocation phaserTexture;
@@ -65,6 +68,7 @@ public class ItemRendererPhaserRifle implements IItemRenderer
         phaserTexture = new ResourceLocation(TEXTURE);
         phaserModel = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL));
         flashTexture = new ResourceLocation(FLASH_TEXTURE);
+        random = new Random();
     }
 
     @Override
@@ -132,11 +136,13 @@ public class ItemRendererPhaserRifle implements IItemRenderer
     {
         RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME,0,0.1f);
         float zoomValue = MOEasing.Sine.easeInOut(ClientWeaponHandler.ZOOM_TIME, 0, 1, 1f);
-        float recoilValue = MOEasing.Quad.easeInOut(RECOIL_TIME, 0, 1, 1f);
+        float recoilValue = MOEasing.Quart.easeInOut(RECOIL_TIME, 0, 1, 1f);
 
         GL11.glPushMatrix();
             ResourceLocation skin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
             Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+        Minecraft.getMinecraft().renderViewEntity.rotationPitch += recoilValue * random.nextGaussian() * 0.1f - (isRifleZoomed(item) ? 0 : recoilValue * 0.05f);
+        Minecraft.getMinecraft().renderViewEntity.rotationYaw += recoilValue * 0.05f * random.nextGaussian();
 
             glTranslated(2.0, MOMathHelper.Lerp(-0.3f, -0.4f, zoomValue), MOMathHelper.Lerp(-1, -1.1f, zoomValue));
             glTranslatef(0, recoilValue * 0.05f * RECOIL_AMOUNT, 0);

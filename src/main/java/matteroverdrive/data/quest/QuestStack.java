@@ -19,6 +19,7 @@
 package matteroverdrive.data.quest;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.quest.IQuest;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -37,11 +39,11 @@ public class QuestStack
     private NBTTagCompound tagCompound;
     private UUID giverUniqueID;
     private Entity giver;
-    private Quest quest;
+    private IQuest quest;
 
     QuestStack(){}
 
-    public QuestStack(Quest quest,Entity giver)
+    public QuestStack(IQuest quest,Entity giver)
     {
         this.quest = quest;
         if (giver != null)
@@ -49,7 +51,7 @@ public class QuestStack
         this.giver = giver;
     }
 
-    public QuestStack(Quest quest)
+    public QuestStack(IQuest quest)
     {
         this.quest = quest;
     }
@@ -84,14 +86,22 @@ public class QuestStack
 
     public static QuestStack loadFromNBT(NBTTagCompound tagCompound)
     {
-        QuestStack questStack = new QuestStack();
-        questStack.readFromNBT(tagCompound);
-        return questStack;
+        if (tagCompound != null) {
+            QuestStack questStack = new QuestStack();
+            questStack.readFromNBT(tagCompound);
+            return questStack;
+        }
+        return null;
     }
 
     public String getTitle()
     {
         return quest.getTitle(this);
+    }
+
+    public int getXP(EntityPlayer entityPlayer)
+    {
+        return quest.getXpReward(this,entityPlayer);
     }
 
     public String getTitle(EntityPlayer entityPlayer)
@@ -156,7 +166,12 @@ public class QuestStack
         this.giverUniqueID = giver.getUniqueID();
     }
 
-    public Quest getQuest()
+    public void addRewards(List<ItemStack> rewards,EntityPlayer entityPlayer)
+    {
+        quest.addRewards(this,entityPlayer,rewards);
+    }
+
+    public IQuest getQuest()
     {
         return quest;
     }
@@ -212,5 +227,10 @@ public class QuestStack
             }
         }
         return true;
+    }
+
+    public boolean canAccept(EntityPlayer entityPlayer,QuestStack questStack)
+    {
+        return quest.canBeAccepted(questStack,entityPlayer);
     }
 }

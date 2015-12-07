@@ -19,11 +19,14 @@
 package matteroverdrive.data.quest;
 
 import cpw.mods.fml.common.eventhandler.Event;
-import matteroverdrive.data.quest.logic.QuestLogic;
+import matteroverdrive.api.quest.IQuestLogic;
+import matteroverdrive.api.quest.Quest;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -31,11 +34,12 @@ import java.util.Random;
  */
 public class GenericQuest extends Quest
 {
-    protected QuestLogic questLogic;
+    protected IQuestLogic questLogic;
+    protected int xpReward;
 
-    public GenericQuest(QuestLogic questLogic,String title)
+    public GenericQuest(IQuestLogic questLogic, String title,int xpReward)
     {
-        super(title);
+        super(title,xpReward);
         this.questLogic = questLogic;
     }
 
@@ -96,8 +100,15 @@ public class GenericQuest extends Quest
     }
 
     @Override
-    public void initQuestStack(Random random,QuestStack questStack) {
+    public void initQuestStack(Random random,QuestStack questStack)
+    {
         questLogic.initQuestStack(random,questStack);
+    }
+
+    @Override
+    public void initQuestStack(Random random, QuestStack questStack, EntityPlayer entityPlayer)
+    {
+
     }
 
     @Override
@@ -112,6 +123,18 @@ public class GenericQuest extends Quest
         questLogic.onCompleted(questStack,entityPlayer);
     }
 
+    @Override
+    public int getXpReward(QuestStack questStack, EntityPlayer entityPlayer)
+    {
+        return questLogic.modifyXP(questStack,entityPlayer,xpReward);
+    }
+
+    @Override
+    public void addRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards)
+    {
+        questLogic.modifyRewards(questStack,entityPlayer,rewards);
+    }
+
     public String replaceVariables(String text,EntityPlayer entityPlayer)
     {
         if (entityPlayer != null)
@@ -121,12 +144,12 @@ public class GenericQuest extends Quest
         return text;
     }
 
-    public QuestLogic getQuestLogic()
+    public IQuestLogic getQuestLogic()
     {
         return questLogic;
     }
 
-    public void setQuestLogic(QuestLogic questLogic)
+    public void setQuestLogic(IQuestLogic questLogic)
     {
         this.questLogic = questLogic;
     }

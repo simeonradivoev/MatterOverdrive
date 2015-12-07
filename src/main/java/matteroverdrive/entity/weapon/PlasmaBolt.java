@@ -69,6 +69,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
     private int color;
     private float fireDamageMultiply;
     private ItemStack weapon;
+    private float renderSize = 2;
 
     public PlasmaBolt(World world)
     {
@@ -102,9 +103,9 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         x /= (double)dirLength;
         y /= (double)dirLength;
         z /= (double)dirLength;
-        x += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)accuracy;
-        y += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)accuracy;
-        z += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)accuracy;
+        x += this.rand.nextGaussian() * 0.007499999832361937D * (double)accuracy;
+        y += this.rand.nextGaussian() * 0.007499999832361937D * (double)accuracy;
+        z += this.rand.nextGaussian() * 0.007499999832361937D * (double)accuracy;
         x *= (double)speed;
         y *= (double)speed;
         z *= (double)speed;
@@ -212,6 +213,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
                     damagesource = getDamageSource(this.shootingEntity);
                 }
 
+                movingobjectposition.entityHit.hurtResistantTime = 0;
                 if (movingobjectposition.entityHit.attackEntityFrom(damagesource, this.damage))
                 {
                     if (movingobjectposition.entityHit instanceof EntityLivingBase) {
@@ -304,7 +306,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         explodeFX.setRBGColorF(c.getFloatR(),c.getFloatG(),c.getFloatB());
         Minecraft.getMinecraft().effectRenderer.addEffect(explodeFX);
         if (rand.nextFloat() < 0.8f) {
-            int hitPraticles = Math.max(0, 30 - (15 * Minecraft.getMinecraft().gameSettings.particleSetting));
+            int hitPraticles = Math.max(0, (int) (16*renderSize) - ((int) (8 * renderSize) * Minecraft.getMinecraft().gameSettings.particleSetting));
             for (int i = 0; i < hitPraticles; i++) {
                 Minecraft.getMinecraft().effectRenderer.addEffect(new PhaserBoltRecoil(worldObj, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, c, sideHit.xCoord * 30, sideHit.yCoord * 30, sideHit.zCoord * 30));
             }
@@ -468,4 +470,16 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
     {
         return 1f-((float)distanceTraveled/(float)life);
     }
+
+    public float setLife(float life)
+    {
+        return life;
+    }
+
+    public void setRenderSize(float size)
+    {
+        this.renderSize = size;
+    }
+
+    public float getRenderSize(){return renderSize;}
 }

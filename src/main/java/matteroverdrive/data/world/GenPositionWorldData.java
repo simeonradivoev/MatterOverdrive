@@ -20,6 +20,7 @@ package matteroverdrive.data.world;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
@@ -52,6 +53,7 @@ public class GenPositionWorldData extends WorldSavedData
             {
                 pos2D.add(new WorldPosition2D(tagList.getCompoundTagAt(i)));
             }
+            positions.put(key.toString(),pos2D);
         }
     }
 
@@ -71,6 +73,37 @@ public class GenPositionWorldData extends WorldSavedData
         }
     }
 
+    public boolean isFarEnough(String name,int x,int y,int distance)
+    {
+        List<WorldPosition2D> positions = this.positions.get(name);
+        if (positions != null) {
+            for (WorldPosition2D worldPosition2D : positions) {
+                if (worldPosition2D.manhattanDistance(x, y) < distance) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public double getNearestDistance(String name, Vec3 pos)
+    {
+        List<WorldPosition2D> positions = this.positions.get(name);
+        double lastDistance = -1;
+        double tempDist;
+
+        if (positions != null) {
+            for (WorldPosition2D worldPosition2D : positions) {
+                tempDist = Vec3.createVectorHelper(worldPosition2D.x,pos.yCoord,worldPosition2D.z).distanceTo(pos);
+                if (lastDistance < 0 || tempDist < lastDistance)
+                {
+                    lastDistance = tempDist;
+                }
+            }
+        }
+        return lastDistance;
+    }
+
     public void addPosition(String name,WorldPosition2D position2D)
     {
         List<WorldPosition2D> pos = positions.get(name);
@@ -80,6 +113,7 @@ public class GenPositionWorldData extends WorldSavedData
             positions.put(name,pos);
         }
         pos.add(position2D);
+        markDirty();
     }
 
     public List<WorldPosition2D> getPositions(String name)

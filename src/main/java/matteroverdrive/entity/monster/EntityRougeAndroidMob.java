@@ -20,13 +20,17 @@ package matteroverdrive.entity.monster;
 
 import matteroverdrive.Reference;
 import matteroverdrive.entity.ai.AndroidTargetSelector;
+import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 /**
@@ -61,7 +65,7 @@ public class EntityRougeAndroidMob extends EntityMob
         name += String.format("[%s] ",getAndroidLevel());
         name += names[rand.nextInt(names.length)];
         setCustomNameTag(name);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getAndroidLevel() * 10 + 32);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getIsLegendary() ? 128 : getAndroidLevel() * 10 + 32);
         this.setHealth(this.getMaxHealth());
     }
 
@@ -107,6 +111,75 @@ public class EntityRougeAndroidMob extends EntityMob
         }
 
         return super.getCanSpawnHere();
+    }
+
+    protected void addRandomArmor()
+    {
+        if (this.rand.nextFloat() < 0.15F * this.worldObj.func_147462_b(this.posX, this.posY, this.posZ))
+        {
+            int i = this.rand.nextInt(2);
+            float f = this.worldObj.difficultySetting == EnumDifficulty.HARD ? 0.1F : 0.25F;
+
+            if (this.rand.nextFloat() < 0.095F)
+            {
+                ++i;
+            }
+
+            if (this.rand.nextFloat() < 0.095F)
+            {
+                ++i;
+            }
+
+            if (this.rand.nextFloat() < 0.095F)
+            {
+                ++i;
+            }
+
+            for (int j = 3; j >= 0; --j)
+            {
+                ItemStack itemstack = this.func_130225_q(j);
+
+                if (j < 3 && this.rand.nextFloat() < f)
+                {
+                    break;
+                }
+
+                if (itemstack == null)
+                {
+                    Item item = null;
+
+                    if (i == 3)
+                    {
+                        if (rand.nextBoolean())
+                        {
+                            switch (j + 1)
+                            {
+                                case 4:
+                                    item = MatterOverdriveItems.tritaniumHelemet;
+                                    break;
+                                case 3:
+                                    item = MatterOverdriveItems.tritaniumChestplate;
+                                    break;
+                                case 2:
+                                    item = MatterOverdriveItems.tritaniumLeggings;
+                                    break;
+                                case 1:
+                                    item = MatterOverdriveItems.tritaniumBoots;
+                                    break;
+                            }
+                        }else
+                        {
+                            item = getArmorItemForSlot(j + 1, i);
+                        }
+                    }
+
+                    if (item != null)
+                    {
+                        this.setCurrentItemOrArmor(j + 1, new ItemStack(item));
+                    }
+                }
+            }
+        }
     }
 
     private boolean inDimensionBlacklist() {

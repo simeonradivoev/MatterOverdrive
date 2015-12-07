@@ -206,6 +206,7 @@ public class ItemRendererPhaser extends WeaponItemRenderer
         RenderUtils.disableLightmap();
         renderLevelSlider(item);
         glEnable(GL_LIGHTING);
+        RenderUtils.enableLightmap();
         glColor3f(1,1,1);
     }
 

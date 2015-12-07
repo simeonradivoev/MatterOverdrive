@@ -47,6 +47,7 @@ public class MatterOverdriveGuides
         MatterOverdriveGuide.registerGuideElementHandler("image",GuideElementImage.class);
         MatterOverdriveGuide.registerGuideElementHandler("preview",GuideElementPreview.class);
         MatterOverdriveGuide.registerGuideElementHandler("details",GuideElementDetails.class);
+        MatterOverdriveGuide.registerGuideElementHandler("tooltip",GuideElementTooltip.class);
     }
 
     public static void registerGuides(FMLPostInitializationEvent event)
@@ -61,8 +62,10 @@ public class MatterOverdriveGuides
 
         //region General
         //Ore
-        addEntry(generalCategory, new MOGuideEntryBlock(MatterOverdriveBlocks.dilithium_ore).setGroup("ore"), 3, 0);
-        addEntry(generalCategory, new MOGuideEntryBlock(MatterOverdriveBlocks.tritaniumOre).setGroup("ore"), 4, 0);
+        addEntry(generalCategory, new MOGuideEntryBlock(MatterOverdriveBlocks.dilithium_ore).setGroup("resources"), 3, 0);
+        addEntry(generalCategory, new MOGuideEntryBlock(MatterOverdriveBlocks.tritaniumOre).setGroup("resources"), 4, 0);
+        addEntry(generalCategory, new MOGuideEntryItem(MatterOverdriveItems.dilithium_ctystal).setGroup("resources"), 3, 1);
+        addEntry(generalCategory, new MOGuideEntryItem(MatterOverdriveItems.tritanium_ingot).setGroup("resources"), 4, 1);
         //Machines
         addEntry(generalCategory, new MOGuideEntryBlock(MatterOverdriveBlocks.replicator).setGroup("machines"), 0, 0);
         addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.decomposer).setGroup("machines"),1,0);
@@ -72,13 +75,16 @@ public class MatterOverdriveGuides
         addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.pattern_monitor).setGroup("machines"),1,2);
         addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.transporter).setGroup("machines"),0,3);
         addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.holoSign).setGroup("machines"),1,3);
+        addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.inscriber).setGroup("machines"),0,4);
+        addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.contractMarket).setGroup("machines"),1,4);
         //Power
         addEntry(generalCategory,new MOGuideEntry("fusion_reactor").setStackIcons(new ItemStack(MatterOverdriveBlocks.fusion_reactor_controller),
                 new ItemStack(MatterOverdriveBlocks.fusion_reactor_coil),
-                new ItemStack(MatterOverdriveBlocks.forceGlass)).setGroup("power"),3,2);
-        addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.gravitational_anomaly).setGroup("power"),4,2);
-        addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.solar_panel).setGroup("power"),3,3);
-        addEntry(generalCategory,new MOGuideEntry("batteries").setStackIcons(new ItemStack(MatterOverdriveItems.battery),new ItemStack(MatterOverdriveItems.hc_battery)).setGroup("power"),4,3);
+                new ItemStack(MatterOverdriveBlocks.forceGlass),
+                new ItemStack(MatterOverdriveBlocks.fusionReactorIO)).setGroup("power"),3,3);
+        addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.gravitational_anomaly).setGroup("power"),4,3);
+        addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.solar_panel).setGroup("power"),3,4);
+        addEntry(generalCategory,new MOGuideEntry("batteries").setStackIcons(new ItemStack(MatterOverdriveItems.battery),new ItemStack(MatterOverdriveItems.hc_battery),new ItemStack(MatterOverdriveItems.creative_battery)).setGroup("power"),4,4);
         //Matter
         addEntry(generalCategory,new MOGuideEntry("matter_transport").setStackIcons(MatterOverdriveBlocks.heavy_matter_pipe).setGroup("matter"),6,0);
         addEntry(generalCategory,new MOGuideEntry("matter_fail").setStackIcons(MatterOverdriveItems.matter_dust).setGroup("matter"),7,0);
@@ -92,21 +98,28 @@ public class MatterOverdriveGuides
         addEntry(generalCategory, new MOGuideEntryBlock(MatterOverdriveBlocks.network_router).setGroup("matter_network"), 7, 5);
         //endregion
         //Items
-        addEntry(generalCategory,new MOGuideEntryItem(MatterOverdriveItems.spacetime_equalizer).setGroup("items"),0,5);
-        addEntry(generalCategory,new MOGuideEntryItem(MatterOverdriveItems.security_protocol).setGroup("items"),1,5);
-        addEntry(generalCategory,new MOGuideEntry("upgrades").setStackIcons(MatterOverdriveItems.item_upgrade).setGroup("items"),2,5);
-        addEntry(generalCategory,new MOGuideEntry("drinks").setStackIcons(new ItemStack(MatterOverdriveItems.romulan_ale),new ItemStack(MatterOverdriveItems.earl_gray_tea)).setGroup("items"),3,5);
-        addEntry(generalCategory,new MOGuideEntry("food").setStackIcons(new ItemStack(MatterOverdriveItems.emergency_ration)).setGroup("items"),4,5);
-        addEntry(generalCategory,new MOGuideEntryItem(MatterOverdriveItems.wrench).setGroup("items"),0,6);
+        int itemsY = 6;
+        addEntry(generalCategory,new MOGuideEntryItem(MatterOverdriveItems.spacetime_equalizer).setGroup("items"),0,itemsY);
+        addEntry(generalCategory,new MOGuideEntryItem(MatterOverdriveItems.security_protocol).setGroup("items"),1,itemsY);
+        addEntry(generalCategory,new MOGuideEntry("upgrades").setStackIcons(MatterOverdriveItems.item_upgrade).setGroup("items"),2,itemsY);
+        addEntry(generalCategory,new MOGuideEntry("drinks").setStackIcons(new ItemStack(MatterOverdriveItems.romulan_ale),new ItemStack(MatterOverdriveItems.earl_gray_tea)).setGroup("items"),3,itemsY);
+        addEntry(generalCategory,new MOGuideEntry("food").setStackIcons(new ItemStack(MatterOverdriveItems.emergency_ration)).setGroup("items"),4,itemsY);
+        itemsY++;
+        addEntry(generalCategory,new MOGuideEntryItem(MatterOverdriveItems.wrench).setGroup("items"),0,itemsY);
+        addEntry(generalCategory,new MOGuideEntryItem(MatterOverdriveItems.transportFlashDrive).setGroup("items"),1,itemsY);
+        addEntry(generalCategory,new MOGuideEntryItem(MatterOverdriveItems.contract).setGroup("items"),2,itemsY);
         //region Weapons
         //Weapons
         addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.phaser).setGroup("weapons"),4,0);
         addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.phaserRifle).setGroup("weapons"),5,0);
         addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.omniTool).setGroup("weapons"),4,1);
+        addEntry(weaponsCategory,new MOGuideEntry("tritanium_tools").setStackIcons(new ItemStack(MatterOverdriveItems.tritaniumAxe),new ItemStack(MatterOverdriveItems.tritaniumSword),new ItemStack(MatterOverdriveItems.tritaniumHoe),new ItemStack(MatterOverdriveItems.tritaniumPickaxe)).setGroup("weapons"),5,1);
         //Parts
         addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.energyPack).setGroup("parts"),1,0);
         addEntry(weaponsCategory,new MOGuideEntry("weapon.modules.barrels").setStackIcons(MatterOverdriveItems.weapon_module_barrel).setGroup("parts"),2,0);
         addEntry(weaponsCategory,new MOGuideEntry("weapon.modules.colors").setStackIcons(MatterOverdriveItems.weapon_module_color).setGroup("parts"),1,1);
+        //Armor
+        addEntry(weaponsCategory,new MOGuideEntry("tritanium_armor").setStackIcons(new ItemStack(MatterOverdriveItems.tritaniumChestplate),new ItemStack(MatterOverdriveItems.tritaniumLeggings),new ItemStack(MatterOverdriveItems.tritaniumBoots),new ItemStack(MatterOverdriveItems.tritaniumHelemet)).setGroup("armor"),1,3);
         //Machines
         addEntry(weaponsCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.weapon_station).setGroup("machines"),4,3);
         //endregion

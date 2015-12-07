@@ -107,6 +107,7 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
             }
         }
         glPopMatrix();
+        RenderUtils.enableLightmap();
     }
 
     @Override

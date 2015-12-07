@@ -33,26 +33,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by Simeon on 11/22/2015.
  */
-public class QuestLogicCocktailOfAscension extends QuestLogic
+public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
 {
     public static final int MAX_CREEPER_KILS = 5;
     public static final int MAX_GUNPOWDER_COUNT = 5;
     public static final int MAX_MUSHROOM_COUNT = 5;
-
-    @Override
-    public String modifyTitle(QuestStack questStack, String original) {
-        return original;
-    }
-
-    @Override
-    public boolean canAccept(QuestStack questStack, EntityPlayer entityPlayer) {
-        return true;
-    }
 
     @Override
     public String modifyInfo(QuestStack questStack, String info)
@@ -212,7 +203,8 @@ public class QuestLogicCocktailOfAscension extends QuestLogic
                     }
                 }
             }
-        }else if (event instanceof MOEventDialogInteract)
+        }
+        else if (event instanceof MOEventDialogInteract)
         {
             if (((MOEventDialogInteract) event).npc instanceof EntityVillagerMadScientist && ((MOEventDialogInteract) event).dialogMessage == EntityVillagerMadScientist.cocktailOfAscensionComplete)
             {
@@ -230,13 +222,13 @@ public class QuestLogicCocktailOfAscension extends QuestLogic
     }
 
     @Override
-    public boolean areQuestStacksEqual(QuestStack questStackOne, QuestStack questStackTwo) {
-        return true;
-    }
-
-    @Override
     public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
+    }
+
+    @Override
+    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards)
+    {
     }
 }

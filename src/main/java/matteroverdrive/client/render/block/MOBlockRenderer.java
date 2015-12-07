@@ -54,14 +54,9 @@ public class MOBlockRenderer implements ISimpleBlockRenderingHandler
         renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 0, metadata));
         tessellator.draw();
 
-        if (renderer.useInventoryTint)
-        {
-            int k = block.getRenderColor(metadata);
-            float f2 = (float)(k >> 16 & 255) / 255.0F;
-            float f3 = (float)(k >> 8 & 255) / 255.0F;
-            float f4 = (float)(k & 255) / 255.0F;
-            GL11.glColor4f(f2 * f1, f3 * f1, f4 * f1, 1.0F);
-        }
+        renderer.colorRedTopLeft = renderer.colorRedBottomLeft = renderer.colorRedBottomRight = renderer.colorRedTopRight = (float)(block.getRenderColor(metadata) >> 16 & 255) / 255.0F;
+        renderer.colorGreenTopLeft = renderer.colorGreenBottomLeft = renderer.colorGreenBottomRight = renderer.colorGreenTopRight = (float)(block.getRenderColor(metadata) >> 8 & 255) / 255.0F;
+        renderer.colorBlueTopLeft = renderer.colorBlueBottomLeft = renderer.colorBlueBottomRight = renderer.colorBlueTopRight = (float)(block.getRenderColor(metadata & 255)) / 255.0F;
 
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 1.0F, 0.0F);
@@ -70,7 +65,7 @@ public class MOBlockRenderer implements ISimpleBlockRenderingHandler
 
         if (renderer.useInventoryTint)
         {
-            GL11.glColor4f(f1, f1, f1, 1.0F);
+            //GL11.glColor4f(f1, f1, f1, 1.0F);
         }
 
         tessellator.startDrawingQuads();

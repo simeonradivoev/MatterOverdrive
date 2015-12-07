@@ -21,6 +21,7 @@ package matteroverdrive.util;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.lib.util.WeightedRandomItemStack;
 import matteroverdrive.Reference;
+import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.EnergyWeapon;
@@ -64,27 +65,19 @@ public class WeaponFactory
         batteryModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.hc_battery),20,1,MAX_LOOT_LEVEL));
 
         otherModules.add(new WeightedRandomWeaponModule(null,300,0,MAX_LOOT_LEVEL));
-        otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_color,1,0),100,0,MAX_LOOT_LEVEL)); //red
-        otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_color,1,1),100,0,MAX_LOOT_LEVEL)); //green
-        otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_color,1,2),100,0,MAX_LOOT_LEVEL)); //blue
-        otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_color,1,3),60,0,MAX_LOOT_LEVEL)); //brown
-        otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_color,1,4),80,0,MAX_LOOT_LEVEL)); //pink
-        otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_color,1,5),80,0,MAX_LOOT_LEVEL)); //sky blue
-        otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_color,1,6),10,0,MAX_LOOT_LEVEL)); //gold
-        otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_color,1,7),100,0,MAX_LOOT_LEVEL)); //lime green
-        otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_color,1,8),90,0,MAX_LOOT_LEVEL)); //black
-        otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_color,1,9),100,0,MAX_LOOT_LEVEL)); //gray
     }
 
     public void initWeapons()
     {
         weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.phaserRifle),70));
         weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.omniTool),30));
+        weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.plasmaShotgun),10));
     }
 
     public ItemStack getRandomDecoratedEnergyWeapon(WeaponGenerationContext context)
     {
         ItemStack weapon = getRandomEnergyWeapon(context);
+        context.setWeaponStack(weapon);
         decorateWeapon(weapon,context);
         if (context.fullCharge)
         {
@@ -106,8 +99,9 @@ public class WeaponFactory
 
     public void decorateWeapon(ItemStack weapon,WeaponGenerationContext context)
     {
+        WeightedRandomWeaponModule barrelModule = null;
         if (context.barrel) {
-            WeightedRandomWeaponModule barrelModule = getRandomModule(random, barrelModules, context);
+            barrelModule = getRandomModule(random, barrelModules, context);
             if (barrelModule != null) {
                 WeaponHelper.setModuleAtSlot(barrelModule.getModuleSlot(), weapon, barrelModule.getWeaponModule());
             }
@@ -126,12 +120,38 @@ public class WeaponFactory
             if (other != null)
             {
                 WeaponHelper.setModuleAtSlot(other.getModuleSlot(),weapon,other.getWeaponModule());
+            }else
+            {
+                if (barrelModule != null && barrelModule.weaponModule != null)
+                {
+                    setColorModuleBasedOnBarrel(weapon,barrelModule.weaponModule);
+                }
             }
         }
 
         if (context.legendary)
         {
             modifyToLegendary(weapon,context);
+        }
+    }
+
+    public void setColorModuleBasedOnBarrel(ItemStack weapon,ItemStack barrel)
+    {
+        if (barrel.getItem() instanceof WeaponModuleBarrel)
+        {
+            if (barrel.getItemDamage() == WeaponModuleBarrel.EXPLOSION_BARREL_ID)
+            {
+                //gold
+                WeaponHelper.setModuleAtSlot(1, weapon, new ItemStack(MatterOverdriveItems.weapon_module_color,1, 6));
+            }else if (barrel.getItemDamage() == WeaponModuleBarrel.FIRE_BARREL_ID)
+            {
+                //red
+                WeaponHelper.setModuleAtSlot(1, weapon, new ItemStack(MatterOverdriveItems.weapon_module_color,1));
+            }else if (barrel.getItemDamage() == WeaponModuleBarrel.DAMAGE_BARREL_ID)
+            {
+                //blue
+                WeaponHelper.setModuleAtSlot(1, weapon, new ItemStack(MatterOverdriveItems.weapon_module_color,1, 2));
+            }
         }
     }
 
@@ -217,10 +237,12 @@ public class WeaponFactory
         public boolean barrel = true;
         public boolean battery = true;
         public boolean other = true;
+        public ItemStack weaponStack;
 
         public WeaponGenerationContext(int level)
         {
             this.level = level;
+            this.weaponStack = weaponStack;
         }
 
         public WeaponGenerationContext(int level,Entity entity)
@@ -233,6 +255,11 @@ public class WeaponFactory
         {
             this(level,entity);
             this.legendary = legendary;
+        }
+
+        public void setWeaponStack(ItemStack weaponStack)
+        {
+            this.weaponStack = weaponStack;
         }
     }
 
@@ -275,11 +302,18 @@ public class WeaponFactory
 
         public boolean fits(WeaponGenerationContext context)
         {
+            boolean weaponSupportModule = false;
+            if (context.weaponStack != null && context.weaponStack.getItem() instanceof IWeapon)
+            {
+                weaponSupportModule = context.weaponStack.getItem() instanceof IWeapon && ((IWeapon) context.weaponStack.getItem()).supportsModule(context.weaponStack,weaponModule);
+            }
+
             if (legendary && !context.legendary)
             {
-                return false;
+                return weaponSupportModule;
             }
-            return context.level >= minLevel && context.level <= maxLevel;
+            return context.level >= minLevel && context.level <= maxLevel && weaponSupportModule;
+
         }
     }
     //endregion

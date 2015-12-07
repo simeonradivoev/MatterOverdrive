@@ -25,12 +25,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by Simeon on 11/25/2015.
  */
-public class QuestLogicCollectItem extends QuestLogic
+public class QuestLogicCollectItem extends AbstractQuestLogic
 {
     int dimensionID;
     boolean inSpecificDimension;
@@ -38,30 +39,19 @@ public class QuestLogicCollectItem extends QuestLogic
     ItemStack[] items;
     int minItemCount;
     int maxItemCount;
+    int xpPerItem;
 
-    public QuestLogicCollectItem(ItemStack itemStack,int minItemCount,int maxItemCount)
+    public QuestLogicCollectItem(ItemStack itemStack,int minItemCount,int maxItemCount,int xpPerItem)
     {
-        this.items = new ItemStack[]{itemStack};
-        this.minItemCount = minItemCount;
-        this.maxItemCount = maxItemCount;
+        this(new ItemStack[]{itemStack},minItemCount,maxItemCount,xpPerItem);
     }
 
-    public QuestLogicCollectItem(ItemStack[] itemStacks,int minItemCount,int maxItemCount)
+    public QuestLogicCollectItem(ItemStack[] itemStacks,int minItemCount,int maxItemCount,int xpPerItem)
     {
         this.items = itemStacks;
         this.minItemCount = minItemCount;
         this.maxItemCount = maxItemCount;
-    }
-
-    @Override
-    public String modifyTitle(QuestStack questStack, String original)
-    {
-        return original;
-    }
-
-    @Override
-    public boolean canAccept(QuestStack questStack, EntityPlayer entityPlayer) {
-        return true;
+        this.xpPerItem = xpPerItem;
     }
 
     @Override
@@ -78,11 +68,6 @@ public class QuestLogicCollectItem extends QuestLogic
     public String modifyObjective(QuestStack questStack, EntityPlayer entityPlayer, String objective, int objectiveIndex)
     {
         return String.format(objective,"", getItemCount(entityPlayer,questStack),getMaxItemCount(questStack),getItem(questStack).getDisplayName());
-    }
-
-    @Override
-    public int modifyObjectiveCount(QuestStack questStack, EntityPlayer entityPlayer, int count) {
-        return count;
     }
 
     @Override
@@ -181,11 +166,6 @@ public class QuestLogicCollectItem extends QuestLogic
     }
 
     @Override
-    public boolean areQuestStacksEqual(QuestStack questStackOne, QuestStack questStackTwo) {
-        return true;
-    }
-
-    @Override
     public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
         if (!destroyOnCollect)
@@ -208,6 +188,17 @@ public class QuestLogicCollectItem extends QuestLogic
                 }
             }
         }
+    }
+
+    @Override
+    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards) {
+
+    }
+
+    @Override
+    public int modifyXP(QuestStack questStack, EntityPlayer entityPlayer, int originalXp)
+    {
+        return originalXp + getMaxItemCount(questStack) * xpPerItem;
     }
 
     public QuestLogicCollectItem setDestroyOnCollect(boolean destroyOnCollect)

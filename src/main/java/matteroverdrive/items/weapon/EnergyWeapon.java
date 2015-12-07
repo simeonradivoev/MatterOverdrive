@@ -485,7 +485,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     {
         if (item.hasTagCompound())
         {
-            item.getTagCompound().setFloat("heat", amount);
+            item.getTagCompound().setFloat("heat", Math.min(amount,getMaxHeat(item)+1));
         }
     }
 

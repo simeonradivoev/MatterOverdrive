@@ -22,7 +22,6 @@ import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.gui.GuiElementList;
-import matteroverdrive.gui.MOGuiBase;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -52,9 +51,6 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
 
     protected ElementBase getElementAtPosition(int mX, int mY)
     {
-        mX -= this.getGlobalX();
-        mY -= this.getGlobalY();
-
         for (int i = getElements().size(); i-- > 0;)
         {
             ElementBase element = getElements().get(i);
@@ -66,13 +62,32 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         return null;
     }
 
+    public void addTooltip(List<String> var1,int mouseX,int mouseY)
+    {
+        mouseX -= posX;
+        mouseY -= posY;
+
+        for (int i = getElements().size(); i-- > 0;)
+        {
+            ElementBase element = getElements().get(i);
+            if (mouseY >= 0 && mouseY <= sizeY && mouseX >= 0 && mouseX <= sizeX && element.intersectsWith(mouseX, mouseY) && element.isVisible())
+            {
+                if (element instanceof MOElementBase)
+                {
+                    ((MOElementBase)element).addTooltip(var1,mouseX,mouseY);
+                }else
+                {
+                    element.addTooltip(var1);
+                }
+            }
+        }
+    }
+
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        handleTooltips(mouseX,mouseY);
-
-        mouseX -= this.getGlobalX();
-        mouseY -= this.getGlobalY();
+        mouseX -= posX;
+        mouseY -= posY;
 
         GL11.glPushMatrix();
         GL11.glTranslatef(this.posX, this.posY, 0);
@@ -87,21 +102,11 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         GL11.glPopMatrix();
     }
 
-    protected void handleTooltips(int mouseX,int mouseY)
-    {
-        if (gui.mc.thePlayer.inventory.getItemStack() == null) {
-            ElementBase element = getElementAtPosition(mouseX, mouseY);
-            if (element != null) {
-                element.addTooltip(((MOGuiBase) gui).getTooltips());
-            }
-        }
-    }
-
     @Override
     public void drawForeground(int mouseX, int mouseY)
     {
-        mouseX -= this.getGlobalX();
-        mouseY -= this.getGlobalY();
+        mouseX -= posX;
+        mouseY -= posY;
 
         GL11.glPushMatrix();
         GL11.glTranslatef(this.posX, this.posY, 0);

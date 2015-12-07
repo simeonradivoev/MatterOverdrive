@@ -18,6 +18,7 @@
 
 package matteroverdrive.data.quest;
 
+import matteroverdrive.api.quest.Quest;
 import net.minecraft.util.WeightedRandom;
 
 /**

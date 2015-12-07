@@ -70,6 +70,16 @@ public class WorldPosition2D implements Serializable {
         z = byteBuf.readInt();
     }
 
+    public int manhattanDistance(WorldPosition2D other)
+    {
+        return manhattanDistance(other.x,other.z);
+    }
+
+    public int manhattanDistance(int x,int z)
+    {
+        return Math.abs(this.x - x) + Math.abs(this.z - z);
+    }
+
     public int hashCode() {
         return this.x & 4095 | this.z & '\uff00';
     }

@@ -59,5 +59,7 @@
     "laser_ricochet": {"category": "player","sounds": [{"name": "weapon/laser_ricochet_0", "stream": false},{"name": "weapon/laser_ricochet_1", "stream": false}]},
     "laser_fire_0": {"category": "player","sounds": [{"name": "weapon/laser_fire_0", "stream": false}]},
     "quest_complete": {"category": "master","sounds": [{"name": "gui/quest_complete", "stream": false}]},
-    "quest_started": {"category": "master","sounds": [{"name": "gui/quest_started", "stream": false}]}
+    "quest_started": {"category": "master","sounds": [{"name": "gui/quest_started", "stream": false}]},
+    "plasma_shotgun_shot": {"category": "player","sounds": [{"name": "weapon/plasma_shotgun_shot", "stream": false}]},
+    "plasma_shotgun_charging": {"category": "player","sounds": [{"name": "weapon/plasma_shotgun_charging", "stream": false}]}
 }

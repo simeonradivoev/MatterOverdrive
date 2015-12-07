@@ -52,7 +52,7 @@ public class MOBaseItem extends Item
 	{
 		if(hasDetails(itemstack))
 		{
-			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || p_77624_4_)
 			{
 				addDetails(itemstack,player,infos);
 			}

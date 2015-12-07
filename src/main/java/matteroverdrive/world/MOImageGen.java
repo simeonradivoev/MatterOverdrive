@@ -25,20 +25,21 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Simeon on 11/17/2015.
  */
 public abstract class MOImageGen
 {
+    public static HashMap<Block,Integer> worldGenerationBlockColors = new HashMap<>();
     private HashMap<Integer,BlockMapping> blockMap;
     protected ResourceLocation texture;
     private List<int[][]> layers;
@@ -46,19 +47,23 @@ public abstract class MOImageGen
     private int textureHeight;
     private int layerCount;
     protected int placeNotify;
-    protected final int layerSize;
+    protected final int layerWidth;
+    protected final int layerHeight;
+    protected final Random localRandom;
 
-    public MOImageGen(ResourceLocation texture,int layerSize)
+    public MOImageGen(ResourceLocation texture,int layerWidth,int layerHeight)
     {
+        localRandom = new Random();
         blockMap = new HashMap<>();
-        this.layerSize = layerSize;
+        this.layerWidth = layerWidth;
+        this.layerHeight = layerHeight;
         setTexture(texture);
     }
 
     public void placeBlock(World world,int color,int x,int y,int z,int layer,Random random)
     {
         Block block = getBlockFromColor(color,random);
-        int meta = getMetaFromColor(color);
+        int meta = getMetaFromColor(color,random);
         if (block != null)
         {
             world.setBlock(x, y, z, block, meta, placeNotify);
@@ -77,22 +82,45 @@ public abstract class MOImageGen
         return null;
     }
 
-    public int getMetaFromColor(int color)
+    public int getMetaFromColor(int color,Random random)
     {
         return 0;
     }
 
-    public void generateFromImage(World world,Random random,int startX,int startY,int startZ)
+    public void generateFromImage(World world,Random random,int startX,int startY,int startZ,int layer)
     {
         for (BlockMapping blockMapping : blockMap.values())
         {
-            blockMapping.reset(random);
+            blockMapping.reset(localRandom);
         }
-        for (int layer = 0; layer < layerCount; layer++) {
-            for (int x = 0; x < layerSize; x++) {
-                for (int z = 0; z < layerSize; z++) {
+        generateFromImage(world,random,startX,Math.min(startY,world.getHeight()-layerCount),startZ,layers,layer);
+    }
 
-                    placeBlock(world, layers.get(layer)[x][z], startX + x, startY + layer, startZ + z, layer,random);
+    public void generateFromImage(World world, Random random, int startX, int startY, int startZ,List<int[][]> layers,int layer)
+    {
+        for (int x = 0; x < layerWidth; x++) {
+            for (int z = 0; z < layerHeight; z++) {
+
+                placeBlock(world, layers.get(layer)[x][z], startX + x, startY + layer, startZ + z, layer,random);
+            }
+        }
+    }
+
+    public static void generateFromImage(World world, int startX, int startY, int startZ,int layerWidth,int layerHeight,List<int[][]> layers,Map<Integer,Block> blockMap)
+    {
+        for (int layer = 0; layer < layers.size(); layer++) {
+            for (int x = 0; x < layerWidth; x++) {
+                for (int z = 0; z < layerHeight; z++) {
+
+                    int color = layers.get(layer)[x][z];
+                    Color c = new Color(color,true);
+                    int alpha = c.getAlpha();
+                    Block block = blockMap.get(color & 0xffffff);
+                    int meta = 255-alpha;
+                    if (block != null)
+                    {
+                        world.setBlock(startX+x, startY + layer, startZ+z, block, meta, 2);
+                    }
                 }
             }
         }
@@ -100,7 +128,7 @@ public abstract class MOImageGen
 
     public boolean isOnSolidGround(World world,int x,int y,int z,int leaway)
     {
-        return isPointOnSolidGround(world,x,y,z,leaway) && isPointOnSolidGround(world,x+layerSize,y,z,leaway) && isPointOnSolidGround(world,x+layerSize,y,z+layerSize,leaway) && isPointOnSolidGround(world,x,y,z+layerSize,leaway);
+        return isPointOnSolidGround(world,x,y,z,leaway) && isPointOnSolidGround(world,x+layerWidth,y,z,leaway) && isPointOnSolidGround(world,x+layerWidth,y,z+layerHeight,leaway) && isPointOnSolidGround(world,x,y,z+layerHeight,leaway);
     }
 
     public boolean isPointOnSolidGround(World world,int x,int y,int z,int leaway)
@@ -117,7 +145,7 @@ public abstract class MOImageGen
 
     public boolean canFit(World world,int x,int y,int z)
     {
-        return !isBlockSolid(world,x,y+layerCount,z) && !isBlockSolid(world,x+layerSize,y+layerCount,z) && !isBlockSolid(world,x+layerSize,y+layerCount,z+layerSize) && !isBlockSolid(world,x,y+layerCount,z+layerSize);
+        return !isBlockSolid(world,x,y+layerCount,z) && !isBlockSolid(world,x+layerWidth,y+layerCount,z) && !isBlockSolid(world,x+layerWidth,y+layerCount,z+layerHeight) && !isBlockSolid(world,x,y+layerCount,z+layerHeight);
     }
 
     public boolean isBlockSolid(World world,int x,int y,int z)
@@ -142,6 +170,11 @@ public abstract class MOImageGen
         return false;
     }
 
+    protected boolean colorsMatch(int color0,int color1)
+    {
+        return (color0 & 0xffffff) == (color1 & 0xffffff);
+    }
+
     private void loadTexture(ResourceLocation textureLocation) throws RuntimeException {
         try {
 
@@ -151,20 +184,36 @@ public abstract class MOImageGen
 
             textureWidth = image.getWidth();
             textureHeight = image.getHeight();
-            if (textureWidth % layerSize != 0) {
-                throw new RuntimeException(String.format("Texture is not a multiple of the layer size: %s", layerSize));
-            }
-            layerCount = (image.getWidth() / layerSize) * (image.getHeight() / layerSize);
+            layerCount = (image.getWidth() / layerWidth) * (image.getHeight() / layerHeight);
             for (int i = 0; i < layerCount; i++) {
-                layers.add(new int[layerSize][layerSize]);
+                layers.add(new int[layerWidth][layerHeight]);
             }
-            convertTo2DWithoutUsingGetRGB(image);
+            convertTo2DWithoutUsingGetRGB(image,layerWidth,layerHeight,textureWidth,layers);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void convertTo2DWithoutUsingGetRGB(BufferedImage image) {
+    public static List<int[][]> loadTexture(File textureLocation, int layerWidth,int layerHeight) {
+        try {
+            BufferedImage image = ImageIO.read(textureLocation);
+
+            int textureWidth = image.getWidth();
+            int textureHeight = image.getHeight();
+            int layerCount = (image.getWidth() / layerWidth) * (image.getHeight() / layerHeight);
+            List<int[][]> layers = new ArrayList<>();
+            for (int i = 0; i < layerCount; i++) {
+                layers.add(new int[layerWidth][layerHeight]);
+            }
+            convertTo2DWithoutUsingGetRGB(image,layerWidth,layerHeight,textureWidth,layers);
+            return layers;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static void convertTo2DWithoutUsingGetRGB(BufferedImage image,int layerWidth,int layerHeight,int textureWidth,List<int[][]> layers) {
 
         final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         final boolean hasAlphaChannel = image.getAlphaRaster() != null;
@@ -177,8 +226,8 @@ public abstract class MOImageGen
                 argb += ((int) pixels[pixel + 1] & 0xff); // blue
                 argb += (((int) pixels[pixel + 2] & 0xff) << 8); // green
                 argb += (((int) pixels[pixel + 3] & 0xff) << 16); // red
-                int layerIndex = Math.floorDiv(col,layerSize) + ((textureWidth/layerSize) * (Math.floorDiv(row,layerSize)));
-                layers.get(layerIndex)[col % layerSize][row % layerSize] = argb;
+                int layerIndex = Math.floorDiv(col,layerWidth) + ((textureWidth/layerWidth) * (Math.floorDiv(row,layerHeight)));
+                layers.get(layerIndex)[col % layerWidth][row % layerHeight] = argb;
                 col++;
                 if (col == textureWidth) {
                     col = 0;
@@ -193,8 +242,8 @@ public abstract class MOImageGen
                 argb += ((int) pixels[pixel] & 0xff); // blue
                 argb += (((int) pixels[pixel + 1] & 0xff) << 8); // green
                 argb += (((int) pixels[pixel + 2] & 0xff) << 16); // red
-                int layerIndex = Math.floorDiv(col,layerSize) + ((textureWidth/layerSize) * (Math.floorDiv(row,layerSize)));
-                layers.get(layerIndex)[col % layerSize][row % layerSize] = argb;
+                int layerIndex = Math.floorDiv(col,layerWidth) + ((textureWidth/layerWidth) * (Math.floorDiv(row,layerHeight)));
+                layers.get(layerIndex)[col % layerWidth][row % layerHeight] = argb;
                 col++;
                 if (col == textureWidth) {
                     col = 0;
@@ -277,6 +326,8 @@ public abstract class MOImageGen
         return textureHeight;
     }
 
+    public int getLayerCount(){return layerCount;}
+
     public ResourceLocation getTexture()
     {
         return texture;
@@ -310,7 +361,7 @@ public abstract class MOImageGen
         loadTexture(textureLocation);
     }
 
-    private static class BlockMapping
+    public static class BlockMapping
     {
         private Block[] blocks;
         private boolean noise;

@@ -25,10 +25,7 @@ import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.gui.GuiDataPad;
-import matteroverdrive.gui.element.ElementBaseGroup;
-import matteroverdrive.gui.element.ElementTextList;
-import matteroverdrive.gui.element.IMOListBoxElement;
-import matteroverdrive.gui.element.MOElementListBox;
+import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.element.list.ListElementQuest;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.items.DataPad;
@@ -41,6 +38,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
@@ -54,15 +52,23 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
     ItemStack dataPadStack;
     MOElementListBox quests;
     ElementTextList questInfo;
+    ElementBaseGroup questRewards;
+    ElementScrollGroup questInfoGroup;
 
     public PageActiveQuests(GuiDataPad gui, int posX, int posY, int width, int height, String name, MOExtendedProperties extendedProperties)
     {
         super(gui, posX, posY, width, height);
         this.setName(name);
-        quests = new MOElementListBox(gui,this,posX+22,posY+28,width-44,90);
+        quests = new MOElementListBox(gui,this,posX+22,posY+28,width-44,74);
         quests.textColor = Reference.COLOR_HOLO.multiply(0.5f).getColor();
         quests.selectedTextColor = Reference.COLOR_HOLO.getColor();
-        questInfo = new ElementTextList(gui,posX+22,posY+120,width-15,80,Reference.COLOR_HOLO.getColor(),true);
+        questInfo = new ElementTextList(gui,0,0,width-15,Reference.COLOR_HOLO.getColor(),true);
+        questRewards = new ElementBaseGroup(gui,8,8,width-15,24);
+        questRewards.setName("Quest Rewards");
+        questInfoGroup = new ElementScrollGroup(gui,22,120,width-15,80);
+        questInfoGroup.addElement(questInfo);
+        questInfoGroup.addElement(questRewards);
+        questInfoGroup.setScrollerColor(Reference.COLOR_HOLO.getColor());
         loadQuests(extendedProperties);
     }
 
@@ -77,8 +83,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
     {
         super.init();
         addElement(quests);
-        addElement(questInfo);
-        loadSelectedQuestInfo();
+        addElement(questInfoGroup);
     }
 
     protected void loadQuests(MOExtendedProperties extendedProperties)
@@ -116,7 +121,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
         }
 
         ((DataPad)dataPadStack.getItem()).setSelectedActiveQuest(dataPadStack,selected);
-        questInfo.setScroll(0);
+        questInfoGroup.setScroll(0);
         loadSelectedQuestInfo();
         MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
     }
@@ -138,12 +143,29 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
                 String objective = selectedQuest.getObjective(Minecraft.getMinecraft().thePlayer,i);
                 if (selectedQuest.isObjectiveCompleted(Minecraft.getMinecraft().thePlayer,i))
                 {
-                    questInfo.addLine(EnumChatFormatting.GREEN + "■ " + objective);
+                    questInfo.addLine(EnumChatFormatting.GREEN + "\u2b1d " + objective);
                 }else
                 {
-                    questInfo.addLine(EnumChatFormatting.DARK_GREEN + "□ " + objective);
+                    questInfo.addLine(EnumChatFormatting.DARK_GREEN + "\u2b1e " + objective);
                 }
             }
+            questInfo.addLine("");
+            questInfo.addLine(EnumChatFormatting.GOLD + String.format("Rewards: +%sxp",selectedQuest.getXP(Minecraft.getMinecraft().thePlayer)));
+            List<ItemStack> rewards = new ArrayList<>();
+            selectedQuest.addRewards(rewards,Minecraft.getMinecraft().thePlayer);
+            questRewards.getElements().clear();
+            questRewards.setSize(questRewards.getWidth(),rewards.size() > 0 ? 20 : 0);
+            for (int i = 0;i < rewards.size();i++)
+            {
+                ElementItemPreview itemPreview = new ElementItemPreview(gui,i * 20,1,rewards.get(i));
+                itemPreview.setItemSize(1);
+                itemPreview.setRenderOverlay(true);
+                itemPreview.setSize(18,18);
+                itemPreview.setDrawTooltip(true);
+                itemPreview.setBackground(null);
+                questRewards.addElement(itemPreview);
+            }
+
             if (selectedQuest == null)
             {
                 ((GuiDataPad)gui).completeQuestButton.setEnabled(false);
@@ -166,7 +188,8 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
         if (dataPadStack.getTagCompound() != null)
         {
             quests.setSelectedIndex(((DataPad)dataPadStack.getItem()).getActiveSelectedQuest(dataPadStack));
-            questInfo.setScroll(dataPadStack.getTagCompound().getShort("QuestInfoScroll"));
+            questInfoGroup.setScroll(dataPadStack.getTagCompound().getShort("QuestInfoScroll"));
+            loadSelectedQuestInfo();
         }
     }
 
@@ -174,7 +197,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
     {
         if (dataPadStack.hasTagCompound())
         {
-            dataPadStack.getTagCompound().setShort("QuestInfoScroll",(short) questInfo.getScroll());
+            dataPadStack.getTagCompound().setShort("QuestInfoScroll",(short) questInfoGroup.getScroll());
         }
         MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
     }

@@ -57,6 +57,7 @@ public abstract class TileEntityRendererMonitor extends TileEntitySpecialRendere
         glDisable(GL_BLEND);
         glEnable(GL_CULL_FACE);
         glEnable(GL_LIGHTING);
+        RenderUtils.enableLightmap();
         glPopMatrix();
     }
 

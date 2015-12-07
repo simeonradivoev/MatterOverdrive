@@ -36,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -105,9 +106,19 @@ public class PlayerEventHandler
         //Minecraft stops he using of items each time they change their NBT. This makes is so the weapons refresh and gutter.
         if (event.player.isUsingItem()) {
             ItemStack itemstack = event.player.inventory.getCurrentItem();
-            if (itemstack != null && itemstack.getItem() instanceof IWeapon)
+            int itemUseCount = 100;
+            try {
+                Field field = EntityPlayer.class.getDeclaredField("itemInUseCount");
+                field.setAccessible(true);
+                itemUseCount = field.getInt(event.player);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+            if (itemstack != null && itemstack.getItem() instanceof IWeapon && itemUseCount > 0)
             {
-                event.player.setItemInUse(itemstack,itemstack.getItem().getMaxItemUseDuration(itemstack));
+                event.player.setItemInUse(itemstack,itemUseCount);
 
                 if (event.player.worldObj.isRemote) {
                     if (Minecraft.getMinecraft().currentScreen != null && event.player.equals(Minecraft.getMinecraft().thePlayer))

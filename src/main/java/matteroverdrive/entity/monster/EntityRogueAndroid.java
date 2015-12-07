@@ -46,13 +46,13 @@ public class EntityRogueAndroid implements IConfigSubscriber
 
     public static void registerEntity()
     {
-        createEntity(EntityMeleeRougeAndroidMob.class, "rogue_android", 0xFFFFF, 0);
-        createEntity(EntityRangedRougeAndroidMob.class,"ranged_rouge_android",0xFFFFF, 0);
+        createEntity(EntityMeleeRougeAndroidMob.class, "rogue_android", 0xFFFFF, 0,177);
+        createEntity(EntityRangedRogueAndroidMob.class,"ranged_rogue_android",0xFFFFF, 0,178);
     }
 
-    public static void createEntity(Class<? extends EntityLiving> entityClass, String name, int solidColor, int spotColor)
+    public static void createEntity(Class<? extends EntityLiving> entityClass, String name, int solidColor, int spotColor,int id)
     {
-        int randomID = MatterOverdriveEntities.registerEntityGlobalIDSafe(entityClass, name);
+        int randomID = MatterOverdriveEntities.loadIDFromConfig(entityClass, name,id);
         EntityRegistry.registerGlobalEntityID(entityClass, name, randomID);
         EntityRegistry.registerModEntity(entityClass, name, randomID, MatterOverdrive.instance, 64, 1, true);
         spawnListEntries.add(new BiomeGenBase.SpawnListEntry(entityClass, 5, 1, 2));
@@ -111,13 +111,13 @@ public class EntityRogueAndroid implements IConfigSubscriber
         loadBiomeBlacklist(config);
         loadBiomesWhitelist(config);
 
-        EntityRangedRougeAndroidMob.UNLIMITED_WEAPON_ENERGY = config.getBool(ConfigurationHandler.CATEGORY_ENTITIES + "rouge_android","unlimited_weapon_energy",true,"Do Ranged Rouge Androids have unlimited weapon energy in their weapons");
+        EntityRangedRogueAndroidMob.UNLIMITED_WEAPON_ENERGY = config.getBool(ConfigurationHandler.CATEGORY_ENTITIES + "rogue_android","unlimited_weapon_energy",true,"Do Ranged Rogue Androids have unlimited weapon energy in their weapons");
     }
 
     private static void loadBiomeBlacklist(ConfigurationHandler config)
     {
         biomesBlacklist.clear();
-        String[] blacklist = config.config.getStringList("biome.blacklist", ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android", new String[]{"Hell","Sky","MushroomIsland","MushroomIslandShore"}, "Rouge Android biome blacklist");
+        String[] blacklist = config.config.getStringList("biome.blacklist", ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android", new String[]{"Hell","Sky","MushroomIsland","MushroomIslandShore"}, "Rogue Android biome blacklist");
         for (int i = 0;i < blacklist.length;i++)
         {
             biomesBlacklist.add(blacklist[i].toLowerCase());
@@ -127,7 +127,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
     private static void loadBiomesWhitelist(ConfigurationHandler configurationHandler)
     {
         biomesWhitelist.clear();
-        String[] whitelist = configurationHandler.config.getStringList("biome.whitelist",ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android",new String[0],"Rouge Android biome whitelist");
+        String[] whitelist = configurationHandler.config.getStringList("biome.whitelist",ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android",new String[0],"Rogue Android biome whitelist");
         for (int i = 0;i < whitelist.length;i++)
         {
             biomesBlacklist.add(whitelist[i].toLowerCase());

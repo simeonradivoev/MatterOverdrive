@@ -185,19 +185,19 @@ public class PhaserRifle extends EnergyWeapon
                 if (canFire(itemStack,world,(EntityLivingBase)entity) && ClientProxy.weaponHandler.shootDelayPassed(this))
                 {
                     itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
-                    if (isWeaponZoomed((EntityPlayer) entity,itemStack))
-                    {
-                        ItemRendererPhaserRifle.RECOIL_AMOUNT = 0.5f + getAccuracy(itemStack,(EntityPlayer)entity,true);
-                        Minecraft.getMinecraft().renderViewEntity.hurtTime = 6 + (int)((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
-                        Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 15;
-                    }else
-                    {
-                        ItemRendererPhaserRifle.RECOIL_AMOUNT = 2 + getAccuracy(itemStack,(EntityPlayer)entity,true) * 2;
-                        Minecraft.getMinecraft().renderViewEntity.hurtTime = 6 + (int)((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
-                        Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 20;
+                    if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+                        if (isWeaponZoomed((EntityPlayer) entity, itemStack)) {
+                            ItemRendererPhaserRifle.RECOIL_AMOUNT = 0.5f + getAccuracy(itemStack, (EntityPlayer) entity, true);
+                            Minecraft.getMinecraft().renderViewEntity.hurtTime = 6 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
+                            Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 15;
+                        } else {
+                            ItemRendererPhaserRifle.RECOIL_AMOUNT = 2 + getAccuracy(itemStack, (EntityPlayer) entity, true) * 2;
+                            Minecraft.getMinecraft().renderViewEntity.hurtTime = 10 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
+                            Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 25;
+                        }
+                        ItemRendererPhaserRifle.RECOIL_TIME = 1;
                     }
 
-                    ItemRendererPhaserRifle.RECOIL_TIME = 1;
                     Vec3 dir = ((EntityPlayer) entity).getLook(1);
                     Vec3 pos = getFirePosition((EntityPlayer) entity, dir, isWeaponZoomed((EntityPlayer) entity,itemStack));
                     WeaponShot shot = createShot(itemStack,(EntityPlayer) entity, isWeaponZoomed((EntityPlayer) entity,itemStack));

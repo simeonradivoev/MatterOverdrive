@@ -21,13 +21,12 @@ package matteroverdrive.tile;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.api.quest.Quest;
 import matteroverdrive.data.Inventory;
-import matteroverdrive.data.inventory.Slot;
+import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.data.inventory.SlotContract;
-import matteroverdrive.data.quest.Quest;
 import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.data.quest.WeightedRandomQuest;
-import matteroverdrive.handler.quest.Quests;
 import matteroverdrive.init.MatterOverdriveQuests;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
@@ -37,17 +36,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
-import java.util.Collection;
 import java.util.EnumSet;
-import java.util.Iterator;
 
 /**
  * Created by Simeon on 11/22/2015.
  */
 public class TileEntityMachineContractMarket extends MOTileEntityMachine
 {
-    public static final int QUEST_GENERATE_DELAY_MIN = 20*60*10;
-    public static final int QUEST_GENERATE_DELAY_PER_SLOT = 20*60*3;
+    public static final int QUEST_GENERATE_DELAY_MIN = 20*60*30;
+    public static final int QUEST_GENERATE_DELAY_PER_SLOT = 20*60*5;
     public static final int CONTRACT_SLOTS = 18;
     private long lastGenerationTime;
     public TileEntityMachineContractMarket() {
@@ -60,7 +57,7 @@ public class TileEntityMachineContractMarket extends MOTileEntityMachine
     protected void RegisterSlots(Inventory inventory)
     {
         super.RegisterSlots(inventory);
-        inventory.AddSlot(new Slot(true));
+        inventory.AddSlot(new RemoveOnlySlot(true));
         for (int i = 0;i < CONTRACT_SLOTS;i++)
         {
             inventory.AddSlot(new SlotContract(false));
@@ -89,7 +86,7 @@ public class TileEntityMachineContractMarket extends MOTileEntityMachine
     {
         Quest quest = ((WeightedRandomQuest)WeightedRandom.getRandomItem(random,MatterOverdriveQuests.contractGeneration)).getQuest();
         QuestStack questStack = MatterOverdrive.questFactory.generateQuestStack(random,quest);
-        for (int i = 0;i < inventory.getSizeInventory();i++)
+        for (int i = 10;i < inventory.getSizeInventory();i++)
         {
             if (inventory.getSlot(i).getItem() != null)
             {
@@ -106,9 +103,14 @@ public class TileEntityMachineContractMarket extends MOTileEntityMachine
         }
 
         inventory.addItem(questStack.getContract());
+        addGenerationDelay();
+        forceSync();
+    }
+
+    public void addGenerationDelay()
+    {
         int freeSlots = getFreeSlots();
         lastGenerationTime = worldObj.getTotalWorldTime() + QUEST_GENERATE_DELAY_MIN + (inventory.getSizeInventory() - freeSlots) * QUEST_GENERATE_DELAY_PER_SLOT;
-        forceSync();
     }
 
     @Override
@@ -185,8 +187,9 @@ public class TileEntityMachineContractMarket extends MOTileEntityMachine
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z) {
-
+    public void onAdded(World world, int x, int y, int z)
+    {
+        addGenerationDelay();
     }
 
     @Override

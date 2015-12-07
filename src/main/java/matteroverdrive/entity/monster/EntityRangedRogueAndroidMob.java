@@ -41,18 +41,18 @@ import net.minecraft.world.World;
 /**
  * Created by Simeon on 11/15/2015.
  */
-public class EntityRangedRougeAndroidMob extends EntityRougeAndroidMob implements IRangedEnergyWeaponAttackMob
+public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implements IRangedEnergyWeaponAttackMob
 {
     public static boolean UNLIMITED_WEAPON_ENERGY = true;
     private EntityAIPhaserBoltAttack aiBoltAttack = new EntityAIPhaserBoltAttack(this, 1.0D, 60, 15.0F);
 
-    public EntityRangedRougeAndroidMob(World world)
+    public EntityRangedRogueAndroidMob(World world)
     {
         super(world);
         init(world);
     }
 
-    public EntityRangedRougeAndroidMob(World world,int level,boolean legendary)
+    public EntityRangedRogueAndroidMob(World world, int level, boolean legendary)
     {
         super(world,level,legendary);
         init(world);

@@ -123,6 +123,7 @@ public class TickHandler
             matterNetworkTickHandler.onWorldTickPost(event.phase, event.world);
         }
 
+        MatterOverdrive.moWorld.onWorldTick(event);
     }
 
     public void onWorldStart(Side side,World world)

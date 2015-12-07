@@ -133,7 +133,7 @@ public class MatterOverdriveRecipes
     {
         InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdriveItems.isolinear_circuit),new ItemStack(Items.gold_ingot),new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),64000,300));
         InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),new ItemStack(Items.diamond),new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),88000,600));
-        InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),new ItemStack(Items.emerald),new ItemStack(MatterOverdriveItems.isolinear_circuit,1,3),11400,1200));
+        InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),new ItemStack(Items.emerald),new ItemStack(MatterOverdriveItems.isolinear_circuit,1,3),114000,1200));
     }
 
     public static void addShapedRecipe(ItemStack output,Object... params)

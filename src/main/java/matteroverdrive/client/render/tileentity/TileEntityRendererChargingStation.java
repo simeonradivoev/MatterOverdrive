@@ -18,7 +18,6 @@
 
 package matteroverdrive.client.render.tileentity;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.util.RenderUtils;
@@ -27,12 +26,9 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
-import net.minecraftforge.client.model.obj.Face;
-import net.minecraftforge.client.model.obj.GroupObject;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 import org.lwjgl.util.vector.Matrix4f;
 
@@ -66,6 +62,7 @@ public class TileEntityRendererChargingStation extends TileEntitySpecialRenderer
             RenderUtils.rotateFromBlock(mat, tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
             RenderUtils.tesseleteModelAsBlock(mat, ((WavefrontObject) model).groupObjects.get(1), MatterOverdriveIcons.charging_station, 0, 0, 0, (int)(colorMul * 20) + 220, false, null);
             Tessellator.instance.draw();
+            RenderUtils.enableLightmap();
             glEnable(GL_LIGHTING);
             glPopMatrix();
         }

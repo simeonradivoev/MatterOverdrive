@@ -125,6 +125,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         {
             spawnParticles(worldObj);
             manageSound();
+            manageClientEntityGravitation(worldObj);
         }
     }
 
@@ -158,26 +159,44 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         Minecraft.getMinecraft().effectRenderer.addEffect(particle);
     }
 
+    @SideOnly(Side.CLIENT)
+    public void manageClientEntityGravitation(World world)
+    {
+        if (!GRAVITATION)
+            return;
+
+        double range = getMaxRange() + 1;
+        Vec3 blockPos = Vec3.createVectorHelper(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
+        Vec3 playerPosition = Vec3.createVectorHelper(Minecraft.getMinecraft().thePlayer.posX, Minecraft.getMinecraft().thePlayer.posY + Minecraft.getMinecraft().thePlayer.getEyeHeight()/2, Minecraft.getMinecraft().thePlayer.posZ);
+
+        double distance = Minecraft.getMinecraft().thePlayer.getPosition(1).distanceTo(blockPos);
+        if ( distance < range)
+        {
+            if ((Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3) != null && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3).getItem() instanceof SpacetimeEqualizer)
+                    || Minecraft.getMinecraft().thePlayer.capabilities.disableDamage
+                    || AndroidPlayer.get(Minecraft.getMinecraft().thePlayer).isUnlocked(MatterOverdriveBioticStats.equalizer,0))
+                return;
+
+            double acceleration = getAcceleration(distance);
+            Vec3 dir = playerPosition.subtract(blockPos).normalize();
+            Minecraft.getMinecraft().thePlayer.addVelocity(dir.xCoord * acceleration,dir.yCoord * acceleration,dir.zCoord * acceleration);
+            Minecraft.getMinecraft().thePlayer.velocityChanged = true;
+        }
+    }
+
     public void manageEntityGravitation(World world,float ticks)
     {
         if (!GRAVITATION)
             return;
 
-        if (world.isRemote)
-            consumedCount = 0;
 
         double range = getMaxRange() + 1;
         AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(xCoord - range, yCoord - range, zCoord - range, xCoord + range, yCoord + range, zCoord + range);
         List entities = world.getEntitiesWithinAABB(Entity.class, bb);
+        Vec3 blockPos = Vec3.createVectorHelper(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
+
         for (Object entityObject : entities)
         {
-            if (entityObject instanceof EntityPlayer)
-            {
-                AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)entityObject);
-                if (((EntityPlayer)entityObject).capabilities.isCreativeMode || androidPlayer.isUnlocked(MatterOverdriveBioticStats.equalizer,1))
-                    continue;
-            }
-
             if (entityObject instanceof Entity)
             {
                 Entity entity = (Entity)entityObject;
@@ -191,30 +210,48 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 Vec3 pos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
 
                 //pos.yCoord += entity.getEyeHeight();
-                Vec3 blockPos = Vec3.createVectorHelper(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
-                Vec3 dir = pos.subtract(blockPos).normalize();
                 double distance = pos.distanceTo(blockPos);
+                double acceleration = getAcceleration(distance);
                 double eventHorizon = getEventHorizon();
-                if (distance < eventHorizon)
+                Vec3 dir = pos.subtract(blockPos).normalize();
+                dir.xCoord *= acceleration;
+                dir.yCoord *= acceleration;
+                dir.zCoord *= acceleration;
+                if (intersectsAnomaly(pos,dir,blockPos,eventHorizon))
                 {
-                    if (!world.isRemote)
-                        consume(entity);
-                    else
-                        consumedCount++;
+                    consume(entity);
+                    consumedCount++;
                 }
-                else
-                {
-                    if (entityObject instanceof EntityLivingBase)
-                    {
-                        ItemStack eq = ((EntityLivingBase) entityObject).getEquipmentInSlot(3);
-                        if (eq != null && eq.getItem() instanceof SpacetimeEqualizer)
-                            continue;
-                    }
 
-                    double acceleration = getAcceleration(distance);
-                    entity.addVelocity(dir.xCoord * acceleration,dir.yCoord * acceleration,dir.zCoord * acceleration);
-                    entity.velocityChanged = true;
+                if (entityObject instanceof EntityLivingBase) {
+                    ItemStack eq = ((EntityLivingBase) entityObject).getEquipmentInSlot(3);
+                    if (eq != null && eq.getItem() instanceof SpacetimeEqualizer)
+                        continue;
                 }
+
+                entity.addVelocity(dir.xCoord, dir.yCoord, dir.zCoord);
+            }
+        }
+    }
+
+    boolean intersectsAnomaly(Vec3 origin,Vec3 dir,Vec3 anomaly,double radius)
+    {
+        if (origin.distanceTo(anomaly) <= radius)
+        {
+            return true;
+        }else
+        {
+            Vec3 Q = anomaly.subtract(origin);
+            double c = Q.lengthVector();
+            double v = Q.dotProduct(dir);
+            double d = radius*radius - (c*c - v*v);
+
+            if (d < 0)
+            {
+                return false;
+            }else
+            {
+                return true;
             }
         }
     }
@@ -734,7 +771,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     @SideOnly(Side.CLIENT)
     public double getMaxRenderDistanceSquared()
     {
-        return Math.pow(getMaxRange(),3);
+        return Math.max(Math.pow(getMaxRange(),3),2048);
     }
 
     public Block getBlock(World world,int x,int y,int z)

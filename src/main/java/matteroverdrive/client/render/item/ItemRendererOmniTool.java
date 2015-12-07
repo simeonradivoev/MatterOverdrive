@@ -32,6 +32,8 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Random;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class ItemRendererOmniTool extends WeaponItemRenderer
@@ -44,10 +46,12 @@ public class ItemRendererOmniTool extends WeaponItemRenderer
     public static final float SCALE_DROP = 2.5f;
     public static float RECOIL_TIME = 0;
     public static float RECOIL_AMOUNT = 0;
+    private Random random;
 
     public ItemRendererOmniTool()
     {
         super((WavefrontObject) AdvancedModelLoader.loadModel(new ResourceLocation(MODEL)),new ResourceLocation(TEXTURE));
+        random = new Random();
     }
 
     @Override
@@ -121,6 +125,9 @@ public class ItemRendererOmniTool extends WeaponItemRenderer
         glTranslatef(0, 0, recoilValue * 0.01f * RECOIL_AMOUNT);
         glRotated(recoilValue * 2 * RECOIL_AMOUNT, 1, 0, 0);
 
+        Minecraft.getMinecraft().renderViewEntity.rotationPitch += recoilValue * random.nextGaussian() * 0.03f - recoilValue * 0.02f;
+        Minecraft.getMinecraft().renderViewEntity.rotationYaw += recoilValue * 0.02f * random.nextGaussian();
+
         glColor3f(1, 1, 1);
         renderHand();
 
@@ -161,6 +168,7 @@ public class ItemRendererOmniTool extends WeaponItemRenderer
         glColor3f(1,1,1);
         weaponModel.renderPart("indicator");
         glEnable(GL_LIGHTING);
+        RenderUtils.enableLightmap();
     }
 
     void renderHand()

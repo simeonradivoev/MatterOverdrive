@@ -113,7 +113,7 @@ public class ClientWeaponHandler
                 {
                     //this allows the item to play the bow use animation when in 3rd person mode
                     currentitem.setItemDamage(1);
-                    player.setItemInUse(currentitem,100);
+                    player.setItemInUse(currentitem,player.getItemInUseCount());
                 }
             }
         }

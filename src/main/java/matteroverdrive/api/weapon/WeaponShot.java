@@ -30,11 +30,17 @@ public class WeaponShot
     protected float accuracy;
     protected int color;
     protected int range;
+    protected int count = 1;
 
+    public WeaponShot(WeaponShot shot)
+    {
+        this(shot.seed,shot.damage,shot.accuracy,shot.color,shot.range);
+    }
 
     public WeaponShot(ByteBuf buf)
     {
         this(buf.readInt(), buf.readFloat(), buf.readFloat(), buf.readInt(),buf.readByte());
+        setCount(buf.readByte());
     }
 
     public WeaponShot(int seed, float damage, float accuracy, int color,int range)
@@ -53,6 +59,7 @@ public class WeaponShot
         buf.writeFloat(accuracy);
         buf.writeInt(color);
         buf.writeByte(range);
+        buf.writeByte(count);
     }
 
     public int getSeed() {
@@ -88,4 +95,10 @@ public class WeaponShot
     }
 
     public int getRange(){return range;}
+
+    public void setRange(int range){this.range = range;}
+
+    public int getCount(){return count;}
+
+    public void setCount(int count){this.count = count;}
 }

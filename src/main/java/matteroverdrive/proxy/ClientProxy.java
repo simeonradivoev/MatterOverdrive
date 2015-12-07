@@ -125,6 +125,7 @@ public class ClientProxy extends CommonProxy
         weaponHandler.registerWeapon(MatterOverdriveItems.phaserRifle);
         weaponHandler.registerWeapon(MatterOverdriveItems.phaser);
         weaponHandler.registerWeapon(MatterOverdriveItems.omniTool);
+        weaponHandler.registerWeapon(MatterOverdriveItems.plasmaShotgun);
 
         MatterOverdriveGuides.registerGuideElements(event);
     }

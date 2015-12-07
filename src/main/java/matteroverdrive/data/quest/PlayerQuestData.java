@@ -22,7 +22,10 @@ import cpw.mods.fml.common.eventhandler.Event;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
+import matteroverdrive.util.MOInventoryHelper;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
@@ -112,6 +115,17 @@ public class PlayerQuestData
             if (activeQuests.get(i).isCompleted())
             {
                 QuestStack questStack = activeQuests.remove(i);
+                extendedProperties.getPlayer().addExperienceLevel(questStack.getXP(extendedProperties.getPlayer()));
+                List<ItemStack> rewards = new ArrayList<>();
+                questStack.addRewards(rewards, extendedProperties.getPlayer());
+                for (ItemStack stack : rewards)
+                {
+                    ItemStack leftItemStack = MOInventoryHelper.addItemInContainer(extendedProperties.getPlayer().inventoryContainer,stack);
+                    if (leftItemStack != null)
+                    {
+                        extendedProperties.getPlayer().worldObj.spawnEntityInWorld(new EntityItem(extendedProperties.getPlayer().worldObj,extendedProperties.getPlayer().posX,extendedProperties.getPlayer().posY+extendedProperties.getPlayer().getEyeHeight(),extendedProperties.getPlayer().posZ,leftItemStack));
+                    }
+                }
                 extendedProperties.onQuestCompleted(questStack,i);
             }else
             {

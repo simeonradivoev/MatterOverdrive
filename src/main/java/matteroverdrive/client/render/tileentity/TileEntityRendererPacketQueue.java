@@ -69,5 +69,6 @@ public class TileEntityRendererPacketQueue extends TileEntitySpecialRenderer
         RenderUtils.drawCube(-0.01, -0.01, -0.01, 1.02, 1.02, 1.02, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV(), Reference.COLOR_HOLO);
         glDisable(GL_BLEND);
         glEnable(GL_LIGHTING);
+        RenderUtils.enableLightmap();
     }
 }

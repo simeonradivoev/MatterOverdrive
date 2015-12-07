@@ -121,7 +121,8 @@ public class MOBlock extends Block
      */
     public void onBlockPlacedBy(World World, int x, int y, int z, EntityLivingBase player, ItemStack item)
     {
-        World.setBlockMetadataWithNotify(x, y, z, BlockHelper.determineXZPlaceFacing(player), 2);
+        int meta = BlockHelper.determineXZPlaceFacing(player);
+        World.setBlockMetadataWithNotify(x, y, z, meta, 2);
     }
 
     public boolean rotateBlock(World worldObj, int x, int y, int z, ForgeDirection axis)

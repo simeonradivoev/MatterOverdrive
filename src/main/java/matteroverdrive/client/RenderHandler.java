@@ -29,12 +29,14 @@ import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.api.renderer.IBionicPartRenderer;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.api.starmap.IStarmapRenderRegistry;
+import matteroverdrive.client.model.ModelHulkingScientist;
 import matteroverdrive.client.model.ModelTritaniumArmor;
 import matteroverdrive.client.render.*;
 import matteroverdrive.client.render.biostat.BioticStatRendererShield;
 import matteroverdrive.client.render.biostat.BioticStatRendererTeleporter;
 import matteroverdrive.client.render.block.*;
 import matteroverdrive.client.render.entity.*;
+import matteroverdrive.client.render.item.ItemRenderPlasmaShotgun;
 import matteroverdrive.client.render.item.ItemRendererOmniTool;
 import matteroverdrive.client.render.item.ItemRendererPhaser;
 import matteroverdrive.client.render.item.ItemRendererPhaserRifle;
@@ -44,7 +46,8 @@ import matteroverdrive.client.render.tileentity.*;
 import matteroverdrive.client.render.tileentity.starmap.*;
 import matteroverdrive.entity.*;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
-import matteroverdrive.entity.monster.EntityRangedRougeAndroidMob;
+import matteroverdrive.entity.monster.EntityMutantScientist;
+import matteroverdrive.entity.monster.EntityRangedRogueAndroidMob;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
@@ -100,6 +103,7 @@ public class RenderHandler
     private RendererBlockReplicator rendererBlockReplicator;
     private RendererBlockTritaniumCrate rendererBlockTritaniumCrate;
     private RendererBlockInscriber rendererBlockInscriber;
+    private RendererBlockDecorativeVertical rendererBlockDecorativeVertical;
     //endregion
     //region Biostat Renderers
     private BioticStatRendererTeleporter rendererTeleporter;
@@ -116,6 +120,7 @@ public class RenderHandler
     private static ItemRendererPhaser rendererPhaser;
     private static ItemRendererPhaserRifle rendererPhaserRifle;
     private static ItemRendererOmniTool rendererOmniTool;
+    private static ItemRenderPlasmaShotgun renderPlasmaShotgun;
     //endregion
     //region Entity Renderers
     private EntityRendererRougeAndroid rendererRougeAndroid;
@@ -127,6 +132,7 @@ public class RenderHandler
     private EntityRendererFailedSheep rendererFailedSheep;
     private EntityRendererPhaserFire rendererPhaserFire;
     private EntityRendererRangedRougeAndroid rendererRangedRougeAndroid;
+    private EntityRendererMutantScientist rendererMutantScientist;
     //endregion
     //region Tile Entity Renderers
     private TileEntityRendererReplicator tileEntityRendererReplicator;
@@ -261,6 +267,7 @@ public class RenderHandler
         rendererBlockReplicator = new RendererBlockReplicator();
         rendererBlockTritaniumCrate = new RendererBlockTritaniumCrate();
         rendererBlockInscriber = new RendererBlockInscriber();
+        rendererBlockDecorativeVertical = new RendererBlockDecorativeVertical();
     }
 
     public void registerBlockRenderers()
@@ -273,6 +280,7 @@ public class RenderHandler
         RenderingRegistry.registerBlockHandler(rendererBlockReplicator);
         RenderingRegistry.registerBlockHandler(rendererBlockTritaniumCrate);
         RenderingRegistry.registerBlockHandler(rendererBlockInscriber);
+        RenderingRegistry.registerBlockHandler(rendererBlockDecorativeVertical);
     }
 
     public void registerTileEntitySpecialRenderers()
@@ -298,6 +306,7 @@ public class RenderHandler
         rendererPhaser = new ItemRendererPhaser();
         rendererPhaserRifle = new ItemRendererPhaserRifle();
         rendererOmniTool = new ItemRendererOmniTool();
+        renderPlasmaShotgun = new ItemRenderPlasmaShotgun();
     }
 
     public void registerItemRenderers()
@@ -305,6 +314,7 @@ public class RenderHandler
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaser, rendererPhaser);
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaserRifle,rendererPhaserRifle);
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.omniTool,rendererOmniTool);
+        MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.plasmaShotgun,renderPlasmaShotgun);
     }
 
     public void createEntityRenderers()
@@ -316,8 +326,9 @@ public class RenderHandler
         rendererFailedChicken = new EntityRendererFailedChicken(new ModelChicken(), 0.3f);
         rendererFailedSheep = new EntityRendererFailedSheep(new ModelSheep2(), new ModelSheep1(), 0.7f);
         rendererPhaserFire = new EntityRendererPhaserFire();
-        rendererRangedRougeAndroid = new EntityRendererRangedRougeAndroid(new ModelBiped(),0);
+        rendererRangedRougeAndroid = new EntityRendererRangedRougeAndroid(0);
         rendererRougeAndroidHologram = new EntityRendererRougeAndroid(new ModelBiped(),0,true);
+        rendererMutantScientist = new EntityRendererMutantScientist(new ModelHulkingScientist(),0,1);
     }
 
     public void registerEntityRenderers()
@@ -329,7 +340,8 @@ public class RenderHandler
         RenderingRegistry.registerEntityRenderingHandler(EntityFailedSheep.class,rendererFailedSheep);
         RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class, rendererMadScientist);
         RenderingRegistry.registerEntityRenderingHandler(PlasmaBolt.class, rendererPhaserFire);
-        RenderingRegistry.registerEntityRenderingHandler(EntityRangedRougeAndroidMob.class,rendererRangedRougeAndroid);
+        RenderingRegistry.registerEntityRenderingHandler(EntityRangedRogueAndroidMob.class,rendererRangedRougeAndroid);
+        RenderingRegistry.registerEntityRenderingHandler(EntityMutantScientist.class,rendererMutantScientist);
         //RenderingRegistry.registerEntityRenderingHandler(EntityMeleeRougeAndroidMob.class,rendererRougeAndroidHologram);
     }
 

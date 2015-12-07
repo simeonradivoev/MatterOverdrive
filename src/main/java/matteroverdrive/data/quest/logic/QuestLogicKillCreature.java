@@ -25,17 +25,19 @@ import matteroverdrive.entity.player.MOExtendedProperties;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by Simeon on 11/19/2015.
  */
-public class QuestLogicKillCreature extends QuestLogic
+public class QuestLogicKillCreature extends AbstractQuestLogic
 {
     ItemStack killWithItemStack;
     Item killWithItem;
@@ -45,74 +47,37 @@ public class QuestLogicKillCreature extends QuestLogic
     boolean onlyChildren;
     int minKillCount;
     int maxKillCount;
+    int xpPerKill;
     Class<? extends EntityLivingBase>[] creatureClasses;
 
-    public QuestLogicKillCreature(Class<? extends EntityLivingBase> creatureClass,int minKillCount,int maxKillCount)
+    public QuestLogicKillCreature(Class<? extends EntityLivingBase> creatureClass,int minKillCount,int maxKillCount,int xpPerKill)
     {
-        this.creatureClasses = new Class[]{creatureClass};
-        this.minKillCount = minKillCount;
-        this.maxKillCount = maxKillCount;
+        this(new Class[]{creatureClass},minKillCount,maxKillCount,xpPerKill);
     }
 
-    public QuestLogicKillCreature(Class<? extends EntityLivingBase>[] creatureClasses,int minKillCount,int maxKillCount)
+    public QuestLogicKillCreature(Class<? extends EntityLivingBase>[] creatureClasses,int minKillCount,int maxKillCount,int xpPerKill)
     {
         this.creatureClasses = creatureClasses;
         this.minKillCount = minKillCount;
         this.maxKillCount = maxKillCount;
-    }
-
-    @Override
-    public String modifyTitle(QuestStack questStack,String original) {
-        return original;
-    }
-
-    @Override
-    public boolean canAccept(QuestStack questStack, EntityPlayer entityPlayer)
-    {
-        return true;
+        this.xpPerKill = xpPerKill;
     }
 
     @Override
     public String modifyInfo(QuestStack questStack,String info)
     {
-        int maxKillCount = 0;
-        if (questStack.getTagCompound() != null)
-        {
-            maxKillCount = questStack.getTagCompound().getInteger("MaxKillCount");
-        }
-        return String.format(info,"",Integer.toString(maxKillCount), getTargetName(questStack));
+        return String.format(info,"",Integer.toString(getMaxKillCount(questStack)), getTargetName(questStack));
     }
 
     @Override
     public boolean isObjectiveCompleted(QuestStack questStack, EntityPlayer entityPlayer, int objectiveIndex)
     {
-        int killCount = 0;
-        int maxKillCount = 0;
-        if (questStack.getTagCompound() != null)
-        {
-            killCount = questStack.getTagCompound().getShort("KillCount");
-            maxKillCount = questStack.getTagCompound().getInteger("MaxKillCount");
-        }
-        return killCount >= maxKillCount;
+        return getKillCount(questStack) >= getMaxKillCount(questStack);
     }
 
     @Override
     public String modifyObjective(QuestStack questStack, EntityPlayer entityPlayer,String objetive, int objectiveIndex) {
-        int killCount = 0;
-        int maxKillCount = 0;
-        if (questStack.getTagCompound() != null)
-        {
-            killCount = questStack.getTagCompound().getShort("KillCount");
-            maxKillCount = questStack.getTagCompound().getInteger("MaxKillCount");
-        }
-
-        return String.format(objetive,"",Integer.toString(killCount),Integer.toString(maxKillCount),getTargetName(questStack));
-    }
-
-    @Override
-    public int modifyObjectiveCount(QuestStack questStack, EntityPlayer entityPlayer,int objectiveCount)
-    {
-        return objectiveCount;
+        return String.format(objetive,"",getKillCount(questStack),getMaxKillCount(questStack),getTargetName(questStack));
     }
 
     @Override
@@ -153,9 +118,9 @@ public class QuestLogicKillCreature extends QuestLogic
                     questStack.setTagCompound(new NBTTagCompound());
                 }
 
-                int currentKillCount = questStack.getTagCompound().getInteger("KillCount");
+                int currentKillCount = getKillCount(questStack);
                 currentKillCount++;
-                if (currentKillCount >= questStack.getTagCompound().getInteger("MaxKillCount"))
+                if (currentKillCount >= getMaxKillCount(questStack))
                 {
                     MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
                     if (extendedProperties != null)
@@ -180,6 +145,20 @@ public class QuestLogicKillCreature extends QuestLogic
         {
             return questStack.getTagCompound().getByte("KillType");
         }
+        return 0;
+    }
+
+    public int getMaxKillCount(QuestStack questStack)
+    {
+        if (questStack.getTagCompound() != null)
+            return questStack.getTagCompound().getInteger("MaxKillCount");
+        return 0;
+    }
+
+    public int getKillCount(QuestStack questStack)
+    {
+        if (questStack.getTagCompound() != null)
+            return questStack.getTagCompound().getInteger("KillCount");
         return 0;
     }
 
@@ -208,15 +187,21 @@ public class QuestLogicKillCreature extends QuestLogic
     }
 
     @Override
-    public boolean areQuestStacksEqual(QuestStack questStackOne, QuestStack questStackTwo)
-    {
-        return true;
-    }
-
-    @Override
     public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
+    }
+
+    @Override
+    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards) {
+        rewards.add(new ItemStack(Items.egg,5));
+    }
+
+    @Override
+    public int modifyXP(QuestStack questStack, EntityPlayer entityPlayer, int originalXp)
+    {
+
+        return originalXp + xpPerKill * getMaxKillCount(questStack);
     }
 
     public QuestLogicKillCreature setOnlyChildren(boolean onlyChildren)

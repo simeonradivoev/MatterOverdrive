@@ -18,7 +18,7 @@
 
 package matteroverdrive.data.quest;
 
-import matteroverdrive.data.quest.logic.QuestLogic;
+import matteroverdrive.api.quest.IQuestLogic;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,9 +31,9 @@ import java.util.Random;
 public class RandomQuestText extends GenericQuest
 {
     int variationsCount;
-    public RandomQuestText(QuestLogic questLogic, String title,int variationsCount)
+    public RandomQuestText(IQuestLogic questLogic, String title, int variationsCount,int xpReward)
     {
-        super(questLogic, title);
+        super(questLogic, title,xpReward);
         this.variationsCount = variationsCount;
     }
 

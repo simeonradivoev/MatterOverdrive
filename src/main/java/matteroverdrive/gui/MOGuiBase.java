@@ -72,10 +72,23 @@ public abstract class MOGuiBase extends GuiBase implements IButtonHandler,ITextH
         super.width = width;
         super.height = height;
 
-        pages = new ArrayList<ElementBaseGroup>(3);
-        pageButtons = new ArrayList<MOElementButton>(3);
+        pages = new ArrayList<>(3);
+        pageButtons = new ArrayList<>(3);
 
         registerPages(container);
+    }
+
+    @Override
+    public void addTooltips(List<String> var1) {
+        super.addTooltips(var1);
+        for (int i = elements.size(); i-- > 0;)
+        {
+            ElementBase element = elements.get(i);
+            if (element instanceof  MOElementBase && element.isVisible() && element.intersectsWith(mouseX, mouseY))
+            {
+                ((MOElementBase)element).addTooltip(var1,mouseX,mouseY);
+            }
+        }
     }
 
     @Override

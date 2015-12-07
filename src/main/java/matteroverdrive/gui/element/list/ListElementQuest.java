@@ -21,11 +21,8 @@ package matteroverdrive.gui.element.list;
 import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.gui.element.IMOListBoxElement;
 import matteroverdrive.gui.element.MOElementListBox;
-import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-
-import java.util.List;
 
 /**
  * Created by Simeon on 11/19/2015.
@@ -69,7 +66,7 @@ public class ListElementQuest implements IMOListBoxElement
 
         int textWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(getName());
         if (selected) {
-            Minecraft.getMinecraft().fontRenderer.drawString("▫ " + getName(), x + width / 2 - textWidth / 2 - 8, y, textColor);
+            Minecraft.getMinecraft().fontRenderer.drawString("\u2023 " + getName(), x + width / 2 - textWidth / 2 - 8, y, textColor);
         }else
         {
             Minecraft.getMinecraft().fontRenderer.drawString(getName(), x + width / 2 - textWidth / 2, y, textColor);

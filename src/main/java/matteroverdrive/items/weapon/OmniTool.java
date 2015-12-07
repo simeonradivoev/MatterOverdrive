@@ -339,10 +339,13 @@ public class OmniTool extends EnergyWeapon
                 if (canFire(itemStack,world,(EntityLivingBase)entity) && ClientProxy.weaponHandler.shootDelayPassed(this))
                 {
                     itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
-                    ItemRendererOmniTool.RECOIL_AMOUNT = 6 + getAccuracy(itemStack,(EntityPlayer)entity,isWeaponZoomed((EntityPlayer) entity,itemStack)) * 2;
-                    ItemRendererOmniTool.RECOIL_TIME = 1;
-                    Minecraft.getMinecraft().renderViewEntity.hurtTime = 5;
-                    Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 15;
+                    if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0)
+                    {
+                        ItemRendererOmniTool.RECOIL_AMOUNT = 6 + getAccuracy(itemStack, (EntityPlayer) entity, isWeaponZoomed((EntityPlayer) entity, itemStack)) * 2;
+                        ItemRendererOmniTool.RECOIL_TIME = 1;
+                        Minecraft.getMinecraft().renderViewEntity.hurtTime = 8;
+                        Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 20;
+                    }
                     Vec3 dir = ((EntityPlayer) entity).getLook(1);
                     Vec3 pos = getFirePosition((EntityPlayer) entity, dir, Mouse.isButtonDown(1));
                     WeaponShot shot = createShot(itemStack,(EntityPlayer)entity,Mouse.isButtonDown(1));

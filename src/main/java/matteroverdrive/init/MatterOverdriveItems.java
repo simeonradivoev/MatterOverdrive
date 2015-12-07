@@ -36,10 +36,7 @@ import matteroverdrive.items.starmap.ItemScoutShip;
 import matteroverdrive.items.starmap.ShipFactory;
 import matteroverdrive.items.tools.TritaniumAxe;
 import matteroverdrive.items.tools.TritaniumPickaxe;
-import matteroverdrive.items.weapon.EnergyPack;
-import matteroverdrive.items.weapon.OmniTool;
-import matteroverdrive.items.weapon.Phaser;
-import matteroverdrive.items.weapon.PhaserRifle;
+import matteroverdrive.items.weapon.*;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import net.minecraft.item.*;
@@ -104,6 +101,7 @@ public class MatterOverdriveItems
     public static TritaniumArmor tritaniumLeggings;
     public static TritaniumArmor tritaniumBoots;
     public static Contract contract;
+    public static PlasmaShotgun plasmaShotgun;
 
     public static Item.ToolMaterial toolMaterialTritanium;
     public static ItemArmor.ArmorMaterial armorMaterialTritanium;
@@ -170,6 +168,7 @@ public class MatterOverdriveItems
         tritaniumLeggings = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,2).setUnlocalizedName("tritanium_leggings").setTextureName(Reference.MOD_ID + ":" + "tritanium_leggings");
         tritaniumBoots = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,3).setUnlocalizedName("tritanium_boots").setTextureName(Reference.MOD_ID + ":" + "tritanium_boots");
         contract = new Contract("contract");
+        plasmaShotgun = new PlasmaShotgun("plasma_shotgun");
 	}
 
 	public static void register(FMLInitializationEvent event)
@@ -225,6 +224,7 @@ public class MatterOverdriveItems
         tritanium_nugget.register();
         omniTool.register();
         contract.register();
+        plasmaShotgun.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);

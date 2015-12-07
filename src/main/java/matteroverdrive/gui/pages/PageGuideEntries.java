@@ -346,7 +346,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
     {
         if (element instanceof ElementGuideEntry)
         {
-            pageGuideDescription.OpenGuide(((ElementGuideEntry) element).getEntry().getId());
+            pageGuideDescription.OpenGuide(((ElementGuideEntry) element).getEntry().getId(),false);
             MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
             ((MOGuiBase)gui).setPage(1);
         }else if (element.equals(orderButtonElement))

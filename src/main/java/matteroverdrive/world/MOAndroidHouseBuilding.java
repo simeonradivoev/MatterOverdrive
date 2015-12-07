@@ -19,13 +19,10 @@
 package matteroverdrive.world;
 
 import cofh.lib.util.helpers.InventoryHelper;
-import cpw.mods.fml.common.IWorldGenerator;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.data.world.GenPositionWorldData;
-import matteroverdrive.data.world.WorldPosition2D;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
-import matteroverdrive.entity.monster.EntityRangedRougeAndroidMob;
+import matteroverdrive.entity.monster.EntityRangedRogueAndroidMob;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.util.WeaponFactory;
 import net.minecraft.block.Block;
@@ -35,21 +32,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.common.ChestGenHooks;
 
 import java.util.Random;
 
-public class MOAndroidHouseBuilding extends MOImageGen implements IWorldGenerator
+public class MOAndroidHouseBuilding extends MOWorldGenBuilding
 {
-    private String name;
-    private double spawnChance;
-
-    public MOAndroidHouseBuilding(String name,double spawnChance)
+    public MOAndroidHouseBuilding(String name)
     {
-        super(new ResourceLocation(Reference.PATH_WORLD_TEXTURES + "android_house.png"),21);
-        this.name = name;
-        this.spawnChance = spawnChance;
+        super(name,new ResourceLocation(Reference.PATH_WORLD_TEXTURES + "android_house.png"),21,21);
+        setyOffset(-2);
         addMapping(0x00fffc,MatterOverdriveBlocks.decorative_beams,MatterOverdriveBlocks.decorative_carbon_fiber_plate,MatterOverdriveBlocks.decorative_white_plate);
         addMapping(0x623200,Blocks.dirt);
         addMapping(0xffa200,MatterOverdriveBlocks.decorative_floor_tiles);
@@ -74,69 +66,23 @@ public class MOAndroidHouseBuilding extends MOImageGen implements IWorldGenerato
         addMapping(0x007eff,MatterOverdriveBlocks.decorative_stripes);
     }
 
-    protected Block[] getValidSpawnBlocks() {
-        return new Block[] {
-                Blocks.stone,
-                Blocks.grass,
-                Blocks.dirt
-        };
-    }
-
-    public boolean locationIsValidSpawn(World world, int i, int j, int k){
-        int distanceToAir = 0;
-        Block check = world.getBlock(i, j, k);
-
-        while (check != Blocks.air){
-            if (distanceToAir > 2){
-                return false;
-            }
-
-            distanceToAir++;
-            check = world.getBlock(i, j + distanceToAir, k);
+    @Override
+    protected void onGeneration(Random random,World world, int x, int y, int z)
+    {
+        for (int i = 0; i < random.nextInt(3) + 3; i++) {
+            spawnAndroid(world, random, x + 7 + i, y + 4, z + 10);
         }
-
-        j += distanceToAir - 1;
-
-        Block block = world.getBlock(i, j, k);
-        Block blockAbove = world.getBlock(i, j+1, k);
-        Block blockBelow = world.getBlock(i, j-1, k);
-
-        for (Block x : getValidSpawnBlocks()){
-            if (blockAbove != Blocks.air){
-                return false;
-            }
-            if (block == x){
-                return true;
-            }else if (block == Blocks.snow && blockBelow == x){
-                return true;
-            }
-        }
-
-        return false;
+        spawnLegendary(world, random, x + 12, y + 4, z + 10);
     }
 
     @Override
-    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
-    {
-        if(world.provider.dimensionId == 0)
-        {
-            int XCoord = chunkX*16 + random.nextInt(16);
-            int ZCoord = chunkZ*16 + random.nextInt(16);
-            int YCoord = world.getHeightValue(XCoord,ZCoord)-2;
+    protected boolean shouldGenerate(Random random,World world, int x, int y, int z) {
+        return world.provider.dimensionId == 0;
+    }
 
-            if(locationIsValidSpawn(world, XCoord, YCoord, ZCoord) && locationIsValidSpawn(world, XCoord + 12, YCoord, ZCoord) && locationIsValidSpawn(world, XCoord + 12, YCoord, ZCoord + 20) && locationIsValidSpawn(world, XCoord, YCoord, ZCoord + 20))
-            {
-                if (random.nextDouble() < spawnChance) {
-                    generateFromImage(world, random, XCoord, YCoord - 1, ZCoord);
-                    for (int i = 0; i < random.nextInt(3) + 3; i++) {
-                        spawnAndroid(world, random, XCoord + 7 + i, YCoord + 4, ZCoord + 10);
-                    }
-                    spawnLegendary(world, random, XCoord + 12, YCoord + 4, ZCoord + 10);
-                    GenPositionWorldData data = MOWorldGen.getWorldPositionData(world);
-                    data.addPosition(name,new WorldPosition2D(XCoord,ZCoord));
-                }
-            }
-        }
+    @Override
+    public void onGenerationWorkerCreated(WorldGenBuildingWorker worldGenBuildingWorker) {
+
     }
 
     @Override
@@ -158,7 +104,7 @@ public class MOAndroidHouseBuilding extends MOImageGen implements IWorldGenerato
     public void spawnAndroid(World world,Random random,int x,int y,int z)
     {
         if (random.nextInt(100) < 60) {
-            EntityRangedRougeAndroidMob androidMob = new EntityRangedRougeAndroidMob(world);
+            EntityRangedRogueAndroidMob androidMob = new EntityRangedRogueAndroidMob(world);
             androidMob.setPosition(x+0.5, y+0.5, z+0.5);
             world.spawnEntityInWorld(androidMob);
             androidMob.onSpawnWithEgg(null);
@@ -175,7 +121,7 @@ public class MOAndroidHouseBuilding extends MOImageGen implements IWorldGenerato
 
     public void spawnLegendary(World world,Random random,int x,int y,int z)
     {
-        EntityRangedRougeAndroidMob legendaryMob = new EntityRangedRougeAndroidMob(world,3,true);
+        EntityRangedRogueAndroidMob legendaryMob = new EntityRangedRogueAndroidMob(world,3,true);
         legendaryMob.setPosition(x+0.5, y+0.5, z+0.5);
         world.spawnEntityInWorld(legendaryMob);
         legendaryMob.onSpawnWithEgg(null);
@@ -183,7 +129,7 @@ public class MOAndroidHouseBuilding extends MOImageGen implements IWorldGenerato
     }
 
     @Override
-    public int getMetaFromColor(int color)
+    public int getMetaFromColor(int color,Random random)
     {
         int alpha = 255-getAlphaFromColor(color);
         int side = (int) ((alpha/255d)*10d);

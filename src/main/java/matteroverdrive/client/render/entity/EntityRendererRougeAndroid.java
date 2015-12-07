@@ -41,7 +41,7 @@ public class EntityRendererRougeAndroid extends RenderBiped
 
     public EntityRendererRougeAndroid(ModelBiped modelBase, float f,boolean hologram)
     {
-        super(modelBase, f);
+        super(modelBase, f,1);
         this.hologram = hologram;
     }
 

@@ -21,12 +21,17 @@ package matteroverdrive.items;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.quest.Quest;
 import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.data.quest.WeightedRandomQuest;
 import matteroverdrive.gui.GuiQuestPreview;
+import matteroverdrive.init.MatterOverdriveQuests;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -59,9 +64,10 @@ public class Contract extends MOBaseItem
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
         QuestStack questStack = QuestStack.loadFromNBT(itemstack.getTagCompound());
-        for (int i = 0;i < questStack.getObjectivesCount(player);i++)
-        {
-            infos.add(MatterOverdrive.questFactory.getFormattedQuestObjective(player,questStack,i));
+        if (questStack != null) {
+            for (int i = 0; i < questStack.getObjectivesCount(player); i++) {
+                infos.add(MatterOverdrive.questFactory.getFormattedQuestObjective(player, questStack, i));
+            }
         }
     }
 
@@ -79,6 +85,17 @@ public class Contract extends MOBaseItem
         if (world.isRemote)
         {
             openGui(itemstack);
+        }else
+        {
+            QuestStack questStack = getQuest(itemstack);
+            if (questStack == null)
+            {
+                Quest quest = ((WeightedRandomQuest) WeightedRandom.getRandomItem(itemRand, MatterOverdriveQuests.contractGeneration)).getQuest();
+                questStack = MatterOverdrive.questFactory.generateQuestStack(itemRand,quest);
+                NBTTagCompound questTag = new NBTTagCompound();
+                questStack.writeToNBT(questTag);
+                itemstack.setTagCompound(questTag);
+            }
         }
         return itemstack;
     }
@@ -87,7 +104,8 @@ public class Contract extends MOBaseItem
     private void openGui(ItemStack stack)
     {
         QuestStack questStack = getQuest(stack);
-        if (questStack != null) {
+        if (questStack != null)
+        {
             Minecraft.getMinecraft().displayGuiScreen(new GuiQuestPreview(getQuest(stack)));
         }
     }

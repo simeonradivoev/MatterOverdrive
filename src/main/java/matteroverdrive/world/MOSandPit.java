@@ -18,33 +18,29 @@
 
 package matteroverdrive.world;
 
-import cpw.mods.fml.common.IWorldGenerator;
 import matteroverdrive.Reference;
-import matteroverdrive.data.world.GenPositionWorldData;
-import matteroverdrive.data.world.WorldPosition2D;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.IChunkProvider;
 
 import java.util.Random;
 
 /**
  * Created by Simeon on 11/18/2015.
  */
-public class MOSandPit extends MOImageGen implements IWorldGenerator
+public class MOSandPit extends MOWorldGenBuilding
 {
-    private double spawnChance;
     private int airLeeway;
-    private String name;
 
-    public MOSandPit(String name,double spawnChance,int airLeeway)
+    public MOSandPit(String name,int airLeeway)
     {
-        super(new ResourceLocation(Reference.PATH_WORLD_TEXTURES + "sand_pit.png"), 24);
-        this.spawnChance = spawnChance;
+        super(name,new ResourceLocation(Reference.PATH_WORLD_TEXTURES + "sand_pit.png"), 24,24);
+        setMaxDistanceToAir(airLeeway);
+        setyOffset(-9);
+        validSpawnBlocks = new Block[]{Blocks.sand};
         this.airLeeway = airLeeway;
         this.name = name;
         addMapping(0xe1db35, Blocks.sandstone);
@@ -57,32 +53,14 @@ public class MOSandPit extends MOImageGen implements IWorldGenerator
         addMapping(0x6b4400,Blocks.fence);
     }
 
-    @Override
-    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
-    {
-        if (world.provider.dimensionId == 0) {
-            int XCoord = chunkX * 16;
-            int ZCoord = chunkZ * 16;
-            int YCoord = world.getHeightValue(XCoord, ZCoord);
-            if (world.getBiomeGenForCoords(XCoord,ZCoord) == BiomeGenBase.desert && isFlat(world,XCoord,YCoord,ZCoord))
-            {
-                if (random.nextDouble() < spawnChance) {
-                    generateFromImage(world, random, XCoord, YCoord - 10, ZCoord);
-                    GenPositionWorldData data = MOWorldGen.getWorldPositionData(world);
-                    data.addPosition(name,new WorldPosition2D(XCoord,ZCoord));
-                }
-            }
-        }
-    }
-
     public boolean isFlat(World world,int x,int y,int z)
     {
-        int y10 = world.getHeightValue(x+layerSize,z);
-        int y11 = world.getHeightValue(x+layerSize,z+layerSize);
-        int y01 = world.getHeightValue(x,z+layerSize);
+        int y10 = world.getHeightValue(x+layerWidth,z);
+        int y11 = world.getHeightValue(x+layerWidth,z+layerHeight);
+        int y01 = world.getHeightValue(x,z+layerHeight);
         if (Math.abs(y-y10) <= airLeeway && Math.abs(y-y11) <= airLeeway && Math.abs(y-y01) <= airLeeway)
         {
-            return blockBelowMatches(airLeeway,world,Blocks.sand,x,y,z) && blockBelowMatches(airLeeway,world,Blocks.sand,x+layerSize,y,z) && blockBelowMatches(airLeeway,world,Blocks.sand,x,y,z+layerSize) && blockBelowMatches(airLeeway,world,Blocks.sand,x+layerSize,y,z+layerSize);
+            return blockBelowMatches(airLeeway,world,Blocks.sand,x,y,z) && blockBelowMatches(airLeeway,world,Blocks.sand,x+layerWidth,y,z) && blockBelowMatches(airLeeway,world,Blocks.sand,x,y,z+layerHeight) && blockBelowMatches(airLeeway,world,Blocks.sand,x+layerWidth,y,z+layerHeight);
         }
         return false;
     }
@@ -114,7 +92,7 @@ public class MOSandPit extends MOImageGen implements IWorldGenerator
         if ((color & 0xffffff) == 0xc735e1)
         {
             Block block = getBlockFromColor(color,random);
-            int meta = getMetaFromColor(color);
+            int meta = getMetaFromColor(color,random);
             if (block != null)
             {
                 world.setBlock(x, y, z, block, meta, 3);
@@ -128,6 +106,21 @@ public class MOSandPit extends MOImageGen implements IWorldGenerator
 
     @Override
     public void onBlockPlace(World world, Block block, int x, int y, int z, Random random, int color) {
+
+    }
+
+    @Override
+    protected void onGeneration(Random random, World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    protected boolean shouldGenerate(Random random,World world, int x, int y, int z) {
+        return world.getBiomeGenForCoords(x,y) == BiomeGenBase.desert;
+    }
+
+    @Override
+    public void onGenerationWorkerCreated(WorldGenBuildingWorker worldGenBuildingWorker) {
 
     }
 }

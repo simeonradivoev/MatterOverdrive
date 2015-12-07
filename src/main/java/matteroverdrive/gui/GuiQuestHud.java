@@ -180,7 +180,7 @@ public class GuiQuestHud
             newQuestName = "Test. This is a test";
         }
 
-        startedQuestTimeline.getSlice(1).setLength(newQuestName.length() * 15);
+        startedQuestTimeline.getSlice(1).setLength(20*5 + newQuestName.length() * 5);
         startedQuestTimeline.sort();
         startedQuestTimeline.replay();
     }

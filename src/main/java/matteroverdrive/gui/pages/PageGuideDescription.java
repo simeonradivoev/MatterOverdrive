@@ -48,10 +48,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,12 +70,13 @@ public class PageGuideDescription extends ElementBaseGroup
 
     public static int tabID;
     public static int scroll;
+    private static Stack<HistoryEntry> historyStack = new Stack<>();
+
     List<IGuideElement> pages;
     ElementButton bt_scroll_right;
     ElementButton bt_scroll_left;
     public final ElementButton bt_return;
     private ItemStack dataPadStack;
-
 
     public PageGuideDescription(MOGuiBase gui, int posX, int posY, int width, int height, String name) {
         super(gui, posX, posY, width, height);
@@ -193,21 +191,43 @@ public class PageGuideDescription extends ElementBaseGroup
         }
         else if (element.equals(bt_return))
         {
-            ((MOGuiBase)gui).setPage(0);
+            undo();
         }
 
         scroll = MathHelper.clampI(scroll,0, pages.size()-1);
     }
 
-    public void OpenGuide(int id)
+    public void OpenGuide(int id,boolean writeToHistory)
+    {
+        OpenGuide(id,0,writeToHistory);
+    }
+
+    public void OpenGuide(int id,int page,boolean writeToHistory)
     {
         if (MatterOverdriveItems.dataPad.getGuideID(dataPadStack) != id)
         {
+            if (writeToHistory)
+                historyStack.push(new HistoryEntry(MatterOverdriveItems.dataPad.getGuideID(dataPadStack),scroll));
+
             loadGuideInfo(id);
             MatterOverdriveItems.dataPad.setOpenGuide(dataPadStack, id);
             MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
-            this.scroll = 0;
+            this.scroll = page;
             this.tabID = 0;
+        }
+    }
+
+    private void undo()
+    {
+        if (historyStack.size() > 0)
+        {
+            HistoryEntry historyEntry = historyStack.pop();
+            OpenGuide(historyEntry.entry,false);
+            scroll = historyEntry.scroll;
+        }
+        else
+        {
+            ((MOGuiBase)gui).setPage(0);
         }
     }
 
@@ -273,5 +293,16 @@ public class PageGuideDescription extends ElementBaseGroup
     public void setDataPadStack(ItemStack stack)
     {
         dataPadStack = stack;
+    }
+
+    private class HistoryEntry
+    {
+        public final int entry;
+        public final int scroll;
+        public HistoryEntry(int entry,int scroll)
+        {
+            this.entry = entry;
+            this.scroll = scroll;
+        }
     }
 }
