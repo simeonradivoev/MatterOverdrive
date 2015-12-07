@@ -30,7 +30,6 @@ import matteroverdrive.Reference;
 import matteroverdrive.animation.AnimationSegmentText;
 import matteroverdrive.animation.AnimationTextTyping;
 import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.gui.android.*;
@@ -44,17 +43,17 @@ import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.util.JsonException;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.config.Property;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -86,6 +85,8 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
     public final AndroidHudBionicStats bionicStats;
     public GuiColor baseGuiColor;
     public float opacity;
+    public float opacityBackground;
+    public boolean hideVanillaHudElements;
 
     public GuiAndroidHud(Minecraft mc)
     {
@@ -140,7 +141,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
         if ((android.isAndroid() && (event.type == RenderGameOverlayEvent.ElementType.FOOD || event.type == RenderGameOverlayEvent.ElementType.AIR || event.type == RenderGameOverlayEvent.ElementType.HEALTH) && event.isCancelable()))
         {
-            event.setCanceled(true);
+            event.setCanceled(hideVanillaHudElements);
             return;
         }
 
@@ -186,7 +187,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         glPushMatrix();
         float scale = 6 + ClientProxy.weaponHandler.getEquippedWeaponAccuracyPercent(Minecraft.getMinecraft().thePlayer)*256;
         glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+        OpenGlHelper.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
         glEnable(GL_ALPHA_TEST);
         //RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
         glColor3d(1, 1, 1);
@@ -363,19 +364,16 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                     if (element.isVisible(android))
                     {
                         glPushMatrix();
-                        int elementWidth =  (int)(element.getWidth(event.resolution) * element.getPosition().x);
-                        glTranslated(element.getPosition().x * event.resolution.getScaledWidth_double() - elementWidth, element.getPosition().y * event.resolution.getScaledHeight_double() - element.getHeight(event.resolution) * element.getPosition().y, 0);
+                        int elementWidth =  (int)(element.getWidth(event.resolution,android) * element.getPosition().x);
+                        glTranslated(element.getPosition().x * event.resolution.getScaledWidth_double() - elementWidth, element.getPosition().y * event.resolution.getScaledHeight_double() - element.getHeight(event.resolution,android) * element.getPosition().y, 0);
                         element.setBaseColor(baseGuiColor);
+                        element.setBackgroundAlpha(opacityBackground);
                         element.drawElement(android, event.mouseX, event.mouseY, event.resolution, event.partialTicks);
                         glPopMatrix();
                     }
                 }
 
                 ClientProxy.holoIcons.bindSheet();
-
-                if (android.getPlayer().getHeldItem() != null && android.getPlayer().getHeldItem().getItem() instanceof IWeapon) {
-                    renderWeaponHud(event,(IWeapon)android.getPlayer().getHeldItem().getItem(),android.getPlayer().getHeldItem(),baseGuiColor);
-                }
 
                 //glAlphaFunc(GL_GREATER, 0.5f);
                 glEnable(GL_ALPHA_TEST);
@@ -392,46 +390,6 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                 }
             }
         }
-    }
-
-    private void renderWeaponHud(RenderGameOverlayEvent event,IWeapon weapon,ItemStack weaponStack,GuiColor color)
-    {
-        int x = 12;
-        int y = 44;
-
-        //region Ammo
-        float percent = (float)weapon.getAmmo(weaponStack) / (float)weapon.getMaxAmmo(weaponStack);
-        GuiColor lerpedColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, color, percent);
-        RenderUtils.applyColorWithAlpha(lerpedColor);
-        ClientProxy.holoIcons.renderIcon("ammo",x,y);
-        x += 18;
-        String info = DecimalFormat.getPercentInstance().format(percent);
-        mc.fontRenderer.drawString(info, x, y+4, lerpedColor.getColor());
-        x += mc.fontRenderer.getStringWidth(info);
-        int energyPackCount = 0;
-        for (ItemStack stack : Minecraft.getMinecraft().thePlayer.inventory.mainInventory)
-        {
-            if (stack != null && stack.getItem() instanceof IEnergyPack)
-            {
-                energyPackCount += stack.stackSize;
-            }
-        }
-        info = " | " + Integer.toString(energyPackCount);
-        mc.fontRenderer.drawString(info,x,y + 4,color.getColor());
-        x += 4 + mc.fontRenderer.getStringWidth(info);
-        //endregion
-
-        //region Temperature
-        if (weapon.getMaxHeat(weaponStack) > 0) {
-            percent = weapon.getHeat(weaponStack) / weapon.getMaxHeat(weaponStack);
-            lerpedColor = RenderUtils.lerp(Reference.COLOR_HOLO_RED, color, 1-percent);
-            RenderUtils.applyColorWithAlpha(lerpedColor);
-            ClientProxy.holoIcons.renderIcon("temperature",x,y);
-            x += 18;
-            info = DecimalFormat.getPercentInstance().format(percent);
-            mc.fontRenderer.drawString(info, x, y + 4, lerpedColor.getColor());
-        }
-        //endregion
     }
 
     private void renderTransformAnimation(AndroidPlayer player,RenderGameOverlayEvent event)
@@ -555,5 +513,13 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,"hud_opacity",0.5f,"The Opacity of the HUD in %",0,1);
         prop.setLanguageKey("config.android_hud.opacity");
         baseGuiColor = new GuiColor(baseGuiColor.getIntR(),baseGuiColor.getIntG(),baseGuiColor.getIntB(),(int)(255 * prop.getDouble()));
+
+        prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,"hud_background_opacity",0F,"The opacity of the black background for each HUD element");
+        prop.setLanguageKey("config.android_hud.opacity_background");
+        opacityBackground = (float) prop.getDouble();
+
+        prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,"hide_vanilla_hud_elements",true,"Should the health bar and food bar be hidden");
+        prop.setLanguageKey("config.android_hud.hide_vanilla");
+        hideVanillaHudElements = prop.getBoolean();
     }
 }

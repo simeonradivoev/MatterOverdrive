@@ -112,6 +112,7 @@ public class HoloIcons {
         reg("sort_random", 16);
         reg("minimap_target",21);
         reg("question_mark",20);
+        reg("android_feature_icon_bg_black",22);
 
         MatterOverdrive.statRegistry.registerIcons(textureMap);
     }

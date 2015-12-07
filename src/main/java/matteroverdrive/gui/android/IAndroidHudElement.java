@@ -29,11 +29,12 @@ public interface IAndroidHudElement
 {
     boolean isVisible(AndroidPlayer android);
     void drawElement(AndroidPlayer androidPlayer,int mouseX,int mouseY,ScaledResolution resolution,float ticks);
-    int getWidth(ScaledResolution resolution);
-    int getHeight(ScaledResolution resolution);
+    int getWidth(ScaledResolution resolution,AndroidPlayer androidPlayer);
+    int getHeight(ScaledResolution resolution,AndroidPlayer androidPlayer);
     void setX(int x);
     void setY(int y);
     void setBaseColor(GuiColor color);
+    void setBackgroundAlpha(float alpha);
     AndroidHudPosition getPosition();
     String getName();
 }

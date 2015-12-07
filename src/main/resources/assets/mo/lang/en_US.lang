@@ -84,6 +84,7 @@ item.tritanium_hoe.name=Tritanium Hoe
 item.tritanium_sword.name=Tritanium Sword
 item.tritanium_pickaxe.name=Tritanium Pickaxe
 item.tritanium_axe.name=Tritanium Axe
+item.contract.name=Contract
 
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade
@@ -146,6 +147,7 @@ tile.holo_sign.name=Holographic Sign
 tile.force_glass.name=Tritanium Glass
 tile.bounding_box.name=Bounding Block
 tile.inscriber.name=Molecular Inscriber
+tile.fusion_reactor_io.name=Fusion Reactor IO
 
 //////////// Pattern Storage ////////////
 tile.pattern_storage.name=Pattern Storage
@@ -222,7 +224,7 @@ entity.failed_cow.name=Failed Cow
 entity.failed_sheep.name=Failed Sheep
 entity.mad_scientist.name=Mad Scientist
 entity.mad_scientist.junkie.name=Mad Scientist Junkie
-entity.ranged_rouge_android.name=Ranged Rouge Android
+entity.ranged_rogue_android.name=Ranged Rogue Android
 
 ///////////// Decorative ////////////////////
 tile.decorative.stripes.name=Yellow Stripes
@@ -242,6 +244,9 @@ tile.decorative.tritanium_plate_stripe.name=Tritanium Plate Guided
 tile.decorative.floor_tile_white.name=White Floor Tiles
 tile.decorative.white_plate.name=Soft Wall Plates
 tile.decorative.separator.name=Tritanium Rail
+tile.decorative.engine_exhaust_plasma.name=Engine Exhaust Plasma
+tile.decorative.tritanium_lamp.name=Tritanium Lamp
+tile.decorative.tritanium_plate_colored.name=Colored Tritanium Plate
 
 ##########################################################################################################
 # Dialogs
@@ -385,7 +390,7 @@ gui.recycler.name=Matter Recycler
 gui.fusion_reactor.name=Fusion Reactor
 gui.charging_station.name=Charging Station
 gui.weapon_station.name=Weapon Station
-gui.inscriber.name=Inscriber
+gui.inscriber.name=Molecular Inscriber
 gui.contract_market.name=Contracts
 
 ////////// Other ///////////////
@@ -523,6 +528,8 @@ config.android_hud.bionicStats.position=Bionic Abilities Position
 config.android_hud.minimap.position=Minimap Position
 config.android_hud.color=HUD Color
 config.android_hud.opacity=HUD Opacity
+config.android_hud.hide_vanilla=Hide Vanilla HUD elements
+config.android_hud.opacity_background=HUD Elements Background Opacity
 
 ##########################################################################################################
 # Chat Alerts
@@ -553,7 +560,7 @@ guide.category.weapons.name=Weapons
 guide.category.android.name=Android
 
 guide.group.machines.name=Machines
-guide.group.ore.name=Ore
+guide.group.resources.name=Resources
 guide.group.matter.name=Matter
 guide.group.matter_network.name=Network
 guide.group.weapons.name=Weapons
@@ -563,6 +570,7 @@ guide.group.power.name=Power
 guide.group.blocks.name=Blocks
 guide.group.drinks.name=Drinks
 guide.group.food.name=Food
+guide.group.armor.name=Armor
 
 guide.entry.matter_fail.name=Matter Replication Failure
 guide.entry.matter_plasma.name=Matter Plasma
@@ -576,6 +584,8 @@ guide.entry.batteries.name=Batteries
 guide.entry.food.name=Food
 guide.entry.drinks.name=Drinks
 guide.entry.upgrades.name=Upgrades
+guide.entry.tritanium_armor.name=Tritanium Armor
+guide.entry.tritanium_tools.name=Tritanium Tools
 
 ###############################################################################################################
 # modifiers
@@ -585,15 +595,34 @@ modifier.bionic.glitch_time=Glitch Time
 
 ###############################################################################################################
 # others
+///// colors /////
+color.black=Black
+color.red=Red
+color.green=Green
+color.brown=Brown
+color.blue=Blue
+color.purple=Purple
+color.cyan=Cyan
+color.silver=Light Gray
+color.gray=Gray
+color.pink=Pink
+color.lime=Lime
+color.yellow=Yellow
+color.lightBlue=Light Blue
+color.magenta=Magenta
+color.orange=Orange
+color.white=White
+
 material.tritanium=Tritanium
 container.tritanium_crate=Tritanium Crate
 rarity.legendary=Legendary
+
 
 ###############################################################################################################
 # others
 quest.kill_androids.0.title=They will kill us all!
 quest.kill_androids.0.info=The are taking over the world! I know it! We must fight our machine overlords. If we don't, we will all perish. The fight starts with you %1$s! I need you to kill %2$s %3$s before they get to us.
-quest.kill_androids.0.objective.0=Kill %2$s/%3$s Rouge Androids.
+quest.kill_androids.0.objective.0=Kill %2$s/%3$s Rogue Androids.
 quest.cocktail_of_ascension.title=Cocktail of Ascension
 quest.cocktail_of_ascension.info=A Crazy scientist has asked you to bring him %2$s gunpowder from a shoveled creeper and %3$s red mushrooms from the darkest depths of the Nether, for his Cocktail Of Ascension.
 quest.cocktail_of_ascension.objective.0=Kill %2$s/%3$s creepers with a shovel

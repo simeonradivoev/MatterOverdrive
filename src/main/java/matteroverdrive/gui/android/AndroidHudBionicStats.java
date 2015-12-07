@@ -55,7 +55,7 @@ public class AndroidHudBionicStats extends AndroidHudElement
         int count = 0;
         for (int i = 0; i < android.getSizeInventory(); i++) {
             if (android.getStackInSlot(i) != null) {
-                drawAndroidPart(android.getStackInSlot(i), baseColor, getX(count), getY(count));
+                drawAndroidPart(android.getStackInSlot(i), baseColor, getX(count,resolution,android), getY(count,resolution,android));
                 count++;
             }
         }
@@ -68,10 +68,10 @@ public class AndroidHudBionicStats extends AndroidHudElement
                 {
                     if (!stat.isEnabled(android,level))
                     {
-                        drawBioticStat(stat,android, level, Reference.COLOR_HOLO_RED, getX(count), getY(count));
+                        drawBioticStat(stat,android, level, Reference.COLOR_HOLO_RED, getX(count,resolution,android), getY(count,resolution,android));
                     }else
                     {
-                        drawBioticStat(stat,android, level, baseColor, getX(count), getY(count));
+                        drawBioticStat(stat,android, level, baseColor, getX(count,resolution,android), getY(count,resolution,android));
                     }
 
                     count++;
@@ -86,15 +86,45 @@ public class AndroidHudBionicStats extends AndroidHudElement
         if (getPosition().y == 1)
         {
             mc.renderEngine.bindTexture(AndroidHudStats.top_element_bg);
-            RenderUtils.drawPlane(0, Math.ceil((count/(double)STATS_PER_ROW))*24 + 4, 0, 174, 11);
+            RenderUtils.drawPlane(12 - 24 * getPosition().x, Math.ceil((count/(double)STATS_PER_ROW))*24 + 4, 0, 174, 11);
         }
-        else
+        else if (getPosition().y == 0.5)
+        {
+            glPushMatrix();
+            glTranslated(22+(getWidth(resolution,android)-24)*getPosition().x,0,0);
+            glRotated(90,0,0,1);
+            mc.renderEngine.bindTexture(AndroidHudStats.top_element_bg);
+            RenderUtils.drawPlane(0, 0, 0, 174, 11);
+            glPopMatrix();
+        }else
         {
             mc.renderEngine.bindTexture(AndroidHudStats.top_element_bg);
-            RenderUtils.drawPlane(0, 10, 0, 174, 11);
+            RenderUtils.drawPlane(12 - 24 * getPosition().x, 10, 0, 174, 11);
         }
 
         lastHeightCount = count;
+    }
+
+    private int getTotalElementCount(AndroidPlayer android)
+    {
+        int count = 0;
+        for (int i = 0; i < android.getSizeInventory(); i++) {
+            if (android.getStackInSlot(i) != null) {
+                count++;
+            }
+        }
+
+        for (Object object : android.getUnlocked().func_150296_c()) {
+            IBionicStat stat = MatterOverdrive.statRegistry.getStat(object.toString());
+            if (stat != null) {
+                int level = android.getUnlockedLevel(stat);
+                if (stat.showOnHud(android, level))
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     private void drawAndroidPart(ItemStack stack,GuiColor color,int x,int y)
@@ -124,6 +154,10 @@ public class AndroidHudBionicStats extends AndroidHudElement
     {
         glDisable(GL_ALPHA_TEST);
         glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        glColor4f(0,0,0,backgroundAlpha);
+        ClientProxy.holoIcons.renderIcon("android_feature_icon_bg_black", x, y, 22, 22);
+
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         RenderUtils.applyColorWithAlpha(color);
         ClientProxy.holoIcons.renderIcon("android_feature_icon_bg", x, y, 22, 22);
@@ -135,6 +169,9 @@ public class AndroidHudBionicStats extends AndroidHudElement
     {
         glDisable(GL_ALPHA_TEST);
         glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        glColor4f(0,0,0,backgroundAlpha);
+        ClientProxy.holoIcons.renderIcon("android_feature_icon_bg_black", x, y, 22, 22);
         glBlendFunc(GL_SRC_ALPHA,GL_ONE);
         RenderUtils.applyColorWithAlpha(color);
         ClientProxy.holoIcons.renderIcon("android_feature_icon_bg_active", x, y, 22, 22);
@@ -142,33 +179,55 @@ public class AndroidHudBionicStats extends AndroidHudElement
         glEnable(GL_ALPHA_TEST);
     }
 
-    private int getX(int count)
+    private int getX(int count,ScaledResolution resolution,AndroidPlayer androidPlayer)
     {
-        if (getPosition().x == 1) {
-            return (int) (getPosition().x * (174 - 24)) - (12 + (24 * (count % STATS_PER_ROW)));
-        }else if (getPosition().x == 0)
+        if (getPosition().y == 0.5)
         {
-            return 12 + (24 * (count % STATS_PER_ROW));
-        }else
+            return Math.floorDiv(count,(getHeight(resolution,androidPlayer) / 24)) * 24 + 22 - (int)(44 * getPosition().x);
+        }
+        else
         {
-            return (24 * STATS_PER_ROW) - (12 + (24 * (count % STATS_PER_ROW)));
+            return 24 * (count % (getWidth(resolution, androidPlayer) / 24)) + 12 - (int) (22 * getPosition().x);
         }
     }
 
-    private int getY(int count)
+    private int getY(int count,ScaledResolution resolution,AndroidPlayer androidPlayer)
     {
-        if (getPosition().y == 1)
+        if (getPosition().y == 0.5)
         {
-            return -24 * (count / STATS_PER_ROW-2)-20;
+            return 24 * (count % (getHeight(resolution,androidPlayer) / 24));
         }else
         {
-            return 23 + 24 * (count / STATS_PER_ROW);
+            return Math.floorDiv(count,(getWidth(resolution,androidPlayer) / 24)) * 24 + 22 - (int) (22 * getPosition().y);
         }
     }
 
     @Override
-    public int getHeight(ScaledResolution resolution)
+    public int getHeight(ScaledResolution resolution,AndroidPlayer androidPlayer)
     {
-        return 23 + 24 * (int)Math.ceil(lastHeightCount / (double)STATS_PER_ROW) + 24;
+        if (getPosition().y == 0.5)
+        {
+            return width;
+        }
+        else
+        {
+            int count = getTotalElementCount(androidPlayer);
+            return (int) Math.ceil(count * 24d / width)*24 + (int)(24*getPosition().y);
+        }
+
+    }
+
+    @Override
+    public int getWidth(ScaledResolution resolution,AndroidPlayer androidPlayer)
+    {
+        if (getPosition().y == 0.5)
+        {
+            int count = getTotalElementCount(androidPlayer);
+            return  (int) Math.ceil((count * 24d) / width) * 24;
+        }
+        else
+        {
+            return width;
+        }
     }
 }

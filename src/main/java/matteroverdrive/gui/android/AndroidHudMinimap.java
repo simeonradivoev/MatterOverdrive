@@ -64,8 +64,8 @@ public class AndroidHudMinimap extends AndroidHudElement
     @Override
     public void drawElement(AndroidPlayer androidPlayer,int mouseX, int mouseY, ScaledResolution resolution, float ticks)
     {
-        int x = getWidth(resolution)/2;
-        int y = getHeight(resolution)/2;
+        int x = getWidth(resolution,androidPlayer)/2;
+        int y = getHeight(resolution,androidPlayer)/2;
         float scale = getScale(resolution);
 
         glDisable(GL_DEPTH_TEST);
@@ -288,12 +288,13 @@ public class AndroidHudMinimap extends AndroidHudElement
     }
 
     @Override
-    public int getWidth(ScaledResolution resolution) {
+    public int getWidth(ScaledResolution resolution,AndroidPlayer androidPlayer) {
         return (int)(width * getScale(resolution));
     }
 
     @Override
-    public int getHeight(ScaledResolution resolution) {
+    public int getHeight(ScaledResolution resolution,AndroidPlayer androidPlayer)
+    {
         return (int)(height * getScale(resolution));
     }
 }
