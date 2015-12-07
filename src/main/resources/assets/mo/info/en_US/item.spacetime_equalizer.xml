@@ -18,8 +18,10 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <text class="matter-text text-block">$itemName is the only source of [item name=tritanium_ingot].</text>
-        <depth min="0" max="64"></depth>
-        <text class="matter-text text-block">It can be found below Y level of 64 and can be mined by any mining instrument including the [item name=omni_tool].</text>
+        <title size="2" class="matter-text small-title">Space-Time Equalizer</title>
+        <text class="matter-text text-block">When dealing with [block name=gravitational_anomaly] there is only one item that can help you fight that gravitational pull.
+            The Space-Time Equalizer negates the effects of the [block name=gravitational_anomaly] on the entity wearing it.
+            The Equalizer can be warn on the Chest and provides the protection equivalent of iron armor.</text>
+        <text class="matter-text text-block">Although the equalizer is quite helpful with anomalies, it does slow the entity wearing it, down to a crawl.</text>
     </page>
 </entry>

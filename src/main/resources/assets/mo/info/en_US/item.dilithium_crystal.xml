@@ -18,8 +18,10 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <text class="matter-text text-block">$itemName is the only source of [item name=tritanium_ingot].</text>
-        <depth min="0" max="64"></depth>
-        <text class="matter-text text-block">It can be found below Y level of 64 and can be mined by any mining instrument including the [item name=omni_tool].</text>
+        <title size="2" class="matter-text small-title">Dilithium Crystal</title>
+        <image width="64" height="64" src="guide/dilithium_crystal.png" style="float:left;margin-right:8px;margin-bottom:4px"></image>
+        <text class="matter-text text-block" style="width:180px">Dilithium is an extremely hard crystalline mineral that occurs naturally on some planets.
+            When placed in a high-frequency electromagnetic field, magnetic eddies are induced in its structure which keep charged particles away from the crystal lattice.</text>
+        <text class="matter-text text-block">Used by most Matter Overdrive machines. Dilithium can only be procured from [block name=dilithium_ore] by mining it with tool with an iron mining capability or above. Fortune enchantments can increase the amount of crystals, [block name=dilithium_ore] drops.</text>
     </page>
 </entry>

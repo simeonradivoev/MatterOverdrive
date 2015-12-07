@@ -1,0 +1,44 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">$itemName</title>
+        <image width="128" height="64" src="guide/fusion_reactor.png" style="margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block">These are naturally occurring Gravitational Anomalies. They attract Entities and break blocks.
+            Each anomaly has it’s own mass and can feed on entities near its event horizon.
+            Matter from each entity is added to the anomaly’s mass. Once the anomaly becomes massive enough it begins destroying the terrain around it.</text>
+        <text class="matter-text text-block">Gravitational Anomalies are also the main component in the [guide name=fusion_reactor].</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">$itemName</title>
+        <text class="matter-text text-block">The radius of the anomaly can be seen on the [block name=gravitational_stabilizer guide=fusion_reactor] used to stabilize it. The further the block is, the less likely it is to be broken and consumed.
+            The hardness of the block determines if the block will be broken by the anomaly.
+            Dirt or redstone will be broken almost immediately but Obsidian will be broken by only the largest of anomalies.</text>
+        <preview size="3" style="text-align:center;margin-bottom:10px;"></preview>
+        <text class="matter-text">Gravitational anomalies can spawn from (4,64).</text>
+        <text class="matter-text text-block">To collapse an anomaly throw a [item mod=minecraft name=nether_star]. Be careful though, the $itemName will explode.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Stabilization</title>
+        <image width="220" height="110" src="guide/gravitational_anomaly_stabilizers.png" style="text-align:center;margin-bottom:8px"/>
+        <text class="matter-text text-block">Anomalies can get quite big and destroy a big part of your world.
+            This is where [block name=gravitational_stabilizer] comes in.
+            By putting a stabilizer on each side of the anomaly it's destructive force.</text>
+    </page>
+</entry>

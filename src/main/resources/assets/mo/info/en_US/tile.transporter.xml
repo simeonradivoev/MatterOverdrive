@@ -1,0 +1,40 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Transporter</title>
+        <text class="matter-text text-block">This machines allows the user to transport himself instantly from one location to another.</text>
+        <image width="71" height="116" src="guide/transporter_in_action.png" style="float:left;margin-right:8px"></image>
+        <text class="matter-text text-block" style="width:180px">To accomplish that the $itemName requires RF energy based on the distance. It stores the quantum information of each atom and transfers it to a desired location. Every entity directly above the $itemName will be affected by the transportation. This means that multiple subjects can teleport at the same time. The $itemName must also be configured with the destination coordinates.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Destination</title>
+        <text class="matter-text text-block">The destination consists of 3 values. The X, Y and Z coordinates of the world point. Each coordinate also shows the relative displacement/distance compared to the transporter itself. Each location stored in the transporter can be edited and renamed. Then only the selected location is used as a destination. </text>
+        <image width="128" height="64" src="guide/transporter_configurations.png" style="float:left;margin-right:8px"></image>
+        <image width="64" height="64" src="guide/transporter_flash_drive.png" style="margin-bottom:8px"></image>
+        <text class="matter-text text-block">You can also use a [item name=transport_flash_drive] to quickly import destination coordinates.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Upgrades</title>
+        <text class="matter-text text-block">By default the $itemName has quite a small range. [item name=upgrade damage=4 guide=upgrades page=4] can be used to boots the range of the $itemName. Each range upgrades stacks up and can add up to quite a large radius.</text>
+        <image width="64" height="64" src="guide/transporter_range_upgrades.png" style="float:left;margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block" style="width:180px">It must be noted that they also increase the power usage of the $itemName.</text>
+        <text class="matter-text text-block">You can also use the [item name=upgrade damage=1 guide=upgrades page=1] and [item name=upgrade damage=2 guide=upgrades page=2] as well as the [item name=upgrade guide=upgrades page=5 damage=5].</text>
+    </page>
+</entry>

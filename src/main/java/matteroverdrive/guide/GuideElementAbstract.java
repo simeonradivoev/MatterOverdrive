@@ -156,7 +156,8 @@ public abstract class GuideElementAbstract implements IGuideElement
             {
                 return new ItemStack(block,count,damage);
             }
-        }else if (shortCodeMap.get("type").equalsIgnoreCase("item") && shortCodeMap.containsKey("name"))
+        }
+        else if (shortCodeMap.containsKey("name"))
         {
             Item item = GameRegistry.findItem(mod, shortCodeMap.get("name"));
             if (item != null)

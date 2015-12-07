@@ -1,0 +1,49 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">The Fusion Reactor</title>
+        <image width="220" height="110" src="guide/fusion_reactor_sphere.png" style="text-align:center;margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block">The fusion reactor is a complex multi-block structure that generates power from hot [guide name=matter_plasma] in a high gravitational field.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Requirements</title>
+        <text class="matter-text text-block">To start producing energy the first thing you need is to find a [block name=gravitational_anomaly]. Then you must build a [block name=fusion_reactor_controller].
+        The controller will highlight exactly where the anomaly needs to be for it to function properly.</text>
+        <preview index="0" size="3" style="text-align:center;margin-bottom:10px;margin-top:-4px"></preview>
+        <text class="matter-text text-block">The controller will also highlight a ring like structure around the anomaly. The anomaly being in the center of the fusion reactor.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Step One</title>
+        <image width="220" height="110" src="guide/fusion_reactor_building_1.png" style="text-align:center;margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block">Place 11 [block name=fusion_reactor_coil] around the ring in a pattern like the one above. You can also use [block name=fusion_reactor_io] instead of coils for input/output.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Step Two</title>
+        <image width="220" height="110" src="guide/fusion_reactor_building_2.png" style="text-align:center;margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block">Fill all the remaining spaces with [block name=machine_hull] blocks. You can also put two [block name=decomposer] blocks next to the controller instead of the [block name=fusion_reactor_coil].</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Generating power</title>
+        <text class="matter-text text-block">After you have completed the fusion reactor multi-block structure, the [item name=fusion_reactor_controller] will show information on the workings of the reactor.</text>
+        <text class="matter-text text-block">You will then need to pump [guide name=matter_plasma] into the reactor using fluid pipes or a [block name=matter_pipe guide=matter_transport].</text>
+        <text class="matter-text text-block">Unfortunately you will need another power source to kick-start the production of [guide name=matter_plasma] from your [block name=decomposer]. After the reactor has enough matter it will start generating power and will be sufficient to power the decomposers.</text>
+        <text class="matter-text text-block">If you want to pump matter or extract power from the reactor but don't want to do it using the controller. You can replace a [block name=fusion_reactor_coil] with a [block name=fusion_reactor_io] and use it as your input/output. Multiple IO ports are allowed.</text>
+    </page>
+</entry>

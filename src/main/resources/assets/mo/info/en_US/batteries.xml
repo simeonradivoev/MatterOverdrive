@@ -1,0 +1,30 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Batteries</title>
+        <text class="matter-text text-block">Matter Overdrive offers 2 types of batteries. 3 if you count the creative battery.</text>
+        <preview index="0" size="2" style="float:left;margin-right:7px"></preview>
+        <text class="matter-text text-block" style="width:210px;margin-top:7px">The first one is the basic [item name=battery] which holds [rf name=battery].</text>
+        <preview index="1" size="2" style="float:left;margin-right:7px"></preview>
+        <text class="matter-text text-block" style="width:210px;margin-top:7px">Then there is the [item name=hc_battery]. It holds [rf name=hc_battery].</text>
+        <preview index="2" size="2" style="float:left;margin-right:7px"></preview>
+        <text class="matter-text text-block" style="width:210px;margin-top:7px">And finally there is the creative battery with unlimited RF that can only be obtained in creative mode.</text>
+    </page>
+</entry>

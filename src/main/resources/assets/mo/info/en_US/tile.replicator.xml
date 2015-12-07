@@ -29,6 +29,13 @@
             [guide name=matter_plasma] is also required to replicate items. How much depends on the item itself.</text>
         <text class="matter-text">Be warned! The replication process produces high amounts of radiation. Without protective plating any living creature will receive large doses of radiation followed by a ton of negative potion effects, such as Hunger, Nausea, Fatigue,Weakness and Poison. To protect against radiation, a maximum of 5 [item name=tritanium_plate] can be used to protect the user from the deadly radiation. Each plate also decreases the area of effect.</text>
     </page>
+    <page style="margin-left:8px;margin-right:8px;margin-top:6px">
+        <title size="2" class="matter-text small-title">How To Use</title>
+        <text class="matter-text text-block">If you use an pattern that is processed less than 100%.
+            The replicator will have a greater change to failure and will produce [item name=matter_dust guide=matter_fail].
+            If you try and replicate an item with a pattern processed at 10% it will fail about 10% of the time.
+            Then you will have to use a [block name=recycler] to convert it into [item name=matter_dust_refined guide=matter_fail] and decompose it back into [guide name=matter_plasma].</text>
+    </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title ">Matter Network</title>
         <text class="matter-text text-block">The $itemName can only be connected to its back side. Once connected to a network, the [item name=pattern_monitor] can be used to issue replication tasks, to all replicators connected.

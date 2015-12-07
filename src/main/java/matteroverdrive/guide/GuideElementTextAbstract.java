@@ -18,6 +18,9 @@
 
 package matteroverdrive.guide;
 
+import cofh.api.energy.IEnergyContainerItem;
+import matteroverdrive.gui.GuiDataPad;
+import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -111,14 +114,29 @@ public abstract class GuideElementTextAbstract extends GuideElementAbstract
             ItemStack stack = shortCodeToStack(shortcodeMap);
             if (stack != null)
             {
-                return new ItemstackTextLinkChunk(EnumChatFormatting.GREEN + stack.getDisplayName() + EnumChatFormatting.RESET,getFontRenderer(),stack);
+                String guideName = shortcodeMap.containsKey("guide") ? shortcodeMap.get("guide") : null;
+                int guidePage = shortcodeMap.containsKey("page") ? Integer.parseInt(shortcodeMap.get("page")) : 0;
+                return new ItemstackTextLinkChunk(EnumChatFormatting.GREEN + stack.getDisplayName() + EnumChatFormatting.RESET,getFontRenderer(),stack,guideName,guidePage);
             }
-        }else if (shortcodeMap.get("type").equalsIgnoreCase("guide"))
+        }
+        else if(shortcodeMap.get("type").equalsIgnoreCase("rf"))
+        {
+            if (shortcodeMap.containsKey("itemType"))
+                shortcodeMap.put("type",shortcodeMap.get("itemType"));
+
+            ItemStack stack = shortCodeToStack(shortcodeMap);
+            if (stack != null && stack.getItem() != null && stack.getItem() instanceof IEnergyContainerItem)
+            {
+                return new TextChunk(((IEnergyContainerItem) stack.getItem()).getMaxEnergyStored(stack) + MOEnergyHelper.ENERGY_UNIT,getFontRenderer());
+            }
+        }
+        else if (shortcodeMap.get("type").equalsIgnoreCase("guide"))
         {
             MOGuideEntry entry = MatterOverdriveGuide.findGuide(shortcodeMap.get("name"));
             if (entry != null)
             {
-                return new GuideTextLinkChunk(EnumChatFormatting.YELLOW + entry.getDisplayName() + EnumChatFormatting.RESET,getFontRenderer(),entry);
+                int page = shortcodeMap.containsKey("page") ? Integer.parseInt(shortcodeMap.get("page")) : 0;
+                return new GuideTextLinkChunk(EnumChatFormatting.YELLOW + entry.getDisplayName() + EnumChatFormatting.RESET,getFontRenderer(),entry,page);
             }
         }
 
@@ -127,7 +145,8 @@ public abstract class GuideElementTextAbstract extends GuideElementAbstract
 
     protected String handleVariables(String text,MOGuideEntry entry)
     {
-        return text.replace("$itemName",formatVariableReplace("$itemName",((entry.getStackIcons().length > 0 && entry.getStackIcons()[0] != null) ? entry.getStackIcons()[0].getDisplayName() : entry.getDisplayName())));
+        text = text.replace("$itemName",formatVariableReplace("$itemName",((entry.getStackIcons().length > 0 && entry.getStackIcons()[0] != null) ? entry.getStackIcons()[0].getDisplayName() : entry.getDisplayName())));
+        return text;
     }
 
     protected String formatVariableReplace(String variable,String replace)
@@ -137,11 +156,11 @@ public abstract class GuideElementTextAbstract extends GuideElementAbstract
 
     protected int calculateWidth(TextChunk before,TextChunk main,TextChunk after)
     {
-        if (after != null && (after.text.matches("[.,!\"')}]")))
+        if (after != null && (after.getText().matches("[.,!\"')}]")))
         {
             return main.getWidth();
         }
-        if (main.text.matches("[({]"))
+        if (main.getText().matches("[({]"))
         {
             return main.getWidth();
         }
@@ -191,24 +210,70 @@ public abstract class GuideElementTextAbstract extends GuideElementAbstract
         {
             return width;
         }
+
+        public String getText(){return text;}
     }
 
-    public class GuideTextLinkChunk extends TextChunk
+    public abstract class TextChunkLink extends TextChunk
+    {
+        public TextChunkLink(String text,FontRenderer fontRenderer)
+        {
+            super(text,fontRenderer);
+        }
+
+        public abstract void onClick(GuiDataPad guiDataPad);
+    }
+
+    public class GuideTextLinkChunk extends TextChunkLink
     {
         MOGuideEntry entry;
+        int page;
 
-        public GuideTextLinkChunk(String text,FontRenderer fontRenderer,MOGuideEntry entry) {
+        public GuideTextLinkChunk(String text,FontRenderer fontRenderer,MOGuideEntry entry,int page) {
             super(text,fontRenderer);
             this.entry = entry;
+            this.page = page;
+        }
+
+        @Override
+        public void onClick(GuiDataPad guiDataPad) {
+            ((GuiDataPad) gui).getGuideDescription().OpenGuide(entry.getId(),page,true);
         }
     }
 
-    public class ItemstackTextLinkChunk extends TextChunk
+    public class ItemstackTextLinkChunk extends TextChunkLink
     {
+        String guideEntryName;
+        int page;
         ItemStack stack;
+
         public ItemstackTextLinkChunk(String text,FontRenderer fontRenderer,ItemStack stack) {
             super(text,fontRenderer);
             this.stack = stack;
+        }
+
+        public ItemstackTextLinkChunk(String text,FontRenderer fontRenderer,ItemStack stack,String guideEntryName,int page) {
+            super(text,fontRenderer);
+            this.stack = stack;
+            this.guideEntryName = guideEntryName;
+            this.page = page;
+        }
+
+        @Override
+        public void onClick(GuiDataPad guiDataPad)
+        {
+            MOGuideEntry entry;
+            if (guideEntryName != null)
+            {
+                entry = MatterOverdriveGuide.findGuide(guideEntryName);
+            }else
+            {
+                entry = MatterOverdriveGuide.findGuide(stack.getUnlocalizedName());
+            }
+            if (entry != null)
+            {
+                ((GuiDataPad) gui).getGuideDescription().OpenGuide(entry.getId(),page,true);
+            }
         }
     }
 

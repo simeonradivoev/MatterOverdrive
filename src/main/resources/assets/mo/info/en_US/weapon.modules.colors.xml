@@ -18,8 +18,9 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <text class="matter-text text-block">$itemName is the only source of [item name=tritanium_ingot].</text>
-        <depth min="0" max="64"></depth>
-        <text class="matter-text text-block">It can be found below Y level of 64 and can be mined by any mining instrument including the [item name=omni_tool].</text>
+        <title size="2" class="matter-text small-title">Weapon Color Modules</title>
+        <text class="matter-text text-block">All energy weapons including the [item name=phaser], [item name=phaser_rifle] and the [item name=omni_tool] can be customized with modules. One of those module types is the weapon color module.</text>
+        <text class="matter-text text-block">The weapon color modules can change the weapon's appearance by changing it's color. The can also change the beam color of the [item name=phaser] and the [item name=omni_tool] as well as the color of the plasma bolts fired by the [item name=phaser_rifle] and the [item name=omni_tool].</text>
+        <text class="matter-text text-block">The color module can only be found in dungeon chests and cannot be replicated nor crafted.</text>
     </page>
 </entry>

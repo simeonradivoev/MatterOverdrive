@@ -18,8 +18,8 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <text class="matter-text text-block">$itemName is the only source of [item name=tritanium_ingot].</text>
-        <depth min="0" max="64"></depth>
-        <text class="matter-text text-block">It can be found below Y level of 64 and can be mined by any mining instrument including the [item name=omni_tool].</text>
+        <title size="2" class="matter-text small-title" >Energy Packs</title>
+        <preview index="0" size="2" style="float:left;margin-right:7px"></preview>
+        <text class="matter-text text-block" style="width:190px">$itemNames can be used to recharge an Energy Weapon quickly. The energy weapon will use an $itemName automatically when the energy drops to 0. The packs must be in the player's inventory for the weapon to be able to reload.</text>
     </page>
 </entry>

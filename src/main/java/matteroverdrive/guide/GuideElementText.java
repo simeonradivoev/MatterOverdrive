@@ -58,7 +58,7 @@ public class GuideElementText extends GuideElementTextAbstract
                 int y = marginTop + i * Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
                 TextChunk chunk = lines[i].chunks.get(c);
 
-                if (chunk instanceof GuideTextLinkChunk)
+                if (chunk instanceof TextChunkLink)
                 {
                     if (mouseX > x && mouseX < x + chunk.getWidth() && mouseY > y && mouseY < y + getFontRenderer().FONT_HEIGHT)
                     {
@@ -66,7 +66,7 @@ public class GuideElementText extends GuideElementTextAbstract
                         {
                             if (gui instanceof GuiDataPad)
                             {
-                                ((GuiDataPad) gui).getGuideDescription().OpenGuide(((GuideTextLinkChunk) chunk).entry.getId());
+                                ((TextChunkLink) chunk).onClick((GuiDataPad)gui);
                             }
                         }
 
@@ -74,7 +74,7 @@ public class GuideElementText extends GuideElementTextAbstract
                 }
 
 
-                Minecraft.getMinecraft().fontRenderer.drawString(lines[i].chunks.get(c).text, marginLeft + x, y, color.getColor());
+                Minecraft.getMinecraft().fontRenderer.drawString(lines[i].chunks.get(c).getText(), marginLeft + x, y, color.getColor());
                 int w = calculateWidth(null,lines[i].chunks.get(c),null);
                 if (c > 0 && c < lines[i].chunks.size()-1)
                 {

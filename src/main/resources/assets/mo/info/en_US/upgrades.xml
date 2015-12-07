@@ -46,7 +46,7 @@
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title">Range Upgrade</title>
-        <text class="matter-text text-block">The range upgrade is used to increase the range of machines such as the [block name=transporter]</text>
+        <text class="matter-text text-block">The range upgrade is used to increase the range of machines such as the [block name=transporter] or the [block name=charging_station]</text>
         <recipe item="[item name=upgrade damage=4]" style="float:left"></recipe>
         <details item="[item name=upgrade damage=4]" style="margin-left:16px;margin-top:8px"></details>
     </page>

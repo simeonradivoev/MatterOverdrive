@@ -1,0 +1,28 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Molecular Inscriber</title>
+        <image width="64" height="64" src="guide/inscriber_block.png" style="float:left;margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block" style="width:180px">The $itemName is the only machine precise enough to create the intricate circuitry of the Isolinear chips. It requires RF power and the appropriate base Isolinear circuit with a inscribing material. Each tier has it's inscribing material.</text>
+        <image width="64" height="64" src="guide/inscriber_gui_recipe_mk2.png" style="float:left;margin-right:28px"></image>
+        <image width="64" height="64" src="guide/inscriber_gui_recipe_mk3.png" style="float:left;margin-right:28px"></image>
+        <image width="64" height="64" src="guide/inscriber_gui_recipe_mk4.png" style="float:left;margin-right:28px"></image>
+    </page>
+</entry>

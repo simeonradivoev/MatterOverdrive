@@ -30,6 +30,7 @@
         <text class="matter-text text-block" style="width:200px">To see how much matter an item contains, hold Shift while the item tooltip is active. You can view more information about the energy cost and matter drain of the decomposing item, by hovering over the matter or energy tank.</text>
     </page>
     <page class="padded-page">
+        <text class="matter-text text-block">There is a small chance the $itemName can fail the decomposition and produce [item name=matter_dust guide=matter_fail] as a byproduct. This chance can increase if you use Speed upgrades.</text>
         <text class="matter-text text-block">By using a [item name=tritanium_wrench] you can pick the machine up with all of it's matter and energy as well as all of it's upgrades and configurations intact.</text>
         <recipe style="text-align:center"></recipe>
     </page>

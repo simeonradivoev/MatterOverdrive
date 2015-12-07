@@ -18,8 +18,8 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <title size="2" class="matter-text small-title">Rouge Android Parts</title>
-        <text class="matter-text text-block">Rouge Androids can drop [guide name=android.parts]. They consist of 4 parts. The [item name=rouge_android_part damage=0], [item name=rouge_android_part damage=1], [item name=rouge_android_part damage=2] and the [item name=rouge_android_part damage=3].</text>
+        <title size="2" class="matter-text small-title">Rogue Android Parts</title>
+        <text class="matter-text text-block">Rogue Androids can drop [guide name=android.parts]. They consist of 4 parts. The [item name=rouge_android_part damage=0], [item name=rouge_android_part damage=1], [item name=rouge_android_part damage=2] and the [item name=rouge_android_part damage=3].</text>
         <image src="guide/mad_scientist_conversation.png" style="float:left" width="167" height="100"></image>
         <text class="matter-text text-block" style="width:33%;margin-left:8px">They are used in the process of Android Transformation. When the player collects a full set of android parts and brings them to a Mad Scientist in a Village, the player can be transformed into an Android.</text>
     </page>
@@ -29,6 +29,6 @@
     </page>
     <page class="padded-page">
         <image src="guide/android_bionic_parts_gui.png" style="text-align:center" width="180" height="127" ></image>
-        <text class="matter-text text-block" style="margin-top:8px">They will replace the player's default skin parts with the Rouge Android's texture.</text>
+        <text class="matter-text text-block" style="margin-top:8px">They will replace the player's default skin parts with the Rogue Android's texture.</text>
     </page>
 </entry>
