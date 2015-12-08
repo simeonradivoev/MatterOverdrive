@@ -95,8 +95,6 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     private GravitationalAnomalySound sound;
     private TimeTracker blockDestoryTimer;
     private long mass;
-    @SideOnly(Side.CLIENT)
-    public int consumedCount;
     PriorityQueue<PositionWrapper> blocks;
     List<AnomalySuppressor> supressors;
     private float suppression;
@@ -220,7 +218,6 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 if (intersectsAnomaly(pos,dir,blockPos,eventHorizon))
                 {
                     consume(entity);
-                    consumedCount++;
                 }
 
                 if (entityObject instanceof EntityLivingBase) {
