@@ -105,12 +105,11 @@ public class MOWorldGenUnderwaterBase extends MOWorldGenBuilding
         int blocksInWater = 0;
         while (y > 0)
         {
-            if (world.getBlock(x,y,z) == Blocks.water)
+            if (world.getBlock(x,y,z) == Blocks.water || world.getBlock(x,y,z) == Blocks.flowing_water)
             {
                 blocksInWater++;
-                y--;
             }
-            else if (world.getBlock(x,y,z).isBlockSolid(world,x,y,z, ForgeDirection.UP.ordinal()))
+            else
             {
                 if (blocksInWater > 26)
                 {
@@ -120,6 +119,7 @@ public class MOWorldGenUnderwaterBase extends MOWorldGenBuilding
                     return false;
                 }
             }
+            y--;
         }
         return false;
     }
