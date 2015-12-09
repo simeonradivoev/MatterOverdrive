@@ -84,7 +84,6 @@ item.tritanium_hoe.name=Тритановая мотыга
 item.tritanium_sword.name=Тритановый меч
 item.tritanium_pickaxe.name=Тритановая кирка
 item.tritanium_axe.name=Тритановый топор
-item.contract.name=Контракт
 
 item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
@@ -146,8 +145,6 @@ tile.heavy_matter_pipe.details=Транспортирует плазменную
 tile.holo_sign.name=Голографическая табличка
 tile.force_glass.name=Тритановое стекло
 tile.bounding_box.name=Ограничительный блок
-tile.inscriber.name=Молекулярный высекатель
-tile.fusion_reactor_io.name=Fusion Reactor IO
 
 ## Хранилище шаблонов ##
 tile.pattern_storage.name=Хранилище шаблонов
@@ -174,7 +171,6 @@ tile.matter_recycler.details=Используется для переработ�
 tile.matter_plasma.name=Плазменная материя
 tile.molten_tritanium.name=Расплавленный тританиум
 
-
 ## Термоядерный реактор ##
 tile.fusion_reactor_controller.name=Контроллер термоядерного реактора
 tile.fusion_reactor_controller.config.storage.energy=Хранилище энергии
@@ -198,33 +194,12 @@ container.replicator.name=Репликатор
 machine.tooltip.matter=Материя
 machine.tooltip.energy=Заряд
 
-## Тритановый ящик ##
-tile.tritanium_crate.black.name=Тритановый ящик (Чёрный)
-tile.tritanium_crate.red.name=Тритановый ящик (Красный)
-tile.tritanium_crate.green.name=Тритановый ящик (Зелёный)
-tile.tritanium_crate.brown.name=Тритановый ящик (Коричневый)
-tile.tritanium_crate.blue.name=Тритановый ящик (Синий)
-tile.tritanium_crate.purple.name=Тритановый ящик (Фиолетовый)
-tile.tritanium_crate.cyan.name=Тритановый ящик (Бирюзовый)
-tile.tritanium_crate.silver.name=Тритановый ящик (Светло-серый)
-tile.tritanium_crate.gray.name=Тритановый ящик (Серый)
-tile.tritanium_crate.pink.name=Тритановый ящик (Розовый)
-tile.tritanium_crate.lime.name=Тритановый ящик (Лаймовый)
-tile.tritanium_crate.yellow=Тритановый ящик (Жёлтый)
-tile.tritanium_crate.lightBlue=Тритановый ящик (Голубой)
-tile.tritanium_crate.magenta.name=Тритановый ящик (Пурпурный)
-tile.tritanium_crate.orange=Тритановый ящик (Оранжевый)
-tile.tritanium_crate.white.name=Тритановый ящик (Белый)
-
-## Существа ##
-entity.rogue_android.name=Рукопашный Андроид-разбойник
+entity.rogue_android.name=Бродящий Андроид
 entity.failed_pig.name=Неудачная свинья
 entity.failed_chicken.name=Неудачная курица
 entity.failed_cow.name=Неудачная корова
 entity.failed_sheep.name=Неудачная овца
 entity.mad_scientist.name=Безумный учёный
-entity.mad_scientist.junkie.name=Безумный учёный-наркоман
-entity.ranged_rogue_android.name=Дальнобойный Андроид-разбойник
 
 ## Декорации ##
 tile.decorative.stripes.name=Жёлтые полосы
@@ -244,21 +219,17 @@ tile.decorative.tritanium_plate_stripe.name=Ориентировочная тр�
 tile.decorative.floor_tile_white.name=Белая напольная плитка
 tile.decorative.white_plate.name=Мягкая настенная плитка
 tile.decorative.separator.name=Тритановый рельс
-tile.decorative.engine_exhaust_plasma.name=Engine Exhaust Plasma
-tile.decorative.tritanium_lamp.name=Тритановая лампа
-tile.decorative.tritanium_plate_colored.name=Крашенная тритановая плита
 
 ============================================================
 # Диалоги/Dialogs
 
-dialog.generic.quit.questions=Увидимся.;Я должен идти.;Я спешу.;До Свидания.;Прощай.;Пока.
-dialog.generic.back.questions=Неважно.;Давай поговорим о чём-нибудь другом.;Мне всё равно.
+dialog.generic.quit.questions=Увидимся позже.;Я должен идти.;Я спешу.;До Свидания.;Прощай.;Пока.
+dialog.generic.back.questions=Неважно.;Давай поговорим о чем-нибудь другом.;Мне все равно.
 dialog.generic.trade.questions=Я хочу обменяться.;Давай обмениваться.;Позвольте мне увидеть ваши товары.;Что у вас есть для продажи?;
-dialog.generic.back_home.questions=Неважно.;Давай поговорим о чём-нибудь другом.;Мне всё равно.
 
 ## Безумный учёный ##
 dialog.mad_scientist.convert.question=У меня есть все части!
-dialog.mad_scientist.requirements.line=Наконец-то!<br>Избавление от этого хрупкого тела это лучший выбор.<br>Единственная проблема заключается в том, что нужно, чтобы ты принёс мне все части Андроида, прежде чем мы начнем.
+dialog.mad_scientist.requirements.line=Наконец То!<br>Избавление от этого хрупкого тела это лучший выбор.<br>Единственная проблема заключается в том, что нужно, чтобы ты принёс мне все части Андроида, прежде чем мы начнем.
 dialog.mad_scientist.requirements.question=Я хочу стать Андроидом.
 dialog.mad_scientist.main.line.human=Я не имею дела с людьми.;НЕТ! Я могу даже смотреть на тебя. Ты такой хрупкий!;Ты в порядке? Ты выглядишь захваченным! Как ты живёшь в этом теле?
 dialog.mad_scientist.main.line.android=Ах %1$s, рад тебя видеть! Что привело тебя сюда?;Привет. Вы смотритесь великолепно!;Мне кажется ваш левый глаз косит. Я буду рад исправить это.
@@ -266,24 +237,6 @@ dialog.mad_scientist.undo.line=Почему вы хотите сделать э�
 dialog.mad_scientist.undo.question=Как отменить это?
 dialog.mad_scientist.whatDidYouDo.line=Теперь ты Андроид! Тебе больше не нужно есть, спать и кислород вдыхать. Ты можешь улучшать себя чудесными способностями в «Андроид станции», и после этого увидеть и сделать вещи, которые до этого не делал.
 dialog.mad_scientist.whatDidYouDo.question=Что ты сделал со мной?
-dialog.mad_scientist.junkie.main.line=Привет дружище [§6отрыжка§r].;В чем дело, дружище.;
-dialog.mad_scientist.junkie.cocktail_quest.question=Ты что-то сказал о коктейле?
-dialog.mad_scientist.junkie.cocktail_quest.question.accept=§aДа, черт возьми!
-dialog.mad_scientist.junkie.cocktail_quest.question.decline=§cFuck NO!
-dialog.mad_scientist.junkie.cocktail_quest.0.line=Ты-ты-ты должен помочь мне, дружище.
-dialog.mad_scientist.junkie.cocktail_quest.1.line=I have-have this [§6отрыжка§r] amazing recipe, buddy, just amazing things with stuff mixed together, buddy.
-dialog.mad_scientist.junkie.cocktail_quest.2.line=It - it's gonna be better than... no it's incomparable, buddy, it's the pinnacle of perfection, buddy [§6отрыжка§r].
-dialog.mad_scientist.junkie.cocktail_quest.3.line=But you see I need these things, buddy! I-I need some of that creeper POWDER, buddy and-and [§6отрыжка§r] some mushrooms from the NETHER!
-dialog.mad_scientist.junkie.cocktail_quest.4.question=[почесать задницу]
-dialog.mad_scientist.junkie.cocktail_quest.4.line=But see here now, buddy! Hey, stop scratching your ass, buddy, it's v-v-very important!
-dialog.mad_scientist.junkie.cocktail_quest.5.question=извини.
-dialog.mad_scientist.junkie.cocktail_quest.5.line=That powder stuff from the creeper keeps its potency only if you kill it with a shovel, buddy.
-dialog.mad_scientist.junkie.cocktail_quest.6.question=Лопата?
-dialog.mad_scientist.junkie.cocktail_quest.6.line=Yes, a fucking shovel, buddy, you-you have to smash its brains out, repeated blunt traumas, buddy, to get the good stuff!
-dialog.mad_scientist.junkie.cocktail_quest.7.line=Now, go, buddy, quickly, buddy, go!
-dialog.mad_scientist.junkie.cocktail_quest.complete.question=I have all the ingredients for your cocktail.
-dialog.mad_scientist.junkie.cocktail_quest.line=Ah yes, now let me get these thing out of you buddy, take the burden of your shoulders, let me just mix up a batch and.... [§6junkie scientist mixes up the ingredients and takes a snort....§r]
-dialog.mad_scientist.junkie.cocktail_quest.are_you_ok.question=Ты в порядке?
 
 ============================================================
 # Вкладки в творческом режиме/Creative Panels
@@ -324,11 +277,24 @@ weaponstat.8.name=Лечение
 ============================================================
 # Графический интерфейс/GUI
 
-## Подсказки ##
-gui.tooltip.starmap.no_ship_space=Не хватает мест для постройки короблей
-gui.tooltip.starmap.no_building_space=Не хватает строительных кораблей
-gui.tooltip.starmap.no_ship_factory=Нет корабля-фабрики
-gui.tooltip.starmap.has_base=Основное здание уже присутствует
+gui.replicator.name=Репликатор шаблонов
+gui.decomposer.name=Разлагатель материи
+gui.matter_analyzer.name=Анализатор материи
+gui.network_router.name=Маршрутизатор сети
+gui.pattern_storage.name=Хранилище шаблонов
+gui.solar_panel.name=Солнечная панель
+gui.pattern_monitor.name=Сетевой монитор шаблонов
+gui.network_switch.name=Сетевой переключатель
+gui.recycler.name=Утилизатор материи
+gui.fusion_reactor.name=Термоядерный реактор
+gui.android_hud.transforming.line.0=Загрузка системы
+gui.android_hud.transforming.line.1=Построение нервных путей
+gui.android_hud.transforming.line.2=Нервная конфигурации в процессе
+gui.android_hud.transforming.line.3=Установка драйверов
+gui.android_hud.transforming.line.4=Регулировка протезов
+gui.android_hud.transforming.line.5=Очистка биологических загрязнений
+gui.android_hud.transforming.line.final=Преобразование в процессе
+gui.hologram.access_denied=ДОСТУП ЗАПРЕЩЕН
 gui.tooltip.close_menu=Закрыть меню
 gui.tooltip.open_menu=Открыть меню
 gui.tooltip.close=Закрыть
@@ -364,12 +330,12 @@ gui.tooltip.slot.shielding=Shielding
 gui.tooltip.slot.upgrade=Улучшения
 gui.tooltip.slot.recycle=Recyclable
 gui.tooltip.slot.weapon=Оружие
-gui.tooltip.quest.abandon=Отказаться от текущего квеста
-gui.tooltip.quest.active_quests=Текущие квесты
-gui.tooltip.quest.accept=Принять квест
-gui.tooltip.quest.complete=Завершить квест
-
-## Ярлыки ##
+gui.redstone_mode.high=Высокий
+gui.redstone_mode.low=Низкий
+gui.redstone_mode.disabled=Отключён
+gui.config.redstone=Красный камень
+gui.config.owner=Владелец
+gui.config.mnet.address=Адрес
 gui.label.button.save=Сохранить
 gui.label.button.remove=Удалить
 gui.label.button.add=Добавить
@@ -379,41 +345,12 @@ gui.label.button.new=Новый
 gui.label.button.import=Импорт
 gui.label.button.import.too_far=Направление слишком далеко
 gui.label.auto_line_size=Размер авто-линии
-gui.label.accept=Принять
 
-## Машины ##
-gui.replicator.name=Репликатор шаблонов
-gui.decomposer.name=Разлагатель материи
-gui.matter_analyzer.name=Анализатор материи
-gui.network_router.name=Маршрутизатор сети
-gui.pattern_storage.name=Хранилище шаблонов
-gui.solar_panel.name=Солнечная панель
-gui.pattern_monitor.name=Сетевой монитор шаблонов
-gui.network_switch.name=Сетевой переключатель
-gui.recycler.name=Утилизатор материи
-gui.fusion_reactor.name=Термоядерный реактор
-gui.charging_station.name=Зарядная станция
-gui.weapon_station.name=Оружейная станция
-gui.inscriber.name=Молекулярный высекатель
-gui.contract_market.name=Контракты
-
-## Другое ##
-gui.redstone_mode.high=Высокий
-gui.redstone_mode.low=Низкий
-gui.redstone_mode.disabled=Отключён
-gui.config.redstone=Красный камень
-gui.config.owner=Владелец
-gui.config.mnet.address=Адрес
-
-gui.android_hud.transforming.line.0=Загрузка системы
-gui.android_hud.transforming.line.1=Построение нервных путей
-gui.android_hud.transforming.line.2=Нервная конфигурации в процессе
-gui.android_hud.transforming.line.3=Установка драйверов
-gui.android_hud.transforming.line.4=Регулировка протезов
-gui.android_hud.transforming.line.5=Очистка биологических загрязнений
-gui.android_hud.transforming.line.final=Преобразование в процессе
-gui.hologram.access_denied=ДОСТУП ЗАПРЕЩЕН
-gui.time_until_next_quest=Следующий квест через: %1$s
+### Подсказки в графическом интерфейсе ###
+gui.tooltip.starmap.no_ship_space=Не хватает мест для постройки короблей
+gui.tooltip.starmap.no_building_space=Не хватает строительных кораблей
+gui.tooltip.starmap.no_ship_factory=Нет корабля-фабрики
+gui.tooltip.starmap.has_base=Основное здание уже присутствует
 
 ============================================================
 # Модули/Modules
@@ -480,8 +417,6 @@ death.attack.phaser=%1$s был размельчен %2$s
 death.attack.phaser.item=%1$s был размельчен %2$s с помощью %3$s
 death.attack.blackHole=%1$s был раздавлен гравитационной аномалией
 death.attack.android_transformation=%1$s закончил своё биологического существования
-death.attack.plasmaBolt=%1$s был застрелен %2$s
-death.attack.plasmaBolt.item=%1$s был застрелен %2$s с помощью %3$s
 
 ============================================================
 # Задачи/Tasks
@@ -533,8 +468,6 @@ config.android_hud.bionicStats.position=Позиция биостатистик
 config.android_hud.minimap.position=Позиция мини-карты
 config.android_hud.color=Цвет интерфейса
 config.android_hud.opacity=Непрозрачность интерфейса
-config.android_hud.hide_vanilla=Скрыть элементы стандартного интерфейса
-config.android_hud.opacity_background=Прозрачность фона элементов интерфейса
  
 ============================================================
 # Чат-оповещения/Chat Alerts
@@ -577,7 +510,6 @@ guide.group.power.name=Энергия
 guide.group.blocks.name=Блоки
 guide.group.drinks.name=Напитки
 guide.group.food.name=Еда
-guide.group.armor.name=Броня
 
 guide.entry.matter_fail.name=Отказоспособность репликации материя
 guide.entry.matter_plasma.name=Плазменная материя
@@ -591,8 +523,6 @@ guide.entry.batteries.name=Батареи
 guide.entry.food.name=Еда
 guide.entry.drinks.name=Напитки
 guide.entry.upgrades.name=Улучшения
-guide.entry.tritanium_armor.name=Тритановая броня
-guide.entry.tritanium_tools.name=Тритановые инструменты
 
 ============================================================
 # Модификаторы/Modifiers
@@ -603,43 +533,4 @@ modifier.bionic.glitch_time=Время глитча
 ============================================================
 # Другое/Others
 
-## Цвета ##
-color.black=Чёрная
-color.red=Красная
-color.green=Зелёная
-color.brown=Коричневая
-color.blue=Синяя
-color.purple=Фиолетовая
-color.cyan=Бирюзовая
-color.silver=Светло-серая
-color.gray=Серая
-color.pink=Розовая
-color.lime=Лаймовая
-color.yellow=Жёлтая
-color.lightBlue=Голубая
-color.magenta=Пурпурная
-color.orange=Оранжевая
-color.white=Белая
-
 material.tritanium=Тританиум
-container.tritanium_crate=Тритановый ящик
-rarity.legendary=Легендарный
-
-## Квесты ##
-quest.kill_androids.0.title=Они убьют нас всех!
-quest.kill_androids.0.info=The are taking over the world! I know it! We must fight our machine overlords. If we don't, we will all perish. The fight starts with you %1$s! I need you to kill %2$s %3$s before they get to us.
-quest.kill_androids.0.objective.0=Убить %2$s/%3$s Андроидов-разбойников.
-quest.cocktail_of_ascension.title=Коктейль Вознесения
-quest.cocktail_of_ascension.info=A Crazy scientist has asked you to bring him %2$s gunpowder from a shoveled creeper and %3$s red mushrooms from the darkest depths of the Nether, for his Cocktail Of Ascension.
-quest.cocktail_of_ascension.objective.0=Убить %2$s/%3$s криперов лопатой
-quest.cocktail_of_ascension.objective.1=Собрать %2$s/%3$s пороха
-quest.cocktail_of_ascension.objective.2=Собрать %2$s/%3$s красных грибов из Ада
-quest.cocktail_of_ascension.objective.3=Поговорите с безумным учёным-наркоманом
-quest.sacrifice.title=Жертва
-quest.sacrifice.info=We are the Dark Vail. We have begun restoring an ancient artifact, the effects of which will remain a secret. All we need from you %1$s is to sacrifice %2$s %3$s newborns in the name of the dark lord, whose name strikes fear in the hearts of the innocent. Barry the dark lord. You will be compensated handsomely for your efforts.
-quest.sacrifice.objective.0=Убить %2$s/%3$s Baby %4$s
-quest.department_of_agriculture.title=Департамент сельского хозяйства
-quest.department_of_agriculture.info=To all willing hands. This is a job offer from the department of agriculture. We operate in the desolate world of Barus V and you can image the obstacles we face when it comes to growing %3$s. As our plans for hydroponic farms come to turn, our people starve to death. We are searching for capable parties to aid us in the supplying of %3$s to our citizens.
-quest.department_of_agriculture.objective.0=Собрать %2$s/%3$s %4$s
-
-============================================================
