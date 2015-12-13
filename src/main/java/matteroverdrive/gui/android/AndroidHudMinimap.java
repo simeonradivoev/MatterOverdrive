@@ -24,6 +24,7 @@ import matteroverdrive.data.MinimapEntityInfo;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -256,7 +257,7 @@ public class AndroidHudMinimap extends AndroidHudElement
 
     private GuiColor getMinimapColor(EntityLivingBase entityLivingBase)
     {
-        if (entityLivingBase instanceof IMob)
+        if (entityLivingBase instanceof IMob && !entityLivingBase.isOnSameTeam(Minecraft.getMinecraft().thePlayer))
         {
             MinimapEntityInfo entityInfo = AndroidPlayer.getMinimapEntityInfo(entityLivingBase);
             if (entityInfo != null && entityInfo.isAttacking())
@@ -272,7 +273,7 @@ public class AndroidHudMinimap extends AndroidHudElement
         {
             return Reference.COLOR_HOLO_YELLOW;
         }
-        else if (entityLivingBase instanceof IMerchant)
+        else if (entityLivingBase instanceof IMerchant || entityLivingBase.isOnSameTeam(Minecraft.getMinecraft().thePlayer))
         {
             return Reference.COLOR_HOLO_GREEN;
         }
