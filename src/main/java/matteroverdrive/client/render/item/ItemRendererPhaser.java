@@ -18,19 +18,14 @@
 
 package matteroverdrive.client.render.item;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
-import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.items.weapon.Phaser;
-import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.obj.WavefrontObject;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -53,7 +48,7 @@ public class ItemRendererPhaser extends WeaponItemRenderer
 
     public ItemRendererPhaser()
     {
-        super((WavefrontObject)AdvancedModelLoader.loadModel(new ResourceLocation(MODEL)),new ResourceLocation(TEXTURE));
+        super(new ResourceLocation(MODEL),new ResourceLocation(TEXTURE));
         phaserTextureColorMask = new ResourceLocation(TEXTURE_COLOR_MASK);
     }
 
@@ -186,19 +181,7 @@ public class ItemRendererPhaser extends WeaponItemRenderer
 
         renderBarrel(item);
 
-        GuiColor color = WeaponModuleColor.defaultColor;
-        ItemStack color_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_COLOR, item);
-        if (color_module != null)
-        {
-            IWeaponModule module = (IWeaponModule)color_module.getItem();
-            Object colorObject = module.getValue(color_module);
-            if(colorObject instanceof GuiColor)
-            {
-                color = (GuiColor)colorObject;
-            }
-        }
-
-        RenderUtils.applyColor(color);
+        RenderUtils.applyColor(WeaponHelper.getColor(item));
         weaponModel.renderOnly("Base","display");
         glColor3f(1,1,1);
 

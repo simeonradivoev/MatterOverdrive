@@ -35,10 +35,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Simeon on 4/15/2015.
@@ -82,10 +81,30 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
         super.addDetails(itemstack, player, infos);
-        Map<Integer,Double> stats = (Map<Integer,Double>)getValue(itemstack);
-        for (final Map.Entry<Integer, Double> entry : stats.entrySet())
+        int damage = itemstack.getItemDamage();
+        switch (damage)
         {
-            infos.add(MOStringHelper.weaponStatToInfo(entry.getKey(), entry.getValue()));
+            case 0:
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_DAMAGE, 1.5f));
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_AMMO, 0.5f));
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_EFFECT, 0.5f));
+                break;
+            case 1:
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_AMMO, 0.5f));
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_DAMAGE, 0.75f));
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_FIRE_DAMAGE, 1));
+                break;
+            case 2:
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_EXPLOSION_DAMAGE, 1));
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_AMMO, 0.2));
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_EFFECT, 0.5));
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_FIRE_RATE, 0.15));
+                break;
+            case 3:
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_DAMAGE, 0));
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_AMMO, 0.5));
+                infos.add(MOStringHelper.weaponStatToInfo(Reference.WS_HEAL, 0.1));
+                break;
         }
     }
 
@@ -93,6 +112,66 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
     public int getSlot(ItemStack module)
     {
         return Reference.MODULE_BARREL;
+    }
+
+    @Override
+    public String getModelPath()
+    {
+        return null;
+    }
+
+    @Override
+    public ResourceLocation getModelTexture(ItemStack module) {
+        return null;
+    }
+
+    @Override
+    public String getModelName(ItemStack module) {
+        return null;
+    }
+
+    @Override
+    public float modifyWeaponStat(int statID, ItemStack module, ItemStack weapon, float originalStat)
+    {
+        int damage = module.getItemDamage();
+        switch (damage)
+        {
+            case 0:
+                if (statID == Reference.WS_DAMAGE)
+                    return originalStat * 1.5f;
+                else if (statID == Reference.WS_AMMO)
+                    return originalStat * 0.5f;
+                else if (statID == Reference.WS_EFFECT)
+                    return originalStat * 0.5f;
+                break;
+            case 1:
+                if (statID == Reference.WS_AMMO)
+                    return originalStat * 0.5f;
+                if (statID == Reference.WS_DAMAGE)
+                    return originalStat * 0.75f;
+                if (statID == Reference.WS_FIRE_DAMAGE)
+                    return originalStat + 1;
+                break;
+            case 2:
+                if (statID == Reference.WS_EXPLOSION_DAMAGE)
+                    return originalStat + 1;
+                else if (statID == Reference.WS_AMMO)
+                    return originalStat * 0.2f;
+                else if (statID == Reference.WS_EFFECT)
+                    return originalStat * 0.5f;
+                else if (statID == Reference.WS_FIRE_RATE)
+                    return originalStat * 0.15f;
+                break;
+            case 3:
+                if (statID == Reference.WS_DAMAGE)
+                    return 0;
+                else if (statID == Reference.WS_AMMO)
+                    return originalStat * 0.5f;
+                else if (statID == Reference.WS_HEAL)
+                    return originalStat + 0.1f;
+                break;
+        }
+        return originalStat;
     }
 
     @Override
@@ -133,38 +212,5 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
         {
             icons[i] = iconRegister.registerIcon(Reference.MOD_ID + ":barrel_" + names[i]);
         }
-    }
-
-
-
-    @Override
-    public Object getValue(ItemStack module)
-    {
-        int damage = module.getItemDamage();
-        Map<Integer,Double> stats = new HashMap<Integer, Double>();
-        switch (damage)
-        {
-            case 0:
-                stats.put(Reference.WS_DAMAGE,1.5);
-                stats.put(Reference.WS_AMMO,0.5);
-                stats.put(Reference.WS_EFFECT,0.5);
-                break;
-            case 1:
-                stats.put(Reference.WS_AMMO,0.5);
-                stats.put(Reference.WS_DAMAGE,0.75);
-                stats.put(Reference.WS_FIRE_DAMAGE,1.0);
-                break;
-            case 2:
-                stats.put(Reference.WS_EXPLOSION_DAMAGE,1.0);
-                stats.put(Reference.WS_AMMO,0.2);
-                stats.put(Reference.WS_EFFECT,0.5);
-                stats.put(Reference.WS_FIRE_RATE,0.15);
-                break;
-            case 3:
-                stats.put(Reference.WS_DAMAGE,0.0D);
-                stats.put(Reference.WS_AMMO,0.5);
-                stats.put(Reference.WS_HEAL,0.1D);
-        }
-        return stats;
     }
 }

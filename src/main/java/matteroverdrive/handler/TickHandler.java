@@ -56,8 +56,8 @@ public class TickHandler
         if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null)
             return;
 
-        if (ClientProxy.weaponHandler != null)
-            ClientProxy.weaponHandler.onClientTick(event);
+        if (ClientProxy.instance().getClientWeaponHandler() != null)
+            ClientProxy.instance().getClientWeaponHandler().onClientTick(event);
 
         if (!Minecraft.getMinecraft().isGamePaused() && event.phase.equals(TickEvent.Phase.START)) {
             ClientProxy.questHud.onTick();
@@ -83,7 +83,7 @@ public class TickHandler
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event)
     {
-        ClientProxy.weaponHandler.onTick(event);
+        ClientProxy.instance().getClientWeaponHandler().onTick(event);
     }
 
     //Called when the world ticks

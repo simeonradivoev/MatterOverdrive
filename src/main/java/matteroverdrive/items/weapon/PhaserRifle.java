@@ -20,26 +20,24 @@ package matteroverdrive.items.weapon;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.client.render.item.ItemRendererPhaserRifle;
+import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
-import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
-import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
-import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import org.lwjgl.input.Mouse;
@@ -62,9 +60,11 @@ public class PhaserRifle extends EnergyWeapon
     public PhaserRifle(String name) {
         super(name,32000,128,128,RANGE);
         this.bFull3D = true;
+        this.leftClickFire = true;
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegistry)
     {
 
@@ -77,6 +77,7 @@ public class PhaserRifle extends EnergyWeapon
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Vector2f getSlotPosition(int slot, ItemStack weapon)
     {
         switch (slot)
@@ -96,6 +97,7 @@ public class PhaserRifle extends EnergyWeapon
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Vector2f getModuleScreenPosition(int slot, ItemStack weapon)
     {
         switch(slot)
@@ -122,11 +124,11 @@ public class PhaserRifle extends EnergyWeapon
     @Override
     public boolean supportsModule(ItemStack weapon, ItemStack module)
     {
-        if (module != null)
+        if (module != null && module.getItem() instanceof IWeaponModule && ((IWeaponModule) module.getItem()).getSlot(module) == Reference.MODULE_BARREL)
         {
-            return module.getItem() == MatterOverdriveItems.weapon_module_color || (module.getItem() == MatterOverdriveItems.weapon_module_barrel && module.getItemDamage() != WeaponModuleBarrel.EXPLOSION_BARREL_ID && module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID);
+            return module.getItemDamage() != WeaponModuleBarrel.EXPLOSION_BARREL_ID && module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -142,18 +144,6 @@ public class PhaserRifle extends EnergyWeapon
     }
 
     @Override
-    public boolean onLeftClick(ItemStack weapon, EntityPlayer entityPlayer)
-    {
-        return true;
-    }
-
-    @Override
-    public boolean onLeftClickTick(ItemStack weapon, EntityPlayer entityPlayer)
-    {
-        return false;
-    }
-
-    @Override
     public boolean isAlwaysEquipped(ItemStack weapon) {
         return true;
     }
@@ -164,6 +154,12 @@ public class PhaserRifle extends EnergyWeapon
     }
 
     @Override
+    public float getBaseZoom(ItemStack weapon, EntityLivingBase shooter) {
+        return 0.2f;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon) {
         return Mouse.isButtonDown(1) && entityPlayer.isUsingItem();
     }
@@ -174,50 +170,42 @@ public class PhaserRifle extends EnergyWeapon
         return null;
     }
 
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
-    {
-        if (world.isRemote
-                && entity instanceof EntityPlayer
-                && ((EntityPlayer) entity).getHeldItem() == itemStack
-                && Minecraft.getMinecraft().currentScreen == null)
-        {
-            if (Mouse.isButtonDown(0)) {
-                if (canFire(itemStack,world,(EntityLivingBase)entity) && ClientProxy.weaponHandler.shootDelayPassed(this))
-                {
-                    itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
-                    if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
-                        if (isWeaponZoomed((EntityPlayer) entity, itemStack)) {
-                            ItemRendererPhaserRifle.RECOIL_AMOUNT = 0.5f + getAccuracy(itemStack, (EntityPlayer) entity, true);
-                            Minecraft.getMinecraft().renderViewEntity.hurtTime = 6 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
-                            Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 15;
-                        } else {
-                            ItemRendererPhaserRifle.RECOIL_AMOUNT = 2 + getAccuracy(itemStack, (EntityPlayer) entity, true) * 2;
-                            Minecraft.getMinecraft().renderViewEntity.hurtTime = 10 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
-                            Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 25;
-                        }
-                        ItemRendererPhaserRifle.RECOIL_TIME = 1;
-                    }
 
-                    Vec3 dir = ((EntityPlayer) entity).getLook(1);
-                    Vec3 pos = getFirePosition((EntityPlayer) entity, dir, isWeaponZoomed((EntityPlayer) entity,itemStack));
-                    WeaponShot shot = createShot(itemStack,(EntityPlayer) entity, isWeaponZoomed((EntityPlayer) entity,itemStack));
-                    onClientShot(itemStack, (EntityPlayer) entity, pos, dir, shot);
-                    MatterOverdrive.packetPipeline.sendToServer(new PacketFirePlasmaShot(entity.getEntityId(),pos,dir,shot));
-                    ClientProxy.weaponHandler.addShootDelay(this,itemStack);
-                }else if (ClientProxy.weaponHandler.shootDelayPassed(this) && needsRecharge(itemStack))
-                {
-                    chargeFromEnergyPack(itemStack,(EntityPlayer)entity);
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onShooterClientUpdate(ItemStack itemStack, World world, EntityPlayer entityPlayer, boolean sendServerTick)
+    {
+        if (Mouse.isButtonDown(0) && hasShootDelayPassed()) {
+            if (canFire(itemStack,world,entityPlayer))
+            {
+                itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
+                if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+                    if (isWeaponZoomed(entityPlayer, itemStack)) {
+                        ItemRendererPhaserRifle.RECOIL_AMOUNT = 0.5f + getAccuracy(itemStack, entityPlayer, true);
+                        Minecraft.getMinecraft().renderViewEntity.hurtTime = 6 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
+                        Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 15;
+                    } else {
+                        ItemRendererPhaserRifle.RECOIL_AMOUNT = 2 + getAccuracy(itemStack, entityPlayer, true) * 2;
+                        Minecraft.getMinecraft().renderViewEntity.hurtTime = 10 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
+                        Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 25;
+                    }
+                    ItemRendererPhaserRifle.RECOIL_TIME = 1;
                 }
+
+                Vec3 dir = entityPlayer.getLook(1);
+                Vec3 pos = getFirePosition(entityPlayer, dir, isWeaponZoomed(entityPlayer,itemStack));
+                WeaponShot shot = createShot(itemStack,entityPlayer, isWeaponZoomed(entityPlayer,itemStack));
+                onClientShot(itemStack, entityPlayer, pos, dir, shot);
+                addShootDelay(itemStack);
+                sendShootTickToServer(world,shot,dir,pos);
+                return;
+            }else if (needsRecharge(itemStack))
+            {
+                chargeFromEnergyPack(itemStack,entityPlayer);
             }
         }
 
-        if (world.isRemote)
-        {
-            for(int i = 0; i < 3; i++)
-                Minecraft.getMinecraft().entityRenderer.itemRenderer.updateEquippedItem();
-        }
-
-        super.onUpdate(itemStack, world, entity, p_77663_4_, p_77663_5_);
+        super.onShooterClientUpdate(itemStack,world,entityPlayer,sendServerTick);
     }
 
     @SideOnly(Side.CLIENT)
@@ -233,23 +221,25 @@ public class PhaserRifle extends EnergyWeapon
     }
 
     @Override
-    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot,Vec3 position,Vec3 dir)
+    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot,Vec3 position,Vec3 dir,int delay)
     {
         DrainEnergy(weapon, getShootCooldown(weapon), false);
-        float newHeat =  (getHeat(weapon)+4) * 2f;
+        float newHeat =  (getHeat(weapon)+4) * 2.2f;
         setHeat(weapon, newHeat);
         manageOverheat(weapon, shooter.worldObj, shooter);
         PlasmaBolt fire = spawnProjectile(weapon,shooter,position,dir,shot);
-        //weapon.getTagCompound().setLong("LastShot", shooter.worldObj.getTotalWorldTime());
-        shooter.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+        fire.simulateDelay(delay);
         return true;
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir,WeaponShot shot)
     {
         //ClientProxy.weaponHandler.addShootDelay(this);
-        shooter.playSound(Reference.MOD_ID + ":" + "phaser_rifle_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+        MOPositionedSound sound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "phaser_rifle_shot"),0.8f + itemRand.nextFloat()*0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+        sound.setPosition((float) position.xCoord,(float)position.yCoord,(float)position.zCoord);
+        Minecraft.getMinecraft().getSoundHandler().playSound(sound);
         spawnProjectile(weapon,shooter,position,dir,shot);
     }
 
@@ -265,9 +255,8 @@ public class PhaserRifle extends EnergyWeapon
         //PlasmaBolt fire = new PlasmaBolt(entityPlayer.worldObj, entityPlayer,position,dir, getWeaponScaledDamage(weapon), 2, getAccuracy(weapon, zoomed), getRange(weapon), WeaponHelper.getColor(weapon).getColor(), zoomed,seed);
         PlasmaBolt fire = new PlasmaBolt(shooter.worldObj, shooter,position,dir, shot,getShotSpeed(weapon,shooter));
         fire.setWeapon(weapon);
-        if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon)) {
-            fire.setFireDamageMultiply((float) WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE, weapon));
-        }
+        fire.setFireDamageMultiply(WeaponHelper.modifyStat(Reference.WS_FIRE_DAMAGE, weapon,0));
+        fire.setKnockBack(0.1f);
         shooter.worldObj.spawnEntityInWorld(fire);
         return fire;
     }
@@ -304,7 +293,7 @@ public class PhaserRifle extends EnergyWeapon
     @Override
     public boolean canFire(ItemStack weapon,World world,EntityLivingBase shooter)
     {
-        return DrainEnergy(weapon, getShootCooldown(weapon), true) && !weapon.getTagCompound().getBoolean("Overheated");
+        return DrainEnergy(weapon, getShootCooldown(weapon), true) && !isOverheated(weapon);
     }
 
     @Override

@@ -18,12 +18,9 @@
 
 package matteroverdrive.entity.monster;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.init.MatterOverdriveEntities;
 import matteroverdrive.util.IConfigSubscriber;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -44,20 +41,10 @@ public class EntityRogueAndroid implements IConfigSubscriber
     public static HashSet<Integer> dimensionWhitelist = new HashSet<>();
     private static List<BiomeGenBase.SpawnListEntry> spawnListEntries = new ArrayList<>();
 
-    public static void registerEntity()
+    public static void addAsBiomeGen(Class<? extends EntityLiving> entityClass)
     {
-        createEntity(EntityMeleeRougeAndroidMob.class, "rogue_android", 0xFFFFF, 0,177);
-        createEntity(EntityRangedRogueAndroidMob.class,"ranged_rogue_android",0xFFFFF, 0,178);
-    }
-
-    public static void createEntity(Class<? extends EntityLiving> entityClass, String name, int solidColor, int spotColor,int id)
-    {
-        int randomID = MatterOverdriveEntities.loadIDFromConfig(entityClass, name,id);
-        EntityRegistry.registerGlobalEntityID(entityClass, name, randomID);
-        EntityRegistry.registerModEntity(entityClass, name, randomID, MatterOverdrive.instance, 64, 1, true);
-        spawnListEntries.add(new BiomeGenBase.SpawnListEntry(entityClass, 5, 1, 2));
+        spawnListEntries.add(new BiomeGenBase.SpawnListEntry(entityClass, 6, 1, 2));
         addInBiome(BiomeGenBase.getBiomeGenArray());
-        createEgg(randomID, solidColor, spotColor);
     }
 
     private static void addInBiome(BiomeGenBase[] biomes)
@@ -91,11 +78,6 @@ public class EntityRogueAndroid implements IConfigSubscriber
             }
         }
         return false;
-    }
-
-    public static void createEgg(int id, int solidColor, int spotColor)
-    {
-        EntityList.entityEggs.put(id, new EntityList.EntityEggInfo(id, solidColor, spotColor));
     }
 
     @Override

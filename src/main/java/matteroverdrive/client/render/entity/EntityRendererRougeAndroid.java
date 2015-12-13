@@ -19,6 +19,7 @@
 package matteroverdrive.client.render.entity;
 
 import matteroverdrive.Reference;
+import matteroverdrive.entity.monster.EntityRougeAndroidMob;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -58,9 +59,28 @@ public class EntityRendererRougeAndroid extends RenderBiped
     }
 
     @Override
-    protected boolean func_110813_b(EntityLiving p_110813_1_)
+    protected boolean func_110813_b(EntityLiving entityLiving)
     {
-        return Minecraft.getMinecraft().thePlayer.getDistanceToEntity(p_110813_1_) < 18;
+        if(entityLiving.getTeam() != null)
+        {
+            return true;
+        }else
+        {
+            return Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entityLiving) < 18;
+        }
+    }
+
+    @Override
+    protected void preRenderCallback(EntityLivingBase entityLiving, float p_77041_2_)
+    {
+        if (entityLiving instanceof EntityRougeAndroidMob)
+        {
+            if (((EntityRougeAndroidMob) entityLiving).getIsLegendary())
+            {
+                GL11.glScaled(1.5,1.5,1.5);
+            }
+        }
+        super.preRenderCallback(entityLiving, p_77041_2_);
     }
 
     @Override

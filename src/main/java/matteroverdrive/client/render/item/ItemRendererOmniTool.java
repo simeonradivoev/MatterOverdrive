@@ -18,7 +18,6 @@
 
 package matteroverdrive.client.render.item;/* Created by Simeon on 10/17/2015. */
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
@@ -28,7 +27,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 import org.lwjgl.opengl.GL11;
 
@@ -50,7 +48,7 @@ public class ItemRendererOmniTool extends WeaponItemRenderer
 
     public ItemRendererOmniTool()
     {
-        super((WavefrontObject) AdvancedModelLoader.loadModel(new ResourceLocation(MODEL)),new ResourceLocation(TEXTURE));
+        super(new ResourceLocation(MODEL),new ResourceLocation(TEXTURE));
         random = new Random();
     }
 
@@ -159,8 +157,7 @@ public class ItemRendererOmniTool extends WeaponItemRenderer
         weaponModel.renderOnly("welder_arms_base","wielder_arms","grip");
         renderBarrel(item);
 
-        GuiColor color = WeaponHelper.getColor(item);
-        RenderUtils.applyColor(color);
+        RenderUtils.applyColor(WeaponHelper.getColor(item));
         weaponModel.renderOnly("hull", "sights_rail","side_rail");
 
         glDisable(GL_LIGHTING);

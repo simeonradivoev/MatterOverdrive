@@ -54,6 +54,7 @@ public class Reference
 	public static final String PATH_GUI_ITEM = PATH_GUI + "items/";
     public static final String PATH_MODEL = "mo:models/";
     public static final String PATH_MODEL_BLOCKS = PATH_MODEL + "block/";
+	public static final String PATH_MODEL_ITEMS = PATH_MODEL + "item/";
     public static final String PATH_SOUNDS = "mo:sounds/";
     public static final String PATH_SOUNDS_BLOCKS = PATH_SOUNDS + "blocks/";
 	public static final String PATH_INFO = "mo:info/";

@@ -106,15 +106,15 @@ public class PlayerEventHandler
         //Minecraft stops he using of items each time they change their NBT. This makes is so the weapons refresh and gutter.
         if (event.player.isUsingItem()) {
             ItemStack itemstack = event.player.inventory.getCurrentItem();
-            int itemUseCount = 100;
+            int itemUseCount = itemstack.getMaxItemUseDuration();
             try {
                 Field field = EntityPlayer.class.getDeclaredField("itemInUseCount");
                 field.setAccessible(true);
                 itemUseCount = field.getInt(event.player);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+            } catch (IllegalAccessException e)
+            {
+            } catch (NoSuchFieldException e)
+            {
             }
             if (itemstack != null && itemstack.getItem() instanceof IWeapon && itemUseCount > 0)
             {

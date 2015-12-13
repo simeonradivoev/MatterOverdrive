@@ -56,7 +56,7 @@ public class ModuleSlot extends Slot
                 {
                     if (((IWeaponModule)item.getItem()).getSlot(item) == type)
                     {
-                        if (weaponSlot.getItem() != null && weaponSlot.getItem().getItem() instanceof IWeapon)
+                        if (weaponSlot != null && weaponSlot.getItem() != null && weaponSlot.getItem().getItem() instanceof IWeapon)
                         {
                             return ((IWeapon) weaponSlot.getItem().getItem()).supportsModule(weaponSlot.getItem(),item);
                         }

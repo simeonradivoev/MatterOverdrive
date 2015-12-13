@@ -45,9 +45,6 @@ public class MatterNetworkConfigPage extends AutoConfigPage implements ITextHand
         destinationTextField.setTextOffset(4, 3);
         this.componentMatterNetworkConfigs = componentMatterNetworkConfigs;
         filterSlot = new ElementInventorySlot(gui,(MOSlot)machineGui.inventorySlots.getSlot(componentMatterNetworkConfigs.getDestinationFilterSlot()),164,50,22,22,"big");
-
-        yStart = 80;
-        xStart = 60;
     }
 
     @Override

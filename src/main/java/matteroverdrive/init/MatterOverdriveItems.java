@@ -39,6 +39,7 @@ import matteroverdrive.items.tools.TritaniumPickaxe;
 import matteroverdrive.items.weapon.*;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
+import matteroverdrive.items.weapon.module.WeaponModuleSniperScope;
 import net.minecraft.item.*;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
@@ -102,6 +103,8 @@ public class MatterOverdriveItems
     public static TritaniumArmor tritaniumBoots;
     public static Contract contract;
     public static PlasmaShotgun plasmaShotgun;
+    public static IonSniper ionSniper;
+    public static WeaponModuleSniperScope sniperScope;
 
     public static Item.ToolMaterial toolMaterialTritanium;
     public static ItemArmor.ArmorMaterial armorMaterialTritanium;
@@ -169,6 +172,8 @@ public class MatterOverdriveItems
         tritaniumBoots = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,3).setUnlocalizedName("tritanium_boots").setTextureName(Reference.MOD_ID + ":" + "tritanium_boots");
         contract = new Contract("contract");
         plasmaShotgun = new PlasmaShotgun("plasma_shotgun");
+        ionSniper = new IonSniper("ion_sniper");
+        sniperScope = new WeaponModuleSniperScope("sniper_scope");
 	}
 
 	public static void register(FMLInitializationEvent event)
@@ -225,6 +230,8 @@ public class MatterOverdriveItems
         omniTool.register();
         contract.register();
         plasmaShotgun.register();
+        ionSniper.register();
+        sniperScope.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);

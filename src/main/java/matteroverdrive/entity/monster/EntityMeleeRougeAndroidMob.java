@@ -18,11 +18,14 @@
 
 package matteroverdrive.entity.monster;
 
+import matteroverdrive.entity.ai.AndroidTargetSelector;
+import matteroverdrive.entity.ai.EntityAIAndroidAttackOnCollide;
+import matteroverdrive.entity.ai.EntityAIMoveAlongPath;
 import matteroverdrive.init.MatterOverdriveItems;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -34,15 +37,15 @@ public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
     public EntityMeleeRougeAndroidMob(World world)
     {
         super(world);
-        this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
-        this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
-        this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAndroidAttackOnCollide(this, EntityLivingBase.class, 1.0D, false));
+        this.tasks.addTask(3, new EntityAIMoveAlongPath(this, 1.0D));
+        this.tasks.addTask(4, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
+        this.tasks.addTask(5, new EntityAILookIdle(this));
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, targetSelector));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 0, false, true, new AndroidTargetSelector(this)));
     }
 
     @Override
@@ -57,18 +60,19 @@ public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(64.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(24);
     }
 
-    @Override
-    protected Entity findPlayerToAttack()
+    public void setAndroidLevel(int level)
     {
-        EntityPlayer entityplayer = this.worldObj.getClosestVulnerablePlayerToEntity(this, 16.0D);
-        if (targetSelector.isEntityApplicable(entityplayer))
-        {
-            return entityplayer != null && this.canEntityBeSeen(entityplayer) ? entityplayer : null;
-        }
-        return null;
+        super.setAndroidLevel(level);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4.0D + level);
+    }
+
+    public void setLegendary(boolean legendary)
+    {
+        super.setLegendary(legendary);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(8);
     }
 
     @Override
@@ -80,14 +84,26 @@ public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
     @Override
     protected void dropFewItems(boolean hit, int looting)
     {
-        float lootingModifier = (Math.min(looting, 10) / 10f);
-        if (rand.nextFloat() < 0.01f * (looting + 1))
+        if (recentlyHit > 0)
         {
-            this.entityDropItem(new ItemStack(MatterOverdriveItems.tritaniumSpine), 0.0F);
+            float lootingModifier = (Math.min(looting, 10) / 10f);
+            if (rand.nextFloat() < 0.01f * (looting + 1))
+            {
+                this.entityDropItem(new ItemStack(MatterOverdriveItems.tritaniumSpine), 0.0F);
+            }
+            if (rand.nextFloat() < (0.2f + lootingModifier))
+            {
+                this.entityDropItem(new ItemStack(MatterOverdriveItems.androidParts, 1, rand.nextInt(4)), 0.0F);
+            }
         }
-        if (rand.nextFloat() < (0.2f + lootingModifier))
-        {
-            this.entityDropItem(new ItemStack(MatterOverdriveItems.androidParts, 1, rand.nextInt(4)), 0.0F);
-        }
+    }
+
+    @Override
+    public IEntityLivingData onSpawnWithEgg(IEntityLivingData entityLivingData)
+    {
+        entityLivingData = super.onSpawnWithEgg(entityLivingData);
+        this.addRandomArmor();
+        this.enchantEquipment();
+        return entityLivingData;
     }
 }

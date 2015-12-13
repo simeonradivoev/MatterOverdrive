@@ -19,15 +19,12 @@
 package matteroverdrive.gui.pages;
 
 import cofh.lib.gui.element.ElementBase;
+import matteroverdrive.Reference;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.MOGuiMachine;
-import matteroverdrive.gui.element.ElementBaseGroup;
-import matteroverdrive.gui.element.ElementCheckbox;
-import matteroverdrive.gui.element.ElementStates;
+import matteroverdrive.gui.element.*;
 import matteroverdrive.machines.components.ComponentConfigs;
-import matteroverdrive.machines.configs.ConfigPropertyBoolean;
-import matteroverdrive.machines.configs.ConfigPropertyInteger;
-import matteroverdrive.machines.configs.ConfigPropertyStringList;
-import matteroverdrive.machines.configs.IConfigProperty;
+import matteroverdrive.machines.configs.*;
 import matteroverdrive.util.MOStringHelper;
 
 /**
@@ -37,8 +34,6 @@ public class AutoConfigPage extends ElementBaseGroup
 {
     protected ComponentConfigs componentConfigs;
     protected MOGuiMachine machineGui;
-    protected int xStart = 48;
-    protected int yStart = 36;
 
     public AutoConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height,ComponentConfigs configurable)
     {
@@ -51,12 +46,12 @@ public class AutoConfigPage extends ElementBaseGroup
     public void init()
     {
         super.init();
-        int yPos = yStart;
+        int yPos = 0;
         for (IConfigProperty configProperty : componentConfigs.getValues().values())
         {
             if (configProperty instanceof ConfigPropertyBoolean)
             {
-                ElementCheckbox elementCheckbox = new ElementCheckbox(gui,this,xStart,yPos,configProperty.getKey(),(boolean)configProperty.getValue());
+                ElementCheckbox elementCheckbox = new ElementCheckbox(gui,this,0,yPos,configProperty.getKey(),(boolean)configProperty.getValue());
                 elementCheckbox.setCheckboxLabel(MOStringHelper.translateToLocal(configProperty.getUnlocalizedName()));
                 addElement(elementCheckbox);
                 yPos+= elementCheckbox.getHeight() + 4;
@@ -65,12 +60,35 @@ public class AutoConfigPage extends ElementBaseGroup
             {
                 if (configProperty instanceof ConfigPropertyStringList)
                 {
-                    ElementStates elementStates = new ElementStates(gui,this,xStart,yPos,configProperty.getKey(),((ConfigPropertyStringList) configProperty).getList());
+                    ElementStates elementStates = new ElementStates(gui,this,0,yPos,configProperty.getKey(),((ConfigPropertyStringList) configProperty).getList());
                     elementStates.setSelectedState((Integer)configProperty.getValue());
                     elementStates.setLabel(MOStringHelper.translateToLocal(configProperty.getUnlocalizedName()));
+                    elementStates.setTextColor(Reference.COLOR_HOLO.getColor());
                     addElement(elementStates);
                     yPos += elementStates.getHeight() + 4;
+                }else
+                {
+                    ElementIntegerField elementIntegerField = new ElementIntegerField((MOGuiMachine)gui,this,0,yPos,20,((ConfigPropertyInteger) configProperty).getMin(),((ConfigPropertyInteger) configProperty).getMax());
+                    elementIntegerField.setNumber((Integer) configProperty.getValue());
+                    elementIntegerField.setName(configProperty.getKey());
+                    elementIntegerField.setLabel(MOStringHelper.translateToLocal(configProperty.getUnlocalizedName()));
+                    elementIntegerField.setLabelColor(Reference.COLOR_HOLO.getColor());
+                    elementIntegerField.init();
+                    addElement(elementIntegerField);
+                    yPos += elementIntegerField.getHeight() + 4;
                 }
+            }else if (configProperty instanceof ConfigPropertyString)
+            {
+                MOElementTextField textField = new MOElementTextField((MOGuiBase) gui,this,8,yPos + 2,sizeX,20);
+                textField.setMaxLength(((ConfigPropertyString) configProperty).getMaxLength());
+                textField.setName(configProperty.getKey());
+                textField.setText(configProperty.getValue().toString());
+                textField.setBackground(MOElementButtonScaled.HOVER_TEXTURE_DARK);
+                textField.setTextOffset(8,4);
+                if (((ConfigPropertyString) configProperty).getPattern() != null)
+                    textField.setFilter(((ConfigPropertyString) configProperty).getPattern(),false);
+                addElement(textField);
+                yPos += textField.getHeight() + 4;
             }
         }
     }
@@ -87,18 +105,36 @@ public class AutoConfigPage extends ElementBaseGroup
                 }
             }else if (configProperty instanceof ConfigPropertyInteger)
             {
-                if (name.equals(configProperty.getKey()) && element instanceof ElementStates)
+                if (name.equals(configProperty.getKey()))
                 {
-                    configProperty.setValue(mouseButton);
+                    int state = 0;
+                    if (element instanceof ElementStates)
+                    {
+                        state = mouseButton;
+                    }else if (element instanceof ElementIntegerField)
+                    {
+                        state = ((ElementIntegerField) element).getNumber();
+                    }
+                    configProperty.setValue(state);
                     componentConfigs.getMachine().sendConfigsToServer(true);
                 }
             }
         }
     }
 
-    public void setStart(int x,int y)
+    @Override
+    public void textChanged(String elementName, String text, boolean typed)
     {
-        this.xStart = x;
-        this.yStart = y;
+        for (IConfigProperty configProperty : componentConfigs.getValues().values())
+        {
+            if (configProperty instanceof ConfigPropertyString)
+            {
+                if (elementName.equals(configProperty.getKey()))
+                {
+                    configProperty.setValue(text);
+                    componentConfigs.getMachine().sendConfigsToServer(true);
+                }
+            }
+        }
     }
 }

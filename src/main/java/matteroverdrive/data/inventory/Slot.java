@@ -32,6 +32,7 @@ public class Slot
     private int id;
     private boolean drops = true;
     private boolean isMainSlot = false;
+    private boolean keepOnDismante = false;
 
     public Slot(boolean isMainSlot) {
         this.isMainSlot = isMainSlot;
@@ -66,7 +67,7 @@ public class Slot
     }
     public boolean keepOnDismantle()
     {
-        return false;
+        return keepOnDismante;
     }
     public boolean isMainSlot()
     {
@@ -76,6 +77,7 @@ public class Slot
     {
         this.isMainSlot = mainSlot;
     }
+    public void setKeepOnDismante(boolean keepOnDismante){this.keepOnDismante = keepOnDismante;}
     public int getMaxStackSize()
     {
         return 64;

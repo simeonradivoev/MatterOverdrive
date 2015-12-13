@@ -18,12 +18,10 @@
 
 package matteroverdrive.client.render.item;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
-import matteroverdrive.api.weapon.IWeaponModule;
-import matteroverdrive.handler.ClientWeaponHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.PhaserRifle;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.animation.MOEasing;
@@ -32,9 +30,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -44,29 +39,24 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by Simeon on 7/25/2015.
  */
-public class ItemRendererPhaserRifle implements IItemRenderer
+public class ItemRendererPhaserRifle extends WeaponItemRenderer
 {
     public static final String TEXTURE = Reference.PATH_ITEM + "phaser_rifle.png";
     public static final String MODEL = Reference.PATH_MODEL + "item/phaser_rifle.obj";
     public static final String FLASH_TEXTURE = Reference.PATH_FX + "phaser_rifle_flash.png";
-    public static final float SCALE = 1f;
-    public static final float THIRD_PERSON_SCALE = 0.8f;
-    public static final float ITEM_SCALE = 0.4f;
-    public static final float SCALE_DROP = 0.5f;
+    public static final float SCALE = 0.06f;
+    public static final float THIRD_PERSON_SCALE = 0.048f;
+    public static final float ITEM_SCALE = 0.02f;
+    public static final float SCALE_DROP = 0.03f;
     public static float RECOIL_TIME = 0;
     public static float RECOIL_AMOUNT = 0;
-    private static float lastFov;
-    private static float lastSensitivity;
     private Random random;
 
-    public static IModelCustom phaserModel;
-    public static ResourceLocation phaserTexture;
     public static ResourceLocation flashTexture;
 
     public ItemRendererPhaserRifle()
     {
-        phaserTexture = new ResourceLocation(TEXTURE);
-        phaserModel = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL));
+        super(new ResourceLocation(MODEL),new ResourceLocation(TEXTURE));
         flashTexture = new ResourceLocation(FLASH_TEXTURE);
         random = new Random();
     }
@@ -105,9 +95,9 @@ public class ItemRendererPhaserRifle implements IItemRenderer
     void renderItem(ItemStack item)
     {
         glPushMatrix();
-        glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
-        glTranslated(0, 0.03, -0.7);
+        glTranslated(0, 0, -0.4);
         glRotated(0, 0, 1, 0);
+        glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
         renderGun(ItemRenderType.INVENTORY,item);
         glPopMatrix();
     }
@@ -115,10 +105,10 @@ public class ItemRendererPhaserRifle implements IItemRenderer
     void renderThirdPerson(ItemRenderType renderType, ItemStack item)
     {
         glPushMatrix();
-        glScaled(THIRD_PERSON_SCALE, THIRD_PERSON_SCALE, THIRD_PERSON_SCALE);
         glTranslated(1, 0.83, 1);
         glRotated(-135, 0, 1, 0);
         glRotated(60, 1, 0, 0);
+        glScaled(THIRD_PERSON_SCALE, THIRD_PERSON_SCALE, THIRD_PERSON_SCALE);
         renderGun(renderType,item);
         glPopMatrix();
     }
@@ -126,31 +116,30 @@ public class ItemRendererPhaserRifle implements IItemRenderer
     void renderDrop(ItemStack item)
     {
         glPushMatrix();
-        glScaled(SCALE_DROP, SCALE_DROP, SCALE_DROP);
         glTranslated(0, 0, -0.7);
+        glScaled(SCALE_DROP, SCALE_DROP, SCALE_DROP);
         renderGun(ItemRenderType.ENTITY,item);
         glPopMatrix();
     }
 
-    void renderFirstPerson(ItemStack item)
-    {
-        RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME,0,0.1f);
-        float zoomValue = MOEasing.Sine.easeInOut(ClientWeaponHandler.ZOOM_TIME, 0, 1, 1f);
+    void renderFirstPerson(ItemStack item) {
+        RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME, 0, 0.1f);
+        float zoomValue = MOEasing.Sine.easeInOut(ClientProxy.instance().getClientWeaponHandler().ZOOM_TIME, 0, 1, 1f);
         float recoilValue = MOEasing.Quart.easeInOut(RECOIL_TIME, 0, 1, 1f);
 
         GL11.glPushMatrix();
-            ResourceLocation skin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
-            Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+        ResourceLocation skin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
+        Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
         Minecraft.getMinecraft().renderViewEntity.rotationPitch += recoilValue * random.nextGaussian() * 0.1f - (isRifleZoomed(item) ? 0 : recoilValue * 0.05f);
         Minecraft.getMinecraft().renderViewEntity.rotationYaw += recoilValue * 0.05f * random.nextGaussian();
 
-            glTranslated(2.0, MOMathHelper.Lerp(-0.3f, -0.4f, zoomValue), MOMathHelper.Lerp(-1, -1.1f, zoomValue));
-            glTranslatef(0, recoilValue * 0.05f * RECOIL_AMOUNT, 0);
-            glRotated(MOMathHelper.Lerp(45, 0, zoomValue), 1, 1, 0);
-            glRotated(MOMathHelper.Lerp(0, MOMathHelper.Lerp(3, 0, zoomValue), recoilValue), 0, 0, 1);
-            double length = 1.8;
-            double width = 0.6;
-            double depth = 0.5;
+        glTranslated(2.0, MOMathHelper.Lerp(-0.3f, -0.5f, zoomValue), MOMathHelper.Lerp(-1, -1.1f, zoomValue));
+        glTranslatef(0, recoilValue * 0.05f * RECOIL_AMOUNT, 0);
+        glRotated(MOMathHelper.Lerp(45, 0, zoomValue), 1, 1, 0);
+        glRotated(MOMathHelper.Lerp(0, MOMathHelper.Lerp(3, 0, zoomValue), recoilValue), 0, 0, 1);
+        double length = 1.8;
+        double width = 0.6;
+        double depth = 0.5;
 
         if (!Minecraft.getMinecraft().thePlayer.isInvisible()) {
             Tessellator.instance.startDrawingQuads();
@@ -172,18 +161,19 @@ public class ItemRendererPhaserRifle implements IItemRenderer
         GL11.glPopMatrix();
 
         glPushMatrix();
-        glScaled(SCALE, SCALE, SCALE);
 
         glRotated(MOMathHelper.Lerp(30, 25, zoomValue), 0, 0, 1);
         glRotated(MOMathHelper.Lerp(90, 85, zoomValue), 0, 1, 0);
 
-        glTranslated(MOMathHelper.Lerp(0, 0.86f, zoomValue), MOMathHelper.Lerp(-0.4f, -0.05f, zoomValue), MOMathHelper.Lerp(1.2f, 0.6f, zoomValue));
+        glTranslated(MOMathHelper.Lerp(0.2f, 1, zoomValue), MOMathHelper.Lerp(-0.4f, -0.1f + getScopeOffset(item), zoomValue), MOMathHelper.Lerp(1.2f, 0.6f, zoomValue));
         glScaled(1, 1, 0.6);
 
         glTranslatef(0, -recoilValue * 0.05f * RECOIL_AMOUNT, -recoilValue * 0.05f * RECOIL_AMOUNT);
         glRotated(recoilValue * 2 * RECOIL_AMOUNT, -1, 0, 0);
 
-        renderGun(ItemRenderType.EQUIPPED_FIRST_PERSON,item);
+        glScaled(SCALE, SCALE, SCALE);
+
+        renderGun(ItemRenderType.EQUIPPED_FIRST_PERSON, item);
         glPopMatrix();
 
         renderMuzzle(item, recoilValue, zoomValue);
@@ -194,14 +184,15 @@ public class ItemRendererPhaserRifle implements IItemRenderer
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
         glDisable(GL_LIGHTING);
+        glDepthMask(false);
         RenderUtils.disableLightmap();
-        double size = 1 + 1 * MatterOverdriveItems.phaserRifle.getHeat(item) / MatterOverdriveItems.phaserRifle.getMaxHeat(item);
+        double size = 1.2 + 1 * MatterOverdriveItems.phaserRifle.getHeat(item) / MatterOverdriveItems.phaserRifle.getMaxHeat(item);
 
-        glTranslated(3, 1.9, MOMathHelper.Lerp(-0.1f, -0.7f, zoomValue));
+        glTranslated(3, 2, MOMathHelper.Lerp(-0.1f, -0.7f, zoomValue));
         glRotated(90, 0, 1, 0);
         glRotated(15, -1, 0, 0);
         float scale = MOEasing.Quart.easeIn(recoilValue, 0, 1, 1);
-        GuiColor color = WeaponHelper.getColor(item);
+        int color = WeaponHelper.getColor(item);
         RenderUtils.applyColorWithMultipy(color,scale);
 
         Minecraft.getMinecraft().renderEngine.bindTexture(flashTexture);
@@ -212,6 +203,7 @@ public class ItemRendererPhaserRifle implements IItemRenderer
         Tessellator.instance.addVertexWithUV(size,-size,0,1,0);
         Tessellator.instance.draw();
 
+        RenderUtils.enableLightmap();
         glDisable(GL_BLEND);
         glEnable(GL_LIGHTING);
         glPopMatrix();
@@ -219,21 +211,11 @@ public class ItemRendererPhaserRifle implements IItemRenderer
 
     void renderGun(ItemRenderType renderType, ItemStack item)
     {
-        GuiColor color = WeaponHelper.getColor(item);
-        ItemStack color_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_COLOR, item);
-        if (color_module != null)
-        {
-            IWeaponModule module = (IWeaponModule)color_module.getItem();
-            Object colorObject = module.getValue(color_module);
-            if(colorObject instanceof GuiColor)
-            {
-                color = (GuiColor)colorObject;
-            }
-        }
-
-        glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
-        Minecraft.getMinecraft().renderEngine.bindTexture(phaserTexture);
-        phaserModel.renderAll();
+        RenderUtils.applyColor(WeaponHelper.getColor(item));
+        Minecraft.getMinecraft().renderEngine.bindTexture(weaponTexture);
+        renderScope(item);
+        bindTexture(weaponTexture);
+        weaponModel.renderAll();
     }
 
     public boolean isRifleZoomed(ItemStack itemStack)

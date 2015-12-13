@@ -19,6 +19,7 @@
 package matteroverdrive.api.weapon;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Simeon on 4/14/2015.
@@ -34,10 +35,33 @@ public interface IWeaponModule
     int getSlot(ItemStack module);
 
     /**
-     * Gets the value provided by the weapon module.
-     * Can be either a color or a Map or anything else.
+     * Gets the module's model path.
+     * @return the path of the model resource file.
+     */
+    String getModelPath();
+
+    /**
+     * Gets the texture location for the module's model.
+     * @param module the module.
+     * @return the location of the model texture.
+     */
+    ResourceLocation getModelTexture(ItemStack module);
+
+    /**
+     * Gets the name of the object inside the model.
+     * This is used to enable modules to share a base model file.
+     * @param module the module.
+     * @return the name of the object in the model.
+     */
+    String getModelName(ItemStack module);
+
+    /**
+     * Modifies the give weapon stats.
+     * @param statID the Stat type ID;
      * @param module the module stack.
+     * @param weapon the weapon stack.
+     * @param originalStat the original stat value.
      * @return general value provided by the module.
      */
-    Object getValue(ItemStack module);
+    float modifyWeaponStat(int statID,ItemStack module,ItemStack weapon,float originalStat);
 }

@@ -24,6 +24,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.Vec3;
 
 /**
@@ -49,6 +50,7 @@ public class EntityAIPhaserBoltAttack extends EntityAIBase
     private int maxRangedAttackDelay;
     private float maxChaseDistance;
     private float maxChaseDistanceSq;
+    private PathEntity lastChasePath;
 
     public EntityAIPhaserBoltAttack(IRangedEnergyWeaponAttackMob rangedAttackEntityHost, double entityMoveSpeed, int maxRangedAttackDelay, float maxChaseDistance)
     {
@@ -86,11 +88,12 @@ public class EntityAIPhaserBoltAttack extends EntityAIBase
         {
             return false;
         }
-        else
+        else if (!entitylivingbase.isDead)
         {
             this.attackTarget = entitylivingbase;
             return true;
         }
+        return false;
     }
 
     /**
@@ -152,10 +155,12 @@ public class EntityAIPhaserBoltAttack extends EntityAIBase
     {
         if (distanceToTargetSq <= (double)this.maxChaseDistanceSq && this.pathRetryTimer >= 20)
         {
-            this.entityHost.getNavigator().clearPathEntity();
-        }else
+            if(this.entityHost.getNavigator().getPath() != null && this.entityHost.getNavigator().getPath().equals(lastChasePath))
+                this.entityHost.getNavigator().clearPathEntity();
+        }else if (this.entityHost.getNavigator().noPath())
         {
-            this.entityHost.getNavigator().tryMoveToEntityLiving(attackTarget, this.entityMoveSpeed);
+            lastChasePath = this.entityHost.getNavigator().getPathToEntityLiving(attackTarget);
+            this.entityHost.getNavigator().setPath(lastChasePath,this.entityMoveSpeed);
         }
     }
 

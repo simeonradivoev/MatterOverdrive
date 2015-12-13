@@ -18,15 +18,14 @@
 
 package matteroverdrive.util;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
+import matteroverdrive.api.weapon.IWeaponColor;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Simeon on 4/14/2015.
@@ -41,6 +40,11 @@ public class WeaponHelper
         return null;
     }
 
+    public static boolean hasModule(int module,ItemStack weapon)
+    {
+        return MOInventoryHelper.getStackInSlot(weapon,module) != null;
+    }
+
     public static void setModuleAtSlot(int slot,ItemStack weapon,ItemStack module)
     {
         if (isWeapon(weapon) && module != null)
@@ -49,83 +53,47 @@ public class WeaponHelper
         }
     }
 
-    public static GuiColor getColor(ItemStack weapon)
+    public static int getColor(ItemStack weapon)
     {
         ItemStack module = getModuleAtSlot(Reference.MODULE_COLOR,weapon);
         if (module != null && isWeaponModule(module))
         {
-            Object value = ((IWeaponModule)module.getItem()).getValue(module);
-            if (value instanceof GuiColor)
-            {
-                return (GuiColor)value;
-            }
+            return ((IWeaponColor)module.getItem()).getColor(module,weapon);
         }
-        return WeaponModuleColor.defaultColor;
+        return WeaponModuleColor.defaultColor.getColor();
     }
 
-    public static double getStatMultiply(int stat,ItemStack weapon)
+    public static float modifyStat(int stat,ItemStack weapon,float original)
     {
-        double multiply = 1;
-
         if (isWeapon(weapon))
         {
-            Map<Integer,Double> stats;
             List<ItemStack> itemStacks = MOInventoryHelper.getStacks(weapon);
             if (itemStacks != null) {
                 for (ItemStack module : itemStacks) {
-                    stats = getStatsFromModule(module, weapon);
-                    if (stats != null) {
-                        if (stats.containsKey(stat)) {
-                            multiply *= stats.get(stat);
-                        }
+                    if (module != null && module.getItem() instanceof IWeaponModule)
+                    {
+                        original = ((IWeaponModule) module.getItem()).modifyWeaponStat(stat,module,weapon,original);
                     }
                 }
             }
         }
-        return multiply;
+        return original;
     }
 
     public static boolean hasStat(int stat,ItemStack weapon)
     {
+        float statValue = 1f;
         if (isWeapon(weapon))
         {
-            Map<Integer,Double> stats;
             for (ItemStack module : MOInventoryHelper.getStacks(weapon))
             {
-                stats = getStatsFromModule(module,weapon);
-                if (stats != null)
+                if (module != null && module.getItem() instanceof IWeaponModule)
                 {
-                    if (stats.containsKey(stat))
-                    {
-                        return true;
-                    }
+                    statValue = ((IWeaponModule) module.getItem()).modifyWeaponStat(stat,module,weapon,statValue);
                 }
             }
         }
-        return false;
-    }
-
-    public static Map<Integer,Double> getStatsFromModule(ItemStack module,ItemStack weapon)
-    {
-        if (weapon != null && module != null && isWeapon(weapon) && isWeaponModule(module))
-        {
-            Object mapObject = ((IWeaponModule)module.getItem()).getValue(module);
-            if (mapObject instanceof Map)
-            {
-                return (Map<Integer,Double>)mapObject;
-            }
-        }
-        return null;
-    }
-
-    public static Map<Integer,Double> getStatsFromModule(int module,ItemStack weapon)
-    {
-        if (weapon != null && isWeapon(weapon))
-        {
-            ItemStack m = getModuleAtSlot(module,weapon);
-            return getStatsFromModule(m,weapon);
-        }
-        return null;
+        return statValue != 1f;
     }
 
     public static boolean isWeaponModule(ItemStack itemStack)

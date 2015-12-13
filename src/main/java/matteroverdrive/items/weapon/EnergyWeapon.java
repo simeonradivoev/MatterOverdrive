@@ -26,17 +26,18 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.api.weapon.IWeapon;
-import matteroverdrive.api.weapon.IWeaponModule;
+import matteroverdrive.api.weapon.IWeaponScope;
 import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.init.MatterOverdriveEnchantments;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
+import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
 import matteroverdrive.network.packet.server.PacketReloadEnergyWeapon;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.EntityDamageSourcePhaser;
 import matteroverdrive.util.MOEnergyHelper;
-import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.animation.MOEasing;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -55,7 +56,6 @@ import net.minecraftforge.common.util.Constants;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Simeon on 7/26/2015.
@@ -72,12 +72,14 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public static final String CUSTOM_SPEED_MULTIPLY_TAG = "CustomSpeedMultiply";
     private final int defaultRange;
     private DecimalFormat damageFormater = new DecimalFormat("#.##");
+    protected boolean leftClickFire;
 
     public EnergyWeapon(String name, int capacity, int maxReceive, int maxExtract,int defaultRange) {
         super(name, capacity, maxReceive, maxExtract);
         this.defaultRange = defaultRange;
     }
 
+    //region Vanilla Item method overloading
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tabs, List list)
     {
@@ -89,17 +91,34 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     }
 
     @Override
-    public boolean hasDetails(ItemStack itemStack)
-    {
-        return true;
-    }
-
-    @Override
     public EnumAction getItemUseAction(ItemStack p_77661_1_)
     {
         return EnumAction.bow;
     }
 
+    @Override
+    public int getItemStackLimit(ItemStack item)
+    {
+        return 1;
+    }
+
+    @Override
+    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean isHolding)
+    {
+        if (!world.isRemote)
+        {
+            manageCooling(itemStack);
+        }else
+        {
+            if (entity instanceof EntityPlayer && entity == Minecraft.getMinecraft().thePlayer && isHolding && Minecraft.getMinecraft().currentScreen == null)
+            {
+                onShooterClientUpdate(itemStack,world,(EntityPlayer)entity,true);
+            }
+        }
+    }
+    //endregion
+
+    //region Tooltips
     @Override
     public void addDetails(ItemStack weapon, EntityPlayer player, List infos)
     {
@@ -116,8 +135,8 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         infos.add(addStatWithMultiplyInfo("Damage",damageFormater.format(getWeaponScaledDamage(weapon)),getWeaponScaledDamage(weapon) / getWeaponBaseDamage(weapon),""));
         infos.add(addStatWithMultiplyInfo("DPS",damageFormater.format((getWeaponScaledDamage(weapon)/getShootCooldown(weapon)) * 20),1,""));
         infos.add(addStatWithMultiplyInfo("Speed",(int)(20d/getShootCooldown(weapon)*60),(double) getBaseShootCooldown(weapon) / (double)getShootCooldown(weapon)," s/m"));
-        infos.add(addStatWithMultiplyInfo("Range",getRange(weapon),(double)defaultRange / (double)getRange(weapon),"b"));
-        infos.add(addStatWithMultiplyInfo("Accuracy","",1d/(getAccuracyMultiply(weapon) * getCustomFloatStat(weapon,CUSTOM_ACCURACY_MULTIPLY_TAG,1)),""));
+        infos.add(addStatWithMultiplyInfo("Range",getRange(weapon),(double)getRange(weapon) / (double)defaultRange,"b"));
+        infos.add(addStatWithMultiplyInfo("Accuracy","",1/(modifyStatFromModules(Reference.WS_ACCURACY,weapon,1) * getCustomFloatStat(weapon,CUSTOM_ACCURACY_MULTIPLY_TAG,1)),""));
 
         String heatInfo = EnumChatFormatting.DARK_RED + "Heat: ";
         double heatPercent = getHeat(weapon) / getMaxHeat(weapon);
@@ -157,7 +176,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         ItemStack module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BARREL, weapon);
         if (module != null)
         {
-            infos.add(EnumChatFormatting.GRAY + "Barrel:");
+            /*infos.add(EnumChatFormatting.GRAY + "Barrel:");
 
             Object statsObject = ((IWeaponModule)module.getItem()).getValue(module);
             if (statsObject instanceof Map)
@@ -170,44 +189,77 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
                 }
             }
 
-            infos.add("");
+            infos.add("");*/
         }
     }
+    //endregion
 
-    protected void manageOverheat(ItemStack itemStack,World world,EntityLivingBase shooter)
+    //region client only
+    /**
+     * Used to manage the sending of weapons tick to the server.
+     * This is tied to {@link #sendShootTickToServer(World, WeaponShot, Vec3, Vec3)}.
+     * Used to mainly send weapon ticks without weapon shot information, aka. weapon firing.
+     * @param world the shooter's world.
+     */
+    @SideOnly(Side.CLIENT)
+    protected void manageClientServerTicks(World world)
     {
-        if (getHeat(itemStack) >= getMaxHeat(itemStack))
-        {
-            itemStack.getTagCompound().setBoolean("Overheated", true);
-            world.playSoundAtEntity(shooter, Reference.MOD_ID + ":" + "overheat", 1F, 1f);
-            world.playSoundAtEntity(shooter,Reference.MOD_ID + ":" + "overheat_alarm",1,1);
-        }
+        ClientProxy.instance().getClientWeaponHandler().sendWeaponTickToServer(world,null);
     }
 
-    protected void manageCooling(ItemStack itemStack)
+    /**
+     * A utility function for sending a weapon tick with a given weapon shot to the server.
+     * This is part of the latency compensation system for Phaser bolts.
+     * @param world the shooter's world.
+     * @param weaponShot the weapon shot being fired. Can be null.
+     * @param dir the direction of the shot.
+     * @param pos the starting position of the shot.
+     */
+    @SideOnly(Side.CLIENT)
+    protected void sendShootTickToServer(World world,WeaponShot weaponShot,Vec3 dir,Vec3 pos)
     {
-        float heat = getHeat(itemStack);
-        if (heat > 0) {
-            float easing = MOEasing.Quart.easeOut(heat / getMaxHeat(itemStack),0,4,1);
-            //System.out.println("Heat Easing: " + easing);
-            float newHeat = heat - easing;
-            if (newHeat < 0.001f) {
-                newHeat = 0;
-            }
-            //System.out.println("old Heat: " + heat);
-            //System.out.println("new Heat: " + newHeat);
-            setHeat(itemStack, Math.max(0, newHeat));
-        }
-
-        if (isOverheated(itemStack))
-        {
-            if (getHeat(itemStack) < 2)
-            {
-                setOverheated(itemStack,false);
-            }
-        }
+        PacketFirePlasmaShot packetFirePlasmaShot = new PacketFirePlasmaShot(Minecraft.getMinecraft().thePlayer.getEntityId(),pos,dir,weaponShot);
+        ClientProxy.instance().getClientWeaponHandler().sendWeaponTickToServer(world,packetFirePlasmaShot);
     }
 
+    @SideOnly(Side.CLIENT)
+    public void addShootDelay(ItemStack weaponStack)
+    {
+        ClientProxy.instance().getClientWeaponHandler().addShootDelay(this,weaponStack);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean hasShootDelayPassed()
+    {
+        return ClientProxy.instance().getClientWeaponHandler().shootDelayPassed(this);
+    }
+
+    /**
+     * This method is called each weapon update tick,
+     * when the player is holding the weapon and is not in any GUI screen.
+     * This is manly done for convenience.
+     * @param weapon the weapon stack.
+     * @param world the shooter world.
+     * @param entityPlayer the player shooter.
+     * @param sendServerTick should a server weapon tick be sent. This is tied up to {@link #manageClientServerTicks(World)}.
+     */
+    @SideOnly(Side.CLIENT)
+    public void onShooterClientUpdate(ItemStack weapon, World world, EntityPlayer entityPlayer, boolean sendServerTick)
+    {
+        if (sendServerTick)
+        {
+            manageClientServerTicks(world);
+        }
+    }
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean onLeftClick(ItemStack weapon, EntityPlayer entityPlayer)
+    {
+        return leftClickFire;
+    }
+    //endregion
+
+    //region Reloading, Heating and Cooling managment
     public void chargeFromEnergyPack(ItemStack weapon,EntityPlayer player)
     {
         if (!player.worldObj.isRemote)
@@ -231,7 +283,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
             {
                 if (stack != null && stack.getItem() instanceof IEnergyPack && stack.stackSize > 0)
                 {
-                    ClientProxy.weaponHandler.addReloadDelay(this, 40);
+                    ClientProxy.instance().getClientWeaponHandler().addReloadDelay(this, 40);
                     MatterOverdrive.packetPipeline.sendToServer(new PacketReloadEnergyWeapon());
                     return;
                 }
@@ -239,14 +291,37 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         }
     }
 
-    @Override
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean isHolding)
+    protected void manageOverheat(ItemStack itemStack,World world,EntityLivingBase shooter)
     {
-        if (!world.isRemote)
+        if (getHeat(itemStack) >= getMaxHeat(itemStack))
         {
-            manageCooling(itemStack);
+            itemStack.getTagCompound().setBoolean("Overheated", true);
+            world.playSoundAtEntity(shooter, Reference.MOD_ID + ":" + "overheat", 1F, 1f);
+            world.playSoundAtEntity(shooter,Reference.MOD_ID + ":" + "overheat_alarm",1,1);
         }
     }
+
+    protected void manageCooling(ItemStack itemStack)
+    {
+        float heat = getHeat(itemStack);
+        if (heat > 0) {
+            float easing = MOEasing.Quart.easeOut(heat / getMaxHeat(itemStack),0,4,1);
+            float newHeat = heat - easing;
+            if (newHeat < 0.001f) {
+                newHeat = 0;
+            }
+            setHeat(itemStack, Math.max(0, newHeat));
+        }
+
+        if (isOverheated(itemStack))
+        {
+            if (getHeat(itemStack) < 2)
+            {
+                setOverheated(itemStack,false);
+            }
+        }
+    }
+    //endregion
 
     //region Abstract Functions
     @SideOnly(Side.CLIENT)
@@ -256,10 +331,36 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public abstract float getWeaponBaseDamage(ItemStack weapon);
     public abstract float getWeaponBaseAccuracy(ItemStack weapon,boolean zoomed);
     public abstract boolean canFire(ItemStack itemStack,World world,EntityLivingBase shooter);
+    /**
+     * Returns the speed on the Phaser Blot or any other projectile shot by the weapon.
+     * This is different than the {@link #getBaseShootCooldown(ItemStack)}.
+     * @param weapon the weapon.
+     * @param shooter the shooter.
+     * @return the speed of the "bullet".
+     */
     public abstract float getShotSpeed(ItemStack weapon,EntityLivingBase shooter);
     public abstract int getBaseShootCooldown(ItemStack weapon);
+    public abstract float getBaseZoom(ItemStack weapon,EntityLivingBase shooter);
+    /**
+     * Called when a weapon is fired with a single Weapon Shot.
+     * This is different then the {@link #onServerFire(ItemStack, EntityLivingBase, WeaponShot, Vec3, Vec3, int)} in that it's called only on the client side.
+     * @param weapon the weapon.
+     * @param shooter the shooter.
+     * @param position the starting position of the shot.
+     * @param dir the direction of the shot.
+     * @param shot the Weapon shot info of the shot.
+     */
     @SideOnly(Side.CLIENT)
     public abstract void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir,WeaponShot shot);
+
+    /**
+     * Called when a Phaser Bolt or another projectile has hit something.
+     * This method is only called on the client side.
+     * @param hit the projective hit information.
+     * @param weapon the weapon.
+     * @param world the world.
+     * @param amount the amount of "hit" there was by the projectile. This is mainly used to control the amount of particles spawned on hit.
+     */
     @SideOnly(Side.CLIENT)
     public abstract void onProjectileHit(MovingObjectPosition hit, ItemStack weapon, World world,float amount);
     //endregion
@@ -388,7 +489,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public int getRange(ItemStack weapon)
     {
         int range = defaultRange;
-        range = cofh.lib.util.helpers.MathHelper.round(range * getRangeMultiply(weapon));
+        range = cofh.lib.util.helpers.MathHelper.round(modifyStatFromModules(Reference.WS_RANGE,weapon,range));
         range *= getCustomIntStat(weapon,CUSTOM_RANGE_MULTIPLY_TAG,1);
         return  range;
     }
@@ -396,57 +497,34 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public int getShootCooldown(ItemStack weapon)
     {
         int shootCooldown = getCustomIntStat(weapon,CUSTOM_SPEED_TAG,getBaseShootCooldown(weapon));
-        shootCooldown *= getShootCooldownMultiply(weapon);
+        shootCooldown = (int)modifyStatFromModules(Reference.WS_FIRE_RATE,weapon,shootCooldown);
         shootCooldown *= getCustomFloatStat(weapon,CUSTOM_SPEED_MULTIPLY_TAG,1);
         return shootCooldown;
     }
 
     public WeaponShot createShot(ItemStack weapon, EntityLivingBase shooter, boolean zoomed)
     {
-        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,shooter,zoomed),WeaponHelper.getColor(weapon).getColor(),getRange(weapon));
+        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,shooter,zoomed),WeaponHelper.getColor(weapon),getRange(weapon));
     }
 
-    //region get multiplies
-    protected double getPowerMultiply(ItemStack weapon)
+    public float modifyStatFromModules(int statID,ItemStack weapon,float original)
     {
-        return WeaponHelper.getStatMultiply(Reference.WS_AMMO, weapon) + EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId,weapon) * 0.04f;
+        return WeaponHelper.modifyStat(statID,weapon,original);
     }
-
-    protected float getDamageMultiplay(ItemStack weapon)
-    {
-        return (float)WeaponHelper.getStatMultiply(Reference.WS_DAMAGE, weapon) + EnchantmentHelper.getEnchantmentLevel(MatterOverdriveEnchantments.overclock.effectId,weapon) * 0.04f;
-    }
-
-    protected float getMaxHeatMultiply(ItemStack weapon)
-    {
-        return (float)WeaponHelper.getStatMultiply(Reference.WS_MAX_HEAT,weapon);
-    }
-
-    protected double getRangeMultiply(ItemStack weapon)
-    {
-        return WeaponHelper.getStatMultiply(Reference.WS_RANGE,weapon);
-    }
-
-    public double getShootCooldownMultiply(ItemStack weapon)
-    {
-        return WeaponHelper.getStatMultiply(Reference.WS_SHOOT_COOLDOWN,weapon);
-    }
-
-    protected float getAccuracyMultiply(ItemStack weapon)
-    {
-        return (float)WeaponHelper.getStatMultiply(Reference.WS_ACCURACY,weapon);
-    }
-    //endregion
 
     @Override
-    public int getItemStackLimit(ItemStack item)
+    public boolean hasDetails(ItemStack itemStack)
     {
-        return 1;
+        return true;
     }
 
     public float getWeaponScaledDamage(ItemStack weapon)
     {
-        return getCustomFloatStat(weapon,CUSTOM_DAMAGE_TAG,getWeaponBaseDamage(weapon)) * getDamageMultiplay(weapon) * getCustomFloatStat(weapon,CUSTOM_DAMAGE_MULTIPLY_TAG,1);
+        float damage = getCustomFloatStat(weapon,CUSTOM_DAMAGE_TAG,getWeaponBaseDamage(weapon));
+        damage = modifyStatFromModules(Reference.WS_DAMAGE,weapon,damage);
+        damage += damage * EnchantmentHelper.getEnchantmentLevel(MatterOverdriveEnchantments.overclock.effectId,weapon) * 0.04f;
+        damage *= getCustomFloatStat(weapon,CUSTOM_DAMAGE_MULTIPLY_TAG,1);
+        return damage;
     }
 
     public DamageSource getDamageSource(ItemStack weapon,EntityPlayer player)
@@ -470,7 +548,9 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     public int getEnergyUse(ItemStack weapon)
     {
-        return (int)(getBaseEnergyUse(weapon) / getPowerMultiply(weapon));
+        float energyUse = modifyStatFromModules(Reference.WS_AMMO,weapon,getBaseEnergyUse(weapon));
+        energyUse -= energyUse *  EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId,weapon) * 0.04f;
+        return Math.max((int)energyUse,0);
     }
 
     public void addHeat(ItemStack itemStack,int amount)
@@ -500,7 +580,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     @Override
     public float getMaxHeat(ItemStack weapon)
     {
-        return getBaseMaxHeat(weapon) * getMaxHeatMultiply(weapon);
+        return modifyStatFromModules(Reference.WS_MAX_HEAT,weapon,getBaseMaxHeat(weapon));
     }
 
     public boolean isOverheated(ItemStack weapon)
@@ -532,7 +612,15 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         accuracy = getCustomFloatStat(weapon,CUSTOM_ACCURACY_TAG,accuracy);
         accuracy += (float)Vec3.createVectorHelper(shooter.motionX,shooter.motionY*0.1,shooter.motionZ).lengthVector() * 10;
         accuracy *= shooter.isSneaking() ? 0.6f: 1;
-        accuracy *= getAccuracyMultiply(weapon);
+        accuracy = modifyStatFromModules(Reference.WS_ACCURACY,weapon,accuracy);
+        if (WeaponHelper.hasModule(Reference.MODULE_SIGHTS,weapon))
+        {
+            ItemStack sights = WeaponHelper.getModuleAtSlot(Reference.MODULE_SIGHTS,weapon);
+            if (sights.getItem() instanceof IWeaponScope)
+            {
+                accuracy = ((IWeaponScope) sights.getItem()).getAccuracyModify(sights,weapon,zoomed,accuracy);
+            }
+        }
         accuracy *= getCustomFloatStat(weapon,CUSTOM_ACCURACY_MULTIPLY_TAG,1);
         return accuracy;
     }
@@ -584,6 +672,20 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public boolean isItemTool(ItemStack p_77616_1_)
     {
         return true;
+    }
+
+    @Override
+    public float getZoomMultiply(EntityPlayer entityPlayer, ItemStack weapon)
+    {
+        if (WeaponHelper.hasModule(Reference.MODULE_SIGHTS,weapon))
+        {
+            ItemStack sights = WeaponHelper.getModuleAtSlot(Reference.MODULE_SIGHTS,weapon);
+            if (sights.getItem() instanceof IWeaponScope)
+            {
+                return ((IWeaponScope) sights.getItem()).getZoomAmount(sights,weapon);
+            }
+        }
+        return getBaseZoom(weapon,entityPlayer);
     }
     //endregion
 }

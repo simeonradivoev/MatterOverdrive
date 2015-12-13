@@ -45,7 +45,7 @@
     "shield_hit": {"category": "player","sounds": [{"name": "shield_hit_0", "stream": false},{"name": "shield_hit_1", "stream": false}]},
     "cloak_on": {"category": "player","sounds": [{"name": "entities/cloak_on", "stream": false}]},
     "cloak_off": {"category": "player","sounds": [{"name": "entities/cloak_off", "stream": false}]},
-    "phaser_rifle_shot": {"category": "player","sounds": [{"name": "phaser_rifle/phaser_rifle_shot", "stream": false}]},
+    "phaser_rifle_shot": {"category": "player","sounds": [{"name": "weapon/phaser_rifle_shot", "stream": false}]},
     "overheat_alarm": {"category": "player","sounds": [{"name": "weapon/overheat_alarm", "stream": false}]},
     "overheat": {"category": "player","sounds": [{"name": "weapon/overheat_med", "stream": false}]},
     "reload": {"category": "player","sounds": [{"name": "weapon/reload", "stream": false}]},
@@ -61,5 +61,6 @@
     "quest_complete": {"category": "master","sounds": [{"name": "gui/quest_complete", "stream": false}]},
     "quest_started": {"category": "master","sounds": [{"name": "gui/quest_started", "stream": false}]},
     "plasma_shotgun_shot": {"category": "player","sounds": [{"name": "weapon/plasma_shotgun_shot", "stream": false}]},
-    "plasma_shotgun_charging": {"category": "player","sounds": [{"name": "weapon/plasma_shotgun_charging", "stream": false}]}
+    "plasma_shotgun_charging": {"category": "player","sounds": [{"name": "weapon/plasma_shotgun_charging", "stream": false}]},
+    "sniper_rifle_fire": {"category": "player","sounds": [{"name": "weapon/sniper_rifle_fire", "stream": false}]}
 }

@@ -33,7 +33,6 @@ import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.animation.MOEasing;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -70,6 +69,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
         soundMap = new HashMap<>();
 	}
 
+    @SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegistry)
     {
 
@@ -89,6 +89,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     protected void addCustomDetails(ItemStack weapon,EntityPlayer player,List infos)
     {
         infos.add(EnumChatFormatting.BLUE + "Stun: " + (GetSleepTime(weapon) / 20f) + "s");
@@ -150,11 +151,11 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 
                 if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,item) && isKillMode(item))
                 {
-                    el.setFire(MathHelper.round(WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE,item) * item.getTagCompound().getByte("power")));
+                    el.setFire(MathHelper.round(WeaponHelper.modifyStat(Reference.WS_FIRE_DAMAGE,item,0) * item.getTagCompound().getByte("power")));
                 }
                 else if (WeaponHelper.hasStat(Reference.WS_HEAL,item))
                 {
-                    el.heal((float)(WeaponHelper.getStatMultiply(Reference.WS_HEAL,item) * item.getTagCompound().getByte("power")));
+                    el.heal((WeaponHelper.modifyStat(Reference.WS_HEAL,item,0) * item.getTagCompound().getByte("power")));
                 }
             }else
             {
@@ -203,7 +204,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
             {
                 if (WeaponHelper.hasStat(Reference.WS_EXPLOSION_DAMAGE, item))
                 {
-                    w.createExplosion(player, hitVector.xCoord, hitVector.yCoord, hitVector.zCoord, (float) WeaponHelper.getStatMultiply(Reference.WS_EXPLOSION_DAMAGE, item) * item.getTagCompound().getByte("power") - (MAX_LEVEL/2), true);
+                    w.createExplosion(player, hitVector.xCoord, hitVector.yCoord, hitVector.zCoord, (float) WeaponHelper.modifyStat(Reference.WS_EXPLOSION_DAMAGE, item,0) * item.getTagCompound().getByte("power") - (MAX_LEVEL/2), true);
                 }
             }
         }
@@ -256,14 +257,6 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 		return item;
 	}
 
-    public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player)
-    {
-        //DrainEnergy(itemStack, getMaxItemUseDuration(itemStack), false);
-        //addHeat(itemStack, getMaxItemUseDuration(itemStack));
-
-        return itemStack;
-    }
-
     @Override
     public void onUsingTick(ItemStack itemStack, EntityPlayer player, int count)
     {
@@ -279,11 +272,6 @@ public class Phaser extends EnergyWeapon implements IWeapon{
         else {
             player.stopUsingItem();
         }
-    }
-
-    public void onPlayerStoppedUsing(ItemStack itemStack, World world, EntityPlayer player, int count) {
-        //addHeat(itemStack, getMaxItemUseDuration(itemStack) - count);
-        //DrainEnergy(itemStack, getMaxItemUseDuration(itemStack) - count, false);
     }
 
 	private void SwitchModes(World world,EntityPlayer player,ItemStack item)
@@ -323,6 +311,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir,WeaponShot shot)
     {
 
@@ -341,10 +330,11 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 
     private double sleepTimeMultipy(ItemStack phaser)
     {
-        return WeaponHelper.getStatMultiply(Reference.WS_DAMAGE,phaser);
+        return WeaponHelper.modifyStat(Reference.WS_DAMAGE,phaser,1);
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Vector2f getSlotPosition(int slot, ItemStack weapon)
     {
         switch (slot)
@@ -362,6 +352,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Vector2f getModuleScreenPosition(int slot, ItemStack weapon)
     {
         switch(slot)
@@ -414,12 +405,6 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
-    {
-        super.onUpdate(itemStack, world, entity, p_77663_4_, p_77663_5_);
-    }
-
-    @Override
     public boolean supportsModule(int slot,ItemStack weapon)
     {
         return slot != Reference.MODULE_SIGHTS;
@@ -436,17 +421,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
-    public boolean onLeftClick(ItemStack weapon, EntityPlayer entityPlayer) {
-        return false;
-    }
-
-    @Override
-    public boolean onLeftClickTick(ItemStack weapon, EntityPlayer entityPlayer) {
-        return false;
-    }
-
-    @Override
-    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot,Vec3 position,Vec3 dir)
+    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot,Vec3 position,Vec3 dir,int delay)
     {
         return false;
     }
@@ -462,6 +437,13 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
+    public float getBaseZoom(ItemStack weapon, EntityLivingBase shooter)
+    {
+        return 0;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon) {
         return false;
     }

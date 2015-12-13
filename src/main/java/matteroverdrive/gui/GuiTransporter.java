@@ -50,28 +50,28 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         energy = new MOElementEnergy(this,xSize - 35,50,machine.getEnergyStorage());
         matterStored = new ElementMatterStored(this,xSize - 35,100,machine.getMatterStorage());
 
-        xCoords = new ElementIntegerField(this,this,80,50,80,16);
+        xCoords = new ElementIntegerField(this,this,32,50,80,16);
         xCoords.setName("XCoord");
-        yCoords = new ElementIntegerField(this,this,80,50 + 18,80,16);
+        yCoords = new ElementIntegerField(this,this,32,50 + 18,80,16);
         yCoords.setName("YCoord");
-        zCoords = new ElementIntegerField(this,this,80,50 + 18 * 2,80,16);
+        zCoords = new ElementIntegerField(this,this,32,50 + 18 * 2,80,16);
         zCoords.setName("ZCoord");
 
         list = new ElementTransportList(this,this,45,30,140,100,machine);
         list.setName("Locations");
 
-        name = new MOElementTextField(this,this,80 + 6,50 - 18,74,16);
+        name = new MOElementTextField(this,this,32 + 6,50 - 18,74,16);
         name.setTextOffset(6, 4);
         name.setBackground(MOElementButton.HOVER_TEXTURE_DARK);
         name.setName("LocationName");
 
-        importButton = new MOElementButtonScaled(this,this,70,55 + 18 * 3,"Import",50,18);
+        importButton = new MOElementButtonScaled(this,this,22,55 + 18 * 3,"Import",50,18);
         importButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
         importButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
         importButton.setDisabledTexture(MOElementButton.HOVER_TEXTURE_DARK);
         importButton.setText(MOStringHelper.translateToLocal("gui.label.button.import"));
 
-        resetButton = new MOElementButtonScaled(this,this,70 + 52,55 + 18 * 3,"Reset",50,18);
+        resetButton = new MOElementButtonScaled(this,this,22 + 52,55 + 18 * 3,"Reset",50,18);
         resetButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
         resetButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
         resetButton.setText(MOStringHelper.translateToLocal("gui.label.button.reset"));
@@ -104,7 +104,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         pages.get(0).addElement(removeLocation);
         pages.get(0).addElement(newLocationButton);
 
-        pages.get(1).getElements().get(0).setPosition(60, 150);
+        pages.get(1).getElements().get(0).setPosition(32, 150);
 
         xCoords.init();
         yCoords.init();
@@ -143,14 +143,14 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         super.drawGuiContainerForegroundLayer(x, y);
 
         if (pages.get(1).isVisible()) {
-            getFontRenderer().drawString("X:", xCoords.getPosX() - 10, xCoords.getPosY() + 4, 0xFFFFFF);
-            getFontRenderer().drawString(Integer.toString(xCoords.getNumber() - machine.xCoord), xCoords.getPosX() + xCoords.getWidth() + 4, xCoords.getPosY() + 4, 0xFFFFFF);
+            getFontRenderer().drawString("X:", pages.get(1).getPosX() + xCoords.getPosX() - 10, pages.get(1).getPosY() + xCoords.getPosY() + 4, 0xFFFFFF);
+            getFontRenderer().drawString(Integer.toString(xCoords.getNumber() - machine.xCoord), pages.get(1).getPosX() + xCoords.getPosX() + xCoords.getWidth() + 4,pages.get(1).getPosY()+  xCoords.getPosY() + 4, 0xFFFFFF);
 
-            getFontRenderer().drawString("Y:", yCoords.getPosX() - 10, yCoords.getPosY() + 4, 0xFFFFFF);
-            getFontRenderer().drawString(Integer.toString(yCoords.getNumber() - machine.yCoord), yCoords.getPosX() + yCoords.getWidth() + 4, yCoords.getPosY() + 4, 0xFFFFFF);
+            getFontRenderer().drawString("Y:", pages.get(1).getPosX() + yCoords.getPosX() - 10, pages.get(1).getPosY() + yCoords.getPosY() + 4, 0xFFFFFF);
+            getFontRenderer().drawString(Integer.toString(yCoords.getNumber() - machine.yCoord), pages.get(1).getPosX() + yCoords.getPosX() + yCoords.getWidth() + 4,pages.get(1).getPosY() + yCoords.getPosY() + 4, 0xFFFFFF);
 
-            getFontRenderer().drawString("Z:", zCoords.getPosX() - 10, zCoords.getPosY() + 4, 0xFFFFFF);
-            getFontRenderer().drawString(Integer.toString(zCoords.getNumber() - machine.zCoord), zCoords.getPosX() + zCoords.getWidth() + 4, zCoords.getPosY() + 4, 0xFFFFFF);
+            getFontRenderer().drawString("Z:", pages.get(1).getPosX() + zCoords.getPosX() - 10, pages.get(1).getPosY() + zCoords.getPosY() + 4, 0xFFFFFF);
+            getFontRenderer().drawString(Integer.toString(zCoords.getNumber() - machine.zCoord), pages.get(1).getPosX() + zCoords.getPosX() + zCoords.getWidth() + 4,pages.get(1).getPosY() + zCoords.getPosY() + 4, 0xFFFFFF);
         }
     }
 

@@ -66,7 +66,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     {
         ElementBaseGroup homePage = new ElementBaseGroup(this,0,0,xSize,ySize);
         homePage.setName("Home");
-        AutoConfigPage configPage = new AutoConfigPage(this,0,0,xSize,ySize,machine.getConfigs());
+        AutoConfigPage configPage = new AutoConfigPage(this,48,32,xSize-76,ySize,machine.getConfigs());
         configPage.setName("Configurations");
 
         AddPage(homePage, ClientProxy.holoIcons.getIcon("page_icon_home"),MOStringHelper.translateToLocal("gui.tooltip.page.home")).setIconColor(Reference.COLOR_MATTER);

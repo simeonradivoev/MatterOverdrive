@@ -18,6 +18,7 @@
 
 package matteroverdrive.client.sound;
 
+import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.util.ResourceLocation;
 
@@ -38,5 +39,10 @@ public class MOPositionedSound extends PositionedSound
         this.xPosF = x;
         this.yPosF = y;
         this.zPosF = z;
+    }
+
+    public void setAttenuationType(ISound.AttenuationType type)
+    {
+        field_147666_i = type;
     }
 }

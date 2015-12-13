@@ -36,10 +36,7 @@ import matteroverdrive.client.render.biostat.BioticStatRendererShield;
 import matteroverdrive.client.render.biostat.BioticStatRendererTeleporter;
 import matteroverdrive.client.render.block.*;
 import matteroverdrive.client.render.entity.*;
-import matteroverdrive.client.render.item.ItemRenderPlasmaShotgun;
-import matteroverdrive.client.render.item.ItemRendererOmniTool;
-import matteroverdrive.client.render.item.ItemRendererPhaser;
-import matteroverdrive.client.render.item.ItemRendererPhaserRifle;
+import matteroverdrive.client.render.item.*;
 import matteroverdrive.client.render.parts.RougeAndroidPartsRender;
 import matteroverdrive.client.render.parts.TritaniumSpineRenderer;
 import matteroverdrive.client.render.tileentity.*;
@@ -93,6 +90,7 @@ public class RenderHandler
     private RenderDialogSystem renderDialogSystem;
     private RenderStarmap renderStarmap;
     private AndroidBionicPartRenderRegistry bionicPartRenderRegistry;
+    private WeaponModuleModelRegistry weaponModuleModelRegistry;
 
     //region Block Renderers
     private MOBlockRenderer blockRenderer;
@@ -121,6 +119,7 @@ public class RenderHandler
     private static ItemRendererPhaserRifle rendererPhaserRifle;
     private static ItemRendererOmniTool rendererOmniTool;
     private static ItemRenderPlasmaShotgun renderPlasmaShotgun;
+    private static ItemRendererIonSniper rendererIonSniper;
     //endregion
     //region Entity Renderers
     private EntityRendererRougeAndroid rendererRougeAndroid;
@@ -169,6 +168,7 @@ public class RenderHandler
         renderDialogSystem = new RenderDialogSystem();
         renderStarmap = new RenderStarmap();
         bionicPartRenderRegistry = new AndroidBionicPartRenderRegistry();
+        weaponModuleModelRegistry = new WeaponModuleModelRegistry();
 
         addCustomRenderer(matterScannerInfoHandler);
         addCustomRenderer(renderParticlesHandler);
@@ -307,6 +307,7 @@ public class RenderHandler
         rendererPhaserRifle = new ItemRendererPhaserRifle();
         rendererOmniTool = new ItemRendererOmniTool();
         renderPlasmaShotgun = new ItemRenderPlasmaShotgun();
+        rendererIonSniper = new ItemRendererIonSniper();
     }
 
     public void registerItemRenderers()
@@ -315,6 +316,7 @@ public class RenderHandler
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.phaserRifle,rendererPhaserRifle);
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.omniTool,rendererOmniTool);
         MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.plasmaShotgun,renderPlasmaShotgun);
+        MinecraftForgeClient.registerItemRenderer(MatterOverdriveItems.ionSniper,rendererIonSniper);
     }
 
     public void createEntityRenderers()
@@ -342,7 +344,6 @@ public class RenderHandler
         RenderingRegistry.registerEntityRenderingHandler(PlasmaBolt.class, rendererPhaserFire);
         RenderingRegistry.registerEntityRenderingHandler(EntityRangedRogueAndroidMob.class,rendererRangedRougeAndroid);
         RenderingRegistry.registerEntityRenderingHandler(EntityMutantScientist.class,rendererMutantScientist);
-        //RenderingRegistry.registerEntityRenderingHandler(EntityMeleeRougeAndroidMob.class,rendererRougeAndroidHologram);
     }
 
     public void createBioticStatRenderers()
@@ -361,6 +362,11 @@ public class RenderHandler
     {
         bionicPartRenderRegistry.register(TritaniumSpine.class,new TritaniumSpineRenderer());
         bionicPartRenderRegistry.register(RougeAndroidParts.class, new RougeAndroidPartsRender());
+    }
+
+    public void registerWeaponModuleModels()
+    {
+        weaponModuleModelRegistry.registerModule(MatterOverdriveItems.sniperScope);
     }
 
     public void createStarmapRenderers()
@@ -413,6 +419,8 @@ public class RenderHandler
     {
         return bionicPartRenderRegistry;
     }
+
+    public WeaponModuleModelRegistry getWeaponModuleModelRegistry(){return weaponModuleModelRegistry;}
 
     public Random getRandom()
     {

@@ -18,10 +18,9 @@
 
 package matteroverdrive.client.render.item;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
-import matteroverdrive.api.weapon.IWeaponModule;
-import matteroverdrive.handler.ClientWeaponHandler;
+import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.animation.MOEasing;
 import matteroverdrive.util.math.MOMathHelper;
@@ -127,7 +126,7 @@ public class ItemRenderPlasmaShotgun implements IItemRenderer
     void renderFirstPerson(ItemStack item)
     {
         RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME,0,0.1f);
-        float zoomValue = MOEasing.Sine.easeInOut(ClientWeaponHandler.ZOOM_TIME, 0, 1, 1f);
+        float zoomValue = MOEasing.Sine.easeInOut(ClientProxy.instance().getClientWeaponHandler().ZOOM_TIME, 0, 1, 1f);
         float recoilValue = MOEasing.Quart.easeInOut(RECOIL_TIME, 0, 1, 1f);
 
         GL11.glPushMatrix();
@@ -187,19 +186,7 @@ public class ItemRenderPlasmaShotgun implements IItemRenderer
 
     void renderGun(ItemRenderType renderType, ItemStack item)
     {
-        GuiColor color = WeaponHelper.getColor(item);
-        ItemStack color_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_COLOR, item);
-        if (color_module != null)
-        {
-            IWeaponModule module = (IWeaponModule)color_module.getItem();
-            Object colorObject = module.getValue(color_module);
-            if(colorObject instanceof GuiColor)
-            {
-                color = (GuiColor)colorObject;
-            }
-        }
-
-        glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
+        RenderUtils.applyColor(WeaponHelper.getColor(item));
         Minecraft.getMinecraft().renderEngine.bindTexture(weaponTexture);
         weaponModel.renderAll();
     }

@@ -123,36 +123,40 @@ public class ComponentConfigs extends MachineComponentAbstract<MOTileEntityMachi
 
     public boolean getBoolean(String key,boolean def)
     {
-        if (propertyMap.containsKey(key))
+        IConfigProperty property = propertyMap.get(key);
+        if (property != null && property.getType() == Boolean.class)
         {
-            if (propertyMap.get(key).getType() == Boolean.class)
-            {
-                return (Boolean)propertyMap.get(key).getValue();
-            }
+            return (Boolean)property.getValue();
         }
         return def;
     }
 
     public Integer getInteger(String key, int def)
     {
-        if (propertyMap.containsKey(key))
+        IConfigProperty property = propertyMap.get(key);
+        if (property != null && property.getType().equals(Integer.class))
         {
-            if (propertyMap.get(key).getType().equals(Integer.class))
-            {
-                return (Integer)propertyMap.get(key).getValue();
-            }
+            return (Integer)property.getValue();
         }
         return def;
     }
 
     public Integer getEnum(String key,int def)
     {
-        if (propertyMap.containsKey(key))
+        IConfigProperty property = propertyMap.get(key);
+        if (property != null && property.getType().equals(Enum.class))
         {
-            if (propertyMap.get(key).getType().equals(Enum.class))
-            {
-                return (Integer)propertyMap.get(key).getValue();
-            }
+            return (Integer)property.getValue();
+        }
+        return def;
+    }
+
+    public String getString(String key,String def)
+    {
+        IConfigProperty property = propertyMap.get(key);
+        if (property != null && property.getType().equals(String.class))
+        {
+            return (String) property.getValue();
         }
         return def;
     }

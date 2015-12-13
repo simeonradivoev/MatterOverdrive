@@ -23,7 +23,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.api.weapon.IWeaponModule;
+import matteroverdrive.api.weapon.IWeaponColor;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -31,6 +31,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
@@ -40,7 +41,7 @@ import java.util.List;
 /**
  * Created by Simeon on 4/14/2015.
  */
-public class WeaponModuleColor extends MOBaseItem implements IWeaponModule
+public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
 {
     private IIcon overlayIcon;
     public static final GuiColor defaultColor = new GuiColor(255,255,255);
@@ -128,6 +129,27 @@ public class WeaponModuleColor extends MOBaseItem implements IWeaponModule
     }
 
     @Override
+    public String getModelPath() {
+        return null;
+    }
+
+    @Override
+    public ResourceLocation getModelTexture(ItemStack module)
+    {
+        return null;
+    }
+
+    @Override
+    public String getModelName(ItemStack module) {
+        return null;
+    }
+
+    @Override
+    public float modifyWeaponStat(int statID, ItemStack module, ItemStack weapon, float originalStat) {
+        return originalStat;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs creativeTabs, List list)
     {
@@ -138,13 +160,12 @@ public class WeaponModuleColor extends MOBaseItem implements IWeaponModule
     }
 
     @Override
-    public Object getValue(ItemStack module)
-    {
+    public int getColor(ItemStack module, ItemStack weapon) {
         int damage = module.getItemDamage();
         if (damage >= 0 && damage < colors.length)
         {
-            return colors[damage];
+            return colors[damage].getColor();
         }
-        return defaultColor;
+        return defaultColor.getColor();
     }
 }

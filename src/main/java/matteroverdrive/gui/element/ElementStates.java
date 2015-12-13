@@ -72,7 +72,7 @@ public class ElementStates extends MOElementButtonScaled
         GL11.glAlphaFunc(GL11.GL_GREATER,0.5f);
         GL11.glCullFace(GL11.GL_BACK);
         int width = getFontRenderer().getStringWidth(label);
-        getFontRenderer().drawString(label,posX + sizeX + 4,posY - getFontRenderer().FONT_HEIGHT/2 + sizeY/2,0xFFFFFF);
+        getFontRenderer().drawString(label,posX + sizeX + 4,posY - getFontRenderer().FONT_HEIGHT/2 + sizeY/2,getTextColor());
     }
 
     @Override

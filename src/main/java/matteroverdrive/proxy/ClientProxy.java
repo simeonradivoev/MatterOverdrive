@@ -25,13 +25,16 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.HoloIcons;
+import matteroverdrive.client.resources.data.WeaponMetadataSection;
+import matteroverdrive.client.resources.data.WeaponMetadataSectionSerializer;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.gui.GuiQuestHud;
-import matteroverdrive.handler.ClientWeaponHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.MouseHandler;
 import matteroverdrive.handler.TooltipHandler;
+import matteroverdrive.handler.weapon.ClientWeaponHandler;
+import matteroverdrive.handler.weapon.CommonWeaponHandler;
 import matteroverdrive.init.MatterOverdriveGuides;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.init.MatterOverdriveItems;
@@ -42,13 +45,19 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy
 {
+    private static ClientProxy clientProxy;
     public static RenderHandler renderHandler;
     public static KeyHandler keyHandler;
     public static MouseHandler mouseHandler;
     public static GuiAndroidHud androidHud;
     public static HoloIcons holoIcons;
-    public static ClientWeaponHandler weaponHandler;
+    private ClientWeaponHandler weaponHandler;
     public static GuiQuestHud questHud;
+
+    public ClientProxy()
+    {
+        weaponHandler = new ClientWeaponHandler();
+    }
 
     @Override
 	public void registerProxies()
@@ -62,6 +71,8 @@ public class ClientProxy extends CommonProxy
         holoIcons = new HoloIcons();
         weaponHandler = new ClientWeaponHandler();
         questHud = new GuiQuestHud();
+
+        Minecraft.getMinecraft().getResourcePackRepository().rprMetadataSerializer.registerMetadataSectionType(new WeaponMetadataSectionSerializer(), WeaponMetadataSection.class);
 
         registerSubscribtions();
 
@@ -83,6 +94,7 @@ public class ClientProxy extends CommonProxy
         renderHandler.registerBioticStatRenderers();
         renderHandler.registerBionicPartRenderers();
         renderHandler.registerStarmapRenderers();
+        renderHandler.registerWeaponModuleModels();
         //endregion
         //endregion
 
@@ -103,6 +115,7 @@ public class ClientProxy extends CommonProxy
         FMLCommonHandler.instance().bus().register(renderHandler);
         FMLCommonHandler.instance().bus().register(GalaxyClient.getInstance());
         FMLCommonHandler.instance().bus().register(androidHud);
+        MinecraftForge.EVENT_BUS.register(weaponHandler);
     }
 
     @Override
@@ -126,6 +139,7 @@ public class ClientProxy extends CommonProxy
         weaponHandler.registerWeapon(MatterOverdriveItems.phaser);
         weaponHandler.registerWeapon(MatterOverdriveItems.omniTool);
         weaponHandler.registerWeapon(MatterOverdriveItems.plasmaShotgun);
+        weaponHandler.registerWeapon(MatterOverdriveItems.ionSniper);
 
         MatterOverdriveGuides.registerGuideElements(event);
     }
@@ -134,5 +148,22 @@ public class ClientProxy extends CommonProxy
     public void postInit(FMLPostInitializationEvent event)
     {
         MatterOverdriveGuides.registerGuides(event);
+    }
+
+    public ClientWeaponHandler getClientWeaponHandler()
+    {
+        return weaponHandler;
+    }
+
+    @Override
+    public CommonWeaponHandler getWeaponHandler(){return weaponHandler;}
+
+    public static ClientProxy instance()
+    {
+        if (clientProxy == null)
+        {
+            clientProxy = (ClientProxy)MatterOverdrive.proxy;
+        }
+        return clientProxy;
     }
 }

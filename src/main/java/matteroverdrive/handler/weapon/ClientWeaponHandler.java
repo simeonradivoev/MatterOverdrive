@@ -16,16 +16,22 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.handler;
+package matteroverdrive.handler.weapon;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.weapon.IWeapon;
+import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
+import matteroverdrive.network.packet.bi.PacketWeaponTick;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,11 +40,10 @@ import java.util.Map;
  * Created by Simeon on 7/31/2015.
  */
 @SideOnly(Side.CLIENT)
-public class ClientWeaponHandler
+public class ClientWeaponHandler extends CommonWeaponHandler
 {
     public static float ZOOM_TIME;
     private Map<IWeapon,Integer> shotTracker;
-    private float lastFov;
     private float lastMouseSensitivity;
 
     public ClientWeaponHandler()
@@ -87,12 +92,24 @@ public class ClientWeaponHandler
             if (ZOOM_TIME == 0)
             {
                 lastMouseSensitivity = Minecraft.getMinecraft().gameSettings.mouseSensitivity;
-                lastFov = Minecraft.getMinecraft().gameSettings.fovSetting;
             }else
             {
-                Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity*(1-(ZOOM_TIME*0.3f));
-                Minecraft.getMinecraft().gameSettings.fovSetting = lastFov - ZOOM_TIME * 15;
+                if (entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof IWeapon)
+                {
+                    Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity * (1 - (ZOOM_TIME * ((IWeapon) entityPlayer.getHeldItem().getItem()).getZoomMultiply(entityPlayer,entityPlayer.getHeldItem())));
+                }else
+                {
+                    Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
+                }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onFovUpdate(FOVUpdateEvent event)
+    {
+        if (Minecraft.getMinecraft().thePlayer.getHeldItem() != null && Minecraft.getMinecraft().thePlayer.getHeldItem().getItem() instanceof IWeapon) {
+            event.newfov -= event.fov * ZOOM_TIME * ((IWeapon) Minecraft.getMinecraft().thePlayer.getHeldItem().getItem()).getZoomMultiply(Minecraft.getMinecraft().thePlayer,Minecraft.getMinecraft().thePlayer.getHeldItem());
         }
     }
 
@@ -117,6 +134,12 @@ public class ClientWeaponHandler
                 }
             }
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void sendWeaponTickToServer(World world, PacketFirePlasmaShot firePlasmaShot)
+    {
+        MatterOverdrive.packetPipeline.sendToServer(new PacketWeaponTick(world.getWorldTime(),firePlasmaShot));
     }
 
     public boolean shootDelayPassed(IWeapon item)

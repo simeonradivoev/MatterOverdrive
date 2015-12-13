@@ -30,10 +30,8 @@ import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
-import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -52,7 +50,7 @@ import java.util.List;
 public class PlasmaShotgun extends EnergyWeapon
 {
     private static final int MAX_CHARGE_TIME = 20;
-    private static final int ENERGY_PER_SHOT = 1024*2;
+    private static final int ENERGY_PER_SHOT = 2560;
     public static final int RANGE = 16;
     @SideOnly(Side.CLIENT)
     private MOPositionedSound lastChargingSound;
@@ -61,6 +59,7 @@ public class PlasmaShotgun extends EnergyWeapon
     {
         super(name, 32000, 128, 128, RANGE);
         this.setFull3D();
+        leftClickFire = true;
     }
 
     @Override
@@ -101,12 +100,21 @@ public class PlasmaShotgun extends EnergyWeapon
 
     @Override
     public int getBaseShootCooldown(ItemStack weapon) {
-        return 20;
+        return 22;
     }
 
     @Override
-    public void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir, WeaponShot shot) {
-        shooter.playSound(Reference.MOD_ID + ":" + "plasma_shotgun_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+    public float getBaseZoom(ItemStack weapon, EntityLivingBase shooter) {
+        return 0;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir, WeaponShot shot)
+    {
+        MOPositionedSound sound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "plasma_shotgun_shot"),0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+        sound.setPosition((float) position.xCoord,(float)position.yCoord,(float)position.zCoord);
+        Minecraft.getMinecraft().getSoundHandler().playDelayedSound(sound,1);
         spawnProjectile(weapon,shooter,position,dir,shot);
     }
 
@@ -121,9 +129,8 @@ public class PlasmaShotgun extends EnergyWeapon
             bolts[i] = new PlasmaBolt(shooter.worldObj, shooter, position, dir, newShot, getShotSpeed(weapon, shooter));
             bolts[i].setWeapon(weapon);
             bolts[i].setRenderSize((getShotCount(weapon,shooter)/shot.getCount())*0.5f);
-            if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE, weapon)) {
-                bolts[i].setFireDamageMultiply((float) WeaponHelper.getStatMultiply(Reference.WS_FIRE_DAMAGE, weapon));
-            }
+            bolts[i].setFireDamageMultiply(WeaponHelper.modifyStat(Reference.WS_FIRE_DAMAGE, weapon,0));
+            bolts[i].setKnockBack(0.5f);
             shooter.worldObj.spawnEntityInWorld(bolts[i]);
         }
         return bolts;
@@ -140,6 +147,7 @@ public class PlasmaShotgun extends EnergyWeapon
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Vector2f getSlotPosition(int slot, ItemStack weapon)
     {
         switch (slot)
@@ -159,6 +167,7 @@ public class PlasmaShotgun extends EnergyWeapon
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Vector2f getModuleScreenPosition(int slot, ItemStack weapon)
     {
         switch(slot)
@@ -195,7 +204,7 @@ public class PlasmaShotgun extends EnergyWeapon
     @Override
     public ItemStack onItemRightClick(ItemStack weapon, World world, EntityPlayer entityPlayer)
     {
-        if (world.isRemote && canFire(weapon,world,entityPlayer) && ClientProxy.weaponHandler.shootDelayPassed(this) && !entityPlayer.isUsingItem()) {
+        if (world.isRemote && canFire(weapon,world,entityPlayer) && hasShootDelayPassed() && !entityPlayer.isUsingItem()) {
             entityPlayer.setItemInUse(weapon, getMaxItemUseDuration(weapon));
             playChargingSound(entityPlayer);
         }
@@ -205,7 +214,7 @@ public class PlasmaShotgun extends EnergyWeapon
     @SideOnly(Side.CLIENT)
     public void playChargingSound(EntityPlayer entityPlayer)
     {
-        lastChargingSound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "plasma_shotgun_charging"),1,1);
+        lastChargingSound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "plasma_shotgun_charging"),3f + itemRand.nextFloat()*0.2f,0.9f * itemRand.nextFloat() * 0.2f);
         lastChargingSound.setPosition((float) entityPlayer.posX,(float)entityPlayer.posY,(float)entityPlayer.posZ);
         Minecraft.getMinecraft().getSoundHandler().playSound(lastChargingSound);
     }
@@ -219,10 +228,10 @@ public class PlasmaShotgun extends EnergyWeapon
     @Override
     public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
     {
-        if (getMaxItemUseDuration(stack) - count >= MAX_CHARGE_TIME)
-        {
-            player.stopUsingItem();
-        }
+        //if (getMaxItemUseDuration(stack) - count >= MAX_CHARGE_TIME)
+        //{
+            //player.stopUsingItem();
+        //}
     }
 
     @Override
@@ -246,7 +255,7 @@ public class PlasmaShotgun extends EnergyWeapon
             shot.setRange(shot.getRange() + (int) (shot.getRange() * (1 - shotPercent)));
             onClientShot(weapon, entityPlayer, pos, dir, shot);
             MatterOverdrive.packetPipeline.sendToServer(new PacketFirePlasmaShot(entityPlayer.getEntityId(), pos, dir, shot));
-            ClientProxy.weaponHandler.addShootDelay(this, weapon);
+            addShootDelay(weapon);
             stopChargingSound();
             entityPlayer.clearItemInUse();
         }
@@ -264,11 +273,7 @@ public class PlasmaShotgun extends EnergyWeapon
         return 72000;
     }
 
-    @Override
-    public boolean onLeftClick(ItemStack weapon, EntityPlayer entityPlayer)
-    {
-        return true;
-    }
+
 
     @SideOnly(Side.CLIENT)
     private Vec3 getFirePosition(EntityPlayer entityPlayer,Vec3 dir,boolean isAiming)
@@ -282,59 +287,52 @@ public class PlasmaShotgun extends EnergyWeapon
         return pos;
     }
 
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_) {
-        super.onUpdate(itemStack,world,entity,p_77663_4_,p_77663_5_);
-
-        if (world.isRemote
-                && entity instanceof EntityPlayer
-                && ((EntityPlayer) entity).getHeldItem() == itemStack
-                && Minecraft.getMinecraft().currentScreen == null) {
-            if (Mouse.isButtonDown(0)) {
-
-                if (canFire(itemStack,world,(EntityLivingBase)entity) && ClientProxy.weaponHandler.shootDelayPassed(this))
-                {
-                    itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
-                    ItemRenderPlasmaShotgun.RECOIL_AMOUNT = 12 + getAccuracy(itemStack,(EntityPlayer)entity,isWeaponZoomed((EntityPlayer) entity,itemStack)) * 2;
-                    ItemRenderPlasmaShotgun.RECOIL_TIME = 1;
-                    Minecraft.getMinecraft().renderViewEntity.hurtTime = 15;
-                    Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 30;
-                    Vec3 dir = ((EntityPlayer) entity).getLook(1);
-                    Vec3 pos = getFirePosition((EntityPlayer) entity, dir, Mouse.isButtonDown(1));
-                    WeaponShot shot = createShot(itemStack,(EntityPlayer)entity,Mouse.isButtonDown(1));
-                    onClientShot(itemStack, (EntityPlayer) entity, pos, dir,shot);
-                    MatterOverdrive.packetPipeline.sendToServer(new PacketFirePlasmaShot(entity.getEntityId(),pos,dir,shot));
-                    ClientProxy.weaponHandler.addShootDelay(this,itemStack);
-                }else if (ClientProxy.weaponHandler.shootDelayPassed(this) && needsRecharge(itemStack))
-                {
-                    chargeFromEnergyPack(itemStack,(EntityPlayer)entity);
-                }
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onShooterClientUpdate(ItemStack itemStack, World world, EntityPlayer entityPlayer, boolean sendServerTick)
+    {
+        if (Mouse.isButtonDown(0) && hasShootDelayPassed()) {
+            if (canFire(itemStack, world, entityPlayer))
+            {
+                itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
+                ItemRenderPlasmaShotgun.RECOIL_AMOUNT = 12 + getAccuracy(itemStack, entityPlayer, isWeaponZoomed(entityPlayer, itemStack)) * 2;
+                ItemRenderPlasmaShotgun.RECOIL_TIME = 1;
+                Minecraft.getMinecraft().renderViewEntity.hurtTime = 15;
+                Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 30;
+                Vec3 dir = entityPlayer.getLook(1);
+                Vec3 pos = getFirePosition(entityPlayer, dir, Mouse.isButtonDown(1));
+                WeaponShot shot = createShot(itemStack, entityPlayer, Mouse.isButtonDown(1));
+                onClientShot(itemStack, entityPlayer, pos, dir, shot);
+                addShootDelay(itemStack);
+                sendShootTickToServer(world, shot, dir, pos);
+                return;
+            } else if (needsRecharge(itemStack)) {
+                chargeFromEnergyPack(itemStack, entityPlayer);
             }
         }
+
+        super.onShooterClientUpdate(itemStack,world,entityPlayer,sendServerTick);
     }
 
     public WeaponShot createShot(ItemStack weapon, EntityLivingBase shooter, boolean zoomed)
     {
-        WeaponShot shot = new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,shooter,zoomed),WeaponHelper.getColor(weapon).getColor(),getRange(weapon));
+        WeaponShot shot = new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,shooter,zoomed),WeaponHelper.getColor(weapon),getRange(weapon));
         shot.setCount(getShotCount(weapon,shooter));
         return shot;
     }
 
     @Override
-    public boolean onLeftClickTick(ItemStack weapon, EntityPlayer entityPlayer)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot, Vec3 position, Vec3 dir) {
+    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot, Vec3 position, Vec3 dir,int delay) {
         DrainEnergy(weapon, getShootCooldown(weapon), false);
         int heatAdd = (getShotCount(weapon,shooter) - shot.getCount()) * 2;
-        float newHeat =  (getHeat(weapon)+ heatAdd + 5) * 4f ;
+        float newHeat =  (getHeat(weapon)+ heatAdd + 6) * 4.2f ;
         setHeat(weapon, Math.max(newHeat,0));
         manageOverheat(weapon, shooter.worldObj, shooter);
         PlasmaBolt[] fires = spawnProjectile(weapon,shooter,position,dir,shot);
-        //weapon.getTagCompound().setLong("LastShot", shooter.worldObj.getTotalWorldTime());
-        shooter.playSound(Reference.MOD_ID + ":" + "plasma_shotgun_shot", 0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+        for (PlasmaBolt bolt : fires)
+        {
+            bolt.simulateDelay(delay);
+        }
         return true;
     }
 
@@ -344,11 +342,13 @@ public class PlasmaShotgun extends EnergyWeapon
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public boolean isWeaponZoomed(EntityPlayer entityPlayer, ItemStack weapon) {
         return false;
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public WeaponSound getFireSound(ItemStack weapon, EntityLivingBase entity) {
         return null;
     }

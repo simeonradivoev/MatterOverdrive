@@ -61,6 +61,7 @@ public class GuiHandler implements IGuiHandler
             registerContainer(TileEntityAndroidStation.class,ContainerAndroidStation.class);
             registerContainer(TileEntityMachineStarMap.class,ContainerStarMap.class);
             registerContainer(TileEntityInscriber.class,ContainerInscriber.class);
+            registerContainer(TileEntityAndroidSpawner.class,ContainerAndroidSpawner.class);
         }
         else
         {
@@ -83,6 +84,7 @@ public class GuiHandler implements IGuiHandler
             registerGui(TileEntityMachineChargingStation.class,GuiChargingStation.class);
             registerGuiAndContainer(TileEntityInscriber.class,GuiInscriber.class,ContainerInscriber.class);
             registerGui(TileEntityMachineContractMarket.class,GuiContractMarket.class);
+            registerGuiAndContainer(TileEntityAndroidSpawner.class,GuiAndroidSpawner.class,ContainerAndroidSpawner.class);
         }
     }
 

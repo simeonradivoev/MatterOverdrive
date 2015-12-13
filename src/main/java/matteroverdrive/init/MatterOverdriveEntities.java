@@ -24,7 +24,9 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.*;
+import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.entity.monster.EntityMutantScientist;
+import matteroverdrive.entity.monster.EntityRangedRogueAndroidMob;
 import matteroverdrive.entity.monster.EntityRogueAndroid;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
@@ -56,11 +58,14 @@ public class MatterOverdriveEntities
         addEntity(EntityFailedSheep.class, "failed_sheep", 15198183, 0x33CC33,174);
         addEntity(EntityVillagerMadScientist.class, "mad_scientist", 0xFFFFFF, 0,175);
         addEntity(EntityMutantScientist.class,"mutant_scientist",0xFFFFFF,0x00FF00,176);
+        addEntity(EntityMeleeRougeAndroidMob.class, "rogue_android", 0xFFFFF, 0,177);
+        addEntity(EntityRangedRogueAndroidMob.class,"ranged_rogue_android",0xFFFFF, 0,178);
 
         VillagerRegistry.instance().registerVillageTradeHandler(666, new TradeHandlerMadScientist());
         VillageCreatationMadScientist creatationMadScientist = new VillageCreatationMadScientist();
         VillagerRegistry.instance().registerVillageCreationHandler(creatationMadScientist);
-        rogueandroid.registerEntity();
+        EntityRogueAndroid.addAsBiomeGen(EntityMeleeRougeAndroidMob.class);
+        EntityRogueAndroid.addAsBiomeGen(EntityRangedRogueAndroidMob.class);
 
         int phaserFireID = loadIDFromConfig(PlasmaBolt.class,"phaser_fire",170);
         EntityRegistry.registerGlobalEntityID(PlasmaBolt.class, "phaser_fire", phaserFireID);

@@ -23,14 +23,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
-import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.tileentity.TileEntityRendererStation;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.items.weapon.OmniTool;
 import matteroverdrive.items.weapon.Phaser;
-import matteroverdrive.items.weapon.module.WeaponModuleColor;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
@@ -210,18 +208,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
     @Override
     protected GuiColor getBeamColor(EntityPlayer caster)
     {
-        GuiColor color = WeaponModuleColor.defaultColor;
-        ItemStack color_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_COLOR, caster.getItemInUse());
-        if (color_module != null)
-        {
-            IWeaponModule module = (IWeaponModule)color_module.getItem();
-            Object colorObject = module.getValue(color_module);
-            if (colorObject instanceof GuiColor)
-            {
-                color = (GuiColor)colorObject;
-            }
-        }
-        return color;
+        return new GuiColor(WeaponHelper.getColor(caster.getItemInUse()));
     }
 
     @Override

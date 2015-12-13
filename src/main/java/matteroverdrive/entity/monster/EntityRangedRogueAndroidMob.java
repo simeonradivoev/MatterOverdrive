@@ -18,10 +18,15 @@
 
 package matteroverdrive.entity.monster;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.entity.IRangedEnergyWeaponAttackMob;
 import matteroverdrive.api.weapon.WeaponShot;
+import matteroverdrive.entity.ai.AndroidTargetSelector;
+import matteroverdrive.entity.ai.EntityAIMoveAlongPath;
 import matteroverdrive.entity.ai.EntityAIPhaserBoltAttack;
+import matteroverdrive.entity.ai.EntityAIRangedRunFromMelee;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
@@ -30,7 +35,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,7 +48,8 @@ import net.minecraft.world.World;
 public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implements IRangedEnergyWeaponAttackMob
 {
     public static boolean UNLIMITED_WEAPON_ENERGY = true;
-    private EntityAIPhaserBoltAttack aiBoltAttack = new EntityAIPhaserBoltAttack(this, 1.0D, 60, 15.0F);
+    private EntityAIPhaserBoltAttack aiBoltAttack = new EntityAIPhaserBoltAttack(this,1.0D, 60, 15.0F);
+    private EntityAIRangedRunFromMelee aiRangedRunFromMelee = new EntityAIRangedRunFromMelee(this,1.0D);
 
     public EntityRangedRogueAndroidMob(World world)
     {
@@ -61,11 +66,15 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     protected void init(World world)
     {
         this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(2,aiRangedRunFromMelee);
+        this.tasks.addTask(3, aiBoltAttack);
+        this.tasks.addTask(4, new EntityAIMoveAlongPath(this,1.0D));
         this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
-        this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
         this.tasks.addTask(6, new EntityAILookIdle(this));
+
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true,false,targetSelector));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 0, true,true,new AndroidTargetSelector(this)));
 
         if (world != null && !world.isRemote)
         {
@@ -78,7 +87,7 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     {
         if (this.recentlyHit > 0)
         {
-            int j = this.rand.nextInt(200) - lootingLevel;
+            int j = this.rand.nextInt(400) - lootingLevel;
 
             if (j < 5 || getIsLegendary())
             {
@@ -98,7 +107,11 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     @Override
     protected Item getDropItem()
     {
-        return MatterOverdriveItems.energyPack;
+        if (this.recentlyHit > 0)
+        {
+            return MatterOverdriveItems.energyPack;
+        }
+        return null;
     }
 
     @Override
@@ -115,21 +128,24 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
         super.onLivingUpdate();
         if (getHeldItem() != null)
         {
-            getHeldItem().getItem().onUpdate(getHeldItem(),worldObj,this,0,true);
+            //getHeldItem().getItem().onUpdate(getHeldItem(),worldObj,this,0,true);
         }
     }
 
     @Override
     protected void dropFewItems(boolean recentlyHit, int lootingLevel)
     {
-        int j;
-        int k;
-
-        j = this.rand.nextInt(2 + lootingLevel);
-
-        for (k = 0; k < j; ++k)
+        if (!hasTeam())
         {
-            this.dropItem(MatterOverdriveItems.energyPack, 1);
+            int j;
+            int k;
+
+            j = this.rand.nextInt(2 + lootingLevel);
+
+            for (k = 0; k < j; ++k)
+            {
+                this.dropItem(MatterOverdriveItems.energyPack, 1);
+            }
         }
     }
 
@@ -140,19 +156,23 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
         int androidLevel = getAndroidLevel();
         ItemStack gun = MatterOverdrive.weaponFactory.getRandomDecoratedEnergyWeapon(new WeaponFactory.WeaponGenerationContext(androidLevel,this,getIsLegendary()));
         setCurrentItemOrArmor(0,gun);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(((EnergyWeapon)gun.getItem()).getRange(gun));
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(((EnergyWeapon)gun.getItem()).getRange(gun)-2);
     }
 
     public void setCombatTask()
     {
-        this.tasks.removeTask(this.aiBoltAttack);
         ItemStack itemstack = this.getHeldItem();
 
         if (itemstack != null && itemstack.getItem() instanceof EnergyWeapon)
         {
-            this.aiBoltAttack.setMaxRangedAttackDelay(((EnergyWeapon) itemstack.getItem()).getShootCooldown(itemstack));
-            this.aiBoltAttack.setMaxChaseDistance(((EnergyWeapon) itemstack.getItem()).getRange(itemstack));
-            this.tasks.addTask(4, this.aiBoltAttack);
+            this.aiBoltAttack.setMaxChaseDistance(((EnergyWeapon) itemstack.getItem()).getRange(itemstack)-2);
+            if (itemstack.getItem() == MatterOverdriveItems.ionSniper)
+            {
+                aiRangedRunFromMelee.setMinDistance(16f);
+            }else if (itemstack.getItem() != MatterOverdriveItems.plasmaShotgun)
+            {
+                aiRangedRunFromMelee.setMinDistance(3f);
+            }
         }
     }
 
@@ -160,8 +180,8 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     public IEntityLivingData onSpawnWithEgg(IEntityLivingData entityLivingData)
     {
         entityLivingData = super.onSpawnWithEgg(entityLivingData);
-        this.tasks.addTask(4, this.aiBoltAttack);
         this.addRandomArmor();
+        this.enchantEquipment();
         return entityLivingData;
     }
 
@@ -177,15 +197,21 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
             if (weapon.getItem() instanceof EnergyWeapon) {
                 EnergyWeapon energyWeapon = (EnergyWeapon) weapon.getItem();
                 //magic number from MC
-                Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY + this.getEyeHeight(), this.posZ);
-                Vec3 dir = Vec3.createVectorHelper(lastSeenPosition.xCoord - this.posX, lastSeenPosition.yCoord + (double) (target.height / 3.0F) - this.posY, lastSeenPosition.zCoord - this.posZ);
+                Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY + getEyeHeight(), this.posZ);
+                Vec3 dir = Vec3.createVectorHelper(lastSeenPosition.xCoord - this.posX, lastSeenPosition.yCoord - this.posY, lastSeenPosition.zCoord - this.posZ);
                 WeaponShot shot = energyWeapon.createShot(weapon, this, true);
-                shot.setDamage(shot.getDamage()* MathHelper.clamp_float(0.3f*worldObj.difficultySetting.getDifficultyId(),0,1));
-                shot.setAccuracy(shot.getAccuracy() + 0.3f);
-                energyWeapon.onServerFire(weapon, this, shot, pos, dir);
+                float difficulty = MathHelper.clamp_float((0.6f/3f)*worldObj.difficultySetting.getDifficultyId(),0,0.6f) + getAndroidLevel()*(0.4f/3f) + (getIsLegendary() ? 0.3f : 0);
+                shot.setDamage(shot.getDamage()*difficulty);
+                difficulty = (3 - worldObj.difficultySetting.getDifficultyId())*4f;
+                shot.setAccuracy(shot.getAccuracy() + difficulty);
+                energyWeapon.onServerFire(weapon, this, shot, pos, dir,0);
+                energyWeapon.setHeat(weapon,0);
                 if (UNLIMITED_WEAPON_ENERGY)
                     energyWeapon.rechargeFully(weapon);
                 MatterOverdrive.packetPipeline.sendToAllAround(new PacketFirePlasmaShot(this.getEntityId(),pos,dir,shot),worldObj.provider.dimensionId,posX,posY,posZ,64);
+
+                difficulty = 1 + (3 - worldObj.difficultySetting.getDifficultyId())*0.5f;
+                this.aiBoltAttack.setMaxRangedAttackDelay((int) (((EnergyWeapon) weapon.getItem()).getShootCooldown(weapon) * difficulty));
             }
         }
     }
@@ -213,5 +239,14 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     @Override
     public ItemStack getWeapon() {
         return getHeldItem();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean isInRangeToRenderDist(double p_70112_1_)
+    {
+        double d1 = this.boundingBox.getAverageEdgeLength();
+        d1 *= 64.0D * this.renderDistanceWeight;
+        d1 += getEntityAttribute(SharedMonsterAttributes.followRange).getAttributeValue();
+        return p_70112_1_ < d1 * d1;
     }
 }

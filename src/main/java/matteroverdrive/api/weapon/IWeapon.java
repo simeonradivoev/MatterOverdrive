@@ -49,6 +49,7 @@ public interface IWeapon
      * @param weapon the weapon stack.
      * @return the 2d GUI coordinate of the slot.
      */
+    @SideOnly(Side.CLIENT)
     Vector2f getSlotPosition(int slot, ItemStack weapon);
 
     /**
@@ -61,6 +62,7 @@ public interface IWeapon
      * @param weapon the weapon stack.
      * @return the 2d GUI position of the module.
      */
+    @SideOnly(Side.CLIENT)
     Vector2f getModuleScreenPosition(int slot, ItemStack weapon);
 
     /**
@@ -83,16 +85,14 @@ public interface IWeapon
     /**
      * Called when the player clicks the left mouse button while holding the weapon.
      * If the methods returns true, then all other action made by left clicking will be canceled.
-     * This method is only called on the client.
+     * This method is only called on the client and only when the mouse hash been clicked.
+     * Used to determine if weapon fires with left mouse click.
      * @param weapon
      * @param entityPlayer
      * @return
      */
     @SideOnly(Side.CLIENT)
     boolean onLeftClick(ItemStack weapon, EntityPlayer entityPlayer);
-
-    @SideOnly(Side.CLIENT)
-    boolean onLeftClickTick(ItemStack weapon, EntityPlayer entityPlayer);
 
     /**
      * Called when the weapon is fired by the player.
@@ -106,7 +106,7 @@ public interface IWeapon
      * @param dir the direction of the weapon/bullet.
      * @return was the fire successful.
      */
-    boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot, Vec3 position, Vec3 dir);
+    boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot, Vec3 position, Vec3 dir,int delay);
 
     /**
      * Shows if the gun is always equipped like a bow in third person.
@@ -180,6 +180,9 @@ public interface IWeapon
      */
     @SideOnly(Side.CLIENT)
     boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon);
+
+    @SideOnly(Side.CLIENT)
+    float getZoomMultiply(EntityPlayer entityPlayer,ItemStack weapon);
 
     /**
      * @param weapon the weapon stack.

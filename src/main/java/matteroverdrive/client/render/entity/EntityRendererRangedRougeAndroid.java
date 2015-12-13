@@ -18,9 +18,11 @@
 
 package matteroverdrive.client.render.entity;
 
+import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.client.model.MOModelRenderColored;
 import matteroverdrive.entity.monster.EntityRougeAndroidMob;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -59,28 +61,23 @@ public class EntityRendererRangedRougeAndroid extends EntityRendererRougeAndroid
         return texture;
     }
 
+    public void setRenderPassModel(ModelBase model)
+    {
+        super.setRenderPassModel(model);
+        if (model instanceof ModelBiped)
+        {
+            ((ModelBiped) model).aimedBow = true;
+        }
+    }
+
     @Override
     public void doRender(EntityLiving entityLiving, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
     {
         if (entityLiving instanceof EntityRougeAndroidMob)
         {
-            int level = ((EntityRougeAndroidMob) entityLiving).getAndroidLevel();
-            boolean legendary = ((EntityRougeAndroidMob) entityLiving).getIsLegendary();
-            if (legendary)
-            {
-                visorModel.setColor(Reference.COLOR_HOLO_RED);
-            }else if (level == 0)
-            {
-                visorModel.setColor(Reference.COLOR_HOLO);
-            }
-            else if (level == 1)
-            {
-                visorModel.setColor(Reference.COLOR_HOLO_YELLOW);
-            }else if (level == 2)
-            {
-                visorModel.setColor(Reference.COLOR_HOLO_PURPLE);
-            }
+            visorModel.setColor(new GuiColor(((EntityRougeAndroidMob) entityLiving).getVisorColor()));
         }
+
         this.field_82423_g.aimedBow = this.field_82425_h.aimedBow = this.modelBipedMain.aimedBow = true;
         super.doRender(entityLiving,p_76986_2_,p_76986_4_,p_76986_6_,p_76986_8_,p_76986_9_);
     }

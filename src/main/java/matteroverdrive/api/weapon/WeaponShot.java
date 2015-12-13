@@ -39,7 +39,7 @@ public class WeaponShot
 
     public WeaponShot(ByteBuf buf)
     {
-        this(buf.readInt(), buf.readFloat(), buf.readFloat(), buf.readInt(),buf.readByte());
+        this(buf.readInt(), buf.readFloat(), buf.readFloat(), buf.readInt(),buf.readShort());
         setCount(buf.readByte());
     }
 
@@ -58,7 +58,7 @@ public class WeaponShot
         buf.writeFloat(damage);
         buf.writeFloat(accuracy);
         buf.writeInt(color);
-        buf.writeByte(range);
+        buf.writeShort(range);
         buf.writeByte(count);
     }
 

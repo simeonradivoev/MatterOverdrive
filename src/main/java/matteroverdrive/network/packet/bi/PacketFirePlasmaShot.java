@@ -39,7 +39,6 @@ public class PacketFirePlasmaShot extends PacketAbstract
 {
     WeaponShot shot;
     private int sender;
-    private long timestamp;
     private Vec3 position;
     private Vec3 direction;
 
@@ -50,7 +49,6 @@ public class PacketFirePlasmaShot extends PacketAbstract
         this.sender = sender;
         this.position = pos;
         this.direction = dir;
-        this.timestamp = System.nanoTime();
     }
 
     @Override
@@ -58,22 +56,25 @@ public class PacketFirePlasmaShot extends PacketAbstract
     {
         this.shot = new WeaponShot(buf);
         this.sender = buf.readInt();
-        this.timestamp = buf.readLong();
         this.position = Vec3.createVectorHelper(buf.readDouble(), buf.readDouble(), buf.readDouble());
-        this.direction = Vec3.createVectorHelper(buf.readDouble(),buf.readDouble(),buf.readDouble());
+        this.direction = Vec3.createVectorHelper(buf.readFloat(),buf.readFloat(),buf.readFloat());
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         shot.writeTo(buf);
         buf.writeInt(sender);
-        buf.writeLong(timestamp);
         buf.writeDouble(position.xCoord);
         buf.writeDouble(position.yCoord);
         buf.writeDouble(position.zCoord);
-        buf.writeDouble(direction.xCoord);
-        buf.writeDouble(direction.yCoord);
-        buf.writeDouble(direction.zCoord);
+        buf.writeFloat((float) direction.xCoord);
+        buf.writeFloat((float)direction.yCoord);
+        buf.writeFloat((float)direction.zCoord);
+    }
+
+    public WeaponShot getShot()
+    {
+        return shot;
     }
 
     public static class BiHandler extends AbstractBiPacketHandler<PacketFirePlasmaShot>
@@ -99,13 +100,18 @@ public class PacketFirePlasmaShot extends PacketAbstract
         @Override
         public IMessage handleServerMessage(EntityPlayer player, PacketFirePlasmaShot message, MessageContext ctx)
         {
+            handleServerShot(player,message,0);
+            MatterOverdrive.packetPipeline.sendToAllAround(message,player,message.shot.getRange()+64);
+            return null;
+        }
+
+        public void handleServerShot(EntityPlayer player,PacketFirePlasmaShot shot,int delay)
+        {
             ItemStack heldItem = player.getHeldItem();
             if (heldItem != null && heldItem.getItem() instanceof EnergyWeapon && ((EnergyWeapon)heldItem.getItem()).canFire(player.getHeldItem(),player.worldObj,player))
             {
-                ((EnergyWeapon)heldItem.getItem()).onServerFire(heldItem, player,message.shot, message.position, message.direction);
-                MatterOverdrive.packetPipeline.sendToAllAround(message,player,128);
+                ((EnergyWeapon)heldItem.getItem()).onServerFire(heldItem, player,shot.shot, shot.position, shot.direction,delay);
             }
-            return null;
         }
     }
 }

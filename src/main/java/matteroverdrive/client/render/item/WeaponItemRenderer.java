@@ -19,13 +19,26 @@
 package matteroverdrive.client.render.item;
 
 import matteroverdrive.Reference;
+import matteroverdrive.api.weapon.IWeaponModule;
+import matteroverdrive.api.weapon.IWeaponScope;
+import matteroverdrive.client.resources.data.WeaponMetadataSection;
+import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.obj.GroupObject;
 import net.minecraftforge.client.model.obj.WavefrontObject;
+
+import java.io.IOException;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Simeon on 11/8/2015.
@@ -33,12 +46,31 @@ import net.minecraftforge.client.model.obj.WavefrontObject;
 public abstract class WeaponItemRenderer implements IItemRenderer
 {
     protected ResourceLocation weaponTexture;
+    protected ResourceLocation weaponModelLocation;
     protected WavefrontObject weaponModel;
+    protected Vec3 scopePosition;
 
-    public WeaponItemRenderer(WavefrontObject weaponModel,ResourceLocation weaponTexture)
+    public WeaponItemRenderer(ResourceLocation weaponModelLocation,ResourceLocation weaponTexture)
     {
-        this.weaponModel = weaponModel;
+        this.weaponModelLocation = weaponModelLocation;
         this.weaponTexture = weaponTexture;
+        weaponModel = (WavefrontObject) AdvancedModelLoader.loadModel(weaponModelLocation);
+        loadWeaponMetadata();
+    }
+
+    protected void loadWeaponMetadata()
+    {
+        try {
+            IResource metadataResource = Minecraft.getMinecraft().getResourceManager().getResource(weaponModelLocation);
+            if (metadataResource.hasMetadata()) {
+                IMetadataSection section = metadataResource.getMetadata("weapon");
+                if (section instanceof WeaponMetadataSection) {
+                    scopePosition = ((WeaponMetadataSection) section).getScopePosition();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void renderBarrel(ItemStack weaponStack)
@@ -55,6 +87,74 @@ public abstract class WeaponItemRenderer implements IItemRenderer
         }
 
         renderDefaultBarrel(weaponStack);
+    }
+
+    protected void renderScope(ItemStack weapon)
+    {
+        ItemStack scopeStack = WeaponHelper.getModuleAtSlot(Reference.MODULE_SIGHTS,weapon);
+        if (scopeStack != null && scopeStack.getItem() instanceof IWeaponModule)
+        {
+            glPushMatrix();
+            glTranslated(scopePosition.xCoord,scopePosition.yCoord,scopePosition.zCoord);
+            String moduleObjectName = ((IWeaponModule)scopeStack.getItem()).getModelName(scopeStack);
+            WavefrontObject model = ClientProxy.renderHandler.getWeaponModuleModelRegistry().getModel(((IWeaponModule)scopeStack.getItem()).getModelPath());
+            ResourceLocation moduleTexture = ((IWeaponModule) scopeStack.getItem()).getModelTexture(scopeStack);
+            if (moduleTexture != null) {
+                bindTexture(moduleTexture);
+            } else {
+                bindTexture(weaponTexture);
+            }
+
+            if (model != null) {
+                for (GroupObject object : model.groupObjects) {
+                    if (object.name.equalsIgnoreCase(moduleObjectName + "_window")) {
+                        RenderUtils.disableLightmap();
+                        glEnable(GL_BLEND);
+                        glBlendFunc(GL_ONE, GL_ONE);
+                        glDepthFunc(GL_LEQUAL);
+                        glEnable(GL_DEPTH_TEST);
+                        glDepthMask(true);
+                        object.render();
+
+                        RenderUtils.enableLightmap();
+                        glDisable(GL_BLEND);
+                        break;
+                    }
+                }
+
+                model.renderOnly(moduleObjectName);
+            }
+            glPopMatrix();
+        }
+    }
+
+    protected void renderModule(IWeaponModule weaponModule,ItemStack weaponModuleStack,ItemStack weaponStack)
+    {
+        WavefrontObject model = ClientProxy.renderHandler.getWeaponModuleModelRegistry().getModel(weaponModule.getModelPath());
+        if (model != null)
+        {
+            ResourceLocation moduleTexture = weaponModule.getModelTexture(weaponModuleStack);
+            if (moduleTexture != null)
+            {
+                bindTexture(moduleTexture);
+            }else
+            {
+                bindTexture(weaponTexture);
+            }
+            String moduleObjectName = weaponModule.getModelName(weaponModuleStack);
+            model.renderOnly(moduleObjectName);
+
+        }
+    }
+
+    public float getScopeOffset(ItemStack weapon)
+    {
+        ItemStack scopeStack = WeaponHelper.getModuleAtSlot(Reference.MODULE_SIGHTS,weapon);
+        if (scopeStack != null && scopeStack.getItem() instanceof IWeaponScope)
+        {
+            return ((IWeaponScope) scopeStack.getItem()).getYOffset(scopeStack,weapon);
+        }
+        return 0;
     }
 
     protected void renderDefaultBarrel(ItemStack weaponStack)

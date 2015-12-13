@@ -71,6 +71,7 @@ public class MatterOverdriveBlocks {
     public static BlockTritaniumCrate[] tritaniumCrate;
     public static BlockInscriber inscriber;
     public static BlockContractMarket contractMarket;
+    public static BlockAndroidSpawner androidSpawner;
 
     public static BlockDecorative decorative_stripes;
     public static BlockDecorative decorative_coils;
@@ -143,6 +144,7 @@ public class MatterOverdriveBlocks {
         tritaniumCrate = BlockTritaniumCrate.createAllColors(Material.iron,"tritanium_crate");
         inscriber = new BlockInscriber(Material.iron,"inscriber");
         contractMarket = new BlockContractMarket(Material.iron,"contract_market");
+        androidSpawner = new BlockAndroidSpawner(Material.iron,"android_spawner");
 
         decorative_stripes = new BlockDecorative(Material.iron,"decorative.stripes","base_stripes",5,1,8,0xd4b108);
         decorative_coils = new BlockDecorative(Material.iron,"decorative.coils","base_coil",5,1,8,0xb6621e);
@@ -217,6 +219,7 @@ public class MatterOverdriveBlocks {
         BlockTritaniumCrate.registerAll(tritaniumCrate,"tritanium_crate");
         inscriber.register();
         contractMarket.register();
+        androidSpawner.register();
 
         decorative_stripes.register();
         decorative_coils.register();

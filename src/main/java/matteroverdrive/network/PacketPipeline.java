@@ -28,6 +28,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.network.packet.AbstractBiPacketHandler;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
 import matteroverdrive.network.packet.bi.PacketMatterScannerGetDatabase;
+import matteroverdrive.network.packet.bi.PacketWeaponTick;
 import matteroverdrive.network.packet.client.*;
 import matteroverdrive.network.packet.client.quest.PacketSyncQuests;
 import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
@@ -94,6 +95,7 @@ public class PacketPipeline
         registerPacket(PacketUpdateQuest.ClientHandler.class,PacketUpdateQuest.class);
         registerPacket(PacketSyncQuests.ClientHandler.class,PacketSyncQuests.class);
         registerPacket(PacketQuestActions.ServerHandler.class,PacketQuestActions.class);
+        registerPacket(PacketWeaponTick.ServerHandler.class,PacketWeaponTick.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

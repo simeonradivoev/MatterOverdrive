@@ -22,6 +22,7 @@ import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.gui.GuiElementList;
+import matteroverdrive.gui.events.ITextHandler;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * Created by Simeon on 4/3/2015.
  */
-public class ElementBaseGroup extends MOElementBase implements IButtonHandler, GuiElementList
+public class ElementBaseGroup extends MOElementBase implements IButtonHandler, GuiElementList, ITextHandler
 {
     protected ArrayList<ElementBase> elements = new ArrayList<ElementBase>();
 
@@ -123,8 +124,8 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
     @Override
     public void update(int mouseX, int mouseY)
     {
-        mouseX -= this.getGlobalX();
-        mouseY -= this.getGlobalY();
+        mouseX -= posX;
+        mouseY -= posY;
 
         for (int i = elements.size(); i-- > 0;)
         {
@@ -151,8 +152,8 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
     @Override
     public boolean onMousePressed(int mouseX, int mouseY, int mouseButton)
     {
-        mouseX -= this.getGlobalX();
-        mouseY -= this.getGlobalY();
+        mouseX -= posX;
+        mouseY -= posY;
 
         for (int i = getElements().size(); i-- > 0;)
         {
@@ -172,8 +173,8 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
     @Override
     public void onMouseReleased(int mouseX, int mouseY) {
 
-        mouseX -= this.getGlobalX();
-        mouseY -= this.getGlobalY();
+        mouseX -= posX;
+        mouseY -= posY;
 
         for (int i = getElements().size(); i-- > 0;)
         {
@@ -187,6 +188,9 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
 
     @Override
     public boolean onMouseWheel(int mouseX, int mouseY, int movement) {
+
+        mouseX -= posX;
+        mouseY -= posY;
 
         for (int i = getElements().size(); i-- > 0;)
         {
@@ -253,5 +257,11 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
 
         elements.add(element);
         return element;
+    }
+
+    @Override
+    public void textChanged(String elementName, String text, boolean typed)
+    {
+
     }
 }
