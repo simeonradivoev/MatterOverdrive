@@ -23,13 +23,12 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.data.quest.GenericQuest;
 import matteroverdrive.data.quest.RandomQuestText;
 import matteroverdrive.data.quest.WeightedRandomQuest;
-import matteroverdrive.data.quest.logic.QuestLogicCocktailOfAscension;
-import matteroverdrive.data.quest.logic.QuestLogicCollectItem;
-import matteroverdrive.data.quest.logic.QuestLogicKillCreature;
+import matteroverdrive.data.quest.logic.*;
 import matteroverdrive.entity.monster.EntityRougeAndroidMob;
 import matteroverdrive.handler.quest.Quests;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityCow;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
@@ -47,6 +46,8 @@ public class MatterOverdriveQuests
     public static GenericQuest cocktailOfAscension;
     public static GenericQuest sacrifice;
     public static GenericQuest departmentOfAgriculture;
+    public static GenericQuest weaponsOfWar;
+    public static GenericQuest oneTrueLove;
 
     public static void init(FMLPreInitializationEvent event)
     {
@@ -54,6 +55,8 @@ public class MatterOverdriveQuests
         cocktailOfAscension = new GenericQuest(new QuestLogicCocktailOfAscension(),"cocktail_of_ascension",512);
         sacrifice = new GenericQuest(new QuestLogicKillCreature(new Class[]{EntityChicken.class, EntityCow.class,EntityCow.class},8,15,7).setOnlyChildren(true),"sacrifice",0);
         departmentOfAgriculture = new GenericQuest(new QuestLogicCollectItem(new ItemStack[]{new ItemStack(Items.wheat),new ItemStack(Items.carrot),new ItemStack(Items.potato)},32,64,1),"department_of_agriculture",0);
+        weaponsOfWar = new GenericQuest(new QuestLogicCraft(new ItemStack(Blocks.anvil),2,4,30),"weapons_of_war",0);
+        oneTrueLove = new GenericQuest(new QuestLogicMine(Blocks.diamond_ore,1,1,50),"one_true_love",0);
     }
 
     public static void register(FMLInitializationEvent event, Quests quests)
@@ -62,9 +65,13 @@ public class MatterOverdriveQuests
         quests.registerQuest("cocktail_of_ascension",cocktailOfAscension);
         quests.registerQuest("sacrifice",sacrifice);
         quests.registerQuest("department_of_agriculture",departmentOfAgriculture);
+        quests.registerQuest("weapons_of_war",weaponsOfWar);
+        quests.registerQuest("one_true_love",oneTrueLove);
 
         contractGeneration.add(new WeightedRandomQuest(killAndroids,100));
         contractGeneration.add(new WeightedRandomQuest(sacrifice,100));
         contractGeneration.add(new WeightedRandomQuest(departmentOfAgriculture,100));
+        contractGeneration.add(new WeightedRandomQuest(weaponsOfWar,80));
+        contractGeneration.add(new WeightedRandomQuest(oneTrueLove,100));
     }
 }
