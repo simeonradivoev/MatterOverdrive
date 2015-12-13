@@ -36,7 +36,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -103,27 +102,16 @@ public class PlayerEventHandler
 
         //used to stop the item refreshing when using weapons and changing their data
         //this also happens on SMP and stops the beam weapons from working properly
-        //Minecraft stops he using of items each time they change their NBT. This makes is so the weapons refresh and gutter.
-        if (event.player.isUsingItem()) {
+        //Minecraft stops he using of items each time they change their NBT. This makes is so the weapons refresh and jitter.
+        if (event.player.isUsingItem() && event.side == Side.CLIENT) {
             ItemStack itemstack = event.player.inventory.getCurrentItem();
-            int itemUseCount = itemstack.getMaxItemUseDuration();
-            try {
-                Field field = EntityPlayer.class.getDeclaredField("itemInUseCount");
-                field.setAccessible(true);
-                itemUseCount = field.getInt(event.player);
-            } catch (IllegalAccessException e)
-            {
-            } catch (NoSuchFieldException e)
-            {
-            }
+            int itemUseCount = event.player.getItemInUseCount();
             if (itemstack != null && itemstack.getItem() instanceof IWeapon && itemUseCount > 0)
             {
                 event.player.setItemInUse(itemstack,itemUseCount);
 
-                if (event.player.worldObj.isRemote) {
-                    if (Minecraft.getMinecraft().currentScreen != null && event.player.equals(Minecraft.getMinecraft().thePlayer))
-                        event.player.clearItemInUse();
-                }
+                if (Minecraft.getMinecraft().currentScreen != null && event.player.equals(Minecraft.getMinecraft().thePlayer))
+                    event.player.clearItemInUse();
             }
         }
     }
