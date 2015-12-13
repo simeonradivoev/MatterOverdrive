@@ -18,6 +18,8 @@
 
 package matteroverdrive.entity.monster;
 
+import net.minecraft.command.IEntitySelector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -40,7 +42,7 @@ public class EntityMutantScientist extends EntityMob
         this.tasks.addTask(8, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 0, true, false));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 0, true, false,new TargetSelector()));
         setSize(1,2.3f);
     }
 
@@ -56,5 +58,14 @@ public class EntityMutantScientist extends EntityMob
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(256);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4D);
+    }
+
+    private class TargetSelector implements IEntitySelector
+    {
+        @Override
+        public boolean isEntityApplicable(Entity entity)
+        {
+            return !(entity instanceof EntityMutantScientist);
+        }
     }
 }
