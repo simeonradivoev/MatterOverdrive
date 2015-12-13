@@ -99,12 +99,21 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     List<AnomalySuppressor> supressors;
     private float suppression;
 
+    private Vec3 blockPos;
+    private Vec3 entityPos;
+    private Vec3 dir;
+    private Vec3 intersectDir;
+
     //region Constructors
     public TileEntityGravitationalAnomaly()
     {
         blockDestoryTimer = new TimeTracker();
         this.mass = 2048 + MathHelper.round(Math.random() * 8192);
         supressors = new ArrayList<>();
+        blockPos = Vec3.createVectorHelper(0,0,0);
+        entityPos = Vec3.createVectorHelper(0,0,0);
+        dir = Vec3.createVectorHelper(0,0,0);
+        intersectDir = Vec3.createVectorHelper(0,0,0);
     }
 
     public TileEntityGravitationalAnomaly(int mass)
@@ -163,20 +172,28 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         if (!GRAVITATION)
             return;
 
-        double range = getMaxRange() + 1;
-        Vec3 blockPos = Vec3.createVectorHelper(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
-        Vec3 playerPosition = Vec3.createVectorHelper(Minecraft.getMinecraft().thePlayer.posX, Minecraft.getMinecraft().thePlayer.posY + Minecraft.getMinecraft().thePlayer.getEyeHeight()/2, Minecraft.getMinecraft().thePlayer.posZ);
+        double rangeSq = getMaxRange() + 1;
+        rangeSq *= rangeSq;
+        blockPos.xCoord = xCoord + 0.5;
+        blockPos.yCoord = yCoord + 0.5;
+        blockPos.zCoord = zCoord + 0.5;
+        entityPos.xCoord = Minecraft.getMinecraft().thePlayer.posX;
+        entityPos.yCoord = Minecraft.getMinecraft().thePlayer.posY + Minecraft.getMinecraft().thePlayer.getEyeHeight()/2;
+        entityPos.zCoord = Minecraft.getMinecraft().thePlayer.posZ;
 
-        double distance = Minecraft.getMinecraft().thePlayer.getPosition(1).distanceTo(blockPos);
-        if ( distance < range)
+        double distanceSq = entityPos.squareDistanceTo(blockPos);
+        if ( distanceSq < rangeSq)
         {
             if ((Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3) != null && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3).getItem() instanceof SpacetimeEqualizer)
                     || Minecraft.getMinecraft().thePlayer.capabilities.disableDamage
                     || AndroidPlayer.get(Minecraft.getMinecraft().thePlayer).isUnlocked(MatterOverdriveBioticStats.equalizer,0))
                 return;
 
-            double acceleration = getAcceleration(distance);
-            Vec3 dir = playerPosition.subtract(blockPos).normalize();
+            double acceleration = getAcceleration(distanceSq);
+            dir.xCoord = blockPos.xCoord - entityPos.xCoord;
+            dir.yCoord = blockPos.yCoord - entityPos.yCoord;
+            dir.zCoord = blockPos.zCoord - entityPos.zCoord;
+            normalize(dir);
             Minecraft.getMinecraft().thePlayer.addVelocity(dir.xCoord * acceleration,dir.yCoord * acceleration,dir.zCoord * acceleration);
             Minecraft.getMinecraft().thePlayer.velocityChanged = true;
         }
@@ -191,7 +208,9 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         double range = getMaxRange() + 1;
         AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(xCoord - range, yCoord - range, zCoord - range, xCoord + range, yCoord + range, zCoord + range);
         List entities = world.getEntitiesWithinAABB(Entity.class, bb);
-        Vec3 blockPos = Vec3.createVectorHelper(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
+        blockPos.xCoord = xCoord + 0.5;
+        blockPos.yCoord = yCoord + 0.5;
+        blockPos.zCoord = zCoord + 0.5;
 
         for (Object entityObject : entities)
         {
@@ -205,17 +224,22 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                         continue;
                     }
                 }
-                Vec3 pos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
+                entityPos.xCoord = entity.posX;
+                entityPos.yCoord = entity.posY;
+                entityPos.zCoord = entity.posZ;
 
                 //pos.yCoord += entity.getEyeHeight();
-                double distance = pos.distanceTo(blockPos);
-                double acceleration = getAcceleration(distance);
+                double distanceSq = entityPos.squareDistanceTo(blockPos);
+                double acceleration = getAcceleration(distanceSq);
                 double eventHorizon = getEventHorizon();
-                Vec3 dir = pos.subtract(blockPos).normalize();
+                dir.xCoord = blockPos.xCoord - entityPos.xCoord;
+                dir.yCoord = blockPos.yCoord - entityPos.yCoord;
+                dir.zCoord = blockPos.zCoord - entityPos.zCoord;
+                normalize(dir);
                 dir.xCoord *= acceleration;
                 dir.yCoord *= acceleration;
                 dir.zCoord *= acceleration;
-                if (intersectsAnomaly(pos,dir,blockPos,eventHorizon))
+                if (intersectsAnomaly(entityPos,dir,blockPos,eventHorizon))
                 {
                     consume(entity);
                 }
@@ -238,9 +262,11 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
             return true;
         }else
         {
-            Vec3 Q = anomaly.subtract(origin);
-            double c = Q.lengthVector();
-            double v = Q.dotProduct(dir);
+            intersectDir.xCoord = origin.xCoord - anomaly.xCoord;
+            intersectDir.yCoord = origin.yCoord - anomaly.yCoord;
+            intersectDir.zCoord = origin.zCoord - anomaly.zCoord;
+            double c = intersectDir.lengthVector();
+            double v = intersectDir.dotProduct(dir);
             double d = radius*radius - (c*c - v*v);
 
             if (d < 0)
@@ -679,6 +705,23 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         }
         return false;
     }
+
+    private Vec3 normalize(Vec3 vec3)
+    {
+        double d0 = (double) net.minecraft.util.MathHelper.sqrt_double(vec3.xCoord * vec3.xCoord + vec3.yCoord * vec3.yCoord + vec3.zCoord * vec3.zCoord);
+        if (d0 < 1.0E-4D)
+        {
+            vec3.xCoord = 0;
+            vec3.yCoord = 0;
+            vec3.zCoord = 0;
+        }else
+        {
+            vec3.xCoord = vec3.xCoord / d0;
+            vec3.yCoord = vec3.yCoord / d0;
+            vec3.zCoord = vec3.zCoord / d0;
+        }
+        return vec3;
+    }
     //endregion
 
     public void collapse()
@@ -806,9 +849,9 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         return Math.sqrt(getRealMass()*(G/0.01));
     }
 
-    public double getAcceleration(double distance)
+    public double getAcceleration(double distanceSq)
     {
-        return G * (getRealMass() / Math.max((distance*distance),0.0001f));
+        return G * (getRealMass() / Math.max(distanceSq,0.0001f));
     }
 
     public double getRealMass() {

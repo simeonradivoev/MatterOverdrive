@@ -159,6 +159,8 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         else if (android.isAndroid() && event.type == RenderGameOverlayEvent.ElementType.ALL)
         {
             glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
             renderHud(event);
 
             //System.out.println(showRadial);
@@ -185,7 +187,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
     {
         glPushAttrib(GL_COLOR_BUFFER_BIT);
         glPushMatrix();
-        float scale = 6 + ClientProxy.weaponHandler.getEquippedWeaponAccuracyPercent(Minecraft.getMinecraft().thePlayer)*256;
+        float scale = 6 + ClientProxy.instance().getClientWeaponHandler().getEquippedWeaponAccuracyPercent(Minecraft.getMinecraft().thePlayer)*256;
         glEnable(GL_BLEND);
         OpenGlHelper.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
         glEnable(GL_ALPHA_TEST);
@@ -229,7 +231,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         glColor3f(1, 1, 1);
         glDepthMask(false);
         //glDisable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
+        //glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
         glPushMatrix();
         glRotated(radialAngle, 0, 0, -1);
@@ -340,20 +342,13 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
                 glPushMatrix();
 
-                if (MatterOverdriveBioticStats.cloak.isActive(android,0)) {
-                    glPushMatrix();
-                    //glDepthMask(false);
-                    glTranslated(0,0,-100);
+                if (MatterOverdriveBioticStats.cloak.isActive(android,0))
+                {
                     glBlendFunc(GL_DST_COLOR, GL_ZERO);
                     glColor3f(1,1,1);
                     mc.renderEngine.bindTexture(cloak_overlay);
-                    func_146110_a(0, 0, 0, 0, event.resolution.getScaledWidth(), event.resolution.getScaledHeight(), event.resolution.getScaledWidth(), event.resolution.getScaledHeight());
-                    glPopMatrix();
+                    RenderUtils.drawPlane(0,0,-100,event.resolution.getScaledWidth(),event.resolution.getScaledHeight());
                 }
-
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-                glDisable(GL_ALPHA_TEST);
 
                 hudRotationYawSmooth = hudRotationYawSmooth * 0.4f + mc.thePlayer.rotationYaw * 0.6f;
                 hudRotationPitchSmooth = hudRotationPitchSmooth * 0.4f + mc.thePlayer.rotationPitch * 0.6f;
@@ -372,13 +367,6 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                         glPopMatrix();
                     }
                 }
-
-                ClientProxy.holoIcons.bindSheet();
-
-                //glAlphaFunc(GL_GREATER, 0.5f);
-                glEnable(GL_ALPHA_TEST);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                glDisable(GL_BLEND);
                 glPopMatrix();
 
                 renderHurt(android, event);
@@ -458,7 +446,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         if (hurtShader != null && Minecraft.getMinecraft().gameSettings.fancyGraphics)
         {
             Minecraft.getMinecraft().entityRenderer.theShaderGroup = hurtShader;
-            hurtShader.createBindFramebuffers(Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+            Minecraft.getMinecraft().entityRenderer.theShaderGroup.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
         }
     }
 
@@ -470,12 +458,10 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
     }
 
     public void renderGlitch(AndroidPlayer player,RenderGameOverlayEvent event) {
-        glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
         glColor3d(1, 1, 1);
         mc.renderEngine.bindTexture(glitch_tex);
-        func_146110_a(0, 0, random.nextInt(1280), random.nextInt(720), event.resolution.getScaledWidth(), event.resolution.getScaledHeight(), event.resolution.getScaledWidth(), event.resolution.getScaledHeight());
-        glDisable(GL_BLEND);
+        RenderUtils.drawPlaneWithUV(0,0,-100,event.resolution.getScaledWidth(),event.resolution.getScaledHeight(),random.nextGaussian(),random.nextGaussian(),1,1);
     }
 
     @Override

@@ -118,11 +118,7 @@ public class Inventory implements IInventory
     @Override
     public ItemStack getStackInSlot(int slot)
     {
-        if(slot >= 0 && slot < getSizeInventory())
-        {
-            return slots.get(slot).getItem();
-        }
-        return null;
+        return slots.get(slot).getItem();
     }
 
     @Override

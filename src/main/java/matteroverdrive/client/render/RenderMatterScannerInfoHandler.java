@@ -41,6 +41,7 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,7 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
 {
+    private DecimalFormat healthFormater = new DecimalFormat("#.##");
     public ResourceLocation spinnerTexture = new ResourceLocation(Reference.PATH_ELEMENTS + "spinner.png");
 
     public void onRenderWorldLast(RenderHandler renderHandler,RenderWorldLastEvent event)
@@ -80,7 +82,9 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
     {
         Vec3 playerPos = player.getPosition(ticks);
 
+        glPushAttrib(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
 
         if (position != null) {
 
@@ -100,7 +104,7 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
                 }
             }
         }
-        glEnable(GL_DEPTH_TEST);
+        glPopAttrib();
     }
 
     private void renderBlockInfo(Block block, MovingObjectPosition position, EntityPlayer player, Vec3 playerPos, ItemStack scanner, boolean infoOnly)
@@ -123,8 +127,7 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         }
 
         glPushMatrix();
-        glTranslated(side.offsetX * 0.5, side.offsetY * 0.5, side.offsetZ * 0.5);
-        glTranslated((position.blockX + 0.5) - playerPos.xCoord, (position.blockY + 0.5) - playerPos.yCoord, (position.blockZ + 0.5) - playerPos.zCoord);
+        glTranslated(side.offsetX * 0.5 + (position.blockX + 0.5) - playerPos.xCoord, side.offsetY * 0.5 + (position.blockY + 0.5) - playerPos.yCoord, side.offsetZ * 0.5 + (position.blockZ + 0.5) - playerPos.zCoord);
         rotateFromSide(side, player.rotationYaw);
         glTranslated(-0.5, -0.5, -offset);
         drawInfoPlane(0);
@@ -169,24 +172,15 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         int count = player.getItemInUseCount();
         int maxCount = scanner.getMaxItemUseDuration();
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glEnable(GL_ALPHA_TEST);
         glAlphaFunc(GL_GREATER, (float) count / (float) maxCount);
-        glColor3f(Reference.COLOR_HOLO.getFloatR() * 0.5f, Reference.COLOR_HOLO.getFloatG() * 0.5f, Reference.COLOR_HOLO.getFloatB() * 0.5f);
-        glTranslated(0.35,0.45,-0.1);
-        glScaled(0.3, 0.3, 0.3);
-        RenderUtils.drawPlane(1);
-        glDisable(GL_BLEND);
-        glAlphaFunc(GL_GREATER, 0.5f);
+        RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
+        RenderUtils.drawPlane(0.35,0.45,-0.1,0.3,0.3);
         glPopMatrix();
     }
 
     private void renderEntityInfo(Entity entity, MovingObjectPosition position, EntityPlayer player, Vec3 playerPos, float ticks)
     {
         double offset = 0.1;
-        ForgeDirection side = ForgeDirection.getOrientation(position.subHit);
-        Vec3 hitPos = position.hitVec;
         Vec3 entityPos;
         String name = entity.getCommandSenderName();
         List<String> infos = new ArrayList<String>();
@@ -194,7 +188,7 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         {
             entityPos = ((EntityLivingBase) entity).getPosition(ticks);
             entityPos.yCoord += +entity.getEyeHeight();
-            infos.add("Health: " + ((EntityLivingBase) entity).getHealth() + " / " + ((EntityLivingBase) entity).getMaxHealth());
+            infos.add("Health: " + (healthFormater.format(((EntityLivingBase) entity).getHealth()) + " / " + ((EntityLivingBase) entity).getMaxHealth()));
 
             glPushMatrix();
             glTranslated(entityPos.xCoord - playerPos.xCoord, entityPos.yCoord - playerPos.yCoord, entityPos.zCoord - playerPos.zCoord);
@@ -209,31 +203,21 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         }
     }
 
-    private void drawInfoPlane(double opacity) {
-
-        glPushMatrix();
-        glEnable(GL_BLEND);
-
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    private void drawInfoPlane(double opacity)
+    {
         if (opacity > 0)
         {
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glDisable(GL_TEXTURE_2D);
             glColor4d(0, 0, 0, opacity);
             RenderUtils.drawPlane(1);
             glEnable(GL_TEXTURE_2D);
         }
 
-
-        glTranslated(0, 0, -0.01);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
-        glColor3d(Reference.COLOR_HOLO.getFloatR() * 0.05f, Reference.COLOR_HOLO.getFloatG() * 0.05f, Reference.COLOR_HOLO.getFloatB() * 0.05f);
+        RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.05f);
         renderer().bindTexture(TileEntityRendererPatternMonitor.screenTextureBack);
-        RenderUtils.drawPlane(1);
-
-
-        glDisable(GL_BLEND);
-        glPopMatrix();
-
+        RenderUtils.drawPlane(0,0,-0.01,1,1);
     }
 
     private void drawInfoList(String name, List<String> infos)

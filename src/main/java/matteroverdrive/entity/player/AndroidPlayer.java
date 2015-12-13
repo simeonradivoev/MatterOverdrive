@@ -830,7 +830,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 && event.ammount > 0) {
             effects.setInteger("GlitchTime", modify(10, AndroidAttributes.attributeGlitchTime));
             sync(EnumSet.of(DataType.EFFECTS));
-                player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "gui.glitch_" + player.worldObj.rand.nextInt(11), 0.2f, 0.9f + player.worldObj.rand.nextFloat() * 0.2f);
+                player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "gui.glitch", 0.2f, 0.9f + player.worldObj.rand.nextFloat() * 0.2f);
         }
     }
 
