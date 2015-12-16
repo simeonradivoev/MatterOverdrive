@@ -46,7 +46,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.shader.ShaderGroup;
-import net.minecraft.client.util.JsonException;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -87,6 +86,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
     public float opacity;
     public float opacityBackground;
     public boolean hideVanillaHudElements;
+    public boolean hudMovement;
 
     public GuiAndroidHud(Minecraft mc)
     {
@@ -350,9 +350,12 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                     RenderUtils.drawPlane(0,0,-100,event.resolution.getScaledWidth(),event.resolution.getScaledHeight());
                 }
 
-                hudRotationYawSmooth = hudRotationYawSmooth * 0.4f + mc.thePlayer.rotationYaw * 0.6f;
-                hudRotationPitchSmooth = hudRotationPitchSmooth * 0.4f + mc.thePlayer.rotationPitch * 0.6f;
-                glTranslated((hudRotationYawSmooth - mc.thePlayer.rotationYaw) * 6, (hudRotationPitchSmooth - mc.thePlayer.rotationPitch) * 6, 0);
+                if (hudMovement)
+                {
+                    hudRotationYawSmooth = hudRotationYawSmooth * 0.4f + mc.thePlayer.rotationYaw * 0.6f;
+                    hudRotationPitchSmooth = hudRotationPitchSmooth * 0.4f + mc.thePlayer.rotationPitch * 0.6f;
+                    glTranslated((hudRotationYawSmooth - mc.thePlayer.rotationYaw) * 6, (hudRotationPitchSmooth - mc.thePlayer.rotationPitch) * 6, 0);
+                }
 
                 for (IAndroidHudElement element : hudElements)
                 {
@@ -406,12 +409,6 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         glPopMatrix();
 
         mc.fontRenderer.drawString(Math.round(textTyping.getPercent() * 100) + "%",centerX - 6,centerY - 3,Reference.COLOR_HOLO.getColor());
-
-        if (!Minecraft.getMinecraft().entityRenderer.isShaderActive())
-        {
-            createHurtShader();
-            bindHurtShader();
-        }
     }
 
     public void renderHurt(AndroidPlayer player,RenderGameOverlayEvent event)
@@ -419,41 +416,6 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         if (player.getEffects().getInteger("GlitchTime") > 0)
         {
             renderGlitch(player,event);
-            if (!Minecraft.getMinecraft().entityRenderer.isShaderActive())
-            {
-                createHurtShader();
-                bindHurtShader();
-            }
-        }else
-        {
-            disableHurtShader();
-        }
-    }
-
-    private void createHurtShader()
-    {
-        if (hurtShader == null && Minecraft.getMinecraft().gameSettings.fancyGraphics) {
-            try {
-                hurtShader = new ShaderGroup(Minecraft.getMinecraft().getTextureManager(), Minecraft.getMinecraft().getResourceManager(), Minecraft.getMinecraft().getFramebuffer(), new ResourceLocation("shaders/post/deconverge.json"));
-            } catch (JsonException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void bindHurtShader()
-    {
-        if (hurtShader != null && Minecraft.getMinecraft().gameSettings.fancyGraphics)
-        {
-            Minecraft.getMinecraft().entityRenderer.theShaderGroup = hurtShader;
-            Minecraft.getMinecraft().entityRenderer.theShaderGroup.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
-        }
-    }
-
-    private void disableHurtShader()
-    {
-        if (Minecraft.getMinecraft().entityRenderer.theShaderGroup != null && Minecraft.getMinecraft().entityRenderer.theShaderGroup == hurtShader) {
-            Minecraft.getMinecraft().entityRenderer.theShaderGroup = null;
         }
     }
 
@@ -507,5 +469,9 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,"hide_vanilla_hud_elements",true,"Should the health bar and food bar be hidden");
         prop.setLanguageKey("config.android_hud.hide_vanilla");
         hideVanillaHudElements = prop.getBoolean();
+
+        prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,"hud_movement",true,"Should the Android HUD move when the player turns his head.");
+        prop.setLanguageKey("config.android_hud.hud_movement");
+        hudMovement = prop.getBoolean();
     }
 }
