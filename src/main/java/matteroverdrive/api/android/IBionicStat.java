@@ -203,4 +203,14 @@ public interface IBionicStat
      * @return how much XP is required to unlock
      */
     int getXP(AndroidPlayer androidPlayer, int level);
+
+    /**
+     * Gets the delay time the ability has.
+     * The time will be displayed on the ability icon.
+     * Time is in world ticks.
+     * @param androidPlayer the android player.
+     * @param level the stat level.
+     * @return the delay time of the ability.
+     */
+    int getDelay(AndroidPlayer androidPlayer,int level);
 }

@@ -26,7 +26,6 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
@@ -140,6 +139,12 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     @Override
     public boolean isActive(AndroidPlayer androidPlayer, int level) {
         return androidPlayer.getEffects().getBoolean("Nightvision");
+    }
+
+    @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        return 0;
     }
 
     @Override

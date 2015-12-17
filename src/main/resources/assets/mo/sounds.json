@@ -62,5 +62,9 @@
     "quest_started": {"category": "master","sounds": [{"name": "gui/quest_started", "stream": false}]},
     "plasma_shotgun_shot": {"category": "player","sounds": [{"name": "weapon/plasma_shotgun_shot", "stream": false}]},
     "plasma_shotgun_charging": {"category": "player","sounds": [{"name": "weapon/plasma_shotgun_charging", "stream": false}]},
-    "sniper_rifle_fire": {"category": "player","sounds": [{"name": "weapon/sniper_rifle_fire", "stream": false}]}
+    "sniper_rifle_fire": {"category": "player","sounds": [{"name": "weapon/sniper_rifle_fire", "stream": false}]},
+    "shield_power_up": {"category": "player","sounds": [{"name": "shield_power_up", "stream": false}]},
+    "shield_power_down": {"category": "player","sounds": [{"name": "shield_power_up", "stream": false}]},
+    "rogue_android_say": {"category": "hostile","sounds": [{"name": "entities/rogue_android_say_0","stream":false},{"name": "entities/rogue_android_say_1","stream":false},{"name": "entities/rogue_android_say_2","stream":false}]},
+    "rogue_android_death": {"category": "hostile","sounds": [{"name": "entities/rogue_android_death_0","stream":false},{"name": "entities/rogue_android_death_1","stream":false}]}
 }

@@ -67,4 +67,10 @@ public class BioticStatMinimap extends AbstractBioticStat
     public boolean isActive(AndroidPlayer androidPlayer, int level) {
         return true;
     }
+
+    @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        return 0;
+    }
 }

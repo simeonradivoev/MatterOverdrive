@@ -96,6 +96,12 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
     }
 
     @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        return 0;
+    }
+
+    @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
         ENERGY_PER_REGEN = config.getInt("heal_energy_per_regen", ConfigurationHandler.CATEGORY_ABILITIES, 32, "The energy cost of each heal by the Nanobots ability");

@@ -25,6 +25,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
@@ -147,6 +148,12 @@ public class AndroidHudBionicStats extends AndroidHudElement
         glEnable(GL_BLEND);
         ClientProxy.holoIcons.bindSheet();
         RenderHelper.renderIcon(x + 2, y + 2, 0, stat.getIcon(level), 18, 18);
+        if (stat.getDelay(androidPlayer,level) > 0)
+        {
+            String delay = MOStringHelper.formatRemainingTime(stat.getDelay(androidPlayer, level)/20f,true);
+            int delayWidth = mc.fontRenderer.getStringWidth(delay);
+            mc.fontRenderer.drawString(delay, x + 22 - delayWidth, y + 22 - mc.fontRenderer.FONT_HEIGHT - 1, Reference.COLOR_HOLO.getColor());
+        }
         glDisable(GL_BLEND);
     }
 

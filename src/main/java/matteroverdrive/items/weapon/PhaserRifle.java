@@ -304,6 +304,6 @@ public class PhaserRifle extends EnergyWeapon
     @Override
     public float getWeaponBaseAccuracy(ItemStack weapon,boolean zoomed)
     {
-        return 0.3f + getHeat(weapon) / (zoomed ? 30f : 10f);
+        return 1f + getHeat(weapon) / (zoomed ? 30f : 10f);
     }
 }

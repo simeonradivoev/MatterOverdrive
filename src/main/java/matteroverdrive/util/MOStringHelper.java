@@ -1,3 +1,21 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.util;
 
 import cofh.lib.util.helpers.MathHelper;
@@ -51,16 +69,21 @@ public class MOStringHelper
 
     public static String formatRemainingTime(float seccounds)
     {
+       return formatRemainingTime(seccounds,false);
+    }
+
+    public static String formatRemainingTime(float seccounds,boolean shotSufix)
+    {
         if (seccounds > 3600)
         {
-            return String.format("%s hr",String.valueOf(Math.round(seccounds / 3600)));
+            return String.format("%s%s",String.valueOf(Math.round(seccounds / 3600)),shotSufix ? "h" : " hr");
         }
         else if (seccounds > 60 && seccounds < 60 * 60)
         {
-            return String.format("%s min",String.valueOf(Math.round(seccounds / 60)));
+            return String.format("%s%s",String.valueOf(Math.round(seccounds / 60)),shotSufix ? "m" : " min");
         }else
         {
-            return String.format("%s sec",String.valueOf(Math.round(seccounds)));
+            return String.format("%s%s",String.valueOf(Math.round(seccounds)),shotSufix ? "s" : " sec");
         }
     }
 

@@ -104,6 +104,12 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     }
 
     @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        return 0;
+    }
+
+    @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
         ENERGY_PER_JUMP = config.getInt("high_jump_energy", ConfigurationHandler.CATEGORY_ABILITIES, 1024, "The energy cost of each High Jump");

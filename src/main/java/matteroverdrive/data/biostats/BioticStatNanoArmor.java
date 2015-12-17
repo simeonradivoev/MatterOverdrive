@@ -100,6 +100,12 @@ public class BioticStatNanoArmor extends AbstractBioticStat
         return false;
     }
 
+    @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        return 0;
+    }
+
     public float getDamageNegate(int level)
     {
         return (1 + level) * 0.06f;

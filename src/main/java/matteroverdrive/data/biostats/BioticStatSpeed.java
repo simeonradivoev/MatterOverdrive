@@ -101,4 +101,10 @@ public class BioticStatSpeed extends AbstractBioticStat
     {
         return false;
     }
+
+    @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        return 0;
+    }
 }

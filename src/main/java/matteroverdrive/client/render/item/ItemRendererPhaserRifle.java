@@ -185,6 +185,7 @@ public class ItemRendererPhaserRifle extends WeaponItemRenderer
         glBlendFunc(GL_ONE, GL_ONE);
         glDisable(GL_LIGHTING);
         glDepthMask(false);
+
         RenderUtils.disableLightmap();
         double size = 1.2 + 1 * MatterOverdriveItems.phaserRifle.getHeat(item) / MatterOverdriveItems.phaserRifle.getMaxHeat(item);
 
@@ -206,6 +207,7 @@ public class ItemRendererPhaserRifle extends WeaponItemRenderer
         RenderUtils.enableLightmap();
         glDisable(GL_BLEND);
         glEnable(GL_LIGHTING);
+        glDepthMask(true);
         glPopMatrix();
     }
 

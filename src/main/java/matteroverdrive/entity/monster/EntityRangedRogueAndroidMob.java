@@ -35,7 +35,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
@@ -105,16 +104,6 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     }
 
     @Override
-    protected Item getDropItem()
-    {
-        if (this.recentlyHit > 0)
-        {
-            return MatterOverdriveItems.energyPack;
-        }
-        return null;
-    }
-
-    @Override
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
@@ -135,7 +124,7 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     @Override
     protected void dropFewItems(boolean recentlyHit, int lootingLevel)
     {
-        if (!hasTeam())
+        if (!hasTeam() || recentlyHit)
         {
             int j;
             int k;

@@ -27,7 +27,6 @@ import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
-import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
@@ -55,7 +54,10 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
 {
     public static int ENERGY_PER_TICK = 64;
     public static int ENERGY_PER_DAMAGE = 256;
+    public static int SHIELD_COOLDOWN = 20*16;
+    public static int SHIELD_TIME = 20*8;
     public static final String TAG_SHIELD = "Shield";
+    public static final String TAG_SHIELD_LAST_USE = "ShieldLastUse";
     public static final String TAG_HITS = "Hits";
     @SideOnly(Side.CLIENT)
     private SoundBase shieldSound;
@@ -65,7 +67,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     {
         super(name, xp);
         setShowOnHud(true);
-        modifyer = new AttributeModifier(UUID.fromString("ead117ad-105a-43fe-ab22-a31aee6adc42"),"Shield Slowdown",-0.8,2);
+        modifyer = new AttributeModifier(UUID.fromString("ead117ad-105a-43fe-ab22-a31aee6adc42"),"Shield Slowdown",-0.4,2);
         random = new Random();
         setShowOnWheel(true);
     }
@@ -73,26 +75,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     @Override
     public void onAndroidUpdate(AndroidPlayer android, int level)
     {
-        if (android.getPlayer().worldObj.isRemote)
-        {
-            if (android.getEffects().getBoolean(TAG_SHIELD))
-            {
-                if (!ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed())
-                {
-                    android.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, false);
-                    android.getEffects().setBoolean(TAG_SHIELD, false);
-                    android.getEffects().removeTag(TAG_HITS);
-                }
-            }else
-            {
-                if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed() && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level, android)))
-                {
-                    setShield(android,true);
-                    android.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, true);
-                }
-            }
-
-        }else
+        if (!android.getPlayer().worldObj.isRemote)
         {
             if (android.getEffects().getBoolean(TAG_SHIELD))
             {
@@ -125,7 +108,11 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     @SideOnly(Side.CLIENT)
     public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
     {
-
+        if (androidPlayer.getActiveStat().equals(this) && canActivate(androidPlayer) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level, androidPlayer)))
+        {
+            setShield(androidPlayer,true);
+            androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, true);
+        }
     }
 
     @Override
@@ -137,7 +124,11 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     public void setShield(AndroidPlayer androidPlayer,boolean on)
     {
         androidPlayer.getEffects().setBoolean(TAG_SHIELD,on);
+        setLastShieldTime(androidPlayer,androidPlayer.getPlayer().worldObj.getTotalWorldTime() + SHIELD_COOLDOWN + SHIELD_TIME);
         androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
+        androidPlayer.getPlayer().worldObj.playSoundAtEntity(androidPlayer.getPlayer(),Reference.MOD_ID + ":" + "shield_power_up",0.6f + random.nextFloat()*0.2f,1);
+        //androidPlayer.getPlayer().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.movementSpeed).removeModifier(modifyer);
+        //androidPlayer.getPlayer().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.movementSpeed).applyModifier(modifyer);
     }
 
     public String getDetails(int level)
@@ -156,6 +147,21 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     public boolean getShieldState(AndroidPlayer androidPlayer)
     {
         return androidPlayer.getEffects().getBoolean(TAG_SHIELD);
+    }
+
+    public long getLastShieldTime(AndroidPlayer androidPlayer)
+    {
+        return androidPlayer.getEffects().getLong("TAG_SHIELD_LAST_USE");
+    }
+
+    public void setLastShieldTime(AndroidPlayer androidPlayer,long time)
+    {
+        androidPlayer.getEffects().setLong("TAG_SHIELD_LAST_USE",time);
+    }
+
+    public boolean canActivate(AndroidPlayer androidPlayer)
+    {
+        return getLastShieldTime(androidPlayer) - androidPlayer.getPlayer().worldObj.getTotalWorldTime() <= 0;
     }
 
     @Override
@@ -204,13 +210,6 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
                 }
             }
         }
-        else if (event instanceof LivingEvent.LivingJumpEvent)
-        {
-            if (getShieldState(androidPlayer))
-            {
-                event.entityLiving.motionY -= 0.5;
-            }
-        }
     }
 
     public boolean isDamageValid(DamageSource damageSource)
@@ -221,25 +220,25 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     @Override
     public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
     {
-        if (!androidPlayer.getEffects().getBoolean(TAG_SHIELD))
+        if (androidPlayer.getPlayer().worldObj.isRemote)
         {
-            if (androidPlayer.getPlayer().worldObj.isRemote)
+            if (!androidPlayer.getEffects().getBoolean(TAG_SHIELD))
             {
                 stopShieldSound();
-
-            }
-        }else
-        {
-            if (androidPlayer.getPlayer().worldObj.isRemote)
+            } else
             {
                 playShieldSound();
             }
-
-            if (androidPlayer.getPlayer().worldObj.isRemote)
+        }else
+        {
+            long shieldTime = getLastShieldTime(androidPlayer) - androidPlayer.getPlayer().worldObj.getTotalWorldTime();
+            if (shieldTime < SHIELD_COOLDOWN && androidPlayer.getEffects().getBoolean(TAG_SHIELD))
             {
-                if (!ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed() || !isEnabled(androidPlayer, level)) {
-                    androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, false);
-                }
+                androidPlayer.getEffects().setBoolean(TAG_SHIELD,false);
+                androidPlayer.getEffects().removeTag(TAG_HITS);
+                androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
+                androidPlayer.getPlayer().worldObj.playSoundAtEntity(androidPlayer.getPlayer(),Reference.MOD_ID + ":" + "shield_power_down",0.6f + random.nextFloat() * 0.2f,1);
+                //androidPlayer.init(androidPlayer.getPlayer(),androidPlayer.getPlayer().worldObj);
             }
         }
     }
@@ -249,7 +248,6 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     {
         //Multimap multimap = HashMultimap.create();
         //multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(),modifyer);
-        //return multimap;
         return null;
     }
 
@@ -258,7 +256,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     {
         if(shieldSound == null && !Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(shieldSound))
         {
-            shieldSound = new SoundBase(Reference.MOD_ID + ":" + "shield_loop",1f,1,true,0);
+            shieldSound = new SoundBase(Reference.MOD_ID + ":" + "shield_loop",0.3f + random.nextFloat() * 0.2f,1,true,0);
             Minecraft.getMinecraft().getSoundHandler().playSound(shieldSound);
         }
     }
@@ -276,7 +274,8 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     @Override
     public boolean isEnabled(AndroidPlayer androidPlayer,int level)
     {
-        return super.isEnabled(androidPlayer,level) && androidPlayer.extractEnergy(ENERGY_PER_TICK,true) >= ENERGY_PER_TICK && (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(this));
+        long shieldTime = getLastShieldTime(androidPlayer) - androidPlayer.getPlayer().worldObj.getTotalWorldTime();
+        return super.isEnabled(androidPlayer,level) && androidPlayer.extractEnergy(ENERGY_PER_TICK,true) >= ENERGY_PER_TICK && (shieldTime <= 0 || shieldTime > SHIELD_COOLDOWN);
     }
 
     @Override
@@ -288,7 +287,18 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     @Override
     public boolean showOnHud(AndroidPlayer android,int level)
     {
-        return android.getActiveStat() != null && android.getActiveStat().equals(this);
+        return (android.getActiveStat() != null && android.getActiveStat().equals(this)) || getShieldState(android);
+    }
+
+    @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        long shieldTime = getLastShieldTime(androidPlayer) - androidPlayer.getPlayer().worldObj.getTotalWorldTime();
+        if (shieldTime > 0)
+        {
+            return (int)shieldTime;
+        }
+        return 0;
     }
 
     @Override

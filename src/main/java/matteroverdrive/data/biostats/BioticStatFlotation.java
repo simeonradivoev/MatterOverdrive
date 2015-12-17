@@ -77,4 +77,10 @@ public class BioticStatFlotation extends AbstractBioticStat
     {
         return false;
     }
+
+    @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        return 0;
+    }
 }

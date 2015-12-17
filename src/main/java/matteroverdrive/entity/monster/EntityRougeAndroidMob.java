@@ -476,4 +476,22 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         this.path = path;
         maxPathTargetRangeSq = range*range;
     }
+
+    @Override
+    protected String getLivingSound()
+    {
+        return Reference.MOD_ID + ":" + "rogue_android_say";
+    }
+
+    @Override
+    protected String getDeathSound()
+    {
+        return Reference.MOD_ID + ":" + "rogue_android_death";
+    }
+
+    @Override
+    protected float getSoundVolume()
+    {
+        return 0.5f;
+    }
 }

@@ -74,4 +74,10 @@ public class BioticStatEqualizer extends AbstractBioticStat
     {
         return false;
     }
+
+    @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        return 0;
+    }
 }

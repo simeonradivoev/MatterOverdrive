@@ -87,6 +87,12 @@ public class BioticStatAttack extends AbstractBioticStat
     }
 
     @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        return 0;
+    }
+
+    @Override
     public String getDetails(int level)
     {
         return String.format(super.getDetails(level), EnumChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(getAttackPower(level)) + EnumChatFormatting.GRAY);

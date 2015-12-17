@@ -221,6 +221,12 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     }
 
     @Override
+    public int getDelay(AndroidPlayer androidPlayer, int level)
+    {
+        return 0;
+    }
+
+    @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
         this.blackListedBlocks.clear();
