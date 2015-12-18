@@ -494,4 +494,9 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     {
         return 0.5f;
     }
+
+    public int getTalkInterval()
+    {
+        return 20*24;
+    }
 }

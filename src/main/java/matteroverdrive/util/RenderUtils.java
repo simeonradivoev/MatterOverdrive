@@ -72,7 +72,7 @@ public class RenderUtils
 			glEnable(GL_DEPTH_TEST);
 			GL11.glTranslatef(0.0F, 0.0F, z);
 			//this.zLevel = 200.0F;
-			renderItem.zLevel = 200.0F;
+			renderItem.zLevel = -50f;
 			FontRenderer font = null;
 			if (stack != null) font = stack.getItem().getFontRenderer(stack);
 			if (font == null) font = Minecraft.getMinecraft().fontRenderer;

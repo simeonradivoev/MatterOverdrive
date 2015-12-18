@@ -85,7 +85,10 @@ item.tritanium_sword.name=Tritanium Sword
 item.tritanium_pickaxe.name=Tritanium Pickaxe
 item.tritanium_axe.name=Tritanium Axe
 item.contract.name=Contract
+item.ion_sniper.name=Ion Sniper
+item.plasma_shotgun.name=Plasma Shotgun
 
+//////////// Upgrades ////////////
 item.upgrade.speed.name=Speed Upgrade
 item.upgrade.power.name=Power Upgrade
 item.upgrade.failsafe.name=Fail-Safe Upgrade
@@ -94,11 +97,13 @@ item.upgrade.power_storage.name=Power Storage Upgrade
 item.upgrade.hyper_speed.name=Hyper Speed Upgrade
 item.upgrade.matter_storage.name=Matter Storage Upgrade
 
+//////////// Weapon Modules ////////////
 item.weapon_module_color.name=Color Module
 item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
 item.weapon_module_barrel.fire.name=Incendiary Filter
 item.weapon_module_barrel.explosion.name=Burst Inductive Drum
 item.weapon_module_barrel.heal.name=Regenerative Converter
+item.sniper_scope.name=Sniper Scope
 
 item.info.configured=Configured
 
@@ -169,6 +174,7 @@ tile.gravitational_stabilizer.name=Gravitational Stabilizer
 tile.gravitational_stabilizer.details=Used to suppress the effects of Gravitational Anomalies
 tile.matter_recycler.name=Matter Recycler
 tile.matter_recycler.details=Used to recycle items, ready for decomposing
+tile.android_spawner.name=Rogue Android Spawner
 
 //////////// Fluids ////////////
 tile.matter_plasma.name=Matter Plasma

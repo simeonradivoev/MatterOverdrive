@@ -1,0 +1,36 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">The $itemName</title>
+        <preview size="8" style="text-align:center;margin-bottom:-14px;margin-top:-8px"></preview>
+        <text class="matter-text text-block">The $itemName is a powerful short range Energy weapon, that fires multiple phaser bolts at once. The weapon also has an alternative fire that inflicts a single powerful plasma shot.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">The $itemName</title>
+        <text class="matter-text text-block">The player can combine the multiple plasma bolts by holding down the right mouse button and then releasing. If charged for enough time the $itemName can fire a single plasma bolt that can travel twice the distance.</text>
+        <text class="matter-text text-block">Ranged rogue androids can also wield this weapon, and can be quite deadly at close range and can deal quite the knockback.</text>
+        <text class="matter-text text-block">The $itemName allows for all types of weapon modules except weapon sights.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title" style="margin-bottom:6px">Stats</title>
+        <tooltip></tooltip>
+        <text class="matter-text text-block">The $itemName can also be dropped by Ranged Rogue Androids. There are also Legendary versions of the shotgun dropped only by Legendary Rogue Androids. The Legendary versions can have increased base stats that can stack with weapon modules. Stats such as higher damage, fire rate and greater accuracy.</text>
+    </page>
+</entry>

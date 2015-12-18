@@ -113,7 +113,7 @@ public class MatterOverdriveRecipes
         addRecipe(new EnergyPackRecipe(new ItemStack(MatterOverdriveItems.tritanium_plate), new ItemStack(MatterOverdriveItems.battery), new ItemStack(Items.gunpowder)));
         addRecipe(new EnergyPackRecipe(new ItemStack(MatterOverdriveItems.tritanium_plate), new ItemStack(MatterOverdriveItems.hc_battery), new ItemStack(Items.gunpowder)));
         addShapedRecipe(new ItemStack(MatterOverdriveItems.phaserRifle), "III", "GCF", " WB", 'I', Items.iron_ingot, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'W', Blocks.wool, 'G', Blocks.glass, 'D', MatterOverdriveItems.dilithium_ctystal, 'F', MatterOverdriveItems.forceFieldEmitter, 'B', MatterOverdriveItems.battery);
-        addRecipe(new ShapedOreRecipe(new ItemStack(MatterOverdriveItems.matterContainer, 3), "TGT", " T ", 'T', MatterOverdriveItems.tritanium_ingot, 'G', "blockGlass"));
+        addRecipe(new ShapedOreRecipe(new ItemStack(MatterOverdriveItems.matterContainer, 4), "TMT", " T ", 'T', MatterOverdriveItems.tritanium_ingot, 'M', MatterOverdriveItems.s_magnet));
         addRecipe(new ShapedOreRecipe(new ItemStack(MatterOverdriveItems.tritanium_ingot), "###", "###", "###", '#', "nuggetTritanium"));
         addRecipe(new ShapelessOreRecipe(new ItemStack(MatterOverdriveItems.tritanium_nugget,9),"ingotTritanium"));
         addShapelessRecipe(new ItemStack(MatterOverdriveItems.dataPad),Items.book,new ItemStack(MatterOverdriveItems.isolinear_circuit,0));
@@ -127,6 +127,7 @@ public class MatterOverdriveRecipes
         addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumLeggings),"XXX","X X","X X",'X',MatterOverdriveItems.tritanium_ingot);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumBoots),"   ","X X","X X",'X',MatterOverdriveItems.tritanium_ingot);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.isolinear_circuit),"I", "R", "G", 'G', Item.getItemFromBlock(Blocks.glass), 'R', Items.redstone, 'I', Items.iron_ingot);
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.sniperScope),"IIC","GFG","III",'I',Items.iron_ingot,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'G',new ItemStack(Blocks.glass_pane,1,13),'F',MatterOverdriveItems.forceFieldEmitter);
     }
 
     public static void registerInscriberRecipes(FMLInitializationEvent event)

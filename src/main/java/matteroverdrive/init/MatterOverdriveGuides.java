@@ -112,12 +112,15 @@ public class MatterOverdriveGuides
         //Weapons
         addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.phaser).setGroup("weapons"),4,0);
         addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.phaserRifle).setGroup("weapons"),5,0);
-        addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.omniTool).setGroup("weapons"),4,1);
-        addEntry(weaponsCategory,new MOGuideEntry("tritanium_tools").setStackIcons(new ItemStack(MatterOverdriveItems.tritaniumAxe),new ItemStack(MatterOverdriveItems.tritaniumSword),new ItemStack(MatterOverdriveItems.tritaniumHoe),new ItemStack(MatterOverdriveItems.tritaniumPickaxe)).setGroup("weapons"),5,1);
+        addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.omniTool).setGroup("weapons"),6,0);
+        addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.plasmaShotgun).setGroup("weapons"),4,1);
+        addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.ionSniper).setGroup("weapons"),5,1);
+        addEntry(weaponsCategory,new MOGuideEntry("tritanium_tools").setStackIcons(new ItemStack(MatterOverdriveItems.tritaniumAxe),new ItemStack(MatterOverdriveItems.tritaniumSword),new ItemStack(MatterOverdriveItems.tritaniumHoe),new ItemStack(MatterOverdriveItems.tritaniumPickaxe)).setGroup("weapons"),6,1);
         //Parts
         addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.energyPack).setGroup("parts"),1,0);
         addEntry(weaponsCategory,new MOGuideEntry("weapon.modules.barrels").setStackIcons(MatterOverdriveItems.weapon_module_barrel).setGroup("parts"),2,0);
         addEntry(weaponsCategory,new MOGuideEntry("weapon.modules.colors").setStackIcons(MatterOverdriveItems.weapon_module_color).setGroup("parts"),1,1);
+        addEntry(weaponsCategory,new MOGuideEntryItem(MatterOverdriveItems.sniperScope).setGroup("parts"),2,1);
         //Armor
         addEntry(weaponsCategory,new MOGuideEntry("tritanium_armor").setStackIcons(new ItemStack(MatterOverdriveItems.tritaniumChestplate),new ItemStack(MatterOverdriveItems.tritaniumLeggings),new ItemStack(MatterOverdriveItems.tritaniumBoots),new ItemStack(MatterOverdriveItems.tritaniumHelemet)).setGroup("armor"),1,3);
         //Machines

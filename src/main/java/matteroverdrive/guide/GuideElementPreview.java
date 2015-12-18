@@ -41,6 +41,7 @@ public class GuideElementPreview extends GuideElementAbstract
         if (itemStack != null)
         {
             GL11.glPushMatrix();
+
             if (textAlign == 1)
                 GL11.glTranslated(width/2 - 8*size,0,0);
             else if (textAlign == 2)
@@ -48,7 +49,6 @@ public class GuideElementPreview extends GuideElementAbstract
 
             GL11.glTranslated(marginLeft,marginTop,0);
             GL11.glScaled(size, size, size);
-            GL11.glTranslated(0,0,-32*size);
             RenderUtils.renderStack(0, 0, itemStack);
             GL11.glPopMatrix();
         }

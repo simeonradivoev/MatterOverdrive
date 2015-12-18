@@ -18,20 +18,22 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <title size="2" class="matter-text small-title" style="margin-bottom:6px">The $itemName</title>
+        <title size="2" class="matter-text small-title">The $itemName</title>
         <preview size="8" style="text-align:center;margin-bottom:-14px;margin-top:-8px"></preview>
-        <text class="matter-text text-block">The $itemName is a rapid fire Energy weapon, that fires phaser bolts. It also allows the player to zoom in for higher accuracy.</text>
+        <text class="matter-text text-block">The $itemName is a powerful long range Energy weapon, that fires powerful single phaser bolts. It also allows the player to zoom in for significantly greater accuracy.</text>
     </page>
     <page class="padded-page">
-        <title size="2" class="matter-text small-title" style="margin-bottom:6px">Customization</title>
+        <text class="matter-text text-block">The range of the $itemName allows it for kills over great distances. It is also the weapon that benefits most by weapon scopes, especially the [item name=sniper_scope].</text>
+        <text class="matter-text text-block">Ranged rogue androids can wield this weapon as well, and will be quite deadly and will target enemies from great distances.</text>
         <text class="matter-text text-block">Like most energy weapons the $itemName can be rapidly recharged by [item name=energy_pack],
             overhead if fired continually without stopping and can be upgraded using weapon modules at the [block name=weapon_station].</text>
         <text class="matter-text text-block">The $itemName allows for all types of weapon modules including weapon sights.</text>
-        <image width="128" height="64" src="guide/phaser_rifle_modules.png" style="text-align:center;"></image>
     </page>
     <page class="padded-page">
-    <title size="2" class="matter-text small-title" style="margin-bottom:6px">Stats</title>
+        <title size="2" class="matter-text small-title" style="margin-bottom:6px">Stats</title>
         <tooltip></tooltip>
-        <text class="matter-text text-block">The $itemName can also be dropped by Ranged Rogue Androids. There are also Legendary versions of the rifle dropped only by Legendary Rogue Androids. The Legendary versions can have increased base stats that can stack with weapon modules. Stats such as higher damage fire rate and greater accuracy.</text>
+        <text class="matter-text text-block">The $itemName can also be dropped by Ranged Rogue Androids. There are also Legendary versions of the sniper dropped only by Legendary Rogue Androids.
+            The Legendary versions can have increased base stats that can stack with weapon modules.
+            Stats such as higher damage fire rate and greater accuracy.</text>
     </page>
 </entry>

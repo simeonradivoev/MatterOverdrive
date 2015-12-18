@@ -27,7 +27,7 @@
         <title size="2" class="matter-text small-title" style="margin-bottom:6px">Customization</title>
         <text class="matter-text text-block">Like most energy weapons the $itemName can be rapidly recharged by [item name=energy_pack],
             overhead if fired continually without stopping and can be upgraded using weapon modules at the [block name=weapon_station].</text>
-        <text class="matter-text text-block">The $itemName allows for all types of weapon modules except the weapon sights.</text>
+        <text class="matter-text text-block">The $itemName allows for all types of weapon modules except weapon sights.</text>
         <image width="128" height="64" src="guide/omni_tool_modules.png" style="text-align:center;"></image>
     </page>
     <page class="padded-page">
