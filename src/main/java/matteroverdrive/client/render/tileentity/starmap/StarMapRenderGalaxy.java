@@ -43,6 +43,7 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
     public void renderBody(Galaxy galaxy, SpaceBody spaceBody, TileEntityMachineStarMap starMap, float partialTicks,float viewerDistance)
     {
         double distanceMultiply = 2;
+        glDepthMask(false);
 
         glLineWidth(1);
 

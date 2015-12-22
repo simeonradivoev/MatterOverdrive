@@ -53,6 +53,7 @@ public class Galaxy extends SpaceBody
     private World world;
     private int version;
     private boolean isDirty;
+    private Iterator<Quadrant> quadrantUpdateIterator;
     //endregion
 
     //region Constructors
@@ -81,6 +82,7 @@ public class Galaxy extends SpaceBody
     {
         quadrantHashMap = new HashMap<>();
         travelEvents = new ArrayList<>();
+        quadrantUpdateIterator = getQuadrants().iterator();
     }
 
     //region update functions
@@ -88,10 +90,20 @@ public class Galaxy extends SpaceBody
     {
         manageTravelEvents(world);
 
-        for (Quadrant quadrant : getQuadrants())
+        try
         {
-            quadrant.update(world);
+            if (quadrantUpdateIterator.hasNext())
+            {
+                quadrantUpdateIterator.next().update(world);
+            }else
+            {
+                quadrantUpdateIterator = getQuadrants().iterator();
+            }
+        }catch (Exception e)
+        {
+            quadrantUpdateIterator = getQuadrants().iterator();
         }
+
     }
 
     private void manageDirty(World world)

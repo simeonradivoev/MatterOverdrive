@@ -38,8 +38,9 @@ public class PageStar extends ElementBaseGroup implements IListHandler
 
     public PageStar(GuiStarMap gui, int posX, int posY, int width, int height,TileEntityMachineStarMap starMap) {
         super(gui, posX, posY, width, height);
-        planetList = new ElementGroupList(gui,this,0,16,width,228);
+        planetList = new ElementGroupList(gui,this,16,16,sizeX,sizeY-100-32);
         planetList.setName("Stars");
+        planetList.resetSmoothScroll();
         //planetList.textColor = Reference.COLOR_HOLO.getColor();
         //planetList.selectedTextColor = Reference.COLOR_HOLO_YELLOW.getColor();
         this.starMap = starMap;
@@ -66,6 +67,7 @@ public class PageStar extends ElementBaseGroup implements IListHandler
     public void init()
     {
         super.init();
+        planetList.setSize(sizeX,sizeY-100-32);
         addElement(planetList);
         loadPlanets();
 

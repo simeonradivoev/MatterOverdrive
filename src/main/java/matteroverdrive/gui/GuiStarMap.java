@@ -19,24 +19,29 @@
 package matteroverdrive.gui;
 
 import cofh.lib.gui.GuiColor;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
 import matteroverdrive.container.ContainerStarMap;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.data.ScaleTexture;
-import matteroverdrive.gui.element.ElementBaseGroup;
 import matteroverdrive.gui.pages.starmap.*;
+import matteroverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Planet;
+import matteroverdrive.starmap.data.Star;
 import matteroverdrive.starmap.data.TravelEvent;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
+import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.Project;
 
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +57,7 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
     Minecraft mc;
     IModelCustom sphere;
     PagePlanetMenu planetPage;
+    PageGalaxy pageGalaxy;
     PageQuadrant pageQuadrant;
     PageStar pageStar;
     PagePlanetStats pagePlanetStats;
@@ -74,9 +80,9 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
     @Override
     public void registerPages(MOBaseContainer container,TileEntityMachineStarMap starMap)
     {
-        ElementBaseGroup galaxyPage = new PageGalaxy(this,0,0,width,height,starMap);
-        galaxyPage.setName("Galaxy");
-        AddPage(galaxyPage, ClientProxy.holoIcons.getIcon("page_icon_galaxy"), MOStringHelper.translateToLocal("gui.tooltip.page.galaxy")).setIconColor(Reference.COLOR_MATTER);
+        pageGalaxy = new PageGalaxy(this,0,0,width,height,starMap);
+        pageGalaxy.setName("Galaxy");
+        AddPage(pageGalaxy, ClientProxy.holoIcons.getIcon("page_icon_galaxy"), MOStringHelper.translateToLocal("gui.tooltip.page.galaxy")).setIconColor(Reference.COLOR_MATTER);
         pageQuadrant = new PageQuadrant(this,0,0,width,height,starMap);
         pageQuadrant.setName("Quadrant");
         AddPage(pageQuadrant, ClientProxy.holoIcons.getIcon("page_icon_quadrant"), MOStringHelper.translateToLocal("gui.tooltip.page.quadrant")).setIconColor(Reference.COLOR_MATTER);
@@ -102,18 +108,23 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         glTranslated(guiLeft, guiTop, 0);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
-        Collection<ISpaceBodyHoloRenderer> renderers = ClientProxy.renderHandler.getStarmapRenderRegistry().getStarmapRendererCollection(machine.getActiveSpaceBody().getClass());
-        if (renderers != null)
+        if (machine.getActiveSpaceBody() != null)
         {
-            for (ISpaceBodyHoloRenderer renderer : renderers)
+            Collection<ISpaceBodyHoloRenderer> renderers = ClientProxy.renderHandler.getStarmapRenderRegistry().getStarmapRendererCollection(machine.getActiveSpaceBody().getClass());
+            if (renderers != null)
             {
-                if (renderer.displayOnZoom(machine.getZoomLevel(),machine.getActiveSpaceBody())) {
-                    glPushMatrix();
-                    glTranslated(xSize / 2, ySize, 0);
-                    if (machine.getActiveSpaceBody() != null) {
-                        renderer.renderGUIInfo(GalaxyClient.getInstance().getTheGalaxy(), machine.getActiveSpaceBody(), machine, partialTick, 0.8f);
+                for (ISpaceBodyHoloRenderer renderer : renderers)
+                {
+                    if (renderer.displayOnZoom(machine.getZoomLevel(), machine.getActiveSpaceBody()))
+                    {
+                        glPushMatrix();
+                        glTranslated(xSize / 1.9, ySize - 16, 0);
+                        if (machine.getActiveSpaceBody() != null)
+                        {
+                            renderer.renderGUIInfo(GalaxyClient.getInstance().getTheGalaxy(), machine.getActiveSpaceBody(), machine, partialTick, 0.8f);
+                        }
+                        glPopMatrix();
                     }
-                    glPopMatrix();
                 }
             }
         }
@@ -127,7 +138,86 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
 
     public void drawWorldBackground(int p_146270_1_)
     {
+        glDisable(GL_TEXTURE_2D);
+        glColor3f(0,0,0);
+        RenderUtils.drawPlane(0,0,-1000,width,height);
+        glEnable(GL_TEXTURE_2D);
+        glPushMatrix();
 
+        //GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
+        //GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        glPushAttrib(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        glPushMatrix();
+        GL11.glLoadIdentity();
+        Project.gluPerspective(75f, (float)this.mc.displayWidth / (float)this.mc.displayHeight, 0.05f, 20);
+        //RenderUtil.loadMatrix(camera.getTransposeProjectionMatrix());
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        glPushMatrix();
+        GL11.glLoadIdentity();
+        //RenderUtil.loadMatrix(camera.getTransposeViewMatrix());
+        glRotated(15,1,0,0);
+        GL11.glTranslatef(0, -0.8f, 0);
+
+        float lastRotationYaw = Minecraft.getMinecraft().renderViewEntity.rotationYaw;
+        float lastRotationPitch = Minecraft.getMinecraft().renderViewEntity.rotationPitch;
+        float rotation = 0;
+        if (machine.getZoomLevel() <= 2)
+        {
+            rotation = mc.theWorld.getWorldTime() * 0.1f;
+        }
+        Minecraft.getMinecraft().renderViewEntity.rotationYaw = 180 + rotation;
+        Minecraft.getMinecraft().renderViewEntity.prevRotationPitch = Minecraft.getMinecraft().renderViewEntity.rotationPitch = 15;
+
+
+        //bindTexture(ClientProxy.renderHandler.getRendererOmniTool().getWeaponTexture());
+        //ClientProxy.renderHandler.getRendererOmniTool().getModel().renderAll();
+        switch (machine.getZoomLevel())
+        {
+            case 0:
+                glTranslated(0,-1.1,-4f);
+                break;
+            case 1:
+                glTranslated(0,-0.6,-4f);
+                break;
+            case 2:
+                Star star = machine.getStar();
+                float maxDistance = 0;
+                if (star != null)
+                {
+                    for (Planet planet : star.getPlanets())
+                    {
+                        if (maxDistance < planet.getOrbit())
+                        {
+                            maxDistance = planet.getOrbit();
+                        }
+                    }
+                }
+                glTranslated(0,0,-maxDistance * 3 - 1.5f);
+                break;
+            default:
+                GL11.glTranslatef(0, 0.1f, -3f);
+                break;
+        }
+
+        glRotated(rotation,0,1,0);
+        //glTranslated(0.5f,2.5f,3);
+        ClientProxy.renderHandler.getTileEntityRendererStarMap().render(machine,-0.5f,-1.8f,-0.5f,0);
+        glPopMatrix();
+        //fontRendererObj.drawString("Test",100,100,0xffffff);
+
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        glPopMatrix();
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        glPopMatrix();
+
+        Minecraft.getMinecraft().renderViewEntity.rotationYaw = lastRotationYaw;
+        Minecraft.getMinecraft().renderViewEntity.prevRotationPitch = Minecraft.getMinecraft().renderViewEntity.rotationPitch = lastRotationPitch;
+
+        GL11.glPopAttrib();
     }
 
     public void onPageChange(int newPage)
@@ -138,8 +228,7 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         pagePlanetStats.init();
         if (newPage != machine.getZoomLevel())
         {
-            machine.setZoomLevel(newPage);
-            machine.SyncCommandsToServer();
+            MatterOverdrive.packetPipeline.sendToServer(new PacketStarMapClientCommands(machine,newPage,machine.getGalaxyPosition(),machine.getDestination()));
         }
     }
 
@@ -160,6 +249,10 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
     {
         this.xSize = width;
         this.ySize = height;
+        pageGalaxy.setSize(width,height);
+        pageQuadrant.setSize(width,height);
+        pageStar.setSize(width,height);
+        sidePannel.setPosition(xSize-42,16);
 
         super.initGui();
         indicator.setVisible(false);
@@ -170,7 +263,7 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
 
     public void onGuiClosed()
     {
-        machine.SyncCommandsToServer();
+        //machine.SyncCommandsToServer();
     }
 
     @Override

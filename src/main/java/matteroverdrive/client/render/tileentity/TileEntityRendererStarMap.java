@@ -21,7 +21,6 @@ package matteroverdrive.client.render.tileentity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
-import matteroverdrive.container.ContainerStarMap;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
@@ -44,22 +43,21 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
     @Override
     protected void renderHologram(TileEntityMachineStarMap starMap, double x, double y, double z, float partialTicks, double noise)
     {
-        if (isUsable(starMap))
+        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiStarMap))
         {
-            if (Minecraft.getMinecraft().thePlayer.openContainer == null || !(Minecraft.getMinecraft().thePlayer.openContainer instanceof ContainerStarMap) || ((ContainerStarMap)Minecraft.getMinecraft().thePlayer.openContainer).getMachine() != starMap) {
-
-            }
-            else
+            if (isUsable(starMap))
             {
-                glClearColor(0, 0, 0, 0);
-                glClear(GL_COLOR_BUFFER_BIT);
+                render(starMap, x, y, z, partialTicks);
+            } else
+            {
+                super.renderHologram(starMap, x, y, z, partialTicks, noise);
             }
-
-            renderHologramBase(starMap, x, y, z, partialTicks);
-        }else
-        {
-            super.renderHologram(starMap, x, y, z, partialTicks, noise);
         }
+    }
+
+    public void render(TileEntityMachineStarMap starMap, double x, double y, double z, float partialTicks)
+    {
+        renderHologramBase(starMap, x, y, z, partialTicks);
     }
 
     protected void renderHologramBase(TileEntityMachineStarMap starMap, double x, double y, double z,float partialTicks) {
@@ -72,35 +70,38 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
         glBlendFunc(GL_ONE, GL_ONE);
         float distance = (float) Vec3.createVectorHelper(x, y, z).lengthVector();
 
-        Collection<ISpaceBodyHoloRenderer> renderers = ClientProxy.renderHandler.getStarmapRenderRegistry().getStarmapRendererCollection(starMap.getActiveSpaceBody().getClass());
-        if (renderers != null)
+        if (starMap.getActiveSpaceBody() != null)
         {
-            for (ISpaceBodyHoloRenderer renderer : renderers)
+            Collection<ISpaceBodyHoloRenderer> renderers = ClientProxy.renderHandler.getStarmapRenderRegistry().getStarmapRendererCollection(starMap.getActiveSpaceBody().getClass());
+            if (renderers != null)
             {
-                if (renderer.displayOnZoom(starMap.getZoomLevel(),starMap.getActiveSpaceBody()))
+                for (ISpaceBodyHoloRenderer renderer : renderers)
                 {
-                    SpaceBody spaceBody = starMap.getActiveSpaceBody();
-                    if (spaceBody != null)
-					{
-                        glTranslated(0, renderer.getHologramHeight(spaceBody), 0);
-                        glPushMatrix();
-                        renderer.renderBody(GalaxyClient.getInstance().getTheGalaxy(), spaceBody,starMap, partialTicks, distance);
-                        glPopMatrix();
-
-                        if (drawHoloLights())
-						{
+                    if (renderer.displayOnZoom(starMap.getZoomLevel(), starMap.getActiveSpaceBody()))
+                    {
+                        SpaceBody spaceBody = starMap.getActiveSpaceBody();
+                        if (spaceBody != null)
+                        {
+                            glTranslated(0, renderer.getHologramHeight(spaceBody), 0);
                             glPushMatrix();
-                            Vec3 playerPosition = Minecraft.getMinecraft().renderViewEntity.getPosition(partialTicks);
-                            playerPosition.yCoord = 0;
-                            Vec3 mapPosition = Vec3.createVectorHelper(starMap.xCoord + 0.5, 0, starMap.zCoord + 0.5);
-                            Vec3 dir = playerPosition.subtract(mapPosition).normalize();
-                            double angle = Math.acos(dir.dotProduct(Vec3.createVectorHelper(1, 0, 0)));
-                            if (Vec3.createVectorHelper(0, 1, 0).dotProduct(dir.crossProduct(Vec3.createVectorHelper(1, 0, 0))) < 0)
-                            {
-                                angle = Math.PI * 2 - angle;
-                            }
-                            drawHoloGuiInfo(renderer, spaceBody,starMap, (Math.PI / 2 - angle) * (180 / Math.PI), partialTicks);
+                            renderer.renderBody(GalaxyClient.getInstance().getTheGalaxy(), spaceBody, starMap, partialTicks, distance);
                             glPopMatrix();
+
+                            if (drawHoloLights())
+                            {
+                                glPushMatrix();
+                                Vec3 playerPosition = Minecraft.getMinecraft().renderViewEntity.getPosition(partialTicks);
+                                playerPosition.yCoord = 0;
+                                Vec3 mapPosition = Vec3.createVectorHelper(starMap.xCoord + 0.5, 0, starMap.zCoord + 0.5);
+                                Vec3 dir = playerPosition.subtract(mapPosition).normalize();
+                                double angle = Math.acos(dir.dotProduct(Vec3.createVectorHelper(1, 0, 0)));
+                                if (Vec3.createVectorHelper(0, 1, 0).dotProduct(dir.crossProduct(Vec3.createVectorHelper(1, 0, 0))) < 0)
+                                {
+                                    angle = Math.PI * 2 - angle;
+                                }
+                                drawHoloGuiInfo(renderer, spaceBody, starMap, (Math.PI / 2 - angle) * (180 / Math.PI), partialTicks);
+                                glPopMatrix();
+                            }
                         }
                     }
                 }

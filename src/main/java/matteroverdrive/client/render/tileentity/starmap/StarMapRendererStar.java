@@ -180,23 +180,24 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
                 RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, opacity);
                 ClientProxy.holoIcons.renderIcon("icon_size", 72, -28);
                 RenderUtils.drawString(DecimalFormat.getPercentInstance().format(planet.getSize()), 92, -23, Reference.COLOR_HOLO, opacity);
-            }
 
-            glDisable(GL_TEXTURE_2D);
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            Tessellator.instance.startDrawingQuads();
-            for (int i = 0; i < 10; i++) {
-                double step = 64d / 10d;
-                double x = step * i;
-                double y = -10;
-                double height = 64 * (0.5 * random.nextGaussian() + 1d) / 2d;
-                Tessellator.instance.addVertex(x, y, 0);
-                Tessellator.instance.addVertex(x + step - 1, y, 0);
-                Tessellator.instance.addVertex(x + step - 1, y - height, 0);
-                Tessellator.instance.addVertex(x, y - height, 0);
+                glDisable(GL_TEXTURE_2D);
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                random.setSeed(planet.getSeed());
+                Tessellator.instance.startDrawingQuads();
+                for (int i = 0; i < 10; i++) {
+                    double step = 64d / 10d;
+                    double x = step * i;
+                    double y = -10;
+                    double height = 64 * (0.5 * random.nextGaussian() + 1d) / 2d;
+                    Tessellator.instance.addVertex(x, y, 0);
+                    Tessellator.instance.addVertex(x + step - 1, y, 0);
+                    Tessellator.instance.addVertex(x + step - 1, y - height, 0);
+                    Tessellator.instance.addVertex(x, y - height, 0);
+                }
+                Tessellator.instance.draw();
+                glEnable(GL_TEXTURE_2D);
             }
-            Tessellator.instance.draw();
-            glEnable(GL_TEXTURE_2D);
         }
     }
 

@@ -30,10 +30,12 @@ import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.SpaceBody;
 import matteroverdrive.tile.TileEntityMachineStarMap;
+import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.text.DecimalFormat;
@@ -150,7 +152,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
             glRotated(Minecraft.getMinecraft().renderViewEntity.rotationPitch, 1, 0, 0);
             glRotated(180, 0, 0, 1);
             glTranslated(-8, -8, 0);
-            RenderUtils.renderStack(0, 0, planet.getShip(i));
+            RenderUtils.renderStack(0, 0, 0 , planet.getShip(i),false);
             glPopMatrix();
 
             glPopMatrix();
@@ -190,13 +192,13 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
             glRotated(180, 0, 0, 1);
             for (int i = 0; i < planet.getBuildings().size(); i++)
             {
-                double angle =  14 * i - 7 * planet.getBuildings().size();
+                double angle =  14 * i - 6 * planet.getBuildings().size();
                 angle *= (Math.PI / 180);
                 int x = (int) (Math.cos(angle) * radius) - 10;
                 int y = (int) (Math.sin(angle) * radius) - 10;
                 RenderUtils.renderStack(x, y, planet.getBuildings().get(i),1);
                 GuiColor color = Reference.COLOR_HOLO_RED;
-                if (planet.getBuildings().get(i).getItem() instanceof IBuilding && !((IBuilding) planet.getBuildings().get(i).getItem()).isOwner(planet.getBuildings().get(i),Minecraft.getMinecraft().thePlayer))
+                if (planet.getBuildings().get(i).getItem() instanceof IBuilding && ((IBuilding) planet.getBuildings().get(i).getItem()).isOwner(planet.getBuildings().get(i),Minecraft.getMinecraft().thePlayer))
                     color = Reference.COLOR_HOLO;
                 Minecraft.getMinecraft().fontRenderer.drawString(planet.getBuildings().get(i).getDisplayName(), x + 21, y + 6, color.getColor());
 
@@ -214,8 +216,10 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE);
 
+            GuiColor color = Reference.COLOR_HOLO;
             Planet planet = (Planet)spaceBody;
             int x = 0;
+            int y = -16;
 
             if (GalaxyClient.getInstance().canSeePlanetInfo(planet,Minecraft.getMinecraft().thePlayer)) {
                 int itemCount = 0;
@@ -224,31 +228,30 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
                         ItemStack stack = planet.getStackInSlot(i);
                         List<String> info = new ArrayList<>();
                         if (stack.getItem() instanceof IBuildable && planet.canBuild((IBuildable)stack.getItem(),stack,info)) {
-                            RenderUtils.renderStack(0, 0 - itemCount * 18 - 21, stack);
+                            RenderUtils.renderStack(0, y - itemCount * 18 - 21,0, stack,false);
                             glEnable(GL_BLEND);
                             glBlendFunc(GL_ONE, GL_ONE);
-                            RenderUtils.drawString(String.format("%1$s - %2$s", stack.getDisplayName(), MOStringHelper.formatRemainingTime(((IBuildable) stack.getItem()).getRemainingBuildTimeTicks(stack, planet, Minecraft.getMinecraft().theWorld)/20)), 0 + 18, 5 - itemCount * 18 - 21, Reference.COLOR_HOLO, opacity);
+                            RenderUtils.drawString(String.format("%1$s - %2$s", stack.getDisplayName(), MOStringHelper.formatRemainingTime(((IBuildable) stack.getItem()).getRemainingBuildTimeTicks(stack, planet, Minecraft.getMinecraft().theWorld)/20)), 0 + 18, y + 5 - itemCount * 18 - 21, Reference.COLOR_HOLO, opacity);
                         }else
                         {
-                            RenderUtils.renderStack(0, 0 - itemCount * 18 - 21, stack);
+                            RenderUtils.renderStack(0, y - itemCount * 18 - 21,0, stack,false);
                             glEnable(GL_BLEND);
                             glBlendFunc(GL_ONE, GL_ONE);
-                            RenderUtils.drawString(String.join(". ",info), 18, 5 - itemCount * 18 - 21, Reference.COLOR_HOLO_RED, opacity);
+                            RenderUtils.drawString(String.join(". ",info), 18, y + 5 - itemCount * 18 - 21, Reference.COLOR_HOLO_RED, opacity);
                         }
                         itemCount++;
                     }
                 }
 
                 int factoryCount = planet.getFactoryCount();
-                GuiColor color = Reference.COLOR_HOLO;
                 if (factoryCount <= 0)
                     color = Reference.COLOR_HOLO_RED;
 
                 RenderUtils.applyColorWithMultipy(color, opacity);
-                ClientProxy.holoIcons.renderIcon("holo_factory", x, 0);
+                ClientProxy.holoIcons.renderIcon("holo_factory", x, y);
                 String factoryInfo = String.format("%1$s/%2$s", factoryCount, planet.getBuildingSpaces());
                 x += 18;
-                RenderUtils.drawString(factoryInfo, x, 6, color, opacity);
+                RenderUtils.drawString(factoryInfo, x, y+6, color, opacity);
 
                 int fleetCount = planet.getFleetCount();
                 color = Reference.COLOR_HOLO;
@@ -258,17 +261,48 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
                 String fleetInfo = String.format("%1$s/%2$s", fleetCount, planet.getFleetSpaces());
                 RenderUtils.applyColorWithMultipy(color, opacity);
                 x += fontRenderer.getStringWidth(factoryInfo) + 8;
-                ClientProxy.holoIcons.renderIcon("icon_shuttle", x, 0);
+                ClientProxy.holoIcons.renderIcon("icon_shuttle", x, y);
                 x += 18;
-                RenderUtils.drawString(fleetInfo, x, 6, color, opacity);
+                RenderUtils.drawString(fleetInfo, x, y+6, color, opacity);
 
                 x += fontRenderer.getStringWidth(fleetInfo) + 8;
             }
 
             RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, opacity);
-            ClientProxy.holoIcons.renderIcon("icon_size", x, 0);
+            ClientProxy.holoIcons.renderIcon("icon_size", x, y);
             x += 18;
-            RenderUtils.drawString(DecimalFormat.getPercentInstance().format(planet.getSize()), x, 6, Reference.COLOR_HOLO, opacity);
+            RenderUtils.drawString(DecimalFormat.getPercentInstance().format(planet.getSize()), x, y+6, Reference.COLOR_HOLO, opacity);
+
+            if (GalaxyClient.getInstance().canSeePlanetInfo(planet,Minecraft.getMinecraft().thePlayer))
+            {
+                x = -2;
+                y -= 20;
+
+                float happines = planet.getHappiness();
+                color = RenderUtils.lerp(Reference.COLOR_HOLO_RED,Reference.COLOR_HOLO, MathHelper.clamp_float(happines,0,1));
+                RenderUtils.applyColorWithMultipy(color, opacity);
+                ClientProxy.holoIcons.renderIcon("smile", x, y);
+                x += 18;
+                String info = DecimalFormat.getPercentInstance().format(happines);
+                RenderUtils.drawString(info, x, y + 6, color, opacity);
+                x += fontRenderer.getStringWidth(DecimalFormat.getPercentInstance().format(happines)) + 4;
+                int population = planet.getPopulation();
+                RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, opacity);
+                ClientProxy.holoIcons.renderIcon("sort_random", x, y);
+                x += 18;
+                info = String.format("%,d",population);
+                RenderUtils.drawString(info, x, y + 6, Reference.COLOR_HOLO, opacity);
+
+                x = -3;
+                y -= 20;
+
+                int powerProduction = planet.getPowerProducation();
+                RenderUtils.applyColorWithMultipy(powerProduction < 0 ? Reference.COLOR_HOLO_RED : Reference.COLOR_HOLO, opacity);
+                ClientProxy.holoIcons.renderIcon("battery", x, y);
+                x += 18;
+                info = Integer.toString(powerProduction) + "m" + MOEnergyHelper.ENERGY_UNIT;
+                RenderUtils.drawString(info, x, y + 6, powerProduction < 0 ? Reference.COLOR_HOLO_RED : Reference.COLOR_HOLO, opacity);
+            }
         }
     }
 

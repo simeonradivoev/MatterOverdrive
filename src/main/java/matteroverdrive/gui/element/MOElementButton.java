@@ -20,7 +20,7 @@ package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.GuiColor;
-import cofh.lib.gui.element.ElementButton;
+import cofh.lib.render.RenderHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.IButtonHandler;
@@ -29,18 +29,20 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by Simeon on 4/8/2015.
  */
-public class MOElementButton extends ElementButton
+public class MOElementButton extends MOElementBase
 {
     public static final ScaleTexture NORMAL_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_normal.png"),18,18).setOffsets(7,7,7,7);
     public static final ScaleTexture HOVER_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_over.png"),18,18).setOffsets(7,7,7,7);
     public static final ScaleTexture HOVER_TEXTURE_DARK = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "button_over_dark.png"),18,18).setOffsets(7,7,7,7);
     public static final Random rand = new Random();
 
+    private int hoverX,hoverY,sheetX,sheetY,disabledX,disabledY;
     protected String[] sounds = new String[]{"button_soft"};
     protected String text;
     protected boolean isDown;
@@ -49,17 +51,24 @@ public class MOElementButton extends ElementButton
     int labelColor = 0xFFFFFFFF;
     IButtonHandler buttonHandler;
     HoloIcon icon;
+    private String tooltip;
 
-    public MOElementButton(GuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int sizeX, int sizeY, String texture) {
-        super(gui, posX, posY, name, sheetX, sheetY, hoverX, hoverY, sizeX, sizeY, texture);
-        this.buttonHandler = handler;
+    public MOElementButton(GuiBase gui,IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int sizeX, int sizeY, String texture) {
+        this(gui,handler,posX,posY,name,sheetX,sheetY,hoverX,hoverY,0,0,sizeX,sizeY,texture);
     }
 
-
-    public MOElementButton(GuiBase gui,IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int disabledX, int disabledY, int sizeX,
-                         int sizeY, String texture) {
-        super(gui, posX, posY, name, sheetX, sheetY, hoverX, hoverY,disabledX,disabledY, sizeX, sizeY, texture);
+    public MOElementButton(GuiBase gui,IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int disabledX, int disabledY, int sizeX, int sizeY, String texture) {
+        super(gui, posX, posY,sizeX, sizeY);
         this.buttonHandler = handler;
+        this.name = name;
+        this.buttonHandler = handler;
+        this.sheetX = sheetX;
+        this.sheetY = sheetY;
+        this.hoverX = hoverX;
+        this.hoverY = hoverY;
+        this.disabledX = disabledX;
+        this.disabledY = disabledY;
+        this.setTexture(texture,this.texH,this.texW);
     }
 
     @Override
@@ -119,8 +128,32 @@ public class MOElementButton extends ElementButton
         if (color != null)
             RenderUtils.applyColor(color);
         GL11.glEnable(GL11.GL_BLEND);
-        super.drawBackground(mouseX, mouseY, gameTicks);
+        RenderHelper.bindTexture(this.texture);
+        if(this.isEnabled()) {
+            if(this.intersectsWith(mouseX, mouseY)) {
+                this.drawTexturedModalRect(this.posX, this.posY, this.hoverX, this.hoverY, this.sizeX, this.sizeY);
+            } else {
+                this.drawTexturedModalRect(this.posX, this.posY, this.sheetX, this.sheetY, this.sizeX, this.sizeY);
+            }
+        } else {
+            this.drawTexturedModalRect(this.posX, this.posY, this.disabledX, this.disabledY, this.sizeX, this.sizeY);
+        }
         GL11.glDisable(GL11.GL_BLEND);
+    }
+
+    @Override
+    public void drawForeground(int i, int i1)
+    {
+
+    }
+
+    @Override
+    public void addTooltip(List<String> var1)
+    {
+        if (this.tooltip != null)
+        {
+            var1.add(this.tooltip);
+        }
     }
 
     public String getText() {
@@ -140,4 +173,5 @@ public class MOElementButton extends ElementButton
     public int getTextColor(){return this.labelColor;}
     public void setIcon(HoloIcon icon){this.icon = icon;}
     public HoloIcon getIcon(){return this.icon;}
+    public void setToolTip(String tooltip){this.tooltip = tooltip;}
 }

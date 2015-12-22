@@ -30,7 +30,6 @@ import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.server.starmap.PacketStarMapAttack;
-import matteroverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.GalaxyServer;
 import matteroverdrive.starmap.data.Planet;
@@ -145,8 +144,10 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
         super.readCustomNBT(nbt, categories);
         if (categories.contains(MachineNBTCategory.DATA)) {
             zoomLevel = nbt.getByte("ZoomLevel");
-            position = new GalacticPosition(nbt.getCompoundTag("GalacticPosition"));
-            destination = new GalacticPosition(nbt.getCompoundTag("GalacticDestination"));
+            GalacticPosition newPosition = new GalacticPosition(nbt.getCompoundTag("GalacticPosition"));
+            GalacticPosition newDestination = new GalacticPosition(nbt.getCompoundTag("GalacticDestination"));
+            position = newPosition;
+            destination = newDestination;
         }
     }
 
@@ -306,12 +307,6 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
             default:
                 return GalaxyClient.getInstance().getPlanet(destination);
         }
-    }
-
-    public void SyncCommandsToServer()
-    {
-        if (worldObj.isRemote)
-            MatterOverdrive.packetPipeline.sendToServer(new PacketStarMapClientCommands(this));
     }
 
     public void Attack(GalacticPosition from,GalacticPosition to,int shipID)

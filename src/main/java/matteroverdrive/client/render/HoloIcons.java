@@ -113,6 +113,7 @@ public class HoloIcons {
         reg("minimap_target",21);
         reg("question_mark",20);
         reg("android_feature_icon_bg_black",22);
+        reg("smile",16);
 
         MatterOverdrive.statRegistry.registerIcons(textureMap);
     }
@@ -145,8 +146,11 @@ public class HoloIcons {
 
     public void renderIcon(HoloIcon icon, int x, int y, int width, int height)
     {
-        bindSheet();
-        RenderHelper.renderIcon(x, y, 0, icon.getIcon(), width, height);
+        if (icon != null)
+        {
+            bindSheet();
+            RenderHelper.renderIcon(x, y, 0, icon.getIcon(), width, height);
+        }
     }
 
     public static void tessalateParticleIcon(IIcon icon, double x, double y, double z, float size, GuiColor color)

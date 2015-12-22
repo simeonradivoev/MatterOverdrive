@@ -19,14 +19,17 @@
 package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
+import matteroverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.starmap.data.Star;
+import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -72,7 +75,7 @@ public class ElementQuadrantEntry extends ElementAbstractStarMapEntry<Quadrant>
     @Override
     protected boolean canTravelTo(Quadrant quadrant, EntityPlayer player)
     {
-        return ((GuiStarMap)gui).getMachine().getGalaxyPosition().equals(quadrant);
+        return false;
     }
 
     @Override
@@ -115,13 +118,13 @@ public class ElementQuadrantEntry extends ElementAbstractStarMapEntry<Quadrant>
     @Override
     protected void onTravelPress()
     {
-        ((GuiStarMap) gui).getMachine().setGalaxticPosition(new GalacticPosition(spaceBody));
-        ((GuiStarMap) gui).getMachine().SyncCommandsToServer();
+        TileEntityMachineStarMap starMap = ((GuiStarMap) gui).getMachine();
+        MatterOverdrive.packetPipeline.sendToServer(new PacketStarMapClientCommands(starMap,starMap.getZoomLevel(),new GalacticPosition(spaceBody),starMap.getDestination()));
     }
 
     @Override
     protected void onSelectPress() {
-        ((GuiStarMap) gui).getMachine().setDestination(new GalacticPosition(spaceBody));
-        ((GuiStarMap) gui).getMachine().SyncCommandsToServer();
+        TileEntityMachineStarMap starMap = ((GuiStarMap) gui).getMachine();
+        MatterOverdrive.packetPipeline.sendToServer(new PacketStarMapClientCommands(starMap,starMap.getZoomLevel(),starMap.getGalaxyPosition(),new GalacticPosition(spaceBody)));
     }
 }

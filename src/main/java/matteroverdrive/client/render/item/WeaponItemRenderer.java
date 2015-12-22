@@ -178,4 +178,6 @@ public abstract class WeaponItemRenderer implements IItemRenderer
         }
         return null;
     }
+
+    public ResourceLocation getWeaponTexture(){return weaponTexture;}
 }

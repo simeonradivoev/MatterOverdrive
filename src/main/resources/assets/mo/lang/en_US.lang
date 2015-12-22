@@ -51,7 +51,7 @@ item.ship_factory.details=Allows the building of Ships
 item.scout_ship.name=Scout Ship
 item.scout_ship.details=A fast ship, used for scouting
 item.ship_colonizer.name=Colonizer Ship
-item.ship_colonizer.details=Used to claim planets by building a base on arrival
+item.ship_colonizer.details=Used to claim planets by building a Base building on arrival/nIncreases building spaces by %s
 item.building_base.name=Base
 item.building_base.details=Main building, needed for everything
 item.android_pill_red.name=Red Pill
@@ -59,11 +59,11 @@ item.android_pill_red.details=Take the red pill and lose what's holding you back
 item.android_pill_blue.name=Blue Pill
 item.android_pill_blue.details=Take the blue pill and you will wake up in your bed none the wiser
 item.creative_pattern_drive.name=Creative Pattern Drive
-item.creative_pattern_drive.details=Contains most replicatable items\nRight Click while sneaking to reload
+item.creative_pattern_drive.details=Contains most replicatable items/nRight Click while sneaking to reload
 item.network_flash_drive.name=Network Flash Drive
 item.network_flash_drive.details=Used as a filter in Matter Network devices
 item.energy_pack.name=Energy Pack
-item.energy_pack.details=Used for rapid charging\nTo 'reload' energy weapons
+item.energy_pack.details=Used for rapid charging/nTo 'reload' energy weapons
 item.phaser_rifle.name=Phaser Rifle
 item.transport_flash_drive.name=Transport Flash Drive
 item.transport_flash_drive.details=Used to mark locations for quick use with Teleporter
@@ -104,6 +104,12 @@ item.weapon_module_barrel.fire.name=Incendiary Filter
 item.weapon_module_barrel.explosion.name=Burst Inductive Drum
 item.weapon_module_barrel.heal.name=Regenerative Converter
 item.sniper_scope.name=Sniper Scope
+
+///////////// Buildings ///////////
+item.building_matter_extractor.name=Matter Extractor
+item.building_residential.name=Residential Buildings
+item.building_ship_hangar.name=Ship Hangar
+item.building_power_generator.name=Power Generator
 
 item.info.configured=Configured
 
@@ -332,6 +338,7 @@ gui.tooltip.starmap.no_ship_space=Not enough ship spaces
 gui.tooltip.starmap.no_building_space=Not enough building spaces
 gui.tooltip.starmap.no_ship_factory=No ship factory
 gui.tooltip.starmap.has_base=Base building already present
+gui.tooltip.starmap.no_base=No Base building
 gui.tooltip.close_menu=Close Menu
 gui.tooltip.open_menu=Open Menu
 gui.tooltip.close=Close

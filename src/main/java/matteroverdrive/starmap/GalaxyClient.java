@@ -48,7 +48,7 @@ public class GalaxyClient extends GalaxyCommon
 
     public boolean canSeePlanetInfo(Planet planet,EntityPlayer player)
     {
-        if (planet.isOwner(player))
+        if (planet.isOwner(player) || player.capabilities.isCreativeMode)
         {
             return true;
         }

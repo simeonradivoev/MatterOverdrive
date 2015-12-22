@@ -18,17 +18,13 @@
 
 package matteroverdrive.api.starmap;
 
+import matteroverdrive.starmap.data.Planet;
+import net.minecraft.item.ItemStack;
+
 /**
- * Created by Simeon on 7/2/2015.
+ * Created by Simeon on 12/19/2015.
  */
-public enum  BuildingType
+public interface IPlanetStatChange
 {
-    BASE,
-    SHIP_FACTORY,
-	SHIELD,
-	GENERATOR,
-	REPLICATOR,
-	RESIDENTIAL,
-	ORE_EXTRACTOR,
-	OTHER
+    float changeStat(ItemStack stack,Planet planet, PlanetStatType statType,float original);
 }

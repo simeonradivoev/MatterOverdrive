@@ -30,10 +30,7 @@ import matteroverdrive.items.food.AndroidPill;
 import matteroverdrive.items.food.EarlGrayTea;
 import matteroverdrive.items.food.RomulanAle;
 import matteroverdrive.items.includes.MOBaseItem;
-import matteroverdrive.items.starmap.ItemBuildingBase;
-import matteroverdrive.items.starmap.ItemColonizerShip;
-import matteroverdrive.items.starmap.ItemScoutShip;
-import matteroverdrive.items.starmap.ShipFactory;
+import matteroverdrive.items.starmap.*;
 import matteroverdrive.items.tools.TritaniumAxe;
 import matteroverdrive.items.tools.TritaniumPickaxe;
 import matteroverdrive.items.weapon.*;
@@ -105,6 +102,10 @@ public class MatterOverdriveItems
     public static PlasmaShotgun plasmaShotgun;
     public static IonSniper ionSniper;
     public static WeaponModuleSniperScope sniperScope;
+    public static ItemBuildingResidential buildingResidential;
+    public static ItemBuildingMatterExtractor buildingMatterExtractor;
+    public static ItemBuildingShipHangar buildingShipHangar;
+    public static ItemBuildingPowerGenerator buildingPowerGenerator;
 
     public static Item.ToolMaterial toolMaterialTritanium;
     public static ItemArmor.ArmorMaterial armorMaterialTritanium;
@@ -174,6 +175,10 @@ public class MatterOverdriveItems
         plasmaShotgun = new PlasmaShotgun("plasma_shotgun");
         ionSniper = new IonSniper("ion_sniper");
         sniperScope = new WeaponModuleSniperScope("sniper_scope");
+        buildingMatterExtractor = new ItemBuildingMatterExtractor("building_matter_extractor");
+        buildingResidential = new ItemBuildingResidential("building_residential");
+        buildingShipHangar = new ItemBuildingShipHangar("building_ship_hangar");
+        buildingPowerGenerator = new ItemBuildingPowerGenerator("building_power_generator");
 	}
 
 	public static void register(FMLInitializationEvent event)
@@ -232,6 +237,10 @@ public class MatterOverdriveItems
         plasmaShotgun.register();
         ionSniper.register();
         sniperScope.register();
+        buildingMatterExtractor.register();
+        buildingResidential.register();
+        buildingShipHangar.register();
+        buildingPowerGenerator.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);

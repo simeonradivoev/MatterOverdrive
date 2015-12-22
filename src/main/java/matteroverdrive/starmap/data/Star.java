@@ -1,5 +1,24 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.starmap.data;
 
+import io.netty.buffer.ByteBuf;
 import matteroverdrive.starmap.GalaxyGenerator;
 import matteroverdrive.starmap.gen.ISpaceBodyGen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -106,6 +125,26 @@ public class Star extends SpaceBody
     }
 
     @Override
+    public void writeToBuffer(ByteBuf byteBuf)
+    {
+        super.writeToBuffer(byteBuf);
+        byteBuf.writeFloat(x);
+        byteBuf.writeFloat(y);
+        byteBuf.writeFloat(z);
+        byteBuf.writeFloat(size);
+        byteBuf.writeFloat(mass);
+        byteBuf.writeByte(type);
+        byteBuf.writeInt(temperature);
+        byteBuf.writeInt(color);
+        int planetCount = getPlanets().size();
+        byteBuf.writeInt(planetCount);
+        for (Planet planet : getPlanets())
+        {
+            planet.writeToBuffer(byteBuf);
+        }
+    }
+
+    @Override
     public void readFromNBT(NBTTagCompound tagCompound,GalaxyGenerator generator)
     {
         super.readFromNBT(tagCompound, generator);
@@ -129,6 +168,28 @@ public class Star extends SpaceBody
         }
 
         generateMissing(tagCompound, generator);
+    }
+
+    @Override
+    public void readFromBuffer(ByteBuf byteBuf)
+    {
+        super.readFromBuffer(byteBuf);
+        x = byteBuf.readFloat();
+        y = byteBuf.readFloat();
+        z = byteBuf.readFloat();
+        size = byteBuf.readFloat();
+        mass = byteBuf.readFloat();
+        type = byteBuf.readByte();
+        temperature = byteBuf.readInt();
+        color = byteBuf.readInt();
+        int planetCount = byteBuf.readInt();
+        for (int i = 0;i < planetCount;i++)
+        {
+            Planet planet = new Planet();
+            planet.readFromBuffer(byteBuf);
+            addPlanet(planet);
+            planet.setStar(this);
+        }
     }
     //endregion
 

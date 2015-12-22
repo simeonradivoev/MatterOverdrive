@@ -133,7 +133,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
     {
         AndroidPlayer android = AndroidPlayer.get(mc.thePlayer);
 
-        if (Minecraft.getMinecraft().currentScreen instanceof GuiDialog && !event.type.equals(RenderGameOverlayEvent.ElementType.ALL) && event.isCancelable())
+        if ((mc.currentScreen instanceof GuiDialog || mc.currentScreen instanceof GuiStarMap) && !event.type.equals(RenderGameOverlayEvent.ElementType.ALL) && event.isCancelable())
         {
             event.setCanceled(true);
             return;
@@ -156,7 +156,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
             mc.getTextureManager().bindTexture(Gui.icons);
         }
-        else if (android.isAndroid() && event.type == RenderGameOverlayEvent.ElementType.ALL)
+        else if (android.isAndroid() && event.type == RenderGameOverlayEvent.ElementType.ALL && !(mc.currentScreen instanceof GuiStarMap))
         {
             glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glDisable(GL_DEPTH_TEST);

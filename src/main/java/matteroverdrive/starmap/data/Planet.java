@@ -20,6 +20,8 @@ package matteroverdrive.starmap.data;
 
 import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.*;
@@ -60,7 +62,7 @@ public class Planet extends SpaceBody implements IInventory
     private ItemStack[] inventory;
     private List<ItemStack> buildings;
     private List<ItemStack> fleet;
-    private boolean isDirty,homeworld,generated,needsUpdate;
+    private boolean isDirty,homeworld,generated, needsClientUpdate;
     private int buildingSpaces,fleetSpaces,seed;
     //endregion
 
@@ -90,9 +92,9 @@ public class Planet extends SpaceBody implements IInventory
     {
         if (!world.isRemote)
         {
-            if (needsUpdate)
+            if (needsClientUpdate)
             {
-                needsUpdate = false;
+                needsClientUpdate = false;
                 MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdatePlanet(this), world);
             }
 
@@ -245,6 +247,15 @@ public class Planet extends SpaceBody implements IInventory
         tagCompound.setInteger("Seed", seed);
     }
 
+    @Override
+    public void writeToBuffer(ByteBuf byteBuf)
+    {
+        super.writeToBuffer(byteBuf);
+        NBTTagCompound nbtData = new NBTTagCompound();
+        writeToNBT(nbtData);
+        ByteBufUtils.writeTag(byteBuf,nbtData);
+    }
+
     public void readFromNBT(NBTTagCompound tagCompound,GalaxyGenerator generator)
     {
         super.readFromNBT(tagCompound,generator);
@@ -258,7 +269,7 @@ public class Planet extends SpaceBody implements IInventory
             }
         }
         buildingSpaces = tagCompound.getInteger("BuildingSpaces");
-        for (int i = 0;i < buildingSpaces;i++)
+        for (int i = 0;i < getBuildingSpaces();i++)
         {
             if (tagCompound.hasKey("Building" + i,10))
             {
@@ -272,7 +283,7 @@ public class Planet extends SpaceBody implements IInventory
             }
         }
         fleetSpaces = tagCompound.getInteger("FleetSpaces");
-        for (int i = 0;i < fleetSpaces;i++)
+        for (int i = 0;i < getFleetSpaces();i++)
         {
             if (tagCompound.hasKey("Ship"+i,10))
             {
@@ -304,6 +315,14 @@ public class Planet extends SpaceBody implements IInventory
         seed = tagCompound.getInteger("Seed");
 
         generateMissing(tagCompound, generator);
+    }
+
+    @Override
+    public void readFromBuffer(ByteBuf byteBuf)
+    {
+        super.readFromBuffer(byteBuf);
+        NBTTagCompound nbtData = ByteBufUtils.readTag(byteBuf);
+        readFromNBT(nbtData,null);
     }
 
     public void generateMissing(NBTTagCompound tagCompound,GalaxyGenerator galaxyGenerator)
@@ -346,17 +365,21 @@ public class Planet extends SpaceBody implements IInventory
     public void setType(byte type){this.type = type;}
     public float getOrbit(){return orbit;}
     public void setOrbit(float orbit){this.orbit = orbit;}
-    public int getBuildingSpaces(){return buildingSpaces;}
+    public int getBuildingSpaces(){return (int)getStatChangeFromBuildings(PlanetStatType.BUILDINGS_SIZE,buildingSpaces);}
     public void setBuildingSpaces(int buildingSpaces){this.buildingSpaces = buildingSpaces;}
     public List<ItemStack> getBuildings(){return buildings;}
     public List<ItemStack> getFleet(){return fleet;}
-    public int getFleetSpaces(){return fleetSpaces;}
+    public int getFleetSpaces(){return (int)getStatChangeFromBuildings(PlanetStatType.FLEET_SIZE,fleetSpaces);}
     public void setFleetSpaces(int fleetSpaces){this.fleetSpaces = fleetSpaces;}
     public void setSeed(int seed){this.seed = seed;}
     public int getSeed(){return seed;}
     public boolean isGenerated(){return generated;}
     public void setGenerated(boolean generated){this.generated = generated;}
     public ItemStack getShip(int at){return fleet.get(at);}
+    public int getPopulation(){return (int)getStatChangeFromBuildings(PlanetStatType.POPULATION_COUNT,0);}
+    public int getPowerProducation(){return (int)getStatChangeFromBuildings(PlanetStatType.ENERGY_PRODUCTION,0);}
+    public float getMatterProduction(){return getStatChangeFromBuildings(PlanetStatType.MATTER_PRODUCTION,0);}
+    public float getHappiness(){return getStatChangeFromBuildings(PlanetStatType.HAPPINESS,0);}
     public void addShip(ItemStack ship){
         if (ship != null) {
             if (ship.getItem() instanceof IShip) {
@@ -380,7 +403,7 @@ public class Planet extends SpaceBody implements IInventory
             }
             else
             {
-                if (fleetCount() < fleetSpaces) {
+                if (fleetCount() < getFleetCount()) {
                     return true;
                 }
             }
@@ -427,7 +450,7 @@ public class Planet extends SpaceBody implements IInventory
         }
     }
     public void markForUpdate(){
-        needsUpdate = true;
+        needsClientUpdate = true;
     }
     public boolean canBuild(IBuildable buildable,ItemStack stack,List<String> info)
     {
@@ -443,24 +466,25 @@ public class Planet extends SpaceBody implements IInventory
     }
     public boolean canBuild(IBuilding building,ItemStack stack,List<String> info)
     {
-        if (buildings.size() < buildingSpaces)
+        if (buildings.size() < getBuildingSpaces())
         {
-            return building.canBuild(stack,this,info);
+            if (hasBuildingType(BuildingType.BASE))
+            {
+                return building.canBuild(stack,this,info);
+            }
+
+            info.add(MOStringHelper.translateToLocal("gui.tooltip.starmap.no_base"));
         }
         info.add(MOStringHelper.translateToLocal("gui.tooltip.starmap.no_building_space"));
         return false;
     }
-
     public boolean canBuild(IShip ship,ItemStack stack,List<String> info)
     {
-        if (fleet.size() < fleetSpaces)
+        if (fleet.size() < getFleetCount())
         {
-            for (ItemStack building : getBuildings())
+            if (hasBuildingType(BuildingType.SHIP_FACTORY))
             {
-                if (building.getItem() instanceof IBuilding && ((IBuilding) building.getItem()).getType(building) == BuildingType.SHIP_FACTORY)
-                {
-                    return ship.canBuild(stack,this,info);
-                }
+                return ship.canBuild(stack,this,info);
             }
 
             info.add(MOStringHelper.translateToLocal("gui.tooltip.starmap.no_ship_factory"));
@@ -469,6 +493,28 @@ public class Planet extends SpaceBody implements IInventory
             info.add(MOStringHelper.translateToLocal("gui.tooltip.starmap.no_ship_space"));
         }
         return false;
+    }
+    public boolean hasBuildingType(BuildingType buildingType)
+    {
+        for (ItemStack building : getBuildings())
+        {
+            if (building.getItem() instanceof IBuilding && ((IBuilding) building.getItem()).getType(building) == buildingType)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public float getStatChangeFromBuildings(PlanetStatType statType,float original)
+    {
+        for (ItemStack building : getBuildings())
+        {
+            if (building.getItem() instanceof  IPlanetStatChange)
+            {
+                original = ((IPlanetStatChange) building.getItem()).changeStat(building,this,statType,original);
+            }
+        }
+        return original;
     }
     public boolean isDirty(){return this.isDirty;}
     //endregion

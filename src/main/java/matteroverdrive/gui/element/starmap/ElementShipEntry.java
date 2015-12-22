@@ -123,6 +123,6 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     @Override
     protected void onSelectPress() {
 
-        ((GuiStarMap) gui).getMachine().SyncCommandsToServer();
+        //((GuiStarMap) gui).getMachine().SyncCommandsToServer();
     }
 }

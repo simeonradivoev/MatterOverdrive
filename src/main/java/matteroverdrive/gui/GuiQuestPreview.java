@@ -70,7 +70,7 @@ public class GuiQuestPreview extends MOGuiBase
         acceptButton.setTextColor(0x279f33);
         if (!questStack.canAccept(Minecraft.getMinecraft().thePlayer,questStack))
         {
-            acceptButton.setDisabled();
+            acceptButton.setEnabled(false);
             acceptButton.setTextColor(Reference.COLOR_HOLO_RED.getColor());
         }
         this.questStack = questStack;

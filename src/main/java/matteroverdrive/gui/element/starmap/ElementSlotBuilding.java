@@ -55,9 +55,13 @@ public class ElementSlotBuilding extends ElementInventorySlot
 
                     if (starMap.getPlanet().canBuild((IBuilding)getSlot().getStack().getItem(),getSlot().getStack(),info)) {
                         ItemStack buildingStack = getSlot().getStack();
-                        String time = MOStringHelper.formatRemainingTime(((IBuilding) buildingStack.getItem()).getRemainingBuildTimeTicks(buildingStack, starMap.getPlanet(), Minecraft.getMinecraft().theWorld) / 20);
-                        int timeWidth = getFontRenderer().getStringWidth(time);
-                        getFontRenderer().drawString(time, posX - timeWidth - 4, posY + 6, Reference.COLOR_HOLO.getColor());
+                        long remainningTime = ((IBuilding) buildingStack.getItem()).getRemainingBuildTimeTicks(buildingStack, starMap.getPlanet(), Minecraft.getMinecraft().theWorld) / 20;
+                        if (remainningTime >= 0)
+                        {
+                            String time = MOStringHelper.formatRemainingTime(remainningTime);
+                            int timeWidth = getFontRenderer().getStringWidth(time);
+                            getFontRenderer().drawString(time, posX - timeWidth - 4, posY + 6, Reference.COLOR_HOLO.getColor());
+                        }
                     }else
                     {
                         String infoText = String.join(". ",info);

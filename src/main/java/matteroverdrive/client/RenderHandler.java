@@ -88,7 +88,6 @@ public class RenderHandler
     private AndroidStatRenderRegistry statRenderRegistry;
     private StarmapRenderRegistry starmapRenderRegistry;
     private RenderDialogSystem renderDialogSystem;
-    private RenderStarmap renderStarmap;
     private AndroidBionicPartRenderRegistry bionicPartRenderRegistry;
     private WeaponModuleModelRegistry weaponModuleModelRegistry;
 
@@ -166,7 +165,6 @@ public class RenderHandler
         statRenderRegistry = new AndroidStatRenderRegistry();
         starmapRenderRegistry = new StarmapRenderRegistry();
         renderDialogSystem = new RenderDialogSystem();
-        renderStarmap = new RenderStarmap();
         bionicPartRenderRegistry = new AndroidBionicPartRenderRegistry();
         weaponModuleModelRegistry = new WeaponModuleModelRegistry();
 
@@ -174,7 +172,6 @@ public class RenderHandler
         addCustomRenderer(renderParticlesHandler);
         addCustomRenderer(renderWeaponsBeam);
         addCustomRenderer(renderDialogSystem);
-        addCustomRenderer(renderStarmap);
     }
 
     @SubscribeEvent

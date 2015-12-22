@@ -19,16 +19,17 @@
 package matteroverdrive.api.starmap;
 
 /**
- * Created by Simeon on 7/2/2015.
+ * Created by Simeon on 12/19/2015.
  */
-public enum  BuildingType
+public enum PlanetStatType
 {
-    BASE,
-    SHIP_FACTORY,
-	SHIELD,
-	GENERATOR,
-	REPLICATOR,
-	RESIDENTIAL,
-	ORE_EXTRACTOR,
-	OTHER
+    FLEET_SIZE,
+    BUILDINGS_SIZE,
+    SHIP_BUILD_SPEED,
+    BUILDING_BUILD_SPEED,
+    MATTER_STORAGE,
+    ENERGY_PRODUCTION,
+    POPULATION_COUNT,
+    HAPPINESS,
+    MATTER_PRODUCTION
 }

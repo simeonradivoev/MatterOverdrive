@@ -108,7 +108,7 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
             {
                 String time = MOStringHelper.formatRemainingTime(travelEvent.getTimeRemainning(Minecraft.getMinecraft().theWorld) / 20);
                 int width = fontRenderer.getStringWidth(time);
-                RenderUtils.renderStack(-8, heightCount - 8, travelEvent.getShip());
+                RenderUtils.renderStack(-8, heightCount - 8,0, travelEvent.getShip(),false);
                 fontRenderer.drawString(time, -width / 2, heightCount + 8, Reference.COLOR_HOLO.getColor());
                 heightCount -= 26;
             }
@@ -139,7 +139,7 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
                         shipColor = Reference.COLOR_HOLO_RED;
                     }
 
-                    RenderUtils.renderStack(16, y - 16, shipStack);
+                    RenderUtils.renderStack(16, y - 16,0, shipStack,false);
                     fontRenderer.drawString(shipStack.getDisplayName(), 36, y - 10, shipColor.getColor());
                     y -= 16;
                 }

@@ -19,16 +19,19 @@
 package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.client.render.tileentity.starmap.StarMapRendererStars;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
+import matteroverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.Star;
+import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -110,7 +113,7 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
     @Override
     protected boolean canTravelTo(Star star, EntityPlayer player)
     {
-        return true;
+        return false;
     }
 
     @Override
@@ -121,14 +124,14 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
     @Override
     protected void onTravelPress()
     {
-        ((GuiStarMap) gui).getMachine().setGalaxticPosition(new GalacticPosition(spaceBody));
-        ((GuiStarMap) gui).getMachine().SyncCommandsToServer();
+        TileEntityMachineStarMap starMap = ((GuiStarMap) gui).getMachine();
+        MatterOverdrive.packetPipeline.sendToServer(new PacketStarMapClientCommands(starMap,starMap.getZoomLevel(),new GalacticPosition(spaceBody),starMap.getDestination()));
     }
 
     @Override
     protected void onSelectPress() {
-        ((GuiStarMap) gui).getMachine().setDestination(new GalacticPosition(spaceBody));
-        ((GuiStarMap) gui).getMachine().SyncCommandsToServer();
+        TileEntityMachineStarMap starMap = ((GuiStarMap) gui).getMachine();
+        MatterOverdrive.packetPipeline.sendToServer(new PacketStarMapClientCommands(starMap,starMap.getZoomLevel(),starMap.getGalaxyPosition(),new GalacticPosition(spaceBody)));
     }
 
     protected void onViewPress()

@@ -42,10 +42,9 @@ public class PageQuadrant extends ElementBaseGroup implements IListHandler {
 
     public PageQuadrant(GuiStarMap gui, int posX, int posY, int width, int height,TileEntityMachineStarMap starMap) {
         super(gui, posX, posY, width, height);
-        starList = new ElementGroupList(gui,this,16,16,width,height-160);
-        starList.setName("Stars");
-        starList.setScroll(scroll);
         this.starMap = starMap;
+        starList = new ElementGroupList(gui,this,16,16,0,0);
+        starList.setName("Stars");
     }
 
     private void loadStars()
@@ -69,6 +68,9 @@ public class PageQuadrant extends ElementBaseGroup implements IListHandler {
     public void init()
     {
         super.init();
+        starList.setSize(sizeX,sizeY-100-32);
+        starList.setScroll(scroll);
+        starList.resetSmoothScroll();
         addElement(starList);
         loadStars();
 

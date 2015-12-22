@@ -68,7 +68,7 @@ public class MOBaseItem extends Item
 	{
 		if (MOStringHelper.hasTranslation(getUnlocalizedName(itemstack) + ".details"))
 		{
-			String[] infoList = MOStringHelper.translateToLocal(getUnlocalizedName(itemstack) + ".details").split("\n");
+			String[] infoList = MOStringHelper.translateToLocal(getUnlocalizedName(itemstack) + ".details").split("/n");
 			for (String info : infoList)
 			{
 				infos.add(EnumChatFormatting.GRAY + info);

@@ -19,16 +19,18 @@
 package matteroverdrive.gui.element.starmap;
 
 import cofh.lib.gui.GuiColor;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
+import matteroverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
 import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Planet;
-import matteroverdrive.util.RenderUtils;
+import matteroverdrive.tile.TileEntityMachineStarMap;
+import matteroverdrive.util.StarmapHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -57,11 +59,7 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
             name = "@ " + EnumChatFormatting.ITALIC + name;
         }
 
-        if (Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode || GalaxyClient.getInstance().canSeePlanetInfo(planet, Minecraft.getMinecraft().thePlayer))
-
-            RenderUtils.drawString(name, posX + 16, posY + 10, color, multiply);
-        else
-            RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer,name,posX + 16,posY + 10,color,multiply);
+        StarmapHelper.drawPlanetInfo(planet,name,posX + 16, posY + 10,multiply);
     }
 
     @Override
@@ -162,13 +160,13 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
     @Override
     protected void onTravelPress()
     {
-        ((GuiStarMap) gui).getMachine().setGalaxticPosition(new GalacticPosition(spaceBody));
-        ((GuiStarMap) gui).getMachine().SyncCommandsToServer();
+        TileEntityMachineStarMap starMap = ((GuiStarMap) gui).getMachine();
+        MatterOverdrive.packetPipeline.sendToServer(new PacketStarMapClientCommands(starMap,starMap.getZoomLevel(),new GalacticPosition(spaceBody),starMap.getDestination()));
     }
 
     @Override
     protected void onSelectPress() {
-        ((GuiStarMap) gui).getMachine().setDestination(new GalacticPosition(spaceBody));
-        ((GuiStarMap) gui).getMachine().SyncCommandsToServer();
+        TileEntityMachineStarMap starMap = ((GuiStarMap) gui).getMachine();
+        MatterOverdrive.packetPipeline.sendToServer(new PacketStarMapClientCommands(starMap,starMap.getZoomLevel(),starMap.getGalaxyPosition(),new GalacticPosition(spaceBody)));
     }
 }

@@ -48,6 +48,7 @@ public class StarMapRendererQuadrant extends StarMapRendererStars {
         if (spaceBody instanceof Quadrant)
         {
             glLineWidth(1);
+            glDepthMask(false);
 
             Quadrant quadrant = (Quadrant)spaceBody;
             double distanceMultiply = 5;
@@ -73,7 +74,7 @@ public class StarMapRendererQuadrant extends StarMapRendererStars {
                 color = Reference.COLOR_HOLO_RED;
             }
             RenderUtils.applyColorWithMultipy(color, opacity);
-            ClientProxy.holoIcons.renderIcon("page_icon_planet", 0, -32);
+            ClientProxy.holoIcons.renderIcon("page_icon_planet", 8, -28);
             RenderUtils.drawString(String.format("x%s", planetCount), 28, -21, color, opacity);
 
 

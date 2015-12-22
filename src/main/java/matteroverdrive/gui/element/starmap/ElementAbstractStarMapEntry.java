@@ -33,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -178,6 +179,21 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
 
     protected abstract void drawElementName(T spaceBody,GuiColor color,float multiply);
     protected abstract Map<HoloIcon,Integer> getIcons(T spaceBody);
+
+    @Override
+    public void addTooltip(List<String> var1, int mouseX, int mouseY)
+    {
+        if(isSelected(spaceBody))
+        {
+            if (canTravelTo(spaceBody, Minecraft.getMinecraft().thePlayer) && mouseX > sizeX - 32 && mouseX < sizeX)
+            {
+                var1.add("Travel To");
+            } else if (canView(spaceBody, Minecraft.getMinecraft().thePlayer) && mouseX > sizeX - 64 && mouseX < sizeX - 32)
+            {
+                var1.add("Enter");
+            }
+        }
+    }
 
     @Override
     public boolean onMousePressed(int mouseX, int mouseY, int mouseButton) {

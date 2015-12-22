@@ -19,7 +19,6 @@
 package matteroverdrive.gui.pages;
 
 import cofh.lib.gui.element.ElementBase;
-import cofh.lib.gui.element.ElementButton;
 import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
@@ -73,9 +72,9 @@ public class PageGuideDescription extends ElementBaseGroup
     private static Stack<HistoryEntry> historyStack = new Stack<>();
 
     List<IGuideElement> pages;
-    ElementButton bt_scroll_right;
-    ElementButton bt_scroll_left;
-    public final ElementButton bt_return;
+    MOElementButton bt_scroll_right;
+    MOElementButton bt_scroll_left;
+    public final MOElementButton bt_return;
     private ItemStack dataPadStack;
 
     public PageGuideDescription(MOGuiBase gui, int posX, int posY, int width, int height, String name) {
