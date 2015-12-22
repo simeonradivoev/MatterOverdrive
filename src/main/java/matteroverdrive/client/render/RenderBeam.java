@@ -18,9 +18,9 @@
 
 package matteroverdrive.client.render;/* Created by Simeon on 10/18/2015. */
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.util.MOPhysicsHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public abstract class RenderBeam<T extends EntityLivingBase> implements IWorldLa
     protected abstract boolean shouldRenderBeam(T entity);
     protected abstract void onBeamRaycastHit(MovingObjectPosition hit,T caster);
     protected abstract void onBeamRender(T caster);
-    protected abstract GuiColor getBeamColor(T caster);
+    protected abstract Color getBeamColor(T caster);
     protected abstract ResourceLocation getBeamTexture(T caster);
     protected abstract float getBeamMaxDistance(T caster);
     protected abstract float getBeamThickness(T caster);
@@ -72,7 +72,7 @@ public abstract class RenderBeam<T extends EntityLivingBase> implements IWorldLa
         return false;
     }
 
-    protected void renderBeam(Vec3 from, Vec3 to, Vec3 offest, GuiColor color, ResourceLocation texture, float tickness, T viewer)
+    protected void renderBeam(Vec3 from, Vec3 to, Vec3 offest, Color color, ResourceLocation texture, float tickness, T viewer)
     {
         if (texture != null)
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);

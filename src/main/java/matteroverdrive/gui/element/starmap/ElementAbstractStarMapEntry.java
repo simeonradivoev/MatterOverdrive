@@ -18,8 +18,8 @@
 
 package matteroverdrive.gui.element.starmap;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.GuiStarMap;
@@ -113,7 +113,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
         if (isSelected(spaceBody))
         {
             float multiply = 1f;
-            GuiColor color = getSpaceBodyColor(spaceBody);
+            Color color = getSpaceBodyColor(spaceBody);
             drawElementName(spaceBody,color,multiply);
             int iconsX = 0;
 
@@ -177,7 +177,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
         }
     }
 
-    protected abstract void drawElementName(T spaceBody,GuiColor color,float multiply);
+    protected abstract void drawElementName(T spaceBody,Color color,float multiply);
     protected abstract Map<HoloIcon,Integer> getIcons(T spaceBody);
 
     @Override
@@ -241,7 +241,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
     protected abstract void onTravelPress();
     protected abstract void onSelectPress();
 
-    protected GuiColor getSpaceBodyColor(T spaceBody)
+    protected Color getSpaceBodyColor(T spaceBody)
     {
         return Reference.COLOR_HOLO;
     }

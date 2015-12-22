@@ -18,11 +18,11 @@
 
 package matteroverdrive.matter_network.packets;
 
-import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import net.minecraft.nbt.NBTTagCompound;
@@ -59,12 +59,12 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
         this(sender.getPosition(), task.getId(),queueID,port,filter);
     }
 
-    public MatterNetworkTaskPacket(BlockPosition sender,long taskID,byte queueID,ForgeDirection port)
+    public MatterNetworkTaskPacket(BlockPos sender, long taskID, byte queueID, ForgeDirection port)
     {
         this(sender, taskID,queueID,port,null);
     }
 
-    public MatterNetworkTaskPacket(BlockPosition sender,long taskID,byte queueID,ForgeDirection port,NBTTagCompound filter)
+    public MatterNetworkTaskPacket(BlockPos sender, long taskID, byte queueID, ForgeDirection port, NBTTagCompound filter)
     {
         super(sender,port);
         this.taskID = taskID;

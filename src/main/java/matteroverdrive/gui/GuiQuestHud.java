@@ -18,10 +18,10 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.audio.SoundBase;
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
+import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.util.animation.MOAnimationTimeline;
 import net.minecraft.client.Minecraft;
@@ -92,7 +92,7 @@ public class GuiQuestHud
             if (completeQuestTimeline.isPlaying() && completeQuestName != null)
             {
                 float time = completeQuestTimeline.getCurrentValue();
-                GuiColor color = new GuiColor(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
+                Color color = new Color(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
                 glPushMatrix();
                 int y = (int)(event.resolution.getScaledHeight() * 0.15);
                 int titleWidth = (int) (fontRenderer.getStringWidth(completeQuestName) * 1.5);
@@ -108,7 +108,7 @@ public class GuiQuestHud
             if (startedQuestTimeline.isPlaying() && newQuestName != null)
             {
                 float time = startedQuestTimeline.getCurrentValue();
-                GuiColor color = new GuiColor(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
+                Color color = new Color(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
                 glPushMatrix();
                 int y = (int)(event.resolution.getScaledHeight() * 0.65);
                 String title = "Dead! We're all dead!";
@@ -121,7 +121,7 @@ public class GuiQuestHud
             if (objectivesTimeline.isPlaying() && objectivesChanged != null)
             {
                 float time = objectivesTimeline.getCurrentValue();
-                GuiColor color = new GuiColor(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
+                Color color = new Color(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
                 int objectivesY = 0;
                 for (int i = 0;i < objectivesChanged.length;i++)
                 {
@@ -153,7 +153,7 @@ public class GuiQuestHud
 
     public void startCompleteQuestNotification(QuestStack questStack)
     {
-        Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(new ResourceLocation(Reference.MOD_ID + ":" + "quest_complete"),1,1));
+        Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "quest_complete"),1,1));
         if (questStack != null) {
             completeQuestName = questStack.getTitle(Minecraft.getMinecraft().thePlayer);
             //addObjectivesChanged(questStack);
@@ -171,7 +171,7 @@ public class GuiQuestHud
 
     public void startNewQuestNotification(QuestStack questStack)
     {
-        Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(new ResourceLocation(Reference.MOD_ID + ":" + "quest_started"),1,1));
+        Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "quest_started"),1,1));
         if (questStack != null)
         {
             newQuestName = questStack.getTitle(Minecraft.getMinecraft().thePlayer);

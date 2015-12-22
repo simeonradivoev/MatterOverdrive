@@ -19,7 +19,6 @@
 package matteroverdrive.gui;
 
 import cofh.lib.gui.element.ElementBase;
-import cofh.lib.util.TimeTracker;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerFalse;
 import matteroverdrive.gui.element.MOElementButton;
@@ -30,6 +29,7 @@ import matteroverdrive.network.packet.server.PacketMatterScannerUpdate;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterDatabaseHelper;
+import matteroverdrive.util.TimeTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

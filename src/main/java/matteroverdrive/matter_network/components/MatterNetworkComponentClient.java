@@ -18,7 +18,6 @@
 
 package matteroverdrive.matter_network.components;
 
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
@@ -26,6 +25,7 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkFilter;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.machines.IMachineComponent;
 import matteroverdrive.machines.MOTileEntityMachine;
@@ -119,7 +119,7 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
             NBTTagList connectionsList = packet.getFilter().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_COMPOUND);
             for (int i = 0;i < connectionsList.tagCount();i++)
             {
-                BlockPosition filterPos = new BlockPosition(connectionsList.getCompoundTagAt(i));
+                BlockPos filterPos = new BlockPos(connectionsList.getCompoundTagAt(i));
                 if (filterPos.equals(getPosition()))
                 {
                     return true;
@@ -132,7 +132,7 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
 
     //region Getters and Setters
     @Override
-    public BlockPosition getPosition()
+    public BlockPos getPosition()
     {
         return rootClient.getPosition();
     }

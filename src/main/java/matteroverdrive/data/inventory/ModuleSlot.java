@@ -18,7 +18,6 @@
 
 package matteroverdrive.data.inventory;
 
-import cofh.lib.util.helpers.EnergyHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
@@ -26,6 +25,7 @@ import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.item.ItemStack;
 
@@ -50,7 +50,7 @@ public class ModuleSlot extends Slot
         switch (type)
         {
             case Reference.MODULE_BATTERY:
-                return EnergyHelper.isEnergyContainerItem(item) && !WeaponHelper.isWeapon(item);
+                return MOEnergyHelper.isEnergyContainerItem(item) && !WeaponHelper.isWeapon(item);
             default:
                 if(WeaponHelper.isWeaponModule(item))
                 {

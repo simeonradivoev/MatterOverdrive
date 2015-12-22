@@ -18,7 +18,6 @@
 
 package matteroverdrive.matter_network.components;
 
-import cofh.lib.util.TimeTracker;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.MatterNetworkTask;
@@ -31,6 +30,7 @@ import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.tile.TileEntityMachineReplicator;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterNetworkHelper;
+import matteroverdrive.util.TimeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;

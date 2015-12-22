@@ -18,10 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.TimeTracker;
-import cofh.lib.util.helpers.BlockHelper;
-import cofh.lib.util.helpers.MathHelper;
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -32,6 +28,7 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.*;
 import matteroverdrive.blocks.BlockReplicator;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
@@ -50,6 +47,7 @@ import matteroverdrive.network.packet.client.PacketReplicationComplete;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.MatterNetworkHelper;
+import matteroverdrive.util.TimeTracker;
 import matteroverdrive.util.math.MOMathHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -68,6 +66,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.util.EnumSet;
 import java.util.List;
+
+import static matteroverdrive.util.MOBlockHelper.*;
 
 
 public class TileEntityMachineReplicator extends MOTileEntityMachineMatter implements IMatterNetworkClient, IMatterNetworkHandler, IMatterNetworkDispatcher<MatterNetworkTaskReplicatePattern>,IMatterNetworkBroadcaster,IWailaBodyProvider
@@ -183,8 +183,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             else
             {
                 if (getBlockType(BlockReplicator.class).hasVentParticles) {
-                    SpawnVentParticles(0.05f, ForgeDirection.getOrientation(BlockHelper.getLeftSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
-                    SpawnVentParticles(0.05f, ForgeDirection.getOrientation(BlockHelper.getRightSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
+                    SpawnVentParticles(0.05f, ForgeDirection.getOrientation(getLeftSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
+                    SpawnVentParticles(0.05f, ForgeDirection.getOrientation(getRightSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
                 }
 
             }
@@ -366,13 +366,13 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
                 PotionEffect[] effects = new PotionEffect[4];
                 //confusion
-                effects[0] = new PotionEffect(9, MathHelper.round(Math.pow(5,distance)), 0);
+                effects[0] = new PotionEffect(9, (int) Math.round(Math.pow(5,distance)), 0);
                 //weakness
-                effects[1] = new PotionEffect(18, MathHelper.round(Math.pow(10,distance)), 0);
+                effects[1] = new PotionEffect(18, (int)Math.round(Math.pow(10,distance)), 0);
                 //hunger
-                effects[2] = new PotionEffect(17, MathHelper.round(Math.pow(12,distance)), 0);
+                effects[2] = new PotionEffect(17, (int)Math.round(Math.pow(12,distance)), 0);
                 //poison
-                effects[3] = new PotionEffect(19, MathHelper.round(Math.pow(5,distance)), 0);
+                effects[3] = new PotionEffect(19, (int)Math.round(Math.pow(5,distance)), 0);
 
                 for (PotionEffect effect : effects)
                 {
@@ -500,15 +500,15 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
 
     @Override
-    public BlockPosition getPosition() {
-        return new BlockPosition(this);
+    public BlockPos getPosition() {
+        return new BlockPos(this);
     }
 
     @Override
     public boolean canConnectFromSide(ForgeDirection side)
     {
         int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-        return BlockHelper.getOppositeSide(meta) == side.ordinal();
+        return getOppositeSide(meta) == side.ordinal();
     }
 
     @Override
@@ -608,7 +608,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         double matter = Math.log1p(MatterHelper.getMatterAmountFromItem(itemStack));
         matter *= matter;
-        return MathHelper.round(((REPLICATE_SPEED_PER_MATTER * matter) - 60) * getUpgradeMultiply(UpgradeTypes.Speed)) + 60;
+        return (int) Math.round(((REPLICATE_SPEED_PER_MATTER * matter) - 60) * getUpgradeMultiply(UpgradeTypes.Speed)) + 60;
     }
 
 	public double getFailChance(NBTTagCompound itemAsNBT)
@@ -629,7 +629,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         int matter = MatterHelper.getMatterAmountFromItem(MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage));
         double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.PowerUsage);
-        return MathHelper.round((matter * REPLICATE_ENERGY_PER_MATTER) * upgradeMultiply);
+        return (int) Math.round((matter * REPLICATE_ENERGY_PER_MATTER) * upgradeMultiply);
     }
 
     public boolean canCompleteTask(MatterNetworkTaskReplicatePattern taskReplicatePattern)

@@ -18,8 +18,6 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.GuiColor;
-import cofh.lib.render.RenderHelper;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -31,6 +29,8 @@ import matteroverdrive.animation.AnimationSegmentText;
 import matteroverdrive.animation.AnimationTextTyping;
 import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.api.weapon.IWeapon;
+import matteroverdrive.client.data.Color;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.gui.android.*;
 import matteroverdrive.gui.config.EnumConfigProperty;
@@ -46,7 +46,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.shader.ShaderGroup;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.config.Property;
@@ -77,12 +76,12 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
     public static boolean showRadial = false;
     public static double radialDeltaX,radialDeltaY,radialAngle;
     private static double radialAnimationTime;
-    private IIcon crosshairIcon;
+    private HoloIcon crosshairIcon;
     private List<IAndroidHudElement> hudElements;
     public final AndroidHudMinimap hudMinimap;
     public final AndroidHudStats hudStats;
     public final AndroidHudBionicStats bionicStats;
-    public GuiColor baseGuiColor;
+    public Color baseGuiColor;
     public float opacity;
     public float opacityBackground;
     public boolean hideVanillaHudElements;
@@ -114,7 +113,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         hudElements.add(hudStats);
         hudElements.add(bionicStats);
 
-        baseGuiColor = Reference.COLOR_HOLO.multiply(0.5f);
+        baseGuiColor = Reference.COLOR_HOLO.multiplyWithoutAlpha(0.5f);
     }
 
     @SubscribeEvent
@@ -193,18 +192,18 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         glEnable(GL_ALPHA_TEST);
         //RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
         glColor3d(1, 1, 1);
-        crosshairIcon = ClientProxy.holoIcons.getIcon("crosshair").getIcon();
+        crosshairIcon = ClientProxy.holoIcons.getIcon("crosshair");
         glTranslated(event.resolution.getScaledWidth() / 2, event.resolution.getScaledHeight() / 2, 0);
         glPushMatrix();
         ClientProxy.holoIcons.bindSheet();
         glRotated(90, 0, 0, 1);
-        RenderHelper.renderIcon(-1,-scale,0,crosshairIcon,3,3);
+        ClientProxy.holoIcons.renderIcon(crosshairIcon,-1,-scale);
         glRotated(90, 0, 0, 1);
-        RenderHelper.renderIcon(-2,-scale,0,crosshairIcon,3,3);
+        ClientProxy.holoIcons.renderIcon(crosshairIcon,-2,-scale);
         glRotated(90,0,0,1);
-        RenderHelper.renderIcon(-1.8,-scale+1,0,crosshairIcon,3,3);
+        ClientProxy.holoIcons.renderIcon(crosshairIcon,-1.8,-scale+1);
         glRotated(90,0,0,1);
-        RenderHelper.renderIcon(-1.0,-scale+1,0,crosshairIcon,3,3);
+        ClientProxy.holoIcons.renderIcon(crosshairIcon,-1,-scale+1);
         glPopMatrix();
         glPopMatrix();
         glPopAttrib();
@@ -309,7 +308,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                     RenderUtils.applyColorWithMultipy(baseGuiColor, 1);
                     x = Math.sin(angle) * radius;
                     y = Math.cos(angle) * radius;
-                    RenderHelper.renderIcon(-12 + x, -12 + y, 10, stat.getIcon(0), 24, 24);
+                    ClientProxy.holoIcons.renderIcon(stat.getIcon(0),-12 + x, -12 + y);
                     String statName = stat.getDisplayName(androidPlayer, androidPlayer.getUnlockedLevel(stat));
                     int statNameWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(statName);
                     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -320,7 +319,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                     x = Math.sin(angle) * radius;
                     y = Math.cos(angle) * radius;
                     RenderUtils.applyColorWithMultipy(baseGuiColor, 0.2f);
-                    RenderHelper.renderIcon(-12 + x, -12 + y, 10, stat.getIcon(0), 24, 24);
+                    ClientProxy.holoIcons.renderIcon(stat.getIcon(0),-12 + x, -12 + y);
                 }
             }
 
@@ -447,11 +446,11 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         prop.setLanguageKey("config.android_hud.bionicStats.position");
         bionicStats.setHudPosition(AndroidHudPosition.values()[prop.getInt()]);
 
-        GuiColor color = Reference.COLOR_HOLO;
+        Color color = Reference.COLOR_HOLO;
         prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,"hud_color",Integer.toHexString(color.getColor()));
         prop.setLanguageKey("config.android_hud.color");
         try {
-            baseGuiColor = new GuiColor(Integer.parseInt(prop.getString(),16));
+            baseGuiColor = new Color(Integer.parseInt(prop.getString(),16));
         }
         catch (Exception e)
         {
@@ -460,7 +459,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
         prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,"hud_opacity",0.5f,"The Opacity of the HUD in %",0,1);
         prop.setLanguageKey("config.android_hud.opacity");
-        baseGuiColor = new GuiColor(baseGuiColor.getIntR(),baseGuiColor.getIntG(),baseGuiColor.getIntB(),(int)(255 * prop.getDouble()));
+        baseGuiColor = new Color(baseGuiColor.getIntR(),baseGuiColor.getIntG(),baseGuiColor.getIntB(),(int)(255 * prop.getDouble()));
 
         prop = config.config.get(ConfigurationHandler.CATEGORY_ANDROID_HUD,"hud_background_opacity",0F,"The opacity of the black background for each HUD element");
         prop.setLanguageKey("config.android_hud.opacity_background");

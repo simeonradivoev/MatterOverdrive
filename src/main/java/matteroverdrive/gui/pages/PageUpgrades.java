@@ -18,10 +18,10 @@
 
 package matteroverdrive.gui.pages;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.machines.IUpgradeHandler;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.container.slot.SlotInventory;
 import matteroverdrive.data.Inventory;
@@ -116,7 +116,7 @@ public class PageUpgrades extends ElementBaseGroup
             }
         }
 
-        RenderUtils.DrawMultilineInfo(infos, 76, 78, 100, 300, new GuiColor(255, 255, 255).getColor());
+        RenderUtils.DrawMultilineInfo(infos, 76, 78, 100, 300, new Color(255, 255, 255).getColor());
     }
 
     public void AddUpgradeSlots(Container container,Inventory inventory)

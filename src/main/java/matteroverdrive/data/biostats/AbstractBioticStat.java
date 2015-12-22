@@ -18,14 +18,13 @@
 
 package matteroverdrive.data.biostats;
 
-import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.client.render.HoloIcon;
+import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,7 @@ public abstract class AbstractBioticStat implements IBionicStat
     int maxLevel;
     boolean showOnHud;
     boolean showOnWheel;
-    IIcon icon;
+    HoloIcon icon;
 
     public AbstractBioticStat(String name, int xp)
     {
@@ -213,9 +212,9 @@ public abstract class AbstractBioticStat implements IBionicStat
     }
 
     @Override
-    public void registerIcons(TextureMap holoIcons)
+    public void registerIcons(HoloIcons holoIcons)
     {
-        icon = holoIcons.registerIcon(Reference.MOD_ID + ":" + "biotic_stat_" + name);
+        icon = holoIcons.registerIcon("biotic_stat_" + name,18);
     }
 
     public void addReqiredItm(ItemStack stack)
@@ -299,7 +298,7 @@ public abstract class AbstractBioticStat implements IBionicStat
     }
 
     @Override
-    public IIcon getIcon(int level)
+    public HoloIcon getIcon(int level)
     {
         return icon;
     }

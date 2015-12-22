@@ -19,7 +19,7 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.GuiColor;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.proxy.ClientProxy;
@@ -32,7 +32,7 @@ import org.lwjgl.opengl.GL11;
 public class MOElementIconButton extends MOElementButton
 {
     HoloIcon icon;
-    GuiColor iconColor;
+    Color iconColor;
 
     public MOElementIconButton(GuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int disabledX, int disabledY, int sizeX, int sizeY, String texture,HoloIcon icon) {
         super(gui, handler, posX, posY, name, sheetX, sheetY, hoverX, hoverY, disabledX, disabledY, sizeX, sizeY, texture);
@@ -59,7 +59,7 @@ public class MOElementIconButton extends MOElementButton
         }
     }
 
-    public void setIconColor(GuiColor iconColor)
+    public void setIconColor(Color iconColor)
     {
         this.iconColor = iconColor;
     }

@@ -18,7 +18,7 @@
 
 package matteroverdrive.gui.android;
 
-import cofh.lib.gui.GuiColor;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.entity.player.AndroidPlayer;
 import net.minecraft.client.gui.ScaledResolution;
 
@@ -33,7 +33,7 @@ public interface IAndroidHudElement
     int getHeight(ScaledResolution resolution,AndroidPlayer androidPlayer);
     void setX(int x);
     void setY(int y);
-    void setBaseColor(GuiColor color);
+    void setBaseColor(Color color);
     void setBackgroundAlpha(float alpha);
     AndroidHudPosition getPosition();
     String getName();

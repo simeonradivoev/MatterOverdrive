@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerFusionReactor;
 import matteroverdrive.gui.element.ElementDoubleCircleBar;
@@ -78,13 +77,13 @@ public class GuiFusionReactor extends MOGuiMachine<TileEntityMachineFusionReacto
             fontRendererObj.drawString(info, 140 - width / 2, 142, Reference.COLOR_GUI_DARKER.getColor());
 
             double angle = -(Math.PI * 0.87) * powerBar.getProgressLeft() - ((Math.PI * 2) * 0.03);
-            int xPos = 137 + MathHelper.round(Math.sin(angle) * 76);
-            int yPos = 104 + MathHelper.round(Math.cos(angle) * 74);
+            int xPos = 137 + (int)Math.round(Math.sin(angle) * 76);
+            int yPos = 104 + (int)Math.round(Math.cos(angle) * 74);
             drawCenteredString(fontRendererObj, format.format(powerBar.getProgressLeft() * 100) + "%", xPos, yPos, Reference.COLOR_HOLO_RED.getColor());
 
             angle = (Math.PI * 0.87) * powerBar.getProgressRight() + ((Math.PI * 2) * 0.03);
-            xPos = 137 + MathHelper.round(Math.sin(angle) * 76);
-            yPos = 104 + MathHelper.round(Math.cos(angle) * 74);
+            xPos = 137 + (int)Math.round(Math.sin(angle) * 76);
+            yPos = 104 + (int)Math.round(Math.cos(angle) * 74);
             drawCenteredString(fontRendererObj, format.format(powerBar.getProgressRight() * 100) + "%", xPos, yPos, Reference.COLOR_MATTER.getColor());
 
             info = "+" + ((ContainerFusionReactor)getContainer()).getEnergyPerTick() + MOEnergyHelper.ENERGY_UNIT + "/t";

@@ -18,12 +18,12 @@
 
 package matteroverdrive.world;
 
-import cofh.lib.util.helpers.InventoryHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.entity.monster.EntityRangedRogueAndroidMob;
 import matteroverdrive.init.MatterOverdriveBlocks;
+import matteroverdrive.util.MOInventoryHelper;
 import matteroverdrive.util.WeaponFactory;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -95,7 +95,7 @@ public class MOAndroidHouseBuilding extends MOWorldGenBuilding
                 WeightedRandomChestContent.generateChestContents(random,ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).getItems(random), (IInventory) inventory,random.nextInt(10) + 10);
                 if (random.nextInt(200) < 10)
                 {
-                    InventoryHelper.insertItemStackIntoInventory((IInventory)inventory, MatterOverdrive.weaponFactory.getRandomDecoratedEnergyWeapon(new WeaponFactory.WeaponGenerationContext(3,null,true)),0);
+                    MOInventoryHelper.insertItemStackIntoInventory((IInventory)inventory, MatterOverdrive.weaponFactory.getRandomDecoratedEnergyWeapon(new WeaponFactory.WeaponGenerationContext(3,null,true)),0);
                 }
             }
         }

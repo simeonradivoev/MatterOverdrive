@@ -18,9 +18,8 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.GuiColor;
-import cofh.lib.util.helpers.StringHelper;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.data.inventory.Slot;
@@ -128,8 +127,8 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     {
         if(name != null && !name.isEmpty())
         {
-            String n = StringHelper.localize("gui." + name + ".name");
-            fontRendererObj.drawString(n, 125 - (fontRendererObj.getStringWidth(n) / 2), 7, new GuiColor(44, 54, 52).getColor());
+            String n = MOStringHelper.translateToLocal("gui." + name + ".name");
+            fontRendererObj.drawString(n, 125 - (fontRendererObj.getStringWidth(n) / 2), 7, new Color(44, 54, 52).getColor());
         }
 
         drawElements(0, true);

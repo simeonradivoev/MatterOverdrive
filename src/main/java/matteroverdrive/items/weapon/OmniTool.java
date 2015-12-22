@@ -18,12 +18,12 @@
 
 package matteroverdrive.items.weapon;/* Created by Simeon on 10/17/2015. */
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.WeaponShot;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.item.ItemRendererOmniTool;
 import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.client.sound.WeaponSound;
@@ -218,7 +218,7 @@ public class OmniTool extends EnergyWeapon
 
             if (itemRand.nextFloat() < 0.8f)
             {
-                Minecraft.getMinecraft().effectRenderer.addEffect(new PhaserBoltRecoil(world, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, new GuiColor(255, 255, 255)));
+                Minecraft.getMinecraft().effectRenderer.addEffect(new PhaserBoltRecoil(world, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, new Color(255, 255, 255)));
             }
         }
     }

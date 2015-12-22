@@ -18,8 +18,8 @@
 
 package matteroverdrive.gui.android;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.data.MinimapEntityInfo;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.init.MatterOverdriveBioticStats;
@@ -213,7 +213,7 @@ public class AndroidHudMinimap extends AndroidHudElement
         if (!entityLivingBase.equals(mc.thePlayer))
         {
             int size = getMinimapSize(entityLivingBase);
-            GuiColor color = getMinimapColor(entityLivingBase);
+            Color color = getMinimapColor(entityLivingBase);
             float opacity = mc.thePlayer.canEntityBeSeen(entityLivingBase) ? 1 : 0.7f;
             opacity *= baseColor.getFloatA();
             glEnable(GL_TEXTURE_2D);
@@ -255,7 +255,7 @@ public class AndroidHudMinimap extends AndroidHudElement
         }
     }
 
-    private GuiColor getMinimapColor(EntityLivingBase entityLivingBase)
+    private Color getMinimapColor(EntityLivingBase entityLivingBase)
     {
         if (entityLivingBase instanceof IMob && !entityLivingBase.isOnSameTeam(Minecraft.getMinecraft().thePlayer))
         {

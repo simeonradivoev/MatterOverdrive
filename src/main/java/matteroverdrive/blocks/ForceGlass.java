@@ -19,11 +19,11 @@
 package matteroverdrive.blocks;
 
 import cofh.api.block.IDismantleable;
-import cofh.lib.util.helpers.InventoryHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderio.conduit.IConduitBundle;
 import matteroverdrive.Reference;
+import matteroverdrive.util.MOInventoryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -101,7 +101,7 @@ public class ForceGlass extends BlockCT implements IDismantleable
         }
         else
         {
-            InventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
+            MOInventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
         }
 
         ArrayList<ItemStack> list = new ArrayList<>();

@@ -20,8 +20,6 @@ package matteroverdrive.entity.player;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyStorage;
-import cofh.lib.audio.SoundBase;
-import cofh.lib.util.helpers.MathHelper;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,6 +27,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.api.inventory.IBionicPart;
+import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.MinimapEntityInfo;
 import matteroverdrive.data.inventory.BionicSlot;
@@ -58,6 +57,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -291,7 +292,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
             if (!simulate) {
                 energy -= energyExtracted;
-                energy = MathHelper.clampI(energy,0,getMaxEnergyStored());
+                energy = MathHelper.clamp_int(energy,0,getMaxEnergyStored());
                 this.player.getDataWatcher().updateObject(energyWatchID,energy);
             }
         }
@@ -380,7 +381,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
             if (!simulate) {
                 energy += energyReceived;
-                energy = MathHelper.clampI(energy, 0, getMaxEnergyStored());
+                energy = MathHelper.clamp_int(energy, 0, getMaxEnergyStored());
                 this.player.getDataWatcher().updateObject(energyWatchID, energy);
             }
         }
@@ -814,7 +815,8 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @SideOnly(Side.CLIENT)
     private void playTransformMusic()
     {
-        SoundBase transform_music = new SoundBase(Reference.MOD_ID + ":transformation_music", 1, 1, false, 0, 0, 0, 0, ISound.AttenuationType.NONE);
+        MOPositionedSound transform_music = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":transformation_music"), 1, 1);
+        transform_music.setAttenuationType(ISound.AttenuationType.NONE);
 
         if (!Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(transform_music))
         {
@@ -948,7 +950,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @SideOnly(Side.CLIENT)
     public void playGlitchSoundClient(Random random,float amount)
     {
-        Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":" + "gui.glitch", amount, 0.9f + random.nextFloat() * 0.2f));
+        Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "gui.glitch"), amount, 0.9f + random.nextFloat() * 0.2f));
     }
 
     public boolean isTurning()

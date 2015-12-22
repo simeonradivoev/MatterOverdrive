@@ -18,8 +18,8 @@
 
 package matteroverdrive.gui.android;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.entity.player.AndroidPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -35,7 +35,7 @@ public abstract class AndroidHudElement implements IAndroidHudElement
     protected int posY;
     protected int width;
     protected int height;
-    protected GuiColor baseColor;
+    protected Color baseColor;
     protected float backgroundAlpha;
     protected AndroidHudPosition defaultPosition;
     protected AndroidHudPosition hudPosition;
@@ -78,7 +78,7 @@ public abstract class AndroidHudElement implements IAndroidHudElement
     }
 
     @Override
-    public void setBaseColor(GuiColor color) {
+    public void setBaseColor(Color color) {
         this.baseColor = color;
     }
 

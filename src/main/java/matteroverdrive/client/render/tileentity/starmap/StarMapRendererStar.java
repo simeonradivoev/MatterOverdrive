@@ -18,10 +18,10 @@
 
 package matteroverdrive.client.render.tileentity.starmap;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Galaxy;
@@ -76,7 +76,7 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
             RenderUtils.tessalateParticle(Minecraft.getMinecraft().renderViewEntity, star_icon, star.getSize(), Vec3.createVectorHelper(0, 0, 0), Reference.COLOR_HOLO_YELLOW.getFloatR() * 0.1f, Reference.COLOR_HOLO_YELLOW.getFloatG() * 0.1f, Reference.COLOR_HOLO_YELLOW.getFloatB() * 0.1f, Reference.COLOR_HOLO_YELLOW.getFloatA() * 0.1f);
             Tessellator.instance.draw();
 
-            RenderUtils.applyColorWithMultipy(new GuiColor(star.getColor()), 0.25f * (1f / distance));
+            RenderUtils.applyColorWithMultipy(new Color(star.getColor()), 0.25f * (1f / distance));
             glPolygonMode(GL_FRONT, GL_LINE);
             glDisable(GL_TEXTURE_2D);
             double s = 0.9 + Math.sin(time * 0.01) * 0.1;
@@ -107,7 +107,7 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
                 }
 
                 glDisable(GL_ALPHA_TEST);
-                GuiColor planetColor = Planet.getGuiColor(planet);
+                Color planetColor = Planet.getGuiColor(planet);
                 random.setSeed(planet.getSeed());
 
                 glPushMatrix();

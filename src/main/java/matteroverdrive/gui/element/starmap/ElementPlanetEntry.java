@@ -18,10 +18,10 @@
 
 package matteroverdrive.gui.element.starmap;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IShip;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.GuiStarMap;
@@ -50,7 +50,7 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
     }
 
     @Override
-    protected void drawElementName(Planet planet, GuiColor color, float multiply)
+    protected void drawElementName(Planet planet, Color color, float multiply)
     {
         String name = spaceBody.getName();
         GuiStarMap guiStarMap = (GuiStarMap)gui;
@@ -140,7 +140,7 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
     }
 
     @Override
-    protected GuiColor getSpaceBodyColor(Planet planet)
+    protected Color getSpaceBodyColor(Planet planet)
     {
         return Planet.getGuiColor(planet);
     }

@@ -19,7 +19,6 @@
 package matteroverdrive.gui;
 
 import cofh.lib.gui.element.ElementDualScaled;
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerInscriber;
 import matteroverdrive.container.ContainerMachine;
@@ -69,6 +68,6 @@ public class GuiInscriber extends MOGuiMachine<TileEntityInscriber>
                                                    int p_146976_2_, int p_146976_3_)
     {
         super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
-        inscribe_progress.setQuantity(MathHelper.round((((ContainerMachine)getContainer()).getProgress() * 24)));
+        inscribe_progress.setQuantity(Math.round((((ContainerMachine)getContainer()).getProgress() * 24)));
     }
 }

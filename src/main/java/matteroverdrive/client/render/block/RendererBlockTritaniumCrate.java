@@ -18,10 +18,10 @@
 
 package matteroverdrive.client.render.block;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.block.Block;
@@ -79,7 +79,7 @@ public class RendererBlockTritaniumCrate implements ISimpleBlockRenderingHandler
 
         RenderUtils.tesseleteModelAsBlock(mat, base, MatterOverdriveIcons.tritanium_crate_base, x, y, z, brightness, true, null);
 
-        RenderUtils.tesseleteModelAsBlock(mat, overlay, MatterOverdriveIcons.tritanium_crate_overlay, x, y, z, brightness, true, new GuiColor(color));
+        RenderUtils.tesseleteModelAsBlock(mat, overlay, MatterOverdriveIcons.tritanium_crate_overlay, x, y, z, brightness, true, new Color(color));
         Tessellator.instance.draw();
         Tessellator.instance.startDrawingQuads();
     }

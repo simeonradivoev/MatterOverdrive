@@ -18,11 +18,11 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.machines.IUpgradeHandler;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.entity.player.AndroidPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -152,11 +152,11 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     }
 
 	@Override
-	public List<BlockPosition> getBoundingBlocks() {
-		List<BlockPosition> coords = new ArrayList<>();
+	public List<BlockPos> getBoundingBlocks() {
+		List<BlockPos> coords = new ArrayList<>();
 
-		coords.add(new BlockPosition(xCoord, yCoord + 1, zCoord));
-		coords.add(new BlockPosition(xCoord, yCoord + 2, zCoord));
+		coords.add(new BlockPos(xCoord, yCoord + 1, zCoord));
+		coords.add(new BlockPos(xCoord, yCoord + 2, zCoord));
 
 		return coords;
 	}

@@ -18,7 +18,6 @@
 
 package matteroverdrive.blocks;
 
-import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
@@ -26,6 +25,7 @@ import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.machines.analyzer.TileEntityMachineMatterAnalyzer;
+import matteroverdrive.util.MOBlockHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
@@ -79,11 +79,11 @@ public class BlockMatterAnalyzer extends MOBlockMachine
         {
             return this.iconFront;
         }
-        else if(side == BlockHelper.getOppositeSide(metadata))
+        else if(side == MOBlockHelper.getOppositeSide(metadata))
         {
             return MatterOverdriveIcons.Network_port_square;
         }
-        else if (side == BlockHelper.getLeftSide(metadata) || side == BlockHelper.getRightSide(metadata))
+        else if (side == MOBlockHelper.getLeftSide(metadata) || side == MOBlockHelper.getRightSide(metadata))
         {
             return MatterOverdriveIcons.Vent2;
         }

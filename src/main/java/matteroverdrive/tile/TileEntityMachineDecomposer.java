@@ -18,8 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.TimeTracker;
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterHandler;
@@ -30,6 +28,7 @@ import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.TimeTracker;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -188,7 +187,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     {
         double matter = Math.log1p(MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(INPUT_SLOT_ID)));
         matter*=matter;
-        return MathHelper.round(DECEOPOSE_SPEED_PER_MATTER * matter * getUpgradeMultiply(UpgradeTypes.Speed));
+        return (int)Math.round(DECEOPOSE_SPEED_PER_MATTER * matter * getUpgradeMultiply(UpgradeTypes.Speed));
     }
 
     public int getEnergyDrainPerTick()
@@ -205,7 +204,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
     {
         int matter = MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(INPUT_SLOT_ID));
         double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.PowerUsage);
-        return MathHelper.round((matter * DECOMPOSE_ENERGY_PER_MATTER) * upgradeMultiply);
+        return (int)Math.round((matter * DECOMPOSE_ENERGY_PER_MATTER) * upgradeMultiply);
     }
 
     private boolean canPutInOutput(int matter)

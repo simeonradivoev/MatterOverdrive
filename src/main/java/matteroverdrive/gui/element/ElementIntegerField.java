@@ -19,12 +19,12 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.element.ElementBase;
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
@@ -87,12 +87,12 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
 
     public int getNumber()
     {
-        return MathHelper.clampI(number, min, max);
+        return MathHelper.clamp_int(number, min, max);
     }
 
     public void setNumber(int number)
     {
-        this.number = MathHelper.clampI(number,min,max);
+        this.number = MathHelper.clamp_int(number,min,max);
     }
 
     @Override

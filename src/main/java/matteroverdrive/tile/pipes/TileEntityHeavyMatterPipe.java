@@ -18,7 +18,7 @@
 
 package matteroverdrive.tile.pipes;
 
-import cofh.lib.util.TimeTracker;
+import matteroverdrive.util.TimeTracker;
 
 /**
  * Created by Simeon on 8/20/2015.

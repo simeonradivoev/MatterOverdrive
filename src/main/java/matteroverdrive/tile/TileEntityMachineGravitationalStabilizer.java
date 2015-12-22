@@ -18,7 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -37,6 +36,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.vector.Vector3f;
+
+import static matteroverdrive.util.MOBlockHelper.getAboveSide;
 
 /**
  * Created by Simeon on 5/12/2015.
@@ -101,7 +102,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
                 float b = (float) getBeamColorB();
 
                 if (r != 0 || g != 0 || b != 0) {
-                    ForgeDirection up = ForgeDirection.getOrientation(BlockHelper.getAboveSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord)));
+                    ForgeDirection up = ForgeDirection.getOrientation(getAboveSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord)));
                     GravitationalStabilizerBeamParticle particle = new GravitationalStabilizerBeamParticle(worldObj, new Vector3f(xCoord + 0.5f, yCoord + 0.5f, zCoord + 0.5f), new Vector3f(hit.blockX + 0.5f, hit.blockY + 0.5f, hit.blockZ + 0.5f), new Vector3f(up.offsetX, up.offsetY, up.offsetZ), 1f, 0.3f, 80);
                     particle.setColor(r, g, b, 1);
                     ClientProxy.renderHandler.getRenderParticlesHandler().addEffect(particle, RenderParticlesHandler.Blending.Additive);

@@ -18,7 +18,7 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.position.BlockPosition;
+import matteroverdrive.data.BlockPos;
 
 import java.util.List;
 
@@ -29,6 +29,6 @@ import java.util.List;
  */
 public interface IMultiBlockTileEntity {
 
-	List<BlockPosition> getBoundingBlocks();
+	List<BlockPos> getBoundingBlocks();
 
 }

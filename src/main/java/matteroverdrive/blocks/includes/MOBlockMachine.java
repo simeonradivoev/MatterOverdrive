@@ -19,7 +19,6 @@
 package matteroverdrive.blocks.includes;
 
 import cofh.api.block.IDismantleable;
-import cofh.lib.util.helpers.InventoryHelper;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -31,6 +30,7 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.items.includes.MOMachineBlockItem;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.IConfigSubscriber;
+import matteroverdrive.util.MOInventoryHelper;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.block.Block;
@@ -213,7 +213,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
         }
         else
         {
-            InventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
+            MOInventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
         }
 
         return items;

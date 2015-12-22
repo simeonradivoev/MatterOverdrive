@@ -18,10 +18,10 @@
 
 package matteroverdrive.data;
 
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.api.matter.IMatterStorage;
 import matteroverdrive.init.MatterOverdriveFluids;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -73,7 +73,7 @@ public class MatterStorage implements IMatterStorage, IFluidTank
 
     public int extractMatter(int amount, boolean simulate)
     {
-        int maxDrain = MathHelper.clampI(Math.min(amount, getMaxExtract()), 0, getFluid().amount);
+        int maxDrain = MathHelper.clamp_int(Math.min(amount, getMaxExtract()), 0, getFluid().amount);
 
         if(!simulate)
         {
@@ -86,7 +86,7 @@ public class MatterStorage implements IMatterStorage, IFluidTank
     @Override
     public int receiveMatter(ForgeDirection side, int amount, boolean simulate)
     {
-        int maxFill = MathHelper.clampI(Math.min(amount, getMaxReceive()), 0, getCapacity() - getFluid().amount);
+        int maxFill = MathHelper.clamp_int(Math.min(amount, getMaxReceive()), 0, getCapacity() - getFluid().amount);
 
         if(!simulate)
         {

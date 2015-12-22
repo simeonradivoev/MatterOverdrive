@@ -19,9 +19,9 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.util.helpers.StringHelper;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.slot.MOSlot;
+import matteroverdrive.util.MOStringHelper;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public class ElementInventorySlot extends ElementSlot
     {
         if (slot.getUnlocalizedTooltip() != null && !slot.getUnlocalizedTooltip().isEmpty() && !slot.getHasStack())
         {
-            list.add(StringHelper.localize(slot.getUnlocalizedTooltip()));
+            list.add(MOStringHelper.translateToLocal(slot.getUnlocalizedTooltip()));
         }
     }
 

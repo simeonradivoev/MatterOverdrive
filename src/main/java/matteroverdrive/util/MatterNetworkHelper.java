@@ -18,9 +18,9 @@
 
 package matteroverdrive.util;
 
-import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.*;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
@@ -41,7 +41,7 @@ public class MatterNetworkHelper
     public static boolean broadcastPacketInDirection(World world, MatterNetworkPacket packet, IMatterNetworkConnection source, ForgeDirection direction) {
         //if the source connection can connect From Side
         if (source.canConnectFromSide(direction)) {
-            BlockPosition position = source.getPosition().step(direction);
+            BlockPos position = source.getPosition().step(direction);
             ForgeDirection oppositeDirection = direction.getOpposite();
             TileEntity e = position.getTileEntity(world);
             //if there is any connection in that direction
@@ -79,7 +79,7 @@ public class MatterNetworkHelper
         return broadcastPacketInDirection(world, new MatterNetworkTaskPacket(dispatcher, task, queueID, direction, filter), dispatcher, direction);
     }
 
-    public static NBTTagCompound getFilterFromPositions(BlockPosition... positions)
+    public static NBTTagCompound getFilterFromPositions(BlockPos... positions)
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
         NBTTagList tagList = new NBTTagList();
@@ -93,7 +93,7 @@ public class MatterNetworkHelper
         return tagCompound;
     }
 
-    public static NBTTagCompound addPositionsToFilter(NBTTagCompound filter,BlockPosition... positions)
+    public static NBTTagCompound addPositionsToFilter(NBTTagCompound filter, BlockPos... positions)
     {
         if (filter == null)
         {

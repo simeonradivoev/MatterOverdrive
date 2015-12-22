@@ -18,11 +18,11 @@
 
 package matteroverdrive.data.inventory;
 
-import cofh.lib.util.helpers.EnergyHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -37,7 +37,7 @@ public class EnergySlot extends Slot
     @Override
     public boolean isValidForSlot(ItemStack itemStack)
     {
-        return EnergyHelper.isEnergyContainerItem(itemStack);
+        return MOEnergyHelper.isEnergyContainerItem(itemStack);
     }
 
     @Override

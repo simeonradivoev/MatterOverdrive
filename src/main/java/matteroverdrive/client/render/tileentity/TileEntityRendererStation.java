@@ -18,9 +18,9 @@
 
 package matteroverdrive.client.render.tileentity;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.IConfigSubscriber;
@@ -61,13 +61,13 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
     int fragmentShader;
     Random fliker;
 
-    protected GuiColor holoColor;
-    protected GuiColor red_holoColor;
+    protected Color holoColor;
+    protected Color red_holoColor;
 
     public TileEntityRendererStation()
     {
-        holoColor = new GuiColor(Reference.COLOR_HOLO.getIntR() / 4, Reference.COLOR_HOLO.getIntG() / 4, Reference.COLOR_HOLO.getIntB() / 4);
-        red_holoColor = new GuiColor(Reference.COLOR_HOLO_RED.getIntR() / 4, Reference.COLOR_HOLO_RED.getIntG() / 4, Reference.COLOR_HOLO_RED.getIntB() / 4);
+        holoColor = Reference.COLOR_HOLO.multiplyWithoutAlpha(0.25f);
+        red_holoColor = Reference.COLOR_HOLO_RED.multiplyWithoutAlpha(0.25f);
         fliker = new Random();
 
         if (GLContext.getCapabilities().OpenGL20) {
@@ -195,7 +195,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         return 1.3;
     }
 
-    protected GuiColor getHoloColor(TileEntity entity)
+    protected Color getHoloColor(TileEntity entity)
     {
         if (((MOTileEntityMachine)entity).isUseableByPlayer(Minecraft.getMinecraft().thePlayer))
         {
@@ -287,7 +287,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
             glScaled(0.02, 0.02, 0.02);
             glRotated(180, 1, 0, 0);
 
-            GuiColor color = new GuiColor(Reference.COLOR_HOLO_RED.getIntR() / 3, Reference.COLOR_HOLO_RED.getIntG() / 3, Reference.COLOR_HOLO_RED.getIntB() / 3);
+            Color color = Reference.COLOR_HOLO_RED.multiplyWithoutAlpha(0.33f);
             String info[] = MOStringHelper.translateToLocal("gui.hologram.access_denied").split(" ");
             for (int i = 0; i < info.length; i++)
             {

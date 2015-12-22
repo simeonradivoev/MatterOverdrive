@@ -18,12 +18,12 @@
 
 package matteroverdrive.data.biostats;
 
-import cofh.lib.audio.SoundBase;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
+import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
@@ -34,6 +34,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -101,11 +102,11 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
             androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_NIGHTVISION, !androidPlayer.getEffects().getBoolean("Nightvision"));
             if (!androidPlayer.getEffects().getBoolean("Nightvision"))
             {
-                Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":night_vision", 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
+                Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":night_vision"), 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
             }
             else
             {
-                Minecraft.getMinecraft().getSoundHandler().playSound(new SoundBase(Reference.MOD_ID + ":power_down", 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
+                Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":power_down"), 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
             }
         }
     }

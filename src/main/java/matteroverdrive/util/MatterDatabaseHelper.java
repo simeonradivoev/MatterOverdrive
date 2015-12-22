@@ -18,7 +18,6 @@
 
 package matteroverdrive.util;
 
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import net.minecraft.block.Block;
@@ -27,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class MatterDatabaseHelper
@@ -218,7 +218,7 @@ public class MatterDatabaseHelper
         if (itemNBT != null)
 		{
             int lastProgress = itemNBT.getByte(PROGRESS_TAG_NAME);
-            int newProgress = MathHelper.clampI(lastProgress + progress, 0, MAX_ITEM_PROGRESS);
+            int newProgress = MathHelper.clamp_int(lastProgress + progress, 0, MAX_ITEM_PROGRESS);
             itemNBT.setByte(PROGRESS_TAG_NAME, (byte) newProgress);
             System.out.println("Item in list");
         }

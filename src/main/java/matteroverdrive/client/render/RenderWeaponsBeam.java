@@ -18,12 +18,12 @@
 
 package matteroverdrive.client.render;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.RenderHandler;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.tileentity.TileEntityRendererStation;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.items.weapon.EnergyWeapon;
@@ -206,9 +206,9 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
     }
 
     @Override
-    protected GuiColor getBeamColor(EntityPlayer caster)
+    protected Color getBeamColor(EntityPlayer caster)
     {
-        return new GuiColor(WeaponHelper.getColor(caster.getItemInUse()));
+        return new Color(WeaponHelper.getColor(caster.getItemInUse()));
     }
 
     @Override

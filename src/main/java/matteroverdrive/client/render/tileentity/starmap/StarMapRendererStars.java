@@ -18,10 +18,10 @@
 
 package matteroverdrive.client.render.tileentity.starmap;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.starmap.data.Star;
@@ -89,7 +89,7 @@ public abstract class StarMapRendererStars extends StarMapRendererAbstract
 
     protected void drawStarParticle(Quadrant quadrant, Star star, Vec3 pos, EntityPlayer player, TileEntityMachineStarMap starMap, double starSizeMultiply)
     {
-        GuiColor color = getStarColor(star, player);
+        Color color = getStarColor(star, player);
         double size = 0.01;
         if (starMap.getDestination().equals(star))
         {
@@ -113,8 +113,8 @@ public abstract class StarMapRendererStars extends StarMapRendererAbstract
         Minecraft.getMinecraft().renderEngine.bindTexture(location);
     }
 
-    public static GuiColor getStarColor(Star star, EntityPlayer player)
+    public static Color getStarColor(Star star, EntityPlayer player)
     {
-        return new GuiColor(star.getColor());
+        return new Color(star.getColor());
     }
 }

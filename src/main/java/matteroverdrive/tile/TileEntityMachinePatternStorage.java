@@ -18,9 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.helpers.BlockHelper;
-import cofh.lib.util.helpers.MathHelper;
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.IScannable;
@@ -30,6 +27,7 @@ import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.blocks.BlockPatternStorage;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.PatternStorageSlot;
@@ -48,11 +46,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
 import java.util.List;
+
+import static matteroverdrive.util.MOBlockHelper.getOppositeSide;
 
 /**
  * Created by Simeon on 3/27/2015.
@@ -93,7 +94,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         {
             if (isActive() && random.nextFloat() < 0.2f && getBlockType(BlockPatternStorage.class) != null && getBlockType(BlockPatternStorage.class).hasVentParticles)
             {
-                SpawnVentParticles(0.03f, ForgeDirection.getOrientation(BlockHelper.getOppositeSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
+                SpawnVentParticles(0.03f, ForgeDirection.getOrientation(getOppositeSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))), 1);
             }
         }
     }
@@ -256,7 +257,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
             {
                 if (!simulate)
                 {
-                    progress = MathHelper.clampI(progress + amount, 0, MatterDatabaseHelper.MAX_ITEM_PROGRESS);
+                    progress = MathHelper.clamp_int(progress + amount, 0, MatterDatabaseHelper.MAX_ITEM_PROGRESS);
                     MatterDatabaseHelper.SetProgressToNBT(hasItem, (byte) progress);
                     forceSync();
                 }
@@ -366,9 +367,9 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public BlockPosition getPosition()
+    public BlockPos getPosition()
     {
-        return new BlockPosition(this);
+        return new BlockPos(this);
     }
 
     @Override

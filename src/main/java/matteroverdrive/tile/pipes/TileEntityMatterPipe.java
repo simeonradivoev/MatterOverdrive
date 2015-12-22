@@ -18,7 +18,6 @@
 
 package matteroverdrive.tile.pipes;
 
-import cofh.lib.util.TimeTracker;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.matter.IMatterHandler;
@@ -27,6 +26,7 @@ import matteroverdrive.fluids.FluidMatterPlasma;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.TimeTracker;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;

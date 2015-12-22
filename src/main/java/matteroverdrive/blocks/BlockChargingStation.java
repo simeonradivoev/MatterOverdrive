@@ -18,13 +18,12 @@
 
 package matteroverdrive.blocks;
 
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.client.render.block.RendererBlockChargingStation;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineChargingStation;
 import net.minecraft.block.Block;
@@ -60,9 +59,9 @@ public class BlockChargingStation extends MOBlockMachine
 
 	@Override
 	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
-		BlockPosition ownerPos = new BlockPosition(x, y, z);
-		BlockBoundingBox.createBoundingBox(world, new BlockPosition(x, y + 1, z), ownerPos, this);
-		BlockBoundingBox.createBoundingBox(world, new BlockPosition(x, y + 2, z), ownerPos, this);
+        BlockPos ownerPos = new matteroverdrive.data.BlockPos(x, y, z);
+		BlockBoundingBox.createBoundingBox(world, new matteroverdrive.data.BlockPos(x, y + 1, z), ownerPos, this);
+		BlockBoundingBox.createBoundingBox(world, new BlockPos(x, y + 2, z), ownerPos, this);
 
 		return meta;
 	}

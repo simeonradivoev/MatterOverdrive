@@ -18,10 +18,10 @@
 
 package matteroverdrive.items;
 
-import cofh.lib.gui.GuiColor;
-import cofh.lib.util.helpers.EnergyHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.client.data.Color;
+import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,7 +30,7 @@ import java.util.List;
 
 public class CreativeBattery extends Battery
 {
-	public CreativeBattery(String name, int capacity,GuiColor color,int input,int output)
+	public CreativeBattery(String name, int capacity, Color color, int input, int output)
 	{
 		super(name, capacity,color,input,output);
 		this.setMaxStackSize(1);
@@ -52,7 +52,7 @@ public class CreativeBattery extends Battery
 	@Override
 	public void setEnergyStored(ItemStack container,int amount)
 	{
-		EnergyHelper.setDefaultEnergyTag(container, capacity);
+		MOEnergyHelper.setDefaultEnergyTag(container, capacity);
 	}
 
 	@Override

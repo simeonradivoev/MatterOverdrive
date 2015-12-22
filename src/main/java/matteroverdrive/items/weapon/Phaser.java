@@ -18,7 +18,6 @@
 
 package matteroverdrive.items.weapon;
 
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -151,7 +150,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 
                 if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,item) && isKillMode(item))
                 {
-                    el.setFire(MathHelper.round(WeaponHelper.modifyStat(Reference.WS_FIRE_DAMAGE,item,0) * item.getTagCompound().getByte("power")));
+                    el.setFire(Math.round(WeaponHelper.modifyStat(Reference.WS_FIRE_DAMAGE,item,0) * item.getTagCompound().getByte("power")));
                 }
                 else if (WeaponHelper.hasStat(Reference.WS_HEAL,item))
                 {

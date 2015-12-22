@@ -20,7 +20,6 @@ package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.element.ElementBase;
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 
@@ -53,7 +52,7 @@ public class ElementScrollGroup extends ElementBaseGroup
         contentTotalHeight = 0;
         for (ElementBase element : elements)
         {
-            element.setPosition(element.getPosX(), MathHelper.round(contentTotalHeight + scrollSmooth));
+            element.setPosition(element.getPosX(), Math.round(contentTotalHeight + scrollSmooth));
             element.setVisible(true);
             contentTotalHeight += element.getHeight();
         }

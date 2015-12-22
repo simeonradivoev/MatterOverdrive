@@ -18,7 +18,6 @@
 
 package matteroverdrive.blocks.includes;
 
-import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,6 +25,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.tile.MOTileEntity;
+import matteroverdrive.util.MOBlockHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,6 +34,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
+
+import static matteroverdrive.util.MOBlockHelper.RotationType;
+import static matteroverdrive.util.MOBlockHelper.SIDE_LEFT;
 
 /**
  * Created by Simeon on 3/24/2015.
@@ -48,7 +51,7 @@ public class MOBlock extends Block
         this.setBlockName(name);
         this.setBlockTextureName(Reference.MOD_ID + ":" + name);
         setCreativeTab(MatterOverdrive.tabMatterOverdrive);
-        rotationType = BlockHelper.RotationType.FOUR_WAY;
+        rotationType = RotationType.FOUR_WAY;
     }
 
     public void register()
@@ -121,7 +124,7 @@ public class MOBlock extends Block
      */
     public void onBlockPlacedBy(World World, int x, int y, int z, EntityLivingBase player, ItemStack item)
     {
-        int meta = BlockHelper.determineXZPlaceFacing(player);
+        int meta = MOBlockHelper.determineXZPlaceFacing(player);
         World.setBlockMetadataWithNotify(x, y, z, meta, 2);
     }
 
@@ -131,9 +134,9 @@ public class MOBlock extends Block
             int meta = worldObj.getBlockMetadata(x, y, z);
             int rotation = meta;
 
-            if (rotationType == BlockHelper.RotationType.FOUR_WAY) {
-                rotation = BlockHelper.SIDE_LEFT[meta];
-            } else if (rotationType == BlockHelper.RotationType.SIX_WAY) {
+            if (rotationType == RotationType.FOUR_WAY) {
+                rotation = SIDE_LEFT[meta];
+            } else if (rotationType == RotationType.SIX_WAY) {
                 if (meta < 6) {
                     rotation = (meta + 1) % 6;
                 }

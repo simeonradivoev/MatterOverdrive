@@ -18,8 +18,8 @@
 
 package matteroverdrive;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.common.Loader;
+import matteroverdrive.client.data.Color;
 
 public class Reference
 {
@@ -66,19 +66,19 @@ public class Reference
 	//endregion
 
 	//region Colors
-	public static final GuiColor COLOR_MATTER = new GuiColor(191,228,230);
-    public static final GuiColor COLOR_HOLO = new GuiColor(169,226,251);
-	public static final GuiColor COLOR_YELLOW_STRIPES = new GuiColor(254,203,4);
-	public static final GuiColor COLOR_HOLO_RED = new GuiColor(230,80,20);
-	public static final GuiColor COLOR_HOLO_GREEN = new GuiColor(24,207,0);
-	public static final GuiColor COLOR_HOLO_YELLOW = new GuiColor(252,223,116);
-    public static final GuiColor COLOR_HOLO_PURPLE = new GuiColor(116,23,230);
-	public static final GuiColor COLOR_GUI_NORMAL = new GuiColor(62,81,84);
-	public static final GuiColor COLOR_GUI_LIGHT = new GuiColor(100,113,136);
-	public static final GuiColor COLOR_GUI_LIGHTER = new GuiColor(139,126,168);
-	public static final GuiColor COLOR_GUI_DARK = new GuiColor(44,54,52);
-	public static final GuiColor COLOR_GUI_DARKER = new GuiColor(34,40,37);
-	public static final GuiColor COLOR_GUI_ENERGY = new GuiColor(224,0,0);
+	public static final Color COLOR_MATTER = new Color(191,228,230);
+    public static final Color COLOR_HOLO = new Color(169,226,251);
+	public static final Color COLOR_YELLOW_STRIPES = new Color(254,203,4);
+	public static final Color COLOR_HOLO_RED = new Color(230,80,20);
+	public static final Color COLOR_HOLO_GREEN = new Color(24,207,0);
+	public static final Color COLOR_HOLO_YELLOW = new Color(252,223,116);
+    public static final Color COLOR_HOLO_PURPLE = new Color(116,23,230);
+	public static final Color COLOR_GUI_NORMAL = new Color(62,81,84);
+	public static final Color COLOR_GUI_LIGHT = new Color(100,113,136);
+	public static final Color COLOR_GUI_LIGHTER = new Color(139,126,168);
+	public static final Color COLOR_GUI_DARK = new Color(44,54,52);
+	public static final Color COLOR_GUI_DARKER = new Color(34,40,37);
+	public static final Color COLOR_GUI_ENERGY = new Color(224,0,0);
 	//endregion
 
 	//region Modules

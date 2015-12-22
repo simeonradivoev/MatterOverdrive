@@ -18,7 +18,7 @@
 
 package matteroverdrive.api.network;
 
-import cofh.lib.util.position.BlockPosition;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -51,7 +51,7 @@ public abstract class MatterNetworkTask
     /**
      * The sender address
      */
-    BlockPosition senderPos;
+    BlockPos senderPos;
 
     /**
      * Is the task alive.
@@ -122,7 +122,7 @@ public abstract class MatterNetworkTask
     public void readFromNBT(NBTTagCompound compound)
     {
         if (compound != null) {
-            this.senderPos = new BlockPosition(compound);
+            this.senderPos = new BlockPos(compound);
             this.state = MatterNetworkTaskState.get(compound.getInteger("State"));
             this.isAlive = compound.getBoolean("isAlive");
             this.id = compound.getLong("id");

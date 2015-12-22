@@ -18,8 +18,8 @@
 
 package matteroverdrive.client.render.entity;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.model.MOModelRenderColored;
 import matteroverdrive.entity.monster.EntityRougeAndroidMob;
 import net.minecraft.client.model.ModelBase;
@@ -75,7 +75,7 @@ public class EntityRendererRangedRougeAndroid extends EntityRendererRougeAndroid
     {
         if (entityLiving instanceof EntityRougeAndroidMob)
         {
-            visorModel.setColor(new GuiColor(((EntityRougeAndroidMob) entityLiving).getVisorColor()));
+            visorModel.setColor(new Color(((EntityRougeAndroidMob) entityLiving).getVisorColor()));
         }
 
         this.field_82423_g.aimedBow = this.field_82425_h.aimedBow = this.modelBipedMain.aimedBow = true;

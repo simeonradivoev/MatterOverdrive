@@ -1,10 +1,28 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.GuiColor;
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.util.math.MOMathHelper;
+import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
@@ -35,10 +53,10 @@ public class ElementScanProgress extends MOElementBase
 
         gui.bindTexture(texture);
         this.drawTexturedModalRect(0,0,0,0,117,47);
-        GuiColor color = new GuiColor(191,228,230);
+        Color color = new Color(191,228,230);
 
         random.setSeed(seed);
-        int progress = MathHelper.floor(this.progress * 26);
+        int progress = MathHelper.floor_float(this.progress * 26);
 
         int marginsTop = 8;
         int marginsLeft = 7;
@@ -57,7 +75,7 @@ public class ElementScanProgress extends MOElementBase
             	noiseValue = noiseValue * 0.8 + random.nextDouble() * 0.2;
 
                 newValue = (float)noiseValue;
-                int height = MathHelper.round(values[i] * maxHeight);
+                int height = Math.round(values[i] * maxHeight);
                 int x1 = marginsLeft + i * 4;
                 int y1 = maxHeight + marginsTop;
                 int x2 = x1 + 2;

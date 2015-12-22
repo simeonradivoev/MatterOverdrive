@@ -18,9 +18,9 @@
 
 package matteroverdrive.client.render.tileentity.starmap;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.IShip;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.Planet;
@@ -133,7 +133,7 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
                 if (shipStack.getItem() instanceof IShip)
                 {
                     IShip ship = (IShip)shipStack.getItem();
-                    GuiColor shipColor = Reference.COLOR_HOLO;
+                    Color shipColor = Reference.COLOR_HOLO;
                     if (!ship.isOwner(shipStack, Minecraft.getMinecraft().thePlayer))
                     {
                         shipColor = Reference.COLOR_HOLO_RED;

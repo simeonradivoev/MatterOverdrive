@@ -18,11 +18,11 @@
 
 package matteroverdrive.blocks;
 
-import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.client.render.IconConnectedTexture;
+import matteroverdrive.util.MOBlockHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -67,16 +67,16 @@ public abstract class BlockCT extends MOBlock
         if (isSideCT(world, x, y, z, sideId)) {
             ForgeDirection side = ForgeDirection.getOrientation(sideId);
             if (side != ForgeDirection.UP && side != ForgeDirection.DOWN) {
-                ForgeDirection direction = ForgeDirection.getOrientation(BlockHelper.getAboveSide(sideId));
+                ForgeDirection direction = ForgeDirection.getOrientation(MOBlockHelper.getAboveSide(sideId));
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 0, true);
-                direction = ForgeDirection.getOrientation(BlockHelper.getBelowSide(sideId));
+                direction = ForgeDirection.getOrientation(MOBlockHelper.getBelowSide(sideId));
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 1, true);
-                direction = ForgeDirection.getOrientation(BlockHelper.getLeftSide(sideId));
+                direction = ForgeDirection.getOrientation(MOBlockHelper.getLeftSide(sideId));
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 2, true);
-                direction = ForgeDirection.getOrientation(BlockHelper.getRightSide(sideId));
+                direction = ForgeDirection.getOrientation(MOBlockHelper.getRightSide(sideId));
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 3, true);
             }else

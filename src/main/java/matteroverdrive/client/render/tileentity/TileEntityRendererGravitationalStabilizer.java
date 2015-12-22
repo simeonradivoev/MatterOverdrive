@@ -18,7 +18,6 @@
 
 package matteroverdrive.client.render.tileentity;
 
-import cofh.lib.util.helpers.BlockHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.tile.TileEntityGravitationalAnomaly;
 import matteroverdrive.tile.TileEntityMachineGravitationalStabilizer;
@@ -36,6 +35,7 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
+import static matteroverdrive.util.MOBlockHelper.getOppositeSide;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -117,7 +117,7 @@ public class TileEntityRendererGravitationalStabilizer extends TileEntitySpecial
     public void renderScreen(double x, double y, double z, TileEntityMachineGravitationalStabilizer stabilizer, TileEntityGravitationalAnomaly anomaly) {
 
         int meta = stabilizer.getWorldObj().getBlockMetadata(stabilizer.xCoord,stabilizer.yCoord,stabilizer.zCoord);
-        ForgeDirection side = ForgeDirection.getOrientation(BlockHelper.getOppositeSide(meta));
+        ForgeDirection side = ForgeDirection.getOrientation(getOppositeSide(meta));
 
         RenderUtils.beginDrawinngBlockScreen(x, y, z, side, Reference.COLOR_HOLO,stabilizer);
 

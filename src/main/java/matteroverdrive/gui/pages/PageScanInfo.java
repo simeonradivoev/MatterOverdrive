@@ -1,8 +1,26 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui.pages;
 
-import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementButton;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.util.MatterDatabaseHelper;
@@ -58,7 +76,7 @@ public class PageScanInfo extends ElementBaseGroup
         scan_progress.setTexture(backgroundPath, 256, 256);
         scan_progress.setMaxValue(MatterDatabaseHelper.MAX_ITEM_PROGRESS);
         scan_progress.SetTextPostition(18, 5);
-        scan_progress.setTextColor(new GuiColor(255, 255, 255).getColor());
+        scan_progress.setTextColor(new Color(255, 255, 255).getColor());
         scan_info_graph.setProgress(1);
     }
 
@@ -98,12 +116,12 @@ public class PageScanInfo extends ElementBaseGroup
                 infos.add(Matter);
             }
 
-            RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 200, new GuiColor(255, 255, 255).getColor());
+            RenderUtils.DrawMultilineInfo(infos, 50, 98, 8, 200, Color.WHITE.getColor());
         }
         else
         {
             String Matter = "Matter: " + String.valueOf(MatterHelper.getMatterAmountFromItem(item)) + MatterHelper.MATTER_UNIT;
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("No Item Selected!",80,90,new GuiColor(255,150,50).getColor());
+            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("No Item Selected!",80,90,new Color(255,150,50).getColor());
         }
     }
 

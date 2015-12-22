@@ -18,9 +18,9 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementTextFieldFiltered;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
@@ -35,7 +35,7 @@ public class MOElementTextField extends ElementTextFieldFiltered
 	private ScaleTexture background;
 	ITextHandler textHandler;
 	private HoloIcon holoIcon;
-    private GuiColor color;
+    private Color color;
 
 	public MOElementTextField(MOGuiBase gui,ITextHandler textHandler, int posX, int posY,int width,int height) {
 		super(gui, posX, posY, width, height);
@@ -72,7 +72,7 @@ public class MOElementTextField extends ElementTextFieldFiltered
 		this.holoIcon = holoIcon;
 	}
 
-    public void setColor(GuiColor color)
+    public void setColor(Color color)
     {
         this.color = color;
     }

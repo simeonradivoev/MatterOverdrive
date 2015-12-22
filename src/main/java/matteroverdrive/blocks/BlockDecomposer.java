@@ -18,7 +18,6 @@
 
 package matteroverdrive.blocks;
 
-import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
@@ -27,6 +26,7 @@ import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineDecomposer;
+import matteroverdrive.util.MOBlockHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
@@ -73,7 +73,7 @@ public class BlockDecomposer extends MOMatterEnergyStorageBlock
     @Override
     public IIcon getIcon(int side,int metadata)
     {
-        if(side == BlockHelper.getAboveSide(metadata))
+        if(side == MOBlockHelper.getAboveSide(metadata))
         {
             return this.iconTop;
         }

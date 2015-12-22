@@ -18,7 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IRecyclable;
@@ -146,7 +145,7 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     {
         int matter = ((IRecyclable)getStackInSlot(INPUT_SLOT_ID).getItem()).getRecycleMatter(getStackInSlot(INPUT_SLOT_ID));
         double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.PowerUsage);
-        return MathHelper.round((matter * RECYCLE_ENERGY_PER_MATTER) * upgradeMultiply);
+        return (int)Math.round((matter * RECYCLE_ENERGY_PER_MATTER) * upgradeMultiply);
     }
 
     public int getSpeed()
@@ -155,7 +154,7 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
             double matter = Math.log1p(((IRecyclable) getStackInSlot(INPUT_SLOT_ID).getItem()).getRecycleMatter(getStackInSlot(INPUT_SLOT_ID)));
             matter *= matter;
             if (matter > 0) {
-                return MathHelper.round(RECYCLE_SPEED_PER_MATTER * matter * getUpgradeMultiply(UpgradeTypes.Speed));
+                return (int)Math.round(RECYCLE_SPEED_PER_MATTER * matter * getUpgradeMultiply(UpgradeTypes.Speed));
             }
         }
         return 1;

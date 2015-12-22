@@ -18,13 +18,13 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.MatterNetworkPacket;
@@ -46,14 +46,14 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     public static int BROADCAST_DELAY = 2;
     public static int TASK_QUEUE_SIZE = 16;
     protected MatterNetworkComponentQueue networkComponent;
-    private BlockPosition[] connections;
+    private BlockPos[] connections;
     @SideOnly(Side.CLIENT)
     public int flashTime;
 
     public TileEntityMachinePacketQueue(int upgradeCount)
     {
         super(upgradeCount);
-        connections = new BlockPosition[6];
+        connections = new BlockPos[6];
     }
 
     protected void registerComponents()
@@ -96,7 +96,7 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
         if (categories.contains(MachineNBTCategory.DATA)) {
             for (int i = 0; i < connections.length; i++) {
                 if (nbt.hasKey("Connection" + i)) {
-                    BlockPosition position = new BlockPosition(nbt.getCompoundTag("Connection" + i));
+                    BlockPos position = new BlockPos(nbt.getCompoundTag("Connection" + i));
                     if (worldObj != null) {
                         TileEntity tileEntity = position.getTileEntity(worldObj);
                         if (tileEntity != null && tileEntity instanceof IMatterNetworkConnection) {
@@ -144,9 +144,9 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     }
 
     @Override
-    public BlockPosition getPosition()
+    public BlockPos getPosition()
     {
-        return new BlockPosition(xCoord,yCoord,zCoord);
+        return new BlockPos(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -198,7 +198,7 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     @Override
     public float soundVolume() { return 0;}
 
-    public BlockPosition getConnection(int id)
+    public BlockPos getConnection(int id)
     {
         if (connections[id] != null)
         {
@@ -212,12 +212,12 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
         return connections[id];
     }
 
-    public void setConnection(int id,BlockPosition position)
+    public void setConnection(int id, BlockPos position)
     {
         connections[id] = position;
     }
 
-    public BlockPosition[] getConnections()
+    public BlockPos[] getConnections()
     {
         return connections;
     }

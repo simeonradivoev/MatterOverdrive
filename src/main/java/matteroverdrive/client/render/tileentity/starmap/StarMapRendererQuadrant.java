@@ -18,10 +18,10 @@
 
 package matteroverdrive.client.render.tileentity.starmap;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Galaxy;
@@ -69,7 +69,7 @@ public class StarMapRendererQuadrant extends StarMapRendererStars {
         Star origin = galaxy.getStar(starMap.getGalaxyPosition());
         if (star != null) {
             int planetCount = star.getPlanets().size();
-            GuiColor color = Reference.COLOR_HOLO;
+            Color color = Reference.COLOR_HOLO;
             if (planetCount <= 0) {
                 color = Reference.COLOR_HOLO_RED;
             }

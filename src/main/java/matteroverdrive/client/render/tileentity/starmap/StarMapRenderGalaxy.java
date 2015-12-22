@@ -18,10 +18,10 @@
 
 package matteroverdrive.client.render.tileentity.starmap;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.*;
@@ -92,7 +92,7 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
         int ownedSystemCount = galaxy.getOwnedSystemCount(Minecraft.getMinecraft().thePlayer);
         int enemySystemCount = galaxy.getEnemySystemCount(Minecraft.getMinecraft().thePlayer);
         int freeSystemCount = galaxy.getStarCount() - ownedSystemCount - enemySystemCount;
-        GuiColor color = Reference.COLOR_HOLO_GREEN;
+        Color color = Reference.COLOR_HOLO_GREEN;
         RenderUtils.applyColorWithMultipy(color, opacity);
         ClientProxy.holoIcons.renderIcon("page_icon_star", 0, -30);
         RenderUtils.drawString(String.format("x%s", ownedSystemCount), 24, -23, color, opacity);

@@ -22,8 +22,6 @@ import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyStorage;
 import cofh.api.tileentity.ITileInfo;
-import cofh.lib.util.helpers.EnergyHelper;
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.Inventory;
@@ -38,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
@@ -96,11 +95,11 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
             if(!this.worldObj.isRemote)
             {
                 int emptyEnergySpace = getFreeEnergySpace(ForgeDirection.DOWN);
-                int maxEnergyCanSpare = EnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, true);
+                int maxEnergyCanSpare = MOEnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, true);
 
                 if(emptyEnergySpace > 0 && maxEnergyCanSpare > 0)
                 {
-                    this.receiveEnergy(ForgeDirection.DOWN, EnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, false), false);
+                    this.receiveEnergy(ForgeDirection.DOWN, MOEnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, false), false);
                 }
             }
         }
@@ -109,7 +108,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     public boolean isCharging()
     {
         return this.inventory.getStackInSlot(energySlotID) != null
-                && EnergyHelper.isEnergyContainerItem(this.inventory.getStackInSlot(energySlotID))
+                && MOEnergyHelper.isEnergyContainerItem(this.inventory.getStackInSlot(energySlotID))
                 && ((IEnergyContainerItem)this.inventory.getStackInSlot(energySlotID).getItem()).extractEnergy(this.inventory.getStackInSlot(energySlotID), getFreeEnergySpace(ForgeDirection.DOWN), true) > 0;
     }
 
@@ -165,7 +164,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 
     public int GetEnergyStoredScaled(int i)
     {
-        return MathHelper.ceil(((float) this.getEnergyStored(ForgeDirection.DOWN) / (float) this.energyStorage.getMaxEnergyStored()) * i);
+        return MathHelper.ceiling_float_int(((float) this.getEnergyStored(ForgeDirection.DOWN) / (float) this.energyStorage.getMaxEnergyStored()) * i);
     }
 
     public int getFreeEnergySpace(ForgeDirection dir)

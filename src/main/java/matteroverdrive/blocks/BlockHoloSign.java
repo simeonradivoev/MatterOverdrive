@@ -19,7 +19,6 @@
 package matteroverdrive.blocks;
 
 import cofh.api.block.IDismantleable;
-import cofh.lib.util.helpers.InventoryHelper;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -30,6 +29,7 @@ import matteroverdrive.client.render.IconConnectedTexture;
 import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityHoloSign;
+import matteroverdrive.util.MOInventoryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -263,7 +263,7 @@ public class BlockHoloSign extends BlockCT implements IDismantleable, ITileEntit
         }
         else
         {
-            InventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
+            MOInventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
         }
 
         ArrayList<ItemStack> list = new ArrayList<>();

@@ -18,8 +18,8 @@
 
 package matteroverdrive.items;
 
-import cofh.lib.gui.GuiColor;
-import cofh.lib.util.position.BlockPosition;
+import matteroverdrive.client.data.Color;
+import matteroverdrive.data.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class TransportFlashDrive extends FlashDrive
 {
-    public TransportFlashDrive(String name,GuiColor color)
+    public TransportFlashDrive(String name,Color color)
     {
         super(name,color);
     }
@@ -116,10 +116,10 @@ public class TransportFlashDrive extends FlashDrive
         return 0;
     }
 
-    public BlockPosition getTraget(ItemStack itemStack)
+    public BlockPos getTraget(ItemStack itemStack)
     {
         if (hasTarget(itemStack))
-            return new BlockPosition(getTargetX(itemStack),getTargetY(itemStack),getTargetZ(itemStack));
+            return new BlockPos(getTargetX(itemStack), getTargetY(itemStack), getTargetZ(itemStack));
         return null;
     }
 

@@ -18,7 +18,6 @@
 
 package matteroverdrive.handler;
 
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -34,6 +33,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
@@ -219,7 +219,7 @@ public class MatterRegistry implements IMatterRegistry
             if (itemStack.getItem() != null)
             {
                 int damage = itemStack.getItemDamage();
-                damage = MathHelper.clampI(damage, 0, itemStack.getMaxDamage());
+                damage = MathHelper.clamp_int(damage, 0, itemStack.getMaxDamage());
                 return itemStack.getItem().getUnlocalizedNameInefficiently(new ItemStack(itemStack.getItem(), 1, damage));
             }
             return null;
@@ -609,7 +609,7 @@ public class MatterRegistry implements IMatterRegistry
 
         //return the amount divided by the count of the items stack
         //sometimes after the division the result is 0
-        return MathHelper.round((double) totalMatter / (double) item.stackSize);
+        return (int) Math.round((double) totalMatter / (double) item.stackSize);
     }
 
     private int handleReturns(Item item) {

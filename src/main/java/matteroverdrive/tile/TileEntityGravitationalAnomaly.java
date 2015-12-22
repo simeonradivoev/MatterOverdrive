@@ -18,8 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.TimeTracker;
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -38,6 +36,7 @@ import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.items.SpacetimeEqualizer;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.TimeTracker;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
@@ -108,7 +107,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public TileEntityGravitationalAnomaly()
     {
         blockDestoryTimer = new TimeTracker();
-        this.mass = 2048 + MathHelper.round(Math.random() * 8192);
+        this.mass = 2048 + Math.round(Math.random() * 8192);
         supressors = new ArrayList<>();
         blockPos = Vec3.createVectorHelper(0,0,0);
         entityPos = Vec3.createVectorHelper(0,0,0);
@@ -425,7 +424,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
         int solidCount = 0;
         int liquidCount = 0;
-        int range = MathHelper.floor(getBlockBreakRange());
+        int range = (int) Math.floor(getBlockBreakRange());
         double distance;
         double eventHorizon = getEventHorizon();
         int blockPosX,blockPosY,blockPosZ;

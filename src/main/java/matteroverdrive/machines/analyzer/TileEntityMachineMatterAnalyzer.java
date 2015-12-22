@@ -19,9 +19,6 @@
 package matteroverdrive.machines.analyzer;
 
 import cofh.api.energy.IEnergyStorage;
-import cofh.lib.util.helpers.BlockHelper;
-import cofh.lib.util.helpers.MathHelper;
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
@@ -30,6 +27,7 @@ import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTaskState;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.MatterSlot;
@@ -53,6 +51,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
+
+import static matteroverdrive.util.MOBlockHelper.getOppositeSide;
 
 /**
  * Created by Simeon on 3/16/2015.
@@ -277,15 +277,15 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     //region Matter Network Functions
     @Override
-    public BlockPosition getPosition()
+    public BlockPos getPosition()
     {
-        return new BlockPosition(this);
+        return new BlockPos(this);
     }
 
     @Override
     public boolean canConnectFromSide(ForgeDirection side) {
         int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
-        return BlockHelper.getOppositeSide(meta) == side.ordinal();
+        return getOppositeSide(meta) == side.ordinal();
     }
 
     @Override
@@ -359,9 +359,9 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
 
     //region Getters and Setters
     public IEnergyStorage getEnergyStorage() {return energyStorage;}
-    public int getSpeed() {return MathHelper.round(ANALYZE_SPEED * getUpgradeMultiply(UpgradeTypes.Speed));}
+    public int getSpeed() {return (int)Math.round(ANALYZE_SPEED * getUpgradeMultiply(UpgradeTypes.Speed));}
     public int getEnergyDrainPerTick() {return getEnergyDrainMax() / getSpeed();}
-    public int getEnergyDrainMax() {return MathHelper.round(ENERGY_DRAIN_PER_ITEM * getUpgradeMultiply(UpgradeTypes.PowerUsage));}
+    public int getEnergyDrainMax() {return (int)Math.round(ENERGY_DRAIN_PER_ITEM * getUpgradeMultiply(UpgradeTypes.PowerUsage));}
     @Override
     public  boolean getServerActive() {return isAnalyzing();}
     @Override

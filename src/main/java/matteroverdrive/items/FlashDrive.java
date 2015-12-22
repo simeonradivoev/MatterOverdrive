@@ -18,10 +18,10 @@
 
 package matteroverdrive.items;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
@@ -33,9 +33,9 @@ import net.minecraft.util.IIcon;
 public class FlashDrive extends MOBaseItem
 {
     private IIcon overlay;
-    protected GuiColor color;
+    protected Color color;
 
-    public FlashDrive(String name,GuiColor color) {
+    public FlashDrive(String name,Color color) {
         super(name);
         this.color = color;
         setMaxStackSize(1);

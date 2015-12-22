@@ -18,9 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.TimeTracker;
-import cofh.lib.util.helpers.BlockHelper;
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
@@ -28,6 +25,7 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
@@ -37,6 +35,7 @@ import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentPatternMonitor;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.network.packet.client.PacketPatternMonitorSync;
+import matteroverdrive.util.TimeTracker;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -45,6 +44,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
 import java.util.HashSet;
+
+import static matteroverdrive.util.MOBlockHelper.getOppositeSide;
 
 /**
  * Created by Simeon on 4/26/2015.
@@ -55,7 +56,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
     public static final int SEARCH_DELAY = 20;
     public static final int VALIDATE_DELAY = 120;
     public static final int TASK_QUEUE_SIZE = 16;
-    HashSet<BlockPosition> databases;
+    HashSet<BlockPos> databases;
     MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueue;
     TimeTracker searchDelayTracker;
     private MatterNetworkComponentPatternMonitor networkComponent;
@@ -159,15 +160,15 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
     }
 
     @Override
-    public BlockPosition getPosition() {
-        return new BlockPosition(xCoord,yCoord,zCoord);
+    public BlockPos getPosition() {
+        return new BlockPos(xCoord, yCoord, zCoord);
     }
 
     @Override
     public boolean canConnectFromSide(ForgeDirection side)
     {
         int meta = worldObj.getBlockMetadata(xCoord,yCoord,zCoord);
-        return BlockHelper.getOppositeSide(meta) == side.ordinal();
+        return getOppositeSide(meta) == side.ordinal();
     }
 
     //endregion
@@ -177,12 +178,12 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
         networkComponent.queuePatternRequest(request);
     }
 
-    public HashSet<BlockPosition> getDatabases()
+    public HashSet<BlockPos> getDatabases()
     {
         return databases;
     }
 
-    public void setDatabases(HashSet<BlockPosition> blockPositions)
+    public void setDatabases(HashSet<BlockPos> blockPositions)
     {
         databases = blockPositions;
     }

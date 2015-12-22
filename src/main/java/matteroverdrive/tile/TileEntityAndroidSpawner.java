@@ -18,11 +18,11 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.weapon.IWeaponColor;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.ModuleSlot;
 import matteroverdrive.data.inventory.TeleportFlashDriveSlot;
@@ -117,7 +117,7 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
                         if (entity.getCanSpawnHere(true,true,true))
                         {
                             entity.onSpawnWithEgg((IEntityLivingData) null);
-                            entity.setSpawnerPosition(new BlockPosition(this));
+                            entity.setSpawnerPosition(new BlockPos(this));
                             entity.func_110163_bv();
                             addSpawnedAndroid(entity);
                             worldObj.playAuxSFX(2004, xCoord, yCoord, zCoord, 0);
@@ -172,7 +172,7 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
             ItemStack flashDrive = inventory.getSlot(i).getItem();
             if (flashDrive != null && flashDrive.getItem() instanceof TransportFlashDrive)
             {
-                BlockPosition position = ((TransportFlashDrive) flashDrive.getItem()).getTraget(flashDrive);
+                BlockPos position = ((TransportFlashDrive) flashDrive.getItem()).getTraget(flashDrive);
                 if (position != null)
                     paths.add(Vec3.createVectorHelper(position.x,position.y,position.z));
             }

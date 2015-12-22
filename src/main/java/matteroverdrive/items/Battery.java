@@ -18,10 +18,10 @@
 
 package matteroverdrive.items;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
@@ -37,10 +37,10 @@ import java.util.List;
 
 public class Battery extends MOItemEnergyContainer
 {
-	GuiColor color;
+	Color color;
 	IIcon overlay;
 
-	public Battery(String name, int capacity,GuiColor color,int input,int output)
+	public Battery(String name, int capacity,Color color,int input,int output)
 	{
 		super(name, capacity,input,output);
 		this.color = color;

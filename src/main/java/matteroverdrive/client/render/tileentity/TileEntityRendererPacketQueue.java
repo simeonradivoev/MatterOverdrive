@@ -18,7 +18,6 @@
 
 package matteroverdrive.client.render.tileentity;
 
-import cofh.lib.render.RenderHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.BlockNetworkSwitch;
 import matteroverdrive.init.MatterOverdriveIcons;
@@ -65,7 +64,7 @@ public class TileEntityRendererPacketQueue extends TileEntitySpecialRenderer
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE,GL_ONE);
         RenderUtils.disableLightmap();
-        RenderHelper.setBlockTextureSheet();
+        RenderUtils.setBlockTextureSheet();
         RenderUtils.drawCube(-0.01, -0.01, -0.01, 1.02, 1.02, 1.02, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV(), Reference.COLOR_HOLO);
         glDisable(GL_BLEND);
         glEnable(GL_LIGHTING);

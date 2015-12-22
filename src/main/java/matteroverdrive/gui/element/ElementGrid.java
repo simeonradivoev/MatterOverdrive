@@ -20,8 +20,7 @@ package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
 import cofh.lib.gui.element.ElementBase;
-import cofh.lib.util.helpers.MathHelper;
-import cofh.lib.util.helpers.StringHelper;
+import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 
@@ -76,8 +75,8 @@ public class ElementGrid extends ElementBaseGroup
                 }
 
 
-                if (MathHelper.round(height + scrollYSmooth) < this.sizeY || maxTempHeigh == 0 && MathHelper.round(height + scrollYSmooth) > -maxTempHeigh) {
-                    element.setPosition(widthCount, MathHelper.round(height + scrollYSmooth));
+                if (Math.round(height + scrollYSmooth) < this.sizeY || maxTempHeigh == 0 && Math.round(height + scrollYSmooth) > -maxTempHeigh) {
+                    element.setPosition(widthCount, Math.round(height + scrollYSmooth));
                     element.setVisible(true);
                 } else {
                     element.setVisible(false);
@@ -112,7 +111,7 @@ public class ElementGrid extends ElementBaseGroup
     @Override
     public boolean onMouseWheel(int mouseX, int mouseY, int movement) {
 
-        if (StringHelper.isControlKeyDown())
+        if (MOStringHelper.isControlKeyDown())
         {
             if (movement > 0) {
                 //scrollLeft();

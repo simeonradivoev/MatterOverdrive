@@ -19,16 +19,15 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.render.RenderHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.network.packet.server.PacketUnlockBioticStat;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
-import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.util.glu.Cylinder;
 
@@ -166,15 +165,14 @@ public class ElementBioStat extends MOElementButton {
         }
     }
 
-    public void drawIcon(IIcon icon,int x,int y)
+    public void drawIcon(HoloIcon icon, int x, int y)
     {
         if(icon != null)
         {
             glEnable(GL_BLEND);
 
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            ClientProxy.holoIcons.bindSheet();
-            RenderHelper.renderIcon(x, y, 0, icon, 16, 16);
+            ClientProxy.holoIcons.renderIcon(icon,x,y,16,16);
             glDisable(GL_BLEND);
         }
     }

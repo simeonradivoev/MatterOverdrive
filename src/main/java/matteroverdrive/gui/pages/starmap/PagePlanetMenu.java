@@ -19,8 +19,8 @@
 package matteroverdrive.gui.pages.starmap;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.container.ContainerStarMap;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.gui.element.ElementBaseGroup;
@@ -55,7 +55,7 @@ public class PagePlanetMenu extends ElementBaseGroup {
         for (int i = 0;i < factorySlots.length;i++) {
             double angle = (-Math.PI/1.8) + (Math.PI/15) * i;
             factorySlots[i] = new ElementSlotBuilding(gui, (MOSlot) starMapContainer.getSlot(i), width / 2 - 10 + (int) (Math.sin(angle) * 140), height / 2 - 48 + (int) (Math.cos(angle) * 140), 22, 22, "holo",ClientProxy.holoIcons.getIcon("factory"),starMap);
-            factorySlots[i].setColor(new GuiColor(Reference.COLOR_HOLO.getIntR() / 2, Reference.COLOR_HOLO.getIntG() / 2, Reference.COLOR_HOLO.getIntB() / 2));
+            factorySlots[i].setColor(new Color(Reference.COLOR_HOLO.getIntR() / 2, Reference.COLOR_HOLO.getIntG() / 2, Reference.COLOR_HOLO.getIntB() / 2));
         }
 
         for (int i = 0;i < shipSlots.length;i++)
@@ -63,7 +63,7 @@ public class PagePlanetMenu extends ElementBaseGroup {
             double angle =  (-Math.PI/1.8) + (Math.PI/15) * (i + factorySlots.length);
             MOSlot slot = (MOSlot)starMapContainer.getSlot(i+factorySlots.length);
             shipSlots[i] = new ElementSlotShip(gui,slot,width / 2 - 10 + (int) (Math.sin(angle) * 140), height / 2 - 48 + (int) (Math.cos(angle) * 140), 22, 22, "holo",ClientProxy.holoIcons.getIcon("icon_shuttle"),starMap);
-            shipSlots[i].setColor(new GuiColor(Reference.COLOR_HOLO.getIntR()/2,Reference.COLOR_HOLO.getIntG()/2,Reference.COLOR_HOLO.getIntB()/2));
+            shipSlots[i].setColor(new Color(Reference.COLOR_HOLO.getIntR()/2,Reference.COLOR_HOLO.getIntG()/2,Reference.COLOR_HOLO.getIntB()/2));
         }
     }
 

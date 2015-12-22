@@ -18,12 +18,12 @@
 
 package matteroverdrive.data.biostats;
 
-import cofh.lib.audio.SoundBase;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
+import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
@@ -37,6 +37,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -60,7 +61,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     public static final String TAG_SHIELD_LAST_USE = "ShieldLastUse";
     public static final String TAG_HITS = "Hits";
     @SideOnly(Side.CLIENT)
-    private SoundBase shieldSound;
+    private MOPositionedSound shieldSound;
     private AttributeModifier modifyer;
     private Random random;
     public BioticStatShield(String name, int xp)
@@ -256,7 +257,8 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     {
         if(shieldSound == null && !Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(shieldSound))
         {
-            shieldSound = new SoundBase(Reference.MOD_ID + ":" + "shield_loop",0.3f + random.nextFloat() * 0.2f,1,true,0);
+            shieldSound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "shield_loop"),0.3f + random.nextFloat() * 0.2f,1);
+            shieldSound.setRepeat(true);
             Minecraft.getMinecraft().getSoundHandler().playSound(shieldSound);
         }
     }

@@ -18,10 +18,10 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.container.ContainerStarMap;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.data.ScaleTexture;
@@ -257,8 +257,8 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         super.initGui();
         indicator.setVisible(false);
 
-        AddMainPlayerSlots(inventorySlots, this,"holo_with_BG",new GuiColor(Reference.COLOR_HOLO.getIntR()/3,Reference.COLOR_HOLO.getIntG()/3,Reference.COLOR_HOLO.getIntB()/3),45,ySize - 104);
-        AddHotbarPlayerSlots(inventorySlots, this,"holo_with_BG",new GuiColor(Reference.COLOR_HOLO.getIntR()/2,Reference.COLOR_HOLO.getIntG()/2,Reference.COLOR_HOLO.getIntB()/2),45,ySize - 25);
+        AddMainPlayerSlots(inventorySlots, this,"holo_with_BG",new Color(Reference.COLOR_HOLO.getIntR()/3,Reference.COLOR_HOLO.getIntG()/3,Reference.COLOR_HOLO.getIntB()/3),45,ySize - 104);
+        AddHotbarPlayerSlots(inventorySlots, this,"holo_with_BG",new Color(Reference.COLOR_HOLO.getIntR()/2,Reference.COLOR_HOLO.getIntG()/2,Reference.COLOR_HOLO.getIntB()/2),45,ySize - 25);
     }
 
     public void onGuiClosed()

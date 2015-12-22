@@ -18,8 +18,8 @@
 
 package matteroverdrive.matter_network;
 
-import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.data.BlockPos;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -32,19 +32,19 @@ import java.util.HashSet;
  */
 public abstract class MatterNetworkPacket
 {
-    protected BlockPosition senderPos;
+    protected BlockPos senderPos;
     protected NBTTagCompound filter;
     protected HashSet<MatterNetworkPathNode> path;
 
 
     public MatterNetworkPacket(){path = new HashSet<>();}
-    public MatterNetworkPacket(BlockPosition senderPos,ForgeDirection port)
+    public MatterNetworkPacket(BlockPos senderPos, ForgeDirection port)
     {
         this();
         this.senderPos = senderPos;
         this.senderPos.setOrientation(port);
     }
-    public MatterNetworkPacket(BlockPosition senderPos,ForgeDirection port,NBTTagCompound filter)
+    public MatterNetworkPacket(BlockPos senderPos, ForgeDirection port, NBTTagCompound filter)
     {
         this();
         this.senderPos = senderPos;
@@ -84,7 +84,7 @@ public abstract class MatterNetworkPacket
         {
             if (tagCompound.hasKey("Sender",10))
             {
-                senderPos = new BlockPosition(tagCompound.getCompoundTag("Sender"));
+                senderPos = new BlockPos(tagCompound.getCompoundTag("Sender"));
             }
             if (tagCompound.hasKey("Filter",10))
             {

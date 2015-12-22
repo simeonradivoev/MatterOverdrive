@@ -18,13 +18,13 @@
 
 package matteroverdrive.starmap.data;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.*;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.starmap.GalaxyGenerator;
 import matteroverdrive.starmap.gen.ISpaceBodyGen;
@@ -429,7 +429,7 @@ public class Planet extends SpaceBody implements IInventory
         }
     }
     public int fleetCount(){return fleet.size();}
-    public static GuiColor getGuiColor(Planet planet)
+    public static Color getGuiColor(Planet planet)
     {
         if (planet.hasOwner()) {
             if (planet.getOwnerUUID().equals(EntityPlayer.func_146094_a(Minecraft.getMinecraft().thePlayer.getGameProfile()))) {

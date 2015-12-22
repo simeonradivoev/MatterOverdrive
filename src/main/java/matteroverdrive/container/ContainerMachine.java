@@ -18,13 +18,13 @@
 
 package matteroverdrive.container;
 
-import cofh.lib.util.helpers.InventoryHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.container.slot.SlotInventory;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.UpgradeSlot;
 import matteroverdrive.machines.MOTileEntityMachine;
+import matteroverdrive.util.MOInventoryHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
@@ -154,12 +154,12 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 
     protected boolean putInPlayerInventory(ItemStack itemStack)
     {
-        return InventoryHelper.mergeItemStack((List<Slot>)inventorySlots, itemStack, machine.getSizeInventory(), inventorySlots.size() - machine.getSizeInventory(), true, true);
+        return MOInventoryHelper.mergeItemStack((List<Slot>)inventorySlots, itemStack, machine.getSizeInventory(), inventorySlots.size() - machine.getSizeInventory(), true, true);
     }
 
     protected boolean tryAndPutInMachineSlots(ItemStack itemStack,IInventory inventory)
     {
-        return InventoryHelper.mergeItemStack((List<Slot>)inventorySlots, itemStack, 0, inventory.getSizeInventory(), false, true);
+        return MOInventoryHelper.mergeItemStack((List<Slot>)inventorySlots, itemStack, 0, inventory.getSizeInventory(), false, true);
     }
 
     public T getMachine()

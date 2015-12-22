@@ -44,13 +44,13 @@ public class StarmapHelper
         {
             lastUnicode = Minecraft.getMinecraft().fontRenderer.getUnicodeFlag();
             Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(unicode);
-            Minecraft.getMinecraft().fontRenderer.drawString(text, x, y, Planet.getGuiColor(planet).multiply(multiply).getColor());
+            Minecraft.getMinecraft().fontRenderer.drawString(text, x, y, Planet.getGuiColor(planet).multiplyWithoutAlpha(multiply).getColor());
             Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(lastUnicode);
         }else
         {
             lastUnicode = Minecraft.getMinecraft().standardGalacticFontRenderer.getUnicodeFlag();
             Minecraft.getMinecraft().standardGalacticFontRenderer.setUnicodeFlag(unicode);
-            Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(text, x, y, Planet.getGuiColor(planet).multiply(multiply).getColor());
+            Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(text, x, y, Planet.getGuiColor(planet).multiplyWithoutAlpha(multiply).getColor());
             Minecraft.getMinecraft().standardGalacticFontRenderer.setUnicodeFlag(lastUnicode);
         }
     }

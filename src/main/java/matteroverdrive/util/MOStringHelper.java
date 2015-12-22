@@ -18,12 +18,13 @@
 
 package matteroverdrive.util;
 
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,7 +92,7 @@ public class MOStringHelper
     {
         float percent = ((float)time / (float)maxTime);
         int messageCount = message.length();
-        return message.substring(0, MathHelper.clampI(Math.round(messageCount * percent),0,messageCount));
+        return message.substring(0, MathHelper.clamp_int(Math.round(messageCount * percent),0,messageCount));
     }
 
     public static boolean hasTranslation(String string){return StatCollector.canTranslate(string);}
@@ -217,6 +218,10 @@ public class MOStringHelper
             default:
                 return value >= 1;
         }
+    }
+
+    public static boolean isControlKeyDown() {
+        return Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157);
     }
 
 }

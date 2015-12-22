@@ -18,7 +18,6 @@
 
 package matteroverdrive.api.transport;
 
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -116,6 +115,6 @@ public class TransportLocation
      */
     public int getDistance(int x1, int y1, int z1)
     {
-        return MathHelper.round(Math.sqrt((x-x1) * (x-x1) + (y-y1) * (y-y1) + (z-z1) * (z-z1)));
+        return (int)Math.round(Math.sqrt((x-x1) * (x-x1) + (y-y1) * (y-y1) + (z-z1) * (z-z1)));
     }
 }

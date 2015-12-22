@@ -18,10 +18,10 @@
 
 package matteroverdrive.items;
 
-import cofh.lib.gui.GuiColor;
-import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkFilter;
+import matteroverdrive.client.data.Color;
+import matteroverdrive.data.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class NetworkFlashDrive extends FlashDrive implements IMatterNetworkFilter {
 
-    public NetworkFlashDrive(String name, GuiColor color)
+    public NetworkFlashDrive(String name, Color color)
     {
         super(name,color);
         setMaxStackSize(1);
@@ -51,7 +51,7 @@ public class NetworkFlashDrive extends FlashDrive implements IMatterNetworkFilte
         {
             NBTTagList list = itemstack.getTagCompound().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_COMPOUND);
             for (int i = 0;i < list.tagCount();i++) {
-                BlockPosition pos = new BlockPosition(list.getCompoundTagAt(i));
+                BlockPos pos = new BlockPos(list.getCompoundTagAt(i));
                 Block block = pos.getBlock(player.worldObj);
                 if (block != null)
                 {
@@ -67,7 +67,7 @@ public class NetworkFlashDrive extends FlashDrive implements IMatterNetworkFilte
         TileEntity tileEntity = world.getTileEntity(x,y,z);
         if (tileEntity instanceof IMatterNetworkConnection)
         {
-            BlockPosition connectionPosition = ((IMatterNetworkConnection) tileEntity).getPosition();
+            BlockPos connectionPosition = ((IMatterNetworkConnection) tileEntity).getPosition();
             if (!itemStack.hasTagCompound())
             {
                 itemStack.setTagCompound(new NBTTagCompound());
@@ -77,7 +77,7 @@ public class NetworkFlashDrive extends FlashDrive implements IMatterNetworkFilte
             NBTTagList list = itemStack.getTagCompound().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_COMPOUND);
             for (int i = 0;i < list.tagCount();i++)
             {
-                BlockPosition pos = new BlockPosition(list.getCompoundTagAt(i));
+                BlockPos pos = new BlockPos(list.getCompoundTagAt(i));
                 if (pos.equals(connectionPosition))
                 {
                     hasPos = true;

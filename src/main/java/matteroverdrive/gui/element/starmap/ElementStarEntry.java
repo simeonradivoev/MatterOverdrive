@@ -18,10 +18,10 @@
 
 package matteroverdrive.gui.element.starmap;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IShip;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.client.render.tileentity.starmap.StarMapRendererStars;
 import matteroverdrive.gui.GuiStarMap;
@@ -59,7 +59,7 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
     }
 
     @Override
-    protected void drawElementName(Star star,GuiColor color,float multiply)
+    protected void drawElementName(Star star,Color color,float multiply)
     {
         String name = spaceBody.getName();
         GuiStarMap guiStarMap = (GuiStarMap)gui;
@@ -140,7 +140,7 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
     }
 
     @Override
-    protected GuiColor getSpaceBodyColor(Star star)
+    protected Color getSpaceBodyColor(Star star)
     {
         return StarMapRendererStars.getStarColor(star, Minecraft.getMinecraft().thePlayer);
     }

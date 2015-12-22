@@ -19,7 +19,7 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.util.position.BlockPosition;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
@@ -43,7 +43,7 @@ public class ElementConnections extends MOElementBase
     {
         for (int i = 0;i < 6;i++)
         {
-            BlockPosition connection = machine.getConnection(i);
+            BlockPos connection = machine.getConnection(i);
             GL11.glColor3f(1, 1, 1);
             int x = 50;
             int y = 42 + i * 19;

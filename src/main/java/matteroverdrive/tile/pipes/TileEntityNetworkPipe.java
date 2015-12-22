@@ -18,10 +18,10 @@
 
 package matteroverdrive.tile.pipes;
 
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.network.IMatterNetworkCable;
 import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.util.MatterNetworkHelper;
@@ -114,8 +114,8 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     }
 
     @Override
-    public BlockPosition getPosition() {
-        return new BlockPosition(this);
+    public BlockPos getPosition() {
+        return new BlockPos(this);
     }
 
     @Override

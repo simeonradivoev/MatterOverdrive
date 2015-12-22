@@ -19,7 +19,6 @@
 package matteroverdrive.items.weapon;
 
 import cofh.api.energy.IEnergyContainerItem;
-import cofh.lib.util.helpers.EnergyHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
@@ -370,7 +369,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
 
         ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
-        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
+        if (energy_module != null && MOEnergyHelper.isEnergyContainerItem(energy_module))
         {
             IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
             int energy = e.receiveEnergy(energy_module, maxReceive, simulate);
@@ -394,7 +393,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public int extractEnergyCustom(ItemStack weapon,int maxExtract,boolean simulate)
     {
         ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, weapon);
-        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
+        if (energy_module != null && MOEnergyHelper.isEnergyContainerItem(energy_module))
         {
             IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
             int energy = e.extractEnergy(energy_module, maxReceive, simulate);
@@ -412,9 +411,9 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     protected void setEnergyStored(ItemStack container,int amount)
     {
         ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
-        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
+        if (energy_module != null && MOEnergyHelper.isEnergyContainerItem(energy_module))
         {
-            EnergyHelper.setDefaultEnergyTag(energy_module, amount);
+            MOEnergyHelper.setDefaultEnergyTag(energy_module, amount);
             WeaponHelper.setModuleAtSlot(Reference.MODULE_BATTERY,container,energy_module);
         }
         else
@@ -433,7 +432,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public int getEnergyStored(ItemStack container)
     {
         ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
-        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
+        if (energy_module != null && MOEnergyHelper.isEnergyContainerItem(energy_module))
         {
             IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
             return e.getEnergyStored(energy_module);
@@ -448,7 +447,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public int getMaxEnergyStored(ItemStack container)
     {
         ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
-        if (energy_module != null && EnergyHelper.isEnergyContainerItem(energy_module))
+        if (energy_module != null && MOEnergyHelper.isEnergyContainerItem(energy_module))
         {
             IEnergyContainerItem e = ((IEnergyContainerItem)energy_module.getItem());
             return e.getMaxEnergyStored(energy_module);
@@ -489,7 +488,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public int getRange(ItemStack weapon)
     {
         int range = defaultRange;
-        range = cofh.lib.util.helpers.MathHelper.round(modifyStatFromModules(Reference.WS_RANGE,weapon,range));
+        range = Math.round(modifyStatFromModules(Reference.WS_RANGE,weapon,range));
         range *= getCustomIntStat(weapon,CUSTOM_RANGE_MULTIPLY_TAG,1);
         return  range;
     }

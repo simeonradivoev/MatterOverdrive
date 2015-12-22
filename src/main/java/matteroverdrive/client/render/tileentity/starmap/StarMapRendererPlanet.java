@@ -18,12 +18,12 @@
 
 package matteroverdrive.client.render.tileentity.starmap;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.IBuildable;
 import matteroverdrive.api.starmap.IBuilding;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Galaxy;
@@ -197,7 +197,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
                 int x = (int) (Math.cos(angle) * radius) - 10;
                 int y = (int) (Math.sin(angle) * radius) - 10;
                 RenderUtils.renderStack(x, y, planet.getBuildings().get(i),1);
-                GuiColor color = Reference.COLOR_HOLO_RED;
+                Color color = Reference.COLOR_HOLO_RED;
                 if (planet.getBuildings().get(i).getItem() instanceof IBuilding && ((IBuilding) planet.getBuildings().get(i).getItem()).isOwner(planet.getBuildings().get(i),Minecraft.getMinecraft().thePlayer))
                     color = Reference.COLOR_HOLO;
                 Minecraft.getMinecraft().fontRenderer.drawString(planet.getBuildings().get(i).getDisplayName(), x + 21, y + 6, color.getColor());
@@ -216,7 +216,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE);
 
-            GuiColor color = Reference.COLOR_HOLO;
+            Color color = Reference.COLOR_HOLO;
             Planet planet = (Planet)spaceBody;
             int x = 0;
             int y = -16;

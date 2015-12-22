@@ -16,30 +16,32 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.blocks;
+package matteroverdrive.util;
 
-import matteroverdrive.tile.pipes.TileEntityMatterPipe;
-import matteroverdrive.util.MOBlockHelper;
-import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 /**
- * Created by Simeon on 3/7/2015.
+ * Created by Simeon on 12/22/2015.
  */
-public class BlockMatterPipe extends BlockPipe
-{
-    public BlockMatterPipe(Material material, String name)
-    {
-        super(material, name);
-        setHardness(10.0F);
-        this.setResistance(5.0f);
-        setRotationType(MOBlockHelper.RotationType.PREVENT);
+public class TimeTracker {
+    private long lastMark = -9223372036854775808L;
+    public TimeTracker() {
     }
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMatterPipe();
+    public boolean hasDelayPassed(World world, int time) {
+        long worldTime = world.getTotalWorldTime();
+        if(worldTime < this.lastMark) {
+            this.lastMark = worldTime;
+            return false;
+        } else if(this.lastMark + (long)time <= worldTime) {
+            this.lastMark = worldTime;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void markTime(World var1) {
+        this.lastMark = var1.getTotalWorldTime();
     }
 }

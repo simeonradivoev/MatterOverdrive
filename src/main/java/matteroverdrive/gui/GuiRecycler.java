@@ -19,7 +19,6 @@
 package matteroverdrive.gui;
 
 import cofh.lib.gui.element.ElementDualScaled;
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.ContainerMachine;
@@ -70,7 +69,7 @@ public class GuiRecycler extends MOGuiMachine<TileEntityMachineMatterRecycler>
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
                                                    int p_146976_2_, int p_146976_3_) {
         super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
-        recycle_progress.setQuantity(MathHelper.round(((ContainerMachine)getContainer()).getProgress() * 24));
+        recycle_progress.setQuantity(Math.round(((ContainerMachine)getContainer()).getProgress() * 24));
         ManageReqiremnetsTooltips();
     }
 

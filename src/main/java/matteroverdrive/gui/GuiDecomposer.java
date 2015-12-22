@@ -19,7 +19,6 @@
 package matteroverdrive.gui;
 
 import cofh.lib.gui.element.ElementDualScaled;
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.ContainerMachine;
@@ -72,7 +71,7 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 			int p_146976_2_, int p_146976_3_)
 	{
 		super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
-		decompose_progress.setQuantity(MathHelper.round((((ContainerMachine)getContainer()).getProgress() * 24)));
+		decompose_progress.setQuantity(Math.round((((ContainerMachine)getContainer()).getProgress() * 24)));
 		ManageReqiremnetsTooltips();
 	}
 

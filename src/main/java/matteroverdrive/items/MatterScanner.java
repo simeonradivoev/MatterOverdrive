@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import cofh.lib.util.position.BlockPosition;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,6 +26,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.client.sound.MachineSound;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.gui.GuiMatterScanner;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.SoundHandler;
@@ -154,15 +154,15 @@ public class MatterScanner extends MOBaseItem
 		return null;
 	}
 
-	public static BlockPosition getLinkPosition(ItemStack scanner)
+	public static BlockPos getLinkPosition(ItemStack scanner)
 	{
 		if(scanner != null && scanner.getItem() instanceof MatterScanner) {
 			if (scanner.hasTagCompound())
 			{
-				return new BlockPosition(scanner.getTagCompound().getInteger("link_x"),scanner.getTagCompound().getInteger("link_y"),scanner.getTagCompound().getInteger("link_z"));
+				return new BlockPos(scanner.getTagCompound().getInteger("link_x"), scanner.getTagCompound().getInteger("link_y"), scanner.getTagCompound().getInteger("link_z"));
 			}
 		}
-		return new BlockPosition(0,0,0);
+		return new BlockPos(0, 0, 0);
 	}
 
 	public static boolean isLinked(ItemStack scanner)

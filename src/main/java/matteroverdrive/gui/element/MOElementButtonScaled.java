@@ -19,7 +19,6 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.render.RenderHelper;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.proxy.ClientProxy;
@@ -83,8 +82,7 @@ public class MOElementButtonScaled extends MOElementButton
                 int width = getFontRenderer().getStringWidth(text) - icon.getOriginalWidth();
                 getFontRenderer().drawString(text,posX + sizeX / 2 - (width / 2),posY + sizeY / 2 - 3,labelColor);
                 RenderUtils.applyColor(getTextColor());
-                ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(posX + sizeX / 2 - icon.getOriginalWidth() - width/2,posY + sizeY / 2 - icon.getOriginalHeight()/2,0,icon.getIcon(),icon.getOriginalWidth(),icon.getOriginalHeight());
+                ClientProxy.holoIcons.renderIcon(icon,posX + sizeX / 2 - icon.getOriginalWidth() - width/2,posY + sizeY / 2 - icon.getOriginalHeight()/2);
             }else
             {
                 int width = getFontRenderer().getStringWidth(text);
@@ -94,8 +92,7 @@ public class MOElementButtonScaled extends MOElementButton
         {
             if (icon != null) {
                 RenderUtils.applyColor(getTextColor());
-                ClientProxy.holoIcons.bindSheet();
-                RenderHelper.renderIcon(posX + sizeX / 2 - icon.getOriginalWidth()/2,posY + sizeY / 2 - icon.getOriginalHeight()/2,0,icon.getIcon(),icon.getOriginalWidth(),icon.getOriginalHeight());
+                ClientProxy.holoIcons.renderIcon(icon,posX + sizeX / 2 - icon.getOriginalWidth()/2,posY + sizeY / 2 - icon.getOriginalHeight()/2);
             }
         }
     }

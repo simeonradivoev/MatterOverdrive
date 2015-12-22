@@ -18,13 +18,12 @@
 
 package matteroverdrive.matter_network.components;
 
-import cofh.lib.util.TimeTracker;
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.network.MatterNetworkTaskState;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
@@ -32,6 +31,7 @@ import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.network.packet.client.PacketPatternMonitorSync;
 import matteroverdrive.tile.TileEntityMachinePatternMonitor;
 import matteroverdrive.util.MatterNetworkHelper;
+import matteroverdrive.util.TimeTracker;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -110,7 +110,7 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
     {
         if (validateTracker.hasDelayPassed(world, TileEntityMachinePatternMonitor.VALIDATE_DELAY))
         {
-            for (BlockPosition blockPosition : rootClient.getDatabases())
+            for (BlockPos blockPosition : rootClient.getDatabases())
             {
                 if (blockPosition.getBlock(world) == null || blockPosition.getTileEntity(world) == null || !(blockPosition.getTileEntity(world) instanceof IMatterDatabase))
                 {

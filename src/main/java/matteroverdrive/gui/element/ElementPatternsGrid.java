@@ -19,8 +19,8 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.element.ElementBase;
-import cofh.lib.util.position.BlockPosition;
 import matteroverdrive.api.matter.IMatterDatabase;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
@@ -45,12 +45,12 @@ public class ElementPatternsGrid extends ElementGrid
     }
 
 
-    public void updateStackList(HashSet<BlockPosition> positions)
+    public void updateStackList(HashSet<BlockPos> positions)
     {
         ItemStack stack;
         elements.clear();
 
-        for (BlockPosition position : positions)
+        for (BlockPos position : positions)
         {
             TileEntity entity = position.getTileEntity(Minecraft.getMinecraft().theWorld);
 

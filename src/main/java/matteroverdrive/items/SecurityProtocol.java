@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.items.includes.MOBaseItem;
@@ -30,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -91,7 +91,7 @@ public class SecurityProtocol extends MOBaseItem {
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
-        return super.getUnlocalizedName(stack) + "." + types[MathHelper.clampI(stack.getItemDamage(),0,types.length)];
+        return super.getUnlocalizedName(stack) + "." + types[MathHelper.clamp_int(stack.getItemDamage(),0,types.length)];
     }
 
     @Override

@@ -18,7 +18,6 @@
 
 package matteroverdrive.blocks;
 
-import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
@@ -30,6 +29,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
+import static matteroverdrive.util.MOBlockHelper.getOppositeSide;
 
 /**
  * Created by Simeon on 3/27/2015.
@@ -51,7 +52,7 @@ public class BlockPatternStorage extends MOBlockMachine
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metadata)
     {
-        if(side == BlockHelper.getOppositeSide(metadata))
+        if(side == getOppositeSide(metadata))
         {
             return MatterOverdriveIcons.Vent;
         }

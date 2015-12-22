@@ -18,9 +18,9 @@
 
 package matteroverdrive.client.model;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -32,7 +32,7 @@ import org.lwjgl.opengl.GL11;
 public class MOModelRenderColored extends ModelRenderer
 {
     boolean disableLighting;
-    GuiColor color;
+    Color color;
     public MOModelRenderColored(ModelBase p_i1174_1_, int p_i1174_2_, int p_i1174_3_)
     {
         super(p_i1174_1_, p_i1174_2_, p_i1174_3_);
@@ -63,7 +63,7 @@ public class MOModelRenderColored extends ModelRenderer
         this.disableLighting = disableLighting;
     }
 
-    public void setColor(GuiColor color)
+    public void setColor(Color color)
     {
         this.color = color;
     }

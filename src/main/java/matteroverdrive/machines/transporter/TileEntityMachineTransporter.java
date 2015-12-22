@@ -18,7 +18,6 @@
 
 package matteroverdrive.machines.transporter;
 
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -367,22 +366,22 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     public int getEnergyDrain()
     {
         TransportLocation location = getSelectedLocation();
-        return MathHelper.round(getUpgradeMultiply(UpgradeTypes.PowerUsage) * (location.getDistance(xCoord, yCoord, zCoord) * ENERGY_PER_UNIT));
+        return (int)Math.round(getUpgradeMultiply(UpgradeTypes.PowerUsage) * (location.getDistance(xCoord, yCoord, zCoord) * ENERGY_PER_UNIT));
     }
 
     private int getSpeed()
     {
-        return MathHelper.round(getUpgradeMultiply(UpgradeTypes.Speed) * TRANSPORT_TIME);
+        return (int)Math.round(getUpgradeMultiply(UpgradeTypes.Speed) * TRANSPORT_TIME);
     }
 
     private int getTransportDelay()
     {
-        return MathHelper.round(getUpgradeMultiply(UpgradeTypes.Speed) * TRANSPORT_DELAY);
+        return (int)Math.round(getUpgradeMultiply(UpgradeTypes.Speed) * TRANSPORT_DELAY);
     }
 
     public int getTransportRange()
     {
-        return MathHelper.round(getUpgradeMultiply(UpgradeTypes.Range) * TRANSPORT_RANGE);
+        return (int)Math.round(getUpgradeMultiply(UpgradeTypes.Range) * TRANSPORT_RANGE);
     }
 
     @Override

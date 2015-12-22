@@ -18,10 +18,10 @@
 
 package matteroverdrive.gui.android;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.api.weapon.IWeapon;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.proxy.ClientProxy;
@@ -154,12 +154,12 @@ public class AndroidHudStats extends AndroidHudElement
         return getWidthIconWithInfo(DecimalFormat.getPercentInstance().format(amount),iconWidth);
     }
 
-    private int renderIconWithPercent(String icon,double amount,int x,int y,int iconOffsetX,int iconOffsetY,boolean leftSided,GuiColor fromColor,GuiColor toColor,int iconWidth,int iconHeight)
+    private int renderIconWithPercent(String icon,double amount,int x,int y,int iconOffsetX,int iconOffsetY,boolean leftSided,Color fromColor,Color toColor,int iconWidth,int iconHeight)
     {
         return this.renderIconWithInfo(icon,DecimalFormat.getPercentInstance().format(amount),RenderUtils.lerp(fromColor, toColor, MathHelper.clamp_float((float) amount,0,1)),x,y,iconOffsetX,iconOffsetY,leftSided,iconWidth,iconHeight);
     }
 
-    private int renderIconWithInfo(String icon,String info,GuiColor color,int x,int y,int iconOffsetX,int iconOffsetY,boolean leftSided,int iconWidth,int iconHeight)
+    private int renderIconWithInfo(String icon, String info, Color color, int x, int y, int iconOffsetX, int iconOffsetY, boolean leftSided, int iconWidth, int iconHeight)
     {
         HoloIcon holoIcon = ClientProxy.holoIcons.getIcon(icon);
         int infoWidth = mc.fontRenderer.getStringWidth(info);
@@ -187,7 +187,7 @@ public class AndroidHudStats extends AndroidHudElement
         return infoWidth + 2 + iconWidth + 2;
     }
 
-    private int renderAmmoBox(AndroidPlayer androidPlayer,int x,int y,boolean leftSided,GuiColor baseColor)
+    private int renderAmmoBox(AndroidPlayer androidPlayer,int x,int y,boolean leftSided,Color baseColor)
     {
         if (androidPlayer.getPlayer() != null && androidPlayer.getPlayer().getHeldItem() != null && androidPlayer.getPlayer().getHeldItem().getItem() instanceof IWeapon)
         {
@@ -209,7 +209,7 @@ public class AndroidHudStats extends AndroidHudElement
         return 0;
     }
 
-    private int renderHeat(AndroidPlayer androidPlayer,int x,int y,boolean leftSided,GuiColor baseColor)
+    private int renderHeat(AndroidPlayer androidPlayer,int x,int y,boolean leftSided,Color baseColor)
     {
         if (androidPlayer.getPlayer() != null && androidPlayer.getPlayer().getHeldItem() != null && androidPlayer.getPlayer().getHeldItem().getItem() instanceof IWeapon)
         {

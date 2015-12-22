@@ -18,7 +18,7 @@
 
 package matteroverdrive.api.network;
 
-import cofh.lib.util.position.BlockPosition;
+import matteroverdrive.data.BlockPos;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -34,7 +34,7 @@ public interface IMatterNetworkConnection
      * Used mainly in Packet filters to filter the machines the packet can reach.
      * @return the block position of the Matter Network connection.
      */
-    BlockPosition getPosition();
+    BlockPos getPosition();
 
     /**
      * Can the Matter Connection connect form a given side.

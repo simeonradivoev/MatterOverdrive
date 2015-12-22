@@ -18,9 +18,9 @@
 
 package matteroverdrive.guide;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -50,7 +50,7 @@ public abstract class GuideElementAbstract implements IGuideElement
     protected int marginRight;
     protected int textAlign;
     protected int floating;
-    protected GuiColor color;
+    protected Color color;
 
     @Override
     public void loadElement(MOGuideEntry entry, Element element,Map<String,String> styleSheetMap,int width,int height)
@@ -233,28 +233,28 @@ public abstract class GuideElementAbstract implements IGuideElement
         return 0;
     }
 
-    public GuiColor getColorFromStyle(Map<String,String> stringMap)
+    public Color getColorFromStyle(Map<String,String> stringMap)
     {
         if (stringMap.containsKey("color"))
         {
             if (stringMap.get("color").startsWith("#"))
             {
-                return new GuiColor(Integer.parseInt(stringMap.get("color").substring(1),16));
+                return new Color(Integer.parseInt(stringMap.get("color").substring(1),16));
             }
             if (stringMap.get("color").startsWith("rgb("))
             {
                 String[] rgb = stringMap.get("color").substring(4,stringMap.get("color").length()-1).split(",");
                 if (rgb.length == 3)
                 {
-                    return new GuiColor(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2]));
+                    return new Color(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2]));
                 }
                 if (rgb.length == 4)
                 {
-                    return new GuiColor(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2]),Integer.parseInt(rgb[3]));
+                    return new Color(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2]),Integer.parseInt(rgb[3]));
                 }
             }
         }
-        return new GuiColor(255,255,255);
+        return new Color(255,255,255);
     }
 
     private int parseStyleNumber(String number,int value)

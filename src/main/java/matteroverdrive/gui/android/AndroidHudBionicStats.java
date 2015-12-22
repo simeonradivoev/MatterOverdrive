@@ -18,11 +18,10 @@
 
 package matteroverdrive.gui.android;
 
-import cofh.lib.gui.GuiColor;
-import cofh.lib.render.RenderHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
@@ -128,26 +127,24 @@ public class AndroidHudBionicStats extends AndroidHudElement
         return count;
     }
 
-    private void drawAndroidPart(ItemStack stack,GuiColor color,int x,int y)
+    private void drawAndroidPart(ItemStack stack, Color color, int x, int y)
     {
         drawNormalBG(color, x, y);
         glEnable(GL_BLEND);
         glColor4f(1, 1, 1, 0.5f);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        RenderHelper.bindItemTexture(stack);
         RenderUtils.renderStack(x + 3, y + 3, stack);
         glDisable(GL_BLEND);
     }
 
-    private void drawBioticStat(IBionicStat stat,AndroidPlayer androidPlayer,int level,GuiColor color,int x,int y)
+    private void drawBioticStat(IBionicStat stat,AndroidPlayer androidPlayer,int level,Color color,int x,int y)
     {
         if (stat.isActive(androidPlayer,level))
             drawActiveBG(color,x,y);
         else
             drawNormalBG(color, x, y);
         glEnable(GL_BLEND);
-        ClientProxy.holoIcons.bindSheet();
-        RenderHelper.renderIcon(x + 2, y + 2, 0, stat.getIcon(level), 18, 18);
+        ClientProxy.holoIcons.renderIcon(stat.getIcon(level),x +2,y + 2,18,18);
         if (stat.getDelay(androidPlayer,level) > 0)
         {
             String delay = MOStringHelper.formatRemainingTime(stat.getDelay(androidPlayer, level)/20f,true);
@@ -157,7 +154,7 @@ public class AndroidHudBionicStats extends AndroidHudElement
         glDisable(GL_BLEND);
     }
 
-    private void drawNormalBG(GuiColor color,int x,int y)
+    private void drawNormalBG(Color color,int x,int y)
     {
         glDisable(GL_ALPHA_TEST);
         glEnable(GL_BLEND);
@@ -172,7 +169,7 @@ public class AndroidHudBionicStats extends AndroidHudElement
         glEnable(GL_ALPHA_TEST);
     }
 
-    private void drawActiveBG(GuiColor color,int x,int y)
+    private void drawActiveBG(Color color,int x,int y)
     {
         glDisable(GL_ALPHA_TEST);
         glEnable(GL_BLEND);

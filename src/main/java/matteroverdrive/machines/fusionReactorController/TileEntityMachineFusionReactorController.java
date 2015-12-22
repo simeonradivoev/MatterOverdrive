@@ -21,10 +21,6 @@ package matteroverdrive.machines.fusionReactorController;
 
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyReceiver;
-import cofh.lib.util.TimeTracker;
-import cofh.lib.util.helpers.BlockHelper;
-import cofh.lib.util.helpers.EnergyHelper;
-import cofh.lib.util.position.BlockPosition;
 import cofh.lib.util.position.IRotateableTile;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -38,6 +34,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.fusionReactorController.components.ComponentComputers;
@@ -47,6 +44,8 @@ import matteroverdrive.tile.MOTileEntityMachineEnergy;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
 import matteroverdrive.tile.TileEntityFusionReactorPart;
 import matteroverdrive.tile.TileEntityGravitationalAnomaly;
+import matteroverdrive.util.MOEnergyHelper;
+import matteroverdrive.util.TimeTracker;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -61,6 +60,10 @@ import net.minecraftforge.fluids.Fluid;
 
 import java.text.DecimalFormat;
 import java.util.EnumSet;
+
+import static java.lang.Math.round;
+import static matteroverdrive.util.MOBlockHelper.getAboveSide;
+import static matteroverdrive.util.MOBlockHelper.getOppositeSide;
 
 /**
  * Created by Simeon on 5/14/2015.
@@ -87,7 +90,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     private float energyEfficiency;
     private int energyPerTick;
     private TimeTracker structureCheckTimer;
-    private BlockPosition anomalyPosition;
+    private BlockPos anomalyPosition;
     private float matterPerTick;
     private float matterDrain;
     private ComponentComputers componentComputers;
@@ -191,7 +194,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     {
         if (i < positionsCount)
         {
-            ForgeDirection back = ForgeDirection.getOrientation(BlockHelper.getOppositeSide(meta));
+            ForgeDirection back = ForgeDirection.getOrientation(getOppositeSide(meta));
             Vec3 pos = Vec3.createVectorHelper(TileEntityMachineFusionReactorController.positions[i * 2], 0, TileEntityMachineFusionReactorController.positions[(i * 2) + 1]);
 
             if (back == ForgeDirection.NORTH)
@@ -242,11 +245,11 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
             for (int i = 0; i < positionsCount; i++) {
                 Vec3 offset = getPosition(i, meta);
-                BlockPosition position = new BlockPosition(xCoord + (int)Math.round(offset.xCoord),yCoord + (int)Math.round(offset.yCoord),zCoord + (int)Math.round(offset.zCoord));
+                BlockPos position = new BlockPos(xCoord + (int) round(offset.xCoord), yCoord + (int) round(offset.yCoord), zCoord + (int) round(offset.zCoord));
 
                 if (blocks[i] == 255)
                 {
-                    BlockPosition anomalyOffset = checkForGravitationalAnomaly(position, ForgeDirection.getOrientation(BlockHelper.getAboveSide(meta)));
+                    BlockPos anomalyOffset = checkForGravitationalAnomaly(position, ForgeDirection.getOrientation(getAboveSide(meta)));
 
                     if (anomalyOffset != null)
                     {
@@ -257,7 +260,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                             info = "GRAVITATIONAL\nANOMALY\nTOO\nFAR";
                             break;
                         }
-                        anomalyPosition = new BlockPosition((int)offset.xCoord + anomalyOffset.x,(int)offset.yCoord + anomalyOffset.y,(int)offset.zCoord + anomalyOffset.z);
+                        anomalyPosition = new BlockPos((int) offset.xCoord + anomalyOffset.x, (int) offset.yCoord + anomalyOffset.y, (int) offset.zCoord + anomalyOffset.z);
                     }else
                     {
                         validStructure = false;
@@ -392,7 +395,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     @Override
     public boolean isCharging()
     {
-        return this.inventory.getStackInSlot(energySlotID) != null && EnergyHelper.isEnergyContainerItem(this.inventory.getStackInSlot(energySlotID));
+        return this.inventory.getStackInSlot(energySlotID) != null && MOEnergyHelper.isEnergyContainerItem(this.inventory.getStackInSlot(energySlotID));
     }
 
     @Override
@@ -403,7 +406,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
             if(!this.worldObj.isRemote)
             {
                 int maxExtracted = Math.min(energyStorage.getMaxExtract(),energyStorage.getEnergyStored());
-                int extracted = EnergyHelper.insertEnergyIntoContainer(this.inventory.getStackInSlot(energySlotID),maxExtracted,false);
+                int extracted = MOEnergyHelper.insertEnergyIntoContainer(this.inventory.getStackInSlot(energySlotID),maxExtracted,false);
                 modifyEnergyStored(extracted);
             }
         }
@@ -444,7 +447,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         return energyEfficiency;
     }
 
-    private BlockPosition checkForGravitationalAnomaly(BlockPosition position,ForgeDirection up)
+    private BlockPos checkForGravitationalAnomaly(BlockPos position, ForgeDirection up)
     {
         int offsetX,offsetY,offsetZ;
 
@@ -456,7 +459,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
             Block block = worldObj.getBlock(position.x + offsetX, position.y + offsetY, position.z + offsetZ);
             if (block != null && block == MatterOverdriveBlocks.gravitational_anomaly)
             {
-                return new BlockPosition(offsetX,offsetY,offsetZ);
+                return new BlockPos(offsetX, offsetY, offsetZ);
             }
         }
 
@@ -471,7 +474,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
-        ForgeDirection backSide = ForgeDirection.getOrientation(BlockHelper.getOppositeSide(worldObj.getBlockMetadata(xCoord,yCoord,zCoord)));
+        ForgeDirection backSide = ForgeDirection.getOrientation(getOppositeSide(worldObj.getBlockMetadata(xCoord,yCoord,zCoord)));
         return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord + backSide.offsetX * 10,yCoord + backSide.offsetY * 10,zCoord + backSide.offsetZ * 10);
     }
 

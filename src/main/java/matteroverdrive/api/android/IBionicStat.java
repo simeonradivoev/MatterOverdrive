@@ -21,12 +21,12 @@ package matteroverdrive.api.android;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.client.render.HoloIcon;
+import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.entity.player.AndroidAttributes;
 import matteroverdrive.entity.player.AndroidPlayer;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.List;
@@ -179,7 +179,7 @@ public interface IBionicStat
      * Called to register any custom Icons
      * @param holoIcons The TextureMap for the Holo Icons
      */
-    void registerIcons(TextureMap holoIcons);
+    void registerIcons(HoloIcons holoIcons);
 
     /**
      * Gets the Bionic Stat Icon.
@@ -188,7 +188,7 @@ public interface IBionicStat
      * @return The stat Icon.
      */
     @SideOnly(Side.CLIENT)
-    IIcon getIcon(int level);
+    HoloIcon getIcon(int level);
 
     /**
      * The maximum level the Bionic stat can reach.

@@ -18,12 +18,12 @@
 
 package matteroverdrive.entity.monster;
 
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.Reference;
 import matteroverdrive.api.entity.IPathableMob;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.tile.TileEntityAndroidSpawner;
 import matteroverdrive.util.MOStringHelper;
@@ -53,7 +53,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     private static ResourceLocation androidNames = new ResourceLocation(Reference.PATH_INFO + "android_names.txt");
     private static String[] names = MOStringHelper.readTextFile(androidNames).split(",");
     boolean fromSpawner;
-    private BlockPosition spawnerPosition;
+    private BlockPos spawnerPosition;
     private int currentPathIndex;
     private Vec3[] path;
     private int maxPathTargetRangeSq;
@@ -141,7 +141,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         }
         if (nbtTagCompound.hasKey("SpawnerPos", Constants.NBT.TAG_COMPOUND))
         {
-            spawnerPosition = new BlockPosition(nbtTagCompound.getCompoundTag("SpawnerPos"));
+            spawnerPosition = new BlockPos(nbtTagCompound.getCompoundTag("SpawnerPos"));
             this.fromSpawner = true;
         }
         currentPathIndex = nbtTagCompound.getInteger("CurrentPathIndex");
@@ -167,7 +167,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         nbtTagCompound.setInteger("CurrentPathIndex",currentPathIndex);
     }
 
-    private boolean addToSpawner(BlockPosition position)
+    private boolean addToSpawner(BlockPos position)
     {
         this.spawnerPosition = position;
         TileEntityAndroidSpawner spawnerEntity = position.getTileEntity(worldObj,TileEntityAndroidSpawner.class);
@@ -382,7 +382,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         return false;
     }
 
-    public void setSpawnerPosition(BlockPosition position)
+    public void setSpawnerPosition(BlockPos position)
     {
         this.spawnerPosition = position;
         this.fromSpawner = true;

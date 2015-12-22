@@ -19,10 +19,9 @@
 package matteroverdrive.gui;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementBase;
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.container.MOBaseContainer;
@@ -32,6 +31,7 @@ import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.gui.events.ITextHandler;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -154,7 +154,7 @@ public abstract class MOGuiBase extends GuiBase implements IButtonHandler,ITextH
 
     public void setPage(int page)
     {
-        page = MathHelper.clampI(page, 0, pages.size() - 1);
+        page = MathHelper.clamp_int(page, 0, pages.size() - 1);
         if (currentPage != page) {
             onPageChange(page);
         }
@@ -229,17 +229,17 @@ public abstract class MOGuiBase extends GuiBase implements IButtonHandler,ITextH
         AddPlayerSlots(45,ySize - 27,container,elements,false,true,"small",null);
     }
 
-    protected void AddMainPlayerSlots(Container container,GuiElementList elements,String type,GuiColor color,int x,int y)
+    protected void AddMainPlayerSlots(Container container,GuiElementList elements,String type,Color color,int x,int y)
     {
         AddPlayerSlots(x,y,container,elements,true,false,type,color);
     }
 
-    protected void AddHotbarPlayerSlots(Container container,GuiElementList elements,String type,GuiColor color,int x,int y)
+    protected void AddHotbarPlayerSlots(Container container,GuiElementList elements,String type,Color color,int x,int y)
     {
         AddPlayerSlots(x,y,container,elements,false,true,type,color);
     }
 
-    protected void AddPlayerSlots(int x,int y,Container container,GuiElementList elements,boolean main,boolean hotbar,String type,GuiColor color)
+    protected void AddPlayerSlots(int x,int y,Container container,GuiElementList elements,boolean main,boolean hotbar,String type,Color color)
     {
         for (int i = 0;i < container.inventorySlots.size();i++)
         {

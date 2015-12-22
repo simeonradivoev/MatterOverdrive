@@ -18,12 +18,12 @@
 
 package matteroverdrive.blocks;
 
-import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.init.MatterOverdriveIcons;
+import matteroverdrive.util.MOBlockHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -56,7 +56,7 @@ public abstract class BlockMonitor extends MOBlockMachine
             MatterOverdriveIcons.Monitor_back.setType(0);
             return MatterOverdriveIcons.Monitor_back;
         }
-        else if (side == BlockHelper.getOppositeSide(meta))
+        else if (side == MOBlockHelper.getOppositeSide(meta))
         {
             return MatterOverdriveIcons.Network_port_square;
         }

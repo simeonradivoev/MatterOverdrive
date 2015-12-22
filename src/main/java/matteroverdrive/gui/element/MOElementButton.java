@@ -19,9 +19,8 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.GuiColor;
-import cofh.lib.render.RenderHelper;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.data.ScaleTexture;
@@ -47,7 +46,7 @@ public class MOElementButton extends MOElementBase
     protected String text;
     protected boolean isDown;
     protected int lastMouseButton;
-    protected GuiColor color;
+    protected Color color;
     int labelColor = 0xFFFFFFFF;
     IButtonHandler buttonHandler;
     HoloIcon icon;
@@ -128,7 +127,7 @@ public class MOElementButton extends MOElementBase
         if (color != null)
             RenderUtils.applyColor(color);
         GL11.glEnable(GL11.GL_BLEND);
-        RenderHelper.bindTexture(this.texture);
+        RenderUtils.bindTexture(this.texture);
         if(this.isEnabled()) {
             if(this.intersectsWith(mouseX, mouseY)) {
                 this.drawTexturedModalRect(this.posX, this.posY, this.hoverX, this.hoverY, this.sizeX, this.sizeY);
@@ -164,10 +163,10 @@ public class MOElementButton extends MOElementBase
         this.text = text;
     }
 
-    public void setColor(GuiColor color){this.color = color;}
-    public void setColor(GuiColor color,float multiplay){this.color = new GuiColor((int)(color.getIntR() * multiplay),(int)(color.getIntG() * multiplay),(int)(color.getIntB() * multiplay));}
+    public void setColor(Color color){this.color = color;}
+    public void setColor(Color color,float multiplay){this.color = new Color((int)(color.getIntR() * multiplay),(int)(color.getIntG() * multiplay),(int)(color.getIntB() * multiplay));}
 
-    public GuiColor getColor(){return this.color;}
+    public Color getColor(){return this.color;}
 
     public void setTextColor(int color){this.labelColor = color;}
     public int getTextColor(){return this.labelColor;}

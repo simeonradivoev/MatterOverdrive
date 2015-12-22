@@ -19,8 +19,8 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementBase;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.util.RenderUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -31,7 +31,7 @@ import java.util.List;
  */
 public abstract class MOElementBase extends ElementBase
 {
-    private GuiColor color = new GuiColor(255,255,255);
+    private Color color = new Color(255,255,255);
     public MOElementBase parent;
     public MOElementBase(GuiBase gui, int posX, int posY)
     {
@@ -54,16 +54,16 @@ public abstract class MOElementBase extends ElementBase
         addTooltip(var1);
     }
 
-    public GuiColor getColor() {
+    public Color getColor() {
         return color;
     }
 
     public void setColor(int r,int g,int b,int alpha)
     {
-        this.color = new GuiColor(r,g,b,alpha);
+        this.color = new Color(r,g,b,alpha);
     }
 
-    public void setColor(GuiColor color)
+    public void setColor(Color color)
     {
         this.color = color;
     }

@@ -19,10 +19,10 @@
 package matteroverdrive.gui.element;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.util.helpers.StringHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -58,7 +58,7 @@ public class ElementSlot extends MOElementBase
     {
         if (!info.isEmpty())
         {
-            list.add(StringHelper.localize(info));
+            list.add(MOStringHelper.translateToLocal(info));
         }
     }
 

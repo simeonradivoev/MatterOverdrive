@@ -68,7 +68,7 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
     public String getUnlocalizedName(ItemStack stack)
     {
         int i = MathHelper.clamp_int(stack.getItemDamage(), 0, 3);
-        return super.getUnlocalizedName() + "." + names[cofh.lib.util.helpers.MathHelper.clampI(i,0,names.length-1)];
+        return super.getUnlocalizedName() + "." + names[MathHelper.clamp_int(i,0,names.length-1)];
     }
 
     @Override

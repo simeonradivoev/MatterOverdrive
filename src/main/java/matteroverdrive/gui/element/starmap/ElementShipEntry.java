@@ -18,9 +18,9 @@
 
 package matteroverdrive.gui.element.starmap;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.IShip;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementGroupList;
@@ -50,7 +50,7 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     }
 
     @Override
-    protected void drawElementName(Planet planet, GuiColor color, float multiply)
+    protected void drawElementName(Planet planet, Color color, float multiply)
     {
         RenderUtils.renderStack(posX + 10, posY + sizeY / 2 - 8, ship);
         RenderUtils.drawString(Minecraft.getMinecraft().fontRenderer, ship.getDisplayName(), posX + 31, posY + 12, color, multiply);
@@ -92,7 +92,7 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     }
 
     @Override
-    protected GuiColor getSpaceBodyColor(Planet planet)
+    protected Color getSpaceBodyColor(Planet planet)
     {
         if (canView(planet,Minecraft.getMinecraft().thePlayer)) {
             return Reference.COLOR_HOLO;

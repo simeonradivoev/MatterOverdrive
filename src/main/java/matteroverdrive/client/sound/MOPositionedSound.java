@@ -41,6 +41,11 @@ public class MOPositionedSound extends PositionedSound
         this.zPosF = z;
     }
 
+    public void setRepeat(boolean repeat)
+    {
+        this.repeat = repeat;
+    }
+
     public void setAttenuationType(ISound.AttenuationType type)
     {
         field_147666_i = type;

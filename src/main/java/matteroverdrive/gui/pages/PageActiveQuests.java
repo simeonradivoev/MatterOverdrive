@@ -60,7 +60,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
         super(gui, posX, posY, width, height);
         this.setName(name);
         quests = new MOElementListBox(gui,this,posX+22,posY+28,width-44,74);
-        quests.textColor = Reference.COLOR_HOLO.multiply(0.5f).getColor();
+        quests.textColor = Reference.COLOR_HOLO.multiplyWithoutAlpha(0.5f).getColor();
         quests.selectedTextColor = Reference.COLOR_HOLO.getColor();
         questInfo = new ElementTextList(gui,0,0,width-15,Reference.COLOR_HOLO.getColor(),true);
         questRewards = new ElementBaseGroup(gui,8,8,width-15,24);

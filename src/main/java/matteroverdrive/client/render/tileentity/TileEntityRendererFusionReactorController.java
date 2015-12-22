@@ -18,8 +18,8 @@
 
 package matteroverdrive.client.render.tileentity;
 
-import cofh.lib.gui.GuiColor;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -74,7 +74,7 @@ public class TileEntityRendererFusionReactorController extends TileEntitySpecial
         int meta = controller.getWorldObj().getBlockMetadata(controller.xCoord, controller.yCoord, controller.zCoord);
         ForgeDirection side = ForgeDirection.getOrientation(meta);
 
-        GuiColor color = Reference.COLOR_HOLO;
+        Color color = Reference.COLOR_HOLO;
         if (!controller.isValidStructure())
             color = Reference.COLOR_HOLO_RED;
 

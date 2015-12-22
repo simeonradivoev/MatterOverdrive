@@ -18,7 +18,7 @@
 
 package matteroverdrive.util;
 
-import cofh.lib.gui.GuiColor;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.tileentity.TileEntityRendererPatternMonitor;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
@@ -202,22 +202,22 @@ public class RenderUtils
 		GL11.glDepthMask(true);
 	}
 
-	public static void drawCube(double sizeX,double sizeY,double sizeZ,GuiColor color)
+	public static void drawCube(double sizeX,double sizeY,double sizeZ,Color color)
 	{
 		drawCube(0, 0, 0, sizeX, sizeY, sizeZ, color);
 	}
 
-	public static void drawCube(double sizeX,double sizeY,double sizeZ,GuiColor color,float multiply)
+	public static void drawCube(double sizeX,double sizeY,double sizeZ,Color color,float multiply)
 	{
-		drawCube(0, 0, 0, sizeX, sizeY, sizeZ, new GuiColor((int)(color.getIntR() * multiply),(int)(color.getIntG() * multiply),(int)(color.getIntB() * multiply)));
+		drawCube(0, 0, 0, sizeX, sizeY, sizeZ, new Color((int)(color.getIntR() * multiply),(int)(color.getIntG() * multiply),(int)(color.getIntB() * multiply)));
 	}
 
-	public static void drawCube(double x,double y,double z,double sizeX,double sizeY,double sizeZ,GuiColor color)
+	public static void drawCube(double x,double y,double z,double sizeX,double sizeY,double sizeZ,Color color)
 	{
 		drawCube(x,y,z,sizeX,sizeY,sizeZ,0,0,1,1,color);
 	}
 
-	public static void drawCube(double x,double y,double z,double sizeX,double sizeY,double sizeZ,double minU,double minV,double maxU,double maxV,GuiColor color)
+	public static void drawCube(double x,double y,double z,double sizeX,double sizeY,double sizeZ,double minU,double minV,double maxU,double maxV,Color color)
 	{
 		Tessellator tessellator = Tessellator.instance;
 
@@ -265,7 +265,7 @@ public class RenderUtils
 		tessellator.draw();
 	}
 
-	public static void tesseleteModelAsBlock(Matrix4f mat,GroupObject object,IIcon icon,int x,int y,int z,int brightness,boolean lighting,GuiColor color)
+	public static void tesseleteModelAsBlock(Matrix4f mat,GroupObject object,IIcon icon,int x,int y,int z,int brightness,boolean lighting,Color color)
 	{
 		float uSize = icon.getMaxU() - icon.getMinU();
 		float vSize = icon.getMaxV() - icon.getMinV();
@@ -354,9 +354,9 @@ public class RenderUtils
 		return ((((( a & MASK1 ) * f1 ) + ( ( b & MASK1 ) * f2 )) >> 8 ) & MASK1 ) | ((((( a & MASK2 ) * f1 ) + ( ( b & MASK2 ) * f2 )) >> 8 ) & MASK2 );
 	}
 
-	public static GuiColor lerp(GuiColor a,GuiColor b,float lerp)
+	public static Color lerp(Color a,Color b,float lerp)
 	{
-		return new GuiColor(lerp(a.getIntR(),b.getIntR(),lerp),lerp(a.getIntG(),b.getIntG(),lerp),lerp(a.getIntB(),b.getIntB(),lerp),lerp(a.getIntA(),b.getIntA(),lerp));
+		return new Color(lerp(a.getIntR(),b.getIntR(),lerp),lerp(a.getIntG(),b.getIntG(),lerp),lerp(a.getIntB(),b.getIntB(),lerp),lerp(a.getIntA(),b.getIntA(),lerp));
 	}
 
 	public static void applyColor(int color)
@@ -364,11 +364,11 @@ public class RenderUtils
 		glColor4f((float) (color >> 16 & 255) / 255f, (float) (color >> 8 & 255) / 255f, (float) (color >> 0 & 255) / 256f, (float) (color >> 24 & 255) / 255f);
 	}
 
-	public static void applyColor(GuiColor color) {
+	public static void applyColor(Color color) {
 		glColor3f(color.getFloatR(), color.getFloatG(), color.getFloatB());
 	}
 
-	public static void applyColorWithMultipy(GuiColor color,float mul) {
+	public static void applyColorWithMultipy(Color color,float mul) {
 		glColor3f(color.getFloatR() * mul, color.getFloatG() * mul, color.getFloatB() * mul);
 	}
 
@@ -376,26 +376,26 @@ public class RenderUtils
 		glColor4f((float) ((color >> 16 & 255) / 255f) * mul, (float) ((color >> 8 & 255) / 255f) * mul, (float) ((color >> 0 & 255) / 256f) * mul, (float) (color >> 24 & 255) / 255f);
 	}
 
-    public static void applyColorWithAdd(GuiColor color,float add)
+    public static void applyColorWithAdd(Color color,float add)
     {
         glColor3f(color.getFloatR() + add, color.getFloatG() + add, color.getFloatB() + add);
     }
 
-	public static void applyColorWithAlpha(GuiColor color,float alphaMultiply)
+	public static void applyColorWithAlpha(Color color,float alphaMultiply)
 	{
 		glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA()*alphaMultiply);
 	}
-	public static void applyColorWithAlpha(GuiColor color)
+	public static void applyColorWithAlpha(Color color)
 	{
 		glColor4f(color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
 	}
 
-    public static void beginDrawinngBlockScreen(double x, double y, double z,ForgeDirection side,GuiColor color,TileEntity entity)
+    public static void beginDrawinngBlockScreen(double x, double y, double z,ForgeDirection side,Color color,TileEntity entity)
     {
         beginDrawinngBlockScreen(x, y, z, side, color, entity, 0.05, 1);
     }
 
-    public static void beginDrawinngBlockScreen(double x, double y, double z,ForgeDirection side,GuiColor color,TileEntity entity,double offset,float glowAlpha)
+    public static void beginDrawinngBlockScreen(double x, double y, double z,ForgeDirection side,Color color,TileEntity entity,double offset,float glowAlpha)
     {
         glEnable(GL_BLEND);
         glDisable(GL_LIGHTING);
@@ -430,7 +430,7 @@ public class RenderUtils
         RenderUtils.drawPlane(1);
     }
 
-    public static void drawScreenInfoWithGlobalAutoSize(String[] info, GuiColor color, ForgeDirection side, int leftMargin, int rightMargin, float maxScaleFactor)
+    public static void drawScreenInfoWithGlobalAutoSize(String[] info, Color color, ForgeDirection side, int leftMargin, int rightMargin, float maxScaleFactor)
     {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
@@ -492,7 +492,7 @@ public class RenderUtils
         glPopMatrix();
     }
 
-    public static void drawScreenInfoWithLocalAutoSize(String[] info,GuiColor color,ForgeDirection side,int leftMargin,int rightMargin,float maxScaleFactor)
+    public static void drawScreenInfoWithLocalAutoSize(String[] info,Color color,ForgeDirection side,int leftMargin,int rightMargin,float maxScaleFactor)
     {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
@@ -606,6 +606,11 @@ public class RenderUtils
 		}
 	}
 
+	public static void bindTexture(ResourceLocation texture)
+	{
+		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+	}
+
 	//From CodeChickenLib
 	public static void translateToWorldCoords(Entity entity, float frame)
 	{
@@ -622,7 +627,7 @@ public class RenderUtils
 		glRotated(viewer.rotationPitch, 1, 0, 0);
 	}
 
-	public static void tessalateParticle(EntityLivingBase viewer, IIcon particleIcon,double scale,Vec3 position,GuiColor color)
+	public static void tessalateParticle(EntityLivingBase viewer, IIcon particleIcon,double scale,Vec3 position,Color color)
 	{
 		tessalateParticle(viewer, particleIcon, scale, position, color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
 	}
@@ -679,14 +684,14 @@ public class RenderUtils
 		Tessellator.instance.addVertexWithUV(x, y, zLevel, u * texU, v * texV);
 	}
 
-	public static void drawString(String string,int x,int y,GuiColor color,float multiply)
+	public static void drawString(String string,int x,int y,Color color,float multiply)
 	{
 		drawString(Minecraft.getMinecraft().fontRenderer, string, x, y, color, multiply);
 	}
 
-	public static void drawString(FontRenderer fontRenderer,String string,int x,int y,GuiColor color,float multiply)
+	public static void drawString(FontRenderer fontRenderer,String string,int x,int y,Color color,float multiply)
 	{
-		fontRenderer.drawString(string, x, y, new GuiColor((int) (color.getIntR() * multiply), (int) (color.getIntG() * multiply), (int) (color.getIntB() * multiply)).getColor());
+		fontRenderer.drawString(string, x, y, color.multiplyWithoutAlpha(multiply).getColor());
 	}
 
 	public static void beginStencil()
@@ -795,4 +800,18 @@ public class RenderUtils
         Vec3 rotAxis = from.crossProduct(to).normalize();
         glRotated(rotAngle * (180d / Math.PI), rotAxis.xCoord, rotAxis.yCoord, rotAxis.zCoord);
     }
+
+	public static void renderIcon(double x, double y, double z, IIcon icon, int width, int height) {
+		Tessellator var9 = Tessellator.instance;
+		var9.startDrawingQuads();
+		var9.addVertexWithUV(x, y + (double)height, z, (double)icon.getMinU(), (double)icon.getMaxV());
+		var9.addVertexWithUV(x + (double)width, y + (double)height, z, (double)icon.getMaxU(), (double)icon.getMaxV());
+		var9.addVertexWithUV(x + (double)width, y, z, (double)icon.getMaxU(), (double)icon.getMinV());
+		var9.addVertexWithUV(x, y, z, (double)icon.getMinU(), (double)icon.getMinV());
+		var9.draw();
+	}
+
+	public static final void setBlockTextureSheet() {
+		new ResourceLocation("textures/atlas/blocks.png");
+	}
 }

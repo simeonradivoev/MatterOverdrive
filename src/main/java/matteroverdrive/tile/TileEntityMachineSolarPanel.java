@@ -18,11 +18,11 @@
 
 package matteroverdrive.tile;
 
-import cofh.lib.util.helpers.EnergyHelper;
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -73,7 +73,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
                 if (energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored())
                 {
                     int energy = energyStorage.getEnergyStored();
-                    energy = MathHelper.clampI(energy + getChargeAmount(),0,energyStorage.getMaxEnergyStored());
+                    energy = MathHelper.clamp_int(energy + getChargeAmount(),0,energyStorage.getMaxEnergyStored());
                     if (energy != energyStorage.getEnergyStored())
                     {
                         UpdateClientPower();
@@ -110,7 +110,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
                 int energyToTransfer = Math.min(energy,MAX_ENERGY_EXTRACT);
                 if (energyToTransfer > 0)
                 {
-                    energy -= EnergyHelper.insertEnergyIntoAdjacentEnergyReceiver(this, i, energyToTransfer, false);
+                    energy -= MOEnergyHelper.insertEnergyIntoAdjacentEnergyReceiver(this, i, energyToTransfer, false);
                 }
             }
 

@@ -18,7 +18,6 @@
 
 package matteroverdrive.client.render.tileentity;
 
-import cofh.lib.util.helpers.BlockHelper;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.BlockHoloSign;
 import matteroverdrive.tile.TileEntityHoloSign;
@@ -26,6 +25,9 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import static matteroverdrive.util.MOBlockHelper.getLeftSide;
+import static matteroverdrive.util.MOBlockHelper.getRightSide;
 
 /**
  * Created by Simeon on 8/15/2015.
@@ -49,13 +51,13 @@ public class TileEntityRendererHoloSign extends TileEntitySpecialRenderer
                 int leftMargin = 10;
                 int rightMargin = 10;
                 float maxSize = 4f;
-                ForgeDirection leftSide = ForgeDirection.getOrientation(BlockHelper.getLeftSide(meta));
+                ForgeDirection leftSide = ForgeDirection.getOrientation(getLeftSide(meta));
                 if (tileEntity.getWorldObj().getBlock(tileEntity.xCoord + leftSide.offsetY, tileEntity.yCoord + leftSide.offsetY, tileEntity.zCoord + leftSide.offsetZ) instanceof BlockHoloSign)
                 {
                     leftMargin = 0;
                     maxSize = 8;
                 }
-                ForgeDirection rightSide = ForgeDirection.getOrientation(BlockHelper.getRightSide(meta));
+                ForgeDirection rightSide = ForgeDirection.getOrientation(getRightSide(meta));
                 if (tileEntity.getWorldObj().getBlock(tileEntity.xCoord + rightSide.offsetY, tileEntity.yCoord + rightSide.offsetY, tileEntity.zCoord + rightSide.offsetZ) instanceof BlockHoloSign)
                 {
                     rightMargin = 0;

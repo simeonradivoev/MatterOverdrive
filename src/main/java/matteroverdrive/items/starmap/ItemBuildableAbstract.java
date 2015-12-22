@@ -18,7 +18,6 @@
 
 package matteroverdrive.items.starmap;
 
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.api.starmap.IBuildable;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.starmap.data.Galaxy;
@@ -26,6 +25,7 @@ import matteroverdrive.starmap.data.Planet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -126,6 +126,6 @@ public abstract class ItemBuildableAbstract extends MOBaseItem implements IBuild
     @Override
     public int getBuildLength(ItemStack buildableStack, Planet planet)
     {
-        return MathHelper.ceil(getBuildLengthUnscaled(buildableStack, planet) * Galaxy.GALAXY_BUILD_TIME_MULTIPLY);
+        return MathHelper.ceiling_double_int(getBuildLengthUnscaled(buildableStack, planet) * Galaxy.GALAXY_BUILD_TIME_MULTIPLY);
     }
 }

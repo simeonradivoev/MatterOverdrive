@@ -18,7 +18,6 @@
 
 package matteroverdrive.blocks;
 
-import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
@@ -27,6 +26,7 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
+import matteroverdrive.util.MOBlockHelper;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -49,7 +49,7 @@ public class BlockFusionReactorController extends MOBlockMachine
         this.setHarvestLevel("pickaxe", 2);
         setHasGui(true);
         lightValue = 10;
-        setRotationType(BlockHelper.RotationType.SIX_WAY);
+        setRotationType(MOBlockHelper.RotationType.SIX_WAY);
     }
 
     @SideOnly(Side.CLIENT)
@@ -59,7 +59,7 @@ public class BlockFusionReactorController extends MOBlockMachine
         {
             return MatterOverdriveIcons.Monitor_back;
         }
-        else if (side == BlockHelper.getRightSide(meta) || side == BlockHelper.getLeftSide(meta))
+        else if (side == MOBlockHelper.getRightSide(meta) || side == MOBlockHelper.getLeftSide(meta))
         {
             return MatterOverdriveBlocks.decomposer.iconTop;
         }

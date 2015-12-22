@@ -18,12 +18,12 @@
 
 package matteroverdrive.items.weapon.module;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponColor;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -44,18 +44,18 @@ import java.util.List;
 public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
 {
     private IIcon overlayIcon;
-    public static final GuiColor defaultColor = new GuiColor(255,255,255);
-    public static final GuiColor colors[] = {
-            new GuiColor(204,0,0),      //red
-            new GuiColor(0,153,51),     //green
-            new GuiColor(0,102,255),    //blue
-            new GuiColor(102,51,51),    //brown
-            new GuiColor(255,153,255),  //pink
-            new GuiColor(153,204,255),  //sky blue
-            new GuiColor(212,175,55),   //gold
-            new GuiColor(102,255,102),  //lime green
-            new GuiColor(30,30,30),     //black
-            new GuiColor(128,128,128)   //grey
+    public static final Color defaultColor = new Color(255,255,255);
+    public static final Color colors[] = {
+            new Color(204,0,0),      //red
+            new Color(0,153,51),     //green
+            new Color(0,102,255),    //blue
+            new Color(102,51,51),    //brown
+            new Color(255,153,255),  //pink
+            new Color(153,204,255),  //sky blue
+            new Color(212,175,55),   //gold
+            new Color(102,255,102),  //lime green
+            new Color(30,30,30),     //black
+            new Color(128,128,128)   //grey
             };
     public static final String names[] = {"red","green","blue","brown","pink","sky_blue","gold","lime_green","black","grey"};
 

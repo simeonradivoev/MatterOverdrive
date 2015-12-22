@@ -18,8 +18,6 @@
 
 package matteroverdrive.matter_network.components;
 
-import cofh.lib.util.TimeTracker;
-import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
@@ -30,6 +28,7 @@ import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.network.packet.client.PacketSendQueueFlash;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
 import matteroverdrive.util.MatterNetworkHelper;
+import matteroverdrive.util.TimeTracker;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -120,7 +119,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
 
     private int getBroadcastDelay()
     {
-        return MathHelper.round(TileEntityMachinePacketQueue.BROADCAST_DELAY * rootClient.getUpgradeMultiply(UpgradeTypes.Speed));
+        return (int)Math.round(TileEntityMachinePacketQueue.BROADCAST_DELAY * rootClient.getUpgradeMultiply(UpgradeTypes.Speed));
     }
 
     @Override

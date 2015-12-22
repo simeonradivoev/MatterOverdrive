@@ -18,7 +18,7 @@
 
 package matteroverdrive.fx;/* Created by Simeon on 10/18/2015. */
 
-import cofh.lib.gui.GuiColor;
+import matteroverdrive.client.data.Color;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
@@ -27,7 +27,7 @@ public class PhaserBoltRecoil extends EntityFX
 {
     private float lavaParticleScale;
 
-    public PhaserBoltRecoil(World world, double x, double y, double z,GuiColor color,double dirX,double dirY,double dirZ)
+    public PhaserBoltRecoil(World world, double x, double y, double z, Color color, double dirX, double dirY, double dirZ)
     {
         super(world, x, y, z, dirX, dirY, dirZ);
         //this.motionX *= 0.800000011920929D;
@@ -46,7 +46,7 @@ public class PhaserBoltRecoil extends EntityFX
         this.setParticleTextureIndex(rand.nextInt(2));
     }
 
-    public PhaserBoltRecoil(World p_i1215_1_, double x, double y, double z,GuiColor color)
+    public PhaserBoltRecoil(World p_i1215_1_, double x, double y, double z,Color color)
     {
         this(p_i1215_1_,x,y,z,color,0,0,0);
     }

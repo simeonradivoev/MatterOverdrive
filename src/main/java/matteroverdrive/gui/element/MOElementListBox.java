@@ -1,10 +1,28 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.listbox.IListBoxElement;
-import cofh.lib.util.helpers.StringHelper;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.IListHandler;
+import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.util.MathHelper;
 
@@ -18,11 +36,11 @@ public class MOElementListBox extends MOElementBase {
 
     IListHandler listHandler;
 
-	public int borderColor = new GuiColor(120, 120, 120, 255).getColor();
-	public int backgroundColor = new GuiColor(0, 0, 0, 255).getColor();
-	public int selectedLineColor = new GuiColor(0, 0, 0, 255).getColor();
-	public int textColor = new GuiColor(150, 150, 150, 255).getColor();
-	public int selectedTextColor = new GuiColor(255, 255, 255, 255).getColor();
+	public int borderColor = new Color(120, 120, 120, 255).getColor();
+	public int backgroundColor = new Color(0, 0, 0, 255).getColor();
+	public int selectedLineColor = new Color(0, 0, 0, 255).getColor();
+	public int textColor = new Color(150, 150, 150, 255).getColor();
+	public int selectedTextColor = new Color(255, 255, 255, 255).getColor();
 
 	private final int _marginTop = 2;
 	private final int _marginLeft = 2;
@@ -219,7 +237,7 @@ public class MOElementListBox extends MOElementBase {
 
 	@Override
 	public boolean onMouseWheel(int mouseX, int mouseY, int movement) {
-		if (StringHelper.isControlKeyDown()) {
+		if (MOStringHelper.isControlKeyDown()) {
 			if (movement > 0) {
 				scrollLeft();
 			} else if (movement < 0) {

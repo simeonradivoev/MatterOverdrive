@@ -19,11 +19,10 @@
 package matteroverdrive.client.render;
 
 import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementButton;
-import cofh.lib.render.RenderHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -115,11 +114,18 @@ public class HoloIcons {
         reg("android_feature_icon_bg_black",22);
         reg("smile",16);
 
-        MatterOverdrive.statRegistry.registerIcons(textureMap);
+        MatterOverdrive.statRegistry.registerIcons(this);
     }
 
     private void reg(String iconName, int originalSize) {
-        iconMap.put(iconName, new HoloIcon(textureMap.registerIcon(Reference.MOD_ID + ":" + iconName), originalSize, originalSize));
+        registerIcon(iconName,originalSize);
+    }
+
+    public HoloIcon registerIcon(String iconName,int originalSize)
+    {
+        HoloIcon holoIcon = new HoloIcon(textureMap.registerIcon(Reference.MOD_ID + ":" + iconName), originalSize, originalSize);
+        iconMap.put(iconName, holoIcon);
+        return holoIcon;
     }
 
     public HoloIcon getIcon(String icon) {
@@ -130,40 +136,40 @@ public class HoloIcons {
         Minecraft.getMinecraft().renderEngine.bindTexture(sheet);
     }
 
-    public void renderIcon(String name, int x, int y) {
+    public void renderIcon(String name, double x, double y) {
         HoloIcon icon = getIcon(name);
         renderIcon(icon, x, y, icon.getOriginalWidth(), icon.getOriginalHeight());
     }
 
-    public void renderIcon(String name, int x, int y, int width, int height) {
+    public void renderIcon(String name, double x, double y, int width, int height) {
         renderIcon(getIcon(name), x, y, width, height);
     }
 
-    public void renderIcon(HoloIcon icon, int x, int y)
+    public void renderIcon(HoloIcon icon, double x, double y)
     {
         renderIcon(icon, x, y, icon.getOriginalWidth(), icon.getOriginalHeight());
     }
 
-    public void renderIcon(HoloIcon icon, int x, int y, int width, int height)
+    public void renderIcon(HoloIcon icon, double x, double y, int width, int height)
     {
         if (icon != null)
         {
             bindSheet();
-            RenderHelper.renderIcon(x, y, 0, icon.getIcon(), width, height);
+            RenderUtils.renderIcon(x, y, 0, icon.getIcon(), width, height);
         }
     }
 
-    public static void tessalateParticleIcon(IIcon icon, double x, double y, double z, float size, GuiColor color)
+    public static void tessalateParticleIcon(IIcon icon, double x, double y, double z, float size, Color color)
     {
         RenderUtils.tessalateParticle(Minecraft.getMinecraft().renderViewEntity, icon, size, Vec3.createVectorHelper(x, y, z), color);
     }
 
-    public static void tessalateStaticIcon(IIcon icon, double x, double y, double z, float size, GuiColor color)
+    public static void tessalateStaticIcon(IIcon icon, double x, double y, double z, float size, Color color)
     {
         tessalateStaticIcon(icon, x, y, z, size, color, 1);
     }
 
-    public static void tessalateStaticIcon(IIcon icon, double x, double y, double z, float size, GuiColor color, float multiply)
+    public static void tessalateStaticIcon(IIcon icon, double x, double y, double z, float size, Color color, float multiply)
     {
         float halfSize = size / 2;
         float uMin = icon.getMinU();

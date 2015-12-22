@@ -18,7 +18,6 @@
 
 package matteroverdrive.entity.weapon;
 
-import cofh.lib.gui.GuiColor;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,6 +27,7 @@ import matteroverdrive.api.events.weapon.MOEventPlasmaBlotHit;
 import matteroverdrive.api.gravity.IGravitationalAnomaly;
 import matteroverdrive.api.gravity.IGravityEntity;
 import matteroverdrive.api.weapon.WeaponShot;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.fx.PhaserBoltRecoil;
 import matteroverdrive.items.weapon.EnergyWeapon;
@@ -337,7 +337,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
         } else {
             sideHit = Vec3.createVectorHelper(-motionX, -motionY, -motionZ);
         }
-        GuiColor c = new GuiColor(color);
+        Color c = new Color(color);
         EntityExplodeFX explodeFX = new EntityExplodeFX(worldObj, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0);
         explodeFX.setRBGColorF(c.getFloatR(),c.getFloatG(),c.getFloatB());
         Minecraft.getMinecraft().effectRenderer.addEffect(explodeFX);

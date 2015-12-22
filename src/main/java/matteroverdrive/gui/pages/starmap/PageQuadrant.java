@@ -18,7 +18,7 @@
 
 package matteroverdrive.gui.pages.starmap;
 
-import cofh.lib.gui.GuiColor;
+import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.tileentity.starmap.StarMapRendererStars;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.gui.element.ElementBaseGroup;
@@ -53,7 +53,7 @@ public class PageQuadrant extends ElementBaseGroup implements IListHandler {
         Quadrant quadrant = GalaxyClient.getInstance().getTheGalaxy().getQuadrant(starMap.getDestination());
         if (quadrant != null) {
             for (Star star : quadrant.getStars()) {
-                GuiColor color = StarMapRendererStars.getStarColor(star, Minecraft.getMinecraft().thePlayer);
+                Color color = StarMapRendererStars.getStarColor(star, Minecraft.getMinecraft().thePlayer);
                 starList.addElement(new ElementStarEntry((GuiStarMap) gui, starList, 128 + 64, 32, star));
 
                 if (starMap.getDestination().equals(star)) {

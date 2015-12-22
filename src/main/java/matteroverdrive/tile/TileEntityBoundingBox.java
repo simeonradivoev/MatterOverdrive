@@ -1,9 +1,27 @@
+/*
+ * This file is part of Matter Overdrive
+ * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+ *
+ * Matter Overdrive is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Matter Overdrive is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+ */
+
 package matteroverdrive.tile;
 
-import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import matteroverdrive.api.IMOTileEntity;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.util.MOLog;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,7 +36,7 @@ import net.minecraft.world.World;
 public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity {
 
 	private int tick = 0;
-	private BlockPosition ownerPos;
+	private BlockPos ownerPos;
 	private Block ownerBlock;
 
 	@Override
@@ -46,7 +64,7 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity {
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		ownerPos = new BlockPosition(tag);
+		ownerPos = new BlockPos(tag);
 
 		String ownerModid = tag.getString("owner_block_modid");
 		String ownerName = tag.getString("owner_block_name");
@@ -72,11 +90,11 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity {
 		}
 	}
 
-	public BlockPosition getOwnerPos() {
+	public BlockPos getOwnerPos() {
 		return ownerPos;
 	}
 
-	public void setOwnerPos(BlockPosition ownerPos) {
+	public void setOwnerPos(BlockPos ownerPos) {
 		this.ownerPos = ownerPos;
 	}
 

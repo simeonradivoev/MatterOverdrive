@@ -18,7 +18,12 @@
 
 package matteroverdrive.util;
 
+import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class MOEnergyHelper
@@ -58,5 +63,31 @@ public class MOEnergyHelper
             }
         }
         return true;
+    }
+
+    public static ItemStack setDefaultEnergyTag(ItemStack itemStack, int energy) {
+        if(itemStack.stackTagCompound == null) {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+
+        itemStack.stackTagCompound.setInteger("Energy", energy);
+        return itemStack;
+    }
+
+    public static int extractEnergyFromContainer(ItemStack itemStack, int amount, boolean simulate) {
+        return isEnergyContainerItem(itemStack)?((IEnergyContainerItem)itemStack.getItem()).extractEnergy(itemStack, amount, simulate):0;
+    }
+
+    public static int insertEnergyIntoContainer(ItemStack itemStack, int amount, boolean simulate) {
+        return isEnergyContainerItem(itemStack)?((IEnergyContainerItem)itemStack.getItem()).receiveEnergy(itemStack, amount, simulate):0;
+    }
+
+    public static boolean isEnergyContainerItem(ItemStack itemStack) {
+        return itemStack != null && itemStack.getItem() instanceof IEnergyContainerItem;
+    }
+
+    public static int insertEnergyIntoAdjacentEnergyReceiver(TileEntity tileEntity, int side, int amount, boolean simulate) {
+        TileEntity var4 = MOBlockHelper.getAdjacentTileEntity(tileEntity, side);
+        return var4 instanceof IEnergyReceiver ?((IEnergyReceiver)var4).receiveEnergy(ForgeDirection.VALID_DIRECTIONS[side ^ 1], amount, simulate):0;
     }
 }

@@ -20,7 +20,6 @@ package matteroverdrive.gui;
 
 import cofh.lib.gui.element.ElementBase;
 import cofh.lib.gui.element.ElementDualScaled;
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterDatabase;
@@ -138,7 +137,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
 
         super.drawGuiContainerBackgroundLayer(partialTick,x,y);
 
-        replicate_progress.setQuantity(MathHelper.round(((ContainerMachine)getContainer()).getProgress() * 24));
+        replicate_progress.setQuantity(Math.round(((ContainerMachine)getContainer()).getProgress() * 24));
     }
 
 	@Override

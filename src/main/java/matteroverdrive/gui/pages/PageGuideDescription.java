@@ -19,7 +19,6 @@
 package matteroverdrive.gui.pages;
 
 import cofh.lib.gui.element.ElementBase;
-import cofh.lib.util.helpers.MathHelper;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.data.ScaleTexture;
@@ -34,6 +33,7 @@ import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.network.packet.server.PacketDataPadCommands;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
@@ -193,7 +193,7 @@ public class PageGuideDescription extends ElementBaseGroup
             undo();
         }
 
-        scroll = MathHelper.clampI(scroll,0, pages.size()-1);
+        scroll = MathHelper.clamp_int(scroll,0, pages.size()-1);
     }
 
     public void OpenGuide(int id,boolean writeToHistory)
