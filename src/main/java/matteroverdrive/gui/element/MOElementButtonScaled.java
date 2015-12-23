@@ -18,9 +18,9 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.data.ScaleTexture;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import org.lwjgl.opengl.GL11;
@@ -35,7 +35,7 @@ public class MOElementButtonScaled extends MOElementButton
     private ScaleTexture disabledTexture;
     private ScaleTexture downTexture;
 
-    public MOElementButtonScaled(GuiBase gui, IButtonHandler handler, int posX, int posY, String name,int sizeX,int sizeY) {
+    public MOElementButtonScaled(MOGuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sizeX, int sizeY) {
         super(gui, handler, posX, posY, name, 0, 0, 0, 0, sizeX, sizeY, "");
         normalTexture = NORMAL_TEXTURE;
         overTexture = HOVER_TEXTURE;

@@ -18,7 +18,7 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.item.ItemStack;
 
@@ -31,10 +31,28 @@ public class ElementQuestRewards extends MOElementBase
 {
     List<ItemStack> itemStacks;
 
-    public ElementQuestRewards(GuiBase gui, int posX, int posY, List<ItemStack> itemStacks)
+    public ElementQuestRewards(MOGuiBase gui, int posX, int posY, List<ItemStack> itemStacks)
     {
         super(gui, posX, posY);
         setItemStacks(itemStacks);
+    }
+
+    @Override
+    public void updateInfo()
+    {
+
+    }
+
+    @Override
+    public void init()
+    {
+
+    }
+
+    @Override
+    public void addTooltip(List<String> var1, int mouseX, int mouseY)
+    {
+
     }
 
     @Override

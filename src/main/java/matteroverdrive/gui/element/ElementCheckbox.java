@@ -18,8 +18,8 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.container.IButtonHandler;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.proxy.ClientProxy;
 
 /**
@@ -30,7 +30,7 @@ public class ElementCheckbox extends MOElementButtonScaled
     String checkboxLabel;
     boolean state;
 
-    public ElementCheckbox(GuiBase gui, IButtonHandler handler, int posX, int posY, String name,boolean state)
+    public ElementCheckbox(MOGuiBase gui, IButtonHandler handler, int posX, int posY, String name, boolean state)
     {
         super(gui, handler, posX, posY, name, 16, 16);
         this.state = state;

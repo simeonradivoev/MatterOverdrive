@@ -18,12 +18,12 @@
 
 package matteroverdrive.gui.pages;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.element.ElementBaseGroup;
+import matteroverdrive.gui.element.MOElementBase;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.guide.GuideElementPage;
 import matteroverdrive.guide.IGuideElement;
@@ -178,7 +178,7 @@ public class PageGuideDescription extends ElementBaseGroup
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element, String buttonName, int mouseButton)
     {
         if(element.equals(bt_scroll_left))
         {

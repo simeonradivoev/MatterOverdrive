@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.data.ScaleTexture;
@@ -96,7 +95,7 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element,String buttonName, int mouseButton)
     {
         if (buttonName == "Inc")
         {

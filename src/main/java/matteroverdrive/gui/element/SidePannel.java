@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.Reference;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
@@ -87,7 +86,7 @@ public class SidePannel extends ElementBaseGroup
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element,String buttonName, int mouseButton)
     {
         if (buttonName == "Toggle")
         {

@@ -18,9 +18,9 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterStorage;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.util.EnumChatFormatting;
@@ -40,7 +40,7 @@ public class ElementMatterStored extends MOElementBase
 	// If this is enabled, 1 pixel of energy will always show in the bar as long as it is non-zero.
 	protected boolean alwaysShowMinimum = false;
 
-	public ElementMatterStored(GuiBase gui, int posX, int posY, IMatterStorage storage) {
+	public ElementMatterStored(MOGuiBase gui, int posX, int posY, IMatterStorage storage) {
 
 		super(gui, posX, posY);
 		this.storage = storage;
@@ -75,7 +75,19 @@ public class ElementMatterStored extends MOElementBase
 	}
 
 	@Override
-	public void addTooltip(List<String> list) {
+	public void updateInfo()
+	{
+
+	}
+
+	@Override
+	public void init()
+	{
+
+	}
+
+	@Override
+	public void addTooltip(List<String> list,int mouseX,int mouseY) {
 
 		if (storage.getCapacity() < 0)
         {

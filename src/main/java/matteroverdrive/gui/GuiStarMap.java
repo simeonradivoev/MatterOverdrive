@@ -131,9 +131,9 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         glPopMatrix();
     }
 
-    public void drawScreen(int x, int y, float partialTick)
+    public void drawScreen(int mouseX, int mouseY, float partialTick)
     {
-        super.drawScreen(x, y, partialTick);
+        super.drawScreen(mouseX, mouseY, partialTick);
     }
 
     public void drawWorldBackground(int p_146270_1_)

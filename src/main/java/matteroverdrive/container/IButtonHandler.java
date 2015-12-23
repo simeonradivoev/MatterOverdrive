@@ -18,12 +18,12 @@
 
 package matteroverdrive.container;
 
-import cofh.lib.gui.element.ElementBase;
+import matteroverdrive.gui.element.MOElementBase;
 
 /**
  * Created by Simeon on 4/8/2015.
  */
 public interface IButtonHandler
 {
-    void handleElementButtonClick(ElementBase element, String elementName, int mouseButton);
+    void handleElementButtonClick(MOElementBase element, String elementName, int mouseButton);
 }

@@ -18,12 +18,12 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.data.ScaleTexture;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -52,11 +52,11 @@ public class MOElementButton extends MOElementBase
     HoloIcon icon;
     private String tooltip;
 
-    public MOElementButton(GuiBase gui,IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int sizeX, int sizeY, String texture) {
+    public MOElementButton(MOGuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int sizeX, int sizeY, String texture) {
         this(gui,handler,posX,posY,name,sheetX,sheetY,hoverX,hoverY,0,0,sizeX,sizeY,texture);
     }
 
-    public MOElementButton(GuiBase gui,IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int disabledX, int disabledY, int sizeX, int sizeY, String texture) {
+    public MOElementButton(MOGuiBase gui,IButtonHandler handler, int posX, int posY, String name, int sheetX, int sheetY, int hoverX, int hoverY, int disabledX, int disabledY, int sizeX, int sizeY, String texture) {
         super(gui, posX, posY,sizeX, sizeY);
         this.buttonHandler = handler;
         this.name = name;
@@ -147,7 +147,7 @@ public class MOElementButton extends MOElementBase
     }
 
     @Override
-    public void addTooltip(List<String> var1)
+    public void addTooltip(List<String> var1,int mouseX,int mouseY)
     {
         if (this.tooltip != null)
         {
@@ -164,6 +164,19 @@ public class MOElementButton extends MOElementBase
     }
 
     public void setColor(Color color){this.color = color;}
+
+    @Override
+    public void updateInfo()
+    {
+
+    }
+
+    @Override
+    public void init()
+    {
+
+    }
+
     public void setColor(Color color,float multiplay){this.color = new Color((int)(color.getIntR() * multiplay),(int)(color.getIntG() * multiplay),(int)(color.getIntB() * multiplay));}
 
     public Color getColor(){return this.color;}

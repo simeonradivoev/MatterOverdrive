@@ -18,9 +18,9 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerFalse;
+import matteroverdrive.gui.element.MOElementBase;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.pages.PageScanInfo;
 import matteroverdrive.items.MatterScanner;
@@ -115,14 +115,13 @@ public class GuiMatterScanner extends MOGuiBase
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int x, int y) {
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 
 		drawElements(0, true);
-		drawTabs(0, true);
 	}
 
 	@Override
-	public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
+	public void handleElementButtonClick(MOElementBase element, String buttonName, int mouseButton)
 	{
 		super.handleElementButtonClick(element,buttonName,mouseButton);
 		if(buttonName == PageScanInfo.SCROLL_UP_BUTTON_NAME)

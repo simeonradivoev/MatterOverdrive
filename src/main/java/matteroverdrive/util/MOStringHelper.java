@@ -223,5 +223,5 @@ public class MOStringHelper
     public static boolean isControlKeyDown() {
         return Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157);
     }
-
+    public static boolean isAltKeyDown() {return Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU);}
 }

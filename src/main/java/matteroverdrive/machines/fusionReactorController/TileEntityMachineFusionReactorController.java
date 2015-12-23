@@ -21,7 +21,6 @@ package matteroverdrive.machines.fusionReactorController;
 
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyReceiver;
-import cofh.lib.util.position.IRotateableTile;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -73,7 +72,7 @@ import static matteroverdrive.util.MOBlockHelper.getOppositeSide;
 		@Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.SimpleComponent"),
 		@Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.ManagedPeripheral")
 })
-public class TileEntityMachineFusionReactorController extends MOTileEntityMachineMatter implements IRotateableTile, IPeripheral, SimpleComponent, ManagedPeripheral
+public class TileEntityMachineFusionReactorController extends MOTileEntityMachineMatter implements IPeripheral, SimpleComponent, ManagedPeripheral
 {
     public static int STRUCTURE_CHECK_DELAY = 40;
     public static final int[] positions = new int[]{0,5,1,0,2,0,3,1,4,2,5,3,5,4,5,5,5,6,5,7,4,8,3,9,2,10,1,10,0,10,-1,10,-2,10,-3,9,-4,8,-5,7,-5,6,-5,5,-5,4,-5,3,-4,2,-3,1,-2,0,-1,0};
@@ -486,33 +485,6 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     public String getMonitorInfo()
     {
         return monitorInfo;
-    }
-
-    @Override
-    public boolean canRotate() {
-        return true;
-    }
-
-    @Override
-    public boolean canRotate(ForgeDirection axis) {
-        return true;
-    }
-
-    @Override
-    public void rotate(ForgeDirection axis)
-    {
-        System.out.println("Rotate");
-    }
-
-    @Override
-    public void rotateDirectlyTo(int facing)
-    {
-        worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, facing, 3);
-    }
-
-    @Override
-    public ForgeDirection getDirectionFacing() {
-        return ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord,yCoord,zCoord));
     }
 
     @Override

@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.pages;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.client.render.HoloIcon;
@@ -342,13 +341,13 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element,String buttonName, int mouseButton)
     {
         if (element instanceof ElementGuideEntry)
         {
             pageGuideDescription.OpenGuide(((ElementGuideEntry) element).getEntry().getId(),false);
             MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
-            ((MOGuiBase)gui).setPage(1);
+            gui.setPage(1);
         }else if (element.equals(orderButtonElement))
         {
             MatterOverdriveItems.dataPad.setOrdering(dataPadStack,orderButtonElement.getSelectedState());
@@ -374,7 +373,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
     {
         MatterOverdriveItems.dataPad.setCategory(dataPadStack, category);
         MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
-        ((MOGuiBase)gui).setPage(0);
+        gui.setPage(0);
         groups.clear();
     }
 

@@ -18,8 +18,7 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.element.ElementBase;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 
@@ -36,7 +35,7 @@ public class ElementScrollGroup extends ElementBaseGroup
     int scrollSpeed = 10;
     int scrollerColor;
 
-    public ElementScrollGroup(GuiBase gui, int posX, int posY, int width, int height)
+    public ElementScrollGroup(MOGuiBase gui, int posX, int posY, int width, int height)
     {
         super(gui, posX, posY, width, height);
     }
@@ -50,7 +49,7 @@ public class ElementScrollGroup extends ElementBaseGroup
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
         contentTotalHeight = 0;
-        for (ElementBase element : elements)
+        for (MOElementBase element : elements)
         {
             element.setPosition(element.getPosX(), Math.round(contentTotalHeight + scrollSmooth));
             element.setVisible(true);

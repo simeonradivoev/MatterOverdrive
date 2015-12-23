@@ -18,9 +18,9 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.data.Inventory;
+import matteroverdrive.gui.MOGuiBase;
 
 /**
  * Created by Simeon on 3/16/2015.
@@ -30,7 +30,7 @@ public class ElementSlotsList extends ElementBaseGroup
     ElementInventorySlot mainSlot;
     int margin = 0;
 
-    public ElementSlotsList(GuiBase gui, int posX, int posY, int width, int height, Inventory inventory, int main)
+    public ElementSlotsList(MOGuiBase gui, int posX, int posY, int width, int height, Inventory inventory, int main)
     {
         super(gui, posX, posY, width, height);
         int index = 0;

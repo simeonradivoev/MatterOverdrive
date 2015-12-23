@@ -18,13 +18,14 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -38,11 +39,29 @@ public class ElementScanProgress extends MOElementBase
     float[] values;
     private static float NoiseSize = 0.1f;
 
-    public ElementScanProgress(GuiBase gui, int posX, int posY)
+    public ElementScanProgress(MOGuiBase gui, int posX, int posY)
     {
         super(gui, posX, posY);
         this.setTexture(Reference.PATH_ELEMENTS + "screen.png",117,47);
         values = new float[26];
+    }
+
+    @Override
+    public void updateInfo()
+    {
+
+    }
+
+    @Override
+    public void init()
+    {
+
+    }
+
+    @Override
+    public void addTooltip(List<String> var1, int mouseX, int mouseY)
+    {
+
     }
 
     @Override

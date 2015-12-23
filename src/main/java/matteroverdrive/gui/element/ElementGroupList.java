@@ -18,8 +18,7 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.element.ElementBase;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
@@ -37,7 +36,7 @@ public class ElementGroupList extends ElementBaseGroup {
     int padding = 6;
     IListHandler listHandler;
 
-    public ElementGroupList(GuiBase gui,IListHandler listHandler, int posX, int posY, int width, int height)
+    public ElementGroupList(MOGuiBase gui, IListHandler listHandler, int posX, int posY, int width, int height)
     {
         super(gui, posX, posY, width, height);
         this.listHandler = listHandler;
@@ -99,7 +98,7 @@ public class ElementGroupList extends ElementBaseGroup {
 
         for (int i = getElements().size(); i-- > 0;)
         {
-            ElementBase c = getElements().get(i);
+            MOElementBase c = getElements().get(i);
             if (!c.isVisible() || !c.isEnabled() || !c.intersectsWith(mouseX, mouseY)) {
                 continue;
             }
@@ -157,7 +156,7 @@ public class ElementGroupList extends ElementBaseGroup {
         }
     }
 
-    public boolean isSelected(ElementBase elementBase)
+    public boolean isSelected(MOElementBase elementBase)
     {
         if (selectedIndex < elements.size()) {
             return elements.get(selectedIndex).equals(elementBase);

@@ -18,8 +18,6 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.element.ElementBase;
-import cofh.lib.gui.element.ElementDualScaled;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterDatabase;
@@ -141,9 +139,9 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
     }
 
 	@Override
-	public void drawGuiContainerForegroundLayer(int part1,int part2)
+	public void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-        super.drawGuiContainerForegroundLayer(part1,part2);
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         ManageReqiremnetsTooltips();
 	}
 
@@ -186,7 +184,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element,String buttonName, int mouseButton)
     {
         super.handleElementButtonClick(element,buttonName,mouseButton);
         if (buttonName.equals("DropTask"))

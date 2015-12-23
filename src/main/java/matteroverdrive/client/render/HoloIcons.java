@@ -18,8 +18,6 @@
 
 package matteroverdrive.client.render;
 
-import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.element.ElementButton;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
@@ -182,12 +180,5 @@ public class HoloIcons {
         Tessellator.instance.addVertexWithUV(x + halfSize,y - halfSize,z,uMin,vMax);
         Tessellator.instance.addVertexWithUV(x + halfSize,y + halfSize,z,uMin,vMin);
         Tessellator.instance.addVertexWithUV(x - halfSize,y + halfSize,z,uMax,vMin);
-    }
-
-    public ElementButton getIconButton(GuiBase gui, String name, IIcon icon, int x, int y, int sizeX, int sizeY)
-    {
-        ElementButton button = new ElementButton(gui,x,y,name, (int)(icon.getMinU() * 256),(int)(icon.getMinV() * 256),(int)(icon.getMinU() * 256),(int)(icon.getMinV() * 256),sizeX,sizeY,"");
-        button.setTexture(sheet.toString(), 256, 256);
-        return button;
     }
 }

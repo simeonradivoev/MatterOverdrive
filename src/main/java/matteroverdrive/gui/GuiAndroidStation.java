@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
@@ -27,10 +26,7 @@ import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.data.inventory.BionicSlot;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.entity.player.AndroidPlayer;
-import matteroverdrive.gui.element.ElementBioStat;
-import matteroverdrive.gui.element.ElementInventorySlot;
-import matteroverdrive.gui.element.ElementSlot;
-import matteroverdrive.gui.element.MOElementButtonScaled;
+import matteroverdrive.gui.element.*;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.proxy.ClientProxy;
@@ -136,7 +132,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
     }
 
     @Override
-    public void drawTooltip(List<String> list) {
+    public void drawTooltip(List<String> tooltips) {
 
         for (ElementBioStat stat : stats)
         {
@@ -155,18 +151,18 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
                 }
             }
         }
-        super.drawTooltip(list);
+        super.drawTooltip(tooltips);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y)
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        super.drawGuiContainerForegroundLayer(x, y);
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
         if (pages.get(0).isVisible()) {
 			glPushMatrix();
 			glTranslatef(0, 0, 100);
-			drawEntityOnScreen(280, ySize - 25, 50, -mouseX + 280, -mouseY + ySize - 100, mc.thePlayer);
+			drawEntityOnScreen(280, ySize - 25, 50, -this.mouseX + 280, -this.mouseY + ySize - 100, mc.thePlayer);
 			glPopMatrix();
 
             String info = Minecraft.getMinecraft().thePlayer.experienceLevel + " XP";
@@ -176,7 +172,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         }
     }
 
-    public void handleElementButtonClick(ElementBase element,String elementName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element, String elementName, int mouseButton)
     {
         super.handleElementButtonClick(element,elementName,mouseButton);
         if (element.equals(hudConfigs))

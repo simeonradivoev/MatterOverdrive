@@ -18,9 +18,9 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.Reference;
 import matteroverdrive.data.ScaleTexture;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -40,7 +40,7 @@ public class ElementItemPreview extends MOElementBase
     boolean renderOverlay;
     boolean drawTooltip;
 
-    public ElementItemPreview(GuiBase gui, int posX, int posY,ItemStack itemStack)
+    public ElementItemPreview(MOGuiBase gui, int posX, int posY, ItemStack itemStack)
     {
         super(gui, posX, posY);
         this.sizeX = 47;
@@ -49,7 +49,19 @@ public class ElementItemPreview extends MOElementBase
     }
 
     @Override
-    public void addTooltip(List<String> tooltip)
+    public void updateInfo()
+    {
+
+    }
+
+    @Override
+    public void init()
+    {
+
+    }
+
+    @Override
+    public void addTooltip(List<String> tooltip,int mouseX,int mouseY)
     {
         tooltip.addAll(itemStack.getTooltip(Minecraft.getMinecraft().thePlayer,Minecraft.getMinecraft().gameSettings.advancedItemTooltips));
     }

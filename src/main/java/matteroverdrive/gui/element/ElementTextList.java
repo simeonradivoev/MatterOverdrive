@@ -18,7 +18,7 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
+import matteroverdrive.gui.MOGuiBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -34,11 +34,29 @@ public class ElementTextList extends MOElementBase
     List<String> lines;
     int textColor;
 
-    public ElementTextList(GuiBase gui, int posX, int posY, int width,int textColor,boolean isUnicode) {
+    public ElementTextList(MOGuiBase gui, int posX, int posY, int width, int textColor, boolean isUnicode) {
         super(gui, posX, posY, width, 0);
         lines = new ArrayList<>();
         this.textColor = textColor;
         this.isUnicode = isUnicode;
+    }
+
+    @Override
+    public void updateInfo()
+    {
+
+    }
+
+    @Override
+    public void init()
+    {
+
+    }
+
+    @Override
+    public void addTooltip(List<String> var1, int mouseX, int mouseY)
+    {
+
     }
 
     @Override

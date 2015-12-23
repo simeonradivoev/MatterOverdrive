@@ -18,9 +18,9 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.IButtonHandler;
+import matteroverdrive.gui.MOGuiBase;
 
 /**
  * Created by Simeon on 8/28/2015.
@@ -30,7 +30,7 @@ public class ElementStatesHoloIcons extends MOElementButtonScaled
     HoloIcon[] states;
     int selectedState;
 
-    public ElementStatesHoloIcons(GuiBase gui, IButtonHandler buttonHandler, int posX, int posY, int sizeX, int sizeY, String name, HoloIcon[] states)
+    public ElementStatesHoloIcons(MOGuiBase gui, IButtonHandler buttonHandler, int posX, int posY, int sizeX, int sizeY, String name, HoloIcon[] states)
     {
         super(gui, buttonHandler, posX, posY,name,sizeX,sizeY);
         this.states = states;

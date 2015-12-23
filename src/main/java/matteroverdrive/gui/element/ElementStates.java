@@ -18,8 +18,8 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.container.IButtonHandler;
+import matteroverdrive.gui.MOGuiBase;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -32,7 +32,7 @@ public class ElementStates extends MOElementButtonScaled
     int selectedState;
     String label;
 
-    public ElementStates(GuiBase gui,IButtonHandler buttonHandler, int posX, int posY,String name,String[] states) {
+    public ElementStates(MOGuiBase gui, IButtonHandler buttonHandler, int posX, int posY, String name, String[] states) {
         super(gui,buttonHandler, posX, posY,name, 0, 0);
         this.name = name;
         this.states = states;

@@ -18,9 +18,9 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.container.slot.MOSlot;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MOStringHelper;
 
 import java.util.List;
@@ -32,23 +32,23 @@ public class ElementInventorySlot extends ElementSlot
 {
     MOSlot slot;
 
-    public ElementInventorySlot(GuiBase gui,MOSlot slot, int posX, int posY,int width,int height, String type,HoloIcon icon)
+    public ElementInventorySlot(MOGuiBase gui, MOSlot slot, int posX, int posY, int width, int height, String type, HoloIcon icon)
     {
         super(gui, posX, posY,width,height, type,icon);
         this.slot = slot;
 
     }
 
-    public ElementInventorySlot(GuiBase gui,MOSlot slot, int posX, int posY,int width,int height, String type)
+    public ElementInventorySlot(MOGuiBase gui,MOSlot slot, int posX, int posY,int width,int height, String type)
     {
         this(gui,slot, posX, posY,width,height, type,slot.getHoloIcon());
     }
 
-    public ElementInventorySlot(GuiBase gui,MOSlot slot,int width,int height, String type,HoloIcon icon) {
+    public ElementInventorySlot(MOGuiBase gui,MOSlot slot,int width,int height, String type,HoloIcon icon) {
         this(gui,slot, slot.xDisplayPosition, slot.yDisplayPosition, width,height,type,icon);
     }
 
-    public ElementInventorySlot(GuiBase gui,MOSlot slot,int width,int height, String type) {
+    public ElementInventorySlot(MOGuiBase gui,MOSlot slot,int width,int height, String type) {
         this(gui,slot, slot.xDisplayPosition, slot.yDisplayPosition, width,height,type,slot.getHoloIcon());
     }
 

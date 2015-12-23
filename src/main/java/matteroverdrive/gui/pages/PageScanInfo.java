@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.pages;
 
-import cofh.lib.gui.element.ElementButton;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
@@ -50,8 +49,8 @@ public class PageScanInfo extends ElementBaseGroup
     ElementProgress scan_progress;
     ElementScanProgress scan_info_graph;
     MOElementTextField searchField;
-    ElementButton scrollButtonUp;
-    ElementButton scrollButtonDown;
+    MOElementButton scrollButtonUp;
+    MOElementButton scrollButtonDown;
 
     ElementItemPreview itemPreview;
 
@@ -66,8 +65,8 @@ public class PageScanInfo extends ElementBaseGroup
         scan_progress = new ElementProgress(gui,44 + 35,202 + 2,44,202,39,202,62,188,105,14,142,18);
         searchField = new MOElementTextField(gui,41,26,242,14);
         list = new MatterDatabaseListBox(gui,3,39,42,152,scanner);
-        scrollButtonUp = new ElementButton(gui,11,27,SCROLL_UP_BUTTON_NAME,22,188,32,188,10,10,backgroundPath);
-        scrollButtonDown = new ElementButton(gui,11,190,SCROLL_DOWN_BUTTON_NAME,42,188,52,188,10,10,backgroundPath);
+        scrollButtonUp = new MOElementButton(gui,this,11,27,SCROLL_UP_BUTTON_NAME,22,188,32,188,10,10,backgroundPath);
+        scrollButtonDown = new MOElementButton(gui,this,11,190,SCROLL_DOWN_BUTTON_NAME,42,188,52,188,10,10,backgroundPath);
 
         list.setName(LIST_ELEMENT_NAME);
 

@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
@@ -97,9 +96,9 @@ public class ElementBioStat extends MOElementButton {
     }
 
     @Override
-    public void addTooltip(List<String> list)
+    public void addTooltip(List<String> list,int mouseX,int mouseY)
     {
-       stat.onTooltip(player, level, list, gui.getMouseX(), gui.getMouseY());
+       stat.onTooltip(player, level, list, mouseX, mouseY);
     }
 
     @Override
@@ -109,7 +108,7 @@ public class ElementBioStat extends MOElementButton {
         {
             if (stat.canBeUnlocked(player,level+1) && level < stat.maxLevel())
             {
-                GuiBase.playSound(Reference.MOD_ID + ":" + "gui.biotic_stat_unlock", 1, 1);
+                MOGuiBase.playSound(Reference.MOD_ID + ":" + "gui.biotic_stat_unlock", 1, 1);
                 MatterOverdrive.packetPipeline.sendToServer(new PacketUnlockBioticStat(stat.getUnlocalizedName(),++level));
             }
         }

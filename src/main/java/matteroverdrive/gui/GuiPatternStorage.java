@@ -18,13 +18,13 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.element.ElementEnergyStored;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.container.slot.SlotInventory;
 import matteroverdrive.data.inventory.PatternStorageSlot;
 import matteroverdrive.gui.element.ElementInventorySlot;
+import matteroverdrive.gui.element.MOElementEnergy;
 import matteroverdrive.tile.TileEntityMachinePatternStorage;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -34,13 +34,13 @@ import net.minecraft.inventory.Container;
  */
 public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStorage>
 {
-    ElementEnergyStored energyElement;
+    MOElementEnergy energyElement;
 
     public GuiPatternStorage(InventoryPlayer playerInventory,TileEntityMachinePatternStorage patternStorage)
     {
         super(ContainerFactory.createMachineContainer(patternStorage,playerInventory),patternStorage);
         name = "pattern_storage";
-        energyElement = new ElementEnergyStored(this,176,39,patternStorage.getEnergyStorage());
+        energyElement = new MOElementEnergy(this,176,39,patternStorage.getEnergyStorage());
         energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
     }
 

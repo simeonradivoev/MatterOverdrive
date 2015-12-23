@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.pages;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.data.quest.QuestStack;
@@ -203,7 +202,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element, String elementName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element, String elementName, int mouseButton)
     {
         super.handleElementButtonClick(element,elementName,mouseButton);
         if (elementName.equalsIgnoreCase("complete_quest"))

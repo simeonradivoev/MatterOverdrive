@@ -18,16 +18,17 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.Reference;
 import matteroverdrive.data.ScaleTexture;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class ElementProgress extends ElementBase
+import java.util.List;
+
+public class ElementProgress extends MOElementBase
 {
 	public static final ScaleTexture FILL_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "progress_slider_fill.png"),9,9).setOffsets(3,6,4,4);
 
@@ -47,7 +48,7 @@ public class ElementProgress extends ElementBase
 	String text;
 	int textColor;
 
-	public ElementProgress(GuiBase gui, int fillX,int fillY,int posX, int posY,int bgU,int bgV,int fillU,int fillV,int fillSizeX,int fillSizeY,int sizeX,int sizeY)
+	public ElementProgress(MOGuiBase gui, int fillX, int fillY, int posX, int posY, int bgU, int bgV, int fillU, int fillV, int fillSizeX, int fillSizeY, int sizeX, int sizeY)
 	{
 		super(gui, posX, posY,sizeX,sizeY);
 		this.fillU = fillU;
@@ -58,6 +59,24 @@ public class ElementProgress extends ElementBase
 		this.fillSizeY = fillSizeY;
 		this.fillX = fillX;
 		this.fillY = fillY;
+	}
+
+	@Override
+	public void updateInfo()
+	{
+
+	}
+
+	@Override
+	public void init()
+	{
+
+	}
+
+	@Override
+	public void addTooltip(List<String> var1, int mouseX, int mouseY)
+	{
+
 	}
 
 	@Override

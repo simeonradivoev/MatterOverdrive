@@ -18,9 +18,8 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
-import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.guide.GuideCategory;
 
 /**
@@ -30,7 +29,7 @@ public class ElementGuideCategory extends MOElementButtonScaled
 {
     private GuideCategory category;
 
-    public ElementGuideCategory(GuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sizeX, int sizeY,GuideCategory category)
+    public ElementGuideCategory(MOGuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sizeX, int sizeY, GuideCategory category)
     {
         super(gui, handler, posX, posY, name, sizeX, sizeY);
         this.category = category;

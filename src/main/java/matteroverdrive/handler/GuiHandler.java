@@ -29,7 +29,6 @@ import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionR
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import matteroverdrive.tile.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ContainerChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -40,7 +39,6 @@ import java.util.Map;
 
 public class GuiHandler implements IGuiHandler
 {
-    public static final int TRITANIUM_CRATE = 1;
     private Map<Class<? extends MOTileEntity>,Class<? extends MOGuiBase>> tileEntityGuiList;
     private Map<Class<? extends MOTileEntity>,Class<? extends MOBaseContainer>> tileEntityContainerList;
 
@@ -112,13 +110,6 @@ public class GuiHandler implements IGuiHandler
 
         switch (ID)
         {
-            case TRITANIUM_CRATE:
-                if (entity instanceof TileEntityTritaniumCrate)
-                {
-                    return new ContainerChest(((TileEntityTritaniumCrate) entity).getInventory(),player.inventory);
-                }
-
-                break;
             default:
                 if (entity != null && tileEntityContainerList.containsKey(entity.getClass()))
                 {
@@ -168,13 +159,7 @@ public class GuiHandler implements IGuiHandler
         TileEntity entity = world.getTileEntity(x, y, z);
 
         switch (ID) {
-            case TRITANIUM_CRATE:
-                if (entity instanceof TileEntityTritaniumCrate)
-                    return new GuiTritaniumCrate(((TileEntityTritaniumCrate) entity).getInventory(),player.inventory);
-                break;
             default:
-
-
                 if (tileEntityGuiList.containsKey(entity.getClass())) {
                     try {
 

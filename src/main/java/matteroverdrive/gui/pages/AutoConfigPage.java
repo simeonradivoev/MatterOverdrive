@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.pages;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.Reference;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.MOGuiMachine;
@@ -94,7 +93,7 @@ public class AutoConfigPage extends ElementBaseGroup
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element,String name, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element,String name, int mouseButton)
     {
         for (IConfigProperty configProperty : componentConfigs.getValues().values()) {
             if (configProperty instanceof ConfigPropertyBoolean) {

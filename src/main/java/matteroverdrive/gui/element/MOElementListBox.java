@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.element.listbox.IListBoxElement;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.IListHandler;
@@ -64,6 +63,24 @@ public class MOElementListBox extends MOElementBase {
         this(containerScreen,containerScreen,x,y,width,height);
     }
 
+	@Override
+	public void updateInfo()
+	{
+
+	}
+
+	@Override
+	public void init()
+	{
+
+	}
+
+	@Override
+	public void addTooltip(List<String> var1, int mouseX, int mouseY)
+	{
+
+	}
+
 	public void add(IMOListBoxElement element) {
 
 		_elements.add(element);
@@ -74,7 +91,7 @@ public class MOElementListBox extends MOElementBase {
 		_elements.addAll(elements);
 	}
 
-	public void remove(IListBoxElement element) {
+	public void remove(IMOListBoxElement element) {
 
 		_elements.remove(element);
 	}

@@ -18,10 +18,9 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.gui.GuiElementList;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.ITextHandler;
 import org.lwjgl.opengl.GL11;
 
@@ -33,13 +32,13 @@ import java.util.List;
  */
 public class ElementBaseGroup extends MOElementBase implements IButtonHandler, GuiElementList, ITextHandler
 {
-    protected ArrayList<ElementBase> elements = new ArrayList<ElementBase>();
+    protected ArrayList<MOElementBase> elements = new ArrayList<MOElementBase>();
 
-    public ElementBaseGroup(GuiBase gui, int posX, int posY)
+    public ElementBaseGroup(MOGuiBase gui, int posX, int posY)
     {
         super(gui, posX, posY);
     }
-    public ElementBaseGroup(GuiBase gui, int posX, int posY,int width,int height)
+    public ElementBaseGroup(MOGuiBase gui, int posX, int posY,int width,int height)
     {
         super(gui, posX, posY, width, height);
     }
@@ -50,11 +49,11 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         elements.clear();
     }
 
-    protected ElementBase getElementAtPosition(int mX, int mY)
+    protected MOElementBase getElementAtPosition(int mX, int mY)
     {
         for (int i = getElements().size(); i-- > 0;)
         {
-            ElementBase element = getElements().get(i);
+            MOElementBase element = getElements().get(i);
             if (mY >= 0 && mY <= sizeY && mX >= 0 && mX <= sizeX && element.intersectsWith(mX, mY) && element.isVisible())
             {
                 return element;
@@ -70,16 +69,10 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
 
         for (int i = getElements().size(); i-- > 0;)
         {
-            ElementBase element = getElements().get(i);
+            MOElementBase element = getElements().get(i);
             if (mouseY >= 0 && mouseY <= sizeY && mouseX >= 0 && mouseX <= sizeX && element.intersectsWith(mouseX, mouseY) && element.isVisible())
             {
-                if (element instanceof MOElementBase)
-                {
-                    ((MOElementBase)element).addTooltip(var1,mouseX,mouseY);
-                }else
-                {
-                    element.addTooltip(var1);
-                }
+                element.addTooltip(var1,mouseX,mouseY);
             }
         }
     }
@@ -95,7 +88,7 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         GL11.glColor3f(1,1,1);
         for (int i = getElements().size(); i-- > 0;)
         {
-            ElementBase c = getElements().get(i);
+            MOElementBase c = getElements().get(i);
 
             if(c.isVisible())
                 c.drawBackground(mouseX,mouseY,gameTicks);
@@ -114,7 +107,7 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         GL11.glColor3f(1, 1, 1);
         for (int i = getElements().size(); i-- > 0;)
         {
-            ElementBase c = getElements().get(i);
+            MOElementBase c = getElements().get(i);
             if(c.isVisible())
                 c.drawForeground(mouseX, mouseY);
         }
@@ -140,11 +133,8 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
     {
         for (int i = elements.size(); i-- > 0;)
         {
-            ElementBase element = elements.get(i);
-            if(element instanceof MOElementBase)
-            {
-                ((MOElementBase) element).updateInfo();
-            }
+            MOElementBase element = elements.get(i);
+            element.updateInfo();
         }
 
     }
@@ -157,7 +147,7 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
 
         for (int i = getElements().size(); i-- > 0;)
         {
-            ElementBase c = getElements().get(i);
+            MOElementBase c = getElements().get(i);
             if (!c.isVisible() || !c.isEnabled() || !c.intersectsWith(mouseX, mouseY)) {
                 continue;
             }
@@ -178,7 +168,7 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
 
         for (int i = getElements().size(); i-- > 0;)
         {
-            ElementBase c = getElements().get(i);
+            MOElementBase c = getElements().get(i);
             if (!c.isVisible() || !c.isEnabled()) {
                 continue;
             }
@@ -194,7 +184,7 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
 
         for (int i = getElements().size(); i-- > 0;)
         {
-            ElementBase c = getElements().get(i);
+            MOElementBase c = getElements().get(i);
             if (!c.isVisible() || !c.isEnabled() || !c.intersectsWith(mouseX, mouseY)) {
                 continue;
             }
@@ -210,7 +200,7 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
 
         for (int i = getElements().size(); i-- > 0;)
         {
-            ElementBase c = getElements().get(i);
+            MOElementBase c = getElements().get(i);
             if (!c.isVisible() || !c.isEnabled()) {
                 continue;
             }
@@ -228,33 +218,29 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element,String buttonName, int mouseButton)
     {
 
     }
 
-    public List<ElementBase> getElements()
+    public List<MOElementBase> getElements()
     {
         return elements;
     }
 
-    public ElementBase addElementAt(int i,ElementBase element)
+    public MOElementBase addElementAt(int i,MOElementBase element)
     {
-        if(element instanceof MOElementBase)
-            ((MOElementBase) element).parent = this;
-
+        element.parent = this;
         elements.add(i,element);
         return element;
     }
 
-    public ElementBase addElement(ElementBase element)
+    public MOElementBase addElement(MOElementBase element)
     {
         if (element == null)
             return null;
 
-        if(element instanceof MOElementBase)
-            ((MOElementBase) element).parent = this;
-
+        element.parent = this;
         elements.add(element);
         return element;
     }

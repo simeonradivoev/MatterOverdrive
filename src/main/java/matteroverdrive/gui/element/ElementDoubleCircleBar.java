@@ -18,10 +18,12 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
+import matteroverdrive.gui.MOGuiBase;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -39,11 +41,29 @@ public class ElementDoubleCircleBar extends MOElementBase
     private Color colorLeft;
     private Color colorRight;
 
-    public ElementDoubleCircleBar(GuiBase gui, int posX, int posY, int width, int height, Color color)
+    public ElementDoubleCircleBar(MOGuiBase gui, int posX, int posY, int width, int height, Color color)
     {
         super(gui, posX, posY, width, height);
         colorLeft = color;
         colorRight = color;
+    }
+
+    @Override
+    public void updateInfo()
+    {
+
+    }
+
+    @Override
+    public void init()
+    {
+
+    }
+
+    @Override
+    public void addTooltip(List<String> var1, int mouseX, int mouseY)
+    {
+
     }
 
     @Override

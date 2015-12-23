@@ -18,16 +18,12 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.MOBaseContainer;
-import matteroverdrive.gui.element.ElementMonitorItemPattern;
-import matteroverdrive.gui.element.ElementPatternsGrid;
-import matteroverdrive.gui.element.MOElementButton;
-import matteroverdrive.gui.element.MOElementTextField;
+import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.pages.PageTasks;
 import matteroverdrive.network.packet.server.PacketPatternMonitorCommands;
 import matteroverdrive.network.packet.server.PacketRemoveTask;
@@ -89,7 +85,7 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
         AddHotbarPlayerSlots(inventorySlots, this);
     }
 
-    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element, String buttonName, int mouseButton)
     {
         super.handleElementButtonClick(element,buttonName,mouseButton);
         if (buttonName.equals("Refresh"))

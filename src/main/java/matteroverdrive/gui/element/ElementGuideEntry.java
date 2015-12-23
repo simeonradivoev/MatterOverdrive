@@ -48,7 +48,19 @@ public class ElementGuideEntry extends MOElementBase
     }
 
     @Override
-    public void addTooltip(List<String> list)
+    public void updateInfo()
+    {
+
+    }
+
+    @Override
+    public void init()
+    {
+
+    }
+
+    @Override
+    public void addTooltip(List<String> list,int mouseX,int mouseY)
     {
         list.add(entry.getDisplayName());
     }

@@ -18,10 +18,10 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.element.ElementDualScaled;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerInscriber;
 import matteroverdrive.container.ContainerMachine;
+import matteroverdrive.gui.element.ElementDualScaled;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementSlot;
 import matteroverdrive.gui.element.MOElementEnergy;

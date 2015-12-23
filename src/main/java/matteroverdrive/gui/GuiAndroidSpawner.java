@@ -18,11 +18,11 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerAndroidSpawner;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.gui.element.ElementInventorySlot;
+import matteroverdrive.gui.element.MOElementBase;
 import matteroverdrive.gui.element.MOElementButtonScaled;
 import matteroverdrive.tile.TileEntityAndroidSpawner;
 import matteroverdrive.util.MOStringHelper;
@@ -58,7 +58,7 @@ public class GuiAndroidSpawner extends MOGuiMachine<TileEntityAndroidSpawner>
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element, String elementName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element, String elementName, int mouseButton)
     {
         super.handleElementButtonClick(element,elementName,mouseButton);
         if (element == deleteAllBt)
@@ -68,9 +68,9 @@ public class GuiAndroidSpawner extends MOGuiMachine<TileEntityAndroidSpawner>
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y)
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        super.drawGuiContainerForegroundLayer(x,y);
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         if (pages.get(0).isVisible())
         {
             getFontRenderer().drawString(String.format("%s/%s", ((ContainerAndroidSpawner)getContainer()).getSpawnedCount(), machine.getMaxSpawnCount()), 130, 68, Reference.COLOR_HOLO.getColor());

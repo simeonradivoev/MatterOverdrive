@@ -18,8 +18,7 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
-import cofh.lib.gui.element.ElementBase;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
@@ -38,7 +37,7 @@ public class ElementGrid extends ElementBaseGroup
     int marginTop = 0;
     int marginLeft = 0;
 
-    public ElementGrid(GuiBase guiBase, int x, int y,int width,int height,int maxWidth)
+    public ElementGrid(MOGuiBase guiBase, int x, int y, int width, int height, int maxWidth)
     {
         super(guiBase,x, y,width,height);
         this.maxWidth = maxWidth;
@@ -63,7 +62,7 @@ public class ElementGrid extends ElementBaseGroup
         int height = marginTop;
         int maxTempHeigh = 0;
 
-        for (ElementBase element : elements)
+        for (MOElementBase element : elements)
         {
             if (element != null && shouldBeDisplayed(element))
             {
@@ -159,7 +158,7 @@ public class ElementGrid extends ElementBaseGroup
         marginLeft = left;
     }
 
-    public boolean shouldBeDisplayed(ElementBase element)
+    public boolean shouldBeDisplayed(MOElementBase element)
     {
         return true;
     }

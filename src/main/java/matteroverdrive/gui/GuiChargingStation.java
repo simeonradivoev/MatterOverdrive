@@ -48,9 +48,9 @@ public class GuiChargingStation extends MOGuiMachine<TileEntityMachineChargingSt
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y)
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        super.drawGuiContainerForegroundLayer(x,y);
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         if (pages.get(0).isVisible()) {
             fontRendererObj.drawString(String.format("Range: %s", machine.getRage()), 100, 50, Reference.COLOR_HOLO.getColor());
             fontRendererObj.drawString(String.format("Charge Rate: %s", machine.getMaxCharging()), 100, 62, Reference.COLOR_HOLO.getColor());

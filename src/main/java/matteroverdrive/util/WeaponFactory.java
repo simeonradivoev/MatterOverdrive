@@ -19,10 +19,10 @@
 package matteroverdrive.util;
 
 import cofh.api.energy.IEnergyContainerItem;
-import cofh.lib.util.WeightedRandomItemStack;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
+import matteroverdrive.data.WeightedRandomItemStack;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;

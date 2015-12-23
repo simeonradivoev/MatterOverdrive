@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.data.BlockPos;
 import matteroverdrive.gui.MOGuiBase;
@@ -76,7 +75,7 @@ public class ElementPatternsGrid extends ElementGrid
         this.filter = filter;
     }
 
-    public boolean shouldBeDisplayed(ElementBase element)
+    public boolean shouldBeDisplayed(MOElementBase element)
     {
         if (element.getName() != null) {
             return element.getName().toLowerCase().contains(filter.toLowerCase());

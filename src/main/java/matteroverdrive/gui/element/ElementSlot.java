@@ -18,9 +18,9 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.Reference;
 import matteroverdrive.client.render.HoloIcon;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.util.ResourceLocation;
@@ -40,7 +40,7 @@ public class ElementSlot extends MOElementBase
 
     protected String info = "";
 
-    public ElementSlot(GuiBase gui, int posX, int posY,int width,int height,String type,HoloIcon icon)
+    public ElementSlot(MOGuiBase gui, int posX, int posY, int width, int height, String type, HoloIcon icon)
     {
         super(gui, posX, posY,width,height);
         iconOffsetX = ((sizeX - 16) / 2);
@@ -49,7 +49,7 @@ public class ElementSlot extends MOElementBase
         this.icon = icon;
     }
 
-    public ElementSlot(GuiBase gui, int posX, int posY,int width,int height,String type)
+    public ElementSlot(MOGuiBase gui, int posX, int posY,int width,int height,String type)
     {
         this(gui,posX,posY,width,height,type,null);
     }
@@ -60,6 +60,24 @@ public class ElementSlot extends MOElementBase
         {
             list.add(MOStringHelper.translateToLocal(info));
         }
+    }
+
+    @Override
+    public void updateInfo()
+    {
+
+    }
+
+    @Override
+    public void init()
+    {
+
+    }
+
+    @Override
+    public void addTooltip(List<String> var1, int mouseX, int mouseY)
+    {
+
     }
 
     @Override

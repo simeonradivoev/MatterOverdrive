@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerFalse;
@@ -26,6 +25,7 @@ import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.gui.element.ElementGuideCategory;
+import matteroverdrive.gui.element.MOElementBase;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.element.MOElementButtonScaled;
 import matteroverdrive.gui.pages.PageActiveQuests;
@@ -155,7 +155,7 @@ public class GuiDataPad extends MOGuiBase
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element, String buttonName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element, String buttonName, int mouseButton)
     {
         super.handleElementButtonClick(element,buttonName,mouseButton);
         if (element == activeQuestsButton)

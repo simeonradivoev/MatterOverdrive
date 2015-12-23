@@ -18,8 +18,8 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.Reference;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -40,21 +40,33 @@ public class MatterConnectionElement extends MOElementBase
     int count;
 
     @Override
-    public void addTooltip(List<String> list)
+    public void addTooltip(List<String> list,int mouseX,int mouseY)
     {
         list.add(StatCollector.translateToLocal(Item.getItemById(id).getUnlocalizedName() + ".name") + " [" + count + "]");
     }
 
-    public MatterConnectionElement(GuiBase gui,int id,int count)
+    public MatterConnectionElement(MOGuiBase gui,int id,int count)
     {
         this(gui, 22, 22, id, count);
     }
 
-    public MatterConnectionElement(GuiBase gui, int width, int height,int id,int count) {
+    public MatterConnectionElement(MOGuiBase gui, int width, int height, int id, int count) {
         super(gui,0,0, width, height);
 
         this.id = id;
         this.count = count;
+    }
+
+    @Override
+    public void updateInfo()
+    {
+
+    }
+
+    @Override
+    public void init()
+    {
+
     }
 
     @Override

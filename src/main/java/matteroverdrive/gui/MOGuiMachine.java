@@ -123,7 +123,7 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y)
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         if(name != null && !name.isEmpty())
         {
@@ -132,7 +132,6 @@ public class MOGuiMachine<T extends MOTileEntityMachine> extends MOGuiBase
         }
 
         drawElements(0, true);
-        drawTabs(0, true);
     }
 
     public T getMachine()

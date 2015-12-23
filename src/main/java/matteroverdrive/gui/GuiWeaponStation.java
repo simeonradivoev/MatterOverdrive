@@ -135,9 +135,9 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y)
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        super.drawGuiContainerForegroundLayer(x, y);
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
         ItemStack item = machine.getStackInSlot(machine.INPUT_SLOT);
         if (WeaponHelper.isWeapon(item) && pages.get(0).isVisible())

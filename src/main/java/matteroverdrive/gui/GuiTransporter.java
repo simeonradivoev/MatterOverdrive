@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.element.ElementBase;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.init.MatterOverdriveItems;
@@ -138,9 +137,9 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y)
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        super.drawGuiContainerForegroundLayer(x, y);
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
         if (pages.get(1).isVisible()) {
             getFontRenderer().drawString("X:", pages.get(1).getPosX() + xCoords.getPosX() - 10, pages.get(1).getPosY() + xCoords.getPosY() + 4, 0xFFFFFF);
@@ -155,7 +154,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
     }
 
     @Override
-    public void handleElementButtonClick(ElementBase element,String buttonName, int mouseButton)
+    public void handleElementButtonClick(MOElementBase element,String buttonName, int mouseButton)
     {
         super.handleElementButtonClick(element,buttonName,mouseButton);
         if (buttonName == "Import")

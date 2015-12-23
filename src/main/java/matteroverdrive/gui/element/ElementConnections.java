@@ -18,11 +18,13 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.data.BlockPos;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 5/10/2015.
@@ -32,10 +34,28 @@ public class ElementConnections extends MOElementBase
 
     TileEntityMachinePacketQueue machine;
 
-    public ElementConnections(GuiBase gui, int posX, int posY, int width, int height,TileEntityMachinePacketQueue machine)
+    public ElementConnections(MOGuiBase gui, int posX, int posY, int width, int height, TileEntityMachinePacketQueue machine)
     {
         super(gui, posX, posY, width, height);
         this.machine = machine;
+    }
+
+    @Override
+    public void updateInfo()
+    {
+
+    }
+
+    @Override
+    public void init()
+    {
+
+    }
+
+    @Override
+    public void addTooltip(List<String> var1, int mouseX, int mouseY)
+    {
+
     }
 
     @Override

@@ -64,9 +64,9 @@ public class GuiFusionReactor extends MOGuiMachine<TileEntityMachineFusionReacto
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y)
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        super.drawGuiContainerForegroundLayer(x,y);
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         if (pages.get(0).isVisible())
         {
             String info = "Efficiency";

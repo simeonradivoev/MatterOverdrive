@@ -93,7 +93,7 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
     }
 
     @Override
-    public void addTooltip(List<String> list)
+    public void addTooltip(List<String> list,int mouseX,int mouseY)
     {
 
     }

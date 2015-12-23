@@ -18,8 +18,8 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.data.ScaleTexture;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class ElementItemPattern extends ElementSlot
     ItemStack itemStack;
     int amount = 0;
 
-    public ElementItemPattern(GuiBase gui,NBTTagCompound tagCompound,String bgType,int width,int height)
+    public ElementItemPattern(MOGuiBase gui, NBTTagCompound tagCompound, String bgType, int width, int height)
     {
         super(gui, 0, 0, width, height, bgType);
         this.texture = new ScaleTexture(getTexture(bgType),width,height).setOffsets(2,2,2,2);

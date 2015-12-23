@@ -18,14 +18,10 @@
 
 package matteroverdrive.gui;
 
-import cofh.lib.gui.element.ElementDualScaled;
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.ContainerMachine;
-import matteroverdrive.gui.element.ElementInventorySlot;
-import matteroverdrive.gui.element.ElementMatterStored;
-import matteroverdrive.gui.element.ElementSlot;
-import matteroverdrive.gui.element.MOElementEnergy;
+import matteroverdrive.gui.element.*;
 import matteroverdrive.tile.TileEntityMachineDecomposer;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.InventoryPlayer;

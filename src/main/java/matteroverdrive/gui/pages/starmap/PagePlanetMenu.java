@@ -18,11 +18,11 @@
 
 package matteroverdrive.gui.pages.starmap;
 
-import cofh.lib.gui.GuiBase;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.container.ContainerStarMap;
 import matteroverdrive.container.slot.MOSlot;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.element.ElementBaseGroup;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.starmap.ElementSlotBuilding;
@@ -44,7 +44,7 @@ public class PagePlanetMenu extends ElementBaseGroup {
     ElementInventorySlot[] factorySlots;
     ElementInventorySlot[] shipSlots;
 
-    public PagePlanetMenu(GuiBase gui, int posX, int posY, int width, int height,ContainerStarMap starMapContainer,TileEntityMachineStarMap starMap)
+    public PagePlanetMenu(MOGuiBase gui, int posX, int posY, int width, int height, ContainerStarMap starMapContainer, TileEntityMachineStarMap starMap)
     {
         super(gui, posX, posY, width, height);
         //this.starMap = starMap;
