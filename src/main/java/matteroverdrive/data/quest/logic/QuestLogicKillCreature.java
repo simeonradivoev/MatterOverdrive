@@ -87,7 +87,7 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
         {
             questStack.setTagCompound(new NBTTagCompound());
         }
-        questStack.getTagCompound().setInteger("MaxKillCount",minKillCount + random.nextInt(maxKillCount - minKillCount));
+        questStack.getTagCompound().setInteger("MaxKillCount",random(random,minKillCount,maxKillCount));
         questStack.getTagCompound().setByte("KillType",(byte) random.nextInt(creatureClasses.length));
     }
 

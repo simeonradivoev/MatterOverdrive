@@ -83,7 +83,7 @@ public class QuestLogicMine extends AbstractQuestLogic
         if (questStack.getTagCompound() == null)
             questStack.setTagCompound(new NBTTagCompound());
 
-        questStack.getTagCompound().setInteger("MaxMineCount",minMineCount + random.nextInt(maxMineCount-minMineCount));
+        questStack.getTagCompound().setInteger("MaxMineCount",random(random,minMineCount,maxMineCount));
     }
 
     @Override

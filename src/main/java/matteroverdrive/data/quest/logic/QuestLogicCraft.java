@@ -104,7 +104,7 @@ public class QuestLogicCraft extends AbstractQuestLogic
     {
         if (questStack.getTagCompound() == null)
             questStack.setTagCompound(new NBTTagCompound());
-        questStack.getTagCompound().setInteger("MaxCraftCount",minCraftCount + random.nextInt(maxCraftCount-minCraftCount));
+        questStack.getTagCompound().setInteger("MaxCraftCount",random(random,minCraftCount,maxCraftCount));
     }
 
     @Override

@@ -22,6 +22,8 @@ import matteroverdrive.api.quest.IQuestLogic;
 import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
 
+import java.util.Random;
+
 /**
  * Created by Simeon on 12/5/2015.
  */
@@ -47,5 +49,11 @@ public abstract class AbstractQuestLogic implements IQuestLogic
     @Override
     public int modifyXP(QuestStack questStack, EntityPlayer entityPlayer, int originalXp) {
         return originalXp;
+    }
+
+    public int random(Random random,int min,int max)
+    {
+        int randomCount = max - min;
+        return min + (randomCount > 0 ? random.nextInt(randomCount) : 0);
     }
 }

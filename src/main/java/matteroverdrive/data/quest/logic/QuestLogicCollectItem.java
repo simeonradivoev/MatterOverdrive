@@ -79,7 +79,7 @@ public class QuestLogicCollectItem extends AbstractQuestLogic
         }
 
         questStack.getTagCompound().setByte("ItemType",(byte) random.nextInt(items.length));
-        questStack.getTagCompound().setInteger("MaxItemCount",minItemCount + random.nextInt(maxItemCount-minItemCount));
+        questStack.getTagCompound().setInteger("MaxItemCount",random(random,minItemCount,maxItemCount));
     }
 
     public int getItemCount(EntityPlayer entityPlayer, QuestStack questStack)
