@@ -316,7 +316,7 @@ public class PlasmaShotgun extends EnergyWeapon
 
     public WeaponShot createShot(ItemStack weapon, EntityLivingBase shooter, boolean zoomed)
     {
-        WeaponShot shot = new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,shooter,zoomed),WeaponHelper.getColor(weapon),getRange(weapon));
+        WeaponShot shot = new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon,shooter),getAccuracy(weapon,shooter,zoomed),WeaponHelper.getColor(weapon),getRange(weapon));
         shot.setCount(getShotCount(weapon,shooter));
         return shot;
     }

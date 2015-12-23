@@ -129,7 +129,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 				if (hit.entityHit instanceof EntityPlayer && FMLCommonHandler.instance().getSide() == Side.SERVER && !MinecraftServer.getServer().isPVPEnabled()) return;
 
                 DamageSource damageInfo = getDamageSource(item,player);
-                float damage = getWeaponScaledDamage(item);
+                float damage = getWeaponScaledDamage(item,player);
 
                 EntityLivingBase el = (EntityLivingBase) hit.entityHit;
                 double motionX = el.motionX;

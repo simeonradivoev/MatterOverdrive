@@ -42,6 +42,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
@@ -131,8 +132,8 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         infos.add(energyInfo);
         infos.add("");
 
-        infos.add(addStatWithMultiplyInfo("Damage",damageFormater.format(getWeaponScaledDamage(weapon)),getWeaponScaledDamage(weapon) / getWeaponBaseDamage(weapon),""));
-        infos.add(addStatWithMultiplyInfo("DPS",damageFormater.format((getWeaponScaledDamage(weapon)/getShootCooldown(weapon)) * 20),1,""));
+        infos.add(addStatWithMultiplyInfo("Damage",damageFormater.format(getWeaponScaledDamage(weapon,player)),getWeaponScaledDamage(weapon,player) / getWeaponBaseDamage(weapon),""));
+        infos.add(addStatWithMultiplyInfo("DPS",damageFormater.format((getWeaponScaledDamage(weapon,player)/getShootCooldown(weapon)) * 20),1,""));
         infos.add(addStatWithMultiplyInfo("Speed",(int)(20d/getShootCooldown(weapon)*60),(double) getBaseShootCooldown(weapon) / (double)getShootCooldown(weapon)," s/m"));
         infos.add(addStatWithMultiplyInfo("Range",getRange(weapon),(double)getRange(weapon) / (double)defaultRange,"b"));
         infos.add(addStatWithMultiplyInfo("Accuracy","",1/(modifyStatFromModules(Reference.WS_ACCURACY,weapon,1) * getCustomFloatStat(weapon,CUSTOM_ACCURACY_MULTIPLY_TAG,1)),""));
@@ -503,7 +504,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     public WeaponShot createShot(ItemStack weapon, EntityLivingBase shooter, boolean zoomed)
     {
-        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon),getAccuracy(weapon,shooter,zoomed),WeaponHelper.getColor(weapon),getRange(weapon));
+        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon,shooter),getAccuracy(weapon,shooter,zoomed),WeaponHelper.getColor(weapon),getRange(weapon));
     }
 
     public float modifyStatFromModules(int statID,ItemStack weapon,float original)
@@ -517,12 +518,13 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         return true;
     }
 
-    public float getWeaponScaledDamage(ItemStack weapon)
+    public float getWeaponScaledDamage(ItemStack weapon,EntityLivingBase shooter)
     {
         float damage = getCustomFloatStat(weapon,CUSTOM_DAMAGE_TAG,getWeaponBaseDamage(weapon));
         damage = modifyStatFromModules(Reference.WS_DAMAGE,weapon,damage);
         damage += damage * EnchantmentHelper.getEnchantmentLevel(MatterOverdriveEnchantments.overclock.effectId,weapon) * 0.04f;
         damage *= getCustomFloatStat(weapon,CUSTOM_DAMAGE_MULTIPLY_TAG,1);
+        damage *= shooter.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage).getAttributeValue();
         return damage;
     }
 
