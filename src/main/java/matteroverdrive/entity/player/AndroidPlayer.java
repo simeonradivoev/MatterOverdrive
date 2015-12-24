@@ -27,7 +27,6 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.api.inventory.IBionicPart;
-import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.MinimapEntityInfo;
 import matteroverdrive.data.inventory.BionicSlot;
@@ -36,6 +35,7 @@ import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.network.packet.client.PacketAndroidTransformation;
 import matteroverdrive.network.packet.client.PacketSendMinimapInfo;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketAndroidChangeAbility;
@@ -43,7 +43,7 @@ import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOLog;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -802,12 +802,17 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public void startConversion()
     {
-        if (!isAndroid() && !isTurning()) {
-            if (player.worldObj.isRemote) {
-                playTransformMusic();
-            } else {
+        if (player.worldObj.isRemote)
+        {
+            playTransformMusic();
+        }else
+        {
+            if (!isAndroid() && !isTurning())
+            {
                 AndroidPlayer androidPlayer = AndroidPlayer.get(player);
                 androidPlayer.startTurningToAndroid();
+                if (player instanceof EntityPlayerMP)
+                    MatterOverdrive.packetPipeline.sendTo(new PacketAndroidTransformation(), (EntityPlayerMP) player);
             }
         }
     }
@@ -815,13 +820,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     @SideOnly(Side.CLIENT)
     private void playTransformMusic()
     {
-        MOPositionedSound transform_music = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":transformation_music"), 1, 1);
-        transform_music.setAttenuationType(ISound.AttenuationType.NONE);
-
-        if (!Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(transform_music))
-        {
-            Minecraft.getMinecraft().getSoundHandler().playSound(transform_music);
-        }
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation(Reference.MOD_ID + ":" + "transformation_music")));
     }
 
     public void onEntityHurt(LivingHurtEvent event)
@@ -923,9 +922,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
                 if (effects.getInteger(EFFECT_KEY_TURNING) % 40 == 0) {
                     player.attackEntityFrom(fake, 0.1f);
-                    if (player.worldObj.isRemote) {
-                        playGlitchSound(this, player.worldObj.rand, 0.2f);
-                    }
+                    playGlitchSound(this, player.worldObj.rand, 0.2f);
                 }
             }else
             {
@@ -944,13 +941,13 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     }
 
     public void playGlitchSound(AndroidPlayer player,Random random,float amount) {
-        player.getPlayer().worldObj.playSoundEffect(player.getPlayer().posX,player.getPlayer().posY,player.getPlayer().posY,Reference.MOD_ID + ":gui.glitch_" + random.nextInt(11), amount, 0.9f + random.nextFloat() * 0.2f);
+        player.getPlayer().worldObj.playSoundAtEntity(player.getPlayer(),Reference.MOD_ID + ":gui.glitch", amount, 0.9f + random.nextFloat() * 0.2f);
     }
 
     @SideOnly(Side.CLIENT)
     public void playGlitchSoundClient(Random random,float amount)
     {
-        Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "gui.glitch"), amount, 0.9f + random.nextFloat() * 0.2f));
+        player.worldObj.playSoundAtEntity(player,Reference.MOD_ID + ":" + "gui.glitch",amount, 0.9f + random.nextFloat() * 0.2f);
     }
 
     public boolean isTurning()

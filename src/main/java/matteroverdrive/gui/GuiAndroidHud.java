@@ -155,7 +155,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
             mc.getTextureManager().bindTexture(Gui.icons);
         }
-        else if (android.isAndroid() && event.type == RenderGameOverlayEvent.ElementType.ALL && !(mc.currentScreen instanceof GuiStarMap))
+        else if (event.type == RenderGameOverlayEvent.ElementType.ALL && !(mc.currentScreen instanceof GuiStarMap))
         {
             glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glDisable(GL_DEPTH_TEST);

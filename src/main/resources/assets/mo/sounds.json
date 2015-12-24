@@ -28,7 +28,7 @@
     "gui.button_loud": {"category": "master","sounds": [{"name": "gui/button_loud_0", "stream": false},{"name": "gui/button_loud_1", "stream": false}]},
     "gui.button_expand": {"category": "master","sounds": [{"name": "gui/button_expand", "stream": false}]},
     "gui.biotic_stat_unlock": {"category": "master","sounds": [{"name": "gui/biotic_stat_unlock", "stream": false}]},
-    "transformation_music": {"category": "master","sounds": [{"name": "music/transformation_music", "stream": true}]},
+    "transformation_music": {"category": "music","sounds": [{"name": "music/transformation_music", "stream": true}]},
     "gui.glitch": {"category": "master","sounds": [{"name": "gui/glitch_0", "stream": false},
       {"name": "gui/glitch_1", "stream": false},
       {"name": "gui/glitch_2", "stream": false},

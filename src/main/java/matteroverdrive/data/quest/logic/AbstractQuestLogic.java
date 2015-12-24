@@ -29,6 +29,8 @@ import java.util.Random;
  */
 public abstract class AbstractQuestLogic implements IQuestLogic
 {
+    protected boolean autoComplete;
+
     @Override
     public String modifyTitle(QuestStack questStack, String original)
     {
@@ -55,5 +57,11 @@ public abstract class AbstractQuestLogic implements IQuestLogic
     {
         int randomCount = max - min;
         return min + (randomCount > 0 ? random.nextInt(randomCount) : 0);
+    }
+
+    public IQuestLogic setAutoComplete(boolean autoComplete)
+    {
+        this.autoComplete = autoComplete;
+        return this;
     }
 }

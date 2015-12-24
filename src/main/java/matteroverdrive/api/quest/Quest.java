@@ -20,6 +20,10 @@ package matteroverdrive.api.quest;
 
 import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Simeon on 11/19/2015.
@@ -28,14 +32,25 @@ public abstract class Quest implements IQuest
 {
     protected String title;
     protected int xpReward;
+    protected List<ItemStack> itemRewards;
     public Quest(String title,int xpReward)
     {
         this.title = title;
         this.xpReward = xpReward;
+        this.itemRewards = new ArrayList<>();
     }
     public String getTitle(QuestStack questStack) {return title;}
     public String getTitle(QuestStack questStack,EntityPlayer entityPlayer)
     {
         return getTitle(questStack);
+    }
+    public Quest addItemReward(ItemStack itemStack){this.itemRewards.add(itemStack);return this;}
+    public Quest addItemRewards(ItemStack... itemStacks)
+    {
+        for (ItemStack itemStack : itemStacks)
+        {
+            this.itemRewards.add(itemStack);
+        }
+        return this;
     }
 }

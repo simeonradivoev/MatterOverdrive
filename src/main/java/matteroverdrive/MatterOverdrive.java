@@ -82,6 +82,7 @@ public class MatterOverdrive
 	public static Quests quests;
 	public static QuestFactory questFactory;
 	public static DialogFactory dialogFactory;
+	public static BlockHandler blockHandler;
 	public static final ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
 	public static MOLog log = new MOLog();
@@ -105,6 +106,7 @@ public class MatterOverdrive
 		quests = new Quests();
 		questFactory = new QuestFactory();
 		dialogFactory = new DialogFactory(dialogRegistry);
+		blockHandler = new BlockHandler();
 
 		FMLCommonHandler.instance().bus().register(configHandler);
 		tickHandler = new TickHandler(configHandler,playerEventHandler);
@@ -112,6 +114,7 @@ public class MatterOverdrive
         FMLCommonHandler.instance().bus().register(playerEventHandler);
 		MinecraftForge.EVENT_BUS.register(playerEventHandler);
 		MinecraftForge.EVENT_BUS.register(bucketHandler);
+		MinecraftForge.EVENT_BUS.register(blockHandler);
 		MatterOverdriveFluids.init(event);
         MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);

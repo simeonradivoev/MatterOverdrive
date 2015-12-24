@@ -35,7 +35,6 @@ import java.util.Random;
 public class GenericQuest extends Quest
 {
     protected IQuestLogic questLogic;
-    protected int xpReward;
 
     public GenericQuest(IQuestLogic questLogic, String title,int xpReward)
     {
@@ -132,6 +131,7 @@ public class GenericQuest extends Quest
     @Override
     public void addRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards)
     {
+        rewards.addAll(itemRewards);
         questLogic.modifyRewards(questStack,entityPlayer,rewards);
     }
 

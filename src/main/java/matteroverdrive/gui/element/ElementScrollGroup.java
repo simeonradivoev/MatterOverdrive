@@ -67,10 +67,12 @@ public class ElementScrollGroup extends ElementBaseGroup
     @Override
     public void drawForeground(int mouseX, int mouseY)
     {
-        RenderUtils.beginStencil();
-        drawStencil(posX, posY, sizeX + posX, sizeY + posY, 1);
+        RenderUtils.beginDrawingDepthMask();
+        RenderUtils.drawPlane(posX,posY,100,sizeX,sizeY);
+        //drawStencil(posX, posY, sizeX + posX, sizeY + posY, 1);
+        RenderUtils.beginDepthMasking();
         super.drawForeground(mouseX, mouseY);
-        RenderUtils.endStencil();
+
 
         glDisable(GL_TEXTURE_2D);
         RenderUtils.applyColor(scrollerColor);
@@ -83,6 +85,8 @@ public class ElementScrollGroup extends ElementBaseGroup
             RenderUtils.drawPlane(posX + sizeX - 1, posY + scrollerY * scrollPercent, 0, 1, scrollerSize);
         }
         glEnable(GL_TEXTURE_2D);
+
+        RenderUtils.endDepthMask();
     }
 
     @Override

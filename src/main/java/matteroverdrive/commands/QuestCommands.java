@@ -165,10 +165,17 @@ public class QuestCommands extends CommandBase
                 commands.add("completed");
             }
         }
-        else
+        else if (parameters.length == 1)
         {
             commands.add("add");
             commands.add("remove");
+        }
+        else if (parameters.length == 3)
+        {
+            for (Object player : commandSender.getEntityWorld().playerEntities)
+            {
+                commands.add(((EntityPlayer)player).getCommandSenderName());
+            }
         }
         return commands;
     }

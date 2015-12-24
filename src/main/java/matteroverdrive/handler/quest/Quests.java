@@ -21,10 +21,7 @@ package matteroverdrive.handler.quest;
 import matteroverdrive.api.quest.IQuest;
 import matteroverdrive.api.quest.Quest;
 
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Simeon on 11/19/2015.
@@ -37,6 +34,7 @@ public class Quests
     private Map<Integer,IQuest> questMap;
     private Map<IQuest,Integer> questIntegerMap;
     private Map<String,IQuest> stringQuestMap;
+    public final Random random;
 
     public Quests()
     {
@@ -44,6 +42,7 @@ public class Quests
         questMap = new HashMap<>();
         questIntegerMap = new HashMap<>();
         stringQuestMap = new HashMap<>();
+        random = new Random();
     }
 
     public IQuest getQuestWithID(int questID)

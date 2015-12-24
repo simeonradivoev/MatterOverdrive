@@ -19,8 +19,10 @@
 package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
+import matteroverdrive.data.quest.QuestItem;
 import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -31,32 +33,67 @@ import java.util.Random;
 /**
  * Created by Simeon on 11/25/2015.
  */
-public class QuestLogicCollectItem extends AbstractQuestLogic
+public class QuestLogicCollectItem extends QuestLogicRandomItem
 {
     int dimensionID;
     boolean inSpecificDimension;
     boolean destroyOnCollect;
-    ItemStack[] items;
+    int xpPerItem;
     int minItemCount;
     int maxItemCount;
-    int xpPerItem;
+
+    public QuestLogicCollectItem(QuestItem questItem,int minItemCount,int maxItemCount,int xpPerItem)
+    {
+        init(new QuestItem[]{questItem},minItemCount,maxItemCount,xpPerItem);
+    }
 
     public QuestLogicCollectItem(ItemStack itemStack,int minItemCount,int maxItemCount,int xpPerItem)
     {
-        this(new ItemStack[]{itemStack},minItemCount,maxItemCount,xpPerItem);
+        init(new QuestItem[]{QuestItem.fromItemStack(itemStack)},minItemCount,maxItemCount,xpPerItem);
     }
 
-    public QuestLogicCollectItem(ItemStack[] itemStacks,int minItemCount,int maxItemCount,int xpPerItem)
+    public QuestLogicCollectItem(Item item, int minItemCount, int maxItemCount, int xpPerItem)
     {
-        this.items = itemStacks;
+        init(new QuestItem[]{QuestItem.fromItemStack(new ItemStack(item))},minItemCount,maxItemCount,xpPerItem);
+    }
+
+    protected void init(QuestItem[] questItems,int minItemCount,int maxItemCount,int xpPerItem)
+    {
+        super.init(questItems);
         this.minItemCount = minItemCount;
         this.maxItemCount = maxItemCount;
         this.xpPerItem = xpPerItem;
     }
 
+    public QuestLogicCollectItem(ItemStack[] itemStacks,int minItemCount,int maxItemCount,int xpPerItem)
+    {
+        QuestItem[] questItems = new QuestItem[itemStacks.length];
+        for (int i = 0;i < itemStacks.length;i++)
+        {
+            questItems[i] = QuestItem.fromItemStack(itemStacks[i]);
+        }
+        init(questItems,minItemCount,maxItemCount,xpPerItem);
+    }
+
+    public QuestLogicCollectItem(Item[] items,int minItemCount,int maxItemCount,int xpPerItem)
+    {
+        QuestItem[] questItems = new QuestItem[items.length];
+        for (int i = 0;i < items.length;i++)
+        {
+            questItems[i] = QuestItem.fromItemStack(new ItemStack(items[i]));
+        }
+        init(questItems,minItemCount,maxItemCount,xpPerItem);
+    }
+
+    public QuestLogicCollectItem(QuestItem[] questItems,int minItemCount,int maxItemCount,int xpPerItem)
+    {
+        init(questItems,minItemCount,maxItemCount,xpPerItem);
+    }
+
     @Override
     public String modifyInfo(QuestStack questStack, String info) {
-        return String.format(info,"",getMaxItemCount(questStack),getItem(questStack).getDisplayName());
+        ItemStack itemStack = getItem(questStack);
+        return String.format(info,"",getMaxItemCount(questStack),itemStack != null ? itemStack.getDisplayName() : "Unknown Item");
     }
 
     @Override
@@ -67,7 +104,8 @@ public class QuestLogicCollectItem extends AbstractQuestLogic
     @Override
     public String modifyObjective(QuestStack questStack, EntityPlayer entityPlayer, String objective, int objectiveIndex)
     {
-        return String.format(objective,"", getItemCount(entityPlayer,questStack),getMaxItemCount(questStack),getItem(questStack).getDisplayName());
+        ItemStack itemStack = getItem(questStack);
+        return String.format(objective,"", getItemCount(entityPlayer,questStack),getMaxItemCount(questStack),itemStack != null ? itemStack.getDisplayName() : "Unknown Item");
     }
 
     @Override
@@ -78,7 +116,7 @@ public class QuestLogicCollectItem extends AbstractQuestLogic
             questStack.setTagCompound(new NBTTagCompound());
         }
 
-        questStack.getTagCompound().setByte("ItemType",(byte) random.nextInt(items.length));
+        initItemType(random,questStack);
         questStack.getTagCompound().setInteger("MaxItemCount",random(random,minItemCount,maxItemCount));
     }
 
@@ -97,14 +135,17 @@ public class QuestLogicCollectItem extends AbstractQuestLogic
             int itemCount = 0;
             ItemStack itemStack = getItem(questStack);
 
-            for (int i = 0;i < entityPlayer.inventory.getSizeInventory();i++)
+            if (itemStack != null)
             {
-                ItemStack stackInSlot = entityPlayer.inventory.getStackInSlot(i);
-                if (stackInSlot != null)
+                for (int i = 0; i < entityPlayer.inventory.getSizeInventory(); i++)
                 {
-                    if (stackInSlot.isItemEqual(itemStack))
+                    ItemStack stackInSlot = entityPlayer.inventory.getStackInSlot(i);
+                    if (stackInSlot != null)
                     {
-                        itemCount += stackInSlot.stackSize;
+                        if (stackInSlot.isItemEqual(itemStack))
+                        {
+                            itemCount += stackInSlot.stackSize;
+                        }
                     }
                 }
             }
@@ -112,25 +153,23 @@ public class QuestLogicCollectItem extends AbstractQuestLogic
         }
     }
 
+    public void setItemCount(QuestStack questStack,int count)
+    {
+        if (destroyOnCollect)
+        {
+            if (questStack.getTagCompound() == null)
+                questStack.setTagCompound(new NBTTagCompound());
+
+            questStack.getTagCompound().setInteger("ItemCount",count);
+        }
+    }
+
     public int getMaxItemCount(QuestStack questStack)
     {
         if (questStack.getTagCompound() != null)
         {
-            return questStack.getTagCompound().getInteger("MaxItemCount");
-        }
-        return 0;
-    }
-
-    public ItemStack getItem(QuestStack questStack)
-    {
-        return items[getItemType(questStack)];
-    }
-
-    public int getItemType(QuestStack questStack)
-    {
-        if (questStack.getTagCompound() != null)
-        {
-            return questStack.getTagCompound().getByte("ItemType");
+            ItemStack itemStack = getItem(questStack);
+            return itemStack.stackSize + questStack.getTagCompound().getInteger("MaxItemCount");
         }
         return 0;
     }
@@ -144,21 +183,26 @@ public class QuestLogicCollectItem extends AbstractQuestLogic
             return false;
 
             ItemStack itemStack = ((EntityItemPickupEvent) event).item.getEntityItem();
-            if (ItemStack.areItemStacksEqual(itemStack,getItem(questStack)))
+            ItemStack questItem = getItem(questStack);
+            if (itemStack != null && questItem != null && ItemStack.areItemStacksEqual(itemStack,questItem))
             {
                 if (questStack.getTagCompound() == null)
                 {
                     questStack.setTagCompound(new NBTTagCompound());
                 }
 
-                int currentItemCount = questStack.getTagCompound().getInteger("ItemCount");
-                questStack.getTagCompound().setInteger("ItemCount",++currentItemCount);
-                if (currentItemCount >= getMaxItemCount(questStack))
+                int currentItemCount = getItemCount(entityPlayer,questStack);
+                if (currentItemCount < getMaxItemCount(questStack))
                 {
-                    questStack.setCompleted(true);
-                }else
-                {
-                    return true;
+                    setItemCount(questStack,++currentItemCount);
+
+                    if (isObjectiveCompleted(questStack,entityPlayer,0) && autoComplete)
+                    {
+                        questStack.setCompleted(true);
+                    } else
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -173,17 +217,20 @@ public class QuestLogicCollectItem extends AbstractQuestLogic
             int itemCount = getMaxItemCount(questStack);
             ItemStack itemStack = getItem(questStack);
 
-            for (int i = 0;i < entityPlayer.inventory.getSizeInventory();i++)
+            if (itemStack != null)
             {
-                ItemStack stackInSlot = entityPlayer.inventory.getStackInSlot(i);
-                if (stackInSlot != null)
+                for (int i = 0; i < entityPlayer.inventory.getSizeInventory(); i++)
                 {
-                    if (stackInSlot.isItemEqual(itemStack) && itemCount > 0)
+                    ItemStack stackInSlot = entityPlayer.inventory.getStackInSlot(i);
+                    if (stackInSlot != null)
                     {
-                        int newItemCount = Math.max(0,itemCount-stackInSlot.stackSize);
-                        int takenFromStack = itemCount-newItemCount;
-                        entityPlayer.inventory.decrStackSize(i,takenFromStack);
-                        itemCount = newItemCount;
+                        if (stackInSlot.isItemEqual(itemStack) && itemCount > 0)
+                        {
+                            int newItemCount = Math.max(0, itemCount - stackInSlot.stackSize);
+                            int takenFromStack = itemCount - newItemCount;
+                            entityPlayer.inventory.decrStackSize(i, takenFromStack);
+                            itemCount = newItemCount;
+                        }
                     }
                 }
             }

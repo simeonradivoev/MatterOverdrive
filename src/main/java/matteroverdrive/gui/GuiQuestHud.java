@@ -21,13 +21,11 @@ package matteroverdrive.gui;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
-import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.util.animation.MOAnimationTimeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import java.util.ArrayDeque;
@@ -153,9 +151,10 @@ public class GuiQuestHud
 
     public void startCompleteQuestNotification(QuestStack questStack)
     {
-        Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "quest_complete"),1,1));
+        Minecraft.getMinecraft().thePlayer.playSound(Reference.MOD_ID + ":" + "quest_complete",1,1);
         if (questStack != null) {
             completeQuestName = questStack.getTitle(Minecraft.getMinecraft().thePlayer);
+            completeQuestXp = questStack.getXP(Minecraft.getMinecraft().thePlayer);
             //addObjectivesChanged(questStack);
         }
         else
@@ -171,7 +170,7 @@ public class GuiQuestHud
 
     public void startNewQuestNotification(QuestStack questStack)
     {
-        Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "quest_started"),1,1));
+        Minecraft.getMinecraft().thePlayer.playSound(Reference.MOD_ID + ":" + "quest_started",1,1);
         if (questStack != null)
         {
             newQuestName = questStack.getTitle(Minecraft.getMinecraft().thePlayer);

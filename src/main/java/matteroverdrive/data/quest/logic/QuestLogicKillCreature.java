@@ -119,20 +119,21 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
                 }
 
                 int currentKillCount = getKillCount(questStack);
-                currentKillCount++;
-                if (currentKillCount >= getMaxKillCount(questStack))
+                if (currentKillCount < getMaxKillCount(questStack))
                 {
-                    MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
-                    if (extendedProperties != null)
+                    setKillCount(questStack,++currentKillCount);
+                    if (isObjectiveCompleted(questStack,entityPlayer,0) && autoComplete)
                     {
-                        questStack.getTagCompound().setInteger("KillCount",currentKillCount);
-                        questStack.setCompleted(true);
+                        MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
+                        if (extendedProperties != null)
+                        {
+                            questStack.setCompleted(true);
+                        }
                     }
-                }
-                else
-                {
-                    questStack.getTagCompound().setInteger("KillCount",currentKillCount);
-                    return true;
+                    else
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -160,6 +161,14 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
         if (questStack.getTagCompound() != null)
             return questStack.getTagCompound().getInteger("KillCount");
         return 0;
+    }
+
+    public void setKillCount(QuestStack questStack,int killCount)
+    {
+        if (questStack.getTagCompound() == null)
+            questStack.setTagCompound(new NBTTagCompound());
+
+        questStack.getTagCompound().setInteger("KillCount",killCount);
     }
 
     public String getTargetName(QuestStack questStack)

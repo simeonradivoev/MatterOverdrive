@@ -28,6 +28,8 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
+import static org.lwjgl.opengl.GL11.*;
+
 /**
  * Created by Simeon on 4/8/2015.
  */
@@ -169,24 +171,28 @@ public abstract class MOElementBase
         this.gui.drawSizedModalRect(var1, var2, var3, var4, var5);
     }
 
-    public void drawStencil(int var1, int var2, int var3, int var4, int var5) {
-        GL11.glDisable(3553);
-        GL11.glStencilFunc(519, var5, var5);
-        GL11.glStencilOp(0, 0, 7681);
-        GL11.glStencilMask(1);
-        GL11.glColorMask(false, false, false, false);
-        GL11.glDepthMask(false);
+    public void drawStencil(int xStart, int yStart, int xEnd, int yEnd, int flag) {
+        glDisable(GL_TEXTURE_2D);
+        glStencilFunc(GL_ALWAYS, flag, flag);
+        glStencilOp(GL_ZERO, GL_ZERO, GL_REPLACE);
+        glStencilMask(flag);
+        glColorMask(false, false, false, false);
+        glDepthMask(false);
+        glClearStencil(0);
+        glClear(GL_STENCIL_BUFFER_BIT);
+
         Tessellator.instance.startDrawingQuads();
-        Tessellator.instance.addVertex((double)var1, (double)var4, 0.0D);
-        Tessellator.instance.addVertex((double)var3, (double)var4, 0.0D);
-        Tessellator.instance.addVertex((double)var3, (double)var2, 0.0D);
-        Tessellator.instance.addVertex((double)var1, (double)var2, 0.0D);
+        Tessellator.instance.addVertex(xStart, yEnd, 0);
+        Tessellator.instance.addVertex(xEnd, yEnd, 0);
+        Tessellator.instance.addVertex(xEnd, yStart, 0);
+        Tessellator.instance.addVertex(xStart, yStart, 0);
         Tessellator.instance.draw();
-        GL11.glEnable(3553);
-        GL11.glStencilFunc(514, var5, var5);
-        GL11.glStencilMask(0);
-        GL11.glColorMask(true, true, true, true);
-        GL11.glDepthMask(true);
+
+        glEnable(GL_TEXTURE_2D);
+        glStencilFunc(GL_EQUAL, flag, flag);
+        glStencilMask(0);
+        glColorMask(true, true, true, true);
+        glDepthMask(true);
     }
 
     public void drawTexturedModalRect(int var1, int var2, int var3, int var4, int var5, int var6) {

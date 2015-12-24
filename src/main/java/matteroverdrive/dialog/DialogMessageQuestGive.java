@@ -33,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class DialogMessageQuestGive extends DialogMessage
 {
     QuestStack questStack;
+    boolean returnToMain;
 
     public DialogMessageQuestGive(){super();}
     public DialogMessageQuestGive(QuestStack questStack){super(); this.questStack = questStack;}
@@ -53,7 +54,13 @@ public class DialogMessageQuestGive extends DialogMessage
     {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiDialog)
         {
-            ((GuiDialog) Minecraft.getMinecraft().currentScreen).setCurrentMessage(npc.getStartDialogMessage(player));
+            ((GuiDialog) Minecraft.getMinecraft().currentScreen).setCurrentMessage(returnToMain ? npc.getStartDialogMessage(player) : this);
         }
+    }
+
+    public DialogMessageQuestGive setReturnToMain(boolean returnToMain)
+    {
+        this.returnToMain = returnToMain;
+        return this;
     }
 }

@@ -185,4 +185,17 @@ public class PlayerEventHandler
             MatterOverdrive.playerEventHandler.players.clear();
         }
     }
+
+    @SubscribeEvent
+    public void onItemCrafted(PlayerEvent.ItemCraftedEvent event)
+    {
+        if (event.player != null)
+        {
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
+            if (extendedProperties != null)
+            {
+                extendedProperties.onEvent(event);
+            }
+        }
+    }
 }

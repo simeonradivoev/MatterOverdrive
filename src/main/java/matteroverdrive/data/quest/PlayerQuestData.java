@@ -115,7 +115,7 @@ public class PlayerQuestData
             if (activeQuests.get(i).isCompleted())
             {
                 QuestStack questStack = activeQuests.remove(i);
-                extendedProperties.getPlayer().addExperienceLevel(questStack.getXP(extendedProperties.getPlayer()));
+                extendedProperties.getPlayer().addExperience(questStack.getXP(extendedProperties.getPlayer()));
                 List<ItemStack> rewards = new ArrayList<>();
                 questStack.addRewards(rewards, extendedProperties.getPlayer());
                 for (ItemStack stack : rewards)

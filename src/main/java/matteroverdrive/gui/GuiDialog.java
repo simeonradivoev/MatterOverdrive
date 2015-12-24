@@ -103,17 +103,20 @@ public class GuiDialog extends GuiScreen
 
         int messageWidth;
         String message = currentMessage.getMessageText(npc, player);
-        List<String> splitMessage = new ArrayList<>();
-        String[] list = message.split("<br>");
-        for (int i = 0;i < list.length;i++)
+        if (message != null && !message.isEmpty())
         {
-            splitMessage.addAll(fontRendererObj.listFormattedStringToWidth(list[i],width / 3));
-        }
-        for (int i = 0;i < splitMessage.size();i++)
-        {
-            String m = splitMessage.get(i).toString();
-            messageWidth = fontRendererObj.getStringWidth(m);
-            fontRendererObj.drawString(m,width/2 - messageWidth - 16,height - height / 8 - 64 - (splitMessage.size()*fontRendererObj.FONT_HEIGHT/2) + fontRendererObj.FONT_HEIGHT * i,Reference.COLOR_HOLO.getColor());
+            List<String> splitMessage = new ArrayList<>();
+            String[] list = message.split("<br>");
+            for (int i = 0; i < list.length; i++)
+            {
+                splitMessage.addAll(fontRendererObj.listFormattedStringToWidth(list[i], width / 3));
+            }
+            for (int i = 0; i < splitMessage.size(); i++)
+            {
+                String m = splitMessage.get(i).toString();
+                messageWidth = fontRendererObj.getStringWidth(m);
+                fontRendererObj.drawString(m, width / 2 - messageWidth - 16, height - height / 8 - 64 - (splitMessage.size() * fontRendererObj.FONT_HEIGHT / 2) + fontRendererObj.FONT_HEIGHT * i, Reference.COLOR_HOLO.getColor());
+            }
         }
 
         glEnable(GL_BLEND);

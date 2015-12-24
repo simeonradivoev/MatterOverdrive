@@ -705,6 +705,26 @@ public class RenderUtils
 		glClear(GL_STENCIL_BUFFER_BIT);
 	}
 
+	public static void beginDrawingDepthMask()
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glClearDepth(1f);
+		GL11.glDepthFunc(GL11.GL_LESS);
+		glEnable(GL_DEPTH_TEST);
+		glDepthMask(true);
+		glColorMask(false,false,false,false);
+		glDisable(GL_TEXTURE_2D);
+	}
+
+	public static void beginDepthMasking()
+	{
+		glEnable(GL_TEXTURE_2D);
+		glDepthMask(false);
+		glColorMask(true,true,true,true);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthFunc(GL11.GL_GREATER);
+	}
+
 	public static void endStencil()
 	{
 		glStencilFunc(GL_EQUAL, 1, 0xFF); // Pass test if stencil value is 1
@@ -712,6 +732,13 @@ public class RenderUtils
 		glDepthMask(true); // Write to depth buffer
 		glColorMask(true, true, true, true);
 		glDisable(GL_STENCIL_TEST);
+	}
+
+	public static void endDepthMask()
+	{
+		glDepthFunc(GL_LEQUAL);
+		glDepthMask(true);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 	}
 
 	public static void drawSizeableBackground(int left,int top,int width,int height,int texW,int texH,ResourceLocation texture,float zLevel,int chunkSize)

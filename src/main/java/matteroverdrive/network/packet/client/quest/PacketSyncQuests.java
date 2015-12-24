@@ -24,9 +24,11 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.gui.GuiDataPad;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.AbstractClientPacketHandler;
 import matteroverdrive.util.MOEnumHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -74,6 +76,10 @@ public class PacketSyncQuests extends PacketAbstract
             MOExtendedProperties extendedProperties = MOExtendedProperties.get(player);
             if (extendedProperties != null && extendedProperties.getQuestData() != null) {
                 extendedProperties.getQuestData().readFromNBT(message.data,MOEnumHelper.decode(message.questTypes,PlayerQuestData.DataType.class));
+            }
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiDataPad)
+            {
+                ((GuiDataPad) Minecraft.getMinecraft().currentScreen).refreshQuests(extendedProperties);
             }
             return null;
         }

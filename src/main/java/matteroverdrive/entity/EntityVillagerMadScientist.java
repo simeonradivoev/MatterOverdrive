@@ -54,6 +54,7 @@ import net.minecraft.world.World;
  */
 public class EntityVillagerMadScientist extends EntityVillager implements IDialogNpc, IDialogQuestGiver
 {
+    private static DialogMessageQuestOnObjectivesCompleted convertMe;
     private static DialogMessage canYouConvert;
     private static DialogMessage whatDidYouDo;
     private static DialogMessage cocktailOfAscension;
@@ -124,11 +125,11 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
     public static void registerDialogMessages(IDialogRegistry registry, Side side)
     {
         //region Human
-        DialogMessageAndroidTransformation convertMe = new DialogMessageAndroidTransformation("");
+        convertMe = new DialogMessageQuestOnObjectivesCompleted(new QuestStack(MatterOverdriveQuests.punyHumans),new int[]{0});
         registry.registerMessage(convertMe);
         convertMe.loadQuestionFromLocalization("dialog.mad_scientist.convert.question");
 
-        canYouConvert = new DialogMessageHumanOnly();
+        canYouConvert = new DialogMessageQuestGive(new QuestStack(MatterOverdriveQuests.punyHumans));
         registry.registerMessage(canYouConvert);
         canYouConvert.loadMessageFromLocalization("dialog.mad_scientist.requirements.line");
         canYouConvert.loadQuestionFromLocalization("dialog.mad_scientist.requirements.question");
@@ -153,7 +154,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
         //endregion
 
         //region Junkie
-        DialogMessage acceptCocktail = new DialogMessageQuestGive(new QuestStack(MatterOverdriveQuests.cocktailOfAscension)).loadQuestionFromLocalization("dialog.mad_scientist.junkie.cocktail_quest.question.accept");
+        DialogMessage acceptCocktail = new DialogMessageQuestGive(new QuestStack(MatterOverdriveQuests.cocktailOfAscension)).setReturnToMain(true).loadQuestionFromLocalization("dialog.mad_scientist.junkie.cocktail_quest.question.accept");
         registry.registerMessage(acceptCocktail);
         DialogMessage declineCocktail = new DialogMessageBackToMain().loadQuestionFromLocalization("dialog.mad_scientist.junkie.cocktail_quest.question.decline");
         registry.registerMessage(declineCocktail);
@@ -255,12 +256,24 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
             worldObj.playSoundAtEntity(this, Reference.MOD_ID + ":" + "failed_animal_die_0",1,1);
             worldObj.createExplosion(this,posX,posY,posZ,3,false);
         }
+        else if (dialogMessage == convertMe)
+        {
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get(player);
+            for (QuestStack questStack : extendedProperties.getQuestData().getActiveQuests())
+            {
+                if (questStack.getQuest() == MatterOverdriveQuests.punyHumans)
+                {
+                    questStack.setCompleted(true);
+                    AndroidPlayer.get(player).startConversion();
+                }
+            }
+        }
     }
 
     @Override
     public void giveQuest(IDialogMessage message,QuestStack questStack,EntityPlayer entityPlayer)
     {
-        if (questStack != null && questStack.getQuest() == MatterOverdriveQuests.cocktailOfAscension)
+        if (questStack != null)
         {
             MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
             if (extendedProperties != null && questStack.getQuest().canBeAccepted(questStack,entityPlayer))
