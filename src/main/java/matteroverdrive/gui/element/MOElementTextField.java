@@ -79,15 +79,25 @@ public class MOElementTextField extends MOElementBase
 	private HoloIcon holoIcon;
     private Color color;
 
-	public MOElementTextField(MOGuiBase gui,ITextHandler textHandler, int posX, int posY,int width,int height) {
+    public MOElementTextField(MOGuiBase gui,ITextHandler textHandler, int posX, int posY,int width,int height) {
+        this(gui,textHandler,posX,posY,width,height,(short) 32);
+    }
+
+	public MOElementTextField(MOGuiBase gui,ITextHandler textHandler, int posX, int posY,int width,int height,short limit) {
 		super(gui, posX, posY, width, height);
 		background = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "search_field.png"),166,14).setOffsets(18,12,9,3);
 		this.textHandler = textHandler;
+        setMaxLength(limit);
 	}
 
-	public MOElementTextField(MOGuiBase gui, int posX, int posY,int width,int height)
+    public MOElementTextField(MOGuiBase gui, int posX, int posY,int width,int height)
+    {
+        this(gui, gui, posX, posY, width, height);
+    }
+
+	public MOElementTextField(MOGuiBase gui, int posX, int posY,int width,int height,short limit)
 	{
-		this(gui, gui, posX, posY, width, height);
+		this(gui, gui, posX, posY, width, height,limit);
 	}
 
 	public MOElementTextField setTextColor(Number textColor, Number selectedTextColor) {

@@ -49,28 +49,28 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         energy = new MOElementEnergy(this,xSize - 35,50,machine.getEnergyStorage());
         matterStored = new ElementMatterStored(this,xSize - 35,100,machine.getMatterStorage());
 
-        xCoords = new ElementIntegerField(this,this,32,50,80,16);
+        xCoords = new ElementIntegerField(this,this,32,24,80,16);
         xCoords.setName("XCoord");
-        yCoords = new ElementIntegerField(this,this,32,50 + 18,80,16);
+        yCoords = new ElementIntegerField(this,this,32,24 + 18,80,16);
         yCoords.setName("YCoord");
-        zCoords = new ElementIntegerField(this,this,32,50 + 18 * 2,80,16);
+        zCoords = new ElementIntegerField(this,this,32,24 + 18 * 2,80,16);
         zCoords.setName("ZCoord");
 
         list = new ElementTransportList(this,this,45,30,140,100,machine);
         list.setName("Locations");
 
-        name = new MOElementTextField(this,this,32 + 6,50 - 18,74,16);
+        name = new MOElementTextField(this,this,32 + 6,4,74,16);
         name.setTextOffset(6, 4);
         name.setBackground(MOElementButton.HOVER_TEXTURE_DARK);
         name.setName("LocationName");
 
-        importButton = new MOElementButtonScaled(this,this,22,55 + 18 * 3,"Import",50,18);
+        importButton = new MOElementButtonScaled(this,this,22,28 + 18 * 3,"Import",50,18);
         importButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
         importButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
         importButton.setDisabledTexture(MOElementButton.HOVER_TEXTURE_DARK);
         importButton.setText(MOStringHelper.translateToLocal("gui.label.button.import"));
 
-        resetButton = new MOElementButtonScaled(this,this,22 + 52,55 + 18 * 3,"Reset",50,18);
+        resetButton = new MOElementButtonScaled(this,this,22 + 52,28 + 18 * 3,"Reset",50,18);
         resetButton.setNormalTexture(MOElementButton.NORMAL_TEXTURE);
         resetButton.setOverTexture(MOElementButton.HOVER_TEXTURE);
         resetButton.setText(MOStringHelper.translateToLocal("gui.label.button.reset"));
@@ -103,7 +103,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
         pages.get(0).addElement(removeLocation);
         pages.get(0).addElement(newLocationButton);
 
-        pages.get(1).getElements().get(0).setPosition(32, 150);
+        pages.get(1).getElements().get(0).setPosition(32, 110);
 
         xCoords.init();
         yCoords.init();

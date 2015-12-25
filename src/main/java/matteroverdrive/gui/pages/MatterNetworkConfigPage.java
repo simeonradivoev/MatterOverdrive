@@ -39,12 +39,12 @@ public class MatterNetworkConfigPage extends AutoConfigPage implements ITextHand
 
     public MatterNetworkConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height,ComponentMatterNetworkConfigs componentMatterNetworkConfigs,ComponentConfigs configurable) {
         super(gui, posX, posY, width, height,configurable);
-        destinationTextField = new MOElementTextField(gui,this,64,54,96,16);
+        destinationTextField = new MOElementTextField(gui,this,4,42,96,16);
         destinationTextField.setName("Destination");
         destinationTextField.setBackground(MOElementButton.HOVER_TEXTURE_DARK);
         destinationTextField.setTextOffset(4, 3);
         this.componentMatterNetworkConfigs = componentMatterNetworkConfigs;
-        filterSlot = new ElementInventorySlot(gui,(MOSlot)machineGui.inventorySlots.getSlot(componentMatterNetworkConfigs.getDestinationFilterSlot()),164,50,22,22,"big");
+        filterSlot = new ElementInventorySlot(gui,(MOSlot)machineGui.inventorySlots.getSlot(componentMatterNetworkConfigs.getDestinationFilterSlot()),104,37,22,22,"big");
     }
 
     @Override
@@ -63,7 +63,7 @@ public class MatterNetworkConfigPage extends AutoConfigPage implements ITextHand
     public void drawForeground(int mouseX, int mouseY)
     {
         super.drawForeground(mouseX, mouseY);
-        getFontRenderer().drawString("Destination Address:", 64, 38, 0xFFFFFF);
+        getFontRenderer().drawString("Destination Address:", posX, posY + 28, 0xFFFFFF);
     }
 
     @Override

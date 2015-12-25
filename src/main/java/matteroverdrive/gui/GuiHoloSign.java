@@ -60,7 +60,7 @@ public class GuiHoloSign extends MOGuiMachine<TileEntityHoloSign>
     public void registerPages(MOBaseContainer container,TileEntityHoloSign machine)
     {
         super.registerPages(container, machine);
-        configPage = new AutoConfigPage(this,0,0,xSize,ySize,machine.getComponent(ComponentConfigs.class));
+        configPage = new AutoConfigPage(this,48,32,xSize-76,ySize,machine.getComponent(ComponentConfigs.class));
         elements.remove(pages.get(1));
         pages.set(1, configPage);
     }
