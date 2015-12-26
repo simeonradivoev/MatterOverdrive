@@ -131,7 +131,7 @@ public class TileEntityFusionReactorPart extends MOTileEntityMachineMatter imple
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
 
     }

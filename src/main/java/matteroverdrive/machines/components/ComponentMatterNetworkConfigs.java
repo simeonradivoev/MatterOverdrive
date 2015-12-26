@@ -58,7 +58,7 @@ public class ComponentMatterNetworkConfigs extends MachineComponentAbstract<MOTi
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
         if (categories.contains(MachineNBTCategory.CONFIGS))
         {

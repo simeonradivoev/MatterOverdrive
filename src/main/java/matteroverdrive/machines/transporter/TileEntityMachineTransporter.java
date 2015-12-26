@@ -106,9 +106,9 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
-        super.writeCustomNBT(nbt, categories);
+        super.writeCustomNBT(nbt, categories, toDisk);
         if (categories.contains(MachineNBTCategory.CONFIGS))
         {
             writeLocations(nbt);

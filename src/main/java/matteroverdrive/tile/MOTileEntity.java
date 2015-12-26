@@ -62,19 +62,21 @@ public abstract class MOTileEntity extends TileEntity implements IMOTileEntity
         }
     }
 
+    @Override
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
         readCustomNBT(nbt, MachineNBTCategory.ALL_OPTS);
     }
 
+    @Override
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
-        writeCustomNBT(nbt, MachineNBTCategory.ALL_OPTS);
+        writeCustomNBT(nbt, MachineNBTCategory.ALL_OPTS, true);
     }
 
-    public abstract void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories);
+    public abstract void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk);
 
     public abstract void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories);
 
@@ -83,7 +85,7 @@ public abstract class MOTileEntity extends TileEntity implements IMOTileEntity
     {
         if (worldObj.isRemote)
         {
-            MatterOverdrive.packetPipeline.sendToServer(new PacketSendMachineNBT(categories,this,forceUpdate));
+            MatterOverdrive.packetPipeline.sendToServer(new PacketSendMachineNBT(categories,this,forceUpdate,true));
         }
     }
 

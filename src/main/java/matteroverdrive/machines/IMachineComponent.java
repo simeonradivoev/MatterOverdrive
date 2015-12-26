@@ -33,7 +33,7 @@ import java.util.EnumSet;
 public interface IMachineComponent<T extends MOTileEntityMachine>
 {
     void readFromNBT(NBTTagCompound nbt,EnumSet<MachineNBTCategory> categories);
-    void writeToNBT(NBTTagCompound nbt,EnumSet<MachineNBTCategory> categories);
+    void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk);
     void registerSlots(Inventory inventory);
     void update(T machine);
     boolean isAffectedByUpgrade(UpgradeTypes type);

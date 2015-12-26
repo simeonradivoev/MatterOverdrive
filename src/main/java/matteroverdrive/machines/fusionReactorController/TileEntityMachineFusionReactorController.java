@@ -117,9 +117,9 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
-        super.writeCustomNBT(nbt, categories);
+        super.writeCustomNBT(nbt, categories, toDisk);
         if (categories.contains(MachineNBTCategory.DATA)) {
             nbt.setBoolean("ValidStructure", validStructure);
             nbt.setString("MonitorInfo", monitorInfo);

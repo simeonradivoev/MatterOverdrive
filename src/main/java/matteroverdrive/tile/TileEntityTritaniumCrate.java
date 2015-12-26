@@ -50,9 +50,9 @@ public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
-        if (categories.contains(MachineNBTCategory.INVENTORY))
+        if (categories.contains(MachineNBTCategory.INVENTORY) && toDisk)
         {
             inventory.writeToNBT(nbt);
         }

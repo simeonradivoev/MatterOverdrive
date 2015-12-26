@@ -131,10 +131,10 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
-        super.writeCustomNBT(nbt, categories);
-        if (categories.contains(MachineNBTCategory.DATA)) {
+        super.writeCustomNBT(nbt, categories, toDisk);
+        if (categories.contains(MachineNBTCategory.DATA) && toDisk) {
             taskQueue.writeToNBT(nbt);
         }
     }

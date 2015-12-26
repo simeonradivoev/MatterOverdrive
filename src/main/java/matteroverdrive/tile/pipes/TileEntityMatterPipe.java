@@ -144,9 +144,9 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterHandl
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound comp, EnumSet<MachineNBTCategory> categories)
+    public void writeCustomNBT(NBTTagCompound comp, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
-        if(!worldObj.isRemote && categories.contains(MachineNBTCategory.DATA))
+        if(!worldObj.isRemote && categories.contains(MachineNBTCategory.DATA) && toDisk)
         {
             storage.writeToNBT(comp);
             comp.setByte("transfer_dir", (byte) this.lastDir.ordinal());

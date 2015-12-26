@@ -373,7 +373,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public Packet getDescriptionPacket()
     {
         NBTTagCompound syncData = new NBTTagCompound();
-        writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
+        writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS, false);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);
     }
 
@@ -772,19 +772,22 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     //region NBT
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
         if (categories.contains(MachineNBTCategory.DATA)) {
             nbt.setLong("Mass", mass);
             nbt.setFloat("Suppression", suppression);
-            NBTTagList suppressors = new NBTTagList();
-            for (AnomalySuppressor s : this.supressors)
+            if (toDisk)
             {
-                NBTTagCompound suppressorTag = new NBTTagCompound();
-                s.writeToNBT(suppressorTag);
-                suppressors.appendTag(suppressorTag);
+                NBTTagList suppressors = new NBTTagList();
+                for (AnomalySuppressor s : this.supressors)
+                {
+                    NBTTagCompound suppressorTag = new NBTTagCompound();
+                    s.writeToNBT(suppressorTag);
+                    suppressors.appendTag(suppressorTag);
+                }
+                nbt.setTag("suppressors", suppressors);
             }
-            nbt.setTag("suppressors",suppressors);
         }
     }
 

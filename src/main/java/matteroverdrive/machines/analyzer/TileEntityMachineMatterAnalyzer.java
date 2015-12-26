@@ -244,9 +244,9 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound tagCompound, EnumSet<MachineNBTCategory> categories)
+    public void writeCustomNBT(NBTTagCompound tagCompound, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
-        super.writeCustomNBT(tagCompound, categories);
+        super.writeCustomNBT(tagCompound, categories, toDisk);
         if (categories.contains(MachineNBTCategory.DATA)) {
             tagCompound.setShort("AnalyzeTime", (short) analyzeTime);
             taskQueueSending.writeToNBT(tagCompound);

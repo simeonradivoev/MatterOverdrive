@@ -441,9 +441,9 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
-        super.writeCustomNBT(nbt, categories);
+        super.writeCustomNBT(nbt, categories, toDisk);
         if (categories.contains(MachineNBTCategory.DATA)) {
             nbt.setShort("ReplicateTime", (short) this.replicateTime);
             taskQueueProcessing.writeToNBT(nbt);

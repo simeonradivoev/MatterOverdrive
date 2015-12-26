@@ -144,7 +144,7 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories) {
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk) {
 
     }
 

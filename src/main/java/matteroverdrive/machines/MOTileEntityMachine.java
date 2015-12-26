@@ -259,8 +259,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
     }
 
+    //region NBT
     @Override
-    public void readCustomNBT(NBTTagCompound nbt,EnumSet<MachineNBTCategory> categories)
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
         if (categories.contains(MachineNBTCategory.DATA))
         {
@@ -286,27 +287,31 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @Override
-    public void  writeCustomNBT(NBTTagCompound nbt,EnumSet<MachineNBTCategory> categories)
+    public void  writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
         if (categories.contains(MachineNBTCategory.DATA))
         {
             nbt.setBoolean("forceClientUpdate", forceClientUpdate);
             nbt.setBoolean("redstoneState", redstoneState);
             nbt.setBoolean("activeState",activeState);
-            if (owner != null)
-                nbt.setString("Owner", owner.toString());
-            else if (nbt.hasKey("Owner", 6)) {
-                nbt.removeTag("Owner");
+            if (toDisk)
+            {
+                if (owner != null)
+                    nbt.setString("Owner", owner.toString());
+                else if (nbt.hasKey("Owner", 6))
+                {
+                    nbt.removeTag("Owner");
+                }
             }
         }
         forceClientUpdate = false;
-        if (categories.contains(MachineNBTCategory.INVENTORY))
+        if (categories.contains(MachineNBTCategory.INVENTORY) && toDisk)
         {
             inventory.writeToNBT(nbt);
         }
         for (IMachineComponent component : components)
         {
-            component.writeToNBT(nbt,categories);
+            component.writeToNBT(nbt,categories, toDisk);
         }
     }
 
@@ -334,7 +339,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         if (saveTagFlag)
             machineTag.setTag("Items", itemTagList);
 
-        writeCustomNBT(machineTag, EnumSet.of(MachineNBTCategory.CONFIGS, MachineNBTCategory.DATA));
+        writeCustomNBT(machineTag, EnumSet.of(MachineNBTCategory.CONFIGS, MachineNBTCategory.DATA), true);
         if (hasOwner()) {
             machineTag.setString("Owner", owner.toString());
             saveTagFlag = true;
@@ -371,9 +376,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public Packet getDescriptionPacket()
     {
-        //System.out.println("Sending Packet To Client");
+        System.out.println("Sending Packet To Client");
         NBTTagCompound syncData = new NBTTagCompound();
-        writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
+        writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS,true);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);
     }
 

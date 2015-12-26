@@ -172,9 +172,9 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
-        if (categories.contains(MachineNBTCategory.DATA))
+        if (categories.contains(MachineNBTCategory.DATA) && toDisk)
         {
             packetQueue.writeToNBT(nbt);
         }

@@ -360,7 +360,7 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories) {
+    public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk) {
 
     }
 

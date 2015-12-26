@@ -43,12 +43,12 @@ public class PacketSendMachineNBT extends TileEntityUpdatePacket
     boolean forceUpdate;
 
     public PacketSendMachineNBT(){}
-    public PacketSendMachineNBT(EnumSet<MachineNBTCategory> categories,MOTileEntity tileEntity,boolean forceUpdate)
+    public PacketSendMachineNBT(EnumSet<MachineNBTCategory> categories,MOTileEntity tileEntity,boolean forceUpdate,boolean toDisk)
     {
         super(tileEntity);
         data = new NBTTagCompound();
         this.forceUpdate = forceUpdate;
-        tileEntity.writeCustomNBT(data,categories);
+        tileEntity.writeCustomNBT(data,categories, toDisk);
         this.cattegories = MachineNBTCategory.encode(categories);
     }
 
