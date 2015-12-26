@@ -22,6 +22,7 @@ import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
+import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
@@ -79,12 +80,12 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    public void onActionKeyPress(AndroidPlayer android, int level, KeyBinding keyBinding)
     {
-        if (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(this))
+        if (this.equals(android.getActiveStat()))
         {
-            boolean cloak = !androidPlayer.getEffects().getBoolean("Cloaked");
-            androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_CLOAK, cloak);
+            boolean cloak = !android.getEffects().getBoolean("Cloaked");
+            android.setActionToServer(PacketSendAndroidAnction.ACTION_CLOAK, cloak);
         }
     }
 

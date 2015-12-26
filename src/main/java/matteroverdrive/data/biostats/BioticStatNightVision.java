@@ -95,18 +95,18 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    public void onActionKeyPress(AndroidPlayer android, int level, KeyBinding keyBinding)
     {
-        if (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(this))
+        if (this.equals(android.getActiveStat()))
         {
-            androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_NIGHTVISION, !androidPlayer.getEffects().getBoolean("Nightvision"));
-            if (!androidPlayer.getEffects().getBoolean("Nightvision"))
+            android.setActionToServer(PacketSendAndroidAnction.ACTION_NIGHTVISION, !android.getEffects().getBoolean("Nightvision"));
+            if (!android.getEffects().getBoolean("Nightvision"))
             {
-                Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":night_vision"), 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
+                Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":night_vision"), 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f));
             }
             else
             {
-                Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":power_down"), 0.05f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + androidPlayer.getPlayer().getRNG().nextFloat() * 0.1f));
+                Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":power_down"), 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f));
             }
         }
     }

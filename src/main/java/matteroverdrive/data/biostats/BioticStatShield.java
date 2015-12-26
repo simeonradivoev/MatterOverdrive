@@ -109,7 +109,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     @SideOnly(Side.CLIENT)
     public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
     {
-        if (androidPlayer.getActiveStat().equals(this) && canActivate(androidPlayer) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level, androidPlayer)))
+        if (this.equals(androidPlayer.getActiveStat()) && canActivate(androidPlayer) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level, androidPlayer)))
         {
             setShield(androidPlayer,true);
             androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, true);
@@ -289,7 +289,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     @Override
     public boolean showOnHud(AndroidPlayer android,int level)
     {
-        return (android.getActiveStat() != null && android.getActiveStat().equals(this)) || getShieldState(android);
+        return this.equals(android.getActiveStat()) || getShieldState(android);
     }
 
     @Override

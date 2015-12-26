@@ -83,7 +83,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     @SideOnly(Side.CLIENT)
     private void manageActivate(AndroidPlayer androidPlayer)
     {
-        if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed() && androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(this))
+        if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed() && this.equals(androidPlayer.getActiveStat()))
         {
             hasPressedKey = true;
         }
@@ -199,7 +199,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     @Override
     public boolean isEnabled(AndroidPlayer android, int level)
     {
-        return super.isEnabled(android,level) && android.getEffectLong(EFFECT_KEY_LAST_TELEPORT) <= android.getPlayer().worldObj.getTotalWorldTime() && android.extractEnergy(ENERGY_PER_TELEPORT,true) == ENERGY_PER_TELEPORT && android.getActiveStat() != null && android.getActiveStat().equals(this);
+        return super.isEnabled(android,level) && android.getEffectLong(EFFECT_KEY_LAST_TELEPORT) <= android.getPlayer().worldObj.getTotalWorldTime() && android.extractEnergy(ENERGY_PER_TELEPORT,true) == ENERGY_PER_TELEPORT && this.equals(android.getActiveStat());
     }
 
     @Override
@@ -217,7 +217,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     @Override
     public boolean showOnHud(AndroidPlayer android,int level)
     {
-        return android.getActiveStat() != null && android.getActiveStat().equals(this);
+        return this.equals(android.getActiveStat());
     }
 
     @Override
