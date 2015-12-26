@@ -376,7 +376,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public Packet getDescriptionPacket()
     {
-        System.out.println("Sending Packet To Client");
         NBTTagCompound syncData = new NBTTagCompound();
         writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS,true);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);

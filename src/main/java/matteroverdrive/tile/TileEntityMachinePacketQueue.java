@@ -112,7 +112,7 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     public void  writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
         super.writeCustomNBT(nbt, categories, toDisk);
-        if (categories.contains(MachineNBTCategory.DATA)) {
+        if (categories.contains(MachineNBTCategory.DATA) && toDisk) {
             for (int i = 0; i < connections.length; i++) {
                 if (getConnection(i) != null) {
                     NBTTagCompound tagCompound = new NBTTagCompound();

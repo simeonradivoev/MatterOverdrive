@@ -136,12 +136,12 @@ public class Star extends SpaceBody
         byteBuf.writeByte(type);
         byteBuf.writeInt(temperature);
         byteBuf.writeInt(color);
-        int planetCount = getPlanets().size();
+        /*int planetCount = getPlanets().size();
         byteBuf.writeInt(planetCount);
         for (Planet planet : getPlanets())
         {
             planet.writeToBuffer(byteBuf);
-        }
+        }*/
     }
 
     @Override
@@ -182,14 +182,14 @@ public class Star extends SpaceBody
         type = byteBuf.readByte();
         temperature = byteBuf.readInt();
         color = byteBuf.readInt();
-        int planetCount = byteBuf.readInt();
+        /*int planetCount = byteBuf.readInt();
         for (int i = 0;i < planetCount;i++)
         {
             Planet planet = new Planet();
             planet.readFromBuffer(byteBuf);
             addPlanet(planet);
             planet.setStar(this);
-        }
+        }*/
     }
     //endregion
 
