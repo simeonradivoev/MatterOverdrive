@@ -96,14 +96,16 @@ public class MatterNetworkComponentPatternStorage extends MatterNetworkComponent
             {
                 NBTTagCompound pattern = (NBTTagCompound)packet.getRequest();
                 NBTTagCompound tagCompound = rootClient.getItemAsNBT(ItemStack.loadItemStackFromNBT(pattern));
-                if (tagCompound != null
-                        && MatterDatabaseHelper.GetProgressFromNBT(tagCompound) >= MatterDatabaseHelper.MAX_ITEM_PROGRESS)
+                if (tagCompound != null)
                 {
-                    MatterNetworkHelper.respondToRequest(getWorldObj(), rootClient, packet, Reference.PACKET_RESPONCE_INVALID, tagCompound);
-                }
-                else if ((tagCompound == null || MatterDatabaseHelper.GetProgressFromNBT(tagCompound) < MatterDatabaseHelper.MAX_ITEM_PROGRESS))
+                    //return not valid when there is already a pattern in storage with full progress
+                    MatterNetworkHelper.respondToRequest(getWorldObj(), rootClient, packet, MatterDatabaseHelper.GetProgressFromNBT(tagCompound) >= MatterDatabaseHelper.MAX_ITEM_PROGRESS ? Reference.PACKET_RESPONCE_INVALID : Reference.PACKET_RESPONCE_VALID, tagCompound);
+                }else
                 {
-                    MatterNetworkHelper.respondToRequest(getWorldObj(), rootClient, packet, Reference.PACKET_RESPONCE_VALID, tagCompound);
+                    ItemStack itemStack = MatterDatabaseHelper.GetItemStackFromNBT(pattern);
+                    boolean canAddItem = rootClient.addItem(itemStack,20,true,null);
+                    if (canAddItem)
+                        MatterNetworkHelper.respondToRequest(getWorldObj(), rootClient, packet, Reference.PACKET_RESPONCE_VALID, tagCompound);
                 }
             }
         }
