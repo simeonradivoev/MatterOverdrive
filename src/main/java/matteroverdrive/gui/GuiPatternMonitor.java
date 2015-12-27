@@ -23,6 +23,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.MOBaseContainer;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.pages.PageTasks;
 import matteroverdrive.network.packet.server.PacketPatternMonitorCommands;
@@ -32,7 +33,9 @@ import matteroverdrive.tile.TileEntityMachinePatternMonitor;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -60,7 +63,7 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
         searchField = new MOElementTextField(this,41,26,167,14);
         slotsList.addElement(refreshButton);
         slotsList.addElement(requestButton);
-        elementGrid.updateStackList(machine.getDatabases());
+        elementGrid.updateStackList(machine.getGuiPatterns());
     }
 
     @Override
@@ -94,7 +97,7 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
         }
         else if (buttonName.equals("Request"))
         {
-            NBTTagList requestList = new NBTTagList();
+            List<ItemPattern> requestList = new ArrayList<>();
             for (int i = 0;i < elementGrid.getElements().size();i++)
             {
                 if (elementGrid.getElements().get(i) instanceof ElementMonitorItemPattern)
@@ -103,10 +106,10 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
 
                     if (itemPattern.getAmount() > 0)
                     {
-                        NBTTagCompound tagCompound = (NBTTagCompound)itemPattern.getTagCompound().copy();
-                        tagCompound.setByte("Count", (byte) itemPattern.getAmount());
-                        requestList.appendTag(tagCompound);
-                        itemPattern.setAmount((byte)0);
+                        ItemPattern pattern = itemPattern.getPattern().copy();
+                        pattern.setCount(itemPattern.getAmount());
+                        requestList.add(pattern);
+                        itemPattern.setAmount(0);
                     }
                     else
                     {
@@ -115,11 +118,9 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
                 }
             }
 
-            if (requestList.tagCount() > 0)
+            if (requestList.size() > 0)
             {
-                NBTTagCompound tagCompound = new NBTTagCompound();
-                tagCompound.setTag("Requests", requestList);
-                MatterOverdrive.packetPipeline.sendToServer(new PacketPatternMonitorCommands(machine, PacketPatternMonitorCommands.COMMAND_REQUEST, tagCompound));
+                MatterOverdrive.packetPipeline.sendToServer(new PacketPatternMonitorCommands(machine, PacketPatternMonitorCommands.COMMAND_REQUEST, requestList));
             }
         }
         else if (buttonName.equals("DropTask"))
@@ -137,7 +138,7 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
 
         if (machine.needsRefresh())
         {
-            elementGrid.updateStackList(machine.getDatabases());
+            elementGrid.updateStackList(machine.getGuiPatterns());
             machine.forceSearch(false);
         }
 

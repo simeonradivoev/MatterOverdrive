@@ -18,9 +18,8 @@
 
 package matteroverdrive.api.matter;
 
+import matteroverdrive.data.ItemPattern;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 /**
  * Created by Simeon on 3/27/2015.
@@ -29,10 +28,10 @@ import net.minecraft.nbt.NBTTagList;
 public interface IMatterPatternStorage
 {
     /**
-     * @param storage the storage stack.
-     * @return a list of NBT patterns.
+     * @param storage the storage stack
+     * @return a list of all the patterns
      */
-    NBTTagList getItemsAsNBT(ItemStack storage);
+    ItemPattern[] getPatterns(ItemStack storage);
 
     /**
      * Adds an item as a pattern in the given Item Stack storage.
@@ -47,13 +46,13 @@ public interface IMatterPatternStorage
     boolean addItem(ItemStack storage, ItemStack itemStack, int initialAmount, boolean simulate);
 
     /**
-     * Gets a pattern as NBT tag for a given Item Stack.
+     * Gets a pattern for a given Item Stack.
      * @param storage The Item Stack storage.
      * @param item The item stack being searched for.
-     * @return The NBT tag pattern for a given Item Stack in storage.
+     * @return The pattern for a given Item Stack in storage.
      * Returns null if pattern is not present in the storage.
      */
-    NBTTagCompound getItemAsNBT(ItemStack storage, ItemStack item);
+    ItemPattern getPattern(ItemStack storage, ItemStack item);
 
     /**
      * Gets the capacity of the storage item.

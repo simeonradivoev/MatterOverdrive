@@ -32,7 +32,7 @@ public class MOEnergyHelper
 
 	public static String formatEnergy(int energy,int capacity)
 	{
-		return MOStringHelper.formatNUmber(energy) + " / " + MOStringHelper.formatNUmber(capacity) + ENERGY_UNIT;
+		return MOStringHelper.formatNumber(energy) + " / " + MOStringHelper.formatNumber(capacity) + ENERGY_UNIT;
 	}
 
     public static String formatEnergy(int energy)
@@ -42,7 +42,7 @@ public class MOEnergyHelper
 
     public static String formatEnergy(String prefix,int energy)
     {
-        return (prefix != null ? prefix : "") + MOStringHelper.formatNUmber(energy) + ENERGY_UNIT;
+        return (prefix != null ? prefix : "") + MOStringHelper.formatNumber(energy) + ENERGY_UNIT;
     }
 
     public static boolean extractExactAmount(IEnergyProvider provider,ForgeDirection direction,int amount,boolean simulate)

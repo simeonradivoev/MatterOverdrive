@@ -21,26 +21,45 @@ package matteroverdrive.network.packet.client;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.data.BlockPos;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.tile.TileEntityMachinePatternMonitor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by Simeon on 4/26/2015.
  */
 public class PacketPatternMonitorSync extends TileEntityUpdatePacket
 {
-    HashSet<BlockPos> positions;
+    List<ItemPattern> patterns;
 
     public PacketPatternMonitorSync(){super();}
     public PacketPatternMonitorSync(TileEntityMachinePatternMonitor monitor)
     {
         super(monitor);
-        positions = monitor.getDatabases();
+        loadPatternsFromDatabases(monitor.getWorldObj(),monitor.getDatabases());
+    }
+
+    public void loadPatternsFromDatabases(World world,HashSet<BlockPos> databases)
+    {
+        patterns = new ArrayList<>();
+        for (BlockPos pos : databases)
+        {
+            TileEntity tileEntity = pos.getTileEntity(world);
+            if (tileEntity instanceof IMatterDatabase)
+            {
+                List<ItemPattern> itemStacks = ((IMatterDatabase) tileEntity).getPatterns();
+                patterns.addAll(itemStacks);
+            }
+        }
     }
 
     @Override
@@ -48,10 +67,10 @@ public class PacketPatternMonitorSync extends TileEntityUpdatePacket
     {
         super.fromBytes(buf);
         int size = buf.readInt();
-        positions = new HashSet<BlockPos>(size);
+        patterns = new ArrayList<>();
         for (int i = 0; i < size;i++)
         {
-            positions.add(new BlockPos(buf.readInt(), buf.readInt(), buf.readInt()));
+            patterns.add(new ItemPattern(buf));
         }
     }
 
@@ -59,12 +78,10 @@ public class PacketPatternMonitorSync extends TileEntityUpdatePacket
     public void toBytes(ByteBuf buf)
     {
         super.toBytes(buf);
-        buf.writeInt(positions.size());
-        for (BlockPos position : positions)
+        buf.writeInt(patterns.size());
+        for (ItemPattern pattern : patterns)
         {
-            buf.writeInt(position.x);
-            buf.writeInt(position.y);
-            buf.writeInt(position.z);
+            pattern.writeToBuffer(buf);
         }
     }
 
@@ -78,7 +95,7 @@ public class PacketPatternMonitorSync extends TileEntityUpdatePacket
             if (entity != null && entity instanceof TileEntityMachinePatternMonitor) {
 
                 TileEntityMachinePatternMonitor monitor = (TileEntityMachinePatternMonitor)entity;
-                monitor.setDatabases(message.positions);
+                monitor.setGuiPatterns(message.patterns);
                 monitor.forceSearch(true);
             }
             return null;

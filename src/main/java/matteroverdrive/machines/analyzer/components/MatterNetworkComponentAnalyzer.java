@@ -24,17 +24,16 @@ import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.machines.analyzer.TileEntityMachineMatterAnalyzer;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.components.MatterNetworkComponentClientDispatcher;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
-import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterNetworkHelper;
 import matteroverdrive.util.TimeTracker;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -121,14 +120,14 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
         if (!(two.getSender(rootClient.getWorldObj()) instanceof IMatterDatabase))
             return false;
 
-        NBTTagCompound packetPattern = two.getResponse();
-        ItemStack packetPatternStack = MatterDatabaseHelper.GetItemStackFromNBT(packetPattern);
+        ItemPattern packetPattern = new ItemPattern(two.getResponse());
+        ItemStack packetPatternStack = packetPattern.toItemStack(false);
         if (packetPattern != null && packetPatternStack != null)
         {
             if (one instanceof IMatterDatabase) {
-                NBTTagCompound patternOne = ((IMatterDatabase) one).getItemAsNBT(packetPatternStack);
-                int oneProgress = MatterDatabaseHelper.GetProgressFromNBT(patternOne);
-                int twoProgress = MatterDatabaseHelper.GetProgressFromNBT(packetPattern);
+                ItemPattern patternOne = ((IMatterDatabase) one).getPattern(packetPatternStack);
+                int oneProgress = patternOne.getProgress();
+                int twoProgress = packetPattern.getProgress();
                 if (oneProgress < twoProgress)
                 {
                     return true;
@@ -149,9 +148,7 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
             if (validDestinationTracker.hasDelayPassed(world, TileEntityMachineMatterAnalyzer.VALID_LOCATION_CHECK_DELAY))
             {
                 for (int i = 0; i < 6; i++) {
-                    NBTTagCompound itemTag = new NBTTagCompound();
-                    rootClient.getInventory().getStackInSlot(rootClient.input_slot).writeToNBT(itemTag);
-                    MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION,ForgeDirection.getOrientation(i),rootClient.getFilter(), itemTag);
+                    MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION,ForgeDirection.getOrientation(i),rootClient.getFilter(), new ItemPattern(rootClient.getInventory().getStackInSlot(rootClient.input_slot)));
                     if (MatterNetworkHelper.broadcastPacketInDirection(world, packet, rootClient, ForgeDirection.getOrientation(i)))
                     {
                         resetValidLocation();

@@ -24,6 +24,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,18 +77,21 @@ public class Inventory implements IInventory
 
     public void readFromNBT(NBTTagCompound compound)
     {
-        NBTTagList nbttaglist = compound.getTagList("Items", 10);
-        for (Slot slot : slots)
+        if (compound.hasKey("Items", Constants.NBT.TAG_LIST))
         {
-            slot.setItem(null);
-        }
+            NBTTagList nbttaglist = compound.getTagList("Items", 10);
+            for (Slot slot : slots)
+            {
+                slot.setItem(null);
+            }
 
-        for (int i = 0; i < nbttaglist.tagCount(); ++i)
-        {
-            NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
-            byte b0 = nbttagcompound1.getByte("Slot");
+            for (int i = 0; i < nbttaglist.tagCount(); ++i)
+            {
+                NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+                byte b0 = nbttagcompound1.getByte("Slot");
 
-            setInventorySlotContents(b0, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+                setInventorySlotContents(b0, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+            }
         }
     }
 

@@ -152,12 +152,12 @@ public class MatterHelper
 
     public static String formatMatter(int matter)
     {
-        return MOStringHelper.formatNUmber(matter) + MATTER_UNIT;
+        return MOStringHelper.formatNumber(matter) + MATTER_UNIT;
     }
 
     public static String formatMatter(int matter,int capacity)
     {
-        return MOStringHelper.formatNUmber(matter) + " / " + MOStringHelper.formatNUmber(capacity) + MATTER_UNIT;
+        return MOStringHelper.formatNumber(matter) + " / " + MOStringHelper.formatNumber(capacity) + MATTER_UNIT;
     }
 
     public static boolean DropInventory(World world,IInventory inventory,int x,int y,int z)

@@ -22,6 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
@@ -30,7 +31,6 @@ import matteroverdrive.tile.TileEntityMachinePatternStorage;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterNetworkHelper;
 import matteroverdrive.util.TimeTracker;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -83,29 +83,36 @@ public class MatterNetworkComponentPatternStorage extends MatterNetworkComponent
     {
         if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH)
         {
-            if (packet.getRequest() instanceof int[]) {
-                int[] array = (int[]) packet.getRequest();
-                NBTTagCompound tagCompound = rootClient.getItemAsNBT(new ItemStack(Item.getItemById(array[0]), 1, array[1]));
-                if (tagCompound != null && packet.getSender(rootClient.getWorldObj()) instanceof IMatterNetworkClient) {
-                    MatterNetworkHelper.respondToRequest(getWorldObj(), rootClient, packet, Reference.PACKET_RESPONCE_VALID, tagCompound);
+            if (packet.getRequest() instanceof ItemPattern) {
+                ItemPattern packPattern = (ItemPattern) packet.getRequest();
+                ItemPattern storagePattern = rootClient.getPattern(packPattern);
+                if (storagePattern != null && packet.getSender(rootClient.getWorldObj()) instanceof IMatterNetworkClient) {
+                    NBTTagCompound patternNBT = new NBTTagCompound();
+                    storagePattern.writeToNBT(patternNBT);
+                    MatterNetworkHelper.respondToRequest(getWorldObj(), rootClient, packet, Reference.PACKET_RESPONCE_VALID, patternNBT);
                 }
             }
         }else if (packet.getRequestType() == Reference.PACKET_REQUEST_VALID_PATTERN_DESTINATION)
         {
-            if (packet.getRequest() instanceof NBTTagCompound)
+            if (packet.getRequest() instanceof ItemPattern)
             {
-                NBTTagCompound pattern = (NBTTagCompound)packet.getRequest();
-                NBTTagCompound tagCompound = rootClient.getItemAsNBT(ItemStack.loadItemStackFromNBT(pattern));
-                if (tagCompound != null)
+                ItemPattern packetPattern = (ItemPattern)packet.getRequest();
+                ItemPattern storagePattern = rootClient.getPattern(packetPattern);
+                NBTTagCompound packetPatternNBT = new NBTTagCompound();
+                packetPattern.writeToNBT(packetPatternNBT);
+                if (storagePattern != null)
                 {
                     //return not valid when there is already a pattern in storage with full progress
-                    MatterNetworkHelper.respondToRequest(getWorldObj(), rootClient, packet, MatterDatabaseHelper.GetProgressFromNBT(tagCompound) >= MatterDatabaseHelper.MAX_ITEM_PROGRESS ? Reference.PACKET_RESPONCE_INVALID : Reference.PACKET_RESPONCE_VALID, tagCompound);
+                    MatterNetworkHelper.respondToRequest(getWorldObj(), rootClient, packet,storagePattern.getProgress() >= MatterDatabaseHelper.MAX_ITEM_PROGRESS ? Reference.PACKET_RESPONCE_INVALID : Reference.PACKET_RESPONCE_VALID, packetPatternNBT);
                 }else
                 {
-                    ItemStack itemStack = MatterDatabaseHelper.GetItemStackFromNBT(pattern);
+                    ItemStack itemStack = packetPattern.toItemStack(false);
                     boolean canAddItem = rootClient.addItem(itemStack,20,true,null);
                     if (canAddItem)
-                        MatterNetworkHelper.respondToRequest(getWorldObj(), rootClient, packet, Reference.PACKET_RESPONCE_VALID, tagCompound);
+                    {
+
+                        MatterNetworkHelper.respondToRequest(getWorldObj(), rootClient, packet, Reference.PACKET_RESPONCE_VALID, packetPatternNBT);
+                    }
                 }
             }
         }

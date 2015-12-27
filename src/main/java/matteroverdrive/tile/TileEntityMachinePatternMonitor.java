@@ -20,12 +20,14 @@ package matteroverdrive.tile;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkBroadcaster;
 import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.data.BlockPos;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
@@ -38,12 +40,13 @@ import matteroverdrive.network.packet.client.PacketPatternMonitorSync;
 import matteroverdrive.util.TimeTracker;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 
 import static matteroverdrive.util.MOBlockHelper.getOppositeSide;
 
@@ -56,6 +59,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
     public static final int SEARCH_DELAY = 20;
     public static final int VALIDATE_DELAY = 120;
     public static final int TASK_QUEUE_SIZE = 16;
+    List<ItemPattern> guiPatterns = new ArrayList<>();
     HashSet<BlockPos> databases;
     MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueue;
     TimeTracker searchDelayTracker;
@@ -69,6 +73,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
         databases = new HashSet<>();
         searchDelayTracker = new TimeTracker();
         playerSlotsHotbar = true;
+
     }
 
     @Override
@@ -173,7 +178,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
 
     //endregion
 
-    public void queuePatternRequest(NBTTagList request)
+    public void queuePatternRequest(List<ItemPattern> request)
     {
         networkComponent.queuePatternRequest(request);
     }
@@ -259,5 +264,16 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
     public ComponentMatterNetworkConfigs getComponentMatterNetworkConfigs()
     {
         return componentMatterNetworkConfigs;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public List<ItemPattern> getGuiPatterns()
+    {
+        return guiPatterns;
+    }
+
+    public void setGuiPatterns(List<ItemPattern> patterns)
+    {
+        this.guiPatterns = patterns;
     }
 }

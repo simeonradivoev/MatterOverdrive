@@ -18,15 +18,13 @@
 
 package matteroverdrive.gui.element;
 
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.items.MatterScanner;
-import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -48,13 +46,13 @@ public class MatterDatabaseListBox extends MOElementListBox
 
 	class MatterDatabaseEntry implements IMOListBoxElement
 	{
-		NBTTagCompound itemComp;
+		ItemPattern itemComp;
 		String name;
 
-		public MatterDatabaseEntry(NBTTagCompound itemComp)
+		public MatterDatabaseEntry(ItemPattern itemComp)
 		{
 			this.itemComp = itemComp;
-			this.name = ItemStack.loadItemStackFromNBT(itemComp).getDisplayName();
+			this.name = itemComp.toItemStack(false).getDisplayName();
 		}
 
 		@Override
@@ -94,7 +92,7 @@ public class MatterDatabaseListBox extends MOElementListBox
 				}
 			}else
 			{
-				ItemStack itemStack = ItemStack.loadItemStackFromNBT(itemComp);
+				ItemStack itemStack = itemComp.toItemStack(false);
 				RenderUtils.renderStack(3 + x, 3 + y, itemStack);
 			}
 		}
@@ -102,9 +100,9 @@ public class MatterDatabaseListBox extends MOElementListBox
 
 		public void drawToolTop(MOElementListBox listBox, int x, int y)
 		{
-			ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemComp);
+			ItemStack item = itemComp.toItemStack(false);
 			List tooltip = item.getTooltip(Minecraft.getMinecraft().thePlayer, false);
-			tooltip.add("Progress: " + MatterDatabaseHelper.GetProgressFromNBT(itemComp) + "%");
+			tooltip.add("Progress: " + itemComp.getProgress() + "%");
 			tooltip.add("Matter: " + MatterHelper.getMatterAmountFromItem(item) + MatterHelper.MATTER_UNIT);
 			((MatterDatabaseListBox)listBox).getGui().setTooltip(tooltip);
 			GL11.glColor4f(1, 1, 1, 1);
@@ -134,17 +132,17 @@ public class MatterDatabaseListBox extends MOElementListBox
 
 
 
-	public void updateList(NBTTagList itemList) {
+	public void updateList(List<ItemPattern> patternList) {
 		//System.out.println("List Updated");
 		this.clear();
-		NBTTagCompound selected = MatterScanner.getSelectedAsNBT(scanner);
+		ItemPattern selected = MatterScanner.getSelectedAsPattern(scanner);
 
-		if (itemList != null) {
-			for (int i = 0; i < itemList.tagCount(); i++) {
-				if (MatterDatabaseHelper.areEqual(selected, itemList.getCompoundTagAt(i)))
+		if (patternList != null) {
+			for (int i = 0; i < patternList.size(); i++) {
+				if (selected.equals(patternList.get(i)))
 					_selectedIndex = i;
 
-				MatterDatabaseEntry selectedEntry = new MatterDatabaseEntry(itemList.getCompoundTagAt(i));
+				MatterDatabaseEntry selectedEntry = new MatterDatabaseEntry(patternList.get(i));
 				this.add(selectedEntry);
 			}
 		}
@@ -156,7 +154,7 @@ public class MatterDatabaseListBox extends MOElementListBox
 		MatterDatabaseEntry entry = (MatterDatabaseEntry) newElement;
 		MatterScanner.setSelected(scanner, entry.itemComp);
 		//updateList(this.filter);
-		((MOGuiBase)gui).handleElementButtonClick(this,this.name,newIndex);
+		(gui).handleElementButtonClick(this,this.name,newIndex);
 	}
 
 }

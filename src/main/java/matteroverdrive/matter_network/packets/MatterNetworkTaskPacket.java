@@ -136,7 +136,10 @@ public class MatterNetworkTaskPacket extends MatterNetworkPacket
         MatterNetworkTask task = getTask(world);
         if (task != null)
         {
-            task.setState(MatterNetworkTaskState.QUEUED);
+            if (task.getState().below(MatterNetworkTaskState.QUEUED) && task.getState().above(MatterNetworkTaskState.INVALID))
+            {
+                task.setState(MatterNetworkTaskState.QUEUED);
+            }
         }
     }
 }

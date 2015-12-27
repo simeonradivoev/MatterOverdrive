@@ -48,7 +48,7 @@ public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolar
     public void addCraftingToCrafters(ICrafting icrafting)
     {
         super.addCraftingToCrafters(icrafting);
-        icrafting.sendProgressBarUpdate(this, 0, this.machine.getChargeAmount());
+        icrafting.sendProgressBarUpdate(this, 1, this.machine.getChargeAmount());
     }
 
     public void detectAndSendChanges()
@@ -58,7 +58,7 @@ public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolar
             ICrafting icrafting = (ICrafting) crafter;
 
             if (this.lastChargeAmount != this.machine.getChargeAmount()) {
-                icrafting.sendProgressBarUpdate(this, 0, this.machine.getChargeAmount());
+                icrafting.sendProgressBarUpdate(this, 1, this.machine.getChargeAmount());
             }
 
             this.lastChargeAmount = this.machine.getChargeAmount();
@@ -68,7 +68,8 @@ public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolar
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int slot,int newValue)
     {
-        if(slot == 0)
+        super.updateProgressBar(slot,newValue);
+        if(slot == 1)
             this.machine.setChargeAmount((byte)newValue);
     }
 

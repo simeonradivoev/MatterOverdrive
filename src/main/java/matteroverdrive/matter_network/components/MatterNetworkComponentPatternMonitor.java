@@ -24,6 +24,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.data.BlockPos;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
@@ -32,9 +33,10 @@ import matteroverdrive.network.packet.client.PacketPatternMonitorSync;
 import matteroverdrive.tile.TileEntityMachinePatternMonitor;
 import matteroverdrive.util.MatterNetworkHelper;
 import matteroverdrive.util.TimeTracker;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 7/13/2015.
@@ -150,11 +152,11 @@ public class MatterNetworkComponentPatternMonitor extends MatterNetworkComponent
         return 0;
     }
 
-    public void queuePatternRequest(NBTTagList patternRequests)
+    public void queuePatternRequest(List<ItemPattern> patternRequests)
     {
-        for (int i = 0;i < patternRequests.tagCount();i++)
+        for (int i = 0;i < patternRequests.size();i++)
         {
-            MatterNetworkTaskReplicatePattern task = new MatterNetworkTaskReplicatePattern(rootClient, patternRequests.getCompoundTagAt(i));
+            MatterNetworkTaskReplicatePattern task = new MatterNetworkTaskReplicatePattern(rootClient, patternRequests.get(i));
             task.setState(MatterNetworkTaskState.WAITING);
             if (rootClient.getTaskQueue(0).queue(task));
         }
