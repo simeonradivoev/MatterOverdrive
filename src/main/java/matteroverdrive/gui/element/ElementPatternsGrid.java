@@ -18,17 +18,11 @@
 
 package matteroverdrive.gui.element;
 
-import matteroverdrive.api.matter.IMatterDatabase;
-import matteroverdrive.data.BlockPos;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.gui.MOGuiBase;
-import matteroverdrive.util.MatterDatabaseHelper;
-import matteroverdrive.util.MatterHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 
-import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by Simeon on 4/27/2015.
@@ -44,29 +38,14 @@ public class ElementPatternsGrid extends ElementGrid
     }
 
 
-    public void updateStackList(HashSet<BlockPos> positions)
+    public void updateStackList(List<ItemPattern> patterns)
     {
         ItemStack stack;
         elements.clear();
 
-        for (BlockPos position : positions)
+        for (ItemPattern pattern : patterns)
         {
-            TileEntity entity = position.getTileEntity(Minecraft.getMinecraft().theWorld);
-
-            if (entity instanceof IMatterDatabase) {
-                NBTTagList list = ((IMatterDatabase) entity).getItemsAsNBT();
-
-                if (list != null) {
-
-                    for (int p = 0; p < list.tagCount(); p++)
-                    {
-                        stack = MatterDatabaseHelper.GetItemStackFromNBT(list.getCompoundTagAt(p));
-                        if (MatterHelper.getMatterAmountFromItem(stack) > 0) {
-                            addElement(new ElementMonitorItemPattern(gui, list.getCompoundTagAt(p), (MOGuiBase) gui));
-                        }
-                    }
-                }
-            }
+            addElement(new ElementMonitorItemPattern(gui, pattern, gui));
         }
     }
 

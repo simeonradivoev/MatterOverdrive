@@ -21,16 +21,11 @@ package matteroverdrive.items;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.util.MatterDatabaseHelper;
-import matteroverdrive.util.MatterHelper;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.RegistryNamespaced;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 
 /**
  * Created by Simeon on 7/22/2015.
@@ -44,53 +39,14 @@ public class CreativePatternDrive extends PatternDrive
     }
 
     @Override
-    public NBTTagList getItemsAsNBT(ItemStack patternStorage)
+    public ItemPattern[] getPatterns(ItemStack patternStorage)
     {
-        TagCompountCheck(patternStorage);
-        return patternStorage.getTagCompound().getTagList(MatterDatabaseHelper.ITEMS_TAG_NAME, Constants.NBT.TAG_COMPOUND);
+        return MatterDatabaseHelper.getPatternsFromStorage(patternStorage);
     }
 
     private void loadAllPatterns(ItemStack patternStorage)
     {
-        patternStorage.setTagCompound(null);
-        RegistryNamespaced itemRegistry = Item.itemRegistry;
-        RegistryNamespaced blockRegistry = Block.blockRegistry;
-        for (Object entryObject : itemRegistry)
-        {
-            if (entryObject instanceof Item) {
-                Item item = (Item)entryObject;
-                int maxDMG = 1;
 
-                if (item.getHasSubtypes())
-                {
-                    maxDMG = item.getMaxDamage();
-                }
-
-                for (int dmg = 0; dmg < maxDMG; dmg++) {
-                    ItemStack stack = new ItemStack(item, 1, dmg);
-                    if (MatterHelper.containsMatter(stack)) {
-                        if (stack != null) {
-                            MatterDatabaseHelper.writeToNBT(patternStorage, stack, 100);
-                        }
-                    }
-                }
-            }
-        }
-
-        for (Block block : (Iterable<Block>)blockRegistry)
-        {
-            try {
-                ItemStack stack = new ItemStack(block);
-                if (MatterHelper.containsMatter(stack)) {
-                    if (stack != null) {
-                        MatterDatabaseHelper.writeToNBT(patternStorage, stack, 100);
-                    }
-                }
-            }catch (Exception e)
-            {
-
-            }
-        }
     }
 
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)

@@ -57,14 +57,14 @@ public class MOMachineBlockItem extends ItemBlock
 				if (stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy")) {
 					infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("MaxEnergy")));
 					if (stack.getTagCompound().hasKey("PowerSend") && stack.getTagCompound().hasKey("PowerReceive")) {
-						infos.add("Send/Receive: " + MOStringHelper.formatNUmber(stack.getTagCompound().getInteger("PowerSend")) + "/" + MOStringHelper.formatNUmber(stack.getTagCompound().getInteger("PowerReceive")) + MOEnergyHelper.ENERGY_UNIT + "/t");
+						infos.add("Send/Receive: " + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("PowerSend")) + "/" + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("PowerReceive")) + MOEnergyHelper.ENERGY_UNIT + "/t");
 					}
 				}
 				if (stack.getTagCompound().hasKey("Matter") && stack.getTagCompound().hasKey("MaxMatter")) {
 					infos.add(EnumChatFormatting.BLUE + MatterHelper.formatMatter(stack.getTagCompound().getInteger("Matter"), stack.getTagCompound().getInteger("MaxMatter")));
 
 					if (stack.getTagCompound().hasKey("MatterSend") && stack.getTagCompound().hasKey("MatterReceive")) {
-						infos.add(EnumChatFormatting.DARK_BLUE + "Send/Receive: " + MOStringHelper.formatNUmber(stack.getTagCompound().getInteger("MatterSend")) + "/" + MOStringHelper.formatNUmber(stack.getTagCompound().getInteger("MatterReceive")) + MatterHelper.MATTER_UNIT + "/t");
+						infos.add(EnumChatFormatting.DARK_BLUE + "Send/Receive: " + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterSend")) + "/" + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterReceive")) + MatterHelper.MATTER_UNIT + "/t");
 					}
 				}
 

@@ -20,11 +20,9 @@ package matteroverdrive.matter_network.tasks;
 
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.api.network.MatterNetworkTask;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.util.MOStringHelper;
-import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -33,24 +31,22 @@ import net.minecraft.world.World;
  */
 public class MatterNetworkTaskReplicatePattern extends MatterNetworkTask
 {
-    NBTTagCompound pattern;
+    ItemPattern pattern;
 
     public MatterNetworkTaskReplicatePattern()
     {
         super();
-
+        pattern = new ItemPattern();
     }
 
     public MatterNetworkTaskReplicatePattern(IMatterNetworkConnection sender,short itemID,short itemMetadata,byte amount)
     {
         super(sender);
-        pattern = new NBTTagCompound();
-        pattern.setShort("id", itemID);
-        pattern.setShort("Damage", itemMetadata);
-        pattern.setByte("Count", amount);
+        pattern = new ItemPattern(itemID,itemMetadata);
+        pattern.setCount(amount);
     }
 
-    public MatterNetworkTaskReplicatePattern(IMatterNetworkConnection sender,NBTTagCompound pattern)
+    public MatterNetworkTaskReplicatePattern(IMatterNetworkConnection sender,ItemPattern pattern)
     {
         super(sender);
         this.pattern = pattern;
@@ -68,7 +64,7 @@ public class MatterNetworkTaskReplicatePattern extends MatterNetworkTask
         super.readFromNBT(compound);
         if (compound != null)
         {
-            pattern = compound.getCompoundTag("Pattern");
+            pattern.readFromNBT(compound.getCompoundTag("Pattern"));
         }
     }
 
@@ -78,7 +74,9 @@ public class MatterNetworkTaskReplicatePattern extends MatterNetworkTask
         super.writeToNBT(compound);
         if (compound != null)
         {
-            compound.setTag("Pattern", pattern);
+            NBTTagCompound tagCompound = new NBTTagCompound();
+            pattern.writeToNBT(tagCompound);
+            compound.setTag("Pattern", tagCompound);
         }
     }
 
@@ -86,32 +84,17 @@ public class MatterNetworkTaskReplicatePattern extends MatterNetworkTask
     @Override
     public String getName()
     {
-        return pattern.getByte("Count") + " " + MOStringHelper.translateToLocal(Item.getItemById(pattern.getShort("id")).getUnlocalizedName() + ".name");
+        return pattern.getCount() + " " + MOStringHelper.translateToLocal(pattern.getItem().getUnlocalizedName() + ".name");
     }
 
-    public int getAmount() {
-        return pattern.getByte("Count");
-    }
-
-    public void setAmount(int amount) {
-        pattern.setByte("Count",(byte)amount);
-    }
-
-    public int getItemMetadata() {
-        return pattern.getShort("Damage");
-    }
-
-    public int getItemID() {
-        return pattern.getShort("id");
-    }
+   public ItemPattern getPattern(){return pattern;}
 
     public boolean isValid(World world)
     {
         if (!super.isValid(world))
             return false;
 
-        ItemStack stack = MatterDatabaseHelper.GetItemStackFromNBT(pattern);
-        return MatterHelper.getMatterAmountFromItem(stack) > 0;
+        return MatterHelper.getMatterAmountFromItem(pattern.toItemStack(false)) > 0;
     }
     //endregion
 }

@@ -42,29 +42,33 @@ public class MOStringHelper
     private static String[] suffix = new String[]{"","K", "M", "B", "T"};
     private static int MAX_LENGTH = 4;
 
-    public static String formatNUmber(double number)
+    public static String formatNumber(double number)
+    {
+        return formatNumber(number,"0.00");
+    }
+    public static String formatNumber(double number, String decialFormat)
     {
         if (number > 1000000000000000D)
         {
-            return new DecimalFormat("0.00Q").format((number / 1000000000000000.00D));
+            return new DecimalFormat(decialFormat+"Q").format((number / 1000000000000000.00D));
         }
         if (number > 1000000000000D)
         {
-            return new DecimalFormat("0.00T").format((number / 1000000000000.00D));
+            return new DecimalFormat(decialFormat+"T").format((number / 1000000000000.00D));
         }
         else if (number > 1000000000D)
         {
-            return new DecimalFormat("0.00B").format((number / 1000000000.00D));
+            return new DecimalFormat(decialFormat+"B").format((number / 1000000000.00D));
         }
         else if (number > 1000000D) {
-            return new DecimalFormat("0.00M").format((number / 1000000.00D));
+            return new DecimalFormat(decialFormat+"M").format((number / 1000000.00D));
         }
         else if (number > 1000D)
         {
-            return new DecimalFormat("0.00K").format((number / 1000.00D));
+            return new DecimalFormat(decialFormat+"K").format((number / 1000.00D));
         }
         else {
-            return String.valueOf(number);
+            return new DecimalFormat(decialFormat).format(number);
         }
     }
 

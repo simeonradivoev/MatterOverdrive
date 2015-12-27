@@ -20,11 +20,9 @@ package matteroverdrive.gui.element;
 
 import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -37,16 +35,15 @@ public class ElementMonitorItemPattern extends ElementItemPattern
     IButtonHandler buttonHandler;
     boolean expanded;
 
-    public ElementMonitorItemPattern(MOGuiBase gui, NBTTagCompound tagCompound, IButtonHandler buttonHandler)
+    public ElementMonitorItemPattern(MOGuiBase gui, ItemPattern pattern, IButtonHandler buttonHandler)
     {
-        super(gui, tagCompound,"big",22,22);
+        super(gui, pattern,"big",22,22);
         this.buttonHandler = buttonHandler;
     }
 
     @Override
     public void drawForeground(int mouseX, int mouseY)
     {
-        ItemStack itemStack = ItemStack.loadItemStackFromNBT(tagCompound);
         RenderUtils.renderStack(posX + 3, posY + 3, itemStack);
 
         if (!expanded && amount > 0)
@@ -56,8 +53,6 @@ public class ElementMonitorItemPattern extends ElementItemPattern
             gui.drawCenteredString(getFontRenderer(), Integer.toString(amount), posX + 17, posY + 12, 0xFFFFFF);
             GL11.glPopMatrix();
         }
-
-        RenderHelper.enableGUIStandardItemLighting();
     }
 
     @Override

@@ -21,6 +21,7 @@ package matteroverdrive.items;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.matter.IMatterPatternStorage;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
@@ -32,6 +33,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
 
@@ -104,34 +106,31 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     {
         if(itemstack.hasTagCompound())
         {
-            NBTTagList list = getItemsAsNBT(itemstack);
-            if (list != null) {
-                for (int i = 0;i < list.tagCount();i++)
+            ItemPattern[] patterns = getPatterns(itemstack);
+            for (int i = 0;i < patterns.length;i++)
+            {
+                ItemStack stack = patterns[i].toItemStack(false);
+                String displayName;
+                try {
+                    displayName = stack.getDisplayName();
+                }
+                catch (Exception e)
                 {
-                    int progress = MatterDatabaseHelper.GetProgressFromNBT(list.getCompoundTagAt(i));
-                    ItemStack stack = MatterDatabaseHelper.GetItemStackFromNBT(list.getCompoundTagAt(i));
-                    String displayName = "Unknown";
-                    try {
-                        displayName = MatterDatabaseHelper.GetItemStackFromNBT(list.getCompoundTagAt(i)).getDisplayName();
-                    }
-                    catch (Exception e)
-                    {
+                    displayName = "Unknown";
+                }
 
-                    }
-
-                    if (MatterHelper.getMatterAmountFromItem(stack) > 0)
-                    {
-                        infos.add(MatterDatabaseHelper.getPatternInfoColor(progress) + displayName + " [" + progress + "%]");
-                    }
-                    else
-                    {
-                        infos.add(EnumChatFormatting.RED + "[Invalid] " + MatterDatabaseHelper.getPatternInfoColor(progress) + displayName + " [" + progress + "%]");
-                    }
-                    if (i > 8)
-                    {
-                        infos.add(EnumChatFormatting.YELLOW + String.format("...and %s more patterns.",list.tagCount()-9));
-                        break;
-                    }
+                if (MatterHelper.getMatterAmountFromItem(stack) > 0)
+                {
+                    infos.add(MatterDatabaseHelper.getPatternInfoColor(patterns[i].getProgress()) + displayName + " [" + patterns[i].getProgress() + "%]");
+                }
+                else
+                {
+                    infos.add(EnumChatFormatting.RED + "[Invalid] " + MatterDatabaseHelper.getPatternInfoColor(patterns[i].getProgress()) + displayName + " [" + patterns[i].getProgress() + "%]");
+                }
+                if (i > 8)
+                {
+                    infos.add(EnumChatFormatting.YELLOW + String.format("...and %s more patterns.",patterns.length-9));
+                    break;
                 }
             }
         }
@@ -148,10 +147,17 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     }
 
     @Override
-    public NBTTagList getItemsAsNBT(ItemStack storage)
+    public ItemPattern[] getPatterns(ItemStack storage)
     {
         TagCompountCheck(storage);
-        return storage.getTagCompound().getTagList(MatterDatabaseHelper.ITEMS_TAG_NAME, 10);
+        NBTTagList tagList = storage.getTagCompound().getTagList(MatterDatabaseHelper.ITEMS_TAG_NAME, 10);
+        ItemPattern[] patterns = new ItemPattern[tagList.tagCount()];
+        for (int i = 0;i < tagList.tagCount();i++)
+        {
+            ItemPattern pattern = new ItemPattern(tagList.getCompoundTagAt(i));
+            patterns[i] = pattern;
+        }
+        return patterns;
     }
 
     @Override
@@ -159,18 +165,18 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     {
         TagCompountCheck(storage);
 
-        NBTTagList itemList = getItemsAsNBT(storage);
-        if(itemList.tagCount() < getCapacity(storage))
+        NBTTagList patternsTagList = storage.getTagCompound().getTagList(MatterDatabaseHelper.ITEMS_TAG_NAME, Constants.NBT.TAG_COMPOUND);
+        if(patternsTagList.tagCount() < getCapacity(storage))
         {
             if(MatterHelper.CanScan(itemStack))
             {
-                int itemProgress = MatterDatabaseHelper.GetItemProgress(storage, itemStack);
+                int itemProgress = MatterDatabaseHelper.getItemStackProgress(storage, itemStack);
 
                 if(itemProgress < MatterDatabaseHelper.MAX_ITEM_PROGRESS)
                 {
                     if (!simulate)
                     {
-                        MatterDatabaseHelper.writeToNBT(storage, itemStack, initialAmount);
+                        MatterDatabaseHelper.addProgressToPatternStorage(storage, itemStack, initialAmount,false);
                     }
                     return true;
                 }
@@ -181,10 +187,10 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     }
 
     @Override
-    public NBTTagCompound getItemAsNBT(ItemStack storage, ItemStack item)
+    public ItemPattern getPattern(ItemStack storage, ItemStack item)
     {
         TagCompountCheck(storage);
-        return  MatterDatabaseHelper.GetItemAsNBT(storage, item);
+        return  MatterDatabaseHelper.getPatternFromStorage(storage, item);
     }
 
     @Override

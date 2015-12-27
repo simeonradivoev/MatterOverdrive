@@ -18,11 +18,11 @@
 
 package matteroverdrive.api.matter;
 
+import matteroverdrive.data.ItemPattern;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * This is used by Machines that store Item Patters. Used by the Replicator.
@@ -37,14 +37,15 @@ public interface IMatterDatabase
 	boolean hasItem(ItemStack item);
 
 	/**
-	 * @return an NBT list of all the item patterns in the database.
+	 * @return an list of all the item patterns in the database.
 	 */
-	NBTTagList getItemsAsNBT();
+	List<ItemPattern> getPatterns();
 
 	/**
+	 * @param withInfo should more info be included in the item stack's NBT tag, like the scan progress.
 	 * @return all item patterns in the database as {@link net.minecraft.item.ItemStack}
 	 */
-	ItemStack[] getItems();
+	List<ItemStack> getItems(boolean withInfo);
 
 	/**
 	 * Add an Items Stack to the database as a pattern.
@@ -60,11 +61,18 @@ public interface IMatterDatabase
 	boolean addItem(ItemStack itemStack,int initialAmount,boolean simulate,@Nullable StringBuilder info);
 
 	/**
-	 * Used to get the NBT item pattern of the specified Item stack.
+	 * Used to get an item pattern of the specified Item stack.
 	 * @param item The item stack to search for.
-	 * @return The NBT pattern of the given Item Stack, {@code null} if the stack wasn't found.
+	 * @return The pattern of the given Item Stack, {@code null} if the stack wasn't found.
 	 */
-	NBTTagCompound getItemAsNBT(ItemStack item);
+	ItemPattern getPattern(ItemStack item);
+
+    /**
+     * Used to get the pattern instance in the storage.
+     * @param item The item stack to search for.
+     * @return The pattern instance of the given pattern, {@code null} if the pattern wasn't found.
+     */
+    ItemPattern getPattern(ItemPattern item);
 
 	/**
 	 * @return a list of Pattern Storages in the database if any.

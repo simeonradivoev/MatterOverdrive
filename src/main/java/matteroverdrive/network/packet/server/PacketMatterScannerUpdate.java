@@ -18,23 +18,22 @@
 
 package matteroverdrive.network.packet.server;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Created by Simeon on 3/9/2015.
  */
 public class PacketMatterScannerUpdate extends PacketAbstract
 {
-    private NBTTagCompound selected;
+    private ItemPattern selected;
     private short page;
     //private boolean panelOpen;
     private short slot;
@@ -43,7 +42,7 @@ public class PacketMatterScannerUpdate extends PacketAbstract
 
     public PacketMatterScannerUpdate(ItemStack scanner,short slot)
     {
-        selected = MatterScanner.getSelectedAsNBT(scanner);
+        selected = MatterScanner.getSelectedAsPattern(scanner);
         if(scanner.hasTagCompound()) {
             this.page = scanner.getTagCompound().getByte(MatterScanner.PAGE_TAG_NAME);
             //this.panelOpen = scanner.getTagCompound().getBoolean(MatterScanner.PANEL_OPEN_TAG_NAME);
@@ -54,7 +53,7 @@ public class PacketMatterScannerUpdate extends PacketAbstract
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        this.selected = ByteBufUtils.readTag(buf);
+        this.selected = new ItemPattern(buf);
         this.page = buf.readShort();
         //this.panelOpen = buffer.readBoolean();
         this.slot = buf.readShort();
@@ -63,7 +62,7 @@ public class PacketMatterScannerUpdate extends PacketAbstract
     @Override
     public void toBytes(ByteBuf buf)
     {
-        ByteBufUtils.writeTag(buf, selected);
+        selected.writeToBuffer(buf);
         buf.writeShort(this.page);
         //buffer.writeBoolean(this.panelOpen);
         buf.writeShort(slot);

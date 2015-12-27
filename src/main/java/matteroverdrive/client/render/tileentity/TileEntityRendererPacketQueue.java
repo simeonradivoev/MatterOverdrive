@@ -62,12 +62,12 @@ public class TileEntityRendererPacketQueue extends TileEntitySpecialRenderer
 
         glDisable(GL_LIGHTING);
         glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE,GL_ONE);
-        RenderUtils.disableLightmap();
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        //RenderUtils.disableLightmap();
         RenderUtils.setBlockTextureSheet();
         RenderUtils.drawCube(-0.01, -0.01, -0.01, 1.02, 1.02, 1.02, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV(), Reference.COLOR_HOLO);
         glDisable(GL_BLEND);
         glEnable(GL_LIGHTING);
-        RenderUtils.enableLightmap();
+        //RenderUtils.enableLightmap();
     }
 }

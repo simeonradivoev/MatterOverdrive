@@ -29,6 +29,7 @@ import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.MatterSlot;
 import matteroverdrive.handler.SoundHandler;
@@ -168,10 +169,10 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
             {
                 if (database.hasItem(inventory.getStackInSlot(input_slot)))
                 {
-                    NBTTagCompound itemAsNBT = database.getItemAsNBT(inventory.getStackInSlot(input_slot));
-                    if(itemAsNBT != null)
+                    ItemPattern itemPattern = database.getPattern(inventory.getStackInSlot(input_slot));
+                    if(itemPattern != null)
                     {
-                        if (MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) < MatterDatabaseHelper.MAX_ITEM_PROGRESS)
+                        if (itemPattern.getProgress() < MatterDatabaseHelper.MAX_ITEM_PROGRESS)
                         {
                             return true;
                         }

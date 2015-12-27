@@ -60,11 +60,12 @@ public class GuiHandler implements IGuiHandler
             registerContainer(TileEntityMachineStarMap.class,ContainerStarMap.class);
             registerContainer(TileEntityInscriber.class,ContainerInscriber.class);
             registerContainer(TileEntityAndroidSpawner.class,ContainerAndroidSpawner.class);
+            registerContainer(TileEntityMachineReplicator.class,ContainerReplicator.class);
         }
         else
         {
             //Gui Registration
-            registerGui(TileEntityMachineReplicator.class, GuiReplicator.class);
+            registerGuiAndContainer(TileEntityMachineReplicator.class, GuiReplicator.class,ContainerReplicator.class);
             registerGui(TileEntityMachineDecomposer.class, GuiDecomposer.class);
             registerGui(TileEntityMachineNetworkRouter.class, GuiNetworkRouter.class);
             registerGui(TileEntityMachineMatterAnalyzer.class, GuiMatterAnalyzer.class);

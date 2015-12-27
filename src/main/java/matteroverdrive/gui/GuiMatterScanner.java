@@ -20,6 +20,7 @@ package matteroverdrive.gui;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerFalse;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.gui.element.MOElementBase;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.pages.PageScanInfo;
@@ -28,12 +29,11 @@ import matteroverdrive.network.packet.bi.PacketMatterScannerGetDatabase;
 import matteroverdrive.network.packet.server.PacketMatterScannerUpdate;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
-import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.TimeTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+
+import java.util.List;
 
 public class GuiMatterScanner extends MOGuiBase
 {
@@ -46,7 +46,7 @@ public class GuiMatterScanner extends MOGuiBase
 	int lastPage = 0;
 	PageScanInfo pageScanInfo;
 	TimeTracker refreshTimeTracker;
-	NBTTagCompound lastSelected;
+	ItemPattern lastSelected;
 
 	MOElementButton infoPageButton;
 	MOElementButton scanPageButton;
@@ -98,14 +98,14 @@ public class GuiMatterScanner extends MOGuiBase
 		}
 	}
 
-    public void UpdatePatternList(NBTTagList list)
+    public void UpdatePatternList(List<ItemPattern> list)
     {
         pageScanInfo.updateList(list);
     }
 
-	private NBTTagCompound getSelectedFromDatabase(ItemStack scanner)
+	private ItemPattern getSelectedFromDatabase(ItemStack scanner)
 	{
-		return MatterScanner.getSelectedAsNBT(scanner);
+		return MatterScanner.getSelectedAsPattern(scanner);
 	}
 
 	private void updateSelected(ItemStack scanner)
@@ -134,7 +134,7 @@ public class GuiMatterScanner extends MOGuiBase
 		}
 		else if (buttonName == PageScanInfo.LIST_ELEMENT_NAME)
 		{
-			NBTTagCompound elementTag = (NBTTagCompound)pageScanInfo.list.getElement(mouseButton).getValue();
+			ItemPattern elementTag = (ItemPattern) pageScanInfo.list.getElement(mouseButton).getValue();
 			SetSelected(elementTag);
 		}
 	}
@@ -158,7 +158,7 @@ public class GuiMatterScanner extends MOGuiBase
 		}
 	}
 
-	void SetSelected(NBTTagCompound tagCompound)
+	void SetSelected(ItemPattern tagCompound)
 	{
 		lastSelected = tagCompound;
 		pageScanInfo.setItemNBT(tagCompound);
@@ -168,7 +168,7 @@ public class GuiMatterScanner extends MOGuiBase
     public void onGuiClosed()
     {
         super.onGuiClosed();
-        if(MatterDatabaseHelper.areEqual(MatterScanner.getSelectedAsNBT(scanner), lastSelected))
+        if(MatterScanner.getSelectedAsPattern(scanner).equals(lastSelected))
             MatterOverdrive.packetPipeline.sendToServer(new PacketMatterScannerUpdate(scanner, (short) databaseSlot));
     }
 

@@ -22,13 +22,13 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.tile.TileEntityMachineReplicator;
-import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterNetworkHelper;
 import matteroverdrive.util.TimeTracker;
 import net.minecraft.nbt.NBTTagCompound;
@@ -98,22 +98,21 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
         if (packet.getRequestType() == Reference.PACKET_REQUEST_PATTERN_SEARCH && packet.getResponseType() == Reference.PACKET_RESPONCE_VALID)
         {
             NBTTagCompound responseTag = packet.getResponse();
+            ItemPattern responsePattern = new ItemPattern(responseTag);
             MatterNetworkTaskReplicatePattern task = rootClient.getTaskQueue(0).peek();
-            if (responseTag != null && responseTag.getShort("id") == task.getItemID() && responseTag.getShort("Damage") == task.getItemMetadata())
+            if (responseTag != null && responsePattern.equals(task.getPattern()))
             {
                 if (rootClient.getInternalPatternStorage() != null)
                 {
                     //if the previous tag is the same but has a higher progress, then continue
-                    if (rootClient.getInternalPatternStorage().getShort("id") == responseTag.getShort("id")
-                            && rootClient.getInternalPatternStorage().getShort("Damage") == responseTag.getShort("Damage")
-                            && MatterDatabaseHelper.GetProgressFromNBT(rootClient.getInternalPatternStorage()) > MatterDatabaseHelper.GetProgressFromNBT(responseTag))
+                    if (rootClient.getInternalPatternStorage().equals(responsePattern) && rootClient.getInternalPatternStorage().getProgress() > responsePattern.getProgress())
                     {
                         return;
                     }
                 }
 
                 //save the pattern in the machine
-                rootClient.setInternalPatternStorage(responseTag);
+                rootClient.setInternalPatternStorage(responsePattern);
                 rootClient.forceSync();
             }
         }
@@ -127,7 +126,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
         if (rootClient.getRedstoneActive() && !rootClient.canCompleteTask(task) && patternSearchTracker.hasDelayPassed(world,rootClient.PATTERN_SEARCH_DELAY)) {
             if (task != null) {
                 for (int i = 0; i < 6; i++) {
-                    MatterNetworkRequestPacket requestPacket = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_PATTERN_SEARCH,ForgeDirection.getOrientation(i),rootClient.getFilter(), new int[]{task.getItemID(), task.getItemMetadata()});
+                    MatterNetworkRequestPacket requestPacket = new MatterNetworkRequestPacket(rootClient, Reference.PACKET_REQUEST_PATTERN_SEARCH,ForgeDirection.getOrientation(i),rootClient.getFilter(), task.getPattern());
                     if (MatterNetworkHelper.broadcastPacketInDirection(world, requestPacket, rootClient, ForgeDirection.getOrientation(i)))
                     {
                         broadcasts++;

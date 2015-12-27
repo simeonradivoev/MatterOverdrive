@@ -20,22 +20,19 @@ package matteroverdrive.gui;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.network.MatterNetworkTaskState;
-import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.ContainerMachine;
+import matteroverdrive.container.ContainerReplicator;
 import matteroverdrive.container.MOBaseContainer;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.pages.PageTasks;
-import matteroverdrive.items.MatterScanner;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.network.packet.server.PacketRemoveTask;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityMachineReplicator;
 import matteroverdrive.util.MOStringHelper;
-import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -56,7 +53,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
 
 	public GuiReplicator(InventoryPlayer inventoryPlayer,TileEntityMachineReplicator entity)
     {
-		super(ContainerFactory.createMachineContainer(entity,inventoryPlayer),entity);
+		super(new ContainerReplicator(inventoryPlayer,entity),entity);
         name = "replicator";
 		matterElement = new ElementMatterStored(this,141,39,machine.getMatterStorage());
 		energyElement = new MOElementEnergy(this,167,39,machine.getEnergyStorage());
@@ -114,18 +111,6 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
             }
         }
 
-        ItemStack itemStack = stack;
-        if(MatterHelper.isMatterScanner(stack))
-        {
-            IMatterDatabase database = MatterScanner.getLink(Minecraft.getMinecraft().theWorld,stack);
-            if(database != null)
-            {
-                itemStack = MatterDatabaseHelper.GetItemStackFromNBT(database.getItemAsNBT(MatterScanner.getSelectedAsItem(stack)));
-            }
-        }
-
-        //MatterHelper.DrawMatterInfoTooltip(itemStack, TileEntityMachineReplicator.REPLICATE_SPEED_PER_MATTER, TileEntityMachineReplicator.REPLICATE_ENERGY_PER_TICK, list);
-
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
     }
@@ -147,11 +132,11 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
 
     void ManageReqiremnetsTooltips()
     {
-        NBTTagCompound itemAsNBT = machine.getInternalPatternStorage();
+        ItemPattern itemPattern = machine.getInternalPatternStorage();
 
-        if(itemAsNBT != null)
+        if(itemPattern != null)
         {
-            ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(itemAsNBT);
+            ItemStack item = itemPattern.toItemStack(false);
 
             int matterAmount = MatterHelper.getMatterAmountFromItem(item);
             matterElement.setDrain(-matterAmount);
@@ -168,16 +153,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
         MatterNetworkTaskReplicatePattern task = machine.getTaskQueue((byte) 0).peek();
         if (task != null && machine.getInternalPatternStorage() != null)
         {
-            NBTTagCompound nbt = machine.getInternalPatternStorage();
-            itemPattern.setAmount(task.getAmount());
-            if (task.getItemID() == nbt.getShort("id") && task.getItemMetadata() == nbt.getShort("Damage"))
-            {
-                itemPattern.setTagCompound(nbt);
-            }
-            else
-            {
-                itemPattern.setTagCompound(null);
-            }
+            itemPattern.setAmount(((ContainerReplicator)inventorySlots).getPatternReplicateCount());
         }
         else
             itemPattern.setAmount(0);

@@ -54,7 +54,8 @@ public class ElementSlot extends MOElementBase
         this(gui,posX,posY,width,height,type,null);
     }
 
-    public void addTooltip(List<String> list)
+    @Override
+    public void addTooltip(List<String> list,int mouseX,int mouseY)
     {
         if (!info.isEmpty())
         {
@@ -70,12 +71,6 @@ public class ElementSlot extends MOElementBase
 
     @Override
     public void init()
-    {
-
-    }
-
-    @Override
-    public void addTooltip(List<String> var1, int mouseX, int mouseY)
     {
 
     }

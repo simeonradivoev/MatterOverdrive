@@ -1,14 +1,16 @@
 package matteroverdrive.network.packet.server;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.tile.TileEntityMachinePatternMonitor;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Simeon on 4/26/2015.
@@ -18,14 +20,18 @@ public class PacketPatternMonitorCommands extends TileEntityUpdatePacket
     public static final int COMMAND_SEARCH = 0;
     public static final int COMMAND_REQUEST = 1;
     int command;
-    NBTTagCompound data;
+    List<ItemPattern> patterns;
 
-    public PacketPatternMonitorCommands(){super();}
-    public PacketPatternMonitorCommands(TileEntityMachinePatternMonitor monitor,int command,NBTTagCompound data)
+    public PacketPatternMonitorCommands()
+    {
+        super();
+        patterns = new ArrayList<>();
+    }
+    public PacketPatternMonitorCommands(TileEntityMachinePatternMonitor monitor,int command,List<ItemPattern> patterns)
     {
         super(monitor);
         this.command = command;
-        this.data = data;
+        this.patterns = patterns;
     }
 
     @Override
@@ -33,7 +39,14 @@ public class PacketPatternMonitorCommands extends TileEntityUpdatePacket
     {
         super.fromBytes(buf);
         command = buf.readInt();
-        data = ByteBufUtils.readTag(buf);
+        if (command == COMMAND_REQUEST)
+        {
+            int size = buf.readInt();
+            for (int i = 0; i < size; i++)
+            {
+                patterns.add(new ItemPattern(buf));
+            }
+        }
     }
 
     @Override
@@ -41,7 +54,14 @@ public class PacketPatternMonitorCommands extends TileEntityUpdatePacket
     {
         super.toBytes(buf);
         buf.writeInt(command);
-        ByteBufUtils.writeTag(buf, data);
+        if (command == COMMAND_REQUEST)
+        {
+            buf.writeInt(patterns.size());
+            for (ItemPattern pattern : patterns)
+            {
+                pattern.writeToBuffer(buf);
+            }
+        }
     }
 
     public static class ServerHandler extends AbstractServerPacketHandler<PacketPatternMonitorCommands>
@@ -60,9 +80,9 @@ public class PacketPatternMonitorCommands extends TileEntityUpdatePacket
                 }
                 else if (message.command == COMMAND_REQUEST)
                 {
-                    if (message.data != null)
+                    if (message.patterns != null)
                     {
-                        monitor.queuePatternRequest(message.data.getTagList("Requests",10));
+                        monitor.queuePatternRequest(message.patterns);
                     }
                 }
             }

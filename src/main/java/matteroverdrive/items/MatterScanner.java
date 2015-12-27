@@ -27,6 +27,7 @@ import matteroverdrive.api.IScannable;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.client.sound.MachineSound;
 import matteroverdrive.data.BlockPos;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.gui.GuiMatterScanner;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.SoundHandler;
@@ -117,10 +118,10 @@ public class MatterScanner extends MOBaseItem
 				infos.add(ChatFormatting.GREEN + "Online");
 			}
 
-			NBTTagCompound lastSelected = getSelectedAsNBT(itemstack);
+			ItemPattern lastSelected = getSelectedAsPattern(itemstack);
 			if(lastSelected != null) {
-				infos.add("Progress: " + lastSelected.getByte(MatterDatabaseHelper.PROGRESS_TAG_NAME) + " / " + 100 + " %");
-				infos.add("Selected: " + MatterDatabaseHelper.GetItemStackFromNBT(lastSelected).getDisplayName());
+				infos.add("Progress: " + lastSelected.getProgress() + " / " + 100 + " %");
+				infos.add("Selected: " + lastSelected.getDisplayName());
 			}
 		} else {
 			infos.add(ChatFormatting.RED + "Offline");
@@ -229,30 +230,31 @@ public class MatterScanner extends MOBaseItem
 	{
 		if(scanner.hasTagCompound())
 		{
-			NBTTagCompound tagCompound = getSelectedFromDatabase(world,scanner,itemStack);
-            if (tagCompound == null)
+			ItemPattern itemPattern = getSelectedFromDatabase(world,scanner,itemStack);
+            if (itemPattern == null)
             {
-                tagCompound = new NBTTagCompound();
-                itemStack.writeToNBT(tagCompound);
+                itemPattern = new ItemPattern(itemStack);
             }
 
-			setSelected(scanner, tagCompound);
+			setSelected(scanner, itemPattern);
 		}
 	}
 
-	public static void setSelected(ItemStack scanner,NBTTagCompound tagCompound)
+	public static void setSelected(ItemStack scanner,ItemPattern itemPattern)
 	{
 		if(scanner.hasTagCompound())
 		{
-			scanner.getTagCompound().setTag(SELECTED_TAG_NAME, tagCompound);
+			NBTTagCompound seletedNBT = new NBTTagCompound();
+			itemPattern.writeToNBT(seletedNBT);
+			scanner.getTagCompound().setTag(SELECTED_TAG_NAME, seletedNBT);
 		}
 	}
 
-	public static NBTTagCompound getSelectedAsNBT(ItemStack scanner)
+	public static ItemPattern getSelectedAsPattern(ItemStack scanner)
 	{
 		if(scanner.hasTagCompound() && scanner.getTagCompound().hasKey(SELECTED_TAG_NAME))
 		{
-			return scanner.getTagCompound().getCompoundTag(SELECTED_TAG_NAME);
+			return new ItemPattern(scanner.getTagCompound().getCompoundTag(SELECTED_TAG_NAME));
 		}
 		return null;
 	}
@@ -266,12 +268,12 @@ public class MatterScanner extends MOBaseItem
 		return null;
 	}
 
-    public static NBTTagCompound getSelectedFromDatabase(World world,ItemStack scanner,ItemStack forItem)
+    public static ItemPattern getSelectedFromDatabase(World world,ItemStack scanner,ItemStack forItem)
     {
         IMatterDatabase database = getLink(world,scanner);
         if (database != null)
         {
-            return database.getItemAsNBT(forItem);
+            return database.getPattern(forItem);
         }
         return null;
     }
@@ -280,7 +282,7 @@ public class MatterScanner extends MOBaseItem
 	@Override
 	public void InitTagCompount(ItemStack stack)
 	{
-        MatterDatabaseHelper.InitTagCompound(stack);
+        MatterDatabaseHelper.initTagCompound(stack);
 	}
 
 	@SideOnly(Side.CLIENT)

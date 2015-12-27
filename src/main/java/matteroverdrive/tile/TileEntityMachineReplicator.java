@@ -22,7 +22,6 @@ import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import li.cil.oc.common.block.Item;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.*;
@@ -30,6 +29,7 @@ import matteroverdrive.blocks.BlockReplicator;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.data.inventory.ShieldingSlot;
@@ -44,7 +44,6 @@ import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentReplicator;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.network.packet.client.PacketReplicationComplete;
-import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.MatterNetworkHelper;
 import matteroverdrive.util.TimeTracker;
@@ -101,7 +100,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     private ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
     private final MatterNetworkTaskQueue<MatterNetworkTaskReplicatePattern> taskQueueProcessing;
     private final TimeTracker timeTracker;
-    private NBTTagCompound internalPatternStorage;
+    private ItemPattern internalPatternStorage;
 
 	public TileEntityMachineReplicator()
 	{
@@ -152,7 +151,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
         if (this.isActive()) {
 
-            ItemStack newItem = MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage);
+            ItemStack newItem = internalPatternStorage.toItemStack(false);
             int time = getSpeed(newItem);
 
             if (!worldObj.isRemote) {
@@ -191,7 +190,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         } else {
             this.replicateTime = 0;
             replicateProgress = 0;
-            internalPatternStorage = null;
+            //internalPatternStorage = null;
         }
 
     }
@@ -222,7 +221,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         }
     }
 
-	private void replicateItem(NBTTagCompound itemAsNBT,ItemStack newItem)
+	private void replicateItem(ItemPattern itemPattern,ItemStack newItem)
 	{
 		if(isActive())
         {
@@ -230,7 +229,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
             float chance = random.nextFloat();
 
-            if(chance <  getFailChance(itemAsNBT))
+            if(chance <  getFailChance(itemPattern))
             {
                 if(failReplicate(MatterHelper.getMatterAmountFromItem(newItem)))
                 {
@@ -245,8 +244,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                     int matter = this.matterStorage.getMatterStored();
                     setMatterStored(matter - matterAmount);
                     MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
-                    task.setAmount(task.getAmount()-1);
-                    if (task.getAmount() <= 0)
+                    task.getPattern().setCount(task.getPattern().getCount()-1);
+                    if (task.getPattern().getCount() <= 0)
                     {
                         task.setState(MatterNetworkTaskState.FINISHED);
                         taskQueueProcessing.dequeue();
@@ -329,15 +328,15 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public boolean canCompleteTask()
     {
         MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
-        return task != null && internalPatternStorage != null && task.getItemID() == internalPatternStorage.getShort("id") && internalPatternStorage.getShort("Damage") == task.getItemMetadata();
+        return task != null && internalPatternStorage != null && task.getPattern().equals(getInternalPatternStorage());
     }
 
     @Override
     public boolean getServerActive()
     {
-		if(getRedstoneActive() && taskQueueProcessing.size() > 0 && internalPatternStorage != null && canCompleteTask())
+		if(getRedstoneActive() && taskQueueProcessing.size() > 0 && getInternalPatternStorage() != null && canCompleteTask())
 		{
-			ItemStack item = MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage);
+			ItemStack item = getInternalPatternStorage().toItemStack(false);
 			int matter = MatterHelper.getMatterAmountFromItem(item);
 			return this.getMatterStored() >= matter && canReplicateIntoOutput(item) && canReplicateIntoSecoundOutput(matter);
 		}
@@ -436,7 +435,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         if (categories.contains(MachineNBTCategory.DATA)) {
             this.replicateTime = nbt.getShort("ReplicateTime");
             taskQueueProcessing.readFromNBT(nbt);
-            internalPatternStorage = nbt.getCompoundTag("InternalPattern");
+            if (nbt.hasKey("InternalPattern"))
+                internalPatternStorage = new ItemPattern(nbt.getCompoundTag("InternalPattern"));
         }
     }
 
@@ -449,7 +449,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             taskQueueProcessing.writeToNBT(nbt);
 
             if (internalPatternStorage != null)
-                nbt.setTag("InternalPattern", internalPatternStorage);
+            {
+                NBTTagCompound patternNBT = new NBTTagCompound();
+                internalPatternStorage.writeToNBT(patternNBT);
+                nbt.setTag("InternalPattern", patternNBT);
+            }
         }
     }
     //endregion
@@ -568,7 +572,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
             MatterNetworkTaskReplicatePattern task = ((TileEntityMachineReplicator) accessor.getTileEntity()).getTaskQueue(0).peek();
             if (task != null) {
-                ItemStack pattern = new ItemStack(Item.getItemById(task.getItemID()), task.getAmount(), task.getItemMetadata());
+                ItemStack pattern = task.getPattern().toItemStack(false);
                 list.add(EnumChatFormatting.YELLOW + String.format("Replicating %s", pattern.getDisplayName()));
             }
         }
@@ -577,11 +581,11 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     //endregion
 
     //region Getters and Setters
-    public NBTTagCompound getInternalPatternStorage()
+    public ItemPattern getInternalPatternStorage()
     {
         return internalPatternStorage;
     }
-    public void setInternalPatternStorage(NBTTagCompound internalPatternStorage){this.internalPatternStorage = internalPatternStorage;}
+    public void setInternalPatternStorage(ItemPattern internalPatternStorage){this.internalPatternStorage = internalPatternStorage;}
     private int getShielding()
     {
         if(getStackInSlot(SHIELDING_SLOT_ID) != null && getStackInSlot(SHIELDING_SLOT_ID).getItem() == MatterOverdriveItems.tritanium_plate)
@@ -611,9 +615,9 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         return (int) Math.round(((REPLICATE_SPEED_PER_MATTER * matter) - 60) * getUpgradeMultiply(UpgradeTypes.Speed)) + 60;
     }
 
-	public double getFailChance(NBTTagCompound itemAsNBT)
+	public double getFailChance(ItemPattern itemPattern)
     {
-        double progressChance = 1.0 - ((double) MatterDatabaseHelper.GetProgressFromNBT(itemAsNBT) / (double)MatterDatabaseHelper.MAX_ITEM_PROGRESS);
+        double progressChance = 1f - itemPattern.getProgressF();
         double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.Fail);
         //this does not negate all fail chance if item is not fully scanned
         return FAIL_CHANCE * upgradeMultiply + progressChance * 0.5 + (progressChance * 0.5) * upgradeMultiply;
@@ -622,12 +626,12 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 	public int getEnergyDrainPerTick()
     {
         int maxEnergy = getEnergyDrainMax();
-        return maxEnergy / getSpeed(MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage));
+        return maxEnergy / getSpeed(internalPatternStorage.toItemStack(false));
     }
 
 	public int getEnergyDrainMax()
     {
-        int matter = MatterHelper.getMatterAmountFromItem(MatterDatabaseHelper.GetItemStackFromNBT(internalPatternStorage));
+        int matter = MatterHelper.getMatterAmountFromItem(internalPatternStorage.toItemStack(false));
         double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.PowerUsage);
         return (int) Math.round((matter * REPLICATE_ENERGY_PER_MATTER) * upgradeMultiply);
     }
@@ -636,8 +640,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     {
         return taskReplicatePattern != null
                 && internalPatternStorage != null
-                && taskReplicatePattern.getItemID() == internalPatternStorage.getShort("id")
-                && internalPatternStorage.getShort("Damage") == taskReplicatePattern.getItemMetadata()
+                && taskReplicatePattern.getPattern().equals(getInternalPatternStorage())
                 && taskReplicatePattern.isValid(worldObj);
     }
 
@@ -655,6 +658,15 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     public boolean canDrain(ForgeDirection from, Fluid fluid)
     {
         return false;
+    }
+
+    public int getTaskReplicateCount()
+    {
+        if (taskQueueProcessing.peek() != null)
+        {
+            return taskQueueProcessing.peek().getPattern().getCount();
+        }
+        return 0;
     }
     //endregion
 }

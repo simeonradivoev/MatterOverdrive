@@ -29,6 +29,7 @@ import matteroverdrive.api.network.IMatterNetworkClient;
 import matteroverdrive.blocks.BlockPatternStorage;
 import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.PatternStorageSlot;
 import matteroverdrive.items.MatterScanner;
@@ -44,12 +45,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -145,8 +145,9 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         {
             if (patternDrive != null && patternDrive.getItem() instanceof IMatterPatternStorage)
             {
-                if (((IMatterPatternStorage) patternDrive.getItem()).getItemsAsNBT(patternDrive) != null) {
-                    patternCount += ((IMatterPatternStorage) patternDrive.getItem()).getItemsAsNBT(patternDrive).tagCount();
+                ItemPattern[] patterns = ((IMatterPatternStorage) patternDrive.getItem()).getPatterns(patternDrive);
+                if (patterns != null) {
+                    patternCount += patterns.length;
                 }
             }
         }
@@ -183,20 +184,17 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
     //region Database functions
     @Override
-    public NBTTagList getItemsAsNBT()
+    public List<ItemPattern> getPatterns()
     {
-        NBTTagList list = new NBTTagList();
+        List<ItemPattern> list = new ArrayList<>();
         for (int slotId : pattern_storage_slots)
         {
             if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotId)))
             {
-                NBTTagList l = MatterDatabaseHelper.GetItemsTagList(inventory.getStackInSlot(slotId));
-                if(l != null)
+                ItemPattern[] patterns = MatterDatabaseHelper.getPatternsFromStorage(inventory.getStackInSlot(slotId));
+                for (int t = 0;t < patterns.length;t++)
                 {
-                    for (int t = 0;t < l.tagCount();t++)
-                    {
-                        list.appendTag(l.getCompoundTagAt(t));
-                    }
+                    list.add(patterns[t]);
                 }
             }
         }
@@ -204,8 +202,21 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public ItemStack[] getItems() {
-        return new ItemStack[0];
+    public List<ItemStack> getItems(boolean withInfo)
+    {
+        List<ItemStack> list = new ArrayList<>();
+        for (int slotId : pattern_storage_slots)
+        {
+            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotId)))
+            {
+                ItemPattern[] patterns = MatterDatabaseHelper.getPatternsFromStorage(inventory.getStackInSlot(slotId));
+                for (int i = 0;i < patterns.length;i++)
+                {
+                    list.add(patterns[i].toItemStack(withInfo));
+                }
+            }
+        }
+        return list;
     }
 
     @Override
@@ -227,7 +238,8 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     public boolean addItem(ItemStack itemStack,int amount,boolean simulate,StringBuilder info)
     {
-        NBTTagCompound hasItem = null;
+        ItemPattern hasItem = null;
+        ItemStack patternStorage = null;
 
         if (!MatterHelper.CanScan(itemStack))
         {
@@ -240,10 +252,11 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         {
             if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotId)))
             {
-                NBTTagCompound hasItemInPatternStorage = MatterDatabaseHelper.GetItemAsNBT(inventory.getStackInSlot(slotId), itemStack);
+                ItemPattern hasItemInPatternStorage = MatterDatabaseHelper.getPatternFromStorage(inventory.getStackInSlot(slotId), itemStack);
                 if (hasItemInPatternStorage != null)
                 {
                     hasItem = hasItemInPatternStorage;
+                    patternStorage = inventory.getStackInSlot(slotId);
                     break;
                 }
             }
@@ -251,18 +264,23 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
         if (hasItem != null)
         {
-            int progress = MatterDatabaseHelper.GetProgressFromNBT(hasItem);
+            int progress = hasItem.getProgress();
 
             if (progress < MatterDatabaseHelper.MAX_ITEM_PROGRESS)
             {
                 if (!simulate)
                 {
-                    progress = MathHelper.clamp_int(progress + amount, 0, MatterDatabaseHelper.MAX_ITEM_PROGRESS);
-                    MatterDatabaseHelper.SetProgressToNBT(hasItem, (byte) progress);
+                    MatterDatabaseHelper.addProgressToPatternStorage(patternStorage,itemStack,amount,true);
                     forceSync();
                 }
                 if (info != null)
-                    info.append(String.format("%s added to Pattern Storage. Progress is now at %s",EnumChatFormatting.GREEN + itemStack.getDisplayName(),progress + "%"));
+                {
+                    ItemPattern pattern = MatterDatabaseHelper.getPatternFromStorage(patternStorage,itemStack);
+                    if (pattern != null)
+                    {
+                        info.append(String.format("%s added to Pattern Storage. Progress is now at %s", EnumChatFormatting.GREEN + itemStack.getDisplayName(), pattern.getProgress() + "%"));
+                    }
+                }
                 return true;
             }
             else
@@ -296,15 +314,35 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     }
 
     @Override
-    public NBTTagCompound getItemAsNBT(ItemStack item)
+    public ItemPattern getPattern(ItemStack item)
     {
         for (int slotId : pattern_storage_slots)
         {
             if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotId)))
             {
-                NBTTagCompound hasItem = MatterDatabaseHelper.GetItemAsNBT(inventory.getStackInSlot(slotId), item);
+                ItemPattern hasItem = MatterDatabaseHelper.getPatternFromStorage(inventory.getStackInSlot(slotId), item);
                 if(hasItem != null)
                     return hasItem;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public ItemPattern getPattern(ItemPattern item)
+    {
+        for (int slotId : pattern_storage_slots)
+        {
+            if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotId)))
+            {
+                ItemPattern[] patterns = MatterDatabaseHelper.getPatternsFromStorage(inventory.getStackInSlot(slotId));
+                for (ItemPattern pattern : patterns)
+                {
+                    if (pattern.equals(item))
+                    {
+                        return pattern;
+                    }
+                }
             }
         }
         return null;

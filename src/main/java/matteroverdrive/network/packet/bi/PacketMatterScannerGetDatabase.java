@@ -18,27 +18,27 @@
 
 package matteroverdrive.network.packet.bi;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.data.BlockPos;
+import matteroverdrive.data.ItemPattern;
 import matteroverdrive.gui.GuiMatterScanner;
 import matteroverdrive.network.packet.AbstractBiPacketHandler;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 5/5/2015.
  */
 public class PacketMatterScannerGetDatabase extends TileEntityUpdatePacket
 {
-    NBTTagList list;
+    List<ItemPattern> list;
 
     public PacketMatterScannerGetDatabase(){super();}
     public PacketMatterScannerGetDatabase(int x, int y, int z)
@@ -49,7 +49,7 @@ public class PacketMatterScannerGetDatabase extends TileEntityUpdatePacket
     {
         this(position.x,position.y,position.z);
     }
-    public PacketMatterScannerGetDatabase(NBTTagList list)
+    public PacketMatterScannerGetDatabase(List<ItemPattern> list)
     {
         this.list = list;
     }
@@ -57,18 +57,21 @@ public class PacketMatterScannerGetDatabase extends TileEntityUpdatePacket
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        NBTTagCompound tagCompound = ByteBufUtils.readTag(buf);
-        list = tagCompound.getTagList("List",10);
+        int size = buf.readInt();
+        for (int i = 0;i < size;i++)
+        {
+            list.add(new ItemPattern(buf));
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        if (list != null)
-            tagCompound.setTag("List",list);
-
-        ByteBufUtils.writeTag(buf, tagCompound);
+        buf.writeInt(list.size());
+        for (ItemPattern pattern : list)
+        {
+            pattern.writeToBuffer(buf);
+        }
     }
 
     public static class Handler extends AbstractBiPacketHandler<PacketMatterScannerGetDatabase>
@@ -83,7 +86,7 @@ public class PacketMatterScannerGetDatabase extends TileEntityUpdatePacket
             if (tileEntity instanceof IMatterDatabase)
             {
                 IMatterDatabase database = (IMatterDatabase) tileEntity;
-                return new PacketMatterScannerGetDatabase(database.getItemsAsNBT());
+                return new PacketMatterScannerGetDatabase(database.getPatterns());
             }
 
             return null;
