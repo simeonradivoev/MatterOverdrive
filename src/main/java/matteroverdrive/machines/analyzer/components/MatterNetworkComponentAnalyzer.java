@@ -126,11 +126,14 @@ public class MatterNetworkComponentAnalyzer extends MatterNetworkComponentClient
         {
             if (one instanceof IMatterDatabase) {
                 ItemPattern patternOne = ((IMatterDatabase) one).getPattern(packetPatternStack);
-                int oneProgress = patternOne.getProgress();
-                int twoProgress = packetPattern.getProgress();
-                if (oneProgress < twoProgress)
+                if (patternOne != null)
                 {
-                    return true;
+                    int oneProgress = patternOne.getProgress();
+                    int twoProgress = packetPattern.getProgress();
+                    if (oneProgress < twoProgress)
+                    {
+                        return true;
+                    }
                 }
             }else
             {
