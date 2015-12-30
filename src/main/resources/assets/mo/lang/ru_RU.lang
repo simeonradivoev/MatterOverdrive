@@ -51,7 +51,7 @@ item.ship_factory.details=Позволяет строить корабли
 item.scout_ship.name=Разведывательный корабль
 item.scout_ship.details=Быстрый корабль, используемый для разведки
 item.ship_colonizer.name=Поселенческий корабль
-item.ship_colonizer.details=Используется для защиты планет путем создания базы по прибытию
+item.ship_colonizer.details=Используется для защиты планет путем создания базы по прибытию/nУвеличивает место для строительства на %s
 item.building_base.name=Основа
 item.building_base.details=Главное здание, нужное всем
 item.android_pill_red.name=Красная пилюля
@@ -59,11 +59,11 @@ item.android_pill_red.details=Примите красную пилюлю и за
 item.android_pill_blue.name=Синяя пилюля
 item.android_pill_blue.details=Примите синюю пилюлю и вы проснетесь в постели более мудрым
 item.creative_pattern_drive.name=Творческий шаблон привода
-item.creative_pattern_drive.details=Содержит наиболее воспроизводимые элементы\nПКМ во время приседа, чтобы перезагрузить
+item.creative_pattern_drive.details=Содержит наиболее воспроизводимые элементы/nПКМ во время приседа, чтобы перезагрузить
 item.network_flash_drive.name=Сетевой флэш-накопитель
 item.network_flash_drive.details=Используется в качестве фильтра в устройствах материальной сети
 item.energy_pack.name=Энергетический ранец
-item.energy_pack.details=Используется для быстрой подзарядки. Для "перезагрузки" энергетических оружий
+item.energy_pack.details=Используется для быстрой подзарядки./nДля "подзарядки" энергетических оружий
 item.phaser_rifle.name=Фазерная винтовка
 item.transport_flash_drive.name=Транспортный флэш-накопитель
 item.transport_flash_drive.details=Используется для обозначения места для быстрого использования Транспортера
@@ -85,7 +85,10 @@ item.tritanium_sword.name=Тритановый меч
 item.tritanium_pickaxe.name=Тритановая кирка
 item.tritanium_axe.name=Тритановый топор
 item.contract.name=Контракт
+item.ion_sniper.name=Ion Sniper
+item.plasma_shotgun.name=Плазменный дробовик
 
+##  Улучшения  ##
 item.upgrade.speed.name=Улучшение «Скорость»
 item.upgrade.power.name=Улучшение «Мощность»
 item.upgrade.failsafe.name=Улучшение «Отказоустойчивость»
@@ -94,11 +97,19 @@ item.upgrade.power_storage.name=Улучшение «Хранимая мощно
 item.upgrade.hyper_speed.name=Улучшение «Гипер-скорость»
 item.upgrade.matter_storage.name=Улучшение «Хранимая материя»
 
+## Модули для оружий ##
 item.weapon_module_color.name=Модуль «Цвет»
 item.weapon_module_barrel.damage.name=Дилитиевая фокусирующая матрица
 item.weapon_module_barrel.fire.name=Зажигательный фильтр
 item.weapon_module_barrel.explosion.name=Взрыво-индуктивный барабан
 item.weapon_module_barrel.heal.name=Восстанавливающий конвертер
+item.sniper_scope.name=Снайперский прицел
+
+## Строения ##
+item.building_matter_extractor.name=Matter Extractor
+item.building_residential.name=Жилые дома
+item.building_ship_hangar.name=Ship Hangar
+item.building_power_generator.name=Генератор энергии
 
 item.info.configured=Настроен
 
@@ -169,6 +180,7 @@ tile.gravitational_stabilizer.name=Гравитационный стабилиз
 tile.gravitational_stabilizer.details=Используется для подавления эффектов гравитационных аномалий
 tile.matter_recycler.name=Утилизатор материи
 tile.matter_recycler.details=Используется для переработки предметов, готовых для разложения
+tile.android_spawner.name=Спаунер Андроидов-разбойников
 
 ## Жидкости ##
 tile.matter_plasma.name=Плазменная материя
@@ -293,7 +305,7 @@ itemGroup.tabMatterOverdrive_modules=Matter Overdrive: Модули
 itemGroup.tabMatterOverdrive_upgrades=Matter Overdrive: Улучшения
 itemGroup.tabMatterOverdrive_food=Matter Overdrive: Еда
 itemGroup.tabMatterOverdrive_ships=Matter Overdrive: Корабли
-itemGroup.tabMatterOverdrive_buildings=Matter Overdrive: Постройки
+itemGroup.tabMatterOverdrive_buildings=Matter Overdrive: Строения
 itemGroup.tabMatterOverdrive_decorative=Matter Overdrive: Декорации
 
 ============================================================
@@ -329,6 +341,7 @@ gui.tooltip.starmap.no_ship_space=Не хватает мест для постр
 gui.tooltip.starmap.no_building_space=Не хватает строительных кораблей
 gui.tooltip.starmap.no_ship_factory=Нет корабля-фабрики
 gui.tooltip.starmap.has_base=Основное здание уже присутствует
+gui.tooltip.starmap.no_base=Нет основного здания
 gui.tooltip.close_menu=Закрыть меню
 gui.tooltip.open_menu=Открыть меню
 gui.tooltip.close=Закрыть
@@ -585,7 +598,7 @@ guide.entry.matter_transport.name=Транспортировка материи
 guide.entry.weapon.modules.barrels.name=Модули для оружий
 guide.entry.weapon.modules.colors.name=Раскраски оружий
 guide.entry.android.pills.name=Пилюли
-guide.entry.android.parts.name=Части бродящего Андроида
+guide.entry.android.parts.name=Части Андроида-разбойника
 guide.entry.fusion_reactor.name=Термоядерный реактор
 guide.entry.batteries.name=Батареи
 guide.entry.food.name=Еда
@@ -641,5 +654,12 @@ quest.sacrifice.objective.0=Убить %2$s/%3$s Baby %4$s
 quest.department_of_agriculture.title=Департамент сельского хозяйства
 quest.department_of_agriculture.info=To all willing hands. This is a job offer from the department of agriculture. We operate in the desolate world of Barus V and you can image the obstacles we face when it comes to growing %3$s. As our plans for hydroponic farms come to turn, our people starve to death. We are searching for capable parties to aid us in the supplying of %3$s to our citizens.
 quest.department_of_agriculture.objective.0=Собрать %2$s/%3$s %4$s
-
+quest.one_true_love.tile=One true love
+quest.one_true_love.info=I'm so happy! You can't even imagine what a joyous moment this is! Merry has finally agreed to merry me. You don't even know how many times I've tried to win her heart. At long last her father gave us his blessing. I know our love is more than enough to keeps us going, but I wanted to give her something special. I was hoping you can find me a diamond so I can put a marvelous ring onto her precious finger. I will forever be in dept and I will be more than happy to compensate for you troubles.
+quest.one_true_love.objective.0=Mine $mineAmount/$maxMineAmount Diamonds
+quest.weapons_of_war.tile=Орудия войны
+quest.weapons_of_war.info=They have oppressed us for long enough! Our proud people will no longer stand for this. Years of oppression, end now! We may be broken in body be we are strong in spirit. This is where we need your help. It may not be pretty, but war is coming and we need a way to defend ourselves. They will throw everything they have at us. The first step to winning the fight is building anvils and then using those anvils to craft the weapons we desperately need.
+quest.weapons_of_war.objective.0=Craft $craftAmount/$craftMaxAmount $craftItem
+quest.weapons_of_war.objective.1=Сделать %2$s мечей.
+ 
 ============================================================
