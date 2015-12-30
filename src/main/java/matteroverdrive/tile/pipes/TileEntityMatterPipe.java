@@ -19,21 +19,18 @@
 package matteroverdrive.tile.pipes;
 
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.api.matter.IMatterHandler;
+import matteroverdrive.api.transport.IPipe;
 import matteroverdrive.data.MatterStorage;
+import matteroverdrive.data.transport.FluidPipeNetwork;
+import matteroverdrive.data.transport.IFluidPipe;
 import matteroverdrive.fluids.FluidMatterPlasma;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.machines.MachineNBTCategory;
-import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.FluidNetworkHelper;
 import matteroverdrive.util.TimeTracker;
-import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -50,16 +47,13 @@ import java.util.Random;
 /**
  * Created by Simeon on 3/7/2015.
  */
-public class TileEntityMatterPipe extends TileEntityPipe implements IMatterHandler
+public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 {
-    public  ForgeDirection lastDir = ForgeDirection.WEST;
     protected MatterStorage storage;
+    protected FluidPipeNetwork fluidPipeNetwork;
     public  static Random rand = new Random();
     protected int transferSpeed;
     TimeTracker t;
-
-    @SideOnly(Side.CLIENT)
-    private boolean matterVisible;
 
     public TileEntityMatterPipe()
     {
@@ -72,11 +66,54 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterHandl
     public  void updateEntity()
     {
         super.updateEntity();
-        if(!worldObj.isRemote)
+        if (!worldObj.isRemote)
         {
-            if (t.hasDelayPassed(worldObj, transferSpeed))
+            manageNetwork();
+            manageTransfer();
+        }
+    }
+
+    public void manageNetwork()
+    {
+        if (fluidPipeNetwork == null)
+        {
+            FluidNetworkHelper.getFluidPipeNetworkFromPool().addPipe(this);
+        }
+
+        FluidPipeNetwork lastNetwork = null;
+        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+        {
+            TileEntity tileEntity = worldObj.getTileEntity(xCoord+direction.offsetX,yCoord+direction.offsetY,zCoord+direction.offsetZ);
+            if (tileEntity instanceof IFluidPipe)
             {
-                Transfer();
+                if (lastNetwork == null || ((IFluidPipe) tileEntity).getNetwork() != null && lastNetwork.getNetworkPipes().size() < ((IFluidPipe) tileEntity).getNetwork().getNetworkPipes().size())
+                {
+                    lastNetwork = ((IFluidPipe) tileEntity).getNetwork();
+                }
+            }
+        }
+        if (lastNetwork != null && lastNetwork != getNetwork())
+        {
+            lastNetwork.addPipe(this);
+            //MatterOverdrive.log.info("Matter Pipe Added to network");
+        }
+    }
+
+    public void manageTransfer()
+    {
+        if (getMatterStored() > 0 && getNetwork() != null)
+        {
+            for (IFluidPipe pipe : getNetwork().getFluidHandlers())
+            {
+                for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+                {
+                    TileEntity fluidHandler = pipe.getTile().getWorldObj().getTileEntity(pipe.getTile().xCoord + direction.offsetX,pipe.getTile().yCoord + direction.offsetY,pipe.getTile().zCoord + direction.offsetZ);
+                    if (fluidHandler != null && fluidHandler instanceof IFluidHandler && !(fluidHandler instanceof  IFluidPipe) && getMatterStored() > 0 && ((IFluidHandler)fluidHandler).canFill(ForgeDirection.UNKNOWN,MatterOverdriveFluids.matterPlasma))
+                    {
+                        extractMatter(ForgeDirection.UNKNOWN,((IFluidHandler)fluidHandler).fill(ForgeDirection.UNKNOWN,new FluidStack(MatterOverdriveFluids.matterPlasma,getMatterStored()),true),false);
+                    }
+                }
+
             }
         }
     }
@@ -94,62 +131,12 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterHandl
         return false;
     }
 
-    public  void  Transfer()
-    {
-        if (getMatterStored() > 0)
-        {
-            List<WeightedDirection> validSides = getWeightedValidSides(lastDir);
-
-            for (WeightedDirection dir : validSides)
-            {
-                if(getMatterStored() <= 0)
-                    return;
-
-                TileEntity e = worldObj.getTileEntity(xCoord + dir.dir.offsetX, yCoord + dir.dir.offsetY, zCoord + dir.dir.offsetZ);
-
-                if (e != null && e instanceof IFluidHandler && ((IFluidHandler) e).canFill(dir.dir,MatterOverdriveFluids.matterPlasma))
-                {
-                    IFluidHandler to = (IFluidHandler)e;
-                    int transferAmount = MatterHelper.Transfer(dir.dir,storage.getMaxExtract(),this,to);
-                }
-            }
-        }
-    }
-
-    private List<WeightedDirection> getWeightedValidSides(ForgeDirection transferDir)
-    {
-        int connections = getConnections();
-        List<WeightedDirection> validSides = new ArrayList<>(6);
-        ForgeDirection transferDirOp = MatterHelper.opposite(transferDir);
-
-        for (int i = 0; i < 6; i++)
-        {
-            if (MOMathHelper.getBoolean(connections,i))
-            {
-                if (ForgeDirection.values()[i] == transferDir)
-                {
-                    validSides.add(new WeightedDirection(ForgeDirection.values()[i], 2.0f));
-                } else if (ForgeDirection.values()[i] == transferDirOp) {
-                    validSides.add(new WeightedDirection(ForgeDirection.values()[i], 0.0f));
-                } else {
-                    validSides.add(new WeightedDirection(ForgeDirection.values()[i], 0.5f + rand.nextFloat()));
-                }
-            }
-        }
-
-        if(validSides.size() > 1)
-            WeightedDirection.Sort(validSides);
-
-        return validSides;
-    }
-
     @Override
     public void writeCustomNBT(NBTTagCompound comp, EnumSet<MachineNBTCategory> categories, boolean toDisk)
     {
         if(!worldObj.isRemote && categories.contains(MachineNBTCategory.DATA) && toDisk)
         {
             storage.writeToNBT(comp);
-            comp.setByte("transfer_dir", (byte) this.lastDir.ordinal());
         }
     }
 
@@ -158,27 +145,13 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterHandl
     {
         if (categories.contains(MachineNBTCategory.DATA)) {
             storage.readFromNBT(comp);
-            if (comp.hasKey("transfer_dir")) {
-                lastDir = ForgeDirection.values()[comp.getByte("transfer_dir")];
-            }
         }
     }
 
     @Override
-    protected void onAwake(Side side) {
-
-    }
-
-    @SideOnly(Side.CLIENT)
-    public  boolean matterVisible()
+    protected void onAwake(Side side)
     {
-        return this.matterVisible;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public  boolean setMatterVisible(boolean matterVisible)
-    {
-        return this.matterVisible = matterVisible;
     }
 
     @Override
@@ -196,54 +169,19 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterHandl
     @Override
     public int receiveMatter(ForgeDirection side, int amount, boolean simulate)
     {
-        int received = storage.receiveMatter(side,amount,simulate);
-        if(!simulate)
-        {
-            if(received > 0)
-            {
-                //MatterOverdrive.packetPipeline.sendToAll(new PacketMatterPipeUpdate(xCoord,yCoord,zCoord,getMatterStored() > 0));
-                //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-                lastDir = side;
-                t.markTime(worldObj);
-            }
-
-        }
-        return received;
+        return storage.receiveMatter(side,amount,simulate);
     }
 
     @Override
     public int extractMatter(ForgeDirection direction, int amount, boolean simulate)
     {
-        int matterExtracted =  storage.extractMatter(direction,amount,simulate);
-        if(!simulate)
-        {
-            //MatterOverdrive.packetPipeline.sendToAll(new PacketMatterPipeUpdate(xCoord, yCoord, zCoord, getMatterStored() > 0));
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
-        return matterExtracted;
+        return storage.extractMatter(direction,amount,simulate);
     }
 
     @Override
-    public Packet getDescriptionPacket()
+    public void onAdded(World world, int x, int y, int z)
     {
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setInteger("Connections",getConnections());
-        tagCompound.setBoolean("matterVisible", getMatterStored() > 0);
-        return new S35PacketUpdateTileEntity(xCoord,yCoord,zCoord,1,tagCompound);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
-    {
-        super.onDataPacket(net,pkt);
-        if(worldObj.isRemote) {
-            this.setMatterVisible(pkt.func_148857_g().getBoolean("matterVisible"));
-        }
-    }
-
-    @Override
-    public void onAdded(World world, int x, int y, int z) {
-
+        //MatterOverdrive.log.info("Tile Entity Matter Pipe placed");
     }
 
     @Override
@@ -252,8 +190,10 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterHandl
     }
 
     @Override
-    public void onDestroyed() {
-
+    public void onDestroyed()
+    {
+        getNetwork().destroyPipe(this);
+        //MatterOverdrive.log.info("Tile Entity Matter Pipe Destroyed");
     }
 
     @Override
@@ -294,5 +234,55 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IMatterHandl
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection from) {
         return new FluidTankInfo[]{storage.getInfo()};
+    }
+
+    @Override
+    public TileEntity getTile()
+    {
+        return this;
+    }
+
+    @Override
+    public void onNetworkUpdate()
+    {
+
+    }
+
+    @Override
+    public FluidPipeNetwork getNetwork()
+    {
+        return fluidPipeNetwork;
+    }
+
+    @Override
+    public void setNetwork(FluidPipeNetwork network)
+    {
+        this.fluidPipeNetwork = network;
+    }
+
+
+    @Override
+    public List<IPipe<FluidPipeNetwork>> getConnections()
+    {
+        List<IPipe<FluidPipeNetwork>> connections = new ArrayList<>();
+        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+        {
+            TileEntity tileEntity = worldObj.getTileEntity(xCoord+direction.offsetX,yCoord+direction.offsetY,zCoord+direction.offsetZ);
+            if (tileEntity instanceof IFluidPipe)
+            {
+                connections.add((IFluidPipe)tileEntity);
+            }
+        }
+        return connections;
+    }
+
+    @Override
+    public void onNeighborBlockChange()
+    {
+        super.onNeighborBlockChange();
+        if (getNetwork() != null)
+        {
+            getNetwork().networkUpdate(this);
+        }
     }
 }

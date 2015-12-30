@@ -1,7 +1,6 @@
 package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.Reference;
-import matteroverdrive.tile.pipes.TileEntityMatterPipe;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -21,28 +20,12 @@ public class TileEntityRendererMatterPipe extends TileEntityRendererPipe
     @Override
     protected  Vector2f getCoreUV(TileEntity entity)
     {
-        if(entity instanceof TileEntityMatterPipe)
-        {
-            if(((TileEntityMatterPipe)entity).matterVisible())
-            {
-                return  new Vector2f(0, 1);
-            }
-        }
-
         return  new Vector2f(0, 0);
     }
 
     @Override
     protected  Vector2f getSidesUV(TileEntity entity, ForgeDirection dir)
     {
-        if(entity instanceof TileEntityMatterPipe)
-        {
-            if(((TileEntityMatterPipe)entity).matterVisible())
-            {
-                return  new Vector2f(1, 1);
-            }
-        }
-
         return  new Vector2f(1, 0);
     }
 }

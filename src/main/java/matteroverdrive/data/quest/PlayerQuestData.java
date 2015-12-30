@@ -22,9 +22,9 @@ import cpw.mods.fml.common.eventhandler.Event;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
-import matteroverdrive.util.MOInventoryHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -118,12 +118,12 @@ public class PlayerQuestData
                 extendedProperties.getPlayer().addExperience(questStack.getXP(extendedProperties.getPlayer()));
                 List<ItemStack> rewards = new ArrayList<>();
                 questStack.addRewards(rewards, extendedProperties.getPlayer());
+                InventoryPlayer inventoryPlayer = extendedProperties.getPlayer().inventory;
                 for (ItemStack stack : rewards)
                 {
-                    ItemStack leftItemStack = MOInventoryHelper.addItemInContainer(extendedProperties.getPlayer().inventoryContainer,stack);
-                    if (leftItemStack != null)
+                    if (!inventoryPlayer.addItemStackToInventory(stack))
                     {
-                        extendedProperties.getPlayer().worldObj.spawnEntityInWorld(new EntityItem(extendedProperties.getPlayer().worldObj,extendedProperties.getPlayer().posX,extendedProperties.getPlayer().posY+extendedProperties.getPlayer().getEyeHeight(),extendedProperties.getPlayer().posZ,leftItemStack));
+                        extendedProperties.getPlayer().worldObj.spawnEntityInWorld(new EntityItem(extendedProperties.getPlayer().worldObj,extendedProperties.getPlayer().posX,extendedProperties.getPlayer().posY+extendedProperties.getPlayer().getEyeHeight(),extendedProperties.getPlayer().posZ,stack));
                     }
                 }
                 extendedProperties.onQuestCompleted(questStack,i);

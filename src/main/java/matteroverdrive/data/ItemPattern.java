@@ -86,7 +86,7 @@ public class ItemPattern
         itemID = nbtTagCompound.getShort("id");
         progress = nbtTagCompound.getByte(MatterDatabaseHelper.PROGRESS_TAG_NAME);
         damage = nbtTagCompound.getShort("Damage");
-        damage = nbtTagCompound.getByte("Count");
+        count = nbtTagCompound.getByte("Count");
     }
 
     public void readFromBuffer(ByteBuf byteBuf)

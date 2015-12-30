@@ -19,6 +19,7 @@
 package matteroverdrive.commands;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.quest.IQuest;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
@@ -30,12 +31,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Simeon on 11/19/2015.
  */
 public class QuestCommands extends CommandBase
 {
+    private Random random = new Random();
+
     @Override
     public String getCommandName() {
         return "quest";
@@ -134,6 +138,30 @@ public class QuestCommands extends CommandBase
                     throw new CommandException("No remove quests parameters.");
                 }
             }
+            else if (parameters[0].equalsIgnoreCase("contract"))
+            {
+                if (parameters.length > 1)
+                {
+                    IQuest quest = MatterOverdrive.quests.getQuestByName(parameters[1]);
+                    if (quest != null)
+                    {
+                        EntityPlayer entityPlayer;
+                        if (parameters.length > 2)
+                        {
+                            entityPlayer = getPlayer(commandSender,parameters[2]);
+                        }else
+                        {
+                            entityPlayer = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getCommandSenderName());
+                        }
+
+                        QuestStack questStack = MatterOverdrive.questFactory.generateQuestStack(random,quest);
+                        entityPlayer.inventory.addItemStackToInventory(questStack.getContract());
+                    }else
+                    {
+                        throw new CommandException("No such quest.");
+                    }
+                }
+            }
             else
             {
                 throw new CommandException("Invalid quest command.");
@@ -152,7 +180,7 @@ public class QuestCommands extends CommandBase
 
         if (parameters.length == 2)
         {
-            if (parameters[0].equalsIgnoreCase("add"))
+            if (parameters[0].equalsIgnoreCase("add") || parameters[0].equalsIgnoreCase("contract"))
             {
                 for (String questName : MatterOverdrive.quests.getAllQuestName())
                 {
@@ -169,6 +197,7 @@ public class QuestCommands extends CommandBase
         {
             commands.add("add");
             commands.add("remove");
+            commands.add("contract");
         }
         else if (parameters.length == 3)
         {

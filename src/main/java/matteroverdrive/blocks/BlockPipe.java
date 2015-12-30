@@ -5,6 +5,8 @@ import matteroverdrive.client.render.block.RendererBlockPipe;
 import matteroverdrive.tile.pipes.TileEntityPipe;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -19,19 +21,7 @@ public abstract class BlockPipe extends MOBlockContainer
 	{
 		super(material, name);
 		this.useNeighborBrightness = true;
-		float pixel = 1f/16f;
-
-		float size = 0.34375f;
-
-        float xMin = size;
-        float yMin = size;
-        float zMin = size;
-
-        float xMax = 1 - size;
-        float yMax = 1 - size;
-        float zMax = 1 - size;
-
-        //this.setBlockBounds(xMin, yMin, zMin, xMax, yMax, zMax);
+        this.setRotationType(-1);
 	}
 
     @Override
@@ -113,6 +103,12 @@ public abstract class BlockPipe extends MOBlockContainer
         }
 
         this.setBlockBounds(xMin, yMin, zMin, xMax, yMax, zMax);
+    }
+
+    @Override
+    public void onBlockPlacedBy(World World, int x, int y, int z, EntityLivingBase player, ItemStack item)
+    {
+
     }
 
     public boolean isConnectableSide(ForgeDirection dir, IBlockAccess world, int x, int y, int z) {

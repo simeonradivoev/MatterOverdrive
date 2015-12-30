@@ -44,7 +44,7 @@ public class RendererBlockPipe implements ISimpleBlockRenderingHandler
     {
         int meta = world.getBlockMetadata(x, y, z);
         IIcon icon = block.getIcon(world, x, y, z, meta);
-        int connections = ((TileEntityPipe)world.getTileEntity(x, y, z)).getConnections();
+        int connections = ((TileEntityPipe)world.getTileEntity(x, y, z)).getConnectionsMask();
         int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
         renderPipe(x, y, z, block, connections, icon, brightness);
         return true;

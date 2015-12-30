@@ -86,7 +86,7 @@ public abstract class MatterNetworkTask
      */
     public MatterNetworkTask(IMatterNetworkConnection sender)
     {
-        this.senderPos = sender.getPosition();
+        setSender(sender);
         init();
     }
 
@@ -243,6 +243,15 @@ public abstract class MatterNetworkTask
             }
         }
         return null;
+    }
+
+    /**
+     * Sets the sender of the task
+     * @param sender the sender connection
+     */
+    public void setSender(IMatterNetworkConnection sender)
+    {
+        this.senderPos = sender.getPosition();
     }
 
     /**

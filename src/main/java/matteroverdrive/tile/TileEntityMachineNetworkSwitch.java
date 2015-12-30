@@ -18,9 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.util.MatterNetworkHelper;
-
 /**
  * Created by Simeon on 4/30/2015.
  */
@@ -28,17 +25,7 @@ public class TileEntityMachineNetworkSwitch extends TileEntityMachinePacketQueue
 {
 
     public TileEntityMachineNetworkSwitch() {
-        super(4);
-        playerSlotsHotbar = true;
-    }
-
-    @Override
-    protected void onAwake(Side side)
-    {
-        if (side.isServer()) {
-            MatterNetworkHelper.broadcastConnection(worldObj, this);
-            MatterNetworkHelper.requestNeighborConnections(worldObj,this);
-        }
+        super(0);
     }
 
     @Override

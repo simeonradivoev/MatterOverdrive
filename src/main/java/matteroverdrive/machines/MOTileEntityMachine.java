@@ -305,9 +305,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             }
         }
         forceClientUpdate = false;
-        if (categories.contains(MachineNBTCategory.INVENTORY) && toDisk)
+        if (categories.contains(MachineNBTCategory.INVENTORY))
         {
-            inventory.writeToNBT(nbt);
+            inventory.writeToNBT(nbt,toDisk);
         }
         for (IMachineComponent component : components)
         {

@@ -42,26 +42,35 @@ public class MatterNetworkHelper
         //if the source connection can connect From Side
         if (source.canConnectFromSide(direction)) {
             BlockPos position = source.getPosition().step(direction);
-            ForgeDirection oppositeDirection = direction.getOpposite();
-            TileEntity e = position.getTileEntity(world);
-            //if there is any connection in that direction
-            if (e instanceof IMatterNetworkConnection) {
-                IMatterNetworkConnection connection = (IMatterNetworkConnection) e;
-                //check if the packet has passed trough the connection or if it can connect from opposite source side
-                if (!packet.hasPassedTrough(connection) && connection.canConnectFromSide(oppositeDirection)) {
-                    if (connection instanceof IMatterNetworkCable) {
-                        //if the connection is a cable
-                        IMatterNetworkCable cable = (IMatterNetworkCable) connection;
-                        if (cable.isValid()) {
-                            cable.broadcast(packet, direction);
-                            return true;
-                        }
-                    } else if (connection instanceof IMatterNetworkClient) {
-                        //if the connection is a client
-                        IMatterNetworkClient c = (IMatterNetworkClient) connection;
-                        if (c.canPreform(packet)) {
-                            c.queuePacket(packet, oppositeDirection);
-                            return true;
+            if (world.getChunkProvider().chunkExists(position.x >> 4,position.z >> 4))
+            {
+                ForgeDirection oppositeDirection = direction.getOpposite();
+                TileEntity e = position.getTileEntity(world);
+                //if there is any connection in that direction
+                if (e instanceof IMatterNetworkConnection)
+                {
+                    IMatterNetworkConnection connection = (IMatterNetworkConnection) e;
+                    //check if the packet has passed trough the connection or if it can connect from opposite source side
+                    if (!packet.hasPassedTrough(connection) && connection.canConnectFromSide(oppositeDirection))
+                    {
+                        if (connection instanceof IMatterNetworkCable)
+                        {
+                            //if the connection is a cable
+                            IMatterNetworkCable cable = (IMatterNetworkCable) connection;
+                            if (cable.isValid())
+                            {
+                                cable.broadcast(packet, direction);
+                                return true;
+                            }
+                        } else if (connection instanceof IMatterNetworkClient)
+                        {
+                            //if the connection is a client
+                            IMatterNetworkClient c = (IMatterNetworkClient) connection;
+                            if (c.canPreform(packet))
+                            {
+                                c.queuePacket(packet, oppositeDirection);
+                                return true;
+                            }
                         }
                     }
                 }

@@ -2,19 +2,20 @@ package matteroverdrive.container;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.tile.TileEntityMachineReplicator;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.network.packet.client.PacketSyncTaskQueue;
+import matteroverdrive.tile.TileEntityMachinePatternMonitor;
 import matteroverdrive.util.MOContainerHelper;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 
 /**
- * Created by Simeon on 12/27/2015.
+ * Created by Simeon on 12/30/2015.
  */
-public class ContainerReplicator extends ContainerMachine<TileEntityMachineReplicator>
+public class ContainerPatternMonitor extends ContainerMachine<TileEntityMachinePatternMonitor>
 {
-    int patternReplicateCount;
-
-    public ContainerReplicator(InventoryPlayer inventory, TileEntityMachineReplicator machine)
+    public ContainerPatternMonitor(InventoryPlayer inventory, TileEntityMachinePatternMonitor machine)
     {
         super(inventory, machine);
     }
@@ -23,14 +24,17 @@ public class ContainerReplicator extends ContainerMachine<TileEntityMachineRepli
     public void init(InventoryPlayer inventory)
     {
         addAllSlotsFromInventory(machine.getInventoryContainer());
-        MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, true, true);
+        MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, false, true);
     }
 
     @Override
     public void addCraftingToCrafters(ICrafting icrafting)
     {
         super.addCraftingToCrafters(icrafting);
-        icrafting.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
+        if (icrafting instanceof EntityPlayerMP)
+        {
+            MatterOverdrive.packetPipeline.sendTo(new PacketSyncTaskQueue(machine,0),(EntityPlayerMP)icrafting);
+        }
     }
 
     @Override
@@ -40,12 +44,8 @@ public class ContainerReplicator extends ContainerMachine<TileEntityMachineRepli
         for (Object crafter : this.crafters) {
             ICrafting icrafting = (ICrafting) crafter;
 
-            if (this.patternReplicateCount != this.machine.getTaskReplicateCount()) {
-                icrafting.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
-            }
-        }
 
-        this.patternReplicateCount = this.machine.getTaskReplicateCount();
+        }
     }
 
     @Override
@@ -53,14 +53,5 @@ public class ContainerReplicator extends ContainerMachine<TileEntityMachineRepli
     public void updateProgressBar(int slot,int newValue)
     {
         super.updateProgressBar(slot,newValue);
-        if (slot == 1)
-        {
-            patternReplicateCount = newValue;
-        }
-    }
-
-    public int getPatternReplicateCount()
-    {
-        return patternReplicateCount;
     }
 }

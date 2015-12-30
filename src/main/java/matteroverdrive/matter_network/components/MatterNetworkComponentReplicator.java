@@ -85,6 +85,7 @@ public class MatterNetworkComponentReplicator extends MatterNetworkComponentClie
         {
             if (rootClient.getTaskQueue(0).queue((MatterNetworkTaskReplicatePattern)task))
             {
+                task.setSender(rootClient);
                 task.setState(MatterNetworkTaskState.PROCESSING);
                 task.setAlive(true);
                 rootClient.forceSync();

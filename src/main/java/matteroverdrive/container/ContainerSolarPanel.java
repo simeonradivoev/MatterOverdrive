@@ -60,9 +60,9 @@ public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolar
             if (this.lastChargeAmount != this.machine.getChargeAmount()) {
                 icrafting.sendProgressBarUpdate(this, 1, this.machine.getChargeAmount());
             }
-
-            this.lastChargeAmount = this.machine.getChargeAmount();
         }
+
+        this.lastChargeAmount = this.machine.getChargeAmount();
     }
 
     @SideOnly(Side.CLIENT)

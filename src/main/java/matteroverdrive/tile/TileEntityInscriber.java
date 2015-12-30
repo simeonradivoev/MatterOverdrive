@@ -64,9 +64,9 @@ public class TileEntityInscriber extends MOTileEntityMachineEnergy
     @Override
     protected void RegisterSlots(Inventory inventory)
     {
-        MAIN_INPUT_SLOT_ID = inventory.AddSlot(new InscriberSlot(true,false));
+        MAIN_INPUT_SLOT_ID = inventory.AddSlot(new InscriberSlot(true,false).setSendToClient(true));
         SEC_INPUT_SLOT_ID = inventory.AddSlot(new InscriberSlot(true,true));
-        OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
+        OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false).setSendToClient(true));
         super.RegisterSlots(inventory);
     }
 

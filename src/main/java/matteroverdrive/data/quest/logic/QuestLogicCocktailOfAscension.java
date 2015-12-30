@@ -222,6 +222,12 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
     }
 
     @Override
+    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    {
+
+    }
+
+    @Override
     public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
 

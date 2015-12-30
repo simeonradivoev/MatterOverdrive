@@ -19,10 +19,10 @@
 package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.common.registry.EntityRegistry;
 import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
-import net.minecraft.entity.EntityList;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -39,6 +39,7 @@ import java.util.Random;
  */
 public class QuestLogicKillCreature extends AbstractQuestLogic
 {
+    String regex;
     ItemStack killWithItemStack;
     Item killWithItem;
     boolean explosionOnly;
@@ -100,6 +101,8 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
             Class targetClass = creatureClasses[getKillType(questStack)];
             if (deathEvent.entityLiving != null && targetClass.isInstance(deathEvent.entityLiving))
             {
+                if (regex != null && !isTargetNameValid(((LivingDeathEvent) event).entity))
+                    return false;
                 if (shootOnly && !((LivingDeathEvent) event).source.isProjectile())
                     return false;
                 if (burnOnly && !((LivingDeathEvent) event).source.isFireDamage())
@@ -140,6 +143,30 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
         return false;
     }
 
+    protected boolean isTargetNameValid(Entity entity)
+    {
+        if (entity instanceof EntityLiving && ((EntityLiving)entity).hasCustomNameTag())
+        {
+            if (!((EntityLiving)entity).getCustomNameTag().matches(regex))
+            {
+                return false;
+            }
+        }else
+        {
+            if (!entity.getCommandSenderName().matches(regex))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    {
+
+    }
+
     public int getKillType(QuestStack questStack)
     {
         if (questStack.getTagCompound() != null)
@@ -173,21 +200,7 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
 
     public String getTargetName(QuestStack questStack)
     {
-        Class<? extends EntityLivingBase> targetClass = creatureClasses[getKillType(questStack)];
-        EntityRegistry.EntityRegistration entityRegistration = EntityRegistry.instance().lookupModSpawn(targetClass,true);
-        if (entityRegistration != null)
-        {
-            return entityRegistration.getEntityName();
-        }
-        else
-        {
-            String name = (String) EntityList.classToStringMapping.get(targetClass);
-            if (name != null)
-            {
-                return name;
-            }
-        }
-        return "Unknown Target";
+        return getEntityClassName(creatureClasses[getKillType(questStack)],"Unknown Target");
     }
 
     public Class<? extends EntityLivingBase>[] getCreatureClasses()
@@ -235,5 +248,10 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
     {
         this.explosionOnly = explosionOnly;
         return this;
+    }
+
+    public void setNameRegex(String regex)
+    {
+        this.regex = regex;
     }
 }

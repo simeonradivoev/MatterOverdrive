@@ -61,9 +61,9 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
             if (this.energyPerTick != this.machine.getEnergyPerTick()) {
                 icrafting.sendProgressBarUpdate(this, 0, this.machine.getEnergyPerTick());
             }
-
-            this.energyPerTick = this.machine.getEnergyPerTick();
         }
+
+        this.energyPerTick = this.machine.getEnergyPerTick();
     }
 
     @SideOnly(Side.CLIENT)

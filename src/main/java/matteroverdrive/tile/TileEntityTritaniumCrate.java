@@ -54,7 +54,7 @@ public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory
     {
         if (categories.contains(MachineNBTCategory.INVENTORY) && toDisk)
         {
-            inventory.writeToNBT(nbt);
+            inventory.writeToNBT(nbt,true);
         }
     }
 
@@ -103,7 +103,7 @@ public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory
             itemStack.setTagCompound(new NBTTagCompound());
         }
 
-        inventory.writeToNBT(itemStack.getTagCompound());
+        inventory.writeToNBT(itemStack.getTagCompound(),true);
     }
 
     @Override

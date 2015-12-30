@@ -62,9 +62,9 @@ public class ContainerAndroidSpawner extends ContainerMachine<TileEntityAndroidS
             if (this.spawnedAndroids != this.machine.getSpawnedCount()) {
                 icrafting.sendProgressBarUpdate(this, 0, this.machine.getMaxSpawnCount());
             }
-
-            this.spawnedAndroids = this.machine.getSpawnedCount();
         }
+
+        this.spawnedAndroids = this.machine.getSpawnedCount();
     }
 
     @Override

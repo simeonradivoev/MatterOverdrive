@@ -67,9 +67,9 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
                 if (this.progressScaled != progressScaled) {
                     ((ICrafting) icrafting).sendProgressBarUpdate(this, 0, progressScaled);
                 }
-
-                this.progressScaled = progressScaled;
             }
+
+            this.progressScaled = progressScaled;
         }
     }
 

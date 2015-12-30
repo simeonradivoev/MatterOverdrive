@@ -48,7 +48,7 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
             if (entity instanceof TileEntityNetworkPipe)
             {
                 TileEntityNetworkPipe networkPipe = (TileEntityNetworkPipe)entity;
-                int pipeConnections = networkPipe.getConnections();
+                int pipeConnections = networkPipe.getConnectionsMask();
                 if (MOMathHelper.getBoolean(pipeConnections,direction.ordinal())) {
                     return true;
                 }
@@ -121,7 +121,7 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     @Override
     public boolean canConnectFromSide(ForgeDirection side)
     {
-        return MOMathHelper.getBoolean(getConnections(),side.ordinal());
+        return MOMathHelper.getBoolean(getConnectionsMask(),side.ordinal());
     }
 
     @Override

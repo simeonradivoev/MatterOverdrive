@@ -23,20 +23,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkClient;
-import matteroverdrive.api.network.IMatterNetworkConnection;
 import matteroverdrive.data.BlockPos;
 import matteroverdrive.machines.MOTileEntityMachine;
-import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentQueue;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.EnumSet;
 
 /**
  * Created by Simeon on 4/30/2015.
@@ -46,14 +40,12 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     public static int BROADCAST_DELAY = 2;
     public static int TASK_QUEUE_SIZE = 16;
     protected MatterNetworkComponentQueue networkComponent;
-    private BlockPos[] connections;
     @SideOnly(Side.CLIENT)
     public int flashTime;
 
     public TileEntityMachinePacketQueue(int upgradeCount)
     {
         super(upgradeCount);
-        connections = new BlockPos[6];
     }
 
     protected void registerComponents()
@@ -88,41 +80,6 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
         return type.equals(UpgradeTypes.Speed);
     }
 
-    //region NBT
-    @Override
-    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
-    {
-        super.readCustomNBT(nbt, categories);
-        if (categories.contains(MachineNBTCategory.DATA)) {
-            for (int i = 0; i < connections.length; i++) {
-                if (nbt.hasKey("Connection" + i)) {
-                    BlockPos position = new BlockPos(nbt.getCompoundTag("Connection" + i));
-                    if (worldObj != null) {
-                        TileEntity tileEntity = position.getTileEntity(worldObj);
-                        if (tileEntity != null && tileEntity instanceof IMatterNetworkConnection) {
-                            connections[i] = ((IMatterNetworkConnection) tileEntity).getPosition();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void  writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
-    {
-        super.writeCustomNBT(nbt, categories, toDisk);
-        if (categories.contains(MachineNBTCategory.DATA) && toDisk) {
-            for (int i = 0; i < connections.length; i++) {
-                if (getConnection(i) != null) {
-                    NBTTagCompound tagCompound = new NBTTagCompound();
-                    connections[i].writeToNBT(tagCompound);
-                    nbt.setTag("Connection" + i, tagCompound);
-                }
-            }
-        }
-    }
-    //endregion
 
     //region Matter Network
     @Override
@@ -197,30 +154,6 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
 
     @Override
     public float soundVolume() { return 0;}
-
-    public BlockPos getConnection(int id)
-    {
-        if (connections[id] != null)
-        {
-            if (connections[id].getTileEntity(worldObj) != null && connections[id].getTileEntity(worldObj) instanceof IMatterNetworkConnection)
-                return connections[id];
-            else {
-                connections[id] = null;
-                return null;
-            }
-        }
-        return connections[id];
-    }
-
-    public void setConnection(int id, BlockPos position)
-    {
-        connections[id] = position;
-    }
-
-    public BlockPos[] getConnections()
-    {
-        return connections;
-    }
 
     @Override
     @SideOnly(Side.CLIENT)

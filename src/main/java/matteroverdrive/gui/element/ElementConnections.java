@@ -18,11 +18,8 @@
 
 package matteroverdrive.gui.element;
 
-import matteroverdrive.data.BlockPos;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
-import net.minecraftforge.common.util.ForgeDirection;
-import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
@@ -61,7 +58,7 @@ public class ElementConnections extends MOElementBase
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        for (int i = 0;i < 6;i++)
+        /*for (int i = 0;i < 6;i++)
         {
             BlockPos connection = machine.getConnection(i);
             GL11.glColor3f(1, 1, 1);
@@ -80,7 +77,7 @@ public class ElementConnections extends MOElementBase
                 MOElementButton.HOVER_TEXTURE_DARK.render(x - 6,y - 6,80,19);
                 getFontRenderer().drawString(ForgeDirection.getOrientation(i).name() + " : None", x, y, 0xFFFFFF);
             }
-        }
+        }*/
     }
 
     @Override

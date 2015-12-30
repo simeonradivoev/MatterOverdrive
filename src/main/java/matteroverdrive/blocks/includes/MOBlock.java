@@ -79,7 +79,7 @@ public class MOBlock extends Block
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
     {
-        super.onNeighborBlockChange(world, x, y, z, block);
+        super.onNeighborBlockChange(world, x, y, z+1, block);
         IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(x, y, z);
         if(tileEntity != null)
             tileEntity.onNeighborBlockChange();
@@ -157,6 +157,7 @@ public class MOBlock extends Block
 
     }
 
+    @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
         if (hasTileEntity(meta) && world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof MOTileEntity)

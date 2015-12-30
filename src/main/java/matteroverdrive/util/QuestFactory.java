@@ -21,7 +21,6 @@ package matteroverdrive.util;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.IQuest;
-import matteroverdrive.api.quest.Quest;
 import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
@@ -33,7 +32,7 @@ import java.util.Random;
  */
 public class QuestFactory
 {
-    public QuestStack generateQuestStack(Random random, Quest quest)
+    public QuestStack generateQuestStack(Random random, IQuest quest)
     {
         QuestStack questStack = new QuestStack(quest);
         quest.initQuestStack(random,questStack);

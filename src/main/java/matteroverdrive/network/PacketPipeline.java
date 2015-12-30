@@ -99,6 +99,7 @@ public class PacketPipeline
         registerPacket(PacketWeaponTick.ServerHandler.class,PacketWeaponTick.class);
         registerBiPacket(PacketStarLoading.BiHandler.class,PacketStarLoading.class);
         registerPacket(PacketAndroidTransformation.ClientHandler.class,PacketAndroidTransformation.class);
+        registerPacket(PacketSyncTaskQueue.ClientHandler.class,PacketSyncTaskQueue.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

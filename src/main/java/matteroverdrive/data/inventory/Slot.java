@@ -33,6 +33,7 @@ public class Slot
     private boolean drops = true;
     private boolean isMainSlot = false;
     private boolean keepOnDismante = false;
+    private boolean sendToClient = false;
 
     public Slot(boolean isMainSlot) {
         this.isMainSlot = isMainSlot;
@@ -86,4 +87,6 @@ public class Slot
     {
         return null;
     }
+    public Slot setSendToClient(boolean sendToClient){this.sendToClient = sendToClient;return this;}
+    public boolean sendsToClient(){return sendToClient;}
 }

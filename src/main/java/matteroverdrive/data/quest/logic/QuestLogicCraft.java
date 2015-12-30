@@ -158,6 +158,12 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     }
 
     @Override
+    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    {
+
+    }
+
+    @Override
     public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer) {
 
     }

@@ -77,40 +77,60 @@ public class Inventory implements IInventory
 
     public void readFromNBT(NBTTagCompound compound)
     {
-        if (compound.hasKey("Items", Constants.NBT.TAG_LIST))
+        NBTTagList nbttaglist = compound.getTagList("Items", 10);
+        for (int i = 0; i < nbttaglist.tagCount(); ++i)
         {
-            NBTTagList nbttaglist = compound.getTagList("Items", 10);
-            for (Slot slot : slots)
+            NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+            byte b0 = nbttagcompound1.getByte("Slot");
+            if (nbttagcompound1.hasKey("id", Constants.NBT.TAG_SHORT))
             {
-                slot.setItem(null);
-            }
-
-            for (int i = 0; i < nbttaglist.tagCount(); ++i)
-            {
-                NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
-                byte b0 = nbttagcompound1.getByte("Slot");
-
                 setInventorySlotContents(b0, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+            }else
+            {
+                setInventorySlotContents(b0,null);
             }
         }
     }
 
-    public void writeToNBT(NBTTagCompound compound)
+    public void writeToNBT(NBTTagCompound compound,boolean toDisk)
     {
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < getSizeInventory(); ++i)
         {
-            if (getStackInSlot(i) != null)
+            writeSlotToNBT(nbttaglist,i,toDisk);
+        }
+
+        if (nbttaglist.tagCount() > 0)
+        {
+            compound.setTag("Items", nbttaglist);
+        }
+    }
+
+    protected void writeSlotToNBT(NBTTagList nbttaglist,int slotId,boolean toDisk)
+    {
+        Slot slot = getSlot(slotId);
+        if (slot != null)
+        {
+            if (toDisk && slot.getItem() != null)
             {
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                nbttagcompound1.setByte("Slot", (byte)i);
-                getStackInSlot(i).writeToNBT(nbttagcompound1);
+                nbttagcompound1.setByte("Slot", (byte) slotId);
+                if (slot.getItem() != null)
+                {
+                    slot.getItem().writeToNBT(nbttagcompound1);
+                }
+                nbttaglist.appendTag(nbttagcompound1);
+            }
+            else if (!toDisk && slot.sendsToClient())
+            {
+                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+                nbttagcompound1.setByte("Slot", (byte) slotId);
+                if (slot.getItem() != null)
+                    slot.getItem().writeToNBT(nbttagcompound1);
                 nbttaglist.appendTag(nbttagcompound1);
             }
         }
-
-        compound.setTag("Items", nbttaglist);
     }
 
     @Override
@@ -126,26 +146,27 @@ public class Inventory implements IInventory
     }
 
     @Override
-    public ItemStack decrStackSize(int slot, int size)
+    public ItemStack decrStackSize(int slotId, int size)
     {
-        if (this.slots.get(slot) != null && this.slots.get(slot).getItem() != null)
+        Slot slot = getSlot(slotId);
+        if (slot != null && slot.getItem() != null)
         {
             ItemStack itemstack;
 
-            if (this.slots.get(slot).getItem().stackSize <= size)
+            if (slot.getItem().stackSize <= size)
             {
-                itemstack = this.slots.get(slot).getItem();
-                this.slots.get(slot).setItem(null);
+                itemstack = slot.getItem();
+                slot.setItem(null);
 
                 return itemstack;
             }
             else
             {
-                itemstack = this.slots.get(slot).getItem().splitStack(size);
+                itemstack = slot.getItem().splitStack(size);
 
-                if (this.slots.get(slot).getItem().stackSize == 0)
+                if (slot.getItem().stackSize == 0)
                 {
-                    this.slots.get(slot).setItem(null);
+                    slot.setItem(null);
                 }
 
                 return itemstack;
@@ -162,7 +183,7 @@ public class Inventory implements IInventory
     {
         if(this.slots.get(slot) != null)
         {
-            ItemStack itemstack = this.slots.get(slot).getItem();
+            ItemStack itemstack = getSlot(slot).getItem();
             this.slots.set(slot, null);
             return itemstack;
         }
@@ -173,7 +194,7 @@ public class Inventory implements IInventory
     @Override
     public void setInventorySlotContents(int slot, ItemStack item)
     {
-        this.slots.get(slot).setItem(item);
+        getSlot(slot).setItem(item);
 
         if(item != null && item.stackSize > this.getInventoryStackLimit())
         {
@@ -185,23 +206,32 @@ public class Inventory implements IInventory
     {
         for (int i = 0;i < slots.size();i++)
         {
-            if (slots.get(i).isValidForSlot(itemStack))
+            Slot slot = getSlot(i);
+            if (slot.isValidForSlot(itemStack))
             {
-                if (slots.get(i).getItem() == null)
+                if (slot.getItem() == null)
                 {
-                    slots.get(i).setItem(itemStack);
+                    slot.setItem(itemStack);
                     return;
-                }else if (ItemStack.areItemStacksEqual(slots.get(i).getItem(),itemStack) && slots.get(i).getItem().stackSize < slots.get(i).getItem().getMaxStackSize())
+                }else if (ItemStack.areItemStacksEqual(slot.getItem(),itemStack) && slot.getItem().stackSize < slot.getItem().getMaxStackSize())
                 {
-                    int newStackSize = Math.min(slots.get(i).getItem().stackSize+itemStack.stackSize,slots.get(i).getItem().getMaxStackSize());
-                    int leftStackSize =  slots.get(i).getItem().stackSize + itemStack.stackSize - newStackSize;
-                    slots.get(i).getItem().stackSize = newStackSize;
+                    int newStackSize = Math.min(slot.getItem().stackSize+itemStack.stackSize,slot.getItem().getMaxStackSize());
+                    int leftStackSize =  slot.getItem().stackSize + itemStack.stackSize - newStackSize;
+                    slot.getItem().stackSize = newStackSize;
                     if (leftStackSize <= 0)
                         return;
 
                     itemStack.stackSize=newStackSize;
                 }
             }
+        }
+    }
+
+    public void clearItems()
+    {
+        for (Slot slot : slots)
+        {
+            slot.setItem(null);
         }
     }
 
@@ -248,21 +278,22 @@ public class Inventory implements IInventory
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack item)
+    public boolean isItemValidForSlot(int slotID, ItemStack item)
     {
-        if (slot >= 0 && slot < getSizeInventory() && slots.get(slot) != null)
+        if (slotID >= 0 && slotID < getSizeInventory() && getSlot(slotID) != null)
         {
-            if (slots.get(slot).getItem() != null)
+            Slot slot = getSlot(slotID);
+            if (slot.getItem() != null)
             {
-                if (slots.get(slot).getItem().stackSize <= slots.get(slot).getMaxStackSize())
+                if (slot.getItem().stackSize <= slot.getMaxStackSize())
                 {
-                    return slots.get(slot).isValidForSlot(item);
+                    return slot.isValidForSlot(item);
                 }else
                 {
                     return false;
                 }
             }
-            return slots.get(slot).isValidForSlot(item);
+            return slot.isValidForSlot(item);
         }
         return true;
     }

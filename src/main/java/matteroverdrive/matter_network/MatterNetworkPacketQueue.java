@@ -18,6 +18,8 @@
 
 package matteroverdrive.matter_network;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -61,7 +63,28 @@ public class MatterNetworkPacketQueue<T extends MatterNetworkPacket> extends Mat
     }
 
     @Override
+    protected void readElementFromBuffer(ByteBuf byteBuf, T element)
+    {
+        element.readFromNBT(ByteBufUtils.readTag(byteBuf));
+    }
+
+    @Override
+    protected void writeElementToBuffer(ByteBuf byteBuf, T element)
+    {
+        NBTTagCompound tagCompound = new NBTTagCompound();
+        byteBuf.writeInt(MatterNetworkRegistry.getPacketID(element.getClass()));
+        element.writeToNBT(tagCompound);
+        ByteBufUtils.writeTag(byteBuf,tagCompound);
+    }
+
+    @Override
     protected Class getElementClassFromNBT(NBTTagCompound tagCompound) {
         return MatterNetworkRegistry.getPacketClass(tagCompound.getInteger("Type"));
+    }
+
+    @Override
+    protected Class getElementClassFromBuffer(ByteBuf byteBuf)
+    {
+        return MatterNetworkRegistry.getPacketClass(byteBuf.readInt());
     }
 }

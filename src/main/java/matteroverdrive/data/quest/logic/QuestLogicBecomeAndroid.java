@@ -90,6 +90,12 @@ public class QuestLogicBecomeAndroid extends AbstractQuestLogic
     }
 
     @Override
+    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    {
+
+    }
+
+    @Override
     public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
         boolean[] hasParts = new boolean[4];

@@ -55,7 +55,11 @@ public class MatterNetworkComponentPatternStorage extends MatterNetworkComponent
 
         if (packet instanceof MatterNetworkTaskPacket)
         {
-            executeTasks((MatterNetworkTaskPacket)packet,((MatterNetworkTaskPacket)packet).getTask(getWorldObj()));
+            MatterNetworkTask task = ((MatterNetworkTaskPacket)packet).getTask(getWorldObj());
+            if (task != null)
+            {
+                executeTasks((MatterNetworkTaskPacket) packet, task);
+            }
         }else if (packet instanceof MatterNetworkRequestPacket)
         {
             executeRequests((MatterNetworkRequestPacket) packet);

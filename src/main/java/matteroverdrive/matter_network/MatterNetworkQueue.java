@@ -18,6 +18,7 @@
 
 package matteroverdrive.matter_network;
 
+import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.network.IMatterNetworkConnection;
 import net.minecraft.nbt.NBTTagCompound;
@@ -157,9 +158,35 @@ public abstract class MatterNetworkQueue <T>
         }
     }
 
+    public void readFromBuffer(ByteBuf byteBuf)
+    {
+        elements.clear();
+        int elementsCount = byteBuf.readInt();
+        for (int i = 0;i < elementsCount;i++)
+        {
+            try
+            {
+                T element = (T)getElementClassFromBuffer(byteBuf).newInstance();
+                readElementFromBuffer(byteBuf,element);
+                elements.add(element);
+            }
+            catch (InstantiationException e)
+            {
+                MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while loading a packet of type %s",getElementClassFromBuffer(byteBuf));
+            }
+            catch (IllegalAccessException e)
+            {
+                MatterOverdrive.log.log(Level.ERROR, e, "There was a problem while loading a packet of type %s", getElementClassFromBuffer(byteBuf));
+            }
+        }
+    }
+
     protected abstract void readElementFromNBT(NBTTagCompound tagCompound,T element);
+    protected abstract void readElementFromBuffer(ByteBuf byteBuf,T element);
     protected abstract void writeElementToNBT(NBTTagCompound tagCompound,T element);
+    protected abstract void writeElementToBuffer(ByteBuf byteBuf,T element);
     protected abstract Class getElementClassFromNBT(NBTTagCompound tagCompound);
+    protected abstract Class getElementClassFromBuffer(ByteBuf byteBuf);
 
     public void writeToNBT(NBTTagCompound tagCompound)
     {
@@ -171,6 +198,14 @@ public abstract class MatterNetworkQueue <T>
             taskList.appendTag(taskNBT);
         }
         tagCompound.setTag(name,taskList);
+    }
+    public void writeToBuffer(ByteBuf byteBuf)
+    {
+        byteBuf.writeInt(elements.size());
+        for (T element : elements)
+        {
+            writeElementToBuffer(byteBuf,element);
+        }
     }
     public IMatterNetworkConnection getConnection()
     {

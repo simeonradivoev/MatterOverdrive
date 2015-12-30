@@ -20,15 +20,10 @@ package matteroverdrive.matter_network.components;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
-import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.matter_network.MatterNetworkPacket;
-import matteroverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
-import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.network.packet.client.PacketSendQueueFlash;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
 import matteroverdrive.util.MatterNetworkHelper;
-import matteroverdrive.util.TimeTracker;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -38,12 +33,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<TileEntityMachinePacketQueue> {
 
     public static int[] directions = {0,1,2,3,4,5};
-    private TimeTracker broadcastTracker;
 
     public MatterNetworkComponentQueue(TileEntityMachinePacketQueue queue)
     {
         super(queue);
-        broadcastTracker = new TimeTracker();
     }
 
     @Override
@@ -57,22 +50,10 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     {
         if (canPreform(packet) && packet.isValid(getWorldObj()))
         {
-            if (packet instanceof MatterNetworkBroadcastPacket)
-            {
-                if (manageBroadcastPacket((MatterNetworkBroadcastPacket)packet,from))
-                    return;
-            }
-            else if (packet instanceof MatterNetworkResponsePacket)
-            {
-                if (manageResponsePackets((MatterNetworkResponsePacket)packet,from))
-                    return;
-            }
-
             if (getPacketQueue(0).queue(packet))
             {
                 packet.addToPath(rootClient, from);
                 packet.tickAlive(getWorldObj(),true);
-                broadcastTracker.markTime(getWorldObj());
                 MatterOverdrive.packetPipeline.sendToAllAround(new PacketSendQueueFlash(rootClient), rootClient, 32);
             }
         }
@@ -95,33 +76,6 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
         return broadcastCount;
     }
 
-    boolean manageResponsePackets(MatterNetworkResponsePacket packet,ForgeDirection direction)
-    {
-        if (packet.getResponseType() == Reference.PACKET_RESPONCE_VALID && packet.getRequestType() == Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION)
-        {
-            rootClient.setConnection(direction.ordinal(), packet.getSender(getWorldObj()).getPosition());
-            rootClient.forceSync();
-            return true;
-        }
-        return false;
-    }
-
-    boolean manageBroadcastPacket(MatterNetworkBroadcastPacket packet,ForgeDirection direction)
-    {
-        if ((packet.getBroadcastType() == Reference.PACKET_BROADCAST_CONNECTION))
-        {
-            rootClient.setConnection(direction.ordinal(), packet.getSender(getWorldObj()).getPosition());
-            rootClient.forceSync();
-            return true;
-        }
-        return false;
-    }
-
-    private int getBroadcastDelay()
-    {
-        return (int)Math.round(TileEntityMachinePacketQueue.BROADCAST_DELAY * rootClient.getUpgradeMultiply(UpgradeTypes.Speed));
-    }
-
     @Override
     public int onNetworkTick(World world, TickEvent.Phase phase)
     {
@@ -131,13 +85,11 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
             for (int i = 0;i < getPacketQueueCount();i++) {
                 getPacketQueue(i).tickAllAlive(world, true);
 
-                if (broadcastTracker.hasDelayPassed(world, getBroadcastDelay())) {
-                    MatterNetworkPacket packet = getPacketQueue(i).dequeue();
-                    if (packet != null) {
-                        if (packet.isValid(world)) {
+                MatterNetworkPacket packet = getPacketQueue(i).dequeue();
+                if (packet != null) {
+                    if (packet.isValid(world)) {
 
-                            broadcastCount += handlePacketBroadcast(world, packet);
-                        }
+                        broadcastCount += handlePacketBroadcast(world, packet);
                     }
                 }
             }

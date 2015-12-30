@@ -61,6 +61,7 @@ public class GuiHandler implements IGuiHandler
             registerContainer(TileEntityInscriber.class,ContainerInscriber.class);
             registerContainer(TileEntityAndroidSpawner.class,ContainerAndroidSpawner.class);
             registerContainer(TileEntityMachineReplicator.class,ContainerReplicator.class);
+            registerContainer(TileEntityMachinePatternMonitor.class,ContainerPatternMonitor.class);
         }
         else
         {
@@ -72,7 +73,7 @@ public class GuiHandler implements IGuiHandler
             registerGui(TileEntityMachinePatternStorage.class, GuiPatternStorage.class);
             registerGuiAndContainer(TileEntityMachineSolarPanel.class, GuiSolarPanel.class, ContainerSolarPanel.class);
             registerGuiAndContainer(TileEntityWeaponStation.class, GuiWeaponStation.class, ContainerWeaponStation.class);
-            registerGui(TileEntityMachinePatternMonitor.class, GuiPatternMonitor.class);
+            registerGuiAndContainer(TileEntityMachinePatternMonitor.class, GuiPatternMonitor.class,ContainerPatternMonitor.class);
             registerGui(TileEntityMachineNetworkSwitch.class, GuiNetworkSwitch.class);
             registerGui(TileEntityMachineTransporter.class,GuiTransporter.class);
             registerGui(TileEntityMachineMatterRecycler.class, GuiRecycler.class);

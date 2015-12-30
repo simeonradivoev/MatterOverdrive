@@ -52,7 +52,7 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer {
     protected int drawSides(TileEntityPipe pipe, double x,
 							double y, double z, float f)
     {
-		int connections = pipe.getConnections();
+		int connections = pipe.getConnectionsMask();
         for (int i = 0; i < 6; i++)
         {
             if (MOMathHelper.getBoolean(connections,i))

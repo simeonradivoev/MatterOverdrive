@@ -18,8 +18,11 @@
 
 package matteroverdrive.data.quest.logic;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
 import matteroverdrive.api.quest.IQuestLogic;
 import matteroverdrive.data.quest.QuestStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Random;
@@ -57,6 +60,26 @@ public abstract class AbstractQuestLogic implements IQuestLogic
     {
         int randomCount = max - min;
         return min + (randomCount > 0 ? random.nextInt(randomCount) : 0);
+    }
+
+    protected String getEntityClassName(Class<? extends Entity> entityClass,String unknownTargetName)
+    {
+        if (entityClass != null)
+        {
+            EntityRegistry.EntityRegistration entityRegistration = EntityRegistry.instance().lookupModSpawn(entityClass, true);
+            if (entityRegistration != null)
+            {
+                return entityRegistration.getEntityName();
+            } else
+            {
+                String name = (String) EntityList.classToStringMapping.get(entityClass);
+                if (name != null)
+                {
+                    return name;
+                }
+            }
+        }
+        return unknownTargetName;
     }
 
     public IQuestLogic setAutoComplete(boolean autoComplete)

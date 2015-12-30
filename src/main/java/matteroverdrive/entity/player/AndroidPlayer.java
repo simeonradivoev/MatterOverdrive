@@ -209,7 +209,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 prop.setString("ActiveAbility", activeStat.getUnlocalizedName());
         }
         if (dataTypes.contains(DataType.INVENTORY)) {
-            inventory.writeToNBT(prop);
+            inventory.writeToNBT(prop,true);
         }else if (dataTypes.contains(DataType.BATTERY))
         {
             if (inventory.getStackInSlot(ENERGY_SLOT) != null)
@@ -247,6 +247,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 }
             }
             if (dataTypes.contains(DataType.INVENTORY)) {
+                this.inventory.clearItems();
                 this.inventory.readFromNBT(prop);
                 initFlag = true;
             } else if (dataTypes.contains(DataType.DATA.BATTERY)) {

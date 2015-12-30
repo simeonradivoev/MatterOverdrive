@@ -150,6 +150,12 @@ public class QuestLogicMine extends AbstractQuestLogic
     }
 
     @Override
+    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    {
+
+    }
+
+    @Override
     public int modifyXP(QuestStack questStack, EntityPlayer entityPlayer, int originalXp) {
         return originalXp + getMaxMineCount(questStack) * xpPerMine;
     }

@@ -21,6 +21,7 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
     {
         connections = pkt.func_148857_g().getInteger("Connections");
+        worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
     }
 
     @Override
@@ -28,7 +29,7 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
         tagCompound.setInteger("Connections",connections);
-        return new S35PacketUpdateTileEntity(xCoord,yCoord,zCoord,2,tagCompound);
+        return new S35PacketUpdateTileEntity(xCoord,yCoord,zCoord,0,tagCompound);
     }
 
     @Override
@@ -45,43 +46,28 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
 	{
         int connections = 0;
 
-        for(int i = 0;i < 6;i++)
+        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
         {
-            TileEntity t = this.worldObj.getTileEntity(ForgeDirection.values()[i].offsetX + this.xCoord,ForgeDirection.values()[i].offsetY + this.yCoord,ForgeDirection.values()[i].offsetZ + this.zCoord);
+            TileEntity t = this.worldObj.getTileEntity(direction.offsetX + this.xCoord,direction.offsetY + this.yCoord,direction.offsetZ + this.zCoord);
 
-            if(canConnectTo(t,ForgeDirection.values()[i]))
+            if(canConnectTo(t,direction))
             {
-                connections |= ForgeDirection.values()[i].flag;
+                connections |= direction.flag;
             }
         }
 
         this.setConnections(connections,notify);
 	}
 
-    public int getConnections()
+    public int getConnectionsMask()
     {
         return connections;
     }
 
     public void setConnections(int connections,boolean notify)
     {
-        if (worldObj != null && this.connections != connections) {
-
-            if (notify) {
-                for (int i = 0; i < 6; i++) {
-                    TileEntity t = this.worldObj.getTileEntity(ForgeDirection.values()[i].offsetX + this.xCoord, ForgeDirection.values()[i].offsetY + this.yCoord, ForgeDirection.values()[i].offsetZ + this.zCoord);
-                    if (t instanceof TileEntityPipe) {
-                        ((TileEntityPipe) t).updateSides(false);
-                    }
-                }
-            }
-
-            worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, connections, notify ? 3 : 0);
-            //worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
-            //worldObj.markBlockRangeForRenderUpdate(xCoord - 4,yCoord - 4,zCoord - 4,xCoord + 4,yCoord + 4,zCoord + 4);
-            //worldObj.notifyBlockOfNeighborChange(xCoord, yCoord, zCoord, blockType);
-        }
         this.connections = connections;
+        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
     }
 
     public abstract boolean canConnectTo(TileEntity entity,ForgeDirection direction);

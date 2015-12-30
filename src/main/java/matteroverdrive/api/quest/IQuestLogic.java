@@ -40,6 +40,7 @@ public interface IQuestLogic
     void initQuestStack(Random random,QuestStack questStack);
     boolean onEvent(QuestStack questStack, Event event,EntityPlayer entityPlayer);
     boolean areQuestStacksEqual(QuestStack questStackOne,QuestStack questStackTwo);
+    void onTaken(QuestStack questStack,EntityPlayer entityPlayer);
     void onCompleted(QuestStack questStack,EntityPlayer entityPlayer);
     int modifyXP(QuestStack questStack,EntityPlayer entityPlayer,int originalXp);
     void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards);
