@@ -40,7 +40,6 @@ import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentPatternStorage;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
-import matteroverdrive.util.MatterNetworkHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -446,17 +445,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
     @Override
     protected void onAwake(Side side)
     {
-        if (side.isServer())
-        {
-            MatterNetworkHelper.broadcastConnection(worldObj, this);
-            for (int slotId : pattern_storage_slots)
-            {
-                if(MatterHelper.isMatterPatternStorage(inventory.getStackInSlot(slotId)))
-                {
-                    //MatterDatabaseHelper.validatePatterns(inventory.getStackInSlot(slotId));
-                }
-            }
-        }
+
     }
 
     @Override
