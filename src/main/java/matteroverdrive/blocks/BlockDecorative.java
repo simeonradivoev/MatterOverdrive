@@ -66,6 +66,7 @@ public class BlockDecorative extends MOBlock implements IImageGenBlock {
         decorativeBlocks.add(this);
         MOImageGen.worldGenerationBlockColors.put(this,getBlockColor(0));
         this.iconNames = iconNames;
+        setRotationType(-1);
     }
 
     @Override

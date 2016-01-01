@@ -135,7 +135,7 @@ public class MOBlock extends Block
             int rotation = meta;
 
             if (rotationType == RotationType.FOUR_WAY) {
-                rotation = SIDE_LEFT[meta];
+                rotation = SIDE_LEFT[meta % SIDE_LEFT.length];
             } else if (rotationType == RotationType.SIX_WAY) {
                 if (meta < 6) {
                     rotation = (meta + 1) % 6;

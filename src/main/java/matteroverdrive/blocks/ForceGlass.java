@@ -43,6 +43,7 @@ public class ForceGlass extends BlockCT implements IDismantleable
     {
         super(material, name);
         setHardness(40);
+        setRotationType(-1);
     }
 
     @Override
