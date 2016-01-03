@@ -35,6 +35,9 @@ public class BlockInscriber extends MOBlockMachine
 {
     public BlockInscriber(Material material, String name) {
         super(material, name);
+        setHardness(20.0F);
+        this.setResistance(9.0f);
+        this.setHarvestLevel("pickaxe",2);
         setHasGui(true);
     }
 
