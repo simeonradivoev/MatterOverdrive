@@ -51,7 +51,6 @@ public abstract class MOWorldGenBuilding extends MOImageGen implements IMOWorldG
     public void generate(Random random, int x,int y,int z, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider,int layer)
     {
         generateFromImage(world, random, x, y + getYOffset(), z,layer);
-        onGeneration(random,world,x,y,z);
     }
 
     public boolean locationIsValidSpawn(World world, int i, int j, int k){
@@ -179,6 +178,7 @@ public abstract class MOWorldGenBuilding extends MOImageGen implements IMOWorldG
             {
                 if (currentLayer >= worldGenBuilding.getLayerCount())
                 {
+                    worldGenBuilding.onGeneration(random,world,x,y,z);
                     return true;
                 }else
                 {
