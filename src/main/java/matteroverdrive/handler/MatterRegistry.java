@@ -47,6 +47,7 @@ public class MatterRegistry implements IMatterRegistry
 {
     private boolean REGISTRATION_DEBUG = false;
     public boolean CALCULATION_DEBUG = false;
+    public boolean AUTOMATIC_CALCULATION = true;
     public boolean CALCULATE_RECIPES = true;
     public boolean CALCULATE_FURNACE = true;
     public boolean hasComplitedRegistration = false;
@@ -60,8 +61,9 @@ public class MatterRegistry implements IMatterRegistry
     {
         REGISTRATION_DEBUG = configurationHandler.getBool(ConfigurationHandler.KEY_MATTER_REGISTRATION_DEBUG,ConfigurationHandler.CATEGORY_DEBUG,false,"Enables Debug logging for Matter Registration");
         CALCULATION_DEBUG = configurationHandler.getBool(ConfigurationHandler.KEY_MATTER_CALCULATION_DEBUG,ConfigurationHandler.CATEGORY_DEBUG,false,"Enables Debug logging for Matter Calculation");
-        CALCULATE_RECIPES = configurationHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_RECIPE_CALCULATION,ConfigurationHandler.CATEGORY_MATTER,true,"Enables Automatic Matter Calculation from recipes");
-        CALCULATE_FURNACE = configurationHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_FURNACE_CALCULATION,configurationHandler.CATEGORY_MATTER,true,"Enables Automatic Matter Calculation from furnace recipes");
+        CALCULATE_RECIPES = configurationHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_RECIPE_CALCULATION,ConfigurationHandler.CATEGORY_MATTER,true,"Enables Matter Calculation from recipes");
+        CALCULATE_FURNACE = configurationHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_FURNACE_CALCULATION,configurationHandler.CATEGORY_MATTER,true,"Enables Matter Calculation from furnace recipes");
+        AUTOMATIC_CALCULATION = configurationHandler.getBool("automatic_calculation",configurationHandler.CATEGORY_MATTER,true,"Should the matter registry calculation run on world start when recipes, mods or blocks change");
     }
 
 	public MatterEntry register(MatterEntry entry)

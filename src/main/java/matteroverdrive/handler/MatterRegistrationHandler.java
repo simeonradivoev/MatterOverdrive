@@ -45,7 +45,7 @@ public class MatterRegistrationHandler
     public void serverStart(FMLServerStartedEvent event)
     {
         try {
-            if (MatterOverdrive.matterRegistry.needsCalculation(registryPath))
+            if (MatterOverdrive.matterRegistry.needsCalculation(registryPath) && MatterOverdrive.matterRegistry.AUTOMATIC_CALCULATION)
             {
                 try {
                     runCalculationThread();
@@ -57,9 +57,14 @@ public class MatterRegistrationHandler
                 try {
                     MatterOverdrive.matterRegistry.loadFromFile(registryPath);
                 }catch (Exception e) {
-                    MatterOverdrive.log.log(Level.ERROR, e, "There was a problem loading the Matter Registry file. Running Matter Calculation");
+                    MatterOverdrive.log.log(Level.ERROR, e, "There was a problem loading the Matter Registry file.");
+                    if (MatterOverdrive.matterRegistry.AUTOMATIC_CALCULATION)
                     {
+                        MatterOverdrive.log.log(Level.INFO, e, "Starting automatic matter calculation thread.");
                         runCalculationThread();
+                    }else
+                    {
+                        MatterOverdrive.log.log(Level.INFO, e, "Automatic matter calculation disabled. To enable go to Matter Overdrive configs");
                     }
                 }
             }
@@ -73,6 +78,7 @@ public class MatterRegistrationHandler
     {
         if (matterCalculationThread != null)
         {
+            MatterOverdrive.log.log(Level.INFO, "Old calculation thread is running. Stopping old calculation thread");
             matterCalculationThread.cancel(true);
             matterCalculationThread = null;
         }
