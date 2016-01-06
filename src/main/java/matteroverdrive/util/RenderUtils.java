@@ -78,12 +78,56 @@ public class RenderUtils
 			if (font == null) font = Minecraft.getMinecraft().fontRenderer;
 			renderItem.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), stack, x, y);
 			if (renderOverlay)
-				renderItem.renderItemOverlayIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), stack, x, y, stack.stackSize > 1 ? Integer.toString(stack.stackSize) : null);
+				renderItemOverlayIntoGUI(font, stack, x, y, stack.stackSize > 1 ? Integer.toString(stack.stackSize) : null);
 			renderItem.zLevel = 0.0F;
 
 			glEnable(GL_ALPHA_TEST);
 			glDisable(GL_LIGHTING);
 			glPopMatrix();
+		}
+	}
+
+    /**
+     * Should be the same as {@link RenderItem#renderItemOverlayIntoGUI(FontRenderer, TextureManager, ItemStack, int, int,String)}
+     */
+	public static void renderItemOverlayIntoGUI(FontRenderer p_94148_1_, ItemStack p_94148_3_, int p_94148_4_, int p_94148_5_, String p_94148_6_)
+	{
+		if (p_94148_3_ != null)
+		{
+			if (p_94148_3_.stackSize > 1 || p_94148_6_ != null)
+			{
+				String s1 = p_94148_6_ == null ? String.valueOf(p_94148_3_.stackSize) : p_94148_6_;
+				GL11.glDisable(GL11.GL_LIGHTING);
+				//GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glDisable(GL11.GL_BLEND);
+				p_94148_1_.drawStringWithShadow(s1, p_94148_4_ + 19 - 2 - p_94148_1_.getStringWidth(s1), p_94148_5_ + 6 + 3, 16777215);
+				GL11.glEnable(GL11.GL_LIGHTING);
+				//GL11.glEnable(GL11.GL_DEPTH_TEST);
+			}
+
+			if (p_94148_3_.getItem().showDurabilityBar(p_94148_3_))
+			{
+				double health = p_94148_3_.getItem().getDurabilityForDisplay(p_94148_3_);
+				int j1 = (int)Math.round(13.0D - health * 13.0D);
+				int k = (int)Math.round(255.0D - health * 255.0D);
+				GL11.glDisable(GL11.GL_LIGHTING);
+				//GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GL11.glDisable(GL11.GL_ALPHA_TEST);
+				GL11.glDisable(GL11.GL_BLEND);
+				Tessellator tessellator = Tessellator.instance;
+				int l = 255 - k << 16 | k << 8;
+				int i1 = (255 - k) / 4 << 16 | 16128;
+				drawPlaneWithUV(p_94148_4_ + 2, p_94148_5_ + 13,0, 13, 2,0,0,0, 0,0);
+				drawPlaneWithUV( p_94148_4_ + 2, p_94148_5_ + 13,0, 12, 1,0,0,0,0,i1);
+				drawPlaneWithUV(p_94148_4_ + 2, p_94148_5_ + 13,0, j1, 1,0,0,0, 0,l);
+				GL11.glEnable(GL11.GL_BLEND); // Forge: Disable Bled because it screws with a lot of things down the line.
+				GL11.glEnable(GL11.GL_ALPHA_TEST);
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				GL11.glEnable(GL11.GL_LIGHTING);
+				//GL11.glEnable(GL11.GL_DEPTH_TEST);
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			}
 		}
 	}
 
@@ -172,9 +216,21 @@ public class RenderUtils
 	}
 	public static void drawPlaneWithUV(double x,double y,double z,double sizeX,double sizeY,double uStart,double vStart,double uSize,double vSize)
 	{
+        Tessellator tessellator = Tessellator.instance;
+
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(x + sizeX, y + sizeY, z, uStart + uSize, vStart + vSize);
+        tessellator.addVertexWithUV(x + sizeX, y, z, uStart + uSize, vStart);
+        tessellator.addVertexWithUV(x, y, z, uStart, vStart);
+        tessellator.addVertexWithUV(x, y + sizeY, z, uStart, vStart + vSize);
+        tessellator.draw();
+	}
+	public static void drawPlaneWithUV(double x,double y,double z,double sizeX,double sizeY,double uStart,double vStart,double uSize,double vSize,int color)
+	{
 		Tessellator tessellator = Tessellator.instance;
 
 		tessellator.startDrawingQuads();
+		tessellator.setColorOpaque_I(color);
 		tessellator.addVertexWithUV(x + sizeX, y + sizeY, z, uStart + uSize, vStart + vSize);
 		tessellator.addVertexWithUV(x + sizeX, y, z, uStart + uSize, vStart);
 		tessellator.addVertexWithUV(x, y, z, uStart, vStart);

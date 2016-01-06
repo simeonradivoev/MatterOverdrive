@@ -18,7 +18,7 @@
 
 package matteroverdrive.api.dialog;
 
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**

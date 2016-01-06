@@ -19,9 +19,13 @@
 package matteroverdrive.api.inventory;
 
 import com.google.common.collect.Multimap;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.entity.player.AndroidPlayer;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Simeon on 5/26/2015.
@@ -59,4 +63,16 @@ public interface IBionicPart
      * @return A multimap of modifiers.
      */
     Multimap<String, AttributeModifier> getModifiers(AndroidPlayer player, ItemStack itemStack);
+
+    /**
+     * Returns the bionic part texture for the given item stack.
+     * @param androidPlayer the android player.
+     * @param itemStack the item stack.
+     * @return the resource location of the texture.
+     */
+    @SideOnly(Side.CLIENT)
+    ResourceLocation getTexture(AndroidPlayer androidPlayer,ItemStack itemStack);
+
+    @SideOnly(Side.CLIENT)
+    ModelBiped getModel(AndroidPlayer androidPlayer,ItemStack itemStack);
 }

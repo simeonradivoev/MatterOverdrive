@@ -19,6 +19,7 @@
 package matteroverdrive.data.quest;
 
 import matteroverdrive.api.quest.IQuestLogic;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

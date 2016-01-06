@@ -1,10 +1,9 @@
 package matteroverdrive.data.quest.logic;
 
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestItem;
-import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,19 +74,17 @@ public abstract class QuestLogicRandomItem extends AbstractQuestLogic
 
     public int getItemType(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return questStack.getTagCompound().getByte("ItemType");
+            return getTag(questStack).getByte("ItemType");
         }
         return 0;
     }
 
     public void setItemType(QuestStack questStack,int itemType)
     {
-        if (questStack.getTagCompound() == null)
-            questStack.setTagCompound(new NBTTagCompound());
-
-        questStack.getTagCompound().setByte("ItemType",(byte) itemType);
+        initTag(questStack);
+        getTag(questStack).setByte("ItemType",(byte) itemType);
     }
 
     public QuestLogicRandomItem setRandomItem(boolean randomItem)

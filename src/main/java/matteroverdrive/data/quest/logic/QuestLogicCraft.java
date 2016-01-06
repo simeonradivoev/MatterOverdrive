@@ -20,11 +20,11 @@ package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestItem;
-import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
 import java.util.Random;
@@ -37,6 +37,16 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     int minCraftCount;
     int maxCraftCount;
     int xpPerCraft;
+
+    public QuestLogicCraft(ItemStack itemStack)
+    {
+        this(itemStack,0,0,0);
+    }
+
+    public QuestLogicCraft(ItemStack itemStack,int minCraftCount,int maxCraftCount)
+    {
+        this(itemStack,minCraftCount,maxCraftCount,0);
+    }
 
     public QuestLogicCraft(ItemStack itemStack,int minCraftCount,int maxCraftCount,int xpPerCraft)
     {
@@ -88,27 +98,25 @@ public class QuestLogicCraft extends QuestLogicRandomItem
 
     public int getCraftCount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return questStack.getTagCompound().getInteger("CraftCount");
+            return getTag(questStack).getInteger("CraftCount");
         }
         return 0;
     }
 
     public void setCraftCount(QuestStack questStack,int count)
     {
-        if (questStack.getTagCompound() == null)
-            questStack.setTagCompound(new NBTTagCompound());
-
-        questStack.getTagCompound().setInteger("CraftCount",count);
+        initTag(questStack);
+        getTag(questStack).setInteger("CraftCount",count);
     }
 
     public int getMaxCraftCount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
             ItemStack itemStack = getItem(questStack);
-            return itemStack.stackSize + questStack.getTagCompound().getInteger("MaxCraftCount");
+            return itemStack.stackSize + getTag(questStack).getInteger("MaxCraftCount");
         }
         return 0;
     }
@@ -126,10 +134,9 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     @Override
     public void initQuestStack(Random random, QuestStack questStack)
     {
-        if (questStack.getTagCompound() == null)
-            questStack.setTagCompound(new NBTTagCompound());
+        initTag(questStack);
         initItemType(random,questStack);
-        questStack.getTagCompound().setInteger("MaxCraftCount",random(random,minCraftCount,maxCraftCount));
+        getTag(questStack).setInteger("MaxCraftCount",random(random,minCraftCount,maxCraftCount));
     }
 
     @Override
@@ -146,11 +153,10 @@ public class QuestLogicCraft extends QuestLogicRandomItem
 
                     if (isObjectiveCompleted(questStack,entityPlayer,0) && autoComplete)
                     {
-                        questStack.setCompleted(true);
-                    } else
-                    {
-                        return true;
+                        questStack.markComplited(entityPlayer,false);
                     }
+
+                    return true;
                 }
             }
         }
@@ -169,7 +175,7 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     }
 
     @Override
-    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards) {
+    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<IQuestReward> rewards) {
 
     }
 

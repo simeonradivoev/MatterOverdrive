@@ -18,14 +18,16 @@
 
 package matteroverdrive.items.android;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import matteroverdrive.Reference;
 import matteroverdrive.entity.player.AndroidAttributes;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.UUID;
 
@@ -56,9 +58,24 @@ public class TritaniumSpine extends BionicPart
     @Override
     public Multimap<String, AttributeModifier> getModifiers(AndroidPlayer player, ItemStack itemStack)
     {
-        Multimap multimap = HashMultimap.create();
-        multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(),new AttributeModifier(healthModifierID, MOStringHelper.translateToLocal("modifier.bionic.max_health"),2f,0));
-        multimap.put(AndroidAttributes.attributeGlitchTime.getAttributeUnlocalizedName(),new AttributeModifier(glitchModifierID,MOStringHelper.translateToLocal("modifier.bionic.glitch_time"),-0.5f,2));
+        Multimap multimap = super.getModifiers(player,itemStack);
+        if (multimap.isEmpty())
+        {
+            multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), new AttributeModifier(healthModifierID, MOStringHelper.translateToLocal("attribute.name." + SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName()), 2f, 0));
+            multimap.put(AndroidAttributes.attributeGlitchTime.getAttributeUnlocalizedName(), new AttributeModifier(glitchModifierID, MOStringHelper.translateToLocal("attribute.name.android.glitchTime"), -0.5f, 2));
+        }
         return multimap;
+    }
+
+    @Override
+    public ResourceLocation getTexture(AndroidPlayer androidPlayer, ItemStack itemStack)
+    {
+        return new ResourceLocation(Reference.PATH_ARMOR + "tritanium_spine.png");
+    }
+
+    @Override
+    public ModelBiped getModel(AndroidPlayer androidPlayer, ItemStack itemStack)
+    {
+        return null;
     }
 }

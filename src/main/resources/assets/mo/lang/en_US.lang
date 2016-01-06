@@ -44,6 +44,8 @@ item.rouge_android_part.head.name=Android Head
 item.rouge_android_part.arms.name=Android Arm
 item.rouge_android_part.legs.name=Android Leg
 item.rouge_android_part.chest.name=Android Torso
+item.rouge_android_part.melee=Melee Android
+item.rouge_android_part.range=Range Android
 item.forcefield_emitter.name=Force Field Emitter
 item.hc_battery.name=High Capacity Battery
 item.ship_factory.name=Ship Factory
@@ -87,6 +89,9 @@ item.tritanium_axe.name=Tritanium Axe
 item.contract.name=Contract
 item.ion_sniper.name=Ion Sniper
 item.plasma_shotgun.name=Plasma Shotgun
+item.weapon_receiver.name=Weapon Receiver
+item.weapon_handle.name=Weapon Handle
+item.plasma_core.name=Plasma Core
 
 //////////// Upgrades ////////////
 item.upgrade.speed.name=Speed Upgrade
@@ -159,6 +164,7 @@ tile.force_glass.name=Tritanium Glass
 tile.bounding_box.name=Bounding Block
 tile.inscriber.name=Molecular Inscriber
 tile.fusion_reactor_io.name=Fusion Reactor IO
+tile.contract_market.name=Contract Market
 
 //////////// Pattern Storage ////////////
 tile.pattern_storage.name=Pattern Storage
@@ -237,6 +243,7 @@ entity.failed_sheep.name=Failed Sheep
 entity.mad_scientist.name=Mad Scientist
 entity.mad_scientist.junkie.name=Mad Scientist Junkie
 entity.ranged_rogue_android.name=Ranged Rogue Android
+entity.mutant_scientist.name=Mutant Scientist
 
 ///////////// Decorative ////////////////////
 tile.decorative.stripes.name=Yellow Stripes
@@ -378,6 +385,7 @@ gui.tooltip.quest.abandon=Abandon Selected Quest
 gui.tooltip.quest.active_quests=Current Quests
 gui.tooltip.quest.accept=Accept Quest
 gui.tooltip.quest.complete=Complete Quest
+gui.tooltip.locks=Locks
 
 ////////// Labels //////////////
 gui.label.button.save=Save
@@ -482,6 +490,10 @@ biotic_stat.nightvision.name=Night Vision
 biotic_stat.nightvision.details=Allows the player to see in the dark. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
 biotic_stat.minimap.name=Minimap
 biotic_stat.minimap.details=Adds a minimap to the HUD
+biotic_stat.flash_cooling.name=Flash Cooling
+biotic_stat.flash_cooling.details=Gives %s change to instantly/n/cool a weapon down when overheated.
+biotic_stat.shockwave.name=Sonic Shockwave
+biotic_stat.shockwave.details=Releases a burst of kinetic energy/n/that damages and knocks nearby enemies up to %1$s blocks/n/To release press the action key while active/n/or hold shift while falling
 
 ##########################################################################################################
 # Deaths
@@ -602,10 +614,12 @@ guide.entry.tritanium_armor.name=Tritanium Armor
 guide.entry.tritanium_tools.name=Tritanium Tools
 
 ###############################################################################################################
-# modifiers
+# attributes
 
 modifier.bionic.max_health=Max Health
-modifier.bionic.glitch_time=Glitch Time
+attribute.name.android.glitchTime=Glitch Time
+attribute.name.android.batteryUse=Battery Use
+
 
 ###############################################################################################################
 # others
@@ -635,7 +649,7 @@ rarity.legendary=Legendary
 ###############################################################################################################
 # others
 quest.kill_androids.0.title=They will kill us all!
-quest.kill_androids.0.info=The are taking over the world! I know it! We must fight our machine overlords. If we don't, we will all perish. The fight starts with you %1$s! I need you to kill %2$s %3$s before they get to us.
+quest.kill_androids.0.info=The are taking over the world! I don't know how exactly they got here, but there numbers are growing by the day. It's seems like there's no end to them. We must fight for if we don't, we will all perish. The fight starts with you %1$s! We need you to help us kill as many of them as possible, before they get us all.
 quest.kill_androids.0.objective.0=Kill %2$s/%3$s Rogue Androids.
 quest.cocktail_of_ascension.title=Cocktail of Ascension
 quest.cocktail_of_ascension.info=A Crazy scientist has asked you to bring him %2$s gunpowder from a shoveled creeper and %3$s red mushrooms from the darkest depths of the Nether, for his Cocktail Of Ascension.
@@ -647,13 +661,13 @@ quest.sacrifice.title=Sacrifice
 quest.sacrifice.info=We are the Dark Vail. We have begun restoring an ancient artifact, the effects of which will remain a secret. All we need from you %1$s is to sacrifice %2$s %3$s newborns in the name of the dark lord, whose name strikes fear in the hearts of the innocent. Barry the dark lord. You will be compensated handsomely for your efforts.
 quest.sacrifice.objective.0=Kill %2$s/%3$s Baby %4$s
 quest.department_of_agriculture.title=Department of Agriculture
-quest.department_of_agriculture.info=To all willing hands. This is a job offer from the department of agriculture. We operate in the desolate world of Barus V and you can image the obstacles we face when it comes to growing %3$s. As our plans for hydroponic farms come to turn, our people starve to death. We are searching for capable parties to aid us in the supplying of %3$s to our citizens.
+quest.department_of_agriculture.info=To all willing hands. This is a job offer from the department of agriculture. We operate in the desolate world of Barus V and you can image the obstacles we face when it comes to growing %3$s. As our plans for hydroponic farms come to turn, our people starve to death. We are searching for capable parties to aid us in the supplying of %3$s shipments to our citizens in need.
 quest.department_of_agriculture.objective.0=Gather %2$s/%3$s %4$s
 quest.one_true_love.title=One true love
 quest.one_true_love.info=I'm so happy! You can't even imagine what a joyous moment this is! Merry has finally agreed to merry me. You don't even know how many times I've tried to win her heart. At long last her father gave us his blessing. I know our love is more than enough to keeps us going, but I wanted to give her something special. I was hoping you can find me a diamond so I can put a marvelous ring onto her precious finger. I will forever be in dept and I will be more than happy to compensate for you troubles.
 quest.one_true_love.objective.0=Mine $mineAmount/$maxMineAmount Diamonds
 quest.weapons_of_war.title=Weapons of war
-quest.weapons_of_war.info=They have oppressed us for long enough! Our proud people will no longer stand for this. Years of oppression, end now! We may be broken in body be we are strong in spirit. This is where we need your help. It may not be pretty, but war is coming and we need a way to defend ourselves. They will throw everything they have at us. The first step to winning the fight is building anvils and then using those anvils to craft the weapons we desperately need.
+quest.weapons_of_war.info=They have oppressed us for long enough! Our proud people will no longer stand for this. Years of oppression, end now! We may be broken in body be we are strong in spirit. This is where we need your help. It may not be pretty, but war is coming and we need a way to defend ourselves. They will throw everything they have at us. The first step of many, is to build anvils use them to forge the weapons we desperately need.
 quest.weapons_of_war.objective.0=Craft $craftAmount/$craftMaxAmount $craftItem
 quest.weapons_of_war.objective.1=Craft $craftAmount swords.
 quest.to_the_power_of.title=To the power of
@@ -663,3 +677,19 @@ quest.puny_humans.title=Puny Humans
 quest.puny_humans.info=I have spoken to scientist, who is obviously mad, but makes quite the offering. He has agreed to make me into an android. All I need to do is collect a full set of Android Parts for the procedure. Rouge Androids seem to be the only ones who drop the parts needed.
 quest.puny_humans.objective.0=Collect a full set of android parts
 quest.puny_humans.objective.1=Talk to the mad scientist
+quest.is_it_really_me.title=Is it really me ?
+quest.is_it_really_me.info=Our investors have finally decided to let us begin human trails. We are all ready to proceed whenever you are. We have done rigorous testing on animals and inanimate objects and the fail rate is well below 25%. We can assure you that everything will go according to plan. Of course there is still the matter of the psychological barriers, we don't know how exactly the Edux got over them, but we are positive you can push yourself to do it. Just step onto the platform and close your eyes.
+quest.is_it_really_me.objective.0=Use a Transporter
+quest.beast_belly.title=The belly of the beast
+quest.beast_belly.info=There is no easy way to say this, but we need you to die for us. For science! Have you ever encountered strange gravitational anomalies? We can't figure out exactly what happens then matter is introduced into their event horizon. We can see it growing, but where does all that matter go ? We want you to travel into the event horizon of a gravitational anomaly and see what mysteries lie within. Be careful, it might hurt a bit.
+quest.beast_belly.objective.0=Travel into an anomaly's horizon
+quest.crash_landing.title=Crash Landing
+quest.crash_landing.info=Captain's Log stardate 48940.8./n//n/I've had to initiate emergency landing procedures. My ship's port nacelle is completely fried. I have enough emergency rations to last me for a while, but the watter tank was ruptured./n/I must get out and find fresh water pronto./n/From what I can gather by looking at the star charts , I seem to have crashed somewhere in the orion sector. Last I heard the whole sector was overwhelmed with Edux rejects./n/I guess that means I won't find anybody to talk to in a while./n/To think this happened just before I got to finally visit Emily for the first time, in 5 years.
+quest.crash_landing.objective.0=Build a $craftItem and try to hack the terminal to contact the captain's family.
+quest.we_must_know.title=We must know
+quest.we_must_know.info=Thank you for contacting us./n/I still find this whole ordeal shocking. I know we weren't on the best of terms for quite some time, but I just can't imagine what my daughter feels right now./n/Emily is quite a strong woman, but she didn't take the news very well./n/I have one last request of you. As his commanding officer It's my duty to honor the death of a fellow solder. Hell it's the least I can do./n/Will you put down the $block I've sent you so that we can retrieve all of his logs. I know he cared deeply for my Emily and I hope there is something in there to put my daughter's mind at ease.
+quest.we_must_know.objective.0=Place the $block near the ship at $distance away.
+quest.gmo.title=G.M.O.
+quest.gmo.info=Replicating vegetables! That's just absurd!/n/They taste awful, all those replicated stuff feel just like eating plastic./n/No no, we need something different. I just got my new biolistic particle delivery system and I can't wait to test that baby out. I see all these pathetic villagers planting their crops, crawling in the dirt like animals. I just need to get my hands on some crop gene sequences. The thing is these brainless, villagers won't let me anywhere near the crops. Can you use my Data Pad and scan some for me? I'm sure I can give you something for the favor. I had some old android parts laying around.
+quest.gmo.objective.0=Scan $scanAmount/$maxScanAmount $block with the Scientist's Data Pad.
+quest.gmo.objective.1=Now scan $scanAmount/$maxScanAmount $block.

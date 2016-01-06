@@ -20,10 +20,11 @@ package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import matteroverdrive.api.quest.IQuestLogic;
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.QuestStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Random;
 
@@ -33,6 +34,7 @@ import java.util.Random;
 public abstract class AbstractQuestLogic implements IQuestLogic
 {
     protected boolean autoComplete;
+    protected String id;
 
     @Override
     public String modifyTitle(QuestStack questStack, String original)
@@ -82,9 +84,61 @@ public abstract class AbstractQuestLogic implements IQuestLogic
         return unknownTargetName;
     }
 
-    public IQuestLogic setAutoComplete(boolean autoComplete)
+    public AbstractQuestLogic setAutoComplete(boolean autoComplete)
     {
         this.autoComplete = autoComplete;
         return this;
+    }
+
+    @Override
+    public String getID()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    protected boolean hasTag(QuestStack questStack)
+    {
+        if (getID() == null)
+        {
+            return questStack.getTagCompound() != null;
+        }else
+        {
+            return questStack.getTagCompound() != null && questStack.getTagCompound().hasKey(getID());
+        }
+    }
+
+    protected void initTag(QuestStack questStack)
+    {
+        if (!hasTag(questStack))
+        {
+            if (getID() == null)
+            {
+                questStack.setTagCompound(new NBTTagCompound());
+            }
+            else
+            {
+                NBTTagCompound tagCompound = questStack.getTagCompound();
+                if (tagCompound == null)
+                    tagCompound = new NBTTagCompound();
+                tagCompound.setTag(getID(),new NBTTagCompound());
+                questStack.setTagCompound(tagCompound);
+            }
+        }
+    }
+
+    protected NBTTagCompound getTag(QuestStack questStack)
+    {
+        if (getID() == null)
+        {
+            return questStack.getTagCompound();
+        }else
+        {
+            return questStack.getTagCompound().getCompoundTag(getID());
+        }
     }
 }

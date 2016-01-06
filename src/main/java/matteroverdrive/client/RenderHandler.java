@@ -50,7 +50,7 @@ import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.init.MatterOverdriveItems;
-import matteroverdrive.items.RougeAndroidParts;
+import matteroverdrive.items.android.RougeAndroidParts;
 import matteroverdrive.items.android.TritaniumSpine;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import matteroverdrive.starmap.data.Galaxy;
@@ -154,6 +154,8 @@ public class RenderHandler
     //region Models
     public ModelTritaniumArmor modelTritaniumArmor;
     public ModelTritaniumArmor modelTritaniumArmorFeet;
+    public ModelBiped modelMeleeRogueAndroidParts;
+    public ModelBiped modelRangedRogueAndroidParts;
     //endregion
 
     public RenderHandler(World world, TextureManager textureManager)
@@ -225,10 +227,10 @@ public class RenderHandler
     }
 
     @SubscribeEvent
-    public void onPlayerRender(RenderPlayerEvent.Post event)
+    public void onPlayerRenderPost(RenderPlayerEvent.Post event)
     {
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glColor3f(1, 1, 1);
+        //GL11.glEnable(GL11.GL_LIGHTING);
+        //GL11.glColor3f(1, 1, 1);
 
         AndroidPlayer androidPlayer = AndroidPlayer.get(event.entityPlayer);
         if (androidPlayer != null && androidPlayer.isAndroid() && !event.entityPlayer.isInvisible()) {
@@ -248,6 +250,28 @@ public class RenderHandler
                         {
                             MOLog.log(Level.ERROR,e,"An Error occurred while rendering bionic part");
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerRenderPre(RenderPlayerEvent.Pre event)
+    {
+        //GL11.glEnable(GL11.GL_LIGHTING);
+        //GL11.glColor3f(1, 1, 1);
+
+        AndroidPlayer androidPlayer = AndroidPlayer.get(event.entityPlayer);
+        if (androidPlayer != null && androidPlayer.isAndroid() && !event.entityPlayer.isInvisible()) {
+            for (int i = 0; i < 5; i++)
+            {
+                ItemStack part = androidPlayer.getStackInSlot(i);
+                if (part != null && part.getItem() instanceof IBionicPart)
+                {
+                    IBionicPartRenderer renderer = bionicPartRenderRegistry.getRenderer(((IBionicPart) part.getItem()).getClass());
+                    if (renderer != null) {
+                        renderer.affectPlayerRenderer(part, androidPlayer, event.renderer, event.partialRenderTick);
                     }
                 }
             }
@@ -388,6 +412,8 @@ public class RenderHandler
     {
         modelTritaniumArmor = new ModelTritaniumArmor(0);
         modelTritaniumArmorFeet = new ModelTritaniumArmor(0.5f);
+        modelMeleeRogueAndroidParts = new ModelBiped(0);
+        modelRangedRogueAndroidParts = new ModelBiped(0,0,96,64);
     }
 
     public RenderParticlesHandler getRenderParticlesHandler()

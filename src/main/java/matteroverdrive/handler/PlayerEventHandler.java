@@ -24,6 +24,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.events.MOEventScan;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.AndroidPlayer;
@@ -35,6 +36,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -192,6 +194,32 @@ public class PlayerEventHandler
         if (event.player != null)
         {
             MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
+            if (extendedProperties != null)
+            {
+                extendedProperties.onEvent(event);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerFlyableFallEvent(PlayerFlyableFallEvent event)
+    {
+        if (event.entityPlayer != null)
+        {
+            AndroidPlayer androidPlayer = AndroidPlayer.get(event.entityPlayer);
+            if (androidPlayer != null && androidPlayer.isAndroid())
+            {
+                androidPlayer.triggerEventOnStats(event);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerScanEvent(MOEventScan event)
+    {
+        if (event.getSide() == Side.SERVER && event.entityPlayer != null)
+        {
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);

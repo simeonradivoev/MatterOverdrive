@@ -19,12 +19,9 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -46,16 +43,15 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
     {
         if (android.getPlayer().worldObj.getWorldTime() % 20 == 0)
         {
-            if (android.getPlayer().getHealth() > 0 && !android.getPlayer().isDead && android.getPlayer().getHealth() < android.getPlayer().getMaxHealth() && android.extractEnergy(ENERGY_PER_REGEN, true) == ENERGY_PER_REGEN) {
+            if (android.getPlayer().getHealth() > 0 && !android.getPlayer().isDead && android.getPlayer().getHealth() < android.getPlayer().getMaxHealth() && android.hasEnoughEnergyScaled(ENERGY_PER_REGEN)) {
                 android.getPlayer().heal(REGEN_AMOUNT_PER_TICK * 20);
-                android.extractEnergy(ENERGY_PER_REGEN * 20, false);
+                android.extractEnergyScaled(ENERGY_PER_REGEN * 20);
             }
         }
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
     {
 
     }

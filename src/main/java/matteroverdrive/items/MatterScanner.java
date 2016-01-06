@@ -24,6 +24,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IScannable;
+import matteroverdrive.api.events.MOEventScan;
+import matteroverdrive.api.inventory.IBlockScanner;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.client.sound.MachineSound;
 import matteroverdrive.data.BlockPos;
@@ -48,12 +50,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
-public class MatterScanner extends MOBaseItem
+public class MatterScanner extends MOBaseItem implements IBlockScanner
 {
 	public static final String SELECTED_TAG_NAME = "lastSelected";
 	public static final String PAGE_TAG_NAME = "page";
@@ -342,7 +345,7 @@ public class MatterScanner extends MOBaseItem
 
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
 	{
-		MovingObjectPosition hit = getScanningPos(entityplayer);
+		MovingObjectPosition hit = getScanningPos(itemstack,entityplayer);
 		if( hit != null && hit.typeOfHit != MovingObjectPosition.MovingObjectType.MISS)
 		{
 			if (world.isRemote)
@@ -380,7 +383,7 @@ public class MatterScanner extends MOBaseItem
 			return scanner;
 		}
 
-		MovingObjectPosition position = getScanningPos(player);
+		MovingObjectPosition position = getScanningPos(scanner,player);
 		if (position != null && position.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
 			if (!world.isRemote) {
 				int x = position.blockX;
@@ -389,21 +392,31 @@ public class MatterScanner extends MOBaseItem
 				ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z);
 
 				//finished scanning
-				Scan(world, scanner, player, worldItem, x, y, z);
+                if (!MinecraftForge.EVENT_BUS.post(new MOEventScan(player,scanner,position)))
+                {
+                    Scan(world, scanner, player, worldItem, x, y, z);
+                }
 			}
 		}
 		return scanner;
 	}
 
-	public MovingObjectPosition getScanningPos(EntityPlayer player)
+	@Override
+	public MovingObjectPosition getScanningPos(ItemStack itemStack,EntityPlayer player)
 	{
-		return MOPhysicsHelper.rayTrace(player, player.worldObj, 5, 0, Vec3.createVectorHelper(0, player.getEyeHeight(), 0), true, false);
+        return MOPhysicsHelper.rayTrace(player, player.worldObj, 5, 0, Vec3.createVectorHelper(0, player.worldObj.isRemote ? 0 : player.getEyeHeight(), 0), true, false);
 	}
 
-	@Override
+    @Override
+    public boolean destroysBlocks(ItemStack itemStack)
+    {
+        return true;
+    }
+
+    @Override
 	public void onUsingTick(ItemStack scanner, EntityPlayer player, int count)
 	{
-		MovingObjectPosition hit = getScanningPos(player);
+		MovingObjectPosition hit = getScanningPos(scanner,player);
 
 		if (hit != null) {
 

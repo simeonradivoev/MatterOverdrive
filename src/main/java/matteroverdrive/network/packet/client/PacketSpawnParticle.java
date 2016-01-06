@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.fx.AndroidTeleportParticle;
+import matteroverdrive.fx.ShockwaveParticle;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.particle.EntityFX;
@@ -23,6 +24,7 @@ public class PacketSpawnParticle extends PacketAbstract
     double x,y,z;
     int count;
     int blending;
+    float size;
 
     public PacketSpawnParticle()
     {
@@ -31,12 +33,18 @@ public class PacketSpawnParticle extends PacketAbstract
 
     public PacketSpawnParticle(String particleType, double x, double y, double z, int count, int blending)
     {
+        this(particleType,x,y,z,count,blending,0);
+    }
+
+    public PacketSpawnParticle(String particleType, double x, double y, double z, int count, int blending,float size)
+    {
         this.particleType = particleType;
         this.x = x;
         this.y = y;
         this.z = z;
         this.count = count;
         this.blending = blending;
+        this.size = size;
     }
 
     @Override
@@ -47,6 +55,7 @@ public class PacketSpawnParticle extends PacketAbstract
         z = buf.readDouble();
         count = buf.readInt();
         blending = buf.readByte();
+        size = buf.readableBytes();
     }
 
     @Override
@@ -57,6 +66,7 @@ public class PacketSpawnParticle extends PacketAbstract
         buf.writeDouble(z);
         buf.writeInt(count);
         buf.writeByte(blending);
+        buf.writeFloat(size);
     }
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketSpawnParticle>
@@ -75,6 +85,9 @@ public class PacketSpawnParticle extends PacketAbstract
             if (message.particleType.equalsIgnoreCase("teleport"))
             {
                 particle = new AndroidTeleportParticle(world,message.x,message.y,message.z);
+            }else if (message.particleType.equalsIgnoreCase("shockwave"))
+            {
+                particle = new ShockwaveParticle(world,message.x,message.y,message.z,message.size);
             }
 
             if (particle != null) {

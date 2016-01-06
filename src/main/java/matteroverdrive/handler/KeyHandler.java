@@ -29,6 +29,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.items.MatterScanner;
+import matteroverdrive.network.packet.server.PacketBioticActionKey;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
@@ -89,9 +90,10 @@ public class KeyHandler
             for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
                 int level = androidPlayer.getUnlockedLevel(stat);
                 if (level > 0 && stat.isEnabled(androidPlayer, level)) {
-                    stat.onActionKeyPress(androidPlayer, androidPlayer.getUnlockedLevel(stat), ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY));
+                    stat.onActionKeyPress(androidPlayer, androidPlayer.getUnlockedLevel(stat), false);
                 }
             }
+            MatterOverdrive.packetPipeline.sendToServer(new PacketBioticActionKey());
         }
     }
 

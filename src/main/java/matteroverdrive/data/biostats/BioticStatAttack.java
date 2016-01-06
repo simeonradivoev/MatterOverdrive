@@ -20,11 +20,8 @@ package matteroverdrive.data.biostats;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.data.MOAttributeModifier;
 import matteroverdrive.entity.player.AndroidPlayer;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -50,8 +47,7 @@ public class BioticStatAttack extends AbstractBioticStat
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
     {
 
     }

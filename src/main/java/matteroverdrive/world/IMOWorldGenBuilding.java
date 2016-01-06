@@ -29,5 +29,5 @@ import java.util.Random;
 public interface IMOWorldGenBuilding
 {
     String getName();
-    void generate(Random random, int x,int y,int z, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider,int layer);
+    void generate(Random random, int x,int y,int z, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider,int layer,int placeNotify);
 }

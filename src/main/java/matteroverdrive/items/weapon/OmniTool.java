@@ -24,11 +24,11 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.client.data.Color;
-import matteroverdrive.client.render.item.ItemRendererOmniTool;
 import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.fx.PhaserBoltRecoil;
+import matteroverdrive.handler.weapon.ClientWeaponHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.network.packet.server.PacketDigBlock;
@@ -111,8 +111,9 @@ public class OmniTool extends EnergyWeapon
                     int y = movingObjectPosition.blockY;
                     int z = movingObjectPosition.blockZ;
                     Block block = player.worldObj.getBlock(x, y, z);
+                    boolean canMine = player.worldObj.canMineBlock(player,x,y,z) && player.isCurrentToolAdventureModeExempt(x,y,z);
 
-                    if (block != null && block.getMaterial() != Material.air) {
+                    if (block != null && block.getMaterial() != Material.air && canMine) {
 
                         float percent = (1-(float)count/(float)getMaxItemUseDuration(itemStack));
                         //MatterOverdrive.log.info("Percent %s",percent);
@@ -339,8 +340,8 @@ public class OmniTool extends EnergyWeapon
             if (canFire(itemStack, world, entityPlayer)) {
                 itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
                 if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
-                    ItemRendererOmniTool.RECOIL_AMOUNT = 6 + getAccuracy(itemStack, entityPlayer, isWeaponZoomed(entityPlayer, itemStack)) * 2;
-                    ItemRendererOmniTool.RECOIL_TIME = 1;
+                    ClientWeaponHandler.RECOIL_AMOUNT = 6 + getAccuracy(itemStack, entityPlayer, isWeaponZoomed(entityPlayer, itemStack)) * 2;
+                    ClientWeaponHandler.RECOIL_TIME = 1;
                     Minecraft.getMinecraft().renderViewEntity.hurtTime = 8;
                     Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 20;
                 }

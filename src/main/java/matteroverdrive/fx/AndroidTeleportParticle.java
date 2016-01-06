@@ -21,11 +21,13 @@ public class AndroidTeleportParticle extends EntityFX
         this.particleIcon = new IconHolder(0, 0, 32f / 128f, 32f / 128f, 32, 32);
     }
 
+    @Override
     public void renderParticle(Tessellator tess, float f, float xOffset, float yOffset, float zOffset, float p_70539_6_, float p_70539_7_)
     {
         super.renderParticle(tess, f, xOffset, yOffset, zOffset, p_70539_6_, p_70539_7_);
     }
 
+    @Override
     public int getBrightnessForRender(float f)
     {
         float f1 = ((float)this.particleAge + f) / (float)this.particleMaxAge;
@@ -56,6 +58,7 @@ public class AndroidTeleportParticle extends EntityFX
     /**
      * Gets how bright this entity is.
      */
+    @Override
     public float getBrightness(float f)
     {
         float f1 = ((float)this.particleAge + f) / (float)this.particleMaxAge;
@@ -77,6 +80,7 @@ public class AndroidTeleportParticle extends EntityFX
     /**
      * Called to update the entity's position/logic.
      */
+    @Override
     public void onUpdate()
     {
         this.prevPosX = this.posX;

@@ -16,25 +16,30 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.items;
+package matteroverdrive.items.android;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.IBionicPart;
+import matteroverdrive.client.render.entity.EntityRendererRangedRougeAndroid;
+import matteroverdrive.client.render.entity.EntityRendererRougeAndroid;
 import matteroverdrive.entity.player.AndroidPlayer;
-import matteroverdrive.items.android.BionicPart;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.UUID;
@@ -52,6 +57,24 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
     {
         super(name);
         setHasSubtypes(true);
+    }
+
+    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+    {
+        if (itemstack.getTagCompound() != null)
+        {
+            if (itemstack.getTagCompound().getByte("Type") == 1)
+            {
+                infos.add(EnumChatFormatting.AQUA + MOStringHelper.translateToLocal("item.rouge_android_part.range"));
+            }else
+            {
+                infos.add(EnumChatFormatting.GOLD + MOStringHelper.translateToLocal("item.rouge_android_part.melee"));
+            }
+        }else
+        {
+            infos.add(EnumChatFormatting.GOLD + MOStringHelper.translateToLocal("item.rouge_android_part.melee"));
+        }
+        super.addDetails(itemstack,player,infos);
     }
 
     @Override
@@ -100,8 +123,48 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
 
     @Override
     public Multimap<String, AttributeModifier> getModifiers(AndroidPlayer player, ItemStack itemStack) {
-        Multimap multimap = HashMultimap.create();
-        multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(),new AttributeModifier(UUID.fromString(healtModifiersIDs[itemStack.getItemDamage()]),MOStringHelper.translateToLocal("modifier.bionic.max_health"),1f,0));
+        Multimap multimap = super.getModifiers(player,itemStack);
+        if (multimap.isEmpty())
+        {
+            multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), new AttributeModifier(UUID.fromString(healtModifiersIDs[itemStack.getItemDamage()]), MOStringHelper.translateToLocal("attribute.name." + SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName()), 1f, 0));
+        }
         return multimap;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public ResourceLocation getTexture(AndroidPlayer androidPlayer, ItemStack itemStack)
+    {
+        if (itemStack.getTagCompound() != null)
+        {
+            if (itemStack.getTagCompound().getByte("Type") == 1)
+            {
+                return EntityRendererRangedRougeAndroid.texture;
+            }
+        }
+        return EntityRendererRougeAndroid.texture;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public ModelBiped getModel(AndroidPlayer androidPlayer, ItemStack itemStack)
+    {
+        int type = getType(itemStack);
+        ModelBiped model = ClientProxy.renderHandler.modelMeleeRogueAndroidParts;
+        if (itemStack.getTagCompound() != null)
+        {
+            if (itemStack.getTagCompound().getByte("Type") == 1)
+            {
+                model = ClientProxy.renderHandler.modelRangedRogueAndroidParts;
+            }
+        }
+        model.bipedHead.showModel = type == 0;
+        model.bipedHeadwear.showModel = type == 0;
+        model.bipedBody.showModel = type == 3;
+        model.bipedRightArm.showModel = type == 1;
+        model.bipedLeftArm.showModel = type == 1;
+        model.bipedRightLeg.showModel = type == 2;
+        model.bipedLeftLeg.showModel = type == 2;
+        return model;
     }
 }

@@ -16,10 +16,9 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.data.quest;
+package matteroverdrive.api.quest;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.quest.IQuest;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,7 +34,7 @@ import java.util.UUID;
  */
 public class QuestStack
 {
-    private boolean completed;
+    boolean completed;
     private NBTTagCompound tagCompound;
     private UUID giverUniqueID;
     private Entity giver;
@@ -166,9 +165,9 @@ public class QuestStack
         this.giverUniqueID = giver.getUniqueID();
     }
 
-    public void addRewards(List<ItemStack> rewards,EntityPlayer entityPlayer)
+    public void addRewards(List<IQuestReward> rewards, EntityPlayer entityPlayer)
     {
-        quest.addRewards(this,entityPlayer,rewards);
+        quest.addToRewards(this,entityPlayer,rewards);
     }
 
     public IQuest getQuest()
@@ -191,9 +190,15 @@ public class QuestStack
         return completed;
     }
 
-    public void setCompleted(boolean completed)
+    public void markComplited(EntityPlayer entityPlayer,boolean force)
     {
-        this.completed = completed;
+        if (force)
+        {
+            this.completed = true;
+        }else
+        {
+            this.quest.setCompleted(this, entityPlayer);
+        }
     }
 
     public QuestStack copy()

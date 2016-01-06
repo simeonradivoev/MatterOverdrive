@@ -26,11 +26,10 @@ import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.audio.ISound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
@@ -66,7 +65,7 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
         {
             if (isActive(android, level) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,android)))
             {
-                android.extractEnergy(ENERGY_PER_TICK,false);
+                android.extractEnergyScaled(ENERGY_PER_TICK);
             }
         }else
         {
@@ -94,20 +93,32 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onActionKeyPress(AndroidPlayer android, int level, KeyBinding keyBinding)
+    public void onActionKeyPress(AndroidPlayer android, int level, boolean server)
     {
         if (this.equals(android.getActiveStat()))
         {
-            android.setActionToServer(PacketSendAndroidAnction.ACTION_NIGHTVISION, !android.getEffects().getBoolean("Nightvision"));
-            if (!android.getEffects().getBoolean("Nightvision"))
+            if (server)
             {
-                Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":night_vision"), 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f));
-            }
-            else
+                setActive(android, level, !android.getEffects().getBoolean("Nightvision"));
+            }else
             {
-                Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":power_down"), 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f));
+                playSound(android);
             }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void playSound(AndroidPlayer android)
+    {
+        if (!android.getEffects().getBoolean("Nightvision"))
+        {
+            MOPositionedSound sound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":night_vision"), 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f);
+            sound.setAttenuationType(ISound.AttenuationType.NONE);
+            Minecraft.getMinecraft().getSoundHandler().playSound(sound);
+        }
+        else
+        {
+            Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":power_down"), 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f).setAttenuationType(ISound.AttenuationType.NONE));
         }
     }
 
@@ -128,7 +139,7 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     {
         if (!isEnabled(androidPlayer,level) && isActive(androidPlayer,level))
         {
-            androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_NIGHTVISION, false);
+            setActive(androidPlayer,level,false);
         }
     }
 
@@ -151,7 +162,7 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     @Override
     public boolean isEnabled(AndroidPlayer androidPlayer,int level)
     {
-        return super.isEnabled(androidPlayer,level) && androidPlayer.extractEnergy(ENERGY_PER_TICK,true) >= ENERGY_PER_TICK;
+        return super.isEnabled(androidPlayer,level) && androidPlayer.hasEnoughEnergyScaled(ENERGY_PER_TICK);
     }
 
     @Override

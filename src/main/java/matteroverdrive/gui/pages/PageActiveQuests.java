@@ -20,7 +20,9 @@ package matteroverdrive.gui.pages;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.data.quest.rewards.ItemStackReward;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.gui.GuiDataPad;
@@ -129,55 +131,57 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
     {
         questInfo.clearLines();
         IMOListBoxElement selectedElement = quests.getSelectedElement();
-        if (selectedElement != null) {
+        if (selectedElement != null)
+        {
             QuestStack selectedQuest = (QuestStack) selectedElement.getValue();
-            List<String> list = getFontRenderer().listFormattedStringToWidth(selectedQuest.getInfo(Minecraft.getMinecraft().thePlayer),sizeX+70);
-            for (String s : list)
+            String info = selectedQuest.getInfo(Minecraft.getMinecraft().thePlayer).replace("/n/","\n");
+            if (info != null)
             {
-                questInfo.addLine(s);
-            }
-            questInfo.addLine("");
-            for (int i = 0;i < selectedQuest.getObjectivesCount(Minecraft.getMinecraft().thePlayer);i++)
-            {
-                String objective = selectedQuest.getObjective(Minecraft.getMinecraft().thePlayer,i);
-                if (selectedQuest.isObjectiveCompleted(Minecraft.getMinecraft().thePlayer,i))
+                List<String> list = getFontRenderer().listFormattedStringToWidth(info, sizeX + 60);
+                for (String s : list)
                 {
-                    questInfo.addLine(EnumChatFormatting.GREEN + "\u2b1d " + objective);
-                }else
-                {
-                    questInfo.addLine(EnumChatFormatting.DARK_GREEN + "\u2b1e " + objective);
+                    questInfo.addLine(s);
                 }
+                questInfo.addLine("");
+            }
+            for (int i = 0; i < selectedQuest.getObjectivesCount(Minecraft.getMinecraft().thePlayer); i++)
+            {
+                List<String> objectiveLines = MatterOverdrive.questFactory.getFormattedQuestObjective(Minecraft.getMinecraft().thePlayer, selectedQuest, i, sizeX + 60);
+                questInfo.addLines(objectiveLines);
             }
             questInfo.addLine("");
-            questInfo.addLine(EnumChatFormatting.GOLD + String.format("Rewards: +%sxp",selectedQuest.getXP(Minecraft.getMinecraft().thePlayer)));
-            List<ItemStack> rewards = new ArrayList<>();
-            selectedQuest.addRewards(rewards,Minecraft.getMinecraft().thePlayer);
+            questInfo.addLine(EnumChatFormatting.GOLD + String.format("Rewards: +%sxp", selectedQuest.getXP(Minecraft.getMinecraft().thePlayer)));
+            List<IQuestReward> rewards = new ArrayList<>();
+            selectedQuest.addRewards(rewards, Minecraft.getMinecraft().thePlayer);
             questRewards.getElements().clear();
-            questRewards.setSize(questRewards.getWidth(),rewards.size() > 0 ? 20 : 0);
-            for (int i = 0;i < rewards.size();i++)
+            questRewards.setSize(questRewards.getWidth(), rewards.size() > 0 ? 20 : 0);
+            for (int i = 0; i < rewards.size(); i++)
             {
-                ElementItemPreview itemPreview = new ElementItemPreview(gui,i * 20,1,rewards.get(i));
-                itemPreview.setItemSize(1);
-                itemPreview.setRenderOverlay(true);
-                itemPreview.setSize(18,18);
-                itemPreview.setDrawTooltip(true);
-                itemPreview.setBackground(null);
-                questRewards.addElement(itemPreview);
+                if (rewards.get(i) instanceof ItemStackReward)
+                {
+                    ElementItemPreview itemPreview = new ElementItemPreview(gui, i * 20, 1, ((ItemStackReward) rewards.get(i)).getItemStack());
+                    itemPreview.setItemSize(1);
+                    itemPreview.setRenderOverlay(true);
+                    itemPreview.setSize(18, 18);
+                    itemPreview.setDrawTooltip(true);
+                    itemPreview.setBackground(null);
+                    questRewards.addElement(itemPreview);
+                }
             }
 
             if (selectedQuest == null)
             {
-                ((GuiDataPad)gui).completeQuestButton.setEnabled(false);
-                ((GuiDataPad)gui).abandonQuestButton.setEnabled(false);
-            }else
+                ((GuiDataPad) gui).completeQuestButton.setEnabled(false);
+                ((GuiDataPad) gui).abandonQuestButton.setEnabled(false);
+            } else
             {
-                ((GuiDataPad)gui).completeQuestButton.setEnabled(QuestStack.canComplete(Minecraft.getMinecraft().thePlayer,selectedQuest));
-                ((GuiDataPad)gui).abandonQuestButton.setEnabled(true);
+                ((GuiDataPad) gui).completeQuestButton.setEnabled(QuestStack.canComplete(Minecraft.getMinecraft().thePlayer, selectedQuest));
+                ((GuiDataPad) gui).abandonQuestButton.setEnabled(true);
             }
-        }else
+        } else
         {
-            ((GuiDataPad)gui).completeQuestButton.setEnabled(false);
-            ((GuiDataPad)gui).abandonQuestButton.setEnabled(false);
+            ((GuiDataPad) gui).completeQuestButton.setEnabled(false);
+            ((GuiDataPad) gui).abandonQuestButton.setEnabled(false);
         }
     }
 

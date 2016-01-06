@@ -25,7 +25,6 @@ import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.entity.player.AndroidAttributes;
 import matteroverdrive.entity.player.AndroidPlayer;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -70,13 +69,12 @@ public interface IBionicStat
 
     /**
      * Called then the Ability Action Key is pressed.
-     * Called only on the Client.
+     * This is also called on the server by {@link matteroverdrive.network.packet.server.PacketBioticActionKey}
      * @param androidPlayer The Android Player.
      * @param level The unlocked stat level.
-     * @param keyBinding The Ability Action Keybinding.
+     * @param server is this method called server side.
      */
-    @SideOnly(Side.CLIENT)
-    void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding);
+    void onActionKeyPress(AndroidPlayer androidPlayer, int level,boolean server);
     /**
      * Called then the Client hits a keyboard key.
      * Called only on the Client.

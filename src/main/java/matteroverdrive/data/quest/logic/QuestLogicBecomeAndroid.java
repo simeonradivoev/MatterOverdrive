@@ -1,12 +1,12 @@
 package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -136,7 +136,7 @@ public class QuestLogicBecomeAndroid extends AbstractQuestLogic
     }
 
     @Override
-    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards)
+    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<IQuestReward> rewards)
     {
 
     }

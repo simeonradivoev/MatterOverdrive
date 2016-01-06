@@ -23,10 +23,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.WeaponShot;
-import matteroverdrive.client.render.item.ItemRenderPlasmaShotgun;
 import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
+import matteroverdrive.handler.weapon.ClientWeaponHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
@@ -243,8 +243,8 @@ public class PlasmaShotgun extends EnergyWeapon
             int count = Math.max(1, (int) ((1f - (timeElapsed / (float) MAX_CHARGE_TIME)) * maxCount));
             float shotPercent = count / (float) getShotCount(weapon, entityPlayer);
 
-            ItemRenderPlasmaShotgun.RECOIL_AMOUNT = 15 + (maxCount - count) * 2 + getAccuracy(weapon, entityPlayer, isWeaponZoomed(entityPlayer, weapon)) * 2;
-            ItemRenderPlasmaShotgun.RECOIL_TIME = 1 + (maxCount - count) * 0.03f;
+            ClientWeaponHandler.RECOIL_AMOUNT = 15 + (maxCount - count) * 2 + getAccuracy(weapon, entityPlayer, isWeaponZoomed(entityPlayer, weapon)) * 2;
+            ClientWeaponHandler.RECOIL_TIME = 1 + (maxCount - count) * 0.03f;
             Minecraft.getMinecraft().renderViewEntity.hurtTime = 15 + (maxCount - count);
             Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 30 + (maxCount - count);
             Vec3 dir = entityPlayer.getLook(1);
@@ -295,8 +295,8 @@ public class PlasmaShotgun extends EnergyWeapon
             if (canFire(itemStack, world, entityPlayer))
             {
                 itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
-                ItemRenderPlasmaShotgun.RECOIL_AMOUNT = 12 + getAccuracy(itemStack, entityPlayer, isWeaponZoomed(entityPlayer, itemStack)) * 2;
-                ItemRenderPlasmaShotgun.RECOIL_TIME = 1;
+                ClientWeaponHandler.RECOIL_AMOUNT = 12 + getAccuracy(itemStack, entityPlayer, isWeaponZoomed(entityPlayer, itemStack)) * 2;
+                ClientWeaponHandler.RECOIL_TIME = 1;
                 Minecraft.getMinecraft().renderViewEntity.hurtTime = 15;
                 Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 30;
                 Vec3 dir = entityPlayer.getLook(1);

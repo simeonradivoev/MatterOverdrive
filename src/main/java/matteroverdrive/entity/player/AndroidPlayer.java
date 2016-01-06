@@ -26,6 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
 import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.MinimapEntityInfo;
@@ -39,7 +40,6 @@ import matteroverdrive.network.packet.client.PacketAndroidTransformation;
 import matteroverdrive.network.packet.client.PacketSendMinimapInfo;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketAndroidChangeAbility;
-import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOLog;
 import net.minecraft.client.Minecraft;
@@ -270,7 +270,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         manageEquipmentAttributeModifiers();
     }
 
-    public int extractEnergy(int amount,boolean simulate)
+    public int extractEnergyRaw(int amount,boolean simulate)
     {
         int energyExtracted;
         if (player.capabilities.isCreativeMode)
@@ -299,6 +299,19 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         }
 
         return energyExtracted;
+    }
+
+    public void extractEnergyScaled(int amount)
+    {
+        double percent = getPlayer().getAttributeMap().getAttributeInstance(AndroidAttributes.attributeBatteryUse).getAttributeValue();
+        extractEnergyRaw((int) (amount * percent), false);
+    }
+
+    public boolean hasEnoughEnergyScaled(int energy)
+    {
+        double percent = getPlayer().getAttributeMap().getAttributeInstance(AndroidAttributes.attributeBatteryUse).getAttributeValue();
+        int newEnergy = (int) Math.ceil(energy * percent);
+        return extractEnergyRaw(energy,true) >= newEnergy;
     }
 
     public boolean isUnlocked(IBionicStat stat, int level)
@@ -389,6 +402,12 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         return energyReceived;
     }
 
+    @Override
+    public int extractEnergy(int maxExtract, boolean simulate)
+    {
+        return extractEnergyRaw(maxExtract,simulate);
+    }
+
     public void setAndroid(boolean isAndroid)
     {
         this.isAndroid = isAndroid;
@@ -431,16 +450,6 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 MatterOverdrive.packetPipeline.sendTo(new PacketSyncAndroid(this, syncPart), (EntityPlayerMP) player);
             }
         }
-    }
-
-    public void setActionToServer(int action,boolean state)
-    {
-        setActionToServer(action, state, 0);
-    }
-
-    public void setActionToServer(int action,boolean state,int options)
-    {
-        MatterOverdrive.packetPipeline.sendToServer(new PacketSendAndroidAnction(action, state, options));
     }
 
     public void copy(AndroidPlayer player)
@@ -511,7 +520,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                 if (getEnergyStored() > 0) {
                     if (getPlayer().getFoodStats().needFood() && getEnergyStored() > 0) {
                         int foodNeeded = 20 - getPlayer().getFoodStats().getFoodLevel();
-                        int extractedEnergy = extractEnergy(foodNeeded * ENERGY_FOOD_MULTIPLY, false);
+                        int extractedEnergy = extractEnergyRaw(foodNeeded * ENERGY_FOOD_MULTIPLY, false);
                         getPlayer().getFoodStats().addStats(extractedEnergy / ENERGY_FOOD_MULTIPLY, 0);
                     }
 
@@ -554,24 +563,6 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
                     }
                 }
             }
-        }
-    }
-
-    public void onPlayerLoad(PlayerEvent.LoadFromFile event)
-    {
-        manageStatAttributeModifiers();
-    }
-
-    public void onPlayerDeath(LivingDeathEvent event)
-    {
-
-    }
-
-    public void onPlayerRespawn()
-    {
-        while (getEnergyStored() < RECHARGE_AMOUNT_ON_RESPAWN)
-        {
-            receiveEnergy(RECHARGE_AMOUNT_ON_RESPAWN,false);
         }
     }
 
@@ -824,26 +815,6 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation(Reference.MOD_ID + ":" + "transformation_music")));
     }
 
-    public void onEntityHurt(LivingHurtEvent event)
-    {
-        if (isAndroid()
-                && !event.isCanceled()
-                && HURT_GLITCHING
-                && event.ammount > 0) {
-            effects.setInteger("GlitchTime", modify(10, AndroidAttributes.attributeGlitchTime));
-            sync(EnumSet.of(DataType.EFFECTS));
-                player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "gui.glitch", 0.2f, 0.9f + player.worldObj.rand.nextFloat() * 0.2f);
-        }
-    }
-
-    public void onEntityJump(LivingEvent.LivingJumpEvent event)
-    {
-        if (isAndroid() && !event.entity.worldObj.isRemote)
-        {
-            extractEnergy(ENERGY_PER_JUMP, false);
-        }
-    }
-
     private void managePotionEffects()
     {
         if (isAndroid() && REMOVE_POTION_EFFECTS)
@@ -956,14 +927,74 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         return effects.hasKey(EFFECT_KEY_TURNING) && effects.getInteger(EFFECT_KEY_TURNING) > 0;
     }
 
-    public static void onEntityFall(LivingFallEvent event)
+    //region Events
+    public void triggerEventOnStats(LivingEvent event)
     {
-        AndroidPlayer props = AndroidPlayer.get((EntityPlayer) event.entity);
-        if (props != null && props.isAndroid())
+        if (event.entityLiving instanceof EntityPlayer)
         {
-            event.distance = (event.distance * FALL_NEGATE);
+            AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer) event.entityLiving);
+
+            if (androidPlayer.isAndroid())
+            {
+                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats())
+                {
+                    int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
+                    if (unlockedLevel > 0 && stat.isEnabled(androidPlayer, unlockedLevel))
+                    {
+                        stat.onLivingEvent(androidPlayer, unlockedLevel, event);
+                    }
+                }
+            }
         }
     }
+    public void onPlayerLoad(PlayerEvent.LoadFromFile event)
+    {
+        manageStatAttributeModifiers();
+    }
+
+    public void onPlayerDeath(LivingDeathEvent event)
+    {
+
+    }
+
+    public void onPlayerRespawn()
+    {
+        while (getEnergyStored() < RECHARGE_AMOUNT_ON_RESPAWN)
+        {
+            receiveEnergy(RECHARGE_AMOUNT_ON_RESPAWN,false);
+        }
+    }
+    public void onEntityHurt(LivingHurtEvent event)
+    {
+        if (!event.isCanceled())
+        {
+            if (HURT_GLITCHING && event.ammount > 0)
+            {
+                effects.setInteger("GlitchTime", modify(10, AndroidAttributes.attributeGlitchTime));
+                sync(EnumSet.of(DataType.EFFECTS));
+                player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "gui.glitch", 0.2f, 0.9f + player.worldObj.rand.nextFloat() * 0.2f);
+            }
+
+            triggerEventOnStats(event);
+        }
+    }
+    public void onEntityJump(LivingEvent.LivingJumpEvent event)
+    {
+        if (!event.entity.worldObj.isRemote)
+        {
+            extractEnergyScaled(ENERGY_PER_JUMP);
+        }
+    }
+    public void onEntityFall(LivingFallEvent event)
+    {
+        triggerEventOnStats(event);
+        event.distance = (event.distance * FALL_NEGATE);
+    }
+    public void onWeaponEvent(MOEventEnergyWeapon eventEnergyWeapon)
+    {
+        triggerEventOnStats(eventEnergyWeapon);
+    }
+    //endregion
 
     //region getters and setters
     public EntityPlayer getPlayer()

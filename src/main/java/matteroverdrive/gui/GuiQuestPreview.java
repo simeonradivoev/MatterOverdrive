@@ -20,14 +20,15 @@ package matteroverdrive.gui;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.container.ContainerFalse;
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.data.quest.rewards.ItemStackReward;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.network.packet.server.PacketQuestActions;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
@@ -96,7 +97,7 @@ public class GuiQuestPreview extends MOGuiBase
         {
             String questName = questStack.getTitle(Minecraft.getMinecraft().thePlayer);
             int titleWidth = fontRendererObj.getStringWidth(questName);
-            float scale = 100f/(float)titleWidth;
+            float scale = Math.min(100f/(float)titleWidth,1.8f);
             glPushMatrix();
             glTranslated(guiLeft + 24,guiTop + 30,0);
             glScalef(scale,scale,scale);
@@ -108,8 +109,10 @@ public class GuiQuestPreview extends MOGuiBase
 
     private void loadQuestInfo(QuestStack questStack)
     {
+        int width = 165;
         questInfo.clearLines();
-        List<String> list = getFontRenderer().listFormattedStringToWidth(questStack.getInfo(Minecraft.getMinecraft().thePlayer),165);
+        String info = questStack.getInfo(Minecraft.getMinecraft().thePlayer).replace("/n/","\n");
+        List<String> list = getFontRenderer().listFormattedStringToWidth(info,width);
         for (String s : list)
         {
             questInfo.addLine(s);
@@ -117,31 +120,28 @@ public class GuiQuestPreview extends MOGuiBase
         questInfo.addLine("");
         for (int i = 0;i < questStack.getObjectivesCount(Minecraft.getMinecraft().thePlayer);i++)
         {
-            String objective = questStack.getObjective(Minecraft.getMinecraft().thePlayer,i);
-            if (questStack.isObjectiveCompleted(Minecraft.getMinecraft().thePlayer,i))
-            {
-                questInfo.addLine(EnumChatFormatting.GREEN + "\u2b1d " + objective);
-            }else
-            {
-                questInfo.addLine(EnumChatFormatting.DARK_GREEN + "\u2b1e " + objective);
-            }
+            List<String> objectiveLines = MatterOverdrive.questFactory.getFormattedQuestObjective(Minecraft.getMinecraft().thePlayer,questStack,i,width);
+            questInfo.addLines(objectiveLines);
         }
         questInfo.addLine("");
         questInfo.addLine(EnumChatFormatting.DARK_PURPLE + "Rewards:");
         questInfo.addLine(String.format(EnumChatFormatting.DARK_PURPLE + "   +%sxp",questStack.getXP(Minecraft.getMinecraft().thePlayer)));
-        List<ItemStack> rewards = new ArrayList<>();
+        List<IQuestReward> rewards = new ArrayList<>();
         questStack.addRewards(rewards,Minecraft.getMinecraft().thePlayer);
         questRewards.getElements().clear();
         questRewards.setSize(questRewards.getWidth(),rewards.size() > 0 ? 20 : 0);
         for (int i = 0;i < rewards.size();i++)
         {
-            ElementItemPreview itemPreview = new ElementItemPreview(this,i * 20,1,rewards.get(i));
-            itemPreview.setItemSize(1);
-            itemPreview.setRenderOverlay(true);
-            itemPreview.setSize(18,18);
-            itemPreview.setDrawTooltip(true);
-            itemPreview.setBackground(null);
-            questRewards.addElement(itemPreview);
+            if (rewards.get(i) instanceof ItemStackReward)
+            {
+                ElementItemPreview itemPreview = new ElementItemPreview(this, i * 20, 1, ((ItemStackReward) rewards.get(i)).getItemStack());
+                itemPreview.setItemSize(1);
+                itemPreview.setRenderOverlay(true);
+                itemPreview.setSize(18, 18);
+                itemPreview.setDrawTooltip(true);
+                itemPreview.setBackground(null);
+                questRewards.addElement(itemPreview);
+            }
         }
     }
 

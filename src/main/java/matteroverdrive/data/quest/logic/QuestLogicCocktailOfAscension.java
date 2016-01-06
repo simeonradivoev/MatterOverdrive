@@ -20,7 +20,8 @@ package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import matteroverdrive.api.events.MOEventDialogInteract;
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.EntityVillagerMadScientist;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +30,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
@@ -109,27 +109,27 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
 
     public int getCreeperKillCount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return questStack.getTagCompound().getByte("CreeperKills");
+            return getTag(questStack).getByte("CreeperKills");
         }
         return 0;
     }
 
     public int getMushroomCount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return questStack.getTagCompound().getByte("MushroomCount");
+            return getTag(questStack).getByte("MushroomCount");
         }
         return 0;
     }
 
     public int getGunpowderCount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return questStack.getTagCompound().getByte("GunpowderCount");
+            return getTag(questStack).getByte("GunpowderCount");
         }
         return 0;
     }
@@ -137,9 +137,9 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
     public boolean hasTalkedTo(QuestStack questStack)
     {
         if (questStack.hasGiver()) {
-            if (questStack.getTagCompound() != null)
+            if (hasTag(questStack))
             {
-                return questStack.getTagCompound().getBoolean("TalkedToGiver");
+                return getTag(questStack).getBoolean("TalkedToGiver");
             }
             return false;
         }
@@ -153,12 +153,9 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
         {
             if (((LivingDeathEvent) event).entityLiving instanceof EntityCreeper && entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof ItemSpade)
             {
-                if (questStack.getTagCompound() == null)
-                {
-                    questStack.setTagCompound(new NBTTagCompound());
-                }
-                byte currentCreeperKillCount = questStack.getTagCompound().getByte("CreeperKills");
-                questStack.getTagCompound().setByte("CreeperKills",++currentCreeperKillCount);
+                initTag(questStack);
+                byte currentCreeperKillCount = getTag(questStack).getByte("CreeperKills");
+                getTag(questStack).setByte("CreeperKills",++currentCreeperKillCount);
                 return true;
             }
         }
@@ -169,35 +166,28 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
             {
                 if (itemStack.getItem() instanceof ItemBlock && ((ItemBlock) itemStack.getItem()).field_150939_a == Blocks.red_mushroom && entityPlayer.worldObj.provider.dimensionId == -1)
                 {
-                    if (questStack.getTagCompound() == null)
-                    {
-                        questStack.setTagCompound(new NBTTagCompound());
-                    }
-
-                    byte mushroomCount = questStack.getTagCompound().getByte("MushroomCount");
+                    initTag(questStack);
+                    byte mushroomCount = getTag(questStack).getByte("MushroomCount");
                     if (mushroomCount < MAX_MUSHROOM_COUNT)
                     {
                         int newMushroomCount = Math.min(mushroomCount + itemStack.stackSize,MAX_MUSHROOM_COUNT);
                         int takenMushrooms = newMushroomCount-mushroomCount;
                         itemStack.stackSize-= takenMushrooms;
-                        questStack.getTagCompound().setByte("MushroomCount",(byte)newMushroomCount);
+                        getTag(questStack).setByte("MushroomCount",(byte)newMushroomCount);
                         return true;
                     }
                 }
                 else if (itemStack.getItem() == Items.gunpowder)
                 {
-                    if (questStack.getTagCompound() == null)
-                    {
-                        questStack.setTagCompound(new NBTTagCompound());
-                    }
+                    initTag(questStack);
 
-                    byte gunpowderCount = questStack.getTagCompound().getByte("GunpowderCount");
+                    byte gunpowderCount = getTag(questStack).getByte("GunpowderCount");
                     if (gunpowderCount < MAX_GUNPOWDER_COUNT)
                     {
                         int newGunpowderCount = Math.min(gunpowderCount + itemStack.stackSize,MAX_MUSHROOM_COUNT);
                         int takenGunpowder = newGunpowderCount-gunpowderCount;
                         itemStack.stackSize-= takenGunpowder;
-                        questStack.getTagCompound().setByte("GunpowderCount",(byte) newGunpowderCount);
+                        getTag(questStack).setByte("GunpowderCount",(byte) newGunpowderCount);
                         itemStack.stackSize--;
                         return true;
                     }
@@ -208,12 +198,9 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
         {
             if (((MOEventDialogInteract) event).npc instanceof EntityVillagerMadScientist && ((MOEventDialogInteract) event).dialogMessage == EntityVillagerMadScientist.cocktailOfAscensionComplete)
             {
-                if (questStack.getTagCompound() == null)
-                {
-                    questStack.setTagCompound(new NBTTagCompound());
-                }
-                questStack.getTagCompound().setBoolean("TalkedToGiver",true);
-                questStack.setCompleted(true);
+                initTag(questStack);
+                getTag(questStack).setBoolean("TalkedToGiver",true);
+                questStack.markComplited(entityPlayer,false);
 
                 return true;
             }
@@ -234,7 +221,7 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
     }
 
     @Override
-    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards)
+    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<IQuestReward> rewards)
     {
     }
 }

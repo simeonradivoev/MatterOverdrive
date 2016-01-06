@@ -18,7 +18,7 @@
 
 package matteroverdrive.gui.element.list;
 
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.gui.element.IMOListBoxElement;
 import matteroverdrive.gui.element.MOElementListBox;
 import net.minecraft.client.Minecraft;

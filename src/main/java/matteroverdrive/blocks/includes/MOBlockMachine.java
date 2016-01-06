@@ -20,19 +20,14 @@ package matteroverdrive.blocks.includes;
 
 import cofh.api.block.IDismantleable;
 import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.items.includes.MOMachineBlockItem;
 import matteroverdrive.machines.MOTileEntityMachine;
-import matteroverdrive.util.IConfigSubscriber;
-import matteroverdrive.util.MOInventoryHelper;
-import matteroverdrive.util.MOStringHelper;
-import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -104,27 +99,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
-        if (world.isRemote)
-        {
-            return true;
-        } else if (hasGui)
-        {
-            TileEntity tileEntity = world.getTileEntity(x,y,z);
-            if (tileEntity instanceof MOTileEntityMachine)
-            {
-                if (((MOTileEntityMachine) tileEntity).isUseableByPlayer(player)) {
-                    FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, x, y, z);
-                    return true;
-                } else
-                {
-                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal(getUnlocalizedMessage(0)).replace("$0", getLocalizedName()));
-                    message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
-                    player.addChatMessage(message);
-                }
-            }
-        }
-
-        return false;
+        return MachineHelper.canOpenMachine(world,x,y,z,player,hasGui,getUnlocalizedMessage(0));
     }
 
     protected String getUnlocalizedMessage(int type)
@@ -141,19 +116,11 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
     {
-        TileEntity tileEntity = world.getTileEntity(x,y,z);
-        if (tileEntity != null && tileEntity instanceof MOTileEntityMachine)
+        if (MachineHelper.canRemoveMachine(world,player,x,y,z,willHarvest))
         {
-            if (!player.capabilities.isCreativeMode &&
-					((MOTileEntityMachine) tileEntity).hasOwner() && !((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getId()))
-            {
-                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.break").replace("$0",getLocalizedName()));
-                    message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
-                    player.addChatMessage(message);
-                return false;
-            }
+            return world.setBlockToAir(x, y, z);
         }
-        return world.setBlockToAir(x, y, z);
+        return false;
     }
 
     public ItemStack getNBTDrop(World world, int x, int y, int z, IMOTileEntity te)

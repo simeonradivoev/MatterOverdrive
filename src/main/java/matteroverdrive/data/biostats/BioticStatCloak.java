@@ -19,17 +19,12 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
-import matteroverdrive.api.android.IBionicStat;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -52,7 +47,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TICK + MOEnergyHelper.ENERGY_UNIT);
+        return String.format(super.getDetails(level), EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TICK + MOEnergyHelper.ENERGY_UNIT + EnumChatFormatting.GRAY);
     }
 
     @Override
@@ -67,7 +62,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
                     android.getPlayer().worldObj.playSoundAtEntity(android.getPlayer(), Reference.MOD_ID + ":cloak_on", 1, 1);
                 }
                 android.getPlayer().setInvisible(true);
-                android.extractEnergy(ENERGY_PER_TICK, false);
+                android.extractEnergyScaled(ENERGY_PER_TICK);
             } else {
                 if (android.getPlayer().isInvisible())
                 {
@@ -79,13 +74,11 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onActionKeyPress(AndroidPlayer android, int level, KeyBinding keyBinding)
+    public void onActionKeyPress(AndroidPlayer android, int level, boolean server)
     {
-        if (this.equals(android.getActiveStat()))
+        if (this.equals(android.getActiveStat()) && server)
         {
-            boolean cloak = !android.getEffects().getBoolean("Cloaked");
-            android.setActionToServer(PacketSendAndroidAnction.ACTION_CLOAK, cloak);
+            setActive(android,level,!android.getEffects().getBoolean("Cloaked"));
         }
     }
 
@@ -112,7 +105,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     {
         if (!isEnabled(androidPlayer, level) && isActive(androidPlayer, level))
         {
-            androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_CLOAK, false);
+            setActive(androidPlayer,level,false);
         }
     }
 
@@ -136,7 +129,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     @Override
     public boolean isEnabled(AndroidPlayer androidPlayer, int level)
     {
-        return super.isEnabled(androidPlayer,level) && androidPlayer.extractEnergy(ENERGY_PER_TICK,true) >= ENERGY_PER_TICK;
+        return super.isEnabled(androidPlayer,level) && androidPlayer.hasEnoughEnergyScaled(ENERGY_PER_TICK);
     }
 
     @Override

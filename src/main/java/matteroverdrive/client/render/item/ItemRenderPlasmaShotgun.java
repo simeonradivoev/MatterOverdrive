@@ -28,9 +28,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
@@ -40,7 +37,7 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by Simeon on 12/6/2015.
  */
-public class ItemRenderPlasmaShotgun implements IItemRenderer
+public class ItemRenderPlasmaShotgun extends WeaponItemRenderer
 {
     public static final String TEXTURE = Reference.PATH_ITEM + "plasma_shotgun.png";
     public static final String MODEL = Reference.PATH_MODEL + "item/plasma_shotgun.obj";
@@ -48,17 +45,12 @@ public class ItemRenderPlasmaShotgun implements IItemRenderer
     public static final float THIRD_PERSON_SCALE = 0.6f;
     public static final float ITEM_SCALE = 0.3f;
     public static final float SCALE_DROP = 0.4f;
-    public static float RECOIL_TIME = 0;
-    public static float RECOIL_AMOUNT = 0;
 
-    public static IModelCustom weaponModel;
-    public static ResourceLocation weaponTexture;
     private Random random;
 
     public ItemRenderPlasmaShotgun()
     {
-        weaponTexture = new ResourceLocation(TEXTURE);
-        weaponModel = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL));
+        super(new ResourceLocation(MODEL),new ResourceLocation(TEXTURE));
         random = new Random();
     }
 
@@ -125,9 +117,8 @@ public class ItemRenderPlasmaShotgun implements IItemRenderer
 
     void renderFirstPerson(ItemStack item)
     {
-        RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME,0,0.1f);
         float zoomValue = MOEasing.Sine.easeInOut(ClientProxy.instance().getClientWeaponHandler().ZOOM_TIME, 0, 1, 1f);
-        float recoilValue = MOEasing.Quart.easeInOut(RECOIL_TIME, 0, 1, 1f);
+        float recoilValue = MOEasing.Quart.easeInOut(getRecoilTime(), 0, 1, 1f);
 
         GL11.glPushMatrix();
         ResourceLocation skin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
@@ -136,7 +127,7 @@ public class ItemRenderPlasmaShotgun implements IItemRenderer
         Minecraft.getMinecraft().renderViewEntity.rotationYaw += recoilValue * 0.1f * random.nextGaussian();
 
         glTranslated(2.7, MOMathHelper.Lerp(-0.3f, -0.8f, zoomValue), MOMathHelper.Lerp(-1, -1.1f, zoomValue));
-        glTranslatef(0, recoilValue * 0.02f * RECOIL_AMOUNT, 0);
+        glTranslatef(0, recoilValue * 0.02f * getRecoilAmount(), 0);
         glRotated(MOMathHelper.Lerp(45, 0, zoomValue), 1, 1, 0);
         glRotated(MOMathHelper.Lerp(0, MOMathHelper.Lerp(3, 0, zoomValue), recoilValue), 0, 0, 1);
         double length = 1.8;

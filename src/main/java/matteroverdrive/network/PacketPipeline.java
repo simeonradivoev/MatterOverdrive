@@ -76,7 +76,6 @@ public class PacketPipeline
         registerPacket(PacketUnlockBioticStat.ServerHandler.class,PacketUnlockBioticStat.class);
         registerPacket(PacketTeleportPlayer.ServerHandler.class,PacketTeleportPlayer.class);
         registerPacket(PacketSpawnParticle.ClientHandler.class,PacketSpawnParticle.class);
-        registerPacket(PacketSendAndroidAnction.ServerHandler.class,PacketSendAndroidAnction.class);
         registerPacket(PacketUpdatePlanet.ClientHandler.class,PacketUpdatePlanet.class);
         registerPacket(PacketUpdateGalaxy.ClientHandler.class,PacketUpdateGalaxy.class);
         registerPacket(PacketStarMapClientCommands.ServerHandler.class,PacketStarMapClientCommands.class);
@@ -100,6 +99,7 @@ public class PacketPipeline
         registerBiPacket(PacketStarLoading.BiHandler.class,PacketStarLoading.class);
         registerPacket(PacketAndroidTransformation.ClientHandler.class,PacketAndroidTransformation.class);
         registerPacket(PacketSyncTaskQueue.ClientHandler.class,PacketSyncTaskQueue.class);
+        registerPacket(PacketBioticActionKey.ServerHandler.class,PacketBioticActionKey.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)

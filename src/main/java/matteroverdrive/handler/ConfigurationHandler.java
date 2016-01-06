@@ -82,7 +82,7 @@ public class ConfigurationHandler
 	{
         config.load();
         ConfigCategory category = config.getCategory(CATEGORY_MATTER);
-        category.setComment("Configuration for the Matter Network");
+        category.setComment("Configuration for the Matter ");
         updateCategoryLang(category);
         config.get(CATEGORY_MATTER,KEY_MBLACKLIST,new String[0]).comment = "Blacklist for items in the matter registry. Automatic Recipe calculation will ignore recipes with these items. Just add the unlocalized name or the ore dictionary name in the list.";
         config.get(CATEGORY_MATTER,KEY_BLACKLIST_MODS,new String[0]).comment = "Blacklist for mods (mod ID). Automatic Recipe calculation will ignore recipes with items from this mod";

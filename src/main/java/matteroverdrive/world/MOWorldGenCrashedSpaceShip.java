@@ -20,11 +20,14 @@ package matteroverdrive.world;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.blocks.BlockTritaniumCrate;
 import matteroverdrive.blocks.BlockWeaponStation;
 import matteroverdrive.init.MatterOverdriveBlocks;
+import matteroverdrive.init.MatterOverdriveQuests;
 import matteroverdrive.tile.TileEntityHoloSign;
 import matteroverdrive.tile.TileEntityWeaponStation;
+import matteroverdrive.util.MOInventoryHelper;
 import matteroverdrive.util.WeaponFactory;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -49,7 +52,7 @@ public class MOWorldGenCrashedSpaceShip extends MOWorldGenBuilding
     public MOWorldGenCrashedSpaceShip(String name)
     {
         super(name,new ResourceLocation(Reference.PATH_WORLD_TEXTURES + "crashed_space_ship.png"),11,35);
-        holoTexts = new String[]{"Critical\nError","Contacting\nSection 9","System\nFailure","Emergency\nPower\nOffline","System\nReboot\nFailure"};
+        holoTexts = new String[]{"Critical\nError","Contacting\nSection 9","System\nFailure","Emergency\nPower\nOffline","System\nReboot\nFailure","Help Me","I Need\nWater"};
         setyOffset(-1);
         addMapping(0x38c8df, MatterOverdriveBlocks.decorative_clean);
         addMapping(0x187b8b,MatterOverdriveBlocks.decorative_vent_bright);
@@ -90,6 +93,9 @@ public class MOWorldGenCrashedSpaceShip extends MOWorldGenBuilding
             TileEntity tileEntity = world.getTileEntity(x,y,z);
             if (tileEntity instanceof IInventory) {
                 WeightedRandomChestContent.generateChestContents(random, ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).getItems(random), (IInventory) tileEntity, random.nextInt(10) + 10);
+                QuestStack questStack = MatterOverdrive.questFactory.generateQuestStack(random, MatterOverdriveQuests.crashLanding);
+                questStack.getTagCompound().setIntArray("Pos",new int[]{x,y,z});
+                MOInventoryHelper.insertItemStackIntoInventory((IInventory)tileEntity,questStack.getContract(),0);
             }
 
         }else if (block instanceof BlockWeaponStation)

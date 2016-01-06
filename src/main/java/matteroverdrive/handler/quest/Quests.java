@@ -62,6 +62,10 @@ public class Quests
 
     public void registerQuest(String name,Quest quest)
     {
+        if(questIntegerMap.containsKey(name))
+        {
+            throw new RuntimeException(name + " Quest is already registered");
+        }
         int id = bitSet.nextClearBit(MIN_QUEST_BIT);
         questMap.put(id,quest);
         questIntegerMap.put(quest,id);

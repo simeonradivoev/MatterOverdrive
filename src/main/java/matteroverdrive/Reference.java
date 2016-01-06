@@ -161,4 +161,10 @@ public class Reference
 	public static final String CHEST_GEN_ANDROID_HOUSE = "android_house";
 	public static final String WORLD_DATA_MO_GEN_POSITIONS = "MOWorldGenPositions";
 	//endregion
+
+	//region Unicodes
+	public static final String UNICODE_LEGENDARY = "\u272a";
+	public static final String UNICODE_COMPLETED_OBJECTIVE = "\u25a0";
+	public static final String UNICODE_UNCOMPLETED_OBJECTIVE = "\u25a1";
+	//endregion
 }

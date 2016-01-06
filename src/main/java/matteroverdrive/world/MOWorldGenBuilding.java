@@ -48,9 +48,9 @@ public abstract class MOWorldGenBuilding extends MOImageGen implements IMOWorldG
     }
 
     @Override
-    public void generate(Random random, int x,int y,int z, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider,int layer)
+    public void generate(Random random, int x,int y,int z, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider,int layer,int placeNotify)
     {
-        generateFromImage(world, random, x, y + getYOffset(), z,layer);
+        generateFromImage(world, random, x, y + getYOffset(), z,layer,placeNotify);
     }
 
     public boolean locationIsValidSpawn(World world, int i, int j, int k){
@@ -151,6 +151,7 @@ public abstract class MOWorldGenBuilding extends MOImageGen implements IMOWorldG
         IChunkProvider chunkGenerator;
         IChunkProvider chunkProvider;
         MOWorldGenBuilding worldGenBuilding;
+        int placeNotify;
 
         public WorldGenBuildingWorker(){}
 
@@ -162,6 +163,7 @@ public abstract class MOWorldGenBuilding extends MOImageGen implements IMOWorldG
         public WorldGenBuildingWorker init(MOWorldGenBuilding worldGenBuilding,Random random,int x,int y,int z,World world,IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
         {
             this.worldGenBuilding = worldGenBuilding;
+            this.worldGenBuilding.manageTextureLoading();
             this.x = x;
             this.y = y;
             this.z = z;
@@ -169,6 +171,7 @@ public abstract class MOWorldGenBuilding extends MOImageGen implements IMOWorldG
             this.world = world;
             this.chunkGenerator = chunkGenerator;
             this.chunkProvider = chunkProvider;
+            this.placeNotify = this.worldGenBuilding.placeNotify;
             return this;
         }
 
@@ -182,7 +185,7 @@ public abstract class MOWorldGenBuilding extends MOImageGen implements IMOWorldG
                     return true;
                 }else
                 {
-                    worldGenBuilding.generate(random,x,y,z,world,chunkGenerator,chunkProvider,currentLayer);
+                    worldGenBuilding.generate(random,x,y,z,world,chunkGenerator,chunkProvider,currentLayer,placeNotify);
                     currentLayer++;
                     return false;
                 }
@@ -192,6 +195,12 @@ public abstract class MOWorldGenBuilding extends MOImageGen implements IMOWorldG
                 MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while generating layer %s of %s",currentLayer,worldGenBuilding.getName());
             }
             return false;
+        }
+
+        public WorldGenBuildingWorker setPlaceNotify(int placeNotify)
+        {
+            this.placeNotify = placeNotify;
+            return this;
         }
     }
 }

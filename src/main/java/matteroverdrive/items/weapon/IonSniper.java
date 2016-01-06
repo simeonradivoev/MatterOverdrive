@@ -23,10 +23,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.api.weapon.WeaponShot;
-import matteroverdrive.client.render.item.ItemRendererIonSniper;
 import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
+import matteroverdrive.handler.weapon.ClientWeaponHandler;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
@@ -125,15 +125,15 @@ public class IonSniper extends EnergyWeapon
             {
                 if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
                     if (isWeaponZoomed(entityPlayer, itemStack)) {
-                        ItemRendererIonSniper.RECOIL_AMOUNT = 2f + Math.min(2,getAccuracy(itemStack, entityPlayer, true));
+                        ClientWeaponHandler.RECOIL_AMOUNT = 2f + Math.min(2,getAccuracy(itemStack, entityPlayer, true));
                         Minecraft.getMinecraft().renderViewEntity.hurtTime = 30 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
                         Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 45;
                     } else {
-                        ItemRendererIonSniper.RECOIL_AMOUNT = 4f + Math.min(2,getAccuracy(itemStack, entityPlayer, true));
+                        ClientWeaponHandler.RECOIL_AMOUNT = 4f + Math.min(2,getAccuracy(itemStack, entityPlayer, true));
                         Minecraft.getMinecraft().renderViewEntity.hurtTime = 30 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
                         Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 45;
                     }
-                    ItemRendererIonSniper.RECOIL_TIME = 1;
+                    ClientWeaponHandler.RECOIL_TIME = 1;
                 }
 
                 Vec3 dir = entityPlayer.getLook(1);

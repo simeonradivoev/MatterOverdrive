@@ -84,14 +84,9 @@ public abstract class AbstractBioticStat implements IBionicStat
             return false;
         }
         //if any of the competitors are unlocked then this stat can't be unlocked
-        if (competitors.size() > 0) {
-            for (IBionicStat competitor : competitors) {
-                if (android.isUnlocked(competitor, 0)) {
-                    return false;
-                }
-            }
-        }
-        if (requiredItems.size() > 0) {
+        if (areCompeditrosUnlocked(android))
+            return false;
+        if (requiredItems.size() > 0 && !android.getPlayer().capabilities.isCreativeMode) {
             for (ItemStack item : requiredItems) {
 
                 if (!hasItem(android, item)) {
@@ -192,7 +187,17 @@ public abstract class AbstractBioticStat implements IBionicStat
            list.add(MOStringHelper.translateToLocal("gui.tooltip.requires") + ": " + requires);
         }
 
-        if (level <= maxLevel())
+        if (competitors.size() > 0)
+        {
+            String locks = EnumChatFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.locks") + ": ";
+            for (IBionicStat compeditor : competitors)
+            {
+                locks += String.format("[%s] ",compeditor.getDisplayName(android,0));
+            }
+            list.add(locks);
+        }
+
+        if (level < maxLevel())
         {
             list.add((android.getPlayer().experienceLevel < xp ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + "XP: " + xp);
         }
@@ -307,5 +312,17 @@ public abstract class AbstractBioticStat implements IBionicStat
     public int getXP(AndroidPlayer androidPlayer, int level)
     {
         return xp;
+    }
+
+    public boolean areCompeditrosUnlocked(AndroidPlayer androidPlayer)
+    {
+        if (competitors.size() > 0) {
+            for (IBionicStat competitor : competitors) {
+                if (androidPlayer.isUnlocked(competitor, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

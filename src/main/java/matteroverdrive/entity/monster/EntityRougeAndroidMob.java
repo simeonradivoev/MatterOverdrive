@@ -36,12 +36,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -67,7 +65,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         super(world);
         if (!world.isRemote)
         {
-            setAndroidLevel((int) (MathHelper.clamp_double(Math.abs(rand.nextGaussian()), 0, 3)));
+            setAndroidLevel((int) (MathHelper.clamp_double(Math.abs(rand.nextGaussian()*(1+world.difficultySetting.getDifficultyId()*0.25)), 0, 3)));
             boolean isLegendary = rand.nextDouble() < 0.05 * getAndroidLevel();
             setLegendary(isLegendary);
             init();
@@ -86,7 +84,30 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
 
     private void init()
     {
-        String name = getIsLegendary() ? String.format("\u272a %s ",MOStringHelper.translateToLocal("rarity.legendary")) : "";
+        String name;
+        if (getIsLegendary())
+        {
+            name = EnumChatFormatting.GOLD.toString();
+        }
+        else
+        {
+           switch (getAndroidLevel())
+           {
+               case 0:
+                   name = EnumChatFormatting.GRAY.toString();
+                   break;
+               case 1:
+                   name = EnumChatFormatting.DARK_AQUA.toString();
+                   break;
+               case 2:
+                   name = EnumChatFormatting.DARK_PURPLE.toString();
+                   break;
+               default:
+                   name = "";
+           }
+
+        }
+        name += getIsLegendary() ? EnumChatFormatting.GOLD + String.format("%s %s ",Reference.UNICODE_LEGENDARY,MOStringHelper.translateToLocal("rarity.legendary")) : "";
         name += String.format("[%s] ",getAndroidLevel());
         name += names[rand.nextInt(names.length)];
         setCustomNameTag(name);
@@ -117,6 +138,8 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
                 case 2:
                     setVisorColor(Reference.COLOR_HOLO_PURPLE.getColor());
                     break;
+                default:
+                    setVisorColor(0xFFFFFFFF);
             }
         }
     }
@@ -200,7 +223,27 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     @Override
     public boolean getCanSpawnHere()
     {
-        return getCanSpawnHere(false,false,false);
+        return getCanSpawnHere(false,false,false) && !hasToManyAndroids();
+    }
+
+    public boolean hasToManyAndroids()
+    {
+        Chunk chunk = worldObj.getChunkFromChunkCoords(chunkCoordX,chunkCoordZ);
+        int androidCount = 0;
+        for (int i = 0;i < chunk.entityLists.length;i++)
+        {
+            for (int c = 0;i < chunk.entityLists[i].size();i++)
+            {
+                if (chunk.entityLists[i].get(c) instanceof EntityRougeAndroidMob)
+                {
+                    androidCount++;
+                    if (androidCount > EntityRogueAndroid.MAX_ANDROIDS_PER_CHUNK)
+                        return true;
+                }
+            }
+
+        }
+        return false;
     }
 
     public boolean getCanSpawnHere(boolean ignoreEntityCollision,boolean ignoreLight,boolean ignoreDimension)
@@ -338,7 +381,13 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     public void setLegendary(boolean legendary)
     {
         this.legendary = legendary;
-        this.height = 1.8f * 1.5f;
+        if (legendary)
+        {
+            this.height = 1.8f * 1.6f;
+        }else
+        {
+            this.height = 1.8f;
+        }
     }
 
     public boolean getIsLegendary()
@@ -428,9 +477,9 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     @Override
     public void readSpawnData(ByteBuf additionalData)
     {
-        level = additionalData.readByte();
-        legendary = additionalData.readBoolean();
-        visorColor = additionalData.readInt();
+        setAndroidLevel(additionalData.readByte());
+        setLegendary(additionalData.readBoolean());
+        setVisorColor(additionalData.readInt());
         if (additionalData.readBoolean())
         {
             String teamName = ByteBufUtils.readUTF8String(additionalData);

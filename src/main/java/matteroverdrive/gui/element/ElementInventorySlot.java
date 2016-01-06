@@ -52,7 +52,8 @@ public class ElementInventorySlot extends ElementSlot
         this(gui,slot, slot.xDisplayPosition, slot.yDisplayPosition, width,height,type,slot.getHoloIcon());
     }
 
-    public void addTooltip(List<String> list)
+    @Override
+    public void addTooltip(List<String> list,int mouseX,int mouseY)
     {
         if (slot.getUnlocalizedTooltip() != null && !slot.getUnlocalizedTooltip().isEmpty() && !slot.getHasStack())
         {
@@ -60,6 +61,7 @@ public class ElementInventorySlot extends ElementSlot
         }
     }
 
+    @Override
     public void updateInfo()
     {
         boolean isVisible = isVisible() && (parent == null || parent.isVisible());

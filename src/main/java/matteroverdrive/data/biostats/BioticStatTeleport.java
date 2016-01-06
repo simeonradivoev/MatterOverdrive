@@ -31,7 +31,6 @@ import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOPhysicsHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -99,8 +98,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
     {
 
     }
@@ -199,7 +197,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     @Override
     public boolean isEnabled(AndroidPlayer android, int level)
     {
-        return super.isEnabled(android,level) && android.getEffectLong(EFFECT_KEY_LAST_TELEPORT) <= android.getPlayer().worldObj.getTotalWorldTime() && android.extractEnergy(ENERGY_PER_TELEPORT,true) == ENERGY_PER_TELEPORT && this.equals(android.getActiveStat());
+        return super.isEnabled(android,level) && android.getEffectLong(EFFECT_KEY_LAST_TELEPORT) <= android.getPlayer().worldObj.getTotalWorldTime() && android.hasEnoughEnergyScaled(ENERGY_PER_TELEPORT) && this.equals(android.getActiveStat());
     }
 
     @Override

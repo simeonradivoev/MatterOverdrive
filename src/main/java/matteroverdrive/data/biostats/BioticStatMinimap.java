@@ -20,7 +20,6 @@ package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
 import matteroverdrive.entity.player.AndroidPlayer;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -39,7 +38,7 @@ public class BioticStatMinimap extends AbstractBioticStat
     }
 
     @Override
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding) {
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server) {
 
     }
 

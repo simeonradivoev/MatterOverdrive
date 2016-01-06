@@ -19,7 +19,7 @@
 package matteroverdrive.dialog;
 
 import matteroverdrive.api.dialog.IDialogNpc;
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -36,7 +36,7 @@ public class DialogMessageQuestStart extends DialogMessage
     public boolean isVisible(IDialogNpc npc, EntityPlayer player)
     {
         MOExtendedProperties extendedProperties = MOExtendedProperties.get(player);
-        if (extendedProperties != null && questStack.getQuest().canBeAccepted(questStack,player))
+        if (extendedProperties != null && questStack != null && questStack.getQuest().canBeAccepted(questStack,player))
         {
             return true;
         }

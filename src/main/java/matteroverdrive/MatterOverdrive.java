@@ -25,10 +25,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import matteroverdrive.commands.AndoidCommands;
-import matteroverdrive.commands.MatterRegistryCommands;
-import matteroverdrive.commands.QuestCommands;
-import matteroverdrive.commands.SaveWorldToImage;
+import matteroverdrive.commands.*;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.dialog.DialogRegistry;
 import matteroverdrive.entity.player.AndroidPlayer;
@@ -39,10 +36,7 @@ import matteroverdrive.init.*;
 import matteroverdrive.matter_network.MatterNetworkRegistry;
 import matteroverdrive.network.PacketPipeline;
 import matteroverdrive.proxy.CommonProxy;
-import matteroverdrive.util.DialogFactory;
-import matteroverdrive.util.MOLog;
-import matteroverdrive.util.QuestFactory;
-import matteroverdrive.util.WeaponFactory;
+import matteroverdrive.util.*;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -79,6 +73,7 @@ public class MatterOverdrive
 	public static DialogRegistry dialogRegistry;
     public static MatterRegistrationHandler matterRegistrationHandler;
 	public static WeaponFactory weaponFactory;
+    public static AndroidPartsFactory androidPartsFactory;
 	public static Quests quests;
 	public static QuestFactory questFactory;
 	public static DialogFactory dialogFactory;
@@ -103,6 +98,7 @@ public class MatterOverdrive
 		bucketHandler = new BucketHandler();
         matterRegistrationHandler = new MatterRegistrationHandler(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + "Registry" + ".matter");
 		weaponFactory = new WeaponFactory();
+        androidPartsFactory = new AndroidPartsFactory();
 		quests = new Quests();
 		questFactory = new QuestFactory();
 		dialogFactory = new DialogFactory(dialogRegistry);
@@ -118,11 +114,9 @@ public class MatterOverdrive
 		MatterOverdriveFluids.init(event);
         MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
-		MatterOverdriveQuests.init(event);
 		moWorld = new MatterOverdriveWorld(configHandler);
 		MatterOverdriveEntities.init(event, configHandler);
 		MatterOverdriveEnchantments.init(event, configHandler);
-		MatterOverdriveDialogs.init(event, configHandler, dialogRegistry);
 		moWorld.register();
 		MatterNetworkRegistry.register();
         packetPipeline.registerPackets();
@@ -149,7 +143,9 @@ public class MatterOverdrive
 		MatterOverdriveFluids.register(event);
 		MatterOverdriveBioticStats.register(event);
 		MatterOverdriveBioticStats.registerAll(configHandler, MatterOverdrive.statRegistry);
+        MatterOverdriveQuests.init(event);
 		MatterOverdriveQuests.register(event,quests);
+		MatterOverdriveDialogs.init(event, configHandler, dialogRegistry);
 
 		MatterOverdriveRecipes.registerBlockRecipes(event);
 		MatterOverdriveRecipes.registerItemRecipes(event);
@@ -157,6 +153,7 @@ public class MatterOverdrive
 
 		weaponFactory.initModules();
 		weaponFactory.initWeapons();
+        androidPartsFactory.initParts();
 
 		AndroidPlayer.loadConfigs(configHandler);
 	}
@@ -186,6 +183,7 @@ public class MatterOverdrive
 		event.registerServerCommand(new MatterRegistryCommands());
 		event.registerServerCommand(new QuestCommands());
 		event.registerServerCommand(new SaveWorldToImage());
+		event.registerServerCommand(new WorldGenCommands());
 	}
 
     @EventHandler

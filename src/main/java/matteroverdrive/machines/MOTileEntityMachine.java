@@ -502,10 +502,15 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @Override
     public String getInventoryName()
     {
-        if (getInventory() != null)
+        if (getInventory() != null && !getInventory().getInventoryName().isEmpty())
             return getInventory().getInventoryName();
-        else
+        else if (getBlockType() != null)
+        {
+            return getBlockType().getLocalizedName();
+        }else
+        {
             return "";
+        }
     }
 
     @Override

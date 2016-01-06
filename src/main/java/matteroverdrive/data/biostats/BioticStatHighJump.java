@@ -19,13 +19,10 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -55,8 +52,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
     {
 
     }
@@ -74,7 +70,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
             if (event.entityLiving.isSneaking() && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this, level, androidPlayer)))
             {
                 if (!event.entity.worldObj.isRemote)
-                    androidPlayer.extractEnergy(ENERGY_PER_JUMP, false);
+                    androidPlayer.extractEnergyScaled(ENERGY_PER_JUMP);
 
                 event.entityLiving.addVelocity(0, 0.5, 0);
             }
@@ -94,7 +90,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     @Override
     public boolean isEnabled(AndroidPlayer android, int level)
     {
-        return super.isEnabled(android,level) && android.extractEnergy(ENERGY_PER_JUMP, true) == ENERGY_PER_JUMP;
+        return super.isEnabled(android,level) && android.hasEnoughEnergyScaled(ENERGY_PER_JUMP);
     }
 
     @Override

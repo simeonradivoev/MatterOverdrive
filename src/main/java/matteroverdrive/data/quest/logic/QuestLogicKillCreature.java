@@ -19,16 +19,15 @@
 package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import java.util.List;
@@ -84,12 +83,9 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
     @Override
     public void initQuestStack(Random random,QuestStack questStack)
     {
-        if (questStack.getTagCompound() == null)
-        {
-            questStack.setTagCompound(new NBTTagCompound());
-        }
-        questStack.getTagCompound().setInteger("MaxKillCount",random(random,minKillCount,maxKillCount));
-        questStack.getTagCompound().setByte("KillType",(byte) random.nextInt(creatureClasses.length));
+        initTag(questStack);
+        getTag(questStack).setInteger("MaxKillCount",random(random,minKillCount,maxKillCount));
+        getTag(questStack).setByte("KillType",(byte) random.nextInt(creatureClasses.length));
     }
 
     @Override
@@ -116,11 +112,7 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
                 if (onlyChildren && !((LivingDeathEvent) event).entityLiving.isChild())
                     return false;
 
-                if (questStack.getTagCompound() == null)
-                {
-                    questStack.setTagCompound(new NBTTagCompound());
-                }
-
+                initTag(questStack);
                 int currentKillCount = getKillCount(questStack);
                 if (currentKillCount < getMaxKillCount(questStack))
                 {
@@ -130,13 +122,11 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
                         MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
                         if (extendedProperties != null)
                         {
-                            questStack.setCompleted(true);
+                            questStack.markComplited(entityPlayer,false);
                         }
                     }
-                    else
-                    {
-                        return true;
-                    }
+
+                    return true;
                 }
             }
         }
@@ -169,33 +159,31 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
 
     public int getKillType(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return questStack.getTagCompound().getByte("KillType");
+            return getTag(questStack).getByte("KillType");
         }
         return 0;
     }
 
     public int getMaxKillCount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
-            return questStack.getTagCompound().getInteger("MaxKillCount");
+        if (hasTag(questStack))
+            return getTag(questStack).getInteger("MaxKillCount");
         return 0;
     }
 
     public int getKillCount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
-            return questStack.getTagCompound().getInteger("KillCount");
+        if (hasTag(questStack))
+            return getTag(questStack).getInteger("KillCount");
         return 0;
     }
 
     public void setKillCount(QuestStack questStack,int killCount)
     {
-        if (questStack.getTagCompound() == null)
-            questStack.setTagCompound(new NBTTagCompound());
-
-        questStack.getTagCompound().setInteger("KillCount",killCount);
+        initTag(questStack);
+        getTag(questStack).setInteger("KillCount",killCount);
     }
 
     public String getTargetName(QuestStack questStack)
@@ -215,8 +203,8 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
     }
 
     @Override
-    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards) {
-        rewards.add(new ItemStack(Items.egg,5));
+    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<IQuestReward> rewards) {
+
     }
 
     @Override

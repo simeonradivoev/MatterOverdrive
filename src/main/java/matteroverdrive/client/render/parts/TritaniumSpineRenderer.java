@@ -52,6 +52,12 @@ public class TritaniumSpineRenderer extends BionicPartRenderer
 
     }
 
+    @Override
+    public void affectPlayerRenderer(ItemStack partStack, AndroidPlayer androidPlayer, RenderPlayer renderPlayer, float ticks)
+    {
+        
+    }
+
     private void renderSpline(double x, double y, double z)
     {
         double minU = 0;

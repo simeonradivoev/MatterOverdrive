@@ -66,5 +66,6 @@
     "shield_power_up": {"category": "player","sounds": [{"name": "shield_power_up", "stream": false}]},
     "shield_power_down": {"category": "player","sounds": [{"name": "shield_power_up", "stream": false}]},
     "rogue_android_say": {"category": "hostile","sounds": [{"name": "entities/rogue_android_say_0","stream":false},{"name": "entities/rogue_android_say_1","stream":false},{"name": "entities/rogue_android_say_2","stream":false}]},
-    "rogue_android_death": {"category": "hostile","sounds": [{"name": "entities/rogue_android_death_0","stream":false},{"name": "entities/rogue_android_death_1","stream":false}]}
+    "rogue_android_death": {"category": "hostile","sounds": [{"name": "entities/rogue_android_death_0","stream":false},{"name": "entities/rogue_android_death_1","stream":false}]},
+    "shockwave": {"category": "player","sounds": [{"name": "shockwave", "stream": false}]}
 }

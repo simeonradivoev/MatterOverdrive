@@ -20,8 +20,8 @@ package matteroverdrive.gui;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.Reference;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.client.data.Color;
-import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.util.animation.MOAnimationTimeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -137,11 +137,11 @@ public class GuiQuestHud
     }
 
     public void onTick() {
-        if (!startedQuestQueue.isEmpty() && !startedQuestTimeline.isPlaying()) {
-            startNewQuestNotification(startedQuestQueue.poll());
-        }
-        if (!completedQuestQueue.isEmpty() && !completeQuestTimeline.isPlaying()) {
+        if (!completedQuestQueue.isEmpty() && !completeQuestTimeline.isPlaying() && !startedQuestTimeline.isPlaying()) {
             startCompleteQuestNotification(completedQuestQueue.poll());
+        }
+        if (!startedQuestQueue.isEmpty() && !startedQuestTimeline.isPlaying() && !completeQuestTimeline.isPlaying()) {
+            startNewQuestNotification(startedQuestQueue.poll());
         }
         if (!objectivesChangedQueue.isEmpty() && !objectivesTimeline.isPlaying()) {
             QuestStack[] questStacks = objectivesChangedQueue.poll();

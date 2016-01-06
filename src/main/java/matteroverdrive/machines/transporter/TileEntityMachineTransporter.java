@@ -30,10 +30,12 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.events.MOEventTransport;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.transport.ITransportList;
 import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
+import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.TeleportFlashDriveSlot;
 import matteroverdrive.fx.ReplicatorParticle;
@@ -55,6 +57,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import org.lwjgl.util.vector.Vector3f;
@@ -267,15 +270,16 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
     public void Teleport(Entity entity,TransportLocation position)
     {
-        if (entity instanceof EntityLivingBase)
+        if(!MinecraftForge.EVENT_BUS.post(new MOEventTransport(new BlockPos(xCoord,yCoord,zCoord),position,entity)))
         {
-            ((EntityLivingBase) entity).setPositionAndUpdate(position.x,position.y,position.z);
+            if (entity instanceof EntityLivingBase)
+            {
+                ((EntityLivingBase) entity).setPositionAndUpdate(position.x, position.y, position.z);
+            } else
+            {
+                entity.setPosition(position.x, position.y, position.z);
+            }
         }
-        else
-        {
-            entity.setPosition(position.x,position.y,position.z);
-        }
-
     }
 
     public TransportLocation getSelectedLocation()

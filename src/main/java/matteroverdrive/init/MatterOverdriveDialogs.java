@@ -18,7 +18,7 @@
 
 package matteroverdrive.init;
 
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.dialog.IDialogRegistry;
 import matteroverdrive.dialog.*;
@@ -35,7 +35,7 @@ public class MatterOverdriveDialogs
     public static DialogMessage quitMessage;
     public static DialogMessage trade;
 
-    public static void init(FMLPreInitializationEvent event,ConfigurationHandler configurationHandler,IDialogRegistry registry)
+    public static void init(FMLInitializationEvent event, ConfigurationHandler configurationHandler, IDialogRegistry registry)
     {
         backMessage = new DialogMessageBack("").loadQuestionFromLocalization("dialog.generic.back.questions");
         registry.registerMessage(backMessage);

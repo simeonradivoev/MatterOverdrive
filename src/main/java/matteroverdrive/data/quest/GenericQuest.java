@@ -20,11 +20,12 @@ package matteroverdrive.data.quest;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestLogic;
+import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.Quest;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 
 import java.util.List;
 import java.util.Random;
@@ -93,7 +94,10 @@ public class GenericQuest extends Quest
     {
         if (questStackOne.getQuest() instanceof GenericQuest && questStackTwo.getQuest() instanceof GenericQuest)
         {
-            return ((GenericQuest) questStackOne.getQuest()).getQuestLogic().equals(((GenericQuest) questStackTwo.getQuest()).getQuestLogic());
+            if (((GenericQuest) questStackOne.getQuest()).getQuestLogic() == ((GenericQuest) questStackTwo.getQuest()).getQuestLogic())
+            {
+                return ((GenericQuest) questStackTwo.getQuest()).getQuestLogic().areQuestStacksEqual(questStackOne,questStackTwo);
+            }
         }
         return false;
     }
@@ -129,9 +133,9 @@ public class GenericQuest extends Quest
     }
 
     @Override
-    public void addRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards)
+    public void addToRewards(QuestStack questStack, EntityPlayer entityPlayer, List<IQuestReward> rewards)
     {
-        rewards.addAll(itemRewards);
+        rewards.addAll(questRewards);
         questLogic.modifyRewards(questStack,entityPlayer,rewards);
     }
 

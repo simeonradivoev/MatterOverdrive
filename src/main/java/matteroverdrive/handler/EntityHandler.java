@@ -19,8 +19,8 @@
 package matteroverdrive.handler;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.events.MOEventTransport;
+import matteroverdrive.api.events.anomaly.MOEventGravitationalAnomalyConsume;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.entity.player.MOExtendedProperties;
@@ -56,9 +56,11 @@ public class EntityHandler
     @SubscribeEvent
     public void onLivingFallEvent(LivingFallEvent event)
     {
-        if (event.entity instanceof EntityPlayer)
+        if (event.entityLiving instanceof EntityPlayer)
         {
-            AndroidPlayer.onEntityFall(event);
+            AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.entityLiving);
+            if (androidPlayer.isAndroid())
+                androidPlayer.onEntityFall(event);
         }
     }
 
@@ -76,18 +78,10 @@ public class EntityHandler
     {
         if (event.entityLiving instanceof EntityPlayer) {
             AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.entityLiving);
-            if (androidPlayer != null)
+            if (androidPlayer != null && androidPlayer.isAndroid())
             {
                 androidPlayer.onEntityJump(event);
-
-                if (androidPlayer.isAndroid()) {
-                    for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
-                        int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
-                        if (unlockedLevel > 0 && stat.isEnabled(androidPlayer,unlockedLevel)) {
-                            stat.onLivingEvent(androidPlayer, unlockedLevel, event);
-                        }
-                    }
-                }
+                androidPlayer.triggerEventOnStats(event);
             }
         }
     }
@@ -117,16 +111,7 @@ public class EntityHandler
     public void onEntityAttack(LivingAttackEvent event)
     {
         if (event.entityLiving instanceof EntityPlayer) {
-            AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.entityLiving);
-            if (androidPlayer != null && androidPlayer.isAndroid()) {
-                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
-                    int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
-                    if (unlockedLevel > 0 && stat.isEnabled(androidPlayer,unlockedLevel))
-                    {
-                        stat.onLivingEvent(androidPlayer,unlockedLevel , event);
-                    }
-                }
-            }
+            AndroidPlayer.get((EntityPlayer)event.entityLiving).triggerEventOnStats(event);
         }
     }
 
@@ -146,17 +131,8 @@ public class EntityHandler
         if (event.entityLiving instanceof EntityPlayer)
         {
             AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.entityLiving);
-
-            if (androidPlayer.isAndroid()) {
-                for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
-                    int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
-                    if (unlockedLevel > 0 && stat.isEnabled(androidPlayer,unlockedLevel)) {
-                        stat.onLivingEvent(androidPlayer,unlockedLevel , event);
-                    }
-                }
-            }
-
-            androidPlayer.onEntityHurt(event);
+            if (androidPlayer.isAndroid())
+                androidPlayer.onEntityHurt(event);
         }
     }
 
@@ -166,6 +142,32 @@ public class EntityHandler
         if (event.entityPlayer != null)
         {
             MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            if (extendedProperties != null)
+            {
+                extendedProperties.onEvent(event);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntityTransport(MOEventTransport eventTransport)
+    {
+        if (eventTransport.entity instanceof EntityPlayer)
+        {
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get((EntityPlayer)eventTransport.entity);
+            if (extendedProperties != null)
+            {
+                extendedProperties.onEvent(eventTransport);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntityAnomalyConsume(MOEventGravitationalAnomalyConsume.Post event)
+    {
+        if (event.entity instanceof EntityPlayer)
+        {
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get((EntityPlayer)event.entity);
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);

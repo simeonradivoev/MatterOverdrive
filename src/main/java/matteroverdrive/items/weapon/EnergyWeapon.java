@@ -23,6 +23,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
 import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponScope;
@@ -52,6 +53,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 
 import java.text.DecimalFormat;
@@ -295,9 +297,12 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     {
         if (getHeat(itemStack) >= getMaxHeat(itemStack))
         {
-            itemStack.getTagCompound().setBoolean("Overheated", true);
-            world.playSoundAtEntity(shooter, Reference.MOD_ID + ":" + "overheat", 1F, 1f);
-            world.playSoundAtEntity(shooter,Reference.MOD_ID + ":" + "overheat_alarm",1,1);
+            if (!MinecraftForge.EVENT_BUS.post(new MOEventEnergyWeapon.Overheat(itemStack,shooter)))
+            {
+                setOverheated(itemStack, true);
+                world.playSoundAtEntity(shooter, Reference.MOD_ID + ":" + "overheat", 1F, 1f);
+                world.playSoundAtEntity(shooter, Reference.MOD_ID + ":" + "overheat_alarm", 1, 1);
+            }
         }
     }
 
@@ -524,7 +529,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         damage = modifyStatFromModules(Reference.WS_DAMAGE,weapon,damage);
         damage += damage * EnchantmentHelper.getEnchantmentLevel(MatterOverdriveEnchantments.overclock.effectId,weapon) * 0.04f;
         damage *= getCustomFloatStat(weapon,CUSTOM_DAMAGE_MULTIPLY_TAG,1);
-        damage *= shooter.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage).getAttributeValue();
+        damage += shooter.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage).getAttributeValue();
         return damage;
     }
 

@@ -18,15 +18,15 @@
 
 package matteroverdrive.entity.monster;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.ai.AndroidTargetSelector;
 import matteroverdrive.entity.ai.EntityAIAndroidAttackOnCollide;
 import matteroverdrive.entity.ai.EntityAIMoveAlongPath;
-import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.util.AndroidPartsFactory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 /**
@@ -87,13 +87,10 @@ public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
         if (recentlyHit > 0)
         {
             float lootingModifier = (Math.min(looting, 10) / 10f);
-            if (rand.nextFloat() < 0.01f * (looting + 1))
+            if (rand.nextFloat() < (0.1f + lootingModifier) || getIsLegendary())
             {
-                this.entityDropItem(new ItemStack(MatterOverdriveItems.tritaniumSpine), 0.0F);
-            }
-            if (rand.nextFloat() < (0.2f + lootingModifier))
-            {
-                this.entityDropItem(new ItemStack(MatterOverdriveItems.androidParts, 1, rand.nextInt(4)), 0.0F);
+
+                this.entityDropItem(MatterOverdrive.androidPartsFactory.generateRandomDecoratedPart(new AndroidPartsFactory.AndroidPartFactoryContext(getAndroidLevel(),this,getIsLegendary())), 0.0F);
             }
         }
     }

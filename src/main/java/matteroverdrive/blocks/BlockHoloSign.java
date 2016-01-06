@@ -19,17 +19,16 @@
 package matteroverdrive.blocks;
 
 import cofh.api.block.IDismantleable;
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.client.render.IconConnectedTexture;
 import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityHoloSign;
 import matteroverdrive.util.MOInventoryHelper;
+import matteroverdrive.util.MachineHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -236,16 +235,16 @@ public class BlockHoloSign extends BlockCT implements IDismantleable, ITileEntit
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
-        if(!world.isRemote)
-        {
-            TileEntity tileEntity = world.getTileEntity(x, y, z);
-            if (tileEntity instanceof TileEntityHoloSign)
-            {
-                FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, x, y, z);
-                return true;
-            }
-        }
+        return MachineHelper.canOpenMachine(world,x,y,z,player,true,"alert.no_rights");
+    }
 
+    @Override
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
+    {
+        if (MachineHelper.canRemoveMachine(world,player,x,y,z,willHarvest))
+        {
+            return world.setBlockToAir(x, y, z);
+        }
         return false;
     }
 

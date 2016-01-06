@@ -493,6 +493,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
     //region Consume Type Handlers
     public void consume(Entity entity) {
+
         if (!entity.isDead && onEntityConsume(entity,true)) {
 
             boolean consumedFlag = false;

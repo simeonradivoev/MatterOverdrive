@@ -24,14 +24,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.client.sound.MOPositionedSound;
+import matteroverdrive.entity.player.AndroidAttributes;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
-import matteroverdrive.network.packet.server.PacketSendAndroidAnction;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -80,7 +79,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
         {
             if (android.getEffects().getBoolean(TAG_SHIELD))
             {
-                android.extractEnergy(ENERGY_PER_TICK, false);
+                android.extractEnergyScaled(ENERGY_PER_TICK);
             }
 
             if (android.getEffects().hasKey(TAG_HITS)) {
@@ -106,13 +105,12 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
     {
         if (this.equals(androidPlayer.getActiveStat()) && canActivate(androidPlayer) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level, androidPlayer)))
         {
             setShield(androidPlayer,true);
-            androidPlayer.setActionToServer(PacketSendAndroidAnction.ACTION_SHIELD, true);
+            androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
         }
     }
 
@@ -191,11 +189,10 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
                         androidPlayer.getPlayer().worldObj.playSoundAtEntity(androidPlayer.getPlayer(),Reference.MOD_ID + ":" + "shield_hit",0.5f,0.9f + random.nextFloat() * 0.2f);
                     }
 
-                    int energyExtracted = androidPlayer.extractEnergy(energyReqired, true);
-                    if (energyExtracted == energyReqired)
+                    if (androidPlayer.hasEnoughEnergyScaled(energyReqired))
                     {
+                        androidPlayer.extractEnergyScaled(energyReqired);
                         event.setCanceled(true);
-                        androidPlayer.extractEnergy(energyReqired, false);
                     }
                 }
             }
@@ -206,6 +203,8 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
                 int energyReqired = MathHelper.ceiling_float_int(((LivingHurtEvent) event).ammount * ENERGY_PER_DAMAGE);
 
                 if (isDamageValid(source)) {
+                    double energyMultiply = androidPlayer.getPlayer().getAttributeMap().getAttributeInstance(AndroidAttributes.attributeBatteryUse).getAttributeValue();
+                    energyReqired *= energyMultiply;
                     int energyExtracted = androidPlayer.extractEnergy(energyReqired, true);
                     ((LivingHurtEvent) event).ammount *= (float) energyExtracted / (float) energyReqired;
                 }
@@ -277,7 +276,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     public boolean isEnabled(AndroidPlayer androidPlayer,int level)
     {
         long shieldTime = getLastShieldTime(androidPlayer) - androidPlayer.getPlayer().worldObj.getTotalWorldTime();
-        return super.isEnabled(androidPlayer,level) && androidPlayer.extractEnergy(ENERGY_PER_TICK,true) >= ENERGY_PER_TICK && (shieldTime <= 0 || shieldTime > SHIELD_COOLDOWN);
+        return super.isEnabled(androidPlayer,level) && androidPlayer.hasEnoughEnergyScaled(ENERGY_PER_TICK) && (shieldTime <= 0 || shieldTime > SHIELD_COOLDOWN);
     }
 
     @Override

@@ -59,6 +59,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     boolean generateTritanium;
     boolean generateDilithium;
     boolean generateAnomalies;
+    boolean generateBuildings;
 
     public MOWorldGen(ConfigurationHandler configurationHandler)
     {
@@ -179,18 +180,27 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
 
     private void startGenerateBuildings(World world, Random random, int chunkX, int chunkZ, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
     {
-        if (random.nextDouble() < BUILDING_SPAWN_CHANCE)
+        if (generateBuildings && random.nextDouble() < BUILDING_SPAWN_CHANCE)
         {
             int XCoord = chunkX*16 + random.nextInt(16);
             int ZCoord = chunkZ*16 + random.nextInt(16);
             int YCoord = world.getHeightValue(XCoord,ZCoord)-2;
 
             WeightedRandomMOWorldGenBuilding building = getRandomBuilding(world,XCoord,YCoord,ZCoord,random);
-            if (building != null && building.worldGenBuilding.shouldGenerate(random,world,XCoord,YCoord,ZCoord) && building.worldGenBuilding.isLocationValid(world,XCoord,YCoord,ZCoord))
-            {
-                worldGenBuildingQueue.add(building.worldGenBuilding.createWorker(random, XCoord, YCoord, ZCoord, world, chunkGenerator, chunkProvider));
-            }
+            if (building != null)
+                startBuildingGeneration(building.worldGenBuilding,XCoord,YCoord,ZCoord,random,world,chunkGenerator,chunkProvider,false);
         }
+    }
+
+    public MOWorldGenBuilding.WorldGenBuildingWorker startBuildingGeneration(MOWorldGenBuilding building, int x, int y, int z, Random random, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider, boolean forceGeneration)
+    {
+        if (building != null && (forceGeneration || (building.shouldGenerate(random,world,x,y,z) && building.isLocationValid(world,x,y,z))))
+        {
+            MOWorldGenBuilding.WorldGenBuildingWorker worker = building.createWorker(random, x, y, z, world, chunkGenerator, chunkProvider);
+            worldGenBuildingQueue.add(worker);
+            return worker;
+        }
+        return null;
     }
 
     public void manageBuildingGeneration(TickEvent.WorldTickEvent worldTickEvent)
@@ -264,6 +274,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         {
             this.oreDimentionsBlacklist.add(oreDimentionBlacklist[i]);
         }
+        generateBuildings = config.getBool("generate buildings",ConfigurationHandler.CATEGORY_WORLD_GEN,true,"Should Matter Overdrive Buildings Generate aka ImageGen");
     }
 
     public static GenPositionWorldData getWorldPositionData(World world)

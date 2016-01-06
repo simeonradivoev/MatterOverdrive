@@ -21,8 +21,8 @@ package matteroverdrive.network.packet.server;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.PlayerQuestData;
-import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.items.Contract;
 import matteroverdrive.network.packet.PacketAbstract;
@@ -94,7 +94,7 @@ public class PacketQuestActions extends PacketAbstract
                         if (message.command == QUEST_ACTION_COMPLETE) {
                             QuestStack questStack = extendedProperties.getQuestData().getActiveQuests().get(message.questID);
                             if (QuestStack.canComplete((EntityPlayer) entity, questStack)) {
-                                questStack.setCompleted(true);
+                                questStack.markComplited(player,true);
                             }
                         } else if (message.command == QUEST_ACTION_ABONDON) {
                             QuestStack abandonedQuest = extendedProperties.getQuestData().removeQuest(message.questID);

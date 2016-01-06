@@ -29,7 +29,6 @@ import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.PacketSpawnParticle;
-import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -93,7 +92,7 @@ public class PacketTeleportPlayer extends PacketAbstract {
                     player.worldObj.playSoundEffect(message.x, message.y, message.z, Reference.MOD_ID + ":" + "android_teleport", 0.2f, 0.8f + 0.4f * player.worldObj.rand.nextFloat());
                     androidPlayer.getEffects().setLong("LastTeleport", player.worldObj.getTotalWorldTime() + BioticStatTeleport.TELEPORT_DELAY);
                     androidPlayer.getEffects().setInteger("GlitchTime", 5);
-                    androidPlayer.extractEnergy(BioticStatTeleport.ENERGY_PER_TELEPORT, false);
+                    androidPlayer.extractEnergyScaled(BioticStatTeleport.ENERGY_PER_TELEPORT);
                     androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS));
                     androidPlayer.getPlayer().fallDistance = 0;
                 }

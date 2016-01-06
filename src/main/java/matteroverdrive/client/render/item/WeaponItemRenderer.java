@@ -22,6 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.api.weapon.IWeaponScope;
 import matteroverdrive.client.resources.data.WeaponMetadataSection;
+import matteroverdrive.handler.weapon.ClientWeaponHandler;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
@@ -180,4 +181,14 @@ public abstract class WeaponItemRenderer implements IItemRenderer
     }
 
     public ResourceLocation getWeaponTexture(){return weaponTexture;}
+
+    public float getRecoilTime()
+    {
+        return ClientWeaponHandler.RECOIL_TIME;
+    }
+
+    public float getRecoilAmount()
+    {
+        return ClientWeaponHandler.RECOIL_AMOUNT;
+    }
 }

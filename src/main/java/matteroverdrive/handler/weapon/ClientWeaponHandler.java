@@ -42,7 +42,10 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class ClientWeaponHandler extends CommonWeaponHandler
 {
+    private static final float RECOIL_RESET_SPEED = 0.03f;
     public static float ZOOM_TIME;
+    public static float RECOIL_TIME;
+    public static float RECOIL_AMOUNT;
     private Map<IWeapon,Integer> shotTracker;
     private float lastMouseSensitivity;
 
@@ -101,6 +104,11 @@ public class ClientWeaponHandler extends CommonWeaponHandler
                 {
                     Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
                 }
+            }
+
+            if (RECOIL_TIME > 0)
+            {
+                RECOIL_TIME = Math.max(0,RECOIL_TIME - RECOIL_RESET_SPEED);
             }
         }
     }

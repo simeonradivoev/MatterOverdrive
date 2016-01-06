@@ -19,12 +19,12 @@
 package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestItem;
-import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
 import java.util.List;
@@ -111,22 +111,18 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
     @Override
     public void initQuestStack(Random random, QuestStack questStack)
     {
-        if (questStack.getTagCompound() == null)
-        {
-            questStack.setTagCompound(new NBTTagCompound());
-        }
-
+        initTag(questStack);
         initItemType(random,questStack);
-        questStack.getTagCompound().setInteger("MaxItemCount",random(random,minItemCount,maxItemCount));
+        getTag(questStack).setInteger("MaxItemCount",random(random,minItemCount,maxItemCount));
     }
 
     public int getItemCount(EntityPlayer entityPlayer, QuestStack questStack)
     {
         if (destroyOnCollect)
         {
-            if (questStack.getTagCompound() != null)
+            if (hasTag(questStack))
             {
-                return questStack.getTagCompound().getInteger("ItemCount");
+                return getTag(questStack).getInteger("ItemCount");
             }
             return 0;
         }
@@ -157,19 +153,17 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
     {
         if (destroyOnCollect)
         {
-            if (questStack.getTagCompound() == null)
-                questStack.setTagCompound(new NBTTagCompound());
-
-            questStack.getTagCompound().setInteger("ItemCount",count);
+            initTag(questStack);
+            getTag(questStack).setInteger("ItemCount",count);
         }
     }
 
     public int getMaxItemCount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
             ItemStack itemStack = getItem(questStack);
-            return itemStack.stackSize + questStack.getTagCompound().getInteger("MaxItemCount");
+            return itemStack.stackSize + getTag(questStack).getInteger("MaxItemCount");
         }
         return 0;
     }
@@ -186,10 +180,7 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
             ItemStack questItem = getItem(questStack);
             if (itemStack != null && questItem != null && ItemStack.areItemStacksEqual(itemStack,questItem))
             {
-                if (questStack.getTagCompound() == null)
-                {
-                    questStack.setTagCompound(new NBTTagCompound());
-                }
+                initTag(questStack);
 
                 int currentItemCount = getItemCount(entityPlayer,questStack);
                 if (currentItemCount < getMaxItemCount(questStack))
@@ -198,11 +189,10 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
 
                     if (isObjectiveCompleted(questStack,entityPlayer,0) && autoComplete)
                     {
-                        questStack.setCompleted(true);
-                    } else
-                    {
-                        return true;
+                        questStack.markComplited(entityPlayer,false);
                     }
+
+                    return true;
                 }
             }
         }
@@ -244,7 +234,7 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
     }
 
     @Override
-    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards) {
+    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<IQuestReward> rewards) {
 
     }
 

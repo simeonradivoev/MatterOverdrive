@@ -87,7 +87,7 @@ public class MOSandPit extends MOWorldGenBuilding
     }
 
     @Override
-    public void placeBlock(World world,int color,int x,int y,int z,int layer,Random random)
+    public void placeBlock(World world,int color,int x,int y,int z,int layer,Random random,int placeNotify)
     {
         if ((color & 0xffffff) == 0xc735e1)
         {
@@ -100,7 +100,7 @@ public class MOSandPit extends MOWorldGenBuilding
             }
         }else
         {
-            super.placeBlock(world,color,x,y,z,layer,random);
+            super.placeBlock(world,color,x,y,z,layer,random,placeNotify);
         }
     }
 

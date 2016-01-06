@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.dialog.IDialogNpc;
 import matteroverdrive.api.dialog.IDialogQuestGiver;
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.gui.GuiDialog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

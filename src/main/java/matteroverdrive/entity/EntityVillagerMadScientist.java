@@ -25,9 +25,10 @@ import matteroverdrive.api.dialog.IDialogMessage;
 import matteroverdrive.api.dialog.IDialogNpc;
 import matteroverdrive.api.dialog.IDialogQuestGiver;
 import matteroverdrive.api.dialog.IDialogRegistry;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.client.render.conversation.DialogShot;
-import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.dialog.*;
+import matteroverdrive.entity.monster.EntityMutantScientist;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.entity.tasks.EntityAITalkToPlayer;
@@ -254,7 +255,13 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
         {
             this.addPotionEffect(new PotionEffect(Potion.wither.id,1000,1));
             worldObj.playSoundAtEntity(this, Reference.MOD_ID + ":" + "failed_animal_die_0",1,1);
-            worldObj.createExplosion(this,posX,posY,posZ,3,false);
+            //worldObj.createExplosion(this,posX,posY,posZ,3,false);
+            this.setDead();
+            EntityMutantScientist mutantScientist = new EntityMutantScientist(worldObj);
+            mutantScientist.spawnExplosionParticle();
+            mutantScientist.setPosition(posX,posY,posZ);
+            mutantScientist.onSpawnWithEgg(null);
+            worldObj.spawnEntityInWorld(mutantScientist);
         }
         else if (dialogMessage == convertMe)
         {
@@ -263,7 +270,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
             {
                 if (questStack.getQuest() == MatterOverdriveQuests.punyHumans)
                 {
-                    questStack.setCompleted(true);
+                    questStack.markComplited(player,false);
                     AndroidPlayer.get(player).startConversion();
                 }
             }

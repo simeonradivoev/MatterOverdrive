@@ -20,12 +20,10 @@ package matteroverdrive.data.quest;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
@@ -115,17 +113,6 @@ public class PlayerQuestData
             if (activeQuests.get(i).isCompleted())
             {
                 QuestStack questStack = activeQuests.remove(i);
-                extendedProperties.getPlayer().addExperience(questStack.getXP(extendedProperties.getPlayer()));
-                List<ItemStack> rewards = new ArrayList<>();
-                questStack.addRewards(rewards, extendedProperties.getPlayer());
-                InventoryPlayer inventoryPlayer = extendedProperties.getPlayer().inventory;
-                for (ItemStack stack : rewards)
-                {
-                    if (!inventoryPlayer.addItemStackToInventory(stack))
-                    {
-                        extendedProperties.getPlayer().worldObj.spawnEntityInWorld(new EntityItem(extendedProperties.getPlayer().worldObj,extendedProperties.getPlayer().posX,extendedProperties.getPlayer().posY+extendedProperties.getPlayer().getEyeHeight(),extendedProperties.getPlayer().posZ,stack));
-                    }
-                }
                 extendedProperties.onQuestCompleted(questStack,i);
             }else
             {
@@ -165,6 +152,14 @@ public class PlayerQuestData
             return questStack;
         }
         return null;
+    }
+
+    public void addQuestToCompleted(QuestStack questStack)
+    {
+        if (questStack.getQuest() != null && !completedQuests.contains(questStack))
+        {
+            completedQuests.add(questStack);
+        }
     }
 
     public void onEvent(Event event)

@@ -18,10 +18,10 @@
 
 package matteroverdrive.client.render.parts;
 
+import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.api.renderer.IBionicPartRenderer;
 import matteroverdrive.client.render.entity.EntityRendererRougeAndroid;
 import matteroverdrive.entity.player.AndroidPlayer;
-import matteroverdrive.items.RougeAndroidParts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.model.ModelBiped;
@@ -61,93 +61,72 @@ public class RougeAndroidPartsRender implements IBionicPartRenderer
         double d1 = entityPlayer.lastTickPosY + (entityPlayer.posY - entityPlayer.lastTickPosY) * (double)ticks;
         double d2 = entityPlayer.lastTickPosZ + (entityPlayer.posZ - entityPlayer.lastTickPosZ) * (double)ticks;
         float f1 = entityPlayer.prevRotationYaw + (entityPlayer.rotationYaw - entityPlayer.prevRotationYaw) * ticks;
+        IBionicPart bionicPart = (IBionicPart)partStack.getItem();
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        moRenderPlayer.doRender(androidPlayer,d0 - RenderManager.renderPosX,d1 - RenderManager.renderPosY,d2 - RenderManager.renderPosZ,f1,ticks);
+        moRenderPlayer.setTexture(bionicPart.getTexture(androidPlayer,partStack));
+        moRenderPlayer.setModelBipedMain(bionicPart.getModel(androidPlayer,partStack));
+        if (moRenderPlayer.modelBipedMain != null)
+        {
+            moRenderPlayer.doRender(androidPlayer,d0 - RenderManager.renderPosX,d1 - RenderManager.renderPosY,d2 - RenderManager.renderPosZ,f1,ticks);
+        }
+    }
+
+    @Override
+    public void affectPlayerRenderer(ItemStack partStack, AndroidPlayer androidPlayer, RenderPlayer renderPlayer, float ticks)
+    {
+
     }
 
     public class RougeAndroidPartsRenderPlayer extends RendererLivingEntity
     {
+        private ResourceLocation textureLocation;
         public ModelBiped modelBipedMain;
 
         public RougeAndroidPartsRenderPlayer()
         {
             super(new ModelBiped(0.0F), 0.5F);
-            this.modelBipedMain = (ModelBiped)this.mainModel;
         }
 
         public void doRender(AndroidPlayer androidPlayer, double x, double y, double z, float rotationYaw, float ticks)
         {
-            boolean needsRender = false;
-            modelBipedMain.bipedBody.showModel = false;
-            modelBipedMain.bipedHead.showModel = false;
-            modelBipedMain.bipedLeftArm.showModel = false;
-            modelBipedMain.bipedLeftLeg.showModel = false;
-            modelBipedMain.bipedRightArm.showModel = false;
-            modelBipedMain.bipedRightLeg.showModel = false;
-            modelBipedMain.bipedHeadwear.showModel = false;
-            modelBipedMain.bipedEars.showModel = false;
-            modelBipedMain.bipedCloak.showModel = false;
+            GL11.glColor3f(1.0F, 1.0F, 1.0F);
+            ItemStack itemstack = androidPlayer.getPlayer().inventory.getCurrentItem();
+            this.modelBipedMain.heldItemRight = itemstack != null ? 1 : 0;
 
-            if (androidPlayer.getInventory().getSlot(0).getItem() != null && androidPlayer.getInventory().getSlot(0).getItem().getItem() instanceof RougeAndroidParts)
+            if (itemstack != null && androidPlayer.getPlayer().getItemInUseCount() > 0)
             {
-                modelBipedMain.bipedHead.showModel = true;
-                needsRender = true;
-            }
-            if (androidPlayer.getInventory().getSlot(1).getItem() != null && androidPlayer.getInventory().getSlot(1).getItem().getItem() instanceof RougeAndroidParts)
-            {
-                modelBipedMain.bipedLeftArm.showModel = true;
-                modelBipedMain.bipedRightArm.showModel = true;
-                needsRender = true;
-            }
-            if (androidPlayer.getInventory().getSlot(2).getItem() != null && androidPlayer.getInventory().getSlot(2).getItem().getItem() instanceof RougeAndroidParts)
-            {
-                modelBipedMain.bipedLeftLeg.showModel = true;
-                modelBipedMain.bipedRightLeg.showModel = true;
-                needsRender = true;
-            }
-            if (androidPlayer.getInventory().getSlot(3).getItem() != null && androidPlayer.getInventory().getSlot(3).getItem().getItem() instanceof RougeAndroidParts)
-            {
-                modelBipedMain.bipedBody.showModel = true;
-                needsRender = true;
-            }
+                EnumAction enumaction = itemstack.getItemUseAction();
 
-            if (needsRender)
-            {
-                GL11.glColor3f(1.0F, 1.0F, 1.0F);
-                ItemStack itemstack = androidPlayer.getPlayer().inventory.getCurrentItem();
-                this.modelBipedMain.heldItemRight = itemstack != null ? 1 : 0;
-
-                if (itemstack != null && androidPlayer.getPlayer().getItemInUseCount() > 0)
+                if (enumaction == EnumAction.block)
                 {
-                    EnumAction enumaction = itemstack.getItemUseAction();
-
-                    if (enumaction == EnumAction.block)
-                    {
-                        this.modelBipedMain.heldItemRight = 3;
-                    }
-                    else if (enumaction == EnumAction.bow)
-                    {
-                        this.modelBipedMain.aimedBow = true;
-                    }
+                    this.modelBipedMain.heldItemRight = 3;
                 }
-
-                this.modelBipedMain.isSneak = androidPlayer.getPlayer().isSneaking();
-                double d3 = y - (double)androidPlayer.getPlayer().yOffset;
-
-                if (androidPlayer.getPlayer().isSneaking() && !(androidPlayer.getPlayer() instanceof EntityPlayerSP))
+                else if (enumaction == EnumAction.bow)
                 {
-                    d3 -= 0.125D;
+                    this.modelBipedMain.aimedBow = true;
                 }
-                super.doRender(androidPlayer.getPlayer(), x, d3, z, rotationYaw, ticks);
-                this.modelBipedMain.aimedBow = false;
-                this.modelBipedMain.isSneak = false;
-                this.modelBipedMain.heldItemRight = 0;
             }
+
+            this.modelBipedMain.isSneak = androidPlayer.getPlayer().isSneaking();
+            double d3 = y - (double)androidPlayer.getPlayer().yOffset;
+
+            if (androidPlayer.getPlayer().isSneaking() && !(androidPlayer.getPlayer() instanceof EntityPlayerSP))
+            {
+                d3 -= 0.125D;
+            }
+            super.doRender(androidPlayer.getPlayer(), x, d3, z, rotationYaw, ticks);
+            this.modelBipedMain.aimedBow = false;
+            this.modelBipedMain.isSneak = false;
+            this.modelBipedMain.heldItemRight = 0;
         }
 
         protected ResourceLocation getEntityTexture(Entity p_110775_1_)
         {
+            if (textureLocation != null)
+            {
+                return textureLocation;
+            }
             return EntityRendererRougeAndroid.texture;
         }
 
@@ -156,6 +135,17 @@ public class RougeAndroidPartsRender implements IBionicPartRenderer
         {
             float f1 = 0.9375F;
             GL11.glScalef(f1, f1, f1);
+        }
+
+        public void setTexture(ResourceLocation location)
+        {
+            this.textureLocation = location;
+        }
+
+        public void setModelBipedMain(ModelBiped modelBipedMain)
+        {
+            this.modelBipedMain = modelBipedMain;
+            this.mainModel = modelBipedMain;
         }
     }
 }

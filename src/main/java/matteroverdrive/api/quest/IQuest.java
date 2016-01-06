@@ -20,9 +20,7 @@ package matteroverdrive.api.quest;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import matteroverdrive.api.events.MOEventDialogInteract;
-import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
@@ -152,9 +150,17 @@ public interface IQuest
     int getXpReward(QuestStack questStack,EntityPlayer entityPlayer);
 
     /**
-     * Adds a rewards the player will receive after quest completion to the list.
+     * Adds to the rewards the player will receive after quest completion.
      * @param questStack the quest stack
      * @param entityPlayer the entity player.
+     * @param rewards the list of quest rewards.
      */
-    void addRewards(QuestStack questStack, EntityPlayer entityPlayer,List<ItemStack> rewards);
+    void addToRewards(QuestStack questStack, EntityPlayer entityPlayer, List<IQuestReward> rewards);
+
+    /**
+     * Sets the quest stack as completed. Used to control the setting of the quest stack from outside sources.
+     * @param questStack the quest stack.
+     * @param entityPlayer the Player.
+     */
+    void setCompleted(QuestStack questStack,EntityPlayer entityPlayer);
 }

@@ -21,4 +21,17 @@ public class BlockHandler
             }
         }
     }
+
+    @SubscribeEvent
+    public void onBlockPlaceEvent(BlockEvent.PlaceEvent event)
+    {
+        if (event.player != null)
+        {
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
+            if (extendedProperties != null)
+            {
+                extendedProperties.onEvent(event);
+            }
+        }
+    }
 }

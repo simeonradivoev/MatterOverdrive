@@ -95,6 +95,8 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         addStat(androidPlayer,MatterOverdriveBioticStats.cloak,0,3,ForgeDirection.UP);
         addStat(androidPlayer,MatterOverdriveBioticStats.nightvision,1,0,ForgeDirection.UNKNOWN);
         addStat(androidPlayer,MatterOverdriveBioticStats.minimap,1,2,ForgeDirection.UNKNOWN);
+        addStat(androidPlayer,MatterOverdriveBioticStats.flashCooling,2,2,ForgeDirection.UP);
+        addStat(androidPlayer,MatterOverdriveBioticStats.shockwave,2,3,ForgeDirection.UP);
 
         mob = new EntityMeleeRougeAndroidMob(Minecraft.getMinecraft().theWorld);
         mob.getEntityData().setBoolean("Hologram",true);

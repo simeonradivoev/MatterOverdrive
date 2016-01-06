@@ -37,4 +37,6 @@ public interface IBionicPartRenderer
      * @param ticks
      */
     void renderPart(ItemStack partStack, AndroidPlayer androidPlayer, RenderPlayer renderPlayer, float ticks);
+
+    void affectPlayerRenderer(ItemStack partStack,AndroidPlayer androidPlayer,RenderPlayer renderPlayer,float ticks);
 }

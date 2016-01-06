@@ -60,7 +60,7 @@ public abstract class MOImageGen
         setTexture(texture);
     }
 
-    public void placeBlock(World world,int color,int x,int y,int z,int layer,Random random)
+    public void placeBlock(World world,int color,int x,int y,int z,int layer,Random random,int placeNotify)
     {
         Block block = getBlockFromColor(color,random);
         int meta = getMetaFromColor(color,random);
@@ -87,21 +87,24 @@ public abstract class MOImageGen
         return 0;
     }
 
-    public void generateFromImage(World world,Random random,int startX,int startY,int startZ,int layer)
+    public void generateFromImage(World world,Random random,int startX,int startY,int startZ,int layer,int placeNotify)
     {
-        for (BlockMapping blockMapping : blockMap.values())
+        if (layers != null && layers.size() > 0)
         {
-            blockMapping.reset(localRandom);
+            for (BlockMapping blockMapping : blockMap.values())
+            {
+                blockMapping.reset(localRandom);
+            }
+            generateFromImage(world, random, startX, Math.min(startY, world.getHeight() - layerCount), startZ, layers, layer, placeNotify);
         }
-        generateFromImage(world,random,startX,Math.min(startY,world.getHeight()-layerCount),startZ,layers,layer);
     }
 
-    public void generateFromImage(World world, Random random, int startX, int startY, int startZ,List<int[][]> layers,int layer)
+    public void generateFromImage(World world, Random random, int startX, int startY, int startZ,List<int[][]> layers,int layer,int placeNotify)
     {
         for (int x = 0; x < layerWidth; x++) {
             for (int z = 0; z < layerHeight; z++) {
 
-                placeBlock(world, layers.get(layer)[x][z], startX + x, startY + layer, startZ + z, layer,random);
+                placeBlock(world, layers.get(layer)[x][z], startX + x, startY + layer, startZ + z, layer,random,placeNotify);
             }
         }
     }
@@ -173,6 +176,14 @@ public abstract class MOImageGen
     protected boolean colorsMatch(int color0,int color1)
     {
         return (color0 & 0xffffff) == (color1 & 0xffffff);
+    }
+
+    public void manageTextureLoading()
+    {
+        if (layers == null || layers.size() == 0)
+        {
+            loadTexture(getTexture());
+        }
     }
 
     private void loadTexture(ResourceLocation textureLocation) throws RuntimeException {
@@ -358,7 +369,6 @@ public abstract class MOImageGen
             layers = new ArrayList<>();
         else
             layers.clear();
-        loadTexture(textureLocation);
     }
 
     public static class BlockMapping

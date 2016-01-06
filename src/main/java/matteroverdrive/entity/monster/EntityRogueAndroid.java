@@ -35,6 +35,7 @@ import java.util.List;
  */
 public class EntityRogueAndroid implements IConfigSubscriber
 {
+    public static int MAX_ANDROIDS_PER_CHUNK = 4;
     private static HashSet<String> biomesBlacklist = new HashSet<>();
     private static HashSet<String> biomesWhitelist = new HashSet<>();
     public static HashSet<Integer> dimensionBlacklist = new HashSet<>();
@@ -43,7 +44,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
 
     public static void addAsBiomeGen(Class<? extends EntityLiving> entityClass)
     {
-        spawnListEntries.add(new BiomeGenBase.SpawnListEntry(entityClass, 6, 1, 2));
+        spawnListEntries.add(new BiomeGenBase.SpawnListEntry(entityClass, 15, 1, 2));
         addInBiome(BiomeGenBase.getBiomeGenArray());
     }
 
@@ -85,7 +86,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         for (BiomeGenBase.SpawnListEntry entry : spawnListEntries)
         {
-            entry.itemWeight = config.config.getInt("spawn_chance", ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android", 5, 0, 100, "The spawn change of the Rogue Android");
+            entry.itemWeight = config.config.getInt("spawn_chance", ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android", 15, 0, 100, "The spawn change of the Rogue Android");
         }
 
         loadDimensionBlacklist(config);
@@ -93,7 +94,8 @@ public class EntityRogueAndroid implements IConfigSubscriber
         loadBiomeBlacklist(config);
         loadBiomesWhitelist(config);
 
-        EntityRangedRogueAndroidMob.UNLIMITED_WEAPON_ENERGY = config.getBool(ConfigurationHandler.CATEGORY_ENTITIES + "rogue_android","unlimited_weapon_energy",true,"Do Ranged Rogue Androids have unlimited weapon energy in their weapons");
+        EntityRangedRogueAndroidMob.UNLIMITED_WEAPON_ENERGY = config.getBool("unlimited_weapon_energy",ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android",true,"Do Ranged Rogue Androids have unlimited weapon energy in their weapons");
+        MAX_ANDROIDS_PER_CHUNK = config.getInt("max_android_per_chunk",ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android",4,"The max amount of Rogue Android that can spawn in a given chunk");
     }
 
     private static void loadBiomeBlacklist(ConfigurationHandler config)

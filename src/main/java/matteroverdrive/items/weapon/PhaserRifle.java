@@ -23,10 +23,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
 import matteroverdrive.api.weapon.WeaponShot;
-import matteroverdrive.client.render.item.ItemRendererPhaserRifle;
 import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
+import matteroverdrive.handler.weapon.ClientWeaponHandler;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
@@ -181,15 +181,15 @@ public class PhaserRifle extends EnergyWeapon
                 itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
                 if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
                     if (isWeaponZoomed(entityPlayer, itemStack)) {
-                        ItemRendererPhaserRifle.RECOIL_AMOUNT = 0.5f + getAccuracy(itemStack, entityPlayer, true);
+                        ClientWeaponHandler.RECOIL_AMOUNT = 0.5f + getAccuracy(itemStack, entityPlayer, true);
                         Minecraft.getMinecraft().renderViewEntity.hurtTime = 6 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
                         Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 15;
                     } else {
-                        ItemRendererPhaserRifle.RECOIL_AMOUNT = 2 + getAccuracy(itemStack, entityPlayer, true) * 2;
+                        ClientWeaponHandler.RECOIL_AMOUNT = 2 + getAccuracy(itemStack, entityPlayer, true) * 2;
                         Minecraft.getMinecraft().renderViewEntity.hurtTime = 10 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
                         Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 25;
                     }
-                    ItemRendererPhaserRifle.RECOIL_TIME = 1;
+                    ClientWeaponHandler.RECOIL_TIME = 1;
                 }
 
                 Vec3 dir = entityPlayer.getLook(1);

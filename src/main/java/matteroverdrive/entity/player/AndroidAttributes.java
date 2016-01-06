@@ -27,5 +27,5 @@ import net.minecraft.entity.ai.attributes.RangedAttribute;
 public class AndroidAttributes
 {
     public static final IAttribute attributeGlitchTime = new RangedAttribute("android.glitchTime",1,0,1).setDescription("Glitch Time Percent");
-    public static final IAttribute attributeBatteryUse = new RangedAttribute("android.batteryUse",1,0,10).setDescription("Battery Use Percent");
+    public static final IAttribute attributeBatteryUse = new RangedAttribute("android.batteryUse",1,0,Double.MAX_VALUE).setDescription("Battery Use Percent");
 }

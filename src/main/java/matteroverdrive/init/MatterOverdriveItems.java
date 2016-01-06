@@ -24,6 +24,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.items.*;
+import matteroverdrive.items.android.RougeAndroidParts;
 import matteroverdrive.items.android.TritaniumSpine;
 import matteroverdrive.items.armour.TritaniumArmor;
 import matteroverdrive.items.food.AndroidPill;
@@ -106,6 +107,9 @@ public class MatterOverdriveItems
     public static ItemBuildingMatterExtractor buildingMatterExtractor;
     public static ItemBuildingShipHangar buildingShipHangar;
     public static ItemBuildingPowerGenerator buildingPowerGenerator;
+    public static MOBaseItem weaponHandle;
+    public static MOBaseItem weaponReceiver;
+    public static MOBaseItem plasmaCore;
 
     public static Item.ToolMaterial toolMaterialTritanium;
     public static ItemArmor.ArmorMaterial armorMaterialTritanium;
@@ -113,7 +117,7 @@ public class MatterOverdriveItems
 	public static void init(FMLPreInitializationEvent event)
 	{
         toolMaterialTritanium = EnumHelper.addToolMaterial("tritanium",2,3122,6f,2f,14);
-        armorMaterialTritanium = EnumHelper.addArmorMaterial("tritanium",66,new int[]{2, 6, 5, 2}, 9);
+        armorMaterialTritanium = EnumHelper.addArmorMaterial("tritanium",66,new int[]{4, 9, 7, 4}, 20);
 
 		matter_dust = new MatterDust("matter_dust",false);
 		matter_dust_refined = new MatterDust("matter_dust_refined",true);
@@ -179,6 +183,9 @@ public class MatterOverdriveItems
         buildingResidential = new ItemBuildingResidential("building_residential");
         buildingShipHangar = new ItemBuildingShipHangar("building_ship_hangar");
         buildingPowerGenerator = new ItemBuildingPowerGenerator("building_power_generator");
+        weaponHandle = new MOBaseItem("weapon_handle");
+        weaponReceiver = new MOBaseItem("weapon_receiver");
+        plasmaCore = new MOBaseItem("plasma_core");
 	}
 
 	public static void register(FMLInitializationEvent event)
@@ -241,6 +248,9 @@ public class MatterOverdriveItems
         buildingResidential.register();
         buildingShipHangar.register();
         buildingPowerGenerator.register();
+        weaponHandle.register();
+        weaponReceiver.register();
+        plasmaCore.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);

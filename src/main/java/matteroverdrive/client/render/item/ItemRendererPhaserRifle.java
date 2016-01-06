@@ -48,8 +48,6 @@ public class ItemRendererPhaserRifle extends WeaponItemRenderer
     public static final float THIRD_PERSON_SCALE = 0.048f;
     public static final float ITEM_SCALE = 0.02f;
     public static final float SCALE_DROP = 0.03f;
-    public static float RECOIL_TIME = 0;
-    public static float RECOIL_AMOUNT = 0;
     private Random random;
 
     public static ResourceLocation flashTexture;
@@ -123,9 +121,8 @@ public class ItemRendererPhaserRifle extends WeaponItemRenderer
     }
 
     void renderFirstPerson(ItemStack item) {
-        RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME, 0, 0.1f);
         float zoomValue = MOEasing.Sine.easeInOut(ClientProxy.instance().getClientWeaponHandler().ZOOM_TIME, 0, 1, 1f);
-        float recoilValue = MOEasing.Quart.easeInOut(RECOIL_TIME, 0, 1, 1f);
+        float recoilValue = MOEasing.Quad.easeInOut(getRecoilTime(), 0, 1, 1f);
 
         GL11.glPushMatrix();
         ResourceLocation skin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
@@ -134,7 +131,7 @@ public class ItemRendererPhaserRifle extends WeaponItemRenderer
         Minecraft.getMinecraft().renderViewEntity.rotationYaw += recoilValue * 0.05f * random.nextGaussian();
 
         glTranslated(2.0, MOMathHelper.Lerp(-0.3f, -0.5f, zoomValue), MOMathHelper.Lerp(-1, -1.1f, zoomValue));
-        glTranslatef(0, recoilValue * 0.05f * RECOIL_AMOUNT, 0);
+        glTranslatef(0, recoilValue * 0.05f * getRecoilAmount(), 0);
         glRotated(MOMathHelper.Lerp(45, 0, zoomValue), 1, 1, 0);
         glRotated(MOMathHelper.Lerp(0, MOMathHelper.Lerp(3, 0, zoomValue), recoilValue), 0, 0, 1);
         double length = 1.8;
@@ -168,8 +165,8 @@ public class ItemRendererPhaserRifle extends WeaponItemRenderer
         glTranslated(MOMathHelper.Lerp(0.2f, 1, zoomValue), MOMathHelper.Lerp(-0.4f, -0.1f + getScopeOffset(item), zoomValue), MOMathHelper.Lerp(1.2f, 0.6f, zoomValue));
         glScaled(1, 1, 0.6);
 
-        glTranslatef(0, -recoilValue * 0.05f * RECOIL_AMOUNT, -recoilValue * 0.05f * RECOIL_AMOUNT);
-        glRotated(recoilValue * 2 * RECOIL_AMOUNT, -1, 0, 0);
+        glTranslatef(0, -recoilValue * 0.05f * getRecoilAmount(), -recoilValue * 0.05f * getRecoilAmount());
+        glRotated(recoilValue * 2 * getRecoilAmount(), -1, 0, 0);
 
         glScaled(SCALE, SCALE, SCALE);
 

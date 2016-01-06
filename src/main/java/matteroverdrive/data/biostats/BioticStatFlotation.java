@@ -19,10 +19,7 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.entity.player.AndroidPlayer;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -45,8 +42,7 @@ public class BioticStatFlotation extends AbstractBioticStat
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, KeyBinding keyBinding)
+    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
     {
 
     }

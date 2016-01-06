@@ -22,10 +22,10 @@ import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.quest.Quest;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.data.inventory.SlotContract;
-import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.data.quest.WeightedRandomQuest;
 import matteroverdrive.init.MatterOverdriveQuests;
 import matteroverdrive.machines.MOTileEntityMachine;
@@ -86,7 +86,7 @@ public class TileEntityMachineContractMarket extends MOTileEntityMachine
     {
         Quest quest = ((WeightedRandomQuest)WeightedRandom.getRandomItem(random,MatterOverdriveQuests.contractGeneration)).getQuest();
         QuestStack questStack = MatterOverdrive.questFactory.generateQuestStack(random,quest);
-        for (int i = 10;i < inventory.getSizeInventory();i++)
+        for (int i = 0;i < inventory.getSizeInventory();i++)
         {
             if (inventory.getSlot(i).getItem() != null)
             {

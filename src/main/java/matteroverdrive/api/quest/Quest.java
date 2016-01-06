@@ -18,9 +18,7 @@
 
 package matteroverdrive.api.quest;
 
-import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,25 +30,29 @@ public abstract class Quest implements IQuest
 {
     protected String title;
     protected int xpReward;
-    protected List<ItemStack> itemRewards;
+    protected List<IQuestReward> questRewards;
     public Quest(String title,int xpReward)
     {
         this.title = title;
         this.xpReward = xpReward;
-        this.itemRewards = new ArrayList<>();
+        this.questRewards = new ArrayList<>();
     }
     public String getTitle(QuestStack questStack) {return title;}
     public String getTitle(QuestStack questStack,EntityPlayer entityPlayer)
     {
         return getTitle(questStack);
     }
-    public Quest addItemReward(ItemStack itemStack){this.itemRewards.add(itemStack);return this;}
-    public Quest addItemRewards(ItemStack... itemStacks)
+    public Quest addQuestRewards(IQuestReward... questRewards)
     {
-        for (ItemStack itemStack : itemStacks)
+        for (IQuestReward itemStack : questRewards)
         {
-            this.itemRewards.add(itemStack);
+            this.questRewards.add(itemStack);
         }
         return this;
+    }
+    @Override
+    public void setCompleted(QuestStack questStack,EntityPlayer entityPlayer)
+    {
+        questStack.completed = true;
     }
 }

@@ -42,6 +42,7 @@ public class CommonProxy
 	public void registerProxies()
 	{
         MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
+        MinecraftForge.EVENT_BUS.register(getWeaponHandler());
         FMLCommonHandler.instance().bus().register(GalaxyServer.getInstance());
         MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance());
         MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance().getGalaxyGenerator());

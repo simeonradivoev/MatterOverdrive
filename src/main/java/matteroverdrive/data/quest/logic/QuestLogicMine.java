@@ -19,12 +19,11 @@
 package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestBlock;
-import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.ArrayList;
@@ -87,11 +86,9 @@ public class QuestLogicMine extends AbstractQuestLogic
     @Override
     public void initQuestStack(Random random, QuestStack questStack)
     {
-        if (questStack.getTagCompound() == null)
-            questStack.setTagCompound(new NBTTagCompound());
-
+        initTag(questStack);
         initBlockType(random,questStack);
-        questStack.getTagCompound().setInteger("MaxMineCount",random(random,minMineCount,maxMineCount));
+        getTag(questStack).setInteger("MaxMineCount",random(random,minMineCount,maxMineCount));
     }
 
     private void initBlockType(Random random,QuestStack questStack)
@@ -138,11 +135,10 @@ public class QuestLogicMine extends AbstractQuestLogic
                     setMineCount(questStack, getMineCount(questStack) + 1);
                     if (isObjectiveCompleted(questStack,entityPlayer,0) && autoComplete)
                     {
-                        questStack.setCompleted(true);
-                    } else
-                    {
-                        return true;
+                        questStack.markComplited(entityPlayer,false);
                     }
+
+                    return true;
                 }
             }
         }
@@ -166,50 +162,46 @@ public class QuestLogicMine extends AbstractQuestLogic
     }
 
     @Override
-    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards) {
+    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<IQuestReward> rewards) {
 
     }
 
     public int getMineCount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return questStack.getTagCompound().getInteger("MineCount");
+            return getTag(questStack).getInteger("MineCount");
         }
         return 0;
     }
 
     public void setMineCount(QuestStack questStack,int mineCount)
     {
-        if (questStack.getTagCompound() == null)
-            questStack.setTagCompound(new NBTTagCompound());
-
-        questStack.getTagCompound().setInteger("MineCount",mineCount);
+        initTag(questStack);
+        getTag(questStack).setInteger("MineCount",mineCount);
     }
 
     public int getMaxMineCount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return questStack.getTagCompound().getInteger("MaxMineCount");
+            return getTag(questStack).getInteger("MaxMineCount");
         }
         return 0;
     }
 
     public int getBlockType(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return questStack.getTagCompound().getByte("BlockType");
+            return getTag(questStack).getByte("BlockType");
         }return 0;
     }
 
     public void setBlockType(QuestStack questStack,int blockType)
     {
-        if (questStack.getTagCompound() == null)
-            questStack.setTagCompound(new NBTTagCompound());
-
-        questStack.getTagCompound().setByte("BlockType",(byte) blockType);
+        initTag(questStack);
+        getTag(questStack).setByte("BlockType",(byte) blockType);
     }
 
     public Block getBlock(QuestStack questStack)

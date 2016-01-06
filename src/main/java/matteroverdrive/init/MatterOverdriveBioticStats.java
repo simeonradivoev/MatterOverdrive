@@ -44,6 +44,8 @@ public class MatterOverdriveBioticStats
     public static BioticStatCloak cloak;
     public static BioticStatNightVision nightvision;
     public static BioticStatMinimap minimap;
+    public static BioticStatFlashCooling flashCooling;
+    public static BioticStatShockwave shockwave;
 
     public static void init(FMLPreInitializationEvent event)
     {
@@ -61,6 +63,8 @@ public class MatterOverdriveBioticStats
         cloak = new BioticStatCloak("cloak",36);
         nightvision = new BioticStatNightVision("nightvision",28);
         minimap = new BioticStatMinimap("minimap",18);
+        flashCooling = new BioticStatFlashCooling("flash_cooling",28);
+        shockwave = new BioticStatShockwave("shockwave",32);
     }
 
     public static void register(FMLInitializationEvent event)
@@ -78,6 +82,8 @@ public class MatterOverdriveBioticStats
         attack.setRoot(nanobots);
         cloak.setRoot(shield);
         minimap.addReqiredItm(new ItemStack(Items.compass));
+        flashCooling.setRoot(attack);
+        shockwave.setRoot(flashCooling);
     }
 
     public static void registerAll(ConfigurationHandler configurationHandler,IAndroidStatRegistry androidStatRegistry)
@@ -94,6 +100,8 @@ public class MatterOverdriveBioticStats
         androidStatRegistry.registerStat(cloak);
         androidStatRegistry.registerStat(nightvision);
         androidStatRegistry.registerStat(minimap);
+        androidStatRegistry.registerStat(flashCooling);
+        androidStatRegistry.registerStat(shockwave);
 
         configurationHandler.subscribe(teleport);
         configurationHandler.subscribe(shield);

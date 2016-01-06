@@ -20,8 +20,8 @@ package matteroverdrive.commands;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.IQuest;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.PlayerQuestData;
-import matteroverdrive.data.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;

@@ -28,8 +28,10 @@ import matteroverdrive.entity.ai.EntityAIMoveAlongPath;
 import matteroverdrive.entity.ai.EntityAIPhaserBoltAttack;
 import matteroverdrive.entity.ai.EntityAIRangedRunFromMelee;
 import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.items.android.RougeAndroidParts;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
+import matteroverdrive.util.AndroidPartsFactory;
 import matteroverdrive.util.WeaponFactory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -134,6 +136,18 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
             for (k = 0; k < j; ++k)
             {
                 this.dropItem(MatterOverdriveItems.energyPack, 1);
+            }
+
+            float lootingModifier = (Math.min(lootingLevel, 10) / 10f);
+            if (rand.nextFloat() < (0.15f + lootingModifier) || getIsLegendary())
+            {
+                ItemStack part = MatterOverdrive.androidPartsFactory.generateRandomDecoratedPart(new AndroidPartsFactory.AndroidPartFactoryContext(getAndroidLevel(),this,getIsLegendary()));
+                if (part.getItem() instanceof RougeAndroidParts)
+                {
+                    part.setTagCompound(new NBTTagCompound());
+                    part.getTagCompound().setByte("Type",(byte) 1);
+                }
+                this.entityDropItem(part, 0.0F);
             }
         }
     }

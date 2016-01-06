@@ -22,7 +22,6 @@ import matteroverdrive.Reference;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.animation.MOEasing;
-import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -42,8 +41,6 @@ public class ItemRendererOmniTool extends WeaponItemRenderer
     public static final float THIRD_PERSON_SCALE = 3f;
     public static final float ITEM_SCALE = 3;
     public static final float SCALE_DROP = 2.5f;
-    public static float RECOIL_TIME = 0;
-    public static float RECOIL_AMOUNT = 0;
     private Random random;
 
     public ItemRendererOmniTool()
@@ -117,11 +114,10 @@ public class ItemRendererOmniTool extends WeaponItemRenderer
     void renderFirstPerson(ItemStack item)
     {
         glPushMatrix();
-        RECOIL_TIME = MOMathHelper.Lerp(RECOIL_TIME, 0, 0.1f);
-        float recoilValue = MOEasing.Quad.easeInOut(RECOIL_TIME, 0, 1, 1f);
+        float recoilValue = MOEasing.Quad.easeInOut(getRecoilTime(), 0, 1, 1f);
 
-        glTranslatef(0, 0, recoilValue * 0.01f * RECOIL_AMOUNT);
-        glRotated(recoilValue * 2 * RECOIL_AMOUNT, 1, 0, 0);
+        glTranslatef(0, 0, recoilValue * 0.01f * getRecoilAmount());
+        glRotated(recoilValue * 2 * getRecoilAmount(), 1, 0, 0);
 
         Minecraft.getMinecraft().renderViewEntity.rotationPitch += recoilValue * random.nextGaussian() * 0.03f - recoilValue * 0.02f;
         Minecraft.getMinecraft().renderViewEntity.rotationYaw += recoilValue * 0.02f * random.nextGaussian();

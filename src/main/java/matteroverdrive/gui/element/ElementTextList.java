@@ -23,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -97,6 +98,11 @@ public class ElementTextList extends MOElementBase
     public void addLine(String line)
     {
         lines.add(line);
+    }
+
+    public void addLines(Collection<String> lines)
+    {
+        this.lines.addAll(lines);
     }
 
     public void setLines(List<String> lines)

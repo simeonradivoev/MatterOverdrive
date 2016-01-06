@@ -19,9 +19,7 @@
 package matteroverdrive.api.quest;
 
 import cpw.mods.fml.common.eventhandler.Event;
-import matteroverdrive.data.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 
 import java.util.List;
 import java.util.Random;
@@ -43,5 +41,6 @@ public interface IQuestLogic
     void onTaken(QuestStack questStack,EntityPlayer entityPlayer);
     void onCompleted(QuestStack questStack,EntityPlayer entityPlayer);
     int modifyXP(QuestStack questStack,EntityPlayer entityPlayer,int originalXp);
-    void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards);
+    void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<IQuestReward> rewards);
+    String getID();
 }

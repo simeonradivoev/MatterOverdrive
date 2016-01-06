@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.Quest;
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.WeightedRandomQuest;
 import matteroverdrive.gui.GuiQuestPreview;
 import matteroverdrive.init.MatterOverdriveQuests;
@@ -75,7 +75,8 @@ public class Contract extends MOBaseItem
     {
         if (itemStack.getTagCompound() != null)
         {
-            return QuestStack.loadFromNBT(itemStack.getTagCompound()).getTitle();
+            QuestStack questStack = QuestStack.loadFromNBT(itemStack.getTagCompound());
+            return questStack.getTitle();
         }
         return super.getItemStackDisplayName(itemStack);
     }

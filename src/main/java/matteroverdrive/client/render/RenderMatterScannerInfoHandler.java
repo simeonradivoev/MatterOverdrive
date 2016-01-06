@@ -20,10 +20,10 @@ package matteroverdrive.client.render;
 
 import matteroverdrive.Reference;
 import matteroverdrive.api.IScannable;
+import matteroverdrive.api.inventory.IBlockScanner;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.tileentity.TileEntityRendererPatternMonitor;
 import matteroverdrive.entity.player.AndroidPlayer;
-import matteroverdrive.items.MatterScanner;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.RenderUtils;
@@ -59,7 +59,7 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
     {
         ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem();
 
-        if (heldItem != null && heldItem.getItem() instanceof MatterScanner && Minecraft.getMinecraft().thePlayer.isUsingItem())
+        if (heldItem != null && heldItem.getItem() instanceof IBlockScanner && Minecraft.getMinecraft().thePlayer.isUsingItem())
         {
             glPushMatrix();
             renderInfo(Minecraft.getMinecraft().thePlayer, heldItem, event.partialTicks);
@@ -73,8 +73,8 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
 
     private void renderInfo(EntityPlayer player, ItemStack scanner, float ticks)
     {
-        MatterScanner scannerItem = (MatterScanner)scanner.getItem();
-        MovingObjectPosition position = scannerItem.getScanningPos(player);
+        IBlockScanner scannerItem = (IBlockScanner)scanner.getItem();
+        MovingObjectPosition position = scannerItem.getScanningPos(scanner,player);
         renderInfo(player, position, scanner, ticks);
     }
 
@@ -180,26 +180,29 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
 
     private void renderEntityInfo(Entity entity, MovingObjectPosition position, EntityPlayer player, Vec3 playerPos, float ticks)
     {
-        double offset = 0.1;
-        Vec3 entityPos;
-        String name = entity.getCommandSenderName();
-        List<String> infos = new ArrayList<String>();
-        if (entity instanceof EntityLivingBase)
+        if (!entity.isInvisibleToPlayer(player))
         {
-            entityPos = ((EntityLivingBase) entity).getPosition(ticks);
-            entityPos.yCoord += +entity.getEyeHeight();
-            infos.add("Health: " + (healthFormater.format(((EntityLivingBase) entity).getHealth()) + " / " + ((EntityLivingBase) entity).getMaxHealth()));
+            double offset = 0.1;
+            Vec3 entityPos;
+            String name = entity.getCommandSenderName();
+            List<String> infos = new ArrayList<String>();
+            if (entity instanceof EntityLivingBase)
+            {
+                entityPos = ((EntityLivingBase) entity).getPosition(ticks);
+                entityPos.yCoord += +entity.getEyeHeight();
+                infos.add("Health: " + (healthFormater.format(((EntityLivingBase) entity).getHealth()) + " / " + ((EntityLivingBase) entity).getMaxHealth()));
 
-            glPushMatrix();
-            glTranslated(entityPos.xCoord - playerPos.xCoord, entityPos.yCoord - playerPos.yCoord, entityPos.zCoord - playerPos.zCoord);
-            glRotated(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * ticks, 0, -1, 0);
-            glRotated(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * ticks, 1, 0, 0);
-            glTranslated(1, 0, 0);
-            glRotated(180, 0, 0, 1);
-            glTranslated(-0.5, -0.5, -offset);
-            drawInfoPlane(0.5);
-            drawInfoList(name, infos);
-            glPopMatrix();
+                glPushMatrix();
+                glTranslated(entityPos.xCoord - playerPos.xCoord, entityPos.yCoord - playerPos.yCoord, entityPos.zCoord - playerPos.zCoord);
+                glRotated(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * ticks, 0, -1, 0);
+                glRotated(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * ticks, 1, 0, 0);
+                glTranslated(1, 0, 0);
+                glRotated(180, 0, 0, 1);
+                glTranslated(-0.5, -0.5, -offset);
+                drawInfoPlane(0.5);
+                drawInfoList(name, infos);
+                glPopMatrix();
+            }
         }
     }
 

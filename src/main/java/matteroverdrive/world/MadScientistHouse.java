@@ -18,10 +18,16 @@
 
 package matteroverdrive.world;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.EntityVillagerMadScientist;
 import matteroverdrive.init.MatterOverdriveBlocks;
+import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.init.MatterOverdriveQuests;
+import matteroverdrive.tile.TileEntityTritaniumCrate;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
@@ -35,6 +41,7 @@ import java.util.Random;
  */
 public class MadScientistHouse extends StructureVillagePieces.Village
 {
+    private boolean hasMadeChest;
     int villagersSpawned;
     private static final String __OBFID = "CL_00000517";
 
@@ -51,6 +58,18 @@ public class MadScientistHouse extends StructureVillagePieces.Village
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, 9, 9, 6, p_74898_6_);
         return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(list, structureboundingbox) == null ? new MadScientistHouse(start, p_74898_7_, p_74898_2_, structureboundingbox, p_74898_6_) : null;
+    }
+
+    protected void func_143012_a(NBTTagCompound p_143012_1_)
+    {
+        super.func_143012_a(p_143012_1_);
+        p_143012_1_.setBoolean("Chest", this.hasMadeChest);
+    }
+
+    protected void func_143011_b(NBTTagCompound p_143011_1_)
+    {
+        super.func_143011_b(p_143011_1_);
+        this.hasMadeChest = p_143011_1_.getBoolean("Chest");
     }
 
     /**
@@ -135,6 +154,35 @@ public class MadScientistHouse extends StructureVillagePieces.Village
         this.placeBlockAtCurrentPosition(world, Blocks.fence, 0, 4, 1, 3, boundingBox);
         this.placeBlockAtCurrentPosition(world, Blocks.wooden_pressure_plate, 0, 4, 2, 3, boundingBox);
         this.placeBlockAtCurrentPosition(world, MatterOverdriveBlocks.inscriber, 0, 7, 1, 1, boundingBox);
+
+        if (!this.hasMadeChest)
+        {
+            this.hasMadeChest = true;
+            int i1 = this.getXWithOffset(1, 4);
+            int j1 = this.getYWithOffset(1);
+            int k1 = this.getZWithOffset(1, 4);
+
+            if (boundingBox.isVecInside(i1, j1, k1))
+            {
+                world.setBlock(i1, j1, k1, MatterOverdriveBlocks.tritaniumCrate[random.nextInt(MatterOverdriveBlocks.tritaniumCrate.length)], 0, 2);
+                TileEntityTritaniumCrate tileentitycrate = (TileEntityTritaniumCrate)world.getTileEntity(i1, j1, k1);
+                tileentitycrate.getInventory().addItem(MatterOverdrive.questFactory.generateQuestStack(random, MatterOverdriveQuests.gmo).getContract());
+                ItemStack scanner = new ItemStack(MatterOverdriveItems.dataPad);
+                scanner.setStackDisplayName("Mad Scientist's Data Pad");
+                MatterOverdriveItems.dataPad.addToScanWhitelist(scanner,Blocks.carrots);
+                MatterOverdriveItems.dataPad.addToScanWhitelist(scanner,Blocks.potatoes);
+                MatterOverdriveItems.dataPad.addToScanWhitelist(scanner,Blocks.wheat);
+                scanner.getTagCompound().setBoolean("Destroys",true);
+                scanner.getTagCompound().setBoolean("nogui",true);
+                tileentitycrate.getInventory().addItem(scanner);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         this.placeBlockAtCurrentPosition(world, Blocks.air, 0, 1, 1, 0, boundingBox);
         this.placeBlockAtCurrentPosition(world, Blocks.air, 0, 1, 2, 0, boundingBox);
         this.placeDoorAtCurrentPosition(world, boundingBox, random, 1, 1, 0, this.getMetadataWithOffset(Blocks.wooden_door, 1));
@@ -153,7 +201,7 @@ public class MadScientistHouse extends StructureVillagePieces.Village
             }
         }
 
-        spawnVillagers(world, boundingBox, 2, 1, 2, 1);
+        spawnVillagers(world, boundingBox, 2, 3, 2, 1);
         return true;
     }
 

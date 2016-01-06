@@ -2,12 +2,11 @@ package matteroverdrive.data.quest.logic;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.data.quest.QuestStack;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -24,6 +23,8 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
     private Class<? extends Entity>[] mobClasses;
     private int minSpawnAmount;
     private int maxSpawnAmount;
+    private int minSpawnRange;
+    private int maxSpawnRange;
 
     public QuestLogicSpawnMobs(Class<? extends Entity>[] mobClasses,int minSpawnAmount,int maxSpawnAmount)
     {
@@ -62,13 +63,9 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
     @Override
     public void initQuestStack(Random random, QuestStack questStack)
     {
-        if (questStack.getTagCompound() == null)
-        {
-            questStack.setTagCompound(new NBTTagCompound());
-        }
-
-        questStack.getTagCompound().setByte("SpawnType",(byte) random.nextInt(mobClasses.length));
-        questStack.getTagCompound().setShort("SpawnAmount",(short) random(random,minSpawnAmount,maxSpawnAmount));
+        initTag(questStack);
+        getTag(questStack).setByte("SpawnType",(byte) random.nextInt(mobClasses.length));
+        getTag(questStack).setShort("SpawnAmount",(short) random(random,minSpawnAmount,maxSpawnAmount));
     }
 
     @Override
@@ -87,6 +84,7 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
             try
             {
                 entity = mobClasses[getSpawnType(questStack)].getConstructor(World.class).newInstance(entityPlayer.worldObj);
+                positionSpawn(entity,entityPlayer);
                 if (entity instanceof EntityLiving)
                 {
                     ((EntityLiving) entity).onSpawnWithEgg(null);
@@ -117,6 +115,11 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
         }
     }
 
+    private void positionSpawn(Entity spawn,EntityPlayer entityPlayer)
+    {
+        spawn.setPosition(entityPlayer.posX,entityPlayer.posY,entityPlayer.posZ);
+    }
+
     @Override
     public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
@@ -124,7 +127,7 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
     }
 
     @Override
-    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<ItemStack> rewards)
+    public void modifyRewards(QuestStack questStack, EntityPlayer entityPlayer, List<IQuestReward> rewards)
     {
 
     }
@@ -136,18 +139,18 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
 
     public int getSpawnType(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return MathHelper.clamp_int(questStack.getTagCompound().getByte("SpawnType"),0,mobClasses.length);
+            return MathHelper.clamp_int(getTag(questStack).getByte("SpawnType"),0,mobClasses.length);
         }
         return 0;
     }
 
     public int getSpawnAmount(QuestStack questStack)
     {
-        if (questStack.getTagCompound() != null)
+        if (hasTag(questStack))
         {
-            return questStack.getTagCompound().getShort("SpawnAmount");
+            return getTag(questStack).getShort("SpawnAmount");
         }
         return 0;
     }
