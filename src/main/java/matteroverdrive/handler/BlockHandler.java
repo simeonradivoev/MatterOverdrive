@@ -1,7 +1,9 @@
 package matteroverdrive.handler;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import net.minecraft.block.Block;
 import net.minecraftforge.event.world.BlockEvent;
 
 /**
@@ -27,6 +29,8 @@ public class BlockHandler
     {
         if (event.player != null)
         {
+            String blockName = Block.blockRegistry.getNameForObject(event.block);
+            MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BLOCK_PLACEING, blockName.substring(0,blockName.indexOf(':')),blockName,event.blockMetadata,event.player);
             MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
             if (extendedProperties != null)
             {

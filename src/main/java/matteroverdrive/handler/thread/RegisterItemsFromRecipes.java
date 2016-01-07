@@ -20,6 +20,7 @@ package matteroverdrive.handler.thread;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.handler.GoogleAnalyticsCommon;
 import matteroverdrive.handler.MatterEntry;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.item.ItemStack;
@@ -111,6 +112,7 @@ public class RegisterItemsFromRecipes implements Runnable {
             }
 
             MatterOverdrive.log.info("Matter Recipe Calculation, Complete ! Took %s Milliseconds. Registered total of %s items", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime), MatterOverdrive.matterRegistry.getEntries().size() - startEntriesCount);
+            MatterOverdrive.proxy.getGoogleAnalytics().sendTimingHit(GoogleAnalyticsCommon.TIMING_CATEGORY_MATTER_REGISTRY,GoogleAnalyticsCommon.TIMING_VAR_MATTER_REGISTRY_CALCULATION,(int)TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime),null);
         }
 
         if (MatterOverdrive.matterRegistry.CALCULATE_FURNACE)
@@ -131,6 +133,7 @@ public class RegisterItemsFromRecipes implements Runnable {
             try {
                 MatterOverdrive.matterRegistry.saveToFile(savePath);
                 MatterOverdrive.log.info("Registry saved at: %s. Took %s Milliseconds.", savePath, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
+                MatterOverdrive.proxy.getGoogleAnalytics().sendTimingHit(GoogleAnalyticsCommon.TIMING_CATEGORY_MATTER_REGISTRY,GoogleAnalyticsCommon.TIMING_VAR_MATTER_REGISTRY_SAVING_TO_DISK,(int)TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime),null);
             } catch (IOException e) {
                 MatterOverdrive.log.log(Level.ERROR, e, "Could not save registry to: %s", savePath);
             }

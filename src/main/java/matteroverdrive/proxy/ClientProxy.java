@@ -30,6 +30,7 @@ import matteroverdrive.client.resources.data.WeaponMetadataSectionSerializer;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.gui.GuiQuestHud;
+import matteroverdrive.handler.GoogleAnalyticsClient;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.MouseHandler;
 import matteroverdrive.handler.TooltipHandler;
@@ -57,6 +58,7 @@ public class ClientProxy extends CommonProxy
     public ClientProxy()
     {
         weaponHandler = new ClientWeaponHandler();
+        googleAnalyticsCommon = new GoogleAnalyticsClient();
     }
 
     @Override

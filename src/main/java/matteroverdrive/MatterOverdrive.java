@@ -184,7 +184,14 @@ public class MatterOverdrive
 		event.registerServerCommand(new QuestCommands());
 		event.registerServerCommand(new SaveWorldToImage());
 		event.registerServerCommand(new WorldGenCommands());
+        proxy.getGoogleAnalytics().load();
 	}
+
+    @EventHandler
+    public void serverStopping(FMLServerStoppingEvent event)
+    {
+        proxy.getGoogleAnalytics().unload();
+    }
 
     @EventHandler
     public void serverStart(FMLServerStartedEvent event)
