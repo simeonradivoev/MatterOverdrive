@@ -20,8 +20,10 @@ package matteroverdrive.compat.modules;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.compat.Compat;
+import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.init.MatterOverdriveItems;
@@ -35,11 +37,12 @@ import net.minecraftforge.fluids.FluidStack;
 @Compat("TConstruct")
 public class CompatTConstruct
 {
-    private static final int TRITANIUM_METAL_FLUID_ID = 201;
+    private static int TRITANIUM_METAL_FLUID_ID = 201;
 
     @Compat.PostInit
     public static void postInit(FMLPostInitializationEvent event)
     {
+        TRITANIUM_METAL_FLUID_ID = MatterOverdrive.configHandler.getInt("TConstruct molten tritanium ID", ConfigurationHandler.CATEGORY_COMPATIBILITY,201,"The ID of Molten Tritanium");
         NBTTagCompound tagCompound = new NBTTagCompound();
         tagCompound.setInteger("Id",TRITANIUM_METAL_FLUID_ID);
         tagCompound.setString("Name","Tritanium");

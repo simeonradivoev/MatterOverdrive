@@ -55,6 +55,7 @@ public class ConfigurationHandler
     public static final String CATEGORY_ENCHANTMENTS = "enchantments";
     public static final String CATEGORY_ENTITIES = "entities";
     public static final String CATEGORY_ANDROID_PLAYER = CATEGORY_ENTITIES + "." + "android_player";
+    public static final String CATEGORY_COMPATIBILITY = "compatibility";
     public static final String CATEGORY_DEBUG = "debug";
 
     public static final String KEY_AUTOMATIC_RECIPE_CALCULATION = "automatic matter calculation from recipe";
@@ -122,6 +123,9 @@ public class ConfigurationHandler
         updateCategoryLang(category);
         category = config.getCategory(CATEGORY_ABILITIES);
         category.setComment("Android Player Abilities");
+        updateCategoryLang(category);
+        category = config.getCategory(CATEGORY_COMPATIBILITY);
+        category.setComment("Option for other mods");
         updateCategoryLang(category);
 
         config.get(CATEGORY_WORLD_GEN,CATEGORY_WORLD_SPAWN_ORES, true, "Should ores such as dilithium and tritanium ore spawn in the world. This applies for all ores !").setLanguageKey("config." + CATEGORY_WORLD_SPAWN_ORES.replace(' ', '_') + ".name");

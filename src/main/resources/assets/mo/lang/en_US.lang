@@ -556,6 +556,7 @@ config.android_hud.color=HUD Color
 config.android_hud.opacity=HUD Opacity
 config.android_hud.hide_vanilla=Hide Vanilla HUD elements
 config.android_hud.opacity_background=HUD Elements Background Opacity
+config.compatibility.name=Compatibility
 
 ##########################################################################################################
 # Chat Alerts
