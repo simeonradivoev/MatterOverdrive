@@ -20,13 +20,11 @@ package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
 import matteroverdrive.Reference;
-import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.EnumSet;
@@ -55,7 +53,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     {
         if (!android.getPlayer().worldObj.isRemote)
         {
-            if (isActive(android, level) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this, level, android)))
+            if (isActive(android, level))
             {
                 if (!android.getPlayer().isInvisible())
                 {

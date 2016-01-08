@@ -22,6 +22,7 @@ import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
@@ -35,6 +36,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -89,7 +91,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
         else if (hasPressedKey)
         {
             Vec3 pos = getPos(androidPlayer);
-            if (pos != null) {
+            if (pos != null && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,androidPlayer.getUnlockedLevel(this),androidPlayer))) {
                 MatterOverdrive.packetPipeline.sendToServer(new PacketTeleportPlayer(pos.xCoord, pos.yCoord, pos.zCoord));
                 hasPressedKey = false;
             }

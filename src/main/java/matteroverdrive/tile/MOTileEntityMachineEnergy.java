@@ -22,6 +22,7 @@ import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyStorage;
 import cofh.api.tileentity.ITileInfo;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.Inventory;
@@ -45,6 +46,10 @@ import java.util.List;
 /**
  * Created by Simeon on 3/18/2015.
  */
+@Optional.InterfaceList({
+        @Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyHandler"),
+        @Optional.Interface(modid = "CoFHLib", iface = "cofh.api.tileentity.ITileInfo")
+})
 public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler, ITileInfo
 {
     protected MachineEnergyStorage energyStorage;

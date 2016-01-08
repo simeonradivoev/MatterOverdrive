@@ -63,16 +63,13 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     {
         if (!android.getPlayer().worldObj.isRemote)
         {
-            if (isActive(android, level) && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,android)))
+            if (isActive(android, level))
             {
-                android.extractEnergyScaled(ENERGY_PER_TICK);
+
             }
         }else
         {
-            if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,android)))
-            {
-                manageNightvision(android, level);
-            }
+            manageNightvision(android, level);
         }
     }
 
@@ -99,7 +96,10 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
         {
             if (server)
             {
-                setActive(android, level, !android.getEffects().getBoolean("Nightvision"));
+                if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,android)))
+                {
+                    setActive(android, level, !android.getEffects().getBoolean("Nightvision"));
+                }
             }else
             {
                 playSound(android);

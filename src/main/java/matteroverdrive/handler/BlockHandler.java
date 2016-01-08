@@ -30,7 +30,7 @@ public class BlockHandler
         if (event.player != null)
         {
             String blockName = Block.blockRegistry.getNameForObject(event.block);
-            MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BLOCK_PLACEING, blockName.substring(0,blockName.indexOf(':')),blockName,event.blockMetadata,event.player);
+            MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BLOCK_PLACEING, blockName.substring(0,blockName.indexOf(':')),blockName,event.player);
             MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
             if (extendedProperties != null)
             {

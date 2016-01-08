@@ -19,10 +19,8 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.player.AndroidPlayer;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
@@ -69,9 +67,7 @@ public class BioticStatNanoArmor extends AbstractBioticStat
     {
         if (event instanceof LivingHurtEvent)
         {
-            if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,androidPlayer))) {
-                ((LivingHurtEvent) event).ammount *= (1 - getDamageNegate(level));
-            }
+            ((LivingHurtEvent) event).ammount *= (1 - getDamageNegate(level));
         }
     }
 
