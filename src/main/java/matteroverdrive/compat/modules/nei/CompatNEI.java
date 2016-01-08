@@ -30,6 +30,7 @@ import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,7 +62,7 @@ public class CompatNEI implements INEIGuiHandler
 
 	@Override
 	public Iterable<Integer> getItemSpawnSlots(GuiContainer guiContainer, ItemStack itemStack) {
-		return null;
+		return new ArrayList<Integer>();
 	}
 
 	@Override
