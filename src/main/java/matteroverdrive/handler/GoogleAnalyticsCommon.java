@@ -1,6 +1,8 @@
 package matteroverdrive.handler;
 
 import com.brsanthu.googleanalytics.*;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.entity.player.EntityPlayer;
@@ -102,7 +104,7 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
 
     public void load()
     {
-        if (this.config.isEnabled())
+        if (this.config.isEnabled() && FMLCommonHandler.instance().getSide() != Side.SERVER)
         {
             googleAnalytics = new com.brsanthu.googleanalytics.GoogleAnalytics(config, APP_ID, Reference.MOD_NAME, Reference.VERSION);
         }
