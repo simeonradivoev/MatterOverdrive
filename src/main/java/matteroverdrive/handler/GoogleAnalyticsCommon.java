@@ -36,7 +36,7 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
     public GoogleAnalyticsCommon()
     {
         config = new GoogleAnalyticsConfig();
-        config.setGatherStats(true);
+        //config.setGatherStats(true);
     }
 
     public void sendEventHit(String category, String action, String label, Integer value, EntityPlayer entityPlayer)
@@ -62,6 +62,7 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
         if (googleAnalytics != null && lastScreen != screen)
         {
             googleAnalytics.postAsync(changeUserID((GoogleAnalyticsRequest) new GoogleAnalyticsRequest("screenview").contentDescription(screen), entityPlayer));
+            lastScreen = screen;
         }
     }
 

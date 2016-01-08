@@ -36,7 +36,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 
@@ -231,11 +230,11 @@ public class PlayerEventHandler
         }
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event)
     {
         MatterOverdrive.proxy.getGoogleAnalytics().sendScreenHit(event.gui != null ? event.gui.getClass().getSimpleName() : "Ingame",null);
-    }
+    }*/
 
     @SubscribeEvent
     public void onBioticStatUse(MOEventBionicStat event)

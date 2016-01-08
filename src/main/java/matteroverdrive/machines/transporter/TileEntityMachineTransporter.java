@@ -35,7 +35,6 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.transport.ITransportList;
 import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
-import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.TeleportFlashDriveSlot;
 import matteroverdrive.fx.ReplicatorParticle;
@@ -54,6 +53,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -270,7 +270,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
     public void Teleport(Entity entity,TransportLocation position)
     {
-        if(!MinecraftForge.EVENT_BUS.post(new MOEventTransport(new BlockPos(xCoord,yCoord,zCoord),position,entity)))
+        if(!MinecraftForge.EVENT_BUS.post(new MOEventTransport(new ChunkCoordinates(xCoord,yCoord,zCoord),position,entity)))
         {
             if (entity instanceof EntityLivingBase)
             {

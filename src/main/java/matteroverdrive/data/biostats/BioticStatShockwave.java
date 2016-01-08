@@ -81,7 +81,7 @@ public class BioticStatShockwave extends AbstractBioticStat
     {
         if (getLastShockwaveTime(androidPlayer) < androidPlayer.getPlayer().worldObj.getTotalWorldTime())
         {
-            if (MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,androidPlayer.getUnlockedLevel(this),androidPlayer)))
+            if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,androidPlayer.getUnlockedLevel(this),androidPlayer)))
             {
                 if (!entityPlayer.worldObj.isRemote)
                 {
