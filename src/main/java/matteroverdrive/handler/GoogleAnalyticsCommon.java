@@ -93,12 +93,18 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
 
     public void unload()
     {
-        googleAnalytics.close();
-        googleAnalytics = null;
+        if (googleAnalytics != null)
+        {
+            googleAnalytics.close();
+            googleAnalytics = null;
+        }
     }
 
     public void load()
     {
-        googleAnalytics = new com.brsanthu.googleanalytics.GoogleAnalytics(config,APP_ID, Reference.MOD_NAME,Reference.VERSION);
+        if (this.config.isEnabled())
+        {
+            googleAnalytics = new com.brsanthu.googleanalytics.GoogleAnalytics(config, APP_ID, Reference.MOD_NAME, Reference.VERSION);
+        }
     }
 }
