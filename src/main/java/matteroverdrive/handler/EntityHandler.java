@@ -19,15 +19,12 @@
 package matteroverdrive.handler;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.MOEventTransport;
 import matteroverdrive.api.events.anomaly.MOEventGravitationalAnomalyConsume;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.entity.player.MOExtendedProperties;
-import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -123,22 +120,6 @@ public class EntityHandler
     {
         if (deathEvent.source != null && deathEvent.source.getEntity() instanceof EntityPlayer)
         {
-            Integer weaponType = null;
-            ItemStack heldItem = ((EntityPlayer) deathEvent.source.getEntity()).getHeldItem();
-            if (heldItem != null)
-            {
-                if (heldItem.getItem() == MatterOverdriveItems.phaser)
-                    weaponType = 0;
-                else if (heldItem.getItem() == MatterOverdriveItems.phaserRifle)
-                    weaponType = 1;
-                else if (heldItem.getItem() == MatterOverdriveItems.omniTool)
-                    weaponType = 2;
-                else if (heldItem.getItem() == MatterOverdriveItems.plasmaShotgun)
-                    weaponType = 3;
-                else if (heldItem.getItem() == MatterOverdriveItems.ionSniper)
-                    weaponType = 4;
-            }
-            MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_ENTITIES, GoogleAnalyticsCommon.EVENT_ACTION_KILL,deathEvent.entity.getCommandSenderName(),weaponType,(EntityPlayer)deathEvent.source.getEntity());
             MOExtendedProperties extendedProperties = MOExtendedProperties.get((EntityPlayer) deathEvent.source.getEntity());
             extendedProperties.onEvent(deathEvent);
         }

@@ -30,6 +30,7 @@ import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -195,7 +196,10 @@ public class PlayerEventHandler
     {
         if (event.player != null && !event.player.worldObj.isRemote)
         {
-            MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_ITEMS,GoogleAnalyticsCommon.EVENT_ACTION_CRAFT_ITEMS,event.crafting.getDisplayName(),event.crafting.stackSize,event.player);
+            if (event.crafting != null && event.crafting.getItem() instanceof MOBaseItem)
+            {
+                MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_ITEMS, GoogleAnalyticsCommon.EVENT_ACTION_CRAFT_ITEMS, event.crafting.getDisplayName(), event.crafting.stackSize, event.player);
+            }
             MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
             if (extendedProperties != null)
             {
