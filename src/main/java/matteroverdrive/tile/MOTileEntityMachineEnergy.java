@@ -21,8 +21,6 @@ package matteroverdrive.tile;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyStorage;
-import cofh.api.tileentity.ITileInfo;
-import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.Inventory;
@@ -32,25 +30,17 @@ import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.client.PacketPowerUpdate;
 import matteroverdrive.util.MOEnergyHelper;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * Created by Simeon on 3/18/2015.
  */
-@Optional.InterfaceList({
-        @Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyHandler"),
-        @Optional.Interface(modid = "CoFHLib", iface = "cofh.api.tileentity.ITileInfo")
-})
-public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler, ITileInfo
+public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler
 {
     protected MachineEnergyStorage energyStorage;
     protected int energySlotID;
@@ -219,11 +209,5 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
                 itemStack.getTagCompound().setInteger("PowerReceive",energyStorage.getMaxReceive());
             }
         }
-    }
-
-    @Override
-    public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug)
-    {
-        info.add(new ChatComponentText("Energy: " + MOEnergyHelper.formatEnergy(getEnergyStorage().getEnergyStored(), getEnergyStorage().getMaxEnergyStored())));
     }
 }
