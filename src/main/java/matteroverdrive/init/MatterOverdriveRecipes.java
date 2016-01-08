@@ -72,6 +72,7 @@ public class MatterOverdriveRecipes
         BlockTritaniumCrate.registerRecipes(MatterOverdriveBlocks.tritaniumCrate);
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.inscriber),"IDI","TPT","RMR",'M',MatterOverdriveItems.machine_casing,'D',MatterOverdriveItems.dilithium_ctystal,'T',MatterOverdriveItems.tritanium_plate,'P',Blocks.piston,'R',Items.redstone,'I',Items.iron_ingot);
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.fusionReactorIO), "TGT", "C C", "TGT", 'G', Items.gold_ingot, 'T', MatterOverdriveItems.tritanium_plate, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0));
+        addShapedRecipe(new ItemStack(MatterOverdriveBlocks.contractMarket)," T ","GEG"," M ",'T',MatterOverdriveItems.tritanium_ingot,'G',Items.gold_ingot,'E',Items.emerald,'M',MatterOverdriveItems.machine_casing);
 
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_tritanium_plate,12),"##","##",'#',MatterOverdriveItems.tritanium_plate);
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decorative_beams,6),"#","T","#",'#',MatterOverdriveItems.tritanium_plate,'T',MatterOverdriveItems.tritanium_ingot);
