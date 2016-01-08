@@ -20,6 +20,7 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
     public static final String EVENT_CATEGORY_BLOCK_PLACEING = "Block Placing";
     public static final String TIMING_CATEGORY_MATTER_REGISTRY = "Matter Registry";
     public static final String EVENT_CATEGORY_ITEMS = "Items";
+    public static final String EVENT_CATEGORY_QUESTS = "Quests";
 
     public static final String EVENT_ACTION_BIOTIC_STAT_UNLOCK = "Unlock";
     public static final String EVENT_ACTION_KILL = "Kill";
@@ -27,6 +28,9 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
     public static final String EVENT_ACTION_BIOTIC_STAT_USE = "Use";
     public static final String EVENT_ACTION_CRAFT_ITEMS = "Craft";
     public static final String EVENT_ACTION_PLAYER_DEATH = "Player Death";
+    public static final String EVENT_ACTION_QUEST_COMPLETE = "Complete";
+    public static final String EVENT_ACTION_QUEST_ABANDON = "Abandon";
+    public static final String EVENT_ACTION_QUEST_ACCEPT = "Accept";
 
     public static final String TIMING_VAR_MATTER_REGISTRY_CALCULATION = "Calculation";
     public static final String TIMING_VAR_MATTER_REGISTRY_SAVING_TO_DISK = "Saving To Disk";
