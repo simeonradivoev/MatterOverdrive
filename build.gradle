@@ -17,7 +17,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "forge"
+            name = "ForgeFS"
             url = "http://files.minecraftforge.net/maven"
         }
         maven {
