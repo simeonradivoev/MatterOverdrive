@@ -243,6 +243,6 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onBioticStatUse(MOEventBionicStat event)
     {
-        MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BIOTIC_STATS,GoogleAnalyticsCommon.EVENT_ACTION_BIOTIC_STAT_USE,event.stat.getDisplayName(event.android,event.level),event.android.getPlayer());
+        MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BIOTIC_STATS,GoogleAnalyticsCommon.EVENT_ACTION_BIOTIC_STAT_USE,event.stat.getUnlocalizedName(),event.android.getPlayer());
     }
 }
