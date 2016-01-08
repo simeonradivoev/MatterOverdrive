@@ -222,7 +222,7 @@ public class GenericMultiQuest extends GenericQuest
     {
         if (questStack.getTagCompound() != null)
         {
-            return MathHelper.clamp_int(questStack.getTagCompound().getByte("CurrentObjective"),0,logics.length);
+            return MathHelper.clamp_int(questStack.getTagCompound().getByte("CurrentObjective"),0,logics.length-1);
         }return 0;
     }
 
@@ -231,7 +231,7 @@ public class GenericMultiQuest extends GenericQuest
         if (questStack.getTagCompound() == null)
             questStack.setTagCompound(new NBTTagCompound());
 
-        questStack.getTagCompound().setByte("CurrentObjective",(byte) MathHelper.clamp_int(objective,0,logics.length));
+        questStack.getTagCompound().setByte("CurrentObjective",(byte) MathHelper.clamp_int(objective,0,logics.length-1));
     }
 
     public GenericMultiQuest setAutoComplete(boolean autoComplete)
