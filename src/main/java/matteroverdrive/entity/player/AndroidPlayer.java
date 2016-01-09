@@ -25,7 +25,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.api.android.IAndroid;
 import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.events.MOEventAndroid;
 import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
 import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.data.Inventory;
@@ -52,7 +54,6 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -61,7 +62,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IExtendedEntityProperties;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -76,14 +77,13 @@ import java.util.stream.Collectors;
 /**
  * Created by Simeon on 5/26/2015.
  */
-public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage, IInventory
+public class AndroidPlayer implements IEnergyStorage, IAndroid
 {
     public static int RECHARGE_AMOUNT_ON_RESPAWN = 64000;
     public static boolean HURT_GLITCHING = true;
     public final static int BUILTIN_ENERGY_TRANSFER = 1024;
     public final static int TRANSFORM_TIME = 20 * 34;
     public final static String EFFECT_KEY_TURNING = "Turning";
-    public final static String EXT_PROP_NAME = "AndroidPlayer";
     public final static int ENERGY_WATCHER_DEFAULT = 29;
     private static int energyWatchID;
     public final static int ENERGY_FOOD_MULTIPLY = 256;
@@ -314,11 +314,13 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         return extractEnergyRaw(energy,true) >= newEnergy;
     }
 
+    @Override
     public boolean isUnlocked(IBionicStat stat, int level)
     {
         return unlocked.hasKey(stat.getUnlocalizedName()) && unlocked.getInteger(stat.getUnlocalizedName()) >= level;
     }
 
+    @Override
     public int getUnlockedLevel(IBionicStat stat)
     {
         if (unlocked.hasKey(stat.getUnlocalizedName()))
@@ -422,6 +424,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         }
     }
 
+    @Override
     public boolean isAndroid()
     {
         return isAndroid;
@@ -794,17 +797,20 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
 
     public void startConversion()
     {
-        if (player.worldObj.isRemote)
+        if (!MinecraftForge.EVENT_BUS.post(new MOEventAndroid.Transformation(this)))
         {
-            playTransformMusic();
-        }else
-        {
-            if (!isAndroid() && !isTurning())
+            if (player.worldObj.isRemote)
             {
-                AndroidPlayer androidPlayer = AndroidPlayer.get(player);
-                androidPlayer.startTurningToAndroid();
-                if (player instanceof EntityPlayerMP)
-                    MatterOverdrive.packetPipeline.sendTo(new PacketAndroidTransformation(), (EntityPlayerMP) player);
+                playTransformMusic();
+            } else
+            {
+                if (!isAndroid() && !isTurning())
+                {
+                    AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+                    androidPlayer.startTurningToAndroid();
+                    if (player instanceof EntityPlayerMP)
+                        MatterOverdrive.packetPipeline.sendTo(new PacketAndroidTransformation(), (EntityPlayerMP) player);
+                }
             }
         }
     }
@@ -922,6 +928,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
         player.worldObj.playSoundAtEntity(player,Reference.MOD_ID + ":" + "gui.glitch",amount, 0.9f + random.nextFloat() * 0.2f);
     }
 
+    @Override
     public boolean isTurning()
     {
         return effects.hasKey(EFFECT_KEY_TURNING) && effects.getInteger(EFFECT_KEY_TURNING) > 0;
@@ -997,6 +1004,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     //endregion
 
     //region getters and setters
+    @Override
     public EntityPlayer getPlayer()
     {
         return player;
@@ -1010,6 +1018,7 @@ public class AndroidPlayer implements IExtendedEntityProperties, IEnergyStorage,
     {
         return getEffects().getLong(effect);
     }
+    @Override
     public IBionicStat getActiveStat()
 	{
 		return activeStat;
