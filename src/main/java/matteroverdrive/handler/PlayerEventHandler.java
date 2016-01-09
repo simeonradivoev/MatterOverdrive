@@ -198,7 +198,7 @@ public class PlayerEventHandler
         {
             if (event.crafting != null && event.crafting.getItem() instanceof MOBaseItem)
             {
-                MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_ITEMS, GoogleAnalyticsCommon.EVENT_ACTION_CRAFT_ITEMS, event.crafting.getDisplayName(), event.crafting.stackSize, event.player);
+                MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_ITEMS, GoogleAnalyticsCommon.EVENT_ACTION_CRAFT_ITEMS, event.crafting.getUnlocalizedName(), event.crafting.stackSize, event.player);
             }
             MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
             if (extendedProperties != null)
