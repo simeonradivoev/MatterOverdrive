@@ -346,7 +346,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
     {
         if (element instanceof ElementGuideEntry)
         {
-            MatterOverdrive.proxy.getGoogleAnalytics().setPageHit(((ElementGuideEntry) element).getEntry().getDisplayName(), GoogleAnalyticsCommon.PAGE_PATH_GUIDE_ENTIRES + "/" + ((ElementGuideEntry) element).getEntry().getGroup(),null);
+            MatterOverdrive.proxy.getGoogleAnalytics().setPageHit(((ElementGuideEntry) element).getEntry().getName(), GoogleAnalyticsCommon.PAGE_PATH_GUIDE_ENTIRES + "/" + ((ElementGuideEntry) element).getEntry().getGroup(),null);
             pageGuideDescription.OpenGuide(((ElementGuideEntry) element).getEntry().getId(),false);
             MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
             gui.setPage(1);

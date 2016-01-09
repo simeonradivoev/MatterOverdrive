@@ -116,12 +116,12 @@ public class MOExtendedProperties implements IExtendedEntityProperties
                 if (addedQuest != null)
                 {
                     addedQuest.getQuest().initQuestStack(player.getRNG(), addedQuest, player);
-                    MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_QUESTS,GoogleAnalyticsCommon.EVENT_ACTION_QUEST_ACCEPT,questStack.getTitle(),player);
                     MatterOverdrive.packetPipeline.sendTo(new PacketUpdateQuest(addedQuest, PacketUpdateQuest.ADD_QUEST), (EntityPlayerMP) player);
                 }
             } else
             {
                 QuestStack addedQuest = questData.addQuest(questStack);
+                MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_QUESTS,GoogleAnalyticsCommon.EVENT_ACTION_QUEST_ACCEPT,addedQuest.getTitle(),player);
                 ClientProxy.questHud.addStartedQuest(addedQuest);
             }
         }
@@ -185,10 +185,11 @@ public class MOExtendedProperties implements IExtendedEntityProperties
     {
         if (isServer())
         {
-            MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_QUESTS,GoogleAnalyticsCommon.EVENT_ACTION_QUEST_ABANDON,questStack.getTitle(),player);
+
         }
         else
         {
+            MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_QUESTS,GoogleAnalyticsCommon.EVENT_ACTION_QUEST_ABANDON,questStack.getTitle(),player);
             if (Minecraft.getMinecraft().currentScreen instanceof GuiDataPad)
             {
                 ((GuiDataPad) Minecraft.getMinecraft().currentScreen).refreshQuests(this);

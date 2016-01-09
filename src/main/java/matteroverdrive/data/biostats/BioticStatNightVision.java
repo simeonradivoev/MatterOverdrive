@@ -102,7 +102,10 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
                 }
             }else
             {
-                playSound(android);
+                if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,android)))
+                {
+                    playSound(android);
+                }
             }
         }
     }

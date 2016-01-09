@@ -243,7 +243,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
             {
                 if(putInOutput(newItem))
                 {
-                    MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_MACHINES, GoogleAnalyticsCommon.EVENT_ACTION_REPLICATE,newItem.getDisplayName(),null);
+                    MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_MACHINES, GoogleAnalyticsCommon.EVENT_ACTION_REPLICATE,newItem.getUnlocalizedName(),null);
                     int matter = this.matterStorage.getMatterStored();
                     setMatterStored(matter - matterAmount);
                     MatterNetworkTaskReplicatePattern task = taskQueueProcessing.peek();
