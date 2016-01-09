@@ -41,4 +41,9 @@
             This is where [block name=gravitational_stabilizer] comes in.
             By putting a stabilizer on each side of the anomaly it's destructive force.</text>
     </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Stabilization</title>
+        <text class="matter-text text-block">Stabilisers require a clear line of sight. Any solid block that block their vision to the anomaly will disable them.
+            Transparent blocks on the other hand, will not block the stabilizers. The stabilizers can function up to 64 blocks away from an anomaly.</text>
+    </page>
 </entry>

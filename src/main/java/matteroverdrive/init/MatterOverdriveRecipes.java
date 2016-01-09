@@ -134,6 +134,7 @@ public class MatterOverdriveRecipes
         addShapedRecipe(new ItemStack(MatterOverdriveItems.plasmaCore),"GI ","MCM"," IG",'G',Blocks.glass,'I',Items.iron_ingot,'M',MatterOverdriveItems.s_magnet,'C',new ItemStack(MatterOverdriveItems.matterContainer));
         addShapedRecipe(new ItemStack(MatterOverdriveItems.plasmaShotgun),"SP ","ICH","SPB",'S',MatterOverdriveItems.weaponReceiver,'P',MatterOverdriveItems.plasmaCore,'I',Items.iron_ingot,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'B',MatterOverdriveItems.battery,'H',MatterOverdriveItems.weaponHandle);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.ionSniper),"ICI","SPP"," HB",'I',Items.iron_ingot,'S',MatterOverdriveItems.weaponReceiver,'P',MatterOverdriveItems.plasmaCore,'H',MatterOverdriveItems.weaponHandle,'B',MatterOverdriveItems.battery,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,3));
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.portableDecomposer)," T ","IPM"," T ",'T',MatterOverdriveItems.tritanium_plate,'I',MatterOverdriveItems.integration_matrix,'M',MatterOverdriveItems.me_conversion_matrix,'P',Blocks.sticky_piston);
     }
 
     public static void registerInscriberRecipes(FMLInitializationEvent event)

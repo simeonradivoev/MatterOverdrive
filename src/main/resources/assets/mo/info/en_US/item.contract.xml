@@ -1,0 +1,9 @@
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">Contracts</title>
+        <text class="matter-text text-block">Contracts contain Quests. They can be previewed by the player before accepting them.
+            Contracts can be obtained in many ways. They can be generated using the [item name=contract_market], by finding them in the world or by talking to NPCs.</text>
+        <text class="matter-text text-block">Once a quest is accepted the player can view and track it using the [item name=data_pad]. They offer different item rewards as well as XP.
+            Once a quest is completed by the player it cannot be accepted again.</text>
+    </page>
+</entry>

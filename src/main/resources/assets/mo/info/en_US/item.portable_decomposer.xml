@@ -1,0 +1,12 @@
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">The $itemName</title>
+        <text class="matter-text text-block">This $itemName acts similarly to the [item name=decomposer] Machine. While the $itemName is in the player's hotbar and has assign items.
+        It will decompose any picked up items matching the assigned ones.</text>
+        <text class="matter-text text-block">To assign items just place the $itemName with the appropriate item containning matter in the [item mod=minecraft name=anvil]. Once an item is assigned it cannot be removed.</text>
+        <text class="matter-text text-block">The $itemName is quite inefficient, compared to it's counterpart the [item name=decomposer].
+            Once an item is decomposed it's matter will be stored in the internal tank.
+            To empty the $itemName just right click on a Tank that can hold [quide name=matter].
+        </text>
+    </page>
+</entry>

@@ -30,6 +30,7 @@ import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
 import net.minecraft.client.Minecraft;
@@ -37,6 +38,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 
@@ -251,6 +253,18 @@ public class PlayerEventHandler
         if (event.entityPlayer.worldObj.isRemote)
         {
             MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BIOTIC_STATS, GoogleAnalyticsCommon.EVENT_ACTION_BIOTIC_STAT_USE, event.stat.getUnlocalizedName(), event.android.getPlayer());
+        }
+    }
+
+    @SubscribeEvent
+    public void onAnvilRepair(AnvilUpdateEvent event)
+    {
+        if (event.left != null && event.right != null && event.left.getItem() == MatterOverdriveItems.portableDecomposer)
+        {
+            event.output = event.left.copy();
+            event.materialCost = 1;
+            event.cost = 3;
+            MatterOverdriveItems.portableDecomposer.addStackToList(event.output,event.right);
         }
     }
 }

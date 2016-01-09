@@ -110,6 +110,7 @@ public class MatterOverdriveItems
     public static MOBaseItem weaponHandle;
     public static MOBaseItem weaponReceiver;
     public static MOBaseItem plasmaCore;
+    public static PortableDecomposer portableDecomposer;
 
     public static Item.ToolMaterial toolMaterialTritanium;
     public static ItemArmor.ArmorMaterial armorMaterialTritanium;
@@ -186,6 +187,7 @@ public class MatterOverdriveItems
         weaponHandle = new MOBaseItem("weapon_handle");
         weaponReceiver = new MOBaseItem("weapon_receiver");
         plasmaCore = new MOBaseItem("plasma_core");
+        portableDecomposer = new PortableDecomposer("portable_decomposer",128000,256,512,0.1f);
 	}
 
 	public static void register(FMLInitializationEvent event)
@@ -251,6 +253,7 @@ public class MatterOverdriveItems
         weaponHandle.register();
         weaponReceiver.register();
         plasmaCore.register();
+        portableDecomposer.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);

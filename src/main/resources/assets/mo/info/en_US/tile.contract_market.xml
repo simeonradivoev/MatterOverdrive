@@ -1,0 +1,10 @@
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">The $itemName</title>
+        <text class="matter-text text-block">The $itemName can generate side Quests in the form of [item name=contract]. Each market has a delay between contract generations.
+            This delay is increased depending on the contracts in the Market Machine.
+            The $itemName cannot generate quests with the same objectives already in it.
+        </text>
+        <text class="matter-text text-block">There are many different side quests. Such as killing mobs, collecting items, scanning items, discovering locations, placing blocks and much more.</text>
+    </page>
+</entry>

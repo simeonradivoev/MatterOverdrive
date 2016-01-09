@@ -24,6 +24,8 @@ import matteroverdrive.api.events.anomaly.MOEventGravitationalAnomalyConsume;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.AndroidPlayer;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -141,6 +143,16 @@ public class EntityHandler
     {
         if (event.entityPlayer != null)
         {
+            if (event.item.getEntityItem() != null && MatterHelper.containsMatter(event.item.getEntityItem()))
+            {
+                for (int i = 0;i < 9;i++)
+                {
+                    if (event.entityPlayer.inventory.getStackInSlot(i) != null && event.entityPlayer.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.portableDecomposer)
+                    {
+                        MatterOverdriveItems.portableDecomposer.decomposeItem(event.entityPlayer.inventory.getStackInSlot(i),event.item.getEntityItem());
+                    }
+                }
+            }
             MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
             if (extendedProperties != null)
             {

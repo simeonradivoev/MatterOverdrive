@@ -91,6 +91,7 @@ public class MatterOverdriveGuides
         addEntry(generalCategory,new MOGuideEntry("matter_plasma",new ItemStack(MatterOverdriveItems.matterContainerFull)).setGroup("matter"),6,1);
         addEntry(generalCategory, new MOGuideEntryItem(MatterOverdriveItems.matter_scanner).setGroup("matter"), 7, 1);
         addEntry(generalCategory, new MOGuideEntryItem(MatterOverdriveItems.pattern_drive).setGroup("matter"), 6, 2);
+        addEntry(generalCategory,new MOGuideEntryItem(MatterOverdriveItems.portableDecomposer).setGroup("matter"),7,2);
         //Matter Network
         addEntry(generalCategory,new MOGuideEntryBlock(MatterOverdriveBlocks.network_pipe).setGroup("matter_network"),6,4);
         addEntry(generalCategory, new MOGuideEntryBlock(MatterOverdriveBlocks.network_switch).setGroup("matter_network"), 7, 4);
