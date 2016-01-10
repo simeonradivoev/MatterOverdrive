@@ -22,10 +22,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import matteroverdrive.compat.modules.CompatEnderIO;
-import matteroverdrive.compat.modules.CompatExNihilo;
-import matteroverdrive.compat.modules.CompatTConstruct;
-import matteroverdrive.compat.modules.CompatThermalExpansion;
+import matteroverdrive.compat.modules.*;
 import matteroverdrive.compat.modules.computercraft.CompatComputerCraft;
 import matteroverdrive.compat.modules.nei.CompatNEI;
 import matteroverdrive.compat.modules.waila.CompatWaila;
@@ -53,6 +50,7 @@ public class MatterOverdriveCompat
 		register(CompatEnderIO.class);
 		register(CompatComputerCraft.class);
 		register(CompatTConstruct.class);
+		register(CompatMFR.class);
 	}
 
 	//Add additional modules that need to run ONLY on the Client
