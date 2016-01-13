@@ -1,0 +1,40 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">传送器</title>
+        <text class="matter-text text-block">该机器能够帮助玩家将自己从一个地点传送至另一个地点.</text>
+        <image width="71" height="116" src="guide/transporter_in_action.png" style="float:left;margin-right:8px"></image>
+        <text class="matter-text text-block" style="width:180px">想要做到这一点,$itemName需要与传送距离 相对应的RF能量.它会存储每个原子的量子 信息并将其传送到目标地点.在$itemName上方的 所有生物均会被传送所影响.这意味着可以 同时传送多个生物.$itemName 必须事先设置好 目标地点坐标.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">目标地点</title>
+        <text class="matter-text text-block">目标地点包含三个元素. X, Y和Z轴的世界坐标. 每个坐标也会显示出相对于传送器的距离. 每个存储在传送器中的地点均可被编辑/重命名. 之后唯有被选中的地点会被作为目标地点. </text>
+        <image width="128" height="64" src="guide/transporter_configurations.png" style="float:left;margin-right:8px"></image>
+        <image width="64" height="64" src="guide/transporter_flash_drive.png" style="margin-bottom:8px"></image>
+        <text class="matter-text text-block">你同样可以使用[item name=transport_flash_drive]来快速导入目标地点坐标.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">升级</title>
+        <text class="matter-text text-block">默认情况下$itemName的传送范围很小. [item name=upgrade damage=4 guide=upgrades page=4]可以被用于增加$itemName的传送范围. 每个范围升级能够叠加, 可以极大地提升传送范围.</text>
+        <image width="64" height="64" src="guide/transporter_range_upgrades.png" style="float:left;margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block" style="width:180px">需要注意的是这同样会增加$itemName所消耗的能量.</text>
+        <text class="matter-text text-block">你也可以使用[item name=upgrade damage=1 guide=upgrades page=1], [item name=upgrade damage=2 guide=upgrades page=2]或[item name=upgrade guide=upgrades page=5 damage=5].</text>
+    </page>
+</entry>
