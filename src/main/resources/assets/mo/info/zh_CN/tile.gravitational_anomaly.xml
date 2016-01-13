@@ -1,0 +1,45 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">$itemName</title>
+        <image width="128" height="64" src="guide/fusion_reactor.png" style="margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block">这些就是自然产生的重力异常点. 它们会吸引生物并破坏方块.
+            每个异常点都会有它的质量并且会通过吸收周围生物而不断增加.
+            每个生物的物质会被添加到异常点的质量中. 一旦异常点质量达到一定程度, 它便会开始破坏地形.</text>
+        <text class="matter-text text-block">重力异常点也是[guide name=fusion_reactor]的重要组成部分.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">$itemName</title>
+        <text class="matter-text text-block">异常点的半径可以通过用于稳定它的[block name=gravitational_stabilizer guide=fusion_reactor]来查看. 一个方块离得越远, 越不容易被破坏并吸收掉.
+            方块的硬度决定了它是否会被异常点破坏掉.
+            泥土或红石几乎会被瞬间破坏掉但黑曜石却仅会被最大的异常点破坏.</text>
+        <preview size="3" style="text-align:center;margin-bottom:10px;"></preview>
+        <text class="matter-text">重力异常点会在纵轴(4,64)范围内生成.</text>
+        <text class="matter-text text-block">向异常点中抛掷一个[item mod=minecraft name=nether_star]来摧毁它. 不过要多加小心, $itemName 会爆炸.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">稳定</title>
+        <image width="220" height="110" src="guide/gravitational_anomaly_stabilizers.png" style="text-align:center;margin-bottom:8px"/>
+        <text class="matter-text text-block">异常点可能会变得很大并摧毁你世界的一大部分.
+            这也是[block name=gravitational_stabilizer]发挥作用的地方.
+            将其放置在异常点四周来消除它的毁灭性力量.</text>
+    </page>
+</entry>
+
