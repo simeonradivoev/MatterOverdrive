@@ -33,7 +33,7 @@
     <page class="padded-page">
         <title size="2" class="matter-text small-title" style="margin-bottom:6px">数据统计</title>
         <tooltip></tooltip>
-        <text class="matter-text text-block">$itemName 也可通过击杀远程残暴机器人获取. 还有一种传奇版本的狙击枪仅能通过击杀传奇残暴机器人获取. 传奇版本会拥有更高的基础属性且能够通过武器模块进一步强化. 这些属性包括伤害, 射速以及更高的准确率.</text>
+        <text class="matter-text text-block">$itemName 也可通过击杀远程残暴机器人获取. 还有一种传奇版本的多功能采集枪仅能通过击杀传奇残暴机器人获取. 传奇版本会拥有更高的基础属性且能够通过武器模块进一步强化. 这些属性包括伤害, 射速以及更高的准确率.</text>
     </page>
 </entry>
 
