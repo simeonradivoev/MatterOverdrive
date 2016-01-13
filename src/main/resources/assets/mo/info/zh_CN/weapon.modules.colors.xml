@@ -1,0 +1,26 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">武器颜色模块</title>
+        <text class="matter-text text-block">所有能量武器包括[item name=phaser], [item name=phaser_rifle]以及[item name=omni_tool]均可通过模块升级. 其中之一就是武器颜色模块.</text>
+        <text class="matter-text text-block">武器颜色模块通过改变外壳颜色来改变武器外观. 它们同样可以改变[item name=phaser]和[item name=omni_tool]的射线颜色还有[item name=phaser_rifle]和[item name=omni_tool]发射的子弹颜色.</text>
+        <text class="matter-text text-block">颜色模块仅能够在地牢箱子中被找到, 它们既不能被复制重组也不能被合成.</text>
+    </page>
+</entry>
