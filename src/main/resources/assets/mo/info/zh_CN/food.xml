@@ -1,0 +1,25 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">食物</title>
+        <preview index="0" size="2" style="float:left;margin-right:7px"></preview>
+        <text class="matter-text text-block" style="width:210px;margin-top:1px">应急营养单元,也被称作压缩干粮,作战口粮或应急口粮, 它是一种当食物短缺且常用食物无法获取时的应急食物. 它们的营养值和牛肉相同且仅能够通过物质重组进行获取.</text>
+    </page>
+</entry>
