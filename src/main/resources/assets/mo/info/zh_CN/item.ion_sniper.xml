@@ -1,0 +1,39 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">$itemName</title>
+        <preview size="8" style="text-align:center;margin-bottom:-14px;margin-top:-8px"></preview>
+        <text class="matter-text text-block">$itemName 是一种强力的远距离能量武器, 能够发射单发相位子弹. 它还允许玩家进行瞄准来极大的提高准确率.</text>
+    </page>
+    <page class="padded-page">
+        <text class="matter-text text-block">$itemName 的远程杀伤力使其能够从极远的距离击杀敌人. 它也是能够从武器瞄准镜, 尤其是[item name=sniper_scope], 当中获益最大的武器.</text>
+        <text class="matter-text text-block">远程残暴机器人同样可能装配该武器, 它能够远距离锁定敌人, 因此相当致命.</text>
+        <text class="matter-text text-block">同其他能量武器一样, $itemName 可以通过使用[item name=energy_pack]进行快速充能,
+            连续射击也会导致过热, 可以通过使用[block name=weapon_station]来进行武器改装.</text>
+        <text class="matter-text text-block">$itemName 可以加装所有种类的武器升级模块.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title" style="margin-bottom:6px">数据统计</title>
+        <tooltip></tooltip>
+        <text class="matter-text text-block">$itemName 也可通过击杀远程残暴机器人获取. 还有一种传奇版本的狙击枪仅能通过击杀传奇残暴机器人获取.
+            传奇版本会拥有更高的基础属性且能够通过武器模块进一步强化.
+            这些属性包括伤害, 射速以及更高的准确率.</text>
+    </page>
+</entry>
