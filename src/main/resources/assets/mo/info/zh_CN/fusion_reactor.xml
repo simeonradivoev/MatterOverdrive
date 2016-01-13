@@ -1,0 +1,50 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">聚变反应堆</title>
+        <image width="220" height="110" src="guide/fusion_reactor_sphere.png" style="text-align:center;margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block">聚变反应堆是一种能够通过灼热[guide name=matter_plasma]在超重力场中产能的复杂多方块结构.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">需求要素</title>
+        <text class="matter-text text-block">想要通过它进行发电, 你需要做的第一件事就是找到一个[block name=gravitational_anomaly]. 之后你需要搭建一个[block name=fusion_reactor_controller].
+        反应堆控制器会标出重力异常点的准确位置以使其能够正常工作.</text>
+        <preview index="0" size="3" style="text-align:center;margin-bottom:10px;margin-top:-4px"></preview>
+        <text class="matter-text text-block">控制器也会在异常点周围高亮一个环形结构. 重力异常点需要被放置在聚变反应堆的中心位置.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">第一步</title>
+        <image width="220" height="110" src="guide/fusion_reactor_building_1.png" style="text-align:center;margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block">如上图所示, 沿着环形结构放置11个[block name=fusion_reactor_coil]. 你同样可以使用[block name=fusion_reactor_io]来代替线圈以进行能量的输入输出.</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">第二步</title>
+        <image width="220" height="110" src="guide/fusion_reactor_building_2.png" style="text-align:center;margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block">将剩余空间用[block name=machine_hull]方块进行填充. 你也可以在控制器两旁放置两个[block name=decomposer]方块来代替[block name=fusion_reactor_coil].</text>
+    </page>
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">产能</title>
+        <text class="matter-text text-block">在你完成聚变反应堆多方块结构之后, [item name=fusion_reactor_controller]将会显示反应堆的运行状况.</text>
+        <text class="matter-text text-block">之后你需要将[guide name=matter_plasma]通过液体管道或[block name=matter_pipe guide=matter_transport]泵入反应堆.</text>
+        <text class="matter-text text-block">不幸的是, 你需要额外的电能来供给你的[block name=decomposer]来进行[guide name=matter_plasma]的生产. 当反映对获取到足够多的物质之后, 它便会开始运行并产生足够多的能量来保证物质分解仓的运行.</text>
+        <text class="matter-text text-block">如果你想从反应堆中抽取物质或能量,但并不想通过控制器来实现. 你可以将一个[block name=fusion_reactor_coil]替换为[block name=fusion_reactor_io]来进行输入输出. 支持多个反应堆接口.</text>
+    </page>
+</entry>
+
