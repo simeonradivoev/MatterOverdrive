@@ -29,6 +29,13 @@
             [guide name=matter_plasma]同样会被用于物质重组. 至于多少就取决于物品本身了.</text>
         <text class="matter-text">警告! 物质重组过程将释放大量辐射. 在没有防护措施的情况下, 生物会受到高剂量辐射并伴有严重的负面效果, 例如饥饿, 恶心, 疲倦, 虚弱还有中毒. 为了抵御辐射, 你可以使用最多5层[item name=tritanium_plate]来保护玩家. 每层板都会降低一些范围效果.</text>
     </page>
+	<page style="margin-left:8px;margin-right:8px;margin-top:6px">
+        <title size="2" class="matter-text small-title">如何使用</title>
+        <text class="matter-text text-block">如果你使用一个进度小于100%的模版.
+            物质重组仓将会有大概率失败并产生[item name=matter_dust guide=matter_fail].
+            如果你尝试用一个10%的模版重组一个物品, 它会有10%几率失败.
+            然后你需要使用[block name=recycler]将它转变为[item name=matter_dust_refined guide=matter_fail]再将其重新分解为[guide name=matter_plasma].</text>
+    </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title ">物质网络</title>
         <text class="matter-text text-block">$itemName 可以从后面进行连接. 一旦接入网路, [item name=pattern_monitor]就可以被用于给所有连接的重组仓发送重组任务.

@@ -18,8 +18,10 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <text class="matter-text text-block">$itemName 是获取[item name=tritanium_ingot]的唯一方法.</text>
-        <depth min="0" max="64"></depth>
-        <text class="matter-text text-block">它在Y坐标64以下生成而且可被任何采集工具挖掘包括[item name=omni_tool].</text>
+        <title size="2" class="matter-text small-title">钛金板手</title>
+        <preview index="0" size="2" style="float:left;margin-right:7px"></preview>
+        <text class="matter-text text-block" style="width:190px">$itemName 可被用于拆除多数超能物质的机器以及其他模组中的机器. 它同样可被用于旋转多种方块.</text>
+        <text class="matter-text text-block">想要快速拆除机器, 只需手持扳手shift右键即可. 大多数机器在拆除后会保留内部物品及相关设置.</text>
+        <text class="matter-text text-block">想要旋转一个方块, 只需手持扳手shift右键即可..</text>
     </page>
 </entry>

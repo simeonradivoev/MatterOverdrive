@@ -18,8 +18,8 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <text class="matter-text text-block">$itemName 是获取[item name=tritanium_ingot]的唯一方法.</text>
-        <depth min="0" max="64"></depth>
-        <text class="matter-text text-block">它在Y坐标64以下生成而且可被任何采集工具挖掘包括[item name=omni_tool].</text>
+        <title size="2" class="matter-text small-title" >能量包</title>
+        <preview index="0" size="2" style="float:left;margin-right:7px"></preview>
+        <text class="matter-text text-block" style="width:190px">$itemNames 可被用于快速充能武器. 能量武器会在能量降为0时自动使用$itemName. 为了使武器能够进行再充能, 能量包必须被放置在玩家物品栏中.</text>
     </page>
 </entry>

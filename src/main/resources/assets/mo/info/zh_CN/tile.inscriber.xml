@@ -18,8 +18,11 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <text class="matter-text text-block">$itemName 是获取[item name=tritanium_ingot]的唯一方法.</text>
-        <depth min="0" max="64"></depth>
-        <text class="matter-text text-block">它在Y坐标64以下生成而且可被任何采集工具挖掘包括[item name=omni_tool].</text>
+        <title size="2" class="matter-text small-title">分子记录仪</title>
+        <image width="64" height="64" src="guide/inscriber_block.png" style="float:left;margin-right:8px;margin-bottom:8px"></image>
+        <text class="matter-text text-block" style="width:180px">$itemName 是唯一一种精密仪器能够用于制作等线性电路中 的复杂电路.它需要RF能量,等线性电路模板以及 对应材料.每种等级的电路有着不同的对应材料.</text>
+        <image width="64" height="64" src="guide/inscriber_gui_recipe_mk2.png" style="float:left;margin-right:28px"></image>
+        <image width="64" height="64" src="guide/inscriber_gui_recipe_mk3.png" style="float:left;margin-right:28px"></image>
+        <image width="64" height="64" src="guide/inscriber_gui_recipe_mk4.png" style="float:left;margin-right:28px"></image>
     </page>
 </entry>

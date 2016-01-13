@@ -18,8 +18,10 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <text class="matter-text text-block">$itemName 是获取[item name=tritanium_ingot]的唯一方法.</text>
-        <depth min="0" max="64"></depth>
-        <text class="matter-text text-block">它在Y坐标64以下生成而且可被任何采集工具挖掘包括[item name=omni_tool].</text>
+        <title size="2" class="matter-text small-title">钛金</title>
+        <preview index="0" size="2" style="margin-bottom:7px"></preview>
+        <text class="matter-text text-block">$itemName 是一种比[item mod=minecraft name=diamond]还要坚硬两倍的金属.
+            它主要作为构建材料被用于多数超能物质的机器中, 但同样也被用于合成[guide name=tritanium_tools]和[guide name=tritanium_armor].</text>
+        <text class="matter-text text-block">钛金锭能够被分解成9个[item name=tritanium_nugget]而且2个钛金锭可以被压制成[item name=tritanium_plate].</text>
     </page>
 </entry>

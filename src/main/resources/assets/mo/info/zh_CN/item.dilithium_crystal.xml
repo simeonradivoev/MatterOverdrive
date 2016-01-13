@@ -18,8 +18,9 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <text class="matter-text text-block">$itemName 是获取[item name=tritanium_ingot]的唯一方法.</text>
-        <depth min="0" max="64"></depth>
-        <text class="matter-text text-block">它在Y坐标64以下生成而且可被任何采集工具挖掘包括[item name=omni_tool].</text>
+        <title size="2" class="matter-text small-title">双锂晶体</title>
+        <image width="64" height="64" src="guide/dilithium_crystal.png" style="float:left;margin-right:8px;margin-bottom:4px"></image>
+        <text class="matter-text text-block" style="width:180px">双锂是一种极为坚硬的矿物结晶且仅会自然生成 在一些星球上. 当被放置在高频电磁场中时,  其内部结构会感应产生磁涡流并排斥带电粒子防 止其进入晶格.</text>
+        <text class="matter-text text-block">大多数超能物质的机器均会使用到它. 双锂晶体只有通过使用采矿等级铁以上的工具开采[block name=dilithium_ore]来进行获取. 时运附魔能够增加[block name=dilithium_ore]所掉落的晶体数量.</text>
     </page>
 </entry>

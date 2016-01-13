@@ -18,8 +18,10 @@
 
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
-        <text class="matter-text text-block">$itemName 是获取[item name=tritanium_ingot]的唯一方法.</text>
-        <depth min="0" max="64"></depth>
-        <text class="matter-text text-block">它在Y坐标64以下生成而且可被任何采集工具挖掘包括[item name=omni_tool].</text>
+        <title size="2" class="matter-text small-title">时空均衡器</title>
+        <text class="matter-text text-block">当处理[block name=gravitational_anomaly]时, 只有一种物品能够帮助你在重力场中飞行.
+            穿戴时空均衡器会抵消掉[block name=gravitational_anomaly]对你产生的引力.
+            时空均衡器可被穿戴在胸甲的位置并提供等同于铁甲的防护.</text>
+        <text class="matter-text text-block">尽管均衡器在解决重力异常点的问题上帮助极大, 它却会减速穿戴者, 使其速度犹如匍匐前行.</text>
     </page>
 </entry>

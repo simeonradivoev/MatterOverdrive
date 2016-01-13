@@ -1,0 +1,30 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">能量单元</title>
+        <text class="matter-text text-block">超能物质提供了两种电池.算上创造能量单元的话就是三种.</text>
+        <preview index="0" size="2" style="float:left;margin-right:7px"></preview>
+        <text class="matter-text text-block" style="width:210px;margin-top:7px">第一种是最基础的[item name=battery]能够存储[rf name=battery].</text>
+        <preview index="1" size="2" style="float:left;margin-right:7px"></preview>
+        <text class="matter-text text-block" style="width:210px;margin-top:7px">然后是[item name=hc_battery].它能够存储[rf name=hc_battery].</text>
+        <preview index="2" size="2" style="float:left;margin-right:7px"></preview>
+        <text class="matter-text text-block" style="width:210px;margin-top:7px">最后是创造能量单元,RF能量无限并仅能在创造模式下获取.</text>
+    </page>
+</entry>

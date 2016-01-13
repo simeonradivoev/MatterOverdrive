@@ -46,7 +46,7 @@
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title">范围升级</title>
-        <text class="matter-text text-block">范围升级会提升类似[block name=transporter]的机器的工作范围</text>
+        <text class="matter-text text-block">范围升级会提升类似[block name=transporter]或[block name=charging_station]的机器的工作范围</text>
         <recipe item="[item name=upgrade damage=4]" style="float:left"></recipe>
         <details item="[item name=upgrade damage=4]" style="margin-left:16px;margin-top:8px"></details>
     </page>

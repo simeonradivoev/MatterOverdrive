@@ -1,0 +1,32 @@
+<!--
+  ~ This file is part of Matter Overdrive
+  ~ Copyright (c) 2015., Simeon Radivoev, All rights reserved.
+  ~
+  ~ Matter Overdrive is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Matter Overdrive is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
+  -->
+
+<entry stylesheet="mo:info/styles/guide.css">
+    <page class="padded-page">
+        <title size="2" class="matter-text small-title">安全协定</title>
+        <image width="64" height="64" src="guide/security_protocol_machine_warning.png" style="float:left;margin-right:8px;margin-bottom:4px"></image>
+        <text class="matter-text text-block" style="width:180px">$itemName 被用于超能物质中的机器安全加密.
+            它能够加密几乎所有可用的机器.
+            一旦机器被加密,它仅能够被拥有者 或拥有安全协定权限的人使用或摧毁.</text>
+        <text class="matter-text">若要制作一个安全协定, 你需要有一个空白的协定然后潜行右键. 该方法能够转换安全协定的不同模式.</text>
+        <text class="matter-text">$itemName (设置) - 能够加密新机器</text>
+        <text class="matter-text">$itemName (Access) - 放入玩家背包后, 使其拥有访问拥有者机器的权限.</text>
+        <text class="matter-text">$itemName (Remove) - 移除一个机器的加密. 该机器必须被同一个人加密才能够移除.</text>
+    </page>
+</entry>
+
