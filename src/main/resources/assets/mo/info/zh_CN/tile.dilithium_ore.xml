@@ -19,9 +19,8 @@
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
         <text class="matter-text text-block">$itemName 是唯一能够获取[item name=dilithium_crystal]的资源.</text>
-        <creates to="[item name=dilithium_crystal]"></creates>
+        <depth min="0" max="32" style="margin-bottom:8px"></depth>
+        <text class="matter-text text-block">该矿石能够在Y坐标32以下生成并且仅能够通过使用开采等级高于铁的 工具进行挖掘.这包括[item name=omni_tool]以及[guide name=tritanium_tools].</text>
         <text class="matter-text text-block">普通掉落为1个晶体, 时运最多可以获取3个晶体.</text>
-        <depth min="0" max="32"></depth>
-        <text class="matter-text text-block">该矿石能够在Y坐标32以下生成.</text>
     </page>
 </entry>
