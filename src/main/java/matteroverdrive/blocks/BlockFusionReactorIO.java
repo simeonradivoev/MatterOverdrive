@@ -36,6 +36,9 @@ public class BlockFusionReactorIO extends MOBlockMachine
     public BlockFusionReactorIO(Material material, String name)
     {
         super(material, name);
+        setHardness(30.0F);
+        this.setResistance(10.0f);
+        this.setHarvestLevel("pickaxe", 2);
     }
 
     @Override
