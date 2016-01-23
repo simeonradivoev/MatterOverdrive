@@ -40,7 +40,7 @@ public class BioticStatShockwave extends AbstractBioticStat
     @Override
     public void onAndroidUpdate(AndroidPlayer android, int level)
     {
-        if (!android.getPlayer().onGround && android.getPlayer().motionY < 0 && android.getPlayer().isSneaking())
+        if (android.getActiveStat() != null && android.getActiveStat().equals(this) && !android.getPlayer().onGround && android.getPlayer().motionY < 0 && android.getPlayer().isSneaking())
         {
             Vec3 motion = Vec3.createVectorHelper(android.getPlayer().motionX,android.getPlayer().motionY,android.getPlayer().motionZ).subtract(Vec3.createVectorHelper(0,1,0)).normalize();
             android.getPlayer().addVelocity(-motion.xCoord*0.2,-motion.yCoord*0.2,-motion.zCoord*0.2);
