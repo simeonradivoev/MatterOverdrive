@@ -128,7 +128,7 @@ public class MatterOverdriveRecipes
         addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumLeggings),"XCX","X X","X X",'X',MatterOverdriveItems.tritanium_ingot,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1));
         addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumBoots),"   ","X X","X X",'X',MatterOverdriveItems.tritanium_ingot);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.isolinear_circuit),"I", "R", "G", 'G', Item.getItemFromBlock(Blocks.glass), 'R', Items.redstone, 'I', Items.iron_ingot);
-        addShapedRecipe(new ItemStack(MatterOverdriveItems.sniperScope),"IIC","GFG","III",'I',Items.iron_ingot,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'G',new ItemStack(Blocks.glass_pane,1,13),'F',MatterOverdriveItems.forceFieldEmitter);
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.sniperScope),"IIC","GFG","III",'I',Items.iron_ingot,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,1),'G',new ItemStack(Blocks.stained_glass_pane,1,5),'F',MatterOverdriveItems.forceFieldEmitter);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.weaponHandle),"TWT","I I","I I",'I',Items.iron_ingot,'W',new ItemStack(Blocks.wool,1,15),'T',MatterOverdriveItems.tritanium_ingot);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.weaponReceiver),"IRT","   ","IIT",'I',Items.iron_ingot,'R',Items.redstone,'T',MatterOverdriveItems.tritanium_ingot);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.plasmaCore),"GI ","MCM"," IG",'G',Blocks.glass,'I',Items.iron_ingot,'M',MatterOverdriveItems.s_magnet,'C',new ItemStack(MatterOverdriveItems.matterContainer));
