@@ -29,6 +29,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -45,6 +46,8 @@ public class MatterOverdriveRecipes
 
     public static void registerBlockRecipes(FMLInitializationEvent event)
     {
+        RecipeSorter.register("mo:energy_pack_recipe",EnergyPackRecipe.class, RecipeSorter.Category.SHAPELESS,"");
+
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.decomposer), "TCT", "S S", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'N', MatterOverdriveItems.integration_matrix, 'S', Blocks.sticky_piston, 'T', MatterOverdriveItems.tritanium_plate);
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.replicator), "PCF", "IHI", "NTM", 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 2), 'M', MatterOverdriveItems.me_conversion_matrix, 'H', MatterOverdriveItems.h_compensator, 'I', Items.iron_ingot, 'N', MatterOverdriveItems.integration_matrix, 'T', MatterOverdriveItems.tritanium_plate, 'F', MatterOverdriveItems.networkFlashDrive, 'P', MatterOverdriveItems.pattern_drive);
         addShapedRecipe(new ItemStack(MatterOverdriveBlocks.network_router), "IGI", "DFC", "OMO", 'M', MatterOverdriveItems.machine_casing, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0), 'I', Items.iron_ingot, 'G', Blocks.glass, 'D', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1), 'F', MatterOverdriveItems.networkFlashDrive);
