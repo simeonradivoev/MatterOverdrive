@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -111,9 +112,14 @@ public abstract class BlockPipe extends MOBlockContainer
 
     }
 
-    public boolean isConnectableSide(ForgeDirection dir, IBlockAccess world, int x, int y, int z) {
-        TileEntityPipe pipe = (TileEntityPipe) world.getTileEntity(x, y, z);
-        return pipe != null && pipe.isConnectableSide(dir);
+    public boolean isConnectableSide(ForgeDirection dir, IBlockAccess world, int x, int y, int z)
+    {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TileEntityPipe)
+        {
+            return tileEntity != null && ((TileEntityPipe)tileEntity).isConnectableSide(dir);
+        }
+        return false;
     }
 
     @Override
