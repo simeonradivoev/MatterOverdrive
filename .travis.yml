@@ -3,8 +3,7 @@ jdk:
 - oraclejdk8
 before_install:
 - chmod +x gradlew
-install: ./gradlew setupCIWorkspace
-script: ./gradlew build
+script: ./gradlew clean build
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
@@ -13,3 +12,11 @@ cache:
     - $HOME/.gradle/wrapper/
 notifications:
   email: false
+deploy:
+  provider: releases
+  api_key: $GITHUB_OAUTH
+  file: build/lib/*.jar
+  skip_cleanup: true
+  on:
+      tags: true
+      all_branches: true
