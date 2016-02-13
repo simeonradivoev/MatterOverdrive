@@ -5,8 +5,7 @@
     "subject": "simeonradivoev"
   },
   "version": {
-    "name": "0.4.1",
-    "desc": "${TRAVIS_COMMIT}"
+    "name": "${TRAVIS_BUILD_NUMBER}"
   },
   "files":
   [
