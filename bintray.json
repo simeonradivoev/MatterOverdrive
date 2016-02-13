@@ -5,7 +5,7 @@
     "subject": "simeonradivoev"
   },
   "version": {
-    "name": "${TRAVIS_BUILD_NUMBER}"
+    "name": "0.4.1"
   },
   "files":
   [

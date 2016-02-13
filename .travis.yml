@@ -12,9 +12,10 @@ cache:
 notifications:
   email: false
 deploy:
-  provider: bintray
-  file: "bintray.json"
-  user: "simeonradivoev"
-  key: $BINTRAY_KEY
+  skip_cleanup: true
+  provider: releases
+  api_key: $GITHUB_OAUTH
+  file_glob: true
+  file: "build/libs/*.jar"
   on:
-    all_branches: true
+      tags: true
