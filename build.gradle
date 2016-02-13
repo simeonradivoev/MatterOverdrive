@@ -35,8 +35,8 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 version = "${config.mc_version}-${config.mod_version}"
 
-if (System.getenv().BUILD_NUMBER != null) {
-    version += "-build-" + System.getenv().BUILD_NUMBER
+if (System.getenv().TRAVIS_BUILD_NUMBER != null) {
+    version += "-build-" + System.getenv().TRAVIS_BUILD_NUMBER
 }
 
 group= "${config.mo_group}"
@@ -45,21 +45,5 @@ archivesBaseName = "${config.mo_base_name}"
 minecraft {
     version = config.mc_version + "-" + config.forge_version
     runDir = "run"
-}
-
-processResources
-{
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
 }
 
