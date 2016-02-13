@@ -1,0 +1,28 @@
+{
+  "package": {
+    "name": "mo",
+    "repo": "MatterOverdrive",
+    "subject": "simeonradivoev",
+    "desc": "I was pushed completely automatically",
+    "website_url": "www.simeon.co.vu/Mods/MatterOverdrive/",
+    "issue_tracker_url": "https://github.com/simeonradivoev/MatterOverdrive/issues",
+    "vcs_url": "https://github.com/simeonradivoev/MatterOverdrive.git",
+    "github_release_notes_file": "RELEASE.txt",
+    "licenses": ["GOLv3"],
+    "public_download_numbers": false,
+    "public_stats": false,
+    "attributes": [{"name": "att1", "values" : ["val1"], "type": "string"},
+      {"name": "att2", "values" : [1, 2.2, 4], "type": "number"},
+      {"name": "att5", "values" : ["2014-12-28T19:43:37+0100"], "type": "date"}]
+  },
+  "version": {
+    "name": "0.4.1",
+    "desc": "Test Version",
+    "released": "2016-02-13"
+  },
+  "files":
+  [
+    {"includePattern": "build/libs/(.*)", "uploadPattern": "builds/$1"}
+  ],
+  "publish": true
+}
