@@ -11,11 +11,4 @@ cache:
     - $HOME/.gradle/wrapper/
 notifications:
   email: false
-deploy:
-  skip_cleanup: true
-  provider: releases
-  api_key: $GITHUB_OAUTH
-  file_glob: true
-  file: "build/libs/*.jar"
-  on:
-      tags: true
+after_success: ./gradlew bintrayUpload
