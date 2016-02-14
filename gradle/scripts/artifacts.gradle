@@ -1,9 +1,11 @@
-jar {
-	configurations.shade.each { dep ->
-		from (project.zipTree(dep)) {
-			exclude 'META-INF', 'META-INF/**'
-		}
-	}
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
 }
 
 artifacts {
