@@ -192,7 +192,10 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
     @Override
     public void onDestroyed()
     {
-        getNetwork().destroyPipe(this);
+        if (getNetwork() != null)
+        {
+            getNetwork().destroyPipe(this);
+        }
         //MatterOverdrive.log.info("Tile Entity Matter Pipe Destroyed");
     }
 
