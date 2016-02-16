@@ -53,7 +53,7 @@ public class MultiBlockTileStructureMachine extends MultiBlockTileStructureAbstr
         while (iterator.hasNext())
         {
             IMultiBlockTile tile = iterator.next();
-            if (tile.isInvalid())
+            if (tile.isMultiblockInvalid())
             {
                 tile.setMultiBlockTileStructure(null);
                 iterator.remove();
