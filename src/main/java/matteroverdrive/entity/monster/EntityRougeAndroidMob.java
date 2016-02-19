@@ -232,7 +232,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         int androidCount = 0;
         for (int i = 0;i < chunk.entityLists.length;i++)
         {
-            for (int c = 0;i < chunk.entityLists[i].size();i++)
+            for (int c = 0;c < chunk.entityLists[i].size();c++)
             {
                 if (chunk.entityLists[i].get(c) instanceof EntityRougeAndroidMob)
                 {
