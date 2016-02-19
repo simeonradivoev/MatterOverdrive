@@ -19,7 +19,6 @@
 package matteroverdrive.network.packet.bi;
 
 import io.netty.buffer.ByteBuf;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.gui.GuiMatterScanner;

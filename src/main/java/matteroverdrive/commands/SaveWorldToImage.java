@@ -18,22 +18,8 @@
 
 package matteroverdrive.commands;
 
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.world.MOImageGen;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Simeon on 11/26/2015.

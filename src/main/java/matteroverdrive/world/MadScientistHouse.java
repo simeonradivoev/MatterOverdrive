@@ -22,7 +22,6 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.EntityVillagerMadScientist;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveItems;
-import matteroverdrive.init.MatterOverdriveQuests;
 import matteroverdrive.tile.TileEntityTritaniumCrate;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;

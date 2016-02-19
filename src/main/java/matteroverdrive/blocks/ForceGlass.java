@@ -19,14 +19,11 @@
 package matteroverdrive.blocks;
 
 import cofh.api.block.IDismantleable;
-import matteroverdrive.Reference;
 import matteroverdrive.util.MOInventoryHelper;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;

@@ -19,19 +19,14 @@
 package matteroverdrive.handler;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import matteroverdrive.api.exceptions.MORuntimeException;
-import matteroverdrive.api.matter.IMatterEntry;
-import matteroverdrive.data.matter.*;
-import matteroverdrive.util.MOLog;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.MOEventRegisterMatterEntry;
+import matteroverdrive.api.exceptions.MORuntimeException;
+import matteroverdrive.api.matter.IMatterEntry;
 import matteroverdrive.api.matter.IMatterRegistry;
+import matteroverdrive.data.matter.*;
+import matteroverdrive.util.MOLog;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -39,14 +34,17 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import javax.annotation.Nonnull;
 import java.io.*;
-import java.lang.reflect.Type;
 import java.util.*;
 
 public class MatterRegistry implements IMatterRegistry

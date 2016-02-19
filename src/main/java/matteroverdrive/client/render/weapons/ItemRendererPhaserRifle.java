@@ -21,8 +21,6 @@ package matteroverdrive.client.render.weapons;
 import matteroverdrive.Reference;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.Random;
-
 /**
  * Created by Simeon on 7/25/2015.
  */

@@ -5,18 +5,12 @@ import com.google.gson.JsonObject;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.IQuest;
 import matteroverdrive.api.quest.IQuestReward;
-import matteroverdrive.api.quest.Quest;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
-import matteroverdrive.handler.quest.Quests;
 import matteroverdrive.util.MOJsonHelper;
-import matteroverdrive.util.MOLog;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
-import org.apache.logging.log4j.Level;
 
 /**
  * Created by Simeon on 1/3/2016.

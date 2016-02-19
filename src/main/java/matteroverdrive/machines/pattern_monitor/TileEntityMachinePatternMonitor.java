@@ -18,6 +18,7 @@
 
 package matteroverdrive.machines.pattern_monitor;
 
+import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.matter_network.IMatterNetworkClient;
 import matteroverdrive.api.matter_network.IMatterNetworkComponent;
@@ -27,21 +28,18 @@ import matteroverdrive.api.transport.IGridNode;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.container.matter_network.IMatterDatabaseMonitor;
 import matteroverdrive.data.transport.MatterNetwork;
-import matteroverdrive.machines.events.MachineEvent;
-import matteroverdrive.matter_network.MatterNetworkTaskQueue;
-import matteroverdrive.matter_network.components.TaskQueueComponent;
-import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
-import net.minecraft.block.state.IBlockState;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
+import matteroverdrive.machines.events.MachineEvent;
+import matteroverdrive.matter_network.MatterNetworkTaskQueue;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Created by Simeon on 4/26/2015.

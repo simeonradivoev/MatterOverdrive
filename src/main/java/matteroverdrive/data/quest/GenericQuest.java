@@ -19,8 +19,6 @@
 package matteroverdrive.data.quest;
 
 import com.google.gson.JsonObject;
-import matteroverdrive.MatterOverdrive;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestLogic;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.Quest;
@@ -28,6 +26,7 @@ import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
 import java.util.Random;

@@ -18,9 +18,7 @@ import matteroverdrive.data.quest.rewards.QuestStackReward;
 import matteroverdrive.init.MatterOverdriveQuests;
 import matteroverdrive.util.MOJsonHelper;
 import matteroverdrive.util.MOLog;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import org.apache.logging.log4j.Level;
 
 import java.io.*;

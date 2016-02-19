@@ -20,7 +20,6 @@ package matteroverdrive.fx;/* Created by Simeon on 10/18/2015. */
 
 import matteroverdrive.client.data.Color;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;

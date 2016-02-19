@@ -21,7 +21,6 @@ package matteroverdrive.blocks;
 import cofh.api.block.IDismantleable;
 import matteroverdrive.tile.pipes.TileEntityNetworkPipe;
 import matteroverdrive.util.MOInventoryHelper;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

@@ -19,7 +19,6 @@
 package matteroverdrive.tile;
 
 import matteroverdrive.Reference;
-import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.weapon.IWeaponColor;
 import matteroverdrive.data.Inventory;
@@ -35,11 +34,7 @@ import matteroverdrive.machines.configs.ConfigPropertyInteger;
 import matteroverdrive.machines.configs.ConfigPropertyString;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.util.WeaponHelper;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -47,7 +42,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.*;

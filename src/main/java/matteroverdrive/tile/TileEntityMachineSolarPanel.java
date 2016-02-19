@@ -18,17 +18,12 @@
 
 package matteroverdrive.tile;
 
-import matteroverdrive.machines.events.MachineEvent;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.util.MOEnergyHelper;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
-import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Simeon on 4/9/2015.

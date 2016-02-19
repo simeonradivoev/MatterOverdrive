@@ -24,7 +24,6 @@ import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;

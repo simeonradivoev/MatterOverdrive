@@ -23,7 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * This is used by Machines that store Item Patters. Used by the Replicator.

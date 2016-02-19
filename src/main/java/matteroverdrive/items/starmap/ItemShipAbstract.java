@@ -20,10 +20,7 @@ package matteroverdrive.items.starmap;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.IShip;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-
-import java.util.List;
 
 /**
  * Created by Simeon on 6/24/2015.

@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import matteroverdrive.blocks.BlockDecorative;
 import matteroverdrive.blocks.BlockDecorativeColored;
 import matteroverdrive.blocks.BlockDecorativeRotated;
 import matteroverdrive.util.MOStringHelper;

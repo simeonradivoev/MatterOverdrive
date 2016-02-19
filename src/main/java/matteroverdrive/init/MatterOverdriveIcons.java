@@ -18,10 +18,6 @@
 
 package matteroverdrive.init;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import matteroverdrive.Reference;
-import net.minecraftforge.client.event.TextureStitchEvent;
-
 /**
  * Created by Simeon on 3/17/2015.
  */

@@ -24,7 +24,6 @@ import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Created by Simeon on 3/13/2015.

@@ -18,12 +18,11 @@
 
 package matteroverdrive.handler;
 
-import matteroverdrive.util.MOLog;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.network.IMatterNetworkHandler;
 import matteroverdrive.util.IConfigSubscriber;
+import matteroverdrive.util.MOLog;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.Level;
 
 /**

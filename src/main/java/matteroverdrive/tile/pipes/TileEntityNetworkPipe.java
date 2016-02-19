@@ -19,22 +19,21 @@
 package matteroverdrive.tile.pipes;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.matter_network.IMatterNetworkConnection;
 import matteroverdrive.api.transport.IGridNode;
 import matteroverdrive.data.transport.MatterNetwork;
+import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraftforge.fml.relauncher.Side;
-import matteroverdrive.api.matter_network.IMatterNetworkConnection;
-import net.minecraft.util.BlockPos;
-import matteroverdrive.machines.MachineNBTCategory;
-import matteroverdrive.util.MatterNetworkHelper;
-import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.EnumSet;
 

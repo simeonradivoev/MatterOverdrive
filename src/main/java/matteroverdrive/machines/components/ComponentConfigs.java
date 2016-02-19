@@ -26,10 +26,7 @@ import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.configs.IConfigProperty;
 import matteroverdrive.machines.configs.IConfigurable;
 import matteroverdrive.machines.events.MachineEvent;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.EnumSet;
 import java.util.HashMap;

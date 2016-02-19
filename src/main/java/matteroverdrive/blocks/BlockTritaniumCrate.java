@@ -21,28 +21,14 @@ package matteroverdrive.blocks;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.data.Inventory;
-import matteroverdrive.init.MatterOverdriveIcons;
-import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.tile.TileEntityTritaniumCrate;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemDye;
-import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 /**
  * Created by Simeon on 11/5/2015.

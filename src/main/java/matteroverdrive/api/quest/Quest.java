@@ -20,8 +20,6 @@ package matteroverdrive.api.quest;
 
 import com.google.gson.JsonObject;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.exceptions.MOQuestParseException;
-import matteroverdrive.handler.quest.Quests;
 import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.player.EntityPlayer;
 

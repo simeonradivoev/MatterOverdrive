@@ -19,7 +19,6 @@
 package matteroverdrive.matter_network;
 
 import io.netty.buffer.ByteBuf;
-import matteroverdrive.api.matter_network.IMatterNetworkConnection;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.util.MOLog;

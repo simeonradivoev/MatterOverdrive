@@ -18,20 +18,13 @@
 
 package matteroverdrive.client.render.tileentity;
 
-import matteroverdrive.Reference;
 import matteroverdrive.blocks.BlockNetworkSwitch;
-import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
-import matteroverdrive.util.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Simeon on 8/22/2015.

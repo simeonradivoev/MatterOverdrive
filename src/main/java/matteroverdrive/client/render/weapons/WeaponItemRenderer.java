@@ -20,14 +20,9 @@ package matteroverdrive.client.render.weapons;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
-import matteroverdrive.Reference;
-import matteroverdrive.api.weapon.IWeaponScope;
-import matteroverdrive.client.data.Color;
 import matteroverdrive.client.resources.data.WeaponMetadataSection;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.util.MOLog;
-import matteroverdrive.util.RenderUtils;
-import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -43,10 +38,11 @@ import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.*;
+import net.minecraftforge.client.model.IFlexibleBakedModel;
+import net.minecraftforge.client.model.IPerspectiveAwareModel;
+import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
-import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
@@ -67,7 +63,6 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel, ISma
     protected WeaponMetadataSection weaponMetadata;
     protected OBJModel.OBJBakedModel bakedModel;
     private Matrix4f matrix;
-    private List<BakedQuad> quads;
 
     public WeaponItemRenderer(ResourceLocation weaponModelLocation)
     {
@@ -100,7 +95,7 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel, ISma
         {
             weaponModel = (OBJModel) OBJLoader.instance.loadModel(weaponModelLocation);
             ImmutableMap<String,String> customOptions = new ImmutableMap.Builder<String,String>().put("flip-v","true").put("ambient","false").build();
-            weaponModel = weaponModel.process(customOptions);
+            weaponModel = (OBJModel)weaponModel.process(customOptions);
         } catch (IOException e)
         {
             MOLog.error("Missing weapon model.",e);

@@ -18,21 +18,16 @@
 
 package matteroverdrive.tile;
 
-import matteroverdrive.machines.events.MachineEvent;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.MachineMatterStorage;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import matteroverdrive.multiblock.IMultiBlockTile;
 import matteroverdrive.multiblock.IMultiBlockTileStructure;
 import matteroverdrive.multiblock.MultiBlockTileStructureMachine;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.util.EnumFacing;
 
 import java.util.EnumSet;
 

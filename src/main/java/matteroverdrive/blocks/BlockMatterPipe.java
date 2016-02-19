@@ -20,7 +20,6 @@ package matteroverdrive.blocks;
 
 import matteroverdrive.tile.pipes.TileEntityMatterPipe;
 import matteroverdrive.util.MOBlockHelper;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

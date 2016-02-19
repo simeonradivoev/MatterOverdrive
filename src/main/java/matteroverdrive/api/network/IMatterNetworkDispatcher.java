@@ -18,7 +18,6 @@
 
 package matteroverdrive.api.network;
 
-import matteroverdrive.api.matter_network.IMatterNetworkConnection;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import net.minecraft.util.BlockPos;
 

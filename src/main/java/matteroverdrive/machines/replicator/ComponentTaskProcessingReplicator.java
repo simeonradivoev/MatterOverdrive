@@ -4,7 +4,6 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.blocks.BlockReplicator;
-import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.handler.GoogleAnalyticsCommon;
 import matteroverdrive.handler.SoundHandler;

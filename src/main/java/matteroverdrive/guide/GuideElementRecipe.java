@@ -18,7 +18,6 @@
 
 package matteroverdrive.guide;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.init.MatterOverdriveRecipes;
 import matteroverdrive.util.MOLog;
@@ -32,7 +31,6 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Element;
 
 import java.util.List;

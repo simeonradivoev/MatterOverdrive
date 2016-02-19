@@ -2,11 +2,7 @@ package matteroverdrive.gui.element;
 
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
-import org.lwjgl.opengl.GL11;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Simeon on 1/31/2016.

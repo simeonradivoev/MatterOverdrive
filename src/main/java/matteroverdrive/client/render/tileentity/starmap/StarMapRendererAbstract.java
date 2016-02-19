@@ -1,19 +1,14 @@
 package matteroverdrive.client.render.tileentity.starmap;
 
-import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
 import matteroverdrive.fx.MOEntityFX;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.glu.Disk;
 import org.lwjgl.util.glu.Sphere;
 
-import java.io.IOException;
 import java.util.Random;
 
 /**

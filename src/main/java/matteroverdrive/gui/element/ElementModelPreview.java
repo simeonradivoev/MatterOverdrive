@@ -18,15 +18,12 @@
 
 package matteroverdrive.gui.element;
 
-import matteroverdrive.client.RenderHandler;
 import matteroverdrive.gui.MOGuiBase;
-import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 

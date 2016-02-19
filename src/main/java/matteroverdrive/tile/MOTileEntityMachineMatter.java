@@ -19,7 +19,6 @@
 package matteroverdrive.tile;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.MachineMatterStorage;
@@ -35,7 +34,6 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.EnumSet;
-import java.util.List;
 
 public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IMatterHandler, IWailaBodyProvider, IFluidHandler
 {

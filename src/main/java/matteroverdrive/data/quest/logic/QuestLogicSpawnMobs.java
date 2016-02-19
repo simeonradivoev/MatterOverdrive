@@ -1,16 +1,15 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
-import matteroverdrive.util.MOLog;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.util.MOLog;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

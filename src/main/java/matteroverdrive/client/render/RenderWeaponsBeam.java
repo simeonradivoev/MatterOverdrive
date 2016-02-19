@@ -27,11 +27,9 @@ import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.items.weapon.OmniTool;
 import matteroverdrive.items.weapon.Phaser;
-import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -49,7 +47,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ONE;
 
 /**
  * Created by Simeon on 6/13/2015.

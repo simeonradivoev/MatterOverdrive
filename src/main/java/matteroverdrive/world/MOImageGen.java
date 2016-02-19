@@ -18,12 +18,9 @@
 
 package matteroverdrive.world;
 
-import matteroverdrive.data.world.GenPositionWorldData;
-import matteroverdrive.data.world.WorldPosition2D;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;

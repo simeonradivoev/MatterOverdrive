@@ -19,7 +19,6 @@
 package matteroverdrive.gui.pages;
 
 import matteroverdrive.Reference;
-import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.MOGuiMachine;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.machines.components.ComponentConfigs;

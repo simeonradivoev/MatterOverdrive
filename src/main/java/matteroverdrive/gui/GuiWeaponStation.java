@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.render.weapons.WeaponItemRenderer;
@@ -27,20 +26,16 @@ import matteroverdrive.container.ContainerWeaponStation;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.element.ElementInventorySlot;
-import matteroverdrive.gui.element.ElementModelPreview;
 import matteroverdrive.gui.element.ElementSlot;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityWeaponStation;
 import matteroverdrive.util.MOInventoryHelper;
 import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.math.MOMathHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 

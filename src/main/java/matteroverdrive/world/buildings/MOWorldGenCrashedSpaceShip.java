@@ -25,7 +25,6 @@ import matteroverdrive.blocks.BlockTritaniumCrate;
 import matteroverdrive.blocks.BlockWeaponStation;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.init.MatterOverdriveBlocks;
-import matteroverdrive.init.MatterOverdriveQuests;
 import matteroverdrive.tile.TileEntityHoloSign;
 import matteroverdrive.tile.TileEntityWeaponStation;
 import matteroverdrive.util.MOInventoryHelper;
@@ -36,11 +35,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ChestGenHooks;
-import net.minecraft.util.EnumFacing;
 
 import java.util.Random;
 

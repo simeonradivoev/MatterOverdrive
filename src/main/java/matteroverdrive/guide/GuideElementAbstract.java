@@ -18,7 +18,6 @@
 
 package matteroverdrive.guide;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MOLog;

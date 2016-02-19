@@ -24,7 +24,6 @@ import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
-import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 import java.util.Random;

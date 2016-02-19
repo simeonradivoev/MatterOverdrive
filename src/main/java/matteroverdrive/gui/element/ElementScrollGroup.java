@@ -23,8 +23,6 @@ import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.renderer.GlStateManager;
 
-import static org.lwjgl.opengl.GL11.*;
-
 /**
  * Created by Simeon on 12/6/2015.
  */

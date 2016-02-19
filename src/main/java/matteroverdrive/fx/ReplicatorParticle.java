@@ -1,9 +1,7 @@
 package matteroverdrive.fx;
 
 import matteroverdrive.Reference;
-import matteroverdrive.util.Vector3;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;

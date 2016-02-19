@@ -1,6 +1,5 @@
 package matteroverdrive.gui.element.android_station;
 
-import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.element.MOElementBase;

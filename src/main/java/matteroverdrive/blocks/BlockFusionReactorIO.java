@@ -18,10 +18,7 @@
 
 package matteroverdrive.blocks;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityFusionReactorPart;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;

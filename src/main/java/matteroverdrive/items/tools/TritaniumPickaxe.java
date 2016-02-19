@@ -18,7 +18,6 @@
 
 package matteroverdrive.items.tools;
 
-import matteroverdrive.Reference;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.item.ItemPickaxe;
 

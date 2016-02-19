@@ -18,7 +18,6 @@
 
 package matteroverdrive.guide.infograms;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.guide.GuideElementAbstract;
 import matteroverdrive.guide.MOGuideEntry;
@@ -27,7 +26,6 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Element;
 
 /**

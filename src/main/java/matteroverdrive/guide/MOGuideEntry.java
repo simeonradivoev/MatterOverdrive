@@ -18,7 +18,6 @@
 
 package matteroverdrive.guide;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;

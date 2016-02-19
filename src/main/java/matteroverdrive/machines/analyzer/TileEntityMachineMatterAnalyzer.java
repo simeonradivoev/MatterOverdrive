@@ -18,35 +18,23 @@
 
 package matteroverdrive.machines.analyzer;
 
-import cofh.api.energy.IEnergyStorage;
+import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter_network.IMatterNetworkClient;
 import matteroverdrive.api.matter_network.IMatterNetworkConnection;
-import matteroverdrive.api.network.*;
+import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.transport.IGridNode;
 import matteroverdrive.blocks.includes.MOBlock;
-import matteroverdrive.data.transport.MatterNetwork;
-import matteroverdrive.machines.events.MachineEvent;
-import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.matter.IMatterDatabase;
-import matteroverdrive.matter_network.components.MatterNetworkComponentClient;
-import matteroverdrive.matter_network.components.TaskQueueComponent;
-import net.minecraft.block.state.IBlockState;
 import matteroverdrive.data.Inventory;
-import matteroverdrive.data.matter_network.ItemPattern;
-import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.MatterSlot;
-import matteroverdrive.handler.SoundHandler;
-import matteroverdrive.items.MatterScanner;
-import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.data.transport.MatterNetwork;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
+import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
-import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
+import matteroverdrive.matter_network.components.MatterNetworkComponentClient;
 import matteroverdrive.tile.MOTileEntityMachineEnergy;
-import matteroverdrive.util.MatterDatabaseHelper;
-import matteroverdrive.util.MatterHelper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
 import java.util.EnumSet;

@@ -18,7 +18,6 @@
 
 package matteroverdrive.client.render.tileentity;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.handler.ConfigurationHandler;
@@ -37,15 +36,11 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.apache.commons.io.IOUtils;
-import org.lwjgl.opengl.GLContext;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL11.GL_ONE;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 /**
  * Created by Simeon on 5/27/2015.

@@ -18,26 +18,15 @@
 
 package matteroverdrive.machines.transporter.components;
 
-import matteroverdrive.machines.events.MachineEvent;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.machines.MachineComponentAbstract;
 import matteroverdrive.machines.MachineNBTCategory;
-import matteroverdrive.machines.configs.IConfigProperty;
+import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashMap;
 
 /**
  * Created by Simeon on 7/21/2015.

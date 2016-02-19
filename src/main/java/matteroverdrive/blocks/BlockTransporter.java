@@ -18,14 +18,11 @@
 
 package matteroverdrive.blocks;
 
-import net.minecraftforge.fml.relauncher.SideOnly;
-import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOMatterEnergyStorageBlock;
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class BlockTransporter extends MOMatterEnergyStorageBlock
 {

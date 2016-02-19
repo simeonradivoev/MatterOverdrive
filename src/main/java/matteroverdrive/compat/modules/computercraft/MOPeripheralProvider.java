@@ -18,12 +18,6 @@
 
 package matteroverdrive.compat.modules.computercraft;
 
-import net.minecraftforge.fml.common.Optional;
-import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
-import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
 /**
  * @author shadowfacts
  */

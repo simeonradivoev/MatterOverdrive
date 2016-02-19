@@ -13,7 +13,6 @@ import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.dialog.DialogMessage;
 import matteroverdrive.util.MOJsonHelper;
 import matteroverdrive.util.MOStringHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;

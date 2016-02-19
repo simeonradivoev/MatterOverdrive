@@ -19,25 +19,24 @@
 package matteroverdrive.world;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.commands.AbsoluteDimensionTeleporter;
-import matteroverdrive.handler.GoogleAnalyticsCommon;
-import matteroverdrive.world.buildings.*;
-import matteroverdrive.world.dimensions.BiomeGeneratorSpace;
-import matteroverdrive.world.dimensions.WorldProviderSpace;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.IWorldGenerator;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.data.world.GenPositionWorldData;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.handler.GoogleAnalyticsCommon;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.util.IConfigSubscriber;
+import matteroverdrive.world.buildings.*;
+import matteroverdrive.world.dimensions.BiomeGeneratorSpace;
+import matteroverdrive.world.dimensions.WorldProviderSpace;
 import net.minecraft.block.Block;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.common.IWorldGenerator;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.*;
 

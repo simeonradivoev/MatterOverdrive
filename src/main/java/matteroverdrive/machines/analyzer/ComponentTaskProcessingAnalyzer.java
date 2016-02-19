@@ -11,7 +11,6 @@ import matteroverdrive.handler.SoundHandler;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.components.TaskQueueComponent;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
-import matteroverdrive.util.MatterHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;

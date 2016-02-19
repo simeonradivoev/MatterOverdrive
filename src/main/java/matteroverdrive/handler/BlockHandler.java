@@ -1,11 +1,10 @@
 package matteroverdrive.handler;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.player.MOExtendedProperties;
-import net.minecraft.block.Block;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Created by Simeon on 12/24/2015.

@@ -18,7 +18,6 @@
 
 package matteroverdrive.api.events;
 
-import matteroverdrive.api.dialog.IDialogMessage;
 import matteroverdrive.api.dialog.IDialogNpc;
 import matteroverdrive.api.dialog.IDialogOption;
 import net.minecraft.entity.player.EntityPlayer;

@@ -19,7 +19,6 @@
 package matteroverdrive.guide;
 
 import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Element;
 
 /**

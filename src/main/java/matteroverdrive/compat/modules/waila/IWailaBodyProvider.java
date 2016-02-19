@@ -2,8 +2,6 @@ package matteroverdrive.compat.modules.waila;
 
 import net.minecraftforge.fml.common.Optional;
 
-import java.util.List;
-
 /**
  * @author shadowfacts
  */

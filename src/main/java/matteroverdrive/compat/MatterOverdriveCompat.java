@@ -18,16 +18,15 @@
 
 package matteroverdrive.compat;
 
-import matteroverdrive.MatterOverdrive;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.compat.modules.*;
 import matteroverdrive.compat.modules.computercraft.CompatComputerCraft;
 import matteroverdrive.compat.modules.nei.CompatNEI;
 import matteroverdrive.compat.modules.waila.CompatWaila;
 import matteroverdrive.util.MOLog;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

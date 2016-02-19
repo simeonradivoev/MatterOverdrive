@@ -18,8 +18,6 @@
 
 package matteroverdrive.blocks;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.tile.TileEntityMachineNetworkSwitch;
 import net.minecraft.block.material.Material;

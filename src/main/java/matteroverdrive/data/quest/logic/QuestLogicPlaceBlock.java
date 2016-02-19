@@ -1,21 +1,17 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestBlock;
 import matteroverdrive.data.quest.QuestItem;
 import matteroverdrive.util.MOJsonHelper;
 import matteroverdrive.util.MOQuestHelper;
-import net.minecraft.block.state.IBlockState;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import matteroverdrive.api.quest.IQuestReward;
-import matteroverdrive.api.quest.QuestStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
 import java.util.Random;

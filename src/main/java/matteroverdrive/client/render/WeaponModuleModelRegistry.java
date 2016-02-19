@@ -18,12 +18,6 @@
 
 package matteroverdrive.client.render;
 
-import matteroverdrive.api.weapon.IWeaponModule;
-import net.minecraft.util.ResourceLocation;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by Simeon on 12/8/2015.
  */

@@ -18,18 +18,17 @@
 
 package matteroverdrive.init;
 
-import net.minecraft.item.EnumDyeColor;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import matteroverdrive.blocks.BlockTritaniumCrate;
 import matteroverdrive.data.recipes.EnergyPackRecipe;
 import matteroverdrive.data.recipes.InscriberRecipe;
 import matteroverdrive.handler.recipes.InscriberRecipes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 

@@ -24,7 +24,6 @@ import net.minecraft.util.MathHelper;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * Created by Simeon on 8/23/2015.

@@ -19,10 +19,8 @@
 package matteroverdrive.util;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 12/22/2015.

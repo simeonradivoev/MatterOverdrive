@@ -19,19 +19,12 @@
 package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.Reference;
-import matteroverdrive.client.render.entity.EntityRendererRougeAndroid;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.EntityLivingBase;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Simeon on 5/27/2015.

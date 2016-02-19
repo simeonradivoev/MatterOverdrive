@@ -20,7 +20,6 @@ package matteroverdrive.gui.element;
 
 import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
-import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.data.matter_network.ItemPatternMapping;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;

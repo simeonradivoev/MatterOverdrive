@@ -19,16 +19,11 @@
 package matteroverdrive.blocks;
 
 import matteroverdrive.blocks.includes.MOBlock;
-import matteroverdrive.util.MOBlockHelper;
-import matteroverdrive.util.math.MOMathHelper;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 8/19/2015.

@@ -19,21 +19,7 @@
 package matteroverdrive.compat.modules.nei;
 
 import matteroverdrive.Reference;
-import matteroverdrive.data.recipes.InscriberRecipe;
-import matteroverdrive.handler.recipes.InscriberRecipes;
-import matteroverdrive.util.MOStringHelper;
-import matteroverdrive.util.RenderUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by Simeon on 12/2/2015.

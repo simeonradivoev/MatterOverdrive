@@ -1,6 +1,5 @@
 package matteroverdrive.compat.modules.computercraft;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import matteroverdrive.compat.Compat;
 
 /**

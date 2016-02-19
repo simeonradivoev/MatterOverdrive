@@ -1,6 +1,5 @@
 package matteroverdrive.fx;
 
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import org.lwjgl.util.vector.Vector3f;
 

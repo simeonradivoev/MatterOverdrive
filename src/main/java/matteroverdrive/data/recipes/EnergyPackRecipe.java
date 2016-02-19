@@ -26,7 +26,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapelessRecipes;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Simeon on 8/2/2015.

@@ -22,17 +22,14 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
 import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
 import matteroverdrive.util.MOLog;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Level;
 
 import java.io.File;
-import java.util.List;
 import java.util.concurrent.Future;
 
 /**

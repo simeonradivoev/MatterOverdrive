@@ -2,23 +2,16 @@ package matteroverdrive.items;
 
 import cofh.api.block.IDismantleable;
 import matteroverdrive.blocks.includes.IMultiBlock;
-import matteroverdrive.blocks.includes.MOBlock;
-import matteroverdrive.multiblock.IMultiBlockTile;
-import matteroverdrive.multiblock.IMultiBlockTileStructure;
-import matteroverdrive.tile.IMultiBlockTileEntity;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.items.includes.MOBaseItem;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * Created by Simeon on 5/19/2015.

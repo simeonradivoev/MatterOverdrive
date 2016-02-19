@@ -23,7 +23,6 @@ import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.pages.MatterNetworkConfigPage;
 import matteroverdrive.machines.MOTileEntityMachine;
-import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 
 /**
  * Created by Simeon on 7/17/2015.

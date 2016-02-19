@@ -18,7 +18,6 @@
 
 package matteroverdrive.handler.village;
 
-import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;

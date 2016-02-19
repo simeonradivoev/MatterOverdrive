@@ -21,7 +21,6 @@ package matteroverdrive.util;
 import matteroverdrive.Reference;
 import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Created by Simeon on 8/11/2015.

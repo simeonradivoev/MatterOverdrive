@@ -18,16 +18,8 @@
 
 package matteroverdrive.compat.modules.nei;
 
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.compat.Compat;
-import matteroverdrive.gui.GuiStarMap;
-import matteroverdrive.init.MatterOverdriveBlocks;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraftforge.fml.common.Optional;
 
 /**
  * @author shadowfacts

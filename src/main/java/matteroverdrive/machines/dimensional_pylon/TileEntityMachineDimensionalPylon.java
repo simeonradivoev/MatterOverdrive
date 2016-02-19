@@ -8,44 +8,31 @@ import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.data.MachineEnergyStorage;
 import matteroverdrive.fluids.FluidMatterPlasma;
-import matteroverdrive.fx.Lightning;
 import matteroverdrive.fx.LightningCircle;
-import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
-import matteroverdrive.network.packet.client.PacketSpawnParticle;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
 import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Created by Simeon on 2/4/2016.

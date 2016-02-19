@@ -36,8 +36,6 @@ import net.minecraft.util.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
-
 /**
  * Created by Simeon on 11/22/2015.
  */

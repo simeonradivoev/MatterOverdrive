@@ -18,20 +18,11 @@
 
 package matteroverdrive.client.render.tileentity;
 
-import matteroverdrive.Reference;
-import matteroverdrive.init.MatterOverdriveItems;
-import matteroverdrive.tile.TileEntityInscriber;
-import matteroverdrive.util.RenderUtils;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.Random;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Simeon on 11/9/2015.

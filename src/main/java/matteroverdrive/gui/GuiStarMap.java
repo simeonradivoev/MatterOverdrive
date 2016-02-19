@@ -41,7 +41,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.obj.OBJLoader;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
 import java.io.IOException;

@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.item.ItemStack;

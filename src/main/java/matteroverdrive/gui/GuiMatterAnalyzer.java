@@ -20,7 +20,6 @@ package matteroverdrive.gui;
 
 import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerAnalyzer;
-import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.element.ElementScanProgress;

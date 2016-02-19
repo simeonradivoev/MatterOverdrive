@@ -26,7 +26,6 @@ import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementSlot;
 import matteroverdrive.gui.element.MOElementEnergy;
 import matteroverdrive.tile.TileEntityMachineMatterRecycler;
-import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 
 /**

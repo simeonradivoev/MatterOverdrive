@@ -1,12 +1,10 @@
 package matteroverdrive.handler;
 
 import com.brsanthu.googleanalytics.GoogleAnalyticsRequest;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-
-import java.util.Set;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 1/7/2016.

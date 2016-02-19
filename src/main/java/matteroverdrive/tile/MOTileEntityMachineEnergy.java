@@ -20,9 +20,7 @@ package matteroverdrive.tile;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyStorage;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.MachineEnergyStorage;
 import matteroverdrive.data.inventory.EnergySlot;

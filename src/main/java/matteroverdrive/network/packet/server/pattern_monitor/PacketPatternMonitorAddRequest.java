@@ -1,18 +1,16 @@
 package matteroverdrive.network.packet.server.pattern_monitor;
 
-import matteroverdrive.MatterOverdrive;
+import io.netty.buffer.ByteBuf;
 import matteroverdrive.api.network.MatterNetworkTaskState;
+import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.machines.pattern_monitor.ComponentTaskProcessingPatternMonitor;
+import matteroverdrive.machines.pattern_monitor.TileEntityMachinePatternMonitor;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
-import matteroverdrive.network.packet.client.task_queue.PacketSyncTaskQueue;
+import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.network.packet.server.AbstractServerPacketHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
-import matteroverdrive.data.matter_network.ItemPattern;
-import matteroverdrive.network.packet.TileEntityUpdatePacket;
-import matteroverdrive.machines.pattern_monitor.TileEntityMachinePatternMonitor;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Created by Simeon on 4/26/2015.

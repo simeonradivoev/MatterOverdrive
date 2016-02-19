@@ -2,7 +2,6 @@ package matteroverdrive.container.matter_network;
 
 import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.data.matter_network.MatterDatabaseEvent;
-import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Simeon on 1/30/2016.

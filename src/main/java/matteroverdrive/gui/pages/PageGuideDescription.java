@@ -53,8 +53,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.lwjgl.opengl.GL11.*;
-
 /**
  * Created by Simeon on 4/3/2015.
  */

@@ -1,11 +1,10 @@
 package matteroverdrive.data.quest;
 
 import com.google.gson.JsonObject;
-import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.util.MOJsonHelper;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraft.block.Block;
 
 /**
  * Created by Simeon on 12/24/2015.

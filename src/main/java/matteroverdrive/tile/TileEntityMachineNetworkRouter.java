@@ -19,10 +19,7 @@
 package matteroverdrive.tile;
 
 import matteroverdrive.machines.events.MachineEvent;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 3/11/2015.

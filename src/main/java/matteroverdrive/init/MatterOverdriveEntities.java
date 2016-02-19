@@ -18,22 +18,19 @@
 
 package matteroverdrive.init;
 
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.entity.*;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.entity.monster.EntityMutantScientist;
 import matteroverdrive.entity.monster.EntityRangedRogueAndroidMob;
 import matteroverdrive.entity.monster.EntityRogueAndroid;
-import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.handler.village.TradeHandlerMadScientist;
 import matteroverdrive.handler.village.VillageCreatationMadScientist;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.VillagerRegistry;
 
 /**
  * Created by Simeon on 5/26/2015.

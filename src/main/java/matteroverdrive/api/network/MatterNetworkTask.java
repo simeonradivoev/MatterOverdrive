@@ -18,11 +18,8 @@
 
 package matteroverdrive.api.network;
 
-import matteroverdrive.api.matter_network.IMatterNetworkConnection;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 

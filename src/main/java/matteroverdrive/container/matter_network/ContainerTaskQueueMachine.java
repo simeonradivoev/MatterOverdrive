@@ -5,7 +5,6 @@ import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.network.packet.client.task_queue.PacketSyncTaskQueue;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 

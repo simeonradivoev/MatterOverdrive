@@ -18,18 +18,17 @@
 
 package matteroverdrive.network.packet.server;/* Created by Simeon on 10/17/2015. */
 
-import matteroverdrive.util.MOLog;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.network.packet.PacketAbstract;
+import matteroverdrive.util.MOLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.S23PacketBlockChange;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketDigBlock  extends PacketAbstract
 {

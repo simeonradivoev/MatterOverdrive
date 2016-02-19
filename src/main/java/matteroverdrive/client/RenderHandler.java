@@ -42,10 +42,10 @@ import matteroverdrive.client.render.weapons.layers.WeaponLayerAmmoRender;
 import matteroverdrive.client.render.weapons.modules.ModuleHoloSightsRender;
 import matteroverdrive.client.render.weapons.modules.ModuleSniperScopeRender;
 import matteroverdrive.entity.*;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.entity.monster.EntityMutantScientist;
 import matteroverdrive.entity.monster.EntityRangedRogueAndroidMob;
-import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
@@ -394,7 +394,7 @@ public class RenderHandler
         try
         {
             OBJModel model = (OBJModel)OBJLoader.instance.loadModel(location);
-            model = model.process(customOptions);
+            model = (OBJModel)model.process(customOptions);
             return model;
         } catch (IOException e)
         {

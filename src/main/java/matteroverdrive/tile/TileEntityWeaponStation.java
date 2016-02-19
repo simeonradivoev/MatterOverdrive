@@ -20,7 +20,6 @@ package matteroverdrive.tile;
 
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.ItemInventoryWrapper;
 import matteroverdrive.data.inventory.ModuleSlot;
@@ -28,21 +27,12 @@ import matteroverdrive.data.inventory.WeaponSlot;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.util.WeaponHelper;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 /**
  * Created by Simeon on 4/13/2015.

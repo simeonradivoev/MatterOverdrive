@@ -18,12 +18,6 @@
 
 package matteroverdrive.tile;
 
-import matteroverdrive.api.container.IMachineWatcher;
-import matteroverdrive.machines.events.MachineEvent;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.quest.Quest;
@@ -35,11 +29,11 @@ import matteroverdrive.data.quest.WeightedRandomQuest;
 import matteroverdrive.init.MatterOverdriveQuests;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
-import net.minecraft.entity.EntityLivingBase;
+import matteroverdrive.machines.events.MachineEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.world.World;
 
 import java.util.EnumSet;
 

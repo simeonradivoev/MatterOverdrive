@@ -6,7 +6,6 @@ import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestItem;
 import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;

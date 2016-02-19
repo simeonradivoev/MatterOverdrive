@@ -34,8 +34,6 @@ import matteroverdrive.util.StarmapHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
-import static org.lwjgl.opengl.GL11.*;
-
 /**
  * Created by Simeon on 6/15/2015.
  */

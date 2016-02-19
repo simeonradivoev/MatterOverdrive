@@ -20,13 +20,10 @@ package matteroverdrive.gui.pages;
 
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.gui.MOGuiMachine;
-import matteroverdrive.gui.MOGuiNetworkMachine;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.element.MOElementTextField;
 import matteroverdrive.gui.events.ITextHandler;
-import matteroverdrive.machines.IMachineComponent;
-import matteroverdrive.machines.components.ComponentConfigs;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 
 

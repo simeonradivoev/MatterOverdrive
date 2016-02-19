@@ -45,17 +45,13 @@ import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.client.model.pipeline.LightUtil;
-import net.minecraftforge.client.model.pipeline.VertexLighterFlat;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.util.glu.Sphere;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
 

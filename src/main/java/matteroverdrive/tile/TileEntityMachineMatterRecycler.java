@@ -18,21 +18,15 @@
 
 package matteroverdrive.tile;
 
-import matteroverdrive.api.container.IMachineWatcher;
-import matteroverdrive.machines.events.MachineEvent;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IRecyclable;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.data.inventory.SlotRecycler;
 import matteroverdrive.machines.MachineNBTCategory;
-import net.minecraft.entity.EntityLivingBase;
+import matteroverdrive.machines.events.MachineEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
 import java.util.EnumSet;

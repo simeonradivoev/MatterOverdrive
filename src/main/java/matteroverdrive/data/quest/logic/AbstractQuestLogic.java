@@ -26,8 +26,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import java.util.Random;

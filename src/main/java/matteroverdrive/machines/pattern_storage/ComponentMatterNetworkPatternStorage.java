@@ -20,11 +20,8 @@ package matteroverdrive.machines.pattern_storage;
 
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.data.matter_network.IMatterNetworkEvent;
-import matteroverdrive.data.matter_network.ItemPattern;
-import matteroverdrive.machines.pattern_storage.TileEntityMachinePatternStorage;
 import matteroverdrive.matter_network.components.MatterNetworkComponentClient;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
-import net.minecraft.item.ItemStack;
 
 /**
  * Created by Simeon on 7/15/2015.

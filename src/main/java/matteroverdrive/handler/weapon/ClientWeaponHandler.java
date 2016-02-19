@@ -18,27 +18,25 @@
 
 package matteroverdrive.handler.weapon;
 
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.items.weapon.EnergyWeapon;
-import matteroverdrive.util.MOLog;
+import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
+import matteroverdrive.network.packet.bi.PacketWeaponTick;
 import matteroverdrive.util.WeaponHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IntHashMap;
+import net.minecraft.world.World;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.weapon.IWeapon;
-import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
-import matteroverdrive.network.packet.bi.PacketWeaponTick;
-import matteroverdrive.util.math.MOMathHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.client.event.FOVUpdateEvent;
 
 import java.util.HashMap;
 import java.util.Map;

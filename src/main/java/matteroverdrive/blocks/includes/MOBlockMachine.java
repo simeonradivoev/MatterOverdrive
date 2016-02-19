@@ -19,7 +19,6 @@
 package matteroverdrive.blocks.includes;
 
 import cofh.api.block.IDismantleable;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
@@ -27,9 +26,7 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.items.includes.MOMachineBlockItem;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.*;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

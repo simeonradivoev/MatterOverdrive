@@ -1,8 +1,5 @@
 package matteroverdrive.blocks;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.tile.TileEntityWeaponStation;
 import net.minecraft.block.material.Material;

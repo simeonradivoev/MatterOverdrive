@@ -24,7 +24,6 @@ import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.element.MOElementTextField;
 import matteroverdrive.gui.pages.AutoConfigPage;
 import matteroverdrive.machines.MachineNBTCategory;
-import matteroverdrive.machines.components.ComponentConfigs;
 import matteroverdrive.tile.TileEntityHoloSign;
 import net.minecraft.entity.player.InventoryPlayer;
 

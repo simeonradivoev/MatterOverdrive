@@ -19,7 +19,6 @@
 package matteroverdrive.starmap.data;
 
 import io.netty.buffer.ByteBuf;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.util.MOLog;
 import net.minecraft.item.ItemStack;

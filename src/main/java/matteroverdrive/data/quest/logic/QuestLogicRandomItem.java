@@ -1,7 +1,6 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestItem;

@@ -21,21 +21,19 @@ package matteroverdrive.data.quest.logic;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import matteroverdrive.api.exceptions.MOQuestParseException;
-import matteroverdrive.util.MOJsonHelper;
-import matteroverdrive.util.MOStringHelper;
-import net.minecraft.entity.EntityList;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
