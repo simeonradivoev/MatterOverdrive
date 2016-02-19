@@ -19,7 +19,7 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -89,7 +89,7 @@ public class BioticStatNanoArmor extends AbstractBioticStat
     @Override
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
-        return false;
+        return androidPlayer.getPlayer().hurtTime > 0;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class BioticStatNanoArmor extends AbstractBioticStat
         return 0;
     }
 
-    public float getDamageNegate(int level)
+    private float getDamageNegate(int level)
     {
         return (1 + level) * 0.06f;
     }

@@ -30,6 +30,7 @@ import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -53,49 +54,49 @@ public class StarMapRenderPlanetStats extends StarMapRendererPlanet
 
             if (from != null && from != to)
             {
-                glPushMatrix();
+                GlStateManager.pushMatrix();
                 Matrix4f rotationMat = new Matrix4f();
-                rotationMat.rotate(Minecraft.getMinecraft().renderViewEntity.rotationYaw * (float) (Math.PI / 180D), new Vector3f(0, -1, 0));
-                glEnable(GL_BLEND);
-                glPushMatrix();
+                rotationMat.rotate(Minecraft.getMinecraft().getRenderViewEntity().rotationYaw * (float) (Math.PI / 180D), new Vector3f(0, -1, 0));
+                GlStateManager.enableBlend();
+                GlStateManager.pushMatrix();
                 Vector4f pos = new Vector4f((float)(getClampedSize(from) + 0.25),0,0,1);
                 Matrix4f.transform(rotationMat, pos, pos);
-                glTranslated(pos.x, pos.y, pos.z);
+                GlStateManager.translate(pos.x, pos.y, pos.z);
                 renderPlanet(from, viewerDistance);
-                glPopMatrix();
+                GlStateManager.popMatrix();
 
-                glPushMatrix();
+                GlStateManager.pushMatrix();
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                glEnable(GL_TEXTURE_2D);
-                glEnable(GL_ALPHA_TEST);
-                RenderUtils.rotateTo(Minecraft.getMinecraft().renderViewEntity);
-                glScaled(0.01, 0.01, 0.01);
-                glRotated(180, 0, 0, 1);
+                GlStateManager.enableTexture2D();
+                GlStateManager.enableAlpha();
+                RenderUtils.rotateTo(Minecraft.getMinecraft().getRenderViewEntity());
+                GlStateManager.scale(0.01, 0.01, 0.01);
+                GlStateManager.rotate(180, 0, 0, 1);
                 drawTravelingShips(galaxy, to);
-                glTranslated(-9, -9, 0);
+                GlStateManager.translate(-9, -9, 0);
                 ClientProxy.holoIcons.renderIcon("arrow_right", 0, 0);
-                glPopMatrix();
+                GlStateManager.popMatrix();
 
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ONE);
-                glPushMatrix();
+                GlStateManager.enableBlend();
+                GlStateManager.blendFunc(GL_ONE, GL_ONE);
+                GlStateManager.pushMatrix();
                 pos = new Vector4f((float)-(getClampedSize(to) + 0.25),0,0,1);
                 Matrix4f.transform(rotationMat,pos,pos);
-                glTranslated(pos.x, pos.y, pos.z);
+                GlStateManager.translate(pos.x, pos.y, pos.z);
                 renderPlanet(to, viewerDistance);
-                glPopMatrix();
-                glPopMatrix();
+                GlStateManager.popMatrix();
+                GlStateManager.popMatrix();
             }else
             {
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ONE);
-                glPushMatrix();
+                GlStateManager.enableBlend();
+                GlStateManager.blendFunc(GL_ONE, GL_ONE);
+                GlStateManager.pushMatrix();
                 renderPlanet(to, viewerDistance);
-                glPopMatrix();
+                GlStateManager.popMatrix();
             }
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            glEnable(GL_TEXTURE_2D);
+            GlStateManager.enableTexture2D();
         }
     }
 

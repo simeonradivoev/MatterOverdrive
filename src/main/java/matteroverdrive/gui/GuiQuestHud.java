@@ -18,7 +18,8 @@
 
 package matteroverdrive.gui;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.client.data.Color;
@@ -82,22 +83,21 @@ public class GuiQuestHud
     @SubscribeEvent()
     public void onRenderOverlay(RenderGameOverlayEvent.Post event)
     {
-        //glEnable(GL_BLEND);
         if (event.type.equals(RenderGameOverlayEvent.ElementType.ALL))
         {
-            FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+            FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 
             if (completeQuestTimeline.isPlaying() && completeQuestName != null)
             {
                 float time = completeQuestTimeline.getCurrentValue();
                 Color color = new Color(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
-                glPushMatrix();
+                GlStateManager.pushMatrix();
                 int y = (int)(event.resolution.getScaledHeight() * 0.15);
                 int titleWidth = (int) (fontRenderer.getStringWidth(completeQuestName) * 1.5);
-                glTranslated(event.resolution.getScaledWidth() - titleWidth - 30 - time * 30, y - 20, 0);
-                glScaled(1.5, 1.5, 1.5);
+                GlStateManager.translate(event.resolution.getScaledWidth() - titleWidth - 30 - time * 30, y - 20, 0);
+                GlStateManager.scale(1.5, 1.5, 1.5);
                 fontRenderer.drawStringWithShadow(EnumChatFormatting.BOLD + completeQuestName, 0, 40, color.getColor());
-                glPopMatrix();
+                GlStateManager.popMatrix();
                 fontRenderer.drawStringWithShadow("Completed:", event.resolution.getScaledWidth() - titleWidth - 20 - (int) (time * 40), y + 28, color.getColor());
                 if (completeQuestXp > 0) {
                     fontRenderer.drawStringWithShadow(String.format("+%dxp", (int) (time * completeQuestXp)), event.resolution.getScaledWidth() - 50 - (int) (20 * time), y + 58, color.getColor());
@@ -106,14 +106,13 @@ public class GuiQuestHud
             if (startedQuestTimeline.isPlaying() && newQuestName != null)
             {
                 float time = startedQuestTimeline.getCurrentValue();
-                Color color = new Color(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
-                glPushMatrix();
+                Color color = new Color(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 19 + (int) (235f * time));
+                GlStateManager.pushMatrix();
                 int y = (int)(event.resolution.getScaledHeight() * 0.65);
-                String title = "Dead! We're all dead!";
-                glTranslated(-10 + time * 30, y, 0);
-                glScaled(1.5, 1.5, 1.5);
+                GlStateManager.translate(-10 + time * 30, y, 0);
+                GlStateManager.scale(1.5, 1.5, 1.5);
                 fontRenderer.drawStringWithShadow(EnumChatFormatting.BOLD + newQuestName, 0, 0, color.getColor());
-                glPopMatrix();
+                GlStateManager.popMatrix();
                 fontRenderer.drawStringWithShadow("Started:",(int) (time * 20), y-12, color.getColor());
             }
             if (objectivesTimeline.isPlaying() && objectivesChanged != null)
@@ -121,10 +120,11 @@ public class GuiQuestHud
                 float time = objectivesTimeline.getCurrentValue();
                 Color color = new Color(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
                 int objectivesY = 0;
-                for (int i = 0;i < objectivesChanged.length;i++)
+                for (String anObjectivesChanged : objectivesChanged)
                 {
-                    if (objectivesChanged[i] != null) {
-                        fontRenderer.drawStringWithShadow(String.format("[ %s ]", objectivesChanged[i]), (int) (time * 20), (int) (event.resolution.getScaledHeight() * 0.5) + objectivesY, color.getColor());
+                    if (anObjectivesChanged != null)
+                    {
+                        fontRenderer.drawStringWithShadow(String.format("[ %s ]", anObjectivesChanged), (int) (time * 20), (int) (event.resolution.getScaledHeight() * 0.5) + objectivesY, color.getColor());
                         objectivesY += fontRenderer.FONT_HEIGHT + 2;
                     }
                 }
@@ -194,12 +194,9 @@ public class GuiQuestHud
             for (int i = 0;i < objectiveCount;i++)
             {
                 String newObjective = newQuestStack.getObjective(Minecraft.getMinecraft().thePlayer,i);
-                String oldObjective = oldQuestStack.getObjective(Minecraft.getMinecraft().thePlayer,i);
-                if (!newObjective.contentEquals(oldObjective))
-                {
-                    objectivesChanged[i] = newObjective;
-                    showTime = Math.max(showTime,objectivesChanged[i].length() * 4);
-                }
+                //String oldObjective = oldQuestStack.getObjective(Minecraft.getMinecraft().thePlayer,i);
+                objectivesChanged[i] = newObjective;
+                showTime = Math.max(showTime,objectivesChanged[i].length() * 4);
             }
 
         }

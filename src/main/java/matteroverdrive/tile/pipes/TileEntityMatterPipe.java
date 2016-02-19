@@ -18,30 +18,31 @@
 
 package matteroverdrive.tile.pipes;
 
-import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.api.transport.IPipe;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.transport.IGridNode;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.data.MatterStorage;
 import matteroverdrive.data.transport.FluidPipeNetwork;
 import matteroverdrive.data.transport.IFluidPipe;
 import matteroverdrive.fluids.FluidMatterPlasma;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.machines.MachineNBTCategory;
-import matteroverdrive.util.FluidNetworkHelper;
 import matteroverdrive.util.TimeTracker;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -49,7 +50,7 @@ import java.util.Random;
  */
 public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 {
-    protected MatterStorage storage;
+    protected final MatterStorage storage;
     protected FluidPipeNetwork fluidPipeNetwork;
     public  static Random rand = new Random();
     protected int transferSpeed;
@@ -63,13 +64,13 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
     }
 
     @Override
-    public  void updateEntity()
+    public  void update()
     {
-        super.updateEntity();
+        super.update();
         if (!worldObj.isRemote)
         {
-            manageNetwork();
             manageTransfer();
+            manageNetwork();
         }
     }
 
@@ -77,49 +78,35 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
     {
         if (fluidPipeNetwork == null)
         {
-            FluidNetworkHelper.getFluidPipeNetworkFromPool().addPipe(this);
-        }
-
-        FluidPipeNetwork lastNetwork = null;
-        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-        {
-            TileEntity tileEntity = worldObj.getTileEntity(xCoord+direction.offsetX,yCoord+direction.offsetY,zCoord+direction.offsetZ);
-            if (tileEntity instanceof IFluidPipe)
+            if(!tryConnectToNeighborNetworks(worldObj))
             {
-                if (lastNetwork == null || ((IFluidPipe) tileEntity).getNetwork() != null && lastNetwork.getNetworkPipes().size() < ((IFluidPipe) tileEntity).getNetwork().getNetworkPipes().size())
-                {
-                    lastNetwork = ((IFluidPipe) tileEntity).getNetwork();
-                }
+                FluidPipeNetwork network = MatterOverdrive.fluidNetworkHandler.getNetwork(this);
+                network.addNode(this);
             }
-        }
-        if (lastNetwork != null && lastNetwork != getNetwork())
-        {
-            lastNetwork.addPipe(this);
-            //MatterOverdrive.log.info("Matter Pipe Added to network");
         }
     }
 
     public void manageTransfer()
     {
-        if (getMatterStored() > 0 && getNetwork() != null)
+        /*if (getMatterStored() > 0 && getNetwork() != null)
         {
             for (IFluidPipe pipe : getNetwork().getFluidHandlers())
             {
-                for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+                for (EnumFacing direction : EnumFacing.VALUES)
                 {
-                    TileEntity fluidHandler = pipe.getTile().getWorldObj().getTileEntity(pipe.getTile().xCoord + direction.offsetX,pipe.getTile().yCoord + direction.offsetY,pipe.getTile().zCoord + direction.offsetZ);
-                    if (fluidHandler != null && fluidHandler instanceof IFluidHandler && !(fluidHandler instanceof  IFluidPipe) && getMatterStored() > 0 && ((IFluidHandler)fluidHandler).canFill(ForgeDirection.UNKNOWN,MatterOverdriveFluids.matterPlasma))
+                    TileEntity fluidHandler = pipe.getTile().getWorld().getTileEntity(pipe.getTile().getPos().offset(direction));
+                    if (fluidHandler != null && fluidHandler instanceof IFluidHandler && !(fluidHandler instanceof  IFluidPipe) && getMatterStored() > 0 && ((IFluidHandler)fluidHandler).canFill(EnumFacing.DOWN,MatterOverdriveFluids.matterPlasma))
                     {
-                        extractMatter(ForgeDirection.UNKNOWN,((IFluidHandler)fluidHandler).fill(ForgeDirection.UNKNOWN,new FluidStack(MatterOverdriveFluids.matterPlasma,getMatterStored()),true),false);
+                        extractMatter(EnumFacing.DOWN,((IFluidHandler)fluidHandler).fill(EnumFacing.DOWN,new FluidStack(MatterOverdriveFluids.matterPlasma,getMatterStored()),true),false);
                     }
                 }
 
             }
-        }
+        }*/
     }
 
     @Override
-    public boolean canConnectTo(TileEntity entity,ForgeDirection direction)
+    public boolean canConnectToPipe(TileEntity entity, EnumFacing direction)
     {
         if (entity != null)
         {
@@ -167,21 +154,15 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
     }
 
     @Override
-    public int receiveMatter(ForgeDirection side, int amount, boolean simulate)
+    public int receiveMatter(EnumFacing side, int amount, boolean simulate)
     {
         return storage.receiveMatter(side,amount,simulate);
     }
 
     @Override
-    public int extractMatter(ForgeDirection direction, int amount, boolean simulate)
+    public int extractMatter(EnumFacing direction, int amount, boolean simulate)
     {
         return storage.extractMatter(direction,amount,simulate);
-    }
-
-    @Override
-    public void onAdded(World world, int x, int y, int z)
-    {
-        //MatterOverdrive.log.info("Tile Entity Matter Pipe placed");
     }
 
     @Override
@@ -190,10 +171,42 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
     }
 
     @Override
-    public void onDestroyed()
+    public void onAdded(World world, BlockPos pos, IBlockState state)
     {
-        getNetwork().destroyPipe(this);
-        //MatterOverdrive.log.info("Tile Entity Matter Pipe Destroyed");
+
+    }
+
+    public boolean tryConnectToNeighborNetworks(World world)
+    {
+        boolean hasConnected = false;
+        for (EnumFacing side : EnumFacing.VALUES)
+        {
+            TileEntity neighborEntity = world.getTileEntity(pos.offset(side));
+            if (neighborEntity instanceof TileEntityMatterPipe)
+            {
+                if (((TileEntityMatterPipe) neighborEntity).getNetwork() != null && ((TileEntityMatterPipe) neighborEntity).getNetwork() != this.fluidPipeNetwork)
+                {
+                    ((TileEntityMatterPipe) neighborEntity).getNetwork().addNode(this);
+                    hasConnected = true;
+                }
+            }
+        }
+        return hasConnected;
+    }
+
+    @Override
+    public void onDestroyed(World worldIn, BlockPos pos, IBlockState state)
+    {
+        if (fluidPipeNetwork != null)
+        {
+            fluidPipeNetwork.onNodeDestroy(state, this);
+        }
+    }
+
+    @Override
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+    {
+        updateSides(false);
     }
 
     @Override
@@ -207,32 +220,32 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
     }
 
     @Override
-    public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
         return storage.fill(resource,doFill);
     }
 
     @Override
-    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
         return storage.drain(resource.amount,doDrain);
     }
 
     @Override
-    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+    public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
         return storage.drain(maxDrain,doDrain);
     }
 
     @Override
-    public boolean canFill(ForgeDirection from, Fluid fluid) {
+    public boolean canFill(EnumFacing from, Fluid fluid) {
         return fluid instanceof FluidMatterPlasma;
     }
 
     @Override
-    public boolean canDrain(ForgeDirection from, Fluid fluid) {
+    public boolean canDrain(EnumFacing from, Fluid fluid) {
         return fluid instanceof FluidMatterPlasma;
     }
 
     @Override
-    public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+    public FluidTankInfo[] getTankInfo(EnumFacing from) {
         return new FluidTankInfo[]{storage.getInfo()};
     }
 
@@ -240,12 +253,6 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
     public TileEntity getTile()
     {
         return this;
-    }
-
-    @Override
-    public void onNetworkUpdate()
-    {
-
     }
 
     @Override
@@ -260,29 +267,15 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
         this.fluidPipeNetwork = network;
     }
 
-
     @Override
-    public List<IPipe<FluidPipeNetwork>> getConnections()
+    public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
     {
-        List<IPipe<FluidPipeNetwork>> connections = new ArrayList<>();
-        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-        {
-            TileEntity tileEntity = worldObj.getTileEntity(xCoord+direction.offsetX,yCoord+direction.offsetY,zCoord+direction.offsetZ);
-            if (tileEntity instanceof IFluidPipe)
-            {
-                connections.add((IFluidPipe)tileEntity);
-            }
-        }
-        return connections;
+        return true;
     }
 
     @Override
-    public void onNeighborBlockChange()
+    public boolean canConnectFromSide(IBlockState blockState, EnumFacing side)
     {
-        super.onNeighborBlockChange();
-        if (getNetwork() != null)
-        {
-            getNetwork().networkUpdate(this);
-        }
+        return true;
     }
 }

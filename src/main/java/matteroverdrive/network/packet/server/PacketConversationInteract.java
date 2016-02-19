@@ -18,15 +18,14 @@
 
 package matteroverdrive.network.packet.server;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.dialog.IDialogMessage;
 import matteroverdrive.api.dialog.IDialogNpc;
 import matteroverdrive.network.packet.PacketAbstract;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Simeon on 8/11/2015.
@@ -65,7 +64,7 @@ public class PacketConversationInteract extends PacketAbstract
     public static class ServerHandler extends AbstractServerPacketHandler<PacketConversationInteract>
     {
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketConversationInteract message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketConversationInteract message, MessageContext ctx)
         {
             Entity npcEntity = player.worldObj.getEntityByID(message.npcID);
             if (npcEntity instanceof IDialogNpc)
@@ -82,7 +81,6 @@ public class PacketConversationInteract extends PacketAbstract
                     m.onOptionsInteract((IDialogNpc) npcEntity, player, message.optionId);
                 }
             }
-            return null;
         }
     }
 }

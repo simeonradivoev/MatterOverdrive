@@ -29,8 +29,8 @@ import net.minecraft.util.ResourceLocation;
  */
 public class BionicSlot extends Slot
 {
-    int type;
-    public static String[] names = {"head", "arms", "legs", "chest", "other", "battery"};
+    private final int type;
+    public static final String[] names = {"head", "arms", "legs", "chest", "other", "battery"};
 
     public ResourceLocation[] icons = new ResourceLocation[]{,};
 

@@ -1,15 +1,13 @@
 package matteroverdrive.blocks.includes;
 
-import matteroverdrive.api.matter.IMatterHandler;
-import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.MOTileEntityMachineEnergy;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class MOMatterEnergyStorageBlock extends MOBlockMachine
@@ -25,34 +23,20 @@ public abstract class MOMatterEnergyStorageBlock extends MOBlockMachine
 		this.keepsMatter = keepsMatter;
 	}
 
-    protected IIcon GetIconBasedOnMatter(IBlockAccess world, int x, int y, int z)
-    {
-        TileEntity entity = world.getTileEntity(x,y,z);
-
-        if (entity != null && entity instanceof IMatterHandler)
-        {
-            if(((IMatterHandler) entity).getMatterStored() > 0)
-            {
-                return MatterOverdriveIcons.matter_tank_full;
-            }
-        }
-        return MatterOverdriveIcons.matter_tank_empty;
-    }
-
 	@Override
-	 public void onBlockPlacedBy(World World, int x, int y, int z, EntityLivingBase player, ItemStack item)
-	    {
-	    	super.onBlockPlacedBy(World, x, y, z, player, item);
-            if(item.hasTagCompound()) {
-                TileEntity entity = World.getTileEntity(x, y, z);
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+    {
+	    	super.onBlockPlacedBy(worldIn,pos,state,placer,stack);
+            if(stack.hasTagCompound()) {
+                TileEntity entity = worldIn.getTileEntity(pos);
 
                 if (entity instanceof MOTileEntityMachineEnergy) {
                     if(this.keepsEnergy)
-                        ((MOTileEntityMachineEnergy)entity).setEnergyStored(item.getTagCompound().getInteger("Energy"));
+                        ((MOTileEntityMachineEnergy)entity).setEnergyStored(stack.getTagCompound().getInteger("Energy"));
                 }
                 if (entity instanceof MOTileEntityMachineMatter) {
                     if(this.keepsMatter)
-                        ((MOTileEntityMachineMatter)entity).setMatterStored(item.getTagCompound().getInteger("Matter"));
+                        ((MOTileEntityMachineMatter)entity).setMatterStored(stack.getTagCompound().getInteger("Matter"));
                 }
             }
 	    }
@@ -75,13 +59,13 @@ public abstract class MOMatterEnergyStorageBlock extends MOBlockMachine
 
                     item.getTagCompound().setInteger("Matter", tile.getMatterStored());
                 }
-                if(tile.getEnergyStored(ForgeDirection.DOWN) > 0 && this.keepsEnergy)
+                if(tile.getEnergyStored(EnumFacing.DOWN) > 0 && this.keepsEnergy)
                 {
                     if(!item.hasTagCompound())
                         item.setTagCompound(new NBTTagCompound());
 
-                    item.getTagCompound().setInteger("Energy", tile.getEnergyStored(ForgeDirection.DOWN));
-                    item.getTagCompound().setInteger("MaxEnergy", tile.getMaxEnergyStored(ForgeDirection.DOWN));
+                    item.getTagCompound().setInteger("Energy", tile.getEnergyStored(EnumFacing.DOWN));
+                    item.getTagCompound().setInteger("MaxEnergy", tile.getMaxEnergyStored(EnumFacing.DOWN));
                 }
 
                 this.dropBlockAsItem(world, x, y, z, item);

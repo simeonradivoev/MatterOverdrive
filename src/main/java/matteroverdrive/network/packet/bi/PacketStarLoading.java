@@ -18,8 +18,10 @@
 
 package matteroverdrive.network.packet.bi;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import matteroverdrive.MatterOverdrive;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.network.packet.AbstractBiPacketHandler;
 import matteroverdrive.network.packet.PacketAbstract;
@@ -27,7 +29,8 @@ import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.GalaxyServer;
 import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.starmap.data.Star;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 12/19/2015.
@@ -79,9 +82,9 @@ public class PacketStarLoading extends PacketAbstract
 
     public static class BiHandler extends AbstractBiPacketHandler<PacketStarLoading>
     {
-
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketStarLoading message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketStarLoading message, MessageContext ctx)
         {
             Quadrant quadrant = GalaxyClient.getInstance().getTheGalaxy().getQuadrantMap().get(message.quadrantID);
             if (quadrant != null && message.star != null)
@@ -89,11 +92,10 @@ public class PacketStarLoading extends PacketAbstract
                 quadrant.addStar(message.star);
                 message.star.setQuadrant(quadrant);
             }
-            return null;
         }
 
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketStarLoading message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketStarLoading message, MessageContext ctx)
         {
             Quadrant quadrant = GalaxyServer.getInstance().getTheGalaxy().getQuadrantMap().get(message.quadrantID);
             if (quadrant != null)
@@ -101,10 +103,9 @@ public class PacketStarLoading extends PacketAbstract
                 Star star = quadrant.getStarMap().get(message.starID);
                 if (star != null)
                 {
-                    return new PacketStarLoading(message.quadrantID,star);
+                    MatterOverdrive.packetPipeline.sendTo(new PacketStarLoading(message.quadrantID,star),player);
                 }
             }
-            return null;
         }
     }
 }

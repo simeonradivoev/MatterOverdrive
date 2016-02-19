@@ -1,0 +1,7 @@
+{
+  "parent": "mo:item/defaultitem",
+  "textures": {
+    "layer0": "mo:items/pill_bottom",
+    "layer1": "mo:items/pill_top"
+  }
+}

@@ -35,7 +35,7 @@ public enum AndroidHudPosition
 
     public final float x;
     public final float y;
-    public final String name;
+    private final String name;
 
     AndroidHudPosition(float x,float y,String name)
     {

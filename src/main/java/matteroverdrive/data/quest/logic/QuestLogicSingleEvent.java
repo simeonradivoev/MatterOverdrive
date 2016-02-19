@@ -1,6 +1,9 @@
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonObject;
+import matteroverdrive.api.exceptions.MOQuestParseException;
+import matteroverdrive.util.MOJsonHelper;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,9 +18,28 @@ public class QuestLogicSingleEvent extends AbstractQuestLogic
 {
     Class<? extends Event> event;
 
+    public QuestLogicSingleEvent(){}
+
     public QuestLogicSingleEvent(Class<? extends Event> event)
     {
         this.event = event;
+    }
+
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+        String eventName = MOJsonHelper.getString(jsonObject,"event");
+        try
+        {
+            event = (Class<? extends Event>) Class.forName(eventName);
+        } catch (ClassNotFoundException e)
+        {
+            throw new MOQuestParseException(String.format("Could not find event class from type: %s",eventName),e);
+        }
+        catch (ClassCastException e)
+        {
+            throw new MOQuestParseException(String.format("Class must be derived form Forge Event Super class"),e);
+        }
     }
 
     @Override
@@ -60,13 +82,13 @@ public class QuestLogicSingleEvent extends AbstractQuestLogic
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }

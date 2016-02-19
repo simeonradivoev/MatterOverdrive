@@ -19,6 +19,7 @@
 package matteroverdrive.util;
 
 import matteroverdrive.Reference;
+import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
@@ -27,16 +28,16 @@ import org.apache.logging.log4j.Logger;
  */
 public class MOLog
 {
-    private static cpw.mods.fml.relauncher.FMLRelaunchLog coreLog = cpw.mods.fml.relauncher.FMLRelaunchLog.log;
+    public static String LOG_PREFIX = String.format("[%s]: ",Reference.MOD_NAME);
 
     public static void log(Level level, String format, Object... data)
     {
-        coreLog.log(Reference.MOD_NAME, level, format, data);
+        FMLRelaunchLog.log(Reference.MOD_NAME, level, LOG_PREFIX + format, data);
     }
 
     public static void log(Level level, Throwable ex, String format, Object... data)
     {
-        coreLog.log(Reference.MOD_NAME, level, ex, format, data);
+        FMLRelaunchLog.log(Reference.MOD_NAME, level, ex, LOG_PREFIX + format, data);
     }
 
     public static void bigWarning(String format, Object... data)
@@ -84,10 +85,5 @@ public class MOLog
     public static void fatal(String format,Throwable t, Object... data)
     {
         log(Level.FATAL,t, format, data);
-    }
-
-    public static Logger getLogger()
-    {
-        return coreLog.getLogger();
     }
 }

@@ -1,7 +1,14 @@
 package matteroverdrive.items;
 
 import cofh.api.block.IDismantleable;
-import cpw.mods.fml.common.eventhandler.Event;
+import matteroverdrive.blocks.includes.IMultiBlock;
+import matteroverdrive.blocks.includes.MOBlock;
+import matteroverdrive.multiblock.IMultiBlockTile;
+import matteroverdrive.multiblock.IMultiBlockTileStructure;
+import matteroverdrive.tile.IMultiBlockTileEntity;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 /**
@@ -25,40 +32,27 @@ public class Wrench extends MOBaseItem
     }
 
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        Block block = world.getBlock(x,y,z);
+        IBlockState state = world.getBlockState(pos);
         boolean result = false;
 
-        if (block != null) {
-            PlayerInteractEvent e = new PlayerInteractEvent(player, PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK, x, y, z, side, world);
+        if (state != null) {
+            PlayerInteractEvent e = new PlayerInteractEvent(player, PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK, pos, side, world);
             if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Event.Result.DENY || e.useBlock == Event.Result.DENY || e.useItem == Event.Result.DENY) {
                 return false;
             }
-            if (player.isSneaking() && block instanceof IDismantleable && ((IDismantleable) block).canDismantle(player,world,x,y,z)) {
+            if (player.isSneaking() && state.getBlock() instanceof IDismantleable && ((IDismantleable) state.getBlock()).canDismantle(player,world,pos)) {
                 if (!world.isRemote) {
-                    ((IDismantleable) block).dismantleBlock(player, world, x, y, z, false);
+                    ((IDismantleable) state.getBlock()).dismantleBlock(player, world, pos, false);
                 }
                 result = true;
-            }else if (!player.isSneaking() && block.rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side)))
+            }if (state.getBlock() instanceof IMultiBlock && !world.isRemote)
             {
-                if (block == Blocks.chest)
-                {
-                    TileEntityChest te = (TileEntityChest)world.getTileEntity(x,y,z);
-                    if (te.adjacentChestXNeg != null || te.adjacentChestXPos != null || te.adjacentChestZNeg != null || te.adjacentChestZPos != null)
-                    {
-                        TileEntityChest masterChest = te.adjacentChestXNeg == null && te.adjacentChestZNeg == null ? te : te.adjacentChestXNeg == null ? te.adjacentChestZNeg : te.adjacentChestXNeg;
-                        if (masterChest != te)
-                        {
-                            int meta = world.getBlockMetadata(masterChest.xCoord,masterChest.yCoord,masterChest.zCoord);
-                            world.setBlockMetadataWithNotify(masterChest.xCoord,masterChest.yCoord,masterChest.zCoord,meta ^ 1,3);
-                        }else
-                        {
-                            block.rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side));
-                        }
-                    }
-                }
-
+                result = ((IMultiBlock) state.getBlock()).onWrenchHit(stack,player,world,pos,side,hitX,hitY,hitZ);
+            }
+            else if (!player.isSneaking() && state.getBlock().rotateBlock(world, pos, side))
+            {
                 result = true;
             }
         }

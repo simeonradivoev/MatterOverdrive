@@ -18,17 +18,15 @@
 
 package matteroverdrive.items.weapon;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOEnergyHelper;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 
 import java.util.List;
 
@@ -37,7 +35,6 @@ import java.util.List;
  */
 public class EnergyPack extends MOBaseItem implements IEnergyPack
 {
-    IIcon overlay;
 
     public EnergyPack(String name)
     {
@@ -52,19 +49,19 @@ public class EnergyPack extends MOBaseItem implements IEnergyPack
         infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(null,getEnergyAmount(itemstack)));
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
         this.itemIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "container_2");
         overlay = iconRegister.registerIcon(Reference.MOD_ID + ":" + "container_2_overlay");
-    }
+    }*/
 
     @Override
     public int getEnergyAmount(ItemStack pack) {
         return 32000;
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public boolean requiresMultipleRenderPasses()
     {
@@ -88,7 +85,7 @@ public class EnergyPack extends MOBaseItem implements IEnergyPack
         {
             return itemIcon;
         }
-    }
+    }*/
 
     @Override
     @SideOnly(Side.CLIENT)

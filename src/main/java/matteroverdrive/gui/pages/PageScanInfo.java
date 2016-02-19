@@ -20,13 +20,14 @@ package matteroverdrive.gui.pages;
 
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -104,8 +105,8 @@ public class PageScanInfo extends ElementBaseGroup
         if(item != null)
         {
             //GL11.glEnable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
-            GL11.glAlphaFunc(GL11.GL_GREATER,0.5f);
+            GlStateManager.enableAlpha();
+            GlStateManager.alphaFunc(GL11.GL_GREATER,0.5f);
             List infos = item.getTooltip(null, false);
 
             if (MatterHelper.CanScan(item))
@@ -119,14 +120,14 @@ public class PageScanInfo extends ElementBaseGroup
         else
         {
             String Matter = "Matter: " + String.valueOf(MatterHelper.getMatterAmountFromItem(item)) + MatterHelper.MATTER_UNIT;
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("No Item Selected!",80,90,new Color(255,150,50).getColor());
+            Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow("No Item Selected!",80,90,new Color(255,150,50).getColor());
         }
     }
 
     @Override
-    public void update(int mouseX, int mouseY)
+    public void update(int mouseX, int mouseY,float partialTicks)
     {
-        super.update(mouseX, mouseY);
+        super.update(mouseX, mouseY,partialTicks);
 
         if(searchField != null)
         {

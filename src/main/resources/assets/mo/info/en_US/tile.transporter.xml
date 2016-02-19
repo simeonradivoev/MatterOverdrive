@@ -32,9 +32,9 @@
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title">Upgrades</title>
-        <text class="matter-text text-block">By default the $itemName has quite a small range. [item name=upgrade damage=4 guide=upgrades page=4] can be used to boots the range of the $itemName. Each range upgrades stacks up and can add up to quite a large radius.</text>
+        <text class="matter-text text-block">By default the $itemName has quite a small range. [item name=upgrade meta=4 guide=upgrades page=4] can be used to boots the range of the $itemName. Each range upgrades stacks up and can add up to quite a large radius.</text>
         <image width="64" height="64" src="guide/transporter_range_upgrades.png" style="float:left;margin-right:8px;margin-bottom:8px"></image>
         <text class="matter-text text-block" style="width:180px">It must be noted that they also increase the power usage of the $itemName.</text>
-        <text class="matter-text text-block">You can also use the [item name=upgrade damage=1 guide=upgrades page=1] and [item name=upgrade damage=2 guide=upgrades page=2] as well as the [item name=upgrade guide=upgrades page=5 damage=5].</text>
+        <text class="matter-text text-block">You can also use the [item name=upgrade meta=1 guide=upgrades page=1] and [item name=upgrade meta=2 guide=upgrades page=2] as well as the [item name=upgrade guide=upgrades page=5 meta=5].</text>
     </page>
 </entry>

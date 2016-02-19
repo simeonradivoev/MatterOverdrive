@@ -18,12 +18,15 @@
 
 package matteroverdrive.tile.pipes;
 
-import cpw.mods.fml.relauncher.Side;
-import matteroverdrive.api.network.IMatterNetworkCable;
-import matteroverdrive.api.network.IMatterNetworkConnection;
-import matteroverdrive.data.BlockPos;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.transport.IGridNode;
+import matteroverdrive.data.transport.MatterNetwork;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraftforge.fml.relauncher.Side;
+import matteroverdrive.api.matter_network.IMatterNetworkConnection;
+import net.minecraft.util.BlockPos;
 import matteroverdrive.machines.MachineNBTCategory;
-import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.util.MatterNetworkHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,47 +34,99 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.EnumSet;
 
 /**
  * Created by Simeon on 3/15/2015.
  */
-public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetworkCable, IMatterNetworkConnection {
+public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetworkConnection {
 
-    @Override
-    public boolean canConnectTo(TileEntity entity, ForgeDirection direction)
+    private MatterNetwork matterNetwork;
+
+    public TileEntityNetworkPipe()
     {
-        if (entity instanceof IMatterNetworkConnection)
-        {
-            if (entity instanceof TileEntityNetworkPipe)
-            {
-                TileEntityNetworkPipe networkPipe = (TileEntityNetworkPipe)entity;
-                int pipeConnections = networkPipe.getConnectionsMask();
-                if (MOMathHelper.getBoolean(pipeConnections,direction.ordinal())) {
-                    return true;
-                }
-                else
-                {
-                    int pipeConnectionsCount = 0;
-                    for (int i = 0; i < 6; i++) {
-                        pipeConnectionsCount += ((pipeConnections >> i) & 1);
-                    }
-                    return pipeConnectionsCount < 2;
-                }
-            }
-            else
-            {
-                return ((IMatterNetworkConnection) entity).canConnectFromSide(direction);
-            }
-        }
-        return false;
+
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z) {
+    public  void update()
+    {
+        if (!worldObj.isRemote)
+        {
+            manageNetwork();
+        }
+    }
 
+    public void manageNetwork()
+    {
+        if (matterNetwork == null)
+        {
+            if(!tryConnectToNeighborNetworks(worldObj))
+            {
+                MatterNetwork network = MatterOverdrive.matterNetworkHandler.getNetwork(this);
+                network.addNode(this);
+            }
+        }
+    }
+
+    public boolean tryConnectToNeighborNetworks(World world)
+    {
+        boolean hasConnected = false;
+        for (EnumFacing side : EnumFacing.VALUES)
+        {
+            BlockPos neighborPos = pos.offset(side);
+            if (world.isBlockLoaded(neighborPos))
+            {
+                TileEntity neighborEntity = world.getTileEntity(neighborPos);
+                if (neighborEntity instanceof IMatterNetworkConnection && isConnectableSide(side))
+                {
+                    if (((IMatterNetworkConnection) neighborEntity).getNetwork() != null && ((IMatterNetworkConnection) neighborEntity).getNetwork() != this.matterNetwork)
+                    {
+                        ((IMatterNetworkConnection) neighborEntity).getNetwork().addNode(this);
+                        hasConnected = true;
+                    }
+                }
+            }
+        }
+        return hasConnected;
+    }
+
+    @Override
+    public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
+    {
+        return isConnectableSide(direction);
+    }
+
+    @Override
+    public boolean canConnectToPipe(TileEntity entity, EnumFacing direction)
+    {
+        return isConnectableSide(direction);
+    }
+
+    @Override
+    public void onAdded(World world, BlockPos pos, IBlockState state)
+    {
+        if (!world.isRemote)
+        {
+            int connectionCount = 0;
+            for (EnumFacing enumFacing : EnumFacing.VALUES)
+            {
+                BlockPos neighborPos = pos.offset(enumFacing);
+                TileEntity tileEntityNeignbor = worldObj.getTileEntity(neighborPos);
+                IBlockState neighborState = world.getBlockState(neighborPos);
+                if (tileEntityNeignbor instanceof IMatterNetworkConnection)
+                {
+                    if (connectionCount < 2 && ((IMatterNetworkConnection) tileEntityNeignbor).establishConnectionFromSide(neighborState, enumFacing.getOpposite()))
+                    {
+                        this.setConnection(enumFacing, true);
+                        world.markBlockForUpdate(pos);
+                        connectionCount++;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -80,10 +135,48 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     }
 
     @Override
-    public void onDestroyed()
+    public void onDestroyed(World worldIn, BlockPos pos, IBlockState state)
+    {
+        if (!worldIn.isRemote)
+        {
+            if (matterNetwork != null)
+            {
+                matterNetwork.onNodeDestroy(state, this);
+            }
+            for (EnumFacing enumFacing : EnumFacing.VALUES)
+            {
+                if (isConnectableSide(enumFacing))
+                {
+                    TileEntity tileEntityConnection = worldIn.getTileEntity(pos.offset(enumFacing));
+                    if (tileEntityConnection instanceof IMatterNetworkConnection)
+                    {
+                        ((IMatterNetworkConnection) tileEntityConnection).breakConnection(state, enumFacing.getOpposite());
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onChunkUnload()
+    {
+        if (!worldObj.isRemote)
+        {
+            IBlockState blockState = worldObj.getBlockState(getPos());
+            if (matterNetwork != null)
+            {
+                matterNetwork.onNodeDestroy(blockState, this);
+                //MOLog.info("Chunk Unload");
+            }
+        }
+    }
+
+    @Override
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
 
     }
+
 
     @Override
     public void writeToDropItem(ItemStack itemStack) {
@@ -95,66 +188,92 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
 
     }
 
-    @Override
+/*    @Override
     public boolean isValid() {
         return true;
     }
 
     @Override
-    public void broadcast(MatterNetworkPacket packet,ForgeDirection direction)
+    public void broadcast(MatterNetworkPacket packet,EnumFacing direction)
     {
         if (isValid())
         {
             for (int i = 0; i < 6; i++)
             {
                 if (direction.getOpposite().ordinal() != i)
-                    MatterNetworkHelper.broadcastPacketInDirection(worldObj, packet, this, ForgeDirection.getOrientation(i));
+                    MatterNetworkHelper.broadcastPacketInDirection(worldObj, packet, this, EnumFacing.VALUES[i]);
             }
         }
-    }
+    }*/
 
     @Override
-    public BlockPos getPosition() {
-        return new BlockPos(this);
-    }
-
-    @Override
-    public boolean canConnectFromSide(ForgeDirection side)
+    public boolean canConnectFromSide(IBlockState blockState, EnumFacing side)
     {
         return MOMathHelper.getBoolean(getConnectionsMask(),side.ordinal());
     }
 
     @Override
-    public void updateSides(boolean notify)
+    public boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side)
     {
-        int connections = 0;
-        int connectionCount = 0;
-
-        for (int i = 0; i < 6; i++) {
-            TileEntity t = this.worldObj.getTileEntity(ForgeDirection.values()[i].offsetX + this.xCoord, ForgeDirection.values()[i].offsetY + this.yCoord, ForgeDirection.values()[i].offsetZ + this.zCoord);
-
-            if (connectionCount < 2 && canConnectTo(t, ForgeDirection.getOrientation(ForgeDirection.OPPOSITES[i])))
+        int connCount = getConnectionsCount();
+        if (connCount < 2)
+        {
+            if (!MOMathHelper.getBoolean(getConnectionsMask(),side.ordinal()))
             {
-                connections |= ForgeDirection.values()[i].flag;
-                connectionCount++;
+                setConnection(side,true);
+                worldObj.markBlockForUpdate(getPos());
+                return true;
             }
         }
-
-        this.setConnections(connections, notify);
+        return false;
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk) {
+    public void breakConnection(IBlockState blockState, EnumFacing side)
+    {
+        setConnection(side,false);
+        worldObj.markBlockForUpdate(getPos());
+    }
+
+    @Override
+    public void updateSides(boolean notify)
+    {
 
     }
 
     @Override
-    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories) {
+    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
+    {
+        if (categories.contains(MachineNBTCategory.DATA) && toDisk)
+        {
+            nbt.setByte("connections",(byte) getConnectionsMask());
+        }
+    }
 
+    @Override
+    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+    {
+        if (categories.contains(MachineNBTCategory.DATA))
+        {
+            setConnections(nbt.getByte("connections"),false);
+            needsUpdate = false;
+        }
     }
 
     @Override
     protected void onAwake(Side side) {
 
+    }
+
+    @Override
+    public MatterNetwork getNetwork()
+    {
+        return matterNetwork;
+    }
+
+    @Override
+    public void setNetwork(MatterNetwork network)
+    {
+        matterNetwork = network;
     }
 }

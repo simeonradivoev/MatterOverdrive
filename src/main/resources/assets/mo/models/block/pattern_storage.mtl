@@ -1,0 +1,5 @@
+newmtl vent
+map_Kd mo:blocks/vent
+
+newmtl pattern_storage
+map_Kd mo:blocks/pattern_storage

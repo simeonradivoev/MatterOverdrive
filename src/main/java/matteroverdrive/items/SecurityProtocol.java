@@ -18,17 +18,17 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.MOStringHelper;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -40,14 +40,16 @@ import java.util.UUID;
  */
 public class SecurityProtocol extends MOBaseItem {
 
-    IIcon[] icons;
-    String[] types = new String[]{"empty","claim","access","remove"};
+    public static final String[] types = new String[]{"empty","claim","access","remove"};
 
     public SecurityProtocol(String name)
     {
         super(name);
         setMaxStackSize(16);
     }
+
+    @Override
+    public int getMetadata(int damage){return damage;}
 
     @Override
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
@@ -57,7 +59,7 @@ public class SecurityProtocol extends MOBaseItem {
         if (itemstack.hasTagCompound())
         {
             try {
-                EntityPlayer entityPlayer = player.worldObj.func_152378_a(UUID.fromString(itemstack.getTagCompound().getString("Owner")));
+                EntityPlayer entityPlayer = player.worldObj.getPlayerEntityByUUID(UUID.fromString(itemstack.getTagCompound().getString("Owner")));
                 if (entityPlayer != null) {
                     String owner = entityPlayer.getGameProfile().getName();
                     infos.add(EnumChatFormatting.YELLOW + "Owner: " + owner);
@@ -69,7 +71,7 @@ public class SecurityProtocol extends MOBaseItem {
         }
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister p_94581_1_)
     {
@@ -86,7 +88,7 @@ public class SecurityProtocol extends MOBaseItem {
     public IIcon getIconFromDamage(int damage)
     {
         return icons[damage];
-    }
+    }*/
 
     @Override
     public String getUnlocalizedName(ItemStack stack)
@@ -121,10 +123,10 @@ public class SecurityProtocol extends MOBaseItem {
     }
 
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(x, y, z);
+            TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof MOTileEntityMachine) {
                 if (stack.getItemDamage() == 1) {
                     if (((MOTileEntityMachine) tileEntity).claim(stack)) {

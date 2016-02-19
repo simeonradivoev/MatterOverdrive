@@ -24,6 +24,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ import java.util.List;
  */
 public class Inventory implements IInventory
 {
-    List<Slot> slots;
+    final List<Slot> slots;
     String name;
     IUsableCondition usableCondition;
 
@@ -82,7 +84,7 @@ public class Inventory implements IInventory
         {
             NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
             byte b0 = nbttagcompound1.getByte("Slot");
-            if (nbttagcompound1.hasKey("id", Constants.NBT.TAG_SHORT))
+            if (nbttagcompound1.hasKey("id"))
             {
                 setInventorySlotContents(b0, ItemStack.loadItemStackFromNBT(nbttagcompound1));
             }else
@@ -179,16 +181,11 @@ public class Inventory implements IInventory
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot)
+    public ItemStack removeStackFromSlot(int index)
     {
-        if(this.slots.get(slot) != null)
-        {
-            ItemStack itemstack = getSlot(slot).getItem();
-            this.slots.set(slot, null);
-            return itemstack;
-        }
-
-        return null;
+        ItemStack itemStack = getSlot(index).getItem();
+        getSlot(index).setItem(null);
+        return itemStack;
     }
 
     @Override
@@ -236,15 +233,23 @@ public class Inventory implements IInventory
     }
 
     @Override
-    public String getInventoryName() {
+    public String getName()
+    {
         return this.name;
     }
 
     @Override
-    public boolean hasCustomInventoryName()
+    public boolean hasCustomName()
     {
         return name != null && !name.isEmpty();
     }
+
+    @Override
+    public IChatComponent getDisplayName()
+    {
+        return new ChatComponentText(this.name);
+    }
+
 
     @Override
     public int getInventoryStackLimit()
@@ -266,13 +271,13 @@ public class Inventory implements IInventory
     }
 
     @Override
-    public void openInventory()
+    public void openInventory(EntityPlayer entityPlayer)
     {
 
     }
 
     @Override
-    public void closeInventory()
+    public void closeInventory(EntityPlayer entityPlayer)
     {
 
     }
@@ -296,6 +301,33 @@ public class Inventory implements IInventory
             return slot.isValidForSlot(item);
         }
         return true;
+    }
+
+    @Override
+    public int getField(int id)
+    {
+        return 0;
+    }
+
+    @Override
+    public void setField(int id, int value)
+    {
+
+    }
+
+    @Override
+    public int getFieldCount()
+    {
+        return 0;
+    }
+
+    @Override
+    public void clear()
+    {
+        for (Slot slot : slots)
+        {
+            slot.setItem(null);
+        }
     }
 
     public Slot getSlot(int slotID) {

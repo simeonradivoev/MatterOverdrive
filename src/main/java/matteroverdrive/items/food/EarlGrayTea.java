@@ -1,6 +1,6 @@
 package matteroverdrive.items.food;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +19,6 @@ public class EarlGrayTea extends ItemFood
     {
         super(4, 0.8F, false);
         setUnlocalizedName(name);
-        setTextureName(Reference.MOD_ID + ":" + name);
         setAlwaysEdible();
     }
 
@@ -30,9 +29,9 @@ public class EarlGrayTea extends ItemFood
     }
 
     @Override
-    public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player)
+    public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityPlayer player)
     {
-        super.onEaten(itemStack,world,player);
+        super.onItemUseFinish(itemStack,world,player);
 
         if (!player.capabilities.isCreativeMode)
         {
@@ -55,6 +54,6 @@ public class EarlGrayTea extends ItemFood
     @Override
     public EnumAction getItemUseAction(ItemStack itemStack)
     {
-        return EnumAction.drink;
+        return EnumAction.DRINK;
     }
 }

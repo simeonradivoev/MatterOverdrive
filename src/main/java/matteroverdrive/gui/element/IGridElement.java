@@ -5,11 +5,11 @@ package matteroverdrive.gui.element;
  */
 public interface IGridElement
 {
-    public int getHeight();
+    int getHeight();
 
-    public int getWidth();
+    int getWidth();
 
-    public Object getValue();
+    Object getValue();
 
-    public void draw(ElementGrid listBox, int x, int y, int backColor, int textColor);
+    void draw(ElementGrid listBox, int x, int y, int backColor, int textColor);
 }

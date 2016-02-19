@@ -18,17 +18,21 @@
 
 package matteroverdrive.handler;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.api.events.MOEventDialogConstruct;
+import matteroverdrive.api.events.MOEventDialogInteract;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.MOEventScan;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.data.quest.PlayerQuestData;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.includes.MOBaseItem;
@@ -51,8 +55,8 @@ import java.util.List;
  */
 public class PlayerEventHandler
 {
-    private VersionCheckerHandler versionCheckerHandler;
-    public List<EntityPlayerMP> players;
+    private final VersionCheckerHandler versionCheckerHandler;
+    public final List<EntityPlayerMP> players;
     public PlayerEventHandler(ConfigurationHandler configurationHandler)
     {
         players = new ArrayList<>();
@@ -68,7 +72,7 @@ public class PlayerEventHandler
             if (MatterOverdrive.matterRegistry.hasComplitedRegistration) {
                 if (!MinecraftServer.getServer().isSinglePlayer()) {
 
-                    MatterOverdrive.packetPipeline.sendTo(new PacketUpdateMatterRegistry(MatterOverdrive.matterRegistry.getEntries()), (EntityPlayerMP) event.player);
+                    MatterOverdrive.packetPipeline.sendTo(new PacketUpdateMatterRegistry(MatterOverdrive.matterRegistry), (EntityPlayerMP) event.player);
 
                 }
             } else {
@@ -166,18 +170,7 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent deathEvent)
     {
-        if (deathEvent.entityLiving instanceof EntityPlayer)
-        {
-            if (!((EntityPlayer) deathEvent.entityLiving).worldObj.isRemote)
-            {
-                MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_ENTITIES, GoogleAnalyticsCommon.EVENT_ACTION_PLAYER_DEATH, deathEvent.source.getDamageType(), ((EntityPlayer) deathEvent.entityLiving).ticksExisted / 20, (EntityPlayer) deathEvent.entityLiving);
-                AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer) deathEvent.entityLiving);
-                if (androidPlayer != null && androidPlayer.isAndroid())
-                {
-                    androidPlayer.onPlayerDeath(deathEvent);
-                }
-            }
-        }
+
     }
 
     public void onServerTick(TickEvent.ServerTickEvent event)
@@ -186,7 +179,7 @@ public class PlayerEventHandler
         {
             for (int i = 0; i < MatterOverdrive.playerEventHandler.players.size();i++)
             {
-                MatterOverdrive.packetPipeline.sendTo(new PacketUpdateMatterRegistry(MatterOverdrive.matterRegistry.getEntries()),MatterOverdrive.playerEventHandler.players.get(i));
+                MatterOverdrive.packetPipeline.sendTo(new PacketUpdateMatterRegistry(MatterOverdrive.matterRegistry),MatterOverdrive.playerEventHandler.players.get(i));
             }
 
             MatterOverdrive.playerEventHandler.players.clear();
@@ -265,6 +258,58 @@ public class PlayerEventHandler
             event.materialCost = 1;
             event.cost = 3;
             MatterOverdriveItems.portableDecomposer.addStackToList(event.output,event.right);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerInteract(PlayerInteractEvent event)
+    {
+        if (!event.world.isRemote && event.entityPlayer != null)
+        {
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            if (extendedProperties != null)
+            {
+                extendedProperties.onEvent(event);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerOpenContainer(PlayerOpenContainerEvent event)
+    {
+        if (event.entityPlayer != null && !event.entityPlayer.worldObj.isRemote)
+        {
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            if (extendedProperties != null)
+            {
+                extendedProperties.onEvent(event);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onDialogMessageInteract(MOEventDialogInteract event)
+    {
+        if (event.entityPlayer != null && event.side.equals(Side.SERVER))
+        {
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            if (extendedProperties != null)
+            {
+                extendedProperties.onEvent(event);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onDialogMessageConstruct(MOEventDialogConstruct event)
+    {
+        if (event.entityPlayer != null)
+        {
+            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            if (extendedProperties != null)
+            {
+                extendedProperties.onEvent(event);
+            }
         }
     }
 }

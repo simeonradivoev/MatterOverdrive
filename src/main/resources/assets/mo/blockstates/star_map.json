@@ -1,0 +1,21 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mo:android_station",
+    "textures": {
+      "bottom": "mo:blocks/weapon_station_bottom",
+      "top": "mo:blocks/weapon_station_top",
+      "side": "mo:blocks/starmap_side",
+      "particle": "mo:blocks/starmap_side"
+    }
+  },
+  "variants": {
+    "normal": {
+      "model": "mo:android_station"
+    },
+    "inventory": {
+      "model": "mo:android_station",
+      "transform": "forge:default-block"
+    }
+  }
+}

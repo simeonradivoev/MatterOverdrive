@@ -18,16 +18,17 @@
 
 package matteroverdrive.guide;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
+import matteroverdrive.util.MOLog;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Level;
 import org.w3c.dom.Element;
 
@@ -175,7 +176,7 @@ public abstract class GuideElementAbstract implements IGuideElement
 
     protected FontRenderer getFontRenderer()
     {
-        return Minecraft.getMinecraft().fontRenderer;
+        return Minecraft.getMinecraft().fontRendererObj;
     }
 
     public Map<String,String> decodeStyle(String styleRaw)
@@ -266,7 +267,7 @@ public abstract class GuideElementAbstract implements IGuideElement
             }
             catch (NumberFormatException e)
             {
-                MatterOverdrive.log.log(Level.ERROR,e,"Could not parse Int %s in %s",number.substring(0,number.length()-2),this);
+                MOLog.log(Level.ERROR,e,"Could not parse Int %s in %s",number.substring(0,number.length()-2),this);
             }
 
         }else if (number.endsWith("%"))
@@ -276,7 +277,7 @@ public abstract class GuideElementAbstract implements IGuideElement
             }
             catch (NumberFormatException e)
             {
-                MatterOverdrive.log.log(Level.ERROR,e,"Could not parse Int %s in %s",number.substring(0,number.length()-1),this);
+                MOLog.log(Level.ERROR,e,"Could not parse Int %s in %s",number.substring(0,number.length()-1),this);
             }
         }
         return 0;
@@ -288,11 +289,11 @@ public abstract class GuideElementAbstract implements IGuideElement
         if (element.hasAttribute("class"))
         {
             String[] classes = element.getAttribute("class").split(" ");
-            for (int i = 0;i < classes.length;i++)
+            for (String aClass : classes)
             {
-                if (styleSheetMap.containsKey("."+classes[i]))
+                if (styleSheetMap.containsKey("." + aClass))
                 {
-                    styleMap.putAll(decodeStyle(styleSheetMap.get("."+classes[i])));
+                    styleMap.putAll(decodeStyle(styleSheetMap.get("." + aClass)));
                 }
             }
         }

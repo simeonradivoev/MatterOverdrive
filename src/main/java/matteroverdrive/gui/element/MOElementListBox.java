@@ -23,6 +23,7 @@ import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 
 import java.util.Collection;
@@ -46,7 +47,7 @@ public class MOElementListBox extends MOElementBase {
 	private final int _marginRight = 2;
 	private final int _marginBottom = 2;
 
-	private final List<IMOListBoxElement> _elements = new LinkedList<IMOListBoxElement>();
+	private final List<IMOListBoxElement> _elements = new LinkedList<>();
 
 	private int _firstIndexDisplayed;
 	protected int _selectedIndex;
@@ -160,13 +161,13 @@ public class MOElementListBox extends MOElementBase {
 		int heightDrawn = 0;
 		int nextElement = _firstIndexDisplayed;
 
-		glDisable(GL_LIGHTING);
-		glPushMatrix();
+		GlStateManager.disableLighting();
+		GlStateManager.pushMatrix();
 
 		RenderUtils.beginStencil();
 		drawStencil(getContentLeft(), getContentTop(), getContentRight(), getContentBottom(), 1);
 
-		glTranslated(-scrollHoriz, 0, 0);
+		GlStateManager.translate(-scrollHoriz, 0, 0);
 
 		int e = getElementCount();
 		while (nextElement < e && heightDrawn <= getContentHeight())
@@ -185,7 +186,7 @@ public class MOElementListBox extends MOElementBase {
 
 		RenderUtils.endStencil();
 
-		glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override
@@ -194,13 +195,13 @@ public class MOElementListBox extends MOElementBase {
 		int heightDrawn = 0;
 		int nextElement = _firstIndexDisplayed;
 
-        glDisable(GL_LIGHTING);
-        glPushMatrix();
+        GlStateManager.disableLighting();
+        GlStateManager.pushMatrix();
 
 		RenderUtils.beginStencil();
 		drawStencil(getContentLeft(), getContentTop(), getContentRight(), getContentBottom(), 1);
 
-		glTranslated(-scrollHoriz, 0, 0);
+		GlStateManager.translate(-scrollHoriz, 0, 0);
 
 		int e = getElementCount();
 		while (nextElement < e && heightDrawn <= getContentHeight())
@@ -226,7 +227,7 @@ public class MOElementListBox extends MOElementBase {
 
 		RenderUtils.endStencil();
 
-		glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

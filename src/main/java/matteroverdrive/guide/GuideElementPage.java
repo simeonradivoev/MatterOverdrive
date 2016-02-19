@@ -19,6 +19,8 @@
 package matteroverdrive.guide;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.util.MOLog;
+import net.minecraft.client.renderer.GlStateManager;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Element;
@@ -62,7 +64,7 @@ public class GuideElementPage extends GuideElementAbstract
                         elements.add(e);
                     }
                 } catch (Exception e) {
-                    MatterOverdrive.log.log(Level.ERROR, e, "Could not create Guide Element of class %s", guideElementClass);
+                    MOLog.log(Level.ERROR, e, "Could not create Guide Element of class %s", guideElementClass);
                 }
             }
         }
@@ -76,8 +78,8 @@ public class GuideElementPage extends GuideElementAbstract
     @Override
     public void drawElement(int width,int mouseX,int mouseY)
     {
-        GL11.glPushMatrix();
-        GL11.glTranslated(marginLeft, marginTop, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(marginLeft, marginTop, 0);
         int x = 0;
         int y = 0;
         int floatRightX = width;
@@ -86,12 +88,12 @@ public class GuideElementPage extends GuideElementAbstract
 
         for (IGuideElement element : elements)
         {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             if (element.getFloating() == 2)
             {
-                GL11.glTranslated(floatRightX - element.getWidth() - marginLeft, 0, 0);
+                GlStateManager.translate(floatRightX - element.getWidth() - marginLeft, 0, 0);
             }
-            GL11.glTranslated(x, y, 0);
+            GlStateManager.translate(x, y, 0);
             element.drawElement(width - marginLeft - marginRight,mouseX - x - marginLeft,mouseY - y - marginTop);
             if (element.getFloating() == 1)
             {
@@ -128,8 +130,8 @@ public class GuideElementPage extends GuideElementAbstract
                 x = 0;
                 floatRightX = width;
             }
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 }

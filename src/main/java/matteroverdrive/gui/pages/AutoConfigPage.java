@@ -31,13 +31,13 @@ import matteroverdrive.util.MOStringHelper;
  */
 public class AutoConfigPage extends ElementBaseGroup
 {
-    protected ComponentConfigs componentConfigs;
-    protected MOGuiMachine machineGui;
+    private final ComponentConfigs componentConfigs;
+    protected final MOGuiMachine machineGui;
 
-    public AutoConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height,ComponentConfigs configurable)
+    public AutoConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height)
     {
         super(gui, posX, posY, width, height);
-        this.componentConfigs = configurable;
+        this.componentConfigs = gui.getMachine().getConfigs();
         this.machineGui = gui;
     }
 
@@ -67,7 +67,7 @@ public class AutoConfigPage extends ElementBaseGroup
                     yPos += elementStates.getHeight() + 4;
                 }else
                 {
-                    ElementIntegerField elementIntegerField = new ElementIntegerField((MOGuiMachine)gui,this,0,yPos,20,((ConfigPropertyInteger) configProperty).getMin(),((ConfigPropertyInteger) configProperty).getMax());
+                    ElementIntegerField elementIntegerField = new ElementIntegerField(gui,this,0,yPos,20,((ConfigPropertyInteger) configProperty).getMin(),((ConfigPropertyInteger) configProperty).getMax());
                     elementIntegerField.setNumber((Integer) configProperty.getValue());
                     elementIntegerField.setName(configProperty.getKey());
                     elementIntegerField.setLabel(MOStringHelper.translateToLocal(configProperty.getUnlocalizedName()));
@@ -78,7 +78,7 @@ public class AutoConfigPage extends ElementBaseGroup
                 }
             }else if (configProperty instanceof ConfigPropertyString)
             {
-                MOElementTextField textField = new MOElementTextField((MOGuiBase) gui,this,8,yPos + 2,sizeX,20);
+                MOElementTextField textField = new MOElementTextField(gui,this,8,yPos + 2,sizeX,20);
                 textField.setMaxLength(((ConfigPropertyString) configProperty).getMaxLength());
                 textField.setName(configProperty.getKey());
                 textField.setText(configProperty.getValue().toString());

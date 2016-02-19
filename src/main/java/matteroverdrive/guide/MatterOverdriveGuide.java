@@ -18,8 +18,8 @@
 
 package matteroverdrive.guide;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -37,9 +37,9 @@ public class MatterOverdriveGuide
 {
     private static int idCounter = 0;
 
-    private static Map<Integer,MOGuideEntry> entries = new HashMap<>();
-    private static Map<String,GuideCategory> categories = new LinkedHashMap<>();
-    private static Map<String,Class<? extends IGuideElement>> guideElementHandlersMap = new HashMap<>();
+    private static final Map<Integer,MOGuideEntry> entries = new HashMap<>();
+    private static final Map<String,GuideCategory> categories = new LinkedHashMap<>();
+    private static final Map<String,Class<? extends IGuideElement>> guideElementHandlersMap = new HashMap<>();
 
     public static void registerGuideElementHandler(String tag, Class<? extends IGuideElement> guideElementClass)
     {

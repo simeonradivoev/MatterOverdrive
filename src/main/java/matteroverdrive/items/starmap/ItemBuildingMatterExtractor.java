@@ -22,7 +22,12 @@ import matteroverdrive.api.starmap.BuildingType;
 import matteroverdrive.api.starmap.IPlanetStatChange;
 import matteroverdrive.api.starmap.PlanetStatType;
 import matteroverdrive.starmap.data.Planet;
+import matteroverdrive.util.MOStringHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -37,6 +42,15 @@ public class ItemBuildingMatterExtractor extends ItemBuildingAbstract implements
     public ItemBuildingMatterExtractor(String name)
     {
         super(name);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+    {
+        super.addDetails(itemstack,player,infos);
+        infos.add(EnumChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.MATTER_PRODUCTION) + ": +" + MATTER_PRODUCTION);
+        infos.add(EnumChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.ENERGY_PRODUCTION) + ": -" + ENERGY_DRAIN);
     }
 
     @Override

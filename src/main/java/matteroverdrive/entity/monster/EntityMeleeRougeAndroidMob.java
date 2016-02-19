@@ -27,6 +27,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
 /**
@@ -46,12 +47,6 @@ public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 0, false, true, new AndroidTargetSelector(this)));
-    }
-
-    @Override
-    protected boolean isAIEnabled()
-    {
-        return true;
     }
 
     @Override
@@ -76,12 +71,6 @@ public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
     }
 
     @Override
-    protected void dropRareDrop(int i)
-    {
-
-    }
-
-    @Override
     protected void dropFewItems(boolean hit, int looting)
     {
         if (recentlyHit > 0)
@@ -96,11 +85,11 @@ public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
     }
 
     @Override
-    public IEntityLivingData onSpawnWithEgg(IEntityLivingData entityLivingData)
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
     {
-        entityLivingData = super.onSpawnWithEgg(entityLivingData);
+        IEntityLivingData entityLivingData = super.onInitialSpawn(difficulty,livingdata);
         this.addRandomArmor();
-        this.enchantEquipment();
+        this.setEnchantmentBasedOnDifficulty(difficulty);
         return entityLivingData;
     }
 }

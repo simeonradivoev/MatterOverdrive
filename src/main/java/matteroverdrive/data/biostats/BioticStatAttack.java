@@ -21,7 +21,7 @@ package matteroverdrive.data.biostats;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import matteroverdrive.data.MOAttributeModifier;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -34,7 +34,7 @@ import java.util.UUID;
  */
 public class BioticStatAttack extends AbstractBioticStat
 {
-    public final UUID modifierID = UUID.fromString("caf3f2ba-75f5-4f2f-84b9-ddfab1fcef25");
+    private final UUID modifierID = UUID.fromString("caf3f2ba-75f5-4f2f-84b9-ddfab1fcef25");
 
     public BioticStatAttack(String name, int xp) {
         super(name, xp);
@@ -70,6 +70,12 @@ public class BioticStatAttack extends AbstractBioticStat
     }
 
     @Override
+    public boolean isEnabled(AndroidPlayer android, int level)
+    {
+        return super.isEnabled(android,level) && android.getEnergyStored() > 0;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public Multimap attributes(AndroidPlayer androidPlayer, int level) {
         Multimap multimap = HashMultimap.create();
@@ -94,7 +100,7 @@ public class BioticStatAttack extends AbstractBioticStat
         return String.format(super.getDetails(level), EnumChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(getAttackPower(level)) + EnumChatFormatting.GRAY);
     }
 
-    public float getAttackPower(int level)
+    private float getAttackPower(int level)
     {
         return (level + 1) * 0.05f;
     }

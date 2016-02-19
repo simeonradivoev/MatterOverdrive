@@ -1,0 +1,38 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mo:pylon.obj",
+    "custom":{
+      "flip-v": true
+    },
+    "textures": {
+
+    }
+  },
+  "variants": {
+    "normal": {
+      "model": "mo:pylon.obj"
+    },
+    "type":{
+      "normal": {
+        "model": "cube_all",
+        "textures": {
+          "all": "mo:blocks/construction_block"
+        }
+      },
+      "dummy": {
+        "model": "cube_all"
+      },
+      "main":{
+        "model": "mo:pylon.obj"
+      }
+    },
+    "inventory": {
+      "model": "cube_all",
+      "transform": "forge:default-block",
+      "textures":{
+        "all":"mo:blocks/construction_block"
+      }
+    }
+  }
+}

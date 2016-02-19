@@ -1,6 +1,9 @@
 package matteroverdrive.data.quest.logic;
 
-import net.minecraft.block.Block;
+import com.google.gson.JsonObject;
+import matteroverdrive.data.quest.QuestBlock;
+import matteroverdrive.data.quest.QuestItem;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -8,43 +11,52 @@ import net.minecraft.item.ItemStack;
  */
 public abstract class QuestLogicBlock extends AbstractQuestLogic
 {
-    protected Block block;
-    protected int blockMetadata;
-    protected ItemStack blockStack;
+    protected QuestBlock block;
+    protected QuestItem blockStack;
 
-    public QuestLogicBlock(Block block,int blockMetadata)
+    public QuestLogicBlock(){}
+
+    public QuestLogicBlock(QuestBlock block)
     {
         this.block = block;
-        this.blockMetadata = blockMetadata;
     }
 
-    public QuestLogicBlock(ItemStack blockStack)
+    public QuestLogicBlock(QuestItem blockStack)
     {
         this.blockStack = blockStack;
     }
 
-    protected boolean areBlockStackTheSame(ItemStack stack)
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
     {
-        if (blockStack.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(blockStack,stack))
+        if (jsonObject.has("block"))
         {
-            return true;
+            block = new QuestBlock(jsonObject.getAsJsonObject("block"));
         }
-        return false;
+        else
+        {
+            blockStack = new QuestItem(jsonObject.getAsJsonObject("item"));
+        }
     }
 
-    protected boolean areBlocksTheSame(Block block,int blockMetadata)
+    protected boolean areBlockStackTheSame(ItemStack stack)
     {
-        return this.block == block && (this.blockMetadata >= 0 ? this.blockMetadata == blockMetadata : true);
+        return blockStack.getItemStack().isItemEqual(stack) && ItemStack.areItemStackTagsEqual(blockStack.getItemStack(), stack);
+    }
+
+    protected boolean areBlocksTheSame(IBlockState blockState)
+    {
+        return this.block.isTheSame(blockState);
     }
 
     protected String replaceBlockNameInText(String text)
     {
         if (blockStack != null)
         {
-            text = text.replace("$block", blockStack.getDisplayName());
+            text = text.replace("$block", blockStack.getItemStack().getDisplayName());
         }else
         {
-            text = text.replace("$block", block.getLocalizedName());
+            text = text.replace("$block", block.getBlockState().getBlock().getLocalizedName());
         }
         return text;
     }

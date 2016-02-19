@@ -1,12 +1,13 @@
 package matteroverdrive.network.packet.client;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 4/22/2015.
@@ -19,7 +20,7 @@ public class PacketMatterUpdate extends TileEntityUpdatePacket
 
     public PacketMatterUpdate(MOTileEntityMachineMatter entityMachineEnergy)
     {
-        super(entityMachineEnergy.xCoord,entityMachineEnergy.yCoord,entityMachineEnergy.zCoord);
+        super(entityMachineEnergy.getPos());
         matter = entityMachineEnergy.getMatterStored();
     }
 
@@ -39,19 +40,17 @@ public class PacketMatterUpdate extends TileEntityUpdatePacket
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketMatterUpdate>
     {
-        public ClientHandler(){}
-
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketMatterUpdate message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketMatterUpdate message, MessageContext ctx)
         {
             if (player != null && player.worldObj != null) {
-                TileEntity tileEntity = player.worldObj.getTileEntity(message.x, message.y, message.z);
+                TileEntity tileEntity = player.worldObj.getTileEntity(message.pos);
 
                 if (tileEntity != null && tileEntity instanceof MOTileEntityMachineMatter) {
                     ((MOTileEntityMachineMatter) tileEntity).setMatterStored(message.matter);
                 }
             }
-            return null;
         }
     }
 }

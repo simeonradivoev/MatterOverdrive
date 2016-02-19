@@ -21,6 +21,7 @@ package matteroverdrive.gui.element;
 import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.gui.MOGuiBase;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -36,12 +37,12 @@ public class ElementStates extends MOElementButtonScaled
         super(gui,buttonHandler, posX, posY,name, 0, 0);
         this.name = name;
         this.states = states;
-        this.sizeY = Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 10;
-        for (int i = 0;i < states.length;i++)
+        this.sizeY = Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 10;
+        for (String state : states)
         {
-            if (this.sizeX < Minecraft.getMinecraft().fontRenderer.getStringWidth(states[i]))
+            if (this.sizeX < Minecraft.getMinecraft().fontRendererObj.getStringWidth(state))
             {
-                this.sizeX = Minecraft.getMinecraft().fontRenderer.getStringWidth(states[i]);
+                this.sizeX = Minecraft.getMinecraft().fontRendererObj.getStringWidth(state);
             }
         }
         this.sizeX += 16;
@@ -67,11 +68,10 @@ public class ElementStates extends MOElementButtonScaled
     public void drawForeground(int mouseX, int mouseY)
     {
         super.drawForeground(mouseX, mouseY);
-        GL11.glColor4d(1, 1, 1, 1);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glAlphaFunc(GL11.GL_GREATER,0.5f);
-        GL11.glCullFace(GL11.GL_BACK);
-        int width = getFontRenderer().getStringWidth(label);
+        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.enableAlpha();
+        GlStateManager.alphaFunc(GL11.GL_GREATER,0.5f);
+        GlStateManager.cullFace(GL11.GL_BACK);
         getFontRenderer().drawString(label,posX + sizeX + 4,posY - getFontRenderer().FONT_HEIGHT/2 + sizeY/2,getTextColor());
     }
 

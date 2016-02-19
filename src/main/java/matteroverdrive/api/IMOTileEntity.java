@@ -18,8 +18,11 @@
 
 package matteroverdrive.api;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -29,13 +32,13 @@ import net.minecraft.world.World;
  */
 public interface IMOTileEntity
 {
-    void onAdded(World world, int x, int y, int z);
+    void onAdded(World world, BlockPos pos, IBlockState state);
 
     void onPlaced(World world, EntityLivingBase entityLiving);
 
-    void onDestroyed();
+    void onDestroyed(World worldIn, BlockPos pos, IBlockState state);
 
-    void onNeighborBlockChange();
+    void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock);
 
     void writeToDropItem(ItemStack itemStack);
 

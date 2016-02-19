@@ -18,7 +18,7 @@
 
 package matteroverdrive.api.matter;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Used by matter receivers to receive matter.
@@ -44,5 +44,5 @@ public interface IMatterReceiver
 	 *                  Used to check if the specified amount of matter can be received.
 	 * @return the actual received amount of matter.
 	 */
-	int receiveMatter(ForgeDirection side,int amount, boolean simulated);
+	int receiveMatter(EnumFacing side, int amount, boolean simulated);
 }

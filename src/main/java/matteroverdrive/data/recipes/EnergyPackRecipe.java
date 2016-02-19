@@ -36,7 +36,7 @@ public class EnergyPackRecipe extends ShapelessRecipes
     public EnergyPackRecipe(ItemStack... recipeitems)
     {
         super(new ItemStack(MatterOverdriveItems.energyPack), Arrays.asList(recipeitems));
-        for (ItemStack stack : (List<ItemStack>)recipeItems)
+        for (ItemStack stack : recipeItems)
         {
             if (stack != null && stack.getItem() instanceof Battery)
             {

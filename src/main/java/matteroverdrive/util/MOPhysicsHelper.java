@@ -18,14 +18,12 @@
 
 package matteroverdrive.util;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -63,9 +61,8 @@ public class MOPhysicsHelper
             if (dir == null)
                 dir = viewer.getLook(ticks);
 
-            double d0 = distance;
-            objectMouseOver = MOPhysicsHelper.rayTraceForBlocks(fromPos,world,d0, ticks,offset,checkBlockCollision,onlySolid,dir);
-            double d1 = d0;
+            objectMouseOver = MOPhysicsHelper.rayTraceForBlocks(fromPos,world, distance, ticks,offset,checkBlockCollision,onlySolid,dir);
+            double d1 = distance;
             Vec3 vec3 = fromPos;
             if (offset != null)
                 vec3 = vec3.addVector(offset.xCoord, offset.yCoord, offset.zCoord);
@@ -75,20 +72,20 @@ public class MOPhysicsHelper
                 d1 = objectMouseOver.hitVec.distanceTo(vec3);
             }
 
-            Vec3 vec32 = vec3.addVector(dir.xCoord * d0, dir.yCoord * d0, dir.zCoord * d0);
+            Vec3 vec32 = vec3.addVector(dir.xCoord * distance, dir.yCoord * distance, dir.zCoord * distance);
             Vec3 vec33 = null;
             float f1 = 1.0F;
-            List list = world.getEntitiesWithinAABBExcludingEntity(viewer, viewer.boundingBox.addCoord(dir.xCoord * d0, dir.yCoord * d0, dir.zCoord * d0).expand((double) f1, (double) f1, (double) f1));
+            List list = world.getEntitiesWithinAABBExcludingEntity(viewer, viewer.getEntityBoundingBox().addCoord(dir.xCoord * distance, dir.yCoord * distance, dir.zCoord * distance).expand((double) f1, (double) f1, (double) f1));
             double d2 = d1;
 
-            for (int i = 0; i < list.size(); ++i)
+            for (Object aList : list)
             {
-                Entity entity = (Entity)list.get(i);
+                Entity entity = (Entity) aList;
 
                 if (entity.canBeCollidedWith())
                 {
                     float f2 = entity.getCollisionBorderSize();
-                    AxisAlignedBB axisalignedbb = entity.boundingBox.expand((double)f2, (double)f2, (double)f2);
+                    AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand((double) f2, (double) f2, (double) f2);
                     MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
 
                     if (axisalignedbb.isVecInside(vec3))
@@ -99,8 +96,7 @@ public class MOPhysicsHelper
                             vec33 = movingobjectposition == null ? vec3 : movingobjectposition.hitVec;
                             d2 = 0.0D;
                         }
-                    }
-                    else if (movingobjectposition != null)
+                    } else if (movingobjectposition != null)
                     {
                         double d3 = vec3.distanceTo(movingobjectposition.hitVec);
 
@@ -125,9 +121,6 @@ public class MOPhysicsHelper
                 else
                 {
                     objectMouseOver = new MovingObjectPosition(pointedEntity, vec33);
-                    objectMouseOver.blockX = (int)vec33.xCoord;
-                    objectMouseOver.blockY = (int)vec33.yCoord;
-                    objectMouseOver.blockZ = (int)vec33.zCoord;
                 }
 
             }
@@ -146,37 +139,36 @@ public class MOPhysicsHelper
     }
     public static MovingObjectPosition rayTraceForBlocks(Vec3 fromPosition,World world,double distance,float ticks,Vec3 offset,boolean collisionCheck,boolean onlySolid,Vec3 dir)
     {
-        Vec3 vec3 = Vec3.createVectorHelper(fromPosition.xCoord,fromPosition.yCoord,fromPosition.zCoord);
+        Vec3 vec3 = new Vec3(fromPosition.xCoord,fromPosition.yCoord,fromPosition.zCoord);
         if (offset != null)
         {
             vec3 = vec3.addVector(offset.xCoord, offset.yCoord, offset.zCoord);
         }
-        Vec3 vec31 = dir;
-        Vec3 vec32 = vec3.addVector(vec31.xCoord * distance, vec31.yCoord * distance, vec31.zCoord * distance);
-        return world.func_147447_a(vec3, vec32, collisionCheck, onlySolid, true);
+        Vec3 vec32 = vec3.addVector(dir.xCoord * distance, dir.yCoord * distance, dir.zCoord * distance);
+        return world.rayTraceBlocks(vec3, vec32, collisionCheck, onlySolid, true);
     }
 
     @SideOnly(Side.CLIENT)
     public static MovingObjectPosition mouseRaytraceForBlocks(int mouseX,int mouseY,int width,int height,EntityLivingBase viewer,World world,boolean collisionCheck,boolean onlySolid)
     {
         Vec3 dir = MOMathHelper.mouseToWorldRay(mouseX, mouseY, width, height);
-        Vec3 vec3 = viewer.getPosition(1);
+        Vec3 vec3 = viewer.getPositionEyes(1);
         Vec3 vec32 = vec3.addVector(dir.xCoord * 32, dir.yCoord * 32, dir.zCoord * 32);
-        return world.func_147447_a(vec3, vec32, false, false, true);
+        return world.rayTraceBlocks(vec3, vec32, false, false, true);
     }
 
     public static Vec3 getPosition(EntityLivingBase entity, float p_70666_1_)
     {
         if (p_70666_1_ == 1.0F)
         {
-            return Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
+            return new Vec3(entity.posX, entity.posY, entity.posZ);
         }
         else
         {
             double d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * (double)p_70666_1_;
             double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double)p_70666_1_;
             double d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double)p_70666_1_;
-            return Vec3.createVectorHelper(d0, d1, d2);
+            return new Vec3(d0, d1, d2);
         }
     }
 }

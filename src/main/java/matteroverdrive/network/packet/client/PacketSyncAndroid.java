@@ -18,16 +18,18 @@
 
 package matteroverdrive.network.packet.client;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.util.MOEnumHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 
@@ -107,8 +109,9 @@ public class PacketSyncAndroid extends PacketAbstract
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketSyncAndroid>
     {
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketSyncAndroid message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketSyncAndroid message, MessageContext ctx)
         {
             Entity entity = player.worldObj.getEntityByID(message.playerID);
 
@@ -133,7 +136,7 @@ public class PacketSyncAndroid extends PacketAbstract
                             break;
                         case SYNC_ACTIVE_ABILITY:
                             if (message.data.hasKey("Ability")) {
-                                IBionicStat stat = MatterOverdrive.statRegistry.getStat(message.data.getString("Ability"));
+                                IBioticStat stat = MatterOverdrive.statRegistry.getStat(message.data.getString("Ability"));
                                 ex.setActiveStat(stat);
                             } else {
                                 ex.setActiveStat(null);
@@ -147,7 +150,6 @@ public class PacketSyncAndroid extends PacketAbstract
                     }
                 }*/
             }
-            return null;
         }
     }
 }

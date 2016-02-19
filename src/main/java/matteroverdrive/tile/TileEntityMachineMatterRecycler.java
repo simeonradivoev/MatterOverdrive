@@ -18,7 +18,11 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.api.container.IMachineWatcher;
+import matteroverdrive.machines.events.MachineEvent;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IRecyclable;
 import matteroverdrive.data.Inventory;
@@ -29,7 +33,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.EnumSet;
 
@@ -65,9 +69,9 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         this.manageRecycle();
     }
 
@@ -81,14 +85,12 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     }
 
     @Override
-    protected void onAwake(Side side) {
-
-    }
-
-    @Override
-    protected void onActiveChange()
+    protected void onMachineEvent(MachineEvent event)
     {
-        forceSync();
+        if (event instanceof MachineEvent.ActiveChange)
+        {
+            forceSync();
+        }
     }
 
     @Override
@@ -109,7 +111,7 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
                 if(this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick())
                 {
                     this.recycleTime++;
-                    extractEnergy(ForgeDirection.DOWN, getEnergyDrainPerTick(), false);
+                    extractEnergy(EnumFacing.DOWN, getEnergyDrainPerTick(), false);
 
                     if (this.recycleTime >= getSpeed())
                     {
@@ -222,19 +224,19 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide(int side)
+    public int[] getSlotsForFace(EnumFacing side)
     {
         return new int[]{INPUT_SLOT_ID,OUTPUT_SLOT_ID};
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack item, int side)
+    public boolean canInsertItem(int slot, ItemStack item, EnumFacing side)
     {
         return slot != OUTPUT_SLOT_ID && super.canInsertItem(slot,item,side);
     }
 
     @Override
-    public boolean canExtractItem(int slot, ItemStack item, int side)
+    public boolean canExtractItem(int slot, ItemStack item, EnumFacing side)
     {
         return slot == OUTPUT_SLOT_ID;
     }
@@ -243,21 +245,6 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type == UpgradeTypes.Speed || type == UpgradeTypes.PowerStorage || type == UpgradeTypes.PowerUsage;
-    }
-
-    @Override
-    public void onAdded(World world, int x, int y, int z) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
-
     }
 
     public float getProgress(){return (float) (recycleTime) / (float) getSpeed();}

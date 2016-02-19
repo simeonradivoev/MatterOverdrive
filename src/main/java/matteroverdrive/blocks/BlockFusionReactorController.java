@@ -18,10 +18,13 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.blocks.includes.MOBlock;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveIcons;
@@ -33,7 +36,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 /**
@@ -50,9 +52,10 @@ public class BlockFusionReactorController extends MOBlockMachine
         setHasGui(true);
         lightValue = 10;
         setRotationType(MOBlockHelper.RotationType.SIX_WAY);
+        setHasRotation();
     }
 
-    @SideOnly(Side.CLIENT)
+   /* @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
         if (side == meta)
@@ -67,7 +70,7 @@ public class BlockFusionReactorController extends MOBlockMachine
         {
             return MatterOverdriveIcons.YellowStripes;
         }
-    }
+    }*/
 
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
@@ -76,29 +79,23 @@ public class BlockFusionReactorController extends MOBlockMachine
     }
 
     @Override
-    public void onBlockPlacedBy(World World, int x, int y, int z, EntityLivingBase player, ItemStack item)
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
-        int l = BlockPistonBase.determineOrientation(World, x, y, z, player);
-        World.setBlockMetadataWithNotify(x, y, z, l, 2);
+        EnumFacing l = BlockPistonBase.getFacingFromEntity(worldIn,pos,placer);
+        worldIn.setBlockState(pos,state.withProperty(MOBlock.PROPERTY_DIRECTION,l),2);
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof TileEntityMachineFusionReactorController) {
             if (((TileEntityMachineFusionReactorController) tileEntity).isValidStructure())
             {
-                return super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
+                return super.onBlockActivated(worldIn,pos,state,playerIn, side, hitX, hitY, hitZ);
             }
         }
         return false;
-    }
-
-    @Override
-    public int getRenderType()
-    {
-        return MOBlockRenderer.renderID;
     }
 
     @Override

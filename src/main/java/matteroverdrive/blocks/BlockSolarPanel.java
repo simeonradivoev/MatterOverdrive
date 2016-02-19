@@ -1,15 +1,9 @@
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOMatterEnergyStorageBlock;
-import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineSolarPanel;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 /**
@@ -17,8 +11,6 @@ import net.minecraft.world.World;
  */
 public class BlockSolarPanel extends MOMatterEnergyStorageBlock
 {
-    IIcon iconTop;
-
     public BlockSolarPanel(Material material, String name) {
         super(material, name, true, false);
 
@@ -35,7 +27,7 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock
         return new TileEntityMachineSolarPanel();
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister registrar)
     {
@@ -47,7 +39,7 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock
     public IIcon getIcon(int side, int metadata)
     {
         return side == 1 ? iconTop : MatterOverdriveIcons.Base;
-    }
+    }*/
 
     public boolean isOpaqueCube()
     {

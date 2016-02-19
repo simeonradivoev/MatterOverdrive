@@ -2,8 +2,8 @@ package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.Reference;
 import matteroverdrive.tile.pipes.TileEntityPipe;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 3/7/2015.
@@ -24,7 +24,7 @@ public class TileEntityRendererNetworkPipe extends TileEntityRendererPipe
     }
 
     @Override
-    protected void drawSide(TileEntityPipe tile, ForgeDirection dir)
+    protected void drawSide(TileEntityPipe tile, EnumFacing dir)
     {
         super.drawSide(tile, dir);
     }

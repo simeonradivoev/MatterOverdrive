@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class StarmapRenderRegistry implements IStarmapRenderRegistry
 {
-    Map<Class<? extends SpaceBody>, Collection<ISpaceBodyHoloRenderer>> map;
+    final Map<Class<? extends SpaceBody>, Collection<ISpaceBodyHoloRenderer>> map;
 
     public StarmapRenderRegistry()
     {

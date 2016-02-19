@@ -18,7 +18,7 @@
 
 package matteroverdrive.api.matter;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Used as a interface for all matter storage entities or components.
@@ -45,7 +45,7 @@ public interface IMatterStorage
 	 * @return the amount of matter received.
 	 * This is the same, not matter if the call is a simulation.
 	 */
-	int receiveMatter(ForgeDirection side, int amount, boolean simulate);
+	int receiveMatter(EnumFacing side, int amount, boolean simulate);
 
 	/**
 	 * Used to extract matter.
@@ -56,7 +56,7 @@ public interface IMatterStorage
 	 * @return the amount of matter extracted.
 	 * This is the same, no matter if the call is a simulation.
 	 */
-	int extractMatter(ForgeDirection direction, int amount, boolean simulate);
+	int extractMatter(EnumFacing direction, int amount, boolean simulate);
 
 	void setMatterStored(int amount);
 }

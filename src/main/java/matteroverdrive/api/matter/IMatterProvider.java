@@ -18,7 +18,7 @@
 
 package matteroverdrive.api.matter;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Used by any {@link net.minecraft.tileentity.TileEntity} that provides matter
@@ -44,5 +44,5 @@ public interface IMatterProvider
 	 *                 Used to check if the specified amount can be extracted.
 	 * @return the extracted amount of matter.
 	 */
-	int extractMatter(ForgeDirection direction,int amount,boolean simulate);
+	int extractMatter(EnumFacing direction, int amount, boolean simulate);
 }

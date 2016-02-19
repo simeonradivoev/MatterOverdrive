@@ -18,9 +18,9 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.IUpgrade;
@@ -28,14 +28,12 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOStringHelper;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 
 import java.util.HashMap;
@@ -48,8 +46,6 @@ import java.util.Map;
 public class ItemUpgrade extends MOBaseItem implements IUpgrade
 {
     public static final String[] subItemNames = {"base","speed","power","failsafe","range","power_storage","hyper_speed","matter_storage"};
-    @SideOnly(Side.CLIENT)
-    private IIcon[] icons;
 
     public ItemUpgrade(String name)
     {
@@ -65,6 +61,11 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
     {
         int damage = itemStack.getItemDamage();
         return damage != 0;
+    }
+
+    public int getMetadata(int damage)
+    {
+        return damage;
     }
 
     @Override
@@ -109,13 +110,13 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
         }
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int damage)
     {
         int j = MathHelper.clamp_int(damage, 0, (icons.length-1));
         return this.icons[j];
-    }
+    }*/
 
     @Override
     public String getUnlocalizedName(ItemStack stack)
@@ -124,7 +125,7 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
         return super.getUnlocalizedName() + "." + subItemNames[i];
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
         this.icons = new IIcon[subItemNames.length];
@@ -135,13 +136,13 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
         }
 
         this.itemIcon = this.icons[0];
-    }
+    }*/
 
 
     @Override
     public Map<UpgradeTypes, Double> getUpgrades(ItemStack itemStack)
     {
-        HashMap<UpgradeTypes,Double> upgrades = new HashMap<UpgradeTypes, Double>();
+        HashMap<UpgradeTypes,Double> upgrades = new HashMap<>();
         int damage = itemStack.getItemDamage();
         switch (damage)
         {
@@ -150,6 +151,7 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
                 upgrades.put(UpgradeTypes.Speed,0.75);
                 upgrades.put(UpgradeTypes.PowerUsage,1.25);
                 upgrades.put(UpgradeTypes.Fail,1.25);
+                upgrades.put(UpgradeTypes.MatterUsage,1.25);
                 break;
             case 2:
                 //less power upgrade
@@ -162,11 +164,13 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
                 upgrades.put(UpgradeTypes.Fail,0.5);
                 upgrades.put(UpgradeTypes.Speed,1.25);
                 upgrades.put(UpgradeTypes.PowerUsage,1.25);
+                upgrades.put(UpgradeTypes.MatterUsage,1.25);
                 break;
             case 4:
                 //range upgrade
                 upgrades.put(UpgradeTypes.Range,4d);
                 upgrades.put(UpgradeTypes.PowerUsage,1.5);
+                upgrades.put(UpgradeTypes.MatterUsage,1.5);
                 break;
             case 5:
                 upgrades.put(UpgradeTypes.PowerStorage,2d);
@@ -175,6 +179,7 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
             case 6:
                 upgrades.put(UpgradeTypes.Speed,0.15);
                 upgrades.put(UpgradeTypes.PowerUsage,2d);
+                upgrades.put(UpgradeTypes.MatterUsage,2d);
                 upgrades.put(UpgradeTypes.Fail,1.25);
                 break;
             case 7:

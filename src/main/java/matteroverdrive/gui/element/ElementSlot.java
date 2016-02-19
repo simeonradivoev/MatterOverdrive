@@ -23,6 +23,7 @@ import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -95,12 +96,12 @@ public class ElementSlot extends MOElementBase
     {
         if(icon != null && canDrawIcon(icon))
         {
-            GL11.glEnable(GL11.GL_BLEND);
+            GlStateManager.enableBlend();
             ApplyColor();
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             ClientProxy.holoIcons.bindSheet();
             ClientProxy.holoIcons.renderIcon(icon,x,y);
-            GL11.glDisable(GL11.GL_BLEND);
+            GlStateManager.disableBlend();
             ResetColor();
         }
     }

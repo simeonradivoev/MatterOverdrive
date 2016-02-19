@@ -19,17 +19,16 @@
 package matteroverdrive.items.android;
 
 import com.google.common.collect.Multimap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.Reference;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.client.render.entity.EntityRendererRangedRougeAndroid;
 import matteroverdrive.client.render.entity.EntityRendererRougeAndroid;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -37,7 +36,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
@@ -49,15 +47,17 @@ import java.util.UUID;
  */
 public class RougeAndroidParts extends BionicPart implements IBionicPart
 {
-    String[] names = new String[]{"head","arms","legs","chest"};
-    String[] healtModifiersIDs = new String[]{"1bb8df41-63d1-4f58-92c4-43adea7528b2","73983b14-e605-40be-8567-36a9dec51d4f","29419afc-63ad-4b74-87e2-38219e867119","e4b38c80-7407-48fd-b837-8f36ae516c4d"};
-    IIcon[] icons = new IIcon[names.length];
+    public static final String[] names = new String[]{"head","arms","legs","chest"};
+    final String[] healtModifiersIDs = new String[]{"1bb8df41-63d1-4f58-92c4-43adea7528b2","73983b14-e605-40be-8567-36a9dec51d4f","29419afc-63ad-4b74-87e2-38219e867119","e4b38c80-7407-48fd-b837-8f36ae516c4d"};
 
     public RougeAndroidParts(String name)
     {
         super(name);
         setHasSubtypes(true);
     }
+
+    @Override
+    public int getMetadata(int damage){return damage;}
 
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
@@ -77,7 +77,7 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
         super.addDetails(itemstack,player,infos);
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
@@ -85,7 +85,7 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
         {
             icons[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + "rouge_android_" + names[i]);
         }
-    }
+    }*/
 
     @Override
     public String getUnlocalizedName(ItemStack stack)
@@ -98,18 +98,24 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs creativeTabs, List list)
     {
-        for (int i = 0;i < names.length;i++)
+        for (byte t = 0;t < 2;t++)
         {
-            list.add(new ItemStack(this,1,i));
+            for (int i = 0; i < names.length; i++)
+            {
+                ItemStack stack = new ItemStack(this, 1, i);
+                stack.setTagCompound(new NBTTagCompound());
+                stack.getTagCompound().setByte("Type", t);
+                list.add(stack);
+            }
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int damage)
     {
         int j = MathHelper.clamp_int(damage, 0, names.length-1);
         return this.icons[j];
-    }
+    }*/
 
     @Override
     public int getType(ItemStack itemStack) {

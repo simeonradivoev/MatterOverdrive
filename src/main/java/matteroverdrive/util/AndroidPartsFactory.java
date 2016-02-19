@@ -2,7 +2,7 @@ package matteroverdrive.util;
 
 import matteroverdrive.Reference;
 import matteroverdrive.data.WeightedRandomItemStack;
-import matteroverdrive.entity.player.AndroidAttributes;
+import matteroverdrive.entity.android_player.AndroidAttributes;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,8 +23,8 @@ import java.util.Random;
  */
 public class AndroidPartsFactory
 {
-    private static Random random = new Random();
-    public List<WeightedRandomItemStack> parts;
+    private static final Random random = new Random();
+    private final List<WeightedRandomItemStack> parts;
 
     public AndroidPartsFactory()
     {
@@ -42,7 +42,7 @@ public class AndroidPartsFactory
 
     public ItemStack generateRandomDecoratedPart(AndroidPartFactoryContext context)
     {
-        WeightedRandomItemStack randomPart = (WeightedRandomItemStack)WeightedRandom.getRandomItem(random,parts);
+        WeightedRandomItemStack randomPart = WeightedRandom.getRandomItem(random,parts);
         ItemStack stack = randomPart.getStack();
         addLegendaryAttributesToPart(stack,context);
         return stack;
@@ -52,7 +52,7 @@ public class AndroidPartsFactory
     {
         if (context.legendary)
         {
-            int healthLevel = random.nextInt(context.level + 1);
+            int healthLevel = random.nextInt(context.level + 1 * 10);
             if (healthLevel > 0)
             {
                 addAttributeToPart(part, new AttributeModifier(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), healthLevel, 0));

@@ -26,6 +26,7 @@ import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.Vec3;
 
@@ -38,8 +39,8 @@ public class EntityRendererConversation extends EntityRenderer
 {
 
     EntityFakePlayer fakePlayer;
-    Minecraft mc;
-    Random random;
+    final Minecraft mc;
+    final Random random;
 
     public EntityRendererConversation(Minecraft minecraft, IResourceManager resourceManager) {
         super(minecraft, resourceManager);
@@ -55,12 +56,12 @@ public class EntityRendererConversation extends EntityRenderer
         }
 
         boolean lastHideGui = mc.gameSettings.hideGUI;
-        EntityLivingBase lastRenderViewEntity = mc.renderViewEntity;
+        Entity lastRenderViewEntity = mc.getRenderViewEntity();
 
         if (mc.currentScreen instanceof GuiDialog)
         {
             mc.gameSettings.hideGUI = true;
-            mc.renderViewEntity = fakePlayer;
+            mc.setRenderViewEntity(fakePlayer);
             GuiDialog guiDialog = (GuiDialog)mc.currentScreen;
             IDialogMessage message = guiDialog.getCurrentMessage();
             if (message != null)
@@ -80,28 +81,26 @@ public class EntityRendererConversation extends EntityRenderer
             updateFakePlayerPositions();
         }
         super.renderWorld(ticks, time);
-        mc.renderViewEntity = lastRenderViewEntity;
+        mc.setRenderViewEntity(lastRenderViewEntity);
         mc.gameSettings.hideGUI = lastHideGui;
     }
 
     public Vec3 getLook(EntityLivingBase active, EntityLivingBase other, float ticks)
     {
-        return getPosition(other, ticks, false).subtract(getPosition(active, ticks, false));
+        return getPosition(active, ticks).subtract(getPosition(other, ticks));
     }
 
-    public Vec3 getPosition(EntityLivingBase entityLivingBase, float ticks, boolean includeHeight)
+    public Vec3 getPosition(EntityLivingBase entityLivingBase, float ticks)
     {
-        Vec3 pos = entityLivingBase.getPosition(ticks);
-        if (includeHeight)
-            pos.addVector(0, entityLivingBase.getEyeHeight(), 0);
+        Vec3 pos = entityLivingBase.getPositionVector();
         return pos;
     }
 
     public void rotateCameraYawTo(Vec3 dir, float offset)
     {
-        double yaw = Math.acos(Vec3.createVectorHelper(-1, 0, 0).dotProduct(dir));
-        Vec3 cross = Vec3.createVectorHelper(-1, 0, 0).crossProduct(dir);
-        Vec3 up = Vec3.createVectorHelper(0, -1, 0);
+        double yaw = Math.acos(new Vec3(-1, 0, 0).dotProduct(dir));
+        Vec3 cross = new Vec3(-1, 0, 0).crossProduct(dir);
+        Vec3 up = new Vec3(0, -1, 0);
         if (up.dotProduct(cross) < 0)
         {
             yaw = -yaw;

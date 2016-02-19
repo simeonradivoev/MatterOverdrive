@@ -1,6 +1,8 @@
 package matteroverdrive.data.quest;
 
-import cpw.mods.fml.common.Loader;
+import com.google.gson.JsonObject;
+import matteroverdrive.util.MOJsonHelper;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +18,19 @@ public class QuestItem
     String name;
     String mod;
     NBTTagCompound nbtTagCompound;
+    boolean ignoreDamage;
+    boolean ignoreNBT;
+
+    public QuestItem(JsonObject object)
+    {
+        name = MOJsonHelper.getString(object,"id");
+        itemAmount = MOJsonHelper.getInt(object,"count",1);
+        itemDamage = MOJsonHelper.getInt(object,"damage",0);
+        mod = MOJsonHelper.getString(object,"mod",null);
+        nbtTagCompound = MOJsonHelper.getNbt(object,"nbt",null);
+        ignoreDamage = MOJsonHelper.getBool(object,"ignore_damage",false);
+        ignoreNBT = MOJsonHelper.getBool(object,"ignore_nbt",false);
+    }
 
     public QuestItem(ItemStack itemStack)
     {
@@ -57,9 +72,9 @@ public class QuestItem
 
     public ItemStack getItemStack()
     {
-        if (isModded())
+        if (isModded() || itemStack == null)
         {
-            Item item = (Item) Item.itemRegistry.getObject(name);
+            Item item = Item.getByNameOrId(name);
             if (item != null)
             {
                 ItemStack itemStack = new ItemStack(item,itemAmount,itemDamage);
@@ -72,6 +87,17 @@ public class QuestItem
             return itemStack;
         }
         return null;
+    }
+
+    public boolean matches(ItemStack itemStack)
+    {
+        if (this.itemStack != null)
+        {
+            return itemStack.getItem().equals(this.itemStack.getItem()) && (ignoreDamage || itemStack.getItemDamage() == this.itemStack.getItemDamage()) && (ignoreNBT || ItemStack.areItemStackTagsEqual(itemStack,this.itemStack));
+        }else
+        {
+            return itemStack.getItem().getRegistryName().equals(name) && (ignoreDamage || itemDamage == itemStack.getItemDamage()) && (ignoreNBT || (nbtTagCompound == null || nbtTagCompound.equals(itemStack.getTagCompound())));
+        }
     }
 
     public static QuestItem fromItemStack(ItemStack itemStack)

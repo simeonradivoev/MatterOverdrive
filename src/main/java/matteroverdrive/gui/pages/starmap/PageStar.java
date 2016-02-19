@@ -60,7 +60,7 @@ public class PageStar extends ElementBaseGroup implements IListHandler
             }
         }
         planetList.limitScroll();
-        planetList.update(0,0);
+        planetList.update(0,0,0);
     }
 
     @Override
@@ -79,8 +79,8 @@ public class PageStar extends ElementBaseGroup implements IListHandler
     }
 
     @Override
-    public void update(int mouseX, int mouseY)
+    public void update(int mouseX, int mouseY,float partialTicks)
     {
-        super.update(mouseX,mouseY);
+        super.update(mouseX,mouseY,partialTicks);
     }
 }

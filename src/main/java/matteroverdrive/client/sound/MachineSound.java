@@ -2,6 +2,7 @@ package matteroverdrive.client.sound;
 
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.audio.PositionedSound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -11,13 +12,13 @@ public class MachineSound extends PositionedSound implements ITickableSound
 {
     private boolean donePlaying;
 
-    public MachineSound(ResourceLocation sound, float x, float y, float z, float volume, float pitch) {
+    public MachineSound(ResourceLocation sound, BlockPos pos, float volume, float pitch) {
         super(sound);
-        setPosition(x, y, z);
+        setPosition(pos);
         this.volume = volume;
-        this.field_147663_c = pitch;
+        this.pitch = pitch;
         this.repeat = true;
-        this.field_147665_h = 0;
+        this.repeatDelay = 0;
     }
 
     @Override
@@ -46,11 +47,11 @@ public class MachineSound extends PositionedSound implements ITickableSound
         this.volume = volume;
     }
 
-    public void setPosition(float x,float y,float z)
+    public void setPosition(BlockPos position)
     {
-        this.xPosF = x;
-        this.yPosF = y;
-        this.zPosF = z;
+        this.xPosF = position.getX();
+        this.yPosF = position.getY();
+        this.zPosF = position.getZ();
     }
 
     @Override

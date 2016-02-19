@@ -18,19 +18,17 @@
 
 package matteroverdrive.items.weapon.module;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponColor;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOStringHelper;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.WeightedRandomChestContent;
@@ -43,7 +41,6 @@ import java.util.List;
  */
 public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
 {
-    private IIcon overlayIcon;
     public static final Color defaultColor = new Color(255,255,255);
     public static final Color colors[] = {
             new Color(204,0,0),      //red
@@ -58,6 +55,8 @@ public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
             new Color(128,128,128)   //grey
             };
     public static final String names[] = {"red","green","blue","brown","pink","sky_blue","gold","lime_green","black","grey"};
+
+    public int getMetadata(int damage){return 0;}
 
     public WeaponModuleColor(String name)
     {
@@ -100,7 +99,7 @@ public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
         return ("" + StatCollector.translateToLocal(this.getUnlocalizedNameInefficiently(itemStack) + ".name")).trim() + " ("+ MOStringHelper.translateToLocal("module.color." + names[itemStack.getItemDamage()])+")";
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
@@ -120,7 +119,7 @@ public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
     public boolean requiresMultipleRenderPasses()
     {
         return true;
-    }
+    }*/
 
     @Override
     public int getSlot(ItemStack module)

@@ -27,7 +27,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -86,7 +89,7 @@ public abstract class ItemBuildableAbstract extends MOBaseItem implements IBuild
         {
             if (ship.getTagCompound().hasKey("Owner") && !ship.getTagCompound().getString("Owner").isEmpty()) {
                 try {
-                    return UUID.fromString(ship.getTagCompound().getString("Owner")).equals(EntityPlayer.func_146094_a(player.getGameProfile()));
+                    return UUID.fromString(ship.getTagCompound().getString("Owner")).equals(EntityPlayer.getUUID(player.getGameProfile()));
                 }
                 catch (Exception e)
                 {

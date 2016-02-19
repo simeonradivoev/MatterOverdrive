@@ -1,14 +1,13 @@
 package matteroverdrive.fx;
 
-import matteroverdrive.data.IconHolder;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Created by Simeon on 5/13/2015.
  */
-public class GravitationalStabilizerBeamParticle extends EntityFX
+public class GravitationalStabilizerBeamParticle extends MOEntityFX
 {
     float smokeParticleScale;
     Vector3f from;
@@ -29,6 +28,7 @@ public class GravitationalStabilizerBeamParticle extends EntityFX
         this.particleRed = this.particleGreen = this.particleBlue = (float)(Math.random() * 0.30000001192092896D);
         this.particleScale *= 0.75F;
         this.particleScale *= size;
+        setSize(this.particleScale * 0.1f,this.particleScale * 0.1f);
         this.smokeParticleScale = this.particleScale;
         this.particleMaxAge = time;
         this.noClip = true;
@@ -37,7 +37,7 @@ public class GravitationalStabilizerBeamParticle extends EntityFX
         this.up = up;
         this.orbitRadius = orbitRadius + (rand.nextFloat() * orbitRadius * 0.5f);
         startTime = rand.nextInt(time);
-        this.particleIcon = new IconHolder(0, 0, 32f / 128f, 32f / 128f, 32, 32);
+        this.particleIcon = ParticleIcon.fromWithAndHeight(0,0,32,32,128);
     }
 
     public void setColor(float r, float g, float b, float a)
@@ -73,8 +73,6 @@ public class GravitationalStabilizerBeamParticle extends EntityFX
         dir.scale(percent);
         Vector3f posOnPath = Vector3f.add(from, dir, null);
 
-        this.posX = posOnPath.x + spiralDir.x;
-        this.posY = posOnPath.y + spiralDir.y;
-        this.posZ = posOnPath.z + spiralDir.z;
+        setPosition(posOnPath.x + spiralDir.x,posOnPath.y + spiralDir.y,posOnPath.z + spiralDir.z);
     }
 }

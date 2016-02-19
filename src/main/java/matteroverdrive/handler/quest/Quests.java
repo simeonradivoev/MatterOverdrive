@@ -30,10 +30,10 @@ public class Quests
 {
     private static final int MIN_QUEST_BIT = 0;
     private static final int MAX_QUEST_IDS = Short.MAX_VALUE;
-    private BitSet bitSet;
-    private Map<Integer,IQuest> questMap;
-    private Map<IQuest,Integer> questIntegerMap;
-    private Map<String,IQuest> stringQuestMap;
+    private final BitSet bitSet;
+    private final Map<Integer,IQuest> questMap;
+    private final Map<IQuest,Integer> questIntegerMap;
+    private final Map<String,IQuest> stringQuestMap;
     public final Random random;
 
     public Quests()
@@ -62,7 +62,7 @@ public class Quests
 
     public void registerQuest(String name,Quest quest)
     {
-        if(questIntegerMap.containsKey(name))
+        if(questIntegerMap.containsKey(quest))
         {
             throw new RuntimeException(name + " Quest is already registered");
         }

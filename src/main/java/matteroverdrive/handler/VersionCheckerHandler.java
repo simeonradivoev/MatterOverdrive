@@ -20,7 +20,11 @@ package matteroverdrive.handler;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import cpw.mods.fml.common.gameevent.TickEvent;
+import matteroverdrive.util.MOLog;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.thread.VersionCheckThread;
@@ -31,6 +35,7 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Level;
 
 import java.text.ParseException;
@@ -57,8 +62,8 @@ public class VersionCheckerHandler implements IConfigSubscriber {
             return;
         }
 
-        if (MinecraftServer.getServer() != null && MinecraftServer.getServer().isServerRunning()) {
-            if (!MinecraftServer.getServer().getConfigurationManager().func_152596_g(event.player.getGameProfile())) {
+        if (FMLCommonHandler.instance().getSide() == Side.SERVER && FMLCommonHandler.instance().getMinecraftServerInstance().isServerRunning()) {
+            if (!MinecraftServer.getServer().getConfigurationManager().canSendCommands(event.player.getGameProfile())) {
                 return;
             }
         }
@@ -85,9 +90,11 @@ public class VersionCheckerHandler implements IConfigSubscriber {
             try {
                 result = download.get();
             } catch (InterruptedException e) {
-				MatterOverdrive.log.log(Level.ERROR,e,"Version checking from '%1$s' was interrupted", mirrors[currentMirror - 1]);
+				MOLog.log(Level.ERROR,e,"Version checking from '%1$s' was interrupted", mirrors[currentMirror - 1]);
+                MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Version Checking interrupted");
             } catch (ExecutionException e) {
-				MatterOverdrive.log.log(Level.ERROR,e,"Version checking from '%1$s' has failed", mirrors[currentMirror - 1]);
+				MOLog.log(Level.ERROR,e,"Version checking from '%1$s' has failed", mirrors[currentMirror - 1]);
+                MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Version Checking failed");
             } finally {
                 if (result != null)
                 {
@@ -95,7 +102,7 @@ public class VersionCheckerHandler implements IConfigSubscriber {
                         updateInfoDisplayed = constructVersionAndCheck(result, event.player);
                     }catch (Exception e)
                     {
-                        MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while decoding the update info from website.");
+                        MOLog.log(Level.ERROR,e,"There was a problem while decoding the update info from website.");
                     }
                 }
 
@@ -119,12 +126,12 @@ public class VersionCheckerHandler implements IConfigSubscriber {
             websiteDate = websiteDatePraser.parse(websiteDateString);
         } catch (ParseException e)
         {
-			MatterOverdrive.log.warn("Website date was incorrect", e);
+			MOLog.warn("Website date was incorrect", e);
         }
         try {
             modDate = modDateFormat.parse(Reference.VERSION_DATE);
         } catch (ParseException e) {
-			MatterOverdrive.log.warn("Mod version date was incorrect", e);
+			MOLog.warn("Mod version date was incorrect", e);
         }
 
         if (modDate != null && websiteDate != null ) {
@@ -146,7 +153,7 @@ public class VersionCheckerHandler implements IConfigSubscriber {
                 chat.appendText(EnumChatFormatting.WHITE + "]");
                 player.addChatMessage(chat);
 
-                chat = new ChatComponentText(root.get("excerpt").getAsString().replaceAll("\\<.*?\\>", ""));
+                chat = new ChatComponentText(root.get("excerpt").getAsString().replaceAll("<.*?>", ""));
                 style = new ChatStyle();
                 style.setColor(EnumChatFormatting.GRAY);
                 chat.setChatStyle(style);
@@ -155,7 +162,7 @@ public class VersionCheckerHandler implements IConfigSubscriber {
 
             } else
             {
-				MatterOverdrive.log.info("Matter Overdrive Version %1$s is up to date. From '%2$s'", root.get("title").getAsString(), mirrors[currentMirror - 1]);
+				MOLog.info("Matter Overdrive Version %1$s is up to date. From '%2$s'", root.get("title").getAsString(), mirrors[currentMirror - 1]);
             }
         }
         return false;

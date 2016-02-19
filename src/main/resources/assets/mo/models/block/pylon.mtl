@@ -1,0 +1,8 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 04.02.2016 16:24:53
+
+newmtl matter
+map_Kd mo:blocks/pylon
+
+newmtl pylon
+map_Kd mo:blocks/pylon

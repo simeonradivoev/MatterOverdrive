@@ -18,8 +18,10 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.Quest;
 import matteroverdrive.api.quest.QuestStack;
@@ -50,8 +52,7 @@ public class Contract extends MOBaseItem
     {
         if (itemStack.getTagCompound() != null)
         {
-            QuestStack questStack = QuestStack.loadFromNBT(itemStack.getTagCompound());
-            return questStack;
+            return QuestStack.loadFromNBT(itemStack.getTagCompound());
         }
         return null;
     }
@@ -71,6 +72,7 @@ public class Contract extends MOBaseItem
         }
     }
 
+    @Override
     public String getItemStackDisplayName(ItemStack itemStack)
     {
         if (itemStack.getTagCompound() != null)

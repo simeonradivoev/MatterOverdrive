@@ -82,31 +82,31 @@ dependencies {
 	shade group: 'com.brsanthu', name: 'google-analytics-java', version: '1.1.2'
 
 	// Chicken Bones
-	compile group: 'codechicken', name: 'ForgeMultipart', version: "${config.mc_version}-${config.fmp_version}", classifier: 'dev'
-	compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.mc_version}-${config.ccl_version}", classifier: 'dev' // Forge http://files.minecraftforge.net/CodeChickenLib/
-	compile group: 'codechicken', name: 'CodeChickenCore', version: "${config.mc_version}-${config.ccc_version}", classifier: 'dev' // CB maven
-	compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.mc_version}-${config.nei_version}", classifier: 'dev' // CB maven
+	//compile group: 'codechicken', name: 'ForgeMultipart', version: "${config.mc_version}-${config.fmp_version}", classifier: 'dev'
+	//compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.mc_version}-${config.ccl_version}", classifier: 'dev' // Forge http://files.minecraftforge.net/CodeChickenLib/
+	//compile group: 'codechicken', name: 'CodeChickenCore', version: "${config.mc_version}-${config.ccc_version}", classifier: 'dev' // CB maven
+	//compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.mc_version}-${config.nei_version}", classifier: 'dev' // CB maven
 	
 	// WAILA
-	compile group: 'mcp.mobius.waila', name: 'Waila', version: "${config.waila_version}_${config.mc_version}", classifier: 'dev'
+	//compile group: 'mcp.mobius.waila', name: 'Waila', version: "${config.waila_version}_${config.mc_version}", classifier: 'dev'
 	
 	// CoFH
-	compile group: 'cofh', name: 'CoFHLib', version: "[${config.mc_version}]${config.cofh_lib_version}", ext: 'jar'
-	compile group: 'cofh', name: 'CoFHCore', version: "[${config.mc_version}]${config.cofh_core_version}", ext: 'jar'
-	compile group: 'cofh', name: 'ThermalFoundation', version: "[${config.mc_version}]${config.cofh_tf_version}", ext: 'jar'
-	compile group: 'cofh', name: 'ThermalExpansion', version: "[${config.mc_version}]${config.cofh_te_version}", ext: 'jar'
-	compile group: 'cofh', name: 'ThermalDynamics', version: "[${config.mc_version}]${config.cofh_td_version}", ext: 'jar'
+	//compile group: 'cofh', name: 'CoFHLib', version: "[${config.mc_version}]${config.cofh_lib_version}", ext: 'jar'
+	//compile group: 'cofh', name: 'CoFHCore', version: "[${config.mc_version}]${config.cofh_core_version}", ext: 'jar'
+	//compile group: 'cofh', name: 'ThermalFoundation', version: "[${config.mc_version}]${config.cofh_tf_version}", ext: 'jar'
+	//compile group: 'cofh', name: 'ThermalExpansion', version: "[${config.mc_version}]${config.cofh_te_version}", ext: 'jar'
+	//compile group: 'cofh', name: 'ThermalDynamics', version: "[${config.mc_version}]${config.cofh_td_version}", ext: 'jar'
 	
 	// EnderIO
-	compile group: 'com.enderio.core', name: 'EnderCore', version: "${config.mc_version}-${config.endercore_version}", classifier: 'dev'
-	compile group: 'com.enderio', name: 'EnderIO', version: "${config.mc_version}-${config.enderio_version}", classifier: 'dev'
+	//compile group: 'com.enderio.core', name: 'EnderCore', version: "${config.mc_version}-${config.endercore_version}", classifier: 'dev'
+	//compile group: 'com.enderio', name: 'EnderIO', version: "${config.mc_version}-${config.enderio_version}", classifier: 'dev'
 	
 	// Extra Utilities
-	compile group: 'ExtraUtilities', name: 'extrautilities', version: "${config.xu_version}", ext: 'jar'
+	//compile group: 'ExtraUtilities', name: 'extrautilities', version: "${config.xu_version}", ext: 'jar'
 
 	// OpenComputers
-	compile group: 'li.cil.oc', name: 'OpenComputers', version: "${config.oc_version}", classifier:  'dev'
+	//compile group: 'li.cil.oc', name: 'OpenComputers', version: "${config.oc_version}", classifier:  'dev'
 
 	// AE2
-	compile group: "appeng", name: "appliedenergistics2", version: "${config.ae2_version}", classifier: "dev"
+	//compile group: "appeng", name: "appliedenergistics2", version: "${config.ae2_version}", classifier: "dev"
 }

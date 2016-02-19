@@ -18,7 +18,15 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.world.IInteractionObject;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.data.TileEntityInventory;
 import matteroverdrive.data.inventory.CrateSlot;
 import matteroverdrive.machines.MachineNBTCategory;
@@ -35,9 +43,9 @@ import java.util.EnumSet;
 /**
  * Created by Simeon on 11/5/2015.
  */
-public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory
+public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory, IInteractionObject
 {
-    TileEntityInventory inventory;
+    final TileEntityInventory inventory;
 
     public TileEntityTritaniumCrate()
     {
@@ -74,7 +82,8 @@ public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z) {
+    public void onAdded(World world, BlockPos pos, IBlockState state)
+    {
 
     }
 
@@ -84,13 +93,13 @@ public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory
     }
 
     @Override
-    public void onDestroyed()
+    public void onDestroyed(World worldIn, BlockPos pos, IBlockState state)
     {
 
     }
 
     @Override
-    public void onNeighborBlockChange()
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
 
     }
@@ -136,24 +145,56 @@ public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot) {
-        return inventory.getStackInSlotOnClosing(slot);
-    }
-
-    @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
         inventory.setInventorySlotContents(slot,stack);
     }
 
     @Override
-    public String getInventoryName()
+    public ItemStack removeStackFromSlot(int index)
     {
-        return inventory.getInventoryName();
+        return inventory.removeStackFromSlot(index);
     }
 
     @Override
-    public boolean hasCustomInventoryName() {
-        return true;
+    public int getField(int id)
+    {
+        return inventory.getField(id);
+    }
+
+    @Override
+    public void setField(int id, int value)
+    {
+        inventory.setField(id,value);
+    }
+
+    @Override
+    public int getFieldCount()
+    {
+        return inventory.getFieldCount();
+    }
+
+    @Override
+    public void clear()
+    {
+        inventory.clear();
+    }
+
+    @Override
+    public String getName()
+    {
+        return inventory.getName();
+    }
+
+    @Override
+    public boolean hasCustomName()
+    {
+        return inventory.hasCustomName();
+    }
+
+    @Override
+    public IChatComponent getDisplayName()
+    {
+        return inventory.getDisplayName();
     }
 
     @Override
@@ -167,17 +208,29 @@ public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory
     }
 
     @Override
-    public void openInventory() {
-        inventory.openInventory();
+    public void openInventory(EntityPlayer entityPlayer) {
+        inventory.openInventory(entityPlayer);
     }
 
     @Override
-    public void closeInventory() {
-        inventory.closeInventory();
+    public void closeInventory(EntityPlayer entityPlayer) {
+        inventory.closeInventory(entityPlayer);
     }
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         return inventory.isItemValidForSlot(slot,stack);
+    }
+
+    @Override
+    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
+    {
+        return new ContainerChest(playerInventory,getInventory(),playerIn);
+    }
+
+    @Override
+    public String getGuiID()
+    {
+        return "minecraft:chest";
     }
 }

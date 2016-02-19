@@ -18,8 +18,9 @@
 
 package matteroverdrive.data.inventory;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.api.matter.IMatterDatabase;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.proxy.ClientProxy;
@@ -30,8 +31,13 @@ import net.minecraft.item.ItemStack;
  */
 public class PatternStorageSlot extends Slot
 {
-    public PatternStorageSlot(boolean isMainSlot) {
+    private IMatterDatabase database;
+    private int storageId;
+
+    public PatternStorageSlot(boolean isMainSlot, IMatterDatabase database,int storageId) {
         super(isMainSlot);
+        this.database = database;
+        this.storageId = storageId;
     }
 
     @Override
@@ -53,5 +59,10 @@ public class PatternStorageSlot extends Slot
     @Override
     public String getUnlocalizedTooltip(){
         return "gui.tooltip.slot.pattern_storage";
+    }
+
+    public void onSlotChanged()
+    {
+        database.onPatternStorageChange(storageId);
     }
 }

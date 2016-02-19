@@ -18,22 +18,22 @@
 
 package matteroverdrive.proxy;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.handler.GoogleAnalyticsCommon;
 import matteroverdrive.handler.weapon.CommonWeaponHandler;
 import matteroverdrive.starmap.GalaxyServer;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class CommonProxy
 {
-    private CommonWeaponHandler commonWeaponHandler;
+    private final CommonWeaponHandler commonWeaponHandler;
     protected GoogleAnalyticsCommon googleAnalyticsCommon;
 
     public CommonProxy()
@@ -42,11 +42,11 @@ public class CommonProxy
         googleAnalyticsCommon = new GoogleAnalyticsCommon();
     }
 
-	public void registerProxies()
+	protected void registerProxies(FMLInitializationEvent event)
 	{
         MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
         MinecraftForge.EVENT_BUS.register(getWeaponHandler());
-        FMLCommonHandler.instance().bus().register(GalaxyServer.getInstance());
+        MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
         MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance());
         MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance().getGalaxyGenerator());
         MatterOverdrive.configHandler.subscribe(googleAnalyticsCommon);
@@ -57,16 +57,19 @@ public class CommonProxy
         MatterOverdriveCompat.registerModules();
     }
 
-    public void registerBlockIcons(IIconRegister register) {}
-
     public EntityPlayer getPlayerEntity(MessageContext ctx)
     {
         return ctx.getServerHandler().playerEntity;
     }
 
+    public void preInit(FMLPreInitializationEvent event)
+    {
+        registerCompatModules();
+    }
+
     public void init(FMLInitializationEvent event)
     {
-        registerProxies();
+        registerProxies(event);
     }
 
     public void postInit(FMLPostInitializationEvent event){}

@@ -18,8 +18,8 @@
 
 package matteroverdrive.container;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.tile.TileEntityAndroidSpawner;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,9 +46,9 @@ public class ContainerAndroidSpawner extends ContainerMachine<TileEntityAndroidS
     }
 
     @Override
-    public void addCraftingToCrafters(ICrafting icrafting)
+    public void onCraftGuiOpened(ICrafting icrafting)
     {
-        super.addCraftingToCrafters(icrafting);
+        super.onCraftGuiOpened(icrafting);
         icrafting.sendProgressBarUpdate(this, 0, spawnedAndroids);
     }
 

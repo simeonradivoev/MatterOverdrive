@@ -1,12 +1,12 @@
 package matteroverdrive.util;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class Platform
 {
-	public static ForgeDirection rotateAround(ForgeDirection forward, ForgeDirection axis)
+	public static EnumFacing rotateAround(EnumFacing forward, EnumFacing axis)
 	{
-		if ( axis == ForgeDirection.UNKNOWN || forward == ForgeDirection.UNKNOWN )
+		if ( axis == null || forward == null )
 			return forward;
 
 		switch (forward)
@@ -19,13 +19,13 @@ public class Platform
 			case UP:
 				return forward;
 			case NORTH:
-				return ForgeDirection.EAST;
+				return EnumFacing.EAST;
 			case SOUTH:
-				return ForgeDirection.WEST;
+				return EnumFacing.WEST;
 			case EAST:
-				return ForgeDirection.NORTH;
+				return EnumFacing.NORTH;
 			case WEST:
-				return ForgeDirection.SOUTH;
+				return EnumFacing.SOUTH;
 			default:
 				break;
 			}
@@ -34,13 +34,13 @@ public class Platform
 			switch (axis)
 			{
 			case NORTH:
-				return ForgeDirection.WEST;
+				return EnumFacing.WEST;
 			case SOUTH:
-				return ForgeDirection.EAST;
+				return EnumFacing.EAST;
 			case EAST:
-				return ForgeDirection.SOUTH;
+				return EnumFacing.SOUTH;
 			case WEST:
-				return ForgeDirection.NORTH;
+				return EnumFacing.NORTH;
 			default:
 				break;
 			}
@@ -49,13 +49,13 @@ public class Platform
 			switch (axis)
 			{
 			case UP:
-				return ForgeDirection.WEST;
+				return EnumFacing.WEST;
 			case DOWN:
-				return ForgeDirection.EAST;
+				return EnumFacing.EAST;
 			case EAST:
-				return ForgeDirection.UP;
+				return EnumFacing.UP;
 			case WEST:
-				return ForgeDirection.DOWN;
+				return EnumFacing.DOWN;
 			default:
 				break;
 			}
@@ -64,13 +64,13 @@ public class Platform
 			switch (axis)
 			{
 			case UP:
-				return ForgeDirection.EAST;
+				return EnumFacing.EAST;
 			case DOWN:
-				return ForgeDirection.WEST;
+				return EnumFacing.WEST;
 			case EAST:
-				return ForgeDirection.DOWN;
+				return EnumFacing.DOWN;
 			case WEST:
-				return ForgeDirection.UP;
+				return EnumFacing.UP;
 			default:
 				break;
 			}
@@ -79,13 +79,13 @@ public class Platform
 			switch (axis)
 			{
 			case UP:
-				return ForgeDirection.NORTH;
+				return EnumFacing.NORTH;
 			case DOWN:
-				return ForgeDirection.SOUTH;
+				return EnumFacing.SOUTH;
 			case NORTH:
-				return ForgeDirection.UP;
+				return EnumFacing.UP;
 			case SOUTH:
-				return ForgeDirection.DOWN;
+				return EnumFacing.DOWN;
 			default:
 				break;
 			}
@@ -93,13 +93,13 @@ public class Platform
 			switch (axis)
 			{
 			case UP:
-				return ForgeDirection.SOUTH;
+				return EnumFacing.SOUTH;
 			case DOWN:
-				return ForgeDirection.NORTH;
+				return EnumFacing.NORTH;
 			case NORTH:
-				return ForgeDirection.DOWN;
+				return EnumFacing.DOWN;
 			case SOUTH:
-				return ForgeDirection.UP;
+				return EnumFacing.UP;
 			default:
 				break;
 			}

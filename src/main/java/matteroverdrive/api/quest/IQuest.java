@@ -18,11 +18,11 @@
 
 package matteroverdrive.api.quest;
 
-import cpw.mods.fml.common.eventhandler.Event;
 import matteroverdrive.api.events.MOEventDialogInteract;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
 import java.util.Random;
@@ -32,6 +32,12 @@ import java.util.Random;
  */
 public interface IQuest
 {
+    /**
+     * Returns the identification name of the quest
+     * @return the quest's identification
+     */
+    String getName();
+
     /**
      * Gets the tile of the Quest with the given Quest stack.
      * There is also an extended version of this method the {@link IQuest#getTitle(QuestStack,EntityPlayer)}

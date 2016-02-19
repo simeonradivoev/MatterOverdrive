@@ -23,6 +23,7 @@ import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -90,11 +91,11 @@ public class ElementItemPreview extends MOElementBase
     {
         if(itemStack != null)
         {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             GL11.glTranslatef(this.posX + sizeX/2 - 9*itemSize,this.posY + sizeY/2 - 9*itemSize,0);
-            GL11.glScaled(itemSize,itemSize,itemSize);
+            GlStateManager.scale(itemSize,itemSize,itemSize);
             RenderUtils.renderStack(0, 0,32,itemStack,renderOverlay);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

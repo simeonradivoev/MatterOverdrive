@@ -29,7 +29,7 @@ public class MOApi
 {
     private static final String CORE_API_CLASS = "matteroverdrive.core.Api";
     private static final String CORE_API_FIELD = "INSTANCE";
-    private static IMOApi API_INSTANCE;
+    private static final IMOApi API_INSTANCE;
 
     static
     {

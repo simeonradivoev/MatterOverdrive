@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
@@ -33,16 +32,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -132,12 +135,12 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
 
         this.mouseX = mouseX - this.guiLeft;
         this.mouseY = mouseY - this.guiTop;
-        this.updateElements();
+        this.updateElements(partialTick);
     }
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int x, int y) {
 
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         //RenderUtils.drawSizeableBackground(guiLeft, guiTop, xSize, ySize, texW, texH, texture, this.zLevel, 57);
         if (background != null) {
             background.render(guiLeft, guiTop, xSize, ySize);
@@ -146,10 +149,10 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
         mouseX = x - guiLeft;
         mouseY = y - guiTop;
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         GL11.glTranslatef(guiLeft, guiTop, 0.0F);
         drawElements(partialTick, false);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     protected void drawElements(float partialTicks, boolean foreground) {
@@ -206,13 +209,14 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         int k = 0;
-        Iterator iterator = list.iterator();
 
-        while (iterator.hasNext()) {
-            String s = (String) iterator.next();
+        for (Object aList : list)
+        {
+            String s = (String) aList;
             int l = font.getStringWidth(s);
 
-            if (l > k) {
+            if (l > k)
+            {
                 k = l;
             }
         }
@@ -276,7 +280,10 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
             }
         }
     }
-    protected void keyTyped(char character, int state) {
+
+    @Override
+    protected void keyTyped(char character, int state) throws IOException
+    {
         int elementsCount = this.elements.size();
 
         MOElementBase element;
@@ -291,7 +298,9 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
 
     }
 
-    public void handleMouseInput() {
+    @Override
+    public void handleMouseInput() throws IOException
+    {
         int var1 = Mouse.getEventX() * this.width / this.mc.displayWidth;
         int var2 = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
         this.mouseX = var1 - this.guiLeft;
@@ -311,7 +320,9 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
         super.handleMouseInput();
     }
 
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    {
         mouseX -= this.guiLeft;
         mouseY -= this.guiTop;
         int var4 = this.elements.size();
@@ -331,26 +342,28 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
 
     }
 
-    protected void mouseMovedOrUp(int var1, int var2, int var3) {
-        var1 -= this.guiLeft;
-        var2 -= this.guiTop;
-        if(var3 >= 0 && var3 <= 2) {
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state)
+    {
+        mouseX -= this.guiLeft;
+        mouseY -= this.guiTop;
+        if(state >= 0 && state <= 2) {
             int var4 = this.elements.size();
 
             while(var4-- > 0) {
                 MOElementBase var5 = this.elements.get(var4);
                 if(var5.isVisible() && var5.isEnabled()) {
-                    var5.onMouseReleased(var1, var2);
+                    var5.onMouseReleased(mouseX, mouseY);
                 }
             }
         }
 
-        var1 += this.guiLeft;
-        var2 += this.guiTop;
-        super.mouseMovedOrUp(var1, var2, var3);
+        mouseX += this.guiLeft;
+        mouseY += this.guiTop;
+        super.mouseReleased(mouseX, mouseY, state);
     }
 
-    protected void mouseClickMove(int var1, int var2, int var3, long var4) {
+    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
         /*Slot var6 = this.getSlotAtPosition(var1, var2);
         ItemStack var7 = this.mc.thePlayer.inventory.getItemStack();
         if(this.field_147007_t && var6 != null && var7 != null && var6 instanceof SlotFalseCopy) {
@@ -361,15 +374,10 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
         } else {
 
 
-        }*/
+        }
+        */
         this.lastIndex = -1;
-        super.mouseClickMove(var1, var2, var3, var4);
-    }
-    public void mouseClicked(int var1) {
-        super.mouseClicked(this.guiLeft + this.mouseX, this.guiTop + this.mouseY, var1);
-    }
-    public boolean isMouseOverSlot(Slot var1, int var2, int var3) {
-        return this.func_146978_c(var1.xDisplayPosition, var1.yDisplayPosition, 16, 16, var2, var3);
+        super.mouseClickMove(mouseX,mouseY,clickedMouseButton,timeSinceLastClick);
     }
     //endregion
 
@@ -391,13 +399,13 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
 
 
     }
-    protected final void updateElements() {
+    protected final void updateElements(float partialTicks) {
         int elementCount = this.elements.size();
 
         while(elementCount-- > 0) {
             MOElementBase element = this.elements.get(elementCount);
             if(element.isVisible() && element.isEnabled()) {
-                element.update(this.mouseX, this.mouseY);
+                element.update(this.mouseX, this.mouseY,partialTicks);
             }
         }
 
@@ -470,16 +478,17 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
         float var8 = (float)(color >> 16 & 255) / 255.0F;
         float var9 = (float)(color >> 8 & 255) / 255.0F;
         float var10 = (float)(color & 255) / 255.0F;
-        Tessellator var11 = Tessellator.instance;
+        Tessellator var11 = Tessellator.getInstance();
+        WorldRenderer worldRenderer = var11.getWorldRenderer();
         GL11.glEnable(3042);
         GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
-        GL11.glColor4f(var8, var9, var10, var7);
-        var11.startDrawingQuads();
-        var11.addVertex((double)x1, (double)y2, (double)this.zLevel);
-        var11.addVertex((double)x2, (double)y2, (double)this.zLevel);
-        var11.addVertex((double)x2, (double)y1, (double)this.zLevel);
-        var11.addVertex((double)x1, (double)y1, (double)this.zLevel);
+        GlStateManager.blendFunc(770, 771);
+        GlStateManager.color(var8, var9, var10, var7);
+        worldRenderer.begin(7, DefaultVertexFormats.POSITION);
+        worldRenderer.pos((double)x1, (double)y2, (double)this.zLevel).endVertex();
+        worldRenderer.pos((double)x2, (double)y2, (double)this.zLevel).endVertex();
+        worldRenderer.pos((double)x2, (double)y1, (double)this.zLevel).endVertex();
+        worldRenderer.pos((double)x1, (double)y1, (double)this.zLevel).endVertex();
         var11.draw();
         GL11.glEnable(3553);
         GL11.glDisable(3042);
@@ -502,42 +511,29 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
         float var8 = (float)(color >> 16 & 255) / 255.0F;
         float var9 = (float)(color >> 8 & 255) / 255.0F;
         float var10 = (float)(color & 255) / 255.0F;
-        Tessellator var11 = Tessellator.instance;
+        Tessellator var11 = Tessellator.getInstance();
+        WorldRenderer worldRenderer = var11.getWorldRenderer();
         GL11.glDisable(3553);
-        GL11.glColor4f(var8, var9, var10, var7);
-        var11.startDrawingQuads();
-        var11.addVertex((double)x1, (double)y2, (double)this.zLevel);
-        var11.addVertex((double)x2, (double)y2, (double)this.zLevel);
-        var11.addVertex((double)x2, (double)y1, (double)this.zLevel);
-        var11.addVertex((double)x1, (double)y1, (double)this.zLevel);
+        GlStateManager.color(var8, var9, var10, var7);
+        worldRenderer.begin(7,DefaultVertexFormats.POSITION);
+        worldRenderer.pos((double)x1, (double)y2, (double)this.zLevel).endVertex();
+        worldRenderer.pos((double)x2, (double)y2, (double)this.zLevel).endVertex();
+        worldRenderer.pos((double)x2, (double)y1, (double)this.zLevel).endVertex();
+        worldRenderer.pos((double)x1, (double)y1, (double)this.zLevel).endVertex();
         var11.draw();
         GL11.glEnable(3553);
     }
     public void drawSizedTexturedModalRect(int x, int y, int u, int v, int width, int height, float texW, float texH) {
         float var9 = 1.0F / texW;
         float var10 = 1.0F / texH;
-        Tessellator var11 = Tessellator.instance;
-        var11.startDrawingQuads();
-        var11.addVertexWithUV((double)(x + 0), (double)(y + height), (double)this.zLevel, (double)((float)(u + 0) * var9), (double)((float)(v + height) * var10));
-        var11.addVertexWithUV((double)(x + width), (double)(y + height), (double)this.zLevel, (double)((float)(u + width) * var9), (double)((float)(v + height) * var10));
-        var11.addVertexWithUV((double)(x + width), (double)(y + 0), (double)this.zLevel, (double)((float)(u + width) * var9), (double)((float)(v + 0) * var10));
-        var11.addVertexWithUV((double)(x + 0), (double)(y + 0), (double)this.zLevel, (double)((float)(u + 0) * var9), (double)((float)(v + 0) * var10));
+        Tessellator var11 = Tessellator.getInstance();
+        WorldRenderer wr = var11.getWorldRenderer();
+        wr.begin(7,DefaultVertexFormats.POSITION_TEX);
+        wr.pos((double)(x), (double)(y + height), (double)this.zLevel).tex( (double)((float)(u) * var9), (double)((float)(v + height) * var10)).endVertex();
+        wr.pos((double)(x + width), (double)(y + height), (double)this.zLevel).tex((double)((float)(u + width) * var9), (double)((float)(v + height) * var10)).endVertex();
+        wr.pos((double)(x + width), (double)(y), (double)this.zLevel).tex((double)((float)(u + width) * var9), (double)((float)(v) * var10)).endVertex();
+        wr.pos((double)(x), (double)(y), (double)this.zLevel).tex((double)((float)(u) * var9), (double)((float)(v) * var10)).endVertex();
         var11.draw();
-    }
-    public void drawScaledTexturedModelRectFromIcon(int x, int y, IIcon icon, int width, int height) {
-        if(icon != null) {
-            double var6 = (double)icon.getMinU();
-            double var8 = (double)icon.getMaxU();
-            double var10 = (double)icon.getMinV();
-            double var12 = (double)icon.getMaxV();
-            Tessellator var14 = Tessellator.instance;
-            var14.startDrawingQuads();
-            var14.addVertexWithUV((double)(x + 0), (double)(y + height), (double)this.zLevel, var6, var10 + (var12 - var10) * (double)height / 16.0D);
-            var14.addVertexWithUV((double)(x + width), (double)(y + height), (double)this.zLevel, var6 + (var8 - var6) * (double)width / 16.0D, var10 + (var12 - var10) * (double)height / 16.0D);
-            var14.addVertexWithUV((double)(x + width), (double)(y + 0), (double)this.zLevel, var6 + (var8 - var6) * (double)width / 16.0D, var10);
-            var14.addVertexWithUV((double)(x + 0), (double)(y + 0), (double)this.zLevel, var6, var10);
-            var14.draw();
-        }
     }
     //endregion
 
@@ -602,13 +598,17 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
     }
     public Slot getSlotAtPosition(int mouseX, int mouseY) {
         for(int var3 = 0; var3 < this.inventorySlots.inventorySlots.size(); ++var3) {
-            Slot var4 = (Slot)this.inventorySlots.inventorySlots.get(var3);
+            Slot var4 = this.inventorySlots.inventorySlots.get(var3);
             if(this.isMouseOverSlot(var4, mouseX, mouseY)) {
                 return var4;
             }
         }
 
         return null;
+    }
+    private boolean isMouseOverSlot(Slot slotIn, int mouseX, int mouseY)
+    {
+        return this.isPointInRegion(slotIn.xDisplayPosition, slotIn.yDisplayPosition, 16, 16, mouseX, mouseY);
     }
     public FontRenderer getFontRenderer() {
         return this.fontRendererObj;

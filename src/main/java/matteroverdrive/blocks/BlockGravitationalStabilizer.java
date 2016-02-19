@@ -18,10 +18,12 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.blocks.includes.MOBlock;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.client.render.block.RendererBlockGravitationalStabilizer;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineGravitationalStabilizer;
 import matteroverdrive.util.MOBlockHelper;
@@ -30,9 +32,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Simeon on 5/12/2015.
@@ -47,9 +48,10 @@ public class BlockGravitationalStabilizer extends MOBlockMachine
         this.setHarvestLevel("pickaxe", 2);
         lightValue = 10;
         setRotationType(MOBlockHelper.RotationType.SIX_WAY);
+        setHasRotation();
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
         if (side == meta)
@@ -66,7 +68,7 @@ public class BlockGravitationalStabilizer extends MOBlockMachine
         }
 
         return MatterOverdriveIcons.Coil;
-    }
+    }*/
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta)
@@ -76,24 +78,19 @@ public class BlockGravitationalStabilizer extends MOBlockMachine
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
-        int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
+        EnumFacing l = BlockPistonBase.getFacingFromEntity(worldIn, pos, placer);
 
-        if (player.isSneaking())
+
+        if (placer.isSneaking())
         {
-            world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.OPPOSITES[l], 2);
+            worldIn.setBlockState(pos, state.withProperty(MOBlock.PROPERTY_DIRECTION,l.getOpposite()), 2);
         }
         else
         {
-            world.setBlockMetadataWithNotify(x, y, z, l, 2);
+            worldIn.setBlockState(pos,state.withProperty(MOBlock.PROPERTY_DIRECTION,l),2);
         }
 
-    }
-
-    @Override
-    public int getRenderType()
-    {
-        return RendererBlockGravitationalStabilizer.renderID;
     }
 }

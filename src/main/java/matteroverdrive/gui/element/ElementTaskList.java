@@ -23,6 +23,7 @@ import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class ElementTaskList extends MOElementListBox
     public ElementTaskList(MOGuiBase gui,IButtonHandler buttonHandler, int posX, int posY, int width, int height,MatterNetworkTaskQueue<? extends MatterNetworkTask> taskQueue) {
         super(gui, posX, posY, width, height);
         this.taskQueue = taskQueue;
-        lastTooltip = new ArrayList<String>();
+        lastTooltip = new ArrayList<>();
         this.buttonHandler = buttonHandler;
     }
 
@@ -79,7 +80,7 @@ public class ElementTaskList extends MOElementListBox
     @Override
     public void DrawElement(int i,int x,int y,int selectedLineColor,int selectedTextColor, boolean selected,boolean BG)
     {
-        GL11.glColor3f(1, 1, 1);
+        GlStateManager.color(1,1,1);
 
         if (selected) {
             if (i == 0)
@@ -88,11 +89,11 @@ public class ElementTaskList extends MOElementListBox
                 MOElementButton.HOVER_TEXTURE.render(x, y, getElementWidth(i), getElementHeight(i));
 
                 MOElementButton.HOVER_TEXTURE_DARK.render(x + 60, y + (getElementHeight(i) / 2) - 2, 50, (getElementHeight(i) / 2) - 4);
-                Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("top", x + 76, y + 24, 0xFFFFFF);
+                Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow("top", x + 76, y + 24, 0xFFFFFF);
             }
 
             MOElementButton.HOVER_TEXTURE_DARK.render(x + 6, y + (getElementHeight(i) / 2) - 2, 50, (getElementHeight(i) / 2) - 4);
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("remove", x + 13, y + 24, 0xFFFFFF);
+            Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow("remove", x + 13, y + 24, 0xFFFFFF);
         }
         else
         {
@@ -103,18 +104,18 @@ public class ElementTaskList extends MOElementListBox
         }
 
         MatterNetworkTask task = taskQueue.getAt(i);
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(task.getName(), x + 8, y + 7, 0xFFFFFF);
+        Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(task.getName(), x + 8, y + 7, 0xFFFFFF);
     }
 
     @Override
     public void drawElementTooltip(int index,int mouseX,int mouseY)
     {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(-posX, 0, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(-posX, 0, 0);
         List tooltip = new ArrayList();
         taskQueue.getAt(index).addInfo(tooltip);
-        ((MOGuiBase)gui).setTooltip(tooltip);
-        GL11.glPopMatrix();
+        gui.setTooltip(tooltip);
+        GlStateManager.popMatrix();
     }
 
     @Override
@@ -131,8 +132,7 @@ public class ElementTaskList extends MOElementListBox
 
         if (mouseY > 22 && mouseX < 50)
         {
-            buttonHandler.handleElementButtonClick(null,"DropTask",index);
-            System.out.println("Remove");
+            buttonHandler.handleElementButtonClick(this,"DropTask",index);
         }
     }
 
@@ -165,7 +165,7 @@ public class ElementTaskList extends MOElementListBox
                 gui.drawSizedTexturedModalRect(x,y,0,0,width,height,width,height*2);
             }
             MatterNetworkTask task = taskQueue.getAt(i);
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(task.getKey(), x + 8, y + 7, 0xFFFFFF);
+            Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(task.getKey(), x + 8, y + 7, 0xFFFFFF);
         }
     }*/
 

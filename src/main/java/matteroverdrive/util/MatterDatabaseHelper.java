@@ -20,12 +20,13 @@ package matteroverdrive.util;
 
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.matter.IMatterPatternStorage;
-import matteroverdrive.data.ItemPattern;
-import net.minecraft.block.Block;
+import matteroverdrive.data.matter_network.ItemPattern;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -67,10 +68,12 @@ public class MatterDatabaseHelper
 		{
 			if(MatterHelper.isMatterPatternStorage(storage))
 			{
-                ItemPattern[] patterns = getPatternsFromStorage(storage);
-                if (patterns.length < MatterDatabaseHelper.getPatternCapacity(storage))
+                IMatterPatternStorage patternStorage = (IMatterPatternStorage)storage.getItem();
+                for (int i = 0;i < patternStorage.getCapacity(storage);i++)
                 {
-                    return true;
+                    ItemPattern itemPattern = patternStorage.getPatternAt(storage,i);
+                    if (itemPattern == null)
+                        return true;
                 }
 			}
 
@@ -82,30 +85,17 @@ public class MatterDatabaseHelper
 	{
 		ItemStack[] patternStorages = database.getPatternStorageList();
 
-		for (int i = 0;i < patternStorages.length;i++)
+		for (ItemStack patternStorage : patternStorages)
 		{
-			if (patternStorages[i] != null)
+			if (patternStorage != null)
 			{
-				if (hasFreeSpace(patternStorages[i]))
+				if (hasFreeSpace(patternStorage))
 				{
-					return patternStorages[i];
+					return patternStorage;
 				}
 			}
 		}
 		return null;
-	}
-
-	public static boolean HasItem(ItemStack storage,ItemStack item)
-	{
-        ItemPattern[] patterns = getPatternsFromStorage(storage);
-        for (int i = 0;i < patterns.length;i++)
-        {
-            if (areEqual(item,patterns[i].toItemStack(false)))
-            {
-                return true;
-            }
-        }
-		return false;
 	}
 
     public static void addProgressToPatternStorage(ItemStack patternStorage, ItemStack item, int progress,boolean existingOnly)
@@ -147,28 +137,16 @@ public class MatterDatabaseHelper
 
 	public static ItemPattern getPatternFromStorage(ItemStack patternStorage, ItemStack item)
 	{
-        ItemPattern[] patterns = getPatternsFromStorage(patternStorage);
-		for (int i = 0; i < patterns.length; i++) {
-			if (areEqual(item, patterns[i].toItemStack(false)))
-				return patterns[i];
-		}
-		return null;
-	}
-	public static ItemPattern getPatternWithItemID(ItemStack patternStorage, int id)
-	{
-        ItemPattern[] patterns = getPatternsFromStorage(patternStorage);
-        for (int i = 0; i < patterns.length; i++) {
-            if (patterns[i].getItemID() == id)
-                return patterns[i];
+        IMatterPatternStorage storage = (IMatterPatternStorage)patternStorage.getItem();
+        for (int i = 0;i < storage.getCapacity(patternStorage);i++)
+        {
+            ItemPattern pattern = storage.getPatternAt(patternStorage,i);
+            if (pattern != null && pattern.equals(item))
+            {
+                return pattern;
+            }
         }
-
 		return null;
-	}
-
-	private static ItemPattern getPatternAt(ItemStack patternStorage, int index)
-	{
-        ItemPattern itemPattern[] = getPatternsFromStorage(patternStorage);
-		return itemPattern[index];
 	}
 
 
@@ -202,35 +180,20 @@ public class MatterDatabaseHelper
 		return areEqual(ItemStack.loadItemStackFromNBT(one),ItemStack.loadItemStackFromNBT(two));
 	}
 
-	public static ItemPattern[] getPatternsFromStorage(ItemStack patternStorage)
+	public static ItemStack GetItemStackFromWorld(World world, BlockPos pos)
 	{
-		if (patternStorage.getItem() instanceof IMatterPatternStorage)
-		{
-			return ((IMatterPatternStorage) patternStorage.getItem()).getPatterns(patternStorage);
-		}
-		return null;
-	}
-
-	public static ItemStack GetItemStackFromWorld(World world,int x, int y,int z)
-	{
-		Block b = world.getBlock(x, y, z);
-
-		if(b != null && Item.getItemFromBlock(b) != null)
-		{
-			//Item bi = Item.getItemFromBlock(b);
-			//List subBlocks = new ArrayList();
-			//b.getSubBlocks(bi, null, subBlocks);
-			int meta = world.getBlockMetadata(x, y, z);
-			return new ItemStack(b,1,b.damageDropped(meta));
-
-		}
-
-		return new ItemStack(b);
+		IBlockState blockState = world.getBlockState(pos);
+        Item item = Item.getItemFromBlock(blockState.getBlock());
+        if (item != null)
+        {
+            return new ItemStack(item, 1, blockState.getBlock().getDamageValue(world, pos));
+        }
+        return null;
 	}
 
 	public static EnumChatFormatting getPatternInfoColor(int progress)
 	{
-		EnumChatFormatting color = EnumChatFormatting.GRAY;
+		EnumChatFormatting color;
 
 		if (progress > 0 && progress <= 20)
 			color = EnumChatFormatting.RED;

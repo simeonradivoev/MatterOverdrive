@@ -18,11 +18,6 @@
 
 package matteroverdrive.network;
 
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelHandler;
 import matteroverdrive.Reference;
 import matteroverdrive.network.packet.AbstractBiPacketHandler;
@@ -31,19 +26,29 @@ import matteroverdrive.network.packet.bi.PacketMatterScannerGetDatabase;
 import matteroverdrive.network.packet.bi.PacketStarLoading;
 import matteroverdrive.network.packet.bi.PacketWeaponTick;
 import matteroverdrive.network.packet.client.*;
+import matteroverdrive.network.packet.client.pattern_monitor.PacketClearPatterns;
+import matteroverdrive.network.packet.client.pattern_monitor.PacketSendItemPattern;
 import matteroverdrive.network.packet.client.quest.PacketSyncQuests;
 import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.network.packet.client.starmap.PacketUpdateTravelEvents;
+import matteroverdrive.network.packet.client.task_queue.PacketSyncTaskQueue;
 import matteroverdrive.network.packet.server.*;
+import matteroverdrive.network.packet.server.pattern_monitor.PacketPatternMonitorAddRequest;
 import matteroverdrive.network.packet.server.starmap.PacketStarMapAttack;
 import matteroverdrive.network.packet.server.starmap.PacketStarMapClientCommands;
+import matteroverdrive.network.packet.server.task_queue.PacketRemoveTask;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Created by Simeon on 3/5/2015.
@@ -52,7 +57,7 @@ import net.minecraft.world.WorldProvider;
 public class PacketPipeline
 {
     protected int packetID;
-    public SimpleNetworkWrapper dispatcher;
+    public final SimpleNetworkWrapper dispatcher;
 
     public PacketPipeline()
     {
@@ -65,8 +70,8 @@ public class PacketPipeline
         registerPacket(PacketMatterScannerUpdate.ServerHandler.class, PacketMatterScannerUpdate.class);
         registerPacket(PacketPowerUpdate.ClientHandler.class, PacketPowerUpdate.class);
         registerPacket(PacketMatterUpdate.ClientHandler.class, PacketMatterUpdate.class);
-        registerPacket(PacketPatternMonitorSync.ClientHandler.class,PacketPatternMonitorSync.class);
-        registerPacket(PacketPatternMonitorCommands.ServerHandler.class,PacketPatternMonitorCommands.class);
+        registerPacket(PacketSendItemPattern.ClientHandler.class,PacketSendItemPattern.class);
+        registerPacket(PacketPatternMonitorAddRequest.ServerHandler.class,PacketPatternMonitorAddRequest.class);
         registerPacket(PacketReplicationComplete.ClientHandler.class,PacketReplicationComplete.class);
         registerPacket(PacketRemoveTask.ServerHandler.class,PacketRemoveTask.class);
         registerPacket(PacketSyncTransportProgress.ClientHandler.class,PacketSyncTransportProgress.class);
@@ -100,6 +105,9 @@ public class PacketPipeline
         registerPacket(PacketAndroidTransformation.ClientHandler.class,PacketAndroidTransformation.class);
         registerPacket(PacketSyncTaskQueue.ClientHandler.class,PacketSyncTaskQueue.class);
         registerPacket(PacketBioticActionKey.ServerHandler.class,PacketBioticActionKey.class);
+        registerPacket(PacketUpdatePlasmaBolt.ClientHandler.class,PacketUpdatePlasmaBolt.class);
+        registerPacket(PacketClearPatterns.ClientHandler.class,PacketClearPatterns.class);
+        registerPacket(PacketSendAndroidEffects.ClientHandler.class,PacketSendAndroidEffects.class);
     }
 
     public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)
@@ -144,12 +152,12 @@ public class PacketPipeline
 
     public void sendToAllAround(IMessage message,EntityPlayer player,double range)
     {
-        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(player.worldObj.provider.dimensionId,player.posX,player.posY,player.posZ,range));
+        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimensionId(),player.posX,player.posY,player.posZ,range));
     }
 
     public void sendToAllAround(IMessage message,TileEntity tileEntity,double range)
     {
-        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(tileEntity.getWorldObj().provider.dimensionId,tileEntity.xCoord,tileEntity.yCoord,tileEntity.zCoord,range));
+        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(tileEntity.getWorld().provider.getDimensionId(),tileEntity.getPos().getX(),tileEntity.getPos().getY(),tileEntity.getPos().getZ(),range));
     }
 
     public void sendTo(IMessage message,EntityPlayerMP player)
@@ -167,7 +175,7 @@ public class PacketPipeline
     }
     public void sendToDimention(IMessage message,WorldProvider worldProvider)
     {
-        dispatcher.sendToDimension(message, worldProvider.dimensionId);
+        dispatcher.sendToDimension(message, worldProvider.getDimensionId());
     }
     //endregion
 }

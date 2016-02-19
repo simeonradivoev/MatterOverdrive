@@ -18,17 +18,19 @@
 
 package matteroverdrive.items;
 
-import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.api.matter_network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkFilter;
 import matteroverdrive.client.data.Color;
-import matteroverdrive.data.BlockPos;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.nbt.NBTTagLong;
+import net.minecraft.util.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -49,36 +51,36 @@ public class NetworkFlashDrive extends FlashDrive implements IMatterNetworkFilte
         super.addDetails(itemstack,player,infos);
         if (itemstack.hasTagCompound())
         {
-            NBTTagList list = itemstack.getTagCompound().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_COMPOUND);
+            NBTTagList list = itemstack.getTagCompound().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_LONG);
             for (int i = 0;i < list.tagCount();i++) {
-                BlockPos pos = new BlockPos(list.getCompoundTagAt(i));
-                Block block = pos.getBlock(player.worldObj);
+                BlockPos pos = BlockPos.fromLong(((NBTTagLong)list.get(i)).getLong());
+                IBlockState block = player.worldObj.getBlockState(pos);
                 if (block != null)
                 {
-                    infos.add(String.format("[%s,%s,%s] %s", pos.x, pos.y, pos.z,block != Blocks.air ? block.getLocalizedName() : "Unknown"));
+                    infos.add(String.format("[%s] %s", pos.toString(),block.getBlock() != Blocks.air ? block.getBlock().getLocalizedName() : "Unknown"));
                 }
             }
         }
     }
 
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        TileEntity tileEntity = world.getTileEntity(x,y,z);
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMatterNetworkConnection)
         {
-            BlockPos connectionPosition = ((IMatterNetworkConnection) tileEntity).getPosition();
-            if (!itemStack.hasTagCompound())
+            BlockPos connectionPosition = tileEntity.getPos();
+            if (!stack.hasTagCompound())
             {
-                itemStack.setTagCompound(new NBTTagCompound());
+                stack.setTagCompound(new NBTTagCompound());
             }
 
             boolean hasPos = false;
-            NBTTagList list = itemStack.getTagCompound().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_COMPOUND);
+            NBTTagList list = stack.getTagCompound().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_LONG);
             for (int i = 0;i < list.tagCount();i++)
             {
-                BlockPos pos = new BlockPos(list.getCompoundTagAt(i));
-                if (pos.equals(connectionPosition))
+                BlockPos p = BlockPos.fromLong(((NBTTagLong)list.get(i)).getLong());
+                if (p.equals(connectionPosition))
                 {
                     hasPos = true;
                     list.removeTag(i);
@@ -88,12 +90,10 @@ public class NetworkFlashDrive extends FlashDrive implements IMatterNetworkFilte
 
             if (!hasPos)
             {
-                NBTTagCompound posNBT = new NBTTagCompound();
-                connectionPosition.writeToNBT(posNBT);
-                list.appendTag(posNBT);
+                list.appendTag(new NBTTagLong(pos.toLong()));
             }
 
-            itemStack.getTagCompound().setTag(IMatterNetworkFilter.CONNECTIONS_TAG, list);
+            stack.getTagCompound().setTag(IMatterNetworkFilter.CONNECTIONS_TAG, list);
 
             return true;
         }

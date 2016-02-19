@@ -18,15 +18,16 @@
 
 package matteroverdrive.data.quest;
 
-import cpw.mods.fml.common.eventhandler.Event;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
+import matteroverdrive.util.MOLog;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
@@ -38,9 +39,9 @@ import java.util.List;
  */
 public class PlayerQuestData
 {
-    List<QuestStack> activeQuests;
-    List<QuestStack> completedQuests;
-    MOExtendedProperties extendedProperties;
+    final List<QuestStack> activeQuests;
+    final List<QuestStack> completedQuests;
+    final MOExtendedProperties extendedProperties;
 
     public PlayerQuestData(MOExtendedProperties extendedProperties)
     {
@@ -87,7 +88,7 @@ public class PlayerQuestData
                     }
                 }
             } catch (Exception e) {
-                MatterOverdrive.log.log(Level.ERROR, e, "There was a problem while loading Completed Quests");
+                MOLog.log(Level.ERROR, e, "There was a problem while loading Completed Quests");
             }
         }
         if (dataTypes.contains(DataType.ACTIVE_QUESTS)) {
@@ -100,7 +101,7 @@ public class PlayerQuestData
                     }
                 }
             } catch (Exception e) {
-                MatterOverdrive.log.log(Level.ERROR, e, "There was a problem while loading Active Quests");
+                MOLog.log(Level.ERROR, e, "There was a problem while loading Active Quests");
             }
         }
     }
@@ -164,12 +165,19 @@ public class PlayerQuestData
 
     public void onEvent(Event event)
     {
-        if (extendedProperties != null && extendedProperties.getPlayer() != null && extendedProperties.getPlayer() instanceof EntityPlayerMP) {
-            for (int i = 0; i < activeQuests.size(); i++) {
-                if (activeQuests.get(i).getQuest() != null) {
-                    if (activeQuests.get(i).getQuest().onEvent(activeQuests.get(i), event, extendedProperties.getPlayer())) {
+        if (extendedProperties != null && extendedProperties.getPlayer() != null)
+        {
+            for (int i = 0; i < activeQuests.size(); i++)
+            {
+                if (activeQuests.get(i).getQuest() != null)
+                {
+                    if (activeQuests.get(i).getQuest().onEvent(activeQuests.get(i), event, extendedProperties.getPlayer()))
+                    {
                         //MatterOverdrive.packetPipeline.sendTo(new PacketSyncQuests(this,EnumSet.of(DataType.ACTIVE_QUESTS)),(EntityPlayerMP) extendedProperties.getPlayer());
-                        MatterOverdrive.packetPipeline.sendTo(new PacketUpdateQuest(i, this,PacketUpdateQuest.UPDATE_QUEST), (EntityPlayerMP) extendedProperties.getPlayer());
+                        if (extendedProperties.getPlayer() instanceof EntityPlayerMP)
+                        {
+                            MatterOverdrive.packetPipeline.sendTo(new PacketUpdateQuest(i, this, PacketUpdateQuest.UPDATE_QUEST), (EntityPlayerMP) extendedProperties.getPlayer());
+                        }
                     }
                 }
             }

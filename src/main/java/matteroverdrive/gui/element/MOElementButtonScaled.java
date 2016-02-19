@@ -23,6 +23,7 @@ import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -49,7 +50,7 @@ public class MOElementButtonScaled extends MOElementButton
         if (color != null)
             RenderUtils.applyColor(color);
         else
-            GL11.glColor4f(1, 1, 1, 1);
+            GlStateManager.color(1, 1, 1, 1);
         if (isEnabled()) {
             if (!isDown) {
                 if (intersectsWith(mouseX, mouseY) && overTexture != null) {

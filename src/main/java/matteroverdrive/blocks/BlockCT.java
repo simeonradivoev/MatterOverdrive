@@ -18,40 +18,38 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlock;
-import matteroverdrive.client.render.IconConnectedTexture;
 import matteroverdrive.util.MOBlockHelper;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 8/19/2015.
  */
 public abstract class BlockCT extends MOBlock
 {
-    protected IconConnectedTexture iconConnectedTexture;
 
     public BlockCT(Material material, String name) {
         super(material, name);
 
     }
 
-    @Override
+/*    @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         super.registerBlockIcons(iconRegister);
         this.iconConnectedTexture = new IconConnectedTexture(this.blockIcon);
-    }
+    }*/
 
-    @Override
+/*    @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
@@ -65,32 +63,32 @@ public abstract class BlockCT extends MOBlock
     {
         int type = 0;
         if (isSideCT(world, x, y, z, sideId)) {
-            ForgeDirection side = ForgeDirection.getOrientation(sideId);
-            if (side != ForgeDirection.UP && side != ForgeDirection.DOWN) {
-                ForgeDirection direction = ForgeDirection.getOrientation(MOBlockHelper.getAboveSide(sideId));
+            EnumFacing side = EnumFacing.getOrientation(sideId);
+            if (side != EnumFacing.UP && side != EnumFacing.DOWN) {
+                EnumFacing direction = EnumFacing.getOrientation(MOBlockHelper.getAboveSide(sideId));
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 0, true);
-                direction = ForgeDirection.getOrientation(MOBlockHelper.getBelowSide(sideId));
+                direction = EnumFacing.getOrientation(MOBlockHelper.getBelowSide(sideId));
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 1, true);
-                direction = ForgeDirection.getOrientation(MOBlockHelper.getLeftSide(sideId));
+                direction = EnumFacing.getOrientation(MOBlockHelper.getLeftSide(sideId));
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 2, true);
-                direction = ForgeDirection.getOrientation(MOBlockHelper.getRightSide(sideId));
+                direction = EnumFacing.getOrientation(MOBlockHelper.getRightSide(sideId));
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 3, true);
             }else
             {
-                ForgeDirection direction = ForgeDirection.NORTH;
+                EnumFacing direction = EnumFacing.NORTH;
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 0, true);
-                direction = ForgeDirection.SOUTH;
+                direction = EnumFacing.SOUTH;
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 1, true);
-                direction = ForgeDirection.WEST;
+                direction = EnumFacing.WEST;
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 2, true);
-                direction = ForgeDirection.EAST;
+                direction = EnumFacing.EAST;
                 if (canConnect(world, world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ), x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
                     type = MOMathHelper.setBoolean(type, 3, true);
             }
@@ -100,16 +98,10 @@ public abstract class BlockCT extends MOBlock
         if (icon != null)
             icon.setType(type);
         return icon;
-    }
+    }*/
 
-    public abstract boolean canConnect(IBlockAccess world,Block block,int x,int y,int z);
+    public abstract boolean canConnect(IBlockAccess world, BlockPos pos, IBlockState blockState);
 
-    public abstract boolean isSideCT(IBlockAccess world,int x,int y,int z,int side);
-
-    @SideOnly(Side.CLIENT)
-    public IconConnectedTexture getIconConnectedTexture(int meta,int side)
-    {
-        return iconConnectedTexture;
-    }
+    public abstract boolean isSideCT(IBlockAccess world, BlockPos pos, EnumFacing side);
 
 }

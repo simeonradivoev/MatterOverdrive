@@ -18,10 +18,10 @@
 
 package matteroverdrive.handler.weapon;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -34,7 +34,7 @@ import java.util.Map;
 public class CommonWeaponHandler
 {
     private static final PacketFirePlasmaShot.BiHandler firePlasmaShotHandler = new PacketFirePlasmaShot.BiHandler();
-    Map<EntityPlayer, Long> weaponTimestamps;
+    private final Map<EntityPlayer, Long> weaponTimestamps;
 
     public CommonWeaponHandler()
     {
@@ -53,7 +53,11 @@ public class CommonWeaponHandler
 
     public long getTimestamp(EntityPlayer entityPlayer)
     {
-        return weaponTimestamps.get(entityPlayer);
+        if (entityPlayer != null)
+        {
+            return weaponTimestamps.get(entityPlayer);
+        }
+        return 0;
     }
 
     public void handlePlasmaShotFire(EntityPlayer entityPlayer, PacketFirePlasmaShot plasmaShot, long timeStamp)

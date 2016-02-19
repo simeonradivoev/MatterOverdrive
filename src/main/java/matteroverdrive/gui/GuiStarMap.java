@@ -36,13 +36,15 @@ import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -55,7 +57,7 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
 {
     public static ScaleTexture BG = new ScaleTexture(new ResourceLocation(Reference.PATH_GUI + "star_map.png"),255,141).setOffsets(213,34,42,94);
     Minecraft mc;
-    IModelCustom sphere;
+    IModel sphere;
     PagePlanetMenu planetPage;
     PageGalaxy pageGalaxy;
     PageQuadrant pageQuadrant;
@@ -66,7 +68,13 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
     {
         super(new ContainerStarMap(inventoryPlayer,machine),machine,480,360);
         mc = Minecraft.getMinecraft();
-        sphere = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.MODEL_SPHERE));
+        try
+        {
+            sphere = OBJLoader.instance.loadModel(new ResourceLocation(Reference.MODEL_SPHERE));
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         background = BG;
         texW = 255;
         texH = 237;
@@ -104,10 +112,10 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
     {
         super.drawGuiContainerBackgroundLayer(partialTick, x, y);
 
-        glPushMatrix();
-        glTranslated(guiLeft, guiTop, 0);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(guiLeft, guiTop, 0);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_ONE, GL_ONE);
         if (machine.getActiveSpaceBody() != null)
         {
             Collection<ISpaceBodyHoloRenderer> renderers = ClientProxy.renderHandler.getStarmapRenderRegistry().getStarmapRendererCollection(machine.getActiveSpaceBody().getClass());
@@ -117,60 +125,55 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
                 {
                     if (renderer.displayOnZoom(machine.getZoomLevel(), machine.getActiveSpaceBody()))
                     {
-                        glPushMatrix();
-                        glTranslated(xSize / 1.9, ySize - 16, 0);
+                        GlStateManager.pushMatrix();
+                        GlStateManager.translate(xSize / 1.9, ySize - 16, 0);
                         if (machine.getActiveSpaceBody() != null)
                         {
                             renderer.renderGUIInfo(GalaxyClient.getInstance().getTheGalaxy(), machine.getActiveSpaceBody(), machine, partialTick, 0.8f);
                         }
-                        glPopMatrix();
+                        GlStateManager.popMatrix();
                     }
                 }
             }
         }
-        glPopMatrix();
-    }
-
-    public void drawScreen(int mouseX, int mouseY, float partialTick)
-    {
-        super.drawScreen(mouseX, mouseY, partialTick);
+        GlStateManager.popMatrix();
     }
 
     public void drawWorldBackground(int p_146270_1_)
     {
-        glDisable(GL_TEXTURE_2D);
-        glColor3f(0,0,0);
+        GlStateManager.pushAttrib();
+        GlStateManager.disableTexture2D();
+        GlStateManager.color(0,0,0);
         RenderUtils.drawPlane(0,0,-1000,width,height);
-        glEnable(GL_TEXTURE_2D);
-        glPushMatrix();
+        GlStateManager.enableTexture2D();
+        GlStateManager.pushMatrix();
 
         //GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
         //GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        glPushAttrib(GL_COLOR_BUFFER_BIT);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_ONE, GL_ONE);
 
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        glPushMatrix();
-        GL11.glLoadIdentity();
+        GlStateManager.matrixMode(GL_PROJECTION);
+        GlStateManager.pushMatrix();
+        GlStateManager.loadIdentity();
         Project.gluPerspective(75f, (float)this.mc.displayWidth / (float)this.mc.displayHeight, 0.05f, 20);
         //RenderUtil.loadMatrix(camera.getTransposeProjectionMatrix());
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        glPushMatrix();
-        GL11.glLoadIdentity();
+        GlStateManager.matrixMode(GL_MODELVIEW);
+        GlStateManager.pushMatrix();
+        GlStateManager.loadIdentity();
         //RenderUtil.loadMatrix(camera.getTransposeViewMatrix());
-        glRotated(15,1,0,0);
-        GL11.glTranslatef(0, -0.8f, 0);
+        GlStateManager.rotate(15,1,0,0);
+        GlStateManager.translate(0, -0.8f, 0);
 
-        float lastRotationYaw = Minecraft.getMinecraft().renderViewEntity.rotationYaw;
-        float lastRotationPitch = Minecraft.getMinecraft().renderViewEntity.rotationPitch;
+        float lastRotationYaw = Minecraft.getMinecraft().getRenderViewEntity().rotationYaw;
+        float lastRotationPitch = Minecraft.getMinecraft().getRenderViewEntity().rotationPitch;
         float rotation = 0;
         if (machine.getZoomLevel() <= 2)
         {
             rotation = mc.theWorld.getWorldTime() * 0.1f;
         }
-        Minecraft.getMinecraft().renderViewEntity.rotationYaw = 180 + rotation;
-        Minecraft.getMinecraft().renderViewEntity.prevRotationPitch = Minecraft.getMinecraft().renderViewEntity.rotationPitch = 15;
+        Minecraft.getMinecraft().getRenderViewEntity().rotationYaw = 180 + rotation;
+        Minecraft.getMinecraft().getRenderViewEntity().prevRotationPitch = Minecraft.getMinecraft().getRenderViewEntity().rotationPitch = 15;
 
 
         //bindTexture(ClientProxy.renderHandler.getRendererOmniTool().getWeaponTexture());
@@ -178,10 +181,10 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         switch (machine.getZoomLevel())
         {
             case 0:
-                glTranslated(0,-1.1,-4f);
+                GlStateManager.translate(0,-1.1,-4f);
                 break;
             case 1:
-                glTranslated(0,-0.6,-4f);
+                GlStateManager.translate(0,-0.6,-4f);
                 break;
             case 2:
                 Star star = machine.getStar();
@@ -196,28 +199,28 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
                         }
                     }
                 }
-                glTranslated(0,0,-maxDistance * 3 - 1.5f);
+                GlStateManager.translate(0,0,-maxDistance * 3 - 1.5f);
                 break;
             default:
-                GL11.glTranslatef(0, 0.1f, -3f);
+                GlStateManager.translate(0, 0.1f, -3f);
                 break;
         }
 
-        glRotated(rotation,0,1,0);
-        //glTranslated(0.5f,2.5f,3);
+        GlStateManager.rotate(rotation,0,1,0);
+        //GlStateManager.translate(0.5f,2.5f,3);
         ClientProxy.renderHandler.getTileEntityRendererStarMap().render(machine,-0.5f,-1.8f,-0.5f,0);
-        glPopMatrix();
+        GlStateManager.popMatrix();
         //fontRendererObj.drawString("Test",100,100,0xffffff);
 
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        glPopMatrix();
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        glPopMatrix();
+        GlStateManager.matrixMode(GL_PROJECTION);
+        GlStateManager.popMatrix();
+        GlStateManager.matrixMode(GL_MODELVIEW);
+        GlStateManager.popMatrix();
 
-        Minecraft.getMinecraft().renderViewEntity.rotationYaw = lastRotationYaw;
-        Minecraft.getMinecraft().renderViewEntity.prevRotationPitch = Minecraft.getMinecraft().renderViewEntity.rotationPitch = lastRotationPitch;
+        Minecraft.getMinecraft().getRenderViewEntity().rotationYaw = lastRotationYaw;
+        Minecraft.getMinecraft().getRenderViewEntity().prevRotationPitch = Minecraft.getMinecraft().getRenderViewEntity().rotationPitch = lastRotationPitch;
 
-        GL11.glPopAttrib();
+        GlStateManager.popAttrib();
     }
 
     public void onPageChange(int newPage)
@@ -284,11 +287,5 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
     public boolean doesGuiPauseGame()
     {
         return false;
-    }
-
-    @Override
-    public void updateScreen()
-    {
-        super.updateScreen();
     }
 }

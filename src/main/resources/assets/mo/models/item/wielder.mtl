@@ -1,0 +1,5 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 15.01.2016 12:53:05
+
+newmtl omni_tool_mat
+map_Kd mo:items/omni_tool

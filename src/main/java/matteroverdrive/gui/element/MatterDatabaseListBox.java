@@ -18,12 +18,13 @@
 
 package matteroverdrive.gui.element;
 
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -80,7 +81,7 @@ public class MatterDatabaseListBox extends MOElementListBox
 		@Override
 		public void draw(MOElementListBox listBox, int x, int y, int backColor,int textColor, boolean selected,boolean BG)
 		{
-			GL11.glColor4f(1.0F, 1.0F, 1.0F,1.0F);
+			GlStateManager.color(1.0F, 1.0F, 1.0F,1.0F);
 
 			if (BG) {
 				if (selected) {
@@ -105,13 +106,13 @@ public class MatterDatabaseListBox extends MOElementListBox
 			tooltip.add("Progress: " + itemComp.getProgress() + "%");
 			tooltip.add("Matter: " + MatterHelper.getMatterAmountFromItem(item) + MatterHelper.MATTER_UNIT);
 			((MatterDatabaseListBox)listBox).getGui().setTooltip(tooltip);
-			GL11.glColor4f(1, 1, 1, 1);
+			GlStateManager.color(1, 1, 1, 1);
 		}
 	}
 
 	public MOGuiBase getGui()
 	{
-		return (MOGuiBase)this.gui;
+		return this.gui;
 	}
 
 	public void setFilter(String filter)

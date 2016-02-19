@@ -18,8 +18,11 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.util.MOLog;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.MOEventScan;
@@ -39,9 +42,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
@@ -52,7 +52,7 @@ import net.minecraftforge.common.util.Constants;
 public class DataPad extends MOBaseItem implements IBlockScanner
 {
     @SideOnly(Side.CLIENT)
-    public static MachineSound scanningSound;
+    private static MachineSound scanningSound;
 
     public DataPad(String name)
     {
@@ -71,17 +71,17 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     }
 
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float p_77648_8_, float p_77648_9_, float p_77648_10_)
+    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        if (!entityPlayer.isSneaking() && world.getBlock(x,y,z) != Blocks.air && canScan(itemStack,world.getBlock(x,y,z)))
+        if (!playerIn.isSneaking() && worldIn.getBlockState(pos).getBlock() != Blocks.air && canScan(stack,worldIn.getBlockState(pos)))
         {
-            entityPlayer.setItemInUse(itemStack,getMaxItemUseDuration(itemStack));
-            if (world.isRemote)
+            playerIn.setItemInUse(stack,getMaxItemUseDuration(stack));
+            if (worldIn.isRemote)
             {
-                playSound(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ);
+                playSound(playerIn.getPosition());
             }else
             {
-                setLastBlock(itemStack,world.getBlock(x,y,z));
+                setLastBlock(stack,worldIn.getBlockState(pos).getBlock());
             }
             return true;
         }
@@ -108,7 +108,7 @@ public class DataPad extends MOBaseItem implements IBlockScanner
         }
         catch (Exception e)
         {
-            MatterOverdrive.log.error("There was a problem while trying to open the Data Pad Gui",e);
+            MOLog.error("There was a problem while trying to open the Data Pad Gui",e);
         }
 
     }
@@ -133,27 +133,27 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     }
 
     @Override
-    public ItemStack onEaten(ItemStack scanner, World world, EntityPlayer player)
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
     {
-        if (world.isRemote)
+        if (worldIn.isRemote)
         {
-            if (!MinecraftForge.EVENT_BUS.post(new MOEventScan(player,scanner,getScanningPos(scanner,player))))
+            if (!MinecraftForge.EVENT_BUS.post(new MOEventScan(playerIn,stack,getScanningPos(stack,playerIn))))
             {
                 stopScanSounds();
             }
         }else
         {
-            MOEventScan event = new MOEventScan(player,scanner,getScanningPos(scanner,player));
+            MOEventScan event = new MOEventScan(playerIn,stack,getScanningPos(stack,playerIn));
             if (!MinecraftForge.EVENT_BUS.post(event))
             {
-                if (destroysBlocks(scanner) && world.canMineBlock(player,event.position.blockX,event.position.blockY,event.position.blockZ))
+                if (destroysBlocks(stack) && worldIn.isBlockModifiable(playerIn,event.position.getBlockPos()))
                 {
-                    world.setBlockToAir(event.position.blockX, event.position.blockY, event.position.blockZ);
+                    worldIn.setBlockToAir(event.position.getBlockPos());
                 }
-                SoundHandler.PlaySoundAt(world, "scanner_success", player);
+                SoundHandler.PlaySoundAt(worldIn, "scanner_success", playerIn);
             }
         }
-        return scanner;
+        return stack;
     }
 
     @Override
@@ -165,7 +165,7 @@ public class DataPad extends MOBaseItem implements IBlockScanner
 
             if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                 Block lastBlock = getLastBlock(scanner);
-                if (lastBlock != null && lastBlock != player.worldObj.getBlock(hit.blockX,hit.blockY,hit.blockZ))
+                if (lastBlock != null && lastBlock != player.worldObj.getBlockState(hit.getBlockPos()).getBlock())
                 {
                     //player.setItemInUse(scanner,getMaxItemUseDuration(scanner));
                     player.clearItemInUse();
@@ -197,7 +197,7 @@ public class DataPad extends MOBaseItem implements IBlockScanner
         if (itemStack.getTagCompound() == null)
             itemStack.setTagCompound(new NBTTagCompound());
 
-        int blockID = block.getIdFromBlock(block);
+        int blockID = Block.getIdFromBlock(block);
         if (itemStack.getTagCompound().getInteger("LastBlock") != blockID)
             itemStack.getTagCompound().setInteger("LastBlock",blockID);
     }
@@ -209,11 +209,11 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     }
 
     @SideOnly(Side.CLIENT)
-    private void playSound(double x,double y,double z)
+    private void playSound(BlockPos pos)
     {
         if(scanningSound == null)
         {
-            scanningSound = new MachineSound(new ResourceLocation(Reference.MOD_ID + ":" +"scanner_scanning"),(float)x,(float)y,(float)z,0.6f,1);
+            scanningSound = new MachineSound(new ResourceLocation(Reference.MOD_ID + ":" +"scanner_scanning"),pos,0.6f,1);
             Minecraft.getMinecraft().getSoundHandler().playSound(scanningSound);
         }
     }
@@ -231,19 +231,25 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     @Override
     public MovingObjectPosition getScanningPos(ItemStack itemStack,EntityPlayer player)
     {
-        return MOPhysicsHelper.rayTrace(player, player.worldObj, 5, 0, Vec3.createVectorHelper(0, player.worldObj.isRemote ? 0 : player.getEyeHeight(), 0), true, false);
+        return MOPhysicsHelper.rayTrace(player, player.worldObj, 5, 0, new Vec3(0, player.getEyeHeight(), 0), true, false);
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
+    {
+        return false;
     }
 
 
     @Override
     public EnumAction getItemUseAction(ItemStack p_77661_1_)
     {
-        return EnumAction.block;
+        return EnumAction.NONE;
     }
 
     public void addToScanWhitelist(ItemStack itemStack,Block block)
     {
-        String id = Block.blockRegistry.getNameForObject(block);
+        String id = block.getRegistryName();
         if (id != null)
         {
             NBTTagList list = itemStack.getTagCompound().getTagList("whitelist", Constants.NBT.TAG_STRING);
@@ -329,20 +335,30 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     @Override
     public boolean destroysBlocks(ItemStack itemStack)
     {
-        if (itemStack.hasTagCompound())
-        {
-            return itemStack.getTagCompound().getBoolean("Destroys");
-        }
-        return false;
+        return itemStack.hasTagCompound() && itemStack.getTagCompound().getBoolean("Destroys");
     }
-    public boolean canScan(ItemStack itemStack,Block block)
+
+    @Override
+    public boolean showsGravitationalWaves(ItemStack itemStack)
+    {
+        if (itemStack.getTagCompound() != null)
+        {
+            if (itemStack.getTagCompound().hasKey("showGravWaves"))
+            {
+                return itemStack.getTagCompound().getBoolean("showGravWaves");
+            }
+        }
+        return true;
+    }
+
+    public boolean canScan(ItemStack itemStack,IBlockState state)
     {
         if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("whitelist", Constants.NBT.TAG_LIST))
         {
             NBTTagList tagList = itemStack.getTagCompound().getTagList("whitelist", Constants.NBT.TAG_STRING);
             for (int i = 0;i < tagList.tagCount();i++)
             {
-                if (tagList.getStringTagAt(i).equals(Block.blockRegistry.getNameForObject(block)))
+                if (tagList.getStringTagAt(i).equals(state.getBlock().getRegistryName()))
                 {
                     return true;
                 }
@@ -354,11 +370,7 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     }
     public boolean hasGui(ItemStack itemStack)
     {
-        if (itemStack.getTagCompound() != null)
-        {
-            return !itemStack.getTagCompound().getBoolean("nogui");
-        }
-        return true;
+        return itemStack.getTagCompound() == null || !itemStack.getTagCompound().getBoolean("nogui");
     }
     //endregion
 }

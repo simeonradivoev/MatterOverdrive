@@ -30,12 +30,12 @@ import matteroverdrive.util.math.MOMathHelper;
 public class ElementGrid extends ElementBaseGroup
 {
     private int maxWidth;
-    float scrollYSmooth = 0;
-    int scrollX = 0;
-    int scrollY = 0;
-    int scrollSpeed = 10;
-    int marginTop = 0;
-    int marginLeft = 0;
+    private float scrollYSmooth = 0;
+    private int scrollX = 0;
+    private int scrollY = 0;
+    private int scrollSpeed = 10;
+    private int marginTop = 0;
+    private int marginLeft = 0;
 
     public ElementGrid(MOGuiBase guiBase, int x, int y, int width, int height, int maxWidth)
     {
@@ -44,7 +44,7 @@ public class ElementGrid extends ElementBaseGroup
     }
 
     @Override
-    public void update(int mouseX,int mouseY)
+    public void update(int mouseX,int mouseY,float partialTicks)
     {
 
     }

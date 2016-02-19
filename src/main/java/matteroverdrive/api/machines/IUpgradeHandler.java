@@ -19,12 +19,13 @@
 package matteroverdrive.api.machines;
 
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.machines.UpgradeHandlerGeneric;
 
 /**
  * Created by Simeon on 8/23/2015.
  * Used by machines to affect the upgrade amount from Machine Upgrades.
- * Used mainly to check if speed or some other Machine Stat doesn't reach 0 as in the implementation {@link matteroverdrive.machines.UpgradeHandlerMinimum}.
- * @see matteroverdrive.machines.UpgradeHandlerMinimum
+ * Used mainly to check if speed or some other Machine Stat doesn't reach 0 as in the implementation {@link UpgradeHandlerGeneric}.
+ * @see UpgradeHandlerGeneric
  */
 public interface IUpgradeHandler
 {

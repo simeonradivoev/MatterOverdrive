@@ -18,19 +18,20 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
@@ -39,9 +40,7 @@ import net.minecraft.world.World;
  */
 public class MatterContainer extends MOBaseItem
 {
-    IIcon centerFill;
-    IIcon bottomFill;
-    boolean isFull;
+    final boolean isFull;
 
     public MatterContainer(String name,boolean isFull) {
         super(name);
@@ -49,7 +48,7 @@ public class MatterContainer extends MOBaseItem
         setMaxStackSize(8);
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
         this.itemIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "container");
@@ -68,7 +67,7 @@ public class MatterContainer extends MOBaseItem
     public int getRenderPasses(int metadata)
     {
         return isFull ? 3 : 1;
-    }
+    }*/
 
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
     {
@@ -82,28 +81,25 @@ public class MatterContainer extends MOBaseItem
         {
             if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
-                int i = movingobjectposition.blockX;
-                int j = movingobjectposition.blockY;
-                int k = movingobjectposition.blockZ;
+                BlockPos pos = movingobjectposition.getBlockPos();
 
-                if (!world.canMineBlock(entityPlayer, i, j, k))
+                if (!world.getBlockState(pos).getBlock().canHarvestBlock(world,pos,entityPlayer))
                 {
                     return itemStack;
                 }
 
                 if (!isFull)
                 {
-                    if (!entityPlayer.canPlayerEdit(i, j, k, movingobjectposition.sideHit, itemStack))
+                    if (!entityPlayer.canPlayerEdit(pos, movingobjectposition.sideHit, itemStack))
                     {
                         return itemStack;
                     }
 
-                    Block block = world.getBlock(i, j, k);
-                    int l = world.getBlockMetadata(i, j, k);
+                    IBlockState block = world.getBlockState(pos);
 
-                    if (block == MatterOverdriveBlocks.blockMatterPlasma && l == 0)
+                    if (block.getBlock() == MatterOverdriveBlocks.blockMatterPlasma)
                     {
-                        world.setBlockToAir(i, j, k);
+                        world.setBlockToAir(pos);
                         return this.darinFluid(itemStack, entityPlayer, MatterOverdriveItems.matterContainerFull);
                     }
                 }
@@ -114,42 +110,14 @@ public class MatterContainer extends MOBaseItem
                         return new ItemStack(MatterOverdriveItems.matterContainer);
                     }
 
-                    if (movingobjectposition.sideHit == 0)
-                    {
-                        --j;
-                    }
+                    pos = pos.offset(movingobjectposition.sideHit);
 
-                    if (movingobjectposition.sideHit == 1)
-                    {
-                        ++j;
-                    }
-
-                    if (movingobjectposition.sideHit == 2)
-                    {
-                        --k;
-                    }
-
-                    if (movingobjectposition.sideHit == 3)
-                    {
-                        ++k;
-                    }
-
-                    if (movingobjectposition.sideHit == 4)
-                    {
-                        --i;
-                    }
-
-                    if (movingobjectposition.sideHit == 5)
-                    {
-                        ++i;
-                    }
-
-                    if (!entityPlayer.canPlayerEdit(i, j, k, movingobjectposition.sideHit, itemStack))
+                    if (!entityPlayer.canPlayerEdit(pos, movingobjectposition.sideHit, itemStack))
                     {
                         return itemStack;
                     }
 
-                    if (this.tryPlaceContainedLiquid(world, i, j, k) && !entityPlayer.capabilities.isCreativeMode)
+                    if (this.tryPlaceContainedLiquid(world, pos) && !entityPlayer.capabilities.isCreativeMode)
                     {
                         itemStack.stackSize--;
                         if (itemStack.stackSize > 1) {
@@ -188,7 +156,7 @@ public class MatterContainer extends MOBaseItem
         }
     }
 
-    public boolean tryPlaceContainedLiquid(World world, int x, int y, int z)
+    public boolean tryPlaceContainedLiquid(World world, BlockPos pos)
     {
         if (!isFull)
         {
@@ -196,9 +164,9 @@ public class MatterContainer extends MOBaseItem
         }
         else
         {
-            Material material = world.getBlock(x, y, z).getMaterial();
+            Material material = world.getBlockState(pos).getBlock().getMaterial();
 
-            if (!world.isAirBlock(x, y, z))
+            if (!world.isAirBlock(pos))
             {
                 return false;
             }
@@ -206,17 +174,17 @@ public class MatterContainer extends MOBaseItem
             {
                 if (!world.isRemote && !material.isLiquid())
                 {
-                    world.func_147480_a(x, y, z, true);
+                    world.destroyBlock(pos, true);
                 }
 
-                world.setBlock(x, y, z, MatterOverdriveBlocks.blockMatterPlasma, 0, 3);
+                world.setBlockState(pos,MatterOverdriveBlocks.blockMatterPlasma.getDefaultState(),3);
 
                 return true;
             }
         }
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamageForRenderPass(int damage, int pass)
     {
@@ -230,7 +198,7 @@ public class MatterContainer extends MOBaseItem
         {
             return itemIcon;
         }
-    }
+    }*/
 
     @Override
     @SideOnly(Side.CLIENT)

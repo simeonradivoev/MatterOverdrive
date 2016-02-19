@@ -22,7 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.gui.element.*;
-import matteroverdrive.tile.TileEntityMachineDecomposer;
+import matteroverdrive.machines.decomposer.TileEntityMachineDecomposer;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 

@@ -23,7 +23,7 @@ package matteroverdrive.machines.configs;
  */
 public class ConfigPropertyStringList extends ConfigPropertyInteger
 {
-    String[] names;
+    private final String[] names;
 
     public ConfigPropertyStringList(String key, String unlocalizedName, String[] names, int def)
     {

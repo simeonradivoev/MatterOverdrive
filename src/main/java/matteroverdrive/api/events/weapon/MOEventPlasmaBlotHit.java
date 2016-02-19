@@ -18,11 +18,11 @@
 
 package matteroverdrive.api.events.weapon;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Created by Simeon on 7/21/2015.

@@ -5,6 +5,7 @@ import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -50,19 +51,11 @@ public class DilithiumOre extends MOBlock
         }
     }
 
-    /**
-     * Drops the block items with a specified chance of dropping the specified items
-     */
-    public void dropBlockAsItemWithChance(World world, int x, int y, int z, int p_149690_5_, float p_149690_6_, int p_149690_7_)
-    {
-        super.dropBlockAsItemWithChance(world, x, y, z, p_149690_5_, p_149690_6_, p_149690_7_);
-    }
-
-    private Random rand = new Random();
+    private final Random rand = new Random();
     @Override
-    public int getExpDrop(IBlockAccess world, int p_149690_5_, int p_149690_7_)
+    public int getExpDrop(IBlockAccess world, BlockPos pos, int fortune)
     {
-        if (this.getItemDropped(p_149690_5_, rand, p_149690_7_) != Item.getItemFromBlock(this))
+        if (this.getItemDropped(world.getBlockState(pos), rand, fortune) != Item.getItemFromBlock(this))
         {
             return MathHelper.getRandomIntegerInRange(rand, 2, 5);
         }

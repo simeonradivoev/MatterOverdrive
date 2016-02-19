@@ -22,12 +22,13 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.client.render.tileentity.TileEntityRendererGravitationalAnomaly;
 import matteroverdrive.data.biostats.BioticStatTeleport;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
@@ -45,14 +46,14 @@ public class BioticStatRendererTeleporter implements IBioticStatRenderer<BioticS
 
         if (androidPlayer != null && androidPlayer.isAndroid() && androidPlayer.isUnlocked(MatterOverdriveBioticStats.teleport, MatterOverdriveBioticStats.teleport.maxLevel()) && MatterOverdriveBioticStats.teleport.isEnabled(androidPlayer, 0) && MatterOverdriveBioticStats.teleport.getHasPressedKey())
         {
-            Vec3 playerPos = androidPlayer.getPlayer().getPosition(event.partialTicks);
-            if(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed())
+            Vec3 playerPos = androidPlayer.getPlayer().getPositionEyes(event.partialTicks);
+            if(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).isKeyDown())
             {
-                glPushMatrix();
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ONE);
+                GlStateManager.pushMatrix();
+                GlStateManager.enableBlend();
+                GlStateManager.tryBlendFuncSeparate(GL_ONE, GL_ONE,0,1);
                 RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.5f);
-                glTranslated(-playerPos.xCoord, -playerPos.yCoord, -playerPos.zCoord);
+                GlStateManager.translate(-playerPos.xCoord, -playerPos.yCoord+Minecraft.getMinecraft().thePlayer.getEyeHeight(), -playerPos.zCoord);
 
                 //mob.rotationYawHead = androidPlayer.getPlayer().rotationYawHead;
 
@@ -60,16 +61,16 @@ public class BioticStatRendererTeleporter implements IBioticStatRenderer<BioticS
                 if (pos != null)
                 {
                     Minecraft.getMinecraft().renderEngine.bindTexture(TileEntityRendererGravitationalAnomaly.glow);
-                    glTranslated(pos.xCoord, pos.yCoord, pos.zCoord);
-                    glRotated(androidPlayer.getPlayer().rotationYaw, 0, -1, 0);
-                    glRotated(androidPlayer.getPlayer().rotationPitch, 1, 0, 0);
-                    glRotated(Minecraft.getMinecraft().theWorld.getWorldTime() * 10, 0, 0, 1);
-                    glTranslated(-0.5, -0.5, 0);
+                    GlStateManager.translate(pos.xCoord, pos.yCoord, pos.zCoord);
+                    GlStateManager.rotate(androidPlayer.getPlayer().rotationYaw, 0, -1, 0);
+                    GlStateManager.rotate(androidPlayer.getPlayer().rotationPitch, 1, 0, 0);
+                    GlStateManager.rotate(Minecraft.getMinecraft().theWorld.getWorldTime() * 10, 0, 0, 1);
+                    GlStateManager.translate(-0.5, -0.5, 0);
                     RenderUtils.drawPlane(1);
                 }
 
-                glDisable(GL_BLEND);
-                glPopMatrix();
+                GlStateManager.disableBlend();
+                GlStateManager.popMatrix();
             }
         }
     }

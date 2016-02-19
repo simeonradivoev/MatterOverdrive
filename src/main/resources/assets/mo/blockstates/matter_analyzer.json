@@ -1,0 +1,25 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mo:matter_analyzer",
+    "textures": {
+      "bottom": "mo:blocks/base",
+      "top": "mo:blocks/analyzer_top",
+      "side": "mo:blocks/vent2",
+      "front": "mo:blocks/analyzer_front",
+      "back": "mo:blocks/network_port",
+      "particle": "mo:blocks/analyzer_front"
+    }
+  },
+  "variants": {
+    "normal": {"model": "mo:matter_analyzer"},
+    "facing=north": { "model": "mo:matter_analyzer"},
+    "facing=south": { "model": "mo:matter_analyzer","y": 180 },
+    "facing=west":  { "model": "mo:matter_analyzer","y": 270 },
+    "facing=east":  { "model": "mo:matter_analyzer","y": 90 },
+    "inventory": {
+      "model": "mo:matter_analyzer",
+      "transform": "forge:default-block"
+    }
+  }
+}

@@ -21,8 +21,8 @@ package matteroverdrive.tile;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyStorage;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.MachineEnergyStorage;
 import matteroverdrive.data.inventory.EnergySlot;
@@ -32,8 +32,9 @@ import matteroverdrive.network.packet.client.PacketPowerUpdate;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.EnumSet;
 
@@ -42,6 +43,7 @@ import java.util.EnumSet;
  */
 public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler
 {
+    public static final int ENERGY_CLIENT_SYNC_RANGE = 16;
     protected MachineEnergyStorage energyStorage;
     protected int energySlotID;
 
@@ -76,10 +78,9 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
         }
     }
 
-    @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         manageCharging();
     }
 
@@ -89,12 +90,12 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
         {
             if(!this.worldObj.isRemote)
             {
-                int emptyEnergySpace = getFreeEnergySpace(ForgeDirection.DOWN);
+                int emptyEnergySpace = getFreeEnergySpace(EnumFacing.DOWN);
                 int maxEnergyCanSpare = MOEnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, true);
 
                 if(emptyEnergySpace > 0 && maxEnergyCanSpare > 0)
                 {
-                    this.receiveEnergy(ForgeDirection.DOWN, MOEnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, false), false);
+                    this.receiveEnergy(EnumFacing.DOWN, MOEnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, false), false);
                 }
             }
         }
@@ -104,7 +105,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     {
         return this.inventory.getStackInSlot(energySlotID) != null
                 && MOEnergyHelper.isEnergyContainerItem(this.inventory.getStackInSlot(energySlotID))
-                && ((IEnergyContainerItem)this.inventory.getStackInSlot(energySlotID).getItem()).extractEnergy(this.inventory.getStackInSlot(energySlotID), getFreeEnergySpace(ForgeDirection.DOWN), true) > 0;
+                && ((IEnergyContainerItem)this.inventory.getStackInSlot(energySlotID).getItem()).extractEnergy(this.inventory.getStackInSlot(energySlotID), getFreeEnergySpace(EnumFacing.DOWN), true) > 0;
     }
 
     public int getEnergySlotID()
@@ -113,12 +114,12 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     }
 
     @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
+    public boolean canConnectEnergy(EnumFacing from) {
         return true;
     }
 
     @Override
-    public int receiveEnergy(ForgeDirection from, int maxReceive,
+    public int receiveEnergy(EnumFacing from, int maxReceive,
                              boolean simulate) {
         int lastEnergy = energyStorage.getEnergyStored();
         int received = energyStorage.receiveEnergy(maxReceive, simulate);
@@ -130,7 +131,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     }
 
     @Override
-    public int extractEnergy(ForgeDirection from, int maxExtract,
+    public int extractEnergy(EnumFacing from, int maxExtract,
                              boolean simulate)
     {
         int lastEnergy = energyStorage.getEnergyStored();
@@ -143,26 +144,26 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
     }
 
     @Override
-    public int getEnergyStored(ForgeDirection from) {
+    public int getEnergyStored(EnumFacing from) {
         return energyStorage.getEnergyStored();
     }
 
     @Override
-    public int getMaxEnergyStored(ForgeDirection from) {
+    public int getMaxEnergyStored(EnumFacing from) {
         return energyStorage.getMaxEnergyStored();
     }
 
-    public IEnergyStorage getEnergyStorage()
+    public MachineEnergyStorage getEnergyStorage()
     {
         return this.energyStorage;
     }
 
     public int GetEnergyStoredScaled(int i)
     {
-        return MathHelper.ceiling_float_int(((float) this.getEnergyStored(ForgeDirection.DOWN) / (float) this.energyStorage.getMaxEnergyStored()) * i);
+        return MathHelper.ceiling_float_int(((float) this.getEnergyStored(EnumFacing.DOWN) / (float) this.energyStorage.getMaxEnergyStored()) * i);
     }
 
-    public int getFreeEnergySpace(ForgeDirection dir)
+    public int getFreeEnergySpace(EnumFacing dir)
     {
         return this.getMaxEnergyStored(dir) - this.getEnergyStored(dir);
     }
@@ -175,7 +176,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 
     public void UpdateClientPower()
     {
-        MatterOverdrive.packetPipeline.sendToAllAround(new PacketPowerUpdate(this), new NetworkRegistry.TargetPoint(worldObj.provider.dimensionId,xCoord,yCoord,zCoord,64));
+        MatterOverdrive.packetPipeline.sendToAllAround(new PacketPowerUpdate(this), new NetworkRegistry.TargetPoint(worldObj.provider.getDimensionId(),getPos().getX(),getPos().getY(),getPos().getZ(),ENERGY_CLIENT_SYNC_RANGE));
     }
 
     @Override

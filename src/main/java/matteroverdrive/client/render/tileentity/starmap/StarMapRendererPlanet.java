@@ -18,8 +18,6 @@
 
 package matteroverdrive.client.render.tileentity.starmap;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.starmap.IBuildable;
 import matteroverdrive.api.starmap.IBuilding;
@@ -34,8 +32,11 @@ import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.text.DecimalFormat;
@@ -58,56 +59,56 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
             glLineWidth(1);
 
             Planet planet = (Planet)spaceBody;
-            glPushMatrix();
+            GlStateManager.popMatrix();
             renderPlanet(planet, viewerDistance);
-            glPopMatrix();
+            GlStateManager.popMatrix();
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            glEnable(GL_TEXTURE_2D);
+            GlStateManager.enableTexture2D();
         }
     }
 
     protected void renderPlanet(Planet planet, float viewerDistance)
     {
-        glPushMatrix();
+        GlStateManager.pushMatrix();
         float size = getClampedSize(planet);
-        glRotated(10, 1, 0, 0);
+        GlStateManager.rotate(10, 1, 0, 0);
 
-        glRotated(Minecraft.getMinecraft().theWorld.getWorldTime() * 0.1, 0, 1, 0);
+        GlStateManager.rotate(Minecraft.getMinecraft().theWorld.getWorldTime() * 0.1f, 0, 1, 0);
         glPolygonMode(GL_FRONT, GL_LINE);
 
-        glEnable(GL_CULL_FACE);
+        GlStateManager.enableCull();
         //region Sphere rotated
-        glPushMatrix();
+        GlStateManager.pushMatrix();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glDisable(GL_TEXTURE_2D);
-        glDepthMask(true);
-        glColor3f(0, 0, 0);
+        GlStateManager.disableTexture2D();
+        GlStateManager.depthMask(true);
+        GlStateManager.color(0,0,0);
         sphere.draw(size * 0.99f, 64, 32);
-        glDepthMask(false);
+        GlStateManager.depthMask(false);
 
         //region Planet
-        glPushMatrix();
-        glRotated(90, 1, 0, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.rotate(90, 1, 0, 0);
 
         RenderUtils.applyColorWithMultipy(Planet.getGuiColor(planet), 0.2f * (1f / viewerDistance));
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         sphere.draw(size, 64, 32);
-        glPopMatrix();
+        GlStateManager.popMatrix();
         //endregion
 
         drawBuildings(planet, size, viewerDistance);
-        glPopMatrix();
+        GlStateManager.popMatrix();
         //endregion
 
-        glDisable(GL_CULL_FACE);
-        glPopMatrix();
+        GlStateManager.disableCull();
+        GlStateManager.popMatrix();
 
         drawPlanetInfoClose(planet);
 
         //region draw Ships
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glEnable(GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
         drawShips(planet, size, viewerDistance);
         //endregion
     }
@@ -122,12 +123,12 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
         random.setSeed(planet.getSeed());
         for (int i = 0;i < planet.getBuildings().size();i++)
         {
-            glPushMatrix();
-            glRotated(random.nextDouble() * 360, 0, 1, 0);
-            glRotated(random.nextDouble() * 360, 0, 0, 1);
-            glTranslated(planetSize - 0.04, 0, 0);
+            GlStateManager.pushMatrix();
+            GlStateManager.rotate(random.nextFloat() * 360, 0, 1, 0);
+            GlStateManager.rotate(random.nextFloat() * 360, 0, 0, 1);
+            GlStateManager.translate(planetSize - 0.04f, 0, 0);
             RenderUtils.drawCube(0.1, 0.1, 0.1, Reference.COLOR_HOLO, (1f / viewerDistance));
-            glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -137,7 +138,7 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
         random.setSeed(planet.getSeed());
         for (int i = 0; i < planet.getFleet().size();i++)
         {
-            glPushMatrix();
+            GlStateManager.pushMatrix();
             double direction = random.nextDouble() * 2 - 1;
             double startingAngle = random.nextDouble() * Math.PI*2;
             double phi = startingAngle + Math.copySign(Minecraft.getMinecraft().theWorld.getWorldTime() * 0.005, direction);
@@ -145,25 +146,24 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
             double radius = random.nextDouble() * 0.3 + 0.1  + planetSize;
             Vector3f pos = new Vector3f((float)(Math.sin(phi) * Math.sin(theta) * radius), (float)(Math.sin(phi) * Math.cos(theta) * radius), (float)(Math.cos(phi) * radius));
             renderShipPath(planet, planet.getShip(i) ,phi, theta, direction, radius);
-            glTranslatef(pos.x, pos.y, pos.z);
-            glPushMatrix();
-            glScaled(0.01, 0.01, 0.01);
-            glRotated(Minecraft.getMinecraft().renderViewEntity.rotationYaw, 0, -1, 0);
-            glRotated(Minecraft.getMinecraft().renderViewEntity.rotationPitch, 1, 0, 0);
-            glRotated(180, 0, 0, 1);
-            glTranslated(-8, -8, 0);
-            RenderUtils.renderStack(0, 0, 0 , planet.getShip(i),false);
-            glPopMatrix();
-
-            glPopMatrix();
+            GlStateManager.translate(pos.x, pos.y, pos.z);
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(0.01f, 0.01f, 0.01f);
+            GlStateManager.rotate(Minecraft.getMinecraft().getRenderViewEntity().rotationYaw, 0, -1, 0);
+            GlStateManager.rotate(Minecraft.getMinecraft().getRenderViewEntity().rotationPitch, 1, 0, 0);
+            GlStateManager.rotate(180, 0, 0, 1);
+            GlStateManager.translate(-8, -8, 0);
+            RenderUtils.renderStack(0, 0, 0, planet.getShip(i),false);
+            GlStateManager.popMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
     protected void renderShipPath(Planet planet, ItemStack shipStack, double phi, double theta, double direction, double radius)
     {
-        glDisable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_ONE, GL_ONE);
         RenderUtils.applyColorWithMultipy(Planet.getGuiColor(planet), 0.2f);
         glBegin(GL_LINE_STRIP);
         for (int p = 0;p < 8;p++)
@@ -173,39 +173,39 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
             glVertex3f(pathPos.x, pathPos.y, pathPos.z);
         }
         glEnd();
-        glEnable(GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
 
     }
 
     protected void drawPlanetInfoClose(Planet planet)
     {
-        glPushMatrix();
-        RenderUtils.rotateTo(Minecraft.getMinecraft().renderViewEntity);
-        glEnable(GL_TEXTURE_2D);
+        GlStateManager.pushMatrix();
+        RenderUtils.rotateTo(Minecraft.getMinecraft().getRenderViewEntity());
+        GlStateManager.enableTexture2D();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         if (GalaxyClient.getInstance().canSeePlanetInfo(planet,Minecraft.getMinecraft().thePlayer))
         {
             double radius = getClampedSize(planet) * 140;
-            glPushMatrix();
-            glScaled(0.01, 0.01, 0.01);
-            glRotated(180, 0, 0, 1);
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(0.01, 0.01, 0.01);
+            GlStateManager.rotate(180, 0, 0, 1);
             for (int i = 0; i < planet.getBuildings().size(); i++)
             {
                 double angle =  14 * i - 6 * planet.getBuildings().size();
                 angle *= (Math.PI / 180);
                 int x = (int) (Math.cos(angle) * radius) - 10;
                 int y = (int) (Math.sin(angle) * radius) - 10;
-                RenderUtils.renderStack(x, y, planet.getBuildings().get(i),1);
+                RenderUtils.renderStack(x, y,0, planet.getBuildings().get(i),false);
                 Color color = Reference.COLOR_HOLO_RED;
                 if (planet.getBuildings().get(i).getItem() instanceof IBuilding && ((IBuilding) planet.getBuildings().get(i).getItem()).isOwner(planet.getBuildings().get(i),Minecraft.getMinecraft().thePlayer))
                     color = Reference.COLOR_HOLO;
-                Minecraft.getMinecraft().fontRenderer.drawString(planet.getBuildings().get(i).getDisplayName(), x + 21, y + 6, color.getColor());
+                Minecraft.getMinecraft().fontRendererObj.drawString(planet.getBuildings().get(i).getDisplayName(), x + 21, y + 6, color.getColor());
 
             }
-            glPopMatrix();
+            GlStateManager.popMatrix();
         }
-        glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override
@@ -213,8 +213,8 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
     {
         if (spaceBody instanceof Planet)
         {
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_ONE, GL_ONE);
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL_ONE, GL_ONE);
 
             Color color = Reference.COLOR_HOLO;
             Planet planet = (Planet)spaceBody;
@@ -229,14 +229,14 @@ public class StarMapRendererPlanet extends StarMapRendererAbstract {
                         List<String> info = new ArrayList<>();
                         if (stack.getItem() instanceof IBuildable && planet.canBuild((IBuildable)stack.getItem(),stack,info)) {
                             RenderUtils.renderStack(0, y - itemCount * 18 - 21,0, stack,false);
-                            glEnable(GL_BLEND);
-                            glBlendFunc(GL_ONE, GL_ONE);
-                            RenderUtils.drawString(String.format("%1$s - %2$s", stack.getDisplayName(), MOStringHelper.formatRemainingTime(((IBuildable) stack.getItem()).getRemainingBuildTimeTicks(stack, planet, Minecraft.getMinecraft().theWorld)/20)), 0 + 18, y + 5 - itemCount * 18 - 21, Reference.COLOR_HOLO, opacity);
+                            GlStateManager.enableBlend();
+                            GlStateManager.blendFunc(GL_ONE, GL_ONE);
+                            RenderUtils.drawString(String.format("%1$s - %2$s", stack.getDisplayName(), MOStringHelper.formatRemainingTime(((IBuildable) stack.getItem()).getRemainingBuildTimeTicks(stack, planet, Minecraft.getMinecraft().theWorld)/20)), 18, y + 5 - itemCount * 18 - 21, Reference.COLOR_HOLO, opacity);
                         }else
                         {
                             RenderUtils.renderStack(0, y - itemCount * 18 - 21,0, stack,false);
-                            glEnable(GL_BLEND);
-                            glBlendFunc(GL_ONE, GL_ONE);
+                            GlStateManager.enableBlend();
+                            GlStateManager.blendFunc(GL_ONE, GL_ONE);
                             RenderUtils.drawString(String.join(". ",info), 18, y + 5 - itemCount * 18 - 21, Reference.COLOR_HOLO_RED, opacity);
                         }
                         itemCount++;

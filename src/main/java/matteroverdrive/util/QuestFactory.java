@@ -19,8 +19,6 @@
 package matteroverdrive.util;
 
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.quest.IQuest;
@@ -28,6 +26,8 @@ import matteroverdrive.api.quest.QuestStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Random;
@@ -62,19 +62,25 @@ public class QuestFactory
     @SideOnly(Side.CLIENT)
     public List<String> getFormattedQuestObjective(EntityPlayer entityPlayer,QuestStack questStack,int objectiveInex,int length)
     {
-        List<String> objectiveLines = Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(questStack.getObjective(entityPlayer,objectiveInex),length);
+        return getFormattedQuestObjective(entityPlayer,questStack,objectiveInex,length,EnumChatFormatting.DARK_GREEN.toString(),EnumChatFormatting.GREEN.toString());
+    }
+
+    @SideOnly(Side.CLIENT)
+    public List<String> getFormattedQuestObjective(EntityPlayer entityPlayer,QuestStack questStack,int objectiveInex,int length,String uncompletedPrefix,String completedPrefix)
+    {
+        List<String> objectiveLines = Minecraft.getMinecraft().fontRendererObj.listFormattedStringToWidth(questStack.getObjective(entityPlayer,objectiveInex),length);
         boolean isObjectiveComplete = questStack.isObjectiveCompleted(Minecraft.getMinecraft().thePlayer,objectiveInex);
         for (int o = 0;o < objectiveLines.size();o++)
         {
             String line = "";
             if (isObjectiveComplete)
             {
-                line += EnumChatFormatting.GREEN;
+                line += completedPrefix;
                 if (o == 0)
                     line += Reference.UNICODE_COMPLETED_OBJECTIVE + " ";
             }else
             {
-                line += EnumChatFormatting.DARK_GREEN;
+                line += uncompletedPrefix;
                 if (o == 0)
                     line += Reference.UNICODE_UNCOMPLETED_OBJECTIVE +" ";
             }

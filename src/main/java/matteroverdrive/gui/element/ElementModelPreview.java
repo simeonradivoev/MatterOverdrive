@@ -18,10 +18,14 @@
 
 package matteroverdrive.gui.element;
 
+import matteroverdrive.client.RenderHandler;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -31,7 +35,6 @@ import java.util.List;
  */
 public class ElementModelPreview extends MOElementBase
 {
-    IItemRenderer renderer;
     ItemStack itemStack;
 
     public ElementModelPreview(MOGuiBase gui, int posX, int posY) {
@@ -68,33 +71,36 @@ public class ElementModelPreview extends MOElementBase
     @Override
     public void drawForeground(int mouseX, int mouseY)
     {
-        if (renderer != null && itemStack != null)
+        if (itemStack != null)
         {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             Transform();
-            RenderUtils.enable3DRender();
-            renderer.renderItem(IItemRenderer.ItemRenderType.INVENTORY, itemStack);
-            RenderUtils.enable2DRender();
-            GL11.glPopMatrix();
+            GlStateManager.disableCull();
+            RenderHelper.enableGUIStandardItemLighting();
+            Minecraft.getMinecraft().getRenderItem().renderItem(itemStack, ItemCameraTransforms.TransformType.GUI);
+            RenderHelper.disableStandardItemLighting();
+            GlStateManager.popMatrix();
         }
     }
 
     public void Transform()
     {
-        GL11.glTranslatef(posX, posY, 80);
-        GL11.glScaled(60, 60, 60);
-        GL11.glRotatef(-90, 0, 1, 0);
-        GL11.glRotatef(210, 0, 0, 1);
-        GL11.glRotatef(-25, 0, 1, 0);
+        GlStateManager.translate(posX, posY, 80);
+        GlStateManager.rotate(-90, 0, 1, 0);
+        GlStateManager.rotate(210, 0, 0, 1);
+        GlStateManager.rotate(-25, 0, 1, 0);
+        GlStateManager.scale(120, 120, 120);
+        //GlStateManager.translate(0,-0.7,0);
+        //GlStateManager.translate(0.2,0.2,0.2);
     }
 
-    public IItemRenderer getRenderer() {
+    /*public IItemRenderer getRenderer() {
         return renderer;
     }
 
     public void setRenderer(IItemRenderer renderer) {
         this.renderer = renderer;
-    }
+    }*/
 
     public ItemStack getItemStack() {
         return itemStack;

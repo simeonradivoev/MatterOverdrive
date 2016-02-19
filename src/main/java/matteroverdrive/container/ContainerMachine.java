@@ -18,29 +18,32 @@
 
 package matteroverdrive.container;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.container.slot.SlotInventory;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.UpgradeSlot;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.MOInventoryHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
 /**
  * Created by Simeon on 4/9/2015.
  */
-public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseContainer
+public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseContainer implements IMachineWatcher
 {
+    EntityPlayer entityPlayer;
     protected T machine;
-    protected int progressScaled;
+    private int progressScaled;
 
     public ContainerMachine()
     {
@@ -51,13 +54,35 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
     {
         super(inventory);
         this.machine = machine;
+        entityPlayer = inventory.player;
         init(inventory);
     }
 
     protected void init(InventoryPlayer inventory)
     {
+
     }
 
+    @Override
+    public void onCraftGuiOpened(ICrafting icrafting)
+    {
+        super.onCraftGuiOpened(icrafting);
+        if (icrafting instanceof EntityPlayerMP)
+        {
+            machine.addWatcher(this);
+        }
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer playerIn)
+    {
+        if (playerIn instanceof EntityPlayerMP)
+        {
+            machine.removeWatcher(this);
+        }
+    }
+
+    @Override
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
@@ -116,7 +141,7 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
     public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
     {
         ItemStack itemstack = null;
-        Slot slot = (Slot)this.inventorySlots.get(slotID);
+        Slot slot = this.inventorySlots.get(slotID);
 
         if(slot != null && slot.getHasStack())
         {
@@ -154,12 +179,12 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 
     protected boolean putInPlayerInventory(ItemStack itemStack)
     {
-        return MOInventoryHelper.mergeItemStack((List<Slot>)inventorySlots, itemStack, machine.getSizeInventory(), inventorySlots.size() - machine.getSizeInventory(), true, true);
+        return MOInventoryHelper.mergeItemStack(inventorySlots, itemStack, machine.getSizeInventory(), inventorySlots.size() - machine.getSizeInventory(), true, true);
     }
 
     protected boolean tryAndPutInMachineSlots(ItemStack itemStack,IInventory inventory)
     {
-        return MOInventoryHelper.mergeItemStack((List<Slot>)inventorySlots, itemStack, 0, inventory.getSizeInventory(), false, true);
+        return MOInventoryHelper.mergeItemStack(inventorySlots, itemStack, 0, inventory.getSizeInventory(), false, true);
     }
 
     public T getMachine()
@@ -170,5 +195,27 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
     public float getProgress()
     {
         return (float)progressScaled / (float)Short.MAX_VALUE;
+    }
+
+    @Override
+    public EntityPlayer getPlayer()
+    {
+        return entityPlayer;
+    }
+
+    @Override
+    public void onWatcherAdded(MOTileEntityMachine machine)
+    {
+
+    }
+
+    @Override
+    public boolean isWatcherValid()
+    {
+        if (entityPlayer instanceof EntityPlayerMP)
+        {
+            return ((EntityPlayerMP) entityPlayer).getServerForPlayer().getPlayerEntityByUUID(entityPlayer.getUniqueID()) != null;
+        }
+        return false;
     }
 }

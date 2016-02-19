@@ -1,0 +1,22 @@
+{
+  "textures": {
+    "particle": "mo:blocks/holo_monitor",
+    "front": "mo:blocks/holo_monitor",
+    "side": "mo:blocks/base"
+  },
+  "elements": [
+    {
+      "name": "Main",
+      "from": [ 0.0, 0.0, 14.0 ],
+      "to": [ 16.0, 16.0, 16.0 ],
+      "faces": {
+        "north": { "texture": "#front", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+        "east": { "texture": "#side", "uv": [ 0.0, 0.0, 5.0, 16.0 ] ,"cullface":"east"},
+        "south": { "texture": "#side", "uv": [ 0.0, 0.0, 16.0, 16.0 ] ,"cullface":"south"},
+        "west": { "texture": "#side", "uv": [ 0.0, 0.0, 5.0, 16.0 ] ,"cullface":"west"},
+        "up": { "texture": "#side", "uv": [ 0.0, 0.0, 16.0, 5.0 ] , "cullface":"up"},
+        "down": { "texture": "#side", "uv": [ 0.0, 0.0, 16.0, 5.0 ] , "cullface":"down"}
+      }
+    }
+  ]
+}

@@ -22,7 +22,12 @@ import matteroverdrive.api.starmap.BuildingType;
 import matteroverdrive.api.starmap.IPlanetStatChange;
 import matteroverdrive.api.starmap.PlanetStatType;
 import matteroverdrive.starmap.data.Planet;
+import matteroverdrive.util.MOStringHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -36,6 +41,14 @@ public class ItemBuildingShipHangar extends ItemBuildingAbstract implements IPla
     public ItemBuildingShipHangar(String name)
     {
         super(name);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+    {
+        super.addDetails(itemstack,player,infos);
+        infos.add(EnumChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.FLEET_SIZE) + ": +" + SHIP_SPACES);
     }
 
     @Override

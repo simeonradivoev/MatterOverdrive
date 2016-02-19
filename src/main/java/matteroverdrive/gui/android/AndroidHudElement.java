@@ -20,7 +20,7 @@ package matteroverdrive.gui.android;
 
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 

@@ -22,6 +22,7 @@ import matteroverdrive.api.weapon.IWeapon;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Simeon on 8/7/2015.
@@ -30,7 +31,7 @@ public class EnchantmentOverclock extends Enchantment
 {
     public EnchantmentOverclock(int id)
     {
-        super(id, 10,EnumEnchantmentType.all);
+        super(id, new ResourceLocation("overclock"),10,EnumEnchantmentType.ALL);
         setName("matteroverdrive.weapon.damage");
     }
 

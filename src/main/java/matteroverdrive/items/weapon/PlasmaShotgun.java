@@ -18,8 +18,6 @@
 
 package matteroverdrive.items.weapon;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.WeaponShot;
@@ -30,6 +28,7 @@ import matteroverdrive.handler.weapon.ClientWeaponHandler;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,6 +38,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -115,22 +116,32 @@ public class PlasmaShotgun extends EnergyWeapon
         MOPositionedSound sound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "plasma_shotgun_shot"),0.3f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
         sound.setPosition((float) position.xCoord,(float)position.yCoord,(float)position.zCoord);
         Minecraft.getMinecraft().getSoundHandler().playDelayedSound(sound,1);
-        spawnProjectile(weapon,shooter,position,dir,shot);
+        spawnProjectiles(weapon,shooter,position,dir,shot);
     }
 
-    public PlasmaBolt[] spawnProjectile(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir, WeaponShot shot)
+    public PlasmaBolt[] spawnProjectiles(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir, WeaponShot shot)
     {
         //PlasmaBolt fire = new PlasmaBolt(entityPlayer.worldObj, entityPlayer,position,dir, getWeaponScaledDamage(weapon), 2, getAccuracy(weapon, zoomed), getRange(weapon), WeaponHelper.getColor(weapon).getColor(), zoomed,seed);
         PlasmaBolt[] bolts = new PlasmaBolt[shot.getCount()];
         for (int i = 0;i < shot.getCount();i++) {
             WeaponShot newShot = new WeaponShot(shot);
-            newShot.setSeed(shot.getSeed()+i);
+            if (shooter.worldObj.isRemote)
+            {
+                newShot.setSeed(((ClientWeaponHandler)MatterOverdrive.proxy.getWeaponHandler()).getNextShotID());
+            }else
+            {
+                newShot.setSeed(shot.getSeed() + i);
+            }
             newShot.setDamage(shot.getDamage()/shot.getCount());
             bolts[i] = new PlasmaBolt(shooter.worldObj, shooter, position, dir, newShot, getShotSpeed(weapon, shooter));
             bolts[i].setWeapon(weapon);
             bolts[i].setRenderSize((getShotCount(weapon,shooter)/shot.getCount())*0.5f);
             bolts[i].setFireDamageMultiply(WeaponHelper.modifyStat(Reference.WS_FIRE_DAMAGE, weapon,0));
             bolts[i].setKnockBack(0.5f);
+            if (WeaponHelper.modifyStat(Reference.WS_RICOCHET,weapon,0) == 1)
+            {
+                bolts[i].markRicochetable();
+            }
             shooter.worldObj.spawnEntityInWorld(bolts[i]);
         }
         return bolts;
@@ -158,12 +169,11 @@ public class PlasmaShotgun extends EnergyWeapon
                 return new Vector2f(60,45);
             case Reference.MODULE_BARREL:
                 return new Vector2f(60,115);
-            case Reference.MODULE_OTHER:
-                return new Vector2f(205,80);
             case Reference.MODULE_SIGHTS:
                 return new Vector2f(150,35);
+            default:
+                return new Vector2f(205,80 + ((slot - Reference.MODULE_OTHER) * 22));
         }
-        return new Vector2f(0,0);
     }
 
     @Override
@@ -243,10 +253,7 @@ public class PlasmaShotgun extends EnergyWeapon
             int count = Math.max(1, (int) ((1f - (timeElapsed / (float) MAX_CHARGE_TIME)) * maxCount));
             float shotPercent = count / (float) getShotCount(weapon, entityPlayer);
 
-            ClientWeaponHandler.RECOIL_AMOUNT = 15 + (maxCount - count) * 2 + getAccuracy(weapon, entityPlayer, isWeaponZoomed(entityPlayer, weapon)) * 2;
-            ClientWeaponHandler.RECOIL_TIME = 1 + (maxCount - count) * 0.03f;
-            Minecraft.getMinecraft().renderViewEntity.hurtTime = 15 + (maxCount - count);
-            Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 30 + (maxCount - count);
+            ClientProxy.instance().getClientWeaponHandler().setCameraRecoil(0.3f + getAccuracy(weapon, entityPlayer, true) * 0.1f,1);
             Vec3 dir = entityPlayer.getLook(1);
             Vec3 pos = getFirePosition(entityPlayer, dir, Mouse.isButtonDown(1));
             WeaponShot shot = createShot(weapon, entityPlayer, Mouse.isButtonDown(1));
@@ -256,15 +263,16 @@ public class PlasmaShotgun extends EnergyWeapon
             onClientShot(weapon, entityPlayer, pos, dir, shot);
             MatterOverdrive.packetPipeline.sendToServer(new PacketFirePlasmaShot(entityPlayer.getEntityId(), pos, dir, shot));
             addShootDelay(weapon);
+            ClientProxy.instance().getClientWeaponHandler().setRecoil(15 + (maxCount - count) * 2 + getAccuracy(weapon, entityPlayer, isWeaponZoomed(entityPlayer, weapon)) * 2,1f + (maxCount - count) * 0.03f,0.3f);
             stopChargingSound();
             entityPlayer.clearItemInUse();
         }
     }
 
     @Override
-    public ItemStack onEaten(ItemStack weapon, World world, EntityPlayer entityPlayer)
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
     {
-        return weapon;
+        return stack;
     }
 
     @Override
@@ -278,7 +286,7 @@ public class PlasmaShotgun extends EnergyWeapon
     @SideOnly(Side.CLIENT)
     private Vec3 getFirePosition(EntityPlayer entityPlayer,Vec3 dir,boolean isAiming)
     {
-        Vec3 pos = Vec3.createVectorHelper(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ);
+        Vec3 pos = entityPlayer.getPositionEyes(1);
         if (!isAiming) {
             //pos.xCoord -= (double)(MathHelper.cos(entityPlayer.rotationYaw / 180.0F * (float) Math.PI) * 0.16F);
             //pos.zCoord -= (double)(MathHelper.sin(entityPlayer.rotationYaw / 180.0F * (float) Math.PI) * 0.16F);
@@ -295,16 +303,15 @@ public class PlasmaShotgun extends EnergyWeapon
             if (canFire(itemStack, world, entityPlayer))
             {
                 itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
-                ClientWeaponHandler.RECOIL_AMOUNT = 12 + getAccuracy(itemStack, entityPlayer, isWeaponZoomed(entityPlayer, itemStack)) * 2;
-                ClientWeaponHandler.RECOIL_TIME = 1;
-                Minecraft.getMinecraft().renderViewEntity.hurtTime = 15;
-                Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 30;
                 Vec3 dir = entityPlayer.getLook(1);
                 Vec3 pos = getFirePosition(entityPlayer, dir, Mouse.isButtonDown(1));
                 WeaponShot shot = createShot(itemStack, entityPlayer, Mouse.isButtonDown(1));
                 onClientShot(itemStack, entityPlayer, pos, dir, shot);
                 addShootDelay(itemStack);
                 sendShootTickToServer(world, shot, dir, pos);
+                ClientProxy.instance().getClientWeaponHandler().setRecoil(12 + getAccuracy(itemStack, entityPlayer, isWeaponZoomed(entityPlayer, itemStack)) * 2,1,0.2f);
+                Minecraft.getMinecraft().thePlayer.hurtTime = 15;
+                Minecraft.getMinecraft().thePlayer.maxHurtTime = 30;
                 return;
             } else if (needsRecharge(itemStack)) {
                 chargeFromEnergyPack(itemStack, entityPlayer);
@@ -328,7 +335,7 @@ public class PlasmaShotgun extends EnergyWeapon
         float newHeat =  (getHeat(weapon)+ heatAdd + 6) * 4.2f ;
         setHeat(weapon, Math.max(newHeat,0));
         manageOverheat(weapon, shooter.worldObj, shooter);
-        PlasmaBolt[] fires = spawnProjectile(weapon,shooter,position,dir,shot);
+        PlasmaBolt[] fires = spawnProjectiles(weapon,shooter,position,dir,shot);
         for (PlasmaBolt bolt : fires)
         {
             bolt.simulateDelay(delay);

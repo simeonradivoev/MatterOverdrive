@@ -18,13 +18,9 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.client.render.block.RendererBlockInscriber;
 import matteroverdrive.tile.TileEntityInscriber;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -39,6 +35,7 @@ public class BlockInscriber extends MOBlockMachine
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe",2);
         setHasGui(true);
+        setHasRotation();
     }
 
     @Override
@@ -46,7 +43,7 @@ public class BlockInscriber extends MOBlockMachine
         return new TileEntityInscriber();
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister p_149651_1_)
     {
@@ -57,7 +54,7 @@ public class BlockInscriber extends MOBlockMachine
     public int getRenderType()
     {
         return RendererBlockInscriber.renderID;
-    }
+    }*/
 
     @Override
     public boolean isOpaqueCube()

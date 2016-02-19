@@ -18,8 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.machines.MachineNBTCategory;
@@ -27,6 +25,8 @@ import matteroverdrive.network.packet.server.PacketSendMachineNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 
@@ -35,31 +35,11 @@ import java.util.EnumSet;
  */
 public abstract class MOTileEntity extends TileEntity implements IMOTileEntity
 {
-    private boolean isAwake = false;
-
     public MOTileEntity(){super();}
 
     public MOTileEntity(World world,int meta)
     {
         super();
-    }
-
-    protected void updateBlock()
-    {
-        if(worldObj != null)
-        {
-            worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
-        }
-    }
-
-    @Override
-    public void updateEntity()
-    {
-        if (!isAwake)
-        {
-            onAwake(worldObj.isRemote ? Side.CLIENT : Side.SERVER);
-            isAwake = true;
-        }
     }
 
     @Override
@@ -81,11 +61,11 @@ public abstract class MOTileEntity extends TileEntity implements IMOTileEntity
     public abstract void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories);
 
     @SideOnly(Side.CLIENT)
-    public void sendNBTToServer(EnumSet<MachineNBTCategory> categories,boolean forceUpdate)
+    public void sendNBTToServer(EnumSet<MachineNBTCategory> categories,boolean forceUpdate,boolean sendDisk)
     {
         if (worldObj.isRemote)
         {
-            MatterOverdrive.packetPipeline.sendToServer(new PacketSendMachineNBT(categories,this,forceUpdate,true));
+            MatterOverdrive.packetPipeline.sendToServer(new PacketSendMachineNBT(categories,this,forceUpdate,sendDisk));
         }
     }
 

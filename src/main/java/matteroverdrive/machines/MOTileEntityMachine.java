@@ -18,14 +18,11 @@
 
 package matteroverdrive.machines;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.api.IUpgradeable;
+import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.machines.IUpgradeHandler;
@@ -39,11 +36,17 @@ import matteroverdrive.fx.VentParticle;
 import matteroverdrive.items.SecurityProtocol;
 import matteroverdrive.machines.components.ComponentConfigs;
 import matteroverdrive.machines.configs.ConfigPropertyStringList;
+import matteroverdrive.machines.events.MachineEvent;
+import matteroverdrive.network.packet.server.PacketSendMachineNBT;
 import matteroverdrive.tile.MOTileEntity;
+import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.math.MOMathHelper;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -53,8 +56,11 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.*;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -66,29 +72,30 @@ import java.util.*;
  * @autor Simeon
  * @since 3/11/2015
  */
-public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTileEntity, ISidedInventory, IUpgradeable
+public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTileEntity, ISidedInventory, IUpgradeable, ITickable
 {
+    protected static final Random random = new Random();
+    protected static final UpgradeHandlerGeneric basicUpgradeHandler = new UpgradeHandlerGeneric(0.05,Double.MAX_VALUE).addUpgradeMinimum(UpgradeTypes.Speed,0.1);
 
-    protected static Random random = new Random();
-    protected static UpgradeHandlerMinimum basicUpgradeHandler = new UpgradeHandlerMinimum(0.05).addUpgradeMinimum(UpgradeTypes.Speed,0.1);
+    protected final List<IMachineWatcher> watchers;
 
     //client syncs
     private boolean lastActive;
     private boolean activeState;
+    private boolean awoken;
 
     @SideOnly(Side.CLIENT)
     protected MachineSound sound;
 
-    protected ResourceLocation soundRes;
+    protected final ResourceLocation soundRes;
     protected boolean redstoneState;
     protected boolean redstoneStateDirty = true;
-    protected boolean forceClientUpdate;
+    private boolean forceClientUpdate;
     protected UUID owner;
 
-    protected Inventory inventory;
-    private int upgradeSlotCount;
-    private int[] upgrade_slots;
-    protected List<IMachineComponent> components;
+    protected final Inventory inventory;
+    private final int[] upgrade_slots;
+    protected final List<IMachineComponent> components;
     protected boolean playerSlotsHotbar,playerSlotsMain;
 
     protected ComponentConfigs configs;
@@ -97,29 +104,31 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         components = new ArrayList<>();
         soundRes = getSoundFor(getSound());
-        this.upgradeSlotCount = upgradeCount;
         upgrade_slots = new int[upgradeCount];
         inventory = new TileEntityInventory(this,"");
         registerComponents();
         RegisterSlots(inventory);
+        watchers = new ArrayList<>();
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        if (!awoken)
+        {
+            awoken = true;
+            onAwake(worldObj.isRemote ? Side.CLIENT : Side.SERVER);
+        }
 
         if(worldObj.isRemote)
         {
             manageSound();
 
-            if(forceClientUpdate)
+            if(lastActive != isActive())
             {
-                updateBlock();
-                forceClientUpdate = false;
+                onActiveChange();
+                lastActive = isActive();
             }
-
-            return;
         }
         else
         {
@@ -130,26 +139,20 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                 onActiveChange();
                 lastActive = activeState;
             }
+
+            manageRedstoneState();
+            manageClientSync();
         }
 
-        manageRedstoneState();
-        manageClientSync();
-
-        if(lastActive != isActive())
-        {
-            onActiveChange();
-            lastActive = isActive();
-        }
-
-        for (IMachineComponent component : components)
-        {
-            try {
-                component.update(this);
-            }catch (Exception e)
+        components.stream().filter(component -> component instanceof ITickable).forEach(component -> {
+            try
             {
-                MatterOverdrive.log.log(Level.FATAL,e,"There was a problem while ticking %s component %s",this,component);
+                ((ITickable) component).update();
+            } catch (Exception e)
+            {
+                MOLog.log(Level.FATAL, e, "There was a problem while ticking %s component %s", this, component);
             }
-        }
+        });
     }
 
     protected void RegisterSlots(Inventory inventory)
@@ -187,10 +190,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     public abstract boolean hasSound();
     public abstract boolean getServerActive();
     public abstract float soundVolume();
-    public void onContainerOpen(Side side)
-    {
-
-    }
     public boolean getRedstoneActive()
     {
         if (getRedstoneMode() == Reference.MODE_REDSTONE_HIGH)
@@ -206,7 +205,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @SideOnly(Side.CLIENT)
     protected void manageSound()
     {
-        if(hasSound() && soundVolume() > 0)
+        float soundVolume = soundVolume();
+
+        if(hasSound() && soundVolume > 0)
         {
             if (isActive() && !isInvalid())
             {
@@ -217,7 +218,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                         soundMultiply = ((MOBlockMachine) getBlockType()).volume;
                     }
                     if (soundMultiply > 0) {
-                        sound = new MachineSound(soundRes, xCoord, yCoord, zCoord, soundVolume() * soundMultiply, 1);
+                        sound = new MachineSound(soundRes, getPos(), soundVolume() * soundMultiply, 1);
                         FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
                     }
                 }
@@ -234,6 +235,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
             {
                 stopSound();
             }
+        }else if (hasSound() && soundVolume <= 0)
+        {
+            stopSound();
         }
     }
 
@@ -257,6 +261,10 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         {
             stopSound();
         }
+
+        MachineEvent.Unload unload = new MachineEvent.Unload();
+        onMachineEvent(unload);
+        onMachineEventCompoments(unload);
     }
 
     //region NBT
@@ -266,13 +274,12 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         if (categories.contains(MachineNBTCategory.DATA))
         {
             redstoneState = nbt.getBoolean("redstoneState");
-            forceClientUpdate = nbt.getBoolean("forceClientUpdate");
             activeState = nbt.getBoolean("activeState");
             if (nbt.hasKey("Owner", 8) && !nbt.getString("Owner").isEmpty()) {
                 try {
                     owner = UUID.fromString(nbt.getString("Owner"));
                 } catch (Exception e) {
-                    FMLLog.log(Level.ERROR, "Invalid Owner ID: " + nbt.getString("Owner"));
+                    MOLog.log(Level.ERROR, "Invalid Owner ID: " + nbt.getString("Owner"));
                 }
             }
         }
@@ -291,7 +298,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         if (categories.contains(MachineNBTCategory.DATA))
         {
-            nbt.setBoolean("forceClientUpdate", forceClientUpdate);
             nbt.setBoolean("redstoneState", redstoneState);
             nbt.setBoolean("activeState",activeState);
             if (toDisk)
@@ -304,7 +310,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                 }
             }
         }
-        forceClientUpdate = false;
         if (categories.contains(MachineNBTCategory.INVENTORY))
         {
             inventory.writeToNBT(nbt,toDisk);
@@ -342,7 +347,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         writeCustomNBT(machineTag, EnumSet.of(MachineNBTCategory.CONFIGS, MachineNBTCategory.DATA), true);
         if (hasOwner()) {
             machineTag.setString("Owner", owner.toString());
-            saveTagFlag = true;
         }
 
         itemStack.getTagCompound().setTag("Machine", machineTag);
@@ -367,25 +371,26 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                     this.owner = UUID.fromString(machineTag.getString("Owner"));
                 }catch (Exception e)
                 {
-                    FMLLog.log(Level.ERROR,e,"Invalid Owner ID: " + machineTag.getString("Owner"));
+                    MOLog.log(Level.ERROR,e,"Invalid Owner ID: " + machineTag.getString("Owner"));
                 }
             }
         }
     }
+    //endregion
 
     @Override
     public Packet getDescriptionPacket()
     {
         NBTTagCompound syncData = new NBTTagCompound();
         writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS,false);
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);
+        return new S35PacketUpdateTileEntity(getPos(), 1, syncData);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
     {
         //System.out.println("Receiving Packet From Server");
-        NBTTagCompound syncData = pkt.func_148857_g();
+        NBTTagCompound syncData = pkt.getNbtCompound();
         if(syncData != null)
         {
             readCustomNBT(syncData, MachineNBTCategory.ALL_OPTS);
@@ -397,7 +402,14 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         if(redstoneStateDirty)
         {
             boolean flag = redstoneState;
-            redstoneState = worldObj.getBlockPowerInput(xCoord,yCoord,zCoord) > 0;
+            for (int i = 0;i < EnumFacing.VALUES.length;i++)
+            {
+                if (getWorld().getRedstonePower(getPos(),EnumFacing.VALUES[i]) > 0)
+                {
+                    redstoneState = true;
+                    return;
+                }
+            }
             redstoneStateDirty = false;
             if(flag != redstoneState)
                 forceClientUpdate = true;
@@ -409,7 +421,8 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         if(forceClientUpdate)
         {
-            updateBlock();
+            forceClientUpdate = false;
+            MatterOverdrive.packetPipeline.sendToAllAround(new PacketSendMachineNBT(MachineNBTCategory.ALL_OPTS,this,false,false),this,64);
             markDirty();
         }
     }
@@ -424,13 +437,71 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         }
     }
 
-    protected abstract void onActiveChange();
+    //region Events
+    protected abstract void onMachineEvent(MachineEvent event);
+    protected void onMachineEventCompoments(MachineEvent event)
+    {
+        for (IMachineComponent component : components)
+        {
+            component.onMachineEvent(event);
+        }
+    }
 
     @Override
-    public void onNeighborBlockChange()
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
+        MachineEvent event = new MachineEvent.NeighborChange(worldIn,pos,state,neighborBlock);
+        onMachineEvent(event);
+        onMachineEventCompoments(event);
         redstoneStateDirty = true;
+
     }
+    @Override
+    public void onDestroyed(World worldIn, BlockPos pos, IBlockState state)
+    {
+        MachineEvent event = new MachineEvent.Destroyed(worldIn,pos,state);
+        onMachineEvent(event);
+        onMachineEventCompoments(event);
+    }
+
+    @Override
+    public void onPlaced(World world, EntityLivingBase entityLiving)
+    {
+        MachineEvent event = new MachineEvent.Placed(world,entityLiving);
+        onMachineEvent(event);
+        onMachineEventCompoments(event);
+    }
+
+    @Override
+    public void onAdded(World world, BlockPos pos, IBlockState state)
+    {
+        MachineEvent event = new MachineEvent.Added(world,pos,state);
+        onMachineEvent(event);
+        onMachineEventCompoments(event);
+    }
+
+    protected void onActiveChange()
+    {
+        MachineEvent event = new MachineEvent.ActiveChange();
+        onMachineEvent(event);
+        onMachineEventCompoments(event);
+    }
+
+    @Override
+    protected void onAwake(Side side)
+    {
+        MachineEvent machineEvent = new MachineEvent.Awake(side);
+        onMachineEvent(machineEvent);
+        onMachineEventCompoments(machineEvent);
+    }
+
+    public void onContainerOpen(Side side)
+    {
+        MachineEvent event = new MachineEvent.OpenContainer(side);
+        onMachineEvent(event);
+        onMachineEventCompoments(event);
+    }
+    //endregion
 
     //region Inventory Methods
     public boolean isItemValidForSlot(int slot, ItemStack item)
@@ -439,21 +510,27 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide(int side)
+    public int getField(int id)
     {
-        return new int[0];
+        return 0;
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack item, int side)
+    public void setField(int id, int value)
     {
-        return isItemValidForSlot(slot, item);
+
     }
 
     @Override
-    public boolean canExtractItem(int slot, ItemStack item, int side)
+    public int getFieldCount()
     {
-        return false;
+        return 0;
+    }
+
+    @Override
+    public void clear()
+    {
+
     }
 
     @Override
@@ -484,10 +561,10 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot)
+    public ItemStack removeStackFromSlot(int index)
     {
         if (getInventory() != null)
-            return getInventory().getStackInSlotOnClosing(slot);
+            return getInventory().removeStackFromSlot(index);
         else
             return null;
     }
@@ -500,23 +577,17 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @Override
-    public String getInventoryName()
+    public IChatComponent getDisplayName()
     {
-        if (getInventory() != null && !getInventory().getInventoryName().isEmpty())
-            return getInventory().getInventoryName();
+        if (getInventory() != null && getInventory().getDisplayName() != null)
+            return getInventory().getDisplayName();
         else if (getBlockType() != null)
         {
-            return getBlockType().getLocalizedName();
+            return new ChatComponentText(getBlockType().getLocalizedName());
         }else
         {
-            return "";
+            return new ChatComponentText("");
         }
-    }
-
-    @Override
-    public boolean hasCustomInventoryName()
-    {
-        return getInventory() != null && getInventory().hasCustomInventoryName();
     }
 
     @Override
@@ -559,14 +630,17 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @Override
-    public void openInventory()
+    public void openInventory(EntityPlayer player)
     {
-        System.out.println("Inventory Open");
+        if (getInventory() != null)
+            getInventory().openInventory(player);
     }
 
     @Override
-    public void closeInventory() {
-
+    public void closeInventory(EntityPlayer player)
+    {
+        if (getInventory() != null)
+            getInventory().closeInventory(player);
     }
 
     public IInventory getInventory()
@@ -578,6 +652,30 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         return inventory;
     }
+
+    @Override
+    public String getName()
+    {
+        return null;
+    }
+
+    @Override
+    public boolean hasCustomName()
+    {
+        return false;
+    }
+    //endregion
+
+    //region Watcher Methods
+    public void addWatcher(IMachineWatcher watcher)
+    {
+        if (!watchers.contains(watcher))
+        {
+            watchers.add(watcher);
+            watcher.onWatcherAdded(this);
+        }
+    }
+    public void removeWatcher(IMachineWatcher watcher){watchers.remove(watcher);}
     //endregion
 
     public void forceSync()
@@ -588,7 +686,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @SideOnly(Side.CLIENT)
     public void sendConfigsToServer(boolean forceUpdate)
     {
-        sendNBTToServer(EnumSet.of(MachineNBTCategory.CONFIGS),forceUpdate);
+        sendNBTToServer(EnumSet.of(MachineNBTCategory.CONFIGS),forceUpdate,true);
     }
 
     //region Upgrades
@@ -621,34 +719,34 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     //endregion
 
     @SideOnly(Side.CLIENT)
-    protected void SpawnVentParticles(float speed,ForgeDirection side,int count)
+    public void SpawnVentParticles(float speed,EnumFacing side,int count)
     {
         for (int i = 0;i < count;i++)
         {
             Matrix4f rotation = new Matrix4f();
             Vector3f offset = new Vector3f();
 
-            if (side == ForgeDirection.UP)
+            if (side == EnumFacing.UP)
             {
                 rotation.rotate((float) Math.PI / 2f, new Vector3f(0, 0, 1));
                 offset = new Vector3f(0.5f,0.7f,0.5f);
             }
-            else if (side == ForgeDirection.WEST)
+            else if (side == EnumFacing.WEST)
             {
                 rotation.rotate((float) Math.PI / 2f, new Vector3f(0, 0, 1));
                 offset = new Vector3f(-0.2f,0.5f,0.5f);
             }
-            else if (side == ForgeDirection.EAST)
+            else if (side == EnumFacing.EAST)
             {
                 rotation.rotate((float) Math.PI / 2f, new Vector3f(0, 0, -1));
                 offset = new Vector3f(1.2f,0.5f,0.5f);
             }
-            else if (side == ForgeDirection.SOUTH)
+            else if (side == EnumFacing.SOUTH)
             {
                 rotation.rotate((float) Math.PI / 2f, new Vector3f(1, 0, 0));
                 offset = new Vector3f(0.5f,0.5f,1.2f);
             }
-            else if (side == ForgeDirection.NORTH)
+            else if (side == EnumFacing.NORTH)
             {
                 rotation.rotate((float) Math.PI / 2f, new Vector3f(-1, 0, 0));
                 offset = new Vector3f(0.5f,0.5f,-0.2f);
@@ -662,7 +760,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 
             float scale = 3f;
 
-            VentParticle ventParticle = new VentParticle(this.worldObj,this.xCoord + offset.x + circleTransformed.x,this.yCoord + offset.y + circleTransformed.y,this.zCoord + offset.z + circleTransformed.z,side.offsetX * speed,side.offsetY * speed,side.offsetZ * speed,scale);
+            VentParticle ventParticle = new VentParticle(this.worldObj,this.getPos().getX() + offset.x + circleTransformed.x,this.getPos().getY() + offset.y + circleTransformed.y,this.getPos().getZ() + offset.z + circleTransformed.z,side.getDirectionVec().getX() * speed,side.getDirectionVec().getY() * speed,side.getDirectionVec().getZ() * speed,scale);
             ventParticle.setAlphaF(0.05f);
             Minecraft.getMinecraft().effectRenderer.addEffect(ventParticle);
         }
@@ -673,7 +771,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         if (this.blockType == null)
         {
-            this.blockType = this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord);
+            this.blockType = this.worldObj.getBlockState(getPos()).getBlock();
         }
         if (type.isInstance(this.blockType))
         {
@@ -746,7 +844,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         return components.get(index);
     }
-    public <T extends IMachineComponent> T getComponent(Class<T> componentClasss)
+    public <C extends IMachineComponent> C getComponent(Class<C> componentClasss)
     {
         for (IMachineComponent component : components)
         {
@@ -770,5 +868,13 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
     public ComponentConfigs getConfigs(){return configs;}
     public IUpgradeHandler getUpgradeHandler(){return basicUpgradeHandler;}
+    @Override
+    public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {return isItemValidForSlot(index,itemStackIn);}
+    @Override
+    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
+    {
+        return false;
+    }
+    public List<IMachineWatcher> getWatchers(){return watchers;}
     //endregion
 }

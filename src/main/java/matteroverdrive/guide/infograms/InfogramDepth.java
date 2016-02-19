@@ -22,6 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.guide.GuideElementAbstract;
 import matteroverdrive.guide.MOGuideEntry;
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -32,9 +33,9 @@ import org.w3c.dom.Element;
  */
 public class InfogramDepth extends GuideElementAbstract
 {
-    private static ResourceLocation terrain_background = new ResourceLocation(Reference.PATH_ELEMENTS + "guide_info_depth_terrain.png");
-    private static ResourceLocation terrain_background_stripes = new ResourceLocation(Reference.PATH_ELEMENTS + "guide_info_depth_terrain_stripes.png");
-    private static ResourceLocation ore_lense_background = new ResourceLocation(Reference.PATH_ELEMENTS + "guide_info_depth_ore_lense.png");
+    private static final ResourceLocation terrain_background = new ResourceLocation(Reference.PATH_ELEMENTS + "guide_info_depth_terrain.png");
+    private static final ResourceLocation terrain_background_stripes = new ResourceLocation(Reference.PATH_ELEMENTS + "guide_info_depth_terrain_stripes.png");
+    private static final ResourceLocation ore_lense_background = new ResourceLocation(Reference.PATH_ELEMENTS + "guide_info_depth_ore_lense.png");
     private ItemStack stack;
     private int minDepth = 0;
     private int maxDepth = 64;
@@ -55,28 +56,28 @@ public class InfogramDepth extends GuideElementAbstract
         }
 
         bindTexture(terrain_background);
-        GL11.glColor3d(1, 1, 1);
+        GlStateManager.color(1, 1, 1);
         RenderUtils.drawPlane(marginLeft + 20.5, marginTop + 8, 0, 72.5, 53);
 
         RenderUtils.beginStencil();
         RenderUtils.drawStencil(marginLeft + 24,marginTop + 8 + (int)(53 * maxPercent),24 + 69,8 + (int)(53 * minPercent),1);
         bindTexture(terrain_background_stripes);
-        GL11.glColor3d(1, 1, 1);
+        GlStateManager.color(1, 1, 1);
         RenderUtils.drawPlane(marginLeft + 24, marginTop + 8, 0, 69, 53);
         RenderUtils.endStencil();
 
 
         bindTexture(ore_lense_background);
-        GL11.glColor3d(1, 1, 1);
+        GlStateManager.color(1, 1, 1);
         RenderUtils.drawPlane(marginLeft + 69,marginTop + 16,0,84,41);
 
         if (stack != null)
         {
-            GL11.glPushMatrix();
-            GL11.glTranslated(marginLeft + 123,marginTop + 21,0);
-            GL11.glScaled(1.5,1.5,1.5);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(marginLeft + 123,marginTop + 21,0);
+            GlStateManager.scale(1.5,1.5,1.5);
             RenderUtils.renderStack(0, 0, stack);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

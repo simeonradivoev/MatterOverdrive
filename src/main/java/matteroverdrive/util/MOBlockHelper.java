@@ -20,9 +20,9 @@ package matteroverdrive.util;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 12/22/2015.
@@ -36,59 +36,40 @@ public class MOBlockHelper
     public static final byte[] SIDE_ABOVE = new byte[]{(byte)3, (byte)2, (byte)1, (byte)1, (byte)1, (byte)1};
     public static final byte[] SIDE_BELOW = new byte[]{(byte)2, (byte)3, (byte)0, (byte)0, (byte)0, (byte)0};
 
-    public static int getLeftSide(int side) {
-        return SIDE_LEFT[side];
+    public static EnumFacing getLeftSide(EnumFacing side) {
+        return EnumFacing.VALUES[SIDE_LEFT[side.ordinal()]];
     }
 
-    public static int getRightSide(int side) {
-        return SIDE_RIGHT[side];
+    public static EnumFacing getRightSide(EnumFacing side) {
+        return EnumFacing.VALUES[SIDE_RIGHT[side.ordinal()]];
     }
 
-    public static int getOppositeSide(int side) {
-        return SIDE_OPPOSITE[side];
+    public static EnumFacing getOppositeSide(EnumFacing side) {
+        return EnumFacing.VALUES[SIDE_OPPOSITE[side.ordinal()]];
     }
 
-    public static int getAboveSide(int side) {
-        return SIDE_ABOVE[side];
+    public static EnumFacing getAboveSide(EnumFacing side) {
+        return EnumFacing.VALUES[SIDE_ABOVE[side.ordinal()]];
     }
 
-    public static int getBelowSide(int side) {
-        return SIDE_BELOW[side];
+    public static int getBelowSide(EnumFacing side) {
+        return SIDE_BELOW[side.ordinal()];
     }
 
-    public static int determineXZPlaceFacing(EntityLivingBase placer) {
+    public static EnumFacing determineXZPlaceFacing(EntityLivingBase placer) {
         int rotation = MathHelper.floor_double((double)(placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         switch(rotation) {
             case 0:
-                return 2;
+                return EnumFacing.UP;
             case 1:
-                return 5;
+                return EnumFacing.EAST;
             case 2:
-                return 3;
+                return EnumFacing.SOUTH;
             case 3:
-                return 4;
+                return EnumFacing.WEST;
             default:
-                return 3;
+                return EnumFacing.SOUTH;
         }
-    }
-
-    public static TileEntity getAdjacentTileEntity(World world, int x, int y, int z, ForgeDirection direction) {
-        x += direction.offsetX;
-        y += direction.offsetY;
-        z += direction.offsetZ;
-        return world != null && world.blockExists(x, y, z)?world.getTileEntity(x, y, z):null;
-    }
-
-    public static TileEntity getAdjacentTileEntity(World world, int x, int y, int z, int side) {
-        return world == null?null:getAdjacentTileEntity(world, x, y, z, ForgeDirection.values()[side]);
-    }
-
-    public static TileEntity getAdjacentTileEntity(TileEntity tileEntity, ForgeDirection direction) {
-        return tileEntity == null?null:getAdjacentTileEntity(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, direction);
-    }
-
-    public static TileEntity getAdjacentTileEntity(TileEntity tileEntity, int direction) {
-        return tileEntity == null?null:getAdjacentTileEntity(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, ForgeDirection.values()[direction]);
     }
 
     public static final class RotationType {

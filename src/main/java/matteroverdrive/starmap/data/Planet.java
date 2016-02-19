@@ -18,8 +18,6 @@
 
 package matteroverdrive.starmap.data;
 
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
@@ -28,6 +26,7 @@ import matteroverdrive.client.data.Color;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.starmap.GalaxyGenerator;
 import matteroverdrive.starmap.gen.ISpaceBodyGen;
+import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +35,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
@@ -169,7 +171,7 @@ public class Planet extends SpaceBody implements IInventory
                 UUID ownerID = ((IShip) ship.getItem()).getOwnerID(ship);
                 if (ownerID != null)
                 {
-                    EntityPlayer owner = world.func_152378_a(ownerID);
+                    EntityPlayer owner = world.getPlayerEntityByUUID(ownerID);
                     if (owner != null) {
                         owner.addChatMessage(
                                 new ChatComponentText(
@@ -197,7 +199,7 @@ public class Planet extends SpaceBody implements IInventory
         UUID ownerID = buildable.getOwnerID(buildableStack);
         if (ownerID != null)
         {
-            EntityPlayer entityPlayer = world.func_152378_a(ownerID);
+            EntityPlayer entityPlayer = world.getPlayerEntityByUUID(ownerID);
             if(entityPlayer != null) {
                 entityPlayer.addChatMessage(
                         new ChatComponentText(
@@ -278,7 +280,8 @@ public class Planet extends SpaceBody implements IInventory
                     addBuilding(buildingStack);
                 }else
                 {
-					MatterOverdrive.log.error("There was a problem loading a building from NBT of planet %s", getName());
+					MOLog.error("There was a problem loading a building from NBT of planet %s", getName());
+                    MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Problem while loading Building from NBT");
                 }
             }
         }
@@ -293,7 +296,8 @@ public class Planet extends SpaceBody implements IInventory
                     addShip(shipStack);
                 }else
                 {
-					MatterOverdrive.log.error("There was a problem loading a ship from NBT of planet %s", getName());
+					MOLog.error("There was a problem loading a ship from NBT of planet %s", getName());
+                    MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Problem while loading Ship from NBT");
                 }
             }
         }
@@ -304,7 +308,7 @@ public class Planet extends SpaceBody implements IInventory
             }
             catch (IllegalArgumentException e)
             {
-                FMLLog.log(Level.ERROR,e,"Invalid planet owner UUID '" + tagCompound.getString("OwnerUUID") +"'",this);
+                MOLog.log(Level.ERROR,e,"Invalid planet owner UUID '" + tagCompound.getString("OwnerUUID") +"'",this);
             }
 
         }
@@ -352,10 +356,10 @@ public class Planet extends SpaceBody implements IInventory
         return star;
     }
     public UUID getOwnerUUID(){return ownerUUID;}
-    public void setOwner(EntityPlayer player){ownerUUID = EntityPlayer.func_146094_a(player.getGameProfile());}
+    public void setOwner(EntityPlayer player){ownerUUID = EntityPlayer.getUUID(player.getGameProfile());}
     public void setOwnerUUID(UUID ownerUUID){this.ownerUUID = ownerUUID;}
     public boolean hasOwner(){return ownerUUID != null;}
-    public boolean isOwner(EntityPlayer player){if (hasOwner()) return getOwnerUUID().equals(EntityPlayer.func_146094_a(player.getGameProfile())); return false; }
+    public boolean isOwner(EntityPlayer player){if (hasOwner()) return getOwnerUUID().equals(EntityPlayer.getUUID(player.getGameProfile())); return false; }
     public void setHomeworld(boolean homeworld){this.homeworld = homeworld;}
     public boolean isHomeworld(){return homeworld;}
     public boolean isHomeworld(EntityPlayer player){if (isOwner(player)) return isHomeworld(); else return false;}
@@ -386,11 +390,11 @@ public class Planet extends SpaceBody implements IInventory
                 fleet.add(ship);
             }else
             {
-				MatterOverdrive.log.error("Trying to add an itemstack to ships, that does not contain a Ship Item");
+				MOLog.error("Trying to add an itemstack to ships, that does not contain a Ship Item");
             }
         }else
         {
-			MatterOverdrive.log.error("Trying to add a null Ship itemstack to %s", getName());
+			MOLog.error("Trying to add a null Ship itemstack to %s", getName());
         }
     }
     public boolean canAddShip(ItemStack ship,@Nullable EntityPlayer player)
@@ -421,18 +425,18 @@ public class Planet extends SpaceBody implements IInventory
                 this.buildings.add(building);
             }else
             {
-				MatterOverdrive.log.error("Trying to add a stack to buildings, that does not contain a Building Item");
+				MOLog.error("Trying to add a stack to buildings, that does not contain a Building Item");
             }
         }else
         {
-			MatterOverdrive.log.error("Trying to add a null building to planet %s", getName());
+			MOLog.error("Trying to add a null building to planet %s", getName());
         }
     }
     public int fleetCount(){return fleet.size();}
     public static Color getGuiColor(Planet planet)
     {
         if (planet.hasOwner()) {
-            if (planet.getOwnerUUID().equals(EntityPlayer.func_146094_a(Minecraft.getMinecraft().thePlayer.getGameProfile()))) {
+            if (planet.getOwnerUUID().equals(EntityPlayer.getUUID(Minecraft.getMinecraft().thePlayer.getGameProfile()))) {
                 if (planet.isHomeworld())
                 {
                     return Reference.COLOR_HOLO_YELLOW;
@@ -569,11 +573,12 @@ public class Planet extends SpaceBody implements IInventory
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot) {
-        if(inventory[slot] != null)
+    public ItemStack removeStackFromSlot(int index)
+    {
+        if(inventory[index] != null)
         {
-            ItemStack stack = inventory[slot];
-            inventory[slot] = null;
+            ItemStack stack = inventory[index];
+            inventory[index] = null;
             return stack;
         }
 
@@ -604,16 +609,6 @@ public class Planet extends SpaceBody implements IInventory
     }
 
     @Override
-    public String getInventoryName() {
-        return getName();
-    }
-
-    @Override
-    public boolean hasCustomInventoryName() {
-        return true;
-    }
-
-    @Override
     public int getInventoryStackLimit() {
         return 1;
     }
@@ -630,20 +625,21 @@ public class Planet extends SpaceBody implements IInventory
     {
         if (hasOwner())
         {
-            return getOwnerUUID().equals(EntityPlayer.func_146094_a(player.getGameProfile()));
+            return getOwnerUUID().equals(EntityPlayer.getUUID(player.getGameProfile()));
         }
 
         return true;
     }
 
     @Override
-    public void openInventory()
+    public void openInventory(EntityPlayer player)
     {
 
     }
 
     @Override
-    public void closeInventory() {
+    public void closeInventory(EntityPlayer player)
+    {
 
     }
 
@@ -657,6 +653,45 @@ public class Planet extends SpaceBody implements IInventory
         {
             return stack.getItem() instanceof IShip;
         }
+    }
+
+    @Override
+    public int getField(int id)
+    {
+        return 0;
+    }
+
+    @Override
+    public void setField(int id, int value)
+    {
+
+    }
+
+    @Override
+    public int getFieldCount()
+    {
+        return 0;
+    }
+
+    @Override
+    public void clear()
+    {
+        for (int i = 0;i < inventory.length;i++)
+        {
+            inventory[i] = null;
+        }
+    }
+
+    @Override
+    public boolean hasCustomName()
+    {
+        return true;
+    }
+
+    @Override
+    public IChatComponent getDisplayName()
+    {
+        return new ChatComponentText(getName());
     }
     //endregion
 }

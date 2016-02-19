@@ -18,15 +18,13 @@
 
 package matteroverdrive.entity.monster;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.Reference;
 import matteroverdrive.api.entity.IPathableMob;
-import matteroverdrive.data.BlockPos;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.tile.TileEntityAndroidSpawner;
 import matteroverdrive.util.MOStringHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
@@ -41,15 +39,16 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 /**
  * Created by Simeon on 11/15/2015.
  */
 public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditionalSpawnData, IPathableMob<EntityRougeAndroidMob>
 {
-    private static ResourceLocation androidNames = new ResourceLocation(Reference.PATH_INFO + "android_names.txt");
-    private static String[] names = MOStringHelper.readTextFile(androidNames).split(",");
+    private static final ResourceLocation androidNames = new ResourceLocation(Reference.PATH_INFO + "android_names.txt");
+    private static final String[] names = MOStringHelper.readTextFile(androidNames).split(",");
     boolean fromSpawner;
     private BlockPos spawnerPosition;
     private int currentPathIndex;
@@ -65,12 +64,12 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         super(world);
         if (!world.isRemote)
         {
-            setAndroidLevel((int) (MathHelper.clamp_double(Math.abs(rand.nextGaussian()*(1+world.difficultySetting.getDifficultyId()*0.25)), 0, 3)));
-            boolean isLegendary = rand.nextDouble() < 0.05 * getAndroidLevel();
+            setAndroidLevel((int) (MathHelper.clamp_double(Math.abs(rand.nextGaussian()*(1+world.getDifficulty().getDifficultyId()*0.25)), 0, 3)));
+            boolean isLegendary = rand.nextDouble() < EntityRogueAndroid.LEGENDARY_SPAWN_CHANCE * getAndroidLevel();
             setLegendary(isLegendary);
             init();
-            getNavigator().setAvoidsWater(true);
-            getNavigator().setCanSwim(false);
+            //getNavigator().setAvoidsWater(true);
+            //getNavigator().setCanSwim(false);
         }
     }
 
@@ -84,30 +83,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
 
     private void init()
     {
-        String name;
-        if (getIsLegendary())
-        {
-            name = EnumChatFormatting.GOLD.toString();
-        }
-        else
-        {
-           switch (getAndroidLevel())
-           {
-               case 0:
-                   name = EnumChatFormatting.GRAY.toString();
-                   break;
-               case 1:
-                   name = EnumChatFormatting.DARK_AQUA.toString();
-                   break;
-               case 2:
-                   name = EnumChatFormatting.DARK_PURPLE.toString();
-                   break;
-               default:
-                   name = "";
-           }
-
-        }
-        name += getIsLegendary() ? EnumChatFormatting.GOLD + String.format("%s %s ",Reference.UNICODE_LEGENDARY,MOStringHelper.translateToLocal("rarity.legendary")) : "";
+        String name = getIsLegendary() ? String.format("%s %s ",Reference.UNICODE_LEGENDARY,MOStringHelper.translateToLocal("rarity.legendary")) : "";
         name += String.format("[%s] ",getAndroidLevel());
         name += names[rand.nextInt(names.length)];
         setCustomNameTag(name);
@@ -144,6 +120,29 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         }
     }
 
+    public EnumChatFormatting getNameColor()
+    {
+        if (getIsLegendary())
+        {
+            return EnumChatFormatting.GOLD;
+        }
+        else
+        {
+            switch (getAndroidLevel())
+            {
+                case 0:
+                    return EnumChatFormatting.GRAY;
+                case 1:
+                    return EnumChatFormatting.DARK_AQUA;
+                case 2:
+                    return EnumChatFormatting.DARK_PURPLE;
+                default:
+                    return null;
+            }
+
+        }
+    }
+
     @Override
     public void readEntityFromNBT(NBTTagCompound nbtTagCompound)
     {
@@ -164,7 +163,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         }
         if (nbtTagCompound.hasKey("SpawnerPos", Constants.NBT.TAG_COMPOUND))
         {
-            spawnerPosition = new BlockPos(nbtTagCompound.getCompoundTag("SpawnerPos"));
+            spawnerPosition = BlockPos.fromLong(nbtTagCompound.getLong("SpawnerPos"));
             this.fromSpawner = true;
         }
         currentPathIndex = nbtTagCompound.getInteger("CurrentPathIndex");
@@ -183,9 +182,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         }
         if (spawnerPosition != null)
         {
-            NBTTagCompound spawnerPos = new NBTTagCompound();
-            spawnerPosition.writeToNBT(spawnerPos);
-            nbtTagCompound.setTag("SpawnerPos",spawnerPos);
+            nbtTagCompound.setLong("SpawnerPos",spawnerPosition.toLong());
         }
         nbtTagCompound.setInteger("CurrentPathIndex",currentPathIndex);
     }
@@ -193,10 +190,10 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     private boolean addToSpawner(BlockPos position)
     {
         this.spawnerPosition = position;
-        TileEntityAndroidSpawner spawnerEntity = position.getTileEntity(worldObj,TileEntityAndroidSpawner.class);
-        if (spawnerEntity != null)
+        TileEntity spawnerEntity = worldObj.getTileEntity(position);
+        if (spawnerEntity != null && spawnerEntity instanceof TileEntityAndroidSpawner)
         {
-            spawnerEntity.addSpawnedAndroid(this);
+            ((TileEntityAndroidSpawner)spawnerEntity).addSpawnedAndroid(this);
             return true;
         }
         return false;
@@ -223,18 +220,18 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     @Override
     public boolean getCanSpawnHere()
     {
-        return getCanSpawnHere(false,false,false) && !hasToManyAndroids();
+        return getCanSpawnHere(false,false,false) && !hasToManyAndroids() && rand.nextFloat() < EntityRogueAndroid.SPAWN_CHANCE;
     }
 
     public boolean hasToManyAndroids()
     {
         Chunk chunk = worldObj.getChunkFromChunkCoords(chunkCoordX,chunkCoordZ);
         int androidCount = 0;
-        for (int i = 0;i < chunk.entityLists.length;i++)
+        for (int i = 0;i < chunk.getEntityLists().length;i++)
         {
-            for (int c = 0;i < chunk.entityLists[i].size();i++)
+            for (Entity entity : chunk.getEntityLists()[i])
             {
-                if (chunk.entityLists[i].get(c) instanceof EntityRougeAndroidMob)
+                if (entity instanceof EntityRougeAndroidMob)
                 {
                     androidCount++;
                     if (androidCount > EntityRogueAndroid.MAX_ANDROIDS_PER_CHUNK)
@@ -252,7 +249,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         {
             if (EntityRogueAndroid.dimensionWhitelist.size() > 0)
             {
-                return EntityRogueAndroid.dimensionWhitelist.contains(worldObj.provider.dimensionId) && inDimensionBlacklist();
+                return EntityRogueAndroid.dimensionWhitelist.contains(worldObj.provider.getDimensionId()) && inDimensionBlacklist();
             }
             if (inDimensionBlacklist())
             {
@@ -260,15 +257,16 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
             }
         }
         boolean light = ignoreLight ? true : isValidLightLevel();
-        boolean entityCollison = ignoreEntityCollision ? true : this.worldObj.checkNoEntityCollision(this.boundingBox);
-        return this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && light && entityCollison && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty() && !this.worldObj.isAnyLiquid(this.boundingBox);
+        boolean entityCollison = ignoreEntityCollision ? true : this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox());
+        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL && light && entityCollison && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty() && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
     }
 
-    public float getBlockPathWeight(int p_70783_1_, int p_70783_2_, int p_70783_3_)
+    @Override
+    public float getBlockPathWeight(BlockPos pos)
     {
-        float weight = 1-this.worldObj.getLightBrightness(p_70783_1_, p_70783_2_, p_70783_3_);
-        weight *= this.worldObj.isSideSolid(p_70783_1_,p_70783_2_,p_70783_3_, ForgeDirection.UP) ? 0 : 1;
-        weight /= Math.abs(p_70783_2_ - posX);
+        float weight = 1-this.worldObj.getLightBrightness(pos);
+        weight *= this.worldObj.isSideSolid(pos, EnumFacing.UP) ? 0 : 1;
+        weight /= Math.abs(pos.getY() - posY);
         return weight;
     }
 
@@ -277,7 +275,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         if (this.rand.nextFloat() < 0.15F)
         {
             int i = this.rand.nextInt(2);
-            float f = this.worldObj.difficultySetting == EnumDifficulty.HARD ? 0.1F : 0.25F;
+            float f = this.worldObj.getDifficulty() == EnumDifficulty.HARD ? 0.1F : 0.25F;
 
             if (this.rand.nextFloat() < 0.095F)
             {
@@ -296,7 +294,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
 
             for (int j = 3; j >= 0; --j)
             {
-                ItemStack itemstack = this.func_130225_q(j);
+                ItemStack itemstack = this.getCurrentArmor(j);
 
                 if (j < 3 && this.rand.nextFloat() < f)
                 {
@@ -345,7 +343,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     }
 
     @Override
-    public boolean isWithinHomeDistance(int p_110176_1_, int p_110176_2_, int p_110176_3_)
+    public boolean isWithinHomeDistanceFromPosition(BlockPos pos)
     {
         return true;
     }
@@ -358,14 +356,14 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     }
 
     @Override
-    public ChunkCoordinates getHomePosition()
+    public BlockPos getHomePosition()
     {
         Vec3 currentTarget = getCurrentTarget();
-        return new ChunkCoordinates((int)currentTarget.xCoord,(int)currentTarget.yCoord,(int)currentTarget.zCoord);
+        return new BlockPos((int)currentTarget.xCoord,(int)currentTarget.yCoord,(int)currentTarget.zCoord);
     }
 
     private boolean inDimensionBlacklist() {
-        return EntityRogueAndroid.dimensionBlacklist.contains(worldObj.provider.dimensionId);
+        return EntityRogueAndroid.dimensionBlacklist.contains(worldObj.provider.getDimensionId());
     }
 
     public void setAndroidLevel(int level)
@@ -406,8 +404,15 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         if(hasTeam())
         {
             return getTeam().formatString(this.dataWatcher.getWatchableObjectString(10));
+        }else
+        {
+            EnumChatFormatting color = getNameColor();
+            if (color != null)
+            {
+                return color + super.getCustomNameTag();
+            }
         }
-        return this.dataWatcher.getWatchableObjectString(10);
+        return super.getCustomNameTag();
     }
 
     @Override
@@ -425,7 +430,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     {
         if (spawnerPosition != null)
         {
-            TileEntity tileEntity = spawnerPosition.getTileEntity(worldObj);
+            TileEntity tileEntity = worldObj.getTileEntity(spawnerPosition);
             return tileEntity == spawner;
         }
         return false;
@@ -442,10 +447,10 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     {
         if (spawnerPosition != null)
         {
-            TileEntityAndroidSpawner spawner = spawnerPosition.getTileEntity(worldObj,TileEntityAndroidSpawner.class);
-            if (spawner != null)
+            TileEntity spawner = worldObj.getTileEntity(spawnerPosition);
+            if (spawner != null && spawner instanceof TileEntityAndroidSpawner)
             {
-                spawner.removeAndroid(this);
+                ((TileEntityAndroidSpawner)spawner).removeAndroid(this);
             }
         }
         this.isDead = true;
@@ -511,7 +516,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     @Override
     public boolean isNearTarget(Vec3 pos)
     {
-        return pos.squareDistanceTo(posX, posY, posZ) < maxPathTargetRangeSq;
+        return pos.squareDistanceTo(pos) < maxPathTargetRangeSq;
     }
 
     @Override

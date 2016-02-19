@@ -42,10 +42,10 @@ public class StarmapHelper
         boolean lastUnicode;
         if (GalaxyClient.getInstance().canSeePlanetInfo(planet, Minecraft.getMinecraft().thePlayer) || Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode)
         {
-            lastUnicode = Minecraft.getMinecraft().fontRenderer.getUnicodeFlag();
-            Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(unicode);
-            Minecraft.getMinecraft().fontRenderer.drawString(text, x, y, Planet.getGuiColor(planet).multiplyWithoutAlpha(multiply).getColor());
-            Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(lastUnicode);
+            lastUnicode = Minecraft.getMinecraft().fontRendererObj.getUnicodeFlag();
+            Minecraft.getMinecraft().fontRendererObj.setUnicodeFlag(unicode);
+            Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, Planet.getGuiColor(planet).multiplyWithoutAlpha(multiply).getColor());
+            Minecraft.getMinecraft().fontRendererObj.setUnicodeFlag(lastUnicode);
         }else
         {
             lastUnicode = Minecraft.getMinecraft().standardGalacticFontRenderer.getUnicodeFlag();

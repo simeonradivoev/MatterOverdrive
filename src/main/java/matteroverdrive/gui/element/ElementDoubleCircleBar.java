@@ -21,6 +21,7 @@ package matteroverdrive.gui.element;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
@@ -70,36 +71,36 @@ public class ElementDoubleCircleBar extends MOElementBase
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
         gui.bindTexture(BACK);
-        glColor4f(1,1,1,1);
+        GlStateManager.color(1,1,1,1);
         gui.drawSizedTexturedModalRect(posX,posY,0,0,sizeX,sizeY,135,135);
 
         //left
         gui.bindTexture(BG);
-        glAlphaFunc(GL_GREATER,1 - progressLeft);
+        GlStateManager.alphaFunc(GL_GREATER,1 - progressLeft);
         if (colorLeft != null)
-        glColor4f(colorLeft.getFloatR(),colorLeft.getFloatG(),colorLeft.getFloatB(),colorLeft.getFloatA());
+        GlStateManager.color(colorLeft.getFloatR(),colorLeft.getFloatG(),colorLeft.getFloatB(),colorLeft.getFloatA());
         gui.drawSizedTexturedModalRect(posX,posY,0,0,sizeX / 2,sizeY,135,135);
-        glAlphaFunc(GL_GREATER,0.2f);
+        GlStateManager.alphaFunc(GL_GREATER,0.2f);
 
         //right
         gui.bindTexture(BG);
-        glAlphaFunc(GL_GREATER,1 - progressRight);
+        GlStateManager.alphaFunc(GL_GREATER,1 - progressRight);
         if (colorRight != null)
-            glColor4f(colorRight.getFloatR(),colorRight.getFloatG(),colorRight.getFloatB(),colorRight.getFloatA());
+            GlStateManager.color(colorRight.getFloatR(),colorRight.getFloatG(),colorRight.getFloatB(),colorRight.getFloatA());
         gui.drawSizedTexturedModalRect(posX + 135 / 2,posY,135/2,0,sizeX / 2,sizeY,135,135);
-        glAlphaFunc(GL_GREATER,0.2f);
+        GlStateManager.alphaFunc(GL_GREATER,0.2f);
     }
 
     @Override
     public void drawForeground(int mouseX, int mouseY)
     {
-        glDisable(GL_ALPHA_TEST);
-        glEnable(GL_BLEND);
+        GlStateManager.disableAlpha();
+        GlStateManager.enableBlend();
         gui.bindTexture(OVERLAY);
-        glColor4f(1,1,1,1);
+        GlStateManager.color(1,1,1,1);
         gui.drawSizedTexturedModalRect(posX,posY,0,0,sizeX,sizeY,135,135);
-        glDisable(GL_BLEND);
-        glEnable(GL_ALPHA_TEST);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
     }
 
     public void setProgressLeft(float progressLeft)

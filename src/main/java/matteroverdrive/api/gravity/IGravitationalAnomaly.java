@@ -18,26 +18,14 @@
 
 package matteroverdrive.api.gravity;
 
+import net.minecraft.util.BlockPos;
+
 /**
  * Created by Simeon on 10/14/2015.
  */
 public interface IGravitationalAnomaly
 {
-    /**
-     * Gets the X coordinate of the Gravitational anomaly.
-     * @return the X coordinate.
-     */
-    int getX();
-    /**
-     * Gets the Y coordinate of the Gravitational anomaly.
-     * @return the Y coordinate.
-     */
-    int getY();
-    /**
-     * Gets the Z coordinate of the Gravitational anomaly.
-     * @return the Z coordinate.
-     */
-    int getZ();
+    BlockPos getPos();
 
     /**
      * Gets the event horizon.

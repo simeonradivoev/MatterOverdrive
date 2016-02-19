@@ -1,15 +1,18 @@
 package matteroverdrive.fx;
 
-import matteroverdrive.data.IconHolder;
 import matteroverdrive.util.animation.MOEasing;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 1/2/2016.
  */
-public class ShockwaveParticle extends EntityFX
+public class ShockwaveParticle extends MOEntityFX
 {
     private float maxScale;
 
@@ -17,12 +20,14 @@ public class ShockwaveParticle extends EntityFX
     {
         super(p_i1218_1_, p_i1218_2_, p_i1218_4_, p_i1218_6_);
         this.maxScale = maxScale;
-        this.particleIcon = new IconHolder(96f / 128f, 0, 1f, 32f / 128f, 32, 32);
+        this.particleIcon = ParticleIcon.fromWithAndHeight(96,0,32,32,128);
         this.particleMaxAge = (int) (maxScale * 5);
+        this.setEntityBoundingBox(new AxisAlignedBB(p_i1218_2_ - maxScale,p_i1218_4_ - 0.5,p_i1218_6_ - maxScale,p_i1218_2_ + maxScale,p_i1218_4_ + 0.5,p_i1218_6_ + maxScale));
+        this.renderDistanceWeight = Minecraft.getMinecraft().gameSettings.renderDistanceChunks / 6d;
     }
 
     @Override
-    public void renderParticle(Tessellator tess, float f, float xOffset, float yOffset, float zOffset, float p_70539_6_, float p_70539_7_)
+    public void renderParticle(WorldRenderer worldRenderer, Entity entity, float partialTicks, float xOffset, float yOffset, float zOffset, float p_70539_6_, float p_70539_7_)
     {
         float f6 = (float)this.particleTextureIndexX / 16.0F;
         float f7 = f6 + 0.0624375F;
@@ -38,15 +43,21 @@ public class ShockwaveParticle extends EntityFX
             f9 = this.particleIcon.getMaxV();
         }
 
-        float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)f - interpPosX);
-        float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)f - interpPosY);
-        float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)f - interpPosZ);
+        float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
+        float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
+        float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
         float particleAge = 1f - (float)this.particleAge / (float)this.particleMaxAge;
-        tess.setColorRGBA_F(this.particleRed * particleAge, this.particleGreen * particleAge, this.particleBlue * particleAge, this.particleAlpha * particleAge);
-        tess.addVertexWithUV((double)(f11 - particleScale), (double)(f12), (double)(f13 - particleScale), (double)f7, (double)f9);
-        tess.addVertexWithUV((double)(f11 - particleScale), (double)(f12), (double)(f13 + particleScale), (double)f7, (double)f8);
-        tess.addVertexWithUV((double)(f11 + particleScale), (double)(f12), (double)(f13 + particleScale), (double)f6, (double)f8);
-        tess.addVertexWithUV((double)(f11 + particleScale), (double)(f12), (double)(f13 - particleScale), (double)f6, (double)f9);
+        float red = this.particleRed * particleAge;
+        float green = this.particleGreen * particleAge;
+        float blue = this.particleBlue * particleAge;
+        float alpha = this.particleAlpha * particleAge;
+        int i = this.getBrightnessForRender(partialTicks);
+        int j = i >> 16 & 65535;
+        int k = i & 65535;
+        worldRenderer.pos((double)(f11 - particleScale), (double)(f12), (double)(f13 - particleScale)).tex((double)f7, (double)f9).color(red,green,blue,alpha).lightmap(j,k).endVertex();
+        worldRenderer.pos((double)(f11 - particleScale), (double)(f12), (double)(f13 + particleScale)).tex((double)f7, (double)f8).color(red,green,blue,alpha).lightmap(j,k).endVertex();
+        worldRenderer.pos((double)(f11 + particleScale), (double)(f12), (double)(f13 + particleScale)).tex((double)f6, (double)f8).color(red,green,blue,alpha).lightmap(j,k).endVertex();
+        worldRenderer.pos((double)(f11 + particleScale), (double)(f12), (double)(f13 - particleScale)).tex((double)f6, (double)f9).color(red,green,blue,alpha).lightmap(j,k).endVertex();
     }
 
     @Override

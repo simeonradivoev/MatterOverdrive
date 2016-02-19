@@ -18,18 +18,16 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.BlockState;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOMatterEnergyStorageBlock;
-import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineMatterRecycler;
 import matteroverdrive.util.MOBlockHelper;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -38,19 +36,17 @@ import net.minecraft.world.World;
  */
 public class BlockMatterRecycler extends MOMatterEnergyStorageBlock {
 
-    private IIcon iconTop;
-    private IIcon iconSideAnim;
-
     public BlockMatterRecycler(Material material, String name)
     {
         super(material, name, true, true);
+        setHasRotation();
         setHardness(20.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
         setHasGui(true);
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":decomposer_top");
@@ -82,17 +78,17 @@ public class BlockMatterRecycler extends MOMatterEnergyStorageBlock {
             }
         }
         return this.getIcon(side, blockAccess.getBlockMetadata(x, y, z));
-    }
+    }*/
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta)
     {
         return new TileEntityMachineMatterRecycler();
     }
-
+/*
     @Override
     public int getRenderType()
     {
         return MOBlockRenderer.renderID;
-    }
+    }*/
 }

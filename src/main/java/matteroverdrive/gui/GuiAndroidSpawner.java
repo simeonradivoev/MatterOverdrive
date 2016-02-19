@@ -48,7 +48,7 @@ public class GuiAndroidSpawner extends MOGuiMachine<TileEntityAndroidSpawner>
         super.initGui();
         pages.get(0).addElement(deleteAllBt);
 
-        for (int i = 1;i < machine.FLASH_DRIVE_COUNT;i++)
+        for (int i = 1; i < TileEntityAndroidSpawner.FLASH_DRIVE_COUNT; i++)
         {
             ElementInventorySlot flashDriveSlot = new ElementInventorySlot(this,(MOSlot)inventorySlots.getSlot(i),60 + 24 * (i-1),32,22,22,"big");
             pages.get(0).addElement(flashDriveSlot);
@@ -77,7 +77,7 @@ public class GuiAndroidSpawner extends MOGuiMachine<TileEntityAndroidSpawner>
             int spawnDelay = machine.getSpawnDelay();
             if (spawnDelay > 0)
             {
-                int spawnTime = spawnDelay - (int) (machine.getWorldObj().getTotalWorldTime() % spawnDelay);
+                int spawnTime = spawnDelay - (int) (machine.getWorld().getTotalWorldTime() % spawnDelay);
                 getFontRenderer().drawString(String.format("Time to next spawn: %s", MOStringHelper.formatRemainingTime(spawnTime / 20f)), 54, 68 + 16, Reference.COLOR_HOLO.getColor());
             }
         }

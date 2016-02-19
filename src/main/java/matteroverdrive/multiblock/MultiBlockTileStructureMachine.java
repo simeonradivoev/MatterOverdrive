@@ -29,7 +29,7 @@ import java.util.Iterator;
  */
 public class MultiBlockTileStructureMachine extends MultiBlockTileStructureAbstract
 {
-    private HashSet<IMultiBlockTile> tiles = new HashSet<>();
+    private final HashSet<IMultiBlockTile> tiles = new HashSet<>();
     private MOTileEntityMachine machine;
 
     public MultiBlockTileStructureMachine(MOTileEntityMachine machine)

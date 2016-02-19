@@ -23,10 +23,11 @@ import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -55,15 +56,14 @@ public class AndroidHudStats extends AndroidHudElement
     }
 
     @Override
-    public void drawElement(AndroidPlayer androidPlayer,int mouseX, int mouseY, ScaledResolution resolution, float ticks)
+    public void drawElement(AndroidPlayer androidPlayer, ScaledResolution resolution, float ticks)
     {
-        glDisable(GL_ALPHA_TEST);
+        GlStateManager.disableAlpha();
 
         double energy_perc = (double) androidPlayer.getEnergyStored() / (double) androidPlayer.getMaxEnergyStored();
         double health_perc = androidPlayer.getPlayer().getHealth() / androidPlayer.getPlayer().getEntityAttribute(SharedMonsterAttributes.maxHealth).getBaseValue();
         int x = 0;
         int y = 0;
-        String info;
         if (this.getPosition().y > 0.5)
         {
             y = -48;
@@ -74,7 +74,7 @@ public class AndroidHudStats extends AndroidHudElement
             x = 12 - (int)(24 * getPosition().x);
             y = 12 - (int)(24 * getPosition().y);
 
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE);
 
             RenderUtils.applyColorWithAlpha(baseColor);
             mc.renderEngine.bindTexture(top_element_bg);
@@ -103,15 +103,15 @@ public class AndroidHudStats extends AndroidHudElement
             x = 12 - (int)(24 * getPosition().x);
 
             //drawBackground(x,y,androidPlayer,resolution);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE);
 
             RenderUtils.applyColorWithAlpha(baseColor);
-            glPushMatrix();
-            glTranslated(x+11+(getWidth(resolution,androidPlayer)-11)*getPosition().x,y,0);
-            glRotated(90,0,0,1);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x+11+(getWidth(resolution,androidPlayer)-11)*getPosition().x,y,0);
+            GlStateManager.rotate(90,0,0,1);
             mc.renderEngine.bindTexture(top_element_bg);
             RenderUtils.drawPlane(0, 0,0,174,11);
-            glPopMatrix();
+            GlStateManager.popMatrix();
 
             y += 86;
             int ySize = 24 + 22 + 24;
@@ -141,12 +141,12 @@ public class AndroidHudStats extends AndroidHudElement
             renderIconWithPercent("battery", energy_perc, x + 24,y - 9,0,0, false, Reference.COLOR_HOLO_RED, baseColor, 20, 20);
         }
 
-        glEnable(GL_ALPHA_TEST);
+        GlStateManager.enableAlpha();
     }
 
     private int getWidthIconWithInfo(String info,int iconWidth)
     {
-        return iconWidth + mc.fontRenderer.getStringWidth(info) + 4;
+        return iconWidth + mc.fontRendererObj.getStringWidth(info) + 4;
     }
 
     private int getWidthIconWithPercent(double amount,int iconWidth)
@@ -162,23 +162,23 @@ public class AndroidHudStats extends AndroidHudElement
     private int renderIconWithInfo(String icon, String info, Color color, int x, int y, int iconOffsetX, int iconOffsetY, boolean leftSided, int iconWidth, int iconHeight)
     {
         HoloIcon holoIcon = ClientProxy.holoIcons.getIcon(icon);
-        int infoWidth = mc.fontRenderer.getStringWidth(info);
+        int infoWidth = mc.fontRendererObj.getStringWidth(info);
 
-        glDisable(GL_TEXTURE_2D);
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-        glColor4f(0,0,0,backgroundAlpha);
+        GlStateManager.disableTexture2D();
+        GlStateManager.blendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(0,0,0,backgroundAlpha);
         RenderUtils.drawPlane(x,y-1,0,infoWidth + 2 + iconWidth + 2,18+2);
-        glEnable(GL_TEXTURE_2D);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        GlStateManager.enableTexture2D();
+        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE);
         RenderUtils.applyColorWithAlpha(color);
 
         if (!leftSided)
         {
             ClientProxy.holoIcons.renderIcon(holoIcon, x + iconOffsetX, y + iconOffsetY,iconWidth,iconHeight);
-            mc.fontRenderer.drawString(info, x + iconWidth + 2 + iconOffsetX, y + iconWidth/2 - mc.fontRenderer.FONT_HEIGHT/2 + iconOffsetY, color.getColor());
+            mc.fontRendererObj.drawString(info, x + iconWidth + 2 + iconOffsetX, y + iconWidth/2 - mc.fontRendererObj.FONT_HEIGHT/2 + iconOffsetY, color.getColor());
         }else
         {
-            mc.fontRenderer.drawString(info, x + iconOffsetX, y + iconWidth/2 - mc.fontRenderer.FONT_HEIGHT/2 + iconOffsetY, color.getColor());
+            mc.fontRendererObj.drawString(info, x + iconOffsetX, y + iconWidth/2 - mc.fontRendererObj.FONT_HEIGHT/2 + iconOffsetY, color.getColor());
             ClientProxy.holoIcons.renderIcon(icon,x+infoWidth+2+iconOffsetX,y+iconOffsetY,iconWidth,iconHeight);
         }
 

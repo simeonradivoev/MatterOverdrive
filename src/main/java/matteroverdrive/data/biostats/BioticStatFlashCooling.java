@@ -3,9 +3,11 @@ package matteroverdrive.data.biostats;
 import com.google.common.collect.Multimap;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
+import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.render.HoloIcons;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -17,8 +19,9 @@ import java.util.Random;
  */
 public class BioticStatFlashCooling extends AbstractBioticStat
 {
-    private Random random;
-    public static final float COOLDOWN_CHANGE = 0.2f;
+    private final Random random;
+    private static final float COOLDOWN_CHANGE = 0.2f;
+    private static final int ENERGY_PER_COOLDOWN = 1024;
 
     public BioticStatFlashCooling(String name, int xp)
     {
@@ -29,7 +32,7 @@ public class BioticStatFlashCooling extends AbstractBioticStat
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), EnumChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(COOLDOWN_CHANGE) + EnumChatFormatting.GRAY);
+        return String.format(super.getDetails(level), EnumChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(COOLDOWN_CHANGE) + EnumChatFormatting.GRAY,EnumChatFormatting.YELLOW + (ENERGY_PER_COOLDOWN + MOEnergyHelper.ENERGY_UNIT) + EnumChatFormatting.GRAY);
     }
 
     @Override
@@ -68,6 +71,12 @@ public class BioticStatFlashCooling extends AbstractBioticStat
     }
 
     @Override
+    public boolean isEnabled(AndroidPlayer android, int level)
+    {
+        return super.isEnabled(android,level) && android.getEnergyStored() > 0;
+    }
+
+    @Override
     public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
     {
 
@@ -89,5 +98,11 @@ public class BioticStatFlashCooling extends AbstractBioticStat
     public int getDelay(AndroidPlayer androidPlayer, int level)
     {
         return 0;
+    }
+
+    @Override
+    public boolean showOnHud(AndroidPlayer android, int level)
+    {
+        return android.getPlayer().getHeldItem() != null && android.getPlayer().getHeldItem().getItem() instanceof IWeapon;
     }
 }

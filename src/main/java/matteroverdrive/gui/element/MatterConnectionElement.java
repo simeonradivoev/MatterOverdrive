@@ -21,6 +21,7 @@ package matteroverdrive.gui.element;
 import matteroverdrive.Reference;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -72,7 +73,7 @@ public class MatterConnectionElement extends MOElementBase
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        GL11.glColor3f(1, 1, 1);
+        GlStateManager.color(1,1,1);
         RenderUtils.bindTexture(texture);
         gui.drawSizedTexturedModalRect(posX, posY, 0, 0, 22, 22, 22, 22);
     }

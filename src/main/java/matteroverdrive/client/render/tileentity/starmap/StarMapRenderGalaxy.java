@@ -18,8 +18,6 @@
 
 package matteroverdrive.client.render.tileentity.starmap;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.proxy.ClientProxy;
@@ -29,7 +27,12 @@ import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -43,16 +46,17 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
     public void renderBody(Galaxy galaxy, SpaceBody spaceBody, TileEntityMachineStarMap starMap, float partialTicks,float viewerDistance)
     {
         double distanceMultiply = 2;
-        glDepthMask(false);
+        GlStateManager.depthMask(false);
 
         glLineWidth(1);
 
+        Tessellator.getInstance().getWorldRenderer().begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
         for (Quadrant quadrant : galaxy.getQuadrants())
         {
             renderStars(quadrant, starMap,distanceMultiply,2);
         }
-
-        glDisable(GL_TEXTURE_2D);
+        Tessellator.getInstance().draw();
+        GlStateManager.disableTexture2D();
 
 
         for (int i = 0;i < galaxy.getTravelEvents().size();i++)
@@ -64,15 +68,15 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
                 Vec3 from = GalaxyClient.getInstance().getTheGalaxy().getPlanet(travelEvent.getFrom()).getStar().getPosition(2);
                 Vec3 to = GalaxyClient.getInstance().getTheGalaxy().getPlanet(travelEvent.getTo()).getStar().getPosition(2);
                 Vec3 dir = from.subtract(to);
-                double percent = travelEvent.getPercent(starMap.getWorldObj());
+                double percent = travelEvent.getPercent(starMap.getWorld());
 
                 RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.5f);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                glPushMatrix();
-                glTranslated(from.xCoord + dir.xCoord * percent, from.yCoord + dir.yCoord * percent, from.zCoord + dir.zCoord * percent);
-                RenderUtils.rotateTowards(Vec3.createVectorHelper(-1, 0, 0.0), dir.normalize(), Vec3.createVectorHelper(0, 1, 0));
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(from.xCoord + dir.xCoord * percent, from.yCoord + dir.yCoord * percent, from.zCoord + dir.zCoord * percent);
+                RenderUtils.rotateTowards(new Vec3(-1, 0, 0.0), dir.normalize(), new Vec3(0, 1, 0));
                 RenderUtils.drawShip(0, 0, 0, 0.02);
-                glPopMatrix();
+                GlStateManager.popMatrix();
 
                 glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
                 RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO_PURPLE, 0.5f);
@@ -82,13 +86,13 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
                 glEnd();
             }
         }
-        glEnable(GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
     }
 
     @Override
     public void renderGUIInfo(Galaxy galaxy, SpaceBody spaceBody,TileEntityMachineStarMap starMap, float partialTicks, float opacity)
     {
-        glEnable(GL_ALPHA_TEST);
+        GlStateManager.enableAlpha();
         int ownedSystemCount = galaxy.getOwnedSystemCount(Minecraft.getMinecraft().thePlayer);
         int enemySystemCount = galaxy.getEnemySystemCount(Minecraft.getMinecraft().thePlayer);
         int freeSystemCount = galaxy.getStarCount() - ownedSystemCount - enemySystemCount;
@@ -114,10 +118,10 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
                 Planet from = GalaxyClient.getInstance().getTheGalaxy().getPlanet(travelEvent.getFrom());
                 Planet to = GalaxyClient.getInstance().getTheGalaxy().getPlanet(travelEvent.getTo());
 
-                RenderUtils.drawString(String.format("%s -> %s : %s", from.getName(), to.getName(), MOStringHelper.formatRemainingTime(galaxy.getTravelEvents().get(i).getTimeRemainning(starMap.getWorldObj()) / 20)), 0, -48 - i * 10, Reference.COLOR_HOLO, opacity);
+                RenderUtils.drawString(String.format("%s -> %s : %s", from.getName(), to.getName(), MOStringHelper.formatRemainingTime(galaxy.getTravelEvents().get(i).getTimeRemainning(starMap.getWorld()) / 20)), 0, -48 - i * 10, Reference.COLOR_HOLO, opacity);
             }
         }
-        glDisable(GL_ALPHA_TEST);
+        GlStateManager.disableAlpha();
     }
 
     @Override

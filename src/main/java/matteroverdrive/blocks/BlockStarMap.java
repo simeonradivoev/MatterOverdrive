@@ -1,16 +1,16 @@
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 /**
@@ -18,9 +18,6 @@ import net.minecraft.world.World;
  */
 public class BlockStarMap extends MOBlockMachine
 {
-    private IIcon topIcon;
-    private IIcon bottomIcon;
-
     public BlockStarMap(Material material, String name)
     {
         super(material, name);
@@ -32,7 +29,7 @@ public class BlockStarMap extends MOBlockMachine
         setHasGui(true);
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         super.registerBlockIcons(iconRegister);
@@ -57,19 +54,19 @@ public class BlockStarMap extends MOBlockMachine
         {
             return blockIcon;
         }
-    }
+    }*/
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        if (player.isSneaking()) {
-            TileEntityMachineStarMap starMap = (TileEntityMachineStarMap) world.getTileEntity(x, y, z);
+        if (playerIn.isSneaking()) {
+            TileEntityMachineStarMap starMap = (TileEntityMachineStarMap) worldIn.getTileEntity(pos);
             starMap.zoom();
             return true;
         }
 		else
         {
-            return super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
+            return super.onBlockActivated(worldIn,pos,state,playerIn, side, hitX, hitY, hitZ);
         }
     }
 
@@ -83,17 +80,5 @@ public class BlockStarMap extends MOBlockMachine
     public boolean isOpaqueCube()
     {
         return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
-
-    @Override
-    public int getRenderType()
-    {
-        return MOBlockRenderer.renderID;
     }
 }

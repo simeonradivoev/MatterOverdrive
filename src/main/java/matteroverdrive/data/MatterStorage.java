@@ -21,8 +21,8 @@ package matteroverdrive.data;
 import matteroverdrive.api.matter.IMatterStorage;
 import matteroverdrive.init.MatterOverdriveFluids;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
@@ -35,7 +35,7 @@ public class MatterStorage implements IMatterStorage, IFluidTank
     protected int capacity;
     protected int maxExtract;
     protected int maxReceive;
-    private FluidStack fluidStack;
+    private final FluidStack fluidStack;
 
     public MatterStorage(int capacity)
     {
@@ -66,7 +66,7 @@ public class MatterStorage implements IMatterStorage, IFluidTank
     }
 
     @Override
-    public int extractMatter(ForgeDirection direction, int amount, boolean simulate)
+    public int extractMatter(EnumFacing direction, int amount, boolean simulate)
     {
         return extractMatter(amount, simulate);
     }
@@ -84,7 +84,7 @@ public class MatterStorage implements IMatterStorage, IFluidTank
     }
 
     @Override
-    public int receiveMatter(ForgeDirection side, int amount, boolean simulate)
+    public int receiveMatter(EnumFacing side, int amount, boolean simulate)
     {
         int maxFill = MathHelper.clamp_int(Math.min(amount, getMaxReceive()), 0, getCapacity() - getFluid().amount);
 
@@ -146,7 +146,7 @@ public class MatterStorage implements IMatterStorage, IFluidTank
             return 0;
         }
 
-        return receiveMatter(ForgeDirection.UNKNOWN, resource.amount, !doFill);
+        return receiveMatter(EnumFacing.DOWN, resource.amount, !doFill);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class MatterStorage implements IMatterStorage, IFluidTank
             return null;
         }
 
-        int drained = extractMatter(ForgeDirection.UNKNOWN, maxDrain, !doDrain);
+        int drained = extractMatter(EnumFacing.DOWN, maxDrain, !doDrain);
         if (drained <= 0)
             return null;
         else

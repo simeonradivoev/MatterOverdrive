@@ -13,7 +13,7 @@ import java.util.List;
 
 public class MatterDust extends MOBaseItem implements IRecyclable, IMatterItem
 {
-    boolean isRefined;
+    final boolean isRefined;
 
 	public MatterDust(String name,boolean refined)
 	{

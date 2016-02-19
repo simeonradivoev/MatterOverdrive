@@ -18,8 +18,9 @@
 
 package matteroverdrive.api.matter;
 
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPattern;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,17 +36,6 @@ public interface IMatterDatabase
 	 * @return is the Item Stack's pattern present in the database.
 	 */
 	boolean hasItem(ItemStack item);
-
-	/**
-	 * @return an list of all the item patterns in the database.
-	 */
-	List<ItemPattern> getPatterns();
-
-	/**
-	 * @param withInfo should more info be included in the item stack's NBT tag, like the scan progress.
-	 * @return all item patterns in the database as {@link net.minecraft.item.ItemStack}
-	 */
-	List<ItemStack> getItems(boolean withInfo);
 
 	/**
 	 * Add an Items Stack to the database as a pattern.
@@ -78,4 +68,12 @@ public interface IMatterDatabase
 	 * @return a list of Pattern Storages in the database if any.
 	 */
 	ItemStack[] getPatternStorageList();
+
+    void onPatternStorageChange(int storageId);
+
+	ItemStack getPatternStorage(int storageId);
+
+	int getPatternStorageCount();
+
+    BlockPos getPos();
 }

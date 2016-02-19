@@ -39,11 +39,6 @@ public class WeaponModuleSniperScope extends MOBaseItem implements IWeaponScope
     }
 
     @Override
-    public float getYOffset(ItemStack scopeStack,ItemStack weapon) {
-        return -0.18f;
-    }
-
-    @Override
     public float getZoomAmount(ItemStack scopeStack,ItemStack weapon)
     {
         return 0.85f;
@@ -82,10 +77,7 @@ public class WeaponModuleSniperScope extends MOBaseItem implements IWeaponScope
     @Override
     public float modifyWeaponStat(int statID, ItemStack module, ItemStack weapon,float originalStat)
     {
-        if (statID == Reference.WS_ACCURACY)
-        {
-            return originalStat * 0.8f;
-        }else if (statID == Reference.WS_RANGE)
+        if (statID == Reference.WS_RANGE)
         {
             return originalStat * 1.5f;
         }

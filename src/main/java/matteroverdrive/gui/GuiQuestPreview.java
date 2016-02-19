@@ -29,6 +29,7 @@ import matteroverdrive.network.packet.server.PacketQuestActions;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
@@ -67,7 +68,7 @@ public class GuiQuestPreview extends MOGuiBase
         //acceptButton.setIcon(ClientProxy.holoIcons.getIcon("tick"));
         acceptButton.setText(String.format("[ %s ]",MOStringHelper.translateToLocal("gui.label.accept")));
         acceptButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.quest.accept"));
-        acceptButton.setTextColor(0x279f33);
+        acceptButton.setTextColor(0x5656ff);
         if (!questStack.canAccept(Minecraft.getMinecraft().thePlayer,questStack))
         {
             acceptButton.setEnabled(false);
@@ -91,18 +92,18 @@ public class GuiQuestPreview extends MOGuiBase
     protected void drawGuiContainerBackgroundLayer(float partialTick, int x, int y)
     {
         bindTexture(backgroundTexture);
-        glColor3f(1,1,1);
+        GlStateManager.color(1,1,1);
         RenderUtils.drawPlane(guiLeft,guiTop,0,xSize,ySize);
         if (questStack != null)
         {
             String questName = questStack.getTitle(Minecraft.getMinecraft().thePlayer);
             int titleWidth = fontRendererObj.getStringWidth(questName);
             float scale = Math.min(100f/(float)titleWidth,1.8f);
-            glPushMatrix();
-            glTranslated(guiLeft + 24,guiTop + 30,0);
-            glScalef(scale,scale,scale);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(guiLeft + 24,guiTop + 30,0);
+            GlStateManager.scale(scale,scale,scale);
             fontRendererObj.drawString(EnumChatFormatting.BOLD + questName,0,0,0x2394e3);
-            glPopMatrix();
+            GlStateManager.popMatrix();
         }
         super.drawGuiContainerBackgroundLayer(partialTick,x,y);
     }
@@ -120,7 +121,7 @@ public class GuiQuestPreview extends MOGuiBase
         questInfo.addLine("");
         for (int i = 0;i < questStack.getObjectivesCount(Minecraft.getMinecraft().thePlayer);i++)
         {
-            List<String> objectiveLines = MatterOverdrive.questFactory.getFormattedQuestObjective(Minecraft.getMinecraft().thePlayer,questStack,i,width);
+            List<String> objectiveLines = MatterOverdrive.questFactory.getFormattedQuestObjective(Minecraft.getMinecraft().thePlayer,questStack,i,width,EnumChatFormatting.BLUE.toString(),EnumChatFormatting.BLUE.toString());
             questInfo.addLines(objectiveLines);
         }
         questInfo.addLine("");
@@ -132,7 +133,7 @@ public class GuiQuestPreview extends MOGuiBase
         questRewards.setSize(questRewards.getWidth(),rewards.size() > 0 ? 20 : 0);
         for (int i = 0;i < rewards.size();i++)
         {
-            if (rewards.get(i) instanceof ItemStackReward)
+            if (rewards.get(i) instanceof ItemStackReward && rewards.get(i).isVisible(questStack))
             {
                 ElementItemPreview itemPreview = new ElementItemPreview(this, i * 20, 1, ((ItemStackReward) rewards.get(i)).getItemStack());
                 itemPreview.setItemSize(1);

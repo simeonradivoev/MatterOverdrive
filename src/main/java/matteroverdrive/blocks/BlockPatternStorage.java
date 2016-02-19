@@ -18,19 +18,12 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.client.render.block.RendererBlockPatternStorage;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.init.MatterOverdriveIcons;
-import matteroverdrive.tile.TileEntityMachinePatternStorage;
+import matteroverdrive.machines.pattern_storage.TileEntityMachinePatternStorage;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
-import static matteroverdrive.util.MOBlockHelper.getOppositeSide;
 
 /**
  * Created by Simeon on 3/27/2015.
@@ -43,12 +36,14 @@ public class BlockPatternStorage extends MOBlockMachine
     {
         super(material, name);
         setHardness(20.0F);
+        setLightOpacity(5);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
         setHasGui(true);
+        setHasRotation();
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metadata)
     {
@@ -58,18 +53,18 @@ public class BlockPatternStorage extends MOBlockMachine
         }
 
         return MatterOverdriveIcons.Base;
-    }
+    }*/
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityMachinePatternStorage();
     }
 
-    @Override
+    /*@Override
     public int getRenderType()
     {
         return RendererBlockPatternStorage.renderID;
-    }
+    }*/
 
     @Override
     public boolean isOpaqueCube()

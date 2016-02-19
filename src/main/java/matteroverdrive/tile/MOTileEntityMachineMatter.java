@@ -18,22 +18,17 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.common.Optional;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.MachineMatterStorage;
 import matteroverdrive.fluids.FluidMatterPlasma;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.client.PacketMatterUpdate;
-import matteroverdrive.util.MatterHelper;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -89,7 +84,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	}
 
 	@Override
-	public int receiveMatter(ForgeDirection side, int amount, boolean simulate)
+	public int receiveMatter(EnumFacing side, int amount, boolean simulate)
 	{
 		if (getMatterStorage() != null)
 			return getMatterStorage().receiveMatter(side,amount,simulate);
@@ -97,7 +92,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	}
 
 	@Override
-	public int extractMatter(ForgeDirection direction, int amount, boolean simulate)
+	public int extractMatter(EnumFacing direction, int amount, boolean simulate)
 	{
 		if (getMatterStorage() != null)
 			return getMatterStorage().extractMatter(direction,amount,simulate);
@@ -115,7 +110,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
     }
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
 	{
 		if (getMatterStorage() != null)
 			return getMatterStorage().fill(resource,doFill);
@@ -123,7 +118,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
 	{
 		if (getMatterStorage() != null)
 			return getMatterStorage().drain(resource.amount,doDrain);
@@ -131,7 +126,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
 	{
 		if (getMatterStorage() != null)
 			return getMatterStorage().drain(maxDrain,doDrain);
@@ -139,19 +134,19 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
+	public boolean canFill(EnumFacing from, Fluid fluid)
 	{
 		return fluid instanceof FluidMatterPlasma;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	public boolean canDrain(EnumFacing from, Fluid fluid)
 	{
 		return fluid instanceof FluidMatterPlasma;
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	public FluidTankInfo[] getTankInfo(EnumFacing from)
 	{
 		if (getMatterStorage() != null)
 			return new FluidTankInfo[]{getMatterStorage().getInfo()};
@@ -159,7 +154,6 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	}
 	
 	public MachineMatterStorage getMatterStorage()
-
 	{
 		return this.matterStorage;
 	}
@@ -172,7 +166,10 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 
 	public void updateClientMatter()
 	{
-		MatterOverdrive.packetPipeline.sendToAllAround(new PacketMatterUpdate(this), this, 64);
+        if (worldObj != null)
+        {
+            MatterOverdrive.packetPipeline.sendToAllAround(new PacketMatterUpdate(this), this, 64);
+        }
 	}
 
 	@Override
@@ -209,7 +206,7 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	}
 
 //	WAILA
-	@Optional.Method(modid = "Waila")
+	/*@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		TileEntity te = accessor.getTileEntity();
 
@@ -222,5 +219,5 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 		}
 
 		return currenttip;
-	}
+	}*/
 }

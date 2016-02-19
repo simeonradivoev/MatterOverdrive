@@ -18,10 +18,10 @@
 
 package matteroverdrive.starmap;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.Star;
@@ -84,7 +84,7 @@ public class GalaxyClient extends GalaxyCommon
 				theGalaxy != null &&
 				!Minecraft.getMinecraft().isGamePaused() &&
 				Minecraft.getMinecraft().theWorld.isRemote &&
-				Minecraft.getMinecraft().theWorld.provider.dimensionId == 0 &&
+				Minecraft.getMinecraft().theWorld.provider.getDimensionId() == 0 &&
 				event.phase == TickEvent.Phase.START &&
                 Minecraft.getMinecraft().theWorld != null)
 		{

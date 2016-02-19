@@ -39,10 +39,10 @@ public class StarGen implements ISpaceBodyGen<Star>
     public static final ResourceLocation starNamesFile = new ResourceLocation(Reference.PATH_INFO + "star_names.txt");
     public static final ResourceLocation starPrefixesFile = new ResourceLocation(Reference.PATH_INFO + "star_prefixes.txt");
     public static final ResourceLocation starSuffixesFile = new ResourceLocation(Reference.PATH_INFO + "star_suffixes.txt");
-    float[] radiuses = new float[]{8.8f,6.6f,6.6f,1.8f,1.8f,1.4f,1.4f,1.15f,1.15f,0.96f,0.96f,0.7f,0.7f,0.2f};
-    int[] temperatures = new int[]{60000,30000,30000,10000,10000,7500,7500,6000,6000,5200,5200,3700,3700,2400};
-    float[] masses = new float[]{32,16,16,2.1f,2.1f,1.4f,1.4f,1.04f,1.04f,0.8f,0.8f,0.45f,0.45f,0.08f};
-    double[] weights = new double[]{0.00003,0.13,0.6,3,7.6,12.1,76.45};
+    final float[] radiuses = new float[]{8.8f,6.6f,6.6f,1.8f,1.8f,1.4f,1.4f,1.15f,1.15f,0.96f,0.96f,0.7f,0.7f,0.2f};
+    final int[] temperatures = new int[]{60000,30000,30000,10000,10000,7500,7500,6000,6000,5200,5200,3700,3700,2400};
+    final float[] masses = new float[]{32,16,16,2.1f,2.1f,1.4f,1.4f,1.04f,1.04f,0.8f,0.8f,0.45f,0.45f,0.08f};
+    final double[] weights = new double[]{0.00003,0.13,0.6,3,7.6,12.1,76.45};
     private static String[] prefixes,starNames, suffixes;
     int type;
 
@@ -56,7 +56,7 @@ public class StarGen implements ISpaceBodyGen<Star>
 
     public static List<StarGen> getStarGens()
     {
-        List<StarGen> gens = new ArrayList<StarGen>(7);
+        List<StarGen> gens = new ArrayList<>(7);
         for (int i = 0;i < 7;i++)
         {
             gens.add(new StarGen(i));
@@ -173,7 +173,7 @@ public class StarGen implements ISpaceBodyGen<Star>
 
     public static List<String> generateAvailableNames(Random random, int maxLength,float prefixChance,float sufixChance)
     {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         String n;
 
         for (String name : starNames)

@@ -53,7 +53,7 @@ public class ElementShipEntry extends ElementAbstractStarMapEntry<Planet>
     protected void drawElementName(Planet planet, Color color, float multiply)
     {
         RenderUtils.renderStack(posX + 10, posY + sizeY / 2 - 8, ship);
-        RenderUtils.drawString(Minecraft.getMinecraft().fontRenderer, ship.getDisplayName(), posX + 31, posY + 12, color, multiply);
+        RenderUtils.drawString(Minecraft.getMinecraft().fontRendererObj, ship.getDisplayName(), posX + 31, posY + 12, color, multiply);
     }
 
     @Override

@@ -18,10 +18,11 @@
 
 package matteroverdrive.compat;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import matteroverdrive.MatterOverdrive;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.compat.modules.*;
 import matteroverdrive.compat.modules.computercraft.CompatComputerCraft;
 import matteroverdrive.compat.modules.nei.CompatNEI;

@@ -89,7 +89,7 @@ public class MOElementButton extends MOElementBase
         {
             String sound = getSound();
             if (sound != null && !sound.isEmpty()) {
-                gui.playSound(Reference.MOD_ID + ":gui." + sound, getSoundVolume(), 0.9f + rand.nextFloat() * 0.2f);
+                MOGuiBase.playSound(Reference.MOD_ID + ":gui." + sound, getSoundVolume(), 0.9f + rand.nextFloat() * 0.2f);
             }
             onAction(mouseX, mouseY, lastMouseButton);
         }

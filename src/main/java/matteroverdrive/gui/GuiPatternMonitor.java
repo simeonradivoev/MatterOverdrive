@@ -21,21 +21,20 @@ package matteroverdrive.gui;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.MatterNetworkTaskState;
-import matteroverdrive.container.ContainerPatternMonitor;
+import matteroverdrive.container.matter_network.ContainerPatternMonitor;
 import matteroverdrive.container.MOBaseContainer;
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPatternMapping;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.pages.PageTasks;
-import matteroverdrive.network.packet.server.PacketPatternMonitorCommands;
-import matteroverdrive.network.packet.server.PacketRemoveTask;
+import matteroverdrive.network.packet.server.pattern_monitor.PacketPatternMonitorAddRequest;
+import matteroverdrive.network.packet.server.task_queue.PacketRemoveTask;
+import matteroverdrive.machines.pattern_monitor.TileEntityMachinePatternMonitor;
 import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.tile.TileEntityMachinePatternMonitor;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.util.BlockPos;
 
 
 /**
@@ -61,9 +60,9 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
         requestButton.setToolTip(MOStringHelper.translateToLocal("gui.tooltip.button.request"));
         elementGrid = new ElementPatternsGrid(this,48,40,160,110);
         searchField = new MOElementTextField(this,41,26,167,14);
-        slotsList.addElement(refreshButton);
+        //slotsList.addElement(refreshButton);
         slotsList.addElement(requestButton);
-        elementGrid.updateStackList(machine.getGuiPatterns());
+        //elementGrid.updateStackList(((ContainerPatternMonitor)inventorySlots).getGuiPatterns());
     }
 
     @Override
@@ -71,7 +70,7 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
     {
         super.registerPages(container, machine);
 
-        pageTasks = new PageTasks(this,0,0,xSize,ySize,machine.getTaskQueue((byte) 0));
+        pageTasks = new PageTasks(this, 0, 0, xSize, ySize, machine.getTaskQueue(0));
         pageTasks.setName("Tasks");
         AddPage(pageTasks, ClientProxy.holoIcons.getIcon("page_icon_tasks"), MOStringHelper.translateToLocal("gui.tooltip.page.tasks")).setIconColor(Reference.COLOR_MATTER);
     }
@@ -91,43 +90,30 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
     public void handleElementButtonClick(MOElementBase element, String buttonName, int mouseButton)
     {
         super.handleElementButtonClick(element,buttonName,mouseButton);
-        if (buttonName.equals("Refresh"))
+        if (element == requestButton)
         {
-            MatterOverdrive.packetPipeline.sendToServer(new PacketPatternMonitorCommands(machine,0,null));
-        }
-        else if (buttonName.equals("Request"))
-        {
-            List<ItemPattern> requestList = new ArrayList<>();
-            for (int i = 0;i < elementGrid.getElements().size();i++)
+            for (int i = 0; i < elementGrid.getElements().size(); i++)
             {
                 if (elementGrid.getElements().get(i) instanceof ElementMonitorItemPattern)
                 {
-                    ElementMonitorItemPattern itemPattern = (ElementMonitorItemPattern)elementGrid.getElements().get(i);
+                    ElementMonitorItemPattern itemPattern = (ElementMonitorItemPattern) elementGrid.getElements().get(i);
 
                     if (itemPattern.getAmount() > 0)
                     {
-                        ItemPattern pattern = itemPattern.getPattern().copy();
-                        pattern.setCount(itemPattern.getAmount());
-                        requestList.add(pattern);
+                        ItemPattern pattern = itemPattern.getPatternMapping().getItemPattern().copy();
+                        MatterOverdrive.packetPipeline.sendToServer(new PacketPatternMonitorAddRequest(machine,pattern,itemPattern.getAmount()));
                         itemPattern.setAmount(0);
-                    }
-                    else
+                    } else
                     {
                         itemPattern.setExpanded(false);
                     }
                 }
             }
-
-            if (requestList.size() > 0)
-            {
-                MatterOverdrive.packetPipeline.sendToServer(new PacketPatternMonitorCommands(machine, PacketPatternMonitorCommands.COMMAND_REQUEST, requestList));
-            }
-        }
-        else if (buttonName.equals("DropTask"))
+        }else if (element instanceof ElementTaskList)
         {
             NBTTagCompound tagCompound = new NBTTagCompound();
-            tagCompound.setInteger("TaskID",mouseButton);
-            MatterOverdrive.packetPipeline.sendToServer(new PacketRemoveTask(machine,mouseButton,(byte)0, MatterNetworkTaskState.INVALID));
+            tagCompound.setInteger("TaskID", mouseButton);
+            MatterOverdrive.packetPipeline.sendToServer(new PacketRemoveTask(machine, mouseButton, (byte) 0, MatterNetworkTaskState.INVALID));
         }
     }
 
@@ -136,12 +122,32 @@ public class GuiPatternMonitor extends MOGuiNetworkMachine<TileEntityMachinePatt
     {
         super.updateElementInformation();
 
-        if (machine.needsRefresh())
-        {
-            elementGrid.updateStackList(machine.getGuiPatterns());
-            machine.forceSearch(false);
-        }
+        //if (machine.needsRefresh())
+        //{
+            //elementGrid.updateStackList(machine.getGuiPatterns());
+            //machine.forceSearch(false);
+        //
 
         elementGrid.setFilter(searchField.getText());
+    }
+
+    public void setPattern(ItemPatternMapping pattern)
+    {
+        elementGrid.setPattern(pattern);
+    }
+
+    public void clearPatterns(BlockPos database,int storageId)
+    {
+        elementGrid.removePatterns(database,storageId);
+    }
+
+    public void clearPatterns(BlockPos database)
+    {
+        elementGrid.removePatterns(database);
+    }
+
+    public void clearPatterns()
+    {
+        elementGrid.clearElements();
     }
 }

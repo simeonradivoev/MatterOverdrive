@@ -18,13 +18,17 @@
 
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
+import com.google.gson.JsonObject;
 import matteroverdrive.api.quest.IQuestLogic;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import java.util.Random;
 
@@ -34,7 +38,13 @@ import java.util.Random;
 public abstract class AbstractQuestLogic implements IQuestLogic
 {
     protected boolean autoComplete;
-    protected String id;
+    private String id;
+
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+        this.autoComplete = MOJsonHelper.getBool(jsonObject,"auto_complete",false);
+    }
 
     @Override
     public String modifyTitle(QuestStack questStack, String original)
@@ -74,7 +84,7 @@ public abstract class AbstractQuestLogic implements IQuestLogic
                 return entityRegistration.getEntityName();
             } else
             {
-                String name = (String) EntityList.classToStringMapping.get(entityClass);
+                String name = EntityList.classToStringMapping.get(entityClass);
                 if (name != null)
                 {
                     return name;

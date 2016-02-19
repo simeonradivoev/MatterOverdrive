@@ -34,6 +34,7 @@ public class ElementMatterStored extends MOElementBase
 	public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(Reference.PATH_ELEMENTS + "Matter.png");
 	public static final int DEFAULT_SCALE = 42;
     private int drain = 0;
+	private double drainPerTick = 0;
 
 	protected IMatterStorage storage;
 
@@ -105,6 +106,15 @@ public class ElementMatterStored extends MOElementBase
         {
             list.add(EnumChatFormatting.RED +  MatterHelper.formatMatter(drain));
         }
+
+		if(drainPerTick > 0)
+		{
+			list.add(EnumChatFormatting.GREEN + "+" +  MatterHelper.formatMatter(drainPerTick) + "/t");
+		}
+		else if(drainPerTick < 0)
+		{
+			list.add(EnumChatFormatting.RED +  MatterHelper.formatMatter(drainPerTick) + "/t");
+		}
 	}
 
 	protected int getScaled() {
@@ -122,4 +132,9 @@ public class ElementMatterStored extends MOElementBase
     {
         this.drain = amount;
     }
+
+	public void setDrainPerTick(double amount)
+	{
+		this.drainPerTick = amount;
+	}
 }

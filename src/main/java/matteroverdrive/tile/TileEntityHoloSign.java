@@ -18,15 +18,21 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.configs.ConfigPropertyBoolean;
+import matteroverdrive.machines.events.MachineEvent;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.EnumSet;
 
@@ -91,28 +97,9 @@ public class TileEntityHoloSign extends MOTileEntityMachine
     }
 
     @Override
-    protected void onAwake(Side side) {
-
-    }
-
-    @Override
-    public void onAdded(World world, int x, int y, int z) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
-
-    }
-
-    @Override
-    public void onNeighborBlockChange() {
-
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[0];
     }
 
     @Override
@@ -127,7 +114,8 @@ public class TileEntityHoloSign extends MOTileEntityMachine
     }
 
     @Override
-    protected void onActiveChange() {
+    protected void onMachineEvent(MachineEvent event)
+    {
 
     }
 

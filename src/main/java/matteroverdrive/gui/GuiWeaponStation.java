@@ -18,24 +18,33 @@
 
 package matteroverdrive.gui;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
+import matteroverdrive.client.render.weapons.WeaponItemRenderer;
+import matteroverdrive.client.render.weapons.WeaponRenderHandler;
 import matteroverdrive.container.ContainerWeaponStation;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.ElementModelPreview;
 import matteroverdrive.gui.element.ElementSlot;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityWeaponStation;
+import matteroverdrive.util.MOInventoryHelper;
 import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.math.MOMathHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
+
+import java.util.List;
 
 /**
  * Created by Simeon on 4/13/2015.
@@ -44,9 +53,9 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
 {
     public static final ScaleTexture BG = new ScaleTexture(new ResourceLocation(Reference.PATH_GUI + "weapon_station.png"),255,141).setOffsets(213,34,42,94);
 
-    ElementModelPreview weaponPreview;
-    ElementSlot[] module_slots = new ElementSlot[5];
-    String[] module_slots_info = {"battery","color","barrel","sights","other"};
+    //ElementModelPreview weaponPreview;
+    ElementSlot[] module_slots = new ElementSlot[6];
+    String[] module_slots_info = {"battery","color","barrel","sights","other","other"};
 
     public GuiWeaponStation(InventoryPlayer inventoryPlayer, TileEntityWeaponStation machine)
     {
@@ -56,7 +65,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         name = "weapon_station";
 
         background = BG;
-        weaponPreview = new ElementModelPreview(this,130,90,xSize,ySize);
+        //weaponPreview = new ElementModelPreview(this,130,90,xSize,ySize);
 
         for (int i = 0;i < module_slots.length;i++)
         {
@@ -75,11 +84,11 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
     public void initGui()
     {
         super.initGui();
-        pages.get(0).addElement(weaponPreview);
+        //pages.get(0).addElement(weaponPreview);
 
-        for (int i = 0;i < module_slots.length;i++)
+        for (ElementSlot module_slot : module_slots)
         {
-            pages.get(0).addElement(module_slots[i]);
+            pages.get(0).addElement(module_slot);
         }
 
         AddMainPlayerSlots(inventorySlots, this);
@@ -92,13 +101,12 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         super.updateElementInformation();
 
         ItemStack item = machine.getStackInSlot(machine.INPUT_SLOT);
-        weaponPreview.setItemStack(item);
+        //weaponPreview.setItemStack(item);
 
         if (WeaponHelper.isWeapon(item))
         {
             IWeapon weapon = (IWeapon)item.getItem();
-            IItemRenderer renderer = MinecraftForgeClient.getItemRenderer(item, IItemRenderer.ItemRenderType.INVENTORY);
-            weaponPreview.setRenderer(renderer);
+            //Minecraft.getMinecraft().getRenderManager().doRenderEntity()
 
             for (int i = 0;i < module_slots.length;i++)
             {
@@ -122,7 +130,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
                 ResetModuleSlotPos(i);
             }
 
-            weaponPreview.setRenderer(null);
+            //weaponPreview.setRenderer(null);
         }
     }
 
@@ -130,7 +138,36 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
     {
         if (i < module_slots.length)
         {
-            module_slots[i].setPosition(216,121 + i * 22);
+            module_slots[i].setPosition(216,96 + i * 22);
+        }
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTick, int x, int y)
+    {
+        super.drawGuiContainerBackgroundLayer(partialTick,x,y);
+
+        ItemStack item = machine.getStackInSlot(machine.INPUT_SLOT);
+        if (WeaponHelper.isWeapon(item) && pages.get(0).isVisible())
+        {
+            GlStateManager.enableDepth();
+            GlStateManager.depthMask(true);
+            GlStateManager.disableCull();
+
+            WeaponRenderHandler weaponRenderHandler = ClientProxy.renderHandler.getWeaponRenderHandler();
+            List<ItemStack> modules = MOInventoryHelper.getStacks(item);
+            WeaponItemRenderer weaponItemRenderer = weaponRenderHandler.getWeaponModel(item);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(240, 130, 200);
+            GlStateManager.scale(180, 180, 180);
+            GlStateManager.rotate(-190, 1, 0, 0);
+            GlStateManager.rotate(-140, 0, 1, 0);
+            GlStateManager.rotate(10, 0, 0, 1);
+            if (weaponItemRenderer != null)
+            {
+                weaponRenderHandler.renderWeaponAndModules(modules, weaponItemRenderer, item, 0, 0);
+            }
+            GlStateManager.popMatrix();
         }
     }
 
@@ -142,10 +179,10 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         ItemStack item = machine.getStackInSlot(machine.INPUT_SLOT);
         if (WeaponHelper.isWeapon(item) && pages.get(0).isVisible())
         {
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glPushMatrix();
+            GlStateManager.disableTexture2D();
+            GlStateManager.pushMatrix();
             GL11.glLineWidth(1f);
-            GL11.glColor4f(Reference.COLOR_MATTER.getFloatR(), Reference.COLOR_MATTER.getFloatG(), Reference.COLOR_MATTER.getFloatB(), 1);
+            GlStateManager.color(Reference.COLOR_MATTER.getFloatR(), Reference.COLOR_MATTER.getFloatG(), Reference.COLOR_MATTER.getFloatB(), 1);
 
             IWeapon weapon = (IWeapon)item.getItem();
             for (int i = 0; i < module_slots.length;i++)
@@ -157,14 +194,14 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
                     Vector2f modulePos = weapon.getModuleScreenPosition(i, item);
                     slotPos = getClosestOnSlot(slotPos, modulePos);
 
-                    GL11.glVertex3f(slotPos.x, slotPos.y, 0);
-                    GL11.glVertex3f(modulePos.x, modulePos.y, 0);
+                    GL11.glVertex3f(slotPos.x, slotPos.y, 400);
+                    GL11.glVertex3f(modulePos.x, modulePos.y, 400);
                     GL11.glEnd();
                 }
             }
 
-            GL11.glPopMatrix();
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GlStateManager.popMatrix();
+            GlStateManager.enableTexture2D();
         }
     }
 
@@ -174,7 +211,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
         int slotHeight = 18;
         Vector2f center = new Vector2f(slotPos.x + slotWidth/2,slotPos.y + slotHeight/2);
 
-        Vector2f intersect = null;
+        Vector2f intersect;
         intersect = MOMathHelper.Intersects(slotPos,new Vector2f(slotPos.x + slotWidth,slotPos.y),modulePos,center);
         if (intersect != null)
             return intersect;

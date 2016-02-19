@@ -1,0 +1,106 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "0": "mo:blocks/heavy_matter_pipe"
+    },
+    "model": "mo:pipe/pipe_center"
+  },
+  "variants": {
+    "down": {
+      "true": {
+        "submodel": {
+          "pipe_down": {
+            "model": "mo:pipe/pipe_part",
+            "transform":{
+              "rotation":{"x":-90}
+            }
+          }
+        }
+      },
+      "false": { }
+    },
+    "up": {
+      "true": {
+        "submodel": {
+          "pipe_up": {
+            "model": "mo:pipe/pipe_part",
+            "transform":{
+              "rotation":{"x":-90},
+              "translation":[0,0.6875,0]
+            }
+          }
+        }
+      },
+      "false": { }
+    },
+    "north": {
+      "true": {
+        "submodel": {
+          "pipe_north": {
+            "model": "mo:pipe/pipe_part"
+          }
+        }
+      },
+      "false": { }
+    },
+    "south": {
+      "true": {
+        "submodel": {
+          "pipe_south": {
+            "model": "mo:pipe/pipe_part",
+            "transform":
+            {
+              "translation":[0,0,0.6875]
+            }
+          }
+        }
+      },
+      "false": { }
+    },
+    "east": {
+      "true": {
+        "submodel": {
+          "pipe_east": {
+            "model": "mo:pipe/pipe_part",
+            "transform": {
+              "rotation": {"y": -90}
+            }
+          }
+        }
+      },
+      "false": { }
+    },
+    "west": {
+      "true": {
+        "submodel": {
+          "pipe_west": {
+            "model": "mo:pipe/pipe_part",
+            "transform":
+            {
+              "rotation":{"y":-90},
+              "translation":[-0.6875,0,0]
+            }
+          }
+        }
+      },
+      "false": { }
+    },
+    "down=false,east=false,north=true,south=true,up=false,west=false":
+    [{
+      "model": "mo:pipe/pipe_center_middle_ns"
+    }],
+    "down=false,east=true,north=false,south=false,up=false,west=true":
+    [{
+      "model": "mo:pipe/pipe_center_middle_ew"
+    }],
+    "down=true,east=false,north=false,south=false,up=true,west=false":
+    [{
+      "model": "mo:pipe/pipe_center_middle_ud"
+    }],
+    "inventory": {
+      "model": "mo:pipe/pipe_center",
+      "transform": "forge:default-block"
+    }
+  }
+}

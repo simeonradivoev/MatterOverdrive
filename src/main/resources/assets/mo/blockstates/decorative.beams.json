@@ -1,0 +1,20 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all",
+    "textures": {
+      "all": "mo:blocks/beams"
+    }
+  },
+  "variants": {
+    "normal": {"model": "cube_all"},
+    "rotated=false":{"model": "cube_all"},
+    "rotated=true":{
+      "model": "mo:base/cube_rotated_all"
+    },
+    "inventory": [{
+      "model": "cube_all",
+      "transform": "forge:default-block"
+    }]
+  }
+}

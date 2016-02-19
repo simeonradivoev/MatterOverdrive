@@ -22,12 +22,13 @@ import matteroverdrive.Reference;
 import matteroverdrive.tile.TileEntityGravitationalAnomaly;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
+import org.lwjgl.util.glu.Sphere;
+
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -40,15 +41,15 @@ public class TileEntityRendererGravitationalAnomaly extends TileEntitySpecialRen
     public static final ResourceLocation glow = new ResourceLocation(Reference.PATH_BLOCKS + "gravitational_anomaly_glow.png");
     public static final ResourceLocation black = new ResourceLocation(Reference.PATH_BLOCKS + "black.png");
 
-    private IModelCustom sphere_model;
+    private final Sphere sphere_model;
 
     public TileEntityRendererGravitationalAnomaly()
     {
-        sphere_model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.MODEL_SPHERE));
+        sphere_model = new Sphere();
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks)
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks,int destroyStage)
     {
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         long time = Minecraft.getMinecraft().theWorld.getWorldTime();
@@ -58,33 +59,34 @@ public class TileEntityRendererGravitationalAnomaly extends TileEntitySpecialRen
 
         radius = radius * Math.sin(time * resonateSpeed) * 0.1 + radius * 0.9;
 
-        glPushMatrix();
-        glDisable(GL_LIGHTING);
+        GlStateManager.pushMatrix();
+        GlStateManager.disableLighting();
 
-        glTranslated(x + 0.5, y + 0.5, z + 0.5);
-        glScaled(radius, radius, radius);
+        GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
+        GlStateManager.scale(radius,radius,radius);
 
-        glDisable(GL_CULL_FACE);
-        bindTexture(black);
-        glColor4d(0, 0, 0, 1);
-        sphere_model.renderAll();
-        glEnable(GL_CULL_FACE);
+        GlStateManager.disableCull();
+        GlStateManager.disableTexture2D();
+        GlStateManager.color(0, 0, 0, 1);
+        sphere_model.draw((float) 0.5,8,8);
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableCull();
 
-        glEnable(GL_BLEND);
-        glScaled(2, 2, 2);
-        glRotated(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * ticks, 0, -1, 0);
-        glRotated(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * ticks, 1, 0, 0);
-        glRotated(time * speed, 0, 0, 1);
-        glTranslated(-0.5, -0.5, 0);
-        glColor3d(1, 1, 1);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.enableBlend();
+        GlStateManager.scale(2, 2, 2);
+        GlStateManager.rotate(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * ticks, 0, -1, 0);
+        GlStateManager.rotate(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * ticks, 1, 0, 0);
+        GlStateManager.rotate(time * speed, 0, 0, 1);
+        GlStateManager.translate(-0.5, -0.5, 0);
+        GlStateManager.color(1, 1, 1);
+        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         bindTexture(core);
         RenderUtils.drawPlane(1);
         bindTexture(glow);
         RenderUtils.drawPlane(1);
 
-        glDisable(GL_BLEND);
-        glEnable(GL_LIGHTING);
-        glPopMatrix();
+        GlStateManager.disableBlend();
+        GlStateManager.enableLighting();
+        GlStateManager.popMatrix();
     }
 }

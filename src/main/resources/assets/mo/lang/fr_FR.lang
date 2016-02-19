@@ -40,10 +40,10 @@ item.tritanium_wrench.name=Clé en tritanium
 item.tritanium_wrench.details=Désassemblez en sécurité et tournez les machines
 item.spacetime_equalizer.name=Égaliseur spatio-temporel
 item.spacetime_equalizer.details=Peut être conseillé sur le coffre pour nier les forces gravitationnelles
-item.rouge_android_part.head.name=Tête d'androïde
-item.rouge_android_part.arms.name=Bras d'androïde
-item.rouge_android_part.legs.name=Jambe d'androïde
-item.rouge_android_part.chest.name=Torse d'androïde
+item.rouge_android_part_head.name=Tête d'androïde
+item.rouge_android_part_arms.name=Bras d'androïde
+item.rouge_android_part_legs.name=Jambe d'androïde
+item.rouge_android_part_chest.name=Torse d'androïde
 item.forcefield_emitter.name=Émetteur de champ de force
 item.hc_battery.name=Batterie haute capacité
 item.ship_factory.name=Usine à vaisseau
@@ -94,7 +94,7 @@ item.upgrade.hyper_speed.name=Amélioration d'hyper vitesse
 item.upgrade.matter_storage.name=Amélioration du stockage de matière
 
 item.weapon_module_color.name=Module de couleur
-item.weapon_module_barrel.damage.name=Matrice de concentration en dilithium 
+item.weapon_module_barrel.meta.name=Matrice de concentration en dilithium
 item.weapon_module_barrel.fire.name=Filtre incendiaire
 item.weapon_module_barrel.explosion.name=Tambour inductif à explosion
 item.weapon_module_barrel.heal.name=Convertisseur de régénération
@@ -500,7 +500,7 @@ alert.starmap.on_build=§3%1$s §ra été construit à §3%2$s§r !
 #############################################################################################################
 # Enchantments
 
-enchantment.matteroverdrive.weapon.damage=Surcadencement
+enchantment.matteroverdrive.weapon.meta=Surcadencement
 
 ###############################################################################################################
 # Fluids

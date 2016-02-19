@@ -18,23 +18,19 @@
 
 package matteroverdrive.gui;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.animation.AnimationSegmentText;
 import matteroverdrive.animation.AnimationTextTyping;
-import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.gui.android.*;
 import matteroverdrive.gui.config.EnumConfigProperty;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.handler.weapon.ClientWeaponHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
@@ -43,12 +39,19 @@ import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -69,15 +72,15 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
     public static final ResourceLocation top_element_bg = new ResourceLocation(Reference.PATH_ELEMENTS + "android_bg_element.png");
     public static final ResourceLocation cloak_overlay = new ResourceLocation(Reference.PATH_ELEMENTS + "cloak_overlay.png");
     private AnimationTextTyping textTyping;
-    private Minecraft mc;
-    private Random random;
+    private final Minecraft mc;
+    private final Random random;
     private ShaderGroup hurtShader;
-    private List<IBionicStat> stats = new ArrayList<>();
+    private final List<IBioticStat> stats = new ArrayList<>();
     public static boolean showRadial = false;
     public static double radialDeltaX,radialDeltaY,radialAngle;
     private static double radialAnimationTime;
     private HoloIcon crosshairIcon;
-    private List<IAndroidHudElement> hudElements;
+    private final List<IAndroidHudElement> hudElements;
     public final AndroidHudMinimap hudMinimap;
     public final AndroidHudStats hudStats;
     public final AndroidHudBionicStats bionicStats;
@@ -138,10 +141,17 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             return;
         }
 
-        if ((android.isAndroid() && (event.type == RenderGameOverlayEvent.ElementType.FOOD || event.type == RenderGameOverlayEvent.ElementType.AIR || event.type == RenderGameOverlayEvent.ElementType.HEALTH) && event.isCancelable()))
+        if ((android.isAndroid() && event.isCancelable()))
         {
-            event.setCanceled(hideVanillaHudElements);
-            return;
+            if (event.type == RenderGameOverlayEvent.ElementType.AIR || event.type == RenderGameOverlayEvent.ElementType.HEALTH)
+            {
+                event.setCanceled(hideVanillaHudElements);
+                return;
+            }else if (event.type == RenderGameOverlayEvent.ElementType.FOOD && android.isUnlocked(MatterOverdriveBioticStats.zeroCalories,1) && MatterOverdriveBioticStats.zeroCalories.isEnabled(android,1))
+            {
+                event.setCanceled(hideVanillaHudElements);
+                return;
+            }
         }
 
         if ((android.isAndroid() || (mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof IWeapon)) && event.isCancelable() && event.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
@@ -157,12 +167,10 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         }
         else if (event.type == RenderGameOverlayEvent.ElementType.ALL && !(mc.currentScreen instanceof GuiStarMap))
         {
-            glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glDisable(GL_DEPTH_TEST);
-            glEnable(GL_BLEND);
+            //glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            GlStateManager.enableBlend();
             renderHud(event);
 
-            //System.out.println(showRadial);
             if (android.isAndroid())
             {
                 if (showRadial)
@@ -178,48 +186,51 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                     renderRadialMenu(event);
                 }
             }
-            glPopAttrib();
+            GlStateManager.disableBlend();
         }
     }
 
     public void renderCrosshair(RenderGameOverlayEvent event)
     {
-        glPushAttrib(GL_COLOR_BUFFER_BIT);
-        glPushMatrix();
-        float scale = 6 + ClientProxy.instance().getClientWeaponHandler().getEquippedWeaponAccuracyPercent(Minecraft.getMinecraft().thePlayer)*256;
-        glEnable(GL_BLEND);
-        OpenGlHelper.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
-        glEnable(GL_ALPHA_TEST);
-        //RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
-        glColor3d(1, 1, 1);
-        crosshairIcon = ClientProxy.holoIcons.getIcon("crosshair");
-        glTranslated(event.resolution.getScaledWidth() / 2, event.resolution.getScaledHeight() / 2, 0);
-        glPushMatrix();
-        ClientProxy.holoIcons.bindSheet();
-        glRotated(90, 0, 0, 1);
-        ClientProxy.holoIcons.renderIcon(crosshairIcon,-1,-scale);
-        glRotated(90, 0, 0, 1);
-        ClientProxy.holoIcons.renderIcon(crosshairIcon,-2,-scale);
-        glRotated(90,0,0,1);
-        ClientProxy.holoIcons.renderIcon(crosshairIcon,-1.8,-scale+1);
-        glRotated(90,0,0,1);
-        ClientProxy.holoIcons.renderIcon(crosshairIcon,-1,-scale+1);
-        glPopMatrix();
-        glPopMatrix();
-        glPopAttrib();
+        if (ClientWeaponHandler.ZOOM_TIME == 0)
+        {
+            GlStateManager.pushAttrib();
+            GlStateManager.pushMatrix();
+            float scale = 6 + ClientProxy.instance().getClientWeaponHandler().getEquippedWeaponAccuracyPercent(Minecraft.getMinecraft().thePlayer) * 256;
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
+            GlStateManager.enableAlpha();
+            //RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
+            GlStateManager.color(1, 1, 1);
+            crosshairIcon = ClientProxy.holoIcons.getIcon("crosshair");
+            GlStateManager.translate(event.resolution.getScaledWidth() / 2, event.resolution.getScaledHeight() / 2, 0);
+            GlStateManager.pushMatrix();
+            ClientProxy.holoIcons.bindSheet();
+            GlStateManager.rotate(90, 0, 0, 1);
+            ClientProxy.holoIcons.renderIcon(crosshairIcon, -1, -scale);
+            GlStateManager.rotate(90, 0, 0, 1);
+            ClientProxy.holoIcons.renderIcon(crosshairIcon, -2, -scale);
+            GlStateManager.rotate(90, 0, 0, 1);
+            ClientProxy.holoIcons.renderIcon(crosshairIcon, -1.8, -scale + 1);
+            GlStateManager.rotate(90, 0, 0, 1);
+            ClientProxy.holoIcons.renderIcon(crosshairIcon, -1, -scale + 1);
+            GlStateManager.popMatrix();
+            GlStateManager.popMatrix();
+            GlStateManager.popAttrib();
+        }
     }
 
     public void renderRadialMenu(RenderGameOverlayEvent event)
     {
-        glPushMatrix();
-        glTranslated(event.resolution.getScaledWidth() / 2, event.resolution.getScaledHeight() / 2, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(event.resolution.getScaledWidth() / 2, event.resolution.getScaledHeight() / 2, 0);
         double scale = MOMathHelper.easeIn(GuiAndroidHud.radialAnimationTime,0,1,1);
-        glScaled(scale, scale, scale);
+        GlStateManager.scale(scale, scale, scale);
         ClientProxy.holoIcons.bindSheet();
         AndroidPlayer androidPlayer = AndroidPlayer.get(Minecraft.getMinecraft().thePlayer);
 
         stats.clear();
-        for (IBionicStat stat : MatterOverdrive.statRegistry.getStats())
+        for (IBioticStat stat : MatterOverdrive.statRegistry.getStats())
         {
             if (stat.showOnWheel(androidPlayer, androidPlayer.getUnlockedLevel(stat)) && androidPlayer.isUnlocked(stat,0))
             {
@@ -227,19 +238,19 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             }
         }
 
-        glColor3f(1, 1, 1);
-        glDepthMask(false);
+        GlStateManager.color(1,1,1);
+        GlStateManager.depthMask(false);
         //glDisable(GL_DEPTH_TEST);
-        //glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glPushMatrix();
-        glRotated(radialAngle, 0, 0, -1);
+        //GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_ONE, GL_ONE);
+        GlStateManager.pushMatrix();
+        GlStateManager.rotate((float) radialAngle, 0, 0, -1);
         RenderUtils.applyColorWithMultipy(baseGuiColor, 0.4f);
         ClientProxy.holoIcons.renderIcon("up_arrow_large", -9, -50);
-        glPopMatrix();
+        GlStateManager.popMatrix();
 
         int i = 0;
-        for (IBionicStat stat : stats)
+        for (IBioticStat stat : stats)
         {
             double angleSeg = (Math.PI*2/stats.size());
             double angle,x,y,radiusMin,radiusMax,angleAb,angleCircle;
@@ -250,55 +261,56 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             radiusMin = radius - 16;
             radiusMax = radius + 16;
 
-            glDisable(GL_TEXTURE_2D);
-            glDisable(GL_ALPHA_TEST);
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            GlStateManager.disableTexture2D();
+            GlStateManager.disableAlpha();
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
             if (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(stat))
             {
                 radiusMax = radius + 20;
                 radiusMin = radius - 16;
-                glColor4d(0, 0, 0, 0.6);
+                GlStateManager.color(0, 0, 0, 0.6f);
             }else
             {
-                glColor4d(0, 0, 0, 0.4);
+                GlStateManager.color(0, 0, 0, 0.4f);
             }
 
 
-            Tessellator.instance.startDrawingQuads();
+            WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+            wr.begin(7, DefaultVertexFormats.POSITION);
             for (int c = 0;c < 32;c++)
             {
                 angleAb = ((angleSeg)/32d);
                 angleCircle = c * angleAb + angle - angleSeg/2;
-                Tessellator.instance.addVertex(Math.sin(angleCircle) * radiusMax,Math.cos(angleCircle) * radiusMax,-1);
-                Tessellator.instance.addVertex(Math.sin(angleCircle + angleAb) * radiusMax,Math.cos(angleCircle + angleAb) * radiusMax,-1);
-                Tessellator.instance.addVertex(Math.sin(angleCircle + angleAb) * radiusMin,Math.cos(angleCircle + angleAb) * radiusMin,-1);
-                Tessellator.instance.addVertex(Math.sin(angleCircle) * radiusMin,Math.cos(angleCircle) * radiusMin,-1);
+                wr.pos(Math.sin(angleCircle) * radiusMax,Math.cos(angleCircle) * radiusMax,-1).endVertex();
+                wr.pos(Math.sin(angleCircle + angleAb) * radiusMax,Math.cos(angleCircle + angleAb) * radiusMax,-1).endVertex();
+                wr.pos(Math.sin(angleCircle + angleAb) * radiusMin,Math.cos(angleCircle + angleAb) * radiusMin,-1).endVertex();
+                wr.pos(Math.sin(angleCircle) * radiusMin,Math.cos(angleCircle) * radiusMin,-1).endVertex();
             }
-            Tessellator.instance.draw();
+            Tessellator.getInstance().draw();
 
             radiusMax = radius - 20;
             radiusMin = radius - 25;
-            Tessellator.instance.startDrawingQuads();
-            glColor4d(0, 0, 0, 0.2);
+            wr.begin(7,DefaultVertexFormats.POSITION);
+            GlStateManager.color(0,0,0,0.2f);
             for (int c = 0;c < 32;c++)
             {
                 angleAb = ((Math.PI*2)/32d);
                 angleCircle = c * angleAb;
-                Tessellator.instance.addVertex(Math.sin(angleCircle) * radiusMax,Math.cos(angleCircle) * radiusMax,-1);
-                Tessellator.instance.addVertex(Math.sin(angleCircle + angleAb) * radiusMax,Math.cos(angleCircle + angleAb) * radiusMax,-1);
-                Tessellator.instance.addVertex(Math.sin(angleCircle + angleAb) * radiusMin,Math.cos(angleCircle + angleAb) * radiusMin,-1);
-                Tessellator.instance.addVertex(Math.sin(angleCircle) * radiusMin,Math.cos(angleCircle) * radiusMin,-1);
+                wr.pos(Math.sin(angleCircle) * radiusMax,Math.cos(angleCircle) * radiusMax,-1).endVertex();
+                wr.pos(Math.sin(angleCircle + angleAb) * radiusMax,Math.cos(angleCircle + angleAb) * radiusMax,-1).endVertex();
+                wr.pos(Math.sin(angleCircle + angleAb) * radiusMin,Math.cos(angleCircle + angleAb) * radiusMin,-1).endVertex();
+                wr.pos(Math.sin(angleCircle) * radiusMin,Math.cos(angleCircle) * radiusMin,-1).endVertex();
             }
-            Tessellator.instance.draw();
-            glEnable(GL_TEXTURE_2D);
+            Tessellator.getInstance().draw();
+            GlStateManager.enableTexture2D();
 
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_ONE, GL_ONE);
-            glEnable(GL_ALPHA_TEST);
-            glEnable(GL_DEPTH_TEST);
-            glDepthMask(false);
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL_ONE, GL_ONE);
+            GlStateManager.enableAlpha();
+            GlStateManager.enableDepth();
+            GlStateManager.depthMask(false);
 
             ClientProxy.holoIcons.bindSheet();
             if (androidPlayer.getActiveStat() != null)
@@ -310,9 +322,9 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                     y = Math.cos(angle) * radius;
                     ClientProxy.holoIcons.renderIcon(stat.getIcon(0),-12 + x, -12 + y);
                     String statName = stat.getDisplayName(androidPlayer, androidPlayer.getUnlockedLevel(stat));
-                    int statNameWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(statName);
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                    Minecraft.getMinecraft().fontRenderer.drawString(statName, -statNameWidth / 2, -5, baseGuiColor.getColor());
+                    int statNameWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(statName);
+                    GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    Minecraft.getMinecraft().fontRendererObj.drawString(statName, -statNameWidth / 2, -5, Reference.COLOR_HOLO.getColor());
                 }
                 else
                 {
@@ -325,7 +337,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
             i++;
         }
-        glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     public static float hudRotationYawSmooth;
@@ -339,37 +351,37 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
             if (android.isAndroid()) {
 
-                glPushMatrix();
+                GlStateManager.pushMatrix();
 
                 if (MatterOverdriveBioticStats.cloak.isActive(android,0))
                 {
-                    glBlendFunc(GL_DST_COLOR, GL_ZERO);
-                    glColor3f(1,1,1);
+                    /*GlStateManager.blendFunc(GL_DST_COLOR, GL_ZERO);
+                    GlStateManager.color(1,1,1);
                     mc.renderEngine.bindTexture(cloak_overlay);
-                    RenderUtils.drawPlane(0,0,-100,event.resolution.getScaledWidth(),event.resolution.getScaledHeight());
+                    RenderUtils.drawPlane(0,0,-100,event.resolution.getScaledWidth(),event.resolution.getScaledHeight());*/
                 }
 
                 if (hudMovement)
                 {
                     hudRotationYawSmooth = hudRotationYawSmooth * 0.4f + mc.thePlayer.rotationYaw * 0.6f;
                     hudRotationPitchSmooth = hudRotationPitchSmooth * 0.4f + mc.thePlayer.rotationPitch * 0.6f;
-                    glTranslated((hudRotationYawSmooth - mc.thePlayer.rotationYaw) * 6, (hudRotationPitchSmooth - mc.thePlayer.rotationPitch) * 6, 0);
+                    GlStateManager.translate((hudRotationYawSmooth - mc.thePlayer.rotationYaw) * 6, (hudRotationPitchSmooth - mc.thePlayer.rotationPitch) * 6, 0);
                 }
 
                 for (IAndroidHudElement element : hudElements)
                 {
                     if (element.isVisible(android))
                     {
-                        glPushMatrix();
+                        GlStateManager.pushMatrix();
                         int elementWidth =  (int)(element.getWidth(event.resolution,android) * element.getPosition().x);
-                        glTranslated(element.getPosition().x * event.resolution.getScaledWidth_double() - elementWidth, element.getPosition().y * event.resolution.getScaledHeight_double() - element.getHeight(event.resolution,android) * element.getPosition().y, 0);
+                        GlStateManager.translate(element.getPosition().x * event.resolution.getScaledWidth_double() - elementWidth, element.getPosition().y * event.resolution.getScaledHeight_double() - element.getHeight(event.resolution,android) * element.getPosition().y, 0);
                         element.setBaseColor(baseGuiColor);
                         element.setBackgroundAlpha(opacityBackground);
-                        element.drawElement(android, event.mouseX, event.mouseY, event.resolution, event.partialTicks);
-                        glPopMatrix();
+                        element.drawElement(android, event.resolution, event.partialTicks);
+                        GlStateManager.popMatrix();
                     }
                 }
-                glPopMatrix();
+                GlStateManager.popMatrix();
 
                 renderHurt(android, event);
             }else
@@ -387,7 +399,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         int centerX = event.resolution.getScaledWidth() / 2;
         int centerY = event.resolution.getScaledHeight() / 2;
         int maxTime = AndroidPlayer.TRANSFORM_TIME;
-        int time = maxTime - player.getEffects().getInteger(AndroidPlayer.EFFECT_KEY_TURNING);
+        int time = maxTime - player.getAndroidEffects().getEffectShort(AndroidPlayer.EFFECT_TURNNING);
         textTyping.setTime(time);
 
         if (time % 40 > 0 &&  time % 40 < 3)
@@ -396,31 +408,33 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         }
 
         String info = textTyping.getString();
-        int width = mc.fontRenderer.getStringWidth(info);
-        mc.fontRenderer.drawString(info,centerX - width / 2,centerY - 28,Reference.COLOR_HOLO.getColor());
+        int width = mc.fontRendererObj.getStringWidth(info);
+        mc.fontRendererObj.drawString(info,centerX - width / 2,centerY - 28,Reference.COLOR_HOLO.getColor());
 
         mc.renderEngine.bindTexture(spinner_tex);
-        glPushMatrix();
-        glTranslated(centerX, centerY,0);
-        glRotated(mc.theWorld.getWorldTime() * 10,0,0,-1);
-        glTranslated(-16,-16,0);
-        func_146110_a(0, 0, 0, 0, 32, 32, 32, 32);
-        glPopMatrix();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(centerX, centerY,0);
+        GlStateManager.rotate(mc.theWorld.getWorldTime() * 10,0,0,-1);
+        GlStateManager.translate(-16,-16,0);
+        drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 32, 32, 32, 32);
+        GlStateManager.popMatrix();
 
-        mc.fontRenderer.drawString(Math.round(textTyping.getPercent() * 100) + "%",centerX - 6,centerY - 3,Reference.COLOR_HOLO.getColor());
+        mc.fontRendererObj.drawString(Math.round(textTyping.getPercent() * 100) + "%",centerX - 6,centerY - 3,Reference.COLOR_HOLO.getColor());
     }
 
     public void renderHurt(AndroidPlayer player,RenderGameOverlayEvent event)
     {
-        if (player.getEffects().getInteger("GlitchTime") > 0)
+        if (player.getAndroidEffects().getEffectInt(AndroidPlayer.EFFECT_GLITCH_TIME) > 0)
         {
             renderGlitch(player,event);
         }
     }
 
     public void renderGlitch(AndroidPlayer player,RenderGameOverlayEvent event) {
-        glBlendFunc(GL_ONE, GL_ONE);
-        glColor3d(1, 1, 1);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_ONE, GL_ONE);
+        GlStateManager.disableDepth();
+        GlStateManager.color(1,1,1);
         mc.renderEngine.bindTexture(glitch_tex);
         RenderUtils.drawPlaneWithUV(0,0,-100,event.resolution.getScaledWidth(),event.resolution.getScaledHeight(),random.nextGaussian(),random.nextGaussian(),1,1);
     }

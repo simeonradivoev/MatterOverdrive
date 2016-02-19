@@ -1,0 +1,7 @@
+{
+  "parent": "mo:item/defaultitem",
+  "textures": {
+    "layer0": "mo:items/battery",
+    "layer1": "mo:items/battery_overlay"
+  }
+}

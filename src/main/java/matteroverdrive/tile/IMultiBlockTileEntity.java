@@ -18,7 +18,7 @@
 
 package matteroverdrive.tile;
 
-import matteroverdrive.data.BlockPos;
+import net.minecraft.util.BlockPos;
 
 import java.util.List;
 

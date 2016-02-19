@@ -19,7 +19,7 @@
 <entry stylesheet="mo:info/styles/guide.css">
     <page class="padded-page">
         <title size="2" class="matter-text small-title">残暴机器人部件</title>
-        <text class="matter-text text-block">残暴机器人会掉落 [guide name=android.parts]. 它们包含4种部件. [item name=rouge_android_part damage=0], [item name=rouge_android_part damage=1], [item name=rouge_android_part damage=2] 以及 [item name=rouge_android_part damage=3].</text>
+        <text class="matter-text text-block">残暴机器人会掉落 [guide name=android.parts]. 它们包含4种部件. [item name=rouge_android_part meta=0], [item name=rouge_android_part meta=1], [item name=rouge_android_part meta=2] 以及 [item name=rouge_android_part meta=3].</text>
         <image src="guide/mad_scientist_conversation.png" style="float:left" width="167" height="100"></image>
         <text class="matter-text text-block" style="width:33%;margin-left:8px">它们被用于机器人转换 过程. 当玩家集齐全套 机器人部件并将他们交 给村庄中的疯狂科学家 后玩家能够被改造为机 器人.</text>
     </page>

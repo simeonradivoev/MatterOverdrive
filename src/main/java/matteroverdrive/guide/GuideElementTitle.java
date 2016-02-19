@@ -18,6 +18,7 @@
 
 package matteroverdrive.guide;
 
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Element;
 
@@ -32,7 +33,7 @@ public class GuideElementTitle extends GuideElementTextAbstract
     @Override
     public void drawElement(int width,int mouseX,int mouseY)
     {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         int titleWidth = (int)(getFontRenderer().getStringWidth(title) * size);
         int x = 0;
         if (textAlign == 1)
@@ -43,10 +44,10 @@ public class GuideElementTitle extends GuideElementTextAbstract
         {
             x = (width-marginLeft-marginRight) - titleWidth;
         }
-        GL11.glTranslated(x + marginLeft, marginTop, 0);
-        GL11.glScaled(size, size, size);
+        GlStateManager.translate(x + marginLeft, marginTop, 0);
+        GlStateManager.scale(size, size, size);
         getFontRenderer().drawString(title, 0, 0, color.getColor());
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override

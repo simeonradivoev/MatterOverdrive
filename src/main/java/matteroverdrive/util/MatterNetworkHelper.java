@@ -19,39 +19,44 @@
 package matteroverdrive.util;
 
 import matteroverdrive.Reference;
+import matteroverdrive.api.matter_network.IMatterNetworkClient;
+import matteroverdrive.api.matter_network.IMatterNetworkConnection;
 import matteroverdrive.api.network.*;
-import matteroverdrive.data.BlockPos;
 import matteroverdrive.matter_network.MatterNetworkPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkBroadcastPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkRequestPacket;
 import matteroverdrive.matter_network.packets.MatterNetworkResponsePacket;
 import matteroverdrive.matter_network.packets.MatterNetworkTaskPacket;
+import matteroverdrive.tile.pipes.TileEntityNetworkPipe;
+import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 3/11/2015.
  */
 public class MatterNetworkHelper
 {
-    public static boolean broadcastPacketInDirection(World world, MatterNetworkPacket packet, IMatterNetworkConnection source, ForgeDirection direction) {
+    /*public static boolean broadcastPacketInDirection(World world, MatterNetworkPacket packet, IMatterNetworkConnection source, EnumFacing direction) {
         //if the source connection can connect From Side
-        if (source.canConnectFromSide(direction)) {
-            BlockPos position = source.getPosition().step(direction);
-            if (world.getChunkProvider().chunkExists(position.x >> 4,position.z >> 4))
+        if (source.canConnectFromSide(world.getBlockState(source.getPos()), direction)) {
+            BlockPos position = source.getPos().offset(direction);
+            if (world.getChunkProvider().chunkExists(position.getX() >> 4,position.getZ() >> 4))
             {
-                ForgeDirection oppositeDirection = direction.getOpposite();
-                TileEntity e = position.getTileEntity(world);
+                EnumFacing oppositeDirection = direction.getOpposite();
+                TileEntity e = world.getTileEntity(position);
                 //if there is any connection in that direction
                 if (e instanceof IMatterNetworkConnection)
                 {
                     IMatterNetworkConnection connection = (IMatterNetworkConnection) e;
                     //check if the packet has passed trough the connection or if it can connect from opposite source side
-                    if (!packet.hasPassedTrough(connection) && connection.canConnectFromSide(oppositeDirection))
+                    if (!packet.hasPassedTrough(connection) && connection.canConnectFromSide(world.getBlockState(connection.getPos()), oppositeDirection))
                     {
                         if (connection instanceof IMatterNetworkCable)
                         {
@@ -68,7 +73,7 @@ public class MatterNetworkHelper
                             IMatterNetworkClient c = (IMatterNetworkClient) connection;
                             if (c.canPreform(packet))
                             {
-                                c.queuePacket(packet, oppositeDirection);
+                                c.queuePacket(packet);
                                 return true;
                             }
                         }
@@ -77,26 +82,24 @@ public class MatterNetworkHelper
             }
         }
         return false;
-    }
+    }*/
 
-    public static boolean broadcastPacketInDirection(World world, byte queueID, MatterNetworkTask task, IMatterNetworkDispatcher dispatcher, ForgeDirection direction)
+    /*public static boolean broadcastPacketInDirection(World world, byte queueID, MatterNetworkTask task, IMatterNetworkDispatcher dispatcher, EnumFacing direction)
     {
         return broadcastPacketInDirection(world, queueID, task, dispatcher, direction, null);
     }
-    public static boolean broadcastPacketInDirection(World world, byte queueID, MatterNetworkTask task, IMatterNetworkDispatcher dispatcher, ForgeDirection direction, NBTTagCompound filter)
+    public static boolean broadcastPacketInDirection(World world, byte queueID, MatterNetworkTask task, IMatterNetworkDispatcher dispatcher, EnumFacing direction, NBTTagCompound filter)
     {
         return broadcastPacketInDirection(world, new MatterNetworkTaskPacket(dispatcher, task, queueID, direction, filter), dispatcher, direction);
-    }
+    }*/
 
     public static NBTTagCompound getFilterFromPositions(BlockPos... positions)
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
         NBTTagList tagList = new NBTTagList();
-        for (int i = 0;i < positions.length;i++)
+        for (BlockPos position : positions)
         {
-            NBTTagCompound positionNBT = new NBTTagCompound();
-            positions[i].writeToNBT(positionNBT);
-            tagList.appendTag(positionNBT);
+            tagList.appendTag(new NBTTagLong(position.toLong()));
         }
         tagCompound.setTag(IMatterNetworkFilter.CONNECTIONS_TAG,tagList);
         return tagCompound;
@@ -110,22 +113,20 @@ public class MatterNetworkHelper
         }
 
         NBTTagList tagList = filter.getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_COMPOUND);
-        for (int i = 0;i < positions.length;i++)
+        for (BlockPos position : positions)
         {
-            NBTTagCompound positionNBT = new NBTTagCompound();
-            positions[i].writeToNBT(positionNBT);
-            tagList.appendTag(positionNBT);
+            tagList.appendTag(new NBTTagLong(position.toLong()));
         }
         filter.setTag(IMatterNetworkFilter.CONNECTIONS_TAG,tagList);
         return filter;
     }
 
-    public static void broadcastConnection(World world,IMatterNetworkConnection connection)
+    /*public static void broadcastConnection(World world,IMatterNetworkConnection connection)
     {
         for (int i = 0;i < 6;i++)
         {
-            MatterNetworkBroadcastPacket packet = new MatterNetworkBroadcastPacket(connection.getPosition(),Reference.PACKET_BROADCAST_CONNECTION,ForgeDirection.getOrientation(i));
-            broadcastPacketInDirection(world, packet, connection, ForgeDirection.getOrientation(i));
+            MatterNetworkBroadcastPacket packet = new MatterNetworkBroadcastPacket(connection.getPos(),Reference.PACKET_BROADCAST_CONNECTION);
+            broadcastPacketInDirection(world, packet, connection, EnumFacing.VALUES[i]);
         }
     }
 
@@ -133,17 +134,41 @@ public class MatterNetworkHelper
     {
         for (int i = 0;i < 6;i++)
         {
-            MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(connection,Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION,ForgeDirection.getOrientation(i),null);
-            broadcastPacketInDirection(world, packet, connection, ForgeDirection.getOrientation(i));
+            MatterNetworkRequestPacket packet = new MatterNetworkRequestPacket(connection,Reference.PACKET_REQUEST_NEIGHBOR_CONNECTION,null);
+            broadcastPacketInDirection(world, packet, connection, EnumFacing.VALUES[i]);
         }
-    }
+    }*/
 
-    public static void respondToRequest(World world,IMatterNetworkConnection sender,MatterNetworkRequestPacket packet,int responseType,NBTTagCompound data)
+    /*public static void respondToRequest(World world,IMatterNetworkConnection sender,MatterNetworkRequestPacket packet,int responseType,NBTTagCompound data)
     {
         if (packet.getSender(world) instanceof IMatterNetworkClient)
         {
-            MatterNetworkResponsePacket responsePacket = new MatterNetworkResponsePacket(sender,responseType,packet.getRequestType(),data,packet.getSenderPort());
-            ((IMatterNetworkClient) packet.getSender(world)).queuePacket(responsePacket,packet.getSenderPort());
+            MatterNetworkResponsePacket responsePacket = new MatterNetworkResponsePacket(sender,responseType,packet.getRequestType(),data);
+            ((IMatterNetworkClient) packet.getSender(world)).queuePacket(responsePacket);
         }
-    }
+    }*/
+
+    /*public static boolean canConnect(IMatterNetworkConnection to,EnumFacing dir)
+    {
+        if (to instanceof TileEntityNetworkPipe)
+        {
+            TileEntityNetworkPipe networkPipe = (TileEntityNetworkPipe) to;
+            int pipeConnections = networkPipe.getConnectionsMask();
+            if (MOMathHelper.getBoolean(pipeConnections, dir.getOpposite().ordinal()))
+            {
+                return true;
+            } else
+            {
+                int pipeConnectionsCount = 0;
+                for (int i = 0; i < 6; i++)
+                {
+                    pipeConnectionsCount += ((pipeConnections >> i) & 1);
+                }
+                return pipeConnectionsCount < 2;
+            }
+        } else
+        {
+            return to.canConnectFromSide(to.getNodeWorld().getBlockState(to.getPos()), dir);
+        }
+    }*/
 }

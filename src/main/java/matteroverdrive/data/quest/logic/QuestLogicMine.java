@@ -18,11 +18,14 @@
 
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import matteroverdrive.util.MOJsonHelper;
+import net.minecraft.block.state.IBlockState;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestBlock;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.world.BlockEvent;
 
@@ -36,14 +39,15 @@ import java.util.Random;
 public class QuestLogicMine extends AbstractQuestLogic
 {
     QuestBlock[] blocks;
-    boolean hasMetadata;
-    int metadata;
     int minMineCount;
     int maxMineCount;
     int xpPerMine;
     boolean randomBlock;
+    boolean destryDrops;
 
-    public QuestLogicMine(Block block,int minMineCount,int maxMineCount,int xpPerMine)
+    public QuestLogicMine(){}
+
+    public QuestLogicMine(IBlockState block, int minMineCount, int maxMineCount, int xpPerMine)
     {
         this.blocks = new QuestBlock[]{QuestBlock.fromBlock(block)};
         this.minMineCount = minMineCount;
@@ -52,19 +56,29 @@ public class QuestLogicMine extends AbstractQuestLogic
         this.randomBlock = true;
     }
 
-    public QuestLogicMine(Block block,int minMineCount,int maxMineCount,int xpPerMine,int metadata)
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
     {
-        this(block,minMineCount,maxMineCount,xpPerMine);
-        this.metadata = metadata;
-        this.hasMetadata = true;
+        super.loadFromJson(jsonObject);
+        JsonArray blocksElement = jsonObject.getAsJsonArray("blocks");
+        blocks = new QuestBlock[blocksElement.size()];
+        for (int i = 0;i < blocks.length;i++)
+        {
+            blocks[i] = new QuestBlock(blocksElement.get(i).getAsJsonObject());
+        }
+        minMineCount = MOJsonHelper.getInt(jsonObject,"mine_count_min");
+        maxMineCount = MOJsonHelper.getInt(jsonObject,"mine_count_max");
+        xpPerMine = MOJsonHelper.getInt(jsonObject,"xp",0);
+        randomBlock = MOJsonHelper.getBool(jsonObject,"random",false);
+        destryDrops = MOJsonHelper.getBool(jsonObject,"destroy_drops",false);
     }
 
     @Override
     public String modifyInfo(QuestStack questStack, String info)
     {
         info = info.replace("$maxMineAmount",Integer.toString(getMaxMineCount(questStack)));
-        Block block = getBlock(questStack);
-        info = info.replace("$mineBlock",block != null ? block.getLocalizedName() : "Unknown Block");
+        IBlockState state = getBlock(questStack);
+        info = info.replace("$mineBlock",state != null ? state.getBlock().getLocalizedName() : "Unknown Block");
         return info;
     }
 
@@ -78,8 +92,8 @@ public class QuestLogicMine extends AbstractQuestLogic
     public String modifyObjective(QuestStack questStack, EntityPlayer entityPlayer, String objective, int objectiveIndex) {
         objective = objective.replace("$mineAmount",Integer.toString(getMineCount(questStack)));
         objective = objective.replace("$maxMineAmount",Integer.toString(getMaxMineCount(questStack)));
-        Block block = getBlock(questStack);
-        objective = objective.replace("$mineBlock",block != null ? block.getLocalizedName() : "Unknown Block");
+        IBlockState state = getBlock(questStack);
+        objective = objective.replace("$mineBlock",state.getBlock() != null ? state.getBlock().getLocalizedName() : "Unknown Block");
         return objective;
     }
 
@@ -98,7 +112,7 @@ public class QuestLogicMine extends AbstractQuestLogic
             List<Integer> avalibleBlocks = new ArrayList<>();
             for (int i = 0;i < blocks.length;i++)
             {
-                Block block = blocks[i].getBlock();
+                IBlockState block = blocks[i].getBlockState();
                 if (block != null)
                 {
                     avalibleBlocks.add(i);
@@ -112,7 +126,7 @@ public class QuestLogicMine extends AbstractQuestLogic
         {
             for (int i = 0;i < blocks.length;i++)
             {
-                Block block = blocks[i].getBlock();
+                IBlockState block = blocks[i].getBlockState();
                 if (block != null)
                 {
                     setBlockType(questStack,i);
@@ -127,11 +141,14 @@ public class QuestLogicMine extends AbstractQuestLogic
         if (event instanceof BlockEvent.HarvestDropsEvent)
         {
             BlockEvent.HarvestDropsEvent harvestEvent = (BlockEvent.HarvestDropsEvent)event;
-            Block block = getBlock(questStack);
-            if (block != null && harvestEvent.block == block && (!hasMetadata || harvestEvent.blockMetadata == metadata))
+            IBlockState state = getBlock(questStack);
+            if (state != null && harvestEvent.state.equals(state))
             {
                 if (getMineCount(questStack) < getMaxMineCount(questStack))
                 {
+                    if (destryDrops)
+                        harvestEvent.drops.clear();
+
                     setMineCount(questStack, getMineCount(questStack) + 1);
                     if (isObjectiveCompleted(questStack,entityPlayer,0) && autoComplete)
                     {
@@ -146,7 +163,7 @@ public class QuestLogicMine extends AbstractQuestLogic
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
@@ -157,7 +174,7 @@ public class QuestLogicMine extends AbstractQuestLogic
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer) {
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer) {
 
     }
 
@@ -204,12 +221,12 @@ public class QuestLogicMine extends AbstractQuestLogic
         getTag(questStack).setByte("BlockType",(byte) blockType);
     }
 
-    public Block getBlock(QuestStack questStack)
+    public IBlockState getBlock(QuestStack questStack)
     {
         int blockType = getBlockType(questStack);
         if (blockType < blocks.length)
         {
-            return blocks[blockType].getBlock();
+            return blocks[blockType].getBlockState();
         }
         return null;
     }
@@ -217,6 +234,12 @@ public class QuestLogicMine extends AbstractQuestLogic
     public QuestLogicMine setRandomBlock(boolean randomBlock)
     {
         this.randomBlock = randomBlock;
+        return this;
+    }
+
+    public QuestLogicMine setDestroyDrops(boolean destryDrops)
+    {
+        this.destryDrops = destryDrops;
         return this;
     }
 }

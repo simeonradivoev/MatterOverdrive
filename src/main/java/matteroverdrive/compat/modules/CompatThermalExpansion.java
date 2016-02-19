@@ -1,7 +1,7 @@
 package matteroverdrive.compat.modules;
 
 import cofh.api.modhelpers.ThermalExpansionHelper;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import matteroverdrive.compat.Compat;
 import net.minecraft.item.ItemStack;
 

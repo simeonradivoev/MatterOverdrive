@@ -40,12 +40,12 @@ item.tritanium_wrench.name=Tritanium Wrench
 item.tritanium_wrench.details=Safely disassembles and rotates machines
 item.spacetime_equalizer.name=Space-Time Equalizer
 item.spacetime_equalizer.details=Can be worn on the chest to negate gravitational forces
-item.rouge_android_part.head.name=Android Head
-item.rouge_android_part.arms.name=Android Arm
-item.rouge_android_part.legs.name=Android Leg
-item.rouge_android_part.chest.name=Android Torso
-item.rouge_android_part.melee=Melee Android
-item.rouge_android_part.range=Range Android
+item.rouge_android_part_head.name=Android Head
+item.rouge_android_part_arms.name=Android Arm
+item.rouge_android_part_legs.name=Android Leg
+item.rouge_android_part_chest.name=Android Torso
+item.rouge_android_part_melee=Melee Android
+item.rouge_android_part_range=Range Android
 item.forcefield_emitter.name=Force Field Emitter
 item.hc_battery.name=High Capacity Battery
 item.ship_factory.name=Ship Factory
@@ -53,15 +53,15 @@ item.ship_factory.details=Allows the building of Ships
 item.scout_ship.name=Scout Ship
 item.scout_ship.details=A fast ship, used for scouting
 item.ship_colonizer.name=Colonizer Ship
-item.ship_colonizer.details=Used to claim planets by building a Base building on arrival/nIncreases building spaces by %s
+item.ship_colonizer.details=Used to claim planets by building a Base building on arrival
 item.building_base.name=Base
 item.building_base.details=Main building, needed for everything
 item.android_pill_red.name=Red Pill
-item.android_pill_red.details=Take the red pill and lose what's holding you back
+item.android_pill_red.details=Take the red pill /n and lose what's holding you back
 item.android_pill_blue.name=Blue Pill
-item.android_pill_blue.details=Take the blue pill and you will wake up in your bed none the wiser
+item.android_pill_blue.details=Take the blue pill /n and you will wake up in your bed none the wiser
 item.creative_pattern_drive.name=Creative Pattern Drive
-item.creative_pattern_drive.details=Contains most replicatable items/nRight Click while sneaking to reload
+item.creative_pattern_drive.details=Contains most replicatable items /n Right Click while sneaking to reload
 item.network_flash_drive.name=Network Flash Drive
 item.network_flash_drive.details=Used as a filter in Matter Network devices
 item.energy_pack.name=Energy Pack
@@ -104,7 +104,7 @@ item.upgrade.power_storage.name=Power Storage Upgrade
 item.upgrade.hyper_speed.name=Hyper Speed Upgrade
 item.upgrade.matter_storage.name=Matter Storage Upgrade
 
-//////////// Weapon Modules ////////////
+//////////// Weapon Modules ///////
 item.weapon_module_color.name=Color Module
 item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
 item.weapon_module_barrel.fire.name=Incendiary Filter
@@ -167,6 +167,9 @@ tile.bounding_box.name=Bounding Block
 tile.inscriber.name=Molecular Inscriber
 tile.fusion_reactor_io.name=Fusion Reactor IO
 tile.contract_market.name=Contract Market
+tile.spacetime_accelerator.name=Space-Time Accelerator
+tile.spacetime_accelerator.details=Speeds up blocks and machines
+tile.pylon.name=Dimensional Pylon
 
 //////////// Pattern Storage ////////////
 tile.pattern_storage.name=Pattern Storage
@@ -219,33 +222,19 @@ machine.tooltip.matter=Matter
 machine.tooltip.energy=Charged
 
 //////////// Tritanium Crate ////////////
-tile.tritanium_crate.black.name=Black Tritanium Crate
-tile.tritanium_crate.red.name=Red Tritanium Crate
-tile.tritanium_crate.green.name=Green Tritanium Crate
-tile.tritanium_crate.brown.name=Brown Tritanium Crate
-tile.tritanium_crate.blue.name=Blue Tritanium Crate
-tile.tritanium_crate.purple.name=Purple Tritanium Crate
-tile.tritanium_crate.cyan.name=Cyan Tritanium Crate
-tile.tritanium_crate.silver.name=Light Gray Tritanium Crate
-tile.tritanium_crate.gray.name=Gray Tritanium Crate
-tile.tritanium_crate.pink.name=Pink Tritanium Crate
-tile.tritanium_crate.lime.name=Lime Tritanium Crate
-tile.tritanium_crate.yellow=Yellow Tritanium Crate
-tile.tritanium_crate.lightBlue=Light Blue Tritanium Crate
-tile.tritanium_crate.magenta.name=Magenta Tritanium Crate
-tile.tritanium_crate.orange=Orange Tritanium Crate
-tile.tritanium_crate.white.name=White Tritanium Crate
+tile.tritanium_crate.name=Tritanium Crate
+tile.tritanium_crate_yellow.name=Yellow Tritanium Crate
 
 ///////////// Entities /////////////////
-entity.rogue_android.name=Melee Rogue Android
-entity.failed_pig.name=Failed Pig
-entity.failed_chicken.name=Failed Chicken
-entity.failed_cow.name=Failed Cow
-entity.failed_sheep.name=Failed Sheep
-entity.mad_scientist.name=Mad Scientist
-entity.mad_scientist.junkie.name=Mad Scientist Junkie
-entity.ranged_rogue_android.name=Ranged Rogue Android
-entity.mutant_scientist.name=Mutant Scientist
+entity.mo.rogue_android.name=Melee Rogue Android
+entity.mo.failed_pig.name=Failed Pig
+entity.mo.failed_chicken.name=Failed Chicken
+entity.mo.failed_cow.name=Failed Cow
+entity.mo.failed_sheep.name=Failed Sheep
+entity.mo.mad_scientist.name=Mad Scient
+entity.mo.mad_scientist.junkie.name=Mad Scientist Junkie
+entity.mo.ranged_rogue_android.name=Ranged Rogue Android
+entity.mo.mutant_scientist.name=Mutant Scientist
 
 ///////////// Decorative ////////////////////
 tile.decorative.stripes.name=Yellow Stripes
@@ -272,25 +261,39 @@ tile.decorative.tritanium_plate_colored.name=Colored Tritanium Plate
 ##########################################################################################################
 # Dialogs
 
-dialog.generic.quit.questions=See you later.;I must go.;I'm in a hurry.;Goodbye.;Farewell.;Bye.
-dialog.generic.back.questions=Never mind.;Let's talk about something else.;I don't care.
-dialog.generic.trade.questions=I want to trade.;Let's trade.;Let me see your goods.;What do you have for sale?;
-dialog.generic.back_home.questions=Never mind.;Let's talk about something else.;I don't care.
+dialog.generic.quit.0.question=See you later.
+dialog.generic.quit.1.question=I must go.
+dialog.generic.quit.2.question=I'm in a hurry.
+dialog.generic.quit.3.question=Goodbye.
+dialog.generic.quit.4.question=Farewell.
+dialog.generic.quit.5.question=Bye.
+dialog.generic.back.0.question=Never mind.
+dialog.generic.back.1.question=Let's talk about something else.
+dialog.generic.back.2.question=I don't care.
+dialog.generic.trade.0.question=I want to trade.
+dialog.generic.trade.1.question=Let's trade.
+dialog.generic.trade.2.question=Let me see your goods.
+dialog.generic.trade.3.question=What do you have for sale?
 
 //////////// Mad Scientist ///////////////
 dialog.mad_scientist.convert.question=I have all the parts!
 dialog.mad_scientist.requirements.line=Finally!<br>Getting rid of that fragile body is the best choice.<br>The only problem is that I need you to bring me a set of Android parts before we begin.
 dialog.mad_scientist.requirements.question=I want to become an android.
-dialog.mad_scientist.main.line.human=I don't deal with humans.;NO! I can't even look at you. So fragile!;Are you ok ? You look trapped! How can you stand that flesh?
-dialog.mad_scientist.main.line.android=Ah %1$s, good to see you! What brings you here?;Hello there. You look splendid today!;It seems your left eye is out of alignment. I'll be glad to fix it.
+dialog.mad_scientist.main.line.0.human=I don't deal with humans.
+dialog.mad_scientist.main.line.1.human=NO! I can't even look at you. So fragile!
+dialog.mad_scientist.main.line.2.human=Are you ok ? You look trapped! How can you stand that flesh?
+dialog.mad_scientist.main.line.0.android=Ah %1$s, good to see you! What brings you here?
+dialog.mad_scientist.main.line.1.android=Hello there. You look splendid today!
+dialog.mad_scientist.main.line.2.android=It seems your left eye is out of alignment. I'll be glad to fix it.
 dialog.mad_scientist.undo.line=Why would you want to do that? The only way is by swallowing a blue pill. It can be found in dungeons, but your best bet is to buy it from someone. I think I had some in my workshop. I'll have to check.
 dialog.mad_scientist.undo.question=How do I reverse it!
 dialog.mad_scientist.whatDidYouDo.line=You are now an Android! You will no longer need food, sleep or oxygen. You can upgrade yourself with wonderful abilities in an Android Station and you will be able to see and do things you never imagined.
 dialog.mad_scientist.whatDidYouDo.question=What did you do to me?
-dialog.mad_scientist.junkie.main.line=Hey there buddy [§6burp§r].;What's going on buddy.;
+dialog.mad_scientist.junkie.main.0.line=Hey there buddy [§6burp§r].
+dialog.mad_scientist.junkie.main.1.line=What's going on buddy.
 dialog.mad_scientist.junkie.cocktail_quest.question=You said something about a cocktail?
-dialog.mad_scientist.junkie.cocktail_quest.question.accept=§aHell Yes!
-dialog.mad_scientist.junkie.cocktail_quest.question.decline=§cFuck NO!
+dialog.mad_scientist.junkie.cocktail_quest.question.accept=§aYes!
+dialog.mad_scientist.junkie.cocktail_quest.question.decline=§cNO!
 dialog.mad_scientist.junkie.cocktail_quest.0.line=You-you-you have to help me, buddy, you see.
 dialog.mad_scientist.junkie.cocktail_quest.1.line=I have-have this [§6burp§r] amazing recipe, buddy, just amazing things with stuff mixed together, buddy.
 dialog.mad_scientist.junkie.cocktail_quest.2.line=It - it's gonna be better than... no it's incomparable, buddy, it's the pinnacle of perfection, buddy [§6burp§r].
@@ -300,11 +303,15 @@ dialog.mad_scientist.junkie.cocktail_quest.4.line=But see here now, buddy! Hey, 
 dialog.mad_scientist.junkie.cocktail_quest.5.question=sorry.
 dialog.mad_scientist.junkie.cocktail_quest.5.line=That powder stuff from the creeper keeps its potency only if you kill it with a shovel, buddy.
 dialog.mad_scientist.junkie.cocktail_quest.6.question=A shovel ?
-dialog.mad_scientist.junkie.cocktail_quest.6.line=Yes, a fucking shovel, buddy, you-you have to smash its brains out, repeated blunt traumas, buddy, to get the good stuff!
+dialog.mad_scientist.junkie.cocktail_quest.6.line=Yes, a shovel, buddy, you-you have to smash its brains out, repeated blunt traumas, buddy, to get the good stuff!
 dialog.mad_scientist.junkie.cocktail_quest.7.line=Now, go, buddy, quickly, buddy, go!
 dialog.mad_scientist.junkie.cocktail_quest.complete.question=I have all the ingredients for your cocktail.
 dialog.mad_scientist.junkie.cocktail_quest.line=Ah yes, now let me get these thing out of you buddy, take the burden of your shoulders, let me just mix up a batch and.... [§6junkie scientist mixes up the ingredients and takes a snort....§r]
 dialog.mad_scientist.junkie.cocktail_quest.are_you_ok.question=Are you ok?
+dialog.mad_scientist.trade_route_quest.0.question=Do you know anything about this trade route agreement?
+dialog.mad_scientist.trade_route_quest.0.line=It can't be! I thought it was lost when he died. I can't thank you enough for this. Here take this..
+dialog.mad_scientist.trade_route_quest.1.question=I noticed the price, what are you trading?
+dialog.mad_scientist.trade_route_quest.1.line=What do you mean? It's nothing really, just some self-sealing stem bolts.
 
 ##########################################################################################################
 # Creative Panels
@@ -326,6 +333,7 @@ upgradetype.Fail.name=Failure
 upgradetype.Range.name=Range
 upgradetype.PowerStorage.name=Power Storage
 upgradetype.MatterStorage.name=Matter Storage
+upgradetype.MatterUsage.name=Matter Usage
 
 ##########################################################################################################
 # Weapon Stats
@@ -338,6 +346,14 @@ weaponstat.5.name=Block Damage
 weaponstat.6.name=Explosion Damage
 weaponstat.7.name=Fire Rate
 weaponstat.8.name=Heal
+
+##########################################################################################################
+# Planet Stats
+planet_stat.population_count.name=Population
+planet_stat.building_size.name=Building Space
+planet_stat.energy_production.name=Energy Production
+planet_stat.matter_production.name=Matter Production
+planet_stat.fleet_size.name=Matter Production
 
 ##########################################################################################################
 # GUI
@@ -388,6 +404,7 @@ gui.tooltip.quest.active_quests=Current Quests
 gui.tooltip.quest.accept=Accept Quest
 gui.tooltip.quest.complete=Complete Quest
 gui.tooltip.locks=Locks
+gui.tooltip.parent=Parent
 
 ////////// Labels //////////////
 gui.label.button.save=Save
@@ -469,19 +486,19 @@ biopart.battery.name=Battery
 # Biostats
 
 biotic_stat.teleport.name=Ender Teleporter
-biotic_stat.teleport.details=Allows for short teleports by hitting the '%1$s' key /n/Each Teleport takes %2$s /n/A battery capable of extracting %2$s is required
+biotic_stat.teleport.details=Short range teleportation with '%1$s' key /n/Drains %2$s on teleport /n/A battery capable of extracting %2$s is required
 biotic_stat.nanobots.name=Nanobots
-biotic_stat.nanobots.details=Heals woulds by using Matter Plasma and Energy
+biotic_stat.nanobots.details=Heals woulds using Energy %s/s/n/Increases Health by %s
 biotic_stat.nano_armor.name=Nano Armor
 biotic_stat.nano_armor.details=Absorbs %1$s of incoming damage
 biotic_stat.floatation.name=Air Bags
 biotic_stat.floatation.details=Enables floating when in water
 biotic_stat.speed.name=Limb Overclocking
-biotic_stat.speed.details=Increases movement speed by %1$s
+biotic_stat.speed.details=Increases movement by %1$s
 biotic_stat.high_jump.name=High Jump
-biotic_stat.high_jump.details=Enables higher jumping while sneaking /n/Each jump drains %1$s /n/A battery capable of extracting %1$s is required
+biotic_stat.high_jump.details=Enables higher jumping /n/Drains %1$s on jump /n/A battery capable of extracting %1$s is required
 biotic_stat.equalizer.name=Space-Time Equalizer
-biotic_stat.equalizer.details=Internal Space-Time Equalizer /n/that negates the gravitational effects of /n/Gravitational Anomalies
+biotic_stat.equalizer.details=Internal Space-Time Equalizer /n/that negates the gravitational effects/n/of Gravitational Anomalies
 biotic_stat.shield.name=Plasma Shield
 biotic_stat.shield.details=Protects the player from projectiles
 biotic_stat.attack.name=Attack Boost
@@ -489,13 +506,27 @@ biotic_stat.attack.details=Increases attack power by %1$s
 biotic_stat.cloak.name=Cloak
 biotic_stat.cloak.details=Allows the player to go invisible. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
 biotic_stat.nightvision.name=Night Vision
-biotic_stat.nightvision.details=Allows the player to see in the dark. /n/While active, drains %1$s per tick /n/A battery capable of extracting %1$s is required
+biotic_stat.nightvision.details=Enables night vision. /n/While active, drains %1$s/t /n/A battery capable of extracting %1$s is required
 biotic_stat.minimap.name=Minimap
 biotic_stat.minimap.details=Adds a minimap to the HUD
 biotic_stat.flash_cooling.name=Flash Cooling
-biotic_stat.flash_cooling.details=Gives %s change to instantly/n/cool a weapon down when overheated.
+biotic_stat.flash_cooling.details=Gives %s change to instantly/n/cool a weapon down when overheated/n/Drains %s on each cooldown
 biotic_stat.shockwave.name=Sonic Shockwave
-biotic_stat.shockwave.details=Releases a burst of kinetic energy/n/that damages and knocks nearby enemies up to %1$s blocks/n/To release press the action key while active/n/or hold shift while falling
+biotic_stat.shockwave.details=Releases a burst of kinetic energy/n/that damages and knocks/n/nearby enemies up to %1$s blocks/n/Activated with '%2$s'
+biotic_stat.auto_shield.name=Emergency Shields
+biotic_stat.auto_shield.details=Automatically actives the Shield Ability/n/when attacked at a range
+biotic_stat.step_assist.name=Step Assist
+biotic_stat.step_assist.details=Automatic step assistance/n/for steps 1 block high
+biotic_stat.zero_calories.name=Zero Calories
+biotic_stat.zero_calories.details=Removes nutritional requirements
+biotic_stat.wireless_charger.name=Wireless Charger
+biotic_stat.wireless_charger.details=Charges items in hotbar/n/except held item/n/Charge speed: %s/t RF
+biotic_stat.inertial_dampers.name=Inertial Dampers
+biotic_stat.inertial_dampers.details=Negate fall damage by %s
+biotic_stat.item_magnet.name=Item Magnet
+biotic_stat.item_magnet.details=Attracts dropped items/n/Drains %s while pulling items
+biotic_stat.air_dash.name=Air Dash
+biotic_stat.air_dash.details=Dashes the player forward/n/double tap forward to active/n/while in the air
 
 ##########################################################################################################
 # Deaths
@@ -575,7 +606,7 @@ alert.starmap.on_build=§3%1$s §rwas built at §3%2$s§r!
 #############################################################################################################
 # Enchantments
 
-enchantment.matteroverdrive.weapon.damage=Overclock
+enchantment.matteroverdrive.weapon.meta=Overclock
 
 ###############################################################################################################
 # Fluids
@@ -651,9 +682,9 @@ rarity.legendary=Legendary
 
 ###############################################################################################################
 # others
-quest.kill_androids.0.title=They will kill us all!
-quest.kill_androids.0.info=The are taking over the world! I don't know how exactly they got here, but there numbers are growing by the day. It's seems like there's no end to them. We must fight for if we don't, we will all perish. The fight starts with you %1$s! We need you to help us kill as many of them as possible, before they get us all.
-quest.kill_androids.0.objective.0=Kill %2$s/%3$s Rogue Androids.
+quest.kill_androids.title=They will kill us all!
+quest.kill_androids.info=The are taking over the world! I don't know how exactly they got here, but there numbers are growing by the day. It's seems like there's no end to them. We must fight for if we don't, we will all perish. The fight starts with you $player! We need you to help us kill as many of them as possible, before they get us all.
+quest.kill_androids.objective.0=Kill $killCount/$maxKillCount Rogue Androids.
 quest.cocktail_of_ascension.title=Cocktail of Ascension
 quest.cocktail_of_ascension.info=A Crazy scientist has asked you to bring him %2$s gunpowder from a shoveled creeper and %3$s red mushrooms from the darkest depths of the Nether, for his Cocktail Of Ascension.
 quest.cocktail_of_ascension.objective.0=Kill %2$s/%3$s creepers with a shovel
@@ -661,8 +692,8 @@ quest.cocktail_of_ascension.objective.1=Pickup %2$s/%3$s gunpowder
 quest.cocktail_of_ascension.objective.2=Pickup %2$s/%3$s red mushrooms from the Nether
 quest.cocktail_of_ascension.objective.3=Talk to the crazy scientist junkie
 quest.sacrifice.title=Sacrifice
-quest.sacrifice.info=We are the Dark Vail. We have begun restoring an ancient artifact, the effects of which will remain a secret. All we need from you %1$s is to sacrifice %2$s %3$s newborns in the name of the dark lord, whose name strikes fear in the hearts of the innocent. Barry the dark lord. You will be compensated handsomely for your efforts.
-quest.sacrifice.objective.0=Kill %2$s/%3$s Baby %4$s
+quest.sacrifice.info=We are the Dark Vail. We have begun restoring an ancient artifact, the effects of which will remain a secret. All we need from you $player is to sacrifice $maxKillCount animal newborns in the name of the dark lord, whose name strikes fear in the hearts of the innocent. Barry the dark lord. You will be compensated handsomely for your efforts.
+quest.sacrifice.objective.0=Kill $killCount/$maxKillCount Babies
 quest.department_of_agriculture.title=Department of Agriculture
 quest.department_of_agriculture.info=To all willing hands. This is a job offer from the department of agriculture. We operate in the desolate world of Barus V and you can image the obstacles we face when it comes to growing %3$s. As our plans for hydroponic farms come to turn, our people starve to death. We are searching for capable parties to aid us in the supplying of %3$s shipments to our citizens in need.
 quest.department_of_agriculture.objective.0=Gather %2$s/%3$s %4$s
@@ -677,7 +708,7 @@ quest.to_the_power_of.title=To the power of
 quest.to_the_power_of.info=Before I can begin work on my ascension from my limiting mortality I need to ensure a consistent source of power.
 quest.to_the_power_of.objective.0=Create $craftAmount/$craftMaxAmount $craftItem
 quest.puny_humans.title=Puny Humans
-quest.puny_humans.info=I have spoken to scientist, who is obviously mad, but makes quite the offering. He has agreed to make me into an android. All I need to do is collect a full set of Android Parts for the procedure. Rouge Androids seem to be the only ones who drop the parts needed.
+quest.puny_humans.info=I have spoken to scientist, who is obviously mad, but makes quite the offering. He has agreed to turn me into an android. All I need to do is collect a full set of Android Parts for the procedure. Rouge Androids seem to be the only ones who drop these parts.
 quest.puny_humans.objective.0=Collect a full set of android parts
 quest.puny_humans.objective.1=Talk to the mad scientist
 quest.is_it_really_me.title=Is it really me ?
@@ -696,3 +727,14 @@ quest.gmo.title=G.M.O.
 quest.gmo.info=Replicating vegetables! That's just absurd!/n/They taste awful, all those replicated stuff feel just like eating plastic./n/No no, we need something different. I just got my new biolistic particle delivery system and I can't wait to test that baby out. I see all these pathetic villagers planting their crops, crawling in the dirt like animals. I just need to get my hands on some crop gene sequences. The thing is these brainless, villagers won't let me anywhere near the crops. Can you use my Data Pad and scan some for me? I'm sure I can give you something for the favor. I had some old android parts laying around.
 quest.gmo.objective.0=Scan $scanAmount/$maxScanAmount $block with the Scientist's Data Pad.
 quest.gmo.objective.1=Now scan $scanAmount/$maxScanAmount $block.
+quest.trade_route.title=Trading Routes
+quest.trade_route.info=I know the Orion sector is not the safest place to go through, but where is, these days. I can't even wrap my head around how the Edux managed to miss such a potential flaw. I mean what were they thinking? Were they that selfish?/n/Anyhow, I know I've lost a lot of friends traveling through the Orion sector, but the pay is just too damn good./n/The crew will be dropping the cargo in the nearest village, I might even join them, but first, I have to take care of something I promised to a friend.
+quest.trade_route.info.2=As you open the captain's chest, you find a $itemName, signed with a digital seal, indicating the establishment of a trade route between Ticonderoga and Overworld. You don't fully understand the language but you quickly notice the unmistakable price. A ridiculous amount of emeralds even for a trade route. You start to wonder, exactly what trade requires such an enormous amount of emeralds. Maybe you should ask one of the Scientists down on the planet.
+quest.trade_route.objective.0=Find the captain's chest and open it
+quest.trade_route.objective.1=Read the $itemName
+quest.trade_route.objective.2=Talk to a $target
+quest.stem_bolts.title=Self-Sealing Stem Bolts
+quest.stem_bolts.info.0=After speaking with the Mad Scientist, you were left with an unwary feeling. The scientist was keeping something from you./n/You had that feeling ever since you saw the trade route agreement, so you decided to make a copy, before giving it to the scientist. You realise you might have missed something.
+quest.stem_bolts.info.1=You found it! A small text at the end, reefers to a disclaimer stating that the shipping party will not be responsible for any undesirable mutations caused by Ionizing radiation. You begin to wonder what sort of cargo can have mutations. You decide to revisit the cargo ship for more clues.
+quest.stem_bolts.objective.0=Read the $itemName
+quest.stem_bolts.objective.1=Return to the cargo ship

@@ -1,15 +1,12 @@
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.tile.TileEntityWeaponStation;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 /**
@@ -17,8 +14,6 @@ import net.minecraft.world.World;
  */
 public class BlockWeaponStation extends MOBlockMachine
 {
-    private IIcon topIcon;
-    private IIcon bottomIcon;
 
     public BlockWeaponStation(Material material, String name)
     {
@@ -31,7 +26,7 @@ public class BlockWeaponStation extends MOBlockMachine
         setHasGui(true);
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         super.registerBlockIcons(iconRegister);
@@ -56,7 +51,7 @@ public class BlockWeaponStation extends MOBlockMachine
         {
             return blockIcon;
         }
-    }
+    }*/
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta)
@@ -70,12 +65,9 @@ public class BlockWeaponStation extends MOBlockMachine
         return false;
     }
 
-    @Override
-    public boolean renderAsNormalBlock(){return false;}
-
-    @Override
+    /*@Override
     public int getRenderType()
     {
         return MOBlockRenderer.renderID;
-    }
+    }*/
 }

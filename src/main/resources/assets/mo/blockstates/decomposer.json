@@ -1,0 +1,25 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mo:base/orientable",
+    "textures": {
+      "bottom": "mo:blocks/vent2",
+      "top": "mo:blocks/decomposer_top",
+      "side": "mo:blocks/base_stripes",
+      "front": "mo:blocks/tank_empty",
+      "particle": "mo:blocks/base_stripes",
+      "back": "mo:blocks/base_stripes"
+    }
+  },
+  "variants": {
+    "normal": {"model": "mo:base/orientable"},
+    "facing=north": { "model": "mo:base/orientable"},
+    "facing=south": { "model": "mo:base/orientable","y": 180 },
+    "facing=west":  { "model": "mo:base/orientable","y": 270 },
+    "facing=east":  { "model": "mo:base/orientable","y": 90 },
+    "inventory": {
+      "model": "mo:base/orientable",
+      "transform": "forge:default-block"
+    }
+  }
+}

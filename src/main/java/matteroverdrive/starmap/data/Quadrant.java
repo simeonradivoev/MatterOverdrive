@@ -164,7 +164,7 @@ public class Quadrant extends SpaceBody
     }
     private void init()
     {
-        starHashMap = new HashMap<Integer, Star>();
+        starHashMap = new HashMap<>();
     }
     public Star star(int at){return starHashMap.get(at);}
     public boolean hasStar(int id){
@@ -172,7 +172,7 @@ public class Quadrant extends SpaceBody
     }
     private boolean isLoaded()
     {
-        return isLoaded();
+        return loaded;
     }
     public Collection<Star> getStars()
     {

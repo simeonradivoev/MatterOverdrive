@@ -32,19 +32,19 @@ import org.lwjgl.input.Keyboard;
  */
 public class ElementIntegerField extends ElementBaseGroup implements IButtonHandler
 {
-    IButtonHandler buttonHandler;
-    MOElementButtonScaled incBtn;
-    MOElementButtonScaled decBtn;
-    ScaleTexture numberBG;
-    int number;
-    int min;
-    int max;
+    private IButtonHandler buttonHandler;
+    private MOElementButtonScaled incBtn;
+    private MOElementButtonScaled decBtn;
+    private ScaleTexture numberBG;
+    private int number;
+    private int min;
+    private int max;
     private String label;
     private int labelColor = 0xffffff;
 
     public ElementIntegerField(MOGuiBase gui,IButtonHandler buttonHandler, int posX, int posY, int height,int min,int max)
     {
-        this(gui,buttonHandler,posX,posY,32+ Minecraft.getMinecraft().fontRenderer.getStringWidth(Integer.toString(max))+10,height,min,max);
+        this(gui,buttonHandler,posX,posY,32+ Minecraft.getMinecraft().fontRendererObj.getStringWidth(Integer.toString(max))+10,height,min,max);
     }
 
     public ElementIntegerField(MOGuiBase gui,IButtonHandler buttonHandler, int posX, int posY, int width, int height,int min,int max) {
@@ -97,7 +97,7 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
     @Override
     public void handleElementButtonClick(MOElementBase element,String buttonName, int mouseButton)
     {
-        if (buttonName == "Inc")
+        if (buttonName.equals("Inc"))
         {
             int value = 1;
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
@@ -108,7 +108,7 @@ public class ElementIntegerField extends ElementBaseGroup implements IButtonHand
             setNumber(getNumber()+value);
             buttonHandler.handleElementButtonClick(this,getName(),value);
         }
-        else if (buttonName == "Dec")
+        else if (buttonName.equals("Dec"))
         {
             int value = -1;
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))

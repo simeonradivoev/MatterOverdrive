@@ -1,0 +1,21 @@
+{
+  "dialogs": [
+    {
+      "id":"mo:trade_route_quest_start",
+      "message": "dialog.mad_scientist.trade_route_quest.0.line",
+      "question": "dialog.mad_scientist.trade_route_quest.0.question",
+      "unlocalized": true,
+      "options": [
+        {
+          "id":"mo:trade_route_quest_end",
+          "message": "dialog.mad_scientist.trade_route_quest.1.line",
+          "question": "dialog.mad_scientist.trade_route_quest.1.question",
+          "unlocalized": true,
+          "options": [
+            "mo:back_home"
+          ]
+        }
+      ]
+    }
+  ]
+}

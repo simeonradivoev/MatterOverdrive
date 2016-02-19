@@ -19,11 +19,15 @@
 package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.Reference;
+import matteroverdrive.client.render.entity.EntityRendererRougeAndroid;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 
@@ -50,23 +54,27 @@ public class TileEntityRendererAndroidStation extends TileEntityRendererStation<
                 mob.getEntityData().setBoolean("Hologram", true);
             }
 
-            //glDisable(GL_BLEND);
-            //glDepthMask(true);
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_ONE, GL_ONE);
-            glPushMatrix();
-            glTranslated(x + 0.5, y + 0.8, z + 0.5);
+            GlStateManager.depthMask(false);
+            //glDisable(GL_DEPTH_TEST);
+            //GlStateManager.enableBlend();
+            //GlStateManager.blendFunc(GL_ONE, GL_ONE);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x + 0.5, y + 0.8, z + 0.5);
             rotate(station, noise);
 
             RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.3f);
 
             if (station.isUseableByPlayer(Minecraft.getMinecraft().thePlayer)) {
-                ClientProxy.renderHandler.rendererRougeAndroidHologram.setRenderManager(RenderManager.instance);
-                ClientProxy.renderHandler.rendererRougeAndroidHologram.doRender((EntityLivingBase) mob,0,0,0,0,0);
+                ClientProxy.renderHandler.rendererRougeAndroidHologram.doRender(mob,0,0,0,0,0);
+                //Render render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(Minecraft.getMinecraft().getRenderViewEntity());
+                //render.doRender(Minecraft.getMinecraft().thePlayer,0,0,0,0,partialTicks);
+                //ModelBiped biped = new ModelBiped(0);
+                //biped.render(mob,0,0,0,0,0,0.1f);
                 //Render render = RenderManager.instance.getEntityRenderObject(mob);
                 //render.doRender(mob,0,0,0,0,0);
             }
-            glPopMatrix();
+
+            GlStateManager.popMatrix();
         }else
         {
             super.renderHologram(station, x, y, z, partialTicks, noise);

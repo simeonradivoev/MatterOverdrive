@@ -18,8 +18,9 @@
 
 package matteroverdrive.network.packet.server;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import matteroverdrive.MatterOverdrive;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.PlayerQuestData;
@@ -41,6 +42,7 @@ public class PacketQuestActions extends PacketAbstract
     public static final int QUEST_ACTION_ABONDON = 0;
     public static final int QUEST_ACTION_COMPLETE = 1;
     public static final int QUEST_ACTION_ADD = 2;
+    public static final int QUEST_ACTION_COMPLETE_OBJECTIVE = 3;
     int command;
     int questID;
     int playerID;
@@ -82,7 +84,7 @@ public class PacketQuestActions extends PacketAbstract
         public ServerHandler(){}
 
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketQuestActions message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketQuestActions message, MessageContext ctx)
         {
             Entity entity = player.worldObj.getEntityByID(message.playerID);
             if (entity instanceof EntityPlayer)
@@ -102,7 +104,12 @@ public class PacketQuestActions extends PacketAbstract
                                 extendedProperties.onQuestAbandoned(abandonedQuest);
                             }
 
-                            return new PacketSyncQuests(extendedProperties.getQuestData(), EnumSet.of(PlayerQuestData.DataType.ACTIVE_QUESTS));
+                            MatterOverdrive.packetPipeline.sendTo(new PacketSyncQuests(extendedProperties.getQuestData(), EnumSet.of(PlayerQuestData.DataType.ACTIVE_QUESTS)),player);
+                            return ;
+                        }else if (message.command == QUEST_ACTION_COMPLETE_OBJECTIVE)
+                        {
+                            QuestStack questStack = extendedProperties.getQuestData().getActiveQuests().get(message.questID);
+                            questStack.markComplited((EntityPlayer) entity,false);
                         }
                     }
                     if (message.command == QUEST_ACTION_ADD)
@@ -110,14 +117,13 @@ public class PacketQuestActions extends PacketAbstract
                         ItemStack contract = extendedProperties.getPlayer().inventory.getStackInSlot(message.questID);
                         if (contract.getItem() instanceof Contract)
                         {
-                            extendedProperties.addQuest(((Contract) contract.getItem()).getQuest(contract));
+                            extendedProperties.addQuest(((Contract) contract.getItem()).getQuest(contract).copy());
                             extendedProperties.getPlayer().inventory.decrStackSize(message.questID,1);
                         }
 
                     }
                 }
             }
-            return null;
         }
     }
 }

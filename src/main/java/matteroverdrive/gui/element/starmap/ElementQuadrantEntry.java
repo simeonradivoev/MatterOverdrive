@@ -68,10 +68,6 @@ public class ElementQuadrantEntry extends ElementAbstractStarMapEntry<Quadrant>
         return icons;
     }
 
-    public void addTooltip(List<String> list)
-    {
-    }
-
     @Override
     protected boolean canTravelTo(Quadrant quadrant, EntityPlayer player)
     {
@@ -112,7 +108,7 @@ public class ElementQuadrantEntry extends ElementAbstractStarMapEntry<Quadrant>
     @Override
     protected void onViewPress()
     {
-        ((GuiStarMap) gui).setPage(1);
+        gui.setPage(1);
     }
 
     @Override

@@ -18,8 +18,9 @@
 
 package matteroverdrive.network.packet.bi;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.weapon.WeaponShot;
@@ -31,6 +32,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 7/25/2015.
@@ -56,8 +59,8 @@ public class PacketFirePlasmaShot extends PacketAbstract
     {
         this.shot = new WeaponShot(buf);
         this.sender = buf.readInt();
-        this.position = Vec3.createVectorHelper(buf.readDouble(), buf.readDouble(), buf.readDouble());
-        this.direction = Vec3.createVectorHelper(buf.readFloat(),buf.readFloat(),buf.readFloat());
+        this.position = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        this.direction = new Vec3(buf.readFloat(),buf.readFloat(),buf.readFloat());
     }
 
     @Override
@@ -79,8 +82,9 @@ public class PacketFirePlasmaShot extends PacketAbstract
 
     public static class BiHandler extends AbstractBiPacketHandler<PacketFirePlasmaShot>
     {
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketFirePlasmaShot message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketFirePlasmaShot message, MessageContext ctx)
         {
             if (player.getEntityId() != message.sender)
             {
@@ -94,15 +98,13 @@ public class PacketFirePlasmaShot extends PacketAbstract
                 }
 
             }
-            return null;
         }
 
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketFirePlasmaShot message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketFirePlasmaShot message, MessageContext ctx)
         {
             handleServerShot(player,message,0);
             MatterOverdrive.packetPipeline.sendToAllAround(message,player,message.shot.getRange()+64);
-            return null;
         }
 
         public void handleServerShot(EntityPlayer player,PacketFirePlasmaShot shot,int delay)

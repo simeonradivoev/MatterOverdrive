@@ -18,12 +18,12 @@
 
 package matteroverdrive.container.slot;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.data.inventory.Slot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 5/15/2015.
@@ -64,5 +64,11 @@ public class SlotInventory extends MOSlot {
     public HoloIcon getHoloIcon()
     {
         return slot.getHoloIcon();
+    }
+
+    public void onSlotChanged()
+    {
+        super.onSlotChanged();
+        slot.onSlotChanged();
     }
 }

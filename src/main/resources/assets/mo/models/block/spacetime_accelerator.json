@@ -1,0 +1,46 @@
+{
+  "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+  "textures": {
+    "0": "mo:blocks/spacetime_accelerator_sides",
+    "1": "mo:blocks/spacetime_accelerator_top_bottom"
+  },
+  "elements": [
+    {
+      "name": "bottom_part",
+      "from": [ 4.0, 0.0, 4.0 ],
+      "to": [ 12.0, 8.0, 12.0 ],
+      "faces": {
+        "north": { "texture": "#0", "uv": [ 0.0, 8.0, 8.0, 16.0 ] },
+        "east": { "texture": "#0", "uv": [ 8.0, 8.0, 16.0, 16.0 ] },
+        "south": { "texture": "#0", "uv": [ 0.0, 8.0, 8.0, 16.0 ] },
+        "west": { "texture": "#0", "uv": [ 8.0, 8.0, 16.0, 16.0 ] },
+        "down": { "texture": "#1", "uv": [ 0.0, 8.0, 8.0, 16.0 ], "cullface": "down" }
+      }
+    },
+    {
+      "name": "middle_part",
+      "from": [ 3.0, 8.0, 3.0 ],
+      "to": [ 13.0, 13.0, 13.0 ],
+      "faces": {
+        "north": { "texture": "#0", "uv": [ 0.0, 3.0, 8.0, 8.0 ] },
+        "east": { "texture": "#0", "uv": [ 0.0, 3.0, 8.0, 8.0 ] },
+        "south": { "texture": "#0", "uv": [ 0.0, 3.0, 8.0, 8.0 ] },
+        "west": { "texture": "#0", "uv": [ 0.0, 3.0, 8.0, 8.0 ] },
+        "up": { "texture": "#0", "uv": [ 0.0, 3.0, 8.0, 8.0 ], "rotation": 90 },
+        "down": { "texture": "#0", "uv": [ 0.0, 8.0, 8.0, 3.0 ], "rotation": 90 }
+      }
+    },
+    {
+      "name": "top_part",
+      "from": [ 4.0, 13.0, 4.0 ],
+      "to": [ 12.0, 16.0, 12.0 ],
+      "faces": {
+        "north": { "texture": "#0", "uv": [ 0.0, 0.0, 8.0, 3.0 ] },
+        "east": { "texture": "#0", "uv": [ 8.0, 0.0, 16.0, 3.0 ] },
+        "south": { "texture": "#0", "uv": [ 0.0, 0.0, 8.0, 3.0 ] },
+        "west": { "texture": "#0", "uv": [ 8.0, 0.0, 16.0, 3.0 ] },
+        "up": { "texture": "#1", "uv": [ 0.0, 0.0, 8.0, 8.0 ], "rotation": 90, "cullface": "up" }
+      }
+    }
+  ]
+}

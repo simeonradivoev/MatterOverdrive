@@ -19,7 +19,7 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -60,6 +60,12 @@ public class BioticStatMinimap extends AbstractBioticStat
     @Override
     public Multimap attributes(AndroidPlayer androidPlayer, int level) {
         return null;
+    }
+
+    @Override
+    public boolean isEnabled(AndroidPlayer android, int level)
+    {
+        return super.isEnabled(android,level) && android.getEnergyStored() > 0;
     }
 
     @Override

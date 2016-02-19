@@ -18,21 +18,18 @@
 
 package matteroverdrive.handler;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.api.android.IBioticStat;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.entity.player.AndroidPlayer;
-import matteroverdrive.items.MatterScanner;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.network.packet.server.PacketBioticActionKey;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
@@ -42,11 +39,10 @@ import org.lwjgl.input.Keyboard;
 @SideOnly(Side.CLIENT)
 public class KeyHandler
 {
-    public static  final int MATTER_SCANNER_KEY = 0;
-    public static final int ABILITY_USE_KEY = 1;
-    public static final int ABILITY_SWITCH_KEY = 2;
+    public static final int ABILITY_USE_KEY = 0;
+    public static final int ABILITY_SWITCH_KEY = 1;
     private static  final String[] keyDesc = {"Open Matter Scanner GUI","Android Ability key","Android Switch Ability key"};
-    private  static  final  int[] keyValues = {Keyboard.KEY_C,Keyboard.KEY_X,Keyboard.KEY_TAB};
+    private  static  final  int[] keyValues = {Keyboard.KEY_X,Keyboard.KEY_R};
     private  final KeyBinding[] keys;
 
     public  KeyHandler()
@@ -60,25 +56,6 @@ public class KeyHandler
     }
 
     @SubscribeEvent
-    public  void onKeyInput(InputEvent.KeyInputEvent event)
-    {
-        if(!FMLClientHandler.instance().isGUIOpen(GuiChat.class))
-        {
-            int key = Keyboard.getEventKey();
-            boolean isDown = Keyboard.getEventKeyState();
-
-            //Matter Scanner key
-            if(isDown && keys[MATTER_SCANNER_KEY].getKeyCode() == key)
-            {
-                //send packet to open gui
-                MatterScanner.DisplayGuiScreen();
-            }
-
-            manageBiostats(key,isDown);
-        }
-    }
-
-    @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
         if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || Minecraft.getMinecraft().isGamePaused() || Minecraft.getMinecraft().currentScreen != null)
@@ -87,7 +64,7 @@ public class KeyHandler
         AndroidPlayer androidPlayer = AndroidPlayer.get(FMLClientHandler.instance().getClientPlayerEntity());
         if (androidPlayer.isAndroid() && ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).isPressed())
         {
-            for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
+            for (IBioticStat stat : MatterOverdrive.statRegistry.getStats()) {
                 int level = androidPlayer.getUnlockedLevel(stat);
                 if (level > 0 && stat.isEnabled(androidPlayer, level)) {
                     stat.onActionKeyPress(androidPlayer, androidPlayer.getUnlockedLevel(stat), false);
@@ -102,7 +79,7 @@ public class KeyHandler
         AndroidPlayer androidPlayer = AndroidPlayer.get(FMLClientHandler.instance().getClientPlayerEntity());
         if (androidPlayer.isAndroid())
         {
-            for (IBionicStat stat : MatterOverdrive.statRegistry.getStats()) {
+            for (IBioticStat stat : MatterOverdrive.statRegistry.getStats()) {
                 int level = androidPlayer.getUnlockedLevel(stat);
                 if (level > 0 && stat.isEnabled(androidPlayer, level)) {
                     stat.onKeyPress(androidPlayer, androidPlayer.getUnlockedLevel(stat), keyCode, state);

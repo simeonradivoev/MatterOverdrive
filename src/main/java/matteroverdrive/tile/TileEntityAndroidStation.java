@@ -18,21 +18,21 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.BionicSlot;
 import matteroverdrive.data.inventory.EnergySlot;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.machines.MOTileEntityMachine;
-import net.minecraft.entity.EntityLivingBase;
+import matteroverdrive.machines.events.MachineEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 5/27/2015.
@@ -49,11 +49,6 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     public TileEntityAndroidStation()
     {
         super(0);
-    }
-
-    @Override
-    protected void onAwake(Side side) {
-
     }
 
     @Override
@@ -94,11 +89,6 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     }
 
     @Override
-    protected void onActiveChange() {
-
-    }
-
-    @Override
     public boolean shouldRenderInPass(int pass)
     {
         return pass == 1;
@@ -115,12 +105,6 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     public ItemStack decrStackSize(int slot, int size)
     {
         return super.decrStackSize(slot, size);
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int slot)
-    {
-        return super.getStackInSlotOnClosing(slot);
     }
 
     @Override
@@ -142,7 +126,7 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
-        return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord + 1,yCoord + 3,zCoord + 1);
+        return new AxisAlignedBB(getPos(),getPos().add(1,3,1));
     }
 
     @Override
@@ -152,17 +136,14 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z) {
+    protected void onMachineEvent(MachineEvent event)
+    {
 
     }
 
     @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
-
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[0];
     }
 }

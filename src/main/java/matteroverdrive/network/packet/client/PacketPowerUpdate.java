@@ -1,12 +1,13 @@
 package matteroverdrive.network.packet.client;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.tile.MOTileEntityMachineEnergy;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 4/22/2015.
@@ -19,7 +20,7 @@ public class PacketPowerUpdate extends TileEntityUpdatePacket
 
     public PacketPowerUpdate(MOTileEntityMachineEnergy entityMachineEnergy)
     {
-        super(entityMachineEnergy.xCoord,entityMachineEnergy.yCoord,entityMachineEnergy.zCoord);
+        super(entityMachineEnergy.getPos());
         energy = entityMachineEnergy.getEnergyStorage().getEnergyStored();
     }
 
@@ -39,18 +40,15 @@ public class PacketPowerUpdate extends TileEntityUpdatePacket
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketPowerUpdate>
     {
-
-        public ClientHandler(){}
-
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketPowerUpdate message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketPowerUpdate message, MessageContext ctx)
         {
-            TileEntity tileEntity = player.worldObj.getTileEntity(message.x,message.y,message.z);
+            TileEntity tileEntity = player.worldObj.getTileEntity(message.pos);
             if (tileEntity instanceof MOTileEntityMachineEnergy)
             {
                 ((MOTileEntityMachineEnergy) tileEntity).setEnergyStored(message.energy);
             }
-            return null;
         }
     }
 }

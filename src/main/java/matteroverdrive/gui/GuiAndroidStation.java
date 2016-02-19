@@ -20,47 +20,42 @@ package matteroverdrive.gui;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.android.BionicStatGuiInfo;
+import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.container.ContainerAndroidStation;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.data.inventory.BionicSlot;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.gui.element.*;
+import matteroverdrive.gui.element.android_station.ElementBioStat;
+import matteroverdrive.gui.element.android_station.ElementDoubleHelix;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityAndroidStation;
-import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.util.ForgeDirection;
-import org.lwjgl.opengl.GL12;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.lwjgl.opengl.GL11.*;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Simeon on 5/27/2015.
  */
 public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 {
+    private static int scrollX;
+    private static int scrollY = 65;
     private EntityMeleeRougeAndroidMob mob;
     private MOElementButtonScaled hudConfigs;
     ElementSlot[] parts_slots = new ElementSlot[Reference.BIONIC_BATTERY+1];
-    List<ElementBioStat> stats = new ArrayList<>(MatterOverdrive.statRegistry.getStats().size());
+    private ElementGroup2DScroll abilitiesGroup;
 
     public GuiAndroidStation(InventoryPlayer inventoryPlayer, TileEntityAndroidStation machine)
     {
-        super(new ContainerAndroidStation(inventoryPlayer,machine), machine,364,250);
+        super(new ContainerAndroidStation(inventoryPlayer,machine), machine,364,280);
         texW = 255;
         texH = 237;
         AndroidPlayer androidPlayer = AndroidPlayer.get(inventoryPlayer.player);
@@ -83,20 +78,53 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         parts_slots[Reference.BIONIC_BATTERY].setPosition(320,ySize - 50);
         parts_slots[Reference.BIONIC_BATTERY].setIcon(ClientProxy.holoIcons.getIcon("battery"));
 
-        addStat(androidPlayer, MatterOverdriveBioticStats.teleport, 0, 0, ForgeDirection.UNKNOWN);
-        addStat(androidPlayer, MatterOverdriveBioticStats.nanobots, 1, 1, ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,MatterOverdriveBioticStats.nanoArmor,0,1,ForgeDirection.EAST);
-        addStat(androidPlayer,MatterOverdriveBioticStats.flotation,2,0,ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,MatterOverdriveBioticStats.speed,3,0,ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,MatterOverdriveBioticStats.highJump,3,1,ForgeDirection.UP);
-        addStat(androidPlayer,MatterOverdriveBioticStats.equalizer,3,2,ForgeDirection.UP);
-        addStat(androidPlayer,MatterOverdriveBioticStats.shield,0,2,ForgeDirection.UP);
-        addStat(androidPlayer,MatterOverdriveBioticStats.attack,2,1,ForgeDirection.WEST);
-        addStat(androidPlayer,MatterOverdriveBioticStats.cloak,0,3,ForgeDirection.UP);
-        addStat(androidPlayer,MatterOverdriveBioticStats.nightvision,1,0,ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,MatterOverdriveBioticStats.minimap,1,2,ForgeDirection.UNKNOWN);
-        addStat(androidPlayer,MatterOverdriveBioticStats.flashCooling,2,2,ForgeDirection.UP);
-        addStat(androidPlayer,MatterOverdriveBioticStats.shockwave,2,3,ForgeDirection.UP);
+        abilitiesGroup = new ElementGroup2DScroll(this,46,30,300,155);
+        abilitiesGroup.setScrollBounds(-270,370,-300,300);
+        abilitiesGroup.setScroll(scrollX,scrollY);
+        ElementParallaxBackground background = new ElementParallaxBackground(this,0,0,abilitiesGroup.getWidth(),abilitiesGroup.getHeight(),false,0.005f);
+        background.setTexture(Reference.PATH_ELEMENTS+"grid_BG.png",32,32);
+        background.setPosZ(-10);
+        background.setColor(Reference.COLOR_HOLO.multiply(1,1,1,0.1f));
+        ElementDoubleHelix doubleHelix = new ElementDoubleHelix(this,0,0,320,240,2f);
+        doubleHelix.setPointColor(Reference.COLOR_HOLO.multiply(1,1,1,0.3f));
+        doubleHelix.setLineColor(Reference.COLOR_HOLO.multiply(1,1,1,0.15f));
+        doubleHelix.setFillColor(Reference.COLOR_HOLO.multiply(0.3f,0.3f,0.3f,0.2f));
+        abilitiesGroup.addElement(doubleHelix);
+        abilitiesGroup.addElement(background);
+
+        /*addStat(androidPlayer, MatterOverdriveBioticStats.teleport, -1, 1, null);
+        addStat(androidPlayer,MatterOverdriveBioticStats.nightvision,1,1,null);
+        addStat(androidPlayer,MatterOverdriveBioticStats.flotation,0,5,null);
+
+        addStat(androidPlayer,MatterOverdriveBioticStats.speed,6,3,null);
+        addStat(androidPlayer,MatterOverdriveBioticStats.highJump,6,1,EnumFacing.DOWN,true);
+        addStat(androidPlayer,MatterOverdriveBioticStats.equalizer,6,0,EnumFacing.DOWN);
+
+
+        addStat(androidPlayer, MatterOverdriveBioticStats.nanobots, 3, 3, null);
+        addStat(androidPlayer,MatterOverdriveBioticStats.nanoArmor,3,5,EnumFacing.UP,true);
+        addStat(androidPlayer,MatterOverdriveBioticStats.shield,3,6,EnumFacing.UP);
+        addStat(androidPlayer,MatterOverdriveBioticStats.cloak,3,7,EnumFacing.UP);
+        addStat(androidPlayer,MatterOverdriveBioticStats.attack,3,1,EnumFacing.DOWN,true);
+        addStat(androidPlayer,MatterOverdriveBioticStats.flashCooling,3,0,EnumFacing.DOWN);
+        addStat(androidPlayer,MatterOverdriveBioticStats.shockwave,3,-1,EnumFacing.DOWN);
+
+        addStat(androidPlayer,MatterOverdriveBioticStats.minimap,7,5,null);*/
+
+        //addStats(AndroidPlayer.get(Minecraft.getMinecraft().thePlayer));
+
+        for (IBioticStat stat : MatterOverdrive.statRegistry.getStats())
+        {
+            int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
+            BionicStatGuiInfo guiInfo = stat.getGuiInfo(androidPlayer,unlockedLevel);
+            if (guiInfo != null)
+            {
+                ElementBioStat statElement = new ElementBioStat(this, guiInfo.getPosX(), guiInfo.getPosY(), stat, unlockedLevel,androidPlayer);
+                statElement.setDirection(guiInfo.getDirection());
+                statElement.setStrongConnection(guiInfo.isStrongConnection());
+                abilitiesGroup.addElement(statElement);
+            }
+        }
 
         mob = new EntityMeleeRougeAndroidMob(Minecraft.getMinecraft().theWorld);
         mob.getEntityData().setBoolean("Hologram",true);
@@ -105,11 +133,18 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         hudConfigs.setText("HUD Options");
     }
 
-    public void addStat(AndroidPlayer androidPlayer,IBionicStat stat,int x,int y,ForgeDirection direction)
+    public void addStat(AndroidPlayer androidPlayer, IBioticStat stat, int x, int y, EnumFacing direction, boolean strong)
     {
-        ElementBioStat elemStat = new ElementBioStat(this,0,0,stat,androidPlayer.getUnlockedLevel(stat),androidPlayer,direction);
-        elemStat.setPosition(54 + x * 30,36 + y * 30);
-        stats.add(elemStat);
+        ElementBioStat elemStat = new ElementBioStat(this,0,0,stat,androidPlayer.getUnlockedLevel(stat),androidPlayer);
+        elemStat.setDirection(direction);
+        elemStat.setStrongConnection(strong);
+        elemStat.setPosition(12 + x * 30,6 + y * 30);
+        //stats.add(elemStat);
+    }
+
+    public void addStat(AndroidPlayer androidPlayer, IBioticStat stat, int x, int y, EnumFacing direction)
+    {
+        addStat(androidPlayer,stat,x,y,direction,false);
     }
 
     @Override
@@ -117,14 +152,11 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
     {
         super.initGui();
 
+        pages.get(0).addElement(abilitiesGroup);
+
         for (ElementSlot elementSlot : parts_slots)
         {
             pages.get(0).addElement(elementSlot);
-        }
-
-        for (ElementBioStat stat : stats)
-        {
-            pages.get(0).addElement(stat);
         }
 
         pages.get(1).addElement(hudConfigs);
@@ -133,42 +165,24 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         AddHotbarPlayerSlots(inventorySlots, this);
     }
 
-    @Override
-    public void drawTooltip(List<String> tooltips) {
 
-        for (ElementBioStat stat : stats)
-        {
-            if (stat.intersectsWith(mouseX, mouseY))
-            {
-                int itemCount = 0;
-                for (ItemStack stack : stat.getStat().getRequiredItems()) {
-                    int x = guiLeft + mouseX + 12 + 22 * itemCount;
-                    int y = guiTop + mouseY - 36;
-                    RenderUtils.renderStack(x, y, stack);
-                    glPushMatrix();
-                    glTranslated(0,0,100);
-                    fontRendererObj.drawString(Integer.toString(stack.stackSize),x + 13,y + 8,0xFFFFFF);
-                    glPopMatrix();
-                    itemCount++;
-                }
-            }
-        }
-        super.drawTooltip(tooltips);
-    }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
+        scrollX = abilitiesGroup.getScrollX();
+        scrollY = abilitiesGroup.getScrollY();
+
         if (pages.get(0).isVisible()) {
-			glPushMatrix();
-			glTranslatef(0, 0, 100);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0, 0, 300);
 			drawEntityOnScreen(280, ySize - 25, 50, -this.mouseX + 280, -this.mouseY + ySize - 100, mc.thePlayer);
-			glPopMatrix();
+			GlStateManager.popMatrix();
 
             String info = Minecraft.getMinecraft().thePlayer.experienceLevel + " XP";
-            glDisable(GL_LIGHTING);
+            GlStateManager.disableLighting();
             int width = fontRendererObj.getStringWidth(info);
             fontRendererObj.drawString(EnumChatFormatting.GREEN + info, 280 - width / 2, ySize - 20, 0xFFFFFF);
         }
@@ -186,50 +200,52 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 	/**
 	 * Draws an entity on the screen
 	 * Copied from {@link net.minecraft.client.gui.inventory.GuiInventory}
-	 * @param x
-	 * @param y
+	 * @param posX
+	 * @param posY
 	 * @param scale
 	 * @param mouseX
 	 * @param mouseY
-	 * @param entity
+	 * @param ent
 	 */
-	private void drawEntityOnScreen(int x, int y, int scale, float mouseX, float mouseY, EntityPlayer entity)
+	private void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase ent)
     {
-        glPushAttrib(GL_LIGHTING_BIT);
-		glEnable(GL_COLOR_MATERIAL);
-		glPushMatrix();
-		glTranslatef((float)x, (float)y, 50.0F);
-		glScalef((float)(-scale), (float)scale, (float)scale);
-		glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-		float f2 = entity.renderYawOffset;
-		float f3 = entity.rotationYaw;
-		float f4 = entity.rotationPitch;
-		float f5 = entity.prevRotationYawHead;
-		float f6 = entity.rotationYawHead;
-		glRotatef(135.0F, 0.0F, 1.0F, 0.0F);
-		RenderHelper.enableStandardItemLighting();
-		glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
-		entity.renderYawOffset = mc.theWorld.getWorldTime();
-		entity.rotationYaw = mc.theWorld.getWorldTime();
-		entity.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
-		entity.rotationYawHead = entity.rotationYaw;
-		entity.prevRotationYawHead = entity.rotationYaw;
-		glTranslatef(0.0F, entity.yOffset, 0.0F);
-		RenderManager.instance.playerViewY = 180.0F;
-
-		RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-
-		entity.renderYawOffset = f2;
-		entity.rotationYaw = f3;
-		entity.rotationPitch = f4;
-		entity.prevRotationYawHead = f5;
-		entity.rotationYawHead = f6;
-		glPopMatrix();
-		RenderHelper.disableStandardItemLighting();
-		glDisable(GL12.GL_RESCALE_NORMAL);
-		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-		glDisable(GL_TEXTURE_2D);
-		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        glPopAttrib();
+        GlStateManager.enableDepth();
+        GlStateManager.depthMask(true);
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate((float)posX, (float)posY, 1f);
+        GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        float f = ent.renderYawOffset;
+        float f1 = ent.rotationYaw;
+        float f2 = ent.rotationPitch;
+        float f3 = ent.prevRotationYawHead;
+        float f4 = ent.rotationYawHead;
+        GlStateManager.rotate(ent.worldObj.getWorldTime(), 0.0F, 1.0F, 0.0F);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+        //GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+        ent.renderYawOffset = 0;
+        ent.rotationYaw = 0;
+        ent.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
+        ent.rotationYawHead = ent.rotationYaw;
+        ent.prevRotationYawHead = ent.rotationYaw;
+        GlStateManager.translate(0.0F, 0.0F, 0.0F);
+        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+        rendermanager.setPlayerViewY(180.0F);
+        rendermanager.setRenderShadow(false);
+        rendermanager.renderEntityWithPosYaw(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+        rendermanager.setRenderShadow(true);
+        ent.renderYawOffset = f;
+        ent.rotationYaw = f1;
+        ent.rotationPitch = f2;
+        ent.prevRotationYawHead = f3;
+        ent.rotationYawHead = f4;
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 	}
 }

@@ -18,15 +18,12 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.tile.TileEntityMachineNetworkSwitch;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import static matteroverdrive.util.MOBlockHelper.RotationType;
@@ -36,8 +33,6 @@ import static matteroverdrive.util.MOBlockHelper.RotationType;
  */
 public class BlockNetworkSwitch extends MOBlockMachine
 {
-    IIcon activeIcon;
-
     public BlockNetworkSwitch(Material material, String name)
     {
         super(material, name);
@@ -47,7 +42,7 @@ public class BlockNetworkSwitch extends MOBlockMachine
         setRotationType(RotationType.PREVENT);
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister registrar)
     {
@@ -68,7 +63,7 @@ public class BlockNetworkSwitch extends MOBlockMachine
             }
         }
         return blockIcon;
-    }
+    }*/
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta)

@@ -1,0 +1,7 @@
+{
+  "parent": "mo:item/defaultitem",
+  "textures": {
+    "layer0": "mo:items/flash_drive",
+    "layer1": "mo:items/flash_drive_overlay"
+  }
+}

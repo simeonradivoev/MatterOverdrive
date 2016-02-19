@@ -47,7 +47,7 @@ public class ListElementQuest implements IMOListBoxElement
 
     @Override
     public int getHeight() {
-        return Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT+6;
+        return Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT+6;
     }
 
     @Override
@@ -64,12 +64,12 @@ public class ListElementQuest implements IMOListBoxElement
     public void draw(MOElementListBox listBox, int x, int y, int backColor, int textColor, boolean selected, boolean BG)
     {
 
-        int textWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(getName());
+        int textWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(getName());
         if (selected) {
-            Minecraft.getMinecraft().fontRenderer.drawString("\u2023 " + getName(), x + width / 2 - textWidth / 2 - 8, y, textColor);
+            Minecraft.getMinecraft().fontRendererObj.drawString("\u2023 " + getName(), x + width / 2 - textWidth / 2 - 8, y, textColor);
         }else
         {
-            Minecraft.getMinecraft().fontRenderer.drawString(getName(), x + width / 2 - textWidth / 2, y, textColor);
+            Minecraft.getMinecraft().fontRendererObj.drawString(getName(), x + width / 2 - textWidth / 2, y, textColor);
         }
     }
 

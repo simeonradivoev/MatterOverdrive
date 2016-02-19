@@ -1,7 +1,8 @@
 package matteroverdrive.util.math;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
@@ -55,7 +56,7 @@ public class MOMathHelper
     {
         double aspectRatio = ((double)width / (double)height);
         double fov = ((Minecraft.getMinecraft().gameSettings.fovSetting / 2d) + 11) * (Math.PI / 180);
-        EntityLivingBase renderViewEntity = Minecraft.getMinecraft().renderViewEntity;
+        Entity renderViewEntity = Minecraft.getMinecraft().getRenderViewEntity();
 
         double a = -((double)mouseX / (double)width - 0.5) * 2;
         double b = -((double)mouseY / (double)height - 0.5) * 2;
@@ -75,7 +76,7 @@ public class MOMathHelper
         Matrix4f.transform(rot,up,up);
         Matrix4f.transform(rot,left,left);
 
-        return  Vec3.createVectorHelper(foward.x,foward.y,foward.z)
+        return  new Vec3(foward.x,foward.y,foward.z)
                 .addVector(left.x * tanf * aspectRatio * a,left.y * tanf * aspectRatio * a,left.z * tanf * aspectRatio * a)
                 .addVector(up.x * tanf * b,up.y * tanf * b,up.z * tanf * b)
                 .normalize();
@@ -105,9 +106,7 @@ public class MOMathHelper
     public static int toInt(short leftShort,short rightShort)
     {
 
-        int leftInt = leftShort;
-        int rightInt = rightShort;
-        return leftInt | (rightInt << 16);
+        return (int) leftShort | ((int) rightShort << 16);
     }
 
     public static short[] getShorts(int number)
@@ -161,6 +160,12 @@ public class MOMathHelper
     public static float Lerp(float form,float to,float time)
     {
         float newTime = MathHelper.clamp_float(time,0,1);
+        return (1 - newTime) * form + newTime * to;
+    }
+
+    public static double Lerp(double form,double to,double time)
+    {
+        double newTime = MathHelper.clamp_double(time,0,1);
         return (1 - newTime) * form + newTime * to;
     }
 
@@ -222,4 +227,24 @@ public class MOMathHelper
             ar[i] = a;
         }
     }
+
+    //region Matrix
+    public static void setScale(javax.vecmath.Vector3f vec, javax.vecmath.Matrix4f src, javax.vecmath.Matrix4f dest) {
+        if (dest == null)
+            dest = new javax.vecmath.Matrix4f();
+
+        dest.m00 = src.m00 * vec.getX();
+        dest.m01 = src.m01 * vec.getX();
+        dest.m02 = src.m02 * vec.getX();
+        dest.m03 = src.m03 * vec.getX();
+        dest.m10 = src.m10 * vec.getY();
+        dest.m11 = src.m11 * vec.getY();
+        dest.m12 = src.m12 * vec.getY();
+        dest.m13 = src.m13 * vec.getY();
+        dest.m20 = src.m20 * vec.getZ();
+        dest.m21 = src.m21 * vec.getZ();
+        dest.m22 = src.m22 * vec.getZ();
+        dest.m23 = src.m23 * vec.getZ();
+    }
+    //endregion
 }

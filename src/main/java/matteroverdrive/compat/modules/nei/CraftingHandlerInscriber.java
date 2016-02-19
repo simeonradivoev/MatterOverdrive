@@ -18,12 +18,6 @@
 
 package matteroverdrive.compat.modules.nei;
 
-import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.NEIServerUtils;
-import codechicken.nei.PositionedStack;
-import codechicken.nei.api.IOverlayHandler;
-import codechicken.nei.api.IRecipeOverlayRenderer;
-import codechicken.nei.recipe.TemplateRecipeHandler;
 import matteroverdrive.Reference;
 import matteroverdrive.data.recipes.InscriberRecipe;
 import matteroverdrive.handler.recipes.InscriberRecipes;
@@ -44,12 +38,12 @@ import java.util.List;
 /**
  * Created by Simeon on 12/2/2015.
  */
-public class CraftingHandlerInscriber extends TemplateRecipeHandler
+public class CraftingHandlerInscriber //extends TemplateRecipeHandler
 {
     ResourceLocation background = new ResourceLocation(Reference.PATH_GUI + "inscriber_nei.png");
     ResourceLocation arrowTexture = new ResourceLocation(Reference.TEXTURE_ARROW_PROGRESS);
 
-    @Override
+    /*@Override
     public void loadTransferRects()
     {
         this.transferRects.add(new RecipeTransferRect(new Rectangle(55,20, 26, 18), "mo_inscriber", new Object[0]));
@@ -75,7 +69,7 @@ public class CraftingHandlerInscriber extends TemplateRecipeHandler
         int width = (int)(((float)(this.cycleticks % ticks) / (float)ticks) * 24);
         RenderUtils.drawPlaneWithUV(57,20,0,width,16,0.5,0,width/48f,1);
 
-        Minecraft.getMinecraft().fontRenderer.drawString(String.format("-%,d RF",((CashedInscriberRecipe)arecipes.get(recipe)).getEnergy()),72,52,Reference.COLOR_HOLO_RED.getColor());
+        Minecraft.getMinecraft().fontRendererObj.drawString(String.format("-%,d RF",((CashedInscriberRecipe)arecipes.get(recipe)).getEnergy()),72,52,Reference.COLOR_HOLO_RED.getColor());
     }
 
     @Override
@@ -97,7 +91,7 @@ public class CraftingHandlerInscriber extends TemplateRecipeHandler
 
     @Override
     public void drawBackground(int recipe) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GuiDraw.changeTexture(this.getGuiTexture());
         //GL11.glDisable(GL11.GL_TEXTURE_2D);
         RenderUtils.drawPlane(23,5,0,120,72);
@@ -207,5 +201,5 @@ public class CraftingHandlerInscriber extends TemplateRecipeHandler
         {
             return energy;
         }
-    }
+    }*/
 }

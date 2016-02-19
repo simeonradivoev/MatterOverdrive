@@ -21,10 +21,12 @@ package matteroverdrive.commands;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.world.MOImageGen;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -51,7 +53,7 @@ public class SaveWorldToImage extends CommandBase
     @Override
     public void processCommand(ICommandSender commandSender, String[] parameters)
     {
-        if (parameters.length >= 1)
+        /*if (parameters.length >= 1)
         {
             if (parameters[0].equalsIgnoreCase("generate"))
             {
@@ -60,13 +62,13 @@ public class SaveWorldToImage extends CommandBase
                     try {
                         HashMap<String,Integer> colorMap = new HashMap<>();
                         String[] coordinates = parameters[1].split(",");
-                        int x1 = parseInt(commandSender, coordinates[0]);
-                        int y1 = parseInt(commandSender, coordinates[1]);
-                        int z1 = parseInt(commandSender, coordinates[2]);
+                        int x1 = parseInt(coordinates[0]);
+                        int y1 = parseInt(coordinates[1]);
+                        int z1 = parseInt(coordinates[2]);
 
-                        int x2 = parseInt(commandSender, coordinates[3]);
-                        int y2 = parseInt(commandSender, coordinates[4]);
-                        int z2 = parseInt(commandSender, coordinates[5]);
+                        int x2 = parseInt(coordinates[3]);
+                        int y2 = parseInt(coordinates[4]);
+                        int z2 = parseInt(coordinates[5]);
 
                         int zoneSizeX = Math.abs(x1 - x2);
                         int zoneSizeZ = Math.abs(z1 - z2);
@@ -81,11 +83,8 @@ public class SaveWorldToImage extends CommandBase
                                 for (int x = 0; x < zoneSizeX; x++) {
                                     int imageX = (layer % layerPerRow) * zoneSizeX + x;
                                     int imageY = Math.floorDiv(layer, layerPerRow) * zoneSizeZ + z;
-                                    int worldX = Math.min(x1,x2) + x;
-                                    int worldY = Math.min(y1,y2) + layer;
-                                    int worldZ = Math.min(z1,z2) + z;
-                                    Block block = commandSender.getEntityWorld().getBlock(worldX, worldY, worldZ);
-                                    int meta = commandSender.getEntityWorld().getBlockMetadata(worldX,worldY,worldZ);
+                                    BlockPos pos = new BlockPos(Math.min(x1,x2) + x,Math.min(y1,y2) + layer,Math.min(z1,z2) + z);
+                                    IBlockState block = commandSender.getEntityWorld().getBlockState(pos);
                                     int color = ((255-meta) & 0xff) << 24;
                                     String hex = Integer.toHexString(color);
                                     if (MOImageGen.worldGenerationBlockColors.containsKey(block))
@@ -181,6 +180,6 @@ public class SaveWorldToImage extends CommandBase
                     MOImageGen.generateFromImage(commandSender.getEntityWorld(),x,y,z,layerWidth,layerHeight,layers,map);
                 }
             }
-        }
+        }*/
     }
 }

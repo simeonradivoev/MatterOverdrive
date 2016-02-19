@@ -18,10 +18,11 @@
 
 package matteroverdrive.handler;
 
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.util.MOLog;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.network.IMatterNetworkHandler;
 import matteroverdrive.proxy.ClientProxy;
@@ -36,8 +37,8 @@ import org.apache.logging.log4j.Level;
  */
 public class TickHandler
 {
-    private MatterNetworkTickHandler matterNetworkTickHandler;
-    private PlayerEventHandler playerEventHandler;
+    private final MatterNetworkTickHandler matterNetworkTickHandler;
+    private final PlayerEventHandler playerEventHandler;
     private boolean worldStartFired = false;
     private long lastTickTime;
     private int lastTickLength;
@@ -104,7 +105,7 @@ public class TickHandler
             for (int i = 0;i < tileEntityListSize;i++)
             {
                 try {
-                    TileEntity tileEntity = (TileEntity)event.world.loadedTileEntityList.get(i);
+                    TileEntity tileEntity = event.world.loadedTileEntityList.get(i);
                     if (tileEntity instanceof IMOTickable) {
                         if (tileEntity instanceof IMatterNetworkHandler) {
                             matterNetworkTickHandler.updateHandler((IMatterNetworkHandler) tileEntity, event.phase, event.world);
@@ -115,7 +116,7 @@ public class TickHandler
                     }
                 }catch (Throwable e)
                 {
-                    MatterOverdrive.log.log(Level.ERROR,e,"There was an Error while updating Matter Overdrive Tile Entities.");
+                    MOLog.log(Level.ERROR,e,"There was an Error while updating Matter Overdrive Tile Entities.");
                     return;
                 }
             }

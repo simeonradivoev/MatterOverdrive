@@ -19,7 +19,6 @@
 package matteroverdrive.machines.components;
 
 
-import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.network.IMatterNetworkFilter;
 import matteroverdrive.data.Inventory;
@@ -27,10 +26,12 @@ import matteroverdrive.data.inventory.DestinationFilterSlot;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineComponentAbstract;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.events.MachineEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.EnumSet;
 
@@ -74,11 +75,6 @@ public class ComponentMatterNetworkConfigs extends MachineComponentAbstract<MOTi
     }
 
     @Override
-    public void update(MOTileEntityMachine machine) {
-
-    }
-
-    @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type) {
         return false;
     }
@@ -89,17 +85,8 @@ public class ComponentMatterNetworkConfigs extends MachineComponentAbstract<MOTi
     }
 
     @Override
-    public void onActiveChange(MOTileEntityMachine machine) {
-
-    }
-
-    @Override
-    public void onAwake(MOTileEntityMachine machine, Side side) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving, MOTileEntityMachine machine) {
+    public void onMachineEvent(MachineEvent event)
+    {
 
     }
 

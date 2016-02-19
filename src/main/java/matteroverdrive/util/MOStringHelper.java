@@ -20,6 +20,7 @@ package matteroverdrive.util;
 
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.api.starmap.PlanetStatType;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -104,6 +105,11 @@ public class MOStringHelper
     public static String translateToLocal(String string)
     {
         return StatCollector.translateToLocal(string);
+    }
+
+    public static String translateToLocal(PlanetStatType statType)
+    {
+        return StatCollector.translateToLocal("planet_stat." + statType.getUnlocalizedName() + ".name");
     }
 
     public static String translateToLocal(UpgradeTypes type)
@@ -222,6 +228,16 @@ public class MOStringHelper
             default:
                 return value >= 1;
         }
+    }
+
+    public static String[] formatVariations(String unlocalizedName,String unlocalizedSuffix,int count)
+    {
+        String[] variations = new String[count];
+        for (int i = 0;i < count;i++)
+        {
+            variations[i] = unlocalizedName + "."+i+"." + unlocalizedSuffix;
+        }
+        return variations;
     }
 
     public static boolean isControlKeyDown() {

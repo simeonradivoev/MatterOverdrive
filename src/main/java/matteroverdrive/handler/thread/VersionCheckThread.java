@@ -28,7 +28,7 @@ import java.util.concurrent.Callable;
  */
 public class VersionCheckThread implements Callable<String>
 {
-    String url;
+    final String url;
 
     public VersionCheckThread(String url)
     {
@@ -48,7 +48,7 @@ public class VersionCheckThread implements Callable<String>
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(connection.getInputStream()));
         String inputLine;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
 
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);

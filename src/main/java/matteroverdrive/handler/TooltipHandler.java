@@ -18,7 +18,7 @@
 
 package matteroverdrive.handler;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.api.events.MOEventMatterTooltip;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;

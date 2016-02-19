@@ -18,13 +18,14 @@
 
 package matteroverdrive.network.packet.client;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.data.MinimapEntityInfo;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.network.packet.PacketAbstract;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,16 +70,15 @@ public class PacketSendMinimapInfo extends PacketAbstract
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketSendMinimapInfo>
     {
-
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketSendMinimapInfo message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketSendMinimapInfo message, MessageContext ctx)
         {
             AndroidPlayer androidPlayer = AndroidPlayer.get(player);
             if (androidPlayer != null && androidPlayer.isAndroid())
             {
-                androidPlayer.setMinimapEntityInfo(message.entityInfos);
+                AndroidPlayer.setMinimapEntityInfo(message.entityInfos);
             }
-            return null;
         }
     }
 }

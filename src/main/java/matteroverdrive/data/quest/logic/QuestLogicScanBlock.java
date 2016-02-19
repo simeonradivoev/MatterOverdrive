@@ -1,11 +1,14 @@
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonObject;
+import matteroverdrive.data.quest.QuestBlock;
+import matteroverdrive.util.MOJsonHelper;
+import net.minecraft.block.state.IBlockState;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.events.MOEventScan;
 import matteroverdrive.api.inventory.IBlockScanner;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 
@@ -20,14 +23,26 @@ public class QuestLogicScanBlock extends QuestLogicBlock
     private int minBlockScan;
     private int maxBlockScan;
     private int xpPerBlock;
-    private boolean onlyDestoryable;
+    private boolean onlyDestroyable;
 
-    public QuestLogicScanBlock(Block block, int blockMetadata,int minBlockScan,int maxBlockScan,int xpPerBlock)
+    public QuestLogicScanBlock(){super();}
+
+    public QuestLogicScanBlock(QuestBlock block, int minBlockScan, int maxBlockScan, int xpPerBlock)
     {
-        super(block, blockMetadata);
+        super(block);
         this.minBlockScan = minBlockScan;
         this.maxBlockScan = maxBlockScan;
         this.xpPerBlock = xpPerBlock;
+    }
+
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+        super.loadFromJson(jsonObject);
+        minBlockScan = MOJsonHelper.getInt(jsonObject,"scan_count_min");
+        maxBlockScan = MOJsonHelper.getInt(jsonObject,"scan_count_max");
+        xpPerBlock = MOJsonHelper.getInt(jsonObject,"xp",0);
+        onlyDestroyable = MOJsonHelper.getBool(jsonObject,"only_destroyable",false);
     }
 
     @Override
@@ -65,7 +80,7 @@ public class QuestLogicScanBlock extends QuestLogicBlock
             MOEventScan eventScan = (MOEventScan)event;
             if (eventScan.position.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
-                if (onlyDestoryable)
+                if (onlyDestroyable)
                 {
                     if (eventScan.scannerStack.getItem() instanceof IBlockScanner && !((IBlockScanner) eventScan.scannerStack.getItem()).destroysBlocks(eventScan.scannerStack))
                     {
@@ -73,9 +88,8 @@ public class QuestLogicScanBlock extends QuestLogicBlock
                     }
                 }
 
-                Block block = entityPlayer.worldObj.getBlock(eventScan.position.blockX,eventScan.position.blockY,eventScan.position.blockZ);
-                int meta = entityPlayer.worldObj.getBlockMetadata(eventScan.position.blockX,eventScan.position.blockY,eventScan.position.blockZ);
-                if (block != null && areBlocksTheSame(block,meta))
+                IBlockState state = entityPlayer.worldObj.getBlockState(eventScan.position.getBlockPos());
+                if (block != null && areBlocksTheSame(state))
                 {
                     if (getBlockScan(questStack) < getMaxBlockScan(questStack))
                     {
@@ -104,13 +118,13 @@ public class QuestLogicScanBlock extends QuestLogicBlock
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
@@ -151,9 +165,9 @@ public class QuestLogicScanBlock extends QuestLogicBlock
         getTag(questStack).setShort("BlockScan",(short) blockScan);
     }
 
-    public QuestLogicScanBlock setOnlyDestoryable(boolean onlyDestoryable)
+    public QuestLogicScanBlock setOnlyDestroyable(boolean onlyDestroyable)
     {
-        this.onlyDestoryable = true;
+        this.onlyDestroyable = true;
         return this;
     }
 }

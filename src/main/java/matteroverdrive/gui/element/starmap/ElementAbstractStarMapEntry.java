@@ -23,12 +23,14 @@ import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.GuiStarMap;
+import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.element.ElementGroupList;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.starmap.data.SpaceBody;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -41,15 +43,16 @@ import java.util.Map;
  */
 public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends MOElementButton
 {
-    public static ScaleTexture BG = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry.png"),32,32).setOffsets(18,12,15,15);
-    public static ScaleTexture BG_FLIPPED = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_flipped.png"),32,32).setOffsets(12,18,15,15);
-    public static ScaleTexture BG_MIDDLE_NORMAL = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96, 32);
+    public static final ScaleTexture BG = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry.png"),32,32).setOffsets(18,12,15,15);
+    public static final ScaleTexture BG_FLIPPED = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_flipped.png"),32,32).setOffsets(12,18,15,15);
+    public static final ScaleTexture BG_MIDDLE_NORMAL = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96, 32);
     public static ScaleTexture BG_MIDDLE_OVER = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96, 32).setUV(32, 0);
-    public static ScaleTexture BG_MIDDLE_DOWN = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96,32).setUV(64,0);
-    public static ScaleTexture BG_CIRCLE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_circle.png"),32,32).setOffsets(15,15,15,15);
-    protected T spaceBody;
-    protected ElementGroupList groupList;
-    protected HoloIcon travelIcon,searchIcon;
+    public static final ScaleTexture BG_MIDDLE_DOWN = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_middle.png"),32,32).setOffsets(15,15,15,15).setTextureSize(96,32).setUV(64,0);
+    public static final ScaleTexture BG_CIRCLE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "holo_list_entry_circle.png"),32,32).setOffsets(15,15,15,15);
+    protected final T spaceBody;
+    protected final ElementGroupList groupList;
+    protected final HoloIcon travelIcon;
+    protected HoloIcon searchIcon;
 
     public ElementAbstractStarMapEntry(GuiStarMap gui, ElementGroupList groupList, int width, int height, T spaceBody)
     {
@@ -63,9 +66,9 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.disableAlpha();
         float multiply = getMultiply(spaceBody);
 
         RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply);
@@ -73,10 +76,10 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
         {
             getBG(spaceBody).render(posX, posY, sizeX - 64, sizeY);
             if (canView(spaceBody,Minecraft.getMinecraft().thePlayer)) {
-                this.BG_MIDDLE_NORMAL.render(posX + sizeX - 64, posY, 32, sizeY);
+                BG_MIDDLE_NORMAL.render(posX + sizeX - 64, posY, 32, sizeY);
             }
             if (canTravelTo(spaceBody, Minecraft.getMinecraft().thePlayer))
-                this.BG_FLIPPED.render(posX + sizeX - 32, posY, 32, sizeY);
+                BG_FLIPPED.render(posX + sizeX - 32, posY, 32, sizeY);
             RenderUtils.applyColorWithMultipy(getSpaceBodyColor(spaceBody), multiply * 0.75f);
 
         }else
@@ -88,8 +91,8 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
                 getBG(spaceBody).render(posX, posY, sizeX - 64, sizeY);
             }
         }
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glDisable(GL11.GL_BLEND);
+        GlStateManager.enableAlpha();
+        GlStateManager.disableBlend();
     }
 
     protected ScaleTexture getBG(T spaceBody)
@@ -233,7 +236,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
     {
         String sound = getSound();
         if (sound != null && !sound.isEmpty()) {
-            gui.playSound(Reference.MOD_ID + ":gui." + sound, getSoundVolume(), 0.9f + rand.nextFloat() * 0.2f);
+            MOGuiBase.playSound(Reference.MOD_ID + ":gui." + sound, getSoundVolume(), 0.9f + rand.nextFloat() * 0.2f);
         }
     }
 

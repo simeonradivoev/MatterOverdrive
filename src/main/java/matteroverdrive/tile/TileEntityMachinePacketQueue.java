@@ -18,24 +18,26 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.network.IMatterNetworkClient;
-import matteroverdrive.data.BlockPos;
+import matteroverdrive.api.matter_network.IMatterNetworkClient;
+import matteroverdrive.api.matter_network.IMatterNetworkComponent;
+import matteroverdrive.api.matter_network.IMatterNetworkConnection;
+import matteroverdrive.api.transport.IGridNode;
+import matteroverdrive.data.transport.MatterNetwork;
 import matteroverdrive.machines.MOTileEntityMachine;
-import matteroverdrive.matter_network.MatterNetworkPacket;
-import matteroverdrive.matter_network.MatterNetworkPacketQueue;
 import matteroverdrive.matter_network.components.MatterNetworkComponentQueue;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 4/30/2015.
  */
-public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine implements IMatterNetworkClient
+public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine implements IMatterNetworkClient,IMatterNetworkConnection
 {
     public static int BROADCAST_DELAY = 2;
     public static int TASK_QUEUE_SIZE = 16;
@@ -56,9 +58,9 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         if (worldObj.isRemote)
         {
             if (flashTime > 0)
@@ -69,9 +71,21 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     }
 
     @Override
-    public boolean canConnectFromSide(ForgeDirection side)
+    public boolean canConnectFromSide(IBlockState blockState, EnumFacing side)
     {
         return true;
+    }
+
+    @Override
+    public boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side)
+    {
+        return canConnectFromSide(blockState, side);
+    }
+
+    @Override
+    public void breakConnection(IBlockState blockState, EnumFacing side)
+    {
+
     }
 
     @Override
@@ -82,7 +96,7 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
 
 
     //region Matter Network
-    @Override
+    /*@Override
     public int onNetworkTick(World world,TickEvent.Phase phase)
     {
         return networkComponent.onNetworkTick(world, phase);
@@ -95,36 +109,40 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     }
 
     @Override
-    public void queuePacket(MatterNetworkPacket packet,ForgeDirection from)
+    public void queuePacket(MatterNetworkPacket packet)
     {
-        networkComponent.queuePacket(packet, from);
-    }
-
-    @Override
-    public BlockPos getPosition()
-    {
-        return new BlockPos(xCoord, yCoord, zCoord);
+        networkComponent.queuePacket(packet);
     }
 
     @Override
     public MatterNetworkPacketQueue getPacketQueue(int queueID) {
         return networkComponent.getPacketQueue(queueID);
+    }*/
+
+    @Override
+    public MatterNetwork getNetwork()
+    {
+        return networkComponent.getNetwork();
     }
+
+    @Override
+    public void setNetwork(MatterNetwork network)
+    {
+        networkComponent.setNetwork(network);
+    }
+
+    @Override
+    public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
+    {
+        return networkComponent.canConnectToNetworkNode(blockState, toNode, direction);
+    }
+
     //endregion
 
     //region Events
-    @Override
-    public void onAdded(World world, int x, int y, int z) {
-
-    }
 
     @Override
     public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
 
     }
 
@@ -163,8 +181,14 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
     }
 
     @Override
+    public IMatterNetworkComponent getMatterNetworkComponent()
+    {
+        return networkComponent;
+    }
+
+/*    @Override
     public int getPacketQueueCount() {
         return networkComponent.getPacketQueueCount();
-    }
+    }*/
     //endregion
 }

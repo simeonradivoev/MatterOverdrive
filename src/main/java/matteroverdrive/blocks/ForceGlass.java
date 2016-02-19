@@ -19,18 +19,21 @@
 package matteroverdrive.blocks;
 
 import cofh.api.block.IDismantleable;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import crazypants.enderio.conduit.IConduitBundle;
 import matteroverdrive.Reference;
 import matteroverdrive.util.MOInventoryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
@@ -47,14 +50,21 @@ public class ForceGlass extends BlockCT implements IDismantleable
     }
 
     @Override
-    public boolean canConnect(IBlockAccess world, Block block, int x, int y, int z)
+    public boolean canConnect(IBlockAccess world, BlockPos blockPos, IBlockState blockState)
     {
-		boolean eio = false;
+		/*boolean eio = false;
 		eio = checkEIO(world, block, x, y, z);
-        return block instanceof ForceGlass || eio;
+        return block instanceof ForceGlass || eio;*/
+        return blockState.getBlock() instanceof ForceGlass;
     }
 
-//	Check if the block is an EIO conduit facade painted with Tritanium Glass
+    @SideOnly(Side.CLIENT)
+    public EnumWorldBlockLayer getBlockLayer()
+    {
+        return EnumWorldBlockLayer.CUTOUT;
+    }
+
+/*//	Check if the block is an EIO conduit facade painted with Tritanium Glass
 	private boolean checkEIO(IBlockAccess world, Block block, int x, int y, int z)
     {
         if (Reference.eioLoaded()) {
@@ -62,17 +72,11 @@ public class ForceGlass extends BlockCT implements IDismantleable
             return te instanceof IConduitBundle && ((IConduitBundle) te).getFacadeId() instanceof ForceGlass;
         }
         return false;
-	}
+	}*/
 
     @Override
-    public boolean isSideCT(IBlockAccess world, int x, int y, int z, int side) {
+    public boolean isSideCT(IBlockAccess world, BlockPos pos, EnumFacing enumFacing) {
         return true;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
     }
 
     @Override
@@ -81,28 +85,37 @@ public class ForceGlass extends BlockCT implements IDismantleable
         return false;
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
+    @Override
+    public boolean isFullCube()
     {
-        Block block = world.getBlock(x, y, z);
-        return !(block instanceof ForceGlass || checkEIO(world, block, x, y, z));
+        return false;
     }
 
     @Override
-    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops)
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockAccess world, BlockPos pos,EnumFacing side)
     {
-        Block block = world.getBlock(x, y, z);
-        int l = world.getBlockMetadata(x, y, z);
-        boolean flag = block.removedByPlayer(world, player, x, y, z, true);
-        ItemStack blockItem = new ItemStack(getItemDropped(l, world.rand, 1));
+        /*Block block = world.getBlock(x, y, z);
+        return !(block instanceof ForceGlass || checkEIO(world, block, x, y, z));*/
+        return !(world.getBlockState(pos).getBlock() instanceof ForceGlass);
+    }
+
+    @Override
+    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops)
+    {
+        IBlockState blockState = world.getBlockState(pos);
+        //Block block = world.getBlock(x, y, z);
+        //int l = world.getBlockMetadata(x, y, z);
+        //boolean flag = block.removedByPlayer(world, player, x, y, z, true);
+        ItemStack blockItem = new ItemStack(getItemDropped(blockState, world.rand, 1));
 
         if (!returnDrops)
         {
-            dropBlockAsItem(world, x, y, z, blockItem);
+            dropBlockAsItem(world, pos, blockState,0);
         }
         else
         {
-            MOInventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
+            MOInventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, EnumFacing.DOWN);
         }
 
         ArrayList<ItemStack> list = new ArrayList<>();
@@ -111,7 +124,7 @@ public class ForceGlass extends BlockCT implements IDismantleable
     }
 
     @Override
-    public boolean canDismantle(EntityPlayer entityPlayer, World world, int x, int y, int z) {
+    public boolean canDismantle(EntityPlayer entityPlayer, World world, BlockPos pos) {
         return true;
     }
 }

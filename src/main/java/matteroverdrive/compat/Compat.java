@@ -22,7 +22,7 @@ public @interface Compat
 
 	/**
 	 * Used to mark a method of a compatibility module to be run in the pre-initialization phase.
-	 * Any method marked with this annotation must have 1 argument, a {@link cpw.mods.fml.common.event.FMLPreInitializationEvent}.
+	 * Any method marked with this annotation must have 1 argument, a {@link net.minecraftforge.fml.common.event.FMLPreInitializationEvent}.
 	 * Any method marked with this annotation must be static.
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
@@ -31,7 +31,7 @@ public @interface Compat
 
 	/**
 	 * Used to mark a method of a compatibility module to be run in the initialization phase.
-	 * Any method marked with this annotation must have 1 argument, a {@link cpw.mods.fml.common.event.FMLInitializationEvent}.
+	 * Any method marked with this annotation must have 1 argument, a {@link net.minecraftforge.fml.common.event.FMLInitializationEvent}.
 	 * Any method marked with this annotation must be static.
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
@@ -40,7 +40,7 @@ public @interface Compat
 
 	/**
 	 * Used to mark a method of a compatibility module to be run in the post-initialization phase.
-	 * Any method marked with this annotation must have 1 argument, a {@link cpw.mods.fml.common.event.FMLPostInitializationEvent}.
+	 * Any method marked with this annotation must have 1 argument, a {@link net.minecraftforge.fml.common.event.FMLPostInitializationEvent}.
 	 * Any method marked with this annotation must be static.
 	 */
 	@Retention(RetentionPolicy.RUNTIME)

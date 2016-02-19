@@ -18,8 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.InscriberSlot;
@@ -27,12 +25,14 @@ import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.data.recipes.InscriberRecipe;
 import matteroverdrive.handler.recipes.InscriberRecipes;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.util.math.MOMathHelper;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 
@@ -41,6 +41,7 @@ import java.util.EnumSet;
  */
 public class TileEntityInscriber extends MOTileEntityMachineEnergy
 {
+    private static final EnumSet<UpgradeTypes> upgradeTypes = EnumSet.of(UpgradeTypes.PowerUsage,UpgradeTypes.Speed,UpgradeTypes.PowerStorage,UpgradeTypes.PowerTransfer);
     @SideOnly(Side.CLIENT)
     private float nextHeadX,nextHeadY;
     @SideOnly(Side.CLIENT)
@@ -100,11 +101,7 @@ public class TileEntityInscriber extends MOTileEntityMachineEnergy
     public boolean canPutInOutput()
     {
         ItemStack outputStack = inventory.getStackInSlot(OUTPUT_SLOT_ID);
-        if (outputStack != null)
-        {
-            return false;
-        }
-        return true;
+        return outputStack == null;
     }
 
     public void inscribeItem()
@@ -201,14 +198,9 @@ public class TileEntityInscriber extends MOTileEntityMachineEnergy
     }
 
     @Override
-    protected void onActiveChange() {
-
-    }
-
-    @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         if (worldObj.isRemote && isActive())
         {
             handleHeadAnimation();
@@ -217,29 +209,7 @@ public class TileEntityInscriber extends MOTileEntityMachineEnergy
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z)
-    {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
-
-    }
-
-    @Override
-    public int[] getAccessibleSlotsFromSide(int side)
-    {
-        return new int[]{MAIN_INPUT_SLOT_ID,SEC_INPUT_SLOT_ID,OUTPUT_SLOT_ID};
-    }
-
-    @Override
-    public boolean canExtractItem(int slot, ItemStack item, int side)
+    public boolean canExtractItem(int slot, ItemStack item, EnumFacing side)
     {
         return slot == OUTPUT_SLOT_ID;
     }
@@ -247,13 +217,16 @@ public class TileEntityInscriber extends MOTileEntityMachineEnergy
     @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
-        return type.equals(UpgradeTypes.PowerUsage) || type.equals(UpgradeTypes.Speed) || type.equals(UpgradeTypes.PowerStorage) || type.equals(UpgradeTypes.PowerTransfer);
+        return upgradeTypes.contains(type);
     }
 
     @Override
-    protected void onAwake(Side side)
+    protected void onMachineEvent(MachineEvent event)
     {
-        calculateRecipe();
+        if (event instanceof MachineEvent.Awake)
+        {
+            calculateRecipe();
+        }
     }
 
     @Override
@@ -318,6 +291,12 @@ public class TileEntityInscriber extends MOTileEntityMachineEnergy
     {
         super.setInventorySlotContents(slot,itemStack);
         calculateRecipe();
+    }
+
+    @Override
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[]{MAIN_INPUT_SLOT_ID,SEC_INPUT_SLOT_ID,OUTPUT_SLOT_ID};
     }
     //endregion
 }

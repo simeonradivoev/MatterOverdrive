@@ -20,9 +20,11 @@ package matteroverdrive.entity.monster;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.handler.GoogleAnalyticsCommon;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Property;
 
@@ -35,12 +37,14 @@ import java.util.List;
  */
 public class EntityRogueAndroid implements IConfigSubscriber
 {
+    public static float LEGENDARY_SPAWN_CHANCE;
+    public static float SPAWN_CHANCE;
     public static int MAX_ANDROIDS_PER_CHUNK = 4;
-    private static HashSet<String> biomesBlacklist = new HashSet<>();
-    private static HashSet<String> biomesWhitelist = new HashSet<>();
-    public static HashSet<Integer> dimensionBlacklist = new HashSet<>();
-    public static HashSet<Integer> dimensionWhitelist = new HashSet<>();
-    private static List<BiomeGenBase.SpawnListEntry> spawnListEntries = new ArrayList<>();
+    private static final HashSet<String> biomesBlacklist = new HashSet<>();
+    private static final HashSet<String> biomesWhitelist = new HashSet<>();
+    public static final HashSet<Integer> dimensionBlacklist = new HashSet<>();
+    public static final HashSet<Integer> dimensionWhitelist = new HashSet<>();
+    private static final List<BiomeGenBase.SpawnListEntry> spawnListEntries = new ArrayList<>();
 
     public static void addAsBiomeGen(Class<? extends EntityLiving> entityClass)
     {
@@ -53,14 +57,15 @@ public class EntityRogueAndroid implements IConfigSubscriber
         loadBiomeBlacklist(MatterOverdrive.configHandler);
         loadBiomesWhitelist(MatterOverdrive.configHandler);
 
-        for (int i = 0;i < biomes.length;i++)
+        for (BiomeGenBase biome : biomes)
         {
-            if (biomes[i] != null)
+            if (biome != null)
             {
-                List spawnList = biomes[i].getSpawnableList(EnumCreatureType.monster);
+                List spawnList = biome.getSpawnableList(EnumCreatureType.MONSTER);
                 for (BiomeGenBase.SpawnListEntry entry : spawnListEntries)
                 {
-                    if (isBiomeValid(biomes[i]) && !spawnList.contains(entry) && entry.itemWeight > 0) {
+                    if (isBiomeValid(biome) && !spawnList.contains(entry) && entry.itemWeight > 0)
+                    {
                         spawnList.add(entry);
                     }
                 }
@@ -73,7 +78,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         if (biome != null) {
             if (biomesWhitelist.size() > 0) {
-                return biomesWhitelist.contains(biome);
+                return biomesWhitelist.contains(biome.biomeName.toLowerCase());
             } else {
                 return !biomesBlacklist.contains(biome.biomeName.toLowerCase());
             }
@@ -84,9 +89,14 @@ public class EntityRogueAndroid implements IConfigSubscriber
     @Override
     public void onConfigChanged(ConfigurationHandler config)
     {
+        String category = ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android";
+
+        int spawn_weight = config.config.getInt("spawn_weight", category, 25, 0, 100, "The spawn weight of Androids. This controls how likely are to be chosen to spawn next.");
+        MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_CONFIG,category,"spawn_weight",spawn_weight,null);
+
         for (BiomeGenBase.SpawnListEntry entry : spawnListEntries)
         {
-            entry.itemWeight = config.config.getInt("spawn_chance", ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android", 15, 0, 100, "The spawn change of the Rogue Android");
+            entry.itemWeight = spawn_weight;
         }
 
         loadDimensionBlacklist(config);
@@ -94,17 +104,26 @@ public class EntityRogueAndroid implements IConfigSubscriber
         loadBiomeBlacklist(config);
         loadBiomesWhitelist(config);
 
-        EntityRangedRogueAndroidMob.UNLIMITED_WEAPON_ENERGY = config.getBool("unlimited_weapon_energy",ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android",true,"Do Ranged Rogue Androids have unlimited weapon energy in their weapons");
-        MAX_ANDROIDS_PER_CHUNK = config.getInt("max_android_per_chunk",ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android",4,"The max amount of Rogue Android that can spawn in a given chunk");
+        EntityRangedRogueAndroidMob.UNLIMITED_WEAPON_ENERGY = config.getBool("unlimited_weapon_energy",category,true,"Do Ranged Rogue Androids have unlimited weapon energy in their weapons");
+        MAX_ANDROIDS_PER_CHUNK = config.getInt("max_android_per_chunk",category,4,"The max amount of Rogue Android that can spawn in a given chunk");
+        MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_CONFIG,category,"max_android_per_chunk",MAX_ANDROIDS_PER_CHUNK,null);
+        SPAWN_CHANCE = config.config.getFloat("spawn_chance_percent",category,0.1f,0,1,"The spawn chance of rogue androids. How likely are they to spawn once chosen to spawn.");
+        MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_CONFIG,category,"spawn_chance_percent", MathHelper.ceiling_float_int(SPAWN_CHANCE * 1000),null);
+        EntityRangedRogueAndroidMob.DROP_NORMAL_WEAPONS = config.getBool("drop_weapons",category,true,"Should normal Rogue Androids drop their weapons? If set to false they will never drop their weapons, but if set to true there is a small chance they will drop them.");
+        MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_CONFIG,category,String.format("drop_weapons(%s)",EntityRangedRogueAndroidMob.DROP_NORMAL_WEAPONS ? "true" : "false"),null);
+        EntityRangedRogueAndroidMob.DROP_LEGENDARY_WEAPONS = config.getBool("drop_legendary_weapons",category,true,"Should Legendary rogue androids drop Legendary weapons");
+        MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_CONFIG,category,String.format("drop_legendary_weapons(%s)",EntityRangedRogueAndroidMob.DROP_LEGENDARY_WEAPONS ? "true" : "false"),null);
+        LEGENDARY_SPAWN_CHANCE = config.config.getFloat("legendary_spawn_chance_percent",category,0.03f,0,1,"The chance in percent, of rogue androids becoming legendary. This is the base value. This value is multiplied by the android's level");
+        MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_CONFIG,category,"legendary_spawn_chance_percent", MathHelper.ceiling_float_int(LEGENDARY_SPAWN_CHANCE * 1000),null);
     }
 
     private static void loadBiomeBlacklist(ConfigurationHandler config)
     {
         biomesBlacklist.clear();
         String[] blacklist = config.config.getStringList("biome.blacklist", ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android", new String[]{"Hell","Sky","MushroomIsland","MushroomIslandShore"}, "Rogue Android biome blacklist");
-        for (int i = 0;i < blacklist.length;i++)
+        for (String aBlacklist : blacklist)
         {
-            biomesBlacklist.add(blacklist[i].toLowerCase());
+            biomesBlacklist.add(aBlacklist.toLowerCase());
         }
     }
 
@@ -112,9 +131,9 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         biomesWhitelist.clear();
         String[] whitelist = configurationHandler.config.getStringList("biome.whitelist",ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android",new String[0],"Rogue Android biome whitelist");
-        for (int i = 0;i < whitelist.length;i++)
+        for (String aWhitelist : whitelist)
         {
-            biomesBlacklist.add(whitelist[i].toLowerCase());
+            biomesBlacklist.add(aWhitelist.toLowerCase());
         }
     }
 
@@ -124,9 +143,9 @@ public class EntityRogueAndroid implements IConfigSubscriber
         Property blacklistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android","dimension.blacklist",new int[]{1});
         blacklistProp.comment = "Rogue Android Dimension ID blacklist";
         int[] blacklist = blacklistProp.getIntList();
-        for (int i = 0;i < blacklist.length;i++)
+        for (int aBlacklist : blacklist)
         {
-            dimensionBlacklist.add(blacklist[i]);
+            dimensionBlacklist.add(aBlacklist);
         }
     }
 

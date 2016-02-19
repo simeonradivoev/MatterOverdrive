@@ -1,0 +1,21 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mo:weapon_station",
+    "textures": {
+      "bottom": "mo:blocks/weapon_station_bottom",
+      "top": "mo:blocks/weapon_station_top",
+      "side": "mo:blocks/weapon_station_side",
+      "particle": "mo:blocks/weapon_station_side"
+    }
+  },
+  "variants": {
+    "normal": {
+      "model": "mo:weapon_station"
+    },
+    "inventory": {
+      "model": "mo:weapon_station",
+      "transform": "forge:default-block"
+    }
+  }
+}

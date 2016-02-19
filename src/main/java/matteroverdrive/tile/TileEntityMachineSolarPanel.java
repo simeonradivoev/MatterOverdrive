@@ -18,21 +18,24 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.machines.events.MachineEvent;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Simeon on 4/9/2015.
  */
 public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
 {
-    public static final int CHARGE_AMOUNT = 16;
+    public static final int CHARGE_AMOUNT = 8;
     public static final int ENERGY_STORAGE = 64000;
     public static final int MAX_ENERGY_EXTRACT = 512;
 
@@ -47,7 +50,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
         if (!worldObj.isRemote)
         {
@@ -55,11 +58,12 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
             manageChagrgeAmount();
         }
 
-        super.updateEntity();
+        super.update();
     }
 
     @Override
-    protected void onAwake(Side side) {
+    protected void onMachineEvent(MachineEvent event)
+    {
 
     }
 
@@ -87,9 +91,9 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     @Override
     public boolean getServerActive()
     {
-        if (!worldObj.provider.hasNoSky)
+        if (!worldObj.provider.getHasNoSky())
         {
-            int i1 = worldObj.getSavedLightValue(EnumSkyBlock.Sky, xCoord, yCoord, zCoord) - worldObj.skylightSubtracted;
+            int i1 = worldObj.getLightFor(EnumSkyBlock.SKY, getPos()) - worldObj.getSkylightSubtracted();
             float time = getTime();
             if(i1 >= 15 && time > 0.5)
             {
@@ -110,7 +114,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
                 int energyToTransfer = Math.min(energy,MAX_ENERGY_EXTRACT);
                 if (energyToTransfer > 0)
                 {
-                    energy -= MOEnergyHelper.insertEnergyIntoAdjacentEnergyReceiver(this, i, energyToTransfer, false);
+                    energy -= MOEnergyHelper.insertEnergyIntoAdjacentEnergyReceiver(this, EnumFacing.VALUES[i], energyToTransfer, false);
                 }
             }
 
@@ -122,10 +126,10 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     {
         if (!worldObj.isRemote)
         {
-            if (!worldObj.provider.hasNoSky)
+            if (!worldObj.provider.getHasNoSky())
             {
                 float f = 0;
-                int i1 = worldObj.getSavedLightValue(EnumSkyBlock.Sky, xCoord, yCoord, zCoord) - worldObj.skylightSubtracted;
+                int i1 = worldObj.getLightFor(EnumSkyBlock.SKY, getPos()) - worldObj.getSkylightSubtracted();
 
                 if(i1 >= 15)
                 {
@@ -167,9 +171,9 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     }
 
     @Override
-    public boolean canConnectEnergy(ForgeDirection from)
+    public boolean canConnectEnergy(EnumFacing from)
     {
-        return from == ForgeDirection.DOWN;
+        return from == EnumFacing.DOWN;
     }
 
     @Override
@@ -188,28 +192,14 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     }
 
     @Override
-    protected void onActiveChange() {
-
-    }
-
-    @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type == UpgradeTypes.PowerStorage;
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
-
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[0];
     }
 }

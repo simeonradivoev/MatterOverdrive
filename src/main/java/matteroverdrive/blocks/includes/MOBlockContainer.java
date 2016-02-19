@@ -18,13 +18,12 @@
 
 package matteroverdrive.blocks.includes;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public abstract class MOBlockContainer extends MOBlock implements ITileEntityProvider
 {
-
 	public MOBlockContainer(Material material, String name)
     {
         super(material, name);
@@ -35,6 +34,6 @@ public abstract class MOBlockContainer extends MOBlock implements ITileEntityPro
     public void register()
     {
         super.register();
-		GameRegistry.registerTileEntity(createNewTileEntity(null, 0).getClass(), this.getUnlocalizedName().substring(5));
+		GameRegistry.registerTileEntity(createNewTileEntity(null, 0).getClass(), this.getRegistryName());
     }
 }

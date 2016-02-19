@@ -20,8 +20,8 @@ package matteroverdrive.items.android;
 
 import com.google.common.collect.Multimap;
 import matteroverdrive.Reference;
-import matteroverdrive.entity.player.AndroidAttributes;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidAttributes;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.SharedMonsterAttributes;

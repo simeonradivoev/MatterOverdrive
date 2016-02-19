@@ -1,18 +1,19 @@
 package matteroverdrive.container;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.tile.TileEntityMachineReplicator;
+import matteroverdrive.container.matter_network.ContainerTaskQueueMachine;
+import matteroverdrive.machines.replicator.TileEntityMachineReplicator;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 12/27/2015.
  */
-public class ContainerReplicator extends ContainerMachine<TileEntityMachineReplicator>
+public class ContainerReplicator extends ContainerTaskQueueMachine<TileEntityMachineReplicator>
 {
-    int patternReplicateCount;
+    private int patternReplicateCount;
 
     public ContainerReplicator(InventoryPlayer inventory, TileEntityMachineReplicator machine)
     {
@@ -27,16 +28,19 @@ public class ContainerReplicator extends ContainerMachine<TileEntityMachineRepli
     }
 
     @Override
-    public void addCraftingToCrafters(ICrafting icrafting)
+    public void onCraftGuiOpened(ICrafting icrafting)
     {
-        super.addCraftingToCrafters(icrafting);
+        super.onCraftGuiOpened(icrafting);
         icrafting.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
+        icrafting.sendProgressBarUpdate(this,2,this.machine.getEnergyDrainPerTick());
+        icrafting.sendProgressBarUpdate(this,3,this.machine.getEnergyDrainMax());
     }
 
     @Override
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
+
         for (Object crafter : this.crafters) {
             ICrafting icrafting = (ICrafting) crafter;
 
@@ -53,9 +57,11 @@ public class ContainerReplicator extends ContainerMachine<TileEntityMachineRepli
     public void updateProgressBar(int slot,int newValue)
     {
         super.updateProgressBar(slot,newValue);
-        if (slot == 1)
+        switch (slot)
         {
-            patternReplicateCount = newValue;
+            case 1:
+                patternReplicateCount = newValue;
+                break;
         }
     }
 

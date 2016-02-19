@@ -53,11 +53,6 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
         super(gui,groupList,width,height,star);
     }
 
-    public void addTooltip(List<String> list)
-    {
-
-    }
-
     @Override
     protected void drawElementName(Star star,Color color,float multiply)
     {
@@ -136,7 +131,7 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
 
     protected void onViewPress()
     {
-        ((GuiStarMap) gui).setPage(2);
+        gui.setPage(2);
     }
 
     @Override

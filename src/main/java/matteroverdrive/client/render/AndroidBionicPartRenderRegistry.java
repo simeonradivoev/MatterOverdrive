@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class AndroidBionicPartRenderRegistry implements IBionicPartRenderRegistry
 {
-    Map<Class<? extends IBionicPart>, IBionicPartRenderer> rendererMap;
+    private final Map<Class<? extends IBionicPart>, IBionicPartRenderer> rendererMap;
 
     public AndroidBionicPartRenderRegistry()
     {

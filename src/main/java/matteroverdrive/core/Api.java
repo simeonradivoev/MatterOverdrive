@@ -18,8 +18,8 @@
 
 package matteroverdrive.core;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMOApi;
 import matteroverdrive.api.android.IAndroidStatRegistry;

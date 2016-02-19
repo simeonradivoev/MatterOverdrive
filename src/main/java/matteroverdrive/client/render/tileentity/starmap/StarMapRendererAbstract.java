@@ -1,19 +1,19 @@
 package matteroverdrive.client.render.tileentity.starmap;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
-import matteroverdrive.data.IconHolder;
+import matteroverdrive.fx.MOEntityFX;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.glu.Disk;
 import org.lwjgl.util.glu.Sphere;
 
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -22,21 +22,26 @@ import java.util.Random;
 @SideOnly(Side.CLIENT)
 public abstract class StarMapRendererAbstract implements ISpaceBodyHoloRenderer
 {
-    protected IIcon star_icon = new IconHolder(0, 0, 32f / 128f, 32f / 128f,32,32);
-    protected IIcon selectedIcon = new IconHolder(32f / 128f, 0, 64f / 128f, 32f / 128f,32,32);
-    protected IIcon currentIcon = new IconHolder(64f / 128f,0,96f / 128f,32f / 128f,32,32);
-    protected Sphere sphere;
-    protected Disk disk;
-    protected Random random;
-    protected IModelCustom sphere_model;
-    protected FontRenderer fontRenderer;
+    protected MOEntityFX.ParticleIcon star_icon = MOEntityFX.ParticleIcon.fromWithAndHeight(0,0,32,32,128);
+    protected MOEntityFX.ParticleIcon selectedIcon = MOEntityFX.ParticleIcon.fromWithAndHeight(32,0,32,32,128);
+    protected MOEntityFX.ParticleIcon currentIcon = MOEntityFX.ParticleIcon.fromWithAndHeight(64,0,32,32,128);
+    protected final Sphere sphere;
+    protected final Disk disk;
+    protected final Random random;
+    protected final FontRenderer fontRenderer;
 
     public StarMapRendererAbstract()
     {
         sphere = new Sphere();
         disk = new Disk();
         random = new Random();
-        sphere_model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.MODEL_SPHERE));
-        fontRenderer = Minecraft.getMinecraft().fontRenderer;
+        /*try
+        {
+            sphere_model = OBJLoader.instance.loadModel(new ResourceLocation(Reference.MODEL_SPHERE));
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }*/
+        fontRenderer = Minecraft.getMinecraft().fontRendererObj;
     }
 }

@@ -20,15 +20,11 @@ package matteroverdrive.data;
 
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends MatterStorage
 {
 	protected final T machine;
-	protected int matter;
-	protected int capacity;
-	protected int maxExtract;
-	protected int maxReceive;
 
 	public MachineMatterStorage(T machine, int capacity)
 	{
@@ -69,21 +65,17 @@ public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends M
 		int extracted = super.extractMatter(amount, simulate);
 		if (!simulate && extracted != 0) {
 			machine.updateClientMatter();
-			if (machine.hasWorldObj())
-				machine.getWorldObj().markBlockForUpdate(machine.xCoord, machine.yCoord, machine.zCoord);
 		}
 		return extracted;
 	}
 
 	@Override
-	public int receiveMatter(ForgeDirection side,int amount,boolean simulate)
+	public int receiveMatter(EnumFacing side, int amount, boolean simulate)
 	{
 		int received = super.receiveMatter(side, amount, simulate);
 		if (!simulate && received != 0)
 		{
 			machine.updateClientMatter();
-			if (machine.hasWorldObj())
-				machine.getWorldObj().markBlockForUpdate(machine.xCoord, machine.yCoord, machine.zCoord);
 		}
 		return received;
 	}
@@ -94,9 +86,7 @@ public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends M
 		int lastMatter = super.getMatterStored();
 		super.setMatterStored(amount);
 		if (lastMatter != amount) {
-			machine.forceSync();
-			if (machine.hasWorldObj())
-				machine.getWorldObj().markBlockForUpdate(machine.xCoord, machine.yCoord,machine.zCoord);
+			machine.updateClientMatter();
 		}
 	}
 
@@ -106,9 +96,7 @@ public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends M
 		int modifiedAmount = super.modifyMatterStored(amount);
 		if (modifiedAmount != 0)
 		{
-			machine.forceSync();
-			if (machine.hasWorldObj())
-				machine.getWorldObj().markBlockForUpdate(machine.xCoord, machine.yCoord,machine.zCoord);
+			machine.updateClientMatter();
 		}
 		return modifiedAmount;
 	}

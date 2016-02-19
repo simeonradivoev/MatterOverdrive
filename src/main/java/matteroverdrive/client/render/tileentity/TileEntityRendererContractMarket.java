@@ -31,7 +31,7 @@ import static org.lwjgl.opengl.GL11.glColor3f;
  */
 public class TileEntityRendererContractMarket extends TileEntityRendererMonitor
 {
-    public static ResourceLocation screenTexture = new ResourceLocation(Reference.PATH_BLOCKS + "contract_station_holo.png");
+    public static final ResourceLocation screenTexture = new ResourceLocation(Reference.PATH_BLOCKS + "contract_station_holo.png");
     @Override
     public void drawScreen(TileEntity tileEntity, float ticks)
     {

@@ -18,7 +18,11 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.machines.events.MachineEvent;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.MachineMatterStorage;
 import matteroverdrive.machines.MachineNBTCategory;
@@ -68,22 +72,8 @@ public class TileEntityFusionReactorPart extends MOTileEntityMachineMatter imple
     }
 
     @Override
-    protected void onActiveChange() {
-
-    }
-
-    @Override
-    public void onAdded(World world, int x, int y, int z) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
+    protected void onMachineEvent(MachineEvent event)
+    {
 
     }
 
@@ -99,11 +89,6 @@ public class TileEntityFusionReactorPart extends MOTileEntityMachineMatter imple
     @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type) {
         return false;
-    }
-
-    @Override
-    protected void onAwake(Side side) {
-
     }
 
     @Override
@@ -140,5 +125,11 @@ public class TileEntityFusionReactorPart extends MOTileEntityMachineMatter imple
     public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
 
+    }
+
+    @Override
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[0];
     }
 }

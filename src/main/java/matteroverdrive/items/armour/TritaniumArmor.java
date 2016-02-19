@@ -18,8 +18,10 @@
 
 package matteroverdrive.items.armour;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.client.model.ModelTritaniumArmor;
 import matteroverdrive.proxy.ClientProxy;
@@ -53,7 +55,13 @@ public class TritaniumArmor extends ItemArmor
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot)
     {
         ModelTritaniumArmor armorModel = armorSlot == 3 ? ClientProxy.renderHandler.modelTritaniumArmorFeet : ClientProxy.renderHandler.modelTritaniumArmor;
-        armorModel.bipedHead.showModel = armorSlot == 0;
+        Render<AbstractClientPlayer> render = Minecraft.getMinecraft().getRenderManager().<AbstractClientPlayer>getEntityRenderObject(entityLiving);
+        if (render instanceof RenderPlayer)
+        {
+            armorModel.setModelAttributes(((RenderPlayer) render).getMainModel());
+            //armorModel.setLivingAnimations(entityLiving, p_177182_2_, p_177182_3_, p_177182_4_);
+        }
+        /*armorModel.bipedHead.showModel = armorSlot == 0;
         armorModel.bipedHeadwear.showModel = armorSlot == 0;
         armorModel.bipedBody.showModel = armorSlot == 1;
         armorModel.bipedRightArm.showModel = armorSlot == 1;
@@ -62,17 +70,16 @@ public class TritaniumArmor extends ItemArmor
         armorModel.bipedLeftLeg.showModel = armorSlot == 2 || armorSlot == 3;
         armorModel.FootLeft.showModel = armorModel.FootRight.showModel = armorSlot == 3;
 
-        Render render = RenderManager.instance.getEntityRenderObject(entityLiving);
+        Render render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entityLiving);
 
         if (render instanceof RenderPlayer)
         {
             RenderPlayer renderPlayer = (RenderPlayer)render;
             armorModel.isSneak = entityLiving.isSneaking();
-            armorModel.heldItemRight = renderPlayer.modelArmor.heldItemRight;
-            armorModel.heldItemLeft = renderPlayer.modelArmor.heldItemLeft;
-            armorModel.aimedBow = renderPlayer.modelArmor.aimedBow;
-            ItemStack heldItem = entityLiving.getHeldItem();
-        }
+            armorModel.heldItemRight = renderPlayer.getMainModel().heldItemRight;
+            armorModel.heldItemLeft = renderPlayer.getMainModel().heldItemLeft;
+            armorModel.aimedBow = renderPlayer.getMainModel().aimedBow;
+        }*/
 
         return armorModel;
     }

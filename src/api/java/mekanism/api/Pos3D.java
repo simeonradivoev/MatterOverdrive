@@ -239,7 +239,7 @@ public class Pos3D
 
 	public static AxisAlignedBB getAABB(Pos3D pos1, Pos3D pos2)
 	{
-		return AxisAlignedBB.getBoundingBox(
+		return new AxisAlignedBB(
 				Math.min(pos1.xPos, pos2.xPos),
 				Math.min(pos1.yPos, pos2.yPos),
 				Math.min(pos1.zPos, pos2.zPos),

@@ -18,9 +18,6 @@
 
 package matteroverdrive.items.weapon;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.WeaponShot;
@@ -30,11 +27,11 @@ import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MOPhysicsHelper;
 import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.animation.MOEasing;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -42,7 +39,9 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.util.HashMap;
@@ -60,19 +59,13 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     private static final int STUN_SLEEP_MULTIPLY = 5;
     public static final int RANGE = 18;
 
-    Map<EntityPlayer,WeaponSound> soundMap;
+    final Map<EntityPlayer,WeaponSound> soundMap;
 
 	public Phaser(String name) {
 		super(name,32000,128,128,RANGE);
 		this.bFull3D = true;
         soundMap = new HashMap<>();
 	}
-
-    @SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegistry)
-    {
-
-    }
 
     @Override
     public int getBaseEnergyUse(ItemStack item)
@@ -103,6 +96,12 @@ public class Phaser extends EnergyWeapon implements IWeapon{
         return MAX_USE_TIME;
     }
 
+    @Override
+    public EnumAction getItemUseAction(ItemStack p_77661_1_)
+    {
+        return EnumAction.NONE;
+    }
+
 	public static boolean isKillMode(ItemStack item)
 	{
 		if(!item.hasTagCompound())
@@ -118,7 +117,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
             return;
 
         Vec3 dir = getPlayerLook(player,item);
-        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(player, w, getRange(item), 0, Vec3.createVectorHelper(0, player.getEyeHeight(), 0), false, true,dir);
+        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(player, w, getRange(item), 0, new Vec3(0, player.getEyeHeight(), 0), false, true,dir);
         if (hit != null)
         {
             Vec3 hitVector = hit.hitVec;
@@ -160,39 +159,15 @@ public class Phaser extends EnergyWeapon implements IWeapon{
             {
                 if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,item))
                 {
-                    int x = hit.blockX;
-                    int y = hit.blockY;
-                    int z = hit.blockZ;
+                    BlockPos pos = hit.getBlockPos();
 
-                    if (player.worldObj.getBlock(x,y,z).isFlammable(player.worldObj,x,y,z, ForgeDirection.getOrientation(hit.sideHit))) {
-                        if (hit.sideHit == 0) {
-                            --y;
-                        }
+                    if (player.worldObj.getBlockState(pos).getBlock().isFlammable(player.worldObj,pos, hit.sideHit)) {
+                        pos.offset(hit.sideHit);
 
-                        if (hit.sideHit == 1) {
-                            ++y;
-                        }
-
-                        if (hit.sideHit == 2) {
-                            --z;
-                        }
-
-                        if (hit.sideHit == 3) {
-                            ++z;
-                        }
-
-                        if (hit.sideHit == 4) {
-                            --x;
-                        }
-
-                        if (hit.sideHit == 5) {
-                            ++x;
-                        }
-
-                        if (player.canPlayerEdit(x, y, z, hit.sideHit, item)) {
-                            if (player.worldObj.isAirBlock(x, y, z)) {
+                        if (player.canPlayerEdit(pos, hit.sideHit, item)) {
+                            if (player.worldObj.isAirBlock(pos)) {
                                 //player.worldObj.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
-                                player.worldObj.setBlock(x, y, z, Blocks.fire);
+                                player.worldObj.setBlockState(pos,Blocks.fire.getDefaultState());
                             }
                         }
                     }
@@ -203,7 +178,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
             {
                 if (WeaponHelper.hasStat(Reference.WS_EXPLOSION_DAMAGE, item))
                 {
-                    w.createExplosion(player, hitVector.xCoord, hitVector.yCoord, hitVector.zCoord, (float) WeaponHelper.modifyStat(Reference.WS_EXPLOSION_DAMAGE, item,0) * item.getTagCompound().getByte("power") - (MAX_LEVEL/2), true);
+                    w.createExplosion(player, hitVector.xCoord, hitVector.yCoord, hitVector.zCoord, WeaponHelper.modifyStat(Reference.WS_EXPLOSION_DAMAGE, item,0) * item.getTagCompound().getByte("power") - (MAX_LEVEL/2), true);
                 }
             }
         }
@@ -213,16 +188,16 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     {
         Vec3 dir = player.getLookVec();
         Vec3 rot = getBeamRotation(weapon,player);
-        dir.rotateAroundX((float)rot.xCoord);
-        dir.rotateAroundY((float) rot.yCoord);
-        dir.rotateAroundZ((float)rot.zCoord);
+        dir.rotateYaw((float)rot.xCoord);
+        dir.rotatePitch((float) rot.yCoord);
+        //dir.rotateAroundZ((float)rot.zCoord);
         return dir;
     }
 
     public Vec3 getBeamRotation(ItemStack weapon,EntityPlayer entityPlayer)
     {
         double rotationY = (float)Math.toRadians(5) * MOEasing.Quart.easeIn(getAccuracy(weapon,entityPlayer,false),0,1,1);
-        return Vec3.createVectorHelper(0,rotationY,0);
+        return new Vec3(0,rotationY,0);
     }
 
     @Override
@@ -344,10 +319,9 @@ public class Phaser extends EnergyWeapon implements IWeapon{
                 return new Vector2f(60,45);
             case Reference.MODULE_BARREL:
                 return new Vector2f(60,115);
-            case Reference.MODULE_OTHER:
-                return new Vector2f(200,45);
+            default:
+                return new Vector2f(200,45 + (slot - Reference.MODULE_OTHER * 22));
         }
-        return new Vector2f(0,0);
     }
 
     @Override
@@ -370,36 +344,39 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     @SideOnly(Side.CLIENT)
     public void onProjectileHit(MovingObjectPosition hit, ItemStack weapon, World world,float amount)
     {
-        Block b = world.getBlock(hit.blockX,hit.blockY,hit.blockZ);
+        if (hit.getBlockPos() == null)
+            return;
+
+        IBlockState b = world.getBlockState(hit.getBlockPos());
         if (hit.entityHit != null && hit.entityHit instanceof EntityLivingBase)
         {
             if (WeaponHelper.hasStat(Reference.WS_HEAL,weapon))
             {
-                world.spawnParticle("happyVillager",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
+                world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY,hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
             }
-            else if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon) && MatterOverdriveItems.phaser.isKillMode(weapon))
+            else if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon) && isKillMode(weapon))
             {
-                world.spawnParticle("flame",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
+                world.spawnParticle(EnumParticleTypes.FLAME,hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
             }
             else
             {
-                if (MatterOverdriveItems.phaser.isKillMode(weapon)) {
-                    world.spawnParticle("reddust", hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0);
+                if (isKillMode(weapon)) {
+                    world.spawnParticle(EnumParticleTypes.REDSTONE, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0);
                 }else
                 {
-                    world.spawnParticle("magicCrit", hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0);
+                    world.spawnParticle(EnumParticleTypes.CRIT_MAGIC, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0);
                 }
             }
 
         }
         else if(b != null && b != Blocks.air)
         {
-            if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon) && MatterOverdriveItems.phaser.isKillMode(weapon))
+            if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,weapon) && isKillMode(weapon))
             {
-                world.spawnParticle("flame",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
+                world.spawnParticle(EnumParticleTypes.FLAME,hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
             }
 
-            world.spawnParticle("smoke",hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
+            world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL,hit.hitVec.xCoord,hit.hitVec.yCoord,hit.hitVec.zCoord,0,0,0);
         }
     }
 

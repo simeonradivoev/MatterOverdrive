@@ -18,10 +18,6 @@
 
 package matteroverdrive.proxy;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.HoloIcons;
@@ -43,6 +39,10 @@ import matteroverdrive.starmap.GalaxyClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class ClientProxy extends CommonProxy
 {
@@ -62,9 +62,9 @@ public class ClientProxy extends CommonProxy
     }
 
     @Override
-	public void registerProxies()
+	protected void registerProxies(FMLInitializationEvent event)
 	{
-        super.registerProxies();
+        super.registerProxies(event);
 
         renderHandler = new RenderHandler(Minecraft.getMinecraft().theWorld,Minecraft.getMinecraft().getTextureManager());
         androidHud = new GuiAndroidHud(Minecraft.getMinecraft());
@@ -77,26 +77,28 @@ public class ClientProxy extends CommonProxy
         Minecraft.getMinecraft().getResourcePackRepository().rprMetadataSerializer.registerMetadataSectionType(new WeaponMetadataSectionSerializer(), WeaponMetadataSection.class);
 
         registerSubscribtions();
+        holoIcons.registerIcons();
 
         //region Render Handler Functions
         //region Create
-        renderHandler.createBlockRenderers();
-        renderHandler.createTileEntityRenderers(MatterOverdrive.configHandler);
+        //renderHandler.createBlockRenderers();
         renderHandler.createItemRenderers();
-        renderHandler.createEntityRenderers();
+        renderHandler.createTileEntityRenderers(MatterOverdrive.configHandler);
+        renderHandler.createEntityRenderers(Minecraft.getMinecraft().getRenderManager());
         renderHandler.createBioticStatRenderers();
         renderHandler.createStarmapRenderers();
         renderHandler.createModels();
         //endregion
         //region Register
-        renderHandler.registerBlockRenderers();
+        renderHandler.registerWeaponModuleRenders();
+        renderHandler.registerWeaponLayers();
         renderHandler.registerTileEntitySpecialRenderers();
         renderHandler.registerItemRenderers();
         renderHandler.registerEntityRenderers();
         renderHandler.registerBioticStatRenderers();
         renderHandler.registerBionicPartRenderers();
         renderHandler.registerStarmapRenderers();
-        renderHandler.registerWeaponModuleModels();
+        renderHandler.registerWeaponModuleRenders();
         //endregion
         //endregion
 
@@ -105,8 +107,8 @@ public class ClientProxy extends CommonProxy
 
     private void registerSubscribtions()
     {
-        FMLCommonHandler.instance().bus().register(keyHandler);
-        FMLCommonHandler.instance().bus().register(mouseHandler);
+        MinecraftForge.EVENT_BUS.register(keyHandler);
+        MinecraftForge.EVENT_BUS.register(mouseHandler);
         MinecraftForge.EVENT_BUS.register(GalaxyClient.getInstance());
         MinecraftForge.EVENT_BUS.register(new MatterOverdriveIcons());
         MinecraftForge.EVENT_BUS.register(renderHandler);
@@ -114,10 +116,11 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(androidHud);
         MinecraftForge.EVENT_BUS.register(mouseHandler);
         MinecraftForge.EVENT_BUS.register(questHud);
-        FMLCommonHandler.instance().bus().register(renderHandler);
-        FMLCommonHandler.instance().bus().register(GalaxyClient.getInstance());
-        FMLCommonHandler.instance().bus().register(androidHud);
+        MinecraftForge.EVENT_BUS.register(renderHandler);
+        MinecraftForge.EVENT_BUS.register(GalaxyClient.getInstance());
+        MinecraftForge.EVENT_BUS.register(androidHud);
         MinecraftForge.EVENT_BUS.register(weaponHandler);
+        MinecraftForge.EVENT_BUS.register(holoIcons);
     }
 
     @Override
@@ -144,6 +147,13 @@ public class ClientProxy extends CommonProxy
         weaponHandler.registerWeapon(MatterOverdriveItems.ionSniper);
 
         MatterOverdriveGuides.registerGuideElements(event);
+    }
+
+    @Override
+    public void preInit(FMLPreInitializationEvent event)
+    {
+        super.preInit(event);
+        RenderHandler.registerItemRendererVarients();
     }
 
     @Override

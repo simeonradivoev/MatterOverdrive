@@ -18,6 +18,8 @@
 
 package matteroverdrive.api.dialog;
 
+import net.minecraft.util.ResourceLocation;
+
 /**
  * Created by Simeon on 8/13/2015.
  * Used to globally store all message.
@@ -30,6 +32,13 @@ public interface IDialogRegistry
      * @param message The Dialog Message
      */
     void registerMessage(IDialogMessage message);
+
+    /**
+     * Register Message to Matter Overdrive Dialog Registry with a name
+     * @param name the name of the dialog message
+     * @param message The Dialog Message
+     */
+    void registerMessage(ResourceLocation name, IDialogMessage message);
 
     /**
      * Gets a message by an ID.

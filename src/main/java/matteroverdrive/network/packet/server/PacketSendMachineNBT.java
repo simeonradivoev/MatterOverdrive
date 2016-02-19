@@ -18,18 +18,20 @@
 
 package matteroverdrive.network.packet.server;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.AbstractBiPacketHandler;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.tile.MOTileEntity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 
@@ -72,19 +74,19 @@ public class PacketSendMachineNBT extends TileEntityUpdatePacket
 
     public static class BiHandler extends AbstractBiPacketHandler<PacketSendMachineNBT>
     {
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketSendMachineNBT message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketSendMachineNBT message, MessageContext ctx)
         {
             TileEntity tileEntity = message.getTileEntity(player.worldObj);
             if (tileEntity instanceof MOTileEntity)
             {
                 ((MOTileEntity) tileEntity).readCustomNBT(message.data,MachineNBTCategory.decode(message.cattegories));
             }
-            return null;
         }
 
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketSendMachineNBT message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketSendMachineNBT message, MessageContext ctx)
         {
             TileEntity tileEntity = message.getTileEntity(player.worldObj);
             if (tileEntity instanceof MOTileEntity)
@@ -96,11 +98,10 @@ public class PacketSendMachineNBT extends TileEntityUpdatePacket
                         ((MOTileEntityMachine) tileEntity).forceSync();
                     }else
                     {
-                        player.worldObj.markBlockForUpdate(tileEntity.xCoord,tileEntity.yCoord,tileEntity.zCoord);
+                        player.worldObj.markBlockForUpdate(tileEntity.getPos());
                     }
                 }
             }
-            return null;
         }
     }
 }

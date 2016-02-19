@@ -18,19 +18,18 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.machines.events.MachineEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.machines.IUpgradeHandler;
-import matteroverdrive.data.BlockPos;
-import matteroverdrive.entity.player.AndroidPlayer;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.BlockPos;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     public static final int ENERGY_CAPACITY = 512000;
     public static final int ENERGY_TRANSFER = 512;
     public static int BASE_MAX_RANGE = 8;
-    private static UpgradeHandler upgradeHandler = new UpgradeHandler();
+    private static final UpgradeHandler upgradeHandler = new UpgradeHandler();
 
     public TileEntityMachineChargingStation()
     {
@@ -56,24 +55,24 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         manageAndroidCharging();
     }
 
     private void manageAndroidCharging()
     {
-        if (!worldObj.isRemote && getEnergyStored(ForgeDirection.UNKNOWN) > 0) {
+        if (!worldObj.isRemote && getEnergyStored(EnumFacing.DOWN) > 0) {
             int range = getRage();
-            AxisAlignedBB radius = AxisAlignedBB.getBoundingBox(xCoord - range, yCoord - range, zCoord - range, xCoord + range, yCoord + range, zCoord + range);
+            AxisAlignedBB radius = new AxisAlignedBB(getPos().add(-range,-range,-range), getPos().add(range,range,range));
             List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, radius);
             for (EntityPlayer player : players) {
                 if (AndroidPlayer.get(player).isAndroid()) {
 					int required = getRequiredEnergy(player,range);
-					int max = Math.min(getEnergyStored(ForgeDirection.UNKNOWN),getMaxCharging());
+					int max = Math.min(getEnergyStored(EnumFacing.DOWN),getMaxCharging());
 					int toExtract = Math.min(required, max);
-					extractEnergy(ForgeDirection.UNKNOWN, AndroidPlayer.get(player).receiveEnergy(toExtract, false), false);
+					extractEnergy(EnumFacing.DOWN, AndroidPlayer.get(player).receiveEnergy(toExtract, false), false);
                 }
             }
         }
@@ -91,7 +90,7 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
 
     private int getRequiredEnergy(EntityPlayer player,int maxRange)
     {
-        return (int)(ENERGY_TRANSFER * (1.0D - MathHelper.clamp_double((Vec3.createVectorHelper(player.posX,player.posY,player.posZ).subtract(Vec3.createVectorHelper(xCoord,yCoord,zCoord)).lengthVector() / (double)maxRange),0,1)));
+        return (int)(ENERGY_TRANSFER * (1.0D - MathHelper.clamp_double((new Vec3(player.posX,player.posY,player.posZ).subtract(new Vec3(getPos())).lengthVector() / (double)maxRange),0,1)));
     }
 
     @Override
@@ -115,22 +114,8 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     }
 
     @Override
-    protected void onActiveChange() {
-
-    }
-
-    @Override
-    public void onAdded(World world, int x, int y, int z) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
+    protected void onMachineEvent(MachineEvent event)
+    {
 
     }
 
@@ -138,11 +123,6 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return type.equals(UpgradeTypes.Range) || type.equals(UpgradeTypes.PowerStorage) || type.equals(UpgradeTypes.PowerUsage);
-    }
-
-    @Override
-    protected void onAwake(Side side) {
-
     }
 
     @SideOnly(Side.CLIENT)
@@ -155,13 +135,19 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
 	public List<BlockPos> getBoundingBlocks() {
 		List<BlockPos> coords = new ArrayList<>();
 
-		coords.add(new BlockPos(xCoord, yCoord + 1, zCoord));
-		coords.add(new BlockPos(xCoord, yCoord + 2, zCoord));
+		coords.add(getPos().add(0,1,0));
+		coords.add(getPos().add(0,2,0));
 
 		return coords;
 	}
 
     public IUpgradeHandler getUpgradeHandler(){return upgradeHandler;}
+
+    @Override
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[0];
+    }
 
     public static class UpgradeHandler implements IUpgradeHandler
     {

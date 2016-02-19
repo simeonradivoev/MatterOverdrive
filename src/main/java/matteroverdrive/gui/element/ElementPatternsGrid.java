@@ -18,11 +18,11 @@
 
 package matteroverdrive.gui.element;
 
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPatternMapping;
 import matteroverdrive.gui.MOGuiBase;
-import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 
-import java.util.List;
+import java.util.Iterator;
 
 /**
  * Created by Simeon on 4/27/2015.
@@ -37,16 +37,73 @@ public class ElementPatternsGrid extends ElementGrid
         setMargins(0,0,4,0);
     }
 
-
-    public void updateStackList(List<ItemPattern> patterns)
+    public void setPattern(ItemPatternMapping patternMapping)
     {
-        ItemStack stack;
-        elements.clear();
-
-        for (ItemPattern pattern : patterns)
+        Iterator<MOElementBase> elementBaseIterator = elements.iterator();
+        boolean patternSet = false;
+        while (elementBaseIterator.hasNext())
         {
-            addElement(new ElementMonitorItemPattern(gui, pattern, gui));
+            MOElementBase elementBase = elementBaseIterator.next();
+            if (elementBase instanceof ElementItemPattern)
+            {
+                ItemPatternMapping elementPatternMapping = ((ElementItemPattern) elementBase).getPatternMapping();
+                if(elementPatternMapping.getDatabaseId().equals(patternMapping.getDatabaseId()) && elementPatternMapping.getStorageId() == patternMapping.getStorageId() && elementPatternMapping.getPatternId() == patternMapping.getPatternId())
+                {
+                    if (patternMapping.getItemPattern() == null)
+                    {
+                        elementBaseIterator.remove();
+                    }else
+                    {
+                        ((ElementItemPattern) elementBase).setPatternMapping(patternMapping);
+                        patternSet = true;
+                        break;
+                    }
+
+                }
+            }
         }
+
+        if (!patternSet && patternMapping.getItemPattern() != null)
+        {
+            elements.add(new ElementMonitorItemPattern(gui,patternMapping,gui));
+        }
+    }
+
+    public void removePatterns(BlockPos database)
+    {
+        Iterator<MOElementBase> elementBaseIterator = elements.iterator();
+        while (elementBaseIterator.hasNext())
+        {
+            MOElementBase elementBase = elementBaseIterator.next();
+            if (elementBase instanceof ElementItemPattern)
+            {
+                if(((ElementItemPattern) elementBase).getPatternMapping().getDatabaseId().equals(database))
+                {
+                    elementBaseIterator.remove();
+                }
+            }
+        }
+    }
+
+    public void removePatterns(BlockPos database,int storageId)
+    {
+        Iterator<MOElementBase> elementBaseIterator = elements.iterator();
+        while (elementBaseIterator.hasNext())
+        {
+            MOElementBase elementBase = elementBaseIterator.next();
+            if (elementBase instanceof ElementItemPattern)
+            {
+                if(((ElementItemPattern) elementBase).getPatternMapping().getDatabaseId().equals(database) && ((ElementItemPattern) elementBase).getPatternMapping().getStorageId() == storageId)
+                {
+                    elementBaseIterator.remove();
+                }
+            }
+        }
+    }
+
+    public void clearPattern()
+    {
+        elements.clear();
     }
 
     public void setFilter(String filter)
@@ -56,9 +113,6 @@ public class ElementPatternsGrid extends ElementGrid
 
     public boolean shouldBeDisplayed(MOElementBase element)
     {
-        if (element.getName() != null) {
-            return element.getName().toLowerCase().contains(filter.toLowerCase());
-        }
-        return false;
+        return element.getName() != null && element.getName().toLowerCase().contains(filter.toLowerCase());
     }
 }

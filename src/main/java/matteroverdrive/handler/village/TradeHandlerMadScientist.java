@@ -18,7 +18,7 @@
 
 package matteroverdrive.handler.village;
 
-import cpw.mods.fml.common.registry.VillagerRegistry;
+import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
@@ -31,9 +31,9 @@ import java.util.Random;
 /**
  * Created by Simeon on 5/30/2015.
  */
-public class TradeHandlerMadScientist implements VillagerRegistry.IVillageTradeHandler
+public class TradeHandlerMadScientist //implements VillagerRegistry.VillagerProfession
 {
-    @Override
+    //@Override
     public void manipulateTradesForVillager(EntityVillager villager, MerchantRecipeList recipeList, Random random)
     {
         if (villager.getProfession() == 666)

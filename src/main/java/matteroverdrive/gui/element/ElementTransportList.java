@@ -53,7 +53,7 @@ public class ElementTransportList extends MOElementListBox
         else
         {
 
-            String info = "[ X: " + (position.x + transporter.xCoord) + ", Y: " + (position.y + transporter.yCoord) + ", Z: " + (position.z + transporter.zCoord) + " ]";
+            String info = "[ X: " + (position.pos.getX() + transporter.getPos().getX()) + ", Y: " + (position.pos.getY() + transporter.getPos().getY()) + ", Z: " + (position.pos.getZ() + transporter.getPos().getZ()) + " ]";
             gui.drawCenteredString(getFontRenderer(), position.name, x + getElementWidth(i) / 2, y + getElementHeight(i) / 2 - 4, transporter.isLocationValid(position) ? selectedTextColor : Reference.COLOR_HOLO_RED.getColor());
             //gui.drawCenteredString(getFontRenderer(), EnumChatFormatting.YELLOW + info,x + getElementWidth(i)/2,y + getElementHeight(i) / 2 + 2,0xFFFFFF);
         }

@@ -18,11 +18,11 @@
 
 package matteroverdrive.handler;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.api.events.MOEventTransport;
 import matteroverdrive.api.events.anomaly.MOEventGravitationalAnomalyConsume;
 import matteroverdrive.data.quest.PlayerQuestData;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MatterHelper;

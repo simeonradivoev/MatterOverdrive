@@ -19,28 +19,20 @@
 package matteroverdrive.items;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.events.MOEventScan;
 import matteroverdrive.api.inventory.IBlockScanner;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.client.sound.MachineSound;
-import matteroverdrive.data.BlockPos;
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.gui.GuiMatterScanner;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.handler.SoundHandler;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.util.MOPhysicsHelper;
-import matteroverdrive.util.MOStringHelper;
-import matteroverdrive.util.MatterDatabaseHelper;
-import matteroverdrive.util.MatterHelper;
+import matteroverdrive.util.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,6 +43,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 
@@ -65,26 +59,10 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 	public static final int SCAN_TIME = 60;
 	@SideOnly(Side.CLIENT)
 	public static MachineSound scanningSound;
-	public static IIcon offline_icon;
 
 	public MatterScanner(String name)
 	{
 		super(name);
-	}
-
-	/**
-	 * Returns the holoIcon index of the stack given as argument.
-	 */
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconIndex(ItemStack itemStack)
-	{
-		if (itemStack.hasTagCompound() && Minecraft.getMinecraft().theWorld != null)
-		{
-			if (isLinked(itemStack))
-				return this.itemIcon;
-		}
-		return offline_icon;
 	}
 
 	@Override
@@ -99,17 +77,14 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 			else
 			{
 				infos.add(MOStringHelper.MORE_INFO);
-				infos.add("Press '"+ EnumChatFormatting.YELLOW + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.MATTER_SCANNER_KEY).getKeyCode()) + EnumChatFormatting.GRAY + "' to open GUI");
 			}
 		}
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister)
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
 	{
-		this.itemIcon = iconRegister.registerIcon(this.getIconString());
-		offline_icon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "matter_scanner_offline");
+		return false;
 	}
 
 	@Override
@@ -145,11 +120,8 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 			{
 				if(scanner.getTagCompound().getBoolean("isLinked"))
 				{
-					int x = scanner.getTagCompound().getInteger("link_x");
-					int y = scanner.getTagCompound().getInteger("link_y");
-					int z = scanner.getTagCompound().getInteger("link_z");
-
-					TileEntity e = world.getTileEntity(x, y, z);
+                    BlockPos pos = BlockPos.fromLong(scanner.getTagCompound().getLong("link"));
+					TileEntity e = world.getTileEntity(pos);
 					if (e instanceof IMatterDatabase)
 						return (IMatterDatabase) e;
 				}
@@ -187,7 +159,7 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		}
 	}
 
-	public static void link(World world, int xCoord, int yCoord, int zCoord,ItemStack scanner)
+	public static void link(World world, BlockPos pos,ItemStack scanner)
 	{
 		if(scanner.getItem() instanceof MatterScanner)
 		{
@@ -197,9 +169,7 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		if(scanner.hasTagCompound())
 		{
 			scanner.getTagCompound().setBoolean("isLinked",true);
-			scanner.getTagCompound().setInteger("link_x", xCoord);
-			scanner.getTagCompound().setInteger("link_y", yCoord);
-			scanner.getTagCompound().setInteger("link_z", zCoord);
+			scanner.getTagCompound().setLong("link",pos.toLong());
 		}
 	}
 
@@ -216,12 +186,11 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		}
 	}
 
-	private boolean HarvestBlock(ItemStack scanner,EntityPlayer player,World world,int x,int y,int z)
+	private boolean HarvestBlock(ItemStack scanner,EntityPlayer player,World world,BlockPos pos)
 	{
 		if(!world.isRemote)
 		{
-			ItemStack item = MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z);
-			return world.func_147480_a(x, y, z, false);
+			return world.setBlockToAir(pos);
 		}
 
 		return false;
@@ -288,27 +257,6 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
         MatterDatabaseHelper.initTagCompound(stack);
 	}
 
-	@SideOnly(Side.CLIENT)
-    public static void DisplayGuiScreen()
-    {
-		try {
-			if (MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem())) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.getHeldItem(), Minecraft.getMinecraft().thePlayer.inventory.currentItem));
-				return;
-			}
-
-			for (int i = 0; i < Minecraft.getMinecraft().thePlayer.inventory.getSizeInventory(); i++) {
-				if (MatterHelper.isMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i))) {
-					Minecraft.getMinecraft().displayGuiScreen(new GuiMatterScanner(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i), i));
-					return;
-				}
-			}
-		}catch (Exception e)
-		{
-			MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while trying to open Matter Scanner GUI");
-		}
-    }
-
 	public static int getLastPage(ItemStack scanner)
 	{
 		if(scanner.hasTagCompound())
@@ -321,14 +269,16 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 	/**
 	 * returns the action that specifies what animation to play when the items is being used
 	 */
+	@Override
 	public EnumAction getItemUseAction(ItemStack p_77661_1_)
 	{
-		return EnumAction.block;
+		return EnumAction.NONE;
 	}
 
 	/**
 	 * How long it takes to use or consume an item
 	 */
+	@Override
 	public int getMaxItemUseDuration(ItemStack scanner)
 	{
         ItemStack selected = getSelectedAsItem(scanner);
@@ -343,6 +293,7 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
         return Integer.MAX_VALUE;
 	}
 
+	@Override
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
 	{
 		MovingObjectPosition hit = getScanningPos(itemstack,entityplayer);
@@ -375,36 +326,34 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		}
 	}
 
-	public ItemStack onEaten(ItemStack scanner, World world, EntityPlayer player)
+	@Override
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
 	{
-		if(world.isRemote)
+		if(worldIn.isRemote)
 		{
 			stopScanSounds();
-			return scanner;
+			return stack;
 		}
 
-		MovingObjectPosition position = getScanningPos(scanner,player);
+		MovingObjectPosition position = getScanningPos(stack,playerIn);
 		if (position != null && position.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-			if (!world.isRemote) {
-				int x = position.blockX;
-				int y = position.blockY;
-				int z = position.blockZ;
-				ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(world, x, y, z);
+			if (!worldIn.isRemote) {
+				ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(worldIn, position.getBlockPos());
 
 				//finished scanning
-                if (!MinecraftForge.EVENT_BUS.post(new MOEventScan(player,scanner,position)))
+                if (!MinecraftForge.EVENT_BUS.post(new MOEventScan(playerIn,stack,position)))
                 {
-                    Scan(world, scanner, player, worldItem, x, y, z);
+                    Scan(worldIn, stack, playerIn, worldItem, position.getBlockPos());
                 }
 			}
 		}
-		return scanner;
+		return stack;
 	}
 
 	@Override
 	public MovingObjectPosition getScanningPos(ItemStack itemStack,EntityPlayer player)
 	{
-        return MOPhysicsHelper.rayTrace(player, player.worldObj, 5, 0, Vec3.createVectorHelper(0, player.worldObj.isRemote ? 0 : player.getEyeHeight(), 0), true, false);
+        return MOPhysicsHelper.rayTrace(player, player.worldObj, 5, 0, new Vec3(0, player.getEyeHeight(), 0), true, false);
 	}
 
     @Override
@@ -413,7 +362,13 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
         return true;
     }
 
-    @Override
+	@Override
+	public boolean showsGravitationalWaves(ItemStack itemStack)
+	{
+		return false;
+	}
+
+	@Override
 	public void onUsingTick(ItemStack scanner, EntityPlayer player, int count)
 	{
 		MovingObjectPosition hit = getScanningPos(scanner,player);
@@ -421,13 +376,10 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		if (hit != null) {
 
             if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                int x = hit.blockX;
-                int y = hit.blockY;
-                int z = hit.blockZ;
                 ItemStack lastSelected = getSelectedAsItem(scanner);
-                ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(player.worldObj, x, y, z);
+                ItemStack worldItem = MatterDatabaseHelper.GetItemStackFromWorld(player.worldObj, hit.getBlockPos());
 
-                if (!MatterDatabaseHelper.areEqual(lastSelected, worldItem)) {
+                if (worldItem != null && !MatterDatabaseHelper.areEqual(lastSelected, worldItem)) {
 
                     setSelected(player.worldObj,scanner, worldItem);
 
@@ -453,11 +405,12 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 	{
 		if(scanningSound == null)
 		{
-			scanningSound = new MachineSound(new ResourceLocation(Reference.MOD_ID + ":" +"scanner_scanning"),(float)x,(float)y,(float)z,0.6f,1);
+			scanningSound = new MachineSound(new ResourceLocation(Reference.MOD_ID + ":" +"scanner_scanning"),new BlockPos(x,y,z),0.6f,1);
 			Minecraft.getMinecraft().getSoundHandler().playSound(scanningSound);
 		}
 	}
 
+	@Override
 	public void onPlayerStoppedUsing(ItemStack scanner, World world, EntityPlayer player, int count)
 	{
 		if (world.isRemote)
@@ -474,7 +427,7 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		}
 	}
 
-	public boolean Scan(World world,ItemStack scanner,EntityPlayer player,ItemStack worldBlock,int x,int y,int z)
+	public boolean Scan(World world,ItemStack scanner,EntityPlayer player,ItemStack worldBlock,BlockPos pos)
 	{
 		this.TagCompountCheck(scanner);
 
@@ -484,13 +437,13 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		if (database != null && MatterHelper.CanScan(worldBlock))
 		{
 			resetScanProgress(scanner);
-			scanInfo.append(EnumChatFormatting.YELLOW + "[" + scanner.getDisplayName() + "] ");
+			scanInfo.append(EnumChatFormatting.YELLOW + "[").append(scanner.getDisplayName()).append("] ");
 
 			if (database.addItem(worldBlock, PROGRESS_PER_ITEM,false,scanInfo)) {
 				//scan successful
 				SoundHandler.PlaySoundAt(world, "scanner_success", player);
 				DisplayInfo(player, scanInfo, EnumChatFormatting.GREEN);
-				return HarvestBlock(scanner, player, world, x, y, z);
+				return HarvestBlock(scanner, player, world, pos);
 			}
 			else
 			{
@@ -501,14 +454,14 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 			}
 		}else
 		{
-            if (world.getBlock(x,y,z) instanceof IScannable)
+            if (world.getBlockState(pos).getBlock() instanceof IScannable)
             {
-                ((IScannable) world.getBlock(x,y,z)).onScan(world,x,y,z,player,scanner);
+                ((IScannable) world.getBlockState(pos).getBlock()).onScan(world,pos.getX(),pos.getY(),pos.getZ(),player,scanner);
                 //DisplayInfo(player, scanInfo, EnumChatFormatting.GREEN);
                 return true;
-            }else if (world.getTileEntity(x,y,z) instanceof IScannable)
+            }else if (world.getTileEntity(pos) instanceof IScannable)
             {
-                ((IScannable) world.getBlock(x,y,z)).onScan(world,x,y,z,player,scanner);
+                ((IScannable) world.getBlockState(pos).getBlock()).onScan(world,pos.getX(),pos.getY(),pos.getZ(),player,scanner);
                 return true;
             }
 		}

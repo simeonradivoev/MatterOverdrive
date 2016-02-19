@@ -1,8 +1,8 @@
 package matteroverdrive.handler;
 
 import com.brsanthu.googleanalytics.*;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class GoogleAnalyticsCommon implements IConfigSubscriber
 {
     private String lastScreen;
-    private GoogleAnalyticsConfig config;
+    private final GoogleAnalyticsConfig config;
     private static final String APP_ID = "UA-3322335-6";
     protected com.brsanthu.googleanalytics.GoogleAnalytics googleAnalytics;
     public static final String EVENT_CATEGORY_BIOTIC_STATS = "Biotic Stats";
@@ -23,16 +23,19 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
     public static final String TIMING_CATEGORY_MATTER_REGISTRY = "Matter Registry";
     public static final String EVENT_CATEGORY_ITEMS = "Items";
     public static final String EVENT_CATEGORY_QUESTS = "Quests";
+    public static final String EVENT_CATEGORY_CONFIG = "Config";
 
     public static final String EVENT_ACTION_BIOTIC_STAT_UNLOCK = "Unlock";
     public static final String EVENT_ACTION_KILL = "Kill";
     public static final String EVENT_ACTION_REPLICATE = "Replicate";
+    public static final String EVENT_ACTION_REPLICATION_FAIL = "Replication Fail";
     public static final String EVENT_ACTION_BIOTIC_STAT_USE = "Use";
     public static final String EVENT_ACTION_CRAFT_ITEMS = "Craft";
     public static final String EVENT_ACTION_PLAYER_DEATH = "Player Death";
     public static final String EVENT_ACTION_QUEST_COMPLETE = "Complete";
     public static final String EVENT_ACTION_QUEST_ABANDON = "Abandon";
     public static final String EVENT_ACTION_QUEST_ACCEPT = "Accept";
+    public static final String EVENT_ACTION_VALUES = "Values";
 
     public static final String TIMING_VAR_MATTER_REGISTRY_CALCULATION = "Calculation";
     public static final String TIMING_VAR_MATTER_REGISTRY_SAVING_TO_DISK = "Saving To Disk";
@@ -48,7 +51,9 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
     public void sendEventHit(String category, String action, String label, Integer value, EntityPlayer entityPlayer)
     {
         if (googleAnalytics != null)
-            googleAnalytics.postAsync(changeUserID(new EventHit(category,action,label,value),entityPlayer));
+        {
+            googleAnalytics.postAsync(changeUserID(new EventHit(category, action, label, value), entityPlayer));
+        }
     }
 
     public void sendEventHit(String category,String action,String label,EntityPlayer entityPlayer)
@@ -65,10 +70,36 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
 
     public void sendScreenHit(String screen,EntityPlayer entityPlayer)
     {
-        if (googleAnalytics != null && lastScreen != screen)
+        if (googleAnalytics != null && !lastScreen.equals(screen))
         {
             googleAnalytics.postAsync(changeUserID((GoogleAnalyticsRequest) new GoogleAnalyticsRequest("screenview").contentDescription(screen), entityPlayer));
             lastScreen = screen;
+        }
+    }
+
+    public void setExceptionHit(String e)
+    {
+        setExceptionHit(e,false);
+    }
+
+    public void setExceptionHit(Exception e)
+    {
+        setExceptionHit(e,false);
+    }
+
+    public void setExceptionHit(Exception e, boolean fatal)
+    {
+        if (googleAnalytics != null)
+        {
+            googleAnalytics.postAsync(changeUserID(new ExceptionHit(e.getMessage(),fatal),null));
+        }
+    }
+
+    public void setExceptionHit(String e, boolean fatal)
+    {
+        if (googleAnalytics != null)
+        {
+            googleAnalytics.postAsync(changeUserID(new ExceptionHit(e,fatal),null));
         }
     }
 
@@ -82,7 +113,7 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
     {
         if (entityPlayer != null)
         {
-            request.userId(entityPlayer.func_146094_a(entityPlayer.getGameProfile()).toString());
+            request.userId(EntityPlayer.getUUID(entityPlayer.getGameProfile()).toString());
         }
         return request;
     }

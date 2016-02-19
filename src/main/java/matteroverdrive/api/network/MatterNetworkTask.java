@@ -18,10 +18,11 @@
 
 package matteroverdrive.api.network;
 
-import matteroverdrive.data.BlockPos;
+import matteroverdrive.api.matter_network.IMatterNetworkConnection;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
@@ -49,18 +50,6 @@ public abstract class MatterNetworkTask
     String name;
 
     /**
-     * The sender address
-     */
-    BlockPos senderPos;
-
-    /**
-     * Is the task alive.
-     * Used to indicate that no machines are currently handling the task.
-     * This includes queueing and processing.
-     */
-    boolean isAlive;
-
-    /**
      * Unlocalized name of the task.
      * This is mainly used to access the description from the lang file.
      */
@@ -77,16 +66,6 @@ public abstract class MatterNetworkTask
      */
     public MatterNetworkTask()
     {
-        init();
-    }
-
-    /**
-     * Constructor with the sender parameter.
-     * @param sender The sender/creator of the task
-     */
-    public MatterNetworkTask(IMatterNetworkConnection sender)
-    {
-        setSender(sender);
         init();
     }
 
@@ -110,8 +89,7 @@ public abstract class MatterNetworkTask
      */
     public boolean isValid(World world)
     {
-        IMatterNetworkDispatcher dispatcher = getSender(world);
-        return dispatcher != null;
+        return true;
     }
     //region NBT
 
@@ -122,9 +100,7 @@ public abstract class MatterNetworkTask
     public void readFromNBT(NBTTagCompound compound)
     {
         if (compound != null) {
-            this.senderPos = new BlockPos(compound);
             this.state = MatterNetworkTaskState.get(compound.getInteger("State"));
-            this.isAlive = compound.getBoolean("isAlive");
             this.id = compound.getLong("id");
         }
     }
@@ -140,9 +116,7 @@ public abstract class MatterNetworkTask
     {
         if (compound != null)
         {
-            senderPos.writeToNBT(compound);
             compound.setInteger("State",state.ordinal());
-            compound.setBoolean("isAlive",isAlive);
             compound.setLong("id",id);
         }
     }
@@ -225,49 +199,6 @@ public abstract class MatterNetworkTask
      */
     public void setUnlocalizedName(String unlocalizedName) {
         this.unlocalizedName = unlocalizedName;
-    }
-
-    /**
-     * This method tries to retrieve the sender/creator of the task by searching the world for it's block coordinates.
-     * This method may return null if the sender/creator was not found at the coordinates.
-     * @param world the world in which the sender/creator resides in. This is where it will search for the sender/creator.
-     * @return the sender/creator of the task. May return null if sender/creator was not found in the world.
-     */
-    public IMatterNetworkDispatcher getSender(World world)
-    {
-        if (world != null && senderPos != null)
-        {
-            TileEntity entity = senderPos.getTileEntity(world);
-            if (entity instanceof IMatterNetworkDispatcher) {
-                return (IMatterNetworkDispatcher)entity;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Sets the sender of the task
-     * @param sender the sender connection
-     */
-    public void setSender(IMatterNetworkConnection sender)
-    {
-        this.senderPos = sender.getPosition();
-    }
-
-    /**
-     * Gets the Alive state of the task
-     * @return is the task alive.
-     */
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    /**
-     * Sets the task to true or false
-     * @param isAlive then new value of the alive state.
-     */
-    public void setAlive(boolean isAlive) {
-        this.isAlive = isAlive;
     }
 
     /**

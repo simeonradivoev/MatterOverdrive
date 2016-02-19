@@ -18,21 +18,15 @@
 
 package matteroverdrive.matter_network.components;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.matter_network.MatterNetworkPacket;
-import matteroverdrive.network.packet.client.PacketSendQueueFlash;
+import matteroverdrive.data.matter_network.IMatterNetworkEvent;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
-import matteroverdrive.util.MatterNetworkHelper;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Simeon on 7/15/2015.
  */
 public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<TileEntityMachinePacketQueue> {
 
-    public static int[] directions = {0,1,2,3,4,5};
+    public static final int[] directions = {0,1,2,3,4,5};
 
     public MatterNetworkComponentQueue(TileEntityMachinePacketQueue queue)
     {
@@ -40,19 +34,25 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     }
 
     @Override
+    public void onNetworkEvent(IMatterNetworkEvent event)
+    {
+
+    }
+
+    /*@Override
     public boolean canPreform(MatterNetworkPacket packet)
     {
         return rootClient.getRedstoneActive();
     }
 
     @Override
-    public void queuePacket(MatterNetworkPacket packet, ForgeDirection from)
+    public void queuePacket(MatterNetworkPacket packet)
     {
         if (canPreform(packet) && packet.isValid(getWorldObj()))
         {
             if (getPacketQueue(0).queue(packet))
             {
-                packet.addToPath(rootClient, from);
+                packet.addToPath(rootClient);
                 packet.tickAlive(getWorldObj(),true);
                 MatterOverdrive.packetPipeline.sendToAllAround(new PacketSendQueueFlash(rootClient), rootClient, 32);
             }
@@ -63,20 +63,22 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     protected void executePacket(MatterNetworkPacket packet)
     {
 
-    }
+    }*/
 
-    protected int handlePacketBroadcast(World world,MatterNetworkPacket packet)
+    /*protected int handlePacketBroadcast(World world,MatterNetworkPacket packet)
     {
         int broadcastCount = 0;
-        for (int i = 0; i < directions.length; i++) {
-            if (MatterNetworkHelper.broadcastPacketInDirection(world, packet, rootClient, ForgeDirection.getOrientation(directions[i]))) {
+        for (int direction : directions)
+        {
+            if (MatterNetworkHelper.broadcastPacketInDirection(world, packet, rootClient, EnumFacing.VALUES[direction]))
+            {
                 broadcastCount++;
             }
         }
         return broadcastCount;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public int onNetworkTick(World world, TickEvent.Phase phase)
     {
         int broadcastCount = 0;
@@ -95,5 +97,5 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
             }
         }
         return broadcastCount;
-    }
+    }*/
 }

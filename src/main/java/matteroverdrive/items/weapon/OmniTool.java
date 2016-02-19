@@ -18,8 +18,11 @@
 
 package matteroverdrive.items.weapon;/* Created by Simeon on 10/17/2015. */
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.proxy.ClientProxy;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.WeaponShot;
@@ -39,10 +42,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
@@ -52,11 +51,12 @@ import java.util.List;
 public class OmniTool extends EnergyWeapon
 {
     private static float BLOCK_DAMAGE,STEP_SOUND_COUNTER,LAST_BRAKE_TIME;
-    private static int CURRENT_BLOCK_X,CURRENT_BLOCK_Y,CURRENT_BLOCK_Z,LAST_SIDE;
+    private static BlockPos CURRENT_BLOCK;
+    private static EnumFacing LAST_SIDE;
     public static final int RANGE = 24;
     private static final int MAX_USE_TIME = 240;
     private static final int ENERGY_PER_SHOT = 512;
-    private static final float DIG_POWER_MULTIPLY = 0.007f;
+    private static final float DIG_POWER_MULTIPLY = 0.03f;
 
     public OmniTool(String name)
     {
@@ -103,49 +103,46 @@ public class OmniTool extends EnergyWeapon
         if (player.worldObj.isRemote && player.equals(Minecraft.getMinecraft().thePlayer)) {
             if (canDig(itemStack, player.worldObj))
             {
-                MovingObjectPosition movingObjectPosition = player.rayTrace(getRange(itemStack),1);
+                MovingObjectPosition hit = player.rayTrace(getRange(itemStack),1);
 
-                if (movingObjectPosition != null && movingObjectPosition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK )
+                if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK )
                 {
-                    int x = movingObjectPosition.blockX;
-                    int y = movingObjectPosition.blockY;
-                    int z = movingObjectPosition.blockZ;
-                    Block block = player.worldObj.getBlock(x, y, z);
-                    boolean canMine = player.worldObj.canMineBlock(player,x,y,z) && player.isCurrentToolAdventureModeExempt(x,y,z);
+                    IBlockState state = player.worldObj.getBlockState(hit.getBlockPos());
+                    boolean canMine = state.getBlock().canHarvestBlock(player.worldObj,hit.getBlockPos(),player) && player.capabilities.allowEdit;
 
-                    if (block != null && block.getMaterial() != Material.air && canMine) {
-
-                        float percent = (1-(float)count/(float)getMaxItemUseDuration(itemStack));
-                        //MatterOverdrive.log.info("Percent %s",percent);
+                    if (state.getBlock() != null && state.getBlock().getMaterial() != Material.air && canMine) {
 
                         ++STEP_SOUND_COUNTER;
-                        LAST_SIDE = movingObjectPosition.sideHit;
+                        LAST_SIDE = hit.sideHit;
 
-                        if (isSameBlock(x,y,z))
+                        if (isSameBlock(hit.getBlockPos()))
                         {
                             if (BLOCK_DAMAGE >= 1.0F)
                             {
                                 //this.isHittingBlock = false;
-                                MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(x,y,z,2,movingObjectPosition.sideHit));
-                                Minecraft.getMinecraft().playerController.onPlayerDestroyBlock(x, y, z, movingObjectPosition.sideHit);
+                                MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(hit.getBlockPos(),2,hit.sideHit));
+                                Minecraft.getMinecraft().playerController.onPlayerDestroyBlock(hit.getBlockPos(), hit.sideHit);
                                 BLOCK_DAMAGE = 0.0F;
                                 STEP_SOUND_COUNTER = 0.0F;
                                 //this.blockHitDelay = 5;
                             }else if (BLOCK_DAMAGE == 0)
                             {
-                                MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(x,y,z,0,movingObjectPosition.sideHit));
+                                MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(hit.getBlockPos(),0,hit.sideHit));
                             }
 
-                            BLOCK_DAMAGE = MathHelper.clamp_float(modifyStatFromModules(Reference.WS_DAMAGE,itemStack,BLOCK_DAMAGE+block.getPlayerRelativeBlockHardness(player, player.worldObj, x, y, z)),0,1);
-                            player.worldObj.destroyBlockInWorldPartially(player.getEntityId(), x, y, z, (int)(BLOCK_DAMAGE * 10));
+                            BLOCK_DAMAGE = MathHelper.clamp_float(modifyStatFromModules(Reference.WS_DAMAGE,itemStack,BLOCK_DAMAGE+state.getBlock().getPlayerRelativeBlockHardness(player, player.worldObj, hit.getBlockPos())),0,1);
+                            player.worldObj.sendBlockBreakProgress(player.getEntityId(), hit.getBlockPos(), (int)(BLOCK_DAMAGE * 10));
                         }else
                         {
                             stopMiningLastBlock();
-                            setLastBlock(x,y,z);
+                            setLastBlock(hit.getBlockPos());
                         }
                     }
                 }
 
+            }else
+            {
+                player.stopUsingItem();
             }
         }else
         {
@@ -153,17 +150,15 @@ public class OmniTool extends EnergyWeapon
         }
     }
 
-    boolean isSameBlock(int x,int y,int z)
+    boolean isSameBlock(BlockPos pos)
     {
-        return x == CURRENT_BLOCK_X && y == CURRENT_BLOCK_Y && z == CURRENT_BLOCK_Z;
+        return CURRENT_BLOCK != null && CURRENT_BLOCK.equals(pos);
     }
 
     @SideOnly(Side.CLIENT)
-    void setLastBlock(int x,int y,int z)
+    void setLastBlock(BlockPos pos)
     {
-        CURRENT_BLOCK_X = x;
-        CURRENT_BLOCK_Y = y;
-        CURRENT_BLOCK_Z = z;
+        CURRENT_BLOCK = pos;
     }
 
     @Override
@@ -173,31 +168,36 @@ public class OmniTool extends EnergyWeapon
         if (world.isRemote)
         {
             stopMiningLastBlock();
+        }else
+        {
+            int ticks = getMaxItemUseDuration(itemStack) - count;
+            //DrainEnergy(itemStack, ticks, false);
         }
     }
 
     @SideOnly(Side.CLIENT)
     private void stopMiningLastBlock()
     {
-        BLOCK_DAMAGE = 0;
-        STEP_SOUND_COUNTER = 0.0F;
-        MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(CURRENT_BLOCK_X, CURRENT_BLOCK_Y, CURRENT_BLOCK_Z, 1, LAST_SIDE));
+        if (CURRENT_BLOCK != null)
+        {
+            BLOCK_DAMAGE = 0;
+            STEP_SOUND_COUNTER = 0.0F;
+            MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(CURRENT_BLOCK, 1, LAST_SIDE));
+        }
     }
 
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int p_77648_7_, float p_77648_8_, float p_77648_9_, float p_77648_10_)
+    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         return false;
     }
 
-    public PlasmaBolt spawnProjectile(ItemStack weapon,EntityLivingBase shooter,Vec3 position,Vec3 dir,WeaponShot shot)
+    @Override
+    public PlasmaBolt getDefaultProjectile(ItemStack weapon,EntityLivingBase shooter,Vec3 position,Vec3 dir,WeaponShot shot)
     {
-        PlasmaBolt fire = new PlasmaBolt(shooter.worldObj, shooter,position,dir, shot,getShotSpeed(weapon,shooter));
-        fire.setWeapon(weapon);
-        fire.setFireDamageMultiply(WeaponHelper.modifyStat(Reference.WS_FIRE_DAMAGE,weapon,0));
-        fire.setKnockBack(0.05f);
-        shooter.worldObj.spawnEntityInWorld(fire);
-        return fire;
+        PlasmaBolt bolt = super.getDefaultProjectile(weapon,shooter,position,dir,shot);
+        bolt.setKnockBack(0.05f);
+        return bolt;
     }
 
     @Override
@@ -228,24 +228,6 @@ public class OmniTool extends EnergyWeapon
     public float getWeaponBaseAccuracy(ItemStack weapon,boolean zoomed)
     {
         return 0.3f + getHeat(weapon)/getMaxHeat(weapon)*5;
-    }
-
-    //Dig speed
-    public float func_150893_a(ItemStack p_150893_1_, Block p_150893_2_)
-    {
-        return 8.0F;
-    }
-
-    //Can harvest block ?
-    @Override
-    public boolean func_150897_b(Block p_150897_1_)
-    {
-        return true;
-    }
-
-    private boolean sameToolAndBlock(int x, int y, int z)
-    {
-        return x == CURRENT_BLOCK_X && y == CURRENT_BLOCK_Y && z == CURRENT_BLOCK_Z;
     }
 
     @Override
@@ -295,10 +277,9 @@ public class OmniTool extends EnergyWeapon
                 return new Vector2f(80,40);
             case Reference.MODULE_BARREL:
                 return new Vector2f(60,115);
-            case Reference.MODULE_OTHER:
-                return new Vector2f(200,45);
+            default:
+                return new Vector2f(200,60 + ((slot - Reference.MODULE_OTHER) * 22));
         }
-        return new Vector2f(0,0);
     }
 
     @Override
@@ -339,18 +320,16 @@ public class OmniTool extends EnergyWeapon
         {
             if (canFire(itemStack, world, entityPlayer)) {
                 itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
-                if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
-                    ClientWeaponHandler.RECOIL_AMOUNT = 6 + getAccuracy(itemStack, entityPlayer, isWeaponZoomed(entityPlayer, itemStack)) * 2;
-                    ClientWeaponHandler.RECOIL_TIME = 1;
-                    Minecraft.getMinecraft().renderViewEntity.hurtTime = 8;
-                    Minecraft.getMinecraft().renderViewEntity.maxHurtTime = 20;
-                }
                 Vec3 dir = entityPlayer.getLook(1);
                 Vec3 pos = getFirePosition(entityPlayer, dir, Mouse.isButtonDown(1));
-                WeaponShot shot = createShot(itemStack, entityPlayer, Mouse.isButtonDown(1));
+                WeaponShot shot = createClientShot(itemStack, entityPlayer, Mouse.isButtonDown(1));
                 onClientShot(itemStack, entityPlayer, pos, dir, shot);
                 addShootDelay(itemStack);
                 sendShootTickToServer(world, shot, dir, pos);
+                if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+                    ClientProxy.instance().getClientWeaponHandler().setRecoil(6 + getAccuracy(itemStack, entityPlayer, isWeaponZoomed(entityPlayer, itemStack)) * 2,1,0.05f);
+                    ClientProxy.instance().getClientWeaponHandler().setCameraRecoil(1 + getAccuracy(itemStack, entityPlayer, true) * 0.08f,1);
+                }
                 return;
             } else if (needsRecharge(itemStack)) {
                 chargeFromEnergyPack(itemStack, entityPlayer);
@@ -363,12 +342,8 @@ public class OmniTool extends EnergyWeapon
     @SideOnly(Side.CLIENT)
     private Vec3 getFirePosition(EntityPlayer entityPlayer,Vec3 dir,boolean isAiming)
     {
-        Vec3 pos = Vec3.createVectorHelper(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ);
-        if (!isAiming) {
-            pos.xCoord -= (double)(MathHelper.cos(entityPlayer.rotationYaw / 180.0F * (float) Math.PI) * 0.16F);
-            pos.zCoord -= (double)(MathHelper.sin(entityPlayer.rotationYaw / 180.0F * (float) Math.PI) * 0.16F);
-            pos.yCoord -= (double)(MathHelper.cos(entityPlayer.rotationPitch / 180.0F * (float) Math.PI) * 0.16F);
-        }
+        Vec3 pos = entityPlayer.getPositionEyes(1);
+        pos = pos.subtract((double)(MathHelper.cos(entityPlayer.rotationYaw / 180.0F * (float) Math.PI) * 0.16F),0,(double)(MathHelper.cos(entityPlayer.rotationYaw / 180.0F * (float) Math.PI) * 0.16F));
         pos = pos.addVector(dir.xCoord,dir.yCoord,dir.zCoord);
         return pos;
     }

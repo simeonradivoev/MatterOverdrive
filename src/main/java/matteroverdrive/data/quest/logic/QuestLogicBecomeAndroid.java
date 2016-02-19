@@ -1,9 +1,10 @@
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonObject;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +21,12 @@ import java.util.Random;
 public class QuestLogicBecomeAndroid extends AbstractQuestLogic
 {
     boolean talkToComplete;
+
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+
+    }
 
     @Override
     public String modifyInfo(QuestStack questStack, String info)
@@ -90,13 +97,13 @@ public class QuestLogicBecomeAndroid extends AbstractQuestLogic
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
         boolean[] hasParts = new boolean[4];
         int[] slots = new int[4];

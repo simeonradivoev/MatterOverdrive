@@ -18,20 +18,20 @@
 
 package matteroverdrive.network.packet.server;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
+import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.data.biostats.BioticStatTeleport;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.PacketSpawnParticle;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.EnumSet;
 
@@ -79,25 +79,28 @@ public class PacketTeleportPlayer extends PacketAbstract {
     {
 
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketTeleportPlayer message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketTeleportPlayer message, MessageContext ctx)
         {
             AndroidPlayer androidPlayer = AndroidPlayer.get(player);
             if (androidPlayer != null && androidPlayer.isAndroid())
             {
-                if(!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(MatterOverdriveBioticStats.teleport, androidPlayer.getUnlockedLevel(MatterOverdriveBioticStats.teleport), androidPlayer)))
+                int unlockedLevel = androidPlayer.getUnlockedLevel(MatterOverdriveBioticStats.teleport);
+                if(!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(MatterOverdriveBioticStats.teleport,unlockedLevel,androidPlayer)))
                 {
-                    MatterOverdrive.packetPipeline.sendToAllAround(new PacketSpawnParticle("teleport", player.posX, player.posY + 1, player.posZ, 1, 0), player, 64);
-                    player.worldObj.playSoundToNearExcept(player, Reference.MOD_ID + ":" + "android_teleport", 0.2f, 0.8f + 0.4f * player.worldObj.rand.nextFloat());
-                    player.setPositionAndUpdate(message.x, message.y, message.z);
-                    player.worldObj.playSoundEffect(message.x, message.y, message.z, Reference.MOD_ID + ":" + "android_teleport", 0.2f, 0.8f + 0.4f * player.worldObj.rand.nextFloat());
-                    androidPlayer.getEffects().setLong("LastTeleport", player.worldObj.getTotalWorldTime() + BioticStatTeleport.TELEPORT_DELAY);
-                    androidPlayer.getEffects().setInteger("GlitchTime", 5);
-                    androidPlayer.extractEnergyScaled(BioticStatTeleport.ENERGY_PER_TELEPORT);
-                    androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS));
-                    androidPlayer.getPlayer().fallDistance = 0;
+                    if (MatterOverdriveBioticStats.teleport.isEnabled(androidPlayer,unlockedLevel))
+                    {
+                        MatterOverdrive.packetPipeline.sendToAllAround(new PacketSpawnParticle("teleport", player.posX, player.posY + 1, player.posZ, 1, RenderParticlesHandler.Blending.Additive), player, 64);
+                        player.worldObj.playSoundToNearExcept(player, Reference.MOD_ID + ":" + "android_teleport", 0.2f, 0.8f + 0.4f * player.worldObj.rand.nextFloat());
+                        player.setPositionAndUpdate(message.x, message.y, message.z);
+                        player.worldObj.playSoundEffect(message.x, message.y, message.z, Reference.MOD_ID + ":" + "android_teleport", 0.2f, 0.8f + 0.4f * player.worldObj.rand.nextFloat());
+                        androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_LAST_TELEPORT, player.worldObj.getTotalWorldTime() + BioticStatTeleport.TELEPORT_DELAY);
+                        androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_GLITCH_TIME, 5);
+                        androidPlayer.extractEnergyScaled(BioticStatTeleport.ENERGY_PER_TELEPORT);
+                        androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS));
+                        androidPlayer.getPlayer().fallDistance = 0;
+                    }
                 }
             }
-            return null;
         }
     }
 }

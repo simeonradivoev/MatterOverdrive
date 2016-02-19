@@ -25,9 +25,12 @@ import java.util.Random;
 public class GalaxyGenerator implements IConfigSubscriber
 {
     //region Private Vars
-    private Random random,starRandom,planetRandom,starNameRandom;
-    private WeightedRandomSpaceGen<Planet> planetGen;
-    private WeightedRandomSpaceGen<Star> starGen;
+    private final Random random;
+    private final Random starRandom;
+    private final Random planetRandom;
+    private final Random starNameRandom;
+    private final WeightedRandomSpaceGen<Planet> planetGen;
+    private final WeightedRandomSpaceGen<Star> starGen;
     private float StarPrefixChance = 1;
     private float StarSufixChance = 0.8f;
     private int maxStars = 2048 + 256;
@@ -111,15 +114,15 @@ public class GalaxyGenerator implements IConfigSubscriber
 
         for (Star star : stars)
         {
-            for (int i = 0;i < quadrants.length;i++)
+            for (Quadrant quadrant : quadrants)
             {
-                if (star.getX() >= quadrants[i].getX() && star.getX() < quadrants[i].getX() + quadrantPosPeace
-                        && star.getY() >= quadrants[i].getY() && star.getY() < quadrants[i].getY() + quadrantPosPeace
-                        && star.getZ() >= quadrants[i].getZ() && star.getZ() < quadrants[i].getZ() + quadrantPosPeace)
+                if (star.getX() >= quadrant.getX() && star.getX() < quadrant.getX() + quadrantPosPeace
+                        && star.getY() >= quadrant.getY() && star.getY() < quadrant.getY() + quadrantPosPeace
+                        && star.getZ() >= quadrant.getZ() && star.getZ() < quadrant.getZ() + quadrantPosPeace)
                 {
-                    star.setId(quadrants[i].getStars().size());
-                    quadrants[i].addStar(star);
-                    star.setQuadrant(quadrants[i]);
+                    star.setId(quadrant.getStars().size());
+                    quadrant.addStar(star);
+                    star.setQuadrant(quadrant);
                 }
             }
         }
@@ -127,7 +130,7 @@ public class GalaxyGenerator implements IConfigSubscriber
 
     public List<Star> generateStars(int amount)
     {
-        List<Star> stars = new ArrayList<Star>(amount);
+        List<Star> stars = new ArrayList<>(amount);
         List<String> names = StarGen.generateAvailableNames(starNameRandom, 18,StarPrefixChance,StarSufixChance);
 
         for (int i = 0;i < amount;i++)
@@ -191,7 +194,7 @@ public class GalaxyGenerator implements IConfigSubscriber
         double x = MathHelper.clamp_double(MOMathHelper.nextGaussian(random, 0, 1d / 3d), -1, 1);
         double y = MathHelper.clamp_double(MOMathHelper.nextGaussian(random, 0, 1d / 3d), -1, 1);
         double z = MathHelper.clamp_double(MOMathHelper.nextGaussian(random, 0, 1d / 3d), -1, 1);
-        return Vec3.createVectorHelper(x,y,z);
+        return new Vec3(x,y,z);
     }
     //endregion
 

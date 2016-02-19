@@ -18,8 +18,6 @@
 
 package matteroverdrive.client.render;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.RenderHandler;
@@ -33,15 +31,19 @@ import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,24 +57,29 @@ import static org.lwjgl.opengl.GL11.*;
 @SideOnly(Side.CLIENT)
 public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 {
-    Map<Entity, WeaponSound> soundMap = new HashMap<>();
-    public static ResourceLocation beamTexture = new ResourceLocation(Reference.PATH_FX + "plasmabeam.png");
-    public static ResourceLocation xbeam = new ResourceLocation(Reference.PATH_FX + "xbeam.png");
+    final Map<Entity, WeaponSound> soundMap = new HashMap<>();
+    public static final ResourceLocation beamTexture = new ResourceLocation(Reference.PATH_FX + "plasmabeam.png");
 
     public void onRenderWorldLast(RenderHandler renderHandler,RenderWorldLastEvent event)
     {
-        glPushMatrix();
-        glTranslated(-Minecraft.getMinecraft().thePlayer.posX, -Minecraft.getMinecraft().thePlayer.posY, -Minecraft.getMinecraft().thePlayer.posZ);
+        GlStateManager.disableLighting();
+        GlStateManager.disableCull();
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GL_ONE,GL_ONE,0,0);
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(-Minecraft.getMinecraft().thePlayer.posX, -Minecraft.getMinecraft().thePlayer.posY, -Minecraft.getMinecraft().thePlayer.posZ);
         renderClient(renderHandler, event.partialTicks);
         renderOthers(renderHandler, event.partialTicks);
-        glPopMatrix();
+        GlStateManager.popMatrix();
+
+        GlStateManager.disableBlend();
+        GlStateManager.enableCull();
     }
 
 	@SuppressWarnings("unchecked")
     public void renderOthers(RenderHandler renderHandler, float ticks)
     {
-
-
 		Minecraft.getMinecraft().theWorld.getLoadedEntityList().stream()
 				.filter(o -> o instanceof EntityPlayer)
 				.filter(player -> !player.equals(Minecraft.getMinecraft().thePlayer))
@@ -80,7 +87,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 					EntityPlayer player = (EntityPlayer)o;
 					if (shouldRenderBeam(player))
 					{
-						renderRaycastedBeam(player.getPosition(ticks).addVector(0, player.getEyeHeight(), 0), player.getLook(0), Vec3.createVectorHelper(-0.5, -0.3, 1), player);
+						renderRaycastedBeam(player.getPositionEyes(ticks).addVector(0, player.getEyeHeight(), 0), player.getLook(0), new Vec3(-0.5, -0.3, 1), player);
 					}
 					else
 					{
@@ -91,13 +98,13 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 
     public void renderClient(RenderHandler renderHandler, float ticks)
     {
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 
         if (shouldRenderBeam(player))
         {
-            Vec3 pos = player.getPosition(1);
+            Vec3 pos = player.getPositionEyes(1);
             Vec3 look = player.getLook(0);
-            renderRaycastedBeam(pos, look, Vec3.createVectorHelper(-0.1, -0.1, 0.15), player);
+            renderRaycastedBeam(pos, look, new Vec3(-0.1, -0.1, 0.15), player);
         }
         else
         {
@@ -159,42 +166,34 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
             ((EnergyWeapon) weaponStack.getItem()).onProjectileHit(hit, weaponStack, caster.worldObj, 1);
             if (weaponStack.getItem() instanceof OmniTool && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
-                glPushMatrix();
+                GlStateManager.pushMatrix();
                 RenderUtils.applyColorWithMultipy(getBeamColor(caster), 0.5f + (float)(1+Math.sin(caster.worldObj.getWorldTime() * 0.5f)) * 0.5f);
                 Minecraft.getMinecraft().renderEngine.bindTexture(TileEntityRendererStation.glowTexture);
-                glDisable(GL_LIGHTING);
-                glDisable(GL_CULL_FACE);
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE,GL_ONE);
-                ForgeDirection side = ForgeDirection.getOrientation(hit.sideHit);
-                glTranslated(hit.blockX+0.5,hit.blockY+0.5,hit.blockZ+0.5);
-                glTranslated(side.offsetX*0.5,side.offsetY*0.5,side.offsetZ*0.5);
-                if (side == ForgeDirection.SOUTH)
+                GlStateManager.translate(hit.getBlockPos().getX()+0.5,hit.getBlockPos().getY()+0.5,hit.getBlockPos().getZ()+0.5);
+                GlStateManager.translate(hit.sideHit.getDirectionVec().getX()*0.5,hit.sideHit.getDirectionVec().getY()*0.5,hit.sideHit.getDirectionVec().getZ()*0.5);
+                if (hit.sideHit == EnumFacing.SOUTH)
                 {
-                    glRotated(90, 1, 0, 0);
+                    GlStateManager.rotate(90, 1, 0, 0);
 
                 }
-				else if (side == ForgeDirection.NORTH)
+				else if (hit.sideHit == EnumFacing.NORTH)
                 {
-                    glRotated(90, -1, 0, 0);
+                    GlStateManager.rotate(90, -1, 0, 0);
                 }
-				else if (side == ForgeDirection.EAST)
+				else if (hit.sideHit == EnumFacing.EAST)
                 {
-                    glRotated(90, 0, 0, -1);
+                    GlStateManager.rotate(90, 0, 0, -1);
                 }
-				else if (side ==ForgeDirection.WEST)
+				else if (hit.sideHit == EnumFacing.WEST)
                 {
-                    glRotated(90, 0, 0, 1);
+                    GlStateManager.rotate(90, 0, 0, 1);
                 }
-				else if (side == ForgeDirection.DOWN)
+				else if (hit.sideHit == EnumFacing.DOWN)
                 {
-                    glRotated(180, 1, 0, 0);
+                    GlStateManager.rotate(180, 1, 0, 0);
                 }
-                glScaled(1, 1.5 + Math.sin(caster.worldObj.getWorldTime() * 0.5) * 0.5, 1);
-                ClientProxy.renderHandler.getRendererOmniTool().getModel().renderPart("dig_effect");
-                glDisable(GL_BLEND);
-                glEnable(GL_CULL_FACE);
-                glPopMatrix();
+                GlStateManager.scale(1, 1.5 + Math.sin(caster.worldObj.getWorldTime() * 0.5) * 0.5, 1);
+                GlStateManager.popMatrix();
             }
         }
     }

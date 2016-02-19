@@ -18,22 +18,19 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.items.includes.MOBaseItem;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 8/5/2015.
  */
 public class FlashDrive extends MOBaseItem
 {
-    private IIcon overlay;
-    protected Color color;
+    protected final Color color;
 
     public FlashDrive(String name,Color color) {
         super(name);
@@ -41,16 +38,16 @@ public class FlashDrive extends MOBaseItem
         setMaxStackSize(1);
     }
 
-    @Override
+  /*  @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister p_94581_1_)
     {
         this.itemIcon = p_94581_1_.registerIcon(Reference.MOD_ID + ":" + "flash_drive");
         overlay = p_94581_1_.registerIcon(Reference.MOD_ID + ":" + "flash_drive_overlay");
-    }
+    }*/
 
     public boolean hasDetails(ItemStack stack){return true;}
-
+/*
     @Override
     @SideOnly(Side.CLIENT)
     public boolean requiresMultipleRenderPasses()
@@ -75,7 +72,7 @@ public class FlashDrive extends MOBaseItem
         {
             return itemIcon;
         }
-    }
+    }*/
 
     @Override
     @SideOnly(Side.CLIENT)

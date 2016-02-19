@@ -18,7 +18,7 @@
 
 package matteroverdrive.blocks;
 
-import matteroverdrive.tile.TileEntityMachinePatternMonitor;
+import matteroverdrive.machines.pattern_monitor.TileEntityMachinePatternMonitor;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

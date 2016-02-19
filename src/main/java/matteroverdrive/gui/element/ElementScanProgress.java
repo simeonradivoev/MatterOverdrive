@@ -22,6 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.math.MOMathHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
@@ -67,8 +68,8 @@ public class ElementScanProgress extends MOElementBase
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(posX,posY,0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX,posY,0);
 
         gui.bindTexture(texture);
         this.drawTexturedModalRect(0,0,0,0,117,47);
@@ -83,7 +84,7 @@ public class ElementScanProgress extends MOElementBase
 
         for (int i = 0;i < 26;i++)
         {
-            float newValue = 0;
+            float newValue;
 
             if(i < progress)
             {
@@ -110,8 +111,8 @@ public class ElementScanProgress extends MOElementBase
             values[i] = MOMathHelper.Lerp(values[i],newValue,0.05f);
         }
 
-        GL11.glPopMatrix();
-        GL11.glColor3f(1, 1, 1);
+        GlStateManager.popMatrix();
+        GlStateManager.color(1,1,1);
     }
 
     public void setSeed(int seed)

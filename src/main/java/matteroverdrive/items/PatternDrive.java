@@ -18,22 +18,17 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.matter.IMatterPatternStorage;
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
 
@@ -42,9 +37,9 @@ import java.util.List;
  */
 public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
 {
-    private IIcon storageFull;
-    private IIcon storagePartiallyFull;
-    int capacity;
+    /*private IIcon storageFull;
+    private IIcon storagePartiallyFull;*/
+    final int capacity;
 
     public PatternDrive(String name, int capacity)
     {
@@ -53,7 +48,7 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
         this.setMaxStackSize(1);
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister p_94581_1_)
     {
@@ -74,15 +69,16 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
             default:
                 return itemIcon;
         }
-    }
+    }*/
 
+    @Override
     public int getDamage(ItemStack stack)
     {
         if (stack.hasTagCompound())
         {
-            if (stack.getTagCompound().func_150296_c().size() > 0)
+            if (stack.getTagCompound().getKeySet().size() > 0)
             {
-                if (stack.getTagCompound().func_150296_c().size() < getCapacity(stack))
+                if (stack.getTagCompound().getKeySet().size() < getCapacity(stack))
                 {
                     return 1;
                 }
@@ -106,31 +102,28 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     {
         if(itemstack.hasTagCompound())
         {
-            ItemPattern[] patterns = getPatterns(itemstack);
-            for (int i = 0;i < patterns.length;i++)
+            for (int i = 0; i < getCapacity(itemstack); i++)
             {
-                ItemStack stack = patterns[i].toItemStack(false);
-                String displayName;
-                try {
-                    displayName = stack.getDisplayName();
-                }
-                catch (Exception e)
+                ItemPattern pattern = getPatternAt(itemstack,i);
+                if (pattern != null)
                 {
-                    displayName = "Unknown";
-                }
+                    ItemStack stack = pattern.toItemStack(false);
+                    String displayName;
+                    try
+                    {
+                        displayName = stack.getDisplayName();
+                    } catch (Exception e)
+                    {
+                        displayName = "Unknown";
+                    }
 
-                if (MatterHelper.getMatterAmountFromItem(stack) > 0)
-                {
-                    infos.add(MatterDatabaseHelper.getPatternInfoColor(patterns[i].getProgress()) + displayName + " [" + patterns[i].getProgress() + "%]");
-                }
-                else
-                {
-                    infos.add(EnumChatFormatting.RED + "[Invalid] " + MatterDatabaseHelper.getPatternInfoColor(patterns[i].getProgress()) + displayName + " [" + patterns[i].getProgress() + "%]");
-                }
-                if (i > 8)
-                {
-                    infos.add(EnumChatFormatting.YELLOW + String.format("...and %s more patterns.",patterns.length-9));
-                    break;
+                    if (MatterHelper.getMatterAmountFromItem(stack) > 0)
+                    {
+                        infos.add(MatterDatabaseHelper.getPatternInfoColor(pattern.getProgress()) + displayName + " [" + pattern.getProgress() + "%]");
+                    } else
+                    {
+                        infos.add(EnumChatFormatting.RED + "[Invalid] " + MatterDatabaseHelper.getPatternInfoColor(pattern.getProgress()) + displayName + " [" + pattern.getProgress() + "%]");
+                    }
                 }
             }
         }
@@ -147,50 +140,40 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
     }
 
     @Override
-    public ItemPattern[] getPatterns(ItemStack storage)
+    public ItemPattern getPatternAt(ItemStack storage, int slot)
     {
-        TagCompountCheck(storage);
-        NBTTagList tagList = storage.getTagCompound().getTagList(MatterDatabaseHelper.ITEMS_TAG_NAME, 10);
-        ItemPattern[] patterns = new ItemPattern[tagList.tagCount()];
-        for (int i = 0;i < tagList.tagCount();i++)
+        if (storage.getTagCompound() != null)
         {
-            ItemPattern pattern = new ItemPattern(tagList.getCompoundTagAt(i));
-            patterns[i] = pattern;
-        }
-        return patterns;
-    }
-
-    @Override
-    public boolean addItem(ItemStack storage, ItemStack itemStack,int initialAmount,boolean simulate)
-    {
-        TagCompountCheck(storage);
-
-        NBTTagList patternsTagList = storage.getTagCompound().getTagList(MatterDatabaseHelper.ITEMS_TAG_NAME, Constants.NBT.TAG_COMPOUND);
-        if(patternsTagList.tagCount() < getCapacity(storage))
-        {
-            if(MatterHelper.CanScan(itemStack))
+            if (slot < getCapacity(storage) && storage.getTagCompound().hasKey("p"+slot))
             {
-                int itemProgress = MatterDatabaseHelper.getItemStackProgress(storage, itemStack);
-
-                if(itemProgress < MatterDatabaseHelper.MAX_ITEM_PROGRESS)
-                {
-                    if (!simulate)
-                    {
-                        MatterDatabaseHelper.addProgressToPatternStorage(storage, itemStack, initialAmount,false);
-                    }
-                    return true;
-                }
+                ItemPattern pattern = new ItemPattern(storage.getTagCompound().getCompoundTag("p"+slot));
+                return pattern;
             }
         }
-
-        return false;
+        return null;
     }
 
     @Override
-    public ItemPattern getPattern(ItemStack storage, ItemStack item)
+    public void setItemPatternAt(ItemStack storage, int slot, ItemPattern itemPattern)
     {
-        TagCompountCheck(storage);
-        return  MatterDatabaseHelper.getPatternFromStorage(storage, item);
+        if (storage.getTagCompound() == null)
+            storage.setTagCompound(new NBTTagCompound());
+
+        if (itemPattern != null)
+        {
+            NBTTagCompound patternTag = new NBTTagCompound();
+            itemPattern.writeToNBT(patternTag);
+            storage.getTagCompound().setTag("p" + slot, patternTag);
+        }else
+        {
+            storage.getTagCompound().removeTag("p"+slot);
+        }
+    }
+
+    @Override
+    public boolean increasePatternProgress(ItemStack itemStack, int slot, int amount)
+    {
+        return false;
     }
 
     @Override

@@ -1,11 +1,12 @@
 package matteroverdrive.client.sound;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.audio.PositionedSound;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.client.FMLClientHandler;
 
 /**
  * Created by Simeon on 5/12/2015.
@@ -15,13 +16,13 @@ public class GravitationalAnomalySound extends PositionedSound implements ITicka
     boolean donePlaying = false;
     double range;
 
-    public GravitationalAnomalySound(ResourceLocation sound, int x, int y, int z, float volume, double range)
+    public GravitationalAnomalySound(ResourceLocation sound, BlockPos pos, float volume, double range)
     {
         super(sound);
-        setPosition(x, y, z);
+        setPosition(pos.getX(),pos.getY(),pos.getZ());
         this.volume = volume;
         this.range = range;
-        field_147666_i = AttenuationType.NONE;
+        this.attenuationType = AttenuationType.NONE;
         this.repeat = true;
     }
 
@@ -66,8 +67,8 @@ public class GravitationalAnomalySound extends PositionedSound implements ITicka
     @Override
     public void update()
     {
-        EntityClientPlayerMP mp =  FMLClientHandler.instance().getClient().thePlayer;
-        double distance = Vec3.createVectorHelper(xPosF, yPosF, zPosF).distanceTo(mp.getPosition(0));
+        EntityPlayerSP mp =  FMLClientHandler.instance().getClient().thePlayer;
+        double distance = new Vec3(xPosF, yPosF, zPosF).distanceTo(mp.getPositionVector());
         volume = 1 - (float)(distance / range);
     }
 }

@@ -20,7 +20,6 @@ package matteroverdrive.client.render.entity;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
@@ -35,6 +34,12 @@ public class EntityFakePlayer extends EntityPlayer
     }
 
     @Override
+    public boolean isSpectator()
+    {
+        return false;
+    }
+
+    @Override
     public void addChatMessage(IChatComponent chatComponent) {
 
     }
@@ -42,10 +47,5 @@ public class EntityFakePlayer extends EntityPlayer
     @Override
     public boolean canCommandSenderUseCommand(int permissionLevel, String command) {
         return false;
-    }
-
-    @Override
-    public ChunkCoordinates getPlayerCoordinates() {
-        return null;
     }
 }

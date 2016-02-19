@@ -23,7 +23,6 @@ import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.matter.IMatterItem;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.api.matter.IMatterProvider;
-import matteroverdrive.handler.MatterEntry;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.items.MatterScanner;
 import net.minecraft.block.Block;
@@ -36,9 +35,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -63,9 +63,7 @@ public class MatterHelper
             }
             else
             {
-                MatterEntry matter = MatterOverdrive.matterRegistry.getEntry(item);
-                if (matter != null)
-                    return matter.getMatter();
+                return MatterOverdrive.matterRegistry.getMatter(item);
             }
         }
 		return 0;
@@ -85,32 +83,27 @@ public class MatterHelper
 
 
 
-    public static int Transfer(ForgeDirection toDir,int amount,IMatterProvider from,IFluidHandler to)
+    public static int Transfer(EnumFacing toDir, int amount, IMatterProvider from, IFluidHandler to)
     {
-        ForgeDirection oposite = toDir.getOpposite();
+        EnumFacing oposite = toDir.getOpposite();
         int extract = from.extractMatter(toDir,amount,true);
         int recived = to.fill(oposite, new FluidStack(MatterOverdriveFluids.matterPlasma,extract), true);
         from.extractMatter(toDir,recived,false);
         return  recived;
     }
 
-    public static ForgeDirection opposite(ForgeDirection dir)
-    {
-        return ForgeDirection.values()[ForgeDirection.OPPOSITES[dir.ordinal()]];
-    }
-
 	private static IRecipe GetRecipeOf(ItemStack item)
 	{
 		List recipes = CraftingManager.getInstance().getRecipeList();
-		for(int i = 0;i < recipes.size();i++)
-		{
-			IRecipe recipe = (IRecipe)recipes.get(i);
+        for (Object recipe1 : recipes)
+        {
+            IRecipe recipe = (IRecipe) recipe1;
 
-			if (recipe != null && recipe.getRecipeOutput() != null && recipe.getRecipeOutput().getItem() == item.getItem())
+            if (recipe != null && recipe.getRecipeOutput() != null && recipe.getRecipeOutput().getItem() == item.getItem())
             {
-				return recipe;
-			}
-		}
+                return recipe;
+            }
+        }
 
 		return null;
 	}
@@ -155,12 +148,17 @@ public class MatterHelper
         return MOStringHelper.formatNumber(matter) + MATTER_UNIT;
     }
 
+    public static String formatMatter(double matter)
+    {
+        return MOStringHelper.formatNumber(matter) + MATTER_UNIT;
+    }
+
     public static String formatMatter(int matter,int capacity)
     {
         return MOStringHelper.formatNumber(matter) + " / " + MOStringHelper.formatNumber(capacity) + MATTER_UNIT;
     }
 
-    public static boolean DropInventory(World world,IInventory inventory,int x,int y,int z)
+    public static boolean DropInventory(World world, IInventory inventory, BlockPos pos)
     {
         if(inventory != null)
         {
@@ -183,7 +181,7 @@ public class MatterHelper
                             j1 = itemstack.stackSize;
                         }
                         itemstack.stackSize -= j1;
-                        EntityItem entityitem = new EntityItem(world, (double)((float)x + f), (double)((float)y + f1), (double)((float)z + f2), new ItemStack(itemstack.getItem(), j1, itemstack.getItemDamage()));
+                        EntityItem entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), j1, itemstack.getItemDamage()));
 
                         if (itemstack.hasTagCompound())
                         {

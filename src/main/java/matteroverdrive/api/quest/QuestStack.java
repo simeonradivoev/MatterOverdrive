@@ -139,11 +139,7 @@ public class QuestStack
         {
             return true;
         }
-        if (giverUniqueID != null && entity.getUniqueID().equals(giverUniqueID))
-        {
-            return true;
-        }
-        return false;
+        return giverUniqueID != null && entity.getUniqueID().equals(giverUniqueID);
     }
 
     public boolean hasGiver()
@@ -152,11 +148,7 @@ public class QuestStack
         {
             return true;
         }
-        if (giverUniqueID != null)
-        {
-            return true;
-        }
-        return false;
+        return giverUniqueID != null;
     }
 
     public void setGiver(Entity entity)

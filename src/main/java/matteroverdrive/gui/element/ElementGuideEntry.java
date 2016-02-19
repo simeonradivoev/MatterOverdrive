@@ -24,6 +24,7 @@ import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.guide.MOGuideEntry;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -35,8 +36,8 @@ import java.util.List;
 public class ElementGuideEntry extends MOElementBase
 {
     public static final ResourceLocation BG = new ResourceLocation(Reference.PATH_ELEMENTS + "quide_element_bg.png");
-    private MOGuideEntry entry;
-    private IButtonHandler buttonHandler;
+    private final MOGuideEntry entry;
+    private final IButtonHandler buttonHandler;
     private boolean showLabel;
 
     public ElementGuideEntry(MOGuiBase gui,IButtonHandler buttonHandler, int posX, int posY,MOGuideEntry entry)
@@ -68,7 +69,7 @@ public class ElementGuideEntry extends MOElementBase
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        GL11.glColor3f(1, 1, 1);
+        GlStateManager.color(1,1,1);
         gui.bindTexture(BG);
         gui.drawSizedTexturedModalRect(this.posX, this.posY, 0, 0, 22, 22, 22, 22);
     }

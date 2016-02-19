@@ -59,8 +59,6 @@ public class GuiFusionReactor extends MOGuiMachine<TileEntityMachineFusionReacto
 
         powerBar.setProgressRight((float) machine.getMatterStorage().getMatterStored() / (float) machine.getMatterStorage().getCapacity());
         powerBar.setProgressLeft((float) machine.getEnergyStorage().getEnergyStored() / (float) machine.getEnergyStorage().getMaxEnergyStored());
-
-        ManageReqiremnetsTooltips();
     }
 
     @Override
@@ -98,10 +96,5 @@ public class GuiFusionReactor extends MOGuiMachine<TileEntityMachineFusionReacto
             yPos = 98;
             fontRendererObj.drawStringWithShadow(info, xPos, yPos, Reference.COLOR_MATTER.getColor());
         }
-    }
-
-    void ManageReqiremnetsTooltips()
-    {
-
     }
 }

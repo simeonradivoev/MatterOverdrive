@@ -18,8 +18,8 @@
 
 package matteroverdrive.items.starmap;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.api.starmap.BuildingType;
 import matteroverdrive.api.starmap.IBuilding;
 import matteroverdrive.api.starmap.IPlanetStatChange;

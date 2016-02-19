@@ -18,9 +18,10 @@
 
 package matteroverdrive.starmap;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
+import matteroverdrive.util.MOLog;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IBuilding;
@@ -55,7 +56,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
     //endregion
     //region Private Vars
     private static GalaxyServer instance;
-    private GalaxyGenerator galaxyGenerator;
+    private final GalaxyGenerator galaxyGenerator;
     //endregion
 
     //region Constructors
@@ -69,7 +70,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
     //region Saving and Creation
     public void createGalaxy(File file,World world)
     {
-        theGalaxy = galaxyGenerator.generateGalaxy("Galaxy",world.getWorldInfo().getVanillaDimension(),world.getWorldInfo().getSeed(),world);
+        theGalaxy = galaxyGenerator.generateGalaxy("Galaxy",world.provider.getDimensionId(),world.getWorldInfo().getSeed(),world);
         saveGalaxy(file);
     }
 
@@ -87,7 +88,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
             return true;
         } catch (IOException e)
         {
-			MatterOverdrive.log.error("Galaxy could not be saved", e);
+			MOLog.error("Galaxy could not be saved", e);
             return false;
         }
     }
@@ -105,19 +106,19 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
                 theGalaxy.readFromNBT(tagCompound, galaxyGenerator);
                 if (theGalaxy.getVersion() < GALAXY_VERSION)
                 {
-					MatterOverdrive.log.info("Galaxy Version is too old. Galaxy Needs regeneration");
+					MOLog.info("Galaxy Version is too old. Galaxy Needs regeneration");
                     galaxyGenerator.regenerateQuadrants(theGalaxy);
                 }
                 setTheGalaxy(theGalaxy);
                 return true;
             } catch (IOException e)
             {
-				MatterOverdrive.log.error("Could not load galaxy from file", e);
+				MOLog.error("Could not load galaxy from file", e);
                 return false;
             }
         }else
         {
-			MatterOverdrive.log.info("Galaxy File could not be found at: '%s'", file);
+			MOLog.info("Galaxy File could not be found at: '%s'", file);
         }
         return false;
     }
@@ -130,7 +131,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
      */
     private Planet claimPlanet(EntityPlayer player)
     {
-        UUID playerUUID = EntityPlayer.func_146094_a(player.getGameProfile());
+        UUID playerUUID = EntityPlayer.getUUID(player.getGameProfile());
         int quadrantID = random.nextInt(theGalaxy.getQuadrants().size());
         for (Quadrant quadrant : theGalaxy.getQuadrants())
         {
@@ -172,10 +173,10 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
         planet.setBuildingSpaces(8);
         planet.setFleetSpaces(10);
         ItemStack base = new ItemStack(MatterOverdriveItems.buildingBase);
-        ((IBuilding)base.getItem()).setOwner(base,EntityPlayer.func_146094_a(player.getGameProfile()));
+        ((IBuilding)base.getItem()).setOwner(base,EntityPlayer.getUUID(player.getGameProfile()));
         planet.addBuilding(base);
         ItemStack scoutShip = new ItemStack(MatterOverdriveItems.scoutShip);
-        ((IShip)scoutShip.getItem()).setOwner(scoutShip,EntityPlayer.func_146094_a(player.getGameProfile()));
+        ((IShip)scoutShip.getItem()).setOwner(scoutShip,EntityPlayer.getUUID(player.getGameProfile()));
         planet.addShip(scoutShip);
         planet.markDirty();
     }
@@ -188,7 +189,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
      */
     private boolean tryAndClaimPlanet(EntityPlayer player)
     {
-        UUID playerUUID = EntityPlayer.func_146094_a(player.getGameProfile());
+        UUID playerUUID = EntityPlayer.getUUID(player.getGameProfile());
         if (!homePlanets.containsKey(playerUUID))
         {
             Planet claimedPlanet = claimPlanet(player);
@@ -198,7 +199,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
                 return true;
             }else
             {
-				MatterOverdrive.log.warn("%s could not claim planet.", player.getDisplayName());
+				MOLog.warn("%s could not claim planet.", player.getDisplayName().getFormattedText());
             }
         }
         return false;
@@ -248,7 +249,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
                 }
             }else
             {
-				MatterOverdrive.log.warn("Galaxy is missing.");
+				MOLog.warn("Galaxy is missing.");
             }
         }
     }
@@ -256,17 +257,17 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load load)
     {
-        if (!load.world.isRemote && load.world.provider.dimensionId == 0)
+        if (!load.world.isRemote && load.world.provider.getDimensionId() == 0)
         {
             world = load.world;
             File galaxyFile = getGalaxyFile(load.world);
             long start = System.nanoTime();
             if (!loadGalaxy(galaxyFile,load.world)) {
                 createGalaxy(galaxyFile, load.world);
-				MatterOverdrive.log.info("Galaxy Generated and saved to '%1$s'. Took %2$s milliseconds", galaxyFile.getPath(), ((System.nanoTime() - start) / 1000000));
+				MOLog.info("Galaxy Generated and saved to '%1$s'. Took %2$s milliseconds", galaxyFile.getPath(), ((System.nanoTime() - start) / 1000000));
             }else
             {
-				MatterOverdrive.log.info("Galaxy Loaded from '%1$s'. Took %2$s milliseconds", galaxyFile.getPath(), ((System.nanoTime() - start) / 1000000));
+				MOLog.info("Galaxy Loaded from '%1$s'. Took %2$s milliseconds", galaxyFile.getPath(), ((System.nanoTime() - start) / 1000000));
             }
         }
     }
@@ -277,7 +278,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
         if (save.world == null || theGalaxy == null)
             return;
 
-        if (!save.world.isRemote && save.world.provider.dimensionId == 0)
+        if (!save.world.isRemote && save.world.provider.getDimensionId() == 0)
         {
             if (theGalaxy.isDirty())
             {
@@ -285,7 +286,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
                 File galaxyFile = getGalaxyFile(save.world);
                 if (saveGalaxy(galaxyFile)) {
                     theGalaxy.onSave(galaxyFile,save.world);
-					MatterOverdrive.log.info("Galaxy saved to '%s'. Took %s milliseconds", galaxyFile.getPath(), ((System.nanoTime() - start) / 1000000));
+					MOLog.info("Galaxy saved to '%s'. Took %s milliseconds", galaxyFile.getPath(), ((System.nanoTime() - start) / 1000000));
                 }
             }
         }
@@ -297,7 +298,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
         if (unload.world == null || theGalaxy == null)
             return;
 
-        if (unload.world.isRemote && unload.world.provider.dimensionId == 0) {
+        if (unload.world.isRemote && unload.world.provider.getDimensionId() == 0) {
             this.world = null;
             theGalaxy = null;
             homePlanets.clear();
@@ -310,7 +311,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
         if (event.world == null || theGalaxy == null)
             return;
 
-        if (!event.world.isRemote && event.world.provider.dimensionId == 0)
+        if (!event.world.isRemote && event.world.provider.getDimensionId() == 0)
         {
             theGalaxy.update(event.world);
         }

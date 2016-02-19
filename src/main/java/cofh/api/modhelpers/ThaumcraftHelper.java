@@ -1,7 +1,7 @@
 package cofh.api.modhelpers;
 
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.ModAPIManager;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

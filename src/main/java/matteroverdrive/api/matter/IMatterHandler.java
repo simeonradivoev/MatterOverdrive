@@ -18,7 +18,7 @@
 
 package matteroverdrive.api.matter;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.IFluidHandler;
 
 /**
@@ -46,7 +46,7 @@ public interface IMatterHandler extends IMatterProvider, IMatterReceiver, IFluid
 	 * @return amount of actually received matter.
 	 */
 	@Override
-	int receiveMatter(ForgeDirection side,int amount, boolean simulate);
+	int receiveMatter(EnumFacing side, int amount, boolean simulate);
 
 	/**
 	 * Used to extract matter.
@@ -56,5 +56,5 @@ public interface IMatterHandler extends IMatterProvider, IMatterReceiver, IFluid
 	 * @return amount of actually extracted matter.
 	 */
 	@Override
-	int extractMatter(ForgeDirection direction,int amount,boolean simulate);
+	int extractMatter(EnumFacing direction,int amount,boolean simulate);
 }

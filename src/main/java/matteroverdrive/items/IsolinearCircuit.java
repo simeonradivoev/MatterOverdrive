@@ -18,15 +18,13 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.items.includes.MOBaseItem;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 
 import java.util.List;
@@ -37,8 +35,6 @@ import java.util.List;
 public class IsolinearCircuit extends MOBaseItem
 {
     public static final String[] subItemNames = {"mk1","mk2","mk3","mk4"};
-    @SideOnly(Side.CLIENT)
-    private IIcon[] icons;
 
     public IsolinearCircuit(String name)
     {
@@ -46,6 +42,9 @@ public class IsolinearCircuit extends MOBaseItem
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
     }
+
+    @Override
+    public int getMetadata(int damage){return damage;}
 
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs creativeTabs, List list)
@@ -59,12 +58,12 @@ public class IsolinearCircuit extends MOBaseItem
     /**
      * Gets an holoIcon index based on an item's damage value
      */
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int damage)
     {
         int j = MathHelper.clamp_int(damage, 0, 3);
         return this.icons[j];
-    }
+    }*/
 
     /**
      * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have
@@ -76,7 +75,7 @@ public class IsolinearCircuit extends MOBaseItem
         return super.getUnlocalizedName() + "." + subItemNames[i];
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
         this.icons = new IIcon[subItemNames.length];
@@ -87,5 +86,5 @@ public class IsolinearCircuit extends MOBaseItem
         }
 
         this.itemIcon = this.icons[0];
-    }
+    }*/
 }

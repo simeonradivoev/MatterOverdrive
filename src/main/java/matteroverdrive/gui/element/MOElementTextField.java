@@ -30,6 +30,7 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -613,7 +614,6 @@ public class MOElementTextField extends MOElementBase
 						int old = caret;
 						if (!onBreak) {
 							for (int i = 3; i-- > 0 && caret > 1 && text[caret - 1] != '\n'; --caret) {
-								;
 							}
 						}
 						findRenderStart();
@@ -739,7 +739,6 @@ public class MOElementTextField extends MOElementBase
 						}
 						l: if (dir == -1) {
 							for (; i > 0 && text[i] != '\n'; --i) {
-								;
 							}
 							if (i == 0) {
 								if (text[0] == '\n') {
@@ -860,7 +859,7 @@ public class MOElementTextField extends MOElementBase
 	}
 
 	@Override
-	public void update(int mouseX, int mouseY) {
+	public void update(int mouseX, int mouseY,float partialTicks) {
 
 		caretCounter = (byte) (Minecraft.getMinecraft().ingameGUI.getUpdateCounter() & 0xFF);
 		// if (selecting) {
@@ -970,10 +969,10 @@ public class MOElementTextField extends MOElementBase
 					caretEnd = width + charW;
 				}
 
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ZERO);
+				GlStateManager.enableBlend();
+				GlStateManager.blendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ZERO);
 				gui.drawSizedRect(startX + width, startY - 1 + height, startX + caretEnd, endY + height, -1);
-				GL11.glDisable(GL11.GL_BLEND);
+				GlStateManager.disableBlend();
 			}
 
 			if (c == '\n') {

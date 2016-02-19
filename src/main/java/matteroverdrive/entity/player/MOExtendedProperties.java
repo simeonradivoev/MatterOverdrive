@@ -18,9 +18,6 @@
 
 package matteroverdrive.entity.player;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.MOEventQuest;
 import matteroverdrive.api.quest.IQuestReward;
@@ -43,6 +40,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -54,8 +54,8 @@ import java.util.List;
 public class MOExtendedProperties implements IExtendedEntityProperties
 {
     public static final String EXT_PROP_NAME = "MOPlayer";
-    private EntityPlayer player;
-    private PlayerQuestData questData;
+    private final EntityPlayer player;
+    private final PlayerQuestData questData;
 
     public MOExtendedProperties(EntityPlayer player)
     {
@@ -159,14 +159,13 @@ public class MOExtendedProperties implements IExtendedEntityProperties
                 MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_QUESTS,GoogleAnalyticsCommon.EVENT_ACTION_QUEST_COMPLETE,event.questStack.getTitle(),player);
                 questData.addQuestToCompleted(questStack);
                 getPlayer().addExperience(event.xp);
-                questStack.addRewards(rewards, getPlayer());
-                InventoryPlayer inventoryPlayer = getPlayer().inventory;
-                for (IQuestReward reward : rewards)
+                for (IQuestReward reward : event.rewards)
                 {
                     reward.giveReward(questStack,getPlayer());
                 }
                 questStack.getQuest().onCompleted(questStack,player);
-                player.addChatMessage(new ChatComponentText(String.format("[Matter Overdrive] %1$s completed %2$s", player.getDisplayName(), questStack.getTitle(player))));
+
+                player.addChatMessage(new ChatComponentText(String.format("[Matter Overdrive] %1$s completed %2$s", player.getDisplayName().getFormattedText(), questStack.getTitle(player))));
             }
             MatterOverdrive.packetPipeline.sendTo(new PacketUpdateQuest(index, questStack, PacketUpdateQuest.COMPLETE_QUEST), (EntityPlayerMP) player);
         }else

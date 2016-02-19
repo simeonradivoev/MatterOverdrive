@@ -1,6 +1,6 @@
 package matteroverdrive.tile.pipes;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.List;
 public class WeightedDirection
 {
     public float weight = 0;
-    public ForgeDirection dir;
+    public EnumFacing dir;
 
-    public  WeightedDirection(ForgeDirection dir,float weight)
+    public  WeightedDirection(EnumFacing dir,float weight)
     {
         this.weight = weight;
         this.dir = dir;

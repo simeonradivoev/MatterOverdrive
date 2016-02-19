@@ -18,10 +18,8 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IBuildable;
@@ -29,6 +27,7 @@ import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.network.packet.server.starmap.PacketStarMapAttack;
 import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.GalaxyServer;
@@ -37,17 +36,19 @@ import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.starmap.data.SpaceBody;
 import matteroverdrive.starmap.data.Star;
 import matteroverdrive.util.MOStringHelper;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -134,11 +135,6 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     }
 
     @Override
-    protected void onActiveChange() {
-
-    }
-
-    @Override
     public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
     {
         super.readCustomNBT(nbt, categories);
@@ -149,17 +145,6 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
             position = newPosition;
             destination = newDestination;
         }
-    }
-
-    @Override
-    protected void onAwake(Side side) {
-
-    }
-
-    @Override
-    public void updateEntity()
-    {
-        super.updateEntity();
     }
 
     public void zoom()
@@ -187,7 +172,7 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
-        return AxisAlignedBB.getBoundingBox(xCoord - 3,yCoord,zCoord - 3,xCoord + 3,yCoord + 5,zCoord + 3);
+        return new AxisAlignedBB(getPos().getX() - 3,getPos().getY(),getPos().getZ() - 3,getPos().getX() + 3,getPos().getY() + 5,getPos().getZ() + 3);
     }
 
     @Override
@@ -247,33 +232,26 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z) {
-
-    }
-
-    @Override
-    public void onPlaced(World world,EntityLivingBase entityLiving)
+    protected void onMachineEvent(MachineEvent event)
     {
-        if (entityLiving instanceof EntityPlayer) {
-            if (world.isRemote) {
-                Planet homeworld = GalaxyClient.getInstance().getHomeworld((EntityPlayer)entityLiving);
-                if (homeworld != null)
-                    position = new GalacticPosition(homeworld);
-            } else {
-                Planet homeworld = GalaxyServer.getInstance().getHomeworld((EntityPlayer)entityLiving);
-                if (homeworld != null)
-                    position = new GalacticPosition(homeworld);
+        if (event instanceof MachineEvent.Placed)
+        {
+            MachineEvent.Placed placed = (MachineEvent.Placed)event;
+            if (placed.entityLiving instanceof EntityPlayer) {
+                if (placed.world.isRemote) {
+                    Planet homeworld = GalaxyClient.getInstance().getHomeworld((EntityPlayer)placed.entityLiving);
+                    if (homeworld != null)
+                        position = new GalacticPosition(homeworld);
+                } else {
+                    Planet homeworld = GalaxyServer.getInstance().getHomeworld((EntityPlayer)placed.entityLiving);
+                    if (homeworld != null)
+                        position = new GalacticPosition(homeworld);
+                }
+
+                destination = new GalacticPosition(position);
+                owner = ((EntityPlayer) placed.entityLiving).getGameProfile().getId();
             }
-
-            destination = new GalacticPosition(position);
-            owner = ((EntityPlayer) entityLiving).getGameProfile().getId();
         }
-    }
-
-    @Override
-    public void onDestroyed()
-    {
-
     }
 
     public GalacticPosition getGalaxyPosition()
@@ -323,7 +301,7 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     {
         if (!worldObj.isRemote) {
             if (itemStack != null && itemStack.getItem() instanceof IBuildable) {
-                ((IBuildable) itemStack.getItem()).setBuildStart(itemStack, getWorldObj().getTotalWorldTime());
+                ((IBuildable) itemStack.getItem()).setBuildStart(itemStack, getWorld().getTotalWorldTime());
             }
         }
     }
@@ -332,16 +310,22 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
     {
         if (!worldObj.isRemote) {
             if (itemStack != null && itemStack.getItem() instanceof IBuildable) {
-                ((IBuildable) itemStack.getItem()).setBuildStart(itemStack, getWorldObj().getTotalWorldTime());
+                ((IBuildable) itemStack.getItem()).setBuildStart(itemStack, getWorld().getTotalWorldTime());
             }
         }
     }
 
-//	WAILA
+    @Override
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[0];
+    }
+
+/*//	WAILA
 	@Override
 	@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		TileEntity te = accessor.getTileEntity();
+		TileEntity te = accessor.get();
 		if (te instanceof TileEntityMachineStarMap) {
 			TileEntityMachineStarMap starMap = (TileEntityMachineStarMap)te;
 
@@ -354,5 +338,5 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
 		}
 
 		return currenttip;
-	}
+	}*/
 }

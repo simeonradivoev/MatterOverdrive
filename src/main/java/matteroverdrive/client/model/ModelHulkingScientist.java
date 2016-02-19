@@ -26,19 +26,19 @@ import net.minecraft.util.MathHelper;
 public class ModelHulkingScientist extends ModelBiped
 {
     //fields
-    ModelRenderer head;
-    ModelRenderer body;
-    ModelRenderer rightArm;
-    ModelRenderer leftArm;
-    ModelRenderer rightLeg;
-    ModelRenderer leftLeg;
-    ModelRenderer lowerRightLeg;
-    ModelRenderer lowerLeftLeg;
-    ModelRenderer lowerBody;
-    ModelRenderer lowerRightArm;
-    ModelRenderer lowerLeftArm;
-    ModelRenderer lowerJaw;
-    ModelRenderer nose;
+    final ModelRenderer head;
+    final ModelRenderer body;
+    final ModelRenderer rightArm;
+    final ModelRenderer leftArm;
+    final ModelRenderer rightLeg;
+    final ModelRenderer leftLeg;
+    final ModelRenderer lowerRightLeg;
+    final ModelRenderer lowerLeftLeg;
+    final ModelRenderer lowerBody;
+    final ModelRenderer lowerRightArm;
+    final ModelRenderer lowerLeftArm;
+    final ModelRenderer lowerJaw;
+    final ModelRenderer nose;
 
     public ModelHulkingScientist()
     {

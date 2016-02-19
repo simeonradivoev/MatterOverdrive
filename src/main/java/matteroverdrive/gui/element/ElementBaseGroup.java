@@ -22,6 +22,7 @@ import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.gui.GuiElementList;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.ITextHandler;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ import java.util.List;
  */
 public class ElementBaseGroup extends MOElementBase implements IButtonHandler, GuiElementList, ITextHandler
 {
-    protected ArrayList<MOElementBase> elements = new ArrayList<MOElementBase>();
+    protected final ArrayList<MOElementBase> elements = new ArrayList<>();
 
     public ElementBaseGroup(MOGuiBase gui, int posX, int posY)
     {
@@ -83,9 +84,9 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         mouseX -= posX;
         mouseY -= posY;
 
-        GL11.glPushMatrix();
-        GL11.glTranslatef(this.posX, this.posY, 0);
-        GL11.glColor3f(1,1,1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(this.posX, this.posY, 0);
+        GlStateManager.color(1,1,1);
         for (int i = getElements().size(); i-- > 0;)
         {
             MOElementBase c = getElements().get(i);
@@ -93,7 +94,7 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
             if(c.isVisible())
                 c.drawBackground(mouseX,mouseY,gameTicks);
         }
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override
@@ -102,7 +103,7 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         mouseX -= posX;
         mouseY -= posY;
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         GL11.glTranslatef(this.posX, this.posY, 0);
         GL11.glColor3f(1, 1, 1);
         for (int i = getElements().size(); i-- > 0;)
@@ -111,18 +112,18 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
             if(c.isVisible())
                 c.drawForeground(mouseX, mouseY);
         }
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override
-    public void update(int mouseX, int mouseY)
+    public void update(int mouseX, int mouseY,float partialTicks)
     {
         mouseX -= posX;
         mouseY -= posY;
 
         for (int i = elements.size(); i-- > 0;)
         {
-            getElements().get(i).update(mouseX, mouseY);
+            getElements().get(i).update(mouseX, mouseY,partialTicks);
         }
 
         update();
@@ -166,13 +167,12 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
         mouseX -= posX;
         mouseY -= posY;
 
-        for (int i = getElements().size(); i-- > 0;)
+        for (MOElementBase child : elements)
         {
-            MOElementBase c = getElements().get(i);
-            if (!c.isVisible() || !c.isEnabled()) {
+            if (!child.isVisible() || !child.isEnabled()) {
                 continue;
             }
-            c.onMouseReleased(mouseX, mouseY);
+            child.onMouseReleased(mouseX, mouseY);
         }
     }
 
@@ -226,6 +226,11 @@ public class ElementBaseGroup extends MOElementBase implements IButtonHandler, G
     public List<MOElementBase> getElements()
     {
         return elements;
+    }
+
+    public void clearElements()
+    {
+        this.elements.clear();
     }
 
     public MOElementBase addElementAt(int i,MOElementBase element)

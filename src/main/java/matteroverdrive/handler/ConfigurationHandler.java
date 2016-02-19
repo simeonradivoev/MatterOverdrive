@@ -18,9 +18,6 @@
 
 package matteroverdrive.handler;
 
-import cpw.mods.fml.client.config.IConfigElement;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.Reference;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.util.IConfigSubscriber;
@@ -28,6 +25,9 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.client.config.IConfigElement;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
 import java.util.HashSet;
@@ -36,8 +36,8 @@ import java.util.Set;
 
 public class ConfigurationHandler
 {
-    private Set<IConfigSubscriber> subscribers;
-	public Configuration config;
+    private final Set<IConfigSubscriber> subscribers;
+	public final Configuration config;
     public static final String CATEGORY_MATTER = "matter registry";
     public static final String CATEGORY_WORLD_GEN = "world gen";
     public static final String CATEGORY_MATTER_NETWORK = "matter network";
@@ -76,7 +76,7 @@ public class ConfigurationHandler
     public ConfigurationHandler(File file)
     {
         config = new Configuration(file, Reference.VERSION);
-        subscribers = new HashSet<IConfigSubscriber>();
+        subscribers = new HashSet<>();
     }
 
 	public void init()
@@ -147,7 +147,7 @@ public class ConfigurationHandler
         save();
     }
 
-    public void updateCategoryLang(ConfigCategory category)
+    private void updateCategoryLang(ConfigCategory category)
     {
         category.setLanguageKey("config." + category.getName().replace(' ','_') + ".name");
     }
@@ -258,15 +258,16 @@ public class ConfigurationHandler
 
     public void addCategoryToGui(List<IConfigElement> list)
     {
-        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_CLIENT)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_SERVER)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_WORLD_GEN)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_MATTER_NETWORK)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_MACHINES)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_MATTER)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_STARMAP)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_ABILITIES)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_ENTITIES)));
-        list.add(new ConfigElement<ConfigCategory>(getCategory(ConfigurationHandler.CATEGORY_DEBUG)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_CLIENT)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_SERVER)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_WORLD_GEN)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_MATTER_NETWORK)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_MACHINES)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_MATTER)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_STARMAP)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_ABILITIES)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_ENTITIES)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_DEBUG)));
+        list.add(new ConfigElement(getCategory(ConfigurationHandler.CATEGORY_COMPATIBILITY)));
     }
 }

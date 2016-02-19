@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mo:pattern_monitor"
+  },
+  "variants": {
+    "normal": {"model": "mo:pattern_monitor"},
+    "facing=north": { "model": "mo:pattern_monitor"},
+    "facing=south": { "model": "mo:pattern_monitor","y": 180 },
+    "facing=west":  { "model": "mo:pattern_monitor","y": 270 },
+    "facing=east":  { "model": "mo:pattern_monitor","y": 90 },
+    "inventory": {
+      "model": "mo:pattern_monitor",
+      "transform": "forge:default-block"
+    }
+  }
+}

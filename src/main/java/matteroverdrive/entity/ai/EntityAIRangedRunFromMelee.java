@@ -49,7 +49,7 @@ public class EntityAIRangedRunFromMelee extends EntityAIBase
             if (sqDistanceToTargetSq+4 < minDistanceSq)
             {
                 int distanceToRun = (int) Math.sqrt(minDistanceSq - sqDistanceToTargetSq);
-                destinaton = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.theEntity, distanceToRun, 4,Vec3.createVectorHelper(this.theEntity.getAttackTarget().posX,this.theEntity.getAttackTarget().posY,this.theEntity.getAttackTarget().posZ));
+                destinaton = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.theEntity, distanceToRun, 4,new Vec3(this.theEntity.getAttackTarget().posX,this.theEntity.getAttackTarget().posY,this.theEntity.getAttackTarget().posZ));
                 return destinaton != null;
             }
         }

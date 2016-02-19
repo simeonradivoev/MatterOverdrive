@@ -1,7 +1,11 @@
 package matteroverdrive.data.quest.logic;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestItem;
+import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -16,11 +20,26 @@ public abstract class QuestLogicRandomItem extends AbstractQuestLogic
 {
     QuestItem[] items;
     boolean randomItem;
+    boolean anyItem;
 
     protected void init(QuestItem[] questItems)
     {
         this.items = questItems;
         this.randomItem = true;
+    }
+
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+        super.loadFromJson(jsonObject);
+        JsonArray itemsElement = jsonObject.getAsJsonArray("items");
+        items = new QuestItem[itemsElement.size()];
+        for (int i = 0;i < itemsElement.size();i++)
+        {
+            items[i] = new QuestItem(itemsElement.get(i).getAsJsonObject());
+        }
+        randomItem = MOJsonHelper.getBool(jsonObject,"random",false);
+        anyItem = MOJsonHelper.getBool(jsonObject,"any",false);
     }
 
     protected void initItemType(Random random, QuestStack questStack)
@@ -40,7 +59,12 @@ public abstract class QuestLogicRandomItem extends AbstractQuestLogic
             {
                 setItemType(questStack,avalibleBlocks.get(random.nextInt(avalibleBlocks.size())));
             }
-        }else
+        }
+        else if (anyItem)
+        {
+
+        }
+        else
         {
             for (int i = 0;i < items.length;i++)
             {
@@ -59,17 +83,54 @@ public abstract class QuestLogicRandomItem extends AbstractQuestLogic
     {
         for (QuestItem item : items)
         {
-            if (!item.canItemExist())
+            if (item.canItemExist())
             {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
-    public ItemStack getItem(QuestStack questStack)
+    public boolean matches(QuestStack questStack,ItemStack itemStack)
     {
-        return items[getItemType(questStack)].getItemStack();
+        if (anyItem)
+        {
+            for (QuestItem item : items)
+            {
+                if (item.matches(itemStack))
+                {
+                    return true;
+                }
+            }
+        }else
+        {
+            return items[getItemType(questStack)].matches(itemStack);
+        }
+        return false;
+    }
+
+    public String getItemName(QuestStack questStack)
+    {
+        if (anyItem)
+        {
+            String name = "";
+            for (QuestItem item : items)
+            {
+                ItemStack itemStack = item.getItemStack();
+                if (itemStack != null)
+                    name += itemStack.getDisplayName() + ", ";
+                else
+                    name += "Unknown Item, ";
+            }
+            return name;
+        }else
+        {
+            ItemStack itemStack = items[getItemType(questStack)].getItemStack();
+            if (itemStack != null)
+                return itemStack.getDisplayName();
+            else
+                return "Unknown Item";
+        }
     }
 
     public int getItemType(QuestStack questStack)

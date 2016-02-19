@@ -18,8 +18,8 @@
 
 package matteroverdrive.container;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.tile.TileEntityMachineSolarPanel;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +31,7 @@ import net.minecraft.inventory.ICrafting;
  */
 public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolarPanel>
 {
-    int lastChargeAmount;
+    private int lastChargeAmount;
 
     public ContainerSolarPanel(InventoryPlayer inventory, TileEntityMachineSolarPanel machine)
     {
@@ -45,9 +45,10 @@ public class ContainerSolarPanel extends ContainerMachine<TileEntityMachineSolar
         MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, true, true);
     }
 
-    public void addCraftingToCrafters(ICrafting icrafting)
+    @Override
+    public void onCraftGuiOpened(ICrafting icrafting)
     {
-        super.addCraftingToCrafters(icrafting);
+        super.onCraftGuiOpened(icrafting);
         icrafting.sendProgressBarUpdate(this, 1, this.machine.getChargeAmount());
     }
 

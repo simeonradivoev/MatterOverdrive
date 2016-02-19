@@ -1,9 +1,15 @@
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonObject;
+import matteroverdrive.data.quest.QuestBlock;
+import matteroverdrive.data.quest.QuestItem;
+import matteroverdrive.util.MOJsonHelper;
+import matteroverdrive.util.MOQuestHelper;
+import net.minecraft.block.state.IBlockState;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
-import matteroverdrive.data.BlockPos;
+import net.minecraft.util.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,12 +30,14 @@ public class QuestLogicPlaceBlock extends QuestLogicBlock
     int minBlockPlace;
     int maxBlockPlace;
 
-    public QuestLogicPlaceBlock(int radius,ItemStack blockStack)
+    public QuestLogicPlaceBlock(){super();}
+
+    public QuestLogicPlaceBlock(int radius,QuestItem blockStack)
     {
         this(radius,blockStack,1,1);
     }
 
-    public QuestLogicPlaceBlock(int radius,ItemStack blockStack,int minBlockPlace,int maxBlockPlace)
+    public QuestLogicPlaceBlock(int radius, QuestItem blockStack, int minBlockPlace, int maxBlockPlace)
     {
         super(blockStack);
         this.radius = radius;
@@ -37,22 +45,27 @@ public class QuestLogicPlaceBlock extends QuestLogicBlock
         this.maxBlockPlace = maxBlockPlace;
     }
 
-    public QuestLogicPlaceBlock(int radius,Block block)
+    public QuestLogicPlaceBlock(int radius,QuestBlock block)
     {
-        this(radius,block,-1,1,1);
+        this(radius,block,1,1);
     }
 
-    public QuestLogicPlaceBlock(int radius,Block block,int blockMetadata)
+    public QuestLogicPlaceBlock(int radius, QuestBlock block, int minBlockPlace, int maxBlockPlace)
     {
-        this(radius,block,blockMetadata,1,1);
-    }
-
-    public QuestLogicPlaceBlock(int radius,Block block,int blockMetadata,int minBlockPlace,int maxBlockPlace)
-    {
-        super(block,blockMetadata);
+        super(block);
         this.radius = radius;
         this.minBlockPlace = minBlockPlace;
         this.maxBlockPlace = maxBlockPlace;
+    }
+
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+        super.loadFromJson(jsonObject);
+        radius = MOJsonHelper.getInt(jsonObject,"radius",0);
+        minBlockPlace = MOJsonHelper.getInt(jsonObject,"place_count_min");
+        maxBlockPlace = MOJsonHelper.getInt(jsonObject,"place_count_max");
+        namePattern = MOJsonHelper.getString(jsonObject,"regex",null);
     }
 
     @Override
@@ -71,10 +84,10 @@ public class QuestLogicPlaceBlock extends QuestLogicBlock
     public String modifyObjective(QuestStack questStack, EntityPlayer entityPlayer, String objective, int objectiveIndex)
     {
         objective = replaceBlockNameInText(objective);
-        BlockPos pos = getPos(questStack);
+        BlockPos pos = MOQuestHelper.getPosition(questStack);
         if (pos != null)
         {
-            double distance = Vec3.createVectorHelper(Math.floor(entityPlayer.posX),Math.floor(entityPlayer.posY),Math.floor(entityPlayer.posZ)).distanceTo(Vec3.createVectorHelper(pos.x,pos.y,pos.z));
+            double distance = new Vec3(Math.floor(entityPlayer.posX),Math.floor(entityPlayer.posY),Math.floor(entityPlayer.posZ)).distanceTo(new Vec3(pos));
             objective = objective.replace("$distance",Integer.toString((int)Math.max(distance - radius,0))+" blocks");
         }else
         {
@@ -96,14 +109,13 @@ public class QuestLogicPlaceBlock extends QuestLogicBlock
         {
             BlockEvent.PlaceEvent placeEvent = (BlockEvent.PlaceEvent)event;
             boolean isTheSameBlockFlag = false;
-            boolean isNearTargetFlag = false;
             if (blockStack != null && placeEvent.itemInHand != null)
             {
                 isTheSameBlockFlag = areBlockStackTheSame(placeEvent.itemInHand);
             }
             else
             {
-                if (areBlocksTheSame(placeEvent.block,placeEvent.blockMetadata))
+                if (areBlocksTheSame(placeEvent.placedBlock))
                 {
                     if (namePattern != null && placeEvent.itemInHand != null)
                     {
@@ -115,10 +127,10 @@ public class QuestLogicPlaceBlock extends QuestLogicBlock
                 }
             }
 
-            BlockPos pos = getPos(questStack);
+            BlockPos pos = MOQuestHelper.getPosition(questStack);
             if (pos != null && isTheSameBlockFlag)
             {
-                if (!(Vec3.createVectorHelper(placeEvent.x,placeEvent.y,placeEvent.z).distanceTo(Vec3.createVectorHelper(pos.x,pos.y,pos.z)) <= radius))
+                if (!(new Vec3(placeEvent.pos).distanceTo(new Vec3(pos)) <= radius))
                 {
                     return false;
                 }
@@ -136,13 +148,13 @@ public class QuestLogicPlaceBlock extends QuestLogicBlock
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
@@ -181,16 +193,6 @@ public class QuestLogicPlaceBlock extends QuestLogicBlock
             return getTag(questStack).getShort("MaxPlaced");
         }
         return 0;
-    }
-
-    protected BlockPos getPos(QuestStack questStack)
-    {
-        if (hasTag(questStack) && getTag(questStack).hasKey("Pos", Constants.NBT.TAG_INT_ARRAY))
-        {
-            int[] pos = getTag(questStack).getIntArray("Pos");
-            return new BlockPos(pos[0],pos[1],pos[2]);
-        }
-        return null;
     }
 
     public void setNamePattern(String namePattern)

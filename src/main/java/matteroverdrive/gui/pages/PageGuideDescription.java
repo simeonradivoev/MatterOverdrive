@@ -31,7 +31,9 @@ import matteroverdrive.guide.MOGuideEntry;
 import matteroverdrive.guide.MatterOverdriveGuide;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.network.packet.server.PacketDataPadCommands;
+import matteroverdrive.util.MOLog;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -64,14 +66,14 @@ public class PageGuideDescription extends ElementBaseGroup
     public static final String SCROLL_LEFT_ELEMENT_NAME = "scroll_left";
     public static final String RETURN_ELEMENT_NAME = "return";
 
-    DocumentBuilderFactory builderFactory;
+    final DocumentBuilderFactory builderFactory;
     DocumentBuilder builder;
 
     public static int tabID;
     public static int scroll;
-    private static Stack<HistoryEntry> historyStack = new Stack<>();
+    private static final Stack<HistoryEntry> historyStack = new Stack<>();
 
-    List<IGuideElement> pages;
+    final List<IGuideElement> pages;
     MOElementButton bt_scroll_right;
     MOElementButton bt_scroll_left;
     public final MOElementButton bt_return;
@@ -116,16 +118,16 @@ public class PageGuideDescription extends ElementBaseGroup
     {
         if(MatterOverdriveItems.dataPad.getGuideID(dataPadStack) >= 0)
         {
-            boolean lastUnicodeFlag = Minecraft.getMinecraft().fontRenderer.getUnicodeFlag();
+            boolean lastUnicodeFlag = Minecraft.getMinecraft().fontRendererObj.getUnicodeFlag();
             //set yunicode for smaller text and all characters
-            Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(true);
+            Minecraft.getMinecraft().fontRendererObj.setUnicodeFlag(true);
 
             if(tabID == 0)
             {
                 DrawDescription(mouseX,mouseY);
             }
 
-            Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(lastUnicodeFlag);
+            Minecraft.getMinecraft().fontRendererObj.setUnicodeFlag(lastUnicodeFlag);
         }
 
         super.drawForeground(mouseX, mouseY);
@@ -135,16 +137,15 @@ public class PageGuideDescription extends ElementBaseGroup
     {
         if (scroll < pages.size() && scroll >= 0)
         {
-            MOGuideEntry guideEntry = MatterOverdriveGuide.getQuide(MatterOverdriveItems.dataPad.getGuideID(dataPadStack));
             int x = posX;
             int y = posY;
 
             if (pages.get(scroll) != null && scroll < pages.size()) {
-                glPushMatrix();
-                glTranslated(x, y, 0);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(x, y, 0);
                 IGuideElement element = pages.get(scroll);
                 element.drawElement(sizeX,mouseX-x ,mouseY-y);
-                glPopMatrix();
+                GlStateManager.popMatrix();
             }else
             {
                 drawNoInfo();
@@ -211,8 +212,8 @@ public class PageGuideDescription extends ElementBaseGroup
             loadGuideInfo(id);
             MatterOverdriveItems.dataPad.setOpenGuide(dataPadStack, id);
             MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
-            this.scroll = page;
-            this.tabID = 0;
+            scroll = page;
+            tabID = 0;
         }
     }
 
@@ -226,7 +227,7 @@ public class PageGuideDescription extends ElementBaseGroup
         }
         else
         {
-            ((MOGuiBase)gui).setPage(0);
+            gui.setPage(0);
         }
     }
 
@@ -249,19 +250,19 @@ public class PageGuideDescription extends ElementBaseGroup
                     for (int i = 0; i < pagesNodes.getLength(); i++)
                     {
                         GuideElementPage page = new GuideElementPage();
-                        page.setGUI((MOGuiBase)gui);
+                        page.setGUI(gui);
                         page.loadElement(entry,(Element)pagesNodes.item(i),stylesheetMap,sizeX,sizeY);
                         pages.add(page);
                     }
 
                 } catch (SAXException e) {
-                    MatterOverdrive.log.log(Level.ERROR, e, "XML for guide entry %s is not valid", entry.getDisplayName());
+                    MOLog.log(Level.ERROR, e, "XML for guide entry %s is not valid", entry.getDisplayName());
                 } catch (IOException e) {
-                    MatterOverdrive.log.log(Level.ERROR, e, "there was a problem reading language file for entry %s", entry.getDisplayName());
+                    MOLog.log(Level.ERROR, e, "there was a problem reading language file for entry %s", entry.getDisplayName());
                 }
             }else
             {
-                MatterOverdrive.log.warn("Guide Entry file for %s missing at: %s",entry.getDisplayName(),entry.getDescriptionPath("language"));
+                MOLog.warn("Guide Entry file for %s missing at: %s",entry.getDisplayName(),entry.getDescriptionPath("language"));
             }
         }
     }
@@ -283,7 +284,7 @@ public class PageGuideDescription extends ElementBaseGroup
                 }
                 return styleMap;
             } catch (IOException e) {
-                MatterOverdrive.log.log(Level.ERROR,e,"There was a problem loading the stylesheet");
+                MOLog.log(Level.ERROR,e,"There was a problem loading the stylesheet");
             }
         }
         return null;

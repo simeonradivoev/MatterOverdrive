@@ -18,7 +18,7 @@
 
 package matteroverdrive.api.dialog;
 
-import matteroverdrive.dialog.DialogMessage;
+import matteroverdrive.data.dialog.DialogMessage;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 

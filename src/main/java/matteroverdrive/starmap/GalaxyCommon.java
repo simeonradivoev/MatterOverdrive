@@ -37,8 +37,8 @@ public abstract class GalaxyCommon
 {
     protected Galaxy theGalaxy;
     protected World world;
-    protected Random random;
-    protected HashMap<UUID,Planet> homePlanets;
+    protected final Random random;
+    protected final HashMap<UUID,Planet> homePlanets;
 
     public GalaxyCommon()
     {
@@ -92,7 +92,7 @@ public abstract class GalaxyCommon
     }
     public Planet getHomeworld(EntityPlayer player)
     {
-        return homePlanets.get(EntityPlayer.func_146094_a(player.getGameProfile()));
+        return homePlanets.get(EntityPlayer.getUUID(player.getGameProfile()));
     }
     public Galaxy getTheGalaxy()
     {

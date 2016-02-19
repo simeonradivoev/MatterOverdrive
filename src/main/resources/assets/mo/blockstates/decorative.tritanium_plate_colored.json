@@ -1,0 +1,32 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mo:base/cube_colored_all",
+    "textures": {
+      "all": "mo:blocks/tritanium_plate_colorless"
+    }
+  },
+  "variants": {
+    "normal": {"model": "mo:base/cube_colored_all"},
+    "color=white":{"model": "mo:base/cube_colored_all"},
+    "color=orange":{"model": "mo:base/cube_colored_all"},
+    "color=magenta":{"model": "mo:base/cube_colored_all"},
+    "color=light_blue":{"model": "mo:base/cube_colored_all"},
+    "color=yellow":{"model": "mo:base/cube_colored_all"},
+    "color=lime":{"model": "mo:base/cube_colored_all"},
+    "color=pink":{"model": "mo:base/cube_colored_all"},
+    "color=gray":{"model": "mo:base/cube_colored_all"},
+    "color=silver":{"model": "mo:base/cube_colored_all"},
+    "color=cyan":{"model": "mo:base/cube_colored_all"},
+    "color=purple":{"model": "mo:base/cube_colored_all"},
+    "color=blue":{"model": "mo:base/cube_colored_all"},
+    "color=brown":{"model": "mo:base/cube_colored_all"},
+    "color=green":{"model": "mo:base/cube_colored_all"},
+    "color=red":{"model": "mo:base/cube_colored_all"},
+    "color=black":{"model": "mo:base/cube_colored_all"},
+    "inventory": {
+      "model": "mo:base/cube_colored_all",
+      "transform": "forge:default-block"
+    }
+  }
+}

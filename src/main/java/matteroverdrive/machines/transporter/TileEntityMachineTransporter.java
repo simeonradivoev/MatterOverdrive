@@ -18,17 +18,12 @@
 
 package matteroverdrive.machines.transporter;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import li.cil.oc.api.machine.Arguments;
-import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedPeripheral;
-import li.cil.oc.api.network.SimpleComponent;
+import matteroverdrive.machines.events.MachineEvent;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.*;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.MOEventTransport;
 import matteroverdrive.api.inventory.UpgradeTypes;
@@ -43,8 +38,6 @@ import matteroverdrive.machines.transporter.components.ComponentComputers;
 import matteroverdrive.network.packet.client.PacketSyncTransportProgress;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
 import matteroverdrive.util.math.MOMathHelper;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -52,13 +45,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -69,13 +57,14 @@ import java.util.List;
 /**
  * Created by Simeon on 5/3/2015.
  */
-@Optional.InterfaceList({
+/*@Optional.InterfaceList({
 		@Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral"),
 		@Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.SimpleComponent"),
 		@Optional.Interface(modid = "OpenComputers", iface = "li.cil.oc.api.network.ManagedPeripheral")
-})
-public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements ITransportList, IWailaBodyProvider, IPeripheral, SimpleComponent, ManagedPeripheral
+})*/
+public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements ITransportList//, IWailaBodyProvider, IPeripheral, SimpleComponent, ManagedPeripheral
 {
+    private static final EnumSet<UpgradeTypes> upgradeTypes = EnumSet.of(UpgradeTypes.PowerUsage,UpgradeTypes.Speed,UpgradeTypes.Range,UpgradeTypes.PowerStorage);
     public static final int MAX_ENTETIES_PRE_TRANSPORT = 3;
     public static final int TRANSPORT_TIME = 70;
     public static final int TRANSPORT_DELAY = 80;
@@ -83,7 +72,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     public static final int ENERGY_STORAGE = 1024000;
     public static final int MAX_ENERGY_EXTRACT = 32000;
     public static final int ENERGY_PER_UNIT = 16;
-    public List<TransportLocation> locations;
+    public final List<TransportLocation> locations;
     public int selectedLocation;
     public int usbSlotID;
     int transportTimer;
@@ -127,11 +116,6 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         }
     }
 
-    @Override
-    protected void onAwake(Side side) {
-
-    }
-
     public void readLocations(NBTTagCompound nbt)
     {
         locations.clear();
@@ -157,21 +141,6 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
-
-    }
-
-    @Override
     public void writeToDropItem(ItemStack itemStack)
     {
         super.writeToDropItem(itemStack);
@@ -192,14 +161,9 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     }
 
     @Override
-    protected void onActiveChange() {
-
-    }
-
-    @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         manageTeleportation();
     }
 
@@ -213,7 +177,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 
     void manageTeleportation()
     {
-        List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 2, zCoord + 1));
+        List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos(),getPos().add(1,2,1)));
         TransportLocation position = getSelectedLocation();
 
         if (!worldObj.isRemote) {
@@ -256,28 +220,34 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
             if (transportTimer > 0) {
                 for (Entity entity : entities)
                 {
-                    SpawnReplicateParticles(entity,new Vector3f((float)entity.posX,yCoord,(float)entity.posZ));
+                    SpawnReplicateParticles(entity,new Vector3f((float)entity.posX,getPos().getY(),(float)entity.posZ));
                 }
 
 
                 for (Entity entity : entities)
                 {
-                    SpawnReplicateParticles(entity,new Vector3f(position.x,position.y-1,position.z));
+                    SpawnReplicateParticles(entity,new Vector3f(position.pos.getX(),position.pos.getY(),position.pos.getZ()));
                 }
             }
         }
     }
 
-    public void Teleport(Entity entity,TransportLocation position)
+    @Override
+    protected void onMachineEvent(MachineEvent event)
     {
-        if(!MinecraftForge.EVENT_BUS.post(new MOEventTransport(new ChunkCoordinates(xCoord,yCoord,zCoord),position,entity)))
+
+    }
+
+    public void Teleport(Entity entity, TransportLocation position)
+    {
+        if(!MinecraftForge.EVENT_BUS.post(new MOEventTransport(getPos(),position,entity)))
         {
             if (entity instanceof EntityLivingBase)
             {
-                ((EntityLivingBase) entity).setPositionAndUpdate(position.x, position.y, position.z);
+                entity.setPositionAndUpdate(position.pos.getX(),position.pos.getY()+1,position.pos.getZ());
             } else
             {
-                entity.setPosition(position.x, position.y, position.z);
+                entity.setPosition(position.pos.getX(),position.pos.getY()+1,position.pos.getZ());
             }
         }
     }
@@ -293,38 +263,38 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
             //location.z = MathHelper.clampI(location.z,zCoord - range,zCoord + range);
             return location;
         }
-        return new TransportLocation(xCoord,yCoord,zCoord,"Unknown");
+        return new TransportLocation(getPos(),"Unknown");
     }
 
     public boolean isLocationValid(TransportLocation location)
     {
-        return !(location.x == xCoord && location.y < yCoord + 4 && location.y > yCoord - 4 && location.z == zCoord) && location.getDistance(xCoord,yCoord,zCoord) < getTransportRange();
+        return !(location.pos.getX() == getPos().getX() && location.pos.getY() < getPos().getY() + 4 && location.pos.getY() > getPos().getY() - 4 && location.pos.getZ() == getPos().getZ()) && location.getDistance(getPos()) < getTransportRange();
     }
 
-    public void setSelectedLocation(int x,int y,int z,String name)
+    public void setSelectedLocation(BlockPos pos, String name)
     {
         if (selectedLocation < locations.size() && selectedLocation >= 0)
         {
             TransportLocation location = locations.get(selectedLocation);
             if (location != null)
             {
-                location.setPosition(x,y,z);
+                location.setPosition(pos);
                 location.setName(name);
             }else
             {
-                locations.set(selectedLocation,new TransportLocation(x,y,z,name));
+                locations.set(selectedLocation,new TransportLocation(pos,name));
             }
 
         }else
         {
             selectedLocation = 0;
-            locations.add(new TransportLocation(x,y,z,name));
+            locations.add(new TransportLocation(pos,name));
         }
     }
 
-    public void addNewLocation(int x,int y,int z,String name)
+    public void addNewLocation(BlockPos pos,String name)
     {
-        locations.add(new TransportLocation(x,y,z,name));
+        locations.add(new TransportLocation(pos,name));
     }
 
     public void removeLocation(int at)
@@ -354,7 +324,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
             float height = p.y + 1 + random.nextFloat() * entity.height;
 
             Vector3f origin = new Vector3f(p.x ,height, p.z);
-            Vector3f pos = MOMathHelper.randomSpherePoint(origin.x,origin.y,origin.z, Vec3.createVectorHelper(radiusX, 0,radiusZ), random);
+            Vector3f pos = MOMathHelper.randomSpherePoint(origin.x,origin.y,origin.z, new Vec3(radiusX, 0,radiusZ), random);
             Vector3f dir = Vector3f.cross(Vector3f.sub(origin, pos,null), new Vector3f(0,1,0),null);
             dir.scale(speed);
             ReplicatorParticle replicatorParticle = new ReplicatorParticle(this.worldObj,pos.x,pos.y ,pos.z,dir.x,dir.y,dir.z);
@@ -370,7 +340,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     public int getEnergyDrain()
     {
         TransportLocation location = getSelectedLocation();
-        return (int)Math.round(getUpgradeMultiply(UpgradeTypes.PowerUsage) * (location.getDistance(xCoord, yCoord, zCoord) * ENERGY_PER_UNIT));
+        return (int)Math.round(getUpgradeMultiply(UpgradeTypes.PowerUsage) * (location.getDistance(getPos()) * ENERGY_PER_UNIT));
     }
 
     private int getSpeed()
@@ -411,21 +381,21 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     }
 
     @Override
-    public boolean canFill(ForgeDirection from, Fluid fluid)
+    public boolean canFill(EnumFacing from, Fluid fluid)
     {
-        return from != ForgeDirection.UP && super.canFill(from,fluid);
+        return from != EnumFacing.UP && super.canFill(from,fluid);
     }
 
     @Override
-    public boolean canDrain(ForgeDirection from, Fluid fluid)
+    public boolean canDrain(EnumFacing from, Fluid fluid)
     {
-        return from != ForgeDirection.UP && super.canDrain(from,fluid);
+        return from != EnumFacing.UP && super.canDrain(from,fluid);
     }
 
     @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
-        return type == UpgradeTypes.PowerUsage || type == UpgradeTypes.Speed || type == UpgradeTypes.Range || type == UpgradeTypes.PowerStorage;
+        return upgradeTypes.contains(type);
     }
 
     public void setTransportTime(int time)
@@ -443,8 +413,14 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
         return locations;
     }
 
+    @Override
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[0];
+    }
 
-    //region WAILA
+
+    /*//region WAILA
 	@Override
 	@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
@@ -525,5 +501,5 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		return computerComponent.invoke(method,context,args);
 	}
     //endregion
-    //endregion
+    //endregion*/
 }

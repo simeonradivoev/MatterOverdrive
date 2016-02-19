@@ -18,9 +18,10 @@
 
 package matteroverdrive.init;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.world.DimensionalRifts;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.world.MOWorldGen;
 
@@ -29,11 +30,13 @@ import matteroverdrive.world.MOWorldGen;
  */
 public class MatterOverdriveWorld
 {
-    public MOWorldGen worldGen;
+    public final MOWorldGen worldGen;
+    private final DimensionalRifts dimensionalRifts;
 
     public MatterOverdriveWorld(ConfigurationHandler configurationHandler)
     {
         worldGen = new MOWorldGen(configurationHandler);
+        dimensionalRifts = new DimensionalRifts(0.04);
         configurationHandler.subscribe(worldGen);
     }
 
@@ -48,4 +51,6 @@ public class MatterOverdriveWorld
     {
         GameRegistry.registerWorldGenerator(worldGen,0);
     }
+
+    public DimensionalRifts getDimensionalRifts(){return dimensionalRifts;}
 }

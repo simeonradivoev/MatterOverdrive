@@ -1,14 +1,15 @@
 package matteroverdrive.blocks;
 
 import cofh.api.block.IDismantleable;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.init.MatterOverdriveIcons;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -26,26 +27,27 @@ public class BlockFusionReactorCoil extends MOBlock implements IDismantleable
         this.setHarvestLevel("pickaxe", 2);
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public IIcon getIcon(int p_149691_1_, int p_149691_2_)
     {
         return MatterOverdriveIcons.YellowStripes;
-    }
+    }*/
 
     @Override
-    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops)
+    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops)
     {
         if (!returnDrops)
         {
-            world.setBlockToAir(x, y, z);
-            dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            IBlockState state = world.getBlockState(pos);
+            world.setBlockToAir(pos);
+            dropBlockAsItem(world, pos,state, 0);
         }
 
         return null;
     }
 
     @Override
-    public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
+    public boolean canDismantle(EntityPlayer player, World world, BlockPos pos) {
         return true;
     }
 

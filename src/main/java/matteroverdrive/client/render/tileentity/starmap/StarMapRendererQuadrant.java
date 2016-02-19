@@ -18,8 +18,6 @@
 
 package matteroverdrive.client.render.tileentity.starmap;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.proxy.ClientProxy;
@@ -31,6 +29,11 @@ import matteroverdrive.starmap.data.Star;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.text.DecimalFormat;
 
@@ -48,23 +51,24 @@ public class StarMapRendererQuadrant extends StarMapRendererStars {
         if (spaceBody instanceof Quadrant)
         {
             glLineWidth(1);
-            glDepthMask(false);
+            GlStateManager.depthMask(false);
 
             Quadrant quadrant = (Quadrant)spaceBody;
             double distanceMultiply = 5;
-            double halfQuadrantSize = quadrant.getSize() * 1.5;
             double x = ((-quadrant.getX()) - quadrant.getSize() / 2) * distanceMultiply;
             double y = (-quadrant.getY()) * distanceMultiply;
             double z = ((-quadrant.getZ()) - quadrant.getSize() / 2) * distanceMultiply;
-            glTranslated(x, y, z);
+            GlStateManager.translate(x, y, z);
+            Tessellator.getInstance().getWorldRenderer().begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
             renderStars(quadrant, starMap, distanceMultiply, distanceMultiply);
+            Tessellator.getInstance().draw();
         }
     }
 
     @Override
     public void renderGUIInfo(Galaxy galaxy, SpaceBody spaceBody,TileEntityMachineStarMap starMap, float partialTicks, float opacity)
     {
-        glEnable(GL_ALPHA_TEST);
+        GlStateManager.enableAlpha();
         Star star = galaxy.getStar(starMap.getDestination());
         Star origin = galaxy.getStar(starMap.getGalaxyPosition());
         if (star != null) {
@@ -91,7 +95,7 @@ public class StarMapRendererQuadrant extends StarMapRendererStars {
             if (origin != null)
                 RenderUtils.drawString(String.format("Distance: %s LY", format.format(origin.getPosition().distanceTo(star.getPosition()) * Galaxy.GALAXY_SIZE_TO_LY)), 0, -42, Reference.COLOR_HOLO, opacity);
         }
-        glDisable(GL_ALPHA_TEST);
+        GlStateManager.disableAlpha();
     }
 
     @Override

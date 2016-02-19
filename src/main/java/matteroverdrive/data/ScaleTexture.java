@@ -19,7 +19,10 @@
 package matteroverdrive.data;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
@@ -87,56 +90,57 @@ public class ScaleTexture
         float centerUWidth = ((float)this.width / (float)texW) - (leftOffset + rightOffset);
         float centerVHeight = ((float)this.height / (float)texH) - (topOffset + bottomOffset);
 
-        glPushMatrix();
+        GlStateManager.pushMatrix();
         glTranslatef(x, y, 0);
-        Tessellator.instance.startDrawingQuads();
+        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        wr.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         //top left
-        Tessellator.instance.addVertexWithUV(0, this.topOffset, 0, u, v + topOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset, this.topOffset, 0, u + leftOffset, v + topOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset, 0, 0, u + leftOffset, v);
-        Tessellator.instance.addVertexWithUV(0, 0, 0, u, v);
+        wr.pos(0, this.topOffset, 0).tex(u, v + topOffset).endVertex();
+        wr.pos(this.leftOffset, this.topOffset, 0).tex(u + leftOffset, v + topOffset).endVertex();
+        wr.pos(this.leftOffset, 0, 0).tex(u + leftOffset, v).endVertex();
+        wr.pos(0, 0, 0).tex(u, v).endVertex();
         //top middle
-        Tessellator.instance.addVertexWithUV(this.leftOffset, this.topOffset, 0, u + leftOffset, v + topOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, this.topOffset, 0, u + leftOffset + centerUWidth, v + topOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, 0, 0, u + leftOffset + centerUWidth, v);
-        Tessellator.instance.addVertexWithUV(this.leftOffset, 0, 0, u + leftOffset, v);
+        wr.pos(this.leftOffset, this.topOffset, 0).tex(u + leftOffset, v + topOffset).endVertex();
+        wr.pos(this.leftOffset + centerWidth, this.topOffset, 0).tex(u + leftOffset + centerUWidth, v + topOffset).endVertex();
+        wr.pos(this.leftOffset + centerWidth, 0, 0).tex(u + leftOffset + centerUWidth, v).endVertex();
+        wr.pos(this.leftOffset, 0, 0).tex( u + leftOffset, v).endVertex();
         //top right
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth,this.topOffset, 0, u + leftOffset + centerUWidth, v + topOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth + this.rightOffset,this.topOffset, 0, u + leftOffset + centerUWidth + rightOffset, v + topOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth + this.rightOffset, 0, 0, u + leftOffset + centerUWidth + rightOffset, v);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, 0, 0, u + leftOffset + centerUWidth, v);
+        wr.pos(this.leftOffset + centerWidth,this.topOffset, 0).tex(u + leftOffset + centerUWidth, v + topOffset).endVertex();
+        wr.pos(this.leftOffset + centerWidth + this.rightOffset,this.topOffset, 0).tex(u + leftOffset + centerUWidth + rightOffset, v + topOffset).endVertex();
+        wr.pos(this.leftOffset + centerWidth + this.rightOffset, 0, 0).tex(u + leftOffset + centerUWidth + rightOffset, v).endVertex();
+        wr.pos(this.leftOffset + centerWidth, 0, 0).tex(u + leftOffset + centerUWidth, v).endVertex();
         //middle left
-        Tessellator.instance.addVertexWithUV(0,this.topOffset + centerHeight, 0, u, v + topOffset + centerVHeight);
-        Tessellator.instance.addVertexWithUV(this.leftOffset, this.topOffset + centerHeight, 0, u + leftOffset, v + topOffset + centerVHeight);
-        Tessellator.instance.addVertexWithUV(this.leftOffset, this.topOffset, 0, u + leftOffset, v + topOffset);
-        Tessellator.instance.addVertexWithUV(0,this.topOffset, 0, u, v + topOffset);
+        wr.pos(0,this.topOffset + centerHeight, 0).tex(u, v + topOffset + centerVHeight).endVertex();
+        wr.pos(this.leftOffset, this.topOffset + centerHeight, 0).tex(u + leftOffset, v + topOffset + centerVHeight).endVertex();
+        wr.pos(this.leftOffset, this.topOffset, 0).tex(u + leftOffset, v + topOffset).endVertex();
+        wr.pos(0,this.topOffset, 0).tex(u, v + topOffset).endVertex();
         //middle
-        Tessellator.instance.addVertexWithUV(this.leftOffset, this.topOffset + centerHeight, 0, u + leftOffset, v + topOffset + centerVHeight);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, this.topOffset + centerHeight, 0, u + leftOffset + centerUWidth, v + topOffset + centerVHeight);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, this.topOffset, 0, u + leftOffset + centerUWidth, v + topOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset, this.topOffset, 0, u + leftOffset, v + topOffset);
+        wr.pos(this.leftOffset, this.topOffset + centerHeight, 0).tex(u + leftOffset, v + topOffset + centerVHeight).endVertex();
+        wr.pos(this.leftOffset + centerWidth, this.topOffset + centerHeight, 0).tex(u + leftOffset + centerUWidth, v + topOffset + centerVHeight).endVertex();
+        wr.pos(this.leftOffset + centerWidth, this.topOffset, 0).tex(u + leftOffset + centerUWidth, v + topOffset).endVertex();
+        wr.pos(this.leftOffset, this.topOffset, 0).tex(u + leftOffset, v + topOffset).endVertex();
         //middle right
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, this.topOffset + centerHeight, 0, u + leftOffset + centerUWidth, v + topOffset + centerVHeight);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth + this.rightOffset, this.topOffset + centerHeight, 0, u + leftOffset + centerUWidth + rightOffset, v + topOffset + centerVHeight);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth + this.rightOffset, this.topOffset, 0, u + leftOffset + centerUWidth + rightOffset, v + topOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, this.topOffset, 0, u + leftOffset + centerUWidth, v + topOffset);
+        wr.pos(this.leftOffset + centerWidth, this.topOffset + centerHeight, 0).tex(u + leftOffset + centerUWidth, v + topOffset + centerVHeight).endVertex();
+        wr.pos(this.leftOffset + centerWidth + this.rightOffset, this.topOffset + centerHeight, 0).tex(u + leftOffset + centerUWidth + rightOffset, v + topOffset + centerVHeight).endVertex();
+        wr.pos(this.leftOffset + centerWidth + this.rightOffset, this.topOffset, 0).tex(u + leftOffset + centerUWidth + rightOffset, v + topOffset).endVertex();
+        wr.pos(this.leftOffset + centerWidth, this.topOffset, 0).tex(u + leftOffset + centerUWidth, v + topOffset).endVertex();
         //bottom left
-        Tessellator.instance.addVertexWithUV(0, this.topOffset + centerHeight + this.bottomOffset, 0, u, v + topOffset + centerVHeight + bottomOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset, this.topOffset + centerHeight + this.bottomOffset, 0, u + leftOffset, v + topOffset + centerVHeight + bottomOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset, this.topOffset + centerHeight, 0, u + leftOffset, v + topOffset + centerVHeight);
-        Tessellator.instance.addVertexWithUV(0,this.topOffset + centerHeight, 0, u, v + topOffset + centerVHeight);
+        wr.pos(0, this.topOffset + centerHeight + this.bottomOffset, 0).tex(u, v + topOffset + centerVHeight + bottomOffset).endVertex();
+        wr.pos(this.leftOffset, this.topOffset + centerHeight + this.bottomOffset, 0).tex(u + leftOffset, v + topOffset + centerVHeight + bottomOffset).endVertex();
+        wr.pos(this.leftOffset, this.topOffset + centerHeight, 0).tex(u + leftOffset, v + topOffset + centerVHeight).endVertex();
+        wr.pos(0,this.topOffset + centerHeight, 0).tex(u, v + topOffset + centerVHeight).endVertex();
         //bottom middle
-        Tessellator.instance.addVertexWithUV(this.leftOffset, this.topOffset + centerHeight + this.bottomOffset, 0, u + leftOffset, v + topOffset + centerVHeight + bottomOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, this.topOffset + centerHeight + this.bottomOffset, 0, u + leftOffset + centerUWidth, v + topOffset + centerVHeight + bottomOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, this.topOffset + centerHeight, 0, u + leftOffset + centerUWidth, v + topOffset + centerVHeight);
-        Tessellator.instance.addVertexWithUV(this.leftOffset,this.topOffset + centerHeight, 0, u + leftOffset, v + topOffset + centerVHeight);
+        wr.pos(this.leftOffset, this.topOffset + centerHeight + this.bottomOffset, 0).tex(u + leftOffset, v + topOffset + centerVHeight + bottomOffset).endVertex();
+        wr.pos(this.leftOffset + centerWidth, this.topOffset + centerHeight + this.bottomOffset, 0).tex(u + leftOffset + centerUWidth, v + topOffset + centerVHeight + bottomOffset).endVertex();
+        wr.pos(this.leftOffset + centerWidth, this.topOffset + centerHeight, 0).tex(u + leftOffset + centerUWidth, v + topOffset + centerVHeight).endVertex();
+        wr.pos(this.leftOffset,this.topOffset + centerHeight, 0).tex(u + leftOffset, v + topOffset + centerVHeight).endVertex();
         //bottom right
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, this.topOffset + centerHeight + this.bottomOffset, 0, u + leftOffset + centerUWidth, v + topOffset + centerVHeight + bottomOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth + this.rightOffset, this.topOffset + centerHeight + this.bottomOffset, 0, u + leftOffset + centerUWidth + rightOffset, v + topOffset + centerVHeight + bottomOffset);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth + this.rightOffset,this.topOffset + centerHeight, 0, u + leftOffset + centerUWidth + rightOffset, v + topOffset + centerVHeight);
-        Tessellator.instance.addVertexWithUV(this.leftOffset + centerWidth, this.topOffset + centerHeight, 0, u + leftOffset + centerUWidth, v + topOffset + centerVHeight);
-        Tessellator.instance.draw();
-        glPopMatrix();
+        wr.pos(this.leftOffset + centerWidth, this.topOffset + centerHeight + this.bottomOffset, 0).tex(u + leftOffset + centerUWidth, v + topOffset + centerVHeight + bottomOffset).endVertex();
+        wr.pos(this.leftOffset + centerWidth + this.rightOffset, this.topOffset + centerHeight + this.bottomOffset, 0).tex(u + leftOffset + centerUWidth + rightOffset, v + topOffset + centerVHeight + bottomOffset).endVertex();
+        wr.pos(this.leftOffset + centerWidth + this.rightOffset,this.topOffset + centerHeight, 0).tex(u + leftOffset + centerUWidth + rightOffset, v + topOffset + centerVHeight).endVertex();
+        wr.pos(this.leftOffset + centerWidth, this.topOffset + centerHeight, 0).tex(u + leftOffset + centerUWidth, v + topOffset + centerVHeight).endVertex();
+        Tessellator.getInstance().draw();
+        GlStateManager.popMatrix();
     }
 
     private int clamp(int value, int max)

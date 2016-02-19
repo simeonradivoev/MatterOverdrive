@@ -27,9 +27,9 @@ import java.util.regex.Pattern;
  */
 public class ConfigPropertyString extends ConfigPropertyAbstract
 {
-    String value;
-    short maxLength = Short.MAX_VALUE;
-    Pattern pattern;
+    private String value;
+    private short maxLength = Short.MAX_VALUE;
+    private Pattern pattern;
 
     public ConfigPropertyString(String key, String unlocalizedName,String def)
     {

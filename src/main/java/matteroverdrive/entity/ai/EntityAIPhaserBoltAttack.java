@@ -120,12 +120,12 @@ public class EntityAIPhaserBoltAttack extends EntityAIBase
      */
     public void updateTask()
     {
-        double distanceToTargetSq = this.entityHost.getDistanceSq(this.attackTarget.posX, this.attackTarget.boundingBox.minY, this.attackTarget.posZ);
+        double distanceToTargetSq = this.entityHost.getDistanceSq(this.attackTarget.posX, this.attackTarget.getEntityBoundingBox().minY, this.attackTarget.posZ);
         boolean canSee = this.entityHost.getEntitySenses().canSee(this.attackTarget);
 
         if (canSee)
         {
-            lastKnownShootLocation = Vec3.createVectorHelper(attackTarget.prevPosX,attackTarget.prevPosY,attackTarget.prevPosZ);
+            lastKnownShootLocation = new Vec3(attackTarget.prevPosX,attackTarget.prevPosY,attackTarget.prevPosZ);
             shootPatienceTime = 60;
             ++this.pathRetryTimer;
         }
@@ -167,7 +167,6 @@ public class EntityAIPhaserBoltAttack extends EntityAIBase
     private void manageShooting(boolean canSeeTarget,double distanceToTargetSq)
     {
         this.entityHost.getLookHelper().setLookPosition(this.lastKnownShootLocation.xCoord, this.lastKnownShootLocation.yCoord + attackTarget.getEyeHeight(), this.lastKnownShootLocation.zCoord, 30.0F, 30.0F);
-        float distancePercentage;
         ItemStack weapon = rangedAttackEntityHost.getWeapon();
 
         if (this.rangedAttackDelayTime == 0 && weapon != null && weapon.getItem() instanceof EnergyWeapon && ((EnergyWeapon) weapon.getItem()).canFire(weapon,entityHost.worldObj,entityHost))

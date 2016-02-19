@@ -18,17 +18,20 @@
 
 package matteroverdrive.client.render;/* Created by Simeon on 10/18/2015. */
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.util.MOPhysicsHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
@@ -49,14 +52,14 @@ public abstract class RenderBeam<T extends EntityLivingBase> implements IWorldLa
 
     protected boolean renderRaycastedBeam(Vec3 direction, Vec3 offset, T caster)
     {
-        return renderRaycastedBeam(caster.getPosition(1), direction, offset, caster);
+        return renderRaycastedBeam(caster.getPositionEyes(1), direction, offset, caster);
     }
 
     protected boolean renderRaycastedBeam(Vec3 position, Vec3 direction, Vec3 offset, T caster)
     {
         double maxDistance = getBeamMaxDistance(caster);
 
-        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(position, caster.worldObj,maxDistance, 0, Vec3.createVectorHelper(0, 0, 0), false, true, direction, caster);
+        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(position, caster.worldObj,maxDistance, 0, new Vec3(0, 0, 0), false, true, direction, caster);
         if (hit != null && hit.typeOfHit != MovingObjectPosition.MovingObjectType.MISS)
         {
             renderBeam(position, hit.hitVec, offset, getBeamColor(caster), getBeamTexture(caster), getBeamThickness(caster), caster);
@@ -78,34 +81,34 @@ public abstract class RenderBeam<T extends EntityLivingBase> implements IWorldLa
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
         RenderUtils.applyColor(color);
-        glDisable(GL_CULL_FACE);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glDisable(GL_LIGHTING);
+        //GlStateManager.disableCull();
+        //GlStateManager.enableBlend();
+        //GlStateManager.blendFunc(GL_ONE, GL_ONE);
+        //GlStateManager.disableLighting();
         double distance = from.subtract(to).lengthVector();
         double v = -viewer.worldObj.getWorldTime() * 0.2;
 
-        glPushMatrix();
-        glTranslated(from.xCoord,from.yCoord,from.zCoord);
-        glRotated(-viewer.getRotationYawHead(), 0, 1, 0);
-        glRotated(viewer.rotationPitch, 1, 0, 0);
-        glTranslated(offest.xCoord, offest.yCoord, offest.zCoord);
-        Tessellator t = Tessellator.instance;
-        t.startDrawingQuads();
-        t.addVertexWithUV(tickness, 0, 0, 0, v);
-        t.addVertexWithUV(tickness, 0, distance, 0, v + distance * 1.5);
-        t.addVertexWithUV(-tickness, 0, distance, 1, v + distance * 1.5);
-        t.addVertexWithUV(-tickness, 0, 0, 1, v);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(from.xCoord,from.yCoord,from.zCoord);
+        GlStateManager.rotate(-viewer.getRotationYawHead(), 0, 1, 0);
+        GlStateManager.rotate(viewer.rotationPitch, 1, 0, 0);
+        GlStateManager.translate(offest.xCoord, offest.yCoord, offest.zCoord);
+        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        wr.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        wr.pos(tickness, 0, 0).tex(0, v).endVertex();
+        wr.pos(tickness, 0, distance).tex(0, v + distance * 1.5).endVertex();
+        wr.pos(-tickness, 0, distance).tex(1, v + distance * 1.5).endVertex();
+        wr.pos(-tickness, 0, 0).tex(1, v).endVertex();
 
-        t.addVertexWithUV(0, tickness, 0, 0, v);
-        t.addVertexWithUV(0, tickness, distance, 0, v + distance * 1.5);
-        t.addVertexWithUV(0, -tickness, distance, 1, v + distance * 1.5);
-        t.addVertexWithUV(0, -tickness, 0, 1, v);
-        t.draw();
-        glPopMatrix();
+        wr.pos(0, tickness, 0).tex( 0, v).endVertex();
+        wr.pos(0, tickness, distance).tex(0, v + distance * 1.5).endVertex();
+        wr.pos(0, -tickness, distance).tex(1, v + distance * 1.5).endVertex();
+        wr.pos(0, -tickness, 0).tex( 1, v).endVertex();
+        Tessellator.getInstance().draw();
+        GlStateManager.popMatrix();
 
-        glEnable(GL_CULL_FACE);
-        glDisable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //GlStateManager.enableCull();
+        //GlStateManager.disableBlend();
+        //GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 }

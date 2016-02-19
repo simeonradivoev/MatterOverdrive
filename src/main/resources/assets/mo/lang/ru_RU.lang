@@ -40,10 +40,10 @@ item.tritanium_wrench.name=Тритановый ключ
 item.tritanium_wrench.details=Безопасно демонтирует и вращает машины
 item.spacetime_equalizer.name=Пространственно-временной эквалайзер
 item.spacetime_equalizer.details=Может быть одет в слот нагрудника, чтобы предотвратить влияние гравитационных сил
-item.rouge_android_part.head.name=Голова Андроида
-item.rouge_android_part.arms.name=Рука Андроида
-item.rouge_android_part.legs.name=Нога Андроида
-item.rouge_android_part.chest.name=Торс Андроида
+item.rouge_android_part_head.name=Голова Андроида
+item.rouge_android_part_arms.name=Рука Андроида
+item.rouge_android_part_legs.name=Нога Андроида
+item.rouge_android_part_chest.name=Торс Андроида
 item.forcefield_emitter.name=Излучатель силового поля
 item.hc_battery.name=Высокоёмкостная батарейка
 item.ship_factory.name=Корабль-фабрика
@@ -99,7 +99,7 @@ item.upgrade.matter_storage.name=Улучшение «Хранимая мате�
 
 ## Модули для оружий ##
 item.weapon_module_color.name=Модуль «Цвет»
-item.weapon_module_barrel.damage.name=Дилитиевая фокусирующая матрица
+item.weapon_module_barrel.meta.name=Дилитиевая фокусирующая матрица
 item.weapon_module_barrel.fire.name=Зажигательный фильтр
 item.weapon_module_barrel.explosion.name=Взрыво-индуктивный барабан
 item.weapon_module_barrel.heal.name=Восстанавливающий конвертер
@@ -564,7 +564,7 @@ alert.starmap.on_build=§3%1$s §rбыл построен на §3%2$s§r!
 ============================================================
 # Зачарования/Enchantments
 
-enchantment.matteroverdrive.weapon.damage=Разгон
+enchantment.matteroverdrive.weapon.meta=Разгон
 
 ============================================================
 # Жидкости/Fluids

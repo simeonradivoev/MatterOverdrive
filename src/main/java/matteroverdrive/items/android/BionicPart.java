@@ -20,8 +20,9 @@ package matteroverdrive.items.android;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.IBionicPart;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -44,6 +45,7 @@ public abstract class BionicPart extends MOBaseItem implements IBionicPart
     public BionicPart(String name)
     {
         super(name);
+        this.setCreativeTab(MatterOverdrive.tabMatterOverdrive_androidParts);
     }
 
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
@@ -75,7 +77,7 @@ public abstract class BionicPart extends MOBaseItem implements IBionicPart
         return multimap;
     }
 
-    public void loadCustomAttributes(ItemStack itemStack,Multimap<String, AttributeModifier> multimap)
+    private void loadCustomAttributes(ItemStack itemStack, Multimap<String, AttributeModifier> multimap)
     {
         if (itemStack.getTagCompound() != null)
         {

@@ -1,6 +1,6 @@
 package matteroverdrive.compat.modules;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import matteroverdrive.compat.Compat;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.block.Block;

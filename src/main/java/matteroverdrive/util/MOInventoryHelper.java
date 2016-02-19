@@ -25,6 +25,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -88,9 +89,9 @@ public class MOInventoryHelper
             return null;
         }
 
-        List<ItemStack> itemStacks = new ArrayList<ItemStack>();
+        List<ItemStack> itemStacks = new ArrayList<>();
 
-        Iterator iterator = container.getTagCompound().func_150296_c().iterator();
+        Iterator iterator = container.getTagCompound().getKeySet().iterator();
 
         while (iterator.hasNext())
         {
@@ -100,7 +101,11 @@ public class MOInventoryHelper
                 NBTBase nbtbase = container.getTagCompound().getTag(s);
                 if (nbtbase instanceof NBTTagCompound)
                 {
-                    itemStacks.add(ItemStack.loadItemStackFromNBT((NBTTagCompound)nbtbase));
+                    ItemStack itemStack = ItemStack.loadItemStackFromNBT((NBTTagCompound)nbtbase);
+                    if (itemStack != null)
+                    {
+                        itemStacks.add(itemStack);
+                    }
                 }
             }
         }
@@ -139,12 +144,12 @@ public class MOInventoryHelper
         return itemStack;
     }
 
-    public static ItemStack insertItemStackIntoInventory(IInventory inventory, ItemStack itemStack, int side) {
+    public static ItemStack insertItemStackIntoInventory(IInventory inventory, ItemStack itemStack, EnumFacing side) {
         if(itemStack != null && inventory != null) {
             int var3 = itemStack.stackSize;
             if(inventory instanceof ISidedInventory) {
                 ISidedInventory var4 = (ISidedInventory)inventory;
-                int[] var5 = var4.getAccessibleSlotsFromSide(side);
+                int[] var5 = var4.getSlotsForFace(side);
                 if(var5 == null) {
                     return itemStack;
                 }
@@ -233,7 +238,7 @@ public class MOInventoryHelper
         int var11;
         if(itemStack.isStackable()) {
             for(; itemStack.stackSize > 0 && (!var4 && var7 < var3 || var4 && var7 >= var2); var7 += var8) {
-                var9 = (Slot)slots.get(var7);
+                var9 = slots.get(var7);
                 var10 = var9.getStack();
                 if(var9.isItemValid(itemStack) && var10 != null && var10.getItem().equals(itemStack.getItem()) && (!itemStack.getHasSubtypes() || itemStack.getItemDamage() == var10.getItemDamage()) && ItemStack.areItemStackTagsEqual(itemStack, var10)) {
                     var11 = var10.stackSize + itemStack.stackSize;
@@ -255,7 +260,7 @@ public class MOInventoryHelper
 
         if(itemStack.stackSize > 0) {
             for(var7 = !var4?var2:var3 - 1; itemStack.stackSize > 0 && (!var4 && var7 < var3 || var4 && var7 >= var2); var7 += var8) {
-                var9 = (Slot)slots.get(var7);
+                var9 = slots.get(var7);
                 var10 = var9.getStack();
                 if(var9.isItemValid(itemStack) && var10 == null) {
                     var11 = var5?Math.min(itemStack.getMaxStackSize(), var9.getSlotStackLimit()):var9.getSlotStackLimit();

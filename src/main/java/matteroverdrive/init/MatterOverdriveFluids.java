@@ -18,8 +18,8 @@
 
 package matteroverdrive.init;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.fluids.FluidMatterPlasma;
 import matteroverdrive.fluids.FluidMoltenTritanium;
 import net.minecraft.item.ItemStack;

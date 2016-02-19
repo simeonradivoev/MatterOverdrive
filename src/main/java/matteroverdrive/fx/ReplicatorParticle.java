@@ -4,7 +4,10 @@ import matteroverdrive.Reference;
 import matteroverdrive.util.Vector3;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class ReplicatorParticle extends EntityFX
@@ -33,11 +36,12 @@ public class ReplicatorParticle extends EntityFX
         this.setParticleTextureIndex(1);
     }
 
-    public void renderParticle(Tessellator tessellator, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
+    @Override
+    public void renderParticle(WorldRenderer worldRenderer, Entity entity, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
     {
         float f6 = ((float)this.particleAge + p_70539_2_) / (float)this.particleMaxAge;
         this.particleScale = this.flameScale * (1.0F - f6 * f6 * 0.5F);
-        super.renderParticle(tessellator, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
+        super.renderParticle(worldRenderer,entity, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
     }
 
     public int getBrightnessForRender(float f)
@@ -103,25 +107,27 @@ public class ReplicatorParticle extends EntityFX
         }
 
         //this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        Vector3 motion = new Vector3(this.motionX, this.motionY, this.motionZ);
-        Vector3 center = new Vector3(this.centerX, this.centerY, this.centerZ);
-        Vector3 position = new Vector3(this.posX, this.posY, this.posZ);
-        Vector3 gravityCenter = center.subtract(position).scale(this.pointGravityScale);
-        Vector3 dir = gravityCenter.add(motion);
+        Vec3 motion = new Vec3(this.motionX, this.motionY, this.motionZ);
+        Vec3 center = new Vec3(this.centerX, this.centerY, this.centerZ);
+        Vec3 position = new Vec3(this.posX, this.posY, this.posZ);
+        Vec3 gravityCenter = center.subtract(position);
+        gravityCenter = new Vec3(gravityCenter.xCoord * pointGravityScale,gravityCenter.yCoord * pointGravityScale,gravityCenter.zCoord * pointGravityScale);
+        Vec3 dir = gravityCenter.add(motion);
 
-        this.motionX = dir.getX();
-        this.motionY = dir.getY();
-        this.motionZ = dir.getZ();
+        this.motionX = dir.xCoord;
+        this.motionY = dir.yCoord;
+        this.motionZ = dir.zCoord;
 
-        this.boundingBox.offset(this.motionX, this.motionY, this.motionZ);
-        this.posX = (this.boundingBox.minX + this.boundingBox.maxX) / 2.0D;
-        this.posY = this.boundingBox.minY + (double)this.yOffset - (double)this.ySize;
-        this.posZ = (this.boundingBox.minZ + this.boundingBox.maxZ) / 2.0D;
+        this.getEntityBoundingBox().offset(this.motionX, this.motionY, this.motionZ);
+        this.posX = (this.getEntityBoundingBox().minX + this.getEntityBoundingBox().maxX) / 2.0D;
+        this.posY = this.getEntityBoundingBox().minY - (double)this.height;
+        this.posZ = (this.getEntityBoundingBox().minZ + this.getEntityBoundingBox().maxZ) / 2.0D;
 
         double speedOverTime = 1D;
         this.motionX *= speedOverTime;
         this.motionY *= speedOverTime;
         this.motionZ *= speedOverTime;
+        moveEntity(this.motionX,this.motionY,this.motionZ);
     }
 
     public void setCenter(double x, double y, double z)

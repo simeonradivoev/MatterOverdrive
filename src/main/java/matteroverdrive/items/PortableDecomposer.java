@@ -7,11 +7,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -51,14 +52,14 @@ public class PortableDecomposer extends MOItemEnergyContainer
     }
 
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float p_77648_8_, float p_77648_9_, float p_77648_10_)
+    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        if (world.getTileEntity(x,y,z) instanceof IFluidHandler)
+        if (worldIn.getTileEntity(pos) instanceof IFluidHandler)
         {
-            IFluidHandler fluidHandler = (IFluidHandler)world.getTileEntity(x,y,z);
-            FluidStack fluidStack = new FluidStack(MatterOverdriveFluids.matterPlasma,getMatter(itemStack));
-            int filled = fluidHandler.fill(ForgeDirection.getOrientation(side),fluidStack,true);
-            setMatter(itemStack,Math.max(0,fluidStack.amount-filled));
+            IFluidHandler fluidHandler = (IFluidHandler)worldIn.getTileEntity(pos);
+            FluidStack fluidStack = new FluidStack(MatterOverdriveFluids.matterPlasma,getMatter(stack));
+            int filled = fluidHandler.fill(side,fluidStack,true);
+            setMatter(stack,Math.max(0,fluidStack.amount-filled));
             return true;
         }
         return false;

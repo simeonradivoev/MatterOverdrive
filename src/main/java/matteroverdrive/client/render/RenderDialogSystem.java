@@ -30,7 +30,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
  */
 public class RenderDialogSystem implements IWorldLastRenderer
 {
-    private EntityRendererConversation entityRendererConversation;
+    private final EntityRendererConversation entityRendererConversation;
     EntityRenderer lastEntityRenderer;
 
     public RenderDialogSystem()

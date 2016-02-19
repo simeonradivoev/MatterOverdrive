@@ -1,10 +1,10 @@
 package matteroverdrive.api.events;
 
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Created by Simeon on 1/5/2016.

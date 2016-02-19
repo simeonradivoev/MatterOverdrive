@@ -102,7 +102,7 @@ public class MOElementEnergy extends MOElementBase
             return this.sizeY;
         } else {
             long var1 = (long)this.storage.getEnergyStored() * (long)this.sizeY / (long)this.storage.getMaxEnergyStored();
-            return this.alwaysShowMinimum && (int) this.storage.getEnergyStored() > 0 ? (int) Math.max(1, Math.round((double)var1)) : (int)Math.round((double)var1);
+            return this.alwaysShowMinimum && this.storage.getEnergyStored() > 0 ? (int) Math.max(1, Math.round((double)var1)) : (int)Math.round((double)var1);
         }
     }
 

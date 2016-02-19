@@ -20,11 +20,12 @@ package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.BlockHoloSign;
+import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.tile.TileEntityHoloSign;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import static matteroverdrive.util.MOBlockHelper.getLeftSide;
 import static matteroverdrive.util.MOBlockHelper.getRightSide;
@@ -32,39 +33,38 @@ import static matteroverdrive.util.MOBlockHelper.getRightSide;
 /**
  * Created by Simeon on 8/15/2015.
  */
-public class TileEntityRendererHoloSign extends TileEntitySpecialRenderer
+public class TileEntityRendererHoloSign extends TileEntitySpecialRenderer<TileEntityHoloSign>
 {
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks)
+    public void renderTileEntityAt(TileEntityHoloSign holoSign, double x, double y, double z, float ticks,int destoryStage)
     {
-        int meta = tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-        ForgeDirection side = ForgeDirection.getOrientation(meta);
+        EnumFacing side = holoSign.getWorld().getBlockState(holoSign.getPos()).getValue(MOBlock.PROPERTY_DIRECTION);
 
-        RenderUtils.beginDrawinngBlockScreen(x, y, z, side, Reference.COLOR_HOLO, tileEntity, -0.8375, 0.2f);
+        RenderUtils.beginDrawinngBlockScreen(x, y, z, side, Reference.COLOR_HOLO, holoSign, -0.8375, 0.2f);
 
-        if (tileEntity instanceof TileEntityHoloSign)
+        if (holoSign instanceof TileEntityHoloSign)
         {
-            String text = ((TileEntityHoloSign) tileEntity).getText();
+            String text = holoSign.getText();
             if (text != null)
             {
                 String[] infos = text.split("\n");
                 int leftMargin = 10;
                 int rightMargin = 10;
                 float maxSize = 4f;
-                ForgeDirection leftSide = ForgeDirection.getOrientation(getLeftSide(meta));
-                if (tileEntity.getWorldObj().getBlock(tileEntity.xCoord + leftSide.offsetY, tileEntity.yCoord + leftSide.offsetY, tileEntity.zCoord + leftSide.offsetZ) instanceof BlockHoloSign)
+                EnumFacing leftSide = getLeftSide(side);
+                if (holoSign.getWorld().getBlockState(holoSign.getPos().offset(leftSide)).getBlock() instanceof BlockHoloSign)
                 {
                     leftMargin = 0;
                     maxSize = 8;
                 }
-                ForgeDirection rightSide = ForgeDirection.getOrientation(getRightSide(meta));
-                if (tileEntity.getWorldObj().getBlock(tileEntity.xCoord + rightSide.offsetY, tileEntity.yCoord + rightSide.offsetY, tileEntity.zCoord + rightSide.offsetZ) instanceof BlockHoloSign)
+                EnumFacing rightSide = getRightSide(side);
+                if (holoSign.getWorld().getBlockState(holoSign.getPos().offset(rightSide)).getBlock() instanceof BlockHoloSign)
                 {
                     rightMargin = 0;
                     maxSize = 8;
                 }
 
-                if (((TileEntityHoloSign) tileEntity).getConfigs().getBoolean("AutoLineSize", false))
+                if (holoSign.getConfigs().getBoolean("AutoLineSize", false))
                 {
                     RenderUtils.drawScreenInfoWithLocalAutoSize(infos, Reference.COLOR_HOLO, side, leftMargin, rightMargin, maxSize);
                 }else

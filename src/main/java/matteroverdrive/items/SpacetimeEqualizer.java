@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.util.MOStringHelper;
@@ -28,6 +27,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -42,7 +42,6 @@ public class SpacetimeEqualizer extends ItemArmor
         super(ItemArmor.ArmorMaterial.IRON,0,1);
         setUnlocalizedName(name);
         this.setCreativeTab(MatterOverdrive.tabMatterOverdrive);
-        this.setTextureName(Reference.MOD_ID + ":" + name);
     }
 
     public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)

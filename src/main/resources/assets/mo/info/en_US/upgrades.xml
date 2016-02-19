@@ -27,45 +27,45 @@
     <page class="padded-page">
         <title size="2" class="matter-text small-title">Speed Upgrade</title>
         <text class="matter-text text-block">The Speed Upgrade is used to speed up machines. It can be used in almost every Matter Overdrive machine.</text>
-        <recipe item="[item name=upgrade damage=1]" style="float:left"></recipe>
-        <details item="[item name=upgrade damage=1]" style="margin-left:16px;margin-top:8px"></details>
+        <recipe item="[item name=upgrade meta=1]" style="float:left"></recipe>
+        <details item="[item name=upgrade meta=1]" style="margin-left:16px;margin-top:8px"></details>
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title">Power Upgrade</title>
         <text class="matter-text text-block">The Power Upgrade can be used to decrease the power usage of most machines in Matter Overdrive.</text>
-        <recipe item="[item name=upgrade damage=2]" style="float:left"></recipe>
-        <details item="[item name=upgrade damage=2]" style="margin-left:16px;margin-top:8px"></details>
+        <recipe item="[item name=upgrade meta=2]" style="float:left"></recipe>
+        <details item="[item name=upgrade meta=2]" style="margin-left:16px;margin-top:8px"></details>
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title">Fail-Safe Upgrade</title>
         <text class="matter-text text-block">The Fail Safe Upgrade is used to lower the chance of failure.
             It can be used in [block name=replicator] and the [block name=decomposer],
             to lower the chance of failure and byproduct production in the form of [item name=matter_dust] instead of an Item or [guide name=matter_plasma].</text>
-        <recipe item="[item name=upgrade damage=3]" style="float:left"></recipe>
-        <details item="[item name=upgrade damage=3]" style="margin-left:16px;margin-top:8px"></details>
+        <recipe item="[item name=upgrade meta=3]" style="float:left"></recipe>
+        <details item="[item name=upgrade meta=3]" style="margin-left:16px;margin-top:8px"></details>
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title">Range Upgrade</title>
         <text class="matter-text text-block">The range upgrade is used to increase the range of machines such as the [block name=transporter] or the [block name=charging_station]</text>
-        <recipe item="[item name=upgrade damage=4]" style="float:left"></recipe>
-        <details item="[item name=upgrade damage=4]" style="margin-left:16px;margin-top:8px"></details>
+        <recipe item="[item name=upgrade meta=4]" style="float:left"></recipe>
+        <details item="[item name=upgrade meta=4]" style="margin-left:16px;margin-top:8px"></details>
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title">Power Storage Upgrade</title>
         <text class="matter-text text-block">The Power Storage Upgrade is used to increase the Energy Storage of Machines.</text>
-        <recipe item="[item name=upgrade damage=5]" style="float:left"></recipe>
-        <details item="[item name=upgrade damage=5]" style="margin-left:16px;margin-top:8px"></details>
+        <recipe item="[item name=upgrade meta=5]" style="float:left"></recipe>
+        <details item="[item name=upgrade meta=5]" style="margin-left:16px;margin-top:8px"></details>
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title">Hyper Speed Upgrade</title>
         <text class="matter-text text-block">The Hyper Speed Upgrade is the advanced version of the Speed Upgrade.</text>
-        <recipe item="[item name=upgrade damage=6]" style="float:left"></recipe>
-        <details item="[item name=upgrade damage=6]" style="margin-left:16px;margin-top:8px"></details>
+        <recipe item="[item name=upgrade meta=6]" style="float:left"></recipe>
+        <details item="[item name=upgrade meta=6]" style="margin-left:16px;margin-top:8px"></details>
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title">Matter Storage Upgrade</title>
         <text class="matter-text text-block">The Matter Storage Upgrade is used to increase the Matter Storage of Machinese.</text>
-        <recipe item="[item name=upgrade damage=7]" style="float:left"></recipe>
-        <details item="[item name=upgrade damage=7]" style="margin-left:16px;margin-top:8px"></details>
+        <recipe item="[item name=upgrade meta=7]" style="float:left"></recipe>
+        <details item="[item name=upgrade meta=7]" style="margin-left:16px;margin-top:8px"></details>
     </page>
 </entry>

@@ -18,13 +18,15 @@
 
 package matteroverdrive.matter_network.tasks;
 
-import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.api.matter_network.IMatterNetworkConnection;
 import matteroverdrive.api.network.MatterNetworkTask;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import java.text.DecimalFormat;
 
 /**
  * Created by Simeon on 4/20/2015.
@@ -40,9 +42,8 @@ public class MatterNetworkTaskStorePattern extends MatterNetworkTask
 
     }
 
-    public MatterNetworkTaskStorePattern(IMatterNetworkConnection sender,ItemStack itemStack,int progress)
+    public MatterNetworkTaskStorePattern(ItemStack itemStack,int progress)
     {
-        super(sender);
         this.itemStack = itemStack;
         this.progress = progress;
     }
@@ -83,7 +84,7 @@ public class MatterNetworkTaskStorePattern extends MatterNetworkTask
     @Override
     public String getName()
     {
-        return itemStack.getDisplayName();
+        return itemStack.getDisplayName() + " +" + DecimalFormat.getPercentInstance().format(progress/100f);
     }
 
     public ItemStack getItemStack() {

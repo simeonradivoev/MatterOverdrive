@@ -20,11 +20,13 @@ package matteroverdrive.commands;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
-import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.api.android.IBioticStat;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -61,7 +63,8 @@ public class AndoidCommands extends CommandBase
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] parameters) {
+    public void processCommand(ICommandSender sender, String[] parameters) throws CommandException
+    {
         if (parameters.length == 0)
         {
             sender.addChatMessage(new ChatComponentText("Invalid Parameters"));
@@ -85,15 +88,15 @@ public class AndoidCommands extends CommandBase
                     String commandInfo = "";
 
                     if (parameters[0].equalsIgnoreCase("set")) {
-                        boolean android = parseBoolean(sender, parameters[1]);
+                        boolean android = parseBoolean(parameters[1]);
                         androidPlayer.setAndroid(android);
                         validCommand = true;
                         if (android)
                         {
-                            commandInfo = sender.getCommandSenderName() + " is now an Android";
+                            commandInfo = sender.getName() + " is now an Android";
                         }else
                         {
-                            commandInfo = sender.getCommandSenderName() + " is no longer an Android";
+                            commandInfo = sender.getName() + " is no longer an Android";
                         }
                     }
                     else if (parameters[0].equalsIgnoreCase("stats"))
@@ -102,25 +105,25 @@ public class AndoidCommands extends CommandBase
                         {
                             androidPlayer.resetUnlocked();
                             validCommand = true;
-                            commandInfo = sender.getCommandSenderName() + " stats are now Reset";
+                            commandInfo = sender.getName() + " stats are now Reset";
                         }
                     }else if (parameters[0].equalsIgnoreCase("unlock"))
                     {
                         if (MatterOverdrive.statRegistry.hasStat(parameters[1]))
                         {
-                            IBionicStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
+                            IBioticStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
                             androidPlayer.unlock(stat, stat.maxLevel());
                             validCommand = true;
-                            commandInfo = sender.getCommandSenderName() + " now has the ability " + EnumChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]";
+                            commandInfo = sender.getName() + " now has the ability " + EnumChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]";
                         }
                     }else if (parameters[0].equalsIgnoreCase("forget"))
                     {
                         if (MatterOverdrive.statRegistry.hasStat(parameters[1]))
                         {
-                            IBionicStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
+                            IBioticStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
                             androidPlayer.reset(stat);
                             validCommand = true;
-                            commandInfo = EnumChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]" + EnumChatFormatting.RESET + " removed from " + sender.getCommandSenderName();
+                            commandInfo = EnumChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]" + EnumChatFormatting.RESET + " removed from " + sender.getName();
                         }
                     }
 
@@ -138,7 +141,7 @@ public class AndoidCommands extends CommandBase
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender commandSender, String[] parameters)
+    public List addTabCompletionOptions(ICommandSender commandSender, String[] parameters, BlockPos pos)
     {
         List<String> commands = new ArrayList<>();
 
@@ -155,11 +158,11 @@ public class AndoidCommands extends CommandBase
             }
             else if (parameters[0].equalsIgnoreCase("unlock"))
             {
-                commands.addAll(MatterOverdrive.statRegistry.getStats().stream().map(IBionicStat::getUnlocalizedName).collect(Collectors.toList()));
+                commands.addAll(MatterOverdrive.statRegistry.getStats().stream().map(IBioticStat::getUnlocalizedName).collect(Collectors.toList()));
             }
             else if (parameters[0].equalsIgnoreCase("forget"))
             {
-                commands.addAll(MatterOverdrive.statRegistry.getStats().stream().map(IBionicStat::getUnlocalizedName).collect(Collectors.toList()));
+                commands.addAll(MatterOverdrive.statRegistry.getStats().stream().map(IBioticStat::getUnlocalizedName).collect(Collectors.toList()));
             }
         }else
         {

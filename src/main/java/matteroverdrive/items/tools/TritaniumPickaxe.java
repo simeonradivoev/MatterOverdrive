@@ -31,6 +31,5 @@ public class TritaniumPickaxe extends ItemPickaxe
     {
         super(MatterOverdriveItems.toolMaterialTritanium);
         setUnlocalizedName(name);
-        setTextureName(Reference.MOD_ID + ":" + name);
     }
 }

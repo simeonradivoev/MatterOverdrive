@@ -24,7 +24,7 @@ import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class MOEnergyHelper
 {
@@ -45,7 +45,7 @@ public class MOEnergyHelper
         return (prefix != null ? prefix : "") + MOStringHelper.formatNumber(energy) + ENERGY_UNIT;
     }
 
-    public static boolean extractExactAmount(IEnergyProvider provider,ForgeDirection direction,int amount,boolean simulate)
+    public static boolean extractExactAmount(IEnergyProvider provider, EnumFacing direction, int amount, boolean simulate)
     {
         int hasEnergy = provider.getEnergyStored(direction);
         if (hasEnergy >= amount)
@@ -66,11 +66,11 @@ public class MOEnergyHelper
     }
 
     public static ItemStack setDefaultEnergyTag(ItemStack itemStack, int energy) {
-        if(itemStack.stackTagCompound == null) {
+        if(itemStack.getTagCompound() == null) {
             itemStack.setTagCompound(new NBTTagCompound());
         }
 
-        itemStack.stackTagCompound.setInteger("Energy", energy);
+        itemStack.getTagCompound().setInteger("Energy", energy);
         return itemStack;
     }
 
@@ -86,8 +86,8 @@ public class MOEnergyHelper
         return itemStack != null && itemStack.getItem() instanceof IEnergyContainerItem;
     }
 
-    public static int insertEnergyIntoAdjacentEnergyReceiver(TileEntity tileEntity, int side, int amount, boolean simulate) {
-        TileEntity var4 = MOBlockHelper.getAdjacentTileEntity(tileEntity, side);
-        return var4 instanceof IEnergyReceiver ?((IEnergyReceiver)var4).receiveEnergy(ForgeDirection.VALID_DIRECTIONS[side ^ 1], amount, simulate):0;
+    public static int insertEnergyIntoAdjacentEnergyReceiver(TileEntity tileEntity, EnumFacing side, int amount, boolean simulate) {
+        TileEntity var4 = tileEntity.getWorld().getTileEntity(tileEntity.getPos().offset(side));
+        return var4 instanceof IEnergyReceiver ?((IEnergyReceiver)var4).receiveEnergy(side.getOpposite(), amount, simulate):0;
     }
 }

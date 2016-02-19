@@ -64,5 +64,9 @@ public enum UpgradeTypes
      * The Matter Transfer Speed of the machine
      */
     MatterTransfer,
+    /**
+     * The Matter Usage of the machine
+     */
+    MatterUsage,
     Other
 }

@@ -18,8 +18,8 @@
 
 package matteroverdrive.items.includes;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
@@ -98,12 +98,6 @@ public class MOMachineBlockItem extends ItemBlock
 		}
 		return 0;
 	 }
-
-	@Override
-	public int getDisplayDamage(ItemStack stack)
-    {
-        return this.getDamage(stack);
-    }
 
 	@Override
 	public int getMaxDamage(ItemStack stack)

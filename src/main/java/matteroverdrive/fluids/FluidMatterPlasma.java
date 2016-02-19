@@ -18,8 +18,8 @@
 
 package matteroverdrive.fluids;
 
-import matteroverdrive.init.MatterOverdriveIcons;
-import net.minecraft.util.IIcon;
+import matteroverdrive.Reference;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 
 /**
@@ -28,18 +28,6 @@ import net.minecraftforge.fluids.Fluid;
 public class FluidMatterPlasma extends Fluid
 {
     public FluidMatterPlasma(String fluidName) {
-        super(fluidName);
-    }
-
-    @Override
-    public IIcon getStillIcon()
-    {
-        return MatterOverdriveIcons.matter_plasma_still;
-    }
-
-    @Override
-    public IIcon getFlowingIcon()
-    {
-        return MatterOverdriveIcons.matter_plasma_flowing;
+        super(fluidName,new ResourceLocation(Reference.PATH_BLOCKS + "matter_plasma_flowing.png"),new ResourceLocation(Reference.PATH_BLOCKS + "matter_plasma_still.png"));
     }
 }

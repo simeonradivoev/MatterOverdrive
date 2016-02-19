@@ -18,8 +18,8 @@
 
 package matteroverdrive.api.events;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.android.IBioticStat;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 
 /**
@@ -31,13 +31,13 @@ public class MOEventRegisterAndroidStatRenderer extends Event
     /**
      * The type of bionic stat that is being rendered.
      */
-    public final Class<? extends IBionicStat> statClass;
+    public final Class<? extends IBioticStat> statClass;
     /**
      * The Bionic Stat renderer itself.
      */
     public final IBioticStatRenderer renderer;
 
-    public MOEventRegisterAndroidStatRenderer(Class<? extends IBionicStat> statClass, IBioticStatRenderer renderer)
+    public MOEventRegisterAndroidStatRenderer(Class<? extends IBioticStat> statClass, IBioticStatRenderer renderer)
     {
         this.statClass = statClass;
         this.renderer = renderer;

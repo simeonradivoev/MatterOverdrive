@@ -18,13 +18,14 @@
 
 package matteroverdrive.network.packet.client;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.tile.TileEntityMachinePacketQueue;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 8/22/2015.
@@ -50,15 +51,15 @@ public class PacketSendQueueFlash extends TileEntityUpdatePacket
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketSendQueueFlash>
     {
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketSendQueueFlash message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketSendQueueFlash message, MessageContext ctx)
         {
             TileEntity tileEntity = message.getTileEntity(player.worldObj);
             if (tileEntity instanceof TileEntityMachinePacketQueue)
             {
                 ((TileEntityMachinePacketQueue) tileEntity).flashTime = 5;
             }
-            return null;
         }
     }
 }

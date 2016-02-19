@@ -18,17 +18,9 @@
 
 package matteroverdrive.compat.modules.waila;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import matteroverdrive.blocks.*;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import matteroverdrive.compat.Compat;
-import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
-import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
-import matteroverdrive.tile.TileEntityMachineDecomposer;
-import matteroverdrive.tile.TileEntityMachineReplicator;
-import matteroverdrive.tile.TileEntityMachineStarMap;
-import matteroverdrive.tile.TileEntityWeaponStation;
-import mcp.mobius.waila.api.IWailaRegistrar;
 
 /**
  * Compatibility for WAILA
@@ -45,7 +37,7 @@ public class CompatWaila
 		FMLInterModComms.sendMessage("Waila", "register", "matteroverdrive.compat.modules.waila.CompatWaila.registerCallback");
 	}
 
-	public static void registerCallback(IWailaRegistrar registrar)
+	/*public static void registerCallback(IWailaRegistrar registrar)
 	{
 		registrar.registerBodyProvider(new TileEntityWeaponStation(), BlockWeaponStation.class);
 		registrar.registerBodyProvider(new TileEntityMachineStarMap(), BlockStarMap.class);
@@ -53,5 +45,5 @@ public class CompatWaila
 		registrar.registerBodyProvider(new TileEntityMachineDecomposer(), BlockDecomposer.class);
 		registrar.registerBodyProvider(new TileEntityMachineReplicator(), BlockReplicator.class);
 		registrar.registerBodyProvider(new TileEntityMachineFusionReactorController(),BlockFusionReactorController.class);
-	}
+	}*/
 }

@@ -25,7 +25,8 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class ConfigPropertyInteger extends ConfigPropertyAbstract
 {
-    private int min,max;
+    private final int min;
+    private final int max;
     private int value;
 
     public ConfigPropertyInteger(String name,String unlocalizedName,int min,int max,int def)

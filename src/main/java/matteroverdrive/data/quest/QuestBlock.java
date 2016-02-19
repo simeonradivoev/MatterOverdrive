@@ -1,6 +1,10 @@
 package matteroverdrive.data.quest;
 
-import cpw.mods.fml.common.Loader;
+import com.google.gson.JsonObject;
+import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.util.MOJsonHelper;
+import net.minecraft.block.state.IBlockState;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraft.block.Block;
 
 /**
@@ -8,11 +12,23 @@ import net.minecraft.block.Block;
  */
 public class QuestBlock
 {
-    Block block;
+    IBlockState block;
     String blockName;
+    int blockMeta;
+    boolean hasMeta;
     String mod;
 
-    public QuestBlock(Block block)
+    public QuestBlock(JsonObject object)
+    {
+        if (object.has("meta"))
+        {
+            setBlockMeta(MOJsonHelper.getInt(object,"meta"));
+        }
+        blockName = MOJsonHelper.getString(object,"id");
+        mod = MOJsonHelper.getString(object,"mod",null);
+    }
+
+    public QuestBlock(IBlockState block)
     {
         this.block = block;
     }
@@ -41,11 +57,15 @@ public class QuestBlock
         }return true;
     }
 
-    public Block getBlock()
+    public IBlockState getBlockState()
     {
-        if (isModded())
+        if (isModded() || block == null)
         {
-            return (Block) Block.blockRegistry.getObject(blockName);
+            if (hasMeta)
+            {
+                return Block.getBlockFromName(blockName).getStateFromMeta(blockMeta);
+            }
+            return Block.getBlockFromName(blockName).getDefaultState();
 
         }else
         {
@@ -53,7 +73,24 @@ public class QuestBlock
         }
     }
 
-    public static QuestBlock fromBlock(Block block)
+    public boolean isTheSame(IBlockState blockState)
+    {
+        if (hasMeta)
+        {
+            return getBlockState().equals(blockState);
+        }else
+        {
+            return getBlockState().getBlock().equals(blockState.getBlock());
+        }
+    }
+
+    public void setBlockMeta(int meta)
+    {
+        this.blockMeta = meta;
+        this.hasMeta = true;
+    }
+
+    public static QuestBlock fromBlock(IBlockState block)
     {
         return new QuestBlock(block);
     }

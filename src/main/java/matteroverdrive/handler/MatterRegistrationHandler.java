@@ -18,14 +18,20 @@
 
 package matteroverdrive.handler;
 
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
 import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
+import matteroverdrive.util.MOLog;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Level;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -34,63 +40,96 @@ import java.util.concurrent.Future;
  */
 public class MatterRegistrationHandler
 {
-    public final String registryPath;
     private Future matterCalculationThread;
 
-    public MatterRegistrationHandler(String registryPath)
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load load)
     {
-        this.registryPath = registryPath;
-    }
+        if (!load.world.isRemote && load.world.provider.getDimensionId() == 0)
+        {
+            File matterRegistryFile = getMatterRegistryFile(load.world);
+            File customHandlersFile = getCustomHandlersFile(load.world);
 
-    public void serverStart(FMLServerStartedEvent event)
-    {
-        try {
-            if (MatterOverdrive.matterRegistry.needsCalculation(registryPath) && MatterOverdrive.matterRegistry.AUTOMATIC_CALCULATION)
+            try
             {
-                try {
-                    runCalculationThread();
-                }catch (Exception e) {
-                    MatterOverdrive.log.log(Level.ERROR,e,"There was a problem calculating Matter from Recipes or Furnaces");
-                }
-            }else
+                MatterOverdrive.matterRegistry.loadCustomHandlers(customHandlersFile);
+            }catch (Exception e)
             {
-                try {
-                    MatterOverdrive.matterRegistry.loadFromFile(registryPath);
-                }catch (Exception e) {
-                    MatterOverdrive.log.log(Level.ERROR, e, "There was a problem loading the Matter Registry file.");
-                    if (MatterOverdrive.matterRegistry.AUTOMATIC_CALCULATION)
+                MOLog.log(Level.ERROR,e,"There was a problem while loading custom matter handlers");
+            }
+
+            try
+            {
+                if (MatterOverdrive.matterRegistry.needsCalculation(matterRegistryFile) && MatterOverdrive.matterRegistry.AUTOMATIC_CALCULATION)
+                {
+                    try
                     {
-                        MatterOverdrive.log.log(Level.INFO, e, "Starting automatic matter calculation thread.");
-                        runCalculationThread();
-                    }else
+                        runCalculationThread(load.world);
+                    } catch (Exception e)
                     {
-                        MatterOverdrive.log.log(Level.INFO, e, "Automatic matter calculation disabled. To enable go to Matter Overdrive configs");
+                        MOLog.log(Level.ERROR, e, "There was a problem calculating Matter from Recipes or Furnaces");
+                    }
+                } else
+                {
+                    try
+                    {
+                        MatterOverdrive.matterRegistry.loadFromFile(matterRegistryFile);
+                    } catch (Exception e)
+                    {
+                        MOLog.log(Level.ERROR, e, "There was a problem loading the Matter Registry file.");
+                        if (MatterOverdrive.matterRegistry.AUTOMATIC_CALCULATION)
+                        {
+                            MOLog.log(Level.INFO, e, "Starting automatic matter calculation thread.");
+                            runCalculationThread(load.world);
+                        } else
+                        {
+                            MOLog.log(Level.INFO, e, "Automatic matter calculation disabled. To enable go to Matter Overdrive configs");
+                        }
                     }
                 }
+            } catch (Exception e)
+            {
+                MOLog.log(Level.ERROR, e, "There was a problem while trying to load Matter Registry or trying to Calculate it");
             }
-        } catch (Exception e)
-        {
-            MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while trying to load Matter Registry or trying to Calculate it");
         }
     }
 
-    public void runCalculationThread()
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload unload)
     {
+        if (!unload.world.isRemote && unload.world.provider.getDimensionId() == 0)
+        {
+            MatterOverdrive.matterRegistry.unload();
+        }
+    }
+
+    public void runCalculationThread(World world)
+    {
+        File matterRegistryFile = getMatterRegistryFile(world);
         if (matterCalculationThread != null)
         {
-            MatterOverdrive.log.log(Level.INFO, "Old calculation thread is running. Stopping old calculation thread");
+            MOLog.log(Level.INFO, "Old calculation thread is running. Stopping old calculation thread");
             matterCalculationThread.cancel(true);
             matterCalculationThread = null;
         }
-        matterCalculationThread = MatterOverdrive.threadPool.submit(new RegisterItemsFromRecipes(registryPath));
+        matterCalculationThread = MatterOverdrive.threadPool.submit(new RegisterItemsFromRecipes(matterRegistryFile));
     }
 
     public void onRegistrationComplete()
     {
-        PacketUpdateMatterRegistry updateMatterRegistry = new PacketUpdateMatterRegistry(MatterOverdrive.matterRegistry.getEntries());
-        for (EntityPlayerMP playerMP : (List<EntityPlayerMP>) MinecraftServer.getServer().getEntityWorld().playerEntities)
-        {
-            MatterOverdrive.packetPipeline.sendTo(updateMatterRegistry,playerMP);
-        }
+        PacketUpdateMatterRegistry updateMatterRegistry = new PacketUpdateMatterRegistry(MatterOverdrive.matterRegistry);
+        MinecraftServer.getServer().getEntityWorld().playerEntities.stream().filter(playerMP -> playerMP instanceof EntityPlayerMP).forEach(playerMP -> MatterOverdrive.packetPipeline.sendTo(updateMatterRegistry, (EntityPlayerMP) playerMP));
+    }
+
+    private File getMatterRegistryFile(World world)
+    {
+        File worldDirectory = world.getSaveHandler().getWorldDirectory();
+        return new File(worldDirectory.getPath() + "/matter_registry.dat");
+    }
+
+    private File getCustomHandlersFile(World world)
+    {
+        File worldDirectory = world.getSaveHandler().getWorldDirectory();
+        return new File(worldDirectory.getPath() + "/custom_matter.json");
     }
 }

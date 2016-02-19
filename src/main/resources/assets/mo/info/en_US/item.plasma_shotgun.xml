@@ -31,6 +31,6 @@
     <page class="padded-page">
         <title size="2" class="matter-text small-title" style="margin-bottom:6px">Stats</title>
         <tooltip></tooltip>
-        <text class="matter-text text-block">The $itemName can also be dropped by Ranged Rogue Androids. There are also Legendary versions of the shotgun dropped only by Legendary Rogue Androids. The Legendary versions can have increased base stats that can stack with weapon modules. Stats such as higher damage, fire rate and greater accuracy.</text>
+        <text class="matter-text text-block">The $itemName can also be dropped by Ranged Rogue Androids. There are also Legendary versions of the shotgun dropped only by Legendary Rogue Androids. The Legendary versions can have increased base stats that can stack with weapon modules. Stats such as higher meta, fire rate and greater accuracy.</text>
     </page>
 </entry>

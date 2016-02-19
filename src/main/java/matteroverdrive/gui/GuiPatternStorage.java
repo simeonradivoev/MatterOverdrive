@@ -25,7 +25,7 @@ import matteroverdrive.container.slot.SlotInventory;
 import matteroverdrive.data.inventory.PatternStorageSlot;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.MOElementEnergy;
-import matteroverdrive.tile.TileEntityMachinePatternStorage;
+import matteroverdrive.machines.pattern_storage.TileEntityMachinePatternStorage;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 

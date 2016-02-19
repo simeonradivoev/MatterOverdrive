@@ -1,10 +1,10 @@
 package matteroverdrive.network.packet.client.starmap;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.network.packet.PacketAbstract;
@@ -15,7 +15,6 @@ import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.starmap.data.Star;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -71,9 +70,9 @@ public class PacketUpdatePlanet extends PacketAbstract
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketUpdatePlanet>
     {
-
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketUpdatePlanet message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketUpdatePlanet message, MessageContext ctx)
         {
             Galaxy galaxy = GalaxyClient.getInstance().getTheGalaxy();
             if (galaxy != null)
@@ -99,7 +98,6 @@ public class PacketUpdatePlanet extends PacketAbstract
                     GalaxyClient.getInstance().loadClaimedPlanets();
                 }
             }
-            return null;
         }
 
         @SideOnly(Side.CLIENT)

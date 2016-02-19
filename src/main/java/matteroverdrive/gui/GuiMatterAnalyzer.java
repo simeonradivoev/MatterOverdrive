@@ -19,6 +19,7 @@
 package matteroverdrive.gui;
 
 import matteroverdrive.Reference;
+import matteroverdrive.container.ContainerAnalyzer;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.container.MOBaseContainer;
@@ -40,7 +41,7 @@ public class GuiMatterAnalyzer extends MOGuiNetworkMachine<TileEntityMachineMatt
 
     public GuiMatterAnalyzer(InventoryPlayer playerInventory,TileEntityMachineMatterAnalyzer analyzer)
     {
-        super(ContainerFactory.createMachineContainer(analyzer,playerInventory),analyzer);
+        super(new ContainerAnalyzer(playerInventory,analyzer),analyzer);
         name = "matter_analyzer";
         energyElement = new MOElementEnergy(this,176,39,analyzer.getEnergyStorage());
         energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);

@@ -18,10 +18,12 @@
 
 package matteroverdrive.network.packet.server;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.MatterOverdrive;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.api.dialog.IDialogNpc;
 import matteroverdrive.gui.GuiDialog;
@@ -29,7 +31,6 @@ import matteroverdrive.network.packet.AbstractBiPacketHandler;
 import matteroverdrive.network.packet.PacketAbstract;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Simeon on 8/11/2015.
@@ -67,7 +68,7 @@ public class PacketManageConversation extends PacketAbstract
     {
         @Override
         @SideOnly(Side.CLIENT)
-        public IMessage handleClientMessage(EntityPlayer player, PacketManageConversation message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketManageConversation message, MessageContext ctx)
         {
             Entity npcEntity = player.worldObj.getEntityByID(message.npcID);
             if (npcEntity instanceof IDialogNpc) {
@@ -81,11 +82,10 @@ public class PacketManageConversation extends PacketAbstract
                     ((IDialogNpc) npcEntity).setDialogPlayer(null);
                 }
             }
-            return null;
         }
 
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketManageConversation message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketManageConversation message, MessageContext ctx)
         {
             Entity npcEntity = player.worldObj.getEntityByID(message.npcID);
             if (npcEntity instanceof IDialogNpc)
@@ -94,15 +94,14 @@ public class PacketManageConversation extends PacketAbstract
                     if (((IDialogNpc) npcEntity).getDialogPlayer() == null && ((IDialogNpc) npcEntity).canTalkTo(player))
                     {
                         ((IDialogNpc) npcEntity).setDialogPlayer(player);
-                        return message;
+                        MatterOverdrive.packetPipeline.sendTo(message,player);
                     }
                 }else
                 {
                     ((IDialogNpc) npcEntity).setDialogPlayer(null);
-                    return message;
+                    MatterOverdrive.packetPipeline.sendTo(message,player);
                 }
             }
-            return null;
         }
     }
 }

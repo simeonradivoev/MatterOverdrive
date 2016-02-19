@@ -18,29 +18,35 @@
 
 package matteroverdrive.handler;
 
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.GameData;
-import cpw.mods.fml.common.registry.GameRegistry;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import matteroverdrive.api.exceptions.MORuntimeException;
+import matteroverdrive.api.matter.IMatterEntry;
+import matteroverdrive.data.matter.*;
+import matteroverdrive.util.MOLog;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.MOEventRegisterMatterEntry;
 import matteroverdrive.api.matter.IMatterRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import javax.annotation.Nonnull;
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class MatterRegistry implements IMatterRegistry
@@ -53,73 +59,149 @@ public class MatterRegistry implements IMatterRegistry
     public boolean hasComplitedRegistration = false;
     private static final int MAX_DEPTH = 8;
     public int basicEntries = 0;
-	private Map<String,MatterEntry> entries = new HashMap<>();
-    private Set<String> blacklist = Collections.synchronizedSet(new HashSet<>());
-    private Set<String> modBlacklist = Collections.synchronizedSet(new HashSet<String>());
+	private Map<Item,MatterEntryItem> itemEntires = new HashMap<>();
+    private Map<Block,MatterEntryBlock> blockEntires = new HashMap<>();
+    private Map<String,MatterEntryOre> oreEntries = new HashMap<>();
+    private final Set<String> modBlacklist = Collections.synchronizedSet(new HashSet<>());
 
-    public void preInit(FMLPreInitializationEvent event,ConfigurationHandler configurationHandler)
+    public void preInit(final FMLPreInitializationEvent event,final ConfigurationHandler configurationHandler)
     {
         REGISTRATION_DEBUG = configurationHandler.getBool(ConfigurationHandler.KEY_MATTER_REGISTRATION_DEBUG,ConfigurationHandler.CATEGORY_DEBUG,false,"Enables Debug logging for Matter Registration");
         CALCULATION_DEBUG = configurationHandler.getBool(ConfigurationHandler.KEY_MATTER_CALCULATION_DEBUG,ConfigurationHandler.CATEGORY_DEBUG,false,"Enables Debug logging for Matter Calculation");
         CALCULATE_RECIPES = configurationHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_RECIPE_CALCULATION,ConfigurationHandler.CATEGORY_MATTER,true,"Enables Matter Calculation from recipes");
-        CALCULATE_FURNACE = configurationHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_FURNACE_CALCULATION,configurationHandler.CATEGORY_MATTER,true,"Enables Matter Calculation from furnace recipes");
-        AUTOMATIC_CALCULATION = configurationHandler.getBool("automatic_calculation",configurationHandler.CATEGORY_MATTER,true,"Should the matter registry calculation run on world start when recepie ");
+        CALCULATE_FURNACE = configurationHandler.getBool(ConfigurationHandler.KEY_AUTOMATIC_FURNACE_CALCULATION, ConfigurationHandler.CATEGORY_MATTER,true,"Enables Matter Calculation from furnace recipes");
+        AUTOMATIC_CALCULATION = configurationHandler.getBool("automatic_calculation", ConfigurationHandler.CATEGORY_MATTER,true,"Should the matter registry calculation run on world start when recepie ");
     }
 
-	public MatterEntry register(MatterEntry entry)
-	{
-        if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterMatterEntry(entry)))
-        {
-			debug("Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
-            entries.put(entry.getName(), entry);
-        }
-		return entry;
-	}
-
-    public void saveToFile(String path) throws IOException {
-        File file = new File(path);
-
+    public void saveToFile(final File file) throws Exception {
         file.getParentFile().mkdirs();
         file.createNewFile();
         FileOutputStream fileOutputStream = new FileOutputStream(file);
-        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-        outputStream.writeObject(entries);
-        outputStream.writeUTF(Reference.VERSION);
-        outputStream.writeInt(CraftingManager.getInstance().getRecipeList().size());
-        outputStream.writeInt(basicEntries);
-        outputStream.writeInt(blacklist.size());
-        outputStream.writeInt(modBlacklist.size());
-        outputStream.close();
+        NBTTagCompound tagCompound = new NBTTagCompound();
+        saveListToNBT("Items",tagCompound,itemEntires.values());
+        saveListToNBT("Ores",tagCompound,oreEntries.values());
+        tagCompound.setString("Version",Reference.VERSION);
+        tagCompound.setInteger("RecipeCount",CraftingManager.getInstance().getRecipeList().size());
+        tagCompound.setInteger("BasicEntriesCount",basicEntries);
+        tagCompound.setInteger("ModBlacklistCount",modBlacklist.size());
+        CompressedStreamTools.writeCompressed(tagCompound, fileOutputStream);
         fileOutputStream.close();
     }
 
-    public void loadFromFile(String path) throws IOException, ClassNotFoundException {
-        File file = new File(path);
-        if (file.exists()) {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
-            entries = (HashMap<String,MatterEntry>) inputStream.readObject();
-            String version = inputStream.readUTF();
-            inputStream.close();
-            fileInputStream.close();
-			MatterOverdrive.log.info("Registry Loaded with %1$s entries, from version %2$s from: %3$s", entries.size(), version, file.getPath());
+    private void saveListToNBT(final String listName,final NBTTagCompound mainTag,final Collection<? extends MatterEntryAbstract> list)
+    {
+        NBTTagCompound itemEntryList = new NBTTagCompound();
+        mainTag.setTag(listName,itemEntryList);
+        for (MatterEntryAbstract entry : list)
+        {
+            if (entry.hasCached())
+            {
+                NBTTagCompound itemEntryTag = new NBTTagCompound();
+                entry.writeTo(itemEntryTag);
+                itemEntryList.setTag(entry.writeKey(),itemEntryTag);
+            }
         }
     }
-    public boolean needsCalculation(String path) throws IOException, ClassNotFoundException
+
+    public void loadFromFile(final File file) throws IOException, ClassNotFoundException {
+        if (file.exists()) {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            NBTTagCompound tagCompound = CompressedStreamTools.readCompressed(fileInputStream);
+            NBTTagCompound itemsList = tagCompound.getCompoundTag("Items");
+            for (String key : itemsList.getKeySet())
+            {
+                MatterEntryItem item = new MatterEntryItem();
+                item.readKey(key);
+                MatterEntryItem existingEntry = this.itemEntires.get(item.getKey());
+                if (existingEntry != null)
+                {
+                    existingEntry.readFrom(itemsList.getCompoundTag(key));
+                }else
+                {
+                    item.readFrom(itemsList.getCompoundTag(key));
+                    this.itemEntires.put(item.getKey(),item);
+                }
+            }
+            NBTTagCompound oresList = tagCompound.getCompoundTag("Ores");
+            for (String key : oresList.getKeySet())
+            {
+                MatterEntryOre entry = new MatterEntryOre();
+                entry.readKey(key);
+                MatterEntryOre existingEntry = this.oreEntries.get(entry.getKey());
+                if (existingEntry != null)
+                {
+                    existingEntry.readFrom(oresList.getCompoundTag(key));
+                }
+                else
+                {
+                    entry.readFrom(oresList.getCompoundTag(key));
+                    this.oreEntries.put(entry.getKey(),entry);
+                }
+            }
+            String version = tagCompound.getString("Version");
+            fileInputStream.close();
+			MOLog.info("Registry Loaded %1$s cached itemEntires, from version %2$s from: %3$s", itemsList.getKeySet().size() + oresList.getKeySet().size(), version, file.getPath());
+        }
+    }
+
+    public void loadCustomHandlers(final File file) throws FileNotFoundException
     {
-        File file = new File(path);
+        if (file.exists())
+        {
+            Gson gson = new Gson();
+            FileReader fileReader = new FileReader(file);
+            CusomHandlerListJSON list = gson.fromJson(fileReader,CusomHandlerListJSON.class);
+            for (Map.Entry<String,CustomHandlerJSON> customHandlerJSON : list.items.entrySet())
+            {
+                Item item = Item.getByNameOrId(customHandlerJSON.getKey());
+
+                if (item != null)
+                {
+                    if (customHandlerJSON.getValue().hasMeta)
+                    {
+                        if (item != null)
+                        {
+                            for (int i = 0; i < customHandlerJSON.getValue().meta.length; i++)
+                            {
+                                ItemStackHandlerCachable cachable = new ItemStackHandlerCachable(customHandlerJSON.getValue().matter, customHandlerJSON.getValue().meta[i]);
+                                cachable.markCustom();
+                                register(item, cachable);
+                            }
+                        }
+                    } else
+                    {
+                        ItemStackHandlerCachable cachable = new ItemStackHandlerCachable(customHandlerJSON.getValue().matter);
+                        cachable.markCustom();
+                        if (item != null)
+                        {
+                            register(item, cachable);
+                        }
+                    }
+                }else
+                {
+                    MOLog.error("Trying to load a Matter Registry Custom Handler with invalid item ID: %s", customHandlerJSON.getKey());
+                    MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Trying to load Custom Matter Handler");
+                }
+            }
+        }
+    }
+
+    public void unload()
+    {
+        itemEntires.values().forEach(MatterEntryItem::clearAllCashed);
+        oreEntries.values().forEach(MatterEntryOre::clearAllCashed);
+    }
+
+    public boolean needsCalculation(final File file) throws IOException, ClassNotFoundException
+    {
         String reason = "";
         if (file.exists())
         {
             FileInputStream fileInputStream = new FileInputStream(file);
-            ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
-            HashMap<String, MatterEntry> entires = (HashMap<String, MatterEntry>)inputStream.readObject();
-            String version = inputStream.readUTF();
-            int recipeCount = inputStream.readInt();
-            int basicEntries = inputStream.readInt();
-            int blackListSize = inputStream.readInt();
-            int modBlacklistSize = inputStream.readInt();
-            inputStream.close();
+            NBTTagCompound tagCompound = CompressedStreamTools.readCompressed(fileInputStream);
+            String version = tagCompound.getString("Version");
+            int recipeCount = tagCompound.getInteger("RecipeCount");
+            int basicEntries = tagCompound.getInteger("BasicEntriesCount");
             fileInputStream.close();
 
             //checks if the saved versions differ from the current version of the mod
@@ -128,31 +210,12 @@ public class MatterRegistry implements IMatterRegistry
             {
                 if (recipeCount == CraftingManager.getInstance().getRecipeList().size())
                 {
-                    if (basicEntries == this.basicEntries)
-                    {
-                        if (blackListSize == blacklist.size() && modBlacklistSize == modBlacklist.size()) {
-
-                            for (Map.Entry<String, MatterEntry> entry : entires.entrySet())
-                            {
-                                if (!entry.getValue().getCalculated()) {
-                                    if (entries.containsKey(entry.getKey())) {
-                                        if (!entries.get(entry.getKey()).equals(entry.getValue())) {
-                                            //if the entry is in the list but it's matter was changed
-											MatterOverdrive.log.warn("Matter Registry has changed! %1$s changed from %2$s to %3$s. Recalculation required!", entry.getKey(), entries.get(entry.getKey()), entry.getValue().getMatter());
-                                            return true;
-                                        }
-                                    }
-                                }
-                            }
-
-                            return false;
-                        }else
-                        {
-                            reason = "Blacklist changed";
-                        }
-                    }else
+                    if (basicEntries != this.basicEntries)
                     {
                         reason = "Basic Entries size changed";
+                    }else
+                    {
+                        return false;
                     }
                 }else
                 {
@@ -161,37 +224,15 @@ public class MatterRegistry implements IMatterRegistry
             }
         }else
         {
-            reason = "Recipe List File missing";
+            reason = "Matter Registry File missing";
         }
 
         //if the registry file is missing then calculate
-		MatterOverdrive.log.warn(reason + "! Recalculation required!");
+		MOLog.warn(reason + "! Recalculation required!");
         return true;
     }
 
-    @Override
-    public void addToBlacklist(ItemStack itemStack) {blacklist.add(getKey(itemStack));}
-    @Override
-    public void addToBlacklist(String key) {blacklist.add(key);}
-    @Override
-    public void addToBlacklist(Item item) {blacklist.add(getKey(item));}
-    @Override
-    public void addToBlacklist(Block block) {blacklist.add(getKey(block));}
-    @Override
-    public boolean blacklisted(Block block){return blacklist.contains(getKey(block));}
-    @Override
-    public boolean blacklisted(Item item){return blacklist.contains(getKey(item));}
-    @Override
-    public boolean blacklisted(ItemStack itemStack)
-    {
-        return blacklisted(getKey(itemStack.getItem())) || blacklisted(getKey(itemStack));
-    }
-    @Override
-    public boolean blacklisted(String key)
-    {
-        return blacklist.contains(key);
-    }
-    public boolean blacklistedFromMod(ItemStack stack)
+    public boolean blacklistedFromMod(final ItemStack stack)
     {
         Item item = stack.getItem();
         if (item != null)
@@ -200,118 +241,18 @@ public class MatterRegistry implements IMatterRegistry
         }
         return false;
     }
-    public String getKey(Block block) {return getKey(new ItemStack(block));}
-    public String getKey(Item item) {return getKey(new ItemStack(item));}
-    public String getKey(ItemStack itemStack) {
-        try {
-            if (itemStack.getHasSubtypes())
-            {
-                if (itemStack.getItemDamage() > 0 && itemStack.getItemDamage() < Short.MAX_VALUE)
-                {
-                    return GameData.getItemRegistry().getNameForObject(itemStack.getItem()) + itemStack.getItemDamage();
-                }
 
-                return GameData.getItemRegistry().getNameForObject(itemStack.getItem());
-            }else
-            {
-                return GameData.getItemRegistry().getNameForObject(itemStack.getItem());
-            }
-        } catch (Exception e)
-        {
-            if (itemStack.getItem() != null)
-            {
-                int damage = itemStack.getItemDamage();
-                damage = MathHelper.clamp_int(damage, 0, itemStack.getMaxDamage());
-                return itemStack.getItem().getUnlocalizedNameInefficiently(new ItemStack(itemStack.getItem(), 1, damage));
-            }
-            return null;
-        }
-    }
-    public MatterEntry register(Block block,int matter) {
-        if (!blacklisted(block)) {
-            String key = getKey(block);
-            int configMatter = checkInConfig(key);
-            if (configMatter > 0)
-                return register(new MatterEntry(key, configMatter, (byte) 1));
-            else
-                return register(new MatterEntry(key, matter, (byte) 1));
-        }
-        return null;
-    }
-    public MatterEntry register(Item item,int matter)
-    {
-        if (!blacklisted(item)) {
-            String key = getKey(item);
-            int configMatter = checkInConfig(key);
-            if (configMatter > 0)
-                return register(new MatterEntry(key, configMatter, (byte) 1));
-            else
-                return register(new MatterEntry(key, matter, (byte) 1));
-        }
-        return null;
-    }
-    public MatterEntry register(ItemStack itemStack,int matter)
-    {
-        if (!blacklisted(itemStack)) {
-            String key = getKey(itemStack);
-            int configMatter = checkInConfig(key);
-            if (configMatter > 0)
-                return register(new MatterEntry(key, configMatter, (byte) 1));
-            else
-                return register(new MatterEntry(key, matter, (byte) 2));
-        }
-        return null;
-    }
-    public MatterEntry register(String key,int matter)
-    {
-        if (!blacklisted(key)) {
-            int configMatter = checkInConfig(key);
-            if (configMatter > 0)
-                return register(new MatterEntry(key, configMatter, (byte) 1));
-            else
-                return register(new MatterEntry(key, matter, (byte) 0));
-        }
-        return null;
-    }
-    public int checkInConfig(String key){
-        if (MatterOverdrive.configHandler.config.hasKey(ConfigurationHandler.CATEGORY_OVERRIDE_MATTER, key))
-        {
-            return MatterOverdrive.configHandler.getInt(key, ConfigurationHandler.CATEGORY_OVERRIDE_MATTER,-1);
-        }
-        return -1;
-    }
-    public MatterEntry registerFromRecipe(ItemStack item)
-    {
-        int matter = getMatterFromRecipe(item, false, 0,true);
-        if(matter > 0)
-            return register(new MatterEntry(getKey(item),matter,(byte)2));
-        else {
-            //System.out.println("Could not register "+ getKey(item)+" from recipe");
-            return null;
-        }
-    }
-
-	public MatterEntry getEntry(Block block) {return getEntry(new ItemStack(block));}
-
-	public MatterEntry getEntry(Item item) {return getEntry(new ItemStack(item));}
-
-    public MatterEntry getEntry(ItemStack item)
+    public IMatterEntry getEntry(final ItemStack item)
     {
         try {
-            if (!blacklist.contains(getKey(item)))
+            IMatterEntry e = itemEntires.get(item.getItem());
+            if (e == null)
             {
-                MatterEntry e = entries.get(getKey(item));
-                if (e == null)
-                {
-                    if (e == null) debug("Could not find matter entry for: %s", item);
-                    e = getOreDicionaryEntry(item);
-                    if (e == null) debug("Could not find ore dictionary entry for: %s", item);
-                }
-                return e;
-            }else
-            {
-                return null;
+
+                e = getOreDicionaryEntry(item);
+
             }
+            return e;
         }catch (Exception e)
         {
             if (e == null) debug("There was a problem getting a Matter Entry for %s.", item);
@@ -319,26 +260,100 @@ public class MatterRegistry implements IMatterRegistry
         }
     }
 
-    public MatterEntry getEntry(String name)
+    @Override
+    public int getMatter(final ItemStack itemStack)
     {
-        MatterEntry e = entries.get(name);
-
-        if(e == null)
+        IMatterEntry entry = getEntry(itemStack);
+        int matter = 0;
+        if (entry != null)
         {
-            for (ItemStack itemStack : OreDictionary.getOres(name))
-            {
-                e = entries.get(Item.itemRegistry.getNameForObject(itemStack.getItem()));
+            matter = entry.getMatter(itemStack);
+        }else
+        {
+            debug("Could not find matter entry for: %s", itemStack);
+        }
 
-                if(e != null)
-                    return e;
+        if (matter <= 0)
+        {
+            entry = getOreDicionaryEntry(itemStack);
+            if (entry != null)
+            {
+                matter = entry.getMatter(itemStack);
+            }else
+            {
+                debug("Could not find ore dictionary entry for: %s", itemStack);
             }
         }
-        return e;
+        return matter;
     }
 
-    private MatterEntry getOreDicionaryEntry(ItemStack stack)
+    @Override
+    public int getMatterOre(final String ore)
     {
-        MatterEntry e;
+        IMatterEntry entry = oreEntries.get(ore);
+        if (entry != null)
+        {
+            return entry.getMatter(null);
+        }
+        return 0;
+    }
+
+    //region Registration
+
+
+    @Override
+    public IMatterEntry register(final @Nonnull Item item, final IMatterEntryHandler handler)
+    {
+        if (item != null)
+        {
+            IMatterEntry existingEntry = itemEntires.get(item);
+            if (existingEntry != null)
+            {
+                existingEntry.addHandler(handler);
+                return existingEntry;
+            } else
+            {
+                MatterEntryItem entry = new MatterEntryItem(item);
+                entry.addHandler(handler);
+
+                if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterMatterEntry(entry)))
+                {
+                    //debug("Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
+                    itemEntires.put(entry.getKey(), entry);
+                }
+                return entry;
+            }
+        }else
+        {
+            throw new MORuntimeException("Matter Registry Item Key cannot be NULL");
+        }
+    }
+
+    @Override
+    public IMatterEntry registerOre(final String ore, final IMatterEntryHandler handler)
+    {
+        IMatterEntry existingEntry = oreEntries.get(ore);
+        if (existingEntry != null)
+        {
+            existingEntry.addHandler(handler);
+        }else
+        {
+            MatterEntryOre matterEntryOre = new MatterEntryOre(ore);
+            matterEntryOre.addHandler(handler);
+            if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterMatterEntry(matterEntryOre)))
+            {
+                //debug("Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
+                oreEntries.put(ore, matterEntryOre);
+            }
+            return matterEntryOre;
+        }
+        return null;
+    }
+    //endregion
+
+    private IMatterEntry getOreDicionaryEntry(final ItemStack stack)
+    {
+        IMatterEntry e;
         int[] ids = OreDictionary.getOreIDs(stack);
 
         if (ids.length <= 0)
@@ -356,7 +371,7 @@ public class MatterRegistry implements IMatterRegistry
         {
             String entryName = OreDictionary.getOreName(id);
             debug("Searching for OreDictionary key with name: %s for item: %s", entryName, stack);
-            e = entries.get(entryName);
+            e = oreEntries.get(entryName);
 
             if(e != null)
                 return e;
@@ -365,12 +380,7 @@ public class MatterRegistry implements IMatterRegistry
         return null;
     }
 
-    public int getMatterFromRecipe(Block block,boolean recursive,int depth,boolean calculated)
-    {
-        return getMatterFromRecipe(new ItemStack(block), recursive, depth,calculated);
-    }
-
-    public int getMatterFromRecipe(ItemStack item,boolean recursive,int depth,boolean calculated)
+    public int getMatterFromRecipe(final ItemStack item)
     {
         int matter = 0;
 
@@ -382,13 +392,13 @@ public class MatterRegistry implements IMatterRegistry
                 int m = 0;
 
                 if (recipe instanceof ShapedRecipes) {
-                    m = getMatterFromList(recipeOutput, ((ShapedRecipes) recipe).recipeItems, recursive, ++depth, calculated);
+                    m = getMatterFromList(recipeOutput, ((ShapedRecipes) recipe).recipeItems);
                 } else if (recipe instanceof ShapelessRecipes) {
-                    m = getMatterFromList(recipeOutput, ((ShapelessRecipes) recipe).recipeItems.toArray(), recursive, ++depth, calculated);
+                    m = getMatterFromList(recipeOutput, ((ShapelessRecipes) recipe).recipeItems.toArray());
                 } else if (recipe instanceof ShapedOreRecipe) {
-                    m = getMatterFromList(recipeOutput, ((ShapedOreRecipe) recipe).getInput(), recursive, ++depth, calculated);
+                    m = getMatterFromList(recipeOutput, ((ShapedOreRecipe) recipe).getInput());
                 } else if (recipe instanceof ShapelessOreRecipe) {
-                    m = getMatterFromList(recipeOutput, ((ShapelessOreRecipe) recipe).getInput().toArray(), recursive, ++depth, calculated);
+                    m = getMatterFromList(recipeOutput, ((ShapelessOreRecipe) recipe).getInput().toArray());
                 }
 
                 matter += m;
@@ -399,35 +409,12 @@ public class MatterRegistry implements IMatterRegistry
     }
 
     @Override
-    public void addModToBlacklist(String modID)
+    public void addModToBlacklist(final String modID)
     {
         modBlacklist.add(modID);
     }
 
-    public void loadNewItemsFromConfig(ConfigurationHandler c)
-    {
-        List<Property> category = c.getCategory(ConfigurationHandler.CATEGORY_NEW_ITEMS).getOrderedValues();
-        for (Property key : category)
-        {
-            int value = key.getInt(0);
-            if (value > 0)
-            {
-                register(key.getName(),value);
-                basicEntries++;
-            }
-        }
-    }
-
-    public void loadBlacklistFromConfig(ConfigurationHandler c)
-    {
-        String[] list = c.getStringList(ConfigurationHandler.CATEGORY_MATTER, ConfigurationHandler.KEY_MBLACKLIST);
-        for (String value : list)
-        {
-            addToBlacklist(value);
-        }
-    }
-
-    public void loadModBlacklistFromConfig(ConfigurationHandler c)
+    public void loadModBlacklistFromConfig(final ConfigurationHandler c)
     {
         String[] list = c.getStringList(ConfigurationHandler.CATEGORY_MATTER, ConfigurationHandler.KEY_BLACKLIST_MODS);
         for (String value : list)
@@ -436,177 +423,128 @@ public class MatterRegistry implements IMatterRegistry
         }
     }
 
-    public int getMatterFromList(ItemStack item, Object[] list,boolean recursive,int depth,boolean calculated)
+    public int getMatterFromList(final ItemStack item, final Object[] list)
     {
         int totalMatter = 0;
         int tempMatter;
-        MatterEntry tempEntry;
+        IMatterEntry tempEntry;
 
-        if (depth < MAX_DEPTH)
+        for (Object s : list)
         {
-            for (Object s : list)
-            {
-                if (s == null)
-                    continue;
+            if (s == null)
+                continue;
 
-                //reset temp vars
-                tempMatter = 0;
+            //reset temp vars
+            tempMatter = 0;
 
-                if (s instanceof ItemStack || s instanceof Item || s instanceof Block) {
+            if (s instanceof ItemStack || s instanceof Item || s instanceof Block) {
 
-                    //converting them all to a stack, for code simplification
-                    ItemStack stack = null;
-                    if (s instanceof ItemStack)
-                    {
-                        stack = (ItemStack)s;
-                    }
-                    else if (s instanceof Block)
-                    {
-                        stack = new ItemStack((Block)s);
-                    }
-                    else if (s instanceof Item)
-                    {
-                        stack = new ItemStack((Item)s);
-                    }
-
-                    if (stack == null || blacklisted(stack) || blacklistedFromMod(stack)) {
-                        debug("%s is blacklisted.", item);
-                        return -1;
-                    }
-
-                    //check to see if the item in the recipe is the same as the output
-                    //and if so then do not calculate to save unnecessary lopping
-                    if (!ItemStack.areItemStacksEqual(stack,item)) {
-                        tempEntry = getEntry(stack);
-                        //if there is an entry use it's matter value
-                        if (tempEntry != null)
-                        {
-                            tempMatter = tempEntry.getMatter();
-                        }
-                        //if there is no entry for item and recursive is true, then continue searching to it's recipe list
-                        else if (recursive) {
-                            tempMatter = getMatterFromRecipe(stack, true, ++depth,calculated);
-                            debug("searching %s in depth: %s", stack, depth - 1);
-
-                            //if the matter is higher than 0 that means the recipe search was successful.
-                            //registration now helps to remove it from future checks
-                            if (tempMatter > 0) {
-                                register(stack, tempMatter).setCalculated(calculated);
-                            }
-                            else if (tempMatter < 0) {
-                                //that means the item had a recipe with a blacklisted item
-                                debug("%s has a blacklisted item in it's recipe", stack);
-                                return -1;
-                            }
-                            else
-                            {
-                                debug("%s cannot be replicated. Contains 0 matter", stack);
-                                return 0;
-                            }
-                        }
-                        //if it's not recursive then check if any item in recipe is not replicatable
-                        else
-                        {
-                            debug("%s cannot be replicated. Contains 0 matter", stack);
-                            return 0;
-                        }
-                    }
-                }
-                //this is checking if it's a list of items stack
-                //this is different from the recipe list, it's oreDictionary list with items with the same ore name
-                //so recursion can't be used because of the devision of the stack size
-                //and we want to use the lowest possible matter amount from the list
-                else if (s instanceof List)
+                //converting them all to a stack, for code simplification
+                ItemStack stack = null;
+                if (s instanceof ItemStack)
                 {
-                    List l = (List)s;
-                    //flag for checking if the item in the list was the first to register
-                    //for checking the lowest matter amount of the list
-                    //not using a index check, because the first item can be empty, and nothing positive is smaller than zero
-                    boolean first = true;
-
-                    for (Object element : l)
-                    {
-                        if (element instanceof ItemStack || element instanceof Item || element instanceof Block)
-                        {
-                            ItemStack stack = null;
-                            if (element instanceof ItemStack)
-                            {
-                                stack = (ItemStack)element;
-                            }
-                            else if (element instanceof Item)
-                            {
-                                stack = new ItemStack((Item)element);
-                            }else if (element instanceof Block)
-                            {
-                                stack = new ItemStack((Block)element);
-                            }
-
-                            tempEntry = getEntry(stack);
-                            if (tempEntry != null)
-                            {
-                                //if the item has matter, has lower matter than the previous
-                                //if the item was first there is no previous so store that amount
-                                if ( tempEntry.getMatter() > 0)
-                                {
-                                    if ((tempEntry.getMatter() < tempMatter || first)) {
-                                        tempMatter = tempEntry.getMatter();
-                                        first = false;
-                                    }
-                                }else
-                                {
-                                    debug("entry for %s, found in recipe for: %s was blacklisted or costs lower then previous", stack, item);
-                                }
-
-                            }
-                            //here we use the recursion to calculate it's matter from any recipes it has
-                            else if (recursive)
-                            {
-								debug("Could not find Matter entry for %s, found in recipe for: %s", stack, item);
-                                int m = getMatterFromRecipe(stack,true,++depth,calculated);
-                                //if the item has matter, has lower matter than the previous
-                                //if the item was first there is no previous so store that amount
-                                if ( m > 0 && (m < tempMatter || first))
-                                {
-                                    tempMatter = m;
-                                    first = false;
-                                }else
-                                {
-                                    debug("entry for %s, found in recipe for: %s was blacklisted or costs lower then previous", stack, item);
-                                }
-                            }
-                        }else
-                        {
-                            debug("Found another type of object in list ot type: %s", element.getClass().toString());
-                        }
-                    }
-
-                    //if for same reason the item is invalid, that can't really happen
-                    if (tempMatter < 0)
-                    {
-                        debug("%s is invalid.", item);
-                        return -1;
-                    }
-                    //if all the items in the list have not matter return as empty
-                    else if (tempMatter == 0) {
-                        debug("%s has no items with matter in recipe.", item);
-                        return 0;
-                    }
+                    stack = (ItemStack)s;
                 }
-                //if the recipe contains anything other than itemsStacks, Items, Blocks or lists
-                //may be used if there are strings to OreDictionary items i don't really know
-                else
+                else if (s instanceof Block)
                 {
-                    debug("Element in list is unknown type: %s", s);
-                    tempEntry = getEntry(s.toString());
+                    stack = new ItemStack((Block)s);
+                }
+                else if (s instanceof Item)
+                {
+                    stack = new ItemStack((Item)s);
+                }
+
+                if (stack == null || blacklistedFromMod(stack)) {
+                    debug("%s is blacklisted.", item);
+                    return -1;
+                }
+
+                //check to see if the item in the recipe is the same as the output
+                //and if so then do not calculate to save unnecessary lopping
+                if (!ItemStack.areItemStacksEqual(stack,item)) {
+                    tempEntry = getEntry(stack);
+                    //if there is an entry use it's matter value
                     if (tempEntry != null)
                     {
-                        tempMatter = tempEntry.getMatter();
+                        tempMatter = tempEntry.getMatter(stack);
+                    }
+                    //if it's not recursive then check if any item in recipe is not replicatable
+                    else
+                    {
+                        debug("%s cannot be replicated. Contains 0 matter", stack);
+                        return 0;
+                    }
+
+
+                }
+            }
+            //this is checking if it's a list of items stack
+            //this is different from the recipe list, it's oreDictionary list with items with the same ore name
+            //so recursion can't be used because of the devision of the stack size
+            //and we want to use the lowest possible matter amount from the list
+            else if (s instanceof List)
+            {
+                List l = (List)s;
+                //flag for checking if the item in the list was the first to register
+                //for checking the lowest matter amount of the list
+                //not using a index check, because the first item can be empty, and nothing positive is smaller than zero
+                boolean first = true;
+
+                for (Object element : l)
+                {
+                    if (element instanceof ItemStack || element instanceof Item || element instanceof Block)
+                    {
+                        ItemStack stack = null;
+                        if (element instanceof ItemStack)
+                        {
+                            stack = (ItemStack)element;
+                        }
+                        else if (element instanceof Item)
+                        {
+                            stack = new ItemStack((Item)element);
+                        }else if (element instanceof Block)
+                        {
+                            stack = new ItemStack((Block)element);
+                        }
+
+                        tempEntry = getEntry(stack);
+                        if (tempEntry != null)
+                        {
+                            //if the item has matter, has lower matter than the previous
+                            //if the item was first there is no previous so store that amount
+                            if ( tempEntry.getMatter(stack) > 0)
+                            {
+                                if ((tempEntry.getMatter(stack) < tempMatter || first)) {
+                                    tempMatter = tempEntry.getMatter(stack);
+                                    first = false;
+                                }
+                            }else
+                            {
+                                debug("entry for %s, found in recipe for: %s was blacklisted or costs lower then previous", stack, item);
+                            }
+
+                        }
+                    }else
+                    {
+                        debug("Found another type of object in list ot type: %s", element.getClass().toString());
                     }
                 }
-
-                //increase the total matter amount
-                totalMatter += tempMatter;
             }
+
+            //if for same reason the item is invalid, that can't really happen
+            if (tempMatter < 0)
+            {
+                debug("%s is invalid.", item);
+                return -1;
+            }
+            //if there is an item that has 0 matter, aka NOT replicatable
+            else if (tempMatter == 0) {
+                debug("%s item in recipe has 0 matter.", item);
+                return 0;
+            }
+
+            //increase the total matter amount
+            totalMatter += tempMatter;
         }
 
         //return the amount divided by the count of the items stack
@@ -614,43 +552,14 @@ public class MatterRegistry implements IMatterRegistry
         return (int) Math.round((double) totalMatter / (double) item.stackSize);
     }
 
-    private int handleReturns(Item item) {
-        if (item == Items.lava_bucket || item == Items.water_bucket || item == Items.milk_bucket) {
-            MatterEntry e = getEntry(Items.bucket);
-            if (e != null)
-                return -e.getMatter();
-            else {
-                e = getEntry(item);
-                if (e != null)
-                    return -e.getMatter();
-            }
-        }
-
-        return 0;
-    }
-
-    public void clearCaluclatedEntries()
+    public Map<Item,MatterEntryItem> getItemEntires()
     {
-        Iterator<Map.Entry<String,MatterEntry>> iter = entries.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<String,MatterEntry> entry = iter.next();
-            if(entry.getValue().getCalculated()){
-                iter.remove();
-            }
-        }
+        return itemEntires;
     }
 
-    public Map<String,MatterEntry> getEntries()
-    {
-        return entries;
-    }
+    public Map<String,MatterEntryOre> getOreEntries(){return oreEntries;}
 
-    public void setEntries(Map<String,MatterEntry> entries)
-    {
-        this.entries = entries;
-    }
-
-    public void debug(String debug,Object... params)
+    public void debug(final String debug,final Object... params)
     {
         if (REGISTRATION_DEBUG)
         {
@@ -660,15 +569,45 @@ public class MatterRegistry implements IMatterRegistry
                 {
                     try
                     {
-                        params[i] = getKey(((ItemStack)params[i]));
+                        params[i] = ((ItemStack)params[i]).getItem();
                     }
                     catch (Exception e)
                     {
-                        MatterOverdrive.log.warn("There was a problem getting ItemStack's name");
+                        MOLog.warn("There was a problem getting ItemStack's name");
                     }
                 }
             }
-            MatterOverdrive.log.debug(debug,params);
+            MOLog.debug(debug,params);
+        }
+    }
+
+    private static class CusomHandlerListJSON
+    {
+        private final Map<String,CustomHandlerJSON> items;
+        private final Map<String,CustomHandlerJSON> ores;
+
+        public CusomHandlerListJSON(final Map<String,CustomHandlerJSON> items,final Map<String,CustomHandlerJSON> ores)
+        {
+            this.items = items;
+            this.ores = ores;
+        }
+    }
+
+    private static class CustomHandlerJSON
+    {
+        private final boolean isOre;
+        private final boolean hasMeta;
+        private final int[] meta;
+        private final int matter;
+        private final int priority;
+
+        public CustomHandlerJSON(final boolean isOre,final boolean metadataSpecific,final int[] meta,final int matter,final int priority)
+        {
+            this.isOre = isOre;
+            this.hasMeta = metadataSpecific;
+            this.meta = meta;
+            this.matter = matter;
+            this.priority = priority;
         }
     }
 }

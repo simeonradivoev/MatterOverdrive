@@ -18,10 +18,10 @@
 
 package matteroverdrive.api.renderer;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.android.IBioticStat;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 7/24/2015.
@@ -30,7 +30,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
  * This is used in the {@link matteroverdrive.api.android.IAndroidStatRenderRegistry}.
  */
 @SideOnly(Side.CLIENT)
-public interface IBioticStatRenderer<T extends IBionicStat>
+public interface IBioticStatRenderer<T extends IBioticStat>
 {
     /**
      * This method is called to render the stat.

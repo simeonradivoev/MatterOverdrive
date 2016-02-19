@@ -1,14 +1,6 @@
 package matteroverdrive.compat.modules.waila;
 
-import cpw.mods.fml.common.Optional;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 
@@ -16,9 +8,9 @@ import java.util.List;
  * @author shadowfacts
  */
 @Optional.Interface(modid = "Waila", iface = "mcp.mobius.waila.api.IWailaDataProvider")
-public interface IWailaBodyProvider extends IWailaDataProvider
+public interface IWailaBodyProvider //extends IWailaDataProvider
 {
-	@Override
+	/*@Override
 	@Optional.Method(modid = "Waila")
 	default ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
@@ -45,5 +37,5 @@ public interface IWailaBodyProvider extends IWailaDataProvider
 	{
 		if (te != null) te.writeToNBT(tag);
 		return tag;
-	}
+	}*/
 }

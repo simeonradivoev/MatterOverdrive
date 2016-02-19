@@ -19,60 +19,57 @@
 package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.Reference;
+import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Simeon on 5/14/2015.
  */
-public class TileEntityRendererFusionReactorController extends TileEntitySpecialRenderer
+public class TileEntityRendererFusionReactorController extends TileEntitySpecialRenderer<TileEntityMachineFusionReactorController>
 {
     public TileEntityRendererFusionReactorController(){
 
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks)
+    public void renderTileEntityAt(TileEntityMachineFusionReactorController controller, double x, double y, double z, float ticks,int destoryStage)
     {
-        TileEntityMachineFusionReactorController controller = (TileEntityMachineFusionReactorController)tileEntity;
         if (!controller.isValidStructure()) {
-            int back = tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-
-            glPushMatrix();
-            glTranslated(x, y, z);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x, y, z);
 
             for (int i = 0; i < TileEntityMachineFusionReactorController.positionsCount; i++) {
-                Vec3 pos = controller.getPosition(i,back);
+                Vec3 pos = controller.getPosition(i,getWorld().getBlockState(controller.getPos()).getValue(MOBlock.PROPERTY_DIRECTION));
 
-                glPushMatrix();
-                glTranslated(pos.xCoord, pos.yCoord, pos.zCoord);
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ONE);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(pos.xCoord, pos.yCoord, pos.zCoord);
+                GlStateManager.enableBlend();
+                GlStateManager.blendFunc(GL_ONE, GL_ONE);
                 bindTexture(TileEntityRendererPatternMonitor.screenTextureBack);
-                glTranslated(0.1, 0.1, 0.1);
+                GlStateManager.translate(0.1, 0.1, 0.1);
                 RenderUtils.drawCube(0.8, 0.8, 0.8, Reference.COLOR_HOLO);
-                glDisable(GL_BLEND);
-                glPopMatrix();
+                GlStateManager.disableBlend();
+                GlStateManager.popMatrix();
 
             }
-            glPopMatrix();
+            GlStateManager.popMatrix();
         }
 
         renderInfo(x, y, z, controller);
     }
 
     private void renderInfo(double x, double y, double z, TileEntityMachineFusionReactorController controller) {
-        int meta = controller.getWorldObj().getBlockMetadata(controller.xCoord, controller.yCoord, controller.zCoord);
-        ForgeDirection side = ForgeDirection.getOrientation(meta);
+        EnumFacing side = controller.getWorld().getBlockState(controller.getPos()).getValue(MOBlock.PROPERTY_DIRECTION);
 
         Color color = Reference.COLOR_HOLO;
         if (!controller.isValidStructure())
@@ -90,6 +87,6 @@ public class TileEntityRendererFusionReactorController extends TileEntitySpecial
 
     private FontRenderer fontRenderer()
     {
-        return Minecraft.getMinecraft().fontRenderer;
+        return Minecraft.getMinecraft().fontRendererObj;
     }
 }

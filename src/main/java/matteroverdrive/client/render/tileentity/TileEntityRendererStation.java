@@ -29,8 +29,11 @@ import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -47,19 +50,13 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * Created by Simeon on 5/27/2015.
  */
-public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> extends TileEntitySpecialRenderer implements IConfigSubscriber
+public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> extends TileEntitySpecialRenderer<T> implements IConfigSubscriber
 {
-    public static ResourceLocation glowTexture = new ResourceLocation(Reference.PATH_FX + "hologram_beam.png");
-    ResourceLocation holo_shader_vert_loc = new ResourceLocation(Reference.PATH_SHADERS + "holo_shader.vert");
-    ResourceLocation holo_shader_frag_loc = new ResourceLocation(Reference.PATH_SHADERS + "holo_shader.frag");
-    String holo_shader_vert;
-    String holo_shader_frag;
+    public static final ResourceLocation glowTexture = new ResourceLocation(Reference.PATH_FX + "hologram_beam.png");
     protected int shaderProgram;
     protected boolean validShader = true;
     private boolean enableHoloShader = true;
-    int vertexShader;
-    int fragmentShader;
-    Random fliker;
+    final Random fliker;
 
     protected Color holoColor;
     protected Color red_holoColor;
@@ -69,81 +66,16 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         holoColor = Reference.COLOR_HOLO.multiplyWithoutAlpha(0.25f);
         red_holoColor = Reference.COLOR_HOLO_RED.multiplyWithoutAlpha(0.25f);
         fliker = new Random();
-
-        if (GLContext.getCapabilities().OpenGL20) {
-            loadShader();
-        }else
-        {
-            validShader = false;
-            MatterOverdrive.log.warn("Your machine does not support OpenGL 2.0. The holographic shader will be disabled.");
-        }
-    }
-
-    private void loadShader()
-    {
-        shaderProgram = glCreateProgram();
-        vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-
-        try {
-            InputStream descriptionStream = Minecraft.getMinecraft().getResourceManager().getResource(holo_shader_vert_loc).getInputStream();
-            holo_shader_vert = IOUtils.toString(descriptionStream);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            InputStream descriptionStream = Minecraft.getMinecraft().getResourceManager().getResource(holo_shader_frag_loc).getInputStream();
-            holo_shader_frag = IOUtils.toString(descriptionStream);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            glShaderSource(vertexShader, holo_shader_vert);
-            glCompileShader(vertexShader);
-
-            glShaderSource(fragmentShader, holo_shader_frag);
-            glCompileShader(fragmentShader);
-
-            glAttachShader(shaderProgram, vertexShader);
-            glAttachShader(shaderProgram, fragmentShader);
-
-            glLinkProgram(shaderProgram);
-            if (glGetProgrami(vertexShader, GL_LINK_STATUS) == GL_FALSE) {
-                System.out.println("Could not link shader");
-                System.out.println(glGetProgramInfoLog(vertexShader, glGetProgrami(vertexShader, GL_INFO_LOG_LENGTH)));
-                validShader = false;
-            }
-
-            glValidateProgram(shaderProgram);
-            if (glGetProgrami(vertexShader, GL_VALIDATE_STATUS) == GL_FALSE) {
-                System.out.println("Could not validate shader");
-                System.out.println(glGetProgramInfoLog(vertexShader, glGetProgrami(vertexShader, GL_INFO_LOG_LENGTH)));
-                validShader = false;
-            }
-
-            if (glGetShaderi(vertexShader, GL_COMPILE_STATUS) == GL_FALSE) {
-                System.out.println("Could not compile shader");
-                validShader = false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            validShader = false;
-        }
     }
 
     private void drawHoloLights(TileEntity entity,World world, double x, double y, double z,double t)
     {
-        glEnable(GL_BLEND);
-        glDisable(GL_LIGHTING);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glDepthMask(false);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_ONE,GL_ONE);
+        GlStateManager.disableLighting();
+        GlStateManager.depthMask(false);
         RenderUtils.disableLightmap();
-        glDisable(GL_CULL_FACE);
+        GlStateManager.disableCull();
 
         Minecraft.getMinecraft().renderEngine.bindTexture(glowTexture);
 
@@ -151,37 +83,38 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         double hologramHeight = getLightHeight();
         double topSize = getLightsSize() - 1;
 
-        glPushMatrix();
-        glTranslated(x,y + height,z);
-        Tessellator.instance.startDrawingQuads();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x,y + height,z);
+        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        wr.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        RenderUtils.applyColor(getHoloColor(entity));
 
-        Tessellator.instance.setColorRGBA_F(getHoloColor(entity).getFloatR(), getHoloColor(entity).getFloatG(), getHoloColor(entity).getFloatB(), 1);
-        Tessellator.instance.addVertexWithUV(0, 0, 0, 1, 1);
-        Tessellator.instance.addVertexWithUV(-topSize, hologramHeight, -topSize, 1, 0);
-        Tessellator.instance.addVertexWithUV(1 + topSize, hologramHeight, -topSize, 0, 0);
-        Tessellator.instance.addVertexWithUV(1, 0, 0, 0, 1);
+        wr.pos(0, 0, 0).tex(1, 1).endVertex();
+        wr.pos(-topSize, hologramHeight, -topSize).tex(1, 0).endVertex();
+        wr.pos(1 + topSize, hologramHeight, -topSize).tex(0, 0).endVertex();
+        wr.pos(1, 0, 0).tex(0, 1).endVertex();
 
-        Tessellator.instance.addVertexWithUV(1, 0, 0, 1, 1);
-        Tessellator.instance.addVertexWithUV(1 + topSize, hologramHeight, -topSize, 1, 0);
-        Tessellator.instance.addVertexWithUV(1 + topSize, hologramHeight, 1 + topSize, 0, 0);
-        Tessellator.instance.addVertexWithUV(1, 0, 1, 0, 1);
+        wr.pos(1, 0, 0).tex(1, 1).endVertex();
+        wr.pos(1 + topSize, hologramHeight, -topSize).tex(1, 0).endVertex();
+        wr.pos(1 + topSize, hologramHeight, 1 + topSize).tex(0, 0).endVertex();
+        wr.pos(1, 0, 1).tex(0, 1).endVertex();
 
-        Tessellator.instance.addVertexWithUV(1, 0, 1, 1, 1);
-        Tessellator.instance.addVertexWithUV(1 + topSize, hologramHeight, 1 + topSize, 1, 0);
-        Tessellator.instance.addVertexWithUV(-topSize, hologramHeight, 1 + topSize, 0, 0);
-        Tessellator.instance.addVertexWithUV(0, 0, 1, 0, 1);
+        wr.pos(1, 0, 1).tex(1, 1).endVertex();
+        wr.pos(1 + topSize, hologramHeight, 1 + topSize).tex(1, 0).endVertex();
+        wr.pos(-topSize, hologramHeight, 1 + topSize).tex(0, 0).endVertex();
+        wr.pos(0, 0, 1).tex(0, 1).endVertex();
 
-        Tessellator.instance.addVertexWithUV(0, 0, 1, 1, 1);
-        Tessellator.instance.addVertexWithUV(-topSize, hologramHeight, 1 + topSize, 1, 0);
-        Tessellator.instance.addVertexWithUV(-topSize, hologramHeight, -topSize, 0, 0);
-        Tessellator.instance.addVertexWithUV(0, 0, 0, 0, 1);
+        wr.pos(0, 0, 1).tex(1, 1).endVertex();
+        wr.pos(-topSize, hologramHeight, 1 + topSize).tex( 1, 0).endVertex();
+        wr.pos(-topSize, hologramHeight, -topSize).tex(0, 0).endVertex();
+        wr.pos(0, 0, 0).tex(0, 1).endVertex();
 
-        Tessellator.instance.draw();
-        glPopMatrix();
+        Tessellator.getInstance().draw();
+        GlStateManager.popMatrix();
 
-        glDisable(GL_BLEND);
-        glEnable(GL_LIGHTING);
-        glEnable(GL_CULL_FACE);
+        GlStateManager.disableBlend();
+        GlStateManager.enableLighting();
+        GlStateManager.enableCull();
         RenderUtils.enableLightmap();
     }
 
@@ -205,37 +138,30 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks)
+    public void renderTileEntityAt(T machine, double x, double y, double z, float ticks,int destroyStage)
     {
-        double t = MOMathHelper.noise(tileEntity.xCoord * 0.3, tileEntity.yCoord * 0.3, tileEntity.zCoord * 0.3);
-
+        double t = MOMathHelper.noise(machine.getPos().getX() * 0.3, machine.getPos().getY() * 0.3, machine.getPos().getZ() * 0.3);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_ONE,GL_ONE);
         try
 		{
-            glPushMatrix();
-            glPushAttrib(GL_COLOR_BUFFER_BIT);
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_ONE, GL_ONE);
-
-            try
-			{
-                renderHologram((T) tileEntity, x, y, z, ticks, t);
-            }
-			catch (ClassCastException e)
-			{
-				MOLog.warn("Could not cast to desired station class", e);
-            }
-
-            glPopAttrib();
-            glPopMatrix();
-
+            renderHologram(machine, x, y, z, ticks, t);
+        }
+        catch (ClassCastException e)
+        {
+            MOLog.warn("Could not cast to desired station class", e);
         }
         catch (Exception e)
         {
 			MOLog.warn("Error while render a station", e);
         }
+        GlStateManager.popMatrix();
 
         if (drawHoloLights())
-            drawHoloLights(tileEntity,tileEntity.getWorldObj(), x, y, z,ticks);
+            drawHoloLights(machine,machine.getWorld(), x, y, z,ticks);
+
+        GlStateManager.disableBlend();
     }
 
     protected boolean drawHoloLights()
@@ -243,30 +169,9 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
         return true;
     }
 
-    protected void beginHolo(T tileEntity)
-    {
-        if (validShader && enableHoloShader)
-        {
-            glUseProgram(shaderProgram);
-            glUniform4f(0, getHoloColor(tileEntity).getFloatR(), getHoloColor(tileEntity).getFloatG(), getHoloColor(tileEntity).getFloatB(), 0);
-        }else
-        {
-            glEnable(GL_ALPHA_TEST);
-            glEnable(GL_DEPTH_TEST);
-            glDepthMask(true);
-        }
-    }
-
-    protected void endHolo()
-    {
-        if (validShader) {
-            glUseProgram(0);
-        }
-    }
-
     protected void rotate(T station,double noise)
     {
-        glRotated((Minecraft.getMinecraft().theWorld.getWorldTime() * 0.5) + (1800 * noise), 0, -1, 0);
+        GlStateManager.rotate((Minecraft.getMinecraft().theWorld.getWorldTime() * 0.5f) + (1800 * (float)noise), 0, -1, 0);
     }
 
     protected boolean isUsable(T station)
@@ -278,27 +183,27 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
     {
         if (!isUsable(station))
         {
-            glPushMatrix();
-            glTranslated(x + 0.5, y + 0.8, z + 0.5);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x + 0.5, y + 0.8, z + 0.5);
             rotate(station, noise);
 
-            glDisable(GL_CULL_FACE);
-            glDisable(GL_LIGHTING);
-            glScaled(0.02, 0.02, 0.02);
-            glRotated(180, 1, 0, 0);
+            GlStateManager.disableCull();
+            GlStateManager.disableLighting();
+            GlStateManager.scale(0.02, 0.02, 0.02);
+            GlStateManager.rotate(180, 1, 0, 0);
 
             Color color = Reference.COLOR_HOLO_RED.multiplyWithoutAlpha(0.33f);
             String info[] = MOStringHelper.translateToLocal("gui.hologram.access_denied").split(" ");
             for (int i = 0; i < info.length; i++)
             {
-                int width = Minecraft.getMinecraft().fontRenderer.getStringWidth(info[i]);
-                glPushMatrix();
-                glTranslated(-width / 2, -32, 0);
-                Minecraft.getMinecraft().fontRenderer.drawString(info[i], 0, i * 10, color.getColor());
-                glPopMatrix();
+                int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(info[i]);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(-width / 2, -32, 0);
+                Minecraft.getMinecraft().fontRendererObj.drawString(info[i], 0, i * 10, color.getColor());
+                GlStateManager.popMatrix();
             }
 
-            glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

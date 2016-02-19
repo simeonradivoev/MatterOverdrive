@@ -18,10 +18,17 @@
 
 package matteroverdrive.handler.weapon;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.api.weapon.WeaponShot;
+import matteroverdrive.entity.weapon.PlasmaBolt;
+import matteroverdrive.items.weapon.EnergyWeapon;
+import matteroverdrive.util.MOLog;
+import matteroverdrive.util.WeaponHelper;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.IntHashMap;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
@@ -35,6 +42,7 @@ import net.minecraftforge.client.event.FOVUpdateEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by Simeon on 7/31/2015.
@@ -43,15 +51,23 @@ import java.util.Map;
 public class ClientWeaponHandler extends CommonWeaponHandler
 {
     private static final float RECOIL_RESET_SPEED = 0.03f;
+    private static final float CAMERA_RECOIL_RESET_SPEED = 0.03f;
     public static float ZOOM_TIME;
     public static float RECOIL_TIME;
     public static float RECOIL_AMOUNT;
-    private Map<IWeapon,Integer> shotTracker;
+    public static float CAMERA_RECOIL_TIME;
+    public static float CAMERA_RECOIL_AMOUNT;
+    private final Map<IWeapon,Integer> shotTracker;
     private float lastMouseSensitivity;
+    private final IntHashMap<PlasmaBolt> plasmaBolts;
+    private int nextShotID;
+    private boolean hasChangedSensitivity = false;
+    private final Random cameraRecoilRandom = new Random();
 
     public ClientWeaponHandler()
     {
         shotTracker = new HashMap<>();
+        plasmaBolts = new IntHashMap<>();
     }
 
     public void registerWeapon(IWeapon weapon)
@@ -78,37 +94,57 @@ public class ClientWeaponHandler extends CommonWeaponHandler
     @SideOnly(Side.CLIENT)
     public void onTick(TickEvent.RenderTickEvent event)
     {
-        if (Minecraft.getMinecraft().thePlayer != null)
+        if (Minecraft.getMinecraft().thePlayer != null && event.phase.equals(TickEvent.Phase.END))
         {
             EntityPlayer entityPlayer = Minecraft.getMinecraft().thePlayer;
 
             if (entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof IWeapon)
             {
-                ZOOM_TIME = MOMathHelper.Lerp(ZOOM_TIME, ((IWeapon) entityPlayer.getHeldItem().getItem()).isWeaponZoomed(entityPlayer,entityPlayer.getHeldItem()) ? 1f : 0, event.renderTickTime*0.2f);
-
+                if (((IWeapon) entityPlayer.getHeldItem().getItem()).isWeaponZoomed(entityPlayer,entityPlayer.getHeldItem()))
+                {
+                    ZOOM_TIME = Math.min(ZOOM_TIME+(event.renderTickTime*0.1f),1);
+                }else
+                {
+                    ZOOM_TIME = Math.max(ZOOM_TIME-(event.renderTickTime*0.1f),0);
+                }
             }
             else
             {
-                ZOOM_TIME = MOMathHelper.Lerp(ZOOM_TIME, 0, 0.2f);
+                ZOOM_TIME = Math.max(ZOOM_TIME-(event.renderTickTime*0.2f),0);
             }
 
             if (ZOOM_TIME == 0)
             {
-                lastMouseSensitivity = Minecraft.getMinecraft().gameSettings.mouseSensitivity;
-            }else
+                if (hasChangedSensitivity)
+                {
+                    hasChangedSensitivity = false;
+                    Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
+                }else
+                {
+                    lastMouseSensitivity = Minecraft.getMinecraft().gameSettings.mouseSensitivity;
+                }
+            }else if (ZOOM_TIME != 0)
             {
                 if (entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof IWeapon)
                 {
-                    Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity * (1 - (ZOOM_TIME * ((IWeapon) entityPlayer.getHeldItem().getItem()).getZoomMultiply(entityPlayer,entityPlayer.getHeldItem())));
+                    hasChangedSensitivity = true;
+                    Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity * (1f - (ZOOM_TIME * ((IWeapon) entityPlayer.getHeldItem().getItem()).getZoomMultiply(entityPlayer,entityPlayer.getHeldItem())));
                 }else
                 {
+                    hasChangedSensitivity = true;
                     Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
                 }
             }
 
+
             if (RECOIL_TIME > 0)
             {
                 RECOIL_TIME = Math.max(0,RECOIL_TIME - RECOIL_RESET_SPEED);
+            }
+
+            if (CAMERA_RECOIL_TIME > 0)
+            {
+                CAMERA_RECOIL_TIME = Math.max(0,CAMERA_RECOIL_TIME - CAMERA_RECOIL_RESET_SPEED);
             }
         }
     }
@@ -164,6 +200,18 @@ public class ClientWeaponHandler extends CommonWeaponHandler
         if (shotTracker.containsKey(weapon))
             shotTracker.put(weapon,shotTracker.get(weapon) + delay);
     }
+    public void setRecoil(float amount, float time,float viewRecoilMultiply)
+    {
+        Minecraft.getMinecraft().thePlayer.rotationPitch -= RECOIL_AMOUNT * viewRecoilMultiply;
+        RECOIL_AMOUNT = amount;
+        RECOIL_TIME = time;
+    }
+
+    public void setCameraRecoil(float amount,float time)
+    {
+        CAMERA_RECOIL_AMOUNT = amount * (cameraRecoilRandom.nextBoolean() ? -1 : 1);
+        CAMERA_RECOIL_TIME = time;
+    }
     public float getEquippedWeaponAccuracyPercent(EntityPlayer entityPlayer)
     {
         if (entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof IWeapon)
@@ -171,5 +219,30 @@ public class ClientWeaponHandler extends CommonWeaponHandler
             return ((IWeapon) entityPlayer.getHeldItem().getItem()).getAccuracy(entityPlayer.getHeldItem(), entityPlayer, ((IWeapon) entityPlayer.getHeldItem().getItem()).isWeaponZoomed(entityPlayer,entityPlayer.getHeldItem())) / ((IWeapon) entityPlayer.getHeldItem().getItem()).getMaxHeat(entityPlayer.getHeldItem());
         }
         return 0;
+    }
+
+    public void addPlasmaBolt(PlasmaBolt plasmaBolt)
+    {
+        plasmaBolts.addKey(plasmaBolt.getEntityId(),plasmaBolt);
+    }
+
+    public void removePlasmaBolt(PlasmaBolt plasmaBolt)
+    {
+        plasmaBolts.removeObject(plasmaBolt.getEntityId());
+    }
+
+    public PlasmaBolt getPlasmaBolt(int id)
+    {
+        return plasmaBolts.lookup(id);
+    }
+
+    public int getNextShotID()
+    {
+        return nextShotID++;
+    }
+
+    public WeaponShot getNextShot(ItemStack weaponStack, EnergyWeapon energyWeapon, EntityLivingBase shooter, boolean zoomed)
+    {
+        return new WeaponShot(getNextShotID(),energyWeapon.getWeaponScaledDamage(weaponStack,shooter),energyWeapon.getAccuracy(weaponStack,shooter,zoomed), WeaponHelper.getColor(weaponStack),energyWeapon.getRange(weaponStack));
     }
 }

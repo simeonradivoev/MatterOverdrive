@@ -21,6 +21,7 @@ package matteroverdrive.gui.element;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
+import net.minecraft.client.renderer.GlStateManager;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -74,7 +75,7 @@ public class ElementScrollGroup extends ElementBaseGroup
         super.drawForeground(mouseX, mouseY);
 
 
-        glDisable(GL_TEXTURE_2D);
+        GlStateManager.disableTexture2D();
         RenderUtils.applyColor(scrollerColor);
         if (contentTotalHeight-sizeY > 0)
         {
@@ -84,7 +85,7 @@ public class ElementScrollGroup extends ElementBaseGroup
             int scrollerY = sizeY - scrollerSize;
             RenderUtils.drawPlane(posX + sizeX - 1, posY + scrollerY * scrollPercent, 0, 1, scrollerSize);
         }
-        glEnable(GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
 
         RenderUtils.endDepthMask();
     }

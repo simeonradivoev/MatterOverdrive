@@ -21,19 +21,42 @@ package matteroverdrive.client.resources.data;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.util.Vec3;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Simeon on 12/9/2015.
  */
 public class WeaponMetadataSection implements IMetadataSection
 {
-    private final Vec3 scopePosition;
+    private final Map<String,Vec3> modulePositions;
 
-    public WeaponMetadataSection(Vec3 scopePosition)
+    public WeaponMetadataSection()
     {
-        this.scopePosition = scopePosition;
+        this.modulePositions = new HashMap<>();
     }
 
-    public Vec3 getScopePosition() {
-        return scopePosition;
+    public Map<String, Vec3> getModulePositions()
+    {
+        return modulePositions;
+    }
+
+    public void setModulePosition(String module,Vec3 pos)
+    {
+        modulePositions.put(module,pos);
+    }
+
+    public Vec3 getModulePosition(String module,Vec3 def)
+    {
+        Vec3 moduelPos = modulePositions.get(module);
+        if (moduelPos != null)
+            return moduelPos;
+        else
+            return def;
+    }
+
+    public Vec3 getModulePosition(String module)
+    {
+        return modulePositions.get(module);
     }
 }

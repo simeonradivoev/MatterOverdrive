@@ -18,14 +18,13 @@
 
 package matteroverdrive.network.packet.server;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.util.MatterHelper;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -53,7 +52,7 @@ public class PacketMatterScannerUpdate extends PacketAbstract
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        this.selected = new ItemPattern(buf);
+        this.selected = ItemPattern.fromBuffer(buf);
         this.page = buf.readShort();
         //this.panelOpen = buffer.readBoolean();
         this.slot = buf.readShort();
@@ -62,7 +61,7 @@ public class PacketMatterScannerUpdate extends PacketAbstract
     @Override
     public void toBytes(ByteBuf buf)
     {
-        selected.writeToBuffer(buf);
+        ItemPattern.writeToBuffer(buf,selected);
         buf.writeShort(this.page);
         //buffer.writeBoolean(this.panelOpen);
         buf.writeShort(slot);
@@ -73,7 +72,7 @@ public class PacketMatterScannerUpdate extends PacketAbstract
         public ServerHandler(){}
 
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketMatterScannerUpdate message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketMatterScannerUpdate message, MessageContext ctx)
         {
             if (message.slot < player.inventory.getSizeInventory()) {
                 ItemStack scanner = player.inventory.getStackInSlot(message.slot);
@@ -85,7 +84,6 @@ public class PacketMatterScannerUpdate extends PacketAbstract
                     }
                 }
             }
-            return null;
         }
     }
 }

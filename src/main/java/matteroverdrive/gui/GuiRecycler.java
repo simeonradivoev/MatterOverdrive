@@ -77,7 +77,6 @@ public class GuiRecycler extends MOGuiMachine<TileEntityMachineMatterRecycler>
     {
         if(machine.getStackInSlot(machine.INPUT_SLOT_ID) != null)
         {
-            int matterAmount = MatterHelper.getMatterAmountFromItem(machine.getStackInSlot(machine.INPUT_SLOT_ID));
             energyElement.setEnergyRequired(-(machine.getEnergyDrainMax()));
             energyElement.setEnergyRequiredPerTick(-machine.getEnergyDrainPerTick());
         }

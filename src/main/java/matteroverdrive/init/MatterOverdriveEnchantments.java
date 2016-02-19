@@ -18,7 +18,7 @@
 
 package matteroverdrive.init;
 
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.enchantment.EnchantmentOverclock;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;

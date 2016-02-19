@@ -19,46 +19,51 @@
 package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.Reference;
+import matteroverdrive.blocks.includes.MOBlock;
+import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Simeon on 11/22/2015.
  */
-public abstract class TileEntityRendererMonitor extends TileEntitySpecialRenderer
+public abstract class TileEntityRendererMonitor<T extends MOTileEntityMachine> extends TileEntitySpecialRenderer<T>
 {
-    public static ResourceLocation screenTextureBack = new ResourceLocation(Reference.PATH_BLOCKS + "pattern_monitor_holo_back.png");
-    public static ResourceLocation screenTextureGlow = new ResourceLocation(Reference.PATH_FX + "holo_monitor_glow.png");
+    public static final ResourceLocation screenTextureBack = new ResourceLocation(Reference.PATH_BLOCKS + "pattern_monitor_holo_back.png");
+    public static final ResourceLocation screenTextureGlow = new ResourceLocation(Reference.PATH_FX + "holo_monitor_glow.png");
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks)
+    public void renderTileEntityAt(MOTileEntityMachine tileEntity, double x, double y, double z, float ticks,int destroyStage)
     {
-        glPushMatrix();
+        GlStateManager.pushMatrix();
 
-        int meta = tileEntity.getWorldObj().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-        ForgeDirection direction = ForgeDirection.getOrientation(meta);
+        IBlockState blockState = getWorld().getBlockState(tileEntity.getPos());
+        EnumFacing rotation = blockState.getValue(MOBlock.PROPERTY_DIRECTION);
 
-        glDisable(GL_LIGHTING);
-        glDisable(GL_CULL_FACE);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
-        RenderUtils.disableLightmap();
+        GlStateManager.pushAttrib();
+        //GlStateManager.disableLighting();
+        //GlStateManager.disableCull();
+        //GlStateManager.enableBlend();
+        //GlStateManager.blendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+        //RenderUtils.disableLightmap();
 
-        RenderUtils.beginDrawinngBlockScreen(x, y, z, direction, Reference.COLOR_HOLO, tileEntity, -0.65,1f);
-        glTranslated(0, 0, -0.05);
+        RenderUtils.beginDrawinngBlockScreen(x, y, z, rotation, Reference.COLOR_HOLO, tileEntity, -0.65,1f);
+        GlStateManager.translate(0, 0, -0.05);
         drawScreen(tileEntity,ticks);
         RenderUtils.endDrawinngBlockScreen();
 
-        glDisable(GL_BLEND);
-        glEnable(GL_CULL_FACE);
-        glEnable(GL_LIGHTING);
-        RenderUtils.enableLightmap();
-        glPopMatrix();
+        //GlStateManager.disableBlend();
+        //GlStateManager.enableCull();
+        //GlStateManager.enableLighting();
+        //GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //RenderUtils.enableLightmap();
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
     }
 
     public abstract void drawScreen(TileEntity tileEntity,float ticks);

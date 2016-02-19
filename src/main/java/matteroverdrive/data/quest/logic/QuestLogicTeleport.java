@@ -1,10 +1,14 @@
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonObject;
+import matteroverdrive.util.MOJsonHelper;
+import matteroverdrive.util.MOQuestHelper;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.events.MOEventTransport;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
-import matteroverdrive.data.BlockPos;
+import net.minecraft.util.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -15,13 +19,11 @@ import java.util.Random;
  */
 public class QuestLogicTeleport extends AbstractQuestLogic
 {
-    BlockPos pos;
     int minDistance;
     int maxDistance;
 
     public QuestLogicTeleport()
     {
-        this(null);
     }
 
     public QuestLogicTeleport(BlockPos pos)
@@ -31,9 +33,16 @@ public class QuestLogicTeleport extends AbstractQuestLogic
 
     public QuestLogicTeleport(BlockPos pos,int minDistance,int maxDistance)
     {
-        this.pos = pos;
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
+    }
+
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+        super.loadFromJson(jsonObject);
+        minDistance = MOJsonHelper.getInt(jsonObject,"distance_min",0);
+        maxDistance = MOJsonHelper.getInt(jsonObject,"distance_max",0);
     }
 
     @Override
@@ -65,9 +74,11 @@ public class QuestLogicTeleport extends AbstractQuestLogic
     {
         if (event instanceof MOEventTransport)
         {
+            BlockPos pos = MOQuestHelper.getPosition(questStack);
+
             if (pos != null)
             {
-                int distance = ((MOEventTransport) event).destination.getDistance(pos.x, pos.y, pos.z);
+                int distance = ((MOEventTransport) event).destination.getDistance(pos);
                 if (distance < maxDistance && distance > minDistance)
                 {
                     if (autoComplete)
@@ -88,13 +99,13 @@ public class QuestLogicTeleport extends AbstractQuestLogic
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }

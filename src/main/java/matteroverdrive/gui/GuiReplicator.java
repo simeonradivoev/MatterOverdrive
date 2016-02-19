@@ -24,13 +24,13 @@ import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.container.ContainerReplicator;
 import matteroverdrive.container.MOBaseContainer;
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPatternMapping;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.pages.PageTasks;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
-import matteroverdrive.network.packet.server.PacketRemoveTask;
+import matteroverdrive.network.packet.server.task_queue.PacketRemoveTask;
+import matteroverdrive.machines.replicator.TileEntityMachineReplicator;
 import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.tile.TileEntityMachineReplicator;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.client.gui.FontRenderer;
@@ -61,7 +61,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
         outputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),70,52,22,22,"big");
         seccoundOutputSlot = new ElementInventorySlot(this,this.getContainer().getSlotAt(machine.SECOND_OUTPUT_SLOT_ID),96,52,22,22,"big");
 
-        itemPattern = new ElementItemPattern(this, entity.getInternalPatternStorage(), "big_main", 37, 22);
+        itemPattern = new ElementItemPattern(this, null, "big_main", 37, 22);
         slotsList.setPosition(5, 49);
         slotsList.addElementAt(0, itemPattern);
 
@@ -132,17 +132,8 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
 
     void ManageReqiremnetsTooltips()
     {
-        ItemPattern itemPattern = machine.getInternalPatternStorage();
-
-        if(itemPattern != null)
-        {
-            ItemStack item = itemPattern.toItemStack(false);
-
-            int matterAmount = MatterHelper.getMatterAmountFromItem(item);
-            matterElement.setDrain(-matterAmount);
-            energyElement.setEnergyRequired(-(machine.getEnergyDrainMax()));
-            energyElement.setEnergyRequiredPerTick(-machine.getEnergyDrainPerTick());
-        }
+        energyElement.setEnergyRequiredPerTick(-machine.getEnergyDrainPerTick());
+        energyElement.setEnergyRequired(-machine.getEnergyDrainMax());
     }
 
     @Override
@@ -150,13 +141,21 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
     {
         super.updateElementInformation();
 
-        MatterNetworkTaskReplicatePattern task = machine.getTaskQueue((byte) 0).peek();
-        if (task != null && machine.getInternalPatternStorage() != null)
+        MatterNetworkTaskReplicatePattern task = (MatterNetworkTaskReplicatePattern) machine.getTaskQueue((byte) 0).peek();
+        if (task != null)
         {
-            itemPattern.setAmount(((ContainerReplicator)inventorySlots).getPatternReplicateCount());
+            if (itemPattern.getPatternMapping() == null || itemPattern.getPatternMapping().getItemPattern() == null || !itemPattern.getPatternMapping().getItemPattern().equals(task.getPattern()))
+            {
+                itemPattern.setPatternMapping(new ItemPatternMapping(task.getPattern(),null,0,0));
+            }
+            itemPattern.setAmount(((ContainerReplicator) inventorySlots).getPatternReplicateCount());
         }
         else
+        {
+            if (itemPattern.getPatternMapping() != null)
+                itemPattern.setPatternMapping(null);
             itemPattern.setAmount(0);
+        }
     }
 
     @Override

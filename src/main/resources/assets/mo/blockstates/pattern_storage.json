@@ -1,0 +1,47 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mo:pattern_storage.obj",
+    "custom":{
+      "flip-v": true
+    },
+    "textures": {
+
+    }
+  },
+  "variants": {
+    "normal": {
+      "model": "mo:pattern_storage.obj"
+    },
+    "facing":{
+      "north":{
+        "transform": {
+          "rotation": {
+            "y":180
+          }
+        }
+      },
+      "south":{
+
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 270
+          }
+        }
+      },
+      "east":{
+        "transform": {
+          "rotation": {
+            "y":90
+          }
+        }
+      }
+    },
+    "inventory": {
+      "model": "mo:pattern_storage.obj",
+      "transform": "forge:default-block"
+    }
+  }
+}

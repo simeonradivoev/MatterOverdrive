@@ -18,7 +18,9 @@
 
 package matteroverdrive.data.quest;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonObject;
+import matteroverdrive.MatterOverdrive;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestLogic;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.Quest;
@@ -36,6 +38,12 @@ import java.util.Random;
 public class GenericQuest extends Quest
 {
     protected IQuestLogic questLogic;
+
+    public GenericQuest(String title,JsonObject questObj,IQuestLogic questLogic)
+    {
+        super(title,questObj);
+        this.questLogic = questLogic;
+    }
 
     public GenericQuest(IQuestLogic questLogic, String title,int xpReward)
     {
@@ -123,7 +131,7 @@ public class GenericQuest extends Quest
     @Override
     public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
-        questLogic.onCompleted(questStack,entityPlayer);
+        questLogic.onQuestCompleted(questStack,entityPlayer);
     }
 
     @Override
@@ -143,7 +151,7 @@ public class GenericQuest extends Quest
     {
         if (entityPlayer != null)
         {
-            return text.replace("%1$s",entityPlayer.getDisplayName());
+            return text.replace("$player",entityPlayer.getDisplayName().getFormattedText());
         }
         return text;
     }

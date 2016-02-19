@@ -18,12 +18,8 @@
 
 package matteroverdrive.compat.modules.nei;
 
-import codechicken.nei.VisiblityData;
-import codechicken.nei.api.API;
-import codechicken.nei.api.INEIGuiHandler;
-import codechicken.nei.api.TaggedInventoryArea;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.compat.Compat;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.init.MatterOverdriveBlocks;
@@ -38,9 +34,9 @@ import java.util.List;
  */
 @Compat("NotEnoughItems")
 @Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = "NotEnoughItems")
-public class CompatNEI implements INEIGuiHandler
+public class CompatNEI //implements INEIGuiHandler
 {
-	@Compat.PreInit
+	/*@Compat.PreInit
 	public static void preInit(FMLPreInitializationEvent event)
 	{
 		API.registerNEIGuiHandler(new CompatNEI());
@@ -78,5 +74,5 @@ public class CompatNEI implements INEIGuiHandler
 	@Override
 	public boolean hideItemPanelSlot(GuiContainer guiContainer, int i, int i1, int i2, int i3) {
 		return false;
-	}
+	}*/
 }

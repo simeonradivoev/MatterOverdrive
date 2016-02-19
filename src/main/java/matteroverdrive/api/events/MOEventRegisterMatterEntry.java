@@ -18,7 +18,7 @@
 
 package matteroverdrive.api.events;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.matter.IMatterEntry;
 /**
  * Created by Simeon on 7/21/2015.

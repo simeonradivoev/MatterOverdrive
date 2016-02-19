@@ -76,9 +76,9 @@ public class PageGalaxy extends ElementBaseGroup implements IListHandler
     }
 
     @Override
-    public void update(int mouseX, int mouseY)
+    public void update(int mouseX, int mouseY,float partialTicks)
     {
-        super.update(mouseX,mouseY);
+        super.update(mouseX,mouseY,partialTicks);
         scroll = quadrantList.getScroll();
     }
 }

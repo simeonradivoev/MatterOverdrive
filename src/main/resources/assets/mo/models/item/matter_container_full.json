@@ -1,0 +1,8 @@
+{
+  "parent": "mo:item/defaultitem",
+  "textures": {
+    "layer0": "mo:items/container",
+    "layer1": "mo:items/container_center_fill",
+    "layer2": "mo:items/container_bottom_fill"
+  }
+}

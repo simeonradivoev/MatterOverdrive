@@ -18,9 +18,9 @@
 
 package matteroverdrive.network.packet.client.quest;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.MOExtendedProperties;
@@ -29,8 +29,9 @@ import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.AbstractClientPacketHandler;
 import matteroverdrive.util.MOEnumHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 
@@ -70,8 +71,9 @@ public class PacketSyncQuests extends PacketAbstract
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketSyncQuests>
     {
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketSyncQuests message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketSyncQuests message, MessageContext ctx)
         {
             MOExtendedProperties extendedProperties = MOExtendedProperties.get(player);
             if (extendedProperties != null && extendedProperties.getQuestData() != null) {
@@ -81,7 +83,6 @@ public class PacketSyncQuests extends PacketAbstract
             {
                 ((GuiDataPad) Minecraft.getMinecraft().currentScreen).refreshQuests(extendedProperties);
             }
-            return null;
         }
     }
 }

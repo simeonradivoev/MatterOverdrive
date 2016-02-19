@@ -37,6 +37,7 @@ import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -53,8 +54,8 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
 {
-    private Map<String,Bounds> groups;
-    private List<ElementGuideEntry> guideEntries;
+    private final Map<String,Bounds> groups;
+    private final List<ElementGuideEntry> guideEntries;
     private ElementStatesHoloIcons orderButtonElement;
     private MOElementTextField searchField;
     private PageGuideDescription pageGuideDescription;
@@ -203,11 +204,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
 
     private boolean searchFilterMatch(MOGuideEntry entry,String searchFilter)
     {
-        if (entry.getDisplayName().toLowerCase().contains(searchFilter.toLowerCase()))
-        {
-            return true;
-        }
-        return false;
+        return entry.getDisplayName().toLowerCase().contains(searchFilter.toLowerCase());
     }
 
     @Override
@@ -215,31 +212,31 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
     {
         //begin depth masking by clearing depth buffer
         //and enabling depth masking. this is where the mask will be drawn
-        glClear(GL_DEPTH_BUFFER_BIT);
-        glClearDepth(1f);
-        GL11.glDepthFunc(GL11.GL_LESS);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        glDepthMask(true);
-        glColorMask(false,false,false,false);
-        glDisable(GL_TEXTURE_2D);
+        GlStateManager.clear(GL_DEPTH_BUFFER_BIT);
+        GlStateManager.clearDepth(1f);
+        GlStateManager.depthFunc(GL11.GL_LESS);
+        GlStateManager.enableDepth();
+        GlStateManager.depthMask(true);
+        GlStateManager.colorMask(false,false,false,false);
+        GlStateManager.disableTexture2D();
         //draws an invisible square mask that will sit on top of everything
         RenderUtils.drawPlane(posX,posY,200,sizeX,sizeY);
-        glEnable(GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
 
         //disable the drawing of the mask and start the drawing of the masked elements
         //while still having the depth test active
-        glDepthMask(false);
-        glColorMask(true,true,true,true);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthFunc(GL11.GL_GREATER);
+        GlStateManager.depthMask(false);
+        GlStateManager.colorMask(true,true,true,false);
+        GlStateManager.enableDepth();
+        GlStateManager.depthFunc(GL11.GL_GREATER);
         gui.bindTexture(this.background);
         double aspect = (double)sizeY/(double)sizeX;
-        glEnable(GL_BLEND);
-        glDisable(GL_ALPHA_TEST);
-        glColor4d(1, 1, 1, 0.1);
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.color(1, 1, 1, 0.1f);
         RenderUtils.drawPlaneWithUV(posX, posY, 0, sizeX, sizeY, 0.5 - scrollX*0.001, 0.5 -(double)scrollY*0.0003, 0.5, 0.5*aspect);
         RenderUtils.drawPlaneWithUV(posX, posY, 0, sizeX, sizeY, 0.2 - scrollX*0.001, 0.2 -(double)scrollY*0.0005, 0.3, 0.3*aspect);
-        glEnable(GL_ALPHA_TEST);
+        GlStateManager.enableAlpha();
         super.drawBackground(mouseX, mouseY, gameTicks);
 
         if(orderButtonElement.getSelectedState() > 1) {
@@ -256,37 +253,37 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
         }
 
         //reset the depth check function to prevent the masking of other elements as well as the depth testing
-        glDepthFunc(GL_LEQUAL);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GlStateManager.depthFunc(GL_LEQUAL);
+        GlStateManager.disableDepth();
     }
 
     @Override
     public void drawForeground(int mouseX, int mouseY)
     {
-        glClear(GL_DEPTH_BUFFER_BIT);
-        glClearDepth(1f);
-        GL11.glDepthFunc(GL11.GL_LESS);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        glDepthMask(true);
-        glColorMask(false,false,false,false);
-        glDisable(GL_TEXTURE_2D);
+        GlStateManager.clear(GL_DEPTH_BUFFER_BIT);
+        GlStateManager.clearDepth(1f);
+        GlStateManager.depthFunc(GL11.GL_LESS);
+        GlStateManager.enableDepth();
+        GlStateManager.depthMask(true);
+        GlStateManager.colorMask(false,false,false,false);
+        GlStateManager.disableTexture2D();
         RenderUtils.drawPlane(posX,posY,400,sizeX,sizeY);
-        glEnable(GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
 
-        glDepthMask(false);
-        glColorMask(true,true,true,true);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthFunc(GL11.GL_GREATER);
+        GlStateManager.depthMask(false);
+        GlStateManager.colorMask(true,true,true,false);
+        GlStateManager.enableDepth();
+        GlStateManager.depthFunc(GL11.GL_GREATER);
         super.drawForeground(mouseX, mouseY);
-        glDepthFunc(GL_LEQUAL);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        glDepthMask(false);
+        GlStateManager.depthFunc(GL_LEQUAL);
+        GlStateManager.disableDepth();
+        GlStateManager.depthMask(false);
     }
 
     @Override
-    public void update(int mouseX, int mouseY)
+    public void update(int mouseX, int mouseY,float partialTicks)
     {
-        super.update(mouseX, mouseY);
+        super.update(mouseX, mouseY,partialTicks);
 
         int mouseXDelta = mouseX - lastMouseX;
         int mouseYDelta = mouseY - lastMouseY;

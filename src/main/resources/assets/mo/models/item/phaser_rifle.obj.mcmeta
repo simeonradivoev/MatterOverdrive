@@ -1,6 +1,14 @@
 {
 	"weapon":
 	{
-		"scope_position":[0,12.898,21.531]
+		"modules":
+		{
+			"default_scope":
+			{
+				"x":0,
+				"y":0.123,
+				"z":0.2
+			}
+		}
 	}
 }

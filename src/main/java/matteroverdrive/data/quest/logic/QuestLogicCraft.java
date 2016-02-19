@@ -18,8 +18,10 @@
 
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
+import com.google.gson.JsonObject;
+import matteroverdrive.util.MOJsonHelper;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestItem;
@@ -37,6 +39,8 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     int minCraftCount;
     int maxCraftCount;
     int xpPerCraft;
+
+    public QuestLogicCraft(){}
 
     public QuestLogicCraft(ItemStack itemStack)
     {
@@ -82,11 +86,19 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     }
 
     @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+        super.loadFromJson(jsonObject);
+        minCraftCount = MOJsonHelper.getInt(jsonObject,"craft_count_min");
+        maxCraftCount = MOJsonHelper.getInt(jsonObject,"craft_count_max");
+        xpPerCraft = MOJsonHelper.getInt(jsonObject,"xp",0);
+    }
+
+    @Override
     public String modifyInfo(QuestStack questStack, String info)
     {
         info = info.replace("$craftMaxAmount",Integer.toString(getMaxCraftCount(questStack)));
-        ItemStack itemStack = getItem(questStack);
-        info = info.replace("$craftItem",itemStack != null ? itemStack.getDisplayName() : "Unknown Item");
+        info = info.replace("$craftItem",getItemName(questStack));
         return info;
     }
 
@@ -115,8 +127,7 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     {
         if (hasTag(questStack))
         {
-            ItemStack itemStack = getItem(questStack);
-            return itemStack.stackSize + getTag(questStack).getInteger("MaxCraftCount");
+            return getTag(questStack).getInteger("MaxCraftCount");
         }
         return 0;
     }
@@ -126,8 +137,7 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     {
         objective = objective.replace("$craftAmount",Integer.toString(getCraftCount(questStack)));
         objective = objective.replace("$craftMaxAmount",Integer.toString(getMaxCraftCount(questStack)));
-        ItemStack itemStack = getItem(questStack);
-        objective = objective.replace("$craftItem",itemStack != null ? itemStack.getDisplayName() : "Unknown Item");
+        objective = objective.replace("$craftItem",getItemName(questStack));
         return objective;
     }
 
@@ -144,8 +154,7 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     {
         if (event instanceof PlayerEvent.ItemCraftedEvent)
         {
-            ItemStack itemStack = getItem(questStack);
-            if (itemStack != null && ((PlayerEvent.ItemCraftedEvent) event).crafting.isItemEqual(itemStack))
+            if (((PlayerEvent.ItemCraftedEvent) event).crafting != null && matches(questStack,((PlayerEvent.ItemCraftedEvent) event).crafting))
             {
                 if (getCraftCount(questStack) < getMaxCraftCount(questStack))
                 {
@@ -164,13 +173,13 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer) {
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer) {
 
     }
 

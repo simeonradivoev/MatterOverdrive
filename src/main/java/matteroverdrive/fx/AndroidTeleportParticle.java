@@ -1,30 +1,29 @@
 package matteroverdrive.fx;
 
-import matteroverdrive.data.IconHolder;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 6/2/2015.
  */
-public class AndroidTeleportParticle extends EntityFX
+@SideOnly(Side.CLIENT)
+public class AndroidTeleportParticle extends MOEntityFX
 {
-
     public AndroidTeleportParticle(World world, double x, double y, double z)
     {
-        super(world, x, y, z, 0, 0, 0);
+        super(world, x, y, z);
+        setSize(1,1);
         this.particleRed = this.particleGreen = this.particleBlue = 1.0F;
         this.particleMaxAge = 16;
         this.noClip = true;
-        this.particleIcon = new IconHolder(0, 0, 32f / 128f, 32f / 128f, 32, 32);
-    }
-
-    @Override
-    public void renderParticle(Tessellator tess, float f, float xOffset, float yOffset, float zOffset, float p_70539_6_, float p_70539_7_)
-    {
-        super.renderParticle(tess, f, xOffset, yOffset, zOffset, p_70539_6_, p_70539_7_);
+        this.particleIcon = ParticleIcon.fromWithAndHeight(0, 0, 32, 32, 128);
     }
 
     @Override

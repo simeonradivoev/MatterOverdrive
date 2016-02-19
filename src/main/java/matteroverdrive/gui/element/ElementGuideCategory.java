@@ -27,7 +27,7 @@ import matteroverdrive.guide.GuideCategory;
  */
 public class ElementGuideCategory extends MOElementButtonScaled
 {
-    private GuideCategory category;
+    private final GuideCategory category;
 
     public ElementGuideCategory(MOGuiBase gui, IButtonHandler handler, int posX, int posY, String name, int sizeX, int sizeY, GuideCategory category)
     {

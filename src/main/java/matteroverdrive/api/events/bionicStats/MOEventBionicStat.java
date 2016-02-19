@@ -18,13 +18,13 @@
 
 package matteroverdrive.api.events.bionicStats;
 
-import matteroverdrive.api.android.IBionicStat;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.api.android.IBioticStat;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 /**
  * Created by Simeon on 7/21/2015.
- * Triggered by most {@link IBionicStat}.
+ * Triggered by most {@link IBioticStat}.
  * For example the {@link matteroverdrive.data.biostats.BioticStatTeleport} triggers the event when used by the player.
  */
 public class MOEventBionicStat extends PlayerEvent
@@ -36,14 +36,14 @@ public class MOEventBionicStat extends PlayerEvent
     /**
      * The Ability itself.
      */
-    public final IBionicStat stat;
+    public final IBioticStat stat;
     /**
      * The level of the ability being used.
      */
     public final int level;
 
 
-    public MOEventBionicStat(IBionicStat stat, int level, AndroidPlayer android) {
+    public MOEventBionicStat(IBioticStat stat, int level, AndroidPlayer android) {
         super(android.getPlayer());
         this.android = android;
         this.stat = stat;

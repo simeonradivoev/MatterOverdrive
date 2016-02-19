@@ -38,10 +38,5 @@ public abstract class ItemBuildingAbstract extends ItemBuildableAbstract impleme
         setCreativeTab(MatterOverdrive.tabMatterOverdrive_buildings);
     }
 
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-    {
-        super.addDetails(itemstack,player,infos);
-    }
-
     public boolean hasDetails(ItemStack stack){return true;}
 }

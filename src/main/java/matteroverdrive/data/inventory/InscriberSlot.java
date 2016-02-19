@@ -26,21 +26,21 @@ import net.minecraft.item.ItemStack;
  */
 public class InscriberSlot extends Slot
 {
-    boolean isSecSolt;
+    boolean isSecSlot;
 
     public InscriberSlot(boolean isMainSlot,boolean isSecSlot) {
         super(isMainSlot);
-        this.isSecSolt = isSecSlot;
+        this.isSecSlot = isSecSlot;
     }
 
     public boolean isValidForSlot(ItemStack item)
     {
-        return InscriberRecipes.containedInRecipe(item,!isSecSolt);
+        return InscriberRecipes.containedInRecipe(item,!isSecSlot);
     }
 
     public int getMaxStackSize()
     {
-        if (isSecSolt)
+        if (isSecSlot)
             return 64;
         else
             return 1;

@@ -19,8 +19,7 @@
 package matteroverdrive.blocks.includes;
 
 import cofh.api.block.IDismantleable;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.registry.GameRegistry;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
@@ -30,14 +29,15 @@ import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
@@ -67,39 +67,40 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
-        super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+    {
+        super.onBlockPlacedBy(worldIn,pos, state, placer,stack);
 
-        IMOTileEntity entity = (IMOTileEntity) world.getTileEntity(x, y, z);
+        IMOTileEntity entity = (IMOTileEntity) worldIn.getTileEntity(pos);
         if (entity != null) {
             try {
-                entity.readFromPlaceItem(itemStack);
+                entity.readFromPlaceItem(stack);
             } catch (Exception e) {
                 e.printStackTrace();
-                FMLLog.log(Level.ERROR,"Could not load settings from placing item",e);
+                MOLog.log(Level.ERROR,"Could not load settings from placing item",e);
             }
 
-            entity.onPlaced(world, entityLiving);
+            entity.onPlaced(worldIn, placer);
         }
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta)
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
         //drops inventory
-        Inventory inventory = getInventory(world,x,y,z);
+        Inventory inventory = getInventory(worldIn,pos);
         if (inventory != null)
         {
-            MatterHelper.DropInventory(world, inventory, x, y, z);
+            MatterHelper.DropInventory(worldIn, inventory, pos);
         }
 
-        super.breakBlock(world, x, y, z, block, meta);
+        super.breakBlock(worldIn,pos,state);
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        return MachineHelper.canOpenMachine(world,x,y,z,player,hasGui,getUnlocalizedMessage(0));
+        return MachineHelper.canOpenMachine(worldIn,pos,playerIn,hasGui,getUnlocalizedMessage(0));
     }
 
     protected String getUnlocalizedMessage(int type)
@@ -114,19 +115,19 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     }
 
     @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
+    public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
-        if (MachineHelper.canRemoveMachine(world,player,x,y,z,willHarvest))
+        if (MachineHelper.canRemoveMachine(world,player,pos,willHarvest))
         {
-            return world.setBlockToAir(x, y, z);
+            return world.setBlockToAir(pos);
         }
         return false;
     }
 
-    public ItemStack getNBTDrop(World world, int x, int y, int z, IMOTileEntity te)
+    public ItemStack getNBTDrop(World world, BlockPos blockPos, IMOTileEntity te)
     {
-        int meta = damageDropped(world.getBlockMetadata(x, y, z));
-        ItemStack itemStack = new ItemStack(this, 1, meta);
+        IBlockState state = world.getBlockState(blockPos);
+        ItemStack itemStack = new ItemStack(this, 1,damageDropped(state));
         if(te != null)
             te.writeToDropItem(itemStack);
         return itemStack;
@@ -141,11 +142,11 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     }
 
     @Override
-    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops)
+    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops)
     {
         ArrayList<ItemStack> items = new ArrayList<>();
-        ItemStack blockItem = getNBTDrop(world, x, y, z, (IMOTileEntity) world.getTileEntity(x, y, z));
-        Inventory inventory = getInventory(world,x,y,z);
+        ItemStack blockItem = getNBTDrop(world, pos, (IMOTileEntity) world.getTileEntity(pos));
+        Inventory inventory = getInventory(world,pos);
         items.add(blockItem);
 
         //remove any items from the machine inventory so that breakBlock doesn't duplicate the items
@@ -164,41 +165,40 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
             }
         }
 
-        Block block = world.getBlock(x, y, z);
-        int l = world.getBlockMetadata(x, y, z);
-        boolean flag = block.removedByPlayer(world, player, x, y, z, true);
-        super.breakBlock(world, x, y, z, block, l);
+        IBlockState blockState = world.getBlockState(pos);
+        boolean flag = blockState.getBlock().removedByPlayer(world, pos,player, true);
+        super.breakBlock(world, pos,blockState);
 
         if (flag)
         {
-            block.onBlockDestroyedByPlayer(world, x, y, z, l);
+            blockState.getBlock().onBlockDestroyedByPlayer(world, pos,blockState);
         }
 
         if (!returnDrops)
         {
-            dropBlockAsItem(world, x, y, z, blockItem);
+            dropBlockAsItem(world, pos, blockState,0);
         }
         else
         {
-            MOInventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, 0);
+            MOInventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, EnumFacing.DOWN);
         }
 
         return items;
     }
 
-    protected Inventory getInventory(World world,int x,int y,int z)
+    protected Inventory getInventory(World world,BlockPos pos)
     {
-        if (world.getTileEntity(x,y,z) instanceof MOTileEntityMachine) {
-            MOTileEntityMachine machine = (MOTileEntityMachine) world.getTileEntity(x, y, z);
+        if (world.getTileEntity(pos) instanceof MOTileEntityMachine) {
+            MOTileEntityMachine machine = (MOTileEntityMachine) world.getTileEntity(pos);
             return machine.getInventoryContainer();
         }
         return null;
     }
 
     @Override
-    public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
+    public boolean canDismantle(EntityPlayer player, World world, BlockPos pos)
     {
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity instanceof MOTileEntityMachine)
         {
             if (player.capabilities.isCreativeMode || !((MOTileEntityMachine) tileEntity).hasOwner())

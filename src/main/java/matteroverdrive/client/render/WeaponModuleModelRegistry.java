@@ -20,9 +20,6 @@ package matteroverdrive.client.render;
 
 import matteroverdrive.api.weapon.IWeaponModule;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
-import net.minecraftforge.client.model.obj.WavefrontObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +29,7 @@ import java.util.Map;
  */
 public class WeaponModuleModelRegistry
 {
-    Map<String,WavefrontObject> models;
+    /*Map<String,WavefrontObject> models;
 
     public WeaponModuleModelRegistry()
     {
@@ -51,5 +48,5 @@ public class WeaponModuleModelRegistry
     public WavefrontObject getModel(String model)
     {
         return models.get(model);
-    }
+    }*/
 }

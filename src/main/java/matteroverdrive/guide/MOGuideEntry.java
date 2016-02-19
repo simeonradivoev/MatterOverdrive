@@ -18,16 +18,17 @@
 
 package matteroverdrive.guide;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -173,7 +174,7 @@ public class MOGuideEntry
         }
         catch (IOException e)
         {
-            MatterOverdrive.log.warn("Language text %s for entry %s not found.",Minecraft.getMinecraft().gameSettings.language,name);
+            MOLog.warn("Language text %s for entry %s not found.",Minecraft.getMinecraft().gameSettings.language,name);
             try {
                 stream = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(getDescriptionPath("en_US"))).getInputStream();
                 info = IOUtils.toString(stream, "UTF-8");
@@ -196,11 +197,11 @@ public class MOGuideEntry
         }
         catch (IOException e)
         {
-            MatterOverdrive.log.warn("Language text %s for entry %s not found.",Minecraft.getMinecraft().gameSettings.language,name);
+            MOLog.warn("Language text %s for entry %s not found.",Minecraft.getMinecraft().gameSettings.language,name);
             try {
                 return Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(getDescriptionPath("en_US"))).getInputStream();
             } catch (IOException e1) {
-                MatterOverdrive.log.warn("Default language entry for %s not found",name);
+                MOLog.warn("Default language entry for %s not found",name);
             }
         }
         return stream;

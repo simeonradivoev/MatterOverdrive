@@ -18,8 +18,9 @@
 
 package matteroverdrive.api.events.anomaly;
 
-import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * Created by Simeon on 9/26/2015.
@@ -31,31 +32,17 @@ public class MOEventGravitationalAnomalyConsume extends Event
      * The entity being consumed.
      */
     public final Entity entity;
-    /**
-     * The X coordinate of the anomaly.
-     */
-    public final int anomalyX;
-    /**
-     * The Y coordinate of the anomaly.
-     */
-    public final int anomalyY;
-    /**
-     * The Z coordinate of the anomaly.
-     */
-    public final int anomalyZ;
-
-    public MOEventGravitationalAnomalyConsume(Entity entity, int x, int y, int z)
+    public final BlockPos pos;
+    public MOEventGravitationalAnomalyConsume(Entity entity, BlockPos pos)
     {
         this.entity = entity;
-        this.anomalyX = x;
-        this.anomalyY = y;
-        this.anomalyZ = z;
+        this.pos = pos;
     }
 
     public static class Pre extends MOEventGravitationalAnomalyConsume
     {
-        public Pre(Entity entity, int x, int y, int z) {
-            super(entity, x, y, z);
+        public Pre(Entity entity, BlockPos pos) {
+            super(entity, pos);
         }
 
         @Override
@@ -67,8 +54,8 @@ public class MOEventGravitationalAnomalyConsume extends Event
 
     public static class Post extends MOEventGravitationalAnomalyConsume
     {
-        public Post(Entity entity, int x, int y, int z) {
-            super(entity, x, y, z);
+        public Post(Entity entity, BlockPos pos) {
+            super(entity, pos);
         }
     }
 }

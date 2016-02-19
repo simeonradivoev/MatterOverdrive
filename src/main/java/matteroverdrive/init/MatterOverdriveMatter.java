@@ -20,8 +20,10 @@ package matteroverdrive.init;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.data.matter.DamageAwareStackHandler;
+import matteroverdrive.data.matter.OreHandler;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.handler.MatterEntry;
+import matteroverdrive.data.matter.MatterEntryItem;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -30,10 +32,6 @@ import net.minecraft.item.ItemStack;
 
 public class MatterOverdriveMatter
 {
-	public static void init(ConfigurationHandler config)
-	{
-
-	}
 
 	public static void registerBasic(ConfigurationHandler c)
 	{
@@ -43,14 +41,8 @@ public class MatterOverdriveMatter
         registerBasicCompoundItems(c);
 	}
 
-    public static void registerFromConfig(ConfigurationHandler c)
-    {
-        MatterOverdrive.matterRegistry.loadNewItemsFromConfig(c);
-    }
-
     public static void registerBlacklistFromConfig(ConfigurationHandler c)
     {
-        MatterOverdrive.matterRegistry.loadBlacklistFromConfig(c);
         MatterOverdrive.matterRegistry.loadModBlacklistFromConfig(c);
     }
 
@@ -90,7 +82,6 @@ public class MatterOverdriveMatter
         reg(c,Blocks.clay,3,16);
         reg(c, Blocks.hardened_clay, 3);
         reg(c,Blocks.stonebrick,2,4);
-        reg(c,Blocks.skull,8,5);
         reg(c,Blocks.cobblestone_wall,1);
         reg(c,Blocks.web,1);
 
@@ -111,7 +102,7 @@ public class MatterOverdriveMatter
 
     public static void registerBasicItems(ConfigurationHandler c)
     {
-        reg(c, Items.apple, 1);
+        reg(c, new ItemStack(Items.apple), 1);
         reg(c, Items.arrow, 1);
         reg(c, Items.baked_potato, 1);
         reg(c, Items.beef, 2);
@@ -162,12 +153,17 @@ public class MatterOverdriveMatter
         reg(c, "slimeball", 2);
         reg(c, "record", 4);
         reg(c, Items.chicken, 2);
+        reg(c,Items.rabbit,2);
+        reg(c,Items.mutton,2);
         reg(c, Items.cooked_chicken, 3);
         reg(c, Items.rotten_flesh, 1);
         reg(c, "dustSaltpeter", 2);
         reg(c, "dustSulfur", 2);
         reg(c,Items.name_tag,32);
-        reg(c,"itemSkull",16);
+        reg(c,new ItemStack(Items.skull,1,0),16); //skeleton
+        reg(c,new ItemStack(Items.skull,1,1),64); //wither
+        reg(c,new ItemStack(Items.skull,1,2),12); //zombie
+        reg(c,new ItemStack(Items.skull,1,4),19); //creeper
         reg(c,Items.glass_bottle,3);
         reg(c,"silicon",2);
 
@@ -289,47 +285,42 @@ public class MatterOverdriveMatter
 
 	private static void reg(ConfigurationHandler c,String name,int matter)
 	{
-        MatterOverdrive.matterRegistry.register(name,matter);
+        MatterOverdrive.matterRegistry.registerOre(name,new OreHandler(matter));
 	}
     private static void regOre(ConfigurationHandler c,String name,int multiply,String ingot)
     {
-        MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(ingot);
-        if (entry != null)
+        int matter = MatterOverdrive.matterRegistry.getMatterOre(ingot);
+        if (matter > 0)
         {
-            MatterOverdrive.matterRegistry.register(name,entry.getMatter()*multiply);
+            MatterOverdrive.matterRegistry.registerOre(name,new OreHandler(matter*multiply));
         }
     }
     private static void regOre(ConfigurationHandler c,String name,int multiply,Item ingot)
     {
-        MatterEntry entry = MatterOverdrive.matterRegistry.getEntry(ingot);
-        if (entry != null)
+        int matter = MatterOverdrive.matterRegistry.getMatter(new ItemStack(ingot));
+        if (matter > 0)
         {
-            MatterOverdrive.matterRegistry.register(name,entry.getMatter()*multiply);
+            MatterOverdrive.matterRegistry.registerOre(name,new OreHandler(matter*multiply));
         }
     }
     private static void reg(ConfigurationHandler c,String name,int matter,Object... items)
     {
-        for (int i = 0;i < items.length;i++)
+        for (Object item : items)
         {
-            MatterEntry entry = null;
+            MatterEntryItem entry = null;
 
-            if (items[i] instanceof String)
+            if (item instanceof String)
             {
-                entry = MatterOverdrive.matterRegistry.getEntry((String)items[i]);
-            }else if (items[i] instanceof Item)
+                matter += MatterOverdrive.matterRegistry.getMatterOre((String)item);
+            } else if (item instanceof Item)
             {
-                entry = MatterOverdrive.matterRegistry.getEntry((Item)items[i]);
-            }else if (items[i] instanceof Block)
+                matter += MatterOverdrive.matterRegistry.getMatter(new ItemStack((Item) item));
+            } else if (item instanceof Block)
             {
-                entry = MatterOverdrive.matterRegistry.getEntry((Block)items[i]);
-            }else if (items[i] instanceof ItemStack)
+                matter += MatterOverdrive.matterRegistry.getMatter(new ItemStack(Item.getItemFromBlock((Block) item)));
+            } else if (item instanceof ItemStack)
             {
-                entry = MatterOverdrive.matterRegistry.getEntry((ItemStack)items[i]);
-            }
-
-            if (entry != null)
-            {
-                matter+= entry.getMatter();
+                matter += MatterOverdrive.matterRegistry.getMatter((ItemStack) item);
             }
         }
 
@@ -341,7 +332,7 @@ public class MatterOverdriveMatter
 
     private static void reg(ConfigurationHandler c,ItemStack itemStack,int matter)
     {
-        MatterOverdrive.matterRegistry.register(itemStack,matter);
+        MatterOverdrive.matterRegistry.register(itemStack.getItem(),new DamageAwareStackHandler(itemStack.getItemDamage(),matter));
         MatterOverdrive.matterRegistry.basicEntries++;
     }
     private static void reg(ConfigurationHandler c,Block block,int matter)
@@ -351,22 +342,16 @@ public class MatterOverdriveMatter
     private static void reg(ConfigurationHandler c,Block block,int matter,int subItems)
     {
         for (int i = 0;i < subItems;i++) {
-            String key = MatterOverdrive.matterRegistry.getKey(new ItemStack(Item.getItemFromBlock(block), 1, i));
-            if (key != null) {
-                MatterOverdrive.matterRegistry.register(key, matter);
-                MatterOverdrive.matterRegistry.basicEntries++;
-            }
+            MatterOverdrive.matterRegistry.register(Item.getItemFromBlock(block),new DamageAwareStackHandler(i,matter));
+            MatterOverdrive.matterRegistry.basicEntries++;
         }
     }
     private static void reg(ConfigurationHandler c,Item item,int matter){reg(c,item,matter,1);}
     private static void reg(ConfigurationHandler c,Item item,int matter,int subItems)
     {
         for (int i = 0;i < subItems;i++) {
-            String key = MatterOverdrive.matterRegistry.getKey(new ItemStack(item, 1, i));
-            if (key != null) {
-                MatterOverdrive.matterRegistry.register(key, matter);
-                MatterOverdrive.matterRegistry.basicEntries++;
-            }
+            MatterOverdrive.matterRegistry.register(item,new DamageAwareStackHandler(i,matter));
+            MatterOverdrive.matterRegistry.basicEntries++;
         }
     }
 }

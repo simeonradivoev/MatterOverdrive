@@ -20,9 +20,10 @@ package matteroverdrive.handler;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.android.IAndroidStatRegistry;
-import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.api.events.MOEventRegisterAndroidStat;
 import matteroverdrive.client.render.HoloIcons;
+import matteroverdrive.util.MOLog;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Collection;
@@ -33,14 +34,15 @@ import java.util.HashMap;
  */
 public class AndroidStatRegistry implements IAndroidStatRegistry
 {
-    private HashMap<String,IBionicStat> stats = new HashMap<>();
+    private final HashMap<String,IBioticStat> stats = new HashMap<>();
 
     @Override
-    public boolean registerStat(IBionicStat stat)
+    public boolean registerStat(IBioticStat stat)
     {
         if (stats.containsKey(stat.getUnlocalizedName()))
         {
-            MatterOverdrive.log.warn("Stat with the name '%s' is already present!", stat.getUnlocalizedName());
+            MOLog.warn("Stat with the name '%s' is already present!", stat.getUnlocalizedName());
+            MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Biotic Stat Registration with existing name");
         }
         else
         {
@@ -53,7 +55,7 @@ public class AndroidStatRegistry implements IAndroidStatRegistry
     }
 
     @Override
-    public IBionicStat getStat(String name)
+    public IBioticStat getStat(String name)
     {
         return stats.get(name);
     }
@@ -65,20 +67,20 @@ public class AndroidStatRegistry implements IAndroidStatRegistry
     }
 
     @Override
-    public IBionicStat unregisterStat(String statName)
+    public IBioticStat unregisterStat(String statName)
     {
         return stats.remove(statName);
     }
 
     public void registerIcons(HoloIcons holoIcons)
     {
-        for (IBionicStat stat : stats.values())
+        for (IBioticStat stat : stats.values())
         {
             stat.registerIcons(holoIcons);
         }
     }
 
-    public Collection<IBionicStat> getStats()
+    public Collection<IBioticStat> getStats()
     {
         return stats.values();
     }

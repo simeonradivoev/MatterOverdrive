@@ -18,14 +18,13 @@
 
 package matteroverdrive.network.packet.server.starmap;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.network.packet.server.AbstractServerPacketHandler;
 import matteroverdrive.tile.TileEntityMachineStarMap;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 
 /**
@@ -78,9 +77,8 @@ public class PacketStarMapClientCommands extends TileEntityUpdatePacket
 
     public static class ServerHandler extends AbstractServerPacketHandler<PacketStarMapClientCommands>
     {
-
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketStarMapClientCommands message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketStarMapClientCommands message, MessageContext ctx)
         {
             TileEntity tileEntity = message.getTileEntity(player.worldObj);
             if (tileEntity instanceof TileEntityMachineStarMap)
@@ -90,7 +88,6 @@ public class PacketStarMapClientCommands extends TileEntityUpdatePacket
                 ((TileEntityMachineStarMap)tileEntity).setDestination(message.destination);
                 ((TileEntityMachineStarMap) tileEntity).forceSync();
             }
-            return null;
         }
     }
 }

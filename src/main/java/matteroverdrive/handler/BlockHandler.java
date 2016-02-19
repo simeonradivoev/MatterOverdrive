@@ -1,6 +1,6 @@
 package matteroverdrive.handler;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.player.MOExtendedProperties;
@@ -30,7 +30,7 @@ public class BlockHandler
     {
         if (event.player != null)
         {
-            String blockName = Block.blockRegistry.getNameForObject(event.block);
+            String blockName = event.state.getBlock().getRegistryName();
             String modID = blockName.substring(0,blockName.indexOf(':'));
             if (modID.equals(Reference.MOD_ID))
             {

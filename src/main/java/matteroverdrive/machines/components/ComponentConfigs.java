@@ -18,7 +18,6 @@
 
 package matteroverdrive.machines.components;
 
-import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.machines.MOTileEntityMachine;
@@ -26,9 +25,11 @@ import matteroverdrive.machines.MachineComponentAbstract;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.configs.IConfigProperty;
 import matteroverdrive.machines.configs.IConfigurable;
+import matteroverdrive.machines.events.MachineEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ import java.util.Map;
  */
 public class ComponentConfigs extends MachineComponentAbstract<MOTileEntityMachine> implements IConfigurable
 {
-    private Map<String,IConfigProperty> propertyMap;
+    private final Map<String,IConfigProperty> propertyMap;
 
     public ComponentConfigs(MOTileEntityMachine machine)
     {
@@ -75,11 +76,6 @@ public class ComponentConfigs extends MachineComponentAbstract<MOTileEntityMachi
     }
 
     @Override
-    public void update(MOTileEntityMachine machine) {
-
-    }
-
-    @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type) {
         return false;
     }
@@ -90,17 +86,8 @@ public class ComponentConfigs extends MachineComponentAbstract<MOTileEntityMachi
     }
 
     @Override
-    public void onActiveChange(MOTileEntityMachine machine) {
-
-    }
-
-    @Override
-    public void onAwake(MOTileEntityMachine machine, Side side) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving, MOTileEntityMachine machine) {
+    public void onMachineEvent(MachineEvent event)
+    {
 
     }
 

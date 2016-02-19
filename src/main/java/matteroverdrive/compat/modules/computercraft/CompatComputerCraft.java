@@ -1,7 +1,6 @@
 package matteroverdrive.compat.modules.computercraft;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import dan200.computercraft.api.ComputerCraftAPI;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import matteroverdrive.compat.Compat;
 
 /**
@@ -11,10 +10,10 @@ import matteroverdrive.compat.Compat;
 public class CompatComputerCraft
 {
 
-	@Compat.Init
+	/*@Compat.Init
 	public static void init(FMLInitializationEvent event)
 	{
 		ComputerCraftAPI.registerPeripheralProvider(new MOPeripheralProvider());
-	}
+	}*/
 
 }

@@ -83,7 +83,7 @@ public class Color extends Number
 
     public int getIntB()
     {
-        return this.color >> 0 & 255;
+        return this.color & 255;
     }
 
     public int getIntA()

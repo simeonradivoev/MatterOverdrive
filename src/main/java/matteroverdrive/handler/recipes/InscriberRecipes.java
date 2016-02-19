@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class InscriberRecipes
 {
-    private static List<InscriberRecipe> recipes = new ArrayList<>();
+    private static final List<InscriberRecipe> recipes = new ArrayList<>();
 
     public static void registerRecipe(InscriberRecipe recipe)
     {

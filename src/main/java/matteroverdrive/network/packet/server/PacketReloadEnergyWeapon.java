@@ -18,12 +18,11 @@
 
 package matteroverdrive.network.packet.server;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.network.packet.PacketAbstract;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Created by Simeon on 8/2/2015.
@@ -47,7 +46,7 @@ public class PacketReloadEnergyWeapon extends PacketAbstract
     public static class ServerHandler extends AbstractServerPacketHandler<PacketReloadEnergyWeapon>
     {
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketReloadEnergyWeapon message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketReloadEnergyWeapon message, MessageContext ctx)
         {
             if (player.getHeldItem() != null && player.getHeldItem().getItem() instanceof EnergyWeapon)
             {
@@ -56,7 +55,6 @@ public class PacketReloadEnergyWeapon extends PacketAbstract
                     ((EnergyWeapon) player.getHeldItem().getItem()).chargeFromEnergyPack(player.getHeldItem(),player);
                 }
             }
-            return null;
         }
     }
 }

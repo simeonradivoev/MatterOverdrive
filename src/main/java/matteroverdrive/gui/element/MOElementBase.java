@@ -22,7 +22,10 @@ import matteroverdrive.client.data.Color;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -35,11 +38,12 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public abstract class MOElementBase
 {
-    protected MOGuiBase gui;
+    protected final MOGuiBase gui;
     protected ResourceLocation texture;
     private FontRenderer fontRenderer;
     protected int posX;
     protected int posY;
+    protected int posZ;
     protected int sizeX;
     protected int sizeY;
     protected int texW = 256;
@@ -87,7 +91,7 @@ public abstract class MOElementBase
 
     protected void ResetColor()
     {
-        GL11.glColor3f(1, 1, 1);
+        GlStateManager.color(1,1,1);
     }
 
     protected int getGlobalX()
@@ -154,7 +158,7 @@ public abstract class MOElementBase
         return this.enabled;
     }
 
-    public void update(int var1, int var2) {
+    public void update(int mouseX, int mouseY,float partialTicks) {
         this.update();
     }
 
@@ -172,27 +176,28 @@ public abstract class MOElementBase
     }
 
     public void drawStencil(int xStart, int yStart, int xEnd, int yEnd, int flag) {
-        glDisable(GL_TEXTURE_2D);
+        GlStateManager.disableTexture2D();
         glStencilFunc(GL_ALWAYS, flag, flag);
         glStencilOp(GL_ZERO, GL_ZERO, GL_REPLACE);
         glStencilMask(flag);
-        glColorMask(false, false, false, false);
-        glDepthMask(false);
+        GlStateManager.colorMask(false, false, false, false);
+        GlStateManager.depthMask(false);
         glClearStencil(0);
-        glClear(GL_STENCIL_BUFFER_BIT);
+        GlStateManager.clear(GL_STENCIL_BUFFER_BIT);
 
-        Tessellator.instance.startDrawingQuads();
-        Tessellator.instance.addVertex(xStart, yEnd, 0);
-        Tessellator.instance.addVertex(xEnd, yEnd, 0);
-        Tessellator.instance.addVertex(xEnd, yStart, 0);
-        Tessellator.instance.addVertex(xStart, yStart, 0);
-        Tessellator.instance.draw();
+        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        wr.begin(GL_QUADS, DefaultVertexFormats.POSITION);
+        wr.pos(xStart, yEnd, 0).endVertex();
+        wr.pos(xEnd, yEnd, 0).endVertex();
+        wr.pos(xEnd, yStart, 0).endVertex();
+        wr.pos(xStart, yStart, 0).endVertex();
+        Tessellator.getInstance().draw();
 
-        glEnable(GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
         glStencilFunc(GL_EQUAL, flag, flag);
         glStencilMask(0);
-        glColorMask(true, true, true, true);
-        glDepthMask(true);
+        GlStateManager.colorMask(true, true, true, false);
+        GlStateManager.depthMask(true);
     }
 
     public void drawTexturedModalRect(int var1, int var2, int var3, int var4, int var5, int var6) {
@@ -254,4 +259,8 @@ public abstract class MOElementBase
     public final int getWidth() {
         return this.sizeX;
     }
+
+    public final void setPosZ(int z){this.posZ = z;}
+
+    public final int getPosZ(){return posZ;}
 }

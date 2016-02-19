@@ -18,10 +18,10 @@
 
 package matteroverdrive.data.inventory;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.client.render.HoloIcon;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 3/16/2015.
@@ -89,4 +89,5 @@ public class Slot
     }
     public Slot setSendToClient(boolean sendToClient){this.sendToClient = sendToClient;return this;}
     public boolean sendsToClient(){return sendToClient;}
+    public void onSlotChanged(){}
 }

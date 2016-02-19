@@ -7,8 +7,8 @@ import matteroverdrive.util.MOStringHelper;
  */
 public class AnimationSegmentText extends AnimationSegment
 {
-    String string;
-    int animationType;
+    private String string;
+    private int animationType;
 
     public AnimationSegmentText(String string, int begin, int length, int animationType)
     {

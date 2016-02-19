@@ -19,7 +19,7 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -58,6 +58,12 @@ public class BioticStatEqualizer extends AbstractBioticStat
     public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
     {
 
+    }
+
+    @Override
+    public boolean isEnabled(AndroidPlayer android, int level)
+    {
+        return super.isEnabled(android,level) && android.getEnergyStored() > 0;
     }
 
     @Override

@@ -13,7 +13,7 @@ import net.minecraft.util.IChatComponent;
  */
 public class EntityDamageSourcePhaser extends EntityDamageSource
 {
-    protected Entity damageSourceEntity;
+    protected final Entity damageSourceEntity;
 
     public EntityDamageSourcePhaser(Entity p_i1567_2_)
     {
@@ -37,11 +37,11 @@ public class EntityDamageSourcePhaser extends EntityDamageSource
 			if (itemStack != null &&
 					itemStack.hasDisplayName() &&
 					MOStringHelper.hasTranslation(itemMsg)) {
-				return new ChatComponentTranslation(itemMsg, entity.func_145748_c_(), damageSourceEntity.func_145748_c_(), itemStack.func_151000_E());
+				return new ChatComponentTranslation(itemMsg, entity.getDisplayName().getFormattedText(), damageSourceEntity.getDisplayName().getFormattedText(), itemStack.getChatComponent());
 			}
 		}
 
-		return new ChatComponentTranslation(normalMsg, entity.func_145748_c_(), damageSourceEntity.func_145748_c_());
+		return new ChatComponentTranslation(normalMsg, entity.getDisplayName(), damageSourceEntity.getDisplayName());
     }
 
     /**

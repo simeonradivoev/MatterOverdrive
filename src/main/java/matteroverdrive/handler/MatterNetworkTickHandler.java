@@ -18,7 +18,8 @@
 
 package matteroverdrive.handler;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
+import matteroverdrive.util.MOLog;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.network.IMatterNetworkHandler;
 import matteroverdrive.util.IConfigSubscriber;
@@ -44,7 +45,7 @@ public class MatterNetworkTickHandler implements IConfigSubscriber
                 try {
                     broadcastCount += handler.onNetworkTick(world, phase);
                 } catch (Exception e) {
-                    MatterOverdrive.log.log(Level.FATAL, e, "There was a problem while ticking MatterNetworkHandler %s", handler);
+                    MOLog.log(Level.FATAL, e, "There was a problem while ticking MatterNetworkHandler %s", handler);
                 }
             }
 

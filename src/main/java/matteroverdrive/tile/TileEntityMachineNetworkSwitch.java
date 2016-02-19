@@ -18,18 +18,28 @@
 
 package matteroverdrive.tile;
 
+import matteroverdrive.machines.events.MachineEvent;
+import net.minecraft.util.EnumFacing;
+
 /**
  * Created by Simeon on 4/30/2015.
  */
 public class TileEntityMachineNetworkSwitch extends TileEntityMachinePacketQueue
 {
-
-    public TileEntityMachineNetworkSwitch() {
+    public TileEntityMachineNetworkSwitch()
+    {
         super(0);
     }
 
     @Override
-    protected void onActiveChange() {
+    protected void onMachineEvent(MachineEvent event)
+    {
 
+    }
+
+    @Override
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[0];
     }
 }

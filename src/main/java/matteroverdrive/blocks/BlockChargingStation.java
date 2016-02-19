@@ -18,18 +18,15 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.client.render.block.RendererBlockChargingStation;
-import matteroverdrive.data.BlockPos;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.tile.TileEntityMachineChargingStation;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 /**
@@ -51,51 +48,36 @@ public class BlockChargingStation extends MOBlockMachine
 
 //	Multiblock
 	@Override
-	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
-		return world.getBlock(x, y, z).isReplaceable(world, x, y, z) &&
-				world.getBlock(x, y + 1, z).isReplaceable(world, x, y + 1, z) &&
-				world.getBlock(x, y + 2, z).isReplaceable(world, x, y + 2, z);
+	public boolean canPlaceBlockAt(World world, BlockPos pos) {
+		return world.getBlockState(pos).getBlock().isReplaceable(world, pos) &&
+				world.getBlockState(pos.add(0,1,0)).getBlock().isReplaceable(world, pos.add(0,1,0)) &&
+				world.getBlockState(pos.add(0,2,0)).getBlock().isReplaceable(world, pos.add(0,2,0));
 	}
 
 	@Override
-	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
-        BlockPos ownerPos = new matteroverdrive.data.BlockPos(x, y, z);
-		BlockBoundingBox.createBoundingBox(world, new matteroverdrive.data.BlockPos(x, y + 1, z), ownerPos, this);
-		BlockBoundingBox.createBoundingBox(world, new BlockPos(x, y + 2, z), ownerPos, this);
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+		BlockBoundingBox.createBoundingBox(worldIn, pos.add(0,1,0), pos, this);
+		BlockBoundingBox.createBoundingBox(worldIn, pos.add(0,2,0), pos, this);
 
-		return meta;
+		return worldIn.getBlockState(pos);
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-		TileEntity te = world.getTileEntity(x, y, z);
+	public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityMachineChargingStation) {
 			TileEntityMachineChargingStation chargingStation = (TileEntityMachineChargingStation)te;
-			chargingStation.getBoundingBlocks().forEach(coord -> {
-				world.setBlockToAir(coord.x, coord.y, coord.z);
-			});
+			chargingStation.getBoundingBlocks().forEach(coord -> world.setBlockToAir(pos));
 		}
 
-		super.breakBlock(world, x, y, z, block, meta);
+		super.breakBlock(world, pos,blockState);
 	}
-
-	@Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int metadata)
-    {
-        return MatterOverdriveIcons.Base;
-    }
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta)
     {
         return new TileEntityMachineChargingStation();
-    }
-
-    @Override
-    public int getRenderType()
-    {
-        return RendererBlockChargingStation.renderID;
     }
 
     @Override

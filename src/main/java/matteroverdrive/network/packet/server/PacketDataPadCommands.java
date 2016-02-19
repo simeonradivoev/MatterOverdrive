@@ -18,13 +18,12 @@
 
 package matteroverdrive.network.packet.server;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.items.DataPad;
 import matteroverdrive.network.packet.PacketAbstract;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -80,7 +79,7 @@ public class PacketDataPadCommands extends PacketAbstract
     {
 
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketDataPadCommands message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketDataPadCommands message, MessageContext ctx)
         {
             ItemStack dataPadStack = player.getHeldItem();
             if (dataPadStack != null && dataPadStack.getItem() instanceof DataPad)
@@ -90,7 +89,6 @@ public class PacketDataPadCommands extends PacketAbstract
                     dataPadStack.setTagCompound(message.data);
                 }
             }
-            return null;
         }
     }
 }

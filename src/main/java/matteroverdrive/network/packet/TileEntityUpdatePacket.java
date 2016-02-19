@@ -2,6 +2,7 @@ package matteroverdrive.network.packet;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -9,44 +10,36 @@ import net.minecraft.world.World;
  */
 public class TileEntityUpdatePacket extends PacketAbstract
 {
-    public int x;
-    public int y;
-    public int z;
+    public BlockPos pos;
 
     public TileEntityUpdatePacket()
     {
         super();
     }
 
-    public TileEntityUpdatePacket(int x,int y,int z)
+    public TileEntityUpdatePacket(BlockPos pos)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.pos = pos;
     }
     public TileEntityUpdatePacket(TileEntity entity)
     {
-        this(entity.xCoord,entity.yCoord,entity.zCoord);
+        this(entity.getPos());
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        x = buf.readInt();
-        y = buf.readInt();
-        z = buf.readInt();
+        pos = BlockPos.fromLong(buf.readLong());
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
+        buf.writeLong(pos.toLong());
     }
 
     public TileEntity getTileEntity(World world)
     {
-        return world.getTileEntity(x,y,z);
+        return world.getTileEntity(pos);
     }
 }

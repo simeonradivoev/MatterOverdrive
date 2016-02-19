@@ -47,16 +47,13 @@ public class MOEnumHelper
                 result.add(values[ordinal]);
             }
             return result;
-        } catch (IllegalAccessException ex) {
+        } catch (IllegalAccessException | NoSuchMethodException ex) {
             // Shouldn't happen
             throw new RuntimeException(ex);
         } catch (InvocationTargetException ex) {
             // Probably a NullPointerException, caused by calling this method
             // from within E's initializer.
             throw (RuntimeException) ex.getCause();
-        } catch (NoSuchMethodException ex) {
-            // Shouldn't happen
-            throw new RuntimeException(ex);
         }
     }
 }

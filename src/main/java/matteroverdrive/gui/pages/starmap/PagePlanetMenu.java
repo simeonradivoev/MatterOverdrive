@@ -32,6 +32,7 @@ import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.StarmapHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -68,9 +69,9 @@ public class PagePlanetMenu extends ElementBaseGroup {
     }
 
     @Override
-    public void update(int mouseX, int mouseY)
+    public void update(int mouseX, int mouseY,float partialTicks)
     {
-        super.update(mouseX,mouseY);
+        super.update(mouseX,mouseY,partialTicks);
 
         boolean planetSlotVisible = starMap.getPlanet() != null && starMap.getPlanet().isOwner(Minecraft.getMinecraft().thePlayer);
 
@@ -91,12 +92,12 @@ public class PagePlanetMenu extends ElementBaseGroup {
         super.drawForeground(mouseX,mouseY);
         if (starMap.getPlanet() != null)
         {
-            glPushMatrix();
+            GlStateManager.pushMatrix();
             int width = getFontRenderer().getStringWidth(starMap.getPlanet().getName());
-            glTranslated(sizeY / 2 + width / 2, 16, 0);
-            glScaled(1, 1, 1);
+            GlStateManager.translate(sizeY / 2 + width / 2, 16, 0);
+            GlStateManager.scale(1, 1, 1);
             StarmapHelper.drawPlanetInfo(starMap.getPlanet(),starMap.getPlanet().getName(),12 - width/2, 4);
-            glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -104,13 +105,13 @@ public class PagePlanetMenu extends ElementBaseGroup {
     public void init()
     {
         super.init();
-        for (int i = 0;i < factorySlots.length;i++)
+        for (ElementInventorySlot factorySlot : factorySlots)
         {
-            addElement(factorySlots[i]);
+            addElement(factorySlot);
         }
-        for (int i = 0;i < shipSlots.length;i++)
+        for (ElementInventorySlot shipSlot : shipSlots)
         {
-            addElement(shipSlots[i]);
+            addElement(shipSlot);
         }
     }
 }

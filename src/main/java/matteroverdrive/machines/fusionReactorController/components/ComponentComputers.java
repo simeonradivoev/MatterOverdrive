@@ -18,23 +18,17 @@
 
 package matteroverdrive.machines.fusionReactorController.components;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import li.cil.oc.api.machine.Arguments;
-import li.cil.oc.api.machine.Context;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.machines.MachineComponentAbstract;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -42,10 +36,11 @@ import java.util.EnumSet;
 /**
  * Created by Simeon on 7/21/2015.
  */
-@Optional.InterfaceList({
+/*@Optional.InterfaceList({
         @Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral")
-})
-public class ComponentComputers extends MachineComponentAbstract<TileEntityMachineFusionReactorController> implements IPeripheral {
+})*/
+public class ComponentComputers extends MachineComponentAbstract<TileEntityMachineFusionReactorController> //implements IPeripheral
+{
 
     private String[] methodNames = new String[]
             {
@@ -94,13 +89,13 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     private Object[] computerGetMatterUsed(Object[] args) {
         return new Object[]{machine.getMatterDrainPerTick()};
     }
-    private Object[] computerGetEnergyStored(Object[] args) {return new Object[]{machine.getEnergyStored(ForgeDirection.UNKNOWN)};}
+    private Object[] computerGetEnergyStored(Object[] args) {return new Object[]{machine.getEnergyStored(EnumFacing.DOWN)};}
     private Object[] computerGetMatterStored(Object[] args) {
         return new Object[]{machine.getMatterStored()};
     }
     //endregion
 
-    //region ComputerCraft
+    /*//region ComputerCraft
     @Override
     @Optional.Method(modid = "ComputerCraft")
     public String getType() {
@@ -163,7 +158,7 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     public String getComponentName() {
         return peripheralName;
     }
-    //endregion
+    //endregion*/
 
     //region Component Functions
     @Override
@@ -182,11 +177,6 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     @Override
-    public void update(TileEntityMachineFusionReactorController machine) {
-
-    }
-
-    @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type) {
         return false;
     }
@@ -197,18 +187,10 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     @Override
-    public void onActiveChange(TileEntityMachineFusionReactorController machine) {
+    public void onMachineEvent(MachineEvent event)
+    {
 
     }
 
-    @Override
-    public void onAwake(TileEntityMachineFusionReactorController machine, Side side) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving, TileEntityMachineFusionReactorController machine) {
-
-    }
     //endregion
 }

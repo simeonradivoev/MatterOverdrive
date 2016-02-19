@@ -1,11 +1,13 @@
 package matteroverdrive.commands;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.world.MOWorldGenBuilding;
-import matteroverdrive.world.WeightedRandomMOWorldGenBuilding;
+import matteroverdrive.world.MOImageGen;
+import matteroverdrive.world.buildings.WeightedRandomMOWorldGenBuilding;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ public class WorldGenCommands extends CommandBase
     }
 
     @Override
-    public void processCommand(ICommandSender commandSender, String[] parameters)
+    public void processCommand(ICommandSender commandSender, String[] parameters) throws PlayerNotFoundException
     {
         EntityPlayer entityPlayer = null;
         if (parameters.length >= 4)
@@ -55,7 +57,7 @@ public class WorldGenCommands extends CommandBase
                     {
                         if (entry.worldGenBuilding.getName().equalsIgnoreCase(parameters[1]))
                         {
-                            MOWorldGenBuilding.WorldGenBuildingWorker worker = MatterOverdrive.moWorld.worldGen.startBuildingGeneration(entry.worldGenBuilding,(int) entityPlayer.posX,(int) entityPlayer.posY,(int) entityPlayer.posZ,entityPlayer.getRNG(),commandSender.getEntityWorld(),null,null,forceGeneration);
+                            MOImageGen.ImageGenWorker worker = MatterOverdrive.moWorld.worldGen.startBuildingGeneration(entry.worldGenBuilding,entityPlayer.getPosition(),entityPlayer.getRNG(),commandSender.getEntityWorld(),null,null,forceGeneration);
                             if (worker != null)
                             {
                                 worker.setPlaceNotify(2);
@@ -68,24 +70,24 @@ public class WorldGenCommands extends CommandBase
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender commandSender, String[] parameters)
+    public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
         List<String> commands = new ArrayList<>();
 
-        if (parameters.length == 1)
+        if (args.length == 1)
         {
             commands.add("generate");
-        }else if (parameters.length == 2)
+        }else if (args.length == 2)
         {
             for (WeightedRandomMOWorldGenBuilding entry : MatterOverdrive.moWorld.worldGen.buildings)
             {
                 commands.add(entry.worldGenBuilding.getName());
             }
-        }else if (parameters.length == 4)
+        }else if (args.length == 4)
         {
-            for (Object entityPlayer : commandSender.getEntityWorld().playerEntities)
+            for (Object entityPlayer : sender.getEntityWorld().playerEntities)
             {
-                commands.add(((EntityPlayer)entityPlayer).getCommandSenderName());
+                commands.add(((EntityPlayer)entityPlayer).getName());
             }
         }
         return commands;

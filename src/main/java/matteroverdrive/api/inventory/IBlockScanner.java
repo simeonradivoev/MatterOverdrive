@@ -11,4 +11,5 @@ public interface IBlockScanner
 {
     MovingObjectPosition getScanningPos(ItemStack itemStack,EntityPlayer player);
     boolean destroysBlocks(ItemStack itemStack);
+    boolean showsGravitationalWaves(ItemStack itemStack);
 }

@@ -12,7 +12,7 @@ import java.util.Collection;
  */
 public class TileEntityInventory extends Inventory
 {
-    TileEntity entity;
+    final TileEntity entity;
 
     public TileEntityInventory(TileEntity entity, String name) {
         this(entity, name, new ArrayList<>());
@@ -44,6 +44,6 @@ public class TileEntityInventory extends Inventory
         {
             return usableCondition.usableByPlayer(player);
         }
-        return entity.getWorldObj().getTileEntity(entity.xCoord, entity.yCoord, entity.zCoord) != entity ? false : player.getDistanceSq((double)entity.xCoord + 0.5D, (double)entity.yCoord + 0.5D, (double)entity.zCoord + 0.5D) <= 64.0D;
+        return entity.getWorld().getTileEntity(entity.getPos()) != entity ? false : player.getDistanceSq((double)entity.getPos().getX() + 0.5D, (double)entity.getPos().getY() + 0.5D, (double)entity.getPos().getZ() + 0.5D) <= 64.0D;
     }
 }

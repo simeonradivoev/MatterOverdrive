@@ -18,8 +18,7 @@
 
 package matteroverdrive.entity.monster;
 
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
+import com.google.common.base.Predicate;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -47,12 +46,6 @@ public class EntityMutantScientist extends EntityMob
     }
 
     @Override
-    protected boolean isAIEnabled()
-    {
-        return true;
-    }
-
-    @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(256);
@@ -60,10 +53,10 @@ public class EntityMutantScientist extends EntityMob
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4D);
     }
 
-    private class TargetSelector implements IEntitySelector
+    private class TargetSelector implements Predicate<EntityLivingBase>
     {
         @Override
-        public boolean isEntityApplicable(Entity entity)
+        public boolean apply(EntityLivingBase entity)
         {
             return !(entity instanceof EntityMutantScientist);
         }

@@ -39,7 +39,7 @@ public class ContainerWeaponStation extends ContainerMachine<TileEntityWeaponSta
     protected void init(InventoryPlayer inventory)
     {
         addSlotToContainer(new MOSlot(machine, machine.INPUT_SLOT, 8, 55));
-        for (int i = 0;i < 5;i++)
+        for (int i = 0;i < 6;i++)
         {
             addSlotToContainer(new SlotInventory(machine, machine.getInventoryContainer().getSlot(i),0,0));
         }

@@ -23,7 +23,7 @@ public interface IAndroid extends IInventory, IExtendedEntityProperties
      * @param level the level of the bionic stat.
      * @return returns true if the given bionic stat at the given level is unlocked.
      */
-    boolean isUnlocked(IBionicStat stat, int level);
+    boolean isUnlocked(IBioticStat stat, int level);
 
     /**
      * Gets the unlocked level for a given biotic stat.
@@ -31,7 +31,7 @@ public interface IAndroid extends IInventory, IExtendedEntityProperties
      * @param stat the bionic stat.
      * @return returns the unlocked level of the given bionic stat. Returns 0 if the stat is not unlocked.
      */
-    int getUnlockedLevel(IBionicStat stat);
+    int getUnlockedLevel(IBioticStat stat);
 
     /**
      * Is the Android Player currently turning into an Android.
@@ -52,7 +52,9 @@ public interface IAndroid extends IInventory, IExtendedEntityProperties
      * Return null if there is no active stat.
      * @return the active/selected biotic stat.
      */
-    IBionicStat getActiveStat();
+    IBioticStat getActiveStat();
+
+    void onEffectsUpdate(int effectId);
 
     //region Helper function
     static IAndroid getAndroid(EntityPlayer entityPlayer)

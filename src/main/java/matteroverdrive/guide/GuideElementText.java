@@ -55,7 +55,7 @@ public class GuideElementText extends GuideElementTextAbstract
 
             for (int c = 0;c < lines[i].chunks.size();c++)
             {
-                int y = marginTop + i * Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
+                int y = marginTop + i * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
                 TextChunk chunk = lines[i].chunks.get(c);
 
                 if (chunk instanceof TextChunkLink)
@@ -74,7 +74,7 @@ public class GuideElementText extends GuideElementTextAbstract
                 }
 
 
-                Minecraft.getMinecraft().fontRenderer.drawString(lines[i].chunks.get(c).getText(), marginLeft + x, y, color.getColor());
+                Minecraft.getMinecraft().fontRendererObj.drawString(lines[i].chunks.get(c).getText(), marginLeft + x, y, color.getColor());
                 int w = calculateWidth(null,lines[i].chunks.get(c),null);
                 if (c > 0 && c < lines[i].chunks.size()-1)
                 {
@@ -91,6 +91,6 @@ public class GuideElementText extends GuideElementTextAbstract
         List<TextLine> lines = handleTextFormatting(entry, element.getTextContent(), this.width);
         this.lines = new TextLine[lines.size()];
         this.lines = lines.toArray(this.lines);
-        this.height = Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT * this.lines.length;
+        this.height = Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT * this.lines.length;
     }
 }

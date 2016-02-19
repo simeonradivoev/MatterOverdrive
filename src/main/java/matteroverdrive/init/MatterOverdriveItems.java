@@ -18,9 +18,11 @@
 
 package matteroverdrive.init;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
+import matteroverdrive.data.matter.ItemHandler;
+import matteroverdrive.items.weapon.module.*;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.items.*;
@@ -35,9 +37,6 @@ import matteroverdrive.items.starmap.*;
 import matteroverdrive.items.tools.TritaniumAxe;
 import matteroverdrive.items.tools.TritaniumPickaxe;
 import matteroverdrive.items.weapon.*;
-import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
-import matteroverdrive.items.weapon.module.WeaponModuleColor;
-import matteroverdrive.items.weapon.module.WeaponModuleSniperScope;
 import net.minecraft.item.*;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
@@ -54,7 +53,7 @@ public class MatterOverdriveItems
 	public static Phaser phaser;
 	public static Battery battery;
     public static Battery hc_battery;
-	public static MOBaseItem creative_battery;
+	public static Battery creative_battery;
 	public static MatterDust matter_dust;
 	public static MatterDust matter_dust_refined;
     public static IsolinearCircuit isolinear_circuit;
@@ -81,7 +80,7 @@ public class MatterOverdriveItems
     public static ItemBuildingBase buildingBase;
     public static AndroidPill androidPill;
     public static NetworkFlashDrive networkFlashDrive;
-    public static CreativePatternDrive creativePatternDrive;
+    //public static CreativePatternDrive creativePatternDrive;
     public static PhaserRifle phaserRifle;
     public static EnergyPack energyPack;
     public static TransportFlashDrive transportFlashDrive;
@@ -111,6 +110,8 @@ public class MatterOverdriveItems
     public static MOBaseItem weaponReceiver;
     public static MOBaseItem plasmaCore;
     public static PortableDecomposer portableDecomposer;
+    public static WeaponModuleRicochet weaponModuleRicochet;
+    public static WeaponModuleHoloSights weaponModuleHoloSights;
 
     public static Item.ToolMaterial toolMaterialTritanium;
     public static ItemArmor.ArmorMaterial armorMaterialTritanium;
@@ -118,7 +119,7 @@ public class MatterOverdriveItems
 	public static void init(FMLPreInitializationEvent event)
 	{
         toolMaterialTritanium = EnumHelper.addToolMaterial("tritanium",2,3122,6f,2f,14);
-        armorMaterialTritanium = EnumHelper.addArmorMaterial("tritanium",66,new int[]{4, 9, 7, 4}, 20);
+        armorMaterialTritanium = EnumHelper.addArmorMaterial("tritanium","tritanium",66,new int[]{4, 9, 7, 4}, 20);
 
 		matter_dust = new MatterDust("matter_dust",false);
 		matter_dust_refined = new MatterDust("matter_dust_refined",true);
@@ -128,7 +129,7 @@ public class MatterOverdriveItems
         hc_battery = new Battery("hc_battery",1 << 20,Reference.COLOR_YELLOW_STRIPES,4096,4096);
 		phaser = new Phaser("phaser");
 		emergency_ration = new ItemFood(8,0.8F,false);
-		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive_food).setTextureName(Reference.MOD_ID + ":" + "emergency_ration");
+		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
         earl_gray_tea = new EarlGrayTea("earl_gray_tea");
 		romulan_ale = new RomulanAle("romulan_ale");
 		me_conversion_matrix = new MOBaseItem("me_conversion_matrix");
@@ -150,7 +151,7 @@ public class MatterOverdriveItems
         security_protocol = new SecurityProtocol("security_protocol");
         spacetime_equalizer = new SpacetimeEqualizer("spacetime_equalizer");
         wrench = new Wrench("tritanium_wrench");
-        androidParts = new RougeAndroidParts("rouge_android_part");
+        androidParts = new RougeAndroidParts("rogue_android_part");
         forceFieldEmitter = new MOBaseItem("forcefield_emitter");
         shipFactory = new ShipFactory("ship_factory");
         scoutShip = new ItemScoutShip("scout_ship");
@@ -158,7 +159,7 @@ public class MatterOverdriveItems
         buildingBase = new ItemBuildingBase("building_base");
         androidPill = new AndroidPill("android_pill");
         networkFlashDrive = new NetworkFlashDrive("network_flash_drive",Reference.COLOR_YELLOW_STRIPES);
-        creativePatternDrive = new CreativePatternDrive("creative_pattern_drive",0);
+        //creativePatternDrive = new CreativePatternDrive("creative_pattern_drive",0);
         phaserRifle = new PhaserRifle("phaser_rifle");
         energyPack = new EnergyPack("energy_pack");
         transportFlashDrive = new TransportFlashDrive("transport_flash_drive",Reference.COLOR_HOLO_GREEN);
@@ -170,12 +171,12 @@ public class MatterOverdriveItems
         omniTool = new OmniTool("omni_tool");
         tritaniumAxe = new TritaniumAxe("tritanium_axe");
         tritaniumPickaxe = new TritaniumPickaxe("tritanium_pickaxe");
-        tritaniumSword = (ItemSword)new ItemSword(toolMaterialTritanium).setUnlocalizedName("tritanium_sword").setTextureName(Reference.MOD_ID + ":" + "tritanium_sword");
-        tritaniumHoe = (ItemHoe)new ItemHoe(toolMaterialTritanium).setUnlocalizedName("tritanium_hoe").setTextureName(Reference.MOD_ID + ":" + "tritanium_hoe");
-        tritaniumHelemet = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,0).setUnlocalizedName("tritanium_helmet").setTextureName(Reference.MOD_ID + ":" + "tritanium_helmet");
-        tritaniumChestplate = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,1).setUnlocalizedName("tritanium_chestplate").setTextureName(Reference.MOD_ID + ":" + "tritanium_chestplate");
-        tritaniumLeggings = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,2).setUnlocalizedName("tritanium_leggings").setTextureName(Reference.MOD_ID + ":" + "tritanium_leggings");
-        tritaniumBoots = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,3).setUnlocalizedName("tritanium_boots").setTextureName(Reference.MOD_ID + ":" + "tritanium_boots");
+        tritaniumSword = (ItemSword)new ItemSword(toolMaterialTritanium).setUnlocalizedName("tritanium_sword");
+        tritaniumHoe = (ItemHoe)new ItemHoe(toolMaterialTritanium).setUnlocalizedName("tritanium_hoe");
+        tritaniumHelemet = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,0).setUnlocalizedName("tritanium_helmet");
+        tritaniumChestplate = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,1).setUnlocalizedName("tritanium_chestplate");
+        tritaniumLeggings = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,2).setUnlocalizedName("tritanium_leggings");
+        tritaniumBoots = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,3).setUnlocalizedName("tritanium_boots");
         contract = new Contract("contract");
         plasmaShotgun = new PlasmaShotgun("plasma_shotgun");
         ionSniper = new IonSniper("ion_sniper");
@@ -188,6 +189,8 @@ public class MatterOverdriveItems
         weaponReceiver = new MOBaseItem("weapon_receiver");
         plasmaCore = new MOBaseItem("plasma_core");
         portableDecomposer = new PortableDecomposer("portable_decomposer",128000,256,512,0.1f);
+        weaponModuleRicochet = new WeaponModuleRicochet("weapon_module_ricochet");
+        weaponModuleHoloSights = new WeaponModuleHoloSights("weapon_module_holo_sights");
 	}
 
 	public static void register(FMLInitializationEvent event)
@@ -208,13 +211,13 @@ public class MatterOverdriveItems
         machine_casing.register();
         s_magnet.register();
         dilithium_ctystal.register();
-        MatterOverdrive.matterRegistry.addToBlacklist(dilithium_ctystal);
+        MatterOverdrive.matterRegistry.register(dilithium_ctystal,new ItemHandler(0,true));
         tritanium_ingot.register();
-        MatterOverdrive.matterRegistry.addToBlacklist(tritanium_ingot);
+        MatterOverdrive.matterRegistry.register(tritanium_ingot,new ItemHandler(0,true));
         tritanium_dust.register();
-        MatterOverdrive.matterRegistry.addToBlacklist(tritanium_dust);
+        MatterOverdrive.matterRegistry.register(tritanium_dust,new ItemHandler(0,true));
         tritanium_plate.register();
-        MatterOverdrive.matterRegistry.addToBlacklist(tritanium_plate);
+        MatterOverdrive.matterRegistry.register(tritanium_plate,new ItemHandler(0,true));
         pattern_drive.register();
         weapon_module_color.register();
         weapon_module_barrel.register();
@@ -232,7 +235,7 @@ public class MatterOverdriveItems
         buildingBase.register();
         androidPill.register();
         networkFlashDrive.register();
-        creativePatternDrive.register();
+        //creativePatternDrive.register();
         phaserRifle.register();
         energyPack.register();
         transportFlashDrive.register();
@@ -254,6 +257,8 @@ public class MatterOverdriveItems
         weaponReceiver.register();
         plasmaCore.register();
         portableDecomposer.register();
+        weaponModuleRicochet.register();
+        weaponModuleHoloSights.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);
@@ -302,6 +307,7 @@ public class MatterOverdriveItems
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(weapon_module_barrel,WeaponModuleBarrel.FIRE_BARREL_ID,1,1,8));
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(weapon_module_barrel,WeaponModuleBarrel.HEAL_BARREL_ID,1,1,10));
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(weapon_module_barrel,WeaponModuleBarrel.EXPLOSION_BARREL_ID,1,1,5));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(weaponModuleRicochet),1,1,5));
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(tritaniumSpine),1,1,10));
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(androidParts,0,1,2,15));
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(androidParts,1,1,2,15));

@@ -18,11 +18,10 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
 import matteroverdrive.Reference;
+import matteroverdrive.api.container.IMachineWatcher;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.weapon.IWeaponColor;
-import matteroverdrive.data.BlockPos;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.ModuleSlot;
 import matteroverdrive.data.inventory.TeleportFlashDriveSlot;
@@ -34,16 +33,22 @@ import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.configs.ConfigPropertyInteger;
 import matteroverdrive.machines.configs.ConfigPropertyString;
+import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.util.WeaponHelper;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.*;
 
@@ -55,7 +60,7 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
     public int FLASH_DRIVE_SLOT_START;
     public static final int FLASH_DRIVE_COUNT = 6;
     public int COLOR_MODULE_SLOT;
-    private Set<EntityRougeAndroidMob> spawnedAndroids;
+    private final Set<EntityRougeAndroidMob> spawnedAndroids;
 
     public TileEntityAndroidSpawner()
     {
@@ -82,9 +87,9 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
 
         if (!worldObj.isRemote)
         {
@@ -107,20 +112,20 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
 
                         double spawnRange = getSpawnRange();
 
-                        double x = (double) xCoord + MathHelper.clamp_double(worldObj.rand.nextGaussian(),0,1) * spawnRange;
-                        double y = (double) (yCoord + worldObj.rand.nextInt(3) - 1);
-                        double z = (double) zCoord + MathHelper.clamp_double(worldObj.rand.nextGaussian(),0,1) * spawnRange;
-                        int topY = worldObj.getHeightValue((int)x,(int)z);
-                        topY = Math.min(topY,yCoord+3);
+                        double x = (double) getPos().getX() + MathHelper.clamp_double(worldObj.rand.nextGaussian(),0,1) * spawnRange;
+                        double y = (double) (getPos().getY() + worldObj.rand.nextInt(3) - 1);
+                        double z = (double) getPos().getZ() + MathHelper.clamp_double(worldObj.rand.nextGaussian(),0,1) * spawnRange;
+                        int topY = worldObj.getHeight(new BlockPos(x,y,z)).getY();
+                        topY = Math.min(topY,getPos().getY()+3);
                         entity.setLocationAndAngles(x, topY, z, worldObj.rand.nextFloat() * 360.0F, 0.0F);
 
                         if (entity.getCanSpawnHere(true,true,true))
                         {
-                            entity.onSpawnWithEgg((IEntityLivingData) null);
-                            entity.setSpawnerPosition(new BlockPos(this));
-                            entity.func_110163_bv();
+                            entity.onInitialSpawn(worldObj.getDifficultyForLocation(getPos()), null);
+                            entity.setSpawnerPosition(getPos());
+                            entity.enablePersistence();
                             addSpawnedAndroid(entity);
-                            worldObj.playAuxSFX(2004, xCoord, yCoord, zCoord, 0);
+                            worldObj.playAuxSFX(2004, getPos(), 0);
                             ScorePlayerTeam team = getTeam();
                             if (team != null)
                             {
@@ -172,18 +177,18 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
             ItemStack flashDrive = inventory.getSlot(i).getItem();
             if (flashDrive != null && flashDrive.getItem() instanceof TransportFlashDrive)
             {
-                BlockPos position = ((TransportFlashDrive) flashDrive.getItem()).getTraget(flashDrive);
+                BlockPos position = ((TransportFlashDrive) flashDrive.getItem()).getTarget(flashDrive);
                 if (position != null)
-                    paths.add(Vec3.createVectorHelper(position.x,position.y,position.z));
+                    paths.add(new Vec3(position));
             }
         }
 
         if (paths.size() <= 0)
         {
-            androidMob.setPath(new Vec3[]{Vec3.createVectorHelper(xCoord,yCoord,zCoord)},getSpawnRange());
+            androidMob.setPath(new Vec3[]{new Vec3(getPos())},getSpawnRange());
         }else
         {
-            androidMob.setPath(paths.toArray(new Vec3[]{}),getSpawnRange());
+            androidMob.setPath(paths.toArray(new Vec3[paths.size()]),getSpawnRange());
         }
     }
 
@@ -259,12 +264,6 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
     }
 
     @Override
-    protected void onActiveChange()
-    {
-
-    }
-
-    @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type)
     {
         return false;
@@ -275,7 +274,7 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
     {
         if (side == Side.SERVER)
         {
-            for (Entity entity : (List<Entity>)worldObj.loadedEntityList)
+            for (Entity entity : worldObj.loadedEntityList)
             {
                 if (entity instanceof EntityRougeAndroidMob)
                 {
@@ -290,21 +289,15 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z)
+    protected void onMachineEvent(MachineEvent event)
     {
 
     }
 
     @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving)
+    public int[] getSlotsForFace(EnumFacing side)
     {
-
-    }
-
-    @Override
-    public void onDestroyed()
-    {
-        removeAllAndroids();
+        return new int[0];
     }
 
     public void removeAllAndroids()

@@ -18,7 +18,12 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.api.container.IMachineWatcher;
+import matteroverdrive.machines.events.MachineEvent;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.quest.Quest;
@@ -65,9 +70,9 @@ public class TileEntityMachineContractMarket extends MOTileEntityMachine
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         if (!worldObj.isRemote)
         {
             manageContractGeneration();
@@ -172,7 +177,8 @@ public class TileEntityMachineContractMarket extends MOTileEntityMachine
     }
 
     @Override
-    protected void onActiveChange() {
+    protected void onMachineEvent(MachineEvent event)
+    {
 
     }
 
@@ -182,23 +188,8 @@ public class TileEntityMachineContractMarket extends MOTileEntityMachine
     }
 
     @Override
-    protected void onAwake(Side side) {
-
-    }
-
-    @Override
-    public void onAdded(World world, int x, int y, int z)
+    public int[] getSlotsForFace(EnumFacing side)
     {
-        addGenerationDelay();
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
-
+        return new int[0];
     }
 }

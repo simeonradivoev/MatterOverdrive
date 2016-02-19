@@ -18,8 +18,8 @@
 
 package matteroverdrive.api.events;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import matteroverdrive.api.android.IBionicStat;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import matteroverdrive.api.android.IBioticStat;
 
 /**
  * Created by Simeon on 7/21/2015.
@@ -31,9 +31,9 @@ public class MOEventRegisterAndroidStat extends Event
     /**
      * The Bionic Stat to be registered
      */
-    public final IBionicStat stat;
+    public final IBioticStat stat;
 
-    public MOEventRegisterAndroidStat(IBionicStat stat)
+    public MOEventRegisterAndroidStat(IBioticStat stat)
     {
         this.stat = stat;
     }

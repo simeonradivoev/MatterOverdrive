@@ -1,9 +1,9 @@
 package matteroverdrive.network.packet.client.starmap;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.network.packet.PacketAbstract;
@@ -12,7 +12,6 @@ import matteroverdrive.starmap.GalaxyClient;
 import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.TravelEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class PacketUpdateTravelEvents extends PacketAbstract
     public void fromBytes(ByteBuf buf)
     {
         if (travelEvents == null)
-            travelEvents = new ArrayList<TravelEvent>();
+            travelEvents = new ArrayList<>();
 
         int size = buf.readInt();
         for (int i = 0;i < size;i++)
@@ -51,20 +50,20 @@ public class PacketUpdateTravelEvents extends PacketAbstract
     public void toBytes(ByteBuf buf)
     {
         buf.writeInt(travelEvents.size());
-        for (int i = 0;i < travelEvents.size();i++)
+        for (TravelEvent travelEvent : travelEvents)
         {
-            travelEvents.get(i).writeToBuffer(buf);
+            travelEvent.writeToBuffer(buf);
         }
     }
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketUpdateTravelEvents>
     {
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketUpdateTravelEvents message, MessageContext ctx)
+        @SideOnly(Side.CLIENT)
+        public void handleClientMessage(EntityPlayerSP player, PacketUpdateTravelEvents message, MessageContext ctx)
         {
             GalaxyClient.getInstance().getTheGalaxy().setTravelEvents(message.travelEvents);
             notifyChange();
-            return null;
         }
 
         @SideOnly(Side.CLIENT)

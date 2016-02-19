@@ -18,12 +18,8 @@
 
 package matteroverdrive.init;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.Reference;
-import matteroverdrive.client.render.IconConnectedTexture;
-import matteroverdrive.proxy.ClientProxy;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 
 /**
@@ -31,7 +27,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
  */
 public class MatterOverdriveIcons
 {
-    public static IIcon Base;
+    /*public static IIcon Base;
     public static IIcon Recycler;
     public static IIcon Vent;
     public static IIcon Vent2;
@@ -113,5 +109,5 @@ public class MatterOverdriveIcons
     public static IIcon register(IIconRegister register,String name)
     {
         return register.registerIcon(Reference.MOD_ID + ":" + name);
-    }
+    }*/
 }

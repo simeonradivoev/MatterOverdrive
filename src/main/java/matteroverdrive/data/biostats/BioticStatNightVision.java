@@ -19,12 +19,12 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.client.sound.MOPositionedSound;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
@@ -44,7 +44,7 @@ import java.util.EnumSet;
  */
 public class BioticStatNightVision extends AbstractBioticStat implements IConfigSubscriber
 {
-    public static int ENERGY_PER_TICK = 16;
+    private static int ENERGY_PER_TICK = 16;
 
     public BioticStatNightVision(String name, int xp) {
         super(name, xp);
@@ -82,10 +82,10 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
         }
     }
 
-    public void setActive(AndroidPlayer androidPlayer,int level,boolean active)
+    private void setActive(AndroidPlayer androidPlayer, int level, boolean active)
     {
         androidPlayer.getPlayer().addPotionEffect(new PotionEffect(Potion.nightVision.id, 500));
-        androidPlayer.getEffects().setBoolean("Nightvision", active);
+        androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_NIGHTVISION,active);
         androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
     }
 
@@ -98,7 +98,7 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
             {
                 if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,level,android)))
                 {
-                    setActive(android, level, !android.getEffects().getBoolean("Nightvision"));
+                    setActive(android, level, !android.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_NIGHTVISION));
                 }
             }else
             {
@@ -111,9 +111,9 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     }
 
     @SideOnly(Side.CLIENT)
-    protected void playSound(AndroidPlayer android)
+    private void playSound(AndroidPlayer android)
     {
-        if (!android.getEffects().getBoolean("Nightvision"))
+        if (!android.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_NIGHTVISION))
         {
             MOPositionedSound sound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":night_vision"), 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f);
             sound.setAttenuationType(ISound.AttenuationType.NONE);
@@ -153,7 +153,7 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
 
     @Override
     public boolean isActive(AndroidPlayer androidPlayer, int level) {
-        return androidPlayer.getEffects().getBoolean("Nightvision");
+        return androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_NIGHTVISION);
     }
 
     @Override
@@ -166,6 +166,12 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     public boolean isEnabled(AndroidPlayer androidPlayer,int level)
     {
         return super.isEnabled(androidPlayer,level) && androidPlayer.hasEnoughEnergyScaled(ENERGY_PER_TICK);
+    }
+
+    @Override
+    public boolean showOnHud(AndroidPlayer android, int level)
+    {
+        return isActive(android,level);
     }
 
     @Override

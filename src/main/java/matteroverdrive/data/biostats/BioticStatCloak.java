@@ -20,7 +20,7 @@ package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
 import matteroverdrive.Reference;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
@@ -34,7 +34,7 @@ import java.util.EnumSet;
  */
 public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscriber
 {
-    public static int ENERGY_PER_TICK = 128;
+    private static int ENERGY_PER_TICK = 128;
 
     public BioticStatCloak(String name, int xp) {
         super(name, xp);
@@ -76,13 +76,13 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     {
         if (this.equals(android.getActiveStat()) && server)
         {
-            setActive(android,level,!android.getEffects().getBoolean("Cloaked"));
+            setActive(android,level,!android.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_CLOAKED));
         }
     }
 
-    public void setActive(AndroidPlayer android, int level, boolean active)
+    private void setActive(AndroidPlayer android, int level, boolean active)
     {
-        android.getEffects().setBoolean("Cloaked", active);
+        android.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_CLOAKED,active);
         android.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS), true);
     }
 
@@ -115,7 +115,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     @Override
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
-        return androidPlayer.getEffects().getBoolean("Cloaked") && !androidPlayer.getPlayer().isUsingItem();
+        return androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_CLOAKED) && !androidPlayer.getPlayer().isUsingItem();
     }
 
     @Override
@@ -128,6 +128,12 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     public boolean isEnabled(AndroidPlayer androidPlayer, int level)
     {
         return super.isEnabled(androidPlayer,level) && androidPlayer.hasEnoughEnergyScaled(ENERGY_PER_TICK);
+    }
+
+    @Override
+    public boolean showOnHud(AndroidPlayer android, int level)
+    {
+        return isActive(android,level);
     }
 
     @Override

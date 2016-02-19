@@ -1,9 +1,17 @@
 package matteroverdrive.client.render.tileentity;
 
 import matteroverdrive.tile.TileEntityWeaponStation;
+import matteroverdrive.util.RenderUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Created by Simeon on 4/17/2015.
@@ -27,17 +35,23 @@ public class TileEntityRendererWeaponStation extends TileEntityRendererStation<T
             {
                 if (itemEntity == null)
                 {
-                    itemEntity = new EntityItem(weaponStation.getWorldObj(), weaponStation.xCoord, weaponStation.yCoord, weaponStation.zCoord, stack);
+                    itemEntity = new EntityItem(weaponStation.getWorld(), weaponStation.getPos().getX(), weaponStation.getPos().getY(), weaponStation.getPos().getZ(), stack);
                 }
                 else if (!ItemStack.areItemStacksEqual(itemEntity.getEntityItem(), stack))
                 {
                     itemEntity.setEntityItemStack(stack);
                 }
 
-                beginHolo(weaponStation);
-                itemEntity.hoverStart = weaponStation.getWorldObj().getWorldTime() * 0.05f + (float) noise * 10;
-                RenderManager.instance.func_147939_a(itemEntity, x + 0.5f, y + 0.8f, z + 0.5f, 0, 0, true);
-                endHolo();
+                itemEntity.hoverStart = weaponStation.getWorld().getWorldTime();
+                GlStateManager.translate(x+0.5f,y+0.8f,z+0.5f);
+                GlStateManager.scale(0.5,0.5,0.5);
+                RenderHelper.enableStandardItemLighting();
+                GlStateManager.rotate(getWorld().getWorldTime(),0,1,0);
+                RenderUtils.bindTexture(TextureMap.locationBlocksTexture);
+                IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(stack);
+                model = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.GROUND);
+                Minecraft.getMinecraft().getRenderItem().renderItem(stack,model);
+                RenderHelper.disableStandardItemLighting();
             }
         }else
         {

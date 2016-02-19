@@ -18,18 +18,22 @@
 
 package matteroverdrive.client.render;
 
-import net.minecraft.util.IIcon;
+
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 8/28/2015.
  */
+@SideOnly(Side.CLIENT)
 public class HoloIcon
 {
-    private IIcon icon;
+    private TextureAtlasSprite icon;
     private int originalWidth;
     private int originalHeight;
 
-    public HoloIcon(IIcon icon, int originalX, int originalY)
+    public HoloIcon(TextureAtlasSprite icon, int originalX, int originalY)
     {
         this.icon = icon;
         setOriginalSize(originalX, originalY);
@@ -51,8 +55,10 @@ public class HoloIcon
         return originalHeight;
     }
 
-    public IIcon getIcon()
+    public TextureAtlasSprite getIcon()
     {
         return icon;
     }
+
+    public void setIcon(TextureAtlasSprite icon){this.icon = icon;}
 }

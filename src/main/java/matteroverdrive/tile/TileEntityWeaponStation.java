@@ -18,9 +18,6 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
@@ -29,30 +26,36 @@ import matteroverdrive.data.ItemInventoryWrapper;
 import matteroverdrive.data.inventory.ModuleSlot;
 import matteroverdrive.data.inventory.WeaponSlot;
 import matteroverdrive.machines.MOTileEntityMachine;
+import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.util.WeaponHelper;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
 /**
  * Created by Simeon on 4/13/2015.
  */
-public class TileEntityWeaponStation extends MOTileEntityMachine implements IWailaBodyProvider
+public class TileEntityWeaponStation extends MOTileEntityMachine
 {
     public int INPUT_SLOT;
     public int BATTERY_MODULE;
     public int COLOR_MODULE;
     public int BARREL_MODULE;
     public int SIGHTS_MODULE;
-    public int OTHER_MODULE;
+    public int OTHER_MODULE_ONE;
+    public int OTHER_MODULE_TWO;
 
     public TileEntityWeaponStation()
     {
@@ -60,19 +63,15 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
     }
 
     @Override
-    protected void onAwake(Side side) {
-
-    }
-
-    @Override
     protected void RegisterSlots(Inventory inventory)
     {
-        WeaponSlot weaponSlot = new WeaponSlot(true);
+        WeaponSlot weaponSlot = (WeaponSlot)new WeaponSlot(true).setSendToClient(true);
         BATTERY_MODULE = inventory.AddSlot(new ModuleSlot(false, Reference.MODULE_BATTERY,weaponSlot));
         COLOR_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_COLOR,weaponSlot));
         BARREL_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_BARREL,weaponSlot));
         SIGHTS_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_SIGHTS,weaponSlot));
-        OTHER_MODULE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_OTHER,weaponSlot));
+        OTHER_MODULE_ONE = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_OTHER,weaponSlot));
+        OTHER_MODULE_TWO = inventory.AddSlot(new ModuleSlot(false,Reference.MODULE_OTHER,weaponSlot));
         INPUT_SLOT = inventory.AddSlot(weaponSlot);
         super.RegisterSlots(inventory);
     }
@@ -81,7 +80,7 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
     {
         if (inventory.getSlot(INPUT_SLOT).getItem() != null && WeaponHelper.isWeapon(inventory.getSlot(INPUT_SLOT).getItem()))
         {
-            return new ItemInventoryWrapper(inventory.getSlot(INPUT_SLOT).getItem(),5);
+            return new ItemInventoryWrapper(inventory.getSlot(INPUT_SLOT).getItem(),6);
         }
         return inventory;
     }
@@ -104,11 +103,6 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
     @Override
     public float soundVolume() {
         return 0;
-    }
-
-    @Override
-    protected void onActiveChange() {
-
     }
 
     @Override
@@ -154,18 +148,6 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot)
-    {
-        if (slot != INPUT_SLOT)
-        {
-            return getActiveInventory().getStackInSlotOnClosing(slot);
-        }else
-        {
-            return super.getStackInSlotOnClosing(slot);
-        }
-    }
-
-    @Override
     public void setInventorySlotContents(int slot, ItemStack itemStack)
     {
         if (slot != INPUT_SLOT)
@@ -190,26 +172,23 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
-        return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord + 1,yCoord + 2,zCoord + 1);
+        return new AxisAlignedBB(getPos().getX(),getPos().getY(),getPos().getZ(),getPos().getX() + 1,getPos().getY() + 2,getPos().getZ() + 1);
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
+    protected void onMachineEvent(MachineEvent event)
+    {
 
     }
 
     @Override
-    public void onDestroyed() {
-
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[0];
     }
 
 //	WAILA
-	@Override
+/*	@Override
 	@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		TileEntity te = accessor.getTileEntity();
@@ -227,5 +206,5 @@ public class TileEntityWeaponStation extends MOTileEntityMachine implements IWai
 		}
 
 		return currenttip;
-	}
+	}*/
 }

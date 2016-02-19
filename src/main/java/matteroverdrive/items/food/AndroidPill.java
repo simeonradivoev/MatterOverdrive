@@ -18,21 +18,19 @@
 
 package matteroverdrive.items.food;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.MathHelper;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ChestGenHooks;
@@ -45,23 +43,29 @@ import java.util.List;
  */
 public class AndroidPill extends ItemFood
 {
-    IIcon overlay;
+    public static final String[] names = new String[]{"red","blue","yellow"};
 
     public AndroidPill(String name)
     {
         super(0, 0, false);
         setUnlocalizedName(name);
-        setTextureName(Reference.MOD_ID + ":" + name);
         setAlwaysEdible();
         hasSubtypes = true;
     }
+
+    @Override
+    public int getMetadata(int damage){return damage;}
 
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
     {
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
         {
-            infos.add(EnumChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName(itemstack) + ".details"));
+            String[] infoList = MOStringHelper.translateToLocal(getUnlocalizedName(itemstack) + ".details").split("/n");
+            for (String info : infoList)
+            {
+                infos.add(EnumChatFormatting.GRAY + info);
+            }
         }
         else
         {
@@ -70,9 +74,9 @@ public class AndroidPill extends ItemFood
 
         if (itemstack.getItemDamage() == 2) {
             AndroidPlayer androidPlayer = AndroidPlayer.get(player);
-            if (androidPlayer != null && androidPlayer.isAndroid()) {
-
-                infos.add(EnumChatFormatting.GREEN + "XP:" + androidPlayer.getResetXPRequired());
+            if (androidPlayer != null && androidPlayer.isAndroid())
+            {
+                infos.add(EnumChatFormatting.GREEN + "XP:" + androidPlayer.getResetXPRequired() + "l");
             } else {
                 infos.add(EnumChatFormatting.RED + "Not an Android.");
             }
@@ -87,17 +91,10 @@ public class AndroidPill extends ItemFood
     @Override
     public String getUnlocalizedName(ItemStack itemStack)
     {
-        if (itemStack.getItemDamage() == 1)
-        {
-            return getUnlocalizedName() + "_blue";
-        }else if (itemStack.getItemDamage() == 2)
-        {
-            return getUnlocalizedName() + "_yellow";
-        }
-        return getUnlocalizedName() + "_red";
+        return getUnlocalizedName() + "_" + names[MathHelper.clamp_int(itemStack.getItemDamage(),0,names.length-1)];
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
@@ -110,7 +107,7 @@ public class AndroidPill extends ItemFood
     public boolean requiresMultipleRenderPasses()
     {
         return true;
-    }
+    }*/
 
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs creativeTabs, List list)
@@ -120,13 +117,13 @@ public class AndroidPill extends ItemFood
         list.add(new ItemStack(item,1,2));
     }
 
-    @Override
+    /*@Override
     public int getRenderPasses(int metadata)
     {
         return 2;
-    }
+    }*/
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamageForRenderPass(int damage, int pass)
     {
@@ -137,7 +134,7 @@ public class AndroidPill extends ItemFood
         {
             return itemIcon;
         }
-    }
+    }*/
 
     @Override
     @SideOnly(Side.CLIENT)

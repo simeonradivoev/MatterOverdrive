@@ -18,27 +18,24 @@
 
 package matteroverdrive.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 
 import java.util.List;
 
 public class Battery extends MOItemEnergyContainer
 {
-	Color color;
-	IIcon overlay;
+	private final Color color;
 
 	public Battery(String name, int capacity,Color color,int input,int output)
 	{
@@ -64,7 +61,7 @@ public class Battery extends MOItemEnergyContainer
         infos.add(EnumChatFormatting.GRAY + MOStringHelper.translateToLocal("gui.tooltip.energy.io") + ": " + maxReceive + "/" + maxExtract + MOEnergyHelper.ENERGY_UNIT + "/t");
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public boolean requiresMultipleRenderPasses()
     {
@@ -96,7 +93,7 @@ public class Battery extends MOItemEnergyContainer
 		{
 			return itemIcon;
 		}
-	}
+	}*/
 
 	@Override
 	@SideOnly(Side.CLIENT)

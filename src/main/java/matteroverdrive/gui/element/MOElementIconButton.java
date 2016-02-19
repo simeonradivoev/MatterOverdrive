@@ -24,6 +24,7 @@ import matteroverdrive.container.IButtonHandler;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -49,12 +50,10 @@ public class MOElementIconButton extends MOElementButton
     {
         if (icon != null)
         {
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            GlStateManager.enableAlpha();
             ClientProxy.holoIcons.bindSheet();
             if (iconColor != null)
-                RenderUtils.applyColor(iconColor);
-            else
-                GL11.glColor3f(1,1,1);
+                RenderUtils.applyColorWithAlpha(iconColor);
             ClientProxy.holoIcons.renderIcon(icon,posX - icon.getOriginalWidth()/2 + sizeX/2,posY - icon.getOriginalHeight()/2 + sizeY/2);
         }
     }

@@ -2,6 +2,7 @@ package matteroverdrive.network.packet.bi;
 
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
+import net.minecraft.util.BlockPos;
 
 /**
  * Created by Simeon on 6/12/2015.
@@ -14,13 +15,13 @@ public class PacketMatterScannerGetPattern extends TileEntityUpdatePacket
     short type;
 
     public PacketMatterScannerGetPattern(){super();}
-    public PacketMatterScannerGetPattern(int x, int y, int z)
+    public PacketMatterScannerGetPattern(BlockPos pos)
     {
-        super(x,y,z);
+        super(pos);
     }
-    public PacketMatterScannerGetPattern(int x,int y,int z,int id,short damage,short scannerSlot,short type)
+    public PacketMatterScannerGetPattern(BlockPos pos,int id,short damage,short scannerSlot,short type)
     {
-        this(x,y,z);
+        this(pos);
         this.id = id;
         this.damage = damage;
         this.scannerSlot = scannerSlot;

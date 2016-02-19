@@ -106,11 +106,6 @@ public class Galaxy extends SpaceBody
 
     }
 
-    private void manageDirty(World world)
-    {
-
-    }
-
     private void manageTravelEvents(World world)
     {
         Iterator<TravelEvent> travelEventIterator = travelEvents.iterator();
@@ -357,7 +352,7 @@ public class Galaxy extends SpaceBody
                 UUID ownerID = ((IShip)shipStack.getItem()).getOwnerID(shipStack);
                 if (ownerID != null)
                 {
-                    owner = world.func_152378_a(ownerID);
+                    owner = world.getPlayerEntityByUUID(ownerID);
                 }
                 return to.canAddShip(shipStack,owner);
             }

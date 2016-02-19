@@ -21,7 +21,7 @@ package matteroverdrive.data.biostats;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import matteroverdrive.data.MOAttributeModifier;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -33,7 +33,7 @@ import java.util.UUID;
  */
 public class BioticStatSpeed extends AbstractBioticStat
 {
-    UUID modifierID;
+    private final UUID modifierID;
 
     public BioticStatSpeed(String name, int xp) {
         super(name, xp);
@@ -47,7 +47,7 @@ public class BioticStatSpeed extends AbstractBioticStat
 
     }
 
-    public float getSpeedModify(int level)
+    private float getSpeedModify(int level)
     {
         return level * 0.1f;
     }

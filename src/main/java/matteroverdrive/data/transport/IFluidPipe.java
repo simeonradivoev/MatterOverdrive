@@ -10,5 +10,4 @@ import net.minecraft.tileentity.TileEntity;
 public interface IFluidPipe extends IPipe<FluidPipeNetwork>, IMatterHandler
 {
     TileEntity getTile();
-    void onNetworkUpdate();
 }

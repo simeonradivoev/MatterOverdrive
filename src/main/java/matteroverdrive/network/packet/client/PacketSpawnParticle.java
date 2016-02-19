@@ -1,10 +1,12 @@
 package matteroverdrive.network.packet.client;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.fx.Lightning;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.fx.AndroidTeleportParticle;
@@ -12,7 +14,6 @@ import matteroverdrive.fx.ShockwaveParticle;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 /**
@@ -21,9 +22,9 @@ import net.minecraft.world.World;
 public class PacketSpawnParticle extends PacketAbstract
 {
     String particleType;
-    double x,y,z;
+    double[] coordinates;
     int count;
-    int blending;
+    RenderParticlesHandler.Blending blending;
     float size;
 
     public PacketSpawnParticle()
@@ -31,17 +32,20 @@ public class PacketSpawnParticle extends PacketAbstract
 
     }
 
-    public PacketSpawnParticle(String particleType, double x, double y, double z, int count, int blending)
+    public PacketSpawnParticle(String particleType, double x, double y, double z, int count, RenderParticlesHandler.Blending blending)
     {
         this(particleType,x,y,z,count,blending,0);
     }
 
-    public PacketSpawnParticle(String particleType, double x, double y, double z, int count, int blending,float size)
+    public PacketSpawnParticle(String particleType, double x, double y, double z, int count, RenderParticlesHandler.Blending blending,float size)
+    {
+        this(particleType,new double[]{x,y,z},count,blending,size);
+    }
+
+    public PacketSpawnParticle(String particleType, double[] coordinates, int count, RenderParticlesHandler.Blending blending, float size)
     {
         this.particleType = particleType;
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.coordinates = coordinates;
         this.count = count;
         this.blending = blending;
         this.size = size;
@@ -50,32 +54,37 @@ public class PacketSpawnParticle extends PacketAbstract
     @Override
     public void fromBytes(ByteBuf buf) {
         particleType = ByteBufUtils.readUTF8String(buf);
-        x = buf.readDouble();
-        y = buf.readDouble();
-        z = buf.readDouble();
+        int coordSize = buf.readUnsignedByte();
+        coordinates = new double[coordSize];
+        for (int i = 0;i < coordSize;i++)
+        {
+            coordinates[i] = buf.readDouble();
+        }
         count = buf.readInt();
-        blending = buf.readByte();
-        size = buf.readableBytes();
+        blending = RenderParticlesHandler.Blending.values()[buf.readUnsignedByte()];
+        size = buf.readUnsignedByte();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf,particleType);
-        buf.writeDouble(x);
-        buf.writeDouble(y);
-        buf.writeDouble(z);
+        buf.writeByte(coordinates.length);
+        for (int i = 0;i < coordinates.length;i++)
+        {
+            buf.writeDouble(coordinates[i]);
+        }
         buf.writeInt(count);
-        buf.writeByte(blending);
+        buf.writeByte(blending.ordinal());
         buf.writeFloat(size);
     }
 
     public static class ClientHandler extends AbstractClientPacketHandler<PacketSpawnParticle>
     {
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketSpawnParticle message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketSpawnParticle message, MessageContext ctx)
         {
             spawnParticle(player.worldObj,message);
-            return null;
         }
 
         @SideOnly(Side.CLIENT)
@@ -84,14 +93,23 @@ public class PacketSpawnParticle extends PacketAbstract
             EntityFX particle = null;
             if (message.particleType.equalsIgnoreCase("teleport"))
             {
-                particle = new AndroidTeleportParticle(world,message.x,message.y,message.z);
+                particle = new AndroidTeleportParticle(world,message.coordinates[0],message.coordinates[1],message.coordinates[2]);
             }else if (message.particleType.equalsIgnoreCase("shockwave"))
             {
-                particle = new ShockwaveParticle(world,message.x,message.y,message.z,message.size);
+                particle = new ShockwaveParticle(world,message.coordinates[0],message.coordinates[1],message.coordinates[2],message.size);
+            }else if (message.particleType.equalsIgnoreCase("lightning"))
+            {
+                if (message.coordinates.length > 7)
+                {
+                    particle = new Lightning(world, new Vec3(message.coordinates[0], message.coordinates[1], message.coordinates[2]), new Vec3(message.coordinates[3], message.coordinates[4], message.coordinates[5]), (float) message.coordinates[6], (float) message.coordinates[7]);
+                }else if (message.coordinates.length > 5)
+                {
+                    particle = new Lightning(world, new Vec3(message.coordinates[0], message.coordinates[1], message.coordinates[2]), new Vec3(message.coordinates[3], message.coordinates[4], message.coordinates[5]));
+                }
             }
 
             if (particle != null) {
-                ClientProxy.renderHandler.getRenderParticlesHandler().addEffect(particle, RenderParticlesHandler.Blending.values()[message.blending]);
+                ClientProxy.renderHandler.getRenderParticlesHandler().addEffect(particle, message.blending);
             }
         }
     }

@@ -26,7 +26,9 @@ import matteroverdrive.entity.player.MOExtendedProperties;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -38,7 +40,7 @@ import java.util.Random;
  */
 public class QuestCommands extends CommandBase
 {
-    private Random random = new Random();
+    private final Random random = new Random();
 
     @Override
     public String getCommandName() {
@@ -58,7 +60,7 @@ public class QuestCommands extends CommandBase
     }
 
     @Override
-    public void processCommand(ICommandSender commandSender, String[] parameters)
+    public void processCommand(ICommandSender commandSender, String[] parameters) throws CommandException
     {
         if (parameters.length > 0)
         {
@@ -72,7 +74,7 @@ public class QuestCommands extends CommandBase
                         entityPlayer = getPlayer(commandSender,parameters[2]);
                     }else
                     {
-                        entityPlayer = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getCommandSenderName());
+                        entityPlayer = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getName());
                     }
 
                     if (entityPlayer != null)
@@ -108,7 +110,7 @@ public class QuestCommands extends CommandBase
                         entityPlayer = getPlayer(commandSender,parameters[2]);
                     }else
                     {
-                        entityPlayer = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getCommandSenderName());
+                        entityPlayer = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getName());
                     }
 
                     if (entityPlayer != null) {
@@ -151,7 +153,7 @@ public class QuestCommands extends CommandBase
                             entityPlayer = getPlayer(commandSender,parameters[2]);
                         }else
                         {
-                            entityPlayer = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getCommandSenderName());
+                            entityPlayer = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getName());
                         }
 
                         QuestStack questStack = MatterOverdrive.questFactory.generateQuestStack(random,quest);
@@ -174,7 +176,7 @@ public class QuestCommands extends CommandBase
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender commandSender, String[] parameters)
+    public List addTabCompletionOptions(ICommandSender commandSender, String[] parameters, BlockPos pos)
     {
         List<String> commands = new ArrayList<>();
 
@@ -203,7 +205,7 @@ public class QuestCommands extends CommandBase
         {
             for (Object player : commandSender.getEntityWorld().playerEntities)
             {
-                commands.add(((EntityPlayer)player).getCommandSenderName());
+                commands.add(((EntityPlayer)player).getName());
             }
         }
         return commands;

@@ -18,7 +18,8 @@
 
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonObject;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.events.MOEventDialogInteract;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
@@ -44,6 +45,12 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
     public static final int MAX_CREEPER_KILS = 5;
     public static final int MAX_GUNPOWDER_COUNT = 5;
     public static final int MAX_MUSHROOM_COUNT = 5;
+
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+
+    }
 
     @Override
     public String modifyInfo(QuestStack questStack, String info)
@@ -164,7 +171,7 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
             ItemStack itemStack = ((EntityItemPickupEvent) event).item.getEntityItem();
             if (itemStack != null)
             {
-                if (itemStack.getItem() instanceof ItemBlock && ((ItemBlock) itemStack.getItem()).field_150939_a == Blocks.red_mushroom && entityPlayer.worldObj.provider.dimensionId == -1)
+                if (itemStack.getItem() instanceof ItemBlock && ((ItemBlock) itemStack.getItem()).getBlock() == Blocks.red_mushroom && entityPlayer.worldObj.provider.getDimensionId() == -1)
                 {
                     initTag(questStack);
                     byte mushroomCount = getTag(questStack).getByte("MushroomCount");
@@ -196,7 +203,7 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
         }
         else if (event instanceof MOEventDialogInteract)
         {
-            if (((MOEventDialogInteract) event).npc instanceof EntityVillagerMadScientist && ((MOEventDialogInteract) event).dialogMessage == EntityVillagerMadScientist.cocktailOfAscensionComplete)
+            if (((MOEventDialogInteract) event).npc instanceof EntityVillagerMadScientist && ((MOEventDialogInteract) event).dialogOption == EntityVillagerMadScientist.cocktailOfAscensionComplete)
             {
                 initTag(questStack);
                 getTag(questStack).setBoolean("TalkedToGiver",true);
@@ -209,13 +216,13 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }

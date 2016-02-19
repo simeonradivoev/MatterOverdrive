@@ -1,6 +1,8 @@
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonObject;
+import matteroverdrive.util.MOLog;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
@@ -26,6 +28,8 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
     private int minSpawnRange;
     private int maxSpawnRange;
 
+    public QuestLogicSpawnMobs(){}
+
     public QuestLogicSpawnMobs(Class<? extends Entity>[] mobClasses,int minSpawnAmount,int maxSpawnAmount)
     {
         this.mobClasses = mobClasses;
@@ -36,6 +40,12 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
     public QuestLogicSpawnMobs(Class<? extends Entity> mobClass,int minSpawnAmount,int maxSpawnAmount)
     {
         this(new Class[]{mobClass},minSpawnAmount,maxSpawnAmount);
+    }
+
+    @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+
     }
 
     @Override
@@ -75,7 +85,7 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
         int spawnAmount = getSpawnAmount(questStack);
         for (int i = 0;i < spawnAmount;i++)
@@ -87,29 +97,29 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
                 positionSpawn(entity,entityPlayer);
                 if (entity instanceof EntityLiving)
                 {
-                    ((EntityLiving) entity).onSpawnWithEgg(null);
+                    ((EntityLiving) entity).onInitialSpawn(entity.worldObj.getDifficultyForLocation(entity.getPosition()),null);
                     if (customSpawnName != null)
                     {
-                        ((EntityLiving) entity).setCustomNameTag(customSpawnName);
+                        entity.setCustomNameTag(customSpawnName);
                     }
                 }
                 entityPlayer.worldObj.spawnEntityInWorld(entity);
 
             } catch (InstantiationException e)
             {
-                MatterOverdrive.log.error("Count not instantiate entity of type %s",mobClasses[getSpawnType(questStack)]);
+                MOLog.error("Count not instantiate entity of type %s",mobClasses[getSpawnType(questStack)]);
                 break;
             } catch (IllegalAccessException e)
             {
-                MatterOverdrive.log.error("Count not call private constructor for entity of type %s",mobClasses[getSpawnType(questStack)]);
+                MOLog.error("Count not call private constructor for entity of type %s",mobClasses[getSpawnType(questStack)]);
                 break;
             } catch (InvocationTargetException e)
             {
-                MatterOverdrive.log.error("Count not call constructor for entity of type %s",mobClasses[getSpawnType(questStack)]);
+                MOLog.error("Count not call constructor for entity of type %s",mobClasses[getSpawnType(questStack)]);
                 break;
             } catch (NoSuchMethodException e)
             {
-                MatterOverdrive.log.error("Count not find appropriate constructor for entity of type %s",mobClasses[getSpawnType(questStack)]);
+                MOLog.error("Count not find appropriate constructor for entity of type %s",mobClasses[getSpawnType(questStack)]);
                 break;
             }
         }
@@ -121,7 +131,7 @@ public class QuestLogicSpawnMobs extends AbstractQuestLogic
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }

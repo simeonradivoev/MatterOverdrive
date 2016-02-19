@@ -18,19 +18,19 @@
 
 package matteroverdrive.container;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 5/17/2015.
  */
 public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFusionReactorController>
 {
-    protected int energyPerTick;
+    private int energyPerTick;
 
     public ContainerFusionReactor(InventoryPlayer inventory, TileEntityMachineFusionReactorController machine)
     {
@@ -45,10 +45,10 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
     }
 
     @Override
-    public void addCraftingToCrafters(ICrafting icrafting)
+    public void onCraftGuiOpened(ICrafting icrafting)
     {
-        super.addCraftingToCrafters(icrafting);
-        icrafting.sendProgressBarUpdate(this, 0, this.machine.getEnergyPerTick());
+        super.onCraftGuiOpened(icrafting);
+        icrafting.sendProgressBarUpdate(this, 1, this.machine.getEnergyPerTick());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
             ICrafting icrafting = (ICrafting) crafter;
 
             if (this.energyPerTick != this.machine.getEnergyPerTick()) {
-                icrafting.sendProgressBarUpdate(this, 0, this.machine.getEnergyPerTick());
+                icrafting.sendProgressBarUpdate(this, 1, this.machine.getEnergyPerTick());
             }
         }
 
@@ -69,7 +69,8 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int slot, int newValue)
     {
-        if(slot == 0)
+        super.updateProgressBar(slot,newValue);
+        if(slot == 1)
             energyPerTick = newValue;
     }
 

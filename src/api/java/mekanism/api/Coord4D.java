@@ -218,7 +218,7 @@ public class Coord4D
 	 */
 	public static Coord4D get(TileEntity tileEntity)
 	{
-		return new Coord4D(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntity.getWorldObj().provider.dimensionId);
+		return new Coord4D(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntity.getWorld().provider.dimensionId);
 	}
 
 	/**
@@ -371,7 +371,7 @@ public class Coord4D
 	 */
 	public AxisAlignedBB getBoundingBox()
 	{
-		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+1, yCoord+1, zCoord+1);
+		return new AxisAlignedBB(xCoord, yCoord, zCoord, xCoord+1, yCoord+1, zCoord+1);
 	}
 
 	@Override

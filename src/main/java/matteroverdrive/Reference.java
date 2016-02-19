@@ -18,14 +18,14 @@
 
 package matteroverdrive;
 
-import cpw.mods.fml.common.Loader;
+import net.minecraftforge.fml.common.Loader;
 import matteroverdrive.client.data.Color;
 
 public class Reference
 {
 	public static final String MOD_ID = "mo";
 	public static final String MOD_NAME = "Matter Overdrive";
-	public static final String VERSION = "0.4.1";
+	public static final String VERSION = "0.4.2";
 	public static final String VERSION_DATE = "09.01.2016";
 	public static final String GUI_FACTORY_CLASS = "matteroverdrive.gui.GuiConfigFactory";
 	public static final String DEPEDNENCIES = "after:ThermalExpansion;after:exnihilo;after:EnderIO;";
@@ -49,7 +49,7 @@ public class Reference
 	public static final String PATH_SHADERS = "mo:shaders/";
 	public static final String PATH_ELEMENTS = PATH_GUI + "elements/";
 	public static final String PATH_ICON = PATH_GUI + "icons/";
-	public static final String PATH_ENTITIES = PATH_GFX + "entities/";
+	public static final String PATH_ENTETIES = PATH_GFX + "entities/";
     public static final String PATH_ITEM = PATH_GFX + "items/";
 	public static final String PATH_GUI_ITEM = PATH_GUI + "items/";
     public static final String PATH_MODEL = "mo:models/";
@@ -111,6 +111,7 @@ public class Reference
 	public static final int WS_MAX_HEAT = 9;
 	public static final int WS_ACCURACY = 10;
 	public static final int WS_SHOOT_COOLDOWN = 11;
+	public static final int WS_RICOCHET = 12;
 	//endregion
 
 	//region Request Packet Type

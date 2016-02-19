@@ -1,6 +1,8 @@
 package matteroverdrive.data.quest;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonObject;
+import matteroverdrive.util.MOJsonHelper;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestLogic;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
@@ -19,14 +21,28 @@ import java.util.Random;
  */
 public class GenericMultiQuest extends GenericQuest
 {
-    protected IQuestLogic[] logics;
+    protected final IQuestLogic[] logics;
     boolean sequential;
     boolean autoComplete;
+
+    public GenericMultiQuest(String title,JsonObject jsonObject,IQuestLogic[] questLogics)
+    {
+        super(title,jsonObject,null);
+        this.logics = questLogics;
+        configureLogics();
+        this.autoComplete = MOJsonHelper.getBool(jsonObject,"auto_complete",false);
+        this.sequential = MOJsonHelper.getBool(jsonObject,"sequential",false);
+    }
 
     public GenericMultiQuest(IQuestLogic[] questLogics, String title, int xpReward)
     {
         super(null, title, xpReward);
         this.logics = questLogics;
+        configureLogics();
+    }
+
+    private void configureLogics()
+    {
         for (int i = 0;i < logics.length;i++)
         {
             if (logics[i] instanceof AbstractQuestLogic)
@@ -123,11 +139,7 @@ public class GenericMultiQuest extends GenericQuest
     @Override
     public boolean areQuestStacksEqual(QuestStack questStackOne, QuestStack questStackTwo)
     {
-        if (questStackOne.getQuest() instanceof GenericMultiQuest && questStackTwo.getQuest() instanceof GenericMultiQuest)
-        {
-            return questStackOne.getQuest() == questStackTwo.getQuest();
-        }
-        return false;
+        return questStackOne.getQuest() instanceof GenericMultiQuest && questStackTwo.getQuest() instanceof GenericMultiQuest && questStackOne.getQuest() == questStackTwo.getQuest();
     }
 
     @Override
@@ -168,7 +180,7 @@ public class GenericMultiQuest extends GenericQuest
     {
         for (IQuestLogic logic : logics)
         {
-            logic.onCompleted(questStack,entityPlayer);
+            logic.onQuestCompleted(questStack,entityPlayer);
         }
     }
 

@@ -21,6 +21,8 @@ package matteroverdrive.fx;/* Created by Simeon on 10/18/2015. */
 import matteroverdrive.client.data.Color;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
 public class PhaserBoltRecoil extends EntityFX
@@ -79,11 +81,12 @@ public class PhaserBoltRecoil extends EntityFX
         return 1.0F;
     }
 
-    public void renderParticle(Tessellator tessellator, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
+    @Override
+    public void renderParticle(WorldRenderer worldRenderer, Entity entity, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
     {
         float f6 = ((float)this.particleAge + p_70539_2_) / (float)this.particleMaxAge;
         this.particleScale = this.lavaParticleScale * (1.0F - f6 * f6);
-        super.renderParticle(tessellator, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
+        super.renderParticle(worldRenderer,entity, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
     }
 
     /**

@@ -55,15 +55,15 @@ public class ElementSlotsList extends ElementBaseGroup
     }
 
     @Override
-    public void update(int mouseX, int mouseY)
+    public void update(int mouseX, int mouseY,float partialTicks)
     {
-        super.update(mouseX, mouseY);
+        super.update(mouseX, mouseY,partialTicks);
 
         int height = 0;
-        for (int i = 0;i < elements.size();i++)
+        for (MOElementBase element : elements)
         {
-            elements.get(i).setPosition(0,height);
-            height += elements.get(i).getHeight() + margin;
+            element.setPosition(0, height);
+            height += element.getHeight() + margin;
         }
     }
 

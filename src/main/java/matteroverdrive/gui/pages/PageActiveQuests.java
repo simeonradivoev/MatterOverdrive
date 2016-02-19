@@ -35,6 +35,7 @@ import matteroverdrive.network.packet.server.PacketQuestActions;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -76,7 +77,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
     @Override
     public FontRenderer getFontRenderer()
     {
-        return Minecraft.getMinecraft().fontRenderer;
+        return Minecraft.getMinecraft().fontRendererObj;
     }
 
     @Override
@@ -107,7 +108,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
     {
         super.drawForeground(mouseX,mouseY);
 
-        glEnable(GL_BLEND);
+        GlStateManager.enableBlend();
         RenderUtils.applyColorWithAlpha(Reference.COLOR_HOLO,0.2f);
         Minecraft.getMinecraft().getTextureManager().bindTexture(GuiAndroidHud.top_element_bg);
         RenderUtils.drawPlane(60,sizeY/2 - 10,0,174,11);
@@ -130,6 +131,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
     private void loadSelectedQuestInfo()
     {
         questInfo.clearLines();
+        questRewards.clearElements();
         IMOListBoxElement selectedElement = quests.getSelectedElement();
         if (selectedElement != null)
         {
@@ -157,7 +159,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
             questRewards.setSize(questRewards.getWidth(), rewards.size() > 0 ? 20 : 0);
             for (int i = 0; i < rewards.size(); i++)
             {
-                if (rewards.get(i) instanceof ItemStackReward)
+                if (rewards.get(i) instanceof ItemStackReward && rewards.get(i).isVisible(selectedQuest))
                 {
                     ElementItemPreview itemPreview = new ElementItemPreview(gui, i * 20, 1, ((ItemStackReward) rewards.get(i)).getItemStack());
                     itemPreview.setItemSize(1);

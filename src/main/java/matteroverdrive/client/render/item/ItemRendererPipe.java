@@ -1,15 +1,12 @@
 package matteroverdrive.client.render.item;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.IItemRenderer;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Created by Simeon on 3/8/2015.
  */
-public class ItemRendererPipe implements IItemRenderer
+public class ItemRendererPipe
 {
     private TileEntitySpecialRenderer renderer;
     private TileEntity pipe;
@@ -22,7 +19,7 @@ public class ItemRendererPipe implements IItemRenderer
         this.size = size;
     }
 
-    @Override
+    /*@Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
         return true;
     }
@@ -45,6 +42,6 @@ public class ItemRendererPipe implements IItemRenderer
             GL11.glTranslatef(size * -0.1f, 0, size * -0.1f);
         }
 
-        GL11.glScaled(size,size,size);
-    }
+        GlStateManager.scale(size,size,size);
+    }*/
 }

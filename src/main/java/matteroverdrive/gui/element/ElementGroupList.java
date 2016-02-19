@@ -29,12 +29,12 @@ import net.minecraft.util.MathHelper;
  */
 public class ElementGroupList extends ElementBaseGroup {
 
-    int selectedIndex;
-    int scroll;
-    int smoothScroll;
-    float smoothScrollMultiply = 0.1f;
-    int padding = 6;
-    IListHandler listHandler;
+    private int selectedIndex;
+    private int scroll;
+    private int smoothScroll;
+    private float smoothScrollMultiply = 0.1f;
+    private int padding = 6;
+    private IListHandler listHandler;
 
     public ElementGroupList(MOGuiBase gui, IListHandler listHandler, int posX, int posY, int width, int height)
     {
@@ -43,28 +43,21 @@ public class ElementGroupList extends ElementBaseGroup {
     }
 
     @Override
-    public void init()
+    public void update(int mouseX, int mouseY,float partialTicks)
     {
-        super.init();
-    }
-
-    @Override
-    public void update(int mouseX, int mouseY)
-    {
-        super.update(mouseX,mouseY);
+        super.update(mouseX,mouseY,partialTicks);
         int heightCount = 0;
-        int elementsHeight = -(getElementsHeight() - sizeY);
 
-        for (int i = 0;i < elements.size();i++)
+        for (MOElementBase element : elements)
         {
-            elements.get(i).setPosition(0,heightCount + smoothScroll);
-            heightCount += elements.get(i).getHeight() + padding;
-            if (smoothScroll + heightCount >= 0 && heightCount + smoothScroll - elements.get(i).getHeight() < sizeY)
+            element.setPosition(0, heightCount + smoothScroll);
+            heightCount += element.getHeight() + padding;
+            if (smoothScroll + heightCount >= 0 && heightCount + smoothScroll - element.getHeight() < sizeY)
             {
-                elements.get(i).setVisible(true);
-            }else
+                element.setVisible(true);
+            } else
             {
-                elements.get(i).setVisible(false);
+                element.setVisible(false);
             }
         }
 
@@ -131,9 +124,9 @@ public class ElementGroupList extends ElementBaseGroup {
     public int getElementsHeight()
     {
         int height = 0;
-        for (int i = 0;i < elements.size();i++)
+        for (MOElementBase element : elements)
         {
-            height += elements.get(i).getHeight() + padding;
+            height += element.getHeight() + padding;
         }
         return height;
     }
@@ -158,10 +151,7 @@ public class ElementGroupList extends ElementBaseGroup {
 
     public boolean isSelected(MOElementBase elementBase)
     {
-        if (selectedIndex < elements.size()) {
-            return elements.get(selectedIndex).equals(elementBase);
-        }
-        return false;
+        return selectedIndex < elements.size() && elements.get(selectedIndex).equals(elementBase);
     }
     public void setScroll(int scroll){this.scroll = scroll;}
     public void resetSmoothScroll(){this.smoothScroll = scroll;}

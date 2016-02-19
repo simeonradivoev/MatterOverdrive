@@ -109,20 +109,12 @@ public class GalacticPosition
     //region Getters and Setters
     public boolean equals(Star star)
     {
-        if (star != null && starID == star.getId())
-        {
-            return quadrantID >= 0 && star.getQuadrant() != null && star.getQuadrant().getId() == quadrantID;
-        }
-        return false;
+        return star != null && starID == star.getId() && quadrantID >= 0 && star.getQuadrant() != null && star.getQuadrant().getId() == quadrantID;
     }
 
     public boolean equals(Planet planet)
     {
-        if (planetID == planet.getId())
-        {
-            return equals(planet.getStar());
-        }
-        return false;
+        return planetID == planet.getId() && equals(planet.getStar());
     }
 
     public boolean equals(Quadrant quadrant)
@@ -141,10 +133,7 @@ public class GalacticPosition
             return true;
         }
 
-        if (obj instanceof GalacticPosition) {
-            return planetID == ((GalacticPosition) obj).planetID && starID == ((GalacticPosition) obj).starID && quadrantID == ((GalacticPosition) obj).quadrantID;
-        }
-        return false;
+        return obj instanceof GalacticPosition && planetID == ((GalacticPosition) obj).planetID && starID == ((GalacticPosition) obj).starID && quadrantID == ((GalacticPosition) obj).quadrantID;
     }
 
     public int getStarID()

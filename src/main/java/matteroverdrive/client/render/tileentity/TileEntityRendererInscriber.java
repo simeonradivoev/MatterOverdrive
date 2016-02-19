@@ -28,8 +28,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
 
 import java.util.Random;
 
@@ -40,22 +38,22 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class TileEntityRendererInscriber extends TileEntitySpecialRenderer
 {
-    private IModelCustom model;
+    //private IModelCustom model;
     private float nextHeadX,nextHeadY;
     private float lastHeadX,lastHeadY;
-    private Random random;
+    private final Random random;
     private EntityItem item;
 
     public TileEntityRendererInscriber()
     {
-        model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.MODEL_INSCRIBER));
+        //model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.MODEL_INSCRIBER));
         random = new Random();
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks)
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks,int destoryStage)
     {
-        if (item == null)
+        /*if (item == null)
         {
             item = new EntityItem(tileEntity.getWorldObj());
             item.setEntityItemStack(new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2));
@@ -70,15 +68,15 @@ public class TileEntityRendererInscriber extends TileEntitySpecialRenderer
             glColor3f(1,1,1);
             glPushMatrix();
             bindTexture(new ResourceLocation(Reference.PATH_BLOCKS + "inscriber.png"));
-            glTranslated(x + 0.5, y, z + 0.5);
-            RenderUtils.rotateFromBlock(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+            GlStateManager.translate(x + 0.5, y, z + 0.5);
+            RenderUtils.rotateFromBlock(tileEntity.getWorld(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
             glPushMatrix();
-            glTranslated(0, 0.6, headX);
+            GlStateManager.translate(0, 0.6, headX);
             model.renderPart("rail");
             glPopMatrix();
 
             glPushMatrix();
-            glTranslated(headY, 0.84, headX - 0.06);
+            GlStateManager.translate(headY, 0.84, headX - 0.06);
             model.renderPart("head");
             glPopMatrix();
 
@@ -90,14 +88,14 @@ public class TileEntityRendererInscriber extends TileEntitySpecialRenderer
             if (newStack != null) {
                 item.setEntityItemStack(newStack);
                 glPushMatrix();
-                glTranslated(-0.23, 0.69, 0);
-                glRotated(90, 0, 1, 0);
-                glRotated(90, 1, 0, 0);
+                GlStateManager.translate(-0.23, 0.69, 0);
+                GlStateManager.rotate(90, 0, 1, 0);
+                GlStateManager.rotate(90, 1, 0, 0);
                 item.hoverStart = 0f;
                 RenderManager.instance.func_147939_a(item, 0, 0, 0, 0, 0, true);
                 glPopMatrix();
             }
             glPopMatrix();
-        }
+        }*/
     }
 }

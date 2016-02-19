@@ -20,7 +20,7 @@ package matteroverdrive.gui;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerFalse;
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.gui.element.MOElementBase;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.pages.PageScanInfo;
@@ -124,15 +124,15 @@ public class GuiMatterScanner extends MOGuiBase
 	public void handleElementButtonClick(MOElementBase element, String buttonName, int mouseButton)
 	{
 		super.handleElementButtonClick(element,buttonName,mouseButton);
-		if(buttonName == PageScanInfo.SCROLL_UP_BUTTON_NAME)
+		if(buttonName.equals(PageScanInfo.SCROLL_UP_BUTTON_NAME))
 		{
 			pageScanInfo.list.scrollUp();
 		}
-		else if(buttonName == PageScanInfo.SCROLL_DOWN_BUTTON_NAME)
+		else if(buttonName.equals(PageScanInfo.SCROLL_DOWN_BUTTON_NAME))
 		{
 			pageScanInfo.list.scrollDown();
 		}
-		else if (buttonName == PageScanInfo.LIST_ELEMENT_NAME)
+		else if (buttonName.equals(PageScanInfo.LIST_ELEMENT_NAME))
 		{
 			ItemPattern elementTag = (ItemPattern) pageScanInfo.list.getElement(mouseButton).getValue();
 			SetSelected(elementTag);

@@ -18,7 +18,8 @@
 
 package matteroverdrive.api.matter;
 
-import net.minecraftforge.common.util.ForgeDirection;
+
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Simeon on 3/7/2015.
@@ -26,5 +27,5 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public interface IMatterConnection
 {
-    boolean canConnectFrom(ForgeDirection dir);
+    boolean canConnectFrom(EnumFacing dir);
 }

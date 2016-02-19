@@ -1,0 +1,19 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_bottom_top",
+    "textures": {
+      "bottom": "mo:blocks/transporter_front",
+      "top": "mo:blocks/transporter_top",
+      "side": "mo:blocks/transporter_side",
+      "particle": "mo:blocks/transporter_top"
+    }
+  },
+  "variants": {
+    "normal": {"model": "cube_bottom_top"},
+    "inventory": {
+      "model": "cube_bottom_top",
+      "transform": "forge:default-block"
+    }
+  }
+}

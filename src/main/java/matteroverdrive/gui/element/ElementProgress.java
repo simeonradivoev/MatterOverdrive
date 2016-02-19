@@ -23,6 +23,7 @@ import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -81,7 +82,7 @@ public class ElementProgress extends MOElementBase
 
 	@Override
 	public void drawBackground(int mouseX, int mouseY, float gameTicks) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderUtils.bindTexture(texture);
 		drawTexturedModalRect(this.posX, this.posY, this.bgU, this.bgV, this.sizeX, this.sizeY);
 
@@ -90,7 +91,7 @@ public class ElementProgress extends MOElementBase
 
 		if(this.isShowText())
 		{
-			this.drawCenteredString(Minecraft.getMinecraft().fontRenderer, this.text, this.posX + this.textX, this.posY + this.textY, this.textColor);
+			this.drawCenteredString(Minecraft.getMinecraft().fontRendererObj, this.text, this.posX + this.textX, this.posY + this.textY, this.textColor);
 		}
 	}
 

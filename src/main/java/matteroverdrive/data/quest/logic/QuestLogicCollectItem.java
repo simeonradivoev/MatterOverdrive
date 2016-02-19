@@ -18,7 +18,9 @@
 
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonObject;
+import matteroverdrive.util.MOJsonHelper;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.QuestItem;
@@ -41,6 +43,8 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
     int xpPerItem;
     int minItemCount;
     int maxItemCount;
+
+    public QuestLogicCollectItem(){}
 
     public QuestLogicCollectItem(QuestItem questItem,int minItemCount,int maxItemCount,int xpPerItem)
     {
@@ -91,9 +95,23 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
     }
 
     @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+        super.loadFromJson(jsonObject);
+        if (jsonObject.has("dimension"))
+        {
+            dimensionID = MOJsonHelper.getInt(jsonObject,"dimension",0);
+            inSpecificDimension = true;
+        }
+        destroyOnCollect = MOJsonHelper.getBool(jsonObject,"destroy_pickup",false);
+        xpPerItem = MOJsonHelper.getInt(jsonObject,"xp",0);
+        minItemCount = MOJsonHelper.getInt(jsonObject,"item_count_min");
+        maxItemCount = MOJsonHelper.getInt(jsonObject,"item_count_max");
+    }
+
+    @Override
     public String modifyInfo(QuestStack questStack, String info) {
-        ItemStack itemStack = getItem(questStack);
-        return String.format(info,"",getMaxItemCount(questStack),itemStack != null ? itemStack.getDisplayName() : "Unknown Item");
+        return String.format(info,"",getMaxItemCount(questStack),getItemName(questStack));
     }
 
     @Override
@@ -104,8 +122,7 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
     @Override
     public String modifyObjective(QuestStack questStack, EntityPlayer entityPlayer, String objective, int objectiveIndex)
     {
-        ItemStack itemStack = getItem(questStack);
-        return String.format(objective,"", getItemCount(entityPlayer,questStack),getMaxItemCount(questStack),itemStack != null ? itemStack.getDisplayName() : "Unknown Item");
+        return String.format(objective,"", getItemCount(entityPlayer,questStack),getMaxItemCount(questStack),getItemName(questStack));
     }
 
     @Override
@@ -129,19 +146,14 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
         else
         {
             int itemCount = 0;
-            ItemStack itemStack = getItem(questStack);
-
-            if (itemStack != null)
+            for (int i = 0; i < entityPlayer.inventory.getSizeInventory(); i++)
             {
-                for (int i = 0; i < entityPlayer.inventory.getSizeInventory(); i++)
+                ItemStack stackInSlot = entityPlayer.inventory.getStackInSlot(i);
+                if (stackInSlot != null)
                 {
-                    ItemStack stackInSlot = entityPlayer.inventory.getStackInSlot(i);
-                    if (stackInSlot != null)
+                    if (matches(questStack,stackInSlot))
                     {
-                        if (stackInSlot.isItemEqual(itemStack))
-                        {
-                            itemCount += stackInSlot.stackSize;
-                        }
+                        itemCount += stackInSlot.stackSize;
                     }
                 }
             }
@@ -162,8 +174,7 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
     {
         if (hasTag(questStack))
         {
-            ItemStack itemStack = getItem(questStack);
-            return itemStack.stackSize + getTag(questStack).getInteger("MaxItemCount");
+            return getTag(questStack).getInteger("MaxItemCount");
         }
         return 0;
     }
@@ -173,12 +184,11 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
     {
         if (destroyOnCollect && event instanceof EntityItemPickupEvent && ((EntityItemPickupEvent) event).item.getEntityItem() != null)
         {
-            if (inSpecificDimension && entityPlayer.worldObj.provider.dimensionId != dimensionID)
+            if (inSpecificDimension && entityPlayer.worldObj.provider.getDimensionId() != dimensionID)
             return false;
 
             ItemStack itemStack = ((EntityItemPickupEvent) event).item.getEntityItem();
-            ItemStack questItem = getItem(questStack);
-            if (itemStack != null && questItem != null && ItemStack.areItemStacksEqual(itemStack,questItem))
+            if (itemStack != null && matches(questStack,itemStack))
             {
                 initTag(questStack);
 
@@ -200,33 +210,28 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
         if (!destroyOnCollect)
         {
             int itemCount = getMaxItemCount(questStack);
-            ItemStack itemStack = getItem(questStack);
-
-            if (itemStack != null)
+            for (int i = 0; i < entityPlayer.inventory.getSizeInventory(); i++)
             {
-                for (int i = 0; i < entityPlayer.inventory.getSizeInventory(); i++)
+                ItemStack stackInSlot = entityPlayer.inventory.getStackInSlot(i);
+                if (stackInSlot != null)
                 {
-                    ItemStack stackInSlot = entityPlayer.inventory.getStackInSlot(i);
-                    if (stackInSlot != null)
+                    if (matches(questStack,stackInSlot) && itemCount > 0)
                     {
-                        if (stackInSlot.isItemEqual(itemStack) && itemCount > 0)
-                        {
-                            int newItemCount = Math.max(0, itemCount - stackInSlot.stackSize);
-                            int takenFromStack = itemCount - newItemCount;
-                            entityPlayer.inventory.decrStackSize(i, takenFromStack);
-                            itemCount = newItemCount;
-                        }
+                        int newItemCount = Math.max(0, itemCount - stackInSlot.stackSize);
+                        int takenFromStack = itemCount - newItemCount;
+                        entityPlayer.inventory.decrStackSize(i, takenFromStack);
+                        itemCount = newItemCount;
                     }
                 }
             }

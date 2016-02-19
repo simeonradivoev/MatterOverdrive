@@ -30,7 +30,7 @@ public class MOPositionedSound extends PositionedSound
     public MOPositionedSound(ResourceLocation p_i45103_1_,float volume,float pitch)
     {
         super(p_i45103_1_);
-        this.field_147663_c = pitch;
+        this.pitch = pitch;
         this.volume = volume;
     }
 
@@ -48,7 +48,7 @@ public class MOPositionedSound extends PositionedSound
 
     public MOPositionedSound setAttenuationType(ISound.AttenuationType type)
     {
-        field_147666_i = type;
+        attenuationType = type;
         return this;
     }
 }

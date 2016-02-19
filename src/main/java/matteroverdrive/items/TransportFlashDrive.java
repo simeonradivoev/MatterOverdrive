@@ -19,13 +19,15 @@
 package matteroverdrive.items;
 
 import matteroverdrive.client.data.Color;
-import matteroverdrive.data.BlockPos;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -45,40 +47,30 @@ public class TransportFlashDrive extends FlashDrive
         super.addDetails(itemstack, player, infos);
         if (hasTarget(itemstack))
         {
-            Block block = player.worldObj.getBlock(getTargetX(itemstack), getTargetY(itemstack), getTargetZ(itemstack));
-            infos.add(EnumChatFormatting.YELLOW + String.format("[%s,%s,%s] %s", getTargetX(itemstack), getTargetY(itemstack), getTargetZ(itemstack),block != Blocks.air ? block.getLocalizedName() : "Unknown"));
+            BlockPos target = getTarget(itemstack);
+            Block block = player.worldObj.getBlockState(target).getBlock();
+            infos.add(EnumChatFormatting.YELLOW + String.format("[%s] %s", target.toString(),block.getMaterial() != Material.air ? block.getLocalizedName() : "Unknown"));
         }
     }
 
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        if (world.getBlock(x,y,z) != null && world.getBlock(x,y,z) != Blocks.air)
+        if (worldIn.getBlockState(pos).getBlock().getMaterial() != Material.air)
         {
-            setTarget(itemStack,x,y,z);
+            setTarget(stack,pos);
             return true;
         }
-        removeTarget(itemStack);
+        removeTarget(stack);
         return false;
     }
 
-    public void setTarget(ItemStack itemStack,int x,int y,int z)
+    public void setTarget(ItemStack itemStack,BlockPos pos)
     {
         if (!itemStack.hasTagCompound())
             itemStack.setTagCompound(new NBTTagCompound());
 
-        itemStack.getTagCompound().setInteger("TargetX",x);
-        itemStack.getTagCompound().setInteger("TargetY",y);
-        itemStack.getTagCompound().setInteger("TargetZ", z);
-    }
-
-    public int getTargetDistance(ItemStack itemStack)
-    {
-        if (itemStack.hasTagCompound())
-        {
-            return (int)Math.sqrt(getTargetX(itemStack)*getTargetX(itemStack) + getTargetY(itemStack)*getTargetY(itemStack) + getTargetZ(itemStack)*getTargetZ(itemStack));
-        }
-        return 0;
+        itemStack.getTagCompound().setLong("target",pos.toLong());
     }
 
     public void removeTarget(ItemStack itemStack)
@@ -89,42 +81,17 @@ public class TransportFlashDrive extends FlashDrive
         }
     }
 
-    public int getTargetX(ItemStack itemStack)
+    public BlockPos getTarget(ItemStack itemStack)
     {
-        if (itemStack.hasTagCompound())
+        if (itemStack.getTagCompound() != null)
         {
-            return itemStack.getTagCompound().getInteger("TargetX");
+            return BlockPos.fromLong(itemStack.getTagCompound().getLong("target"));
         }
-        return 0;
-    }
-
-    public int getTargetY(ItemStack itemStack)
-    {
-        if (itemStack.hasTagCompound())
-        {
-            return itemStack.getTagCompound().getInteger("TargetY");
-        }
-        return 0;
-    }
-
-    public int getTargetZ(ItemStack itemStack)
-    {
-        if (itemStack.hasTagCompound())
-        {
-            return itemStack.getTagCompound().getInteger("TargetZ");
-        }
-        return 0;
-    }
-
-    public BlockPos getTraget(ItemStack itemStack)
-    {
-        if (hasTarget(itemStack))
-            return new BlockPos(getTargetX(itemStack), getTargetY(itemStack), getTargetZ(itemStack));
         return null;
     }
 
     public boolean hasTarget(ItemStack itemStack)
     {
-        return itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("TargetX", Constants.NBT.TAG_INT) && itemStack.getTagCompound().hasKey("TargetY", Constants.NBT.TAG_INT) && itemStack.getTagCompound().hasKey("TargetZ", Constants.NBT.TAG_INT);
+        return itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("taget", Constants.NBT.TAG_LONG);
     }
 }

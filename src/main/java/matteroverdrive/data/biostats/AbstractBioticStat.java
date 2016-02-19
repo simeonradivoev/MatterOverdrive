@@ -18,13 +18,16 @@
 
 package matteroverdrive.data.biostats;
 
-import matteroverdrive.api.android.IBionicStat;
+import matteroverdrive.api.android.BionicStatGuiInfo;
+import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.client.render.HoloIcons;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,17 +35,20 @@ import java.util.List;
 /**
  * Created by Simeon on 5/27/2015.
  */
-public abstract class AbstractBioticStat implements IBionicStat
+public abstract class AbstractBioticStat implements IBioticStat
 {
-    int xp;
-    String name;
-    IBionicStat root;
-    List<IBionicStat> competitors;
-    List<ItemStack> requiredItems;
-    List<IBionicStat> enabledBlacklist;
-    int maxLevel;
+    private int xp;
+    private String name;
+    private IBioticStat root;
+    private BionicStatGuiInfo guiInfo;
+    private boolean rootMaxLevel;
+    private List<IBioticStat> competitors;
+    private List<ItemStack> requiredItems;
+    private List<IBioticStat> enabledBlacklist;
+    private int maxLevel;
     boolean showOnHud;
     boolean showOnWheel;
+    @SideOnly(Side.CLIENT)
     HoloIcon icon;
 
     public AbstractBioticStat(String name, int xp)
@@ -80,11 +86,10 @@ public abstract class AbstractBioticStat implements IBionicStat
     @Override
     public boolean canBeUnlocked(AndroidPlayer android,int level) {
         //if the root is not unlocked then this stat can't be unlocked
-        if (root != null && !android.isUnlocked(root, root.maxLevel())) {
+        if (root != null && !android.isUnlocked(root, rootMaxLevel ? root.maxLevel() : 1)) {
             return false;
         }
-        //if any of the competitors are unlocked then this stat can't be unlocked
-        if (areCompeditrosUnlocked(android))
+        if (isLocked(android,level))
             return false;
         if (requiredItems.size() > 0 && !android.getPlayer().capabilities.isCreativeMode) {
             for (ItemStack item : requiredItems) {
@@ -95,6 +100,12 @@ public abstract class AbstractBioticStat implements IBionicStat
             }
         }
         return android.isAndroid() && (android.getPlayer().capabilities.isCreativeMode || android.getPlayer().experienceLevel >= xp);
+    }
+
+    @Override
+    public boolean isLocked(AndroidPlayer androidPlayer, int level)
+    {
+        return areCompeditrosUnlocked(androidPlayer);
     }
 
     protected boolean hasItem(AndroidPlayer player, ItemStack stack)
@@ -115,8 +126,14 @@ public abstract class AbstractBioticStat implements IBionicStat
     @Override
     public void onUnlock(AndroidPlayer android, int level)
     {
-        android.getPlayer().addExperienceLevel(-xp);
+        android.getPlayer().removeExperienceLevel(xp);
         consumeItems(android);
+    }
+
+    @Override
+    public void onUnlearn(AndroidPlayer androidPlayer,int level)
+    {
+
     }
 
     //consume all the necessary items from the player inventory
@@ -145,10 +162,10 @@ public abstract class AbstractBioticStat implements IBionicStat
     @Override
     public void onTooltip(AndroidPlayer android, int level, List<String> list, int mouseX, int mouseY)
     {
-        String name = getDisplayName(android, level);
+        String name = EnumChatFormatting.BOLD + getDisplayName(android, level);
         if (maxLevel() > 1)
         {
-            name += String.format(" [%s/%s]",level,maxLevel());
+            name += EnumChatFormatting.RESET + String.format(" [%s/%s]",level,maxLevel());
         }
         list.add(EnumChatFormatting.WHITE + name);
         String details = getDetails(level);
@@ -158,13 +175,20 @@ public abstract class AbstractBioticStat implements IBionicStat
             list.add(EnumChatFormatting.GRAY + detail);
         }
 
-        String requires = "";
-
         if (root != null)
         {
-            requires += EnumChatFormatting.GOLD+String.format("[%s%s]",root.getDisplayName(android,0),root.maxLevel() > 1 ? " " + root.maxLevel() : "");
+            String rootLevel = "";
+            if (root.maxLevel() > 1)
+            {
+                if (rootMaxLevel)
+                {
+                    rootLevel = " " + root.maxLevel();
+                }
+            }
+            list.add(EnumChatFormatting.DARK_AQUA + MOStringHelper.translateToLocal("gui.tooltip.parent") + ": " + EnumChatFormatting.GOLD+String.format("[%s%s]",root.getDisplayName(android,0),rootLevel));
         }
 
+        String requires = "";
         if (requiredItems.size() > 0)
         {
             for (ItemStack itemStack : requiredItems)
@@ -175,22 +199,22 @@ public abstract class AbstractBioticStat implements IBionicStat
                 }
                 if (itemStack.stackSize > 1)
                 {
-                    requires += EnumChatFormatting.WHITE.toString() + itemStack.stackSize + "x";
+                    requires += EnumChatFormatting.DARK_GREEN.toString() + itemStack.stackSize + "x";
                 }
 
-                requires += EnumChatFormatting.WHITE + "[" + itemStack.getDisplayName() + "]";
+                requires += EnumChatFormatting.DARK_GREEN + "[" + itemStack.getDisplayName() + "]";
             }
         }
 
         if (!requires.isEmpty())
         {
-           list.add(MOStringHelper.translateToLocal("gui.tooltip.requires") + ": " + requires);
+           list.add(EnumChatFormatting.DARK_AQUA + MOStringHelper.translateToLocal("gui.tooltip.requires") + ": " + requires);
         }
 
         if (competitors.size() > 0)
         {
             String locks = EnumChatFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.locks") + ": ";
-            for (IBionicStat compeditor : competitors)
+            for (IBioticStat compeditor : competitors)
             {
                 locks += String.format("[%s] ",compeditor.getDisplayName(android,0));
             }
@@ -205,7 +229,7 @@ public abstract class AbstractBioticStat implements IBionicStat
 
     public boolean checkBlacklistActive(AndroidPlayer androidPlayer,int level)
     {
-        for (IBionicStat stat : enabledBlacklist)
+        for (IBioticStat stat : enabledBlacklist)
         {
             if(stat.isActive(androidPlayer,level))
             {
@@ -244,27 +268,28 @@ public abstract class AbstractBioticStat implements IBionicStat
         return maxLevel;
     }
 
-    public IBionicStat getRoot()
+    public IBioticStat getRoot()
     {
         return root;
     }
 
-    public void setRoot(IBionicStat stat)
+    public void setRoot(IBioticStat stat, boolean rootMaxLevel)
     {
         this.root = stat;
+        this.rootMaxLevel = rootMaxLevel;
     }
 
-    public void addCompetitor(IBionicStat stat)
+    public void addCompetitor(IBioticStat stat)
     {
         this.competitors.add(stat);
     }
 
-    public void removeCompetitor(IBionicStat competitor)
+    public void removeCompetitor(IBioticStat competitor)
     {
         this.competitors.remove(competitor);
     }
 
-    public List<IBionicStat> getCompetitors()
+    public List<IBioticStat> getCompetitors()
     {
         return competitors;
     }
@@ -286,18 +311,25 @@ public abstract class AbstractBioticStat implements IBionicStat
 
     public void setShowOnWheel(boolean showOnWheel){this.showOnWheel = showOnWheel;}
 
+    public void setGuiInfo(BionicStatGuiInfo guiInfo){this.guiInfo = guiInfo;}
+
+    @Override
+    public BionicStatGuiInfo getGuiInfo(AndroidPlayer androidPlayer, int level)
+    {
+        return guiInfo;
+    }
 
     public List<ItemStack> getRequiredItems()
     {
         return requiredItems;
     }
 
-    public List<IBionicStat> getEnabledBlacklist()
+    public List<IBioticStat> getEnabledBlacklist()
     {
         return enabledBlacklist;
     }
 
-    public void addToEnabledBlacklist(IBionicStat stat)
+    public void addToEnabledBlacklist(IBioticStat stat)
     {
         enabledBlacklist.add(stat);
     }
@@ -317,7 +349,7 @@ public abstract class AbstractBioticStat implements IBionicStat
     public boolean areCompeditrosUnlocked(AndroidPlayer androidPlayer)
     {
         if (competitors.size() > 0) {
-            for (IBionicStat competitor : competitors) {
+            for (IBioticStat competitor : competitors) {
                 if (androidPlayer.isUnlocked(competitor, 0)) {
                     return true;
                 }

@@ -10,11 +10,11 @@ import java.util.List;
  */
 public class AnimationTimeline <T extends AnimationSegment>
 {
-    boolean loopable;
-    int time;
-    int duration;
-    List<T> segments;
-    int lastSegmentBegin;
+    private boolean loopable;
+    protected int time;
+    private int duration;
+    private List<T> segments;
+    private int lastSegmentBegin;
 
     public AnimationTimeline(boolean loopable,int duration)
     {

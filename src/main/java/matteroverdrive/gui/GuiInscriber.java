@@ -42,7 +42,7 @@ public class GuiInscriber extends MOGuiMachine<TileEntityInscriber>
         name="inscriber";
         energyElement = new MOElementEnergy(this,100,39,machine.getEnergyStorage());
         inscribe_progress = new ElementDualScaled(this,32,55);
-        outputSlot = new ElementInventorySlot(this,getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),129,55,22,22,"big");
+        outputSlot = new ElementInventorySlot(this,getContainer().getSlotAt(TileEntityInscriber.OUTPUT_SLOT_ID),129,55,22,22,"big");
 
         inscribe_progress.setMode(1);
         inscribe_progress.setSize(24, 16);

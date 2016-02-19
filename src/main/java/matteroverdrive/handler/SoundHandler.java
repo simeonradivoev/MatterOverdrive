@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class SoundHandler
 {
-	protected static Random soundRand = new Random();
+	protected static final Random soundRand = new Random();
 
 	public static void PlaySoundAt(World world,String name,Entity entity)
 	{

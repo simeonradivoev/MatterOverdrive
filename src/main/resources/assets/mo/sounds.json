@@ -67,5 +67,10 @@
     "shield_power_down": {"category": "player","sounds": [{"name": "shield_power_up", "stream": false}]},
     "rogue_android_say": {"category": "hostile","sounds": [{"name": "entities/rogue_android_say_0","stream":false},{"name": "entities/rogue_android_say_1","stream":false},{"name": "entities/rogue_android_say_2","stream":false}]},
     "rogue_android_death": {"category": "hostile","sounds": [{"name": "entities/rogue_android_death_0","stream":false},{"name": "entities/rogue_android_death_1","stream":false}]},
-    "shockwave": {"category": "player","sounds": [{"name": "shockwave", "stream": false}]}
+    "shockwave": {"category": "player","sounds": [{"name": "shockwave", "stream": false}]},
+    "electric_arc": {"category": "block","sounds": [{"name": "blocks/pylon/electric_arc_0", "stream": false},
+        {"name": "blocks/pylon/electric_arc_1", "stream": false},
+        {"name": "blocks/pylon/electric_arc_2", "stream": false},
+        {"name": "blocks/pylon/electric_arc_3", "stream": false}]},
+    "pylon": {"category": "block","sounds": [{"name": "blocks/pylon/pylon", "stream": false}]}
 }

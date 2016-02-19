@@ -1,15 +1,12 @@
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 /**
@@ -17,9 +14,6 @@ import net.minecraft.world.World;
  */
 public class BlockAndroidStation extends MOBlockMachine
 {
-    private IIcon topIcon;
-    private IIcon bottomIcon;
-
     public BlockAndroidStation(Material material, String name)
     {
         super(material, name);
@@ -31,7 +25,7 @@ public class BlockAndroidStation extends MOBlockMachine
         setHasGui(true);
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         super.registerBlockIcons(iconRegister);
@@ -56,7 +50,7 @@ public class BlockAndroidStation extends MOBlockMachine
         {
             return blockIcon;
         }
-    }
+    }*/
 
     @Override
     protected String getUnlocalizedMessage(int type)
@@ -80,17 +74,5 @@ public class BlockAndroidStation extends MOBlockMachine
     public boolean isOpaqueCube()
     {
         return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
-    }
-
-    @Override
-    public int getRenderType()
-    {
-        return MOBlockRenderer.renderID;
     }
 }

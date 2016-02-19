@@ -45,9 +45,9 @@ public class GuideElementDetails extends GuideElementAbstract
                 List<String> details = new ArrayList<>();
                 ((MOBaseItem) stack.getItem()).addDetails(stack, Minecraft.getMinecraft().thePlayer, details);
                 this.details = details;
-                for (int i = 0;i < details.size();i++)
+                for (String detail : details)
                 {
-                    width = Math.max(getFontRenderer().getStringWidth(details.get(i)),width);
+                    width = Math.max(getFontRenderer().getStringWidth(detail), width);
                 }
                 this.height = details.size()*getFontRenderer().FONT_HEIGHT;
             }

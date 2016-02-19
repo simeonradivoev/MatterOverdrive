@@ -18,11 +18,13 @@
 
 package matteroverdrive.init;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.relauncher.Side;
+import matteroverdrive.Reference;
+import matteroverdrive.util.MOStringHelper;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.api.dialog.IDialogRegistry;
-import matteroverdrive.dialog.*;
-import matteroverdrive.entity.EntityVillagerMadScientist;
+import matteroverdrive.data.dialog.*;
 import matteroverdrive.handler.ConfigurationHandler;
 
 /**
@@ -34,17 +36,24 @@ public class MatterOverdriveDialogs
     public static DialogMessage backHomeMessage;
     public static DialogMessage quitMessage;
     public static DialogMessage trade;
+    //public static DialogMessage tradeRouteQuest;
 
     public static void init(FMLInitializationEvent event, ConfigurationHandler configurationHandler, IDialogRegistry registry)
     {
-        backMessage = new DialogMessageBack("").loadQuestionFromLocalization("dialog.generic.back.questions");
-        registry.registerMessage(backMessage);
-        quitMessage = new DialogMessageQuit("").loadQuestionFromLocalization("dialog.generic.quit.questions");
-        registry.registerMessage(quitMessage);
-        backHomeMessage = new DialogMessageBackToMain().loadQuestionFromLocalization("dialog.generic.back_home.questions");
-        registry.registerMessage(backHomeMessage);
-        trade = new DialogMessageTrade().loadQuestionFromLocalization("dialog.generic.trade.questions");
-        registry.registerMessage(trade);
+        backMessage = new DialogMessageBack(null, MOStringHelper.formatVariations("dialog.generic.back","question",3)).setUnlocalized(true);
+        registry.registerMessage(new ResourceLocation(Reference.MOD_ID,"back"),backMessage);
+        quitMessage = new DialogMessageQuit(null,MOStringHelper.formatVariations("dialog.generic.quit","question",5)).setUnlocalized(true);
+        registry.registerMessage(new ResourceLocation(Reference.MOD_ID,"quit"),quitMessage);
+        backHomeMessage = new DialogMessageBackToMain(null,MOStringHelper.formatVariations("dialog.generic.back","question",3)).setUnlocalized(true);
+        registry.registerMessage(new ResourceLocation(Reference.MOD_ID,"back_home"),backHomeMessage);
+        trade = new DialogMessageTrade(null,MOStringHelper.formatVariations("dialog.generic.trade","question",4)).setUnlocalized(true);
+        registry.registerMessage(new ResourceLocation(Reference.MOD_ID,"trade"),trade);
+        //tradeRouteQuest = new DialogMessage("dialog.mad_scientist.trade_route_quest.0.line","dialog.mad_scientist.trade_route_quest.0.question").setUnlocalized(true);
+        //registry.registerMessage(tradeRouteQuest);
+        //DialogMessage tradeRouteQuest = new DialogMessage("dialog.mad_scientist.trade_route_quest.1.line","dialog.mad_scientist.trade_route_quest.1.question").setUnlocalized(true);
+        //registry.registerMessage(tradeRouteQuest);
+        //MatterOverdriveDialogs.tradeRouteQuest.addOption(tradeRouteQuest);
+        //tradeRouteQuest.addOption(backHomeMessage);
 
         if(event.getSide() == Side.CLIENT)
         {
@@ -53,8 +62,5 @@ public class MatterOverdriveDialogs
             backHomeMessage.setHoloIcon("mini_quit");
             trade.setHoloIcon("trade");
         }
-
-
-        EntityVillagerMadScientist.registerDialogMessages(registry,event.getSide());
     }
 }

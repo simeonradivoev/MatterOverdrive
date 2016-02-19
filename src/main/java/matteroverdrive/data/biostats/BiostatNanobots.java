@@ -18,24 +18,32 @@
 
 package matteroverdrive.data.biostats;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.data.MOAttributeModifier;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
+
+import java.util.UUID;
 
 /**
  * Created by Simeon on 5/29/2015.
  */
 public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscriber
 {
-    public final static float REGEN_AMOUNT_PER_TICK = 0.03f;
-    public static int ENERGY_PER_REGEN = 32;
+    private final static float REGEN_AMOUNT_PER_TICK = 0.05f;
+    private final UUID modifierID = UUID.fromString("4548003d-1566-49aa-9378-8be2f9a064ab");
+    private static int ENERGY_PER_REGEN = 32;
 
     public BiostatNanobots(String name, int xp)
     {
         super(name, xp);
         setShowOnHud(true);
+        setMaxLevel(4);
     }
 
     @Override
@@ -48,6 +56,14 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
                 android.extractEnergyScaled(ENERGY_PER_REGEN * 20);
             }
         }
+
+        //android.getPlayer().stepHeight = 1;
+    }
+
+    @Override
+    public String getDetails(int level)
+    {
+        return String.format(super.getDetails(level),EnumChatFormatting.GREEN.toString() + (REGEN_AMOUNT_PER_TICK * 20), EnumChatFormatting.GREEN.toString() + "+" + getHealthBoost(level));
     }
 
     @Override
@@ -75,8 +91,11 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
     }
 
     @Override
-    public Multimap attributes(AndroidPlayer androidPlayer,int level) {
-        return null;
+    public Multimap attributes(AndroidPlayer androidPlayer,int level)
+    {
+        Multimap multimap = HashMultimap.create();
+        multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(),new MOAttributeModifier(modifierID, "Android Health", getHealthBoost(level), 0).setSaved(false));
+        return multimap;
     }
 
     @Override
@@ -88,7 +107,12 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
     @Override
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
-        return false;
+        return isEnabled(androidPlayer,level) && androidPlayer.getPlayer().getHealth() < androidPlayer.getPlayer().getMaxHealth();
+    }
+
+    public int getHealthBoost(int level)
+    {
+        return level * 5;
     }
 
     @Override

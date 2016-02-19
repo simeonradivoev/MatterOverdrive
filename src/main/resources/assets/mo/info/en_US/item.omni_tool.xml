@@ -21,7 +21,7 @@
         <title size="2" class="matter-text small-title">The $itemName</title>
         <preview size="6" style="text-align:center;margin-bottom:-10px;margin-top:-4px"></preview>
         <text class="matter-text text-block">The $itemName is a powerful long range mining tool as well as a powerful pistol.
-            It can shoot plasma bolts at enemies but it's range is smaller than it's rifle counterpart the [item name=phaser_rifle]. Although the damage is a lot smaller than the [item name=phaser_rifle] the $itemName can also mine blocks by holding the right mouse button.</text>
+            It can shoot plasma bolts at enemies but it's range is smaller than it's rifle counterpart the [item name=phaser_rifle]. Although the meta is a lot smaller than the [item name=phaser_rifle] the $itemName can also mine blocks by holding the right mouse button.</text>
     </page>
     <page class="padded-page">
         <title size="2" class="matter-text small-title" style="margin-bottom:6px">Customization</title>
@@ -33,6 +33,6 @@
     <page class="padded-page">
         <title size="2" class="matter-text small-title" style="margin-bottom:6px">Stats</title>
         <tooltip></tooltip>
-        <text class="matter-text text-block">The $itemName can also be dropped by Rogue Androids. There are also Legendary versions of the tool dropped only by Legendary Rogue Androids. The Legendary versions can have increased base stats that can stack with weapon modules. Stats such as higher damage fire rate and greater accuracy.</text>
+        <text class="matter-text text-block">The $itemName can also be dropped by Rogue Androids. There are also Legendary versions of the tool dropped only by Legendary Rogue Androids. The Legendary versions can have increased base stats that can stack with weapon modules. Stats such as higher meta fire rate and greater accuracy.</text>
     </page>
 </entry>

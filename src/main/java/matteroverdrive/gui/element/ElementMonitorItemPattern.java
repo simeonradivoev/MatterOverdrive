@@ -20,9 +20,11 @@ package matteroverdrive.gui.element;
 
 import matteroverdrive.Reference;
 import matteroverdrive.container.IButtonHandler;
-import matteroverdrive.data.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPattern;
+import matteroverdrive.data.matter_network.ItemPatternMapping;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -35,7 +37,7 @@ public class ElementMonitorItemPattern extends ElementItemPattern
     IButtonHandler buttonHandler;
     boolean expanded;
 
-    public ElementMonitorItemPattern(MOGuiBase gui, ItemPattern pattern, IButtonHandler buttonHandler)
+    public ElementMonitorItemPattern(MOGuiBase gui, ItemPatternMapping pattern, IButtonHandler buttonHandler)
     {
         super(gui, pattern,"big",22,22);
         this.buttonHandler = buttonHandler;
@@ -44,14 +46,14 @@ public class ElementMonitorItemPattern extends ElementItemPattern
     @Override
     public void drawForeground(int mouseX, int mouseY)
     {
-        RenderUtils.renderStack(posX + 3, posY + 3, itemStack);
+        RenderUtils.renderStack(posX + 3, posY + 3,3, itemStack,true);
 
         if (!expanded && amount > 0)
         {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             GL11.glTranslatef(0, 0, 100);
             gui.drawCenteredString(getFontRenderer(), Integer.toString(amount), posX + 17, posY + 12, 0xFFFFFF);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -103,12 +105,12 @@ public class ElementMonitorItemPattern extends ElementItemPattern
     {
         if (!expanded)
         {
-            this.expanded = expanded;
+            this.expanded = false;
             this.setSize(22, 22);
         }
         else
         {
-            this.expanded = expanded;
+            this.expanded = true;
             this.setSize(44, 44);
         }
     }

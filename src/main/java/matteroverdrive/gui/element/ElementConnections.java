@@ -28,7 +28,6 @@ import java.util.List;
  */
 public class ElementConnections extends MOElementBase
 {
-
     TileEntityMachinePacketQueue machine;
 
     public ElementConnections(MOGuiBase gui, int posX, int posY, int width, int height, TileEntityMachinePacketQueue machine)
@@ -67,7 +66,7 @@ public class ElementConnections extends MOElementBase
 
             if (connection != null)
             {
-                String info = ForgeDirection.getOrientation(i).name() + " : " + connection.getTileEntity(machine.getWorldObj()).getBlockType().getLocalizedName();
+                String info = EnumFacing.getOrientation(i).name() + " : " + connection.getTileEntity(machine.getWorldObj()).getBlockType().getLocalizedName();
 
                 MOElementButton.NORMAL_TEXTURE.render(x - 6,y - 6,sizeX + 12,19);
                 getFontRenderer().drawString(info,x,y,0xFFFFFF);
@@ -75,7 +74,7 @@ public class ElementConnections extends MOElementBase
             else
             {
                 MOElementButton.HOVER_TEXTURE_DARK.render(x - 6,y - 6,80,19);
-                getFontRenderer().drawString(ForgeDirection.getOrientation(i).name() + " : None", x, y, 0xFFFFFF);
+                getFontRenderer().drawString(EnumFacing.getOrientation(i).name() + " : None", x, y, 0xFFFFFF);
             }
         }*/
     }

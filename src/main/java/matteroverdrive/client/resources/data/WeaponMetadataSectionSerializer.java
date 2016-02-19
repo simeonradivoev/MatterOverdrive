@@ -24,13 +24,13 @@ import net.minecraft.util.JsonUtils;
 import net.minecraft.util.Vec3;
 
 import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * Created by Simeon on 12/9/2015.
  */
 public class WeaponMetadataSectionSerializer extends BaseMetadataSectionSerializer implements JsonSerializer<WeaponMetadataSection>
 {
-
     @Override
     public String getSectionName() {
         return "weapon";
@@ -39,31 +39,50 @@ public class WeaponMetadataSectionSerializer extends BaseMetadataSectionSerializ
     @Override
     public WeaponMetadataSection deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
     {
-        JsonObject jsonobject = JsonUtils.getJsonElementAsJsonObject(json, "metadata section");
-        Vec3 scopePosition = null;
+        WeaponMetadataSection weaponMetadataSection = new WeaponMetadataSection();
+        JsonObject jsonobject = JsonUtils.getJsonObject(json, "metadata section");
         try
         {
-            JsonArray array = jsonobject.getAsJsonArray("scope_position");
-            if (array.size() >= 3)
+            JsonObject modules = jsonobject.getAsJsonObject("modules");
+            if (modules != null)
             {
-                scopePosition = Vec3.createVectorHelper(array.get(0).getAsDouble(),array.get(1).getAsDouble(),array.get(2).getAsDouble());
+                for (Map.Entry<String, JsonElement> element : modules.entrySet())
+                {
+                    weaponMetadataSection.setModulePosition(element.getKey(), fromJson(element.getValue().getAsJsonObject()));
+                }
             }
         }catch (ClassCastException classcastexception)
         {
             throw new JsonParseException("Invalid weapon->scope_position: expected array, was " + jsonobject.get("scope_position"), classcastexception);
         }
-        return new WeaponMetadataSection(scopePosition);
+        return weaponMetadataSection;
     }
 
     @Override
     public JsonElement serialize(WeaponMetadataSection section, Type type, JsonSerializationContext context)
     {
         JsonObject jsonobject = new JsonObject();
-        JsonArray scopePosition = new JsonArray();
-        scopePosition.add(new JsonPrimitive(section.getScopePosition().xCoord));
-        scopePosition.add(new JsonPrimitive(section.getScopePosition().yCoord));
-        scopePosition.add(new JsonPrimitive(section.getScopePosition().zCoord));
-        jsonobject.add("scope_position",scopePosition);
+        JsonObject modules = new JsonObject();
+        for (Map.Entry<String,Vec3> position : section.getModulePositions().entrySet())
+        {
+
+            modules.add(position.getKey(),toObject(position.getValue()));
+        }
+        jsonobject.add("modules",modules);
         return jsonobject;
+    }
+
+    public JsonObject toObject(Vec3 vec3)
+    {
+        JsonObject object = new JsonObject();
+        object.add("x",new JsonPrimitive(vec3.xCoord));
+        object.add("y",new JsonPrimitive(vec3.yCoord));
+        object.add("z",new JsonPrimitive(vec3.zCoord));
+        return object;
+    }
+
+    public Vec3 fromJson(JsonObject object)
+    {
+        return new Vec3(object.get("x").getAsDouble(),object.get("y").getAsDouble(),object.get("z").getAsDouble());
     }
 }

@@ -18,23 +18,23 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.gravity.AnomalySuppressor;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.blocks.BlockGravitationalAnomaly;
+import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.fx.GravitationalStabilizerBeamParticle;
+import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
 import static matteroverdrive.util.MOBlockHelper.getAboveSide;
@@ -52,9 +52,9 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
 
         if (worldObj.isRemote)
         {
@@ -64,19 +64,23 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     }
 
     @Override
-    protected void onAwake(Side side) {
+    protected void onMachineEvent(MachineEvent event)
+    {
 
     }
 
     MovingObjectPosition seacrhForAnomalies(World world)
     {
-        ForgeDirection front = ForgeDirection.getOrientation(world.getBlockMetadata(xCoord, yCoord, zCoord));
-        for (int i = 1;i < 64;i++)
+        if (world.getBlockState(getPos()).getBlock() == blockType)
         {
-            Block block = world.getBlock(xCoord + front.offsetX * i, yCoord + front.offsetY * i, zCoord + front.offsetZ * i);
-            if (block instanceof BlockGravitationalAnomaly || block.getMaterial() == null || block.getMaterial().isOpaque())
+            EnumFacing front = world.getBlockState(getPos()).getValue(MOBlock.PROPERTY_DIRECTION);
+            for (int i = 1; i < 64; i++)
             {
-                return new MovingObjectPosition(xCoord + front.offsetX * i, yCoord + front.offsetY * i, zCoord + front.offsetZ * i, front.getOpposite().ordinal(),Vec3.createVectorHelper(xCoord + (front.offsetX * i) - Math.abs(front.offsetX) * 0.5, yCoord + (front.offsetY * i) - Math.abs(front.offsetY) * 0.5, zCoord + (front.offsetZ * i) - Math.abs(front.offsetZ) * 0.5));
+                IBlockState blockState = world.getBlockState(getPos().offset(front, i));
+                if (blockState.getBlock() instanceof BlockGravitationalAnomaly || blockState.getBlock().getMaterial() == null || blockState.getBlock().getMaterial().isOpaque())
+                {
+                    return new MovingObjectPosition(new Vec3(getPos().offset(front, i)).subtract(Math.abs(front.getDirectionVec().getX() * 0.5), Math.abs(front.getDirectionVec().getY() * 0.5), Math.abs(front.getDirectionVec().getZ() * 0.5)), front.getOpposite(), getPos().offset(front, i));
+                }
             }
         }
         return null;
@@ -85,16 +89,16 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     void manageAnomalies(World world)
     {
         hit = seacrhForAnomalies(world);
-        if (hit != null && world.getTileEntity(hit.blockX,hit.blockY,hit.blockZ) instanceof TileEntityGravitationalAnomaly)
+        if (hit != null && world.getTileEntity(hit.getBlockPos()) instanceof TileEntityGravitationalAnomaly)
         {
-            ((TileEntityGravitationalAnomaly) world.getTileEntity(hit.blockX,hit.blockY,hit.blockZ)).suppress(new AnomalySuppressor(xCoord,yCoord,zCoord,20,0.7f));
+            ((TileEntityGravitationalAnomaly) world.getTileEntity(hit.getBlockPos())).suppress(new AnomalySuppressor(getPos(),20,0.7f));
         }
     }
 
     @SideOnly(Side.CLIENT)
     void spawnParticles(World world)
     {
-        if (hit != null && world.getTileEntity(hit.blockX,hit.blockY,hit.blockZ) instanceof TileEntityGravitationalAnomaly)
+        if (hit != null && world.getTileEntity(hit.getBlockPos()) instanceof TileEntityGravitationalAnomaly)
         {
             if (random.nextFloat() < 0.2f) {
                 float r = (float) getBeamColorR();
@@ -102,8 +106,8 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
                 float b = (float) getBeamColorB();
 
                 if (r != 0 || g != 0 || b != 0) {
-                    ForgeDirection up = ForgeDirection.getOrientation(getAboveSide(worldObj.getBlockMetadata(xCoord, yCoord, zCoord)));
-                    GravitationalStabilizerBeamParticle particle = new GravitationalStabilizerBeamParticle(worldObj, new Vector3f(xCoord + 0.5f, yCoord + 0.5f, zCoord + 0.5f), new Vector3f(hit.blockX + 0.5f, hit.blockY + 0.5f, hit.blockZ + 0.5f), new Vector3f(up.offsetX, up.offsetY, up.offsetZ), 1f, 0.3f, 80);
+                    EnumFacing up = getAboveSide(worldObj.getBlockState(getPos()).getValue(MOBlock.PROPERTY_DIRECTION));
+                    GravitationalStabilizerBeamParticle particle = new GravitationalStabilizerBeamParticle(worldObj, new Vector3f(getPos().getX() + 0.5f, getPos().getY() + 0.5f, getPos().getZ() + 0.5f), new Vector3f(hit.getBlockPos().getX() + 0.5f, hit.getBlockPos().getY() + 0.5f, hit.getBlockPos().getZ() + 0.5f), new Vector3f(up.getFrontOffsetX(), up.getFrontOffsetY(), up.getFrontOffsetZ()), 1f, 0.3f, 80);
                     particle.setColor(r, g, b, 1);
                     ClientProxy.renderHandler.getRenderParticlesHandler().addEffect(particle, RenderParticlesHandler.Blending.Additive);
                 }
@@ -121,10 +125,10 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     public AxisAlignedBB getRenderBoundingBox()
     {
         Block type = getBlockType();
-        AxisAlignedBB bb = type.getCollisionBoundingBoxFromPool(worldObj, xCoord, yCoord, zCoord);
+        AxisAlignedBB bb = type.getCollisionBoundingBox(worldObj, getPos(),worldObj.getBlockState(getPos()));
         if (hit != null)
         {
-            return bb.expand(hit.blockX - xCoord,hit.blockY - yCoord,hit.blockZ - zCoord);
+            return bb.expand(hit.getBlockPos().getX() - getPos().getX(),hit.getBlockPos().getY() - getPos().getY(),hit.getBlockPos().getZ() - getPos().getZ());
         }
         return bb;
     }
@@ -149,24 +153,19 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
         return (float) Math.max(Math.max(getBeamColorR(), getBeamColorG()), getBeamColorB()) * 0.5f;
     }
 
-    @Override
-    protected void onActiveChange() {
-
-    }
-
     public double getBeamColorR()
     {
-        return MOMathHelper.noise(0,yCoord,worldObj.getWorldTime() * 0.01);
+        return MOMathHelper.noise(0,getPos().getY(),worldObj.getWorldTime() * 0.01);
     }
 
     public double getBeamColorG()
     {
-        return MOMathHelper.noise(xCoord,0,worldObj.getWorldTime() * 0.01);
+        return MOMathHelper.noise(getPos().getX(),0,worldObj.getWorldTime() * 0.01);
     }
 
     public double getBeamColorB()
     {
-        return MOMathHelper.noise(0,0,zCoord + worldObj.getWorldTime() * 0.01);
+        return MOMathHelper.noise(0,0,getPos().getZ() + worldObj.getWorldTime() * 0.01);
     }
 
     public MovingObjectPosition getHit()
@@ -181,7 +180,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     }
 
     @Override
-    public void onServerTick(TickEvent.Phase phase,World world)
+    public void onServerTick(TickEvent.Phase phase, World world)
     {
         if (worldObj == null)
             return;
@@ -199,17 +198,8 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     }
 
     @Override
-    public void onAdded(World world, int x, int y, int z) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-    }
-
-    @Override
-    public void onDestroyed() {
-
+    public int[] getSlotsForFace(EnumFacing side)
+    {
+        return new int[0];
     }
 }

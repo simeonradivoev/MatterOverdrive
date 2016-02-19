@@ -18,10 +18,9 @@
 
 package matteroverdrive.items.food;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
@@ -38,7 +37,6 @@ public class RomulanAle extends ItemFood {
 	public RomulanAle(String name) {
 		super(4, 0.6f, false);
 		setUnlocalizedName(name);
-		setTextureName(Reference.MOD_ID + ":" + name);
 		setAlwaysEdible();
 	}
 
@@ -48,8 +46,8 @@ public class RomulanAle extends ItemFood {
 	}
 
 	@Override
-	public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player) {
-		super.onEaten(itemStack, world, player);
+	public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityPlayer player) {
+		super.onItemUseFinish(itemStack, world, player);
 
 		if (!player.capabilities.isCreativeMode && !world.isRemote) {
 			--itemStack.stackSize;
@@ -69,6 +67,6 @@ public class RomulanAle extends ItemFood {
 
 	@Override
 	public EnumAction getItemUseAction(ItemStack p_77661_1_) {
-		return EnumAction.drink;
+		return EnumAction.DRINK;
 	}
 }

@@ -23,10 +23,10 @@ package matteroverdrive.data;
  */
 public class Bounds
 {
-    int minX;
-    int minY;
-    int maxX;
-    int maxY;
+    private int minX;
+    private int minY;
+    private int maxX;
+    private int maxY;
 
     public Bounds(int minX, int minY, int maxX, int maxY)
     {

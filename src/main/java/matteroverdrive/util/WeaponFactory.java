@@ -39,11 +39,11 @@ import java.util.*;
 public class WeaponFactory
 {
     public static final int MAX_LOOT_LEVEL = 3;
-    private Random random;
-    public List<WeightedRandomItemStack> weapons;
-    public List<WeightedRandomWeaponModule> barrelModules;
-    public List<WeightedRandomWeaponModule> batteryModules;
-    public List<WeightedRandomWeaponModule> otherModules;
+    private final Random random;
+    public final List<WeightedRandomItemStack> weapons;
+    public final List<WeightedRandomWeaponModule> barrelModules;
+    public final List<WeightedRandomWeaponModule> batteryModules;
+    public final List<WeightedRandomWeaponModule> otherModules;
 
     public WeaponFactory()
     {
@@ -91,7 +91,7 @@ public class WeaponFactory
     public ItemStack getRandomEnergyWeapon(WeaponGenerationContext context)
     {
         ItemStack weapon;
-        weapon = ((WeightedRandomItemStack)WeightedRandom.getRandomItem(random,weapons)).getStack();
+        weapon = WeightedRandom.getRandomItem(random,weapons).getStack();
         if (context.fullCharge)
         {
             ((EnergyWeapon)weapon.getItem()).rechargeFully(weapon);

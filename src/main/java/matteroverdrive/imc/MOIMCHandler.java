@@ -18,7 +18,12 @@
 
 package matteroverdrive.imc;
 
-import cpw.mods.fml.common.event.FMLInterModComms;
+import matteroverdrive.data.matter.DamageAwareStackHandler;
+import matteroverdrive.data.matter.ItemHandler;
+import matteroverdrive.data.matter.OreHandler;
+import matteroverdrive.util.MOLog;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMC;
 import matteroverdrive.data.recipes.InscriberRecipe;
@@ -57,43 +62,80 @@ public class MOIMCHandler {
 	{
 		if (!msg.isNBTMessage())
 		{
-			MatterOverdrive.log.warn("Invalid message type for Matter Registration. Message needs to be of type NBT");
+			MOLog.warn("Invalid message type for Matter Registration. Message needs to be of type NBT");
 			return;
 		}
 		try {
 			NBTTagCompound data = msg.getNBTValue();
 			if (containsAllTags(data, "Matter")) {
 				int matter = data.getInteger("Matter");
-				if (data.hasKey("Item")) {
+				boolean isFinalHandler = data.getBoolean("FinalMatter");
+				if (data.hasKey("Item", Constants.NBT.TAG_COMPOUND)) {
 					ItemStack itemStack = ItemStack.loadItemStackFromNBT(data.getCompoundTag("Item"));
-					MatterOverdrive.matterRegistry.register(itemStack, matter);
-				} else if (data.hasKey("Ore")) {
+
+					if (data.getBoolean("MetaAware"))
+					{
+						MatterOverdrive.matterRegistry.register(itemStack.getItem(),new DamageAwareStackHandler(itemStack.getItemDamage(),matter,isFinalHandler));
+					}else
+					{
+						MatterOverdrive.matterRegistry.register(itemStack.getItem(),new ItemHandler(matter,isFinalHandler));
+					}
+				} else if (data.hasKey("Ore", Constants.NBT.TAG_STRING)) {
 					String oreName = data.getString("Ore");
-					MatterOverdrive.matterRegistry.register(oreName, matter);
+					MatterOverdrive.matterRegistry.registerOre(oreName, new OreHandler(matter,isFinalHandler));
 				}
 			}
 		}catch (Exception e)
 		{
-			MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while trying to register an Item in the Matter Registry from: %s",msg.getSender());
+			MOLog.log(Level.ERROR,e,"There was a problem while trying to register an Item in the Matter Registry from: %s",msg.getSender());
 		}
 	}
 
 	private static void handleItemBlacklistRegistration(FMLInterModComms.IMCMessage msg)
 	{
-		if (!msg.isItemStackMessage())
+		try
 		{
-			MatterOverdrive.log.warn("Invalid message type for Matter Blacklist Registration. Message needs to be of type Item Stack");
-			return;
+
+
+			if (msg.isItemStackMessage())
+			{
+				ItemStack itemStack = msg.getItemStackValue();
+				if (itemStack != null)
+				{
+					MatterOverdrive.matterRegistry.register(itemStack.getItem(), new DamageAwareStackHandler(itemStack.getItemDamage(), 0, true));
+				}
+			} else if (msg.isNBTMessage())
+			{
+				NBTTagCompound data = msg.getNBTValue();
+				ItemStack itemStack = ItemStack.loadItemStackFromNBT(data.getCompoundTag("Item"));
+				if (data.hasKey("Item", Constants.NBT.TAG_COMPOUND))
+				{
+					if (data.getBoolean("MetaAware"))
+					{
+						MatterOverdrive.matterRegistry.register(itemStack.getItem(), new DamageAwareStackHandler(itemStack.getItemDamage(), 0, true));
+					} else
+					{
+						MatterOverdrive.matterRegistry.register(itemStack.getItem(), new ItemHandler(0, true));
+					}
+				} else if (data.hasKey("Ore", Constants.NBT.TAG_STRING))
+				{
+					String oreName = data.getString("Ore");
+					MatterOverdrive.matterRegistry.registerOre(oreName, new OreHandler(0, true));
+				}
+			} else
+			{
+				MOLog.warn("Invalid message type for Matter Blacklisting. Message needs to be of type NBT or ItemStack");
+			}
+		}catch (Exception e)
+		{
+			MOLog.log(Level.ERROR,e,"There was a problem while trying to blacklist an Item in the Matter Registry from: %s",msg.getSender());
 		}
-		ItemStack itemStack = msg.getItemStackValue();
-		if (itemStack != null)
-			MatterOverdrive.matterRegistry.addToBlacklist(itemStack);
 	}
 
 	private static void handleInscriberRecipeRegistration(FMLInterModComms.IMCMessage msg) {
 		if (!msg.isNBTMessage())
 		{
-			MatterOverdrive.log.error("Invalid message format for Inscriber Recipe registration. Message needs to be of type NBT");
+			MOLog.error("Invalid message format for Inscriber Recipe registration. Message needs to be of type NBT");
 			return;
 		}
 		try {
@@ -111,7 +153,7 @@ public class MOIMCHandler {
 			}
 		} catch (Exception e)
 		{
-			MatterOverdrive.log.log(Level.ERROR,e,"There was a problem while trying to register an Inscriber Recipe from: %s",msg.getSender());
+			MOLog.log(Level.ERROR,e,"There was a problem while trying to register an Inscriber Recipe from: %s",msg.getSender());
 		}
 	}
 

@@ -18,8 +18,10 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.blocks.includes.MOBlockContainer;
 import matteroverdrive.handler.ConfigurationHandler;
@@ -58,30 +60,22 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+    public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)
     {
-        return null;
+        this.setBlockBoundsBasedOnState(worldIn,pos);
+        return super.collisionRayTrace(worldIn,pos,start,end);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
+    public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
     {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
-        return super.getSelectedBoundingBoxFromPool(world, x, y, z);
+        return true;
     }
 
     @Override
-    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 vector1, Vec3 vector2)
+    public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
     {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
-        return super.collisionRayTrace(world, x, y, z, vector1, vector2);
-    }
-
-    @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
-    {
-        TileEntity tileEntity = world.getTileEntity(x,y,z);
+        TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityGravitationalAnomaly)
         {
             double range = ((TileEntityGravitationalAnomaly) tileEntity).getEventHorizon();
@@ -93,12 +87,19 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
     }
 
     @Override
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+    {
+        return null;
+    }
+
+    @Override
     public boolean isOpaqueCube()
     {
         return false;
     }
+
     @Override
-    public boolean renderAsNormalBlock()
+    public boolean isFullCube()
     {
         return false;
     }
@@ -111,7 +112,7 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
     @Override
     public void addInfo(World world, double x, double y, double z, List<String> infos)
     {
-        TileEntity tileEntity = world.getTileEntity((int)x, (int)y, (int)z);
+        TileEntity tileEntity = world.getTileEntity(new BlockPos(x,y,z));
 
         if (tileEntity != null && tileEntity instanceof TileEntityGravitationalAnomaly)
         {
@@ -126,7 +127,7 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
     }
 
     @Override
-    public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity)
+    public boolean canEntityDestroy(IBlockAccess world, BlockPos pos, Entity entity)
     {
         return false;
     }

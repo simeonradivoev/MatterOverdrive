@@ -1,0 +1,47 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mo:inscriber.obj",
+    "custom":{
+      "flip-v": true
+    },
+    "textures": {
+
+    }
+  },
+  "variants": {
+    "normal": {
+      "model": "mo:inscriber.obj"
+    },
+    "facing":{
+      "north":{
+        "transform": {
+          "rotation": {
+            "y":180
+          }
+        }
+      },
+      "south":{
+
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 270
+          }
+        }
+      },
+      "east":{
+        "transform": {
+          "rotation": {
+            "y":90
+          }
+        }
+      }
+    },
+    "inventory": {
+      "model": "mo:inscriber.obj",
+      "transform": "forge:default-block"
+    }
+  }
+}

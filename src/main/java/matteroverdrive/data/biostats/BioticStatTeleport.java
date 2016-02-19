@@ -19,27 +19,24 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
-import matteroverdrive.entity.player.AndroidPlayer;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.network.packet.server.PacketTeleportPlayer;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOPhysicsHelper;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -49,12 +46,11 @@ import java.util.HashSet;
  */
 public class BioticStatTeleport extends AbstractBioticStat implements IConfigSubscriber {
 
-    public static final String EFFECT_KEY_LAST_TELEPORT = "LastTeleport";
     public static final int TELEPORT_DELAY = 40;
     public static int ENERGY_PER_TELEPORT = 4096;
-    public static int MAX_TELEPORT_HEIGHT_CHECK = 8;
-    public static int MAX_TELEPORT_DISTANCE = 32;
-    private HashSet<String> blackListedBlocks;
+    private static int MAX_TELEPORT_HEIGHT_CHECK = 8;
+    private static int MAX_TELEPORT_DISTANCE = 32;
+    private final HashSet<String> blackListedBlocks;
     @SideOnly(Side.CLIENT)
     private boolean hasPressedKey;
     public BioticStatTeleport(String name, int xp)
@@ -68,7 +64,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     @Override
     public String getDetails(int level)
     {
-        String keyName = GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode());
+        String keyName = EnumChatFormatting.AQUA + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()) + EnumChatFormatting.GRAY;
         return String.format(super.getDetails(level), keyName, EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + EnumChatFormatting.GRAY);
     }
 
@@ -84,7 +80,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     @SideOnly(Side.CLIENT)
     private void manageActivate(AndroidPlayer androidPlayer)
     {
-        if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getIsKeyPressed() && this.equals(androidPlayer.getActiveStat()))
+        if (ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).isKeyDown() && this.equals(androidPlayer.getActiveStat()))
         {
             hasPressedKey = true;
         }
@@ -111,18 +107,19 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
 
     }
 
-    public Vec3 getPos(AndroidPlayer androidPlayer) {
-        MovingObjectPosition position = MOPhysicsHelper.rayTraceForBlocks(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, MAX_TELEPORT_DISTANCE, 0, Vec3.createVectorHelper(0, 0, 0), true, true);
-        if (position != null && position.typeOfHit != MovingObjectPosition.MovingObjectType.MISS)
+    public Vec3 getPos(AndroidPlayer androidPlayer)
+    {
+        MovingObjectPosition position = MOPhysicsHelper.rayTraceForBlocks(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, MAX_TELEPORT_DISTANCE, 0, new Vec3(0, androidPlayer.getPlayer().getEyeHeight(), 0), true, true);
+        if (position != null && position.typeOfHit != MovingObjectPosition.MovingObjectType.MISS && position.getBlockPos() != null)
         {
-            Vec3 pos = getTopSafeBlock(androidPlayer.getPlayer().worldObj, position.blockX, position.blockY, position.blockZ, position.sideHit);
+            BlockPos pos = getTopSafeBlock(androidPlayer.getPlayer().worldObj, position.getBlockPos(), position.sideHit);
             if (pos != null) {
-                return Vec3.createVectorHelper(pos.xCoord + 0.5, pos.yCoord, pos.zCoord + 0.5);
+                return new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             }
             return null;
         }
 
-        position = MOPhysicsHelper.rayTrace(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, 6, 0, Vec3.createVectorHelper(0, 0, 0), true, true);
+        position = MOPhysicsHelper.rayTrace(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, 6, 0, new Vec3(0, androidPlayer.getPlayer().getEyeHeight(), 0), true, true);
         if (position != null)
         {
             return position.hitVec;
@@ -130,26 +127,27 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
         return null;
     }
 
-    public Vec3 getTopSafeBlock(World world, int x, int y, int z, int side)
+    private BlockPos getTopSafeBlock(World world, BlockPos pos, EnumFacing side)
     {
         int airBlockCount = 0;
         int heightCheck = MAX_TELEPORT_HEIGHT_CHECK;
-        if (side == 1)
+        if (side == EnumFacing.UP)
         {
             heightCheck = 3;
         }
-        int height = Math.min(y + heightCheck, world.getActualHeight());
-        Block block;
-        for (int i = y; i < height; i++)
+        int height = Math.min(pos.getY() + heightCheck, world.getActualHeight());
+        IBlockState block;
+        for (int i = pos.getY(); i < height; i++)
         {
-            block = world.getBlock(x, i, z);
-            String unlocalizedName = block.getUnlocalizedName().substring(5);
+            BlockPos blockPos = new BlockPos(pos.getX(),i,pos.getZ());
+            block = world.getBlockState(blockPos);
+            String unlocalizedName = block.getBlock().getUnlocalizedName().substring(5);
             if (blackListedBlocks.contains(unlocalizedName))
             {
                 return null;
             }
 
-            if (!block.isBlockSolid(world, x, i, z, world.getBlockMetadata(x, i, z)) || block instanceof IFluidBlock)
+            if (!block.getBlock().isBlockSolid(world, blockPos, EnumFacing.UP) || block instanceof IFluidBlock)
             {
                 airBlockCount++;
             }else
@@ -159,18 +157,17 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
 
             if (airBlockCount >= 2)
             {
-                return Vec3.createVectorHelper(x, i - 1, z);
+                return blockPos.offset(EnumFacing.DOWN);
             }
         }
 
-        ForgeDirection direction = ForgeDirection.getOrientation(side);
-        x += direction.offsetX;
-        y += direction.offsetY;
-        z += direction.offsetZ;
+        pos = pos.offset(side);
 
-        if (!world.getBlock(x, y + 1, z).isBlockSolid(world, x, y, z, world.getBlockMetadata(x, y + 1, z)) && !world.getBlock(x, y + 2, z).isBlockSolid(world, x, y, z, world.getBlockMetadata(x, y + 2, z)))
+        IBlockState above = world.getBlockState(pos.offset(EnumFacing.UP));
+        IBlockState aboveTwo = world.getBlockState(pos.offset(EnumFacing.UP,2));
+        if (!above.getBlock().isBlockSolid(world, pos.offset(EnumFacing.UP), EnumFacing.UP) && !aboveTwo.getBlock().isBlockSolid(world, pos.offset(EnumFacing.UP,2), EnumFacing.UP))
         {
-            return Vec3.createVectorHelper(x, y, z);
+            return pos;
         }
 
         return null;
@@ -199,7 +196,9 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     @Override
     public boolean isEnabled(AndroidPlayer android, int level)
     {
-        return super.isEnabled(android,level) && android.getEffectLong(EFFECT_KEY_LAST_TELEPORT) <= android.getPlayer().worldObj.getTotalWorldTime() && android.hasEnoughEnergyScaled(ENERGY_PER_TELEPORT) && this.equals(android.getActiveStat());
+        long lastTeleport = android.getAndroidEffects().getEffectLong(AndroidPlayer.EFFECT_LAST_TELEPORT);
+        long worldTime = android.getPlayer().worldObj.getTotalWorldTime();
+        return super.isEnabled(android,level) && lastTeleport <= worldTime && android.hasEnoughEnergyScaled(ENERGY_PER_TELEPORT) && this.equals(android.getActiveStat());
     }
 
     @Override

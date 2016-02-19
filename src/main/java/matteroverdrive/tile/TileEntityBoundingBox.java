@@ -18,53 +18,59 @@
 
 package matteroverdrive.tile;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import matteroverdrive.api.IMOTileEntity;
-import matteroverdrive.data.BlockPos;
 import matteroverdrive.util.MOLog;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * @author shadowfacts
  */
-public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity {
+public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity, ITickable
+{
 
 	private int tick = 0;
 	private BlockPos ownerPos;
 	private Block ownerBlock;
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		tick++;
 		if (tick == 80) { // update every 4 seconds (assuming 20 TPS)
 			tick = 0;
 
-			if (!ownerPresent()) {
-				worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+			if (worldObj != null)
+			{
+				if (!ownerPresent())
+				{
+					worldObj.setBlockToAir(getPos());
+				}
 			}
 
 		}
 	}
 
-	@Override
-	public boolean canUpdate() {
-		return worldObj != null;
-	}
-
-	private boolean ownerPresent() {
-		return worldObj.getBlock(ownerPos.x, ownerPos.y, ownerPos.z) == ownerBlock;
+	private boolean ownerPresent()
+	{
+		if (ownerPos != null)
+		{
+			return worldObj.getBlockState(ownerPos).getBlock() == ownerBlock;
+		}
+		return true;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		ownerPos = new BlockPos(tag);
+		ownerPos = BlockPos.fromLong(tag.getLong("owner"));
 
 		String ownerModid = tag.getString("owner_block_modid");
 		String ownerName = tag.getString("owner_block_name");
@@ -80,11 +86,11 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity {
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		if (ownerPos != null) {
-			ownerPos.writeToNBT(tag);
+			tag.setLong("owner",ownerPos.toLong());
 		}
 
 		if (ownerBlock != null) {
-			UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(ownerBlock);
+			GameRegistry.UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(ownerBlock);
 			tag.setString("owner_block_modid", id.modId);
 			tag.setString("owner_block_name", id.name);
 		}
@@ -107,22 +113,7 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity {
 	}
 
 	@Override
-	public void onAdded(World world, int x, int y, int z) {
-
-	}
-
-	@Override
 	public void onPlaced(World world, EntityLivingBase entityLiving) {
-
-	}
-
-	@Override
-	public void onDestroyed() {
-
-	}
-
-	@Override
-	public void onNeighborBlockChange() {
 
 	}
 
@@ -133,6 +124,24 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity {
 
 	@Override
 	public void readFromPlaceItem(ItemStack itemStack) {
+
+	}
+
+	@Override
+	public void onAdded(World world, BlockPos pos, IBlockState state)
+	{
+
+	}
+
+	@Override
+	public void onDestroyed(World worldIn, BlockPos pos, IBlockState state)
+	{
+
+	}
+
+	@Override
+	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	{
 
 	}
 }

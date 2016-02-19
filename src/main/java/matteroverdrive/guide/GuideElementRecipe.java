@@ -21,8 +21,10 @@ package matteroverdrive.guide;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.init.MatterOverdriveRecipes;
+import matteroverdrive.util.MOLog;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -48,13 +50,13 @@ public class GuideElementRecipe extends GuideElementAbstract
     @Override
     public void drawElement(int width,int mouseX,int mouseY)
     {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         if (textAlign == 1) {
-            GL11.glTranslated(marginLeft + this.width/2 - 110/2, marginTop, 0);
+            GlStateManager.translate(marginLeft + this.width/2 - 110/2, marginTop, 0);
         }
         else
         {
-            GL11.glTranslated(marginLeft, marginTop, 0);
+            GlStateManager.translate(marginLeft, marginTop, 0);
         }
         bindTexture(background);
         RenderUtils.applyColor(Reference.COLOR_MATTER);
@@ -85,18 +87,18 @@ public class GuideElementRecipe extends GuideElementAbstract
                 }
             }
         }
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     private void renderStack(ItemStack stack,int x,int y)
     {
         if (stack != null) {
 
-            GL11.glPushMatrix();
-            GL11.glTranslated(10 + x * 33, 9 + y * 33, 0);
-            GL11.glScaled(1.5, 1.5, 1.5);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(10 + x * 33, 9 + y * 33, 0);
+            GlStateManager.scale(1.5, 1.5, 1.5);
             RenderUtils.renderStack(0, 0, stack);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -124,7 +126,7 @@ public class GuideElementRecipe extends GuideElementAbstract
 
             if (recipe == null)
             {
-                for (IRecipe recipe : (List<IRecipe>)CraftingManager.getInstance().getRecipeList())
+                for (IRecipe recipe : CraftingManager.getInstance().getRecipeList())
                 {
                     if (ItemStack.areItemStacksEqual(recipe.getRecipeOutput(),output))
                     {
@@ -136,7 +138,7 @@ public class GuideElementRecipe extends GuideElementAbstract
         }
         else
         {
-            MatterOverdrive.log.warn("There is no output Itemstack to recipe Guide Element");
+            MOLog.warn("There is no output Itemstack to recipe Guide Element");
         }
 
 
@@ -157,7 +159,7 @@ public class GuideElementRecipe extends GuideElementAbstract
             }
         }else
         {
-            MatterOverdrive.log.warn("Could not find recipe for %s in Guide Recipe Element",output);
+            MOLog.warn("Could not find recipe for %s in Guide Recipe Element",output);
         }
 
         this.height = 100;

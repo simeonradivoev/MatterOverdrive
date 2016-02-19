@@ -30,23 +30,24 @@ import net.minecraft.entity.Entity;
 public class ModelTritaniumArmor extends ModelBiped {
   //fields
   int part;
-  public ModelRenderer VisorUpperPart;
-  public ModelRenderer VisorFrontPart;
-  public ModelRenderer Chestplate;
-  public ModelRenderer ChestplateSupportLeft;
-  public ModelRenderer ChestplateSupportRight;
-  public ModelRenderer Backplate;
-  public ModelRenderer BackplateSupport;
-  public ModelRenderer FootLeft;
-  public ModelRenderer FootRight;
-  public ModelRenderer ShoulderLeft;
-  public ModelRenderer ShoulderRight;
-  public ModelRenderer ShoulderL1;
-  public ModelRenderer ShoulderR1;
+  public final ModelRenderer VisorUpperPart;
+  public final ModelRenderer VisorFrontPart;
+  public final ModelRenderer Chestplate;
+  public final ModelRenderer ChestplateSupportLeft;
+  public final ModelRenderer ChestplateSupportRight;
+  public final ModelRenderer Backplate;
+  public final ModelRenderer BackplateSupport;
+  public final ModelRenderer FootLeft;
+  public final ModelRenderer FootRight;
+  public final ModelRenderer ShoulderLeft;
+  public final ModelRenderer ShoulderRight;
+  public final ModelRenderer ShoulderL1;
+  public final ModelRenderer ShoulderR1;
 
   public ModelTritaniumArmor(float expand) {
     super(expand, 0, 64, 64);
     bipedHeadwear.isHidden = true;
+    this.isChild = false;
 
 
     //head

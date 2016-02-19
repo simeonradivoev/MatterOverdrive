@@ -21,7 +21,7 @@ package matteroverdrive.util;
 import matteroverdrive.api.dialog.IDialogNpc;
 import matteroverdrive.api.dialog.IDialogRegistry;
 import matteroverdrive.client.render.conversation.DialogShot;
-import matteroverdrive.dialog.DialogMessage;
+import matteroverdrive.data.dialog.DialogMessage;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -29,7 +29,7 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class DialogFactory
 {
-    private IDialogRegistry registry;
+    private final IDialogRegistry registry;
 
     public DialogFactory(IDialogRegistry registry)
     {
@@ -41,26 +41,26 @@ public class DialogFactory
         DialogMessage[] messages = new DialogMessage[lines];
         try {
             messages[0] = mainMessageType.newInstance();
-        } catch (InstantiationException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             messages[0] = new DialogMessage();
-        } catch (IllegalAccessException e) {
-            messages[0] = new DialogMessage();
-        }finally {
+        } finally {
             registry.registerMessage(messages[0]);
         }
-        messages[0].loadMessageFromLocalization(String.format("%s.%s.line",unlocalizedName,0));
-        messages[0].loadQuestionFromLocalization(unlocalizedName+".question");
+        messages[0].setMessages(new String[]{String.format("%s.%s.line",unlocalizedName,0)});
+        messages[0].setQuestions(new String[]{unlocalizedName+".question"});
+        messages[0].setUnlocalized(true);
 
         DialogMessage lastChild = messages[0];
         for (int i = 1;i < lines;i++)
         {
             DialogMessage child = new DialogMessage("",nextLineQuestion);
             registry.registerMessage(child);
-            child.loadMessageFromLocalization(String.format("%s.%s.line",unlocalizedName,i));
+            child.setMessages(new String[]{String.format("%s.%s.line",unlocalizedName,i)});
             if (MOStringHelper.hasTranslation(String.format("%s.%s.question",unlocalizedName,i)))
             {
-                child.loadQuestionFromLocalization(String.format("%s.%s.question",unlocalizedName,i));
+                child.setQuestions(new String[]{String.format("%s.%s.question",unlocalizedName,i)});
             }
+            child.setUnlocalized(true);
             child.setParent(lastChild);
             lastChild.addOption(child);
             lastChild = child;

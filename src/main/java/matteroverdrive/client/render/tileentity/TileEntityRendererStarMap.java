@@ -18,8 +18,6 @@
 
 package matteroverdrive.client.render.tileentity;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
 import matteroverdrive.gui.GuiStarMap;
 import matteroverdrive.proxy.ClientProxy;
@@ -28,7 +26,10 @@ import matteroverdrive.starmap.data.SpaceBody;
 import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collection;
 
@@ -61,14 +62,14 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
     }
 
     protected void renderHologramBase(TileEntityMachineStarMap starMap, double x, double y, double z,float partialTicks) {
-        glPushMatrix();
-        glTranslated(x, y, z);
-        glTranslated(0.5, 0.5, 0.5);
-        glEnable(GL_BLEND);
-        glDisable(GL_LIGHTING);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
+        GlStateManager.translate(0.5, 0.5, 0.5);
+        GlStateManager.enableBlend();
+        GlStateManager.disableLighting();
         RenderUtils.disableLightmap();
-        glBlendFunc(GL_ONE, GL_ONE);
-        float distance = (float) Vec3.createVectorHelper(x, y, z).lengthVector();
+        GlStateManager.blendFunc(GL_ONE, GL_ONE);
+        float distance = (float) new Vec3(x, y, z).lengthVector();
 
         if (starMap.getActiveSpaceBody() != null)
         {
@@ -82,32 +83,32 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
                         SpaceBody spaceBody = starMap.getActiveSpaceBody();
                         if (spaceBody != null)
                         {
-                            glTranslated(0, renderer.getHologramHeight(spaceBody), 0);
-                            glPushMatrix();
+                            GlStateManager.translate(0, renderer.getHologramHeight(spaceBody), 0);
+                            GlStateManager.pushMatrix();
                             renderer.renderBody(GalaxyClient.getInstance().getTheGalaxy(), spaceBody, starMap, partialTicks, distance);
-                            glPopMatrix();
+                            GlStateManager.popMatrix();
 
                             if (drawHoloLights())
                             {
-                                glPushMatrix();
-                                Vec3 playerPosition = Minecraft.getMinecraft().renderViewEntity.getPosition(partialTicks);
-                                playerPosition.yCoord = 0;
-                                Vec3 mapPosition = Vec3.createVectorHelper(starMap.xCoord + 0.5, 0, starMap.zCoord + 0.5);
-                                Vec3 dir = playerPosition.subtract(mapPosition).normalize();
-                                double angle = Math.acos(dir.dotProduct(Vec3.createVectorHelper(1, 0, 0)));
-                                if (Vec3.createVectorHelper(0, 1, 0).dotProduct(dir.crossProduct(Vec3.createVectorHelper(1, 0, 0))) < 0)
+                                GlStateManager.pushMatrix();
+                                Vec3 playerPosition = Minecraft.getMinecraft().getRenderViewEntity().getPositionEyes(partialTicks);
+                                playerPosition = new Vec3(playerPosition.xCoord,0,playerPosition.zCoord);
+                                Vec3 mapPosition = new Vec3(starMap.getPos().getX() + 0.5, 0, starMap.getPos().getZ() + 0.5);
+                                Vec3 dir = mapPosition.subtract(playerPosition).normalize();
+                                double angle = Math.acos(dir.dotProduct(new Vec3(1, 0, 0)));
+                                if (new Vec3(0, 1, 0).dotProduct(dir.crossProduct(new Vec3(1, 0, 0))) < 0)
                                 {
                                     angle = Math.PI * 2 - angle;
                                 }
                                 drawHoloGuiInfo(renderer, spaceBody, starMap, (Math.PI / 2 - angle) * (180 / Math.PI), partialTicks);
-                                glPopMatrix();
+                                GlStateManager.popMatrix();
                             }
                         }
                     }
                 }
             }
         }
-        glPopMatrix();
+        GlStateManager.popMatrix();
         RenderUtils.enableLightmap();
     }
 
@@ -131,15 +132,17 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
 
     public void drawHoloGuiInfo(ISpaceBodyHoloRenderer renderer,SpaceBody spaceBody,TileEntityMachineStarMap starMap,double angle,float partialTicks)
     {
+        GlStateManager.disableLighting();
         angle = Math.round(angle / 90d) * 90;
-        glPushMatrix();
-        glTranslated(0, -renderer.getHologramHeight(spaceBody) + 0.3, 0);
-        glRotated(angle, 0, 1, 0);
-        glTranslated(1, 0, -0.8);
-        glScaled(0.01, 0.01, 0.01);
-        glRotated(180, 0, 0, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, -renderer.getHologramHeight(spaceBody) + 0.3, 0);
+        GlStateManager.rotate((float)angle, 0, 1, 0);
+        GlStateManager.translate(1, 0, -0.8);
+        GlStateManager.scale(0.01, 0.01, 0.01);
+        GlStateManager.rotate(180, 0, 0, 1);
         if (spaceBody != null)
             renderer.renderGUIInfo(GalaxyClient.getInstance().getTheGalaxy(), spaceBody,starMap, partialTicks, 0.5f);
-        glPopMatrix();
+        GlStateManager.popMatrix();
+        GlStateManager.enableLighting();
     }
 }

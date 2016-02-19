@@ -1,7 +1,5 @@
 package matteroverdrive.tile.pipes;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.tile.MOTileEntity;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,18 +8,22 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
+public abstract class TileEntityPipe extends MOTileEntity implements ITickable
 {
-    private boolean needsUpdate = true;
+    protected boolean needsUpdate = true;
+    protected boolean awoken;
     private int connections = 0;
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
     {
-        connections = pkt.func_148857_g().getInteger("Connections");
-        worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+        connections = pkt.getNbtCompound().getInteger("Connections");
+        worldObj.markBlockRangeForRenderUpdate(getPos(),getPos());
     }
 
     @Override
@@ -29,16 +31,22 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
         tagCompound.setInteger("Connections",connections);
-        return new S35PacketUpdateTileEntity(xCoord,yCoord,zCoord,0,tagCompound);
+        return new S35PacketUpdateTileEntity(getPos(),0,tagCompound);
     }
 
     @Override
-	public void updateEntity()
+	public void update()
 	{
         if(needsUpdate)
         {
             updateSides(true);
             needsUpdate = false;
+        }
+
+        if (!awoken)
+        {
+            onAwake(worldObj.isRemote ? Side.CLIENT : Side.SERVER);
+            awoken = true;
         }
 	}
 
@@ -46,13 +54,13 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
 	{
         int connections = 0;
 
-        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+        for (EnumFacing direction : EnumFacing.VALUES)
         {
-            TileEntity t = this.worldObj.getTileEntity(direction.offsetX + this.xCoord,direction.offsetY + this.yCoord,direction.offsetZ + this.zCoord);
+            TileEntity t = this.worldObj.getTileEntity(getPos().offset(direction));
 
-            if(canConnectTo(t,direction))
+            if(canConnectToPipe(t,direction))
             {
-                connections |= direction.flag;
+                connections |= 1 << direction.ordinal();
             }
         }
 
@@ -64,20 +72,45 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
         return connections;
     }
 
+    public int getConnectionsCount()
+    {
+        int tot = 0;
+        int con = connections;
+        while (con > 0) {
+            ++tot;
+            con &= con - 1;
+        }
+
+        return tot;
+    }
+
     public void setConnections(int connections,boolean notify)
     {
         this.connections = connections;
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+        if (notify)
+        {
+            worldObj.markBlockForUpdate(getPos());
+        }
     }
 
-    public abstract boolean canConnectTo(TileEntity entity,ForgeDirection direction);
+    public void setConnection(EnumFacing connection,boolean value)
+    {
+        this.connections = MOMathHelper.setBoolean(connections,connection.ordinal(),value);
+    }
+
+    public boolean isConnectedFromSide(EnumFacing enumFacing)
+    {
+        return MOMathHelper.getBoolean(connections,enumFacing.ordinal());
+    }
+
+    public abstract boolean canConnectToPipe(TileEntity entity, EnumFacing direction);
 
     public void queueUpdate()
     {
         needsUpdate = true;
     }
 
-    public  boolean isConnectableSide(ForgeDirection dir)
+    public  boolean isConnectableSide(EnumFacing dir)
     {
         return  MOMathHelper.getBoolean(connections,dir.ordinal());
     }
@@ -85,12 +118,6 @@ public abstract class TileEntityPipe<T extends TileEntity> extends MOTileEntity
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
-        return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord+1,yCoord+1,zCoord+1);
-    }
-
-    @Override
-    public void onNeighborBlockChange()
-    {
-        queueUpdate();
+        return new AxisAlignedBB(getPos(),getPos().add(1,1,1));
     }
 }

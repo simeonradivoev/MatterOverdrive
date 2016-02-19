@@ -18,10 +18,13 @@
 
 package matteroverdrive.machines;
 
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
+
 /**
  * Created by Simeon on 7/19/2015.
  */
-public abstract class MachineComponentAbstract<T extends MOTileEntityMachine> implements IMachineComponent<T>
+public abstract class MachineComponentAbstract<T extends MOTileEntityMachine> implements IMachineComponent
 {
     protected final T machine;
 
@@ -34,4 +37,8 @@ public abstract class MachineComponentAbstract<T extends MOTileEntityMachine> im
     {
         return machine;
     }
+
+    public World getWorld(){return machine.getWorld();}
+
+    public BlockPos getPos(){return machine.getPos();}
 }

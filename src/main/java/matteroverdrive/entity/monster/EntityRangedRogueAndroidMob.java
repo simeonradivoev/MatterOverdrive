@@ -18,8 +18,6 @@
 
 package matteroverdrive.entity.monster;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.entity.IRangedEnergyWeaponAttackMob;
 import matteroverdrive.api.weapon.WeaponShot;
@@ -41,16 +39,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 11/15/2015.
  */
 public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implements IRangedEnergyWeaponAttackMob
 {
+    public static boolean DROP_NORMAL_WEAPONS = true;
+    public static boolean DROP_LEGENDARY_WEAPONS = true;
     public static boolean UNLIMITED_WEAPON_ENERGY = true;
-    private EntityAIPhaserBoltAttack aiBoltAttack = new EntityAIPhaserBoltAttack(this,1.0D, 60, 15.0F);
-    private EntityAIRangedRunFromMelee aiRangedRunFromMelee = new EntityAIRangedRunFromMelee(this,1.0D);
+    private final EntityAIPhaserBoltAttack aiBoltAttack = new EntityAIPhaserBoltAttack(this,1.0D, 60, 15.0F);
+    private final EntityAIRangedRunFromMelee aiRangedRunFromMelee = new EntityAIRangedRunFromMelee(this,1.0D);
 
     public EntityRangedRogueAndroidMob(World world)
     {
@@ -86,7 +89,7 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     @Override
     protected void dropEquipment(boolean recentlyHit, int lootingLevel)
     {
-        if (this.recentlyHit > 0)
+        if (this.recentlyHit > 0 && DROP_NORMAL_WEAPONS)
         {
             int j = this.rand.nextInt(400) - lootingLevel;
 
@@ -95,14 +98,6 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
                 this.entityDropItem(getEquipmentInSlot(0).copy(),0);
             }
         }
-    }
-
-    /**
-     * Returns true if the newer Entity AI code should be run
-     */
-    public boolean isAIEnabled()
-    {
-        return true;
     }
 
     @Override
@@ -180,12 +175,12 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     }
 
     @Override
-    public IEntityLivingData onSpawnWithEgg(IEntityLivingData entityLivingData)
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
     {
-        entityLivingData = super.onSpawnWithEgg(entityLivingData);
+        livingdata = super.onInitialSpawn(difficulty,livingdata);
         this.addRandomArmor();
-        this.enchantEquipment();
-        return entityLivingData;
+        this.setEnchantmentBasedOnDifficulty(difficulty);
+        return livingdata;
     }
 
     @Override
@@ -195,25 +190,25 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
         {
             if (lastSeenPosition == null)
             {
-                lastSeenPosition = Vec3.createVectorHelper(target.posX,target.posY,target.posZ);
+                lastSeenPosition = target.getPositionVector();
             }
             if (weapon.getItem() instanceof EnergyWeapon) {
                 EnergyWeapon energyWeapon = (EnergyWeapon) weapon.getItem();
                 //magic number from MC
-                Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY + getEyeHeight(), this.posZ);
-                Vec3 dir = Vec3.createVectorHelper(lastSeenPosition.xCoord - this.posX, lastSeenPosition.yCoord - this.posY, lastSeenPosition.zCoord - this.posZ);
-                WeaponShot shot = energyWeapon.createShot(weapon, this, true);
-                float difficulty = MathHelper.clamp_float((0.6f/3f)*worldObj.difficultySetting.getDifficultyId(),0,0.6f) + getAndroidLevel()*(0.4f/3f) + (getIsLegendary() ? 0.3f : 0);
+                Vec3 pos = new Vec3(this.posX, this.posY + getEyeHeight(), this.posZ);
+                Vec3 dir = lastSeenPosition.subtract(this.getPositionVector());
+                WeaponShot shot = energyWeapon.createServerShot(weapon, this, true);
+                float difficulty = MathHelper.clamp_float((0.6f/3f)*worldObj.getDifficulty().getDifficultyId(),0,0.6f) + getAndroidLevel()*(0.4f/3f) + (getIsLegendary() ? 0.3f : 0);
                 shot.setDamage(shot.getDamage()*difficulty);
-                difficulty = (3 - worldObj.difficultySetting.getDifficultyId())*4f;
+                difficulty = (3 - worldObj.getDifficulty().getDifficultyId())*4f;
                 shot.setAccuracy(shot.getAccuracy() + difficulty);
                 energyWeapon.onServerFire(weapon, this, shot, pos, dir,0);
                 energyWeapon.setHeat(weapon,0);
                 if (UNLIMITED_WEAPON_ENERGY)
                     energyWeapon.rechargeFully(weapon);
-                MatterOverdrive.packetPipeline.sendToAllAround(new PacketFirePlasmaShot(this.getEntityId(),pos,dir,shot),worldObj.provider.dimensionId,posX,posY,posZ,64);
+                MatterOverdrive.packetPipeline.sendToAllAround(new PacketFirePlasmaShot(this.getEntityId(),pos,dir,shot),worldObj.provider.getDimensionId(),posX,posY,posZ,64);
 
-                difficulty = 1 + (3 - worldObj.difficultySetting.getDifficultyId())*0.5f;
+                difficulty = 1 + (3 - worldObj.getDifficulty().getDifficultyId())*0.5f;
                 this.aiBoltAttack.setMaxRangedAttackDelay((int) (((EnergyWeapon) weapon.getItem()).getShootCooldown(weapon) * difficulty));
             }
         }
@@ -247,7 +242,7 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     @SideOnly(Side.CLIENT)
     public boolean isInRangeToRenderDist(double p_70112_1_)
     {
-        double d1 = this.boundingBox.getAverageEdgeLength();
+        double d1 = this.getEntityBoundingBox().getAverageEdgeLength();
         d1 *= 64.0D * this.renderDistanceWeight;
         d1 += getEntityAttribute(SharedMonsterAttributes.followRange).getAttributeValue();
         return p_70112_1_ < d1 * d1;

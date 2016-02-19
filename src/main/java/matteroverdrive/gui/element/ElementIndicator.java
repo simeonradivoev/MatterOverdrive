@@ -20,6 +20,7 @@ package matteroverdrive.gui.element;
 
 import matteroverdrive.Reference;
 import matteroverdrive.gui.MOGuiBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -61,7 +62,7 @@ public class ElementIndicator extends MOElementBase
     @Override
     public void drawBackground(int mouseX, int mouseY, float gameTicks)
     {
-        GL11.glColor3f(1,1,1);
+        GlStateManager.color(1,1,1);
         gui.bindTexture(BG);
         gui.drawSizedTexturedModalRect(posX, posY, 0, 5 * indication, sizeX, sizeY,texW,texH);
     }

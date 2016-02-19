@@ -18,14 +18,10 @@
 
 package matteroverdrive.machines.transporter.components;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import li.cil.oc.api.machine.Arguments;
-import li.cil.oc.api.machine.Context;
+import matteroverdrive.machines.events.MachineEvent;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.transport.TransportLocation;
@@ -46,12 +42,16 @@ import java.util.HashMap;
 /**
  * Created by Simeon on 7/21/2015.
  */
-@Optional.InterfaceList({
+/*@Optional.InterfaceList({
         @Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral"),
-})
-public class ComponentComputers extends MachineComponentAbstract<TileEntityMachineTransporter> implements IPeripheral
+})*/
+public class ComponentComputers extends MachineComponentAbstract<TileEntityMachineTransporter>// implements IPeripheral
 {
-    private static String[] methodNames = new String[] {
+    public ComponentComputers(TileEntityMachineTransporter machine)
+    {
+        super(machine);
+    }
+    /*private static String[] methodNames = new String[] {
             "getLocations",
             "getSelectedLocation",
             "getLocation",
@@ -106,9 +106,9 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
 
             map.put("name", loc.name);
             map.put("selected", machine.selectedLocation == machine.getPositions().indexOf(loc));
-            map.put("x", loc.x);
-            map.put("y", loc.y);
-            map.put("z", loc.z);
+            map.put("x", loc.pos.getX());
+            map.put("y", loc.pos.getY());
+            map.put("z", loc.pos.getZ());
 
             list.add(map);
         }
@@ -120,10 +120,10 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
         return computerGetLocation(new Object[]{1.0});
     }
 
-    /**
+    *//**
      * args:
      * id (number) numeric index of the location to select (First location has index 0)
-     */
+     *//*
     private Object[] computerGetLocation(Object[] args) {
 
         if (!(args[0] instanceof Double)) {
@@ -136,20 +136,20 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
 
         TransportLocation loc = machine.getPositions().get(locNum);
         map.put("name", loc.name);
-        map.put("x", loc.x);
-        map.put("y", loc.y);
-        map.put("z", loc.z);
+        map.put("x", loc.pos.getX());
+        map.put("y", loc.pos.getY());
+        map.put("z", loc.pos.getZ());
 
         return new Object[]{ map };
     }
 
-    /**
+    *//**
      * args:
      * name (string) name of the new location
      * x (number) x coord of the new location
      * y (number) y coord of the new location
      * z (number) z coord of the new location
-     */
+     *//*
     private Object[] computerAddLocation(Object[] args) {
         if (!(args[0] instanceof String)) {
             throw new IllegalArgumentException("First argument must be a string containing the name of the transport location");
@@ -163,14 +163,14 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
         int x = (int)Math.floor((Double)args[1]);
         int y = (int)Math.floor((Double)args[2]);
         int z = (int)Math.floor((Double)args[3]);
-        machine.addNewLocation(x, y, z, name);
+        machine.addNewLocation(new BlockPos(x, y, z), name);
         return null;
     }
 
-    /**
+    *//**
      * args:
      * id (number) numeric index of the location to select (First location has index 0)
-     */
+     *//*
     private Object[] computerSetSelectedLocation(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number");
@@ -179,11 +179,11 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
         return null;
     }
 
-    /**
+    *//**
      * args:
      * id (number) numeric index of the location to select (First location has index 0)
      * name (string) the new name
-     */
+     *//*
     private Object[] computerSetName(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number");
@@ -199,11 +199,11 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
         return null;
     }
 
-    /**
+    *//**
      * args:
      * id (number) numeric index of the location to select (first location has index 0)
      * x (number) the new X coordinate
-     */
+     *//*
     private Object[] computerSetX(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number");
@@ -213,16 +213,16 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
         }
 
         int locNum = (int)Math.floor((Double)args[0]);
-        machine.getPositions().get(locNum).x = (int)Math.floor((Double)args[1]);
+        machine.getPositions().get(locNum).pos = (int)Math.floor((Double)args[1]);
 
         return null;
     }
 
-    /**
+    *//**
      * args:
      * id (number) numeric index of the location to select (first location has index 0)
      * y (number) the new Y coordinate
-     */
+     *//*
     private Object[] computerSetY(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number");
@@ -237,11 +237,11 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
         return null;
     }
 
-    /**
+    *//**
      * args:
      * id (number) numeric index of the location to select (first location has index 0)
      * z (number) the new Z coordinate
-     */
+     *//*
     private Object[] computerSetZ(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number");
@@ -256,13 +256,13 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
         return null;
     }
 
-    /**
+    *//**
      * args:
      * mode (number) the redstone mode of the transporter
      * 		0: High redstone signal
      * 		1: Low redstone signal
      * 		2: Redstone disabled
-     */
+     *//*
     private Object[] computerSetRedstoneMode(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number from 0 to 2");
@@ -351,7 +351,7 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     public String getComponentName() {
         return peripheralName;
     }
-    //endregion
+    //endregion*/
 
     //region Component Functions
     @Override
@@ -370,11 +370,6 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     @Override
-    public void update(TileEntityMachineTransporter machine) {
-
-    }
-
-    @Override
     public boolean isAffectedByUpgrade(UpgradeTypes type) {
         return false;
     }
@@ -385,18 +380,10 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     @Override
-    public void onActiveChange(TileEntityMachineTransporter machine) {
+    public void onMachineEvent(MachineEvent event)
+    {
 
     }
 
-    @Override
-    public void onAwake(TileEntityMachineTransporter machine, Side side) {
-
-    }
-
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving, TileEntityMachineTransporter machine) {
-
-    }
     //endregion
 }

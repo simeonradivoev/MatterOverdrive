@@ -18,13 +18,12 @@
 
 package matteroverdrive.network.packet.bi;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.server.AbstractServerPacketHandler;
-import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Simeon on 12/7/2015.
@@ -76,14 +75,13 @@ public class PacketWeaponTick extends PacketAbstract
     public static class ServerHandler extends AbstractServerPacketHandler<PacketWeaponTick>
     {
         @Override
-        public IMessage handleServerMessage(EntityPlayer player, PacketWeaponTick message, MessageContext ctx)
+        public void handleServerMessage(EntityPlayerMP player, PacketWeaponTick message, MessageContext ctx)
         {
             if (message.plasmaShot != null)
             {
                 MatterOverdrive.proxy.getWeaponHandler().handlePlasmaShotFire(player,message.plasmaShot,message.timestamp);
             }
             MatterOverdrive.proxy.getWeaponHandler().addTimestamp(player,message.timestamp);
-            return null;
         }
     }
 }

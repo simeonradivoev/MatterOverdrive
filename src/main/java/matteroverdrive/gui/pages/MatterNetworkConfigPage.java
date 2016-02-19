@@ -20,10 +20,12 @@ package matteroverdrive.gui.pages;
 
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.gui.MOGuiMachine;
+import matteroverdrive.gui.MOGuiNetworkMachine;
 import matteroverdrive.gui.element.ElementInventorySlot;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.gui.element.MOElementTextField;
 import matteroverdrive.gui.events.ITextHandler;
+import matteroverdrive.machines.IMachineComponent;
 import matteroverdrive.machines.components.ComponentConfigs;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 
@@ -37,13 +39,13 @@ public class MatterNetworkConfigPage extends AutoConfigPage implements ITextHand
     ElementInventorySlot filterSlot;
     MOElementTextField destinationTextField;
 
-    public MatterNetworkConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height,ComponentMatterNetworkConfigs componentMatterNetworkConfigs,ComponentConfigs configurable) {
-        super(gui, posX, posY, width, height,configurable);
+    public MatterNetworkConfigPage(MOGuiMachine gui, int posX, int posY, int width, int height) {
+        super(gui, posX, posY, width, height);
         destinationTextField = new MOElementTextField(gui,this,4,42,96,16);
         destinationTextField.setName("Destination");
         destinationTextField.setBackground(MOElementButton.HOVER_TEXTURE_DARK);
         destinationTextField.setTextOffset(4, 3);
-        this.componentMatterNetworkConfigs = componentMatterNetworkConfigs;
+        this.componentMatterNetworkConfigs = gui.getMachine().getComponent(ComponentMatterNetworkConfigs.class);
         filterSlot = new ElementInventorySlot(gui,(MOSlot)machineGui.inventorySlots.getSlot(componentMatterNetworkConfigs.getDestinationFilterSlot()),104,37,22,22,"big");
     }
 
@@ -79,9 +81,9 @@ public class MatterNetworkConfigPage extends AutoConfigPage implements ITextHand
     }
 
     @Override
-    public void update(int mouseX, int mouseY)
+    public void update(int mouseX, int mouseY,float partialTicks)
     {
-        super.update(mouseX,mouseY);
+        super.update(mouseX,mouseY,partialTicks);
         int x = destinationTextField.getPosX() + destinationTextField.getWidth() + 10;
         /*for (ElementSlot slot : networkConfigSlots)
         {

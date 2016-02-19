@@ -21,13 +21,21 @@ package matteroverdrive.client.render;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
+import matteroverdrive.fx.MOEntityFX;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.IIconCreator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,19 +43,20 @@ import java.util.Map;
 /**
  * Created by Simeon on 6/15/2015.
  */
+@SideOnly(Side.CLIENT)
 public class HoloIcons {
-    Map<String, HoloIcon> iconMap;
-    public TextureMap textureMap;
+    private final Map<String, HoloIcon> iconMap;
+    public final TextureMap textureMap;
     public int sheetSize = 256;
-    public ResourceLocation sheet = new ResourceLocation(Reference.MOD_ID, "textures/gui/holo_icons.png");
+    public final ResourceLocation sheet = new ResourceLocation(Reference.MOD_ID, "textures/gui/holo_icons.png");
 
     public HoloIcons() {
         iconMap = new HashMap<>();
-        textureMap = new TextureMap(4, "textures/gui/items");
-        Minecraft.getMinecraft().renderEngine.loadTextureMap(sheet, textureMap);
+        textureMap = new TextureMap("textures");
+        Minecraft.getMinecraft().renderEngine.loadTickableTexture(sheet,textureMap);
     }
 
-    public void registerIcons(TextureMap textureMap) {
+    public void registerIcons() {
         reg("holo_home", 14);
         reg("holo_dotted_circle", 20);
         reg("holo_factory", 14);
@@ -115,13 +124,25 @@ public class HoloIcons {
         MatterOverdrive.statRegistry.registerIcons(this);
     }
 
+    @SubscribeEvent
+    public void onModelBaking(ModelBakeEvent event)
+    {
+        textureMap.loadSprites(Minecraft.getMinecraft().getResourceManager(), iconRegistry -> {
+            for (Map.Entry<String,HoloIcon> entry : iconMap.entrySet())
+            {
+                TextureAtlasSprite sprite = iconRegistry.registerSprite(new ResourceLocation("mo:gui/items/"+ entry.getKey()));
+                entry.getValue().setIcon(sprite);
+            }
+        });
+    }
+
     private void reg(String iconName, int originalSize) {
         registerIcon(iconName,originalSize);
     }
 
     public HoloIcon registerIcon(String iconName,int originalSize)
     {
-        HoloIcon holoIcon = new HoloIcon(textureMap.registerIcon(Reference.MOD_ID + ":" + iconName), originalSize, originalSize);
+        HoloIcon holoIcon = new HoloIcon(textureMap.registerSprite(new ResourceLocation(Reference.MOD_ID + ":" + iconName)), originalSize, originalSize);
         iconMap.put(iconName, holoIcon);
         return holoIcon;
     }
@@ -157,17 +178,17 @@ public class HoloIcons {
         }
     }
 
-    public static void tessalateParticleIcon(IIcon icon, double x, double y, double z, float size, Color color)
+    public static void tessalateParticleIcon(MOEntityFX.ParticleIcon icon, double x, double y, double z, float size, Color color)
     {
-        RenderUtils.tessalateParticle(Minecraft.getMinecraft().renderViewEntity, icon, size, Vec3.createVectorHelper(x, y, z), color);
+        RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), icon, size, new Vec3(x, y, z), color);
     }
 
-    public static void tessalateStaticIcon(IIcon icon, double x, double y, double z, float size, Color color)
+    public static void tessalateStaticIcon(MOEntityFX.ParticleIcon icon, double x, double y, double z, float size, Color color)
     {
         tessalateStaticIcon(icon, x, y, z, size, color, 1);
     }
 
-    public static void tessalateStaticIcon(IIcon icon, double x, double y, double z, float size, Color color, float multiply)
+    public static void tessalateStaticIcon(MOEntityFX.ParticleIcon icon, double x, double y, double z, float size, Color color, float multiply)
     {
         float halfSize = size / 2;
         float uMin = icon.getMinU();
@@ -175,10 +196,10 @@ public class HoloIcons {
         float vMin = icon.getMinV();
         float vMax = icon.getMaxV();
 
-        Tessellator.instance.setColorRGBA_F(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA());
-        Tessellator.instance.addVertexWithUV(x - halfSize, y - halfSize, z, uMax, vMax);
-        Tessellator.instance.addVertexWithUV(x + halfSize,y - halfSize,z,uMin,vMax);
-        Tessellator.instance.addVertexWithUV(x + halfSize,y + halfSize,z,uMin,vMin);
-        Tessellator.instance.addVertexWithUV(x - halfSize,y + halfSize,z,uMax,vMin);
+        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        wr.pos(x - halfSize, y - halfSize, z).tex(uMax, vMax).color(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA()).endVertex();
+        wr.pos(x + halfSize,y - halfSize,z).tex(uMin,vMax).color(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA()).endVertex();
+        wr.pos(x + halfSize,y + halfSize,z).tex(uMin,vMin).color(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA()).endVertex();
+        wr.pos(x - halfSize,y + halfSize,z).tex(uMax,vMin).color(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA()).endVertex();
     }
 }

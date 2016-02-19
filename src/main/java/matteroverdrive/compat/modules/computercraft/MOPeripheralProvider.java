@@ -18,9 +18,7 @@
 
 package matteroverdrive.compat.modules.computercraft;
 
-import cpw.mods.fml.common.Optional;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import net.minecraftforge.fml.common.Optional;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import net.minecraft.tileentity.TileEntity;
@@ -29,11 +27,11 @@ import net.minecraft.world.World;
 /**
  * @author shadowfacts
  */
-@Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheralProvider")
-public class MOPeripheralProvider implements IPeripheralProvider
+//@Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheralProvider")
+public class MOPeripheralProvider //implements IPeripheralProvider
 {
 
-	@Override
+	/*@Override
 	public IPeripheral getPeripheral(World world, int x, int y, int z, int side)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
@@ -48,6 +46,6 @@ public class MOPeripheralProvider implements IPeripheralProvider
 		}
 
 		return null;
-	}
+	}*/
 
 }

@@ -19,6 +19,9 @@
 package matteroverdrive.guide;
 
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
@@ -40,17 +43,17 @@ public class GuideElementPreview extends GuideElementAbstract
     {
         if (itemStack != null)
         {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
 
             if (textAlign == 1)
-                GL11.glTranslated(width/2 - 8*size,0,0);
+                GlStateManager.translate(width/2 - 8*size,0,0);
             else if (textAlign == 2)
-                GL11.glTranslated(width - 16*size,0,0);
+                GlStateManager.translate(width - 16*size,0,0);
 
-            GL11.glTranslated(marginLeft,marginTop,0);
-            GL11.glScaled(size, size, size);
-            RenderUtils.renderStack(0, 0, itemStack);
-            GL11.glPopMatrix();
+            GlStateManager.translate(marginLeft,marginTop,0);
+            GlStateManager.scale(size, size, size);
+            RenderUtils.renderStack(0, 0,0, itemStack,false);
+            GlStateManager.popMatrix();
         }
     }
 

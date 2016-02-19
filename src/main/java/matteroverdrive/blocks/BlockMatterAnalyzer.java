@@ -18,18 +18,15 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.client.render.block.MOBlockRenderer;
 import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.machines.analyzer.TileEntityMachineMatterAnalyzer;
 import matteroverdrive.util.MOBlockHelper;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -39,13 +36,14 @@ import net.minecraft.world.World;
 public class BlockMatterAnalyzer extends MOBlockMachine
 {
     public static float MACHINE_VOLUME;
-    private IIcon iconTop;
+/*    private IIcon iconTop;
     private IIcon iconFront;
-    private IIcon iconFronAnim;
+    private IIcon iconFronAnim;*/
 
     public BlockMatterAnalyzer(Material material, String name)
     {
         super(material, name);
+        setHasRotation();
         setHardness(20.0F);
         this.setResistance(5.0f);
         this.setHarvestLevel("pickaxe", 2);
@@ -58,7 +56,7 @@ public class BlockMatterAnalyzer extends MOBlockMachine
         return new TileEntityMachineMatterAnalyzer();
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
@@ -111,5 +109,5 @@ public class BlockMatterAnalyzer extends MOBlockMachine
     public int getRenderType()
     {
         return MOBlockRenderer.renderID;
-    }
+    }*/
 }

@@ -23,16 +23,19 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.dialog.IDialogMessage;
 import matteroverdrive.api.dialog.IDialogMessageSeedable;
 import matteroverdrive.api.dialog.IDialogNpc;
+import matteroverdrive.api.dialog.IDialogOption;
 import matteroverdrive.network.packet.server.PacketConversationInteract;
 import matteroverdrive.network.packet.server.PacketManageConversation;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -76,17 +79,17 @@ public class GuiDialog extends GuiScreen
             return;
         }
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_ALPHA_TEST);
-        glColor4d(0, 0, 0, 1);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.disableTexture2D();
+        //GlStateManager.enableAlpha();
+        GlStateManager.color(0, 0, 0, 1);
         drawTexturedModalRect(0, 0, 0, 0, width, height / 8);
         drawTexturedModalRect(0, height - height / 8, 0, 0, width, height / 8);
-        glColor4d(0, 0, 0, 0.4);
+        GlStateManager.color(0, 0, 0, 0.4f);
         drawTexturedModalRect(0, height - height / 8 - 128, 0, 0, width, 128);
-        glEnable(GL_ALPHA_TEST);
-        glEnable(GL_TEXTURE_2D);
+        //GlStateManager.disableAlpha();
+        GlStateManager.enableTexture2D();
 
         drawDialog(mouseX,mouseY,ticks);
 
@@ -94,6 +97,8 @@ public class GuiDialog extends GuiScreen
         {
             lastInteractionTime = Math.max(0,lastInteractionTime-ticks);
         }
+
+        GlStateManager.disableBlend();
     }
 
     public void drawDialog(int mouseX,int mouseY, float ticks)
@@ -107,34 +112,32 @@ public class GuiDialog extends GuiScreen
         {
             List<String> splitMessage = new ArrayList<>();
             String[] list = message.split("<br>");
-            for (int i = 0; i < list.length; i++)
+            for (String aList : list)
             {
-                splitMessage.addAll(fontRendererObj.listFormattedStringToWidth(list[i], width / 3));
+                splitMessage.addAll(fontRendererObj.listFormattedStringToWidth(aList, width / 3));
             }
             for (int i = 0; i < splitMessage.size(); i++)
             {
-                String m = splitMessage.get(i).toString();
+                String m = splitMessage.get(i);
                 messageWidth = fontRendererObj.getStringWidth(m);
                 fontRendererObj.drawString(m, width / 2 - messageWidth - 16, height - height / 8 - 64 - (splitMessage.size() * fontRendererObj.FONT_HEIGHT / 2) + fontRendererObj.FONT_HEIGHT * i, Reference.COLOR_HOLO.getColor());
             }
         }
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
+        GlStateManager.blendFunc(GL_ONE, GL_ONE);
         Minecraft.getMinecraft().renderEngine.bindTexture(separator_texture);
         RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.5f);
-        func_146110_a(width / 2 - 5, height - height / 8 - 128, 0, 0, 11, 128, 11, 128);
-        glDisable(GL_BLEND);
+        drawModalRectWithCustomSizedTexture(width / 2 - 5, height - height / 8 - 128, 0, 0, 11, 128, 11, 128);
 
-        List<IDialogMessage> options = currentMessage.getOptions(npc,player);
+        List<IDialogOption> options = currentMessage.getOptions(npc,player);
         int visibleOptionsCount = 0;
-        for (IDialogMessage option : options)
+        for (IDialogOption option : options)
         {
             if (option.isVisible(npc,player))
                 visibleOptionsCount ++;
         }
         int optionPos = 0;
-        for (IDialogMessage option : options)
+        for (IDialogOption option : options)
         {
             if (option instanceof IDialogMessageSeedable)
                 ((IDialogMessageSeedable) option).setSeed(seed);
@@ -143,35 +146,36 @@ public class GuiDialog extends GuiScreen
             {
                 int messageX = width / 2 + 26;
                 int messageY = height - height / 8 - 60 + (18 * optionPos) - ((visibleOptionsCount * 18) / 2);
-                messageWidth = fontRendererObj.getStringWidth(option.getQuestionText(npc, player));
+                String optionText = option.getQuestionText(npc, player);
+                messageWidth = fontRendererObj.getStringWidth(optionText);
+
 
                 boolean canInteract = option.canInteract(npc, player);
                 if (mouseX > messageX && mouseX <= messageX + messageWidth && mouseY > messageY && mouseY <= messageY + fontRendererObj.FONT_HEIGHT) {
-                    glDisable(GL_TEXTURE_2D);
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                    glColor4d(0, 0, 0, 0.4);
-                    func_146110_a(messageX - 2, messageY - 4, 0, 0, messageWidth + 10, fontRendererObj.FONT_HEIGHT + 8, messageWidth + 8, fontRendererObj.FONT_HEIGHT + 8);
+                    GlStateManager.disableTexture2D();
+                    GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    GlStateManager.color(0, 0, 0, 0.4f);
+                    drawModalRectWithCustomSizedTexture(messageX - 2, messageY - 4, 0, 0, messageWidth + 10, fontRendererObj.FONT_HEIGHT + 8, messageWidth + 8, fontRendererObj.FONT_HEIGHT + 8);
                     if (canInteract)
-                        glColor4d(1, 1, 1, 0.6);
+                        GlStateManager.color(1, 1, 1, 0.6f);
                     else
                         RenderUtils.applyColor(Reference.COLOR_HOLO_RED);
-                    func_146110_a(messageX - 2 + messageWidth + 10, messageY - 4, 0, 0, 2, fontRendererObj.FONT_HEIGHT + 8, 2, fontRendererObj.FONT_HEIGHT + 8);
-                    glEnable(GL_TEXTURE_2D);
-                    glDisable(GL_BLEND);
+                    drawModalRectWithCustomSizedTexture(messageX - 2 + messageWidth + 10, messageY - 4, 0, 0, 2, fontRendererObj.FONT_HEIGHT + 8, 2, fontRendererObj.FONT_HEIGHT + 8);
+                    GlStateManager.enableTexture2D();
 
                     if (option.getHoloIcon(npc, player) != null) {
-                        glColor3d(1, 1, 1);
+                        GlStateManager.color(1, 1, 1);
                         ClientProxy.holoIcons.renderIcon(option.getHoloIcon(npc, player), messageX - 18, messageY + fontRendererObj.FONT_HEIGHT / 2 - 8, 16, 16);
                     }
-                    fontRendererObj.drawString(option.getQuestionText(npc, player), messageX + 2, messageY, canInteract ? 0xFFFFFF : Reference.COLOR_HOLO_RED.getColor());
+                    fontRendererObj.drawString(optionText, messageX + 2, messageY, canInteract ? 0xFFFFFF : Reference.COLOR_HOLO_RED.getColor());
                 } else {
-                    if (option.getHoloIcon(npc, player) != null) {
+                    if (option.getHoloIcon(npc, player) != null)
+                    {
                         RenderUtils.applyColor(Reference.COLOR_HOLO);
                         ClientProxy.holoIcons.renderIcon(option.getHoloIcon(npc, player), messageX - 18, messageY + fontRendererObj.FONT_HEIGHT / 2 - 8, 16, 16);
                     }
-                    String text = option.getQuestionText(npc, player);
-                    fontRendererObj.drawString(text, messageX, messageY, canInteract ? Reference.COLOR_HOLO.getColor() : Reference.COLOR_HOLO_RED.getColor());
+
+                    fontRendererObj.drawString(optionText, messageX, messageY, canInteract ? Reference.COLOR_HOLO.getColor() : Reference.COLOR_HOLO_RED.getColor());
                 }
                 optionPos++;
             }
@@ -179,20 +183,20 @@ public class GuiDialog extends GuiScreen
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button)
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException
     {
         super.mouseClicked(mouseX,mouseY,button);
 
-        List<IDialogMessage> options = currentMessage.getOptions(npc, player);
+        List<IDialogOption> options = currentMessage.getOptions(npc, player);
         int visibleOptionsCount = 0;
-        for (IDialogMessage option : options)
+        for (IDialogOption option : options)
         {
             if (option.isVisible(npc,player))
                 visibleOptionsCount ++;
         }
         int optionPos = 0;
         int optionIndex = 0;
-        for (IDialogMessage option : options)
+        for (IDialogOption option : options)
         {
             if (option.isVisible(npc,player)) {
                 if (option.canInteract(npc, player)) {

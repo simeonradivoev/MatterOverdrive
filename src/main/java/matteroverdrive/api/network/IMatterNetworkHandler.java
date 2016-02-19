@@ -18,9 +18,9 @@
 
 package matteroverdrive.api.network;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
 import matteroverdrive.tile.IMOTickable;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
  * Created by Simeon on 7/13/2015.

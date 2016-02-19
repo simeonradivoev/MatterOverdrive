@@ -23,9 +23,12 @@ import matteroverdrive.tile.pipes.TileEntityNetworkPipe;
 import matteroverdrive.util.MOInventoryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -53,30 +56,29 @@ public class BlockNetworkPipe extends BlockPipe implements IDismantleable
     }
 
     @Override
-    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops)
+    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops)
     {
         ArrayList<ItemStack> items = new ArrayList<>();
-        Block block = world.getBlock(x, y, z);
-        int l = world.getBlockMetadata(x, y, z);
+        IBlockState state = world.getBlockState(pos);
 
         if (!returnDrops)
         {
-            block.harvestBlock(world, player, x, y, z, l);
-            block.removedByPlayer(world, player, x, y, z, true);
+            state.getBlock().harvestBlock(world, player, pos,state,null);
+            state.getBlock().removedByPlayer(world, pos,player, true);
         }
         else
         {
-            block.removedByPlayer(world, player, x, y, z, true);
-            block.breakBlock(world, x, y, z, block, l);
-            for (ItemStack itemStack : getDrops(world, x, y, z, l, 0))
-                MOInventoryHelper.insertItemStackIntoInventory(player.inventory, itemStack, 0);
+            state.getBlock().removedByPlayer(world,pos, player, true);
+            state.getBlock().breakBlock(world, pos,state);
+            for (ItemStack itemStack : getDrops(world, pos,state,0))
+                MOInventoryHelper.insertItemStackIntoInventory(player.inventory, itemStack, EnumFacing.DOWN);
         }
 
         return items;
     }
 
     @Override
-    public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
+    public boolean canDismantle(EntityPlayer player, World world, BlockPos pos)
     {
         return true;
     }

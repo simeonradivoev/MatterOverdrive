@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class GenPositionWorldData extends WorldSavedData
 {
-    Map<String,List<WorldPosition2D>> positions;
+    final Map<String,List<WorldPosition2D>> positions;
 
     public GenPositionWorldData(String name)
     {
@@ -45,7 +45,7 @@ public class GenPositionWorldData extends WorldSavedData
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound)
     {
-        for (Object key : nbtTagCompound.func_150296_c())
+        for (Object key : nbtTagCompound.getKeySet())
         {
             List<WorldPosition2D> pos2D = new ArrayList<>();
             NBTTagList tagList = nbtTagCompound.getTagList(key.toString(), Constants.NBT.TAG_COMPOUND);
@@ -94,7 +94,7 @@ public class GenPositionWorldData extends WorldSavedData
 
         if (positions != null) {
             for (WorldPosition2D worldPosition2D : positions) {
-                tempDist = Vec3.createVectorHelper(worldPosition2D.x,pos.yCoord,worldPosition2D.z).distanceTo(pos);
+                tempDist = new Vec3(worldPosition2D.x,pos.yCoord,worldPosition2D.z).distanceTo(pos);
                 if (lastDistance < 0 || tempDist < lastDistance)
                 {
                     lastDistance = tempDist;

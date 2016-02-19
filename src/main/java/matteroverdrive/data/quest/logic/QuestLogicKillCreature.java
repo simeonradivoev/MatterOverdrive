@@ -18,18 +18,24 @@
 
 package matteroverdrive.data.quest.logic;
 
-import cpw.mods.fml.common.eventhandler.Event;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import matteroverdrive.api.exceptions.MOQuestParseException;
+import matteroverdrive.util.MOJsonHelper;
+import matteroverdrive.util.MOStringHelper;
+import net.minecraft.entity.EntityList;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -48,25 +54,59 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
     int minKillCount;
     int maxKillCount;
     int xpPerKill;
-    Class<? extends EntityLivingBase>[] creatureClasses;
+    String[] creatureTypes;
 
-    public QuestLogicKillCreature(Class<? extends EntityLivingBase> creatureClass,int minKillCount,int maxKillCount,int xpPerKill)
+    public QuestLogicKillCreature(){}
+
+    public QuestLogicKillCreature(String creatureClass,int minKillCount,int maxKillCount,int xpPerKill)
     {
-        this(new Class[]{creatureClass},minKillCount,maxKillCount,xpPerKill);
+        this(new String[]{creatureClass},minKillCount,maxKillCount,xpPerKill);
     }
 
-    public QuestLogicKillCreature(Class<? extends EntityLivingBase>[] creatureClasses,int minKillCount,int maxKillCount,int xpPerKill)
+    public QuestLogicKillCreature(String[] creatureTypes, int minKillCount, int maxKillCount, int xpPerKill)
     {
-        this.creatureClasses = creatureClasses;
+        this.creatureTypes = creatureTypes;
         this.minKillCount = minKillCount;
         this.maxKillCount = maxKillCount;
         this.xpPerKill = xpPerKill;
     }
 
     @Override
+    public void loadFromJson(JsonObject jsonObject)
+    {
+        super.loadFromJson(jsonObject);
+        regex = MOJsonHelper.getString(jsonObject,"regex",null);
+        killWithItemStack = MOJsonHelper.getItemStack(jsonObject,"kill_item",null);
+        explosionOnly = MOJsonHelper.getBool(jsonObject,"explosion_only",false);
+        burnOnly = MOJsonHelper.getBool(jsonObject,"burn_only",false);
+        shootOnly = MOJsonHelper.getBool(jsonObject,"shoot_only",false);
+        onlyChildren = MOJsonHelper.getBool(jsonObject,"children_only",false);
+        minKillCount = MOJsonHelper.getInt(jsonObject,"kill_count_min");
+        minKillCount = MOJsonHelper.getInt(jsonObject,"kill_count_max");
+        xpPerKill = MOJsonHelper.getInt(jsonObject,"xp");
+        JsonArray creatureTypes = jsonObject.getAsJsonArray("creatures");
+        this.creatureTypes = new String[creatureTypes.size()];
+        if (creatureTypes != null)
+        {
+            for (int i = 0; i < creatureTypes.size(); i++)
+            {
+                this.creatureTypes[i] = creatureTypes.get(i).getAsString();
+            }
+        }else
+        {
+            throw new MOQuestParseException("Missing creatures type list in Quest logic");
+        }
+    }
+
+    @Override
     public String modifyInfo(QuestStack questStack,String info)
     {
-        return String.format(info,"",Integer.toString(getMaxKillCount(questStack)), getTargetName(questStack));
+        info = info.replace("$maxKillCount",Integer.toString(getMaxKillCount(questStack)));
+        if (killWithItemStack != null)
+        {
+            info = info.replace("$itemStack",killWithItemStack.getDisplayName());
+        }
+        return info;
     }
 
     @Override
@@ -77,7 +117,13 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
 
     @Override
     public String modifyObjective(QuestStack questStack, EntityPlayer entityPlayer,String objetive, int objectiveIndex) {
-        return String.format(objetive,"",getKillCount(questStack),getMaxKillCount(questStack),getTargetName(questStack));
+        objetive = objetive.replace("$maxKillCount",Integer.toString(getMaxKillCount(questStack)));
+        objetive = objetive.replace("$killCount",Integer.toString(getKillCount(questStack)));
+        if (killWithItemStack != null)
+        {
+            objetive = objetive.replace("$itemStack",killWithItemStack.getDisplayName());
+        }
+        return objetive;
     }
 
     @Override
@@ -85,7 +131,6 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
     {
         initTag(questStack);
         getTag(questStack).setInteger("MaxKillCount",random(random,minKillCount,maxKillCount));
-        getTag(questStack).setByte("KillType",(byte) random.nextInt(creatureClasses.length));
     }
 
     @Override
@@ -94,8 +139,7 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
         if (event instanceof LivingDeathEvent)
         {
             LivingDeathEvent deathEvent = (LivingDeathEvent)event;
-            Class targetClass = creatureClasses[getKillType(questStack)];
-            if (deathEvent.entityLiving != null && targetClass.isInstance(deathEvent.entityLiving))
+            if (deathEvent.entityLiving != null && isTarget(questStack,deathEvent.entityLiving))
             {
                 if (regex != null && !isTargetNameValid(((LivingDeathEvent) event).entity))
                     return false;
@@ -133,37 +177,42 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
         return false;
     }
 
-    protected boolean isTargetNameValid(Entity entity)
+    public boolean isTarget(QuestStack questStack,Entity entity)
     {
-        if (entity instanceof EntityLiving && ((EntityLiving)entity).hasCustomNameTag())
+        EntityRegistry.EntityRegistration registration = EntityRegistry.instance().lookupModSpawn(entity.getClass(),true);
+        if (registration != null)
         {
-            if (!((EntityLiving)entity).getCustomNameTag().matches(regex))
+            for (String type : creatureTypes)
             {
-                return false;
+                if (registration.getEntityName().equalsIgnoreCase(type))
+                {
+                    return true;
+                }
             }
         }else
         {
-            if (!entity.getCommandSenderName().matches(regex))
+            String entityName = EntityList.getEntityString(entity);
+            for (String type : creatureTypes)
             {
-                return false;
+                if (entityName.equalsIgnoreCase(type))
+                {
+                    return true;
+                }
             }
+
         }
-        return true;
+        return false;
+    }
+
+    protected boolean isTargetNameValid(Entity entity)
+    {
+        return entity.getName().matches(regex);
     }
 
     @Override
-    public void onTaken(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
-    }
-
-    public int getKillType(QuestStack questStack)
-    {
-        if (hasTag(questStack))
-        {
-            return getTag(questStack).getByte("KillType");
-        }
-        return 0;
     }
 
     public int getMaxKillCount(QuestStack questStack)
@@ -186,18 +235,13 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
         getTag(questStack).setInteger("KillCount",killCount);
     }
 
-    public String getTargetName(QuestStack questStack)
+    public String[] getCreatureTypes()
     {
-        return getEntityClassName(creatureClasses[getKillType(questStack)],"Unknown Target");
-    }
-
-    public Class<? extends EntityLivingBase>[] getCreatureClasses()
-    {
-        return creatureClasses;
+        return creatureTypes;
     }
 
     @Override
-    public void onCompleted(QuestStack questStack, EntityPlayer entityPlayer)
+    public void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer)
     {
 
     }

@@ -136,12 +136,12 @@ public class Star extends SpaceBody
         byteBuf.writeByte(type);
         byteBuf.writeInt(temperature);
         byteBuf.writeInt(color);
-        /*int planetCount = getPlanets().size();
+        int planetCount = getPlanets().size();
         byteBuf.writeInt(planetCount);
         for (Planet planet : getPlanets())
         {
             planet.writeToBuffer(byteBuf);
-        }*/
+        }
     }
 
     @Override
@@ -182,14 +182,14 @@ public class Star extends SpaceBody
         type = byteBuf.readByte();
         temperature = byteBuf.readInt();
         color = byteBuf.readInt();
-        /*int planetCount = byteBuf.readInt();
+        int planetCount = byteBuf.readInt();
         for (int i = 0;i < planetCount;i++)
         {
             Planet planet = new Planet();
             planet.readFromBuffer(byteBuf);
             addPlanet(planet);
             planet.setStar(this);
-        }*/
+        }
     }
     //endregion
 
@@ -202,7 +202,7 @@ public class Star extends SpaceBody
     public boolean hasPlanet(int id){return planetHashMap.containsKey(id);}
     private void init()
     {
-        planetHashMap = new HashMap<Integer, Planet>();
+        planetHashMap = new HashMap<>();
     }
     public Collection<Planet> getPlanets()
     {
@@ -218,7 +218,7 @@ public class Star extends SpaceBody
     }
     public void setPosition(float x,float y,float z){this.x = x;this.y = y;this.z = z;}
     public Vec3 getPosition(){return getPosition(1);}
-    public Vec3 getPosition(double multipy){return Vec3.createVectorHelper(x * multipy, y * multipy, z * multipy);}
+    public Vec3 getPosition(double multipy){return new Vec3(x * multipy, y * multipy, z * multipy);}
     public float getX(){return x;}
     public float getY(){return y;}
     public float getZ(){return z;}
@@ -246,7 +246,7 @@ public class Star extends SpaceBody
         {
             if (planet.hasOwner())
             {
-                if (planet.getOwnerUUID().equals(EntityPlayer.func_146094_a(player.getGameProfile())))
+                if (planet.getOwnerUUID().equals(EntityPlayer.getUUID(player.getGameProfile())))
                 {
                     if (planet.isHomeworld())
                         if (ownType < 3)

@@ -18,9 +18,10 @@
 
 package matteroverdrive.api.transport;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Created by Simeon on 5/5/2015.
@@ -32,26 +33,22 @@ public class TransportLocation
     /**
      * The X,Y,Z coordinates of the location.
      */
-    public int x, y, z;
+    public BlockPos pos;
     /**
      * The name of the location.
      */
     public String name;
 
     //region constructors
-    public TransportLocation(int x, int y, int z, String name)
+    public TransportLocation(BlockPos pos, String name)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.pos = pos;
         this.name = name;
     }
 
     public TransportLocation(ByteBuf buf)
     {
-        this.x = buf.readInt();
-        this.y = buf.readInt();
-        this.z = buf.readInt();
+        this.pos = BlockPos.fromLong(buf.readLong());
         this.name = ByteBufUtils.readUTF8String(buf);
     }
 
@@ -59,9 +56,7 @@ public class TransportLocation
     {
         if (nbt != null)
         {
-            x = nbt.getInteger("tl_x");
-            y = nbt.getInteger("tl_y");
-            z = nbt.getInteger("tl_z");
+            pos = BlockPos.fromLong(nbt.getLong("tl"));
             name = nbt.getString("tl_name");
         }
     }
@@ -69,17 +64,13 @@ public class TransportLocation
     //region Buffer and NBT
     public void writeToBuffer(ByteBuf buf)
     {
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
+        buf.writeLong(pos.toLong());
         ByteBufUtils.writeUTF8String(buf,name);
     }
 
     public void writeToNBT(NBTTagCompound nbtTagCompound)
     {
-        nbtTagCompound.setInteger("tl_x", x);
-        nbtTagCompound.setInteger("tl_y", y);
-        nbtTagCompound.setInteger("tl_z", z);
+        nbtTagCompound.setLong("tl", pos.toLong());
         nbtTagCompound.setString("tl_name", name);
     }
     //endregion
@@ -95,26 +86,19 @@ public class TransportLocation
 
     /**
      * Sets the transport location coordinates.
-     * @param x the X coordinate of the location.
-     * @param y the Y coordinate of the location.
-     * @param z the Z coordinate of the location.
      */
-    public void setPosition(int x, int y, int z)
+    public void setPosition(BlockPos pos)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.pos = pos;
     }
 
     /**
      * Calculates and returns the distance between this location and the given coordinates.
-     * @param x1 the given X coordinate.
-     * @param y1 the given Y coordinate.
-     * @param z1 the given Z coordinate.
+     * @param pos the given position.
      * @return the distance between this transport location and the provided coordinates.
      */
-    public int getDistance(int x1, int y1, int z1)
+    public int getDistance(BlockPos pos)
     {
-        return (int)Math.round(Math.sqrt((x-x1) * (x-x1) + (y-y1) * (y-y1) + (z-z1) * (z-z1)));
+        return (int) Math.sqrt(pos.distanceSq(this.pos));
     }
 }

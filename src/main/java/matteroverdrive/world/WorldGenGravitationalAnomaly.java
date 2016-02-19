@@ -24,6 +24,7 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.tile.TileEntityGravitationalAnomaly;
 import matteroverdrive.util.IConfigSubscriber;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.config.Property;
@@ -36,8 +37,8 @@ import java.util.Random;
  */
 public class WorldGenGravitationalAnomaly extends WorldGenerator implements IConfigSubscriber
 {
-    private HashSet<Integer> blacklist = new HashSet<>();
-    private HashSet<Integer> whitelist = new HashSet<>();
+    private final HashSet<Integer> blacklist = new HashSet<>();
+    private final HashSet<Integer> whitelist = new HashSet<>();
     private float defaultChance;
     private float chance;
     private int minMatter;
@@ -54,16 +55,16 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
     }
 
     @Override
-    public boolean generate(World world, Random random, int x, int y, int z)
+    public boolean generate(World world, Random random, BlockPos pos)
     {
         if (isWorldValid(world) && random.nextFloat() < chance)
         {
-            if (world.setBlock(x,y,z, MatterOverdriveBlocks.gravitational_anomaly))
+            if (world.setBlockState(pos, MatterOverdriveBlocks.gravitational_anomaly.getDefaultState()))
             {
                 TileEntityGravitationalAnomaly anomaly = new TileEntityGravitationalAnomaly(minMatter + random.nextInt(maxMatter - minMatter));
-                world.setTileEntity(x,y,z,anomaly);
+                world.setTileEntity(pos,anomaly);
                 GenPositionWorldData data = MOWorldGen.getWorldPositionData(world);
-                data.addPosition(name,new WorldPosition2D(x,y));
+                data.addPosition(name,new WorldPosition2D(pos.getX(),pos.getZ()));
             }
         }
         return false;
@@ -73,10 +74,10 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
     {
         if (whitelist.size() > 0)
         {
-            return whitelist.contains(world.provider.dimensionId) && !blacklist.contains(world.provider.dimensionId);
+            return whitelist.contains(world.provider.getDimensionId()) && !blacklist.contains(world.provider.getDimensionId());
         }
 
-        return !blacklist.contains(world.provider.dimensionId);
+        return !blacklist.contains(world.provider.getDimensionId());
     }
 
     @Override
@@ -93,9 +94,9 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
         Property whitelistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN + "." + "gravitational_anomaly","whitelist",new int[]{-1,0,2});
         whitelistProp.comment = "Gravitational Anomaly Dimension ID whitelist";
         int[] dimentions = whitelistProp.getIntList();
-        for (int i = 0;i < dimentions.length;i++)
+        for (int dimention : dimentions)
         {
-            whitelist.add(dimentions[i]);
+            whitelist.add(dimention);
         }
     }
 
@@ -105,9 +106,9 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
         Property blacklistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN + "." + "gravitational_anomaly","blacklist",new int[]{});
         blacklistProp.comment = "Gravitational Anomaly Dimension ID blacklist";
         int[] dimentions = blacklistProp.getIntList();
-        for (int i = 0;i < dimentions.length;i++)
+        for (int dimention : dimentions)
         {
-            blacklist.add(dimentions[i]);
+            blacklist.add(dimention);
         }
     }
 }

@@ -22,6 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MOStringHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -31,7 +32,7 @@ import org.lwjgl.opengl.GL11;
 public class SidePannel extends ElementBaseGroup
 {
     MOElementButton button;
-    public ScaleTexture BACKGROUND_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png"),15,18).setOffsets(7,7,8,9);
+    public final ScaleTexture BACKGROUND_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_panel_bg.png"),15,18).setOffsets(7,7,8,9);
     private static boolean isOpen;
     private boolean openable;
 
@@ -65,7 +66,7 @@ public class SidePannel extends ElementBaseGroup
         if (openable)
         {
             if (isOpen) {
-                GL11.glColor3f(1, 1, 1);
+                GlStateManager.color(1,1,1);
                 BACKGROUND_TEXTURE.render(posX, posY, 37, sizeY);
                 button.setPosition(32, 0);
             } else {
@@ -78,17 +79,17 @@ public class SidePannel extends ElementBaseGroup
 
     public boolean IsOpen()
     {
-        return this.isOpen;
+        return isOpen;
     }
 
     public void setOpen(boolean open) {
-        this.isOpen = open;
+        isOpen = open;
     }
 
     @Override
     public void handleElementButtonClick(MOElementBase element,String buttonName, int mouseButton)
     {
-        if (buttonName == "Toggle")
+        if (buttonName.equals("Toggle"))
         {
             isOpen = !isOpen;
         }
@@ -112,9 +113,9 @@ public class SidePannel extends ElementBaseGroup
     @Override
     public void updateInfo()
     {
-        for (int i = 0; i < elements.size(); i++)
+        for (MOElementBase element : elements)
         {
-            elements.get(i).setVisible(isOpen);
+            element.setVisible(isOpen);
         }
 
         button.setVisible(openable);

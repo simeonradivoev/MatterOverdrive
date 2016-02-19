@@ -18,37 +18,36 @@
 
 package matteroverdrive.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.blocks.includes.MOBlockMachine;
-import matteroverdrive.client.render.block.MOBlockRenderer;
-import matteroverdrive.init.MatterOverdriveIcons;
-import matteroverdrive.util.MOBlockHelper;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 11/22/2015.
  */
 public abstract class BlockMonitor extends MOBlockMachine
 {
+    protected int depth;
+
     public BlockMonitor(Material material, String name)
     {
         super(material, name);
+        setHasRotation();
         setHardness(20.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
         setBlockBounds(0, 0, 0, 1, 1, 1);
         lightValue = 10;
+        depth = 5;
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
         if (side == meta)
@@ -61,67 +60,60 @@ public abstract class BlockMonitor extends MOBlockMachine
             return MatterOverdriveIcons.Network_port_square;
         }
         return MatterOverdriveIcons.Base;
-    }
+    }*/
 
-    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+    @Override
+    public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
     {
-        int meta = world.getBlockMetadata(x, y, z);
-        ForgeDirection direction = ForgeDirection.getOrientation(meta);
-        float pixel = 1f / 16f;
+        if (world.getBlockState(pos).getBlock() == this)
+        {
+            EnumFacing direction = world.getBlockState(pos).getValue(MOBlock.PROPERTY_DIRECTION);
+            float pixel = 1f / 16f;
 
-        if (direction == ForgeDirection.EAST)
-        {
-            this.setBlockBounds(0, 0, 0, 5 * pixel, 1, 1);
-        }
-        else if (direction == ForgeDirection.WEST)
-        {
-            this.setBlockBounds(1 - 5 * pixel, 0, 0, 1, 1, 1);
-        }
-        else if (direction == ForgeDirection.SOUTH)
-        {
-            this.setBlockBounds(0, 0, 0, 1, 1, 5 * pixel);
-        }
-        else if (direction == ForgeDirection.NORTH)
-        {
-            this.setBlockBounds(0, 0, 1 - 5 * pixel, 1, 1, 1);
-        }
-        else
-        {
-            this.setBlockBounds(0, 0, 0, 1, 1, 5 * pixel);
+            if (direction == EnumFacing.EAST)
+            {
+                this.setBlockBounds(0, 0, 0, depth * pixel, 1, 1);
+            } else if (direction == EnumFacing.WEST)
+            {
+                this.setBlockBounds(1 - depth * pixel, 0, 0, 1, 1, 1);
+            } else if (direction == EnumFacing.SOUTH)
+            {
+                this.setBlockBounds(0, 0, 0, 1, 1, depth * pixel);
+            } else if (direction == EnumFacing.NORTH)
+            {
+                this.setBlockBounds(0, 0, 1 - depth * pixel, 1, 1, 1);
+            } else
+            {
+                this.setBlockBounds(0, 0, 0, 1, 1, depth * pixel);
+            }
         }
     }
 
     @Override
     public void setBlockBoundsForItemRender() {
-        this.setBlockBounds(0, 0, 0, 1, 1, 5 * (1f / 16f));
+        this.setBlockBounds(0, 0, 0, 1, 1, depth * (1f / 16f));
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+    {
+        this.setBlockBoundsBasedOnState(worldIn, pos);
+        return super.getCollisionBoundingBox(worldIn, pos, state);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
+    public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)
     {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
-        return super.getSelectedBoundingBoxFromPool(world, x, y, z);
+        this.setBlockBoundsBasedOnState(worldIn,pos);
+        return super.getSelectedBoundingBox(worldIn,pos);
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+    public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)
     {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
-        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
-    }
-
-    @Override
-    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 vector1, Vec3 vector2)
-    {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
-        return super.collisionRayTrace(world, x, y, z, vector1, vector2);
-    }
-
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
+        this.setBlockBoundsBasedOnState(worldIn,pos);
+        return super.collisionRayTrace(worldIn,pos,start,end);
     }
 
     @Override
@@ -131,8 +123,8 @@ public abstract class BlockMonitor extends MOBlockMachine
     }
 
     @Override
-    public int getRenderType()
+    public boolean isFullCube()
     {
-        return MOBlockRenderer.renderID;
+        return false;
     }
 }

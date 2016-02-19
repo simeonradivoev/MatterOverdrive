@@ -19,33 +19,32 @@
 package matteroverdrive.api.gravity;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 
 /**
  * Created by Simeon on 10/23/2015.
  */
 public class AnomalySuppressor
 {
-    int x, y, z;
-    int time;
-    float amount;
+    private BlockPos pos;
+    private int time;
+    private float amount;
 
     public AnomalySuppressor(NBTTagCompound tagCompound)
     {
-
+        readFromNBT(tagCompound);
     }
 
-    public AnomalySuppressor(int x, int y, int z, int time, float amount)
+    public AnomalySuppressor(BlockPos pos, int time, float amount)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.pos = pos;
         this.time = time;
         this.amount = amount;
     }
 
     public boolean update(AnomalySuppressor suppressor)
     {
-        if (suppressor.x == x && suppressor.y == y && suppressor.z == z) {
+        if (suppressor.pos.equals(pos)) {
             if (time < suppressor.time) {
                 this.time = suppressor.time;
             }
@@ -57,18 +56,14 @@ public class AnomalySuppressor
 
     public void writeToNBT(NBTTagCompound tagCompound)
     {
-        tagCompound.setInteger("block_x", x);
-        tagCompound.setInteger("block_y", y);
-        tagCompound.setInteger("block_z", z);
+        tagCompound.setLong("block",pos.toLong());
         tagCompound.setByte("time", (byte)time);
         tagCompound.setFloat("amount", amount);
     }
 
     public void readFromNBT(NBTTagCompound tagCompound)
     {
-        x = tagCompound.getInteger("block_x");
-        y = tagCompound.getInteger("block_y");
-        z = tagCompound.getInteger("block_z");
+        pos = BlockPos.fromLong(tagCompound.getLong("block"));
         time = tagCompound.getByte("time");
         amount = tagCompound.getFloat("amount");
     }
@@ -99,27 +94,7 @@ public class AnomalySuppressor
         this.time = time;
     }
 
-    public int getX() {
-        return x;
-    }
+    public BlockPos getPos(){return pos;}
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getZ() {
-        return z;
-    }
-
-    public void setZ(int z) {
-        this.z = z;
-    }
+    public void setPos(BlockPos pos){this.pos = pos;}
 }

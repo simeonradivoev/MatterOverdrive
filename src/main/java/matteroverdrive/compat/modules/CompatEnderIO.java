@@ -1,7 +1,7 @@
 package matteroverdrive.compat.modules;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import matteroverdrive.compat.Compat;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.item.ItemStack;
@@ -38,9 +38,9 @@ public class CompatEnderIO {
 		public static final String REDSTONE_CONNECTABLE_ADD = "redstone:connectable:add";
 	}
 
-	private static StringBuilder sb = new StringBuilder();
+	private static final StringBuilder sb = new StringBuilder();
 
-	private static ArrayList<String> recipes = new ArrayList<>();
+	private static final ArrayList<String> recipes = new ArrayList<>();
 
 	@Compat.Init
 	public static void init(FMLInitializationEvent event)

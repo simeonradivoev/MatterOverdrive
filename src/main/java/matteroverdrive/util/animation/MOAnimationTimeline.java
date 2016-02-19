@@ -31,7 +31,7 @@ public class MOAnimationTimeline
 {
     boolean autoLength;
     boolean isPlaying;
-    List<Slice> slices = new ArrayList<>();
+    final List<Slice> slices = new ArrayList<>();
     private float maxTime;
     private boolean repeat;
     private float time;

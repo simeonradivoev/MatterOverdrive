@@ -19,8 +19,6 @@
 package matteroverdrive.items.weapon;
 
 import cofh.api.energy.IEnergyContainerItem;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
@@ -28,6 +26,8 @@ import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponScope;
 import matteroverdrive.api.weapon.WeaponShot;
+import matteroverdrive.entity.weapon.PlasmaBolt;
+import matteroverdrive.handler.weapon.ClientWeaponHandler;
 import matteroverdrive.init.MatterOverdriveEnchantments;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
@@ -48,13 +48,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -73,7 +72,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public static final String CUSTOM_RANGE_MULTIPLY_TAG = "CustomRangeMultiply";
     public static final String CUSTOM_SPEED_MULTIPLY_TAG = "CustomSpeedMultiply";
     private final int defaultRange;
-    private DecimalFormat damageFormater = new DecimalFormat("#.##");
+    private final DecimalFormat damageFormater = new DecimalFormat("#.##");
     protected boolean leftClickFire;
 
     public EnergyWeapon(String name, int capacity, int maxReceive, int maxExtract,int defaultRange) {
@@ -92,10 +91,16 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         list.add(powered);
     }
 
+    @SideOnly(Side.CLIENT)
+    public int getColorFromItemStack(ItemStack stack, int renderPass)
+    {
+        return WeaponHelper.getColor(stack);
+    }
+
     @Override
     public EnumAction getItemUseAction(ItemStack p_77661_1_)
     {
-        return EnumAction.bow;
+        return EnumAction.NONE;
     }
 
     @Override
@@ -293,6 +298,12 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         }
     }
 
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
+    {
+        return !oldStack.isItemEqual(newStack) || slotChanged;
+    }
+
     protected void manageOverheat(ItemStack itemStack,World world,EntityLivingBase shooter)
     {
         if (getHeat(itemStack) >= getMaxHeat(itemStack))
@@ -466,7 +477,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     protected boolean DrainEnergy(ItemStack item,float ticks,boolean simulate)
     {
-        int amount = (int)(getEnergyUse(item) * ticks);
+        int amount = MathHelper.ceiling_float_int(getEnergyUse(item) * ticks);
         int hasEnergy = getEnergyStored(item);
         if (hasEnergy >= amount)
         {
@@ -490,6 +501,32 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     //endregion
 
+    //region Projectile
+    public PlasmaBolt getDefaultProjectile(ItemStack weapon,EntityLivingBase shooter,Vec3 position,Vec3 dir,WeaponShot shot)
+    {
+        PlasmaBolt fire = new PlasmaBolt(shooter.worldObj, shooter,position,dir, shot,getShotSpeed(weapon,shooter));
+        fire.setWeapon(weapon);
+        fire.setFireDamageMultiply(WeaponHelper.modifyStat(Reference.WS_FIRE_DAMAGE, weapon,0));
+        if (WeaponHelper.modifyStat(Reference.WS_RICOCHET,weapon,0) == 1)
+        {
+            fire.markRicochetable();
+        }
+
+        return fire;
+    }
+
+    public PlasmaBolt spawnProjectile(ItemStack weapon,EntityLivingBase shooter,Vec3 position,Vec3 dir,WeaponShot shot)
+    {
+        PlasmaBolt fire = getDefaultProjectile(weapon,shooter,position,dir,shot);
+        shooter.worldObj.spawnEntityInWorld(fire);
+        if (shooter.worldObj.isRemote && shooter instanceof EntityPlayer)
+        {
+            ((ClientWeaponHandler)MatterOverdrive.proxy.getWeaponHandler()).addPlasmaBolt(fire);
+        }
+        return fire;
+    }
+    //endregion
+
     //region Getters and setters
     public int getRange(ItemStack weapon)
     {
@@ -507,9 +544,15 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         return shootCooldown;
     }
 
-    public WeaponShot createShot(ItemStack weapon, EntityLivingBase shooter, boolean zoomed)
+    @SideOnly(Side.CLIENT)
+    public WeaponShot createClientShot(ItemStack weapon, EntityLivingBase shooter, boolean zoomed)
     {
-        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weapon,shooter),getAccuracy(weapon,shooter,zoomed),WeaponHelper.getColor(weapon),getRange(weapon));
+        return ((ClientWeaponHandler)MatterOverdrive.proxy.getWeaponHandler()).getNextShot(weapon,this,shooter,zoomed);
+    }
+
+    public WeaponShot createServerShot(ItemStack weaponStack, EntityLivingBase shooter, boolean zoomed)
+    {
+        return new WeaponShot(itemRand.nextInt(),getWeaponScaledDamage(weaponStack,shooter),getAccuracy(weaponStack,shooter,zoomed), WeaponHelper.getColor(weaponStack),getRange(weaponStack));
     }
 
     public float modifyStatFromModules(int statID,ItemStack weapon,float original)
@@ -591,11 +634,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     public boolean isOverheated(ItemStack weapon)
     {
-        if (weapon.hasTagCompound())
-        {
-            return weapon.getTagCompound().getBoolean("Overheated");
-        }
-        return false;
+        return weapon.hasTagCompound() && weapon.getTagCompound().getBoolean("Overheated");
     }
 
     protected void setOverheated(ItemStack weapon,boolean overheated)
@@ -616,13 +655,13 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     {
         float accuracy = getWeaponBaseAccuracy(weapon,zoomed);
         accuracy = getCustomFloatStat(weapon,CUSTOM_ACCURACY_TAG,accuracy);
-        accuracy += (float)Vec3.createVectorHelper(shooter.motionX,shooter.motionY*0.1,shooter.motionZ).lengthVector() * 10;
+        accuracy += (float)new Vec3(shooter.motionX,shooter.motionY*0.1,shooter.motionZ).lengthVector() * 10;
         accuracy *= shooter.isSneaking() ? 0.6f: 1;
         accuracy = modifyStatFromModules(Reference.WS_ACCURACY,weapon,accuracy);
         if (WeaponHelper.hasModule(Reference.MODULE_SIGHTS,weapon))
         {
             ItemStack sights = WeaponHelper.getModuleAtSlot(Reference.MODULE_SIGHTS,weapon);
-            if (sights.getItem() instanceof IWeaponScope)
+            if (sights != null && sights.getItem() instanceof IWeaponScope)
             {
                 accuracy = ((IWeaponScope) sights.getItem()).getAccuracyModify(sights,weapon,zoomed,accuracy);
             }
@@ -686,7 +725,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         if (WeaponHelper.hasModule(Reference.MODULE_SIGHTS,weapon))
         {
             ItemStack sights = WeaponHelper.getModuleAtSlot(Reference.MODULE_SIGHTS,weapon);
-            if (sights.getItem() instanceof IWeaponScope)
+            if (sights != null && sights.getItem() instanceof IWeaponScope)
             {
                 return ((IWeaponScope) sights.getItem()).getZoomAmount(sights,weapon);
             }

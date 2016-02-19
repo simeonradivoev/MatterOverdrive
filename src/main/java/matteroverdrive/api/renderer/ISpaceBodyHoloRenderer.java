@@ -18,11 +18,11 @@
 
 package matteroverdrive.api.renderer;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import matteroverdrive.starmap.data.Galaxy;
 import matteroverdrive.starmap.data.SpaceBody;
 import matteroverdrive.tile.TileEntityMachineStarMap;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 6/17/2015.

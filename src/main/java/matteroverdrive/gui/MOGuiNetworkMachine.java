@@ -18,8 +18,7 @@
 
 package matteroverdrive.gui;
 
-import matteroverdrive.api.network.IMatterNetworkBroadcaster;
-import matteroverdrive.api.network.IMatterNetworkConnection;
+import matteroverdrive.api.matter_network.IMatterNetworkConnection;
 import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.gui.pages.MatterNetworkConfigPage;
@@ -29,7 +28,7 @@ import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 /**
  * Created by Simeon on 7/17/2015.
  */
-public abstract class MOGuiNetworkMachine<T extends MOTileEntityMachine & IMatterNetworkBroadcaster & IMatterNetworkConnection> extends MOGuiMachine<T> {
+public abstract class MOGuiNetworkMachine<T extends MOTileEntityMachine & IMatterNetworkConnection> extends MOGuiMachine<T> {
 
     public MOGuiNetworkMachine(ContainerMachine<T> container, T machine) {
         super(container, machine);
@@ -42,7 +41,7 @@ public abstract class MOGuiNetworkMachine<T extends MOTileEntityMachine & IMatte
     public void registerPages(MOBaseContainer container,T machine)
     {
         super.registerPages(container, machine);
-        MatterNetworkConfigPage configPage = new MatterNetworkConfigPage(this,48,32,xSize-76,ySize,machine.getComponent(ComponentMatterNetworkConfigs.class),machine.getConfigs());
+        MatterNetworkConfigPage configPage = new MatterNetworkConfigPage(this,48,32,xSize-76,ySize);
         configPage.setName("Configurations");
 
         pages.set(1,configPage);

@@ -107,11 +107,7 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
     @Override
     protected boolean canView(Planet planet, EntityPlayer player)
     {
-        if (planet.hasOwner())
-        {
-            return planet.isOwner(player);
-        }
-        return true;
+        return !planet.hasOwner() || planet.isOwner(player);
     }
 
     @Override
@@ -154,7 +150,7 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
     @Override
     protected void onViewPress()
     {
-        ((GuiStarMap) gui).setPage(3);
+        gui.setPage(3);
     }
 
     @Override

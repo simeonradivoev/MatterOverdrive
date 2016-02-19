@@ -18,19 +18,22 @@
 
 package matteroverdrive.entity.ai;
 
+import com.google.common.base.Predicate;
 import matteroverdrive.entity.monster.EntityMutantScientist;
 import matteroverdrive.entity.monster.EntityRougeAndroidMob;
-import matteroverdrive.entity.player.AndroidPlayer;
-import net.minecraft.command.IEntitySelector;
+import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+
+import javax.annotation.Nullable;
+
 
 /**
  * Created by Simeon on 5/26/2015.
  */
-public class AndroidTargetSelector implements IEntitySelector
+public class AndroidTargetSelector implements Predicate<Entity>
 {
-    final EntityRougeAndroidMob mob;
+    private final EntityRougeAndroidMob mob;
 
     public AndroidTargetSelector(EntityRougeAndroidMob mob)
     {
@@ -38,7 +41,7 @@ public class AndroidTargetSelector implements IEntitySelector
     }
 
     @Override
-    public boolean isEntityApplicable(Entity entity)
+    public boolean apply(@Nullable Entity entity)
     {
         if (entity instanceof EntityPlayer)
         {

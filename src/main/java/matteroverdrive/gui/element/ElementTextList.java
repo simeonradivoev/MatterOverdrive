@@ -69,7 +69,7 @@ public class ElementTextList extends MOElementBase
     @Override
     public FontRenderer getFontRenderer()
     {
-        return Minecraft.getMinecraft().fontRenderer;
+        return Minecraft.getMinecraft().fontRendererObj;
     }
 
     @Override

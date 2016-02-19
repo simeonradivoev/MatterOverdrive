@@ -18,13 +18,14 @@
 
 package matteroverdrive.network.packet.client;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 5/4/2015.
@@ -58,15 +59,15 @@ public class PacketSyncTransportProgress extends TileEntityUpdatePacket
     {
         public ClientHandler(){}
 
+        @SideOnly(Side.CLIENT)
         @Override
-        public IMessage handleClientMessage(EntityPlayer player, PacketSyncTransportProgress message, MessageContext ctx)
+        public void handleClientMessage(EntityPlayerSP player, PacketSyncTransportProgress message, MessageContext ctx)
         {
             TileEntity entity = message.getTileEntity(player.worldObj);
             if (entity instanceof TileEntityMachineTransporter)
             {
                 ((TileEntityMachineTransporter) entity).setTransportTime(message.progress);
             }
-            return null;
         }
     }
 }

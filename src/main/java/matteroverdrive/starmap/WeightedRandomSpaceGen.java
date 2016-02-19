@@ -13,12 +13,12 @@ import java.util.Random;
  */
 public class WeightedRandomSpaceGen<T extends SpaceBody>
 {
-    Random random;
-    List<ISpaceBodyGen<T>> collection;
+    final Random random;
+    final List<ISpaceBodyGen<T>> collection;
 
     public WeightedRandomSpaceGen(Random random)
     {
-        collection = new ArrayList<ISpaceBodyGen<T>>();
+        collection = new ArrayList<>();
         this.random = random;
     }
 

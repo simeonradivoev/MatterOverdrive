@@ -28,14 +28,14 @@ public interface IAndroidStatRegistry
      * @param stat the stat itself
      * @return if the stat was registered
      */
-    boolean registerStat(IBionicStat stat);
+    boolean registerStat(IBioticStat stat);
 
     /**
      * Gets a specific stat by it's name from Matter Overdrive Bionic Stat Registry
      * @param name the name of the Bionic stat to search for
      * @return The Bionic stat. Null if Bionic stat was not found.
      */
-    IBionicStat getStat(String name);
+    IBioticStat getStat(String name);
 
     /**
      * Check if a Bionic Stat with a given name exists in the Matter Overdrive Bionic Stat Registry
@@ -50,5 +50,5 @@ public interface IAndroidStatRegistry
      * @param name the name of the stat
      * @return the stat that was removed. Null if there was no stat with the given name.
      */
-    IBionicStat unregisterStat(String name);
+    IBioticStat unregisterStat(String name);
 }

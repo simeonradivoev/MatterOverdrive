@@ -68,9 +68,10 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
         return true;
     }
 
-	public int getDisplayDamage(ItemStack stack)
+	@Override
+	public double getDurabilityForDisplay(ItemStack stack)
 	{
-		return getMaxEnergyStored(stack) - getEnergyStored(stack);
+		return (getMaxEnergyStored(stack) - getEnergyStored(stack)) / (double)getMaxDamage(stack);
 	}
 
 	@Override
@@ -114,13 +115,13 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 
 		this.TagCompountCheck(container);
 
-		int energy = container.stackTagCompound.getInteger("Energy");
+		int energy = container.getTagCompound().getInteger("Energy");
 		int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
 
 		if (!simulate)
 		{
             energy += energyReceived;
-			container.stackTagCompound.setInteger("Energy", energy);
+			container.getTagCompound().setInteger("Energy", energy);
 		}
 		return energyReceived;
 	}
@@ -128,14 +129,14 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	@Override
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
 
-        if(container.stackTagCompound != null && container.stackTagCompound.hasKey("Energy"))
+        if(container.getTagCompound() != null && container.getTagCompound().hasKey("Energy"))
         {
-            int energy = container.stackTagCompound.getInteger("Energy");
+            int energy = container.getTagCompound().getInteger("Energy");
             int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
 
             if (!simulate) {
                 energy -= energyExtracted;
-                container.stackTagCompound.setInteger("Energy", energy);
+                container.getTagCompound().setInteger("Energy", energy);
             }
             return energyExtracted;
         }
@@ -151,7 +152,7 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	public int getEnergyStored(ItemStack container)
 	{
 		this.TagCompountCheck(container);
-		return container.stackTagCompound.getInteger("Energy");
+		return container.getTagCompound().getInteger("Energy");
 	}
 
 	@Override
