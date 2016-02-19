@@ -9,6 +9,8 @@
 <a href='http://simeon.co.vu/Mods/MatterOverdrive/builds/'>Dev Builds</a>
 </h2>
 
+[![Build Status](https://travis-ci.org/simeonradivoev/MatterOverdrive.svg?branch=1.8.9)](https://travis-ci.org/simeonradivoev/MatterOverdrive)
+
 ## Table of Contents
 * [About](#about)
 * [Features](#features)
