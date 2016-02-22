@@ -8,6 +8,4 @@ jar {
 
 artifacts {
     archives jar
-    archives deobfJar
-    archives sourcesJar
 }
