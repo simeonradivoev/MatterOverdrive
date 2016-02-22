@@ -4,8 +4,6 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.IBlockScanner;
 import matteroverdrive.client.RenderHandler;
-import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -54,9 +52,7 @@ public class DimensionalRiftsRender implements IWorldLastRenderer
                     lastY = MOMathHelper.Lerp(lastY, viewEntityPos.yCoord, 0.05);
                 Vec3 viewEntityPosRound = new Vec3(Math.floor(viewEntityPos.xCoord), lastY, Math.floor(viewEntityPos.zCoord));
 
-
                 GlStateManager.translate(-viewEntityPos.xCoord, -viewEntityPos.yCoord, -viewEntityPos.zCoord);
-                RenderUtils.bindTexture(ClientProxy.renderHandler.getRenderParticlesHandler().additiveTextureSheet);
                 WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
 
                 int vewDistance = 128;

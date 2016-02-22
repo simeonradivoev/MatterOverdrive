@@ -146,7 +146,7 @@ public class AndroidHudStats extends AndroidHudElement
 
     private int getWidthIconWithInfo(String info,int iconWidth)
     {
-        return iconWidth + mc.fontRendererObj.getStringWidth(info) + 4;
+        return iconWidth + ClientProxy.moFontRender.getStringWidth(info) + 4;
     }
 
     private int getWidthIconWithPercent(double amount,int iconWidth)
@@ -162,7 +162,7 @@ public class AndroidHudStats extends AndroidHudElement
     private int renderIconWithInfo(String icon, String info, Color color, int x, int y, int iconOffsetX, int iconOffsetY, boolean leftSided, int iconWidth, int iconHeight)
     {
         HoloIcon holoIcon = ClientProxy.holoIcons.getIcon(icon);
-        int infoWidth = mc.fontRendererObj.getStringWidth(info);
+        int infoWidth = ClientProxy.moFontRender.getStringWidth(info);
 
         GlStateManager.disableTexture2D();
         GlStateManager.blendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -175,10 +175,10 @@ public class AndroidHudStats extends AndroidHudElement
         if (!leftSided)
         {
             ClientProxy.holoIcons.renderIcon(holoIcon, x + iconOffsetX, y + iconOffsetY,iconWidth,iconHeight);
-            mc.fontRendererObj.drawString(info, x + iconWidth + 2 + iconOffsetX, y + iconWidth/2 - mc.fontRendererObj.FONT_HEIGHT/2 + iconOffsetY, color.getColor());
+            ClientProxy.moFontRender.drawString(info, x + iconWidth + 2 + iconOffsetX, y + iconWidth/2 - ClientProxy.moFontRender.FONT_HEIGHT/2 + iconOffsetY, color.getColor());
         }else
         {
-            mc.fontRendererObj.drawString(info, x + iconOffsetX, y + iconWidth/2 - mc.fontRendererObj.FONT_HEIGHT/2 + iconOffsetY, color.getColor());
+            ClientProxy.moFontRender.drawString(info, x + iconOffsetX, y + iconWidth/2 - ClientProxy.moFontRender.FONT_HEIGHT/2 + iconOffsetY, color.getColor());
             ClientProxy.holoIcons.renderIcon(icon,x+infoWidth+2+iconOffsetX,y+iconOffsetY,iconWidth,iconHeight);
         }
 

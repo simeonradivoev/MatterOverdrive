@@ -41,16 +41,6 @@ public class CommonProxy
         googleAnalyticsCommon = new GoogleAnalyticsCommon();
     }
 
-	protected void registerProxies(FMLInitializationEvent event)
-	{
-        MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
-        MinecraftForge.EVENT_BUS.register(getWeaponHandler());
-        MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
-        MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance());
-        MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance().getGalaxyGenerator());
-        MatterOverdrive.configHandler.subscribe(googleAnalyticsCommon);
-	}
-
     public void registerCompatModules()
     {
         MatterOverdriveCompat.registerModules();
@@ -68,7 +58,12 @@ public class CommonProxy
 
     public void init(FMLInitializationEvent event)
     {
-        registerProxies(event);
+        MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
+        MinecraftForge.EVENT_BUS.register(getWeaponHandler());
+        MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
+        MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance());
+        MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance().getGalaxyGenerator());
+        MatterOverdrive.configHandler.subscribe(googleAnalyticsCommon);
     }
 
     public void postInit(FMLPostInitializationEvent event){}

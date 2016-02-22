@@ -147,8 +147,8 @@ public class AndroidHudBionicStats extends AndroidHudElement
         if (stat.getDelay(androidPlayer,level) > 0)
         {
             String delay = MOStringHelper.formatRemainingTime(stat.getDelay(androidPlayer, level)/20f,true);
-            int delayWidth = mc.fontRendererObj.getStringWidth(delay);
-            mc.fontRendererObj.drawString(delay, x + 22 - delayWidth, y + 22 - mc.fontRendererObj.FONT_HEIGHT - 1, Reference.COLOR_HOLO.getColor());
+            int delayWidth = ClientProxy.moFontRender.getStringWidth(delay);
+            ClientProxy.moFontRender.drawString(delay, x + 22 - delayWidth, y + 22 - ClientProxy.moFontRender.FONT_HEIGHT - 1, Reference.COLOR_HOLO.getColor());
         }
         GlStateManager.disableBlend();
     }

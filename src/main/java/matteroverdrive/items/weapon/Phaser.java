@@ -320,7 +320,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
             case Reference.MODULE_BARREL:
                 return new Vector2f(60,115);
             default:
-                return new Vector2f(200,45 + (slot - Reference.MODULE_OTHER * 22));
+                return new Vector2f(200,60 + ((slot - Reference.MODULE_OTHER) * 22));
         }
     }
 

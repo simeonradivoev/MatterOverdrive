@@ -1,5 +1,7 @@
 package matteroverdrive.fx;
 
+import matteroverdrive.client.render.RenderParticlesHandler;
+import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.world.World;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -36,7 +38,7 @@ public class GravitationalStabilizerBeamParticle extends MOEntityFX
         this.up = up;
         this.orbitRadius = orbitRadius + (rand.nextFloat() * orbitRadius * 0.5f);
         startTime = rand.nextInt(time);
-        this.particleIcon = ParticleIcon.fromWithAndHeight(0,0,32,32,128);
+        this.particleIcon = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.star);
     }
 
     public void setColor(float r, float g, float b, float a)

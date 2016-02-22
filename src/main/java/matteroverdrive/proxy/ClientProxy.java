@@ -19,6 +19,7 @@
 package matteroverdrive.proxy;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.Reference;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.client.resources.data.WeaponMetadataSection;
@@ -37,7 +38,10 @@ import matteroverdrive.init.MatterOverdriveIcons;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.starmap.GalaxyClient;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -54,56 +58,14 @@ public class ClientProxy extends CommonProxy
     public static HoloIcons holoIcons;
     private ClientWeaponHandler weaponHandler;
     public static GuiQuestHud questHud;
+    public static FontRenderer moFontRender;
 
     public ClientProxy()
     {
         weaponHandler = new ClientWeaponHandler();
         googleAnalyticsCommon = new GoogleAnalyticsClient();
+
     }
-
-    @Override
-	protected void registerProxies(FMLInitializationEvent event)
-	{
-        super.registerProxies(event);
-
-        renderHandler = new RenderHandler(Minecraft.getMinecraft().theWorld,Minecraft.getMinecraft().getTextureManager());
-        androidHud = new GuiAndroidHud(Minecraft.getMinecraft());
-        keyHandler = new KeyHandler();
-        mouseHandler = new MouseHandler();
-        holoIcons = new HoloIcons();
-        weaponHandler = new ClientWeaponHandler();
-        questHud = new GuiQuestHud();
-
-        Minecraft.getMinecraft().getResourcePackRepository().rprMetadataSerializer.registerMetadataSectionType(new WeaponMetadataSectionSerializer(), WeaponMetadataSection.class);
-
-        registerSubscribtions();
-        holoIcons.registerIcons();
-
-        //region Render Handler Functions
-        //region Create
-        //renderHandler.createBlockRenderers();
-        renderHandler.createItemRenderers();
-        renderHandler.createTileEntityRenderers(MatterOverdrive.configHandler);
-        renderHandler.createEntityRenderers(Minecraft.getMinecraft().getRenderManager());
-        renderHandler.createBioticStatRenderers();
-        renderHandler.createStarmapRenderers();
-        renderHandler.createModels();
-        //endregion
-        //region Register
-        renderHandler.registerWeaponModuleRenders();
-        renderHandler.registerWeaponLayers();
-        renderHandler.registerTileEntitySpecialRenderers();
-        renderHandler.registerItemRenderers();
-        renderHandler.registerEntityRenderers();
-        renderHandler.registerBioticStatRenderers();
-        renderHandler.registerBionicPartRenderers();
-        renderHandler.registerStarmapRenderers();
-        renderHandler.registerWeaponModuleRenders();
-        //endregion
-        //endregion
-
-        MatterOverdrive.configHandler.subscribe(androidHud);
-	}
 
     private void registerSubscribtions()
     {
@@ -140,6 +102,44 @@ public class ClientProxy extends CommonProxy
     public void init(FMLInitializationEvent event)
     {
         super.init(event);
+
+        renderHandler = new RenderHandler(Minecraft.getMinecraft().theWorld,Minecraft.getMinecraft().getTextureManager());
+        androidHud = new GuiAndroidHud(Minecraft.getMinecraft());
+        keyHandler = new KeyHandler();
+        mouseHandler = new MouseHandler();
+        holoIcons = new HoloIcons();
+        weaponHandler = new ClientWeaponHandler();
+        questHud = new GuiQuestHud();
+
+        Minecraft.getMinecraft().getResourcePackRepository().rprMetadataSerializer.registerMetadataSectionType(new WeaponMetadataSectionSerializer(), WeaponMetadataSection.class);
+
+        registerSubscribtions();
+
+        //region Render Handler Functions
+        //region Create
+        //renderHandler.createBlockRenderers();
+        renderHandler.createItemRenderers();
+        renderHandler.createTileEntityRenderers(MatterOverdrive.configHandler);
+        renderHandler.createEntityRenderers(Minecraft.getMinecraft().getRenderManager());
+        renderHandler.createBioticStatRenderers();
+        renderHandler.createStarmapRenderers();
+        renderHandler.createModels();
+        //endregion
+        //region Register
+        renderHandler.registerWeaponModuleRenders();
+        renderHandler.registerWeaponLayers();
+        renderHandler.registerTileEntitySpecialRenderers();
+        renderHandler.registerItemRenderers();
+        renderHandler.registerEntityRenderers();
+        renderHandler.registerBioticStatRenderers();
+        renderHandler.registerBionicPartRenderers();
+        renderHandler.registerStarmapRenderers();
+        renderHandler.registerWeaponModuleRenders();
+        //endregion
+        //endregion
+
+        MatterOverdrive.configHandler.subscribe(androidHud);
+
         weaponHandler.registerWeapon(MatterOverdriveItems.phaserRifle);
         weaponHandler.registerWeapon(MatterOverdriveItems.phaser);
         weaponHandler.registerWeapon(MatterOverdriveItems.omniTool);
@@ -147,6 +147,8 @@ public class ClientProxy extends CommonProxy
         weaponHandler.registerWeapon(MatterOverdriveItems.ionSniper);
 
         MatterOverdriveGuides.registerGuideElements(event);
+        moFontRender = new FontRenderer(Minecraft.getMinecraft().gameSettings,new ResourceLocation(Reference.MOD_ID,"textures/font/ascii.png"),Minecraft.getMinecraft().renderEngine,false);
+        ((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(moFontRender);
     }
 
     @Override

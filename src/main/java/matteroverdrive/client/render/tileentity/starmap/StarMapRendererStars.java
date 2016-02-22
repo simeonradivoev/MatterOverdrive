@@ -28,7 +28,6 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -52,7 +51,7 @@ public abstract class StarMapRendererStars extends StarMapRendererAbstract
             glLineWidth(1);
 
             Star from = null, to = null;
-            bindTexture(ClientProxy.renderHandler.getRenderParticlesHandler().getAdditiveTextureSheet());
+            ClientProxy.renderHandler.getRenderParticlesHandler().bindSheet();
             for (Star star : quadrant.getStars())
             {
                 pos = new Vec3(star.getPosition().xCoord * distanceMultiply,star.getPosition().yCoord * distanceMultiply,star.getPosition().zCoord * distanceMultiply);
@@ -103,11 +102,6 @@ public abstract class StarMapRendererStars extends StarMapRendererAbstract
             size = 0.025;
         }
         RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), star_icon, star.getSize() * size * starSizeMultiply, pos, color);
-    }
-
-    private void bindTexture(ResourceLocation location)
-    {
-        Minecraft.getMinecraft().renderEngine.bindTexture(location);
     }
 
     public static Color getStarColor(Star star, EntityPlayer player)

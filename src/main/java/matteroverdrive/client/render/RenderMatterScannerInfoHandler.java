@@ -24,6 +24,7 @@ import matteroverdrive.api.inventory.IBlockScanner;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.tileentity.TileEntityRendererPatternMonitor;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.RenderUtils;
@@ -275,7 +276,7 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
 
     private FontRenderer fontRenderer()
     {
-        return Minecraft.getMinecraft().fontRendererObj;
+        return ClientProxy.moFontRender;
     }
 
     private TextureManager renderer()

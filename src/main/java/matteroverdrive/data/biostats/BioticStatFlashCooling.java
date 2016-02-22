@@ -6,8 +6,8 @@ import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.entity.android_player.AndroidPlayer;
-import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOEnergyHelper;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -36,9 +36,9 @@ public class BioticStatFlashCooling extends AbstractBioticStat
     }
 
     @Override
-    public void registerIcons(HoloIcons holoIcons)
+    public void registerIcons(TextureMap textureMap,HoloIcons holoIcons)
     {
-        this.icon = ClientProxy.holoIcons.getIcon("temperature");
+        this.icon = holoIcons.getIcon("temperature");
     }
 
     @Override

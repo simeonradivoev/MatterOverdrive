@@ -21,7 +21,6 @@ package matteroverdrive.util;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.tileentity.TileEntityRendererPatternMonitor;
-import matteroverdrive.fx.MOEntityFX;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -73,7 +72,7 @@ public class RenderUtils
 
 			GlStateManager.enableAlpha();
 			GlStateManager.disableBlend();
-			GlStateManager.enableLighting();
+			RenderHelper.disableStandardItemLighting();
 			GlStateManager.popMatrix();
 		}
 	}
@@ -705,12 +704,12 @@ public class RenderUtils
         GlStateManager.rotate(viewer.rotationPitch, 1, 0, 0);
 	}
 
-	public static void tessalateParticle(Entity viewer, MOEntityFX.ParticleIcon particleIcon, double scale, Vec3 position, Color color)
+	public static void tessalateParticle(Entity viewer, TextureAtlasSprite particleIcon, double scale, Vec3 position, Color color)
 	{
 		tessalateParticle(viewer, particleIcon, scale, position, color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
 	}
 
-	public static void tessalateParticle(Entity viewer, MOEntityFX.ParticleIcon particleIcon,double scale,Vec3 position,float r,float g,float b,float a)
+	public static void tessalateParticle(Entity viewer, TextureAtlasSprite particleIcon,double scale,Vec3 position,float r,float g,float b,float a)
 	{
 		float f1 = MathHelper.cos(viewer.rotationYaw * 0.017453292F);
 		float f2 = MathHelper.sin(viewer.rotationYaw * 0.017453292F);

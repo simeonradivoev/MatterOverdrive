@@ -200,9 +200,9 @@ public class ClientWeaponHandler extends CommonWeaponHandler
     }
     public void setRecoil(float amount, float time,float viewRecoilMultiply)
     {
-        Minecraft.getMinecraft().thePlayer.rotationPitch -= RECOIL_AMOUNT * viewRecoilMultiply;
         RECOIL_AMOUNT = amount;
         RECOIL_TIME = time;
+        Minecraft.getMinecraft().thePlayer.rotationPitch -= amount * viewRecoilMultiply;
     }
 
     public void setCameraRecoil(float amount,float time)

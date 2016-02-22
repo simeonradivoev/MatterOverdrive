@@ -2,6 +2,8 @@ package matteroverdrive.client.render;
 
 import matteroverdrive.Reference;
 import matteroverdrive.client.RenderHandler;
+import matteroverdrive.client.data.TextureAtlasSpriteParticle;
+import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -10,7 +12,10 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.client.renderer.texture.IIconCreator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -31,9 +36,19 @@ import java.util.concurrent.Callable;
 /**
  * Created by Simeon on 5/13/2015.
  */
-public class RenderParticlesHandler implements IWorldLastRenderer
+public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
 {
-    final ResourceLocation additiveTextureSheet = new ResourceLocation(Reference.PATH_PARTICLE + "particles_additive.png");
+    public static ResourceLocation star = new ResourceLocation(Reference.MOD_ID,"sprite_star");
+    public static ResourceLocation shockwave = new ResourceLocation(Reference.MOD_ID,"sprite_shockwave");
+    public static ResourceLocation selection = new ResourceLocation(Reference.MOD_ID,"sprite_selection");
+    public static ResourceLocation marker = new ResourceLocation(Reference.MOD_ID,"sprite_marker");
+    public static ResourceLocation sparks = new ResourceLocation(Reference.MOD_ID,"sprite_sparks");
+    public static ResourceLocation blood = new ResourceLocation(Reference.MOD_ID,"sprite_blood");
+    public static ResourceLocation smoke = new ResourceLocation(Reference.MOD_ID,"sprite_smoke");
+    public static ResourceLocation explosion = new ResourceLocation(Reference.MOD_ID,"sprite_explosion");
+
+    private final TextureMap textureMap;
+    private final ResourceLocation sheet = new ResourceLocation(Reference.MOD_ID, "textures/particle/mo_particles.png");
     private final TextureManager renderer;
     protected final World worldObj;
     private Random rand = new Random();
@@ -44,10 +59,13 @@ public class RenderParticlesHandler implements IWorldLastRenderer
         this.worldObj = world;
         this.renderer = renderer;
         fxes = new List[Blending.values().length];
+        textureMap = new TextureMap("textures/particle",this);
+        Minecraft.getMinecraft().renderEngine.loadTickableTexture(sheet,textureMap);
         for (int i = 0;i < Blending.values().length;i++)
         {
             fxes[i] = new ArrayList<>();
         }
+        textureMap.loadTextureAtlas(Minecraft.getMinecraft().getResourceManager());
     }
 
     public void onRenderWorldLast(RenderHandler renderHandler, RenderWorldLastEvent event)
@@ -123,6 +141,7 @@ public class RenderParticlesHandler implements IWorldLastRenderer
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
         ICamera camera = new Frustum();
         camera.setPosition(EntityFX.interpPosX,EntityFX.interpPosY,EntityFX.interpPosZ);
+        renderer.bindTexture(sheet);
 
         for (int k = 0; k < fxes.length; ++k)
         {
@@ -130,16 +149,15 @@ public class RenderParticlesHandler implements IWorldLastRenderer
             {
                 WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
                 Blending blending = Blending.values()[k];
+
                 switch (blending)
                 {
                     case Additive:
                         GlStateManager.tryBlendFuncSeparate(GL11.GL_ONE, GL11.GL_ONE,0,1);
-                        renderer.bindTexture(additiveTextureSheet);
                         wr.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
                         break;
                     case Additive2Sided:
                         GlStateManager.tryBlendFuncSeparate(GL11.GL_ONE,GL11.GL_ONE,0,1);
-                        renderer.bindTexture(additiveTextureSheet);
                         GlStateManager.disableCull();
                         wr.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
                         break;
@@ -148,6 +166,10 @@ public class RenderParticlesHandler implements IWorldLastRenderer
                         GlStateManager.disableTexture2D();
                         GL11.glLineWidth(2);
                         wr.begin(GL11.GL_LINES, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+                        break;
+                    case Transparent:
+                        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA,1,0);
+                        wr.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
                         break;
                 }
 
@@ -197,15 +219,45 @@ public class RenderParticlesHandler implements IWorldLastRenderer
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
     }
 
+    @Override
+    public void registerSprites(TextureMap iconRegistry)
+    {
+        reg(iconRegistry,sparks);
+        reg(iconRegistry,star);
+        reg(iconRegistry,shockwave);
+        reg(iconRegistry,marker);
+        reg(iconRegistry,selection);
+        reg(iconRegistry,blood,64,2);
+        reg(iconRegistry,smoke,64,2);
+        reg(iconRegistry,explosion,21,2);
+    }
+
+    public void reg(TextureMap textureMap,ResourceLocation resourceLocation)
+    {
+        textureMap.registerSprite(resourceLocation);
+    }
+
+    public void reg(TextureMap textureMap,ResourceLocation resourceLocation,int frameSize,int speed)
+    {
+        TextureAtlasSpriteParticle spriteParticle = new TextureAtlasSpriteParticle(resourceLocation.toString(),frameSize,speed);
+        textureMap.setTextureEntry(resourceLocation.toString(),spriteParticle);
+    }
+
+    public TextureAtlasSprite getSprite(ResourceLocation location)
+    {
+        return textureMap.getAtlasSprite(location.toString());
+    }
+
+    public void bindSheet()
+    {
+        RenderUtils.bindTexture(sheet);
+    }
+
     public enum Blending
     {
         Additive,
         Additive2Sided,
         LinesAdditive,
-    }
-
-    public ResourceLocation getAdditiveTextureSheet()
-    {
-        return additiveTextureSheet;
+        Transparent
     }
 }

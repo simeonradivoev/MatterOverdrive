@@ -51,7 +51,7 @@ public class WeaponModuleSniperScope extends MOBaseItem implements IWeaponScope
         {
             return originalAccuracy * 0.4f;
         }
-        return originalAccuracy + 3f;
+        return originalAccuracy + 4f;
     }
 
     @Override

@@ -45,7 +45,7 @@ public class BioticStatShockwave extends AbstractBioticStat
     @Override
     public void onAndroidUpdate(AndroidPlayer android, int level)
     {
-        if (android.getActiveStat() != null && android.getActiveStat().equals(this) && !android.getPlayer().onGround && android.getPlayer().motionY < 0 && android.getPlayer().isSneaking())
+        if (this.equals(android.getActiveStat()) && !android.getPlayer().onGround && android.getPlayer().motionY < 0 && android.getPlayer().isSneaking())
         {
             Vec3 motion = new Vec3(android.getPlayer().motionX,android.getPlayer().motionY,android.getPlayer().motionZ).subtract(new Vec3(0,1,0)).normalize();
             android.getPlayer().addVelocity(motion.xCoord*0.2,motion.yCoord*0.2,motion.zCoord*0.2);
@@ -55,7 +55,7 @@ public class BioticStatShockwave extends AbstractBioticStat
     @Override
     public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
     {
-        if (androidPlayer.getActiveStat() == this && server)
+        if (this.equals(androidPlayer.getActiveStat()) && server)
         {
             createShockwave(androidPlayer,androidPlayer.getPlayer(),5);
         }
@@ -70,7 +70,7 @@ public class BioticStatShockwave extends AbstractBioticStat
     @Override
     public void onLivingEvent(AndroidPlayer androidPlayer, int level, LivingEvent event)
     {
-        if ((event instanceof LivingFallEvent || event instanceof PlayerFlyableFallEvent) && event.entityLiving.isSneaking() && androidPlayer.getActiveStat().equals(this))
+        if ((event instanceof LivingFallEvent || event instanceof PlayerFlyableFallEvent) && event.entityLiving.isSneaking() && this.equals(androidPlayer.getActiveStat()))
         {
             if (event instanceof LivingFallEvent)
             {
@@ -153,7 +153,7 @@ public class BioticStatShockwave extends AbstractBioticStat
     @Override
     public boolean showOnHud(AndroidPlayer android, int level)
     {
-        return android.getActiveStat().equals(this) || getDelay(android,level) > 0;
+        return this.equals(android.getActiveStat()) || getDelay(android,level) > 0;
     }
 
     @Override

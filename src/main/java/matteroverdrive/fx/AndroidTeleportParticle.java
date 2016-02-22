@@ -1,5 +1,7 @@
 package matteroverdrive.fx;
 
+import matteroverdrive.client.render.RenderParticlesHandler;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,7 +20,7 @@ public class AndroidTeleportParticle extends MOEntityFX
         this.particleRed = this.particleGreen = this.particleBlue = 1.0F;
         this.particleMaxAge = 16;
         this.noClip = true;
-        this.particleIcon = ParticleIcon.fromWithAndHeight(0, 0, 32, 32, 128);
+        this.particleIcon = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.star);
     }
 
     @Override

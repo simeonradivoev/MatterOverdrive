@@ -4,6 +4,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.client.resources.data.WeaponMetadataSection;
 import matteroverdrive.items.weapon.EnergyWeapon;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -46,10 +47,10 @@ public class WeaponLayerAmmoRender implements IWeaponLayer
 
         String ammoString = DecimalFormat.getPercentInstance().format((float)energyWeapon.getAmmo(weapon) / (float)energyWeapon.getMaxAmmo(weapon));
         int ammoStringWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(ammoString);
-        Minecraft.getMinecraft().fontRendererObj.drawString(ammoString,16 - ammoStringWidth/2,9,color.getColor(),false);
+        ClientProxy.moFontRender.drawString(ammoString,16 - ammoStringWidth/2,9,color.getColor(),false);
         GlStateManager.scale(0.7,0.7,0.7);
 
-        Minecraft.getMinecraft().fontRendererObj.drawString(DecimalFormat.getPercentInstance().format(heatPerc),54,18,color.getColor(),false);
+        ClientProxy.moFontRender.drawString(DecimalFormat.getPercentInstance().format(heatPerc),54,18,color.getColor(),false);
         GlStateManager.translate(46,28 - 18*heatPerc,0);
         GlStateManager.disableTexture2D();
         RenderUtils.drawPlane(4,18*heatPerc);

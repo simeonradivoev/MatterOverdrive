@@ -29,11 +29,12 @@ import matteroverdrive.api.transport.IGridNode;
 import matteroverdrive.blocks.BlockPatternStorage;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.data.Inventory;
-import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.data.inventory.DatabaseSlot;
 import matteroverdrive.data.inventory.PatternStorageSlot;
+import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.data.matter_network.MatterDatabaseEvent;
 import matteroverdrive.data.transport.MatterNetwork;
+import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.items.MatterScanner;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
@@ -96,7 +97,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         }
         else
         {
-            if (isActive() && random.nextFloat() < 0.2f && getBlockType(BlockPatternStorage.class) != null && getBlockType(BlockPatternStorage.class).hasVentParticles)
+            if (isActive() && random.nextFloat() < 0.2f && getBlockType(BlockPatternStorage.class) != null && getBlockType(BlockPatternStorage.class).hasVentParticles && worldObj.getBlockState(getPos()).getBlock() == MatterOverdriveBlocks.pattern_storage)
             {
                 SpawnVentParticles(0.03f, getOppositeSide(worldObj.getBlockState(getPos()).getValue(MOBlock.PROPERTY_DIRECTION)), 1);
             }

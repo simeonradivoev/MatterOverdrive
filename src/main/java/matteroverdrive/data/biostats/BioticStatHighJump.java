@@ -57,7 +57,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     @Override
     public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
     {
-        if (server && androidPlayer.getActiveStat() == this)
+        if (server && this.equals(androidPlayer.getActiveStat()))
         {
             androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_HIGH_JUMP,!androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_HIGH_JUMP));
             androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS));

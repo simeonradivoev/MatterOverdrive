@@ -21,20 +21,21 @@ package matteroverdrive.client.render;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
-import matteroverdrive.fx.MOEntityFX;
+import matteroverdrive.util.MOLog;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.IIconCreator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.Level;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ import java.util.Map;
  * Created by Simeon on 6/15/2015.
  */
 @SideOnly(Side.CLIENT)
-public class HoloIcons {
+public class HoloIcons implements IIconCreator{
     private final Map<String, HoloIcon> iconMap;
     public final TextureMap textureMap;
     public int sheetSize = 256;
@@ -50,97 +51,24 @@ public class HoloIcons {
 
     public HoloIcons() {
         iconMap = new HashMap<>();
-        textureMap = new TextureMap("textures");
+        textureMap = new TextureMap("textures/gui/items",this);
         Minecraft.getMinecraft().renderEngine.loadTickableTexture(sheet,textureMap);
+        try
+        {
+            textureMap.loadTexture(Minecraft.getMinecraft().getResourceManager());
+        } catch (IOException e)
+        {
+            MOLog.log(Level.ERROR,e,"There was a problem while creating Holo Icons texture sheet");
+        }
     }
 
-    public void registerIcons() {
-        reg("holo_home", 14);
-        reg("holo_dotted_circle", 20);
-        reg("holo_factory", 14);
-        reg("person", 18);
-        reg("android_slot_arms", 16);
-        reg("android_slot_chest", 16);
-        reg("android_slot_head", 16);
-        reg("android_slot_legs", 16);
-        reg("android_slot_other", 16);
-        reg("barrel", 16);
-        reg("battery", 16);
-        reg("color", 16);
-        reg("factory", 16);
-        reg("module", 16);
-        reg("sights", 16);
-        reg("shielding", 16);
-        reg("scanner", 16);
-        reg("upgrade", 16);
-        reg("decompose", 16);
-        reg("pattern_storage", 16);
-        reg("home_icon", 14);
-        reg("page_icon_home", 14);
-        reg("page_icon_tasks", 15);
-        reg("page_icon_upgrades", 12);
-        reg("page_icon_config", 16);
-        reg("page_icon_search", 16);
-        reg("page_icon_info", 16);
-        reg("page_icon_galaxy", 11);
-        reg("page_icon_quadrant", 9);
-        reg("page_icon_star", 12);
-        reg("page_icon_planet", 16);
-        reg("energy", 16);
-        reg("arrow_right", 19);
-        reg("travel_icon", 18);
-        reg("icon_search", 16);
-        reg("icon_size", 16);
-        reg("icon_shuttle", 16);
-        reg("icon_size", 16);
-        reg("icon_stats", 16);
-        reg("icon_scount_planet", 32);
-        reg("icon_attack", 16);
-        reg("up_arrow", 7);
-        reg("crosshair", 3);
-        reg("up_arrow_large", 18);
-        reg("android_feature_icon_bg", 22);
-        reg("android_feature_icon_bg_active", 22);
-        reg("health", 18);
-        reg("black_circle", 18);
-        reg("connections", 16);
-        reg("ammo", 18);
-        reg("temperature", 18);
-        reg("flash_drive", 16);
-        reg("trade", 16);
-        reg("mini_quit", 16);
-        reg("mini_back", 16);
-        reg("tick", 16);
-        reg("list", 16);
-        reg("grid", 16);
-        reg("sort_random", 16);
-        reg("minimap_target",21);
-        reg("question_mark",20);
-        reg("android_feature_icon_bg_black",22);
-        reg("smile",16);
-
-        MatterOverdrive.statRegistry.registerIcons(this);
+    private void reg(TextureMap textureMap,String iconName, int originalSize) {
+        registerIcon(textureMap,iconName,originalSize);
     }
 
-    @SubscribeEvent
-    public void onModelBaking(ModelBakeEvent event)
+    public HoloIcon registerIcon(TextureMap textureMap,String iconName,int originalSize)
     {
-        textureMap.loadSprites(Minecraft.getMinecraft().getResourceManager(), iconRegistry -> {
-            for (Map.Entry<String,HoloIcon> entry : iconMap.entrySet())
-            {
-                TextureAtlasSprite sprite = iconRegistry.registerSprite(new ResourceLocation("mo:gui/items/"+ entry.getKey()));
-                entry.getValue().setIcon(sprite);
-            }
-        });
-    }
-
-    private void reg(String iconName, int originalSize) {
-        registerIcon(iconName,originalSize);
-    }
-
-    public HoloIcon registerIcon(String iconName,int originalSize)
-    {
-        HoloIcon holoIcon = new HoloIcon(textureMap.registerSprite(new ResourceLocation(Reference.MOD_ID + ":" + iconName)), originalSize, originalSize);
+        HoloIcon holoIcon = new HoloIcon(textureMap.registerSprite(new ResourceLocation(Reference.MOD_ID,iconName)), originalSize, originalSize);
         iconMap.put(iconName, holoIcon);
         return holoIcon;
     }
@@ -176,17 +104,17 @@ public class HoloIcons {
         }
     }
 
-    public static void tessalateParticleIcon(MOEntityFX.ParticleIcon icon, double x, double y, double z, float size, Color color)
+    public static void tessalateParticleIcon(TextureAtlasSprite icon, double x, double y, double z, float size, Color color)
     {
         RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), icon, size, new Vec3(x, y, z), color);
     }
 
-    public static void tessalateStaticIcon(MOEntityFX.ParticleIcon icon, double x, double y, double z, float size, Color color)
+    public static void tessalateStaticIcon(TextureAtlasSprite icon, double x, double y, double z, float size, Color color)
     {
         tessalateStaticIcon(icon, x, y, z, size, color, 1);
     }
 
-    public static void tessalateStaticIcon(MOEntityFX.ParticleIcon icon, double x, double y, double z, float size, Color color, float multiply)
+    public static void tessalateStaticIcon(TextureAtlasSprite icon, double x, double y, double z, float size, Color color, float multiply)
     {
         float halfSize = size / 2;
         float uMin = icon.getMinU();
@@ -199,5 +127,75 @@ public class HoloIcons {
         wr.pos(x + halfSize,y - halfSize,z).tex(uMin,vMax).color(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA()).endVertex();
         wr.pos(x + halfSize,y + halfSize,z).tex(uMin,vMin).color(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA()).endVertex();
         wr.pos(x - halfSize,y + halfSize,z).tex(uMax,vMin).color(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA()).endVertex();
+    }
+
+    @Override
+    public void registerSprites(TextureMap ir)
+    {
+        reg(ir,"holo_home", 14);
+        reg(ir,"holo_dotted_circle", 20);
+        reg(ir,"holo_factory", 14);
+        reg(ir,"person", 18);
+        reg(ir,"android_slot_arms", 16);
+        reg(ir,"android_slot_chest", 16);
+        reg(ir,"android_slot_head", 16);
+        reg(ir,"android_slot_legs", 16);
+        reg(ir,"android_slot_other", 16);
+        reg(ir,"barrel", 16);
+        reg(ir,"battery", 16);
+        reg(ir,"color", 16);
+        reg(ir,"factory", 16);
+        reg(ir,"module", 16);
+        reg(ir,"sights", 16);
+        reg(ir,"shielding", 16);
+        reg(ir,"scanner", 16);
+        reg(ir,"upgrade", 16);
+        reg(ir,"decompose", 16);
+        reg(ir,"pattern_storage", 16);
+        reg(ir,"home_icon", 14);
+        reg(ir,"page_icon_home", 14);
+        reg(ir,"page_icon_tasks", 15);
+        reg(ir,"page_icon_upgrades", 12);
+        reg(ir,"page_icon_config", 16);
+        reg(ir,"page_icon_search", 16);
+        reg(ir,"page_icon_info", 16);
+        reg(ir,"page_icon_galaxy", 11);
+        reg(ir,"page_icon_quadrant", 9);
+        reg(ir,"page_icon_star", 12);
+        reg(ir,"page_icon_planet", 16);
+        reg(ir,"energy", 16);
+        reg(ir,"arrow_right", 19);
+        reg(ir,"travel_icon", 18);
+        reg(ir,"icon_search", 16);
+        reg(ir,"icon_size", 16);
+        reg(ir,"icon_shuttle", 16);
+        reg(ir,"icon_size", 16);
+        reg(ir,"icon_stats", 16);
+        reg(ir,"icon_scount_planet", 32);
+        reg(ir,"icon_attack", 16);
+        reg(ir,"up_arrow", 7);
+        reg(ir,"crosshair", 3);
+        reg(ir,"up_arrow_large", 18);
+        reg(ir,"android_feature_icon_bg", 22);
+        reg(ir,"android_feature_icon_bg_active", 22);
+        reg(ir,"health", 18);
+        reg(ir,"black_circle", 18);
+        reg(ir,"connections", 16);
+        reg(ir,"ammo", 18);
+        reg(ir,"temperature", 18);
+        reg(ir,"flash_drive", 16);
+        reg(ir,"trade", 16);
+        reg(ir,"mini_quit", 16);
+        reg(ir,"mini_back", 16);
+        reg(ir,"tick", 16);
+        reg(ir,"list", 16);
+        reg(ir,"grid", 16);
+        reg(ir,"sort_random", 16);
+        reg(ir,"minimap_target",21);
+        reg(ir,"question_mark",20);
+        reg(ir,"android_feature_icon_bg_black",22);
+        reg(ir,"smile",16);
+
+        MatterOverdrive.statRegistry.registerIcons(ir,this);
     }
 }

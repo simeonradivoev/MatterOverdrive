@@ -66,10 +66,10 @@ public class ListElementQuest implements IMOListBoxElement
 
         int textWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(getName());
         if (selected) {
-            Minecraft.getMinecraft().fontRendererObj.drawString("\u2023 " + getName(), x + width / 2 - textWidth / 2 - 8, y, textColor);
+            listBox.getFontRenderer().drawString("\u2023 " + getName(), x + width / 2 - textWidth / 2 - 8, y, textColor);
         }else
         {
-            Minecraft.getMinecraft().fontRendererObj.drawString(getName(), x + width / 2 - textWidth / 2, y, textColor);
+            listBox.getFontRenderer().drawString(getName(), x + width / 2 - textWidth / 2, y, textColor);
         }
     }
 

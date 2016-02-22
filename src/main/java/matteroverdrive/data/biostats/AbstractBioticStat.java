@@ -24,6 +24,7 @@ import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
@@ -241,9 +242,9 @@ public abstract class AbstractBioticStat implements IBioticStat
     }
 
     @Override
-    public void registerIcons(HoloIcons holoIcons)
+    public void registerIcons(TextureMap textureMap,HoloIcons holoIcons)
     {
-        icon = holoIcons.registerIcon("biotic_stat_" + name,18);
+        icon = holoIcons.registerIcon(textureMap,"biotic_stat_" + name,18);
     }
 
     public void addReqiredItm(ItemStack stack)

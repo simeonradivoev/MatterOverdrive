@@ -61,7 +61,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
         quests = new MOElementListBox(gui,this,posX+22,posY+28,width-44,74);
         quests.textColor = Reference.COLOR_HOLO.multiplyWithoutAlpha(0.5f).getColor();
         quests.selectedTextColor = Reference.COLOR_HOLO.getColor();
-        questInfo = new ElementTextList(gui,0,0,width-15,Reference.COLOR_HOLO.getColor(),true);
+        questInfo = new ElementTextList(gui,0,0,width-15,Reference.COLOR_HOLO.getColor(),false);
         questRewards = new ElementBaseGroup(gui,8,8,width-15,24);
         questRewards.setName("Quest Rewards");
         questInfoGroup = new ElementScrollGroup(gui,22,120,width-15,80);
@@ -136,7 +136,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
             String info = selectedQuest.getInfo(Minecraft.getMinecraft().thePlayer).replace("/n/","\n");
             if (info != null)
             {
-                List<String> list = getFontRenderer().listFormattedStringToWidth(info, sizeX + 60);
+                List<String> list = getFontRenderer().listFormattedStringToWidth(info, sizeX - 32);
                 for (String s : list)
                 {
                     questInfo.addLine(s);

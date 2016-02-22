@@ -19,7 +19,7 @@
 package matteroverdrive.gui.element;
 
 import matteroverdrive.gui.MOGuiBase;
-import net.minecraft.client.Minecraft;
+import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.gui.FontRenderer;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class ElementTextList extends MOElementBase
     @Override
     public FontRenderer getFontRenderer()
     {
-        return Minecraft.getMinecraft().fontRendererObj;
+        return ClientProxy.moFontRender;
     }
 
     @Override

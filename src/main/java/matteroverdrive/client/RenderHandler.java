@@ -418,7 +418,10 @@ public class RenderHandler
     @SubscribeEvent
     public void onTextureStich(TextureStitchEvent.Pre event)
     {
-        weaponRenderHandler.onTextureStich(Minecraft.getMinecraft().getTextureMapBlocks(),this);
+        if (event.map == Minecraft.getMinecraft().getTextureMapBlocks())
+        {
+            weaponRenderHandler.onTextureStich(Minecraft.getMinecraft().getTextureMapBlocks(), this);
+        }
     }
 
     public static void registerItemRendererVarients()

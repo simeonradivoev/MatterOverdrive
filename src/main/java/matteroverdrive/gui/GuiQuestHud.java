@@ -21,6 +21,7 @@ package matteroverdrive.gui;
 import matteroverdrive.Reference;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.client.data.Color;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.animation.MOAnimationTimeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -83,7 +84,7 @@ public class GuiQuestHud
     {
         if (event.type.equals(RenderGameOverlayEvent.ElementType.ALL))
         {
-            FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+            FontRenderer fontRenderer = ClientProxy.moFontRender;
 
             if (completeQuestTimeline.isPlaying() && completeQuestName != null)
             {

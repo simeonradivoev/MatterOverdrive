@@ -51,7 +51,7 @@ public class BioticStatWirelessCharger extends AbstractBioticStat
     @Override
     public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
     {
-        if (server && androidPlayer.getActiveStat() == this)
+        if (server && this.equals(androidPlayer.getActiveStat()))
         {
             androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_WIRELESS_CHARGING,!androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_WIRELESS_CHARGING));
             androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS));

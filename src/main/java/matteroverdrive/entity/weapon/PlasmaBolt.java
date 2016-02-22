@@ -26,11 +26,14 @@ import matteroverdrive.api.gravity.IGravitationalAnomaly;
 import matteroverdrive.api.gravity.IGravityEntity;
 import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.client.data.Color;
+import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.client.sound.MOPositionedSound;
+import matteroverdrive.fx.EntityFXGenericAnimatedParticle;
 import matteroverdrive.fx.PhaserBoltRecoil;
 import matteroverdrive.handler.weapon.ClientWeaponHandler;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.network.packet.client.PacketUpdatePlasmaBolt;
+import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.material.Material;
@@ -381,37 +384,51 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
             sideHit = new Vec3(-motionX, -motionY, -motionZ);
         }
         Color c = new Color(color);
-        //EntityExplodeFX explodeFX = new EntityExplodeFX(worldObj, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 0, 0, 0);
-        //explodeFX.setRBGColorF(c.getFloatR(),c.getFloatG(),c.getFloatB());
-        //Minecraft.getMinecraft().effectRenderer.addEffect(explodeFX);
-        if (rand.nextFloat() < 0.8f) {
-            int hitPraticles = Math.max(0, (int) (16*renderSize) - ((int) (8 * renderSize) * Minecraft.getMinecraft().gameSettings.particleSetting));
-            for (int i = 0; i < hitPraticles; i++) {
-                Minecraft.getMinecraft().effectRenderer.addEffect(new PhaserBoltRecoil(worldObj, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, c, sideHit.xCoord * 30, sideHit.yCoord * 30, sideHit.zCoord * 30));
-            }
-
-            if (getRenderSize() > 0.5)
-            {
-                MOPositionedSound sizzleSound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "sizzle"), rand.nextFloat() * 0.2f + 0.4f, rand.nextFloat() * 0.6f + 0.7f);
-                sizzleSound.setPosition((float) hit.hitVec.xCoord, (float) hit.hitVec.yCoord, (float) hit.hitVec.zCoord);
-                Minecraft.getMinecraft().getSoundHandler().playSound(sizzleSound);
-                if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
-                {
-                    MOPositionedSound ricochetSound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "laser_ricochet"), rand.nextFloat() * 0.2f + 0.6f, rand.nextFloat() * 0.2f + 1f);
-                    ricochetSound.setPosition((float) hit.hitVec.xCoord, (float) hit.hitVec.yCoord, (float) hit.hitVec.zCoord);
-                    Minecraft.getMinecraft().getSoundHandler().playSound(ricochetSound);
-                }
-            }
-        }
 
         if (hit.typeOfHit.equals(MovingObjectPosition.MovingObjectType.ENTITY))
         {
             if (hit.entityHit instanceof EntityLivingBase)
             {
-                for (int s = 0; s < Math.max(0,10 - (5 * Minecraft.getMinecraft().gameSettings.particleSetting)); s++) {
-                    worldObj.spawnParticle(EnumParticleTypes.REDSTONE, hit.hitVec.xCoord+rand.nextDouble()*0.4-0.2, hit.hitVec.yCoord+rand.nextDouble()*0.4-0.2, hit.hitVec.zCoord+rand.nextDouble()*0.4-0.2, 0,0,0);
-                }
+                EntityFXGenericAnimatedParticle blood = new EntityFXGenericAnimatedParticle(worldObj,hit.hitVec.xCoord+rand.nextDouble()*0.4-0.2, hit.hitVec.yCoord+rand.nextDouble()*0.4-0.2, hit.hitVec.zCoord+rand.nextDouble()*0.4-0.2,6f + rand.nextFloat() * 2,RenderParticlesHandler.blood);
+                blood.setParticleMaxAge(12);
+                blood.setRenderDistanceWeight(3f);
+                ClientProxy.renderHandler.getRenderParticlesHandler().addEffect(blood, RenderParticlesHandler.Blending.Transparent);
             }
+        }else
+        {
+            if (rand.nextFloat() < 0.8f)
+            {
+                int hitPraticles = Math.max(0, (int) (16*renderSize) - ((int) (8 * renderSize) * Minecraft.getMinecraft().gameSettings.particleSetting));
+                for (int i = 0; i < hitPraticles; i++) {
+                    Minecraft.getMinecraft().effectRenderer.addEffect(new PhaserBoltRecoil(worldObj, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, c, sideHit.xCoord * 30, sideHit.yCoord * 30, sideHit.zCoord * 30));
+                }
+
+                if (getRenderSize() > 0.5)
+                {
+                    MOPositionedSound sizzleSound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "sizzle"), rand.nextFloat() * 0.2f + 0.4f, rand.nextFloat() * 0.6f + 0.7f);
+                    sizzleSound.setPosition((float) hit.hitVec.xCoord, (float) hit.hitVec.yCoord, (float) hit.hitVec.zCoord);
+                    Minecraft.getMinecraft().getSoundHandler().playSound(sizzleSound);
+                    if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+                    {
+                        MOPositionedSound ricochetSound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "laser_ricochet"), rand.nextFloat() * 0.2f + 0.6f, rand.nextFloat() * 0.2f + 1f);
+                        ricochetSound.setPosition((float) hit.hitVec.xCoord, (float) hit.hitVec.yCoord, (float) hit.hitVec.zCoord);
+                        Minecraft.getMinecraft().getSoundHandler().playSound(ricochetSound);
+                    }
+                }
+
+                EntityFXGenericAnimatedParticle smoke = new EntityFXGenericAnimatedParticle(worldObj, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 8f + rand.nextFloat() * 2, RenderParticlesHandler.smoke);
+                smoke.setParticleMaxAge(20);
+                smoke.setRenderDistanceWeight(2f);
+                smoke.setColorRGBA(c.multiply(1,1,1,0.5f));
+                smoke.setBottomPivot(true);
+                ClientProxy.renderHandler.getRenderParticlesHandler().addEffect(smoke, RenderParticlesHandler.Blending.Transparent);
+            }
+
+            /*EntityFXGenericAnimatedParticle sparks = new EntityFXGenericAnimatedParticle(worldObj, hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord, 4f + rand.nextFloat() * 2, RenderParticlesHandler.sparks);
+            sparks.setParticleMaxAge(12);
+            sparks.setRenderDistanceWeight(2f);
+            sparks.setColorRGBA(c);
+            ClientProxy.renderHandler.getRenderParticlesHandler().addEffect(sparks, RenderParticlesHandler.Blending.Additive);*/
         }
     }
 

@@ -60,7 +60,7 @@ public class BioticStatItemMagnet extends AbstractBioticStat
     @Override
     public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
     {
-        if (androidPlayer.getActiveStat().equals(this))
+        if (this.equals(androidPlayer.getActiveStat()))
         {
             androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_ITEM_MAGNET, !androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_ITEM_MAGNET));
         }

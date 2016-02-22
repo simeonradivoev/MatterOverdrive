@@ -31,9 +31,6 @@ public class PhaserBoltRecoil extends EntityFX
     public PhaserBoltRecoil(World world, double x, double y, double z, Color color, double dirX, double dirY, double dirZ)
     {
         super(world, x, y, z, dirX, dirY, dirZ);
-        //this.motionX *= 0.800000011920929D;
-        //this.motionY *= 0.800000011920929D;
-        //this.motionZ *= 0.800000011920929D;
         this.motionY += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
         this.motionX += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
         this.motionZ += (double)((this.rand.nextFloat()-0.5f) * 0.2F);

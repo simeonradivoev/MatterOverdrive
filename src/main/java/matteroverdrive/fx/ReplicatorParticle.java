@@ -1,18 +1,13 @@
 package matteroverdrive.fx;
 
-import matteroverdrive.Reference;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class ReplicatorParticle extends EntityFX
 {
-	public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_PARTICLE + "replication_particle.png");
-	public static float replicatorScale = 0.1f;
-
 	/** the scale of the flame FX */
     private float flameScale;
     private double centerX,centerY,centerZ;

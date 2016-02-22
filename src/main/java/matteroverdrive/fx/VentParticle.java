@@ -1,11 +1,9 @@
 package matteroverdrive.fx;
 
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import matteroverdrive.Reference;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 4/17/2015.
@@ -13,8 +11,6 @@ import net.minecraft.world.World;
 @SideOnly(Side.CLIENT)
 public class VentParticle extends EntityFX
 {
-    public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_PARTICLE + "steam_particle.png");
-
     public VentParticle(World world, double x, double y, double z, double dirX, double dirY, double dirZ)
     {
         this(world, x, y, z, dirX, dirY, dirZ, 1.0F);

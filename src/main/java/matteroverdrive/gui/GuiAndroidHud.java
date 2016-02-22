@@ -266,7 +266,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            if (androidPlayer.getActiveStat() != null && androidPlayer.getActiveStat().equals(stat))
+            if (stat.equals(androidPlayer.getActiveStat()))
             {
                 radiusMax = radius + 20;
                 radiusMin = radius - 16;
@@ -315,7 +315,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             ClientProxy.holoIcons.bindSheet();
             if (androidPlayer.getActiveStat() != null)
             {
-                if (androidPlayer.getActiveStat().equals(stat))
+                if (stat.equals(androidPlayer.getActiveStat()))
                 {
                     RenderUtils.applyColorWithMultipy(baseGuiColor, 1);
                     x = Math.sin(angle) * radius;
@@ -363,9 +363,9 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
                 if (hudMovement)
                 {
-                    hudRotationYawSmooth = hudRotationYawSmooth * 0.4f + mc.thePlayer.rotationYaw * 0.6f;
-                    hudRotationPitchSmooth = hudRotationPitchSmooth * 0.4f + mc.thePlayer.rotationPitch * 0.6f;
-                    GlStateManager.translate((hudRotationYawSmooth - mc.thePlayer.rotationYaw) * 6, (hudRotationPitchSmooth - mc.thePlayer.rotationPitch) * 6, 0);
+                    hudRotationYawSmooth = mc.thePlayer.prevRenderArmYaw + (mc.thePlayer.renderArmYaw - mc.thePlayer.prevRenderArmYaw) * event.partialTicks;
+                    hudRotationPitchSmooth = mc.thePlayer.prevRenderArmPitch + (mc.thePlayer.renderArmPitch - mc.thePlayer.prevRenderArmPitch) * event.partialTicks;
+                    GlStateManager.translate((hudRotationYawSmooth - mc.thePlayer.rotationYaw) * 0.2f, (hudRotationPitchSmooth - mc.thePlayer.rotationPitch) * 0.2f, 0);
                 }
 
                 for (IAndroidHudElement element : hudElements)

@@ -28,6 +28,7 @@ import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.gui.events.ITextHandler;
+import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
@@ -608,6 +609,12 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
     private boolean isMouseOverSlot(Slot slotIn, int mouseX, int mouseY)
     {
         return this.isPointInRegion(slotIn.xDisplayPosition, slotIn.yDisplayPosition, 16, 16, mouseX, mouseY);
+    }
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    {
+        super.setWorldAndResolution(mc,width,height);
+        this.fontRendererObj = ClientProxy.moFontRender;
     }
     public FontRenderer getFontRenderer() {
         return this.fontRendererObj;

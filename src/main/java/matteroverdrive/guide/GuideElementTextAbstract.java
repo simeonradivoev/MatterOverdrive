@@ -112,7 +112,7 @@ public abstract class GuideElementTextAbstract extends GuideElementAbstract
         if (shortcodeMap.get("type").equalsIgnoreCase("block") || shortcodeMap.get("type").equalsIgnoreCase("item"))
         {
             ItemStack stack = shortCodeToStack(shortcodeMap);
-            if (stack != null)
+            if (stack != null && stack.getItem() != null)
             {
                 String guideName = shortcodeMap.containsKey("guide") ? shortcodeMap.get("guide") : null;
                 int guidePage = shortcodeMap.containsKey("page") ? Integer.parseInt(shortcodeMap.get("page")) : 0;

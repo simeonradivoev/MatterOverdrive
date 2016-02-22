@@ -99,7 +99,7 @@ public class StarMapRendererStar extends StarMapRendererAbstract {
             GlStateManager.pushMatrix();
             GlStateManager.scale(star.getSize(), star.getSize(), star.getSize());
 
-            bindTexture(ClientProxy.renderHandler.getRenderParticlesHandler().getAdditiveTextureSheet());
+            ClientProxy.renderHandler.getRenderParticlesHandler().bindSheet();
             Tessellator.getInstance().getWorldRenderer().begin(GL_QUADS,DefaultVertexFormats.POSITION_TEX_COLOR);
             RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), star_icon, star.getSize(), new Vec3(0, 0, 0), Reference.COLOR_HOLO_YELLOW.getFloatR() * 0.1f, Reference.COLOR_HOLO_YELLOW.getFloatG() * 0.1f, Reference.COLOR_HOLO_YELLOW.getFloatB() * 0.1f, Reference.COLOR_HOLO_YELLOW.getFloatA() * 0.1f);
             Tessellator.getInstance().draw();

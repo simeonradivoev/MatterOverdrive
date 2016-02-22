@@ -1,5 +1,7 @@
 package matteroverdrive.fx;
 
+import matteroverdrive.client.render.RenderParticlesHandler;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.animation.MOEasing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -18,7 +20,7 @@ public class ShockwaveParticle extends MOEntityFX
     {
         super(p_i1218_1_, p_i1218_2_, p_i1218_4_, p_i1218_6_);
         this.maxScale = maxScale;
-        this.particleIcon = ParticleIcon.fromWithAndHeight(96,0,32,32,128);
+        this.particleIcon = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.shockwave);
         this.particleMaxAge = (int) (maxScale * 5);
         this.setEntityBoundingBox(new AxisAlignedBB(p_i1218_2_ - maxScale,p_i1218_4_ - 0.5,p_i1218_6_ - maxScale,p_i1218_2_ + maxScale,p_i1218_4_ + 0.5,p_i1218_6_ + maxScale));
         this.renderDistanceWeight = Minecraft.getMinecraft().gameSettings.renderDistanceChunks / 6d;

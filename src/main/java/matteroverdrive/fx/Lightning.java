@@ -31,7 +31,6 @@ public class Lightning extends MOEntityFX
         super(worldIn, start.xCoord,start.yCoord,start.zCoord);
         this.destination = new Vector3d(destination.xCoord,destination.yCoord,destination.zCoord);
         this.length = (float) destination.distanceTo(getPositionVector());
-        this.particleIcon = ParticleIcon.fromWithAndHeight(96,0,32,32,128);
         this.particleMaxAge = 10 + (int) (this.rand.nextFloat() * 10);
         this.randomness = randomness;
         this.speed = speed;

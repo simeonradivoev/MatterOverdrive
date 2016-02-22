@@ -1,9 +1,11 @@
 package matteroverdrive.client.render.tileentity.starmap;
 
 import matteroverdrive.api.renderer.ISpaceBodyHoloRenderer;
-import matteroverdrive.fx.MOEntityFX;
+import matteroverdrive.client.render.RenderParticlesHandler;
+import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.glu.Disk;
@@ -17,9 +19,9 @@ import java.util.Random;
 @SideOnly(Side.CLIENT)
 public abstract class StarMapRendererAbstract implements ISpaceBodyHoloRenderer
 {
-    protected MOEntityFX.ParticleIcon star_icon = MOEntityFX.ParticleIcon.fromWithAndHeight(0,0,32,32,128);
-    protected MOEntityFX.ParticleIcon selectedIcon = MOEntityFX.ParticleIcon.fromWithAndHeight(32,0,32,32,128);
-    protected MOEntityFX.ParticleIcon currentIcon = MOEntityFX.ParticleIcon.fromWithAndHeight(64,0,32,32,128);
+    protected TextureAtlasSprite star_icon = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.star);
+    protected TextureAtlasSprite selectedIcon = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.selection);
+    protected TextureAtlasSprite currentIcon = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.marker);
     protected final Sphere sphere;
     protected final Disk disk;
     protected final Random random;

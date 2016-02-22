@@ -24,6 +24,7 @@ import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.api.events.MOEventRegisterAndroidStat;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.util.MOLog;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Collection;
@@ -72,11 +73,11 @@ public class AndroidStatRegistry implements IAndroidStatRegistry
         return stats.remove(statName);
     }
 
-    public void registerIcons(HoloIcons holoIcons)
+    public void registerIcons(TextureMap textureMap,HoloIcons holoIcons)
     {
         for (IBioticStat stat : stats.values())
         {
-            stat.registerIcons(holoIcons);
+            stat.registerIcons(textureMap,holoIcons);
         }
     }
 

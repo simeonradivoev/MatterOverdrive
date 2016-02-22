@@ -20,7 +20,6 @@ public class LightningCircle extends MOEntityFX
     public LightningCircle(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn,float randomness,float speed,float scale,float growth)
     {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn);
-        this.particleIcon = ParticleIcon.fromWithAndHeight(96,0,32,32,128);
         this.particleMaxAge = 10 + (int) (this.rand.nextFloat() * 10);
         this.randomness = randomness;
         this.speed = speed;

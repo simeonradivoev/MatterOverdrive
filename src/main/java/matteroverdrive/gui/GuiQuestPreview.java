@@ -26,6 +26,7 @@ import matteroverdrive.container.ContainerFalse;
 import matteroverdrive.data.quest.rewards.ItemStackReward;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.network.packet.server.PacketQuestActions;
+import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -95,12 +96,12 @@ public class GuiQuestPreview extends MOGuiBase
         if (questStack != null)
         {
             String questName = questStack.getTitle(Minecraft.getMinecraft().thePlayer);
-            int titleWidth = fontRendererObj.getStringWidth(questName);
+            int titleWidth = ClientProxy.moFontRender.getStringWidth(questName);
             float scale = Math.min(100f/(float)titleWidth,1.8f);
             GlStateManager.pushMatrix();
             GlStateManager.translate(guiLeft + 24,guiTop + 30,0);
             GlStateManager.scale(scale,scale,scale);
-            fontRendererObj.drawString(EnumChatFormatting.BOLD + questName,0,0,0x2394e3);
+            ClientProxy.moFontRender.drawString(EnumChatFormatting.BOLD + questName,0,0,0x2394e3);
             GlStateManager.popMatrix();
         }
         super.drawGuiContainerBackgroundLayer(partialTick,x,y);
@@ -111,7 +112,7 @@ public class GuiQuestPreview extends MOGuiBase
         int width = 165;
         questInfo.clearLines();
         String info = questStack.getInfo(Minecraft.getMinecraft().thePlayer).replace("/n/","\n");
-        List<String> list = getFontRenderer().listFormattedStringToWidth(info,width);
+        List<String> list = ClientProxy.moFontRender.listFormattedStringToWidth(info,width);
         for (String s : list)
         {
             questInfo.addLine(s);

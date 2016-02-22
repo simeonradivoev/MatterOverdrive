@@ -23,6 +23,7 @@ import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.entity.android_player.AndroidAttributes;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -190,7 +191,7 @@ public interface IBioticStat
      * Called to register any custom Icons
      * @param holoIcons The TextureMap for the Holo Icons
      */
-    void registerIcons(HoloIcons holoIcons);
+    void registerIcons(TextureMap textureMap,HoloIcons holoIcons);
 
     /**
      * Gets the Bionic Stat Icon.
