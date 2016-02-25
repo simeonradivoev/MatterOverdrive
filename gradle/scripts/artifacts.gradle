@@ -1,11 +1,3 @@
-jar {
-	configurations.shade.each { dep ->
-		from (project.zipTree(dep)) {
-			exclude 'META-INF', 'META-INF/**'
-		}
-	}
-}
-
 artifacts {
     archives jar
 }
