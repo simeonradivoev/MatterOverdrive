@@ -123,7 +123,7 @@ public class PhaserRifle extends EnergyWeapon
     {
         if (module != null && module.getItem() instanceof IWeaponModule && ((IWeaponModule) module.getItem()).getSlot(module) == Reference.MODULE_BARREL)
         {
-            return module.getItemDamage() != WeaponModuleBarrel.EXPLOSION_BARREL_ID && module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID;
+            return module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID;
         }
         return true;
     }
@@ -186,12 +186,12 @@ public class PhaserRifle extends EnergyWeapon
                 if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
                     if (isWeaponZoomed(entityPlayer, itemStack)) {
                         ClientProxy.instance().getClientWeaponHandler().setRecoil(0.5f + getAccuracy(itemStack, entityPlayer, true),1,0.05f);
-                        ClientProxy.instance().getClientWeaponHandler().setCameraRecoil(1 + getAccuracy(itemStack, entityPlayer, true) * 0.1f,1);
+                        ClientProxy.instance().getClientWeaponHandler().setCameraRecoil(0.5f + getAccuracy(itemStack, entityPlayer, true) * 0.1f,1);
                         //entityPlayer.hurtTime = 6 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
                         //entityPlayer.maxHurtTime = 15;
                     } else {
                         ClientProxy.instance().getClientWeaponHandler().setRecoil(2 + getAccuracy(itemStack, entityPlayer, true) * 2,1,0.07f);
-                        ClientProxy.instance().getClientWeaponHandler().setCameraRecoil(1 + getAccuracy(itemStack, entityPlayer, true) * 0.5f,1);
+                        ClientProxy.instance().getClientWeaponHandler().setCameraRecoil(0.5f + getAccuracy(itemStack, entityPlayer, true) * 0.5f,1);
                         //entityPlayer.hurtTime = 10 + (int) ((getHeat(itemStack) / getMaxHeat(itemStack)) * 8);
                         //entityPlayer.maxHurtTime = 25;
                     }

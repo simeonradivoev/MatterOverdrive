@@ -137,6 +137,11 @@ public class PlasmaShotgun extends EnergyWeapon
             bolts[i].setWeapon(weapon);
             bolts[i].setRenderSize((getShotCount(weapon,shooter)/shot.getCount())*0.5f);
             bolts[i].setFireDamageMultiply(WeaponHelper.modifyStat(Reference.WS_FIRE_DAMAGE, weapon,0));
+            float explosionMultiply = WeaponHelper.modifyStat(Reference.WS_EXPLOSION_DAMAGE,weapon,0);
+            if (explosionMultiply > 0)
+            {
+                bolts[i].setExplodeMultiply((getWeaponBaseDamage(weapon) * 0.3f * explosionMultiply) / shot.getCount());
+            }
             bolts[i].setKnockBack(0.5f);
             if (WeaponHelper.modifyStat(Reference.WS_RICOCHET,weapon,0) == 1)
             {
@@ -206,7 +211,7 @@ public class PlasmaShotgun extends EnergyWeapon
     {
         if (module != null)
         {
-            return module.getItem() == MatterOverdriveItems.weapon_module_color || (module.getItem() == MatterOverdriveItems.weapon_module_barrel && module.getItemDamage() != WeaponModuleBarrel.EXPLOSION_BARREL_ID && module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID);
+            return module.getItem() == MatterOverdriveItems.weapon_module_color || (module.getItem() == MatterOverdriveItems.weapon_module_barrel && module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID);
         }
         return false;
     }

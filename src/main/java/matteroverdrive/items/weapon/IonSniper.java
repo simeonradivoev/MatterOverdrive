@@ -252,7 +252,7 @@ public class IonSniper extends EnergyWeapon
     {
         if (module != null && module.getItem() instanceof IWeaponModule && ((IWeaponModule) module.getItem()).getSlot(module) == Reference.MODULE_BARREL)
         {
-            return module.getItemDamage() != WeaponModuleBarrel.EXPLOSION_BARREL_ID && module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID;
+            return module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID;
         }
         return true;
     }

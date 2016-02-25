@@ -19,9 +19,9 @@ public class BioticStatAirDash extends AbstractBioticStat
     @SideOnly(Side.CLIENT)
     private int lastClickTime;
     @SideOnly(Side.CLIENT)
-    private int clickCount = 0;
+    private int clickCount;
     @SideOnly(Side.CLIENT)
-    private boolean hasReleased = true;
+    private boolean hasNotReleased;
     @SideOnly(Side.CLIENT)
     private boolean hasDashed;
 
@@ -50,9 +50,9 @@ public class BioticStatAirDash extends AbstractBioticStat
             {
                 if (Minecraft.getMinecraft().gameSettings.keyBindForward.isKeyDown())
                 {
-                    if (hasReleased)
+                    if (!hasNotReleased)
                     {
-                        hasReleased = false;
+                        hasNotReleased = true;
                         if (lastClickTime > 0)
                         {
                             clickCount++;
@@ -62,7 +62,7 @@ public class BioticStatAirDash extends AbstractBioticStat
                     }
                 } else
                 {
-                    hasReleased = true;
+                    hasNotReleased = false;
                 }
 
                 if (clickCount >= 1)
@@ -77,7 +77,7 @@ public class BioticStatAirDash extends AbstractBioticStat
             }
         }else
         {
-            hasReleased = true;
+            hasNotReleased = false;
             hasDashed = false;
             clickCount = 0;
             lastClickTime = 0;

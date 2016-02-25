@@ -507,6 +507,11 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         PlasmaBolt fire = new PlasmaBolt(shooter.worldObj, shooter,position,dir, shot,getShotSpeed(weapon,shooter));
         fire.setWeapon(weapon);
         fire.setFireDamageMultiply(WeaponHelper.modifyStat(Reference.WS_FIRE_DAMAGE, weapon,0));
+        float explosionAmount = WeaponHelper.modifyStat(Reference.WS_EXPLOSION_DAMAGE,weapon,0);
+        if (explosionAmount > 0)
+        {
+            fire.setExplodeMultiply(getWeaponBaseDamage(weapon)*0.3f*explosionAmount);
+        }
         if (WeaponHelper.modifyStat(Reference.WS_RICOCHET,weapon,0) == 1)
         {
             fire.markRicochetable();

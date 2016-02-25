@@ -72,5 +72,6 @@
         {"name": "blocks/pylon/electric_arc_1", "stream": false},
         {"name": "blocks/pylon/electric_arc_2", "stream": false},
         {"name": "blocks/pylon/electric_arc_3", "stream": false}]},
-    "pylon": {"category": "block","sounds": [{"name": "blocks/pylon/pylon", "stream": false}]}
+    "pylon": {"category": "block","sounds": [{"name": "blocks/pylon/pylon", "stream": false}]},
+    "explosive_shot": {"category": "player","sounds": [{"name": "weapon/explosive_shot", "stream": false}]}
 }

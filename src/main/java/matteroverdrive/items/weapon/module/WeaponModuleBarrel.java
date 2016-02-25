@@ -18,9 +18,6 @@
 
 package matteroverdrive.items.weapon.module;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
@@ -34,6 +31,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -157,13 +157,13 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
                 break;
             case 2:
                 if (statID == Reference.WS_EXPLOSION_DAMAGE)
-                    return originalStat + 1;
+                    return originalStat + 1f;
                 else if (statID == Reference.WS_AMMO)
                     return originalStat * 0.2f;
                 else if (statID == Reference.WS_EFFECT)
                     return originalStat * 0.5f;
                 else if (statID == Reference.WS_FIRE_RATE)
-                    return originalStat * 0.15f;
+                    return originalStat * 2f;
                 break;
             case 3:
                 if (statID == Reference.WS_DAMAGE)
