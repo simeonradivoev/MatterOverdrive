@@ -3,8 +3,12 @@ jdk:
 - oraclejdk8
 before_install:
 - chmod +x gradlew
+- ulimit -a
+- free -m
 install: true
-script: ./gradlew build
+script:
+- ./gradlew clean
+- ./gradlew build --info
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
