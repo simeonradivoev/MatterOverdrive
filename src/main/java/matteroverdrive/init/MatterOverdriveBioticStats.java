@@ -19,15 +19,15 @@
 package matteroverdrive.init;
 
 import matteroverdrive.api.android.BionicStatGuiInfo;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.api.android.IAndroidStatRegistry;
 import matteroverdrive.data.biostats.*;
 import matteroverdrive.handler.ConfigurationHandler;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 /**
  * Created by Simeon on 9/12/2015.
@@ -55,6 +55,7 @@ public class MatterOverdriveBioticStats
     public static BioticStatInertialDampers inertialDampers;
     public static BioticStatItemMagnet itemMagnet;
     public static BioticStatAirDash airDash;
+    public static BioticstatOxygen oxygen;
 
     public static void init(FMLPreInitializationEvent event)
     {
@@ -81,6 +82,7 @@ public class MatterOverdriveBioticStats
         inertialDampers = new BioticStatInertialDampers("inertial_dampers",18);
         itemMagnet = new BioticStatItemMagnet("item_magnet",24);
         airDash = new BioticStatAirDash("air_dash",28);
+        oxygen = new BioticstatOxygen("oxygen",12);
     }
 
     public static void configure(FMLInitializationEvent event)
@@ -102,7 +104,8 @@ public class MatterOverdriveBioticStats
         flashCooling.setRoot(attack,true);
         shockwave.setRoot(flashCooling,true);
         autoShield.setRoot(shield,true);
-        flotation.setRoot(zeroCalories,true);
+        oxygen.setRoot(zeroCalories,true);
+        flotation.setRoot(oxygen,true);
         itemMagnet.setRoot(stepAssist,false);
         airDash.setRoot(highJump,true);
 
@@ -113,7 +116,8 @@ public class MatterOverdriveBioticStats
         teleport.setGuiInfo(new BionicStatGuiInfo(0,stepSizeY*-2));
 
         zeroCalories.setGuiInfo(new BionicStatGuiInfo(stepSizeX,0));
-        flotation.setGuiInfo(new BionicStatGuiInfo(stepSizeX,stepSizeY*2,EnumFacing.UP,true));
+        oxygen.setGuiInfo(new BionicStatGuiInfo(stepSizeX,stepSizeY*2,EnumFacing.UP,true));
+        flotation.setGuiInfo(new BionicStatGuiInfo(stepSizeX,stepSizeY*3,EnumFacing.UP));
 
         nightvision.setGuiInfo(new BionicStatGuiInfo(stepSizeX*2,stepSizeY*-2));
 
@@ -163,6 +167,7 @@ public class MatterOverdriveBioticStats
         androidStatRegistry.registerStat(inertialDampers);
         androidStatRegistry.registerStat(itemMagnet);
         androidStatRegistry.registerStat(airDash);
+        androidStatRegistry.registerStat(oxygen);
 
         configurationHandler.subscribe(teleport);
         configurationHandler.subscribe(shield);

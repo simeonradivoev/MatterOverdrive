@@ -572,7 +572,6 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
         if (isAndroid())
         {
             manageGlitch();
-            manageAir();
 
             for (IBioticStat stat : MatterOverdrive.statRegistry.getStats()) {
                 int unlockedLevel = getUnlockedLevel(stat);
@@ -918,14 +917,6 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
                     player.motionY -= 0.06;
                 }
             }
-        }
-    }
-
-    private void manageAir()
-    {
-        if (player.getAir() < 0)
-        {
-            player.setAir(0);
         }
     }
 

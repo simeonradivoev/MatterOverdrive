@@ -527,6 +527,8 @@ biotic_stat.item_magnet.name=Item Magnet
 biotic_stat.item_magnet.details=Attracts dropped items/n/Drains %s while pulling items
 biotic_stat.air_dash.name=Air Dash
 biotic_stat.air_dash.details=Dashes the player forward/n/double tap forward to active/n/while in the air
+biotic_stat.oxygen.name=Respirocytes
+biotic_stat.oxygen.details=Removes the need for oxygen.
 
 ##########################################################################################################
 # Deaths

@@ -143,14 +143,21 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
         if ((android.isAndroid() && event.isCancelable()))
         {
-            if (event.type == RenderGameOverlayEvent.ElementType.AIR || event.type == RenderGameOverlayEvent.ElementType.HEALTH)
+            if (hideVanillaHudElements)
             {
-                event.setCanceled(hideVanillaHudElements);
-                return;
-            }else if (event.type == RenderGameOverlayEvent.ElementType.FOOD && android.isUnlocked(MatterOverdriveBioticStats.zeroCalories,1) && MatterOverdriveBioticStats.zeroCalories.isEnabled(android,1))
-            {
-                event.setCanceled(hideVanillaHudElements);
-                return;
+                if (event.type == RenderGameOverlayEvent.ElementType.HEALTH)
+                {
+                    event.setCanceled(true);
+                    return;
+                } else if (event.type == RenderGameOverlayEvent.ElementType.AIR && android.isUnlocked(MatterOverdriveBioticStats.oxygen, 1) && MatterOverdriveBioticStats.oxygen.isEnabled(android, 1))
+                {
+                    event.setCanceled(true);
+                    return;
+                } else if (event.type == RenderGameOverlayEvent.ElementType.FOOD && android.isUnlocked(MatterOverdriveBioticStats.zeroCalories, 1) && MatterOverdriveBioticStats.zeroCalories.isEnabled(android, 1))
+                {
+                    event.setCanceled(true);
+                    return;
+                }
             }
         }
 
