@@ -118,6 +118,11 @@ public class AndroidEffects
     {
         Effect effect = this.getEffect(id);
 
+        if(!typeMap.get(newData.getClass()).equals(effect.typeId))
+        {
+            throw new ClassCastException(String.format("Class: %s of value not the same as in stored effect",newData.getClass().getName()));
+        }
+
         if (ObjectUtils.notEqual(newData, effect.value))
         {
             effect.value = newData;

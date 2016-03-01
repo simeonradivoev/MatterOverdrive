@@ -96,7 +96,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     private static int RECHARGE_AMOUNT_ON_RESPAWN = 64000;
     private static boolean HURT_GLITCHING = true;
     private final static int BUILTIN_ENERGY_TRANSFER = 1024;
-    public final static int TRANSFORM_TIME = 20 * 34;
+    public final static short TRANSFORM_TIME = 20 * 34;
     private final static int ENERGY_WATCHER_DEFAULT = 29;
     private static int energyWatchID;
     private final static int ENERGY_PER_JUMP = 512;
@@ -922,7 +922,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 
     private void manageTurning()
     {
-        int turnningTime = getAndroidEffects().getEffectShort(EFFECT_TURNNING);
+        short turnningTime = getAndroidEffects().getEffectShort(EFFECT_TURNNING);
         if (turnningTime > 0)
         {
             DamageSource fake = new DamageSource("android_transformation");
@@ -971,7 +971,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     @Override
     public boolean isTurning()
     {
-        return getAndroidEffects().getEffectShort(EFFECT_TURNNING) > 0;
+        return getAndroidEffects().getEffectShort(EFFECT_TURNNING) > (short) 0;
     }
 
     //region Events

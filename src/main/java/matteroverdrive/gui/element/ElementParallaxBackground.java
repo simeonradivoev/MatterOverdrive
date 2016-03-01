@@ -69,6 +69,7 @@ public class ElementParallaxBackground extends MOElementBase implements IParalla
         }
 
         GlStateManager.enableAlpha();
+        GlStateManager.disableBlend();
     }
 
     @Override

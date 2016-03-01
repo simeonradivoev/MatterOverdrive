@@ -53,6 +53,7 @@ public class ElementDoubleHelix extends MOElementBase
     @Override
     public void drawBackground(int var1, int var2, float var3)
     {
+        GlStateManager.enableBlend();
         ScaledResolution scaledresolution = new ScaledResolution(gui.mc);
         GlStateManager.matrixMode(GL_PROJECTION);
         GlStateManager.pushMatrix();
@@ -127,6 +128,7 @@ public class ElementDoubleHelix extends MOElementBase
         GlStateManager.popMatrix();
         GlStateManager.matrixMode(GL_MODELVIEW);
         GlStateManager.popMatrix();
+        GlStateManager.disableBlend();
     }
 
     private void tesseleteHelix(int fromSegment,int toSegment,List<BakedQuad> quadList,int color)
