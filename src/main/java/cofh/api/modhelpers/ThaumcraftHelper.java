@@ -2,14 +2,15 @@ package cofh.api.modhelpers;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.ModAPIManager;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Map;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ThaumcraftHelper {
 
