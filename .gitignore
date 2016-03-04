@@ -33,3 +33,5 @@ hs_err_pid*
 /*.iml
 /*.ipr
 /*.iws
+
+.DS_Store
