@@ -513,6 +513,8 @@ public class RenderHandler
         regItemRender(MatterOverdriveItems.buildingPowerGenerator);
         regItemRender(MatterOverdriveItems.weaponModuleRicochet);
 
+        regItemRender(MatterOverdriveItems.recordTransformation);
+
         regItemRender(MatterOverdriveBlocks.weapon_station);
         regItemRender(MatterOverdriveBlocks.androidStation);
         regItemRender(MatterOverdriveBlocks.replicator);

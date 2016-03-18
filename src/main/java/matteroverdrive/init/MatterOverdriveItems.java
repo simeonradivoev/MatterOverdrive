@@ -112,6 +112,7 @@ public class MatterOverdriveItems
     public static PortableDecomposer portableDecomposer;
     public static WeaponModuleRicochet weaponModuleRicochet;
     public static WeaponModuleHoloSights weaponModuleHoloSights;
+    public static ItemRecordTransformation recordTransformation;
 
     public static Item.ToolMaterial toolMaterialTritanium;
     public static ItemArmor.ArmorMaterial armorMaterialTritanium;
@@ -191,6 +192,7 @@ public class MatterOverdriveItems
         portableDecomposer = new PortableDecomposer("portable_decomposer",128000,256,512,0.1f);
         weaponModuleRicochet = new WeaponModuleRicochet("weapon_module_ricochet");
         weaponModuleHoloSights = new WeaponModuleHoloSights("weapon_module_holo_sights");
+        recordTransformation = new ItemRecordTransformation();
 	}
 
 	public static void register(FMLInitializationEvent event)
@@ -272,6 +274,8 @@ public class MatterOverdriveItems
         GameRegistry.registerItem(tritaniumLeggings,"tritanium_leggings");
         GameRegistry.registerItem(tritaniumBoots,"tritanium_boots");
 
+        GameRegistry.registerItem(recordTransformation);
+
         OreDictionary.registerOre("dustTritanium", tritanium_dust);
         OreDictionary.registerOre("ingotTritanium",tritanium_ingot);
         OreDictionary.registerOre("gemDilithium",dilithium_ctystal);
@@ -287,6 +291,7 @@ public class MatterOverdriveItems
         addToDungons(emergency_ration, 1, 8, 6);
         addToDungons(earl_gray_tea, 1, 2, 2);
         addToDungons(romulan_ale, 1, 2, 2);
+        addToDungons(recordTransformation, 1, 2, 1);
     }
 
     public static void addToMODungons()
