@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.*;
@@ -83,7 +83,7 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer<TileEntity
             rotation = new AxisAngle4d(0, 0, 1, 180);
         }
 
-		drawCube(uv,rotation,new Vec3(0,0,0));
+		drawCube(uv,rotation,new Vec3d(0,0,0));
 		GL11.glEnable(GL11.GL_CULL_FACE);
 	}
 
@@ -102,7 +102,7 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer<TileEntity
 		if(drawInside)
 			GL11.glDisable(GL11.GL_CULL_FACE);
 
-		Vec3 offset = new Vec3(dir.getDirectionVec().getX() * size, dir.getDirectionVec().getY() * size, dir.getDirectionVec().getZ() * size);
+		Vec3d offset = new Vec3d(dir.getDirectionVec().getX() * size, dir.getDirectionVec().getY() * size, dir.getDirectionVec().getZ() * size);
 		Vector2f uv = getSidesUV(tile, dir);
 
 		if(dir ==  EnumFacing.UP || dir == EnumFacing.DOWN)
@@ -121,7 +121,7 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer<TileEntity
 		GL11.glEnable(GL11.GL_CULL_FACE);
 	}
 
-	void drawCube(Vector2f uv,AxisAngle4d rot,Vec3 pos) {
+	void drawCube(Vector2f uv,AxisAngle4d rot,Vec3d pos) {
         //down
         drawPlane(new Vector3d(0, 0, 1), new AxisAngle4d(1, 0, 0, -90), size, uv, rot, pos);
         //up
@@ -136,11 +136,11 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer<TileEntity
         drawPlane(new Vector3d(1, 0, 0), new AxisAngle4d(0, 1, 0, 270), size, uv, rot, pos);
     }
 
-	void drawPlane(Vector3d pos,AxisAngle4d rot,double scale,Vector2f uv,AxisAngle4d globalRot,Vec3 globalPos)
+	void drawPlane(Vector3d pos,AxisAngle4d rot,double scale,Vector2f uv,AxisAngle4d globalRot,Vec3d globalPos)
 	{
 		GlStateManager.pushMatrix();
 
-		Tessellator.getInstance().getWorldRenderer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+		Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 		GlStateManager.translate(globalPos.xCoord, globalPos.yCoord, globalPos.zCoord);
 		GlStateManager.translate(0.5 - scale / 2, 0.5 - scale / 2, 0.5 - scale / 2);
 
@@ -182,6 +182,6 @@ public class TileEntityRendererPipe extends TileEntitySpecialRenderer<TileEntity
 
 	void addVertexWithUV(Vector4d vec,float u,float v,Vector3f normal)
 	{
-        Tessellator.getInstance().getWorldRenderer().pos(vec.x, vec.y, vec.z).tex(u,v).normal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
+        Tessellator.getInstance().getBuffer().pos(vec.x, vec.y, vec.z).tex(u,v).normal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
 	}
 }

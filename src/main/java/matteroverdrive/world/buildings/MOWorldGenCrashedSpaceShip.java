@@ -34,12 +34,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ChestGenHooks;
 
 import java.util.Random;
 
@@ -94,7 +92,8 @@ public class MOWorldGenCrashedSpaceShip extends MOWorldGenBuilding
         {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof IInventory) {
-                WeightedRandomChestContent.generateChestContents(random, ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).getItems(random), (IInventory) tileEntity, random.nextInt(10) + 10);
+                // TODO: 3/26/2016 Find how to access Chest Gen Hooks
+                //WeightedRandomChestContent.generateDispenserContents(random, ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).getItems(random), (IInventory) tileEntity, random.nextInt(10) + 10);
                 QuestStack questStack = MatterOverdrive.questFactory.generateQuestStack(random, MatterOverdrive.quests.getQuestByName("crash_landing"));
                 questStack.getTagCompound().setLong("pos",pos.toLong());
                 MOInventoryHelper.insertItemStackIntoInventory((IInventory)tileEntity,questStack.getContract(),EnumFacing.DOWN);
@@ -127,6 +126,6 @@ public class MOWorldGenCrashedSpaceShip extends MOWorldGenBuilding
     @Override
     public boolean shouldGenerate(Random random,World world, BlockPos pos)
     {
-        return world.provider.getDimensionId() == 0 && isFarEnoughFromOthers(world,pos.getX(),pos.getZ(),MIN_DISTANCE_APART);
+        return world.provider.getDimension() == 0 && isFarEnoughFromOthers(world,pos.getX(),pos.getZ(),MIN_DISTANCE_APART);
     }
 }

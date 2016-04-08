@@ -55,8 +55,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.*;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -87,7 +93,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     @SideOnly(Side.CLIENT)
     protected MachineSound sound;
 
-    protected final ResourceLocation soundRes;
     protected boolean redstoneState;
     protected boolean redstoneStateDirty = true;
     private boolean forceClientUpdate;
@@ -103,7 +108,6 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     public MOTileEntityMachine(int upgradeCount)
     {
         components = new ArrayList<>();
-        soundRes = getSoundFor(getSound());
         upgrade_slots = new int[upgradeCount];
         inventory = new TileEntityInventory(this,"");
         registerComponents();
@@ -182,11 +186,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
         addComponent(configs);
     }
 
-    private static ResourceLocation getSoundFor(String sound)
-    {
-        return sound == null ? null : new ResourceLocation(Reference.MOD_ID + ":" + sound);
-    }
-    public abstract String getSound();
+    public abstract SoundEvent getSound();
     public abstract boolean hasSound();
     public abstract boolean getServerActive();
     public abstract float soundVolume();
@@ -218,7 +218,7 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
                         soundMultiply = ((MOBlockMachine) getBlockType()).volume;
                     }
                     if (soundMultiply > 0) {
-                        sound = new MachineSound(soundRes, getPos(), soundVolume() * soundMultiply, 1);
+                        sound = new MachineSound(getSound(),SoundCategory.BLOCKS, getPos(), soundVolume() * soundMultiply, 1);
                         FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
                     }
                 }
@@ -383,11 +383,11 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     {
         NBTTagCompound syncData = new NBTTagCompound();
         writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS,false);
-        return new S35PacketUpdateTileEntity(getPos(), 1, syncData);
+        return new SPacketUpdateTileEntity(getPos(), 1, syncData);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
     {
         //System.out.println("Receiving Packet From Server");
         NBTTagCompound syncData = pkt.getNbtCompound();
@@ -577,16 +577,16 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
     }
 
     @Override
-    public IChatComponent getDisplayName()
+    public ITextComponent getDisplayName()
     {
         if (getInventory() != null && getInventory().getDisplayName() != null)
             return getInventory().getDisplayName();
         else if (getBlockType() != null)
         {
-            return new ChatComponentText(getBlockType().getLocalizedName());
+            return new TextComponentString(getBlockType().getLocalizedName());
         }else
         {
-            return new ChatComponentText("");
+            return new TextComponentString("");
         }
     }
 

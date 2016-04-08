@@ -18,11 +18,11 @@
 
 package matteroverdrive.handler;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.blocks.BlockFluidMatterPlasma;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class BucketHandler
     @SubscribeEvent
     public void onBucketFill(FillBucketEvent event) {
 
-        Block block = event.world.getBlockState(event.target.getBlockPos()).getBlock();
+        Block block = event.getWorld().getBlockState(event.getTarget().getBlockPos()).getBlock();
         if (block instanceof BlockFluidMatterPlasma)
         {
             if (event.isCancelable())

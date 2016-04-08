@@ -20,7 +20,7 @@ package matteroverdrive.client.render.entity;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 /**
@@ -40,7 +40,13 @@ public class EntityFakePlayer extends EntityPlayer
     }
 
     @Override
-    public void addChatMessage(IChatComponent chatComponent) {
+    public boolean isCreative()
+    {
+        return false;
+    }
+
+    @Override
+    public void addChatMessage(ITextComponent chatComponent) {
 
     }
 

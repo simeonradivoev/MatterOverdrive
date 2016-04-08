@@ -23,11 +23,13 @@ import matteroverdrive.api.quest.IQuest;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -59,7 +61,7 @@ public class QuestCommands extends CommandBase
     }
 
     @Override
-    public void processCommand(ICommandSender commandSender, String[] parameters) throws CommandException
+    public void execute(MinecraftServer server,ICommandSender commandSender, String[] parameters) throws CommandException
     {
         if (parameters.length > 0)
         {
@@ -70,7 +72,7 @@ public class QuestCommands extends CommandBase
                     EntityPlayer entityPlayer;
                     if (parameters.length > 2)
                     {
-                        entityPlayer = getPlayer(commandSender,parameters[2]);
+                        entityPlayer = getPlayer(server,commandSender,parameters[2]);
                     }else
                     {
                         entityPlayer = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getName());
@@ -78,7 +80,7 @@ public class QuestCommands extends CommandBase
 
                     if (entityPlayer != null)
                     {
-                        MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
+                        MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(entityPlayer);
                         QuestStack questStack = MatterOverdrive.questFactory.generateQuestStack(parameters[1]);
                         if (questStack != null)
                         {
@@ -106,14 +108,14 @@ public class QuestCommands extends CommandBase
                     EntityPlayer entityPlayer;
                     if (parameters.length > 2)
                     {
-                        entityPlayer = getPlayer(commandSender,parameters[2]);
+                        entityPlayer = getPlayer(server,commandSender,parameters[2]);
                     }else
                     {
                         entityPlayer = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getName());
                     }
 
                     if (entityPlayer != null) {
-                        MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
+                        MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(entityPlayer);
                         if (parameters[1].equalsIgnoreCase("all")) {
                             extendedProperties.getQuestData().clearActiveQuests();
                             extendedProperties.getQuestData().clearCompletedQuests();
@@ -149,7 +151,7 @@ public class QuestCommands extends CommandBase
                         EntityPlayer entityPlayer;
                         if (parameters.length > 2)
                         {
-                            entityPlayer = getPlayer(commandSender,parameters[2]);
+                            entityPlayer = getPlayer(server,commandSender,parameters[2]);
                         }else
                         {
                             entityPlayer = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getName());
@@ -175,34 +177,34 @@ public class QuestCommands extends CommandBase
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender commandSender, String[] parameters, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         List<String> commands = new ArrayList<>();
 
-        if (parameters.length == 2)
+        if (args.length == 2)
         {
-            if (parameters[0].equalsIgnoreCase("add") || parameters[0].equalsIgnoreCase("contract"))
+            if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("contract"))
             {
                 for (String questName : MatterOverdrive.quests.getAllQuestName())
                 {
                     commands.add(questName);
                 }
-            }else if (parameters[0].equalsIgnoreCase("remove"))
+            }else if (args[0].equalsIgnoreCase("remove"))
             {
                 commands.add("all");
                 commands.add("active");
                 commands.add("completed");
             }
         }
-        else if (parameters.length == 1)
+        else if (args.length == 1)
         {
             commands.add("add");
             commands.add("remove");
             commands.add("contract");
         }
-        else if (parameters.length == 3)
+        else if (args.length == 3)
         {
-            for (Object player : commandSender.getEntityWorld().playerEntities)
+            for (Object player : sender.getEntityWorld().playerEntities)
             {
                 commands.add(((EntityPlayer)player).getName());
             }

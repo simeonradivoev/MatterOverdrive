@@ -1,4 +1,4 @@
-package matteroverdrive.world.dimensions;
+package matteroverdrive.world.dimensions.space;
 
 import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;

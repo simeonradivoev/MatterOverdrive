@@ -3,9 +3,10 @@ package matteroverdrive.client.sound;
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
 /**
@@ -16,9 +17,9 @@ public class GravitationalAnomalySound extends PositionedSound implements ITicka
     boolean donePlaying = false;
     double range;
 
-    public GravitationalAnomalySound(ResourceLocation sound, BlockPos pos, float volume, double range)
+    public GravitationalAnomalySound(SoundEvent sound, SoundCategory category, BlockPos pos, float volume, double range)
     {
-        super(sound);
+        super(sound,category);
         setPosition(pos.getX(),pos.getY(),pos.getZ());
         this.volume = volume;
         this.range = range;
@@ -68,7 +69,7 @@ public class GravitationalAnomalySound extends PositionedSound implements ITicka
     public void update()
     {
         EntityPlayerSP mp =  FMLClientHandler.instance().getClient().thePlayer;
-        double distance = new Vec3(xPosF, yPosF, zPosF).distanceTo(mp.getPositionVector());
+        double distance = new Vec3d(xPosF, yPosF, zPosF).distanceTo(mp.getPositionVector());
         volume = 1 - (float)(distance / range);
     }
 }

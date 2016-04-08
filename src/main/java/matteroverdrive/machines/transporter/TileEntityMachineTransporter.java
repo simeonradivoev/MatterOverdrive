@@ -26,6 +26,7 @@ import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.TeleportFlashDriveSlot;
 import matteroverdrive.fx.ReplicatorParticle;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.machines.transporter.components.ComponentComputers;
@@ -38,10 +39,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
@@ -299,7 +302,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     {
         if (at < locations.size() && at >= 0) {
             locations.remove(at);
-            selectedLocation = net.minecraft.util.MathHelper.clamp_int(selectedLocation,0,locations.size()-1);
+            selectedLocation = MathHelper.clamp_int(selectedLocation,0,locations.size()-1);
         }
     }
 
@@ -322,7 +325,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
             float height = p.y + 1 + random.nextFloat() * entity.height;
 
             Vector3f origin = new Vector3f(p.x ,height, p.z);
-            Vector3f pos = MOMathHelper.randomSpherePoint(origin.x,origin.y,origin.z, new Vec3(radiusX, 0,radiusZ), random);
+            Vector3f pos = MOMathHelper.randomSpherePoint(origin.x,origin.y,origin.z, new Vec3d(radiusX, 0,radiusZ), random);
             Vector3f dir = Vector3f.cross(Vector3f.sub(origin, pos,null), new Vector3f(0,1,0),null);
             dir.scale(speed);
             ReplicatorParticle replicatorParticle = new ReplicatorParticle(this.worldObj,pos.x,pos.y ,pos.z,dir.x,dir.y,dir.z);
@@ -357,9 +360,9 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
     }
 
     @Override
-    public String getSound()
+    public SoundEvent getSound()
     {
-        return "transporter";
+        return MatterOverdriveSounds.transporter;
     }
 
     @Override

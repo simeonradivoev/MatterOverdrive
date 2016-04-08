@@ -19,12 +19,13 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.Vec3;
+import matteroverdrive.util.MOStringHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -51,7 +52,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), EnumChatFormatting.YELLOW.toString() + ENERGY_PER_JUMP + " RF" + EnumChatFormatting.GRAY);
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.YELLOW.toString() + ENERGY_PER_JUMP + " RF" + ChatFormatting.GRAY);
     }
 
     @Override
@@ -78,12 +79,12 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
             {
                 if (!androidPlayer.getPlayer().isSneaking())
                 {
-                    if (!event.entity.worldObj.isRemote)
+                    if (!event.getEntity().worldObj.isRemote)
                         androidPlayer.extractEnergyScaled(ENERGY_PER_JUMP * level);
 
-                    Vec3 motion = new Vec3(event.entityLiving.motionX, event.entityLiving.motionY, event.entityLiving.motionZ);
+                    Vec3d motion = new Vec3d(event.getEntityLiving().motionX, event.getEntityLiving().motionY, event.getEntityLiving().motionZ);
                     motion = motion.normalize().addVector(0, 1, 0).normalize();
-                    event.entityLiving.addVelocity(motion.xCoord * 0.25 * level, motion.yCoord * 0.25 * level, motion.zCoord * 0.25 * level);
+                    event.getEntityLiving().addVelocity(motion.xCoord * 0.25 * level, motion.yCoord * 0.25 * level, motion.zCoord * 0.25 * level);
                 }
             }
         }

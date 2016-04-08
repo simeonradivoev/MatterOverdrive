@@ -18,11 +18,12 @@
 
 package matteroverdrive.network.packet.server;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.network.packet.PacketAbstract;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Created by Simeon on 9/30/2015.
@@ -45,7 +46,7 @@ public class PacketResetBioStats extends PacketAbstract
         @Override
         public void handleServerMessage(EntityPlayerMP player, PacketResetBioStats message, MessageContext ctx)
         {
-            AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
             if (androidPlayer != null && androidPlayer.isAndroid())
             {
                 player.addExperienceLevel(androidPlayer.resetUnlocked());

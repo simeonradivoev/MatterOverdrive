@@ -23,16 +23,17 @@ import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.client.render.tileentity.TileEntityRendererGravitationalAnomaly;
 import matteroverdrive.data.biostats.BioticStatTeleport;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ONE;
 
 /**
  * Created by Simeon on 6/13/2015.
@@ -42,11 +43,11 @@ public class BioticStatRendererTeleporter implements IBioticStatRenderer<BioticS
     @Override
     public void onWorldRender(BioticStatTeleport stat,int level,RenderWorldLastEvent event)
     {
-        AndroidPlayer androidPlayer = AndroidPlayer.get(Minecraft.getMinecraft().thePlayer);
+        AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(Minecraft.getMinecraft().thePlayer);
 
         if (androidPlayer != null && androidPlayer.isAndroid() && androidPlayer.isUnlocked(MatterOverdriveBioticStats.teleport, MatterOverdriveBioticStats.teleport.maxLevel()) && MatterOverdriveBioticStats.teleport.isEnabled(androidPlayer, 0) && MatterOverdriveBioticStats.teleport.getHasPressedKey())
         {
-            Vec3 playerPos = androidPlayer.getPlayer().getPositionEyes(event.partialTicks);
+            Vec3d playerPos = androidPlayer.getPlayer().getPositionEyes(event.getPartialTicks());
             if(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).isKeyDown())
             {
                 GlStateManager.pushMatrix();
@@ -57,7 +58,7 @@ public class BioticStatRendererTeleporter implements IBioticStatRenderer<BioticS
 
                 //mob.rotationYawHead = androidPlayer.getPlayer().rotationYawHead;
 
-                Vec3 pos = MatterOverdriveBioticStats.teleport.getPos(androidPlayer);
+                Vec3d pos = MatterOverdriveBioticStats.teleport.getPos(androidPlayer);
                 if (pos != null)
                 {
                     Minecraft.getMinecraft().renderEngine.bindTexture(TileEntityRendererGravitationalAnomaly.glow);

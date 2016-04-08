@@ -20,7 +20,7 @@ package matteroverdrive.machines;
 
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.machines.IUpgradeHandler;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.HashMap;
 import java.util.Map;

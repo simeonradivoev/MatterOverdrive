@@ -7,12 +7,12 @@ import matteroverdrive.client.render.weapons.WeaponRenderHandler;
 import matteroverdrive.client.resources.data.WeaponMetadataSection;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.client.model.IFlexibleBakedModel;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
 
@@ -26,8 +26,8 @@ public class ModuleSniperScopeRender extends ModuleRenderAbstract
 {
     private ResourceLocation scopeModelLocation = new ResourceLocation(Reference.PATH_MODEL + "item/sniper_scope.obj");
     private OBJModel scopeModel;
-    private IFlexibleBakedModel scopeBakedModelBase;
-    private IFlexibleBakedModel scopeBakedModelWindow;
+    private IBakedModel scopeBakedModelBase;
+    private IBakedModel scopeBakedModelWindow;
 
     public ModuleSniperScopeRender(WeaponRenderHandler weaponRenderer)
     {
@@ -37,7 +37,7 @@ public class ModuleSniperScopeRender extends ModuleRenderAbstract
     @Override
     public void renderModule(WeaponMetadataSection weaponMeta, ItemStack weaponStack, ItemStack moduleStack, float ticks, int pass)
     {
-        Vec3 scopePos = weaponMeta.getModulePosition("default_scope");
+        Vec3d scopePos = weaponMeta.getModulePosition("default_scope");
         if (scopePos != null)
         {
             GlStateManager.translate(scopePos.xCoord,scopePos.yCoord,scopePos.zCoord);
@@ -53,7 +53,7 @@ public class ModuleSniperScopeRender extends ModuleRenderAbstract
     @Override
     public void transformWeapon(WeaponMetadataSection weaponMeta, ItemStack weaponStack, ItemStack moduleStack, float ticks,float zoomValue)
     {
-        Vec3 scopePos = weaponMeta.getModulePosition("default_scope");
+        Vec3d scopePos = weaponMeta.getModulePosition("default_scope");
         if (scopePos != null)
         {
             GlStateManager.translate(MOMathHelper.Lerp(0, -0.0005, zoomValue), MOMathHelper.Lerp(0, -scopePos.yCoord/5.5f, zoomValue), 0);

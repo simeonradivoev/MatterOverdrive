@@ -27,6 +27,7 @@ import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.gui.android.*;
 import matteroverdrive.gui.config.EnumConfigProperty;
 import matteroverdrive.handler.ConfigurationHandler;
@@ -41,9 +42,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.ShaderGroup;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.config.Property;
@@ -133,9 +135,9 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public void onRenderExperienceBar(RenderGameOverlayEvent event)
     {
-        AndroidPlayer android = AndroidPlayer.get(mc.thePlayer);
+        AndroidPlayer android = MOPlayerCapabilityProvider.GetAndroidCapability(mc.thePlayer);
 
-        if ((mc.currentScreen instanceof GuiDialog || mc.currentScreen instanceof GuiStarMap) && !event.type.equals(RenderGameOverlayEvent.ElementType.ALL) && event.isCancelable())
+        if ((mc.currentScreen instanceof GuiDialog || mc.currentScreen instanceof GuiStarMap) && !event.getType().equals(RenderGameOverlayEvent.ElementType.ALL) && event.isCancelable())
         {
             event.setCanceled(true);
             return;
@@ -145,15 +147,15 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         {
             if (hideVanillaHudElements)
             {
-                if (event.type == RenderGameOverlayEvent.ElementType.HEALTH)
+                if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH)
                 {
                     event.setCanceled(true);
                     return;
-                } else if (event.type == RenderGameOverlayEvent.ElementType.AIR && android.isUnlocked(MatterOverdriveBioticStats.oxygen, 1) && MatterOverdriveBioticStats.oxygen.isEnabled(android, 1))
+                } else if (event.getType() == RenderGameOverlayEvent.ElementType.AIR && android.isUnlocked(MatterOverdriveBioticStats.oxygen, 1) && MatterOverdriveBioticStats.oxygen.isEnabled(android, 1))
                 {
                     event.setCanceled(true);
                     return;
-                } else if (event.type == RenderGameOverlayEvent.ElementType.FOOD && android.isUnlocked(MatterOverdriveBioticStats.zeroCalories, 1) && MatterOverdriveBioticStats.zeroCalories.isEnabled(android, 1))
+                } else if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD && android.isUnlocked(MatterOverdriveBioticStats.zeroCalories, 1) && MatterOverdriveBioticStats.zeroCalories.isEnabled(android, 1))
                 {
                     event.setCanceled(true);
                     return;
@@ -161,7 +163,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             }
         }
 
-        if ((android.isAndroid() || (mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof IWeapon)) && event.isCancelable() && event.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+        if ((android.isAndroid() || (mc.thePlayer.getHeldItem(EnumHand.MAIN_HAND) != null && mc.thePlayer.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IWeapon)) && event.isCancelable() && event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
         {
             event.setCanceled(true);
 
@@ -172,7 +174,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
             mc.getTextureManager().bindTexture(Gui.icons);
         }
-        else if (event.type == RenderGameOverlayEvent.ElementType.ALL && !(mc.currentScreen instanceof GuiStarMap))
+        else if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR)
         {
             //glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             GlStateManager.enableBlend();
@@ -182,10 +184,10 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             {
                 if (showRadial)
                 {
-                    GuiAndroidHud.radialAnimationTime = Math.min(1,GuiAndroidHud.radialAnimationTime+event.partialTicks*0.2);
+                    GuiAndroidHud.radialAnimationTime = Math.min(1,GuiAndroidHud.radialAnimationTime+event.getPartialTicks()*0.2);
                 }else
                 {
-                    GuiAndroidHud.radialAnimationTime = Math.max(0,GuiAndroidHud.radialAnimationTime-event.partialTicks*0.2);
+                    GuiAndroidHud.radialAnimationTime = Math.max(0,GuiAndroidHud.radialAnimationTime-event.getPartialTicks()*0.2);
                 }
 
                 if (GuiAndroidHud.radialAnimationTime > 0)
@@ -210,7 +212,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             //RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
             GlStateManager.color(1, 1, 1);
             crosshairIcon = ClientProxy.holoIcons.getIcon("crosshair");
-            GlStateManager.translate(event.resolution.getScaledWidth() / 2, event.resolution.getScaledHeight() / 2, 0);
+            GlStateManager.translate(event.getResolution().getScaledWidth() / 2, event.getResolution().getScaledHeight() / 2, 0);
             GlStateManager.pushMatrix();
             ClientProxy.holoIcons.bindSheet();
             GlStateManager.rotate(90, 0, 0, 1);
@@ -230,11 +232,11 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
     public void renderRadialMenu(RenderGameOverlayEvent event)
     {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(event.resolution.getScaledWidth() / 2, event.resolution.getScaledHeight() / 2, 0);
+        GlStateManager.translate(event.getResolution().getScaledWidth() / 2, event.getResolution().getScaledHeight() / 2, 0);
         double scale = MOMathHelper.easeIn(GuiAndroidHud.radialAnimationTime,0,1,1);
         GlStateManager.scale(scale, scale, scale);
         ClientProxy.holoIcons.bindSheet();
-        AndroidPlayer androidPlayer = AndroidPlayer.get(Minecraft.getMinecraft().thePlayer);
+        AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(Minecraft.getMinecraft().thePlayer);
 
         stats.clear();
         for (IBioticStat stat : MatterOverdrive.statRegistry.getStats())
@@ -284,7 +286,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
             }
 
 
-            WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+            VertexBuffer wr = Tessellator.getInstance().getBuffer();
             wr.begin(7, DefaultVertexFormats.POSITION);
             for (int c = 0;c < 32;c++)
             {
@@ -352,7 +354,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
     public void renderHud(RenderGameOverlayEvent event)
     {
-        AndroidPlayer android = AndroidPlayer.get(mc.thePlayer);
+        AndroidPlayer android = MOPlayerCapabilityProvider.GetAndroidCapability(mc.thePlayer);
 
         if (android != null) {
 
@@ -370,8 +372,8 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
                 if (hudMovement)
                 {
-                    hudRotationYawSmooth = mc.thePlayer.prevRenderArmYaw + (mc.thePlayer.renderArmYaw - mc.thePlayer.prevRenderArmYaw) * event.partialTicks;
-                    hudRotationPitchSmooth = mc.thePlayer.prevRenderArmPitch + (mc.thePlayer.renderArmPitch - mc.thePlayer.prevRenderArmPitch) * event.partialTicks;
+                    hudRotationYawSmooth = mc.thePlayer.prevRenderArmYaw + (mc.thePlayer.renderArmYaw - mc.thePlayer.prevRenderArmYaw) * event.getPartialTicks();
+                    hudRotationPitchSmooth = mc.thePlayer.prevRenderArmPitch + (mc.thePlayer.renderArmPitch - mc.thePlayer.prevRenderArmPitch) * event.getPartialTicks();
                     GlStateManager.translate((hudRotationYawSmooth - mc.thePlayer.rotationYaw) * 0.2f, (hudRotationPitchSmooth - mc.thePlayer.rotationPitch) * 0.2f, 0);
                 }
 
@@ -380,11 +382,11 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
                     if (element.isVisible(android))
                     {
                         GlStateManager.pushMatrix();
-                        int elementWidth =  (int)(element.getWidth(event.resolution,android) * element.getPosition().x);
-                        GlStateManager.translate(element.getPosition().x * event.resolution.getScaledWidth_double() - elementWidth, element.getPosition().y * event.resolution.getScaledHeight_double() - element.getHeight(event.resolution,android) * element.getPosition().y, 0);
+                        int elementWidth =  (int)(element.getWidth(event.getResolution(),android) * element.getPosition().x);
+                        GlStateManager.translate(element.getPosition().x * event.getResolution().getScaledWidth_double() - elementWidth, element.getPosition().y * event.getResolution().getScaledHeight_double() - element.getHeight(event.getResolution(),android) * element.getPosition().y, 0);
                         element.setBaseColor(baseGuiColor);
                         element.setBackgroundAlpha(opacityBackground);
-                        element.drawElement(android, event.resolution, event.partialTicks);
+                        element.drawElement(android, event.getResolution(), event.getPartialTicks());
                         GlStateManager.popMatrix();
                     }
                 }
@@ -403,8 +405,8 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
     private void renderTransformAnimation(AndroidPlayer player,RenderGameOverlayEvent event)
     {
-        int centerX = event.resolution.getScaledWidth() / 2;
-        int centerY = event.resolution.getScaledHeight() / 2;
+        int centerX = event.getResolution().getScaledWidth() / 2;
+        int centerY = event.getResolution().getScaledHeight() / 2;
         int maxTime = AndroidPlayer.TRANSFORM_TIME;
         int time = maxTime - player.getAndroidEffects().getEffectShort(AndroidPlayer.EFFECT_TURNNING);
         textTyping.setTime(time);
@@ -443,7 +445,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
         GlStateManager.disableDepth();
         GlStateManager.color(1,1,1);
         mc.renderEngine.bindTexture(glitch_tex);
-        RenderUtils.drawPlaneWithUV(0,0,-100,event.resolution.getScaledWidth(),event.resolution.getScaledHeight(),random.nextGaussian(),random.nextGaussian(),1,1);
+        RenderUtils.drawPlaneWithUV(0,0,-100,event.getResolution().getScaledWidth(),event.getResolution().getScaledHeight(),random.nextGaussian(),random.nextGaussian(),1,1);
     }
 
     @Override

@@ -8,18 +8,12 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
-import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Simeon on 2/5/2016.
@@ -43,7 +37,8 @@ public class DimesionTeleportCommends extends CommandBase
         return 2;
     }
 
-    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    @Override
+    public void execute(MinecraftServer server,ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 1)
         {
@@ -60,11 +55,11 @@ public class DimesionTeleportCommends extends CommandBase
             }
             else
             {
-                entity = func_175768_b(sender, args[0]);
+                entity = getEntity(server,sender, args[0]);
                 i = 1;
             }
 
-            if (args.length != 1 && args.length != 2)
+            /*if (args.length != 1 && args.length != 2)
             {
                 if (args.length < i + 3)
                 {
@@ -82,31 +77,31 @@ public class DimesionTeleportCommends extends CommandBase
 
                     if (entity instanceof EntityPlayerMP)
                     {
-                        Set<S08PacketPlayerPosLook.EnumFlags> set = EnumSet.<S08PacketPlayerPosLook.EnumFlags>noneOf(S08PacketPlayerPosLook.EnumFlags.class);
+                        Set<SPacketPlayerPosLook.EnumFlags> set = EnumSet.<SPacketPlayerPosLook.EnumFlags>noneOf(SPacketPlayerPosLook.EnumFlags.class);
 
                         if (commandbase$coordinatearg.func_179630_c())
                         {
-                            set.add(S08PacketPlayerPosLook.EnumFlags.X);
+                            set.add(SPacketPlayerPosLook.EnumFlags.X);
                         }
 
                         if (commandbase$coordinatearg1.func_179630_c())
                         {
-                            set.add(S08PacketPlayerPosLook.EnumFlags.Y);
+                            set.add(SPacketPlayerPosLook.EnumFlags.Y);
                         }
 
                         if (commandbase$coordinatearg2.func_179630_c())
                         {
-                            set.add(S08PacketPlayerPosLook.EnumFlags.Z);
+                            set.add(SPacketPlayerPosLook.EnumFlags.Z);
                         }
 
                         if (commandbase$coordinatearg4.func_179630_c())
                         {
-                            set.add(S08PacketPlayerPosLook.EnumFlags.X_ROT);
+                            set.add(SPacketPlayerPosLook.EnumFlags.X_ROT);
                         }
 
                         if (commandbase$coordinatearg3.func_179630_c())
                         {
-                            set.add(S08PacketPlayerPosLook.EnumFlags.Y_ROT);
+                            set.add(SPacketPlayerPosLook.EnumFlags.Y_ROT);
                         }
 
                         float f = (float)commandbase$coordinatearg3.func_179629_b();
@@ -165,7 +160,7 @@ public class DimesionTeleportCommends extends CommandBase
                 }
                 else
                 {
-                    entity.mountEntity((Entity)null);
+                    entity.dismountRidingEntity();
 
                     if (entity instanceof EntityPlayerMP)
                     {
@@ -178,7 +173,7 @@ public class DimesionTeleportCommends extends CommandBase
 
                     notifyOperators(sender, this, "commands.tp.success", new Object[] {entity.getName(), entity1.getName()});
                 }
-            }
+            }*/
         }
     }
 
@@ -191,15 +186,15 @@ public class DimesionTeleportCommends extends CommandBase
 
         if (theEntity.dimension == 1 && dimensionId == 1)
         {
-            theEntity.triggerAchievement(AchievementList.theEnd2);
-            theEntity.worldObj.removeEntity(theEntity);
-            theEntity.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(4, 0.0F));
+            //theEntity.triggerAchievement(AchievementList.theEnd2);
+            //theEntity.worldObj.removeEntity(theEntity);
+            //theEntity.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(4, 0.0F));
         }
         else
         {
             if (theEntity.dimension == 0 && dimensionId == 1)
             {
-                theEntity.triggerAchievement(AchievementList.theEnd);
+                //theEntity.triggerAchievement(AchievementList.theEnd);
                 BlockPos blockpos = theEntity.mcServer.worldServerForDimension(dimensionId).getSpawnCoordinate();
 
                 if (blockpos != null)
@@ -211,7 +206,7 @@ public class DimesionTeleportCommends extends CommandBase
             }
             else
             {
-                theEntity.triggerAchievement(AchievementList.portal);
+                //theEntity.triggerAchievement(AchievementList.portal);
             }
 
             IBlockState[][][] states = new IBlockState[8][8][8];
@@ -255,13 +250,14 @@ public class DimesionTeleportCommends extends CommandBase
             }
 
             AbsoluteDimensionTeleporter absoluteDimensionTeleporter = new AbsoluteDimensionTeleporter(theEntity.getServerForPlayer());
-            theEntity.mcServer.getConfigurationManager().transferPlayerToDimension(theEntity, dimensionId,absoluteDimensionTeleporter);
+            // TODO: 3/26/2016 Find how to access configuration manager
+            //theEntity.mcServer.getConfigurationManager().transferPlayerToDimension(theEntity, dimensionId,absoluteDimensionTeleporter);
         }
     }
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        return args.length != 1 && args.length != 2 ? null : getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
+        return args.length != 1 && args.length != 2 ? null : getListOfStringsMatchingLastWord(args, sender.getServer().getAllUsernames());
     }
 
     /**

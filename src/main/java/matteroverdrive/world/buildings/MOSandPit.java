@@ -23,8 +23,8 @@ import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -119,6 +119,6 @@ public class MOSandPit extends MOWorldGenBuilding
 
     @Override
     public boolean shouldGenerate(Random random,World world, BlockPos pos) {
-        return world.getBiomeGenForCoords(pos) == BiomeGenBase.desert;
+        return world.getBiomeGenForCoords(pos) == BiomeGenBase.getBiome(2);
     }
 }

@@ -18,14 +18,15 @@
 
 package matteroverdrive.network.packet.server;
 
+import io.netty.buffer.ByteBuf;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.android.IBioticStat;
+import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
+import matteroverdrive.network.packet.PacketAbstract;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.entity.android_player.AndroidPlayer;
-import matteroverdrive.network.packet.PacketAbstract;
 
 import java.util.EnumSet;
 
@@ -67,7 +68,7 @@ public class PacketAndroidChangeAbility extends PacketAbstract
             IBioticStat stat = MatterOverdrive.statRegistry.getStat(message.ability);
             if (stat != null)
             {
-                AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+                AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
                 if (androidPlayer.isUnlocked(stat,0) && stat.showOnWheel(androidPlayer,androidPlayer.getUnlockedLevel(stat)))
                 {
                     androidPlayer.setActiveStat(stat);

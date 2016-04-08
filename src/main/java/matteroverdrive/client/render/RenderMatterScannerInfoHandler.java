@@ -23,7 +23,7 @@ import matteroverdrive.api.IScannable;
 import matteroverdrive.api.inventory.IBlockScanner;
 import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.render.tileentity.TileEntityRendererPatternMonitor;
-import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MatterDatabaseHelper;
 import matteroverdrive.util.MatterHelper;
@@ -38,9 +38,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import java.text.DecimalFormat;
@@ -59,30 +60,31 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
 
     public void onRenderWorldLast(RenderHandler renderHandler,RenderWorldLastEvent event)
     {
-        ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem();
+        // TODO: 3/26/2016 Add support for Offhand
+        ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
 
-        if (heldItem != null && heldItem.getItem() instanceof IBlockScanner && Minecraft.getMinecraft().thePlayer.isUsingItem())
+        if (heldItem != null && heldItem.getItem() instanceof IBlockScanner && Minecraft.getMinecraft().thePlayer.getActiveHand() == EnumHand.MAIN_HAND)
         {
             GlStateManager.pushMatrix();
-            renderInfo(Minecraft.getMinecraft().thePlayer, heldItem, event.partialTicks);
+            renderInfo(Minecraft.getMinecraft().thePlayer, heldItem, event.getPartialTicks());
             GlStateManager.popMatrix();
         }
-        else if (AndroidPlayer.get(Minecraft.getMinecraft().thePlayer).isAndroid())
+        else if (MOPlayerCapabilityProvider.GetAndroidCapability(Minecraft.getMinecraft().thePlayer).isAndroid())
         {
-            renderInfo(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().objectMouseOver, null, event.partialTicks);
+            renderInfo(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().objectMouseOver, null, event.getPartialTicks());
         }
     }
 
     private void renderInfo(EntityPlayer player, ItemStack scanner, float ticks)
     {
         IBlockScanner scannerItem = (IBlockScanner)scanner.getItem();
-        MovingObjectPosition position = scannerItem.getScanningPos(scanner,player);
+        RayTraceResult position = scannerItem.getScanningPos(scanner,player);
         renderInfo(player, position, scanner, ticks);
     }
 
-    private void renderInfo(EntityPlayer player, MovingObjectPosition position, ItemStack scanner, float ticks)
+    private void renderInfo(EntityPlayer player, RayTraceResult position, ItemStack scanner, float ticks)
     {
-        Vec3 playerPos = player.getPositionEyes(ticks);
+        Vec3d playerPos = player.getPositionEyes(ticks);
 
         glPushAttrib(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         GlStateManager.disableDepth();
@@ -92,7 +94,7 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
 
         if (position != null) {
 
-            if (position.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+            if (position.typeOfHit == RayTraceResult.Type.BLOCK) {
 
                 IBlockState blockState = player.worldObj.getBlockState(position.getBlockPos());
                 if (blockState != null)
@@ -100,7 +102,7 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
                     renderBlockInfo(blockState, position, player, playerPos, scanner, scanner == null);
                 }
             }
-            else if (position.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY)
+            else if (position.typeOfHit == RayTraceResult.Type.ENTITY)
             {
                 if (position.entityHit != null)
                 {
@@ -113,7 +115,7 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         GlStateManager.popAttrib();
     }
 
-    private void renderBlockInfo(IBlockState block, MovingObjectPosition position, EntityPlayer player, Vec3 playerPos, ItemStack scanner, boolean infoOnly)
+    private void renderBlockInfo(IBlockState block, RayTraceResult position, EntityPlayer player, Vec3d playerPos, ItemStack scanner, boolean infoOnly)
     {
         double offset = 0.1;
         EnumFacing side = position.sideHit;
@@ -184,12 +186,12 @@ public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
         GlStateManager.popMatrix();
     }
 
-    private void renderEntityInfo(Entity entity, MovingObjectPosition position, EntityPlayer player, Vec3 playerPos, float ticks)
+    private void renderEntityInfo(Entity entity, RayTraceResult position, EntityPlayer player, Vec3d playerPos, float ticks)
     {
         if (!entity.isInvisibleToPlayer(player))
         {
             double offset = 0.1;
-            Vec3 entityPos;
+            Vec3d entityPos;
             String name = entity.getDisplayName().getFormattedText();
             List<String> infos = new ArrayList<>();
             if (entity instanceof EntityLivingBase)

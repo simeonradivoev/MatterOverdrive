@@ -20,10 +20,11 @@ package matteroverdrive.data.biostats;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.data.MOAttributeModifier;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.text.DecimalFormat;
@@ -79,7 +80,7 @@ public class BioticStatAttack extends AbstractBioticStat
     @SuppressWarnings("unchecked")
     public Multimap attributes(AndroidPlayer androidPlayer, int level) {
         Multimap multimap = HashMultimap.create();
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(),new MOAttributeModifier(modifierID, "Android Attack Damage", getAttackPower(level), 1).setSaved(false));
+        multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),new MOAttributeModifier(modifierID, "Android Attack Damage", getAttackPower(level), 1).setSaved(false));
         return multimap;
     }
 
@@ -97,7 +98,7 @@ public class BioticStatAttack extends AbstractBioticStat
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), EnumChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(getAttackPower(level)) + EnumChatFormatting.GRAY);
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(),ChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(getAttackPower(level)) + ChatFormatting.GRAY);
     }
 
     private float getAttackPower(int level)

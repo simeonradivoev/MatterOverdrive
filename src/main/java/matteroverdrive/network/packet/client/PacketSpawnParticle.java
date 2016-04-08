@@ -1,20 +1,20 @@
 package matteroverdrive.network.packet.client;
 
+import io.netty.buffer.ByteBuf;
+import matteroverdrive.client.render.RenderParticlesHandler;
+import matteroverdrive.fx.AndroidTeleportParticle;
 import matteroverdrive.fx.Lightning;
+import matteroverdrive.fx.ShockwaveParticle;
+import matteroverdrive.network.packet.PacketAbstract;
+import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.Vec3;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import io.netty.buffer.ByteBuf;
-import matteroverdrive.client.render.RenderParticlesHandler;
-import matteroverdrive.fx.AndroidTeleportParticle;
-import matteroverdrive.fx.ShockwaveParticle;
-import matteroverdrive.network.packet.PacketAbstract;
-import matteroverdrive.proxy.ClientProxy;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.world.World;
 
 /**
  * Created by Simeon on 6/2/2015.
@@ -101,10 +101,10 @@ public class PacketSpawnParticle extends PacketAbstract
             {
                 if (message.coordinates.length > 7)
                 {
-                    particle = new Lightning(world, new Vec3(message.coordinates[0], message.coordinates[1], message.coordinates[2]), new Vec3(message.coordinates[3], message.coordinates[4], message.coordinates[5]), (float) message.coordinates[6], (float) message.coordinates[7]);
+                    particle = new Lightning(world, new Vec3d(message.coordinates[0], message.coordinates[1], message.coordinates[2]), new Vec3d(message.coordinates[3], message.coordinates[4], message.coordinates[5]), (float) message.coordinates[6], (float) message.coordinates[7]);
                 }else if (message.coordinates.length > 5)
                 {
-                    particle = new Lightning(world, new Vec3(message.coordinates[0], message.coordinates[1], message.coordinates[2]), new Vec3(message.coordinates[3], message.coordinates[4], message.coordinates[5]));
+                    particle = new Lightning(world, new Vec3d(message.coordinates[0], message.coordinates[1], message.coordinates[2]), new Vec3d(message.coordinates[3], message.coordinates[4], message.coordinates[5]));
                 }
             }
 

@@ -21,7 +21,7 @@ package matteroverdrive.machines.replicator;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter_network.IMatterNetworkClient;
 import matteroverdrive.api.matter_network.IMatterNetworkConnection;
-import matteroverdrive.api.network.*;
+import matteroverdrive.api.network.IMatterNetworkDispatcher;
 import matteroverdrive.api.transport.IGridNode;
 import matteroverdrive.blocks.BlockReplicator;
 import matteroverdrive.blocks.includes.MOBlock;
@@ -32,6 +32,7 @@ import matteroverdrive.data.inventory.ShieldingSlot;
 import matteroverdrive.data.transport.MatterNetwork;
 import matteroverdrive.fx.ReplicatorParticle;
 import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
@@ -42,8 +43,13 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -216,7 +222,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
         {
             float speed = 0.05f;
 
-            Vector3f pos = MOMathHelper.randomSpherePoint(this.getPos().getX() + 0.5D, this.getPos().getY() + 0.5D, this.getPos().getZ() + 0.5D, new Vec3(0.5,0.5,0.5), this.worldObj.rand);
+            Vector3f pos = MOMathHelper.randomSpherePoint(this.getPos().getX() + 0.5D, this.getPos().getY() + 0.5D, this.getPos().getZ() + 0.5D, new Vec3d(0.5,0.5,0.5), this.worldObj.rand);
             Vector3f dir = new Vector3f(random.nextFloat() * 2 - 1,(random.nextFloat()* 2 - 1) * 0.05f,random.nextFloat()* 2 - 1);
             dir.scale(speed);
             ReplicatorParticle replicatorParticle = new ReplicatorParticle(this.worldObj,pos.getX(),pos.getY() ,pos.getZ(),dir.getX(), dir.getY(), dir.getZ());
@@ -250,19 +256,19 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
                 EntityLivingBase l = (EntityLivingBase) e;
 
                 double distance = Math.sqrt(getPos().distanceSq(l.getPosition())) / RADIATION_RANGE;
-                distance = net.minecraft.util.MathHelper.clamp_double(distance,0,1);
+                distance = MathHelper.clamp_double(distance,0,1);
                 distance = 1.0 - distance;
                 distance *= 5 - shielding;
 
                 PotionEffect[] effects = new PotionEffect[4];
                 //confusion
-                effects[0] = new PotionEffect(9, (int) Math.round(Math.pow(5,distance)), 0);
+                effects[0] = new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), (int) Math.round(Math.pow(5,distance)), 0);
                 //weakness
-                effects[1] = new PotionEffect(18, (int)Math.round(Math.pow(10,distance)), 0);
+                effects[1] = new PotionEffect(Potion.getPotionFromResourceLocation("weakness"), (int)Math.round(Math.pow(10,distance)), 0);
                 //hunger
-                effects[2] = new PotionEffect(17, (int)Math.round(Math.pow(12,distance)), 0);
+                effects[2] = new PotionEffect(Potion.getPotionFromResourceLocation("hunger"), (int)Math.round(Math.pow(12,distance)), 0);
                 //poison
-                effects[3] = new PotionEffect(19, (int)Math.round(Math.pow(5,distance)), 0);
+                effects[3] = new PotionEffect(Potion.getPotionFromResourceLocation("poison"), (int)Math.round(Math.pow(5,distance)), 0);
 
                 for (PotionEffect effect : effects)
                 {
@@ -422,8 +428,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
     }
 
 	@Override
-    public String getSound() {
-        return "machine";
+    public SoundEvent getSound() {
+        return MatterOverdriveSounds.machine;
     }
 
 	@Override

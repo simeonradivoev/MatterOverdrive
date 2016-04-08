@@ -5,11 +5,11 @@ import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,7 +20,7 @@ public abstract class TileEntityPipe extends MOTileEntity implements ITickable
     private int connections = 0;
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
     {
         connections = pkt.getNbtCompound().getInteger("Connections");
         worldObj.markBlockRangeForRenderUpdate(getPos(),getPos());
@@ -31,7 +31,7 @@ public abstract class TileEntityPipe extends MOTileEntity implements ITickable
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
         tagCompound.setInteger("Connections",connections);
-        return new S35PacketUpdateTileEntity(getPos(),0,tagCompound);
+        return new SPacketUpdateTileEntity(getPos(),0,tagCompound);
     }
 
     @Override
@@ -89,7 +89,8 @@ public abstract class TileEntityPipe extends MOTileEntity implements ITickable
         this.connections = connections;
         if (notify)
         {
-            worldObj.markBlockForUpdate(getPos());
+            // TODO: 3/25/2016 Find how to mark block for update
+            //worldObj.markBlockForUpdate(getPos());
         }
     }
 

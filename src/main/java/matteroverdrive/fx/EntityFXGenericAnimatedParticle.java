@@ -2,7 +2,7 @@ package matteroverdrive.fx;
 
 import matteroverdrive.client.data.TextureAtlasSpriteParticle;
 import matteroverdrive.proxy.ClientProxy;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -22,10 +22,10 @@ public class EntityFXGenericAnimatedParticle extends MOEntityFX
         TextureAtlasSprite originalSprite = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(sprite);
         if (originalSprite instanceof TextureAtlasSpriteParticle)
         {
-            this.particleIcon = ((TextureAtlasSpriteParticle) originalSprite).copy();
+            this.particleTexture = ((TextureAtlasSpriteParticle) originalSprite).copy();
         }else
         {
-            this.particleIcon = originalSprite;
+            this.particleTexture = originalSprite;
         }
     }
 
@@ -33,14 +33,14 @@ public class EntityFXGenericAnimatedParticle extends MOEntityFX
     public void onUpdate()
     {
         super.onUpdate();
-        if (this.particleIcon instanceof TextureAtlasSpriteParticle)
+        if (this.particleTexture instanceof TextureAtlasSpriteParticle)
         {
-            ((TextureAtlasSpriteParticle) this.particleIcon).updateParticleAnimation();
+            ((TextureAtlasSpriteParticle) this.particleTexture).updateParticleAnimation();
         }
     }
 
     @Override
-    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)
+    public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)
     {
         if (bottomPivot)
         {
@@ -50,12 +50,12 @@ public class EntityFXGenericAnimatedParticle extends MOEntityFX
             float f3 = f2 + 0.0624375F;
             float f4 = 0.1F * this.particleScale;
 
-            if (this.particleIcon != null)
+            if (this.particleTexture != null)
             {
-                f = this.particleIcon.getMinU();
-                f1 = this.particleIcon.getMaxU();
-                f2 = this.particleIcon.getMinV();
-                f3 = this.particleIcon.getMaxV();
+                f = this.particleTexture.getMinU();
+                f1 = this.particleTexture.getMaxU();
+                f2 = this.particleTexture.getMinV();
+                f3 = this.particleTexture.getMaxV();
             }
 
             float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);

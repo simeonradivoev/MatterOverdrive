@@ -18,14 +18,15 @@
 
 package matteroverdrive.data.dialog;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.dialog.IDialogNpc;
-import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Created by Simeon on 8/10/2015.
@@ -91,8 +92,8 @@ public class DialogMessageAndroidTransformation extends DialogMessage
         for (boolean hasPart : hasParts) {
             if (!hasPart) {
                 if (!player.worldObj.isRemote) {
-                    ChatComponentText componentText = new ChatComponentText(EnumChatFormatting.GOLD + "<Mad Scientist>" + EnumChatFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + player.getRNG().nextInt(4)));
-                    componentText.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
+                    TextComponentString componentText = new TextComponentString(ChatFormatting.GOLD + "<Mad Scientist>" + ChatFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + player.getRNG().nextInt(4)));
+                    componentText.setChatStyle(new Style().setColor(TextFormatting.RED));
                     player.addChatMessage(componentText);
                 }
                 return;
@@ -105,13 +106,13 @@ public class DialogMessageAndroidTransformation extends DialogMessage
             }
         }
 
-        AndroidPlayer.get(player).startConversion();
+        MOPlayerCapabilityProvider.GetAndroidCapability(player).startConversion();
         player.closeScreen();
     }
 
     @Override
     public boolean isVisible(IDialogNpc npc, EntityPlayer player)
     {
-        return AndroidPlayer.get(player) == null || !AndroidPlayer.get(player).isAndroid();
+        return MOPlayerCapabilityProvider.GetAndroidCapability(player) == null || !MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid();
     }
 }

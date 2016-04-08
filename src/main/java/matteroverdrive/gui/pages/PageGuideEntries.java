@@ -39,6 +39,7 @@ import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -47,7 +48,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_LEQUAL;
 
 /**
  * Created by Simeon on 8/28/2015.
@@ -60,6 +62,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
     private MOElementTextField searchField;
     private PageGuideDescription pageGuideDescription;
     private ItemStack dataPadStack;
+    private EnumHand hand;
     private static int scrollX;
     private static int scrollY;
     private static String searchFilter = "";
@@ -345,21 +348,22 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
         {
             MatterOverdrive.proxy.getGoogleAnalytics().setPageHit(((ElementGuideEntry) element).getEntry().getName(), GoogleAnalyticsCommon.PAGE_PATH_GUIDE_ENTIRES + "/" + ((ElementGuideEntry) element).getEntry().getGroup(),null);
             pageGuideDescription.OpenGuide(((ElementGuideEntry) element).getEntry().getId(),false);
-            MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
+            MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand,dataPadStack));
             gui.setPage(1);
         }else if (element.equals(orderButtonElement))
         {
             MatterOverdriveItems.dataPad.setOrdering(dataPadStack,orderButtonElement.getSelectedState());
-            MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
+            MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand,dataPadStack));
         }else if (element instanceof ElementGuideCategory)
         {
             setActiveCategory(((ElementGuideCategory) element).getCategory().getName());
         }
     }
 
-    public void setDataPadStack(ItemStack dataPadStack)
+    public void setDataPadStack(EnumHand hand,ItemStack dataPadStack)
     {
         this.dataPadStack = dataPadStack;
+        this.hand = hand;
     }
 
     @Override
@@ -371,7 +375,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
     public void setActiveCategory(String category)
     {
         MatterOverdriveItems.dataPad.setCategory(dataPadStack, category);
-        MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
+        MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand,dataPadStack));
         gui.setPage(0);
         groups.clear();
     }

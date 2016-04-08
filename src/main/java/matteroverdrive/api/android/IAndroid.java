@@ -2,12 +2,14 @@ package matteroverdrive.api.android;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraftforge.common.IExtendedEntityProperties;
+import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.EnumSet;
 
 /**
  * Created by Simeon on 1/9/2016.
  */
-public interface IAndroid extends IInventory, IExtendedEntityProperties
+public interface IAndroid extends IInventory
 {
     String EXT_PROP_NAME = "AndroidPlayer";
 
@@ -56,19 +58,11 @@ public interface IAndroid extends IInventory, IExtendedEntityProperties
 
     void onEffectsUpdate(int effectId);
 
-    //region Helper function
-    static IAndroid getAndroid(EntityPlayer entityPlayer)
+    void writeToNBT(NBTTagCompound compound,EnumSet<DataType> dataTypes);
+    void readFromNBT(NBTTagCompound compound,EnumSet<DataType> dataTypes);
+
+    enum DataType
     {
-        if (entityPlayer != null)
-            return (IAndroid)entityPlayer.getExtendedProperties(EXT_PROP_NAME);
-        return null;
+        DATA,ENERGY,EFFECTS,STATS,ACTIVE_ABILITY,INVENTORY, BATTERY
     }
-    static boolean isPlayerAnAndroid(EntityPlayer entityPlayer)
-    {
-        IAndroid android = getAndroid(entityPlayer);
-        if (android != null)
-            return android.isAndroid();
-        return false;
-    }
-    //endregion
 }

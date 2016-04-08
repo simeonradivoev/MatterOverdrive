@@ -19,10 +19,11 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.events.MOEventDialogInteract;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.entity.EntityVillagerMadScientist;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,8 +32,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
 import java.util.Random;
@@ -154,24 +157,25 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
         if (getCreeperKillCount(questStack) < MAX_CREEPER_KILS && event instanceof LivingDeathEvent)
         {
-            if (((LivingDeathEvent) event).entityLiving instanceof EntityCreeper && entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof ItemSpade)
+            // TODO: 3/26/2016 Add support for offhand
+            if (((LivingDeathEvent) event).getEntityLiving() instanceof EntityCreeper && entityPlayer.getHeldItem(EnumHand.MAIN_HAND) != null && entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemSpade)
             {
                 initTag(questStack);
                 byte currentCreeperKillCount = getTag(questStack).getByte("CreeperKills");
                 getTag(questStack).setByte("CreeperKills",++currentCreeperKillCount);
-                return true;
+                return new QuestLogicState(QuestState.Type.UPDATE,true);
             }
         }
         else if (event instanceof EntityItemPickupEvent)
         {
-            ItemStack itemStack = ((EntityItemPickupEvent) event).item.getEntityItem();
+            ItemStack itemStack = ((EntityItemPickupEvent) event).getItem().getEntityItem();
             if (itemStack != null)
             {
-                if (itemStack.getItem() instanceof ItemBlock && ((ItemBlock) itemStack.getItem()).getBlock() == Blocks.red_mushroom && entityPlayer.worldObj.provider.getDimensionId() == -1)
+                if (itemStack.getItem() instanceof ItemBlock && ((ItemBlock) itemStack.getItem()).getBlock() == Blocks.red_mushroom && entityPlayer.worldObj.provider.getDimension() == -1)
                 {
                     initTag(questStack);
                     byte mushroomCount = getTag(questStack).getByte("MushroomCount");
@@ -181,7 +185,7 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
                         int takenMushrooms = newMushroomCount-mushroomCount;
                         itemStack.stackSize-= takenMushrooms;
                         getTag(questStack).setByte("MushroomCount",(byte)newMushroomCount);
-                        return true;
+                        return new QuestLogicState(QuestState.Type.UPDATE,true);
                     }
                 }
                 else if (itemStack.getItem() == Items.gunpowder)
@@ -196,7 +200,7 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
                         itemStack.stackSize-= takenGunpowder;
                         getTag(questStack).setByte("GunpowderCount",(byte) newGunpowderCount);
                         itemStack.stackSize--;
-                        return true;
+                        return new QuestLogicState(QuestState.Type.UPDATE,true);
                     }
                 }
             }
@@ -207,12 +211,11 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
             {
                 initTag(questStack);
                 getTag(questStack).setBoolean("TalkedToGiver",true);
-                questStack.markComplited(entityPlayer,false);
-
-                return true;
+                markComplete(questStack,entityPlayer);
+                return new QuestLogicState(QuestState.Type.COMPLETE,true);
             }
         }
-        return false;
+        return null;
     }
 
     @Override

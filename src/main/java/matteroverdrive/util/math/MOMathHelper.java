@@ -2,8 +2,8 @@ package matteroverdrive.util.math;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Matrix4f;
@@ -18,7 +18,7 @@ public class MOMathHelper
 	public static final double PI2 = Math.PI * 2;
 	public static double degreesToRadians = Math.PI / 180.0;
 
-	public static Vector3f randomSpherePoint(double x0,double y0,double z0,Vec3 radius,Random rand)
+	public static Vector3f randomSpherePoint(double x0, double y0, double z0, Vec3d radius, Random rand)
     {
     	   double u = rand.nextDouble();
     	   double v = rand.nextDouble();
@@ -51,7 +51,7 @@ public class MOMathHelper
     }
 
     @SideOnly(Side.CLIENT)
-    public static Vec3 mouseToWorldRay(int mouseX,int mouseY,int width,int height)
+    public static Vec3d mouseToWorldRay(int mouseX, int mouseY, int width, int height)
     {
         double aspectRatio = ((double)width / (double)height);
         double fov = ((Minecraft.getMinecraft().gameSettings.fovSetting / 2d) + 11) * (Math.PI / 180);
@@ -75,7 +75,7 @@ public class MOMathHelper
         Matrix4f.transform(rot,up,up);
         Matrix4f.transform(rot,left,left);
 
-        return  new Vec3(foward.x,foward.y,foward.z)
+        return  new Vec3d(foward.x,foward.y,foward.z)
                 .addVector(left.x * tanf * aspectRatio * a,left.y * tanf * aspectRatio * a,left.z * tanf * aspectRatio * a)
                 .addVector(up.x * tanf * b,up.y * tanf * b,up.z * tanf * b)
                 .normalize();

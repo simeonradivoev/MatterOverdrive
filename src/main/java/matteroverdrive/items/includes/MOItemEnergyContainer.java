@@ -19,10 +19,10 @@
 package matteroverdrive.items.includes;
 
 import cofh.api.energy.IEnergyContainerItem;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
 	 {
 		this.TagCompountCheck(itemstack);
-		infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(getEnergyStored(itemstack), getMaxEnergyStored(itemstack)));
+		infos.add(ChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(getEnergyStored(itemstack), getMaxEnergyStored(itemstack)));
 	 }
 
 	@Override

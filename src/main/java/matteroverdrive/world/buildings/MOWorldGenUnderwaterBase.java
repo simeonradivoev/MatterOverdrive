@@ -26,12 +26,12 @@ import matteroverdrive.world.MOImageGen;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.NoiseGeneratorSimplex;
-import net.minecraft.util.EnumFacing;
 
 import java.util.Random;
 
@@ -129,7 +129,8 @@ public class MOWorldGenUnderwaterBase extends MOWorldGenBuilding
 
     @Override
     public boolean shouldGenerate(Random random,World world, BlockPos pos) {
-        return world.getBiomeGenForCoords(pos).isEqualTo(BiomeGenBase.deepOcean) && isFarEnoughFromOthers(world,pos.getX(),pos.getZ(),MIN_DISTANCE_APART);
+        //deep_ocean biome
+        return world.getBiomeGenForCoords(pos).equals(BiomeGenBase.getBiome(24)) && isFarEnoughFromOthers(world,pos.getX(),pos.getZ(),MIN_DISTANCE_APART);
     }
 
     @Override

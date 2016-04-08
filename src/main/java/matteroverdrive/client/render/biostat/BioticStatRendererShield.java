@@ -22,13 +22,14 @@ import matteroverdrive.Reference;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.data.biostats.BioticStatShield;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.IModel;
 import org.lwjgl.util.vector.Vector3f;
@@ -75,8 +76,8 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
 
     private void renderPlayerShield(RenderWorldLastEvent event, EntityPlayer player)
     {
-        AndroidPlayer androidPlayer = AndroidPlayer.get(player);
-        boolean isVisible = manageOpacityLerp(androidPlayer,event.partialTicks);
+        AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
+        boolean isVisible = manageOpacityLerp(androidPlayer,event.getPartialTicks());
 
         if (isVisible)
         {
@@ -88,8 +89,8 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
             GlStateManager.disableAlpha();
             GlStateManager.disableCull();
             GlStateManager.blendFunc(GL_ONE, GL_ONE);
-            Vec3 playerPosition = player.getPositionEyes(event.partialTicks);
-            Vec3 clientPosition = Minecraft.getMinecraft().thePlayer.getPositionEyes(event.partialTicks);
+            Vec3d playerPosition = player.getPositionEyes(event.getPartialTicks());
+            Vec3d clientPosition = Minecraft.getMinecraft().thePlayer.getPositionEyes(event.getPartialTicks());
             RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.2f * getOpacityLerp(player));
             Minecraft.getMinecraft().renderEngine.bindTexture(shield_texture);
             if (!isClient(player))

@@ -21,8 +21,6 @@ package matteroverdrive.items;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 8/5/2015.
@@ -73,7 +71,8 @@ public class FlashDrive extends MOBaseItem
         }
     }*/
 
-    @Override
+    // TODO: 3/26/2016 Find how to get color for stack
+    /*@Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)
     {
@@ -82,5 +81,5 @@ public class FlashDrive extends MOBaseItem
             return color.getColor();
         }
         return super.getColorFromItemStack(itemStack,pass);
-    }
+    }*/
 }

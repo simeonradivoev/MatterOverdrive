@@ -23,11 +23,13 @@ import matteroverdrive.api.matter.IRecyclable;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.data.inventory.SlotRecycler;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 
 import java.util.EnumSet;
 
@@ -198,8 +200,8 @@ public class TileEntityMachineMatterRecycler extends MOTileEntityMachineEnergy {
     }
 
     @Override
-    public String getSound() {
-        return "machine";
+    public SoundEvent getSound() {
+        return MatterOverdriveSounds.machine;
     }
 
     @Override

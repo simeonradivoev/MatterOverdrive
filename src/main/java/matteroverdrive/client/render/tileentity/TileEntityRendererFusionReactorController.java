@@ -28,9 +28,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ONE;
 
 /**
  * Created by Simeon on 5/14/2015.
@@ -49,7 +49,7 @@ public class TileEntityRendererFusionReactorController extends TileEntitySpecial
             GlStateManager.translate(x, y, z);
 
             for (int i = 0; i < TileEntityMachineFusionReactorController.positionsCount; i++) {
-                Vec3 pos = controller.getPosition(i,getWorld().getBlockState(controller.getPos()).getValue(MOBlock.PROPERTY_DIRECTION));
+                Vec3d pos = controller.getPosition(i,getWorld().getBlockState(controller.getPos()).getValue(MOBlock.PROPERTY_DIRECTION));
 
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(pos.xCoord, pos.yCoord, pos.zCoord);

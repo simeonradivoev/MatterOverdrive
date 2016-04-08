@@ -2,11 +2,13 @@ package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
 import matteroverdrive.api.exceptions.MOQuestParseException;
-import matteroverdrive.util.MOJsonHelper;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
+import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
 import java.util.Random;
@@ -67,18 +69,15 @@ public class QuestLogicSingleEvent extends AbstractQuestLogic
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
         if (!hasEventFired(questStack) && this.event.isInstance(event))
         {
-            if (autoComplete)
-            {
-                questStack.markComplited(entityPlayer,false);
-            }
+            markComplete(questStack,entityPlayer);
             setEventFired(questStack);
-            return true;
+            return new QuestLogicState(QuestState.Type.COMPLETE,true);
         }
-        return false;
+        return null;
     }
 
     @Override

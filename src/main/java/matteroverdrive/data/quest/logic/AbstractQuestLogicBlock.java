@@ -9,19 +9,19 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Simeon on 1/5/2016.
  */
-public abstract class QuestLogicBlock extends AbstractQuestLogic
+public abstract class AbstractQuestLogicBlock extends AbstractQuestLogic
 {
     protected QuestBlock block;
     protected QuestItem blockStack;
 
-    public QuestLogicBlock(){}
+    public AbstractQuestLogicBlock(){}
 
-    public QuestLogicBlock(QuestBlock block)
+    public AbstractQuestLogicBlock(QuestBlock block)
     {
         this.block = block;
     }
 
-    public QuestLogicBlock(QuestItem blockStack)
+    public AbstractQuestLogicBlock(QuestItem blockStack)
     {
         this.blockStack = blockStack;
     }

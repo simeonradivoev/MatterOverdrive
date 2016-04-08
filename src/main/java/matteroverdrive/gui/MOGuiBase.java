@@ -28,19 +28,19 @@ import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.gui.events.ITextHandler;
-import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -479,16 +479,16 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
         float var9 = (float)(color >> 8 & 255) / 255.0F;
         float var10 = (float)(color & 255) / 255.0F;
         Tessellator var11 = Tessellator.getInstance();
-        WorldRenderer worldRenderer = var11.getWorldRenderer();
+        VertexBuffer vb = var11.getBuffer();
         GL11.glEnable(3042);
         GL11.glDisable(3553);
         GlStateManager.blendFunc(770, 771);
         GlStateManager.color(var8, var9, var10, var7);
-        worldRenderer.begin(7, DefaultVertexFormats.POSITION);
-        worldRenderer.pos((double)x1, (double)y2, (double)this.zLevel).endVertex();
-        worldRenderer.pos((double)x2, (double)y2, (double)this.zLevel).endVertex();
-        worldRenderer.pos((double)x2, (double)y1, (double)this.zLevel).endVertex();
-        worldRenderer.pos((double)x1, (double)y1, (double)this.zLevel).endVertex();
+        vb.begin(7, DefaultVertexFormats.POSITION);
+        vb.pos((double)x1, (double)y2, (double)this.zLevel).endVertex();
+        vb.pos((double)x2, (double)y2, (double)this.zLevel).endVertex();
+        vb.pos((double)x2, (double)y1, (double)this.zLevel).endVertex();
+        vb.pos((double)x1, (double)y1, (double)this.zLevel).endVertex();
         var11.draw();
         GL11.glEnable(3553);
         GL11.glDisable(3042);
@@ -512,7 +512,7 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
         float var9 = (float)(color >> 8 & 255) / 255.0F;
         float var10 = (float)(color & 255) / 255.0F;
         Tessellator var11 = Tessellator.getInstance();
-        WorldRenderer worldRenderer = var11.getWorldRenderer();
+        VertexBuffer worldRenderer = var11.getBuffer();
         GL11.glDisable(3553);
         GlStateManager.color(var8, var9, var10, var7);
         worldRenderer.begin(7,DefaultVertexFormats.POSITION);
@@ -527,7 +527,7 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
         float var9 = 1.0F / texW;
         float var10 = 1.0F / texH;
         Tessellator var11 = Tessellator.getInstance();
-        WorldRenderer wr = var11.getWorldRenderer();
+        VertexBuffer wr = var11.getBuffer();
         wr.begin(7,DefaultVertexFormats.POSITION_TEX);
         wr.pos((double)(x), (double)(y + height), (double)this.zLevel).tex( (double)((float)(u) * var9), (double)((float)(v + height) * var10)).endVertex();
         wr.pos((double)(x + width), (double)(y + height), (double)this.zLevel).tex((double)((float)(u + width) * var9), (double)((float)(v + height) * var10)).endVertex();
@@ -614,7 +614,7 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
     public void setWorldAndResolution(Minecraft mc, int width, int height)
     {
         super.setWorldAndResolution(mc,width,height);
-        this.fontRendererObj = ClientProxy.moFontRender;
+        //this.fontRendererObj = ClientProxy.moFontRender;
     }
     public FontRenderer getFontRenderer() {
         return this.fontRendererObj;
@@ -633,8 +633,8 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler,I
     }
     //endregion
 
-    public static void playSound(String soundName, float volume, float pitch) {
-        Minecraft.getMinecraft().thePlayer.playSound(soundName,volume, pitch);
+    public static void playSound(SoundEvent event, float volume, float pitch) {
+        Minecraft.getMinecraft().thePlayer.playSound(event,volume, pitch);
     }
 
     public void bindTexture(ResourceLocation location) {

@@ -26,13 +26,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import static matteroverdrive.util.MOBlockHelper.RotationType;
 import static matteroverdrive.util.MOBlockHelper.SIDE_LEFT;
@@ -42,7 +42,7 @@ import static matteroverdrive.util.MOBlockHelper.SIDE_LEFT;
  */
 public class MOBlock extends Block
 {
-    private BlockState blockState;
+    private BlockStateContainer blockState;
     private boolean hasRotation;
     private int rotationType;
     public static final PropertyDirection PROPERTY_DIRECTION = PropertyDirection.create("facing");
@@ -50,30 +50,22 @@ public class MOBlock extends Block
     public MOBlock(Material material, String name)
     {
         super(material);
+        setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
         this.blockState = createBlockState();
-        this.setDefaultState(this.blockState.getBaseState());
-        this.setRegistryName(Reference.MOD_ID,name);
+        this.setDefaultState(getBlockState().getBaseState());
+        this.fullBlock = getDefaultState().isOpaqueCube();
+        this.lightOpacity = fullBlock ? 255 : 0;
         this.setUnlocalizedName(name);
         setCreativeTab(MatterOverdrive.tabMatterOverdrive);
         rotationType = RotationType.FOUR_WAY;
     }
 
-    public void register()
-    {
-        registerBlock();
-    }
-
-    protected void registerBlock()
-    {
-        GameRegistry.registerBlock(this, this.getUnlocalizedName().substring(5));
-    }
-
     @Override
-    protected BlockState createBlockState()
+    protected BlockStateContainer createBlockState()
     {
         if (hasRotation)
         {
-            return new BlockState(this, PROPERTY_DIRECTION);
+            return new BlockStateContainer(this, PROPERTY_DIRECTION);
         }
         return super.createBlockState();
     }
@@ -191,7 +183,7 @@ public class MOBlock extends Block
     }
 
     @Override
-    public BlockState getBlockState()
+    public BlockStateContainer getBlockState()
     {
         return this.blockState;
     }

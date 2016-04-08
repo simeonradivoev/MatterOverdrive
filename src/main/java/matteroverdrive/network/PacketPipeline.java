@@ -152,12 +152,12 @@ public class PacketPipeline
 
     public void sendToAllAround(IMessage message,EntityPlayer player,double range)
     {
-        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimensionId(),player.posX,player.posY,player.posZ,range));
+        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimension(),player.posX,player.posY,player.posZ,range));
     }
 
     public void sendToAllAround(IMessage message,TileEntity tileEntity,double range)
     {
-        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(tileEntity.getWorld().provider.getDimensionId(),tileEntity.getPos().getX(),tileEntity.getPos().getY(),tileEntity.getPos().getZ(),range));
+        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(tileEntity.getWorld().provider.getDimension(),tileEntity.getPos().getX(),tileEntity.getPos().getY(),tileEntity.getPos().getZ(),range));
     }
 
     public void sendTo(IMessage message,EntityPlayerMP player)
@@ -175,7 +175,7 @@ public class PacketPipeline
     }
     public void sendToDimention(IMessage message,WorldProvider worldProvider)
     {
-        dispatcher.sendToDimension(message, worldProvider.getDimensionId());
+        dispatcher.sendToDimension(message, worldProvider.getDimension());
     }
     //endregion
 }

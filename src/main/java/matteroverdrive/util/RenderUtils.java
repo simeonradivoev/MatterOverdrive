@@ -18,6 +18,7 @@
 
 package matteroverdrive.util;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.tileentity.TileEntityRendererPatternMonitor;
@@ -26,13 +27,16 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
@@ -90,7 +94,7 @@ public class RenderUtils
 
 				if (text == null && stack.stackSize < 1)
 				{
-					s = EnumChatFormatting.RED + String.valueOf(stack.stackSize);
+					s = ChatFormatting.RED + String.valueOf(stack.stackSize);
 				}
 
 				GlStateManager.disableLighting();
@@ -113,7 +117,7 @@ public class RenderUtils
 				GlStateManager.disableAlpha();
 				GlStateManager.disableBlend();
 				Tessellator tessellator = Tessellator.getInstance();
-				WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+				VertexBuffer worldrenderer = tessellator.getBuffer();
 				func_181565_a(worldrenderer, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
 				func_181565_a(worldrenderer, xPosition + 2, yPosition + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
 				func_181565_a(worldrenderer, xPosition + 2, yPosition + 13, j, 1, 255 - i, i, 0, 255);
@@ -126,7 +130,7 @@ public class RenderUtils
 		}
 	}
 
-	private static void func_181565_a(WorldRenderer p_181565_1_, int p_181565_2_, int p_181565_3_, int p_181565_4_, int p_181565_5_, int p_181565_6_, int p_181565_7_, int p_181565_8_, int p_181565_9_)
+	private static void func_181565_a(VertexBuffer p_181565_1_, int p_181565_2_, int p_181565_3_, int p_181565_4_, int p_181565_5_, int p_181565_6_, int p_181565_7_, int p_181565_8_, int p_181565_9_)
 	{
 		p_181565_1_.begin(7, DefaultVertexFormats.POSITION_COLOR);
 		p_181565_1_.pos((double)(p_181565_2_ + 0), (double)(p_181565_3_ + 0), 0.0D).color(p_181565_6_, p_181565_7_, p_181565_8_, p_181565_9_).endVertex();
@@ -222,7 +226,7 @@ public class RenderUtils
 	}
 	public static void drawPlaneWithUV(double x,double y,double z,double sizeX,double sizeY,double uStart,double vStart,double uSize,double vSize)
 	{
-        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        VertexBuffer wr = Tessellator.getInstance().getBuffer();
 
         wr.begin(GL_QUADS,DefaultVertexFormats.POSITION_TEX);
         wr.pos(x + sizeX, y + sizeY, z).tex(uStart + uSize, vStart + vSize).endVertex();
@@ -233,7 +237,7 @@ public class RenderUtils
 	}
 	public static void drawPlaneWithUV(double x,double y,double z,double sizeX,double sizeY,double uStart,double vStart,double uSize,double vSize,Color color)
 	{
-		WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+		VertexBuffer wr = Tessellator.getInstance().getBuffer();
 
         wr.begin(GL_QUADS,DefaultVertexFormats.POSITION_TEX_COLOR);
         wr.pos(x + sizeX, y + sizeY, z).tex( uStart + uSize, vStart + vSize).color(color.getFloatR(),color.getFloatG(),color.getFloatB(),color.getFloatA()).endVertex();
@@ -250,7 +254,7 @@ public class RenderUtils
 		GL11.glStencilMask(1);
 		GL11.glColorMask(false, false, false, false);
 		GL11.glDepthMask(false);
-        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        VertexBuffer wr = Tessellator.getInstance().getBuffer();
 		wr.begin(GL_QUADS,DefaultVertexFormats.POSITION);
         wr.pos((double)xMin, (double)yMax, 0.0D).endVertex();
         wr.pos((double)xMax, (double)yMax, 0.0D).endVertex();
@@ -281,7 +285,7 @@ public class RenderUtils
 
 	public static void drawCube(double x,double y,double z,double sizeX,double sizeY,double sizeZ,double minU,double minV,double maxU,double maxV,Color color)
 	{
-        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        VertexBuffer wr = Tessellator.getInstance().getBuffer();
 
 		wr.begin(GL_QUADS,DefaultVertexFormats.POSITION_TEX_COLOR);
 
@@ -704,12 +708,12 @@ public class RenderUtils
         GlStateManager.rotate(viewer.rotationPitch, 1, 0, 0);
 	}
 
-	public static void tessalateParticle(Entity viewer, TextureAtlasSprite particleIcon, double scale, Vec3 position, Color color)
+	public static void tessalateParticle(Entity viewer, TextureAtlasSprite particleIcon, double scale, Vec3d position, Color color)
 	{
 		tessalateParticle(viewer, particleIcon, scale, position, color.getFloatR(), color.getFloatG(), color.getFloatB(), color.getFloatA());
 	}
 
-	public static void tessalateParticle(Entity viewer, TextureAtlasSprite particleIcon,double scale,Vec3 position,float r,float g,float b,float a)
+	public static void tessalateParticle(Entity viewer, TextureAtlasSprite particleIcon,double scale,Vec3d position,float r,float g,float b,float a)
 	{
 		float f1 = MathHelper.cos(viewer.rotationYaw * 0.017453292F);
 		float f2 = MathHelper.sin(viewer.rotationYaw * 0.017453292F);
@@ -725,7 +729,7 @@ public class RenderUtils
 		float x = (float)position.xCoord;
 		float y = (float)position.yCoord;
 		float z = (float)position.zCoord;
-		WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+		VertexBuffer wr = Tessellator.getInstance().getBuffer();
 		wr.pos(x - f1 * scale - f3 * scale, y - f5 * scale,z - f2 * scale - f4 * scale).tex((double)uMax, (double)vMax).color(r, g, b, a).endVertex();
 		wr.pos(x - f1 * scale + f3 * scale, y + f5 * scale, z - f2 * scale + f4 * scale).tex((double) uMax, (double) vMin).color(r, g, b, a).endVertex();
 		wr.pos(x + f1 * scale + f3 * scale, y + f5 * scale, z + f2 * scale + f4 * scale).tex((double)uMin, (double)vMin).color(r, g, b, a).endVertex();
@@ -746,7 +750,7 @@ public class RenderUtils
 
 	public static void drawSizedTexturedModalRect(int x, int y, int u, int v, int width, int height,int widthU, int heightV, float texW, float texH,float zLevel)
 	{
-        Tessellator.getInstance().getWorldRenderer().begin(GL_QUADS,DefaultVertexFormats.POSITION_TEX);
+        Tessellator.getInstance().getBuffer().begin(GL_QUADS,DefaultVertexFormats.POSITION_TEX);
 		tessalateSizedModelRect(x, y, u, v, width, height, widthU, heightV, texW, texH, zLevel);
         Tessellator.getInstance().draw();
 	}
@@ -755,7 +759,7 @@ public class RenderUtils
 	{
 		float texU = 1 / texW;
 		float texV = 1 / texH;
-		WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+		VertexBuffer wr = Tessellator.getInstance().getBuffer();
 		wr.pos(x, y + height, zLevel).tex(u * texU, (v + heightV) * texV).endVertex();
 		wr.pos(x + width, y + height, zLevel).tex( (u + widthU) * texU, (v + heightV) * texV).endVertex();
 		wr.pos(x + width, y, zLevel).tex( (u + widthU) * texU, v * texV).endVertex();
@@ -869,7 +873,7 @@ public class RenderUtils
 
 	public static void drawShip(double x,double y,double z,double size)
 	{
-		WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+		VertexBuffer wr = Tessellator.getInstance().getBuffer();
 		wr.begin(GL_TRIANGLES,DefaultVertexFormats.POSITION);
 		wr.pos(x-size, y, z).endVertex();
 		wr.pos(x + size, y, z-size).endVertex();
@@ -889,7 +893,7 @@ public class RenderUtils
 		Tessellator.getInstance().draw();
 	}
 
-    public static void rotateTowards(Vec3 from,Vec3 to,Vec3 up)
+    public static void rotateTowards(Vec3d from,Vec3d to,Vec3d up)
     {
         double dot = from.dotProduct(to);
         if (Math.abs(dot - (-1.0)) < Double.MIN_VALUE)
@@ -902,12 +906,12 @@ public class RenderUtils
         }
 
         double rotAngle = Math.acos(dot);
-        Vec3 rotAxis = from.crossProduct(to).normalize();
+        Vec3d rotAxis = from.crossProduct(to).normalize();
         GlStateManager.rotate((float)(rotAngle * (180d / Math.PI)), (float)rotAxis.xCoord, (float)rotAxis.yCoord, (float)rotAxis.zCoord);
     }
 
 	public static void renderIcon(double x, double y, double z, TextureAtlasSprite icon, int width, int height) {
-		WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+		VertexBuffer wr = Tessellator.getInstance().getBuffer();
 		wr.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		wr.pos(x, y + (double)height, z).tex((double)icon.getMinU(), (double)icon.getMaxV()).endVertex();
 		wr.pos(x + (double)width, y + (double)height, z).tex((double)icon.getMaxU(), (double)icon.getMaxV()).endVertex();

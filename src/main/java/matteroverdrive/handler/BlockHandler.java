@@ -3,6 +3,8 @@ package matteroverdrive.handler;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -14,9 +16,9 @@ public class BlockHandler
     @SubscribeEvent
     public void onHarvestDropsEvent(BlockEvent.HarvestDropsEvent event)
     {
-        if (event.harvester != null)
+        if (event.getHarvester() != null)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.harvester);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getHarvester());
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);
@@ -27,15 +29,14 @@ public class BlockHandler
     @SubscribeEvent
     public void onBlockPlaceEvent(BlockEvent.PlaceEvent event)
     {
-        if (event.player != null)
+        if (event.getPlayer() != null)
         {
-            String blockName = event.state.getBlock().getRegistryName();
-            String modID = blockName.substring(0,blockName.indexOf(':'));
-            if (modID.equals(Reference.MOD_ID))
+            ResourceLocation blockName = event.getState().getBlock().getRegistryName();
+            if (blockName.getResourceDomain().equals(Reference.MOD_ID))
             {
-                MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BLOCK_PLACEING, modID, blockName, event.player);
+                MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BLOCK_PLACEING, blockName.getResourceDomain(), blockName.getResourcePath(), event.getPlayer());
             }
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getPlayer());
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);

@@ -19,6 +19,7 @@
 package matteroverdrive.items.weapon;
 
 import cofh.api.energy.IEnergyContainerItem;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
@@ -29,6 +30,7 @@ import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.weapon.ClientWeaponHandler;
 import matteroverdrive.init.MatterOverdriveEnchantments;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
 import matteroverdrive.network.packet.server.PacketReloadEnergyWeapon;
@@ -48,7 +50,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
@@ -117,7 +123,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
             manageCooling(itemStack);
         }else
         {
-            if (entity instanceof EntityPlayer && entity == Minecraft.getMinecraft().thePlayer && isHolding && Minecraft.getMinecraft().currentScreen == null)
+            if (entity instanceof EntityPlayer && entity == Minecraft.getMinecraft().thePlayer && ((EntityPlayer) entity).getHeldItemMainhand() == itemStack && Minecraft.getMinecraft().currentScreen == null)
             {
                 onShooterClientUpdate(itemStack,world,(EntityPlayer)entity,true);
             }
@@ -130,7 +136,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public void addDetails(ItemStack weapon, EntityPlayer player, List infos)
     {
         super.addDetails(weapon, player, infos);
-        String energyInfo = EnumChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(null,getEnergyUse(weapon) * 20) + "/s";
+        String energyInfo = ChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(null,getEnergyUse(weapon) * 20) + "/s";
         float energyMultiply = (float)getEnergyUse(weapon) / (float)getBaseEnergyUse(weapon);
         if (energyMultiply != 1)
         {
@@ -145,7 +151,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         infos.add(addStatWithMultiplyInfo("Range",getRange(weapon),(double)getRange(weapon) / (double)defaultRange,"b"));
         infos.add(addStatWithMultiplyInfo("Accuracy","",1/(modifyStatFromModules(Reference.WS_ACCURACY,weapon,1) * getCustomFloatStat(weapon,CUSTOM_ACCURACY_MULTIPLY_TAG,1)),""));
 
-        String heatInfo = EnumChatFormatting.DARK_RED + "Heat: ";
+        String heatInfo = ChatFormatting.DARK_RED + "Heat: ";
         double heatPercent = getHeat(weapon) / getMaxHeat(weapon);
         for (int i = 0;i < 32 * heatPercent;i++)
         {
@@ -159,7 +165,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
     private String addStatWithMultiplyInfo(String statName,Object value,double multiply,String units)
     {
-        String info = String.format("%s: %s%s",statName,EnumChatFormatting.DARK_AQUA,value);
+        String info = String.format("%s: %s%s",statName,ChatFormatting.DARK_AQUA,value);
         if (!units.isEmpty())
         {
             info += " " + units;
@@ -168,12 +174,12 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         {
             if (multiply > 1)
             {
-                info += EnumChatFormatting.DARK_GREEN;
+                info += ChatFormatting.DARK_GREEN;
             }else
             {
-                info +=  EnumChatFormatting.DARK_RED;
+                info +=  ChatFormatting.DARK_RED;
             }
-            info += String.format(" (%s) %s",DecimalFormat.getPercentInstance().format(multiply),EnumChatFormatting.RESET);
+            info += String.format(" (%s) %s",DecimalFormat.getPercentInstance().format(multiply),ChatFormatting.RESET);
         }
         return info;
     }
@@ -204,7 +210,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     //region client only
     /**
      * Used to manage the sending of weapons tick to the server.
-     * This is tied to {@link #sendShootTickToServer(World, WeaponShot, Vec3, Vec3)}.
+     * This is tied to {@link #sendShootTickToServer(World, WeaponShot, Vec3d, Vec3d)}.
      * Used to mainly send weapon ticks without weapon shot information, aka. weapon firing.
      * @param world the shooter's world.
      */
@@ -223,7 +229,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
      * @param pos the starting position of the shot.
      */
     @SideOnly(Side.CLIENT)
-    protected void sendShootTickToServer(World world,WeaponShot weaponShot,Vec3 dir,Vec3 pos)
+    protected void sendShootTickToServer(World world, WeaponShot weaponShot, Vec3d dir, Vec3d pos)
     {
         PacketFirePlasmaShot packetFirePlasmaShot = new PacketFirePlasmaShot(Minecraft.getMinecraft().thePlayer.getEntityId(),pos,dir,weaponShot);
         ClientProxy.instance().getClientWeaponHandler().sendWeaponTickToServer(world,packetFirePlasmaShot);
@@ -276,7 +282,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
                     player.inventory.mainInventory[i].stackSize--;
                     setEnergyStored(weapon, Math.min(getEnergyStored(weapon) + ((IEnergyPack) player.inventory.mainInventory[i].getItem()).getEnergyAmount(player.inventory.mainInventory[i]), getMaxEnergyStored(weapon)));
                     player.inventory.inventoryChanged = true;
-                    player.worldObj.playSoundAtEntity(player, Reference.MOD_ID + ":" + "reload", 0.7f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
+                    player.worldObj.playSound(null,player.getPosition(), MatterOverdriveSounds.weaponsReload,SoundCategory.PLAYERS, 0.7f + itemRand.nextFloat() * 0.2f, 0.9f + itemRand.nextFloat() * 0.2f);
                     if (player.inventory.mainInventory[i].stackSize <= 0)
                     {
                         player.inventory.mainInventory[i] = null;
@@ -301,7 +307,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
     {
-        return !oldStack.isItemEqual(newStack) || slotChanged;
+        return !ItemStack.areItemStacksEqual(oldStack,newStack) || slotChanged;
     }
 
     protected void manageOverheat(ItemStack itemStack,World world,EntityLivingBase shooter)
@@ -311,8 +317,8 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
             if (!MinecraftForge.EVENT_BUS.post(new MOEventEnergyWeapon.Overheat(itemStack,shooter)))
             {
                 setOverheated(itemStack, true);
-                world.playSoundAtEntity(shooter, Reference.MOD_ID + ":" + "overheat", 1F, 1f);
-                world.playSoundAtEntity(shooter, Reference.MOD_ID + ":" + "overheat_alarm", 1, 1);
+                world.playSound(null,shooter.posX,shooter.posY,shooter.posZ, MatterOverdriveSounds.weaponsOverheat,SoundCategory.PLAYERS, 1F, 1f);
+                world.playSound(null,shooter.posX,shooter.posY,shooter.posZ,MatterOverdriveSounds.weaponsOverheatAlarm,SoundCategory.PLAYERS, 1, 1);
             }
         }
     }
@@ -359,7 +365,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public abstract float getBaseZoom(ItemStack weapon,EntityLivingBase shooter);
     /**
      * Called when a weapon is fired with a single Weapon Shot.
-     * This is different then the {@link #onServerFire(ItemStack, EntityLivingBase, WeaponShot, Vec3, Vec3, int)} in that it's called only on the client side.
+     * This is different then the {@link #onServerFire(ItemStack, EntityLivingBase, WeaponShot, Vec3d, Vec3d, int)} in that it's called only on the client side.
      * @param weapon the weapon.
      * @param shooter the shooter.
      * @param position the starting position of the shot.
@@ -367,7 +373,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
      * @param shot the Weapon shot info of the shot.
      */
     @SideOnly(Side.CLIENT)
-    public abstract void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir,WeaponShot shot);
+    public abstract void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3d position, Vec3d dir, WeaponShot shot);
 
     /**
      * Called when a Phaser Bolt or another projectile has hit something.
@@ -378,7 +384,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
      * @param amount the amount of "hit" there was by the projectile. This is mainly used to control the amount of particles spawned on hit.
      */
     @SideOnly(Side.CLIENT)
-    public abstract void onProjectileHit(MovingObjectPosition hit, ItemStack weapon, World world,float amount);
+    public abstract void onProjectileHit(RayTraceResult hit, ItemStack weapon, World world, float amount);
     //endregion
 
     //region Energy Functions
@@ -502,7 +508,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     //endregion
 
     //region Projectile
-    public PlasmaBolt getDefaultProjectile(ItemStack weapon,EntityLivingBase shooter,Vec3 position,Vec3 dir,WeaponShot shot)
+    public PlasmaBolt getDefaultProjectile(ItemStack weapon, EntityLivingBase shooter, Vec3d position, Vec3d dir, WeaponShot shot)
     {
         PlasmaBolt fire = new PlasmaBolt(shooter.worldObj, shooter,position,dir, shot,getShotSpeed(weapon,shooter));
         fire.setWeapon(weapon);
@@ -520,7 +526,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
         return fire;
     }
 
-    public PlasmaBolt spawnProjectile(ItemStack weapon,EntityLivingBase shooter,Vec3 position,Vec3 dir,WeaponShot shot)
+    public PlasmaBolt spawnProjectile(ItemStack weapon, EntityLivingBase shooter, Vec3d position, Vec3d dir, WeaponShot shot)
     {
         PlasmaBolt fire = getDefaultProjectile(weapon,shooter,position,dir,shot);
         shooter.worldObj.spawnEntityInWorld(fire);
@@ -575,9 +581,9 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     {
         float damage = getCustomFloatStat(weapon,CUSTOM_DAMAGE_TAG,getWeaponBaseDamage(weapon));
         damage = modifyStatFromModules(Reference.WS_DAMAGE,weapon,damage);
-        damage += damage * EnchantmentHelper.getEnchantmentLevel(MatterOverdriveEnchantments.overclock.effectId,weapon) * 0.04f;
+        damage += damage * EnchantmentHelper.getEnchantmentLevel(MatterOverdriveEnchantments.overclock,weapon) * 0.04f;
         damage *= getCustomFloatStat(weapon,CUSTOM_DAMAGE_MULTIPLY_TAG,1);
-        damage += shooter.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage).getAttributeValue();
+        damage += shooter.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
         return damage;
     }
 
@@ -603,7 +609,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     public int getEnergyUse(ItemStack weapon)
     {
         float energyUse = modifyStatFromModules(Reference.WS_AMMO,weapon,getBaseEnergyUse(weapon));
-        energyUse -= energyUse *  EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId,weapon) * 0.04f;
+        energyUse -= energyUse *  EnchantmentHelper.getEnchantmentLevel(Enchantment.getEnchantmentByLocation("unbreaking"),weapon) * 0.04f;
         return Math.max((int)energyUse,0);
     }
 
@@ -660,7 +666,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
     {
         float accuracy = getWeaponBaseAccuracy(weapon,zoomed);
         accuracy = getCustomFloatStat(weapon,CUSTOM_ACCURACY_TAG,accuracy);
-        accuracy += (float)new Vec3(shooter.motionX,shooter.motionY*0.1,shooter.motionZ).lengthVector() * 10;
+        accuracy += (float)new Vec3d(shooter.motionX,shooter.motionY*0.1,shooter.motionZ).lengthVector() * 10;
         accuracy *= shooter.isSneaking() ? 0.6f: 1;
         accuracy = modifyStatFromModules(Reference.WS_ACCURACY,weapon,accuracy);
         if (WeaponHelper.hasModule(Reference.MODULE_SIGHTS,weapon))

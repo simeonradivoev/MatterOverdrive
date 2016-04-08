@@ -18,8 +18,26 @@
 
 package matteroverdrive.handler;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.MOEventDialogConstruct;
 import matteroverdrive.api.events.MOEventDialogInteract;
+import matteroverdrive.api.events.MOEventScan;
+import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
+import matteroverdrive.api.weapon.IWeapon;
+import matteroverdrive.data.quest.PlayerQuestData;
+import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
+import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.items.includes.MOBaseItem;
+import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,24 +45,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.events.MOEventScan;
-import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
-import matteroverdrive.api.weapon.IWeapon;
-import matteroverdrive.data.quest.PlayerQuestData;
-import matteroverdrive.entity.android_player.AndroidPlayer;
-import matteroverdrive.entity.player.MOExtendedProperties;
-import matteroverdrive.init.MatterOverdriveItems;
-import matteroverdrive.items.includes.MOBaseItem;
-import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -70,7 +70,7 @@ public class PlayerEventHandler
     {
         if (event.player instanceof EntityPlayerMP) {
             if (MatterOverdrive.matterRegistry.hasComplitedRegistration) {
-                if (!MinecraftServer.getServer().isSinglePlayer()) {
+                if (!event.player.getServer().isSinglePlayer()) {
 
                     MatterOverdrive.packetPipeline.sendTo(new PacketUpdateMatterRegistry(MatterOverdrive.matterRegistry), (EntityPlayerMP) event.player);
 
@@ -84,11 +84,23 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
+        //used to stop the item refreshing when using weapons and changing their data
+        //this also happens on SMP and stops the beam weapons from working properly
+        //Minecraft stops he using of items each time they change their NBT. This makes is so the weapons refresh and jitter.
+        if (event.phase == TickEvent.Phase.START && event.player.isHandActive() && event.side == Side.CLIENT && event.player.getActiveHand() == EnumHand.MAIN_HAND) {
+            ItemStack itemstack = event.player.inventory.getCurrentItem();
+            if (itemstack != null && itemstack.getItem() instanceof IWeapon && event.player.getItemInUseCount() > 0)
+            {
+                event.player.resetActiveHand();
+                event.player.setActiveHand(EnumHand.MAIN_HAND);
+            }
+        }
+
         if (event.side == Side.CLIENT) {
             versionCheckerHandler.onPlayerTick(event);
         }
 
-        AndroidPlayer player = AndroidPlayer.get(event.player);
+        AndroidPlayer player = MOPlayerCapabilityProvider.GetAndroidCapability(event.player);
         if (player != null && event.phase.equals(TickEvent.Phase.START)) {
             if (event.side == Side.CLIENT) {
                 onAndroidTickClient(player, event);
@@ -98,7 +110,7 @@ public class PlayerEventHandler
             }
         }
 
-        MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
+        MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.player);
         if (extendedProperties != null && event.phase.equals(TickEvent.Phase.START))
         {
             if (event.side == Side.CLIENT)
@@ -107,21 +119,6 @@ public class PlayerEventHandler
             }else
             {
                 extendedProperties.update(Side.SERVER);
-            }
-        }
-
-        //used to stop the item refreshing when using weapons and changing their data
-        //this also happens on SMP and stops the beam weapons from working properly
-        //Minecraft stops he using of items each time they change their NBT. This makes is so the weapons refresh and jitter.
-        if (event.player.isUsingItem() && event.side == Side.CLIENT) {
-            ItemStack itemstack = event.player.inventory.getCurrentItem();
-            int itemUseCount = event.player.getItemInUseCount();
-            if (itemstack != null && itemstack.getItem() instanceof IWeapon && itemUseCount > 0)
-            {
-                event.player.setItemInUse(itemstack,itemUseCount);
-
-                if (Minecraft.getMinecraft().currentScreen != null && event.player.equals(Minecraft.getMinecraft().thePlayer))
-                    event.player.clearItemInUse();
             }
         }
     }
@@ -143,7 +140,7 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerLoadFromFile(net.minecraftforge.event.entity.player.PlayerEvent.LoadFromFile event)
     {
-        AndroidPlayer player = AndroidPlayer.get(event.entityPlayer);
+        AndroidPlayer player = MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntityPlayer());
         if (player != null) {
             player.onPlayerLoad(event);
         }
@@ -152,14 +149,14 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onStartTracking(net.minecraftforge.event.entity.player.PlayerEvent.StartTracking event)
     {
-        if (event.target instanceof EntityPlayer)
+        if (event.getEntityPlayer() != null)
         {
-            AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.target);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntityPlayer());
             if (androidPlayer != null && androidPlayer.isAndroid())
             {
-                androidPlayer.sync(event.entityPlayer, EnumSet.allOf(AndroidPlayer.DataType.class),false);
+                androidPlayer.sync(event.getEntityPlayer(), EnumSet.allOf(AndroidPlayer.DataType.class),false);
             }
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get((EntityPlayer)event.target);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getEntityPlayer());
             if (extendedProperties != null)
             {
                 extendedProperties.sync(EnumSet.allOf(PlayerQuestData.DataType.class));
@@ -199,7 +196,7 @@ public class PlayerEventHandler
                 }
             }else
             {
-                MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.player);
+                MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.player);
                 if (extendedProperties != null)
                 {
                     extendedProperties.onEvent(event);
@@ -211,9 +208,9 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerFlyableFallEvent(PlayerFlyableFallEvent event)
     {
-        if (event.entityPlayer != null)
+        if (event.getEntityPlayer() != null)
         {
-            AndroidPlayer androidPlayer = AndroidPlayer.get(event.entityPlayer);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntity());
             if (androidPlayer != null && androidPlayer.isAndroid())
             {
                 androidPlayer.triggerEventOnStats(event);
@@ -224,9 +221,9 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerScanEvent(MOEventScan event)
     {
-        if (event.getSide() == Side.SERVER && event.entityPlayer != null)
+        if (event.getSide() == Side.SERVER && event.getEntityPlayer() != null)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getEntityPlayer());
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);
@@ -243,7 +240,7 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onBioticStatUse(MOEventBionicStat event)
     {
-        if (event.entityPlayer.worldObj.isRemote)
+        if (event.getEntityPlayer().worldObj.isRemote)
         {
             MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BIOTIC_STATS, GoogleAnalyticsCommon.EVENT_ACTION_BIOTIC_STAT_USE, event.stat.getUnlocalizedName(), event.android.getPlayer());
         }
@@ -252,21 +249,21 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onAnvilRepair(AnvilUpdateEvent event)
     {
-        if (event.left != null && event.right != null && event.left.getItem() == MatterOverdriveItems.portableDecomposer)
+        if (event.getLeft() != null && event.getRight() != null && event.getLeft().getItem() == MatterOverdriveItems.portableDecomposer)
         {
-            event.output = event.left.copy();
-            event.materialCost = 1;
-            event.cost = 3;
-            MatterOverdriveItems.portableDecomposer.addStackToList(event.output,event.right);
+            event.setOutput(event.getLeft().copy());
+            event.setMaterialCost(1);
+            event.setCost(3);
+            MatterOverdriveItems.portableDecomposer.addStackToList(event.getOutput(),event.getRight());
         }
     }
 
     @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent event)
+    public void onPlayerBlockInteract(PlayerInteractEvent event)
     {
-        if (!event.world.isRemote && event.entityPlayer != null)
+        if (!event.getWorld().isRemote && event.getEntityPlayer() != null)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getEntityPlayer());
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);
@@ -277,9 +274,9 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerOpenContainer(PlayerOpenContainerEvent event)
     {
-        if (event.entityPlayer != null && !event.entityPlayer.worldObj.isRemote)
+        if (event.getEntityPlayer() != null && !event.getEntityPlayer().worldObj.isRemote)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getEntityPlayer());
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);
@@ -290,9 +287,9 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onDialogMessageInteract(MOEventDialogInteract event)
     {
-        if (event.entityPlayer != null && event.side.equals(Side.SERVER))
+        if (event.getEntityPlayer() != null && event.side.equals(Side.SERVER))
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getEntityPlayer());
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);
@@ -303,9 +300,9 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onDialogMessageConstruct(MOEventDialogConstruct event)
     {
-        if (event.entityPlayer != null)
+        if (event.getEntityPlayer() != null)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getEntityPlayer());
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);

@@ -18,15 +18,17 @@
 
 package matteroverdrive.gui;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.client.data.Color;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.animation.MOAnimationTimeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -45,11 +47,11 @@ public class GuiQuestHud
     private static final float OBJECTIVES_FADE_TIME = 20;
     private Queue<QuestStack> completedQuestQueue;
     private Queue<QuestStack> startedQuestQueue;
-    private Queue<QuestStack[]> objectivesChangedQueue;
+    private Queue<String> objectivesChangedQueue;
     private String completeQuestName;
     private int completeQuestXp;
     private String newQuestName;
-    private String[] objectivesChanged;
+    private String objectiveChanged;
     private MOAnimationTimeline completeQuestTimeline;
     private MOAnimationTimeline startedQuestTimeline;
     private MOAnimationTimeline objectivesTimeline;
@@ -82,7 +84,7 @@ public class GuiQuestHud
     @SubscribeEvent()
     public void onRenderOverlay(RenderGameOverlayEvent.Post event)
     {
-        if (event.type.equals(RenderGameOverlayEvent.ElementType.ALL))
+        if (event.getType().equals(RenderGameOverlayEvent.ElementType.ALL))
         {
             FontRenderer fontRenderer = ClientProxy.moFontRender;
 
@@ -91,15 +93,15 @@ public class GuiQuestHud
                 float time = completeQuestTimeline.getCurrentValue();
                 Color color = new Color(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
                 GlStateManager.pushMatrix();
-                int y = (int)(event.resolution.getScaledHeight() * 0.15);
+                int y = (int)(event.getResolution().getScaledHeight() * 0.15);
                 int titleWidth = (int) (fontRenderer.getStringWidth(completeQuestName) * 1.5);
-                GlStateManager.translate(event.resolution.getScaledWidth() - titleWidth - 30 - time * 30, y - 20, 0);
+                GlStateManager.translate(event.getResolution().getScaledWidth() - titleWidth - 30 - time * 30, y - 20, 0);
                 GlStateManager.scale(1.5, 1.5, 1.5);
-                fontRenderer.drawStringWithShadow(EnumChatFormatting.BOLD + completeQuestName, 0, 40, color.getColor());
+                fontRenderer.drawStringWithShadow(ChatFormatting.BOLD + completeQuestName, 0, 40, color.getColor());
                 GlStateManager.popMatrix();
-                fontRenderer.drawStringWithShadow("Completed:", event.resolution.getScaledWidth() - titleWidth - 20 - (int) (time * 40), y + 28, color.getColor());
+                fontRenderer.drawStringWithShadow("Completed:", event.getResolution().getScaledWidth() - titleWidth - 20 - (int) (time * 40), y + 28, color.getColor());
                 if (completeQuestXp > 0) {
-                    fontRenderer.drawStringWithShadow(String.format("+%dxp", (int) (time * completeQuestXp)), event.resolution.getScaledWidth() - 50 - (int) (20 * time), y + 58, color.getColor());
+                    fontRenderer.drawStringWithShadow(String.format("+%dxp", (int) (time * completeQuestXp)), event.getResolution().getScaledWidth() - 50 - (int) (20 * time), y + 58, color.getColor());
                 }
             }
             if (startedQuestTimeline.isPlaying() && newQuestName != null)
@@ -107,31 +109,28 @@ public class GuiQuestHud
                 float time = startedQuestTimeline.getCurrentValue();
                 Color color = new Color(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 19 + (int) (235f * time));
                 GlStateManager.pushMatrix();
-                int y = (int)(event.resolution.getScaledHeight() * 0.65);
+                int y = (int)(event.getResolution().getScaledHeight() * 0.65);
                 GlStateManager.translate(-10 + time * 30, y, 0);
                 GlStateManager.scale(1.5, 1.5, 1.5);
-                fontRenderer.drawStringWithShadow(EnumChatFormatting.BOLD + newQuestName, 0, 0, color.getColor());
+                fontRenderer.drawStringWithShadow(ChatFormatting.BOLD + newQuestName, 0, 0, color.getColor());
                 GlStateManager.popMatrix();
                 fontRenderer.drawStringWithShadow("Started:",(int) (time * 20), y-12, color.getColor());
             }
-            if (objectivesTimeline.isPlaying() && objectivesChanged != null)
+            if (objectivesTimeline.isPlaying() && objectiveChanged != null)
             {
                 float time = objectivesTimeline.getCurrentValue();
                 Color color = new Color(Reference.COLOR_HOLO.getIntR(), Reference.COLOR_HOLO.getIntG(), Reference.COLOR_HOLO.getIntB(), 20 + (int) (235f * time));
                 int objectivesY = 0;
-                for (String anObjectivesChanged : objectivesChanged)
+                if (objectiveChanged != null)
                 {
-                    if (anObjectivesChanged != null)
-                    {
-                        fontRenderer.drawStringWithShadow(String.format("[ %s ]", anObjectivesChanged), (int) (time * 20), (int) (event.resolution.getScaledHeight() * 0.5) + objectivesY, color.getColor());
-                        objectivesY += fontRenderer.FONT_HEIGHT + 2;
-                    }
+                    fontRenderer.drawStringWithShadow(String.format("[ %s ]", objectiveChanged), (int) (time * 20), (int) (event.getResolution().getScaledHeight() * 0.5) + objectivesY, color.getColor());
+                    objectivesY += fontRenderer.FONT_HEIGHT + 2;
                 }
             }
 
-            startedQuestTimeline.tick(event.partialTicks);
-            completeQuestTimeline.tick(event.partialTicks);
-            objectivesTimeline.tick(event.partialTicks);
+            startedQuestTimeline.tick(event.getPartialTicks());
+            completeQuestTimeline.tick(event.getPartialTicks());
+            objectivesTimeline.tick(event.getPartialTicks());
         }
     }
 
@@ -143,14 +142,14 @@ public class GuiQuestHud
             startNewQuestNotification(startedQuestQueue.poll());
         }
         if (!objectivesChangedQueue.isEmpty() && !objectivesTimeline.isPlaying()) {
-            QuestStack[] questStacks = objectivesChangedQueue.poll();
-            startObjectivesChanged(questStacks[0], questStacks[1]);
+            String objective = objectivesChangedQueue.poll();
+            startObjectivesChanged(objective);
         }
     }
 
     public void startCompleteQuestNotification(QuestStack questStack)
     {
-        Minecraft.getMinecraft().thePlayer.playSound(Reference.MOD_ID + ":" + "quest_complete",1,1);
+        Minecraft.getMinecraft().thePlayer.playSound(MatterOverdriveSounds.guiQuestComplete,1,1);
         if (questStack != null) {
             completeQuestName = questStack.getTitle(Minecraft.getMinecraft().thePlayer);
             completeQuestXp = questStack.getXP(Minecraft.getMinecraft().thePlayer);
@@ -169,7 +168,7 @@ public class GuiQuestHud
 
     public void startNewQuestNotification(QuestStack questStack)
     {
-        Minecraft.getMinecraft().thePlayer.playSound(Reference.MOD_ID + ":" + "quest_started",1,1);
+        Minecraft.getMinecraft().thePlayer.playSound(MatterOverdriveSounds.guiQuestStarted,1,1);
         if (questStack != null)
         {
             newQuestName = questStack.getTitle(Minecraft.getMinecraft().thePlayer);
@@ -183,25 +182,17 @@ public class GuiQuestHud
         startedQuestTimeline.replay();
     }
 
-    public void startObjectivesChanged(QuestStack oldQuestStack,QuestStack newQuestStack)
+    public void startObjectivesChanged(String objective)
     {
         int showTime = 0;
-        if (newQuestStack != null)
+        if (objective != null)
         {
-            int objectiveCount = newQuestStack.getObjectivesCount(Minecraft.getMinecraft().thePlayer);
-            objectivesChanged = new String[objectiveCount];
-            for (int i = 0;i < objectiveCount;i++)
-            {
-                String newObjective = newQuestStack.getObjective(Minecraft.getMinecraft().thePlayer,i);
-                //String oldObjective = oldQuestStack.getObjective(Minecraft.getMinecraft().thePlayer,i);
-                objectivesChanged[i] = newObjective;
-                showTime = Math.max(showTime,objectivesChanged[i].length() * 4);
-            }
-
+            objectiveChanged = objective;
+            showTime = objective.length() * 4;
         }
         else
         {
-            objectivesChanged = new String[]{"Objectives changed 0/5","Objectives changed 0/5"};
+            objectiveChanged = "Objectives changed 0/5";
         }
 
         objectivesTimeline.getSlice(1).setLength(showTime);
@@ -219,9 +210,12 @@ public class GuiQuestHud
         startedQuestQueue.add(questStack);
     }
 
-    public void addObjectivesChanged(QuestStack oldQuestStack,QuestStack newQestStack)
+    public void addObjectivesChanged(QuestStack oldQuestStack, QuestStack newQestStack, QuestState questState)
     {
-        objectivesChangedQueue.add(new QuestStack[]{oldQuestStack,newQestStack});
+        for (int i = 0;i < questState.getObjectiveIds().length;i++)
+        {
+            objectivesChangedQueue.add(newQestStack.getObjective(Minecraft.getMinecraft().thePlayer,questState.getObjectiveIds()[i]));
+        }
         if (objectivesTimeline.getTime() < OBJECTIVES_NOTIFICATION_TIME-OBJECTIVES_FADE_TIME)
             objectivesTimeline.setTime(OBJECTIVES_NOTIFICATION_TIME-OBJECTIVES_FADE_TIME);
     }

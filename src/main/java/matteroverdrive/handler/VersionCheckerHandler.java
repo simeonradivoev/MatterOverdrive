@@ -20,6 +20,7 @@ package matteroverdrive.handler;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.thread.VersionCheckThread;
@@ -27,10 +28,9 @@ import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -61,9 +61,10 @@ public class VersionCheckerHandler implements IConfigSubscriber {
         }
 
         if (FMLCommonHandler.instance().getSide() == Side.SERVER && FMLCommonHandler.instance().getMinecraftServerInstance().isServerRunning()) {
-            if (!MinecraftServer.getServer().getConfigurationManager().canSendCommands(event.player.getGameProfile())) {
+            // TODO: 3/25/2016 Find how to acccess the configuration manager
+            /*if (!event.player.getServer().getConfigurationManager().canSendCommands(event.player.getGameProfile())) {
                 return;
-            }
+            }*/
         }
 
         if (lastPoll > 0) {
@@ -136,24 +137,24 @@ public class VersionCheckerHandler implements IConfigSubscriber {
 
             if (modDate.before(websiteDate))
             {
-                ChatComponentText chat = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.WHITE + MOStringHelper.translateToLocal("alert.new_update"));
-                ChatStyle style = new ChatStyle();
+                TextComponentString chat = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.WHITE + MOStringHelper.translateToLocal("alert.new_update"));
+                Style style = new Style();
                 player.addChatMessage(chat);
 
-                chat = new ChatComponentText("");
-                IChatComponent versionName = new ChatComponentText(root.get("title").getAsString() + " ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA));
+                chat = new TextComponentString("");
+                ITextComponent versionName = new TextComponentString(root.get("title").getAsString() + " ").setChatStyle(new Style().setColor(TextFormatting.AQUA));
                 chat.appendSibling(versionName);
-                chat.appendText(EnumChatFormatting.WHITE + "[");
+                chat.appendText(ChatFormatting.WHITE + "[");
                 style.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Reference.DOWNLOAD_URL));
-                style.setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentTranslation("info." + Reference.MOD_ID + ".updater.hover").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))));
-                style.setColor(EnumChatFormatting.GREEN);
-                chat.appendSibling(new ChatComponentTranslation("info." + Reference.MOD_ID + ".updater.download")).setChatStyle(style);
-                chat.appendText(EnumChatFormatting.WHITE + "]");
+                style.setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.hover").setChatStyle(new Style().setColor(TextFormatting.YELLOW))));
+                style.setColor(TextFormatting.GREEN);
+                chat.appendSibling(new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.download")).setChatStyle(style);
+                chat.appendText(ChatFormatting.WHITE + "]");
                 player.addChatMessage(chat);
 
-                chat = new ChatComponentText(root.get("excerpt").getAsString().replaceAll("<.*?>", ""));
-                style = new ChatStyle();
-                style.setColor(EnumChatFormatting.GRAY);
+                chat = new TextComponentString(root.get("excerpt").getAsString().replaceAll("<.*?>", ""));
+                style = new Style();
+                style.setColor(TextFormatting.GRAY);
                 chat.setChatStyle(style);
                 player.addChatMessage(chat);
                 return true;
@@ -171,6 +172,6 @@ public class VersionCheckerHandler implements IConfigSubscriber {
     {
         String comment = "Should Matter Overdrive check for newer versions, every time the world starts";
         checkForUpdates = config.getBool(ConfigurationHandler.KEY_VERSION_CHECK, ConfigurationHandler.CATEGORY_CLIENT,true,comment);
-        config.config.get(ConfigurationHandler.CATEGORY_CLIENT, ConfigurationHandler.KEY_VERSION_CHECK,true).comment = comment;
+        config.config.get(ConfigurationHandler.CATEGORY_CLIENT, ConfigurationHandler.KEY_VERSION_CHECK,true).setComment(comment);
     }
 }

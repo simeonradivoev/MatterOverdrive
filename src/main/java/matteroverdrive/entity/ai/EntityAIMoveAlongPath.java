@@ -21,7 +21,7 @@ package matteroverdrive.entity.ai;
 import matteroverdrive.api.entity.IPathableMob;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Created by Simeon on 12/10/2015.
@@ -63,7 +63,7 @@ public class EntityAIMoveAlongPath extends EntityAIBase
             {
                 if (!pathableMob.getEntity().getNavigator().tryMoveToXYZ(pathableMob.getCurrentTarget().xCoord,pathableMob.getCurrentTarget().yCoord,pathableMob.getCurrentTarget().zCoord,this.movementSpeed))
                 {
-                    Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(pathableMob.getEntity(), 8, 2, pathableMob.getCurrentTarget());
+                    Vec3d vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(pathableMob.getEntity(), 8, 2, pathableMob.getCurrentTarget());
 
                     if (vec3 == null)
                     {

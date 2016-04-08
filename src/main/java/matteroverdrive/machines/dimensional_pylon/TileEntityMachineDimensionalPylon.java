@@ -1,5 +1,6 @@
 package matteroverdrive.machines.dimensional_pylon;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
@@ -9,6 +10,7 @@ import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.data.MachineEnergyStorage;
 import matteroverdrive.fluids.FluidMatterPlasma;
 import matteroverdrive.fx.LightningCircle;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
@@ -22,7 +24,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -57,9 +66,9 @@ public class TileEntityMachineDimensionalPylon extends MOTileEntityMachineMatter
     }
 
     @Override
-    public String getSound()
+    public SoundEvent getSound()
     {
-        return "pylon";
+        return MatterOverdriveSounds.blocksPylon;
     }
 
     @Override
@@ -391,8 +400,8 @@ public class TileEntityMachineDimensionalPylon extends MOTileEntityMachineMatter
                     return true;
                 } else
                 {
-                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights").replace("$0", ((MOTileEntityMachine) mainPylon).getDisplayName().toString()));
-                    message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
+                    TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights").replace("$0", ((MOTileEntityMachine) mainPylon).getDisplayName().toString()));
+                    message.setChatStyle(new Style().setColor(TextFormatting.RED));
                     entityPlayer.addChatMessage(message);
                 }
             }

@@ -8,8 +8,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.obj.OBJLoader;
 
-import java.io.IOException;
-
 /**
  * Created by Simeon on 3/19/2015.
  */
@@ -26,8 +24,8 @@ public class TileEntityRendererPatterStorage extends TileEntitySpecialRenderer<T
         ventTexture = new ResourceLocation(Reference.PATH_BLOCKS + "vent.png");
         try
         {
-            model = OBJLoader.instance.loadModel(new ResourceLocation(Reference.MODEL_PATTERN_STORAGE));
-        } catch (IOException e)
+            model = OBJLoader.INSTANCE.loadModel(new ResourceLocation(Reference.MODEL_PATTERN_STORAGE));
+        } catch (Exception e)
         {
             e.printStackTrace();
         }

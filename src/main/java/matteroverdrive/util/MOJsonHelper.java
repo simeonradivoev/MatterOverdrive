@@ -7,8 +7,8 @@ import matteroverdrive.api.exceptions.MORuntimeException;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
@@ -128,7 +128,7 @@ public class MOJsonHelper
         return def;
     }
 
-    public static Vec3 getVec3(JsonObject jsonObject,String key,Vec3 def)
+    public static Vec3d getVec3(JsonObject jsonObject, String key, Vec3d def)
     {
         if (jsonObject.has(key))
         {
@@ -143,7 +143,7 @@ public class MOJsonHelper
                         double x = array.get(0).getAsDouble();
                         double y = array.get(1).getAsDouble();
                         double z = array.get(2).getAsDouble();
-                        return new Vec3(x,y,z);
+                        return new Vec3d(x,y,z);
                     }catch (Exception e)
                     {
                         MOLog.log(Level.ERROR,e,"All elements in Vec3 array must be decimals");

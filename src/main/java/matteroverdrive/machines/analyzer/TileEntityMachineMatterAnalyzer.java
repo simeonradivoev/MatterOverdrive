@@ -27,6 +27,7 @@ import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.MatterSlot;
 import matteroverdrive.data.transport.MatterNetwork;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.components.ComponentMatterNetworkConfigs;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
@@ -36,6 +37,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 
 import java.util.EnumSet;
 
@@ -168,7 +170,7 @@ public class TileEntityMachineMatterAnalyzer extends MOTileEntityMachineEnergy i
         return taskProcessingComponent.isAnalyzing();
     }
     @Override
-    public String getSound() {return "analyzer";}
+    public SoundEvent getSound() {return MatterOverdriveSounds.analyzer;}
     @Override
     public boolean hasSound() {return true;}
     @Override

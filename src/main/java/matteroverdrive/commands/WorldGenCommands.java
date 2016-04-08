@@ -7,7 +7,8 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +32,12 @@ public class WorldGenCommands extends CommandBase
     }
 
     @Override
-    public void processCommand(ICommandSender commandSender, String[] parameters) throws PlayerNotFoundException
+    public void execute(MinecraftServer server,ICommandSender commandSender, String[] parameters) throws PlayerNotFoundException
     {
         EntityPlayer entityPlayer = null;
         if (parameters.length >= 4)
         {
-            entityPlayer = getPlayer(commandSender,parameters[3]);
+            entityPlayer = getPlayer(server,commandSender,parameters[3]);
         }else if (commandSender instanceof EntityPlayer)
         {
             entityPlayer = (EntityPlayer)commandSender;
@@ -70,7 +71,7 @@ public class WorldGenCommands extends CommandBase
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         List<String> commands = new ArrayList<>();
 

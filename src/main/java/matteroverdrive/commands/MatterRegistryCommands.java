@@ -18,6 +18,7 @@
 
 package matteroverdrive.commands;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.matter.DamageAwareStackHandler;
 import matteroverdrive.data.matter.ItemHandler;
@@ -28,9 +29,10 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -58,44 +60,44 @@ public class MatterRegistryCommands extends CommandBase
     }
 
     @Override
-    public void processCommand(ICommandSender commandSender, String[] parameters) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender commandSender, String[] args) throws CommandException
     {
-        if (parameters.length == 1)
+        if (args.length == 1)
         {
-            if (parameters[0].equalsIgnoreCase("recalculate"))
+            if (args[0].equalsIgnoreCase("recalculate"))
             {
                 MatterOverdrive.matterRegistry.getItemEntires().clear();
                 MatterOverdriveMatter.registerBasic(MatterOverdrive.configHandler);
                 MatterOverdrive.matterRegistrationHandler.runCalculationThread(commandSender.getEntityWorld());
             }
         }
-        else if (parameters.length == 2)
+        else if (args.length == 2)
         {
-            if (parameters[0].equalsIgnoreCase("blacklist"))
+            if (args[0].equalsIgnoreCase("blacklist"))
             {
                 ItemStack stack;
-                if (parameters.length >= 4)
+                if (args.length >= 4)
 				{
-                    stack = getPlayer(commandSender, parameters[3]).getCurrentEquippedItem();
+                    stack = getPlayer(server,commandSender, args[3]).getHeldItem(EnumHand.MAIN_HAND);
                 }
 				else
                 {
-                    stack = getPlayer(commandSender,commandSender.getName()).getCurrentEquippedItem();
+                    stack = getPlayer(server,commandSender,commandSender.getName()).getHeldItem(EnumHand.MAIN_HAND);
                 }
 
                 String key;
                 if (stack != null)
 				{
-                    if (parameters[1].equalsIgnoreCase("itemstack"))
+                    if (args[1].equalsIgnoreCase("itemstack"))
 					{
                         key = stack.getItem().getRegistryName() + "/" + stack.getItemDamage();
                         MatterOverdrive.matterRegistry.register(stack.getItem(),new DamageAwareStackHandler(stack.getItemDamage(),0,true));
                     }
-					else if (parameters[1].equalsIgnoreCase("item")) {
-                        key = stack.getItem().getRegistryName();
+					else if (args[1].equalsIgnoreCase("item")) {
+                        key = stack.getItem().getRegistryName().toString();
                         MatterOverdrive.matterRegistry.register(stack.getItem(),new ItemHandler(0,true));
                     }
-					else if (parameters[1].equalsIgnoreCase("ore"))
+					else if (args[1].equalsIgnoreCase("ore"))
                     {
                         int[] orenames = OreDictionary.getOreIDs(stack);
                         if (orenames != null && orenames.length > 0)
@@ -105,7 +107,7 @@ public class MatterRegistryCommands extends CommandBase
                         }
 						else
                         {
-                            throw new CommandException("Could not find an ore dictionary entry", parameters[1]);
+                            throw new CommandException("Could not find an ore dictionary entry", args[1]);
                         }
                     }
                     else
@@ -118,42 +120,42 @@ public class MatterRegistryCommands extends CommandBase
                     newBlacklist[oldBlacklist.length] = key;
                     MatterOverdrive.configHandler.config.get(ConfigurationHandler.CATEGORY_MATTER, ConfigurationHandler.KEY_MBLACKLIST, new String[]{}, "").set(newBlacklist);
                     MatterOverdrive.configHandler.save();
-                    commandSender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "[" + key + "]" + EnumChatFormatting.RESET + " Added $s to matter blacklist and config.\nYou must recalculate the registry for changes to take effect.\nUse /matter_registry recalculate."));
+                    commandSender.addChatMessage(new TextComponentString(ChatFormatting.GOLD + "[" + key + "]" + ChatFormatting.RESET + " Added $s to matter blacklist and config.\nYou must recalculate the registry for changes to take effect.\nUse /matter_registry recalculate."));
                 }
 				else
                 {
-                    throw new CommandException("Player not holding any item", parameters[1]);
+                    throw new CommandException("Player not holding any item", args[1]);
                 }
             }
         }
-        else if (parameters.length >= 3)
+        else if (args.length >= 3)
         {
-            if (parameters[0].equalsIgnoreCase("register"))
+            if (args[0].equalsIgnoreCase("register"))
             {
-                int matter = parseInt(parameters[2]);
+                int matter = parseInt(args[2]);
                 ItemStack stack;
-                if (parameters.length >= 4)
+                if (args.length >= 4)
 				{
-                    stack = getPlayer(commandSender, parameters[3]).getCurrentEquippedItem();
+                    stack = getPlayer(server,commandSender, args[3]).getHeldItem(EnumHand.MAIN_HAND);
                 }
 				else
                 {
-                    stack = getPlayer(commandSender,commandSender.getName()).getCurrentEquippedItem();
+                    stack = getPlayer(server,commandSender,commandSender.getName()).getHeldItem(EnumHand.MAIN_HAND);
                 }
 
                 if (stack != null)
 				{
                     String key;
-                    if (parameters[1].equalsIgnoreCase("itemstack"))
+                    if (args[1].equalsIgnoreCase("itemstack"))
                     {
                         key = stack.getItem().getRegistryName() + "/" + stack.getItemDamage();
                         MatterOverdrive.matterRegistry.register(stack.getItem(),new DamageAwareStackHandler(stack.getItemDamage(),matter));
 
-                    } else if (parameters[1].equalsIgnoreCase("item")) {
-                        key = stack.getItem().getRegistryName();
+                    } else if (args[1].equalsIgnoreCase("item")) {
+                        key = stack.getItem().getRegistryName().toString();
                         MatterOverdrive.matterRegistry.register(stack.getItem(),new ItemHandler(matter));
                     }
-                    else if (parameters[1].equalsIgnoreCase("ore"))
+                    else if (args[1].equalsIgnoreCase("ore"))
                     {
                         int[] oreNames = OreDictionary.getOreIDs(stack);
                         if (oreNames != null && oreNames.length > 0)
@@ -171,18 +173,18 @@ public class MatterRegistryCommands extends CommandBase
 
                     MatterOverdrive.configHandler.setInt(key, ConfigurationHandler.CATEGORY_NEW_ITEMS,matter);
                     MatterOverdrive.configHandler.save();
-                    commandSender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "[" + key + "]"+ EnumChatFormatting.RESET +" Added $s to matter registry and config.\nYou can now recalculated the registry.\nUse /matter_registry recalculate."));
+                    commandSender.addChatMessage(new TextComponentString(ChatFormatting.GOLD + "[" + key + "]"+ ChatFormatting.RESET +" Added $s to matter registry and config.\nYou can now recalculated the registry.\nUse /matter_registry recalculate."));
                 }
 				else
                 {
-                    throw new CommandException("player not holding any item", parameters[1]);
+                    throw new CommandException("player not holding any item", args[1]);
                 }
             }
         }
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender commandSender, String[] parameters, BlockPos pos)
+    public List getTabCompletionOptions(MinecraftServer server,ICommandSender commandSender, String[] parameters, BlockPos pos)
     {
         List<String> commands = new ArrayList<>();
 

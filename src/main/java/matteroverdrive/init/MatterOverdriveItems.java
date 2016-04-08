@@ -18,13 +18,9 @@
 
 package matteroverdrive.init;
 
-import matteroverdrive.data.matter.ItemHandler;
-import matteroverdrive.items.weapon.module.*;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
+import matteroverdrive.data.matter.ItemHandler;
 import matteroverdrive.items.*;
 import matteroverdrive.items.android.RougeAndroidParts;
 import matteroverdrive.items.android.TritaniumSpine;
@@ -37,240 +33,120 @@ import matteroverdrive.items.starmap.*;
 import matteroverdrive.items.tools.TritaniumAxe;
 import matteroverdrive.items.tools.TritaniumPickaxe;
 import matteroverdrive.items.weapon.*;
+import matteroverdrive.items.weapon.module.*;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.*;
-import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraftforge.common.ChestGenHooks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.lang.reflect.Field;
 
 public class MatterOverdriveItems
 {
-	public static MOBaseItem matter_scanner;
-	public static ItemFood emergency_ration;
-    public static EarlGrayTea earl_gray_tea;
-    public static RomulanAle romulan_ale;
-	public static MOBaseItem me_conversion_matrix;
-	public static Phaser phaser;
-	public static Battery battery;
-    public static Battery hc_battery;
-	public static Battery creative_battery;
-	public static MatterDust matter_dust;
-	public static MatterDust matter_dust_refined;
-    public static IsolinearCircuit isolinear_circuit;
-    public static MOBaseItem h_compensator;
-    public static MOBaseItem integration_matrix;
-    public static MOBaseItem machine_casing;
-    public static MOBaseItem s_magnet;
-    public static MOBaseItem dilithium_ctystal;
-    public static MOBaseItem tritanium_ingot;
-    public static MOBaseItem tritanium_dust;
-    public static MOBaseItem tritanium_plate;
-    public static PatternDrive pattern_drive;
-    public static ItemUpgrade item_upgrade;
-    public static WeaponModuleColor weapon_module_color;
-    public static WeaponModuleBarrel weapon_module_barrel;
-    public static SecurityProtocol security_protocol;
-    public static SpacetimeEqualizer spacetime_equalizer;
-    public static Wrench wrench;
-    public static RougeAndroidParts androidParts;
-    public static MOBaseItem forceFieldEmitter;
-    public static ShipFactory shipFactory;
-    public static ItemScoutShip scoutShip;
-    public static ItemColonizerShip colonizerShip;
-    public static ItemBuildingBase buildingBase;
-    public static AndroidPill androidPill;
-    public static NetworkFlashDrive networkFlashDrive;
-    //public static CreativePatternDrive creativePatternDrive;
-    public static PhaserRifle phaserRifle;
-    public static EnergyPack energyPack;
-    public static TransportFlashDrive transportFlashDrive;
-    public static MatterContainer matterContainerFull;
-    public static MatterContainer matterContainer;
-    public static DataPad dataPad;
-    public static TritaniumSpine tritaniumSpine;
-    public static MOBaseItem tritanium_nugget;
-    public static OmniTool omniTool;
-    public static TritaniumAxe tritaniumAxe;
-    public static TritaniumPickaxe tritaniumPickaxe;
-    public static ItemSword tritaniumSword;
-    public static ItemHoe tritaniumHoe;
-    public static TritaniumArmor tritaniumHelemet;
-    public static TritaniumArmor tritaniumChestplate;
-    public static TritaniumArmor tritaniumLeggings;
-    public static TritaniumArmor tritaniumBoots;
-    public static Contract contract;
-    public static PlasmaShotgun plasmaShotgun;
-    public static IonSniper ionSniper;
-    public static WeaponModuleSniperScope sniperScope;
-    public static ItemBuildingResidential buildingResidential;
-    public static ItemBuildingMatterExtractor buildingMatterExtractor;
-    public static ItemBuildingShipHangar buildingShipHangar;
-    public static ItemBuildingPowerGenerator buildingPowerGenerator;
-    public static MOBaseItem weaponHandle;
-    public static MOBaseItem weaponReceiver;
-    public static MOBaseItem plasmaCore;
-    public static PortableDecomposer portableDecomposer;
-    public static WeaponModuleRicochet weaponModuleRicochet;
-    public static WeaponModuleHoloSights weaponModuleHoloSights;
+    public final static Item.ToolMaterial toolMaterialTritanium = EnumHelper.addToolMaterial("tritanium",2,3122,6f,2f,14);
+    public final static ItemArmor.ArmorMaterial armorMaterialTritanium = EnumHelper.addArmorMaterial("tritanium","tritanium",66,new int[]{4, 9, 7, 4}, 20, null);
 
-    public static Item.ToolMaterial toolMaterialTritanium;
-    public static ItemArmor.ArmorMaterial armorMaterialTritanium;
+	public final static MOBaseItem matter_scanner = new MatterScanner("matter_scanner");
+	public final static ItemFood emergency_ration = (ItemFood)new ItemFood(8,0.8F,false).setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive_food).setRegistryName(new ResourceLocation(Reference.MOD_ID,"emergency_ration"));
+    public final static EarlGrayTea earl_gray_tea = new EarlGrayTea("earl_gray_tea");
+    public final static RomulanAle romulan_ale = new RomulanAle("romulan_ale");
+	public final static MOBaseItem me_conversion_matrix = new MOBaseItem("me_conversion_matrix");
+	public final static Phaser phaser = new Phaser("phaser");
+	public final static Battery battery = new Battery("battery", 1 << 19,Reference.COLOR_MATTER,400,800);
+    public final static Battery hc_battery = new Battery("hc_battery",1 << 20,Reference.COLOR_YELLOW_STRIPES,4096,4096);
+	public final static Battery creative_battery = new CreativeBattery("creative_battery",1 << 24,Reference.COLOR_HOLO_RED,8192,8192);
+	public final static MatterDust matter_dust =  new MatterDust("matter_dust",false);
+	public final static MatterDust matter_dust_refined = new MatterDust("matter_dust_refined",true);
+    public final static IsolinearCircuit isolinear_circuit = new IsolinearCircuit("isolinear_circuit");
+    public final static MOBaseItem h_compensator = new MOBaseItem("h_compensator");
+    public final static MOBaseItem integration_matrix = new MOBaseItem("integration_matrix");
+    public final static MOBaseItem machine_casing = new MOBaseItem("machine_casing");
+    public final static MOBaseItem s_magnet = new MOBaseItem("s_magnet");
+    public final static MOBaseItem dilithium_ctystal = new MOBaseItem("dilithium_crystal");
+    public final static MOBaseItem tritanium_ingot = new MOBaseItem("tritanium_ingot");
+    public final static MOBaseItem tritanium_dust = new MOBaseItem("tritanium_dust");
+    public final static MOBaseItem tritanium_plate = new MOBaseItem("tritanium_plate");
+    public final static PatternDrive pattern_drive = new PatternDrive("pattern_drive",2);
+    public final static ItemUpgrade item_upgrade = new ItemUpgrade("upgrade");
+    public final static WeaponModuleColor weapon_module_color = new WeaponModuleColor("weapon_module_color");
+    public final static WeaponModuleBarrel weapon_module_barrel = new WeaponModuleBarrel("weapon_module_barrel");
+    public final static SecurityProtocol security_protocol = new SecurityProtocol("security_protocol");
+    public final static SpacetimeEqualizer spacetime_equalizer = new SpacetimeEqualizer("spacetime_equalizer");
+    public final static Wrench wrench = new Wrench("tritanium_wrench");
+    public final static RougeAndroidParts androidParts = new RougeAndroidParts("rogue_android_part");
+    public final static MOBaseItem forceFieldEmitter = new MOBaseItem("forcefield_emitter");
+    public final static ShipFactory shipFactory = new ShipFactory("ship_factory");
+    public final static ItemScoutShip scoutShip = new ItemScoutShip("scout_ship");
+    public final static ItemColonizerShip colonizerShip = new ItemColonizerShip("ship_colonizer");
+    public final static ItemBuildingBase buildingBase = new ItemBuildingBase("building_base");
+    public final static AndroidPill androidPill = new AndroidPill("android_pill");
+    public final static NetworkFlashDrive networkFlashDrive = new NetworkFlashDrive("network_flash_drive",Reference.COLOR_YELLOW_STRIPES);
+    //public static CreativePatternDrive creativePatternDrive;
+    public final static PhaserRifle phaserRifle = new PhaserRifle("phaser_rifle");
+    public final static EnergyPack energyPack = new EnergyPack("energy_pack");
+    public final static TransportFlashDrive transportFlashDrive = new TransportFlashDrive("transport_flash_drive",Reference.COLOR_HOLO_GREEN);
+    public final static MatterContainer matterContainerFull = new MatterContainer("matter_container_full",true);
+    public final static MatterContainer matterContainer = new MatterContainer("matter_container",false);
+    public final static DataPad dataPad = new DataPad("data_pad");
+    public final static TritaniumSpine tritaniumSpine = new TritaniumSpine("tritainum_spine");
+    public final static MOBaseItem tritanium_nugget = new MOBaseItem("tritanium_nugget");
+    public final static OmniTool omniTool = new OmniTool("omni_tool");
+    public final static TritaniumAxe tritaniumAxe = (TritaniumAxe)new TritaniumAxe("tritanium_axe").setRegistryName(new ResourceLocation(Reference.MOD_ID,"tritanium_axe"));
+    public final static TritaniumPickaxe tritaniumPickaxe = (TritaniumPickaxe)new TritaniumPickaxe("tritanium_pickaxe").setRegistryName(new ResourceLocation(Reference.MOD_ID,"tritanium_pickaxe"));
+    public final static ItemSword tritaniumSword = (ItemSword)new ItemSword(toolMaterialTritanium).setUnlocalizedName("tritanium_sword").setRegistryName(new ResourceLocation(Reference.MOD_ID,"tritanium_sword"));
+    public final static ItemHoe tritaniumHoe = (ItemHoe)new ItemHoe(toolMaterialTritanium).setUnlocalizedName("tritanium_hoe").setRegistryName(new ResourceLocation(Reference.MOD_ID,"tritanium_hoe"));
+    public final static TritaniumArmor tritaniumHelemet = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2, EntityEquipmentSlot.HEAD).setUnlocalizedName("tritanium_helmet").setRegistryName(new ResourceLocation(Reference.MOD_ID,"tritanium_helmet"));
+    public final static TritaniumArmor tritaniumChestplate = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,EntityEquipmentSlot.CHEST).setUnlocalizedName("tritanium_chestplate").setRegistryName(new ResourceLocation(Reference.MOD_ID,"tritanium_chestplate"));
+    public final static TritaniumArmor tritaniumLeggings = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,EntityEquipmentSlot.LEGS).setUnlocalizedName("tritanium_leggings").setRegistryName(new ResourceLocation(Reference.MOD_ID,"tritanium_leggings"));
+    public final static TritaniumArmor tritaniumBoots = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,EntityEquipmentSlot.FEET).setUnlocalizedName("tritanium_boots").setRegistryName(new ResourceLocation(Reference.MOD_ID,"tritanium_boots"));
+    public final static Contract contract = new Contract("contract");
+    public final static PlasmaShotgun plasmaShotgun  = new PlasmaShotgun("plasma_shotgun");
+    public final static IonSniper ionSniper = new IonSniper("ion_sniper");
+    public final static WeaponModuleSniperScope sniperScope = new WeaponModuleSniperScope("sniper_scope");
+    public final static ItemBuildingResidential buildingResidential = new ItemBuildingResidential("building_residential");
+    public final static ItemBuildingMatterExtractor buildingMatterExtractor = new ItemBuildingMatterExtractor("building_matter_extractor");
+    public final static ItemBuildingShipHangar buildingShipHangar = new ItemBuildingShipHangar("building_ship_hangar");
+    public final static ItemBuildingPowerGenerator buildingPowerGenerator = new ItemBuildingPowerGenerator("building_power_generator");
+    public final static MOBaseItem weaponHandle = new MOBaseItem("weapon_handle");
+    public final static MOBaseItem weaponReceiver = new MOBaseItem("weapon_receiver");
+    public final static MOBaseItem plasmaCore = new MOBaseItem("plasma_core");
+    public final static PortableDecomposer portableDecomposer = new PortableDecomposer("portable_decomposer",128000,256,512,0.1f);
+    public final static WeaponModuleRicochet weaponModuleRicochet = new WeaponModuleRicochet("weapon_module_ricochet");
+    public final static WeaponModuleHoloSights weaponModuleHoloSights = new WeaponModuleHoloSights("weapon_module_holo_sights");
 
 	public static void init(FMLPreInitializationEvent event)
 	{
-        toolMaterialTritanium = EnumHelper.addToolMaterial("tritanium",2,3122,6f,2f,14);
-        armorMaterialTritanium = EnumHelper.addArmorMaterial("tritanium","tritanium",66,new int[]{4, 9, 7, 4}, 20);
-
-		matter_dust = new MatterDust("matter_dust",false);
-		matter_dust_refined = new MatterDust("matter_dust_refined",true);
-		matter_scanner = new MatterScanner("matter_scanner");
-		battery = new Battery("battery", 1 << 19,Reference.COLOR_MATTER,400,800);
-		creative_battery = new CreativeBattery("creative_battery",1 << 24,Reference.COLOR_HOLO_RED,8192,8192);
-        hc_battery = new Battery("hc_battery",1 << 20,Reference.COLOR_YELLOW_STRIPES,4096,4096);
-		phaser = new Phaser("phaser");
-		emergency_ration = new ItemFood(8,0.8F,false);
-		emergency_ration.setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
-        earl_gray_tea = new EarlGrayTea("earl_gray_tea");
-		romulan_ale = new RomulanAle("romulan_ale");
-		me_conversion_matrix = new MOBaseItem("me_conversion_matrix");
-        isolinear_circuit = new IsolinearCircuit("isolinear_circuit");
-        item_upgrade = new ItemUpgrade("upgrade");
-        h_compensator = new MOBaseItem("h_compensator");
-        integration_matrix = new MOBaseItem("integration_matrix");
-        machine_casing = new MOBaseItem("machine_casing");
-        s_magnet = new MOBaseItem("s_magnet");
-        dilithium_ctystal = new MOBaseItem("dilithium_crystal");
-        tritanium_ingot = new MOBaseItem("tritanium_ingot");
         toolMaterialTritanium.setRepairItem(new ItemStack(tritanium_ingot));
         armorMaterialTritanium.customCraftingMaterial = tritanium_ingot;
-        tritanium_dust = new MOBaseItem("tritanium_dust");
-        tritanium_plate = new MOBaseItem("tritanium_plate");
-        pattern_drive = new PatternDrive("pattern_drive",2);
-        weapon_module_color = new WeaponModuleColor("weapon_module_color");
-        weapon_module_barrel = new WeaponModuleBarrel("weapon_module_barrel");
-        security_protocol = new SecurityProtocol("security_protocol");
-        spacetime_equalizer = new SpacetimeEqualizer("spacetime_equalizer");
-        wrench = new Wrench("tritanium_wrench");
-        androidParts = new RougeAndroidParts("rogue_android_part");
-        forceFieldEmitter = new MOBaseItem("forcefield_emitter");
-        shipFactory = new ShipFactory("ship_factory");
-        scoutShip = new ItemScoutShip("scout_ship");
-        colonizerShip = new ItemColonizerShip("ship_colonizer");
-        buildingBase = new ItemBuildingBase("building_base");
-        androidPill = new AndroidPill("android_pill");
-        networkFlashDrive = new NetworkFlashDrive("network_flash_drive",Reference.COLOR_YELLOW_STRIPES);
-        //creativePatternDrive = new CreativePatternDrive("creative_pattern_drive",0);
-        phaserRifle = new PhaserRifle("phaser_rifle");
-        energyPack = new EnergyPack("energy_pack");
-        transportFlashDrive = new TransportFlashDrive("transport_flash_drive",Reference.COLOR_HOLO_GREEN);
-        matterContainer = new MatterContainer("matter_container",false);
-        matterContainerFull = new MatterContainer("matter_container_full",true);
-        dataPad = new DataPad("data_pad");
-        tritaniumSpine = new TritaniumSpine("tritainum_spine");
-        tritanium_nugget = new MOBaseItem("tritanium_nugget");
-        omniTool = new OmniTool("omni_tool");
-        tritaniumAxe = new TritaniumAxe("tritanium_axe");
-        tritaniumPickaxe = new TritaniumPickaxe("tritanium_pickaxe");
-        tritaniumSword = (ItemSword)new ItemSword(toolMaterialTritanium).setUnlocalizedName("tritanium_sword");
-        tritaniumHoe = (ItemHoe)new ItemHoe(toolMaterialTritanium).setUnlocalizedName("tritanium_hoe");
-        tritaniumHelemet = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,0).setUnlocalizedName("tritanium_helmet");
-        tritaniumChestplate = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,1).setUnlocalizedName("tritanium_chestplate");
-        tritaniumLeggings = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,2).setUnlocalizedName("tritanium_leggings");
-        tritaniumBoots = (TritaniumArmor)new TritaniumArmor(armorMaterialTritanium,2,3).setUnlocalizedName("tritanium_boots");
-        contract = new Contract("contract");
-        plasmaShotgun = new PlasmaShotgun("plasma_shotgun");
-        ionSniper = new IonSniper("ion_sniper");
-        sniperScope = new WeaponModuleSniperScope("sniper_scope");
-        buildingMatterExtractor = new ItemBuildingMatterExtractor("building_matter_extractor");
-        buildingResidential = new ItemBuildingResidential("building_residential");
-        buildingShipHangar = new ItemBuildingShipHangar("building_ship_hangar");
-        buildingPowerGenerator = new ItemBuildingPowerGenerator("building_power_generator");
-        weaponHandle = new MOBaseItem("weapon_handle");
-        weaponReceiver = new MOBaseItem("weapon_receiver");
-        plasmaCore = new MOBaseItem("plasma_core");
-        portableDecomposer = new PortableDecomposer("portable_decomposer",128000,256,512,0.1f);
-        weaponModuleRicochet = new WeaponModuleRicochet("weapon_module_ricochet");
-        weaponModuleHoloSights = new WeaponModuleHoloSights("weapon_module_holo_sights");
 	}
 
 	public static void register(FMLInitializationEvent event)
 	{
-		GameRegistry.registerItem(emergency_ration, emergency_ration.getUnlocalizedName().substring(5));
+        for (Field field : MatterOverdriveItems.class.getFields())
+        {
+            if (Item.class.isAssignableFrom(field.getType()))
+            {
+                try
+                {
+                    GameRegistry.register((Item)field.get(null));
+                } catch (IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-		matter_dust_refined.register();
-		matter_dust.register();
-		creative_battery.register();
-        me_conversion_matrix.register();
-		matter_scanner.register();
-		phaser.register();
-		battery.register();
-        isolinear_circuit.register();
-        item_upgrade.register();
-        h_compensator.register();
-        integration_matrix.register();
-        machine_casing.register();
-        s_magnet.register();
-        dilithium_ctystal.register();
         MatterOverdrive.matterRegistry.register(dilithium_ctystal,new ItemHandler(0,true));
-        tritanium_ingot.register();
         MatterOverdrive.matterRegistry.register(tritanium_ingot,new ItemHandler(0,true));
-        tritanium_dust.register();
         MatterOverdrive.matterRegistry.register(tritanium_dust,new ItemHandler(0,true));
-        tritanium_plate.register();
         MatterOverdrive.matterRegistry.register(tritanium_plate,new ItemHandler(0,true));
-        pattern_drive.register();
-        weapon_module_color.register();
-        weapon_module_barrel.register();
-        earl_gray_tea.Register();
-		romulan_ale.register();
-        security_protocol.register();
-        spacetime_equalizer.Register();
-        wrench.register();
-        androidParts.register();
-        forceFieldEmitter.register();
-        hc_battery.register();
-        shipFactory.register();
-        scoutShip.register();
-        colonizerShip.register();
-        buildingBase.register();
-        androidPill.register();
-        networkFlashDrive.register();
-        //creativePatternDrive.register();
-        phaserRifle.register();
-        energyPack.register();
-        transportFlashDrive.register();
-        matterContainer.register();
-        matterContainerFull.register();
-        dataPad.register();
-        tritaniumSpine.register();
-        tritanium_nugget.register();
-        omniTool.register();
-        contract.register();
-        plasmaShotgun.register();
-        ionSniper.register();
-        sniperScope.register();
-        buildingMatterExtractor.register();
-        buildingResidential.register();
-        buildingShipHangar.register();
-        buildingPowerGenerator.register();
-        weaponHandle.register();
-        weaponReceiver.register();
-        plasmaCore.register();
-        portableDecomposer.register();
-        weaponModuleRicochet.register();
-        weaponModuleHoloSights.register();
 
         GameRegistry.addSmelting(new ItemStack(tritanium_dust), new ItemStack(tritanium_ingot), 5);
         GameRegistry.addSmelting(new ItemStack(MatterOverdriveBlocks.tritaniumOre), new ItemStack(tritanium_ingot), 10);
-
-        GameRegistry.registerItem(tritaniumAxe,"tritanium_axe");
-        GameRegistry.registerItem(tritaniumPickaxe,"tritanium_pickaxe");
-        GameRegistry.registerItem(tritaniumSword,"tritanium_sword");
-        GameRegistry.registerItem(tritaniumHoe,"tritanium_hoe");
-        GameRegistry.registerItem(tritaniumHelemet,"tritanium_helmet");
-        GameRegistry.registerItem(tritaniumChestplate,"tritanium_chestplate");
-        GameRegistry.registerItem(tritaniumLeggings,"tritanium_leggings");
-        GameRegistry.registerItem(tritaniumBoots,"tritanium_boots");
 
         OreDictionary.registerOre("dustTritanium", tritanium_dust);
         OreDictionary.registerOre("ingotTritanium",tritanium_ingot);
@@ -291,8 +167,8 @@ public class MatterOverdriveItems
 
     public static void addToMODungons()
     {
-
-        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(emergency_ration),8,20,100));
+        // TODO: 3/25/2016 Find how to add to dungon chests
+        /*ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(emergency_ration),8,20,100));
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(earl_gray_tea),4,10,50));
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(romulan_ale),4,10,50));
 
@@ -317,15 +193,15 @@ public class MatterOverdriveItems
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(h_compensator),1,2,10));
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(me_conversion_matrix),1,2,10));
         ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(matterContainerFull),4,8,20));
-        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(phaser),1,1,10));
+        ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(phaser),1,1,10));*/
     }
 
     private static void addToDungons(Item item,int min,int max,int chance)
     {
-        ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
+        /*ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
         ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
         ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
         ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
-        ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));
+        ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH).addItem(new WeightedRandomChestContent(new ItemStack(item),min,max,chance));*/
     }
 }

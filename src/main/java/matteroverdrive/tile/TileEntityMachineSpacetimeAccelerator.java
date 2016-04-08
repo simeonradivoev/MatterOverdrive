@@ -12,9 +12,10 @@ import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.TimeTracker;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -131,7 +132,7 @@ public class TileEntityMachineSpacetimeAccelerator extends MOTileEntityMachineMa
     }
 
     @Override
-    public String getSound()
+    public SoundEvent getSound()
     {
         return null;
     }

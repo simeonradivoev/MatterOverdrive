@@ -1,10 +1,10 @@
 package matteroverdrive.fx;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -25,15 +25,15 @@ public class LightningCircle extends MOEntityFX
         this.speed = speed;
         this.scale = scale;
         this.growth = growth;
-        this.renderDistanceWeight = Minecraft.getMinecraft().gameSettings.renderDistanceChunks / 6d;
+        this.renderDistanceWeight = Minecraft.getMinecraft().gameSettings.renderDistanceChunks / 6f;
         setEntityBoundingBox(new AxisAlignedBB(xCoordIn-scale-growth,yCoordIn-2*randomness,zCoordIn-scale-growth,xCoordIn+scale+growth,yCoordIn+2*randomness,zCoordIn+scale+growth));
     }
 
-    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float rotX, float rotXZ, float rotZ, float rotYZ, float rotXY)
+    public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotX, float rotXZ, float rotZ, float rotYZ, float rotXY)
     {
         particleScale = scale + ((float) particleAge / (float)particleMaxAge) * growth;
         rand.setSeed((long) (particleAge * speed) + hashCode());
-        Vec3 randomDir = new Vec3(rand.nextGaussian() * randomness,rand.nextGaussian() * randomness,rand.nextGaussian() * randomness);
+        Vec3d randomDir = new Vec3d(rand.nextGaussian() * randomness,rand.nextGaussian() * randomness,rand.nextGaussian() * randomness);
 
         for (double i = 0;i < Math.PI*2;i+=0.1)
         {
@@ -45,11 +45,11 @@ public class LightningCircle extends MOEntityFX
             int j = b >> 16 & 65535;
             int k = b & 65535;
 
-            Vec3 pos = new Vec3(Math.sin(i) * particleScale,0,Math.cos(i) * particleScale).add(randomDir);
+            Vec3d pos = new Vec3d(Math.sin(i) * particleScale,0,Math.cos(i) * particleScale).add(randomDir);
             worldRendererIn.pos(pos.xCoord + tickX, pos.yCoord + tickY, pos.zCoord + tickZ).tex(0,0).color(this.particleRed, this.particleGreen, this.particleBlue ,this.particleAlpha).lightmap(j, k).endVertex();
 
             randomDir = randomDir.addVector(rand.nextGaussian() * randomness,rand.nextGaussian() * randomness,rand.nextGaussian() * randomness);
-            pos = new Vec3(Math.sin(i+0.1) * particleScale,0,Math.cos(i+0.1) * particleScale).add(randomDir);
+            pos = new Vec3d(Math.sin(i+0.1) * particleScale,0,Math.cos(i+0.1) * particleScale).add(randomDir);
             worldRendererIn.pos(pos.xCoord + tickX, pos.yCoord + tickY, pos.zCoord + tickZ).tex(0,0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
         }
     }

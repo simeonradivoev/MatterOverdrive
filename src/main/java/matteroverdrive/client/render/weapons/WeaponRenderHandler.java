@@ -17,18 +17,18 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -58,25 +58,22 @@ public class WeaponRenderHandler
     @SubscribeEvent
     public void onHandRender(RenderHandEvent event)
     {
-        if (Minecraft.getMinecraft().thePlayer.getHeldItem() != null && Minecraft.getMinecraft().thePlayer.getHeldItem().getItem() instanceof EnergyWeapon)
+        ItemStack weapon = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
+
+        if (weapon != null && weapon.getItem() instanceof EnergyWeapon)
         {
             if (event.isCancelable())
                 event.setCanceled(true);
 
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
-
-            ItemStack weapon = Minecraft.getMinecraft().thePlayer.getHeldItem();
-            ItemRenderer itemRenderer = mc.getItemRenderer();
             EntityRenderer entityRenderer = mc.entityRenderer;
-
-
             GlStateManager.matrixMode(GL11.GL_PROJECTION);
             GlStateManager.loadIdentity();
             float f = 0.07F;
 
             if (mc.gameSettings.anaglyph)
             {
-                GlStateManager.translate((float)(-(event.renderPass * 2 - 1)) * f, 0.0F, 0.0F);
+                GlStateManager.translate((float)(-(event.getRenderPass() * 2 - 1)) * f, 0.0F, 0.0F);
             }
 
             Project.gluPerspective(35f, (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, (float)(mc.gameSettings.renderDistanceChunks * 32));
@@ -85,15 +82,15 @@ public class WeaponRenderHandler
 
             if (mc.gameSettings.anaglyph)
             {
-                GlStateManager.translate((float)(event.renderPass * 2 - 1) * 0.1F, 0.0F, 0.0F);
+                GlStateManager.translate((float)(event.getRenderPass() * 2 - 1) * 0.1F, 0.0F, 0.0F);
             }
 
             GlStateManager.pushMatrix();
-            hurtCameraEffect(event.partialTicks);
+            hurtCameraEffect(event.getPartialTicks());
 
             if (mc.gameSettings.viewBobbing)
             {
-                setupViewBobbing(event.partialTicks);
+                setupViewBobbing(event.getPartialTicks());
             }
 
             boolean flag = this.mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase)this.mc.getRenderViewEntity()).isPlayerSleeping();
@@ -108,12 +105,12 @@ public class WeaponRenderHandler
                 if (model != null)
                 {
                     AbstractClientPlayer abstractclientplayer = this.mc.thePlayer;
-                    float f1 = abstractclientplayer.getSwingProgress(event.partialTicks);
-                    float f2 = abstractclientplayer.prevRotationPitch + (abstractclientplayer.rotationPitch - abstractclientplayer.prevRotationPitch) * event.partialTicks;
-                    float f3 = abstractclientplayer.prevRotationYaw + (abstractclientplayer.rotationYaw - abstractclientplayer.prevRotationYaw) * event.partialTicks;
+                    float f1 = abstractclientplayer.getSwingProgress(event.getPartialTicks());
+                    float f2 = abstractclientplayer.prevRotationPitch + (abstractclientplayer.rotationPitch - abstractclientplayer.prevRotationPitch) * event.getPartialTicks();
+                    float f3 = abstractclientplayer.prevRotationYaw + (abstractclientplayer.rotationYaw - abstractclientplayer.prevRotationYaw) * event.getPartialTicks();
                     this.func_178101_a(f2, f3);
                     this.func_178109_a(abstractclientplayer);
-                    this.func_178110_a(model, (EntityPlayerSP) abstractclientplayer, event.partialTicks);
+                    this.func_178110_a(model, (EntityPlayerSP) abstractclientplayer, event.getPartialTicks());
                     GlStateManager.enableRescaleNormal();
 
                     entityRenderer.enableLightmap();
@@ -128,10 +125,10 @@ public class WeaponRenderHandler
                     }
 
                     List<ItemStack> modules = MOInventoryHelper.getStacks(weapon);
-                    transformFromModules(modules, model.getWeaponMetadata(), weapon, event.partialTicks, zoomValue);
+                    transformFromModules(modules, model.getWeaponMetadata(), weapon, event.getPartialTicks(), zoomValue);
                     model.transformFirstPersonWeapon((EnergyWeapon) weapon.getItem(), weapon, zoomValue, recoilValue);
-                    renderWeaponAndModules(modules, model, weapon, event.partialTicks, event.renderPass);
-                    renderLayers(model.getWeaponMetadata(),weapon,event.partialTicks,event.renderPass);
+                    renderWeaponAndModules(modules, model, weapon, event.getPartialTicks(), event.getRenderPass());
+                    renderLayers(model.getWeaponMetadata(),weapon,event.getPartialTicks(),event.getRenderPass());
                     entityRenderer.disableLightmap();
                 }
 
@@ -142,7 +139,7 @@ public class WeaponRenderHandler
 
             if (this.mc.gameSettings.viewBobbing)
             {
-                this.setupViewBobbing(event.partialTicks);
+                this.setupViewBobbing(event.getPartialTicks());
             }
 
         }
@@ -254,15 +251,15 @@ public class WeaponRenderHandler
     {
         RenderUtils.bindTexture(TextureMap.locationBlocksTexture);
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        VertexBuffer worldrenderer = tessellator.getBuffer();
         worldrenderer.begin(7, DefaultVertexFormats.ITEM);
 
         for (EnumFacing enumfacing : EnumFacing.values())
         {
-            this.renderQuads(worldrenderer, model.getFaceQuads(enumfacing), -1, weapon);
+            this.renderQuads(worldrenderer, model.getQuads(null,enumfacing,0), -1, weapon);
         }
 
-        this.renderQuads(worldrenderer, model.getGeneralQuads(), WeaponHelper.getColor(weapon), weapon);
+        this.renderQuads(worldrenderer, model.getQuads(null,null,0), WeaponHelper.getColor(weapon), weapon);
         tessellator.draw();
     }
 
@@ -271,7 +268,7 @@ public class WeaponRenderHandler
         return mc.getRenderItem().getItemModelMesher().getItemModel(weapon);
     }
 
-    private void renderQuads(WorldRenderer renderer, List<BakedQuad> quads, int color, ItemStack stack)
+    private void renderQuads(VertexBuffer renderer, List<BakedQuad> quads, int color, ItemStack stack)
     {
         boolean flag = color == -1 && stack != null;
         int i = 0;
@@ -281,7 +278,8 @@ public class WeaponRenderHandler
             BakedQuad bakedquad = quads.get(i);
             int k = color;
 
-            if (flag && bakedquad.hasTintIndex())
+            // TODO: 3/25/2016 Find how get get stack color
+            /*if (flag && bakedquad.hasTintIndex())
             {
                 k = stack.getItem().getColorFromItemStack(stack, bakedquad.getTintIndex());
 
@@ -291,7 +289,7 @@ public class WeaponRenderHandler
                 }
 
                 k = k | -16777216;
-            }
+            }*/
 
             net.minecraftforge.client.model.pipeline.LightUtil.renderQuadColorSlow(renderer, bakedquad, k);
         }
@@ -300,8 +298,8 @@ public class WeaponRenderHandler
     @SubscribeEvent
     public void handleCameraRecoil(EntityViewRenderEvent.CameraSetup event)
     {
-        event.roll += ClientWeaponHandler.CAMERA_RECOIL_AMOUNT * ClientWeaponHandler.CAMERA_RECOIL_TIME;
-        event.pitch -= Math.abs(ClientWeaponHandler.CAMERA_RECOIL_AMOUNT) * ClientWeaponHandler.CAMERA_RECOIL_TIME * 0.5f;
+        event.setRoll(event.getRoll() + ClientWeaponHandler.CAMERA_RECOIL_AMOUNT * ClientWeaponHandler.CAMERA_RECOIL_TIME);
+        event.setPitch(event.getPitch() + Math.abs(ClientWeaponHandler.CAMERA_RECOIL_AMOUNT) * ClientWeaponHandler.CAMERA_RECOIL_TIME * 0.5f);
     }
 
     private void transformFirstPerson(float zoomValue)

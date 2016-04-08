@@ -21,6 +21,7 @@ package matteroverdrive.gui.element;
 import matteroverdrive.Reference;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -45,7 +46,7 @@ public class SidePannel extends ElementBaseGroup
         MOElementButtonScaled button = new MOElementButtonScaled(gui, this, 0, 0, "Toggle", 16, height);
         button.setNormalTexture(new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_over.png"), 32, 143).setOffsets(0, 0, 42, 100));
         button.setOverTexture(new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "right_side_bar_over.png"), 32, 143).setOffsets(0, 0, 42, 100));
-        button.setSounds("button_expand");
+        button.setSounds(MatterOverdriveSounds.guiButtonExpand.getSoundName());
         this.button = button;
         this.openable = openable;
 

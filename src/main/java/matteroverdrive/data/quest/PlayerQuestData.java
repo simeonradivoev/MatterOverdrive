@@ -20,6 +20,7 @@ package matteroverdrive.data.quest;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
 import matteroverdrive.util.MOLog;
@@ -171,12 +172,13 @@ public class PlayerQuestData
             {
                 if (activeQuests.get(i).getQuest() != null)
                 {
-                    if (activeQuests.get(i).getQuest().onEvent(activeQuests.get(i), event, extendedProperties.getPlayer()))
+                    QuestState questState = activeQuests.get(i).getQuest().onEvent(activeQuests.get(i), event, extendedProperties.getPlayer());
+                    if (questState != null)
                     {
                         //MatterOverdrive.packetPipeline.sendTo(new PacketSyncQuests(this,EnumSet.of(DataType.ACTIVE_QUESTS)),(EntityPlayerMP) extendedProperties.getPlayer());
                         if (extendedProperties.getPlayer() instanceof EntityPlayerMP)
                         {
-                            MatterOverdrive.packetPipeline.sendTo(new PacketUpdateQuest(i, this, PacketUpdateQuest.UPDATE_QUEST), (EntityPlayerMP) extendedProperties.getPlayer());
+                            MatterOverdrive.packetPipeline.sendTo(new PacketUpdateQuest(i, questState,this, PacketUpdateQuest.UPDATE_QUEST), (EntityPlayerMP) extendedProperties.getPlayer());
                         }
                     }
                 }

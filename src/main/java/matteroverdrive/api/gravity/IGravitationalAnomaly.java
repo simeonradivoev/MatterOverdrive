@@ -18,7 +18,7 @@
 
 package matteroverdrive.api.gravity;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Created by Simeon on 10/14/2015.

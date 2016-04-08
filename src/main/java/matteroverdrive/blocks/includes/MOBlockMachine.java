@@ -19,11 +19,11 @@
 package matteroverdrive.blocks.includes;
 
 import cofh.api.block.IDismantleable;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
 import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.items.includes.MOMachineBlockItem;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.*;
 import net.minecraft.block.material.Material;
@@ -32,9 +32,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
@@ -50,12 +54,6 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     public MOBlockMachine(Material material, String name)
     {
         super(material, name);
-    }
-
-    @Override
-    protected void registerBlock()
-    {
-        GameRegistry.registerBlock(this, MOMachineBlockItem.class, this.getUnlocalizedName().substring(5));
     }
 
     public boolean doNormalDrops(World world, int x, int y, int z)
@@ -95,7 +93,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         return MachineHelper.canOpenMachine(worldIn,pos,playerIn,hasGui,getUnlocalizedMessage(0));
     }
@@ -112,7 +110,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
     }
 
     @Override
-    public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
         if (MachineHelper.canRemoveMachine(world,player,pos,willHarvest))
         {
@@ -163,7 +161,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
         }
 
         IBlockState blockState = world.getBlockState(pos);
-        boolean flag = blockState.getBlock().removedByPlayer(world, pos,player, true);
+        boolean flag = blockState.getBlock().removedByPlayer(blockState,world, pos,player, true);
         super.breakBlock(world, pos,blockState);
 
         if (flag)
@@ -209,8 +207,8 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
                 }else
                 {
                     if (world.isRemote) {
-                        ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.dismantle").replace("$0",getLocalizedName()));
-                        message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
+                        TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.dismantle").replace("$0",getLocalizedName()));
+                        message.setChatStyle(new Style().setColor(TextFormatting.RED));
                         player.addChatMessage(message);
                     }
                     return false;

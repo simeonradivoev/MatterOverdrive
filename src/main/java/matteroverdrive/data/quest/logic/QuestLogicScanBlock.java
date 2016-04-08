@@ -1,16 +1,18 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
-import matteroverdrive.data.quest.QuestBlock;
-import matteroverdrive.util.MOJsonHelper;
-import net.minecraft.block.state.IBlockState;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.events.MOEventScan;
 import matteroverdrive.api.inventory.IBlockScanner;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
+import matteroverdrive.data.quest.QuestBlock;
+import matteroverdrive.util.MOJsonHelper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
 import java.util.Random;
@@ -18,7 +20,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 1/5/2016.
  */
-public class QuestLogicScanBlock extends QuestLogicBlock
+public class QuestLogicScanBlock extends AbstractQuestLogicBlock
 {
     private int minBlockScan;
     private int maxBlockScan;
@@ -73,18 +75,18 @@ public class QuestLogicScanBlock extends QuestLogicBlock
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
         if (event instanceof MOEventScan)
         {
             MOEventScan eventScan = (MOEventScan)event;
-            if (eventScan.position.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+            if (eventScan.position.typeOfHit == RayTraceResult.Type.BLOCK)
             {
                 if (onlyDestroyable)
                 {
                     if (eventScan.scannerStack.getItem() instanceof IBlockScanner && !((IBlockScanner) eventScan.scannerStack.getItem()).destroysBlocks(eventScan.scannerStack))
                     {
-                        return false;
+                        return null;
                     }
                 }
 
@@ -100,15 +102,16 @@ public class QuestLogicScanBlock extends QuestLogicBlock
                             if (autoComplete)
                             {
                                 questStack.markComplited(entityPlayer,false);
+                                return new QuestLogicState(QuestState.Type.COMPLETE,true);
                             }
                         }
 
-                        return true;
+                        return new QuestLogicState(QuestState.Type.UPDATE,true);
                     }
                 }
             }
         }
-        return false;
+        return null;
     }
 
     @Override

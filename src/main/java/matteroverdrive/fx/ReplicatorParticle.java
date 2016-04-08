@@ -1,9 +1,9 @@
 package matteroverdrive.fx;
 
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class ReplicatorParticle extends EntityFX
@@ -16,21 +16,21 @@ public class ReplicatorParticle extends EntityFX
     public ReplicatorParticle(World world, double p_i1209_2_, double p_i1209_4_, double p_i1209_6_, double p_i1209_8_, double p_i1209_10_, double p_i1209_12_)
     {
         super(world, p_i1209_2_, p_i1209_4_, p_i1209_6_, p_i1209_8_, p_i1209_10_, p_i1209_12_);
-        this.motionX = this.motionX * 0.009999999776482582D + p_i1209_8_;
-        this.motionY = this.motionY * 0.009999999776482582D + p_i1209_10_;
-        this.motionZ = this.motionZ * 0.009999999776482582D + p_i1209_12_;
+        this.xSpeed = this.xSpeed * 0.009999999776482582D + p_i1209_8_;
+        this.ySpeed = this.ySpeed * 0.009999999776482582D + p_i1209_10_;
+        this.zSpeed = this.zSpeed * 0.009999999776482582D + p_i1209_12_;
         double d6 = p_i1209_2_ + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
         d6 = p_i1209_4_ + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
         d6 = p_i1209_6_ + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
         this.flameScale = this.particleScale;
         this.particleRed = this.particleGreen = this.particleBlue = 1.0F;
         this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D)) + 4;
-        this.noClip = true;
+        //this.noClip = true;
         this.setParticleTextureIndex(1);
     }
 
     @Override
-    public void renderParticle(WorldRenderer worldRenderer, Entity entity, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
+    public void renderParticle(VertexBuffer worldRenderer, Entity entity, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
     {
         float f6 = ((float)this.particleAge + p_70539_2_) / (float)this.particleMaxAge;
         this.particleScale = this.flameScale * (1.0F - f6 * f6 * 0.5F);
@@ -81,7 +81,7 @@ public class ReplicatorParticle extends EntityFX
             f1 = 1.0F;
         }
 
-        float f2 = super.getBrightness(p_70013_1_);
+        float f2 = super.getBrightnessForRender(p_70013_1_);
         return f2 * f1 + (1.0F - f1);
     }
 
@@ -96,31 +96,31 @@ public class ReplicatorParticle extends EntityFX
 
         if (this.particleAge++ >= this.particleMaxAge)
         {
-            this.setDead();
+            this.setExpired();
         }
 
         //this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        Vec3 motion = new Vec3(this.motionX, this.motionY, this.motionZ);
-        Vec3 center = new Vec3(this.centerX, this.centerY, this.centerZ);
-        Vec3 position = new Vec3(this.posX, this.posY, this.posZ);
-        Vec3 gravityCenter = center.subtract(position);
-        gravityCenter = new Vec3(gravityCenter.xCoord * pointGravityScale,gravityCenter.yCoord * pointGravityScale,gravityCenter.zCoord * pointGravityScale);
-        Vec3 dir = gravityCenter.add(motion);
+        Vec3d motion = new Vec3d(this.xSpeed, this.ySpeed, this.zSpeed);
+        Vec3d center = new Vec3d(this.centerX, this.centerY, this.centerZ);
+        Vec3d position = new Vec3d(this.posX, this.posY, this.posZ);
+        Vec3d gravityCenter = center.subtract(position);
+        gravityCenter = new Vec3d(gravityCenter.xCoord * pointGravityScale,gravityCenter.yCoord * pointGravityScale,gravityCenter.zCoord * pointGravityScale);
+        Vec3d dir = gravityCenter.add(motion);
 
-        this.motionX = dir.xCoord;
-        this.motionY = dir.yCoord;
-        this.motionZ = dir.zCoord;
+        this.xSpeed = dir.xCoord;
+        this.ySpeed = dir.yCoord;
+        this.zSpeed = dir.zCoord;
 
-        this.getEntityBoundingBox().offset(this.motionX, this.motionY, this.motionZ);
+        this.getEntityBoundingBox().offset(this.xSpeed, this.ySpeed, this.zSpeed);
         this.posX = (this.getEntityBoundingBox().minX + this.getEntityBoundingBox().maxX) / 2.0D;
         this.posY = this.getEntityBoundingBox().minY - (double)this.height;
         this.posZ = (this.getEntityBoundingBox().minZ + this.getEntityBoundingBox().maxZ) / 2.0D;
 
         double speedOverTime = 1D;
-        this.motionX *= speedOverTime;
-        this.motionY *= speedOverTime;
-        this.motionZ *= speedOverTime;
-        moveEntity(this.motionX,this.motionY,this.motionZ);
+        this.xSpeed *= speedOverTime;
+        this.ySpeed *= speedOverTime;
+        this.zSpeed *= speedOverTime;
+        moveEntity(this.zSpeed,this.ySpeed,this.zSpeed);
     }
 
     public void setCenter(double x, double y, double z)

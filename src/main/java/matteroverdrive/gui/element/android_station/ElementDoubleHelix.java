@@ -9,6 +9,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.util.glu.Project;
 
 import java.util.List;
@@ -81,13 +82,13 @@ public class ElementDoubleHelix extends MOElementBase
         GlStateManager.rotate(-90,0,0,1);
         GlStateManager.enableRescaleNormal();
 
-        List<BakedQuad> quadList = ClientProxy.renderHandler.doubleHelixModel.getGeneralQuads();
-        /*Tessellator.getInstance().getWorldRenderer().begin(GL_QUADS, ClientProxy.renderHandler.doubleHelixModel.getFormat());
+        List<BakedQuad> quadList = ClientProxy.renderHandler.doubleHelixModel.getQuads(null, null,0);
+        /*Tessellator.getInstance().getBuffer().begin(GL_QUADS, ClientProxy.renderHandler.doubleHelixModel.getFormat());
         for (BakedQuad quad : quadList)
         {
-            Tessellator.getInstance().getWorldRenderer().addVertexData(quad.getVertexData());
-            //LightUtil.renderQuadColorSlow(Tessellator.getInstance().getWorldRenderer(),quad,color);
-            //LightUtil.renderQuadColor(Tessellator.getInstance().getWorldRenderer(),quad,new Color(color).getColor()+0x00ff);
+            Tessellator.getInstance().getBuffer().addVertexData(quad.getVertexData());
+            //LightUtil.renderQuadColorSlow(Tessellator.getInstance().getBuffer(),quad,color);
+            //LightUtil.renderQuadColor(Tessellator.getInstance().getBuffer(),quad,new Color(color).getColor()+0x00ff);
         }
         Tessellator.getInstance().draw();*/
         //GlStateManager.colorMask(true,false,false,true);
@@ -96,7 +97,7 @@ public class ElementDoubleHelix extends MOElementBase
         {
             glPointSize(1);
             glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-            Tessellator.getInstance().getWorldRenderer().begin(GL_QUADS, ClientProxy.renderHandler.doubleHelixModel.getFormat());
+            Tessellator.getInstance().getBuffer().begin(GL_QUADS, DefaultVertexFormats.ITEM);
             tesseleteHelix(-1, 3, quadList, pointColor.getColor());
             Tessellator.getInstance().draw();
         }
@@ -104,7 +105,7 @@ public class ElementDoubleHelix extends MOElementBase
         if (lineColor != null)
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            Tessellator.getInstance().getWorldRenderer().begin(GL_QUADS, ClientProxy.renderHandler.doubleHelixModel.getFormat());
+            Tessellator.getInstance().getBuffer().begin(GL_QUADS, DefaultVertexFormats.ITEM);
             tesseleteHelix(-1, 3, quadList, lineColor.getColor());
             Tessellator.getInstance().draw();
         }
@@ -112,7 +113,7 @@ public class ElementDoubleHelix extends MOElementBase
         if (fillColor != null)
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            Tessellator.getInstance().getWorldRenderer().begin(GL_QUADS, ClientProxy.renderHandler.doubleHelixModel.getFormat());
+            Tessellator.getInstance().getBuffer().begin(GL_QUADS, DefaultVertexFormats.ITEM);
             tesseleteHelix(-1, 3, quadList, fillColor.getColor());
             Tessellator.getInstance().draw();
         }
@@ -137,9 +138,9 @@ public class ElementDoubleHelix extends MOElementBase
         {
             for (BakedQuad quad : quadList)
             {
-                Tessellator.getInstance().getWorldRenderer().addVertexData(quad.getVertexData());
-                Tessellator.getInstance().getWorldRenderer().putColor4(color);
-                Tessellator.getInstance().getWorldRenderer().putPosition(0,129.7 * i,0);
+                Tessellator.getInstance().getBuffer().addVertexData(quad.getVertexData());
+                Tessellator.getInstance().getBuffer().putColor4(color);
+                Tessellator.getInstance().getBuffer().putPosition(0,129.7 * i,0);
             }
         }
     }

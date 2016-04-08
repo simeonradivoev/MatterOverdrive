@@ -20,7 +20,6 @@ package matteroverdrive.blocks.includes;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public abstract class MOBlockContainer extends MOBlock implements ITileEntityProvider
 {
@@ -28,12 +27,5 @@ public abstract class MOBlockContainer extends MOBlock implements ITileEntityPro
     {
         super(material, name);
         this.isBlockContainer = true;
-    }
-
-    @Override
-    public void register()
-    {
-        super.register();
-		GameRegistry.registerTileEntity(createNewTileEntity(null, 0).getClass(), this.getRegistryName());
     }
 }

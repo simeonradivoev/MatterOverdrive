@@ -21,10 +21,10 @@ package matteroverdrive.data;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -92,7 +92,7 @@ public class ScaleTexture
 
         GlStateManager.pushMatrix();
         glTranslatef(x, y, 0);
-        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        VertexBuffer wr = Tessellator.getInstance().getBuffer();
         wr.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         //top left
         wr.pos(0, this.topOffset, 0).tex(u, v + topOffset).endVertex();

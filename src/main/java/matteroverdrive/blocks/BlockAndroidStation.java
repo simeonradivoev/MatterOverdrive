@@ -3,6 +3,7 @@ package matteroverdrive.blocks;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -14,7 +15,7 @@ public class BlockAndroidStation extends MOBlockMachine
     public BlockAndroidStation(Material material, String name)
     {
         super(material, name);
-        setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
+        //setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
         setHardness(20.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
@@ -68,7 +69,7 @@ public class BlockAndroidStation extends MOBlockMachine
     }
 
     @Override
-    public boolean isOpaqueCube()
+    public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }

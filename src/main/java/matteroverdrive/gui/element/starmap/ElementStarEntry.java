@@ -18,6 +18,7 @@
 
 package matteroverdrive.gui.element.starmap;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IShip;
@@ -36,7 +37,6 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
         GuiStarMap guiStarMap = (GuiStarMap)gui;
         if (guiStarMap.getMachine().getGalaxyPosition().equals(star))
         {
-            name = "@ " + EnumChatFormatting.ITALIC + name;
+            name = "@ " + ChatFormatting.ITALIC + name;
         }
 
         if (Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode || GalaxyClient.getInstance().canSeeStarInfo(star,Minecraft.getMinecraft().thePlayer))

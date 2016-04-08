@@ -111,6 +111,7 @@ public class ClientProxy extends CommonProxy
         weaponHandler = new ClientWeaponHandler();
         questHud = new GuiQuestHud();
 
+        RenderHandler.registerCustomStateMappers();
         Minecraft.getMinecraft().getResourcePackRepository().rprMetadataSerializer.registerMetadataSectionType(new WeaponMetadataSectionSerializer(), WeaponMetadataSection.class);
 
         registerSubscribtions();

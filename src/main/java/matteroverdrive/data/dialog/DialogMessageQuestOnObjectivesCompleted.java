@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import matteroverdrive.api.dialog.IDialogNpc;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -63,7 +64,7 @@ public class DialogMessageQuestOnObjectivesCompleted extends DialogMessage
     @Override
     public boolean isVisible(IDialogNpc npc, EntityPlayer player)
     {
-        MOExtendedProperties extendedProperties = MOExtendedProperties.get(player);
+        MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(player);
         if (extendedProperties != null)
         {
             for (QuestStack questStack : extendedProperties.getQuestData().getActiveQuests())

@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.network.packet.PacketAbstract;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -35,7 +36,7 @@ public class PacketBioticActionKey extends PacketAbstract
         @Override
         public void handleServerMessage(EntityPlayerMP player, PacketBioticActionKey message, MessageContext ctx)
         {
-            AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
             if (androidPlayer.isAndroid())
             {
                 for (IBioticStat stat : MatterOverdrive.statRegistry.getStats())

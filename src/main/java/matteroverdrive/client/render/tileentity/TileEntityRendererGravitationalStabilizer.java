@@ -29,8 +29,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class TileEntityRendererGravitationalStabilizer extends TileEntitySpecial
     public void renderTileEntityAt(TileEntityMachineGravitationalStabilizer stabilizer, double x, double y, double z, float ticks,int destroyStage)
     {
         if (stabilizer.getHit() != null) {
-            MovingObjectPosition hit = stabilizer.getHit();
+            RayTraceResult hit = stabilizer.getHit();
             TileEntity tileEntityHit = stabilizer.getWorld().getTileEntity(hit.getBlockPos());
 
 

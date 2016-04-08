@@ -18,18 +18,19 @@
 
 package matteroverdrive.network.packet.client.quest;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.gui.GuiDataPad;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.AbstractClientPacketHandler;
 import matteroverdrive.util.MOEnumHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -75,7 +76,7 @@ public class PacketSyncQuests extends PacketAbstract
         @Override
         public void handleClientMessage(EntityPlayerSP player, PacketSyncQuests message, MessageContext ctx)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(player);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(player);
             if (extendedProperties != null && extendedProperties.getQuestData() != null) {
                 extendedProperties.getQuestData().readFromNBT(message.data,MOEnumHelper.decode(message.questTypes,PlayerQuestData.DataType.class));
             }

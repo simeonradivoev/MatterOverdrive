@@ -30,8 +30,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -120,7 +120,8 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
                     if (connectionCount < 2 && ((IMatterNetworkConnection) tileEntityNeignbor).establishConnectionFromSide(neighborState, enumFacing.getOpposite()))
                     {
                         this.setConnection(enumFacing, true);
-                        world.markBlockForUpdate(pos);
+                        // TODO: 3/26/2016 Find how to mark block for update
+                        //world.markBlockForUpdate(pos);
                         connectionCount++;
                     }
                 }
@@ -220,7 +221,8 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
             if (!MOMathHelper.getBoolean(getConnectionsMask(),side.ordinal()))
             {
                 setConnection(side,true);
-                worldObj.markBlockForUpdate(getPos());
+                // TODO: 3/26/2016 Find how to mark block for update
+                //worldObj.markBlockForUpdate(getPos());
                 return true;
             }
         }
@@ -231,7 +233,8 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
     public void breakConnection(IBlockState blockState, EnumFacing side)
     {
         setConnection(side,false);
-        worldObj.markBlockForUpdate(getPos());
+        // TODO: 3/26/2016 Find how to mark block for update
+        //worldObj.markBlockForUpdate(getPos());
     }
 
     @Override

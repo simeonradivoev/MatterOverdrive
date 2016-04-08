@@ -1,8 +1,9 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.entity.android_player.AndroidPlayer;
-import net.minecraft.util.EnumChatFormatting;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 
@@ -27,7 +28,7 @@ public class BioticStatInertialDampers extends AbstractBioticStat
 
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), EnumChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(level * 0.5f) + EnumChatFormatting.GRAY);
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(level * 0.5f) + ChatFormatting.GRAY);
     }
 
     @Override
@@ -47,10 +48,10 @@ public class BioticStatInertialDampers extends AbstractBioticStat
     {
         if (event instanceof LivingFallEvent)
         {
-            ((LivingFallEvent) event).damageMultiplier *= Math.max(0,1 - level * 0.5f);
-            if ((int)((LivingFallEvent) event).distance > 4)
+            ((LivingFallEvent) event).setDamageMultiplier(((LivingFallEvent) event).getDamageMultiplier() * Math.max(0,1 - level * 0.5f));
+            if ((int)((LivingFallEvent) event).getDistance() > 4)
             {
-                androidPlayer.extractEnergyScaled((int) (((LivingFallEvent) event).distance * level * 0.5f));
+                androidPlayer.extractEnergyScaled((int) (((LivingFallEvent) event).getDistance() * level * 0.5f));
             }
         }
     }

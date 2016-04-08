@@ -9,8 +9,8 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 /**
@@ -95,7 +95,7 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
     {
         IBlockState iblockstate = this.theWorld.getBlockState(p_181065_1_);
         Block block = iblockstate.getBlock();
-        return block == Blocks.air ? true : !block.isFullCube();
+        return block == Blocks.air ? true : !block.isFullCube(iblockstate);
     }
 
     /**

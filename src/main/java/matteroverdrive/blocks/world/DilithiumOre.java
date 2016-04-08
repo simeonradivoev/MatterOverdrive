@@ -2,11 +2,11 @@ package matteroverdrive.blocks.world;
 
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.init.MatterOverdriveItems;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 
 import java.util.Random;
@@ -23,7 +23,7 @@ public class DilithiumOre extends MOBlock
         this.setHardness(4.0f);
         this.setResistance(5.0f);
         this.setHarvestLevel("pickaxe", 3);
-        this.setStepSound(Block.soundTypePiston);
+        //this.setStepSound(Block.soundTypePiston);
     }
 
     public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
@@ -52,7 +52,7 @@ public class DilithiumOre extends MOBlock
 
     private final Random rand = new Random();
     @Override
-    public int getExpDrop(IBlockAccess world, BlockPos pos, int fortune)
+    public int getExpDrop(IBlockState state,IBlockAccess world, BlockPos pos, int fortune)
     {
         if (this.getItemDropped(world.getBlockState(pos), rand, fortune) != Item.getItemFromBlock(this))
         {

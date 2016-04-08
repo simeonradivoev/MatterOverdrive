@@ -36,9 +36,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -67,8 +67,8 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(-Minecraft.getMinecraft().thePlayer.posX, -Minecraft.getMinecraft().thePlayer.posY, -Minecraft.getMinecraft().thePlayer.posZ);
-        renderClient(renderHandler, event.partialTicks);
-        renderOthers(renderHandler, event.partialTicks);
+        renderClient(renderHandler, event.getPartialTicks());
+        renderOthers(renderHandler, event.getPartialTicks());
         GlStateManager.popMatrix();
 
         GlStateManager.disableBlend();
@@ -85,7 +85,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 					EntityPlayer player = (EntityPlayer)o;
 					if (shouldRenderBeam(player))
 					{
-						renderRaycastedBeam(player.getPositionEyes(ticks).addVector(0, player.getEyeHeight(), 0), player.getLook(0), new Vec3(-0.5, -0.3, 1), player);
+						renderRaycastedBeam(player.getPositionEyes(ticks).addVector(0, player.getEyeHeight(), 0), player.getLook(0), new Vec3d(-0.5, -0.3, 1), player);
 					}
 					else
 					{
@@ -100,9 +100,9 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 
         if (shouldRenderBeam(player))
         {
-            Vec3 pos = player.getPositionEyes(1);
-            Vec3 look = player.getLook(0);
-            renderRaycastedBeam(pos, look, new Vec3(-0.1, -0.1, 0.15), player);
+            Vec3d pos = player.getPositionEyes(1);
+            Vec3d look = player.getLook(0);
+            renderRaycastedBeam(pos, look, new Vec3d(-0.1, -0.1, 0.15), player);
         }
         else
         {
@@ -115,7 +115,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
     {
         if (!soundMap.containsKey(player))
         {
-            ItemStack weaponStack = player.getItemInUse();
+            ItemStack weaponStack = player.getActiveItemStack();
             if (weaponStack != null && weaponStack.getItem() instanceof IWeapon)
             {
                 //WeaponSound sound = new WeaponSound(new ResourceLocation(((IWeapon)weaponStack.getItem()).getFireSound(weaponStack, player)), (float)player.posX, (float)player.posY, (float)player.posZ, random.nextFloat() * 0.05f + 0.2f, 1);
@@ -150,19 +150,19 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 
     @Override
     protected boolean shouldRenderBeam(EntityPlayer entity) {
-        return entity.isUsingItem() &&
-				(entity.getItemInUse().getItem() instanceof Phaser ||
-					entity.getItemInUse().getItem() instanceof OmniTool);
+        return entity.isHandActive() &&
+				(entity.getActiveItemStack().getItem() instanceof Phaser ||
+					entity.getActiveItemStack().getItem() instanceof OmniTool);
     }
 
     @Override
-    protected void onBeamRaycastHit(MovingObjectPosition hit, EntityPlayer caster)
+    protected void onBeamRaycastHit(RayTraceResult hit, EntityPlayer caster)
     {
-        ItemStack weaponStack = caster.getItemInUse();
+        ItemStack weaponStack = caster.getActiveItemStack();
         if (weaponStack != null && weaponStack.getItem() instanceof EnergyWeapon)
         {
             ((EnergyWeapon) weaponStack.getItem()).onProjectileHit(hit, weaponStack, caster.worldObj, 1);
-            if (weaponStack.getItem() instanceof OmniTool && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+            if (weaponStack.getItem() instanceof OmniTool && hit.typeOfHit == RayTraceResult.Type.BLOCK)
             {
                 GlStateManager.pushMatrix();
                 RenderUtils.applyColorWithMultipy(getBeamColor(caster), 0.5f + (float)(1+Math.sin(caster.worldObj.getWorldTime() * 0.5f)) * 0.5f);
@@ -205,13 +205,13 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
     @Override
     protected Color getBeamColor(EntityPlayer caster)
     {
-        return new Color(WeaponHelper.getColor(caster.getItemInUse()));
+        return new Color(WeaponHelper.getColor(caster.getActiveItemStack()));
     }
 
     @Override
     protected ResourceLocation getBeamTexture(EntityPlayer caster)
     {
-        ItemStack weaponStack = caster.getItemInUse();
+        ItemStack weaponStack = caster.getActiveItemStack();
         if (weaponStack != null && weaponStack.getItem() instanceof IWeapon)
         {
            if (weaponStack.getItem() instanceof Phaser)
@@ -230,7 +230,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
     protected float getBeamMaxDistance(EntityPlayer caster)
     {
         int range = Phaser.RANGE;
-        ItemStack weaponStack = caster.getItemInUse();
+        ItemStack weaponStack = caster.getActiveItemStack();
         if (weaponStack != null && weaponStack.getItem() instanceof IWeapon)
         {
             range = ((IWeapon) weaponStack.getItem()).getRange(weaponStack);
@@ -241,7 +241,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
     @Override
     protected float getBeamThickness(EntityPlayer caster)
     {
-        ItemStack weaponStack = caster.getItemInUse();
+        ItemStack weaponStack = caster.getActiveItemStack();
         if (weaponStack != null && weaponStack.getItem() instanceof IWeapon)
         {
             if (weaponStack.getItem() instanceof Phaser)

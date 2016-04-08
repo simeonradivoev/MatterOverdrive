@@ -20,7 +20,7 @@ package matteroverdrive.api.events.weapon;
 
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -32,11 +32,11 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MOEventPlasmaBlotHit extends Event
 {
     public final ItemStack weapon;
-    public final MovingObjectPosition hit;
+    public final RayTraceResult hit;
     public final PlasmaBolt plasmaBolt;
     public final Side side;
 
-    public MOEventPlasmaBlotHit(ItemStack weapon, MovingObjectPosition hit, PlasmaBolt plasmaBolt, Side side)
+    public MOEventPlasmaBlotHit(ItemStack weapon, RayTraceResult hit, PlasmaBolt plasmaBolt, Side side)
     {
         this.weapon = weapon;
         this.hit = hit;

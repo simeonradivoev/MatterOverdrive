@@ -27,17 +27,19 @@ import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.element.ElementSlot;
 import matteroverdrive.gui.element.MOElementButton;
 import matteroverdrive.handler.GoogleAnalyticsCommon;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.network.packet.server.PacketUnlockBioticStat;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 /**
  * Created by Simeon on 5/27/2015.
@@ -114,7 +116,7 @@ public class ElementBioStat extends MOElementButton
         {
             if (stat.canBeUnlocked(player,level+1) && level < stat.maxLevel())
             {
-                MOGuiBase.playSound(Reference.MOD_ID + ":" + "gui.biotic_stat_unlock", 1, 1);
+                MOGuiBase.playSound(MatterOverdriveSounds.guiBioticStatUnlock, 1, 1);
                 MatterOverdrive.packetPipeline.sendToServer(new PacketUnlockBioticStat(stat.getUnlocalizedName(),++level));
                 MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BIOTIC_STATS, GoogleAnalyticsCommon.EVENT_ACTION_BIOTIC_STAT_UNLOCK,stat.getUnlocalizedName(),null);
             }

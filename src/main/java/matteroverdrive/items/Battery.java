@@ -18,6 +18,7 @@
 
 package matteroverdrive.items;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.util.MOEnergyHelper;
@@ -26,7 +27,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -57,7 +57,7 @@ public class Battery extends MOItemEnergyContainer
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
         super.addDetails(itemstack, player, infos);
-        infos.add(EnumChatFormatting.GRAY + MOStringHelper.translateToLocal("gui.tooltip.energy.io") + ": " + maxReceive + "/" + maxExtract + MOEnergyHelper.ENERGY_UNIT + "/t");
+        infos.add(ChatFormatting.GRAY + MOStringHelper.translateToLocal("gui.tooltip.energy.io") + ": " + maxReceive + "/" + maxExtract + MOEnergyHelper.ENERGY_UNIT + "/t");
     }
 
     /*@Override
@@ -94,7 +94,8 @@ public class Battery extends MOItemEnergyContainer
 		}
 	}*/
 
-	@Override
+	// TODO: 3/26/2016 Find how to get color for Stack
+	/*@Override
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack itemStack, int pass)
 	{
@@ -103,7 +104,7 @@ public class Battery extends MOItemEnergyContainer
 			return color.getColor();
 		}
 		return super.getColorFromItemStack(itemStack,pass);
-	}
+	}*/
 
 	@Override
 	public void setEnergyStored(ItemStack container,int amount)

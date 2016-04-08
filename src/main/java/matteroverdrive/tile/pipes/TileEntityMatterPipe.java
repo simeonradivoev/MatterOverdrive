@@ -20,10 +20,6 @@ package matteroverdrive.tile.pipes;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.transport.IGridNode;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.data.MatterStorage;
 import matteroverdrive.data.transport.FluidPipeNetwork;
 import matteroverdrive.data.transport.IFluidPipe;
@@ -31,16 +27,20 @@ import matteroverdrive.fluids.FluidMatterPlasma;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.TimeTracker;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -110,6 +110,11 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
     {
         if (entity != null)
         {
+            if (entity instanceof TileEntityMatterPipe)
+            {
+                if (this.getBlockType() != entity.getBlockType())
+                    return false;
+            }
             if (entity instanceof IFluidHandler)
             {
                 return ((IFluidHandler) entity).canDrain(direction, MatterOverdriveFluids.matterPlasma) || ((IFluidHandler) entity).canFill(direction,MatterOverdriveFluids.matterPlasma);
@@ -182,7 +187,7 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
         for (EnumFacing side : EnumFacing.VALUES)
         {
             TileEntity neighborEntity = world.getTileEntity(pos.offset(side));
-            if (neighborEntity instanceof TileEntityMatterPipe)
+            if (neighborEntity instanceof TileEntityMatterPipe && this.getBlockType() == neighborEntity.getBlockType())
             {
                 if (((TileEntityMatterPipe) neighborEntity).getNetwork() != null && ((TileEntityMatterPipe) neighborEntity).getNetwork() != this.fluidPipeNetwork)
                 {
@@ -206,7 +211,7 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
     @Override
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
-        updateSides(false);
+        updateSides(true);
     }
 
     @Override
@@ -270,7 +275,7 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
     @Override
     public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
     {
-        return true;
+        return toNode instanceof TileEntityMatterPipe;
     }
 
     @Override

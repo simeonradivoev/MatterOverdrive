@@ -1,18 +1,18 @@
 package matteroverdrive.data.quest;
 
 import com.google.gson.JsonObject;
-import matteroverdrive.util.MOJsonHelper;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import matteroverdrive.api.quest.IQuestLogic;
-import matteroverdrive.api.quest.IQuestReward;
-import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.*;
 import matteroverdrive.data.quest.logic.AbstractQuestLogic;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
+import matteroverdrive.util.MOJsonHelper;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -56,7 +56,7 @@ public class GenericMultiQuest extends GenericQuest
     @Override
     public boolean canBeAccepted(QuestStack questStack, EntityPlayer entityPlayer)
     {
-        MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
+        MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(entityPlayer);
         if (extendedProperties != null)
         {
             for (IQuestLogic logic : logics)
@@ -152,27 +152,59 @@ public class GenericMultiQuest extends GenericQuest
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
-        boolean hasChangedFlag = false;
+        QuestState.Type type = null;
+        List<Integer> logicIds = null;
         for (int i = 0;i < logics.length;i++)
         {
             if (sequential)
             {
                 if (i <= getCurrentObjective(questStack))
                 {
-                    hasChangedFlag |= logics[i].onEvent(questStack,event,entityPlayer);
+                    QuestLogicState logicState = logics[i].onEvent(questStack,event,entityPlayer);
+                    if (logicState != null && logicState.isShowOnHud())
+                    {
+                        if (logicIds == null)
+                        {
+                            logicIds = new ArrayList<>();
+                        }
+                        logicIds.add(i);
+                        type = QuestState.Type.UPDATE;
+                    }
+                }
+                else if (i >= getObjectivesCount(questStack,entityPlayer)-1)
+                {
+                    type = QuestState.Type.COMPLETE;
                 }
             }else
             {
-                if (logics[i].onEvent(questStack,event,entityPlayer))
+                QuestLogicState logicState = logics[i].onEvent(questStack,event,entityPlayer);
+                if (logicState != null && logicState.isShowOnHud())
                 {
-                    hasChangedFlag = true;
+                    if (type == null || type == QuestState.Type.UPDATE)
+                    {
+                        type = logicState.getType();
+                        if (logicIds == null)
+                        {
+                            logicIds = new ArrayList<>();
+                        }
+                        logicIds.add(i);
+                    }
                 }
             }
 
         }
-        return hasChangedFlag;
+        if (type != null && logicIds != null)
+        {
+            int[] logicIdsArray = new int[logicIds.size()];
+            for (int i = 0;i < logicIds.size();i++)
+            {
+                logicIdsArray[i] = logicIds.get(i);
+            }
+            return new QuestState(type,logicIdsArray,true);
+        }
+        return null;
     }
 
     @Override

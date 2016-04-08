@@ -29,10 +29,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -46,22 +47,23 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
     public BlockGravitationalAnomaly(Material material, String name)
     {
         super(material, name);
-        setBlockBounds(0.3f,0.3f,0.3f,0.6f,0.6f,0.6f);
+        // TODO: 3/25/2016 Find how to set block bounds
+        //setBlockBounds(0.3f,0.3f,0.3f,0.6f,0.6f,0.6f);
         setBlockUnbreakable();
         setResistance(6000000.0F);
         disableStats();
     }
     @Override
-    public boolean isNormalCube()
+    public boolean isNormalCube(IBlockState blockState)
     {
         return false;
     }
 
     @Override
-    public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)
+    public RayTraceResult collisionRayTrace(IBlockState state,World worldIn, BlockPos pos, Vec3d start, Vec3d end)
     {
-        this.setBlockBoundsBasedOnState(worldIn,pos);
-        return super.collisionRayTrace(worldIn,pos,start,end);
+        //this.setBlockBoundsBasedOnState(worldIn,pos);
+        return super.collisionRayTrace(state,worldIn,pos,start,end);
     }
 
     @Override
@@ -70,8 +72,8 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
         return true;
     }
 
-    @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
+    /*@Override
+    public void setBlockBoundsBasedOnState(IBlockStateIBlockAccess world, BlockPos pos)
     {
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityGravitationalAnomaly)
@@ -82,22 +84,22 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
             float rangeMax = (float)(0.5 + (range/2));
             setBlockBounds(rangeMin, rangeMin, rangeMin, rangeMax, rangeMax, rangeMax);
         }
-    }
+    }*/
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state,World worldIn, BlockPos pos)
     {
         return null;
     }
 
     @Override
-    public boolean isOpaqueCube()
+    public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
 
     @Override
-    public boolean isFullCube()
+    public boolean isFullCube(IBlockState state)
     {
         return false;
     }
@@ -125,15 +127,15 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
     }
 
     @Override
-    public boolean canEntityDestroy(IBlockAccess world, BlockPos pos, Entity entity)
+    public boolean canEntityDestroy(IBlockState state,IBlockAccess world, BlockPos pos, Entity entity)
     {
         return false;
     }
 
     @Override
-    public int getRenderType()
+    public EnumBlockRenderType getRenderType(IBlockState state)
     {
-        return -1;
+        return EnumBlockRenderType.INVISIBLE;
     }
 
     @Override

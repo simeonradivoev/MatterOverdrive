@@ -24,7 +24,7 @@ import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.Collection;
 import java.util.LinkedList;

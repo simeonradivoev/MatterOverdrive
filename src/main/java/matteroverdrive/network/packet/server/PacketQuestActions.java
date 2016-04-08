@@ -18,19 +18,20 @@
 
 package matteroverdrive.network.packet.server;
 
-import matteroverdrive.MatterOverdrive;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.items.Contract;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.quest.PacketSyncQuests;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.EnumSet;
 
@@ -89,7 +90,7 @@ public class PacketQuestActions extends PacketAbstract
             Entity entity = player.worldObj.getEntityByID(message.playerID);
             if (entity instanceof EntityPlayer)
             {
-                MOExtendedProperties extendedProperties = MOExtendedProperties.get((EntityPlayer) entity);
+                MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability((EntityPlayer) entity);
                 if (extendedProperties != null)
                 {
                     if (message.questID < extendedProperties.getQuestData().getActiveQuests().size()) {

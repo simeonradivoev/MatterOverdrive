@@ -3,11 +3,13 @@ package matteroverdrive.data.quest.logic;
 import com.google.gson.JsonObject;
 import matteroverdrive.api.events.MOEventTransport;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.util.MOJsonHelper;
 import matteroverdrive.util.MOQuestHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
@@ -69,7 +71,7 @@ public class QuestLogicTeleport extends AbstractQuestLogic
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
         if (event instanceof MOEventTransport)
         {
@@ -80,21 +82,19 @@ public class QuestLogicTeleport extends AbstractQuestLogic
                 int distance = ((MOEventTransport) event).destination.getDistance(pos);
                 if (distance < maxDistance && distance > minDistance)
                 {
-                    if (autoComplete)
-                        questStack.markComplited(entityPlayer,false);
+                    markComplete(questStack,entityPlayer);
                     setTeleported(questStack);
-                    return true;
+                    return new QuestLogicState(QuestState.Type.COMPLETE,true);
                 }
             }else
             {
-                if (autoComplete)
-                    questStack.markComplited(entityPlayer,false);
+                markComplete(questStack,entityPlayer);
                 setTeleported(questStack);
-                return true;
+                return new QuestLogicState(QuestState.Type.COMPLETE,true);
             }
 
         }
-        return false;
+        return null;
     }
 
     @Override

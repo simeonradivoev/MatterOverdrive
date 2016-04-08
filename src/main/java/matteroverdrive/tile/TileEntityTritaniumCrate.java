@@ -18,25 +18,25 @@
 
 package matteroverdrive.tile;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.world.IInteractionObject;
-import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.data.TileEntityInventory;
 import matteroverdrive.data.inventory.CrateSlot;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MOStringHelper;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.EnumSet;
 
@@ -192,7 +192,7 @@ public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory
     }
 
     @Override
-    public IChatComponent getDisplayName()
+    public ITextComponent getDisplayName()
     {
         return inventory.getDisplayName();
     }

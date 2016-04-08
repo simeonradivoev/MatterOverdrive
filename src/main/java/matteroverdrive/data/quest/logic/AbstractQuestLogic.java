@@ -19,7 +19,9 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.IQuestLogic;
+import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.Entity;
@@ -28,6 +30,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -35,13 +39,23 @@ import java.util.Random;
  */
 public abstract class AbstractQuestLogic implements IQuestLogic
 {
+    protected List<IQuestReward> rewards;
     protected boolean autoComplete;
     private String id;
+
+    public AbstractQuestLogic()
+    {
+        rewards = new ArrayList<>();
+    }
 
     @Override
     public void loadFromJson(JsonObject jsonObject)
     {
         this.autoComplete = MOJsonHelper.getBool(jsonObject,"auto_complete",false);
+        if (jsonObject.has("rewards"))
+        {
+            rewards.addAll(MatterOverdrive.questAssembler.parseRewards(jsonObject.getAsJsonArray("rewards")));
+        }
     }
 
     @Override
@@ -147,6 +161,20 @@ public abstract class AbstractQuestLogic implements IQuestLogic
         }else
         {
             return questStack.getTagCompound().getCompoundTag(getID());
+        }
+    }
+
+    protected void markComplete(QuestStack questStack,EntityPlayer entityPlayer)
+    {
+        if (autoComplete)
+            questStack.markComplited(entityPlayer,false);
+
+        if (rewards != null)
+        {
+            for (IQuestReward reward : rewards)
+            {
+                reward.giveReward(questStack,entityPlayer);
+            }
         }
     }
 }

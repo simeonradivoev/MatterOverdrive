@@ -18,13 +18,13 @@
 
 package matteroverdrive.util;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.starmap.PlanetStatType;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -38,7 +38,7 @@ import java.text.DecimalFormat;
  */
 public class MOStringHelper
 {
-    public static final String MORE_INFO = EnumChatFormatting.RESET.toString() + EnumChatFormatting.GRAY + "Hold "+ EnumChatFormatting.ITALIC + EnumChatFormatting.YELLOW + "Shift" + EnumChatFormatting.RESET.toString() + EnumChatFormatting.GRAY + " for Details.";
+    public static final String MORE_INFO = ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Hold "+ ChatFormatting.ITALIC + ChatFormatting.YELLOW + "Shift" + ChatFormatting.RESET.toString() + ChatFormatting.GRAY + " for Details.";
 
     private static String[] suffix = new String[]{"","K", "M", "B", "T"};
     private static int MAX_LENGTH = 4;
@@ -100,33 +100,33 @@ public class MOStringHelper
         return message.substring(0, MathHelper.clamp_int(Math.round(messageCount * percent),0,messageCount));
     }
 
-    public static boolean hasTranslation(String string){return StatCollector.canTranslate(string);}
+    public static boolean hasTranslation(String string){return I18n.hasKey(string);}
 
-    public static String translateToLocal(String string)
+    public static String translateToLocal(String string,Object... params)
     {
-        return StatCollector.translateToLocal(string);
+        return I18n.format(string,params);
     }
 
     public static String translateToLocal(PlanetStatType statType)
     {
-        return StatCollector.translateToLocal("planet_stat." + statType.getUnlocalizedName() + ".name");
+        return I18n.format("planet_stat." + statType.getUnlocalizedName() + ".name");
     }
 
     public static String translateToLocal(UpgradeTypes type)
     {
-        return StatCollector.translateToLocal("upgradetype." + type.name() + ".name");
+        return I18n.format("upgradetype." + type.name() + ".name");
     }
     public static String weaponStatTranslateToLocal(int type)
     {
-        return StatCollector.translateToLocal("weaponstat." + type + ".name");
+        return I18n.format("weaponstat." + type + ".name");
     }
     public static String toInfo(UpgradeTypes type,double value,boolean good)
     {
         String info = "";
         if (good)
-            info += EnumChatFormatting.GREEN;
+            info += ChatFormatting.GREEN;
         else
-            info += EnumChatFormatting.RED;
+            info += ChatFormatting.RED;
 
 
         DecimalFormat format = new DecimalFormat("##");
@@ -139,9 +139,9 @@ public class MOStringHelper
     {
         String info = "";
         if (good)
-            info += EnumChatFormatting.GREEN;
+            info += ChatFormatting.GREEN;
         else
-            info += EnumChatFormatting.RED;
+            info += ChatFormatting.RED;
 
 
         DecimalFormat format = new DecimalFormat("##");

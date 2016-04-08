@@ -33,6 +33,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -234,9 +235,9 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
 
     protected void playSound()
     {
-        String sound = getSound();
-        if (sound != null && !sound.isEmpty()) {
-            MOGuiBase.playSound(Reference.MOD_ID + ":gui." + sound, getSoundVolume(), 0.9f + rand.nextFloat() * 0.2f);
+        SoundEvent event = getSound();
+        if (event != null) {
+            MOGuiBase.playSound(event, getSoundVolume(), 0.9f + rand.nextFloat() * 0.2f);
         }
     }
 

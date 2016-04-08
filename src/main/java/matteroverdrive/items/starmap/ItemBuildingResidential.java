@@ -18,6 +18,7 @@
 
 package matteroverdrive.items.starmap;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.starmap.BuildingType;
 import matteroverdrive.api.starmap.IPlanetStatChange;
 import matteroverdrive.api.starmap.PlanetStatType;
@@ -25,7 +26,6 @@ import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -51,10 +51,10 @@ public class ItemBuildingResidential extends ItemBuildingAbstract implements IPl
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
         super.addDetails(itemstack,player,infos);
-        infos.add(EnumChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.POPULATION_COUNT) + ": +" + POPULATION_COUNT);
-        infos.add(EnumChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.BUILDINGS_SIZE) + ": +" + BUILDING_SIZE_INCREASE);
-        infos.add(EnumChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.ENERGY_PRODUCTION) + ": -" + ENERGY_DRAIN);
-        infos.add(EnumChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.MATTER_PRODUCTION) + ": -" + MATTER_DRAIN);
+        infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.POPULATION_COUNT) + ": +" + POPULATION_COUNT);
+        infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.BUILDINGS_SIZE) + ": +" + BUILDING_SIZE_INCREASE);
+        infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.ENERGY_PRODUCTION) + ": -" + ENERGY_DRAIN);
+        infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.MATTER_PRODUCTION) + ": -" + MATTER_DRAIN);
     }
 
     @Override

@@ -19,11 +19,9 @@
 package matteroverdrive.data.quest;
 
 import com.google.gson.JsonObject;
-import matteroverdrive.api.quest.IQuestLogic;
-import matteroverdrive.api.quest.IQuestReward;
-import matteroverdrive.api.quest.Quest;
-import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.*;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -53,7 +51,7 @@ public class GenericQuest extends Quest
     @Override
     public boolean canBeAccepted(QuestStack questStack, EntityPlayer entityPlayer)
     {
-        MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
+        MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(entityPlayer);
         if (extendedProperties != null)
         {
             return questLogic.canAccept(questStack,entityPlayer) && !extendedProperties.hasCompletedQuest(questStack) && !extendedProperties.hasQuest(questStack);
@@ -122,9 +120,11 @@ public class GenericQuest extends Quest
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
-        return questLogic.onEvent(questStack,event,entityPlayer);
+        QuestLogicState state = questLogic.onEvent(questStack,event,entityPlayer);
+        if (state == null) return null;
+        return new QuestState(state.getType(), new int[]{0}, state.isShowOnHud());
     }
 
     @Override

@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
 import java.text.DecimalFormat;
@@ -26,7 +26,7 @@ public class WeaponLayerAmmoRender implements IWeaponLayer
     @Override
     public void renderLayer(WeaponMetadataSection weaponMeta,ItemStack weapon, float ticks, int pass)
     {
-        Vec3 modulePosition = weaponMeta.getModulePosition("ammo_holo",new Vec3(0.17, 0.13, 0.2));
+        Vec3d modulePosition = weaponMeta.getModulePosition("ammo_holo",new Vec3d(0.17, 0.13, 0.2));
 
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();

@@ -39,7 +39,7 @@ public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
     {
         super(world);
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAIAndroidAttackOnCollide(this, EntityLivingBase.class, 1.0D, false));
+        this.tasks.addTask(2, new EntityAIAndroidAttackOnCollide(this, 1.0D, false));
         this.tasks.addTask(3, new EntityAIMoveAlongPath(this, 1.0D));
         this.tasks.addTask(4, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
@@ -53,21 +53,21 @@ public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(64.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(24);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(64.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(24);
     }
 
     public void setAndroidLevel(int level)
     {
         super.setAndroidLevel(level);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4.0D + level);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D + level);
     }
 
     public void setLegendary(boolean legendary)
     {
         super.setLegendary(legendary);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(8);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(8);
     }
 
     @Override

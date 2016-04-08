@@ -23,8 +23,8 @@ import matteroverdrive.client.data.Color;
 import matteroverdrive.starmap.data.Star;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;

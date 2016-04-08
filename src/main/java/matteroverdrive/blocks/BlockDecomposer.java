@@ -22,9 +22,10 @@ import matteroverdrive.blocks.includes.MOMatterEnergyStorageBlock;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.machines.decomposer.TileEntityMachineDecomposer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -41,13 +42,13 @@ public class BlockDecomposer extends MOMatterEnergyStorageBlock
 	}
 
     @Override
-    public boolean canPlaceTorchOnTop(IBlockAccess world, BlockPos pos)
+    public boolean canPlaceTorchOnTop(IBlockState state,IBlockAccess world, BlockPos pos)
 	 {
 		 return true;
 	 }
 
     @Override
-	 public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
+	 public boolean isSideSolid(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing side)
 	 {
 		 return true;
 	 }

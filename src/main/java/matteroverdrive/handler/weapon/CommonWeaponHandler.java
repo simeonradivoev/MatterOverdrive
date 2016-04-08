@@ -18,12 +18,13 @@
 
 package matteroverdrive.handler.weapon;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,9 +71,9 @@ public class CommonWeaponHandler
     @SubscribeEvent
     public void onEnergyWeaponEvent(MOEventEnergyWeapon eventEnergyWeapon)
     {
-        if (eventEnergyWeapon.entityLiving != null && eventEnergyWeapon.entityLiving instanceof EntityPlayer)
+        if (eventEnergyWeapon.getEntity() != null)
         {
-            AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)eventEnergyWeapon.entityLiving);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(eventEnergyWeapon.getEntity());
             if (androidPlayer != null)
             {
                 androidPlayer.onWeaponEvent(eventEnergyWeapon);

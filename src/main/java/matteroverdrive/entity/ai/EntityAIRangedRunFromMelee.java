@@ -21,7 +21,7 @@ package matteroverdrive.entity.ai;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Created by Simeon on 12/11/2015.
@@ -31,7 +31,7 @@ public class EntityAIRangedRunFromMelee extends EntityAIBase
     private double minDistanceSq;
     private EntityCreature theEntity;
     private double moveSpeed;
-    Vec3 destinaton;
+    Vec3d destinaton;
 
     public EntityAIRangedRunFromMelee(EntityCreature theEntity,double moveSpeed)
     {
@@ -49,7 +49,7 @@ public class EntityAIRangedRunFromMelee extends EntityAIBase
             if (sqDistanceToTargetSq+4 < minDistanceSq)
             {
                 int distanceToRun = (int) Math.sqrt(minDistanceSq - sqDistanceToTargetSq);
-                destinaton = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.theEntity, distanceToRun, 4,new Vec3(this.theEntity.getAttackTarget().posX,this.theEntity.getAttackTarget().posY,this.theEntity.getAttackTarget().posZ));
+                destinaton = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.theEntity, distanceToRun, 4,new Vec3d(this.theEntity.getAttackTarget().posX,this.theEntity.getAttackTarget().posY,this.theEntity.getAttackTarget().posZ));
                 return destinaton != null;
             }
         }

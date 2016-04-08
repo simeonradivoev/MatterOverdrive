@@ -24,7 +24,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.Iterator;
 
 public class MatterEntryItem extends MatterEntryAbstract<Item,ItemStack>
@@ -110,7 +112,7 @@ public class MatterEntryItem extends MatterEntryAbstract<Item,ItemStack>
     @Override
     public String writeKey()
     {
-        return key.getRegistryName();
+        return key.getRegistryName().toString();
     }
 
     @Override

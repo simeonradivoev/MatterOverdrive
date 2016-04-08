@@ -19,14 +19,16 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
-import matteroverdrive.util.MOJsonHelper;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.data.quest.QuestItem;
+import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.util.List;
 import java.util.Random;
@@ -34,7 +36,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 12/9/2015.
  */
-public class QuestLogicCraft extends QuestLogicRandomItem
+public class QuestLogicCraft extends AbstractQuestLogicRandomItem
 {
     int minCraftCount;
     int maxCraftCount;
@@ -150,7 +152,7 @@ public class QuestLogicCraft extends QuestLogicRandomItem
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
         if (event instanceof PlayerEvent.ItemCraftedEvent)
         {
@@ -160,16 +162,18 @@ public class QuestLogicCraft extends QuestLogicRandomItem
                 {
                     setCraftCount(questStack, getCraftCount(questStack) + 1);
 
-                    if (isObjectiveCompleted(questStack,entityPlayer,0) && autoComplete)
+                    if (isObjectiveCompleted(questStack,entityPlayer,0))
                     {
-                        questStack.markComplited(entityPlayer,false);
+                        markComplete(questStack,entityPlayer);
+                        return new QuestLogicState(QuestState.Type.COMPLETE,true);
+                    }else
+                    {
+                        return new QuestLogicState(QuestState.Type.UPDATE,true);
                     }
-
-                    return true;
                 }
             }
         }
-        return false;
+        return null;
     }
 
     @Override

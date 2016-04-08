@@ -28,6 +28,7 @@ import matteroverdrive.multiblock.IMultiBlockTileStructure;
 import matteroverdrive.multiblock.MultiBlockTileStructureMachine;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 
 import java.util.EnumSet;
 
@@ -47,7 +48,7 @@ public class TileEntityFusionReactorPart extends MOTileEntityMachineMatter imple
     }
 
     @Override
-    public String getSound() {
+    public SoundEvent getSound() {
         return null;
     }
 

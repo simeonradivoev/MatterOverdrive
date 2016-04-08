@@ -39,6 +39,8 @@ public class MOGuideEntryBlock extends MOGuideEntry
     @Override
     public String getDisplayName()
     {
-        return getStackIcons()[0].getDisplayName();
+        if (getStackIcons() != null && getStackIcons().length > 0 && getStackIcons()[0] != null)
+            return getStackIcons()[0].getDisplayName();
+        return "Unknown Block";
     }
 }

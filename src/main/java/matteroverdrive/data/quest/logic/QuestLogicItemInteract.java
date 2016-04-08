@@ -2,7 +2,9 @@ package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.data.quest.QuestItem;
 import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +18,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 1/24/2016.
  */
-public class QuestLogicItemInteract extends QuestLogicRandomItem
+public class QuestLogicItemInteract extends AbstractQuestLogicRandomItem
 {
     boolean consumeItem;
 
@@ -61,32 +63,27 @@ public class QuestLogicItemInteract extends QuestLogicRandomItem
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
-        if (event instanceof PlayerInteractEvent)
+        if (event instanceof PlayerInteractEvent.RightClickItem)
         {
             PlayerInteractEvent interactEvent = (PlayerInteractEvent)event;
-            if (interactEvent.useItem.equals(Event.Result.DEFAULT) && interactEvent.useBlock.equals(Event.Result.DENY));
+            if (interactEvent.getItemStack() != null);
             {
-                boolean hasItem = interactEvent.entityPlayer.getHeldItem() != null;
-                if (hasItem)
+                boolean isSameItem = matches(questStack,((PlayerInteractEvent.RightClickItem) event).getItemStack());
+                if (isSameItem)
                 {
-                    boolean isSameItem = matches(questStack,interactEvent.entityPlayer.getHeldItem());
-                    if (isSameItem)
+                    setInteracted(questStack, true);
+                    if (consumeItem)
                     {
-                        setInteracted(questStack, true);
-                        if (consumeItem)
-                        {
-                            entityPlayer.getHeldItem().stackSize--;
-                        }
-                        if (autoComplete)
-                            questStack.markComplited(entityPlayer, false);
-                        return true;
+                        interactEvent.getItemStack().stackSize--;
                     }
+                    markComplete(questStack,entityPlayer);
+                    return new QuestLogicState(QuestState.Type.COMPLETE,true);
                 }
             }
         }
-        return false;
+        return null;
     }
 
     @Override

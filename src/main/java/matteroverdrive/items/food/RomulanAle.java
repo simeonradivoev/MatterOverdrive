@@ -18,15 +18,18 @@
 
 package matteroverdrive.items.food;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.Reference;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 /**
@@ -37,28 +40,26 @@ public class RomulanAle extends ItemFood {
 	public RomulanAle(String name) {
 		super(4, 0.6f, false);
 		setUnlocalizedName(name);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
 		setAlwaysEdible();
-	}
-
-	public void register() {
 		setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
-		GameRegistry.registerItem(this, getUnlocalizedName().substring(5));
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityPlayer player) {
-		super.onItemUseFinish(itemStack, world, player);
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
+		super.onItemUseFinish(stack, worldIn, entityLiving);
 
-		if (!player.capabilities.isCreativeMode && !world.isRemote) {
-			--itemStack.stackSize;
+		if (!(entityLiving instanceof EntityPlayer)) return stack;
+		if (!((EntityPlayer)entityLiving).capabilities.isCreativeMode && !worldIn.isRemote) {
+			--stack.stackSize;
 		}
 
 
-		if (!AndroidPlayer.get(player).isAndroid()) player.addPotionEffect(new PotionEffect(9, 160, 8));
+		if (!MOPlayerCapabilityProvider.GetAndroidCapability(entityLiving).isAndroid()) entityLiving.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 160, 8));
 
-		if (itemStack.stackSize > 0) {
-			player.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
-			return itemStack;
+		if (stack.stackSize > 0) {
+			((EntityPlayer)entityLiving).inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
+			return stack;
 		} else {
 			return new ItemStack(Items.glass_bottle);
 		}

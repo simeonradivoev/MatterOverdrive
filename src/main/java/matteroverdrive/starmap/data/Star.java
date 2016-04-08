@@ -24,7 +24,7 @@ import matteroverdrive.starmap.gen.ISpaceBodyGen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.io.File;
@@ -217,8 +217,8 @@ public class Star extends SpaceBody
         getPlanetMap().put(planet.getId(), planet);
     }
     public void setPosition(float x,float y,float z){this.x = x;this.y = y;this.z = z;}
-    public Vec3 getPosition(){return getPosition(1);}
-    public Vec3 getPosition(double multipy){return new Vec3(x * multipy, y * multipy, z * multipy);}
+    public Vec3d getPosition(){return getPosition(1);}
+    public Vec3d getPosition(double multipy){return new Vec3d(x * multipy, y * multipy, z * multipy);}
     public float getX(){return x;}
     public float getY(){return y;}
     public float getZ(){return z;}

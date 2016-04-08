@@ -2,9 +2,9 @@ package matteroverdrive.world;
 
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Created by Simeon on 2/10/2016.
@@ -20,10 +20,10 @@ public class DimensionalRifts
 
     public float getValueAt(BlockPos pos)
     {
-        return this.getValueAt(new Vec3(pos));
+        return this.getValueAt(new Vec3d(pos));
     }
 
-    public float getValueAt(Vec3 pos)
+    public float getValueAt(Vec3d pos)
     {
         if (Minecraft.getMinecraft().theWorld != null)
         {

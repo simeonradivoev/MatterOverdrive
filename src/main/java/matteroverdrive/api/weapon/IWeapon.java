@@ -22,7 +22,7 @@ import matteroverdrive.client.sound.WeaponSound;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector2f;
@@ -106,7 +106,7 @@ public interface IWeapon
      * @param dir the direction of the weapon/bullet.
      * @return was the fire successful.
      */
-    boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot, Vec3 position, Vec3 dir,int delay);
+    boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot, Vec3d position, Vec3d dir, int delay);
 
     /**
      * Shows if the gun is always equipped like a bow in third person.
@@ -179,7 +179,7 @@ public interface IWeapon
      * @return is the weapon zoomed.
      */
     @SideOnly(Side.CLIENT)
-    boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon);
+    boolean isWeaponZoomed(EntityLivingBase entityPlayer,ItemStack weapon);
 
     @SideOnly(Side.CLIENT)
     float getZoomMultiply(EntityPlayer entityPlayer,ItemStack weapon);

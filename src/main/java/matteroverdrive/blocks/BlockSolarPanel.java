@@ -14,7 +14,7 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock
     public BlockSolarPanel(Material material, String name) {
         super(material, name, true, false);
 
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
+        //this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
         setHardness(20.0F);
         this.setResistance(5.0f);
         this.setHarvestLevel("pickaxe", 2);

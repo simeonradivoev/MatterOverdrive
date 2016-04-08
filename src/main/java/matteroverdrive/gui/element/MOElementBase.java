@@ -24,7 +24,7 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
@@ -184,12 +184,12 @@ public abstract class MOElementBase
         glClearStencil(0);
         GlStateManager.clear(GL_STENCIL_BUFFER_BIT);
 
-        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
-        wr.begin(GL_QUADS, DefaultVertexFormats.POSITION);
-        wr.pos(xStart, yEnd, 0).endVertex();
-        wr.pos(xEnd, yEnd, 0).endVertex();
-        wr.pos(xEnd, yStart, 0).endVertex();
-        wr.pos(xStart, yStart, 0).endVertex();
+        VertexBuffer vb = Tessellator.getInstance().getBuffer();
+        vb.begin(GL_QUADS, DefaultVertexFormats.POSITION);
+        vb.pos(xStart, yEnd, 0).endVertex();
+        vb.pos(xEnd, yEnd, 0).endVertex();
+        vb.pos(xEnd, yStart, 0).endVertex();
+        vb.pos(xStart, yStart, 0).endVertex();
         Tessellator.getInstance().draw();
 
         GlStateManager.enableTexture2D();

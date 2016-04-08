@@ -31,7 +31,7 @@ import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.EnumSet;
@@ -174,7 +174,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 
     public void UpdateClientPower()
     {
-        MatterOverdrive.packetPipeline.sendToAllAround(new PacketPowerUpdate(this), new NetworkRegistry.TargetPoint(worldObj.provider.getDimensionId(),getPos().getX(),getPos().getY(),getPos().getZ(),ENERGY_CLIENT_SYNC_RANGE));
+        MatterOverdrive.packetPipeline.sendToAllAround(new PacketPowerUpdate(this), new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(),getPos().getX(),getPos().getY(),getPos().getZ(),ENERGY_CLIENT_SYNC_RANGE));
     }
 
     @Override

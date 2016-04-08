@@ -33,6 +33,7 @@ import matteroverdrive.machines.events.MachineEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.WeightedRandom;
 
 import java.util.EnumSet;
@@ -151,7 +152,7 @@ public class TileEntityMachineContractMarket extends MOTileEntityMachine
     }
 
     @Override
-    public String getSound() {
+    public SoundEvent getSound() {
         return null;
     }
 

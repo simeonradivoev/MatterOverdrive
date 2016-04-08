@@ -1,12 +1,12 @@
 package matteroverdrive.handler.village;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.gen.structure.StructureComponent;
-import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import matteroverdrive.world.MadScientistHouse;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
+import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
+import net.minecraftforge.fml.common.registry.VillagerRegistry;
 
 import java.util.List;
 import java.util.Random;
@@ -35,6 +35,6 @@ public class VillageCreatationMadScientist implements VillagerRegistry.IVillageC
     @Override
     public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5)
     {
-        return MadScientistHouse.func_74898_a(startPiece,pieces,random,p1,p2,p3,facing,p5);
+        return MadScientistHouse.func_175850_a(startPiece,pieces,random,p1,p2,p3,facing,p5);
     }
 }

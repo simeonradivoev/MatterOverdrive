@@ -1,0 +1,53 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cross",
+    "textures": {
+      "cross": "mo:blocks/alien/tallgrass"
+    }
+  },
+  "variants": {
+    "normal": {
+      "model": "cross"
+    },
+    "type=blood_orchid":{
+      "model": "cross",
+      "textures":{
+        "cross": "mo:blocks/alien/blood_orchid"
+      }
+    },
+    "type=elowan":{
+      "model": "cross",
+      "textures":{
+        "cross": "mo:blocks/alien/elowan"
+      }
+    },
+    "type=katterpod":{
+      "model": "cross",
+      "textures":{
+        "cross": "mo:blocks/alien/katterpod"
+      }
+    },
+    "type=lasher":{
+      "model": "cross",
+      "textures":{
+        "cross": "mo:blocks/alien/lasher"
+      }
+    },"type=metarex":{
+      "model": "cross",
+      "textures":{
+        "cross": "mo:blocks/alien/metarex"
+      }
+    },"type=sap_sac":{
+      "model": "cross",
+      "textures":{
+        "cross": "mo:blocks/alien/sap_sac"
+      }
+    },"type=nirnroot":{
+      "model": "cross",
+      "textures":{
+        "cross": "mo:blocks/alien/nirnroot"
+      }
+    }
+  }
+}

@@ -38,10 +38,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.*;
@@ -127,9 +129,9 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
                                 if (inventory.getStackInSlot(COLOR_MODULE_SLOT) != null && inventory.getStackInSlot(COLOR_MODULE_SLOT).getItem() instanceof IWeaponColor)
                                 {
                                     entity.setVisorColor(((IWeaponColor) inventory.getStackInSlot(COLOR_MODULE_SLOT).getItem()).getColor(inventory.getStackInSlot(COLOR_MODULE_SLOT), null));
-                                    if (entity.getHeldItem() != null)
+                                    if (entity.getHeldItem(EnumHand.MAIN_HAND) != null)
                                     {
-                                        WeaponHelper.setModuleAtSlot(Reference.MODULE_COLOR, entity.getHeldItem(), inventory.getStackInSlot(COLOR_MODULE_SLOT));
+                                        WeaponHelper.setModuleAtSlot(Reference.MODULE_COLOR, entity.getHeldItem(EnumHand.MAIN_HAND), inventory.getStackInSlot(COLOR_MODULE_SLOT));
                                     }
                                 }
                             }
@@ -165,7 +167,7 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
 
     public void assignPath(EntityRougeAndroidMob androidMob)
     {
-        List<Vec3> paths = new ArrayList<>();
+        List<Vec3d> paths = new ArrayList<>();
         for (int i = FLASH_DRIVE_SLOT_START;i < FLASH_DRIVE_COUNT;i++)
         {
             ItemStack flashDrive = inventory.getSlot(i).getItem();
@@ -173,16 +175,16 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
             {
                 BlockPos position = ((TransportFlashDrive) flashDrive.getItem()).getTarget(flashDrive);
                 if (position != null)
-                    paths.add(new Vec3(position));
+                    paths.add(new Vec3d(position));
             }
         }
 
         if (paths.size() <= 0)
         {
-            androidMob.setPath(new Vec3[]{new Vec3(getPos())},getSpawnRange());
+            androidMob.setPath(new Vec3d[]{new Vec3d(getPos())},getSpawnRange());
         }else
         {
-            androidMob.setPath(paths.toArray(new Vec3[paths.size()]),getSpawnRange());
+            androidMob.setPath(paths.toArray(new Vec3d[paths.size()]),getSpawnRange());
         }
     }
 
@@ -234,7 +236,7 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
     }
 
     @Override
-    public String getSound()
+    public SoundEvent getSound()
     {
         return null;
     }

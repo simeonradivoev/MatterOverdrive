@@ -21,17 +21,13 @@ package matteroverdrive.items;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -76,27 +72,6 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
         {
             infos.add(MOStringHelper.toInfo(entry.getKey(),entry.getValue()));
         }
-    }
-
-    @Override
-    public void register(String name)
-    {
-        super.register(name);
-        GameRegistry.addRecipe(new ItemStack(this, 1, 0), " R ", " C ", " T ", 'G', Blocks.glass, 'R', Items.redstone, 'T', MatterOverdriveItems.tritanium_plate, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0));
-        //speed
-        GameRegistry.addRecipe(new ItemStack(this,1,1)," R ","GUG"," E ",'U',this,'G',Items.glowstone_dust,'R',Items.redstone,'E',Items.emerald);
-        //power
-        GameRegistry.addRecipe(new ItemStack(this,1,2)," B ","RUR"," C ",'U',this,'B',MatterOverdriveItems.battery,'R',Items.redstone,'C',Items.quartz);
-        //failsafe
-        GameRegistry.addRecipe(new ItemStack(this, 1, 3), " D ", "RUR", " G ", 'U', this, 'D', Items.diamond, 'R', Items.redstone, 'G', Items.gold_ingot);
-        //range
-        GameRegistry.addRecipe(new ItemStack(this, 1, 4), " E ", "RUR", " G ", 'U', this, 'E', Items.ender_pearl, 'R', Items.redstone, 'G', Items.gold_ingot);
-        //power storage
-        GameRegistry.addRecipe(new ItemStack(this, 1, 5), "   ", "RUR", " B ", 'U', this, 'B', MatterOverdriveItems.hc_battery, 'R', Items.redstone, 'G', Items.gold_ingot);
-        //hyper speed
-        GameRegistry.addShapelessRecipe(new ItemStack(this, 1, 6), MatterOverdriveItems.dilithium_ctystal,Items.nether_star,new ItemStack(this,1,1));
-        //matter storage
-        GameRegistry.addRecipe(new ItemStack(this, 1, 7), " R ", "MUM", " R ", 'U', this, 'M', MatterOverdriveItems.s_magnet, 'R',Items.redstone);
     }
 
     @Override

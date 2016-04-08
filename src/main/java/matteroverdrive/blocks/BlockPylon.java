@@ -6,16 +6,18 @@ import matteroverdrive.machines.dimensional_pylon.TileEntityMachineDimensionalPy
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,17 +43,11 @@ public class BlockPylon extends MOBlock implements ITileEntityProvider, IMultiBl
         return getDefaultState();
     }
 
-    @Override
-    public void register()
-    {
-        super.register();
-        GameRegistry.registerTileEntity(createNewTileEntity(null, 0).getClass(), this.getRegistryName());
-    }
 
     @Override
-    protected BlockState createBlockState()
+    protected BlockStateContainer createBlockState()
     {
-        return new BlockState(this,TYPE);
+        return new BlockStateContainer(this,TYPE);
     }
 
     @Override
@@ -68,7 +64,7 @@ public class BlockPylon extends MOBlock implements ITileEntityProvider, IMultiBl
     }
 
     @Override
-    public boolean isOpaqueCube()
+    public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
@@ -80,7 +76,7 @@ public class BlockPylon extends MOBlock implements ITileEntityProvider, IMultiBl
     }
 
     @Override
-    public boolean isFullCube()
+    public boolean isFullCube(IBlockState state)
     {
         return false;
     }
@@ -103,7 +99,7 @@ public class BlockPylon extends MOBlock implements ITileEntityProvider, IMultiBl
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
         {
@@ -147,6 +143,6 @@ public class BlockPylon extends MOBlock implements ITileEntityProvider, IMultiBl
                 return false;
 
         }
-        return super.shouldSideBeRendered(worldIn,pos,side);
+        return super.shouldSideBeRendered(originalBlockState,worldIn,pos,side);
     }
 }

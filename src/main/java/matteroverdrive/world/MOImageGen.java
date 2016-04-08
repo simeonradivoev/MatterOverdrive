@@ -21,10 +21,11 @@ package matteroverdrive.world;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 
 import javax.imageio.ImageIO;
@@ -420,7 +421,7 @@ public abstract class MOImageGen<T extends MOImageGen.ImageGenWorker>
     public abstract void onGenerationWorkerCreated(T worker);
     public abstract T getNewWorkerInstance();
 
-    public T createWorker(Random random,BlockPos pos,World world,IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+    public T createWorker(Random random, BlockPos pos, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
     {
         T worker = getNewWorkerInstance();
         worker.init(random,pos,world,chunkGenerator,chunkProvider);
@@ -434,11 +435,11 @@ public abstract class MOImageGen<T extends MOImageGen.ImageGenWorker>
         protected Random random;
         BlockPos pos;
         World world;
-        IChunkProvider chunkGenerator;
+        IChunkGenerator chunkGenerator;
         IChunkProvider chunkProvider;
         int placeNotify;
 
-        public void init(Random random, BlockPos pos, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+        public void init(Random random, BlockPos pos, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
         {
             this.pos = pos;
             this.random = random;
@@ -458,7 +459,7 @@ public abstract class MOImageGen<T extends MOImageGen.ImageGenWorker>
 
         public BlockPos getPos(){return pos;}
 
-        public IChunkProvider getChunkGenerator(){return chunkGenerator;}
+        public IChunkGenerator getChunkGenerator(){return chunkGenerator;}
 
         public IChunkProvider getChunkProvider(){return chunkProvider;}
         public int getPlaceNotify(){return placeNotify;}

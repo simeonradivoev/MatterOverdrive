@@ -1,14 +1,17 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import matteroverdrive.Reference;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.util.MOEnergyHelper;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.text.DecimalFormat;
@@ -32,7 +35,7 @@ public class BioticStatFlashCooling extends AbstractBioticStat
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), EnumChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(COOLDOWN_CHANGE) + EnumChatFormatting.GRAY,EnumChatFormatting.YELLOW + (ENERGY_PER_COOLDOWN + MOEnergyHelper.ENERGY_UNIT) + EnumChatFormatting.GRAY);
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(COOLDOWN_CHANGE) + ChatFormatting.GRAY, ChatFormatting.YELLOW + (ENERGY_PER_COOLDOWN + MOEnergyHelper.ENERGY_UNIT) + ChatFormatting.GRAY);
     }
 
     @Override
@@ -66,7 +69,7 @@ public class BioticStatFlashCooling extends AbstractBioticStat
         {
             event.setCanceled(true);
             ((MOEventEnergyWeapon.Overheat) event).energyWeapon.setHeat(((MOEventEnergyWeapon.Overheat) event).weaponStack,0);
-            ((MOEventEnergyWeapon.Overheat) event).entity.worldObj.playSoundAtEntity(((MOEventEnergyWeapon.Overheat) event).entity, Reference.MOD_ID + ":" + "overheat", 1F, 1f);
+            event.getEntity().worldObj.playSound(null,event.getEntityLiving().posX,event.getEntityLiving().posY,event.getEntityLiving().posZ, MatterOverdriveSounds.weaponsOverheat, SoundCategory.PLAYERS, 1F, 1f);
         }
     }
 
@@ -103,6 +106,6 @@ public class BioticStatFlashCooling extends AbstractBioticStat
     @Override
     public boolean showOnHud(AndroidPlayer android, int level)
     {
-        return android.getPlayer().getHeldItem() != null && android.getPlayer().getHeldItem().getItem() instanceof IWeapon;
+        return android.getPlayer().getHeldItem(EnumHand.MAIN_HAND) != null && android.getPlayer().getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IWeapon;
     }
 }

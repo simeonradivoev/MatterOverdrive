@@ -20,7 +20,7 @@ package matteroverdrive.util;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Created by Simeon on 12/22/2015.

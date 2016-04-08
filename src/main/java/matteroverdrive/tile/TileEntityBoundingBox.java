@@ -26,8 +26,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -90,9 +91,9 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity, 
 		}
 
 		if (ownerBlock != null) {
-			GameRegistry.UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(ownerBlock);
-			tag.setString("owner_block_modid", id.modId);
-			tag.setString("owner_block_name", id.name);
+			ResourceLocation id = ownerBlock.getRegistryName();
+			tag.setString("owner_block_modid", id.getResourceDomain());
+			tag.setString("owner_block_name", id.getResourcePath());
 		}
 	}
 

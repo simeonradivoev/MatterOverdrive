@@ -18,8 +18,9 @@
 
 package matteroverdrive.blocks;
 
-import net.minecraft.util.BlockPos;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
@@ -49,12 +50,14 @@ public class BlockFluidMatterPlasma extends BlockFluidClassic
     @Override
     public boolean canDisplace(IBlockAccess world, BlockPos pos)
     {
-        return !world.getBlockState(pos).getBlock().getMaterial().isLiquid() && super.canDisplace(world, pos);
+        IBlockState state = world.getBlockState(pos);
+        return !state.getBlock().getMaterial(state).isLiquid() && super.canDisplace(world, pos);
     }
 
     @Override
     public boolean displaceIfPossible(World world, BlockPos pos)
     {
-        return !world.getBlockState(pos).getBlock().getMaterial().isLiquid() && super.displaceIfPossible(world, pos);
+        IBlockState state = world.getBlockState(pos);
+        return !state.getBlock().getMaterial(state).isLiquid() && super.displaceIfPossible(world, pos);
     }
 }

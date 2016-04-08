@@ -18,12 +18,13 @@
 
 package matteroverdrive.blocks;
 
-import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.*;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,7 +43,7 @@ public abstract class BlockMonitor extends MOBlockMachine
         setHardness(20.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
-        setBlockBounds(0, 0, 0, 1, 1, 1);
+        //setBlockBounds(0, 0, 0, 1, 1, 1);
         lightValue = 10;
         depth = 5;
     }
@@ -62,7 +63,8 @@ public abstract class BlockMonitor extends MOBlockMachine
         return MatterOverdriveIcons.Base;
     }*/
 
-    @Override
+    // TODO: 3/25/2016 Find how to set bounds based on state
+    /*@Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
     {
         if (world.getBlockState(pos).getBlock() == this)
@@ -72,7 +74,7 @@ public abstract class BlockMonitor extends MOBlockMachine
 
             if (direction == EnumFacing.EAST)
             {
-                this.setBlockBounds(0, 0, 0, depth * pixel, 1, 1);
+                this.se(0, 0, 0, depth * pixel, 1, 1);
             } else if (direction == EnumFacing.WEST)
             {
                 this.setBlockBounds(1 - depth * pixel, 0, 0, 1, 1, 1);
@@ -93,37 +95,38 @@ public abstract class BlockMonitor extends MOBlockMachine
     public void setBlockBoundsForItemRender() {
         this.setBlockBounds(0, 0, 0, 1, 1, depth * (1f / 16f));
     }
+    */
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state,World worldIn, BlockPos pos)
     {
-        this.setBlockBoundsBasedOnState(worldIn, pos);
-        return super.getCollisionBoundingBox(worldIn, pos, state);
+        //this.setBlockBoundsBasedOnState(worldIn, pos);
+        return super.getCollisionBoundingBox(state,worldIn, pos);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)
+    public AxisAlignedBB getSelectedBoundingBox(IBlockState state,World worldIn, BlockPos pos)
     {
-        this.setBlockBoundsBasedOnState(worldIn,pos);
-        return super.getSelectedBoundingBox(worldIn,pos);
+        //this.setBlockBoundsBasedOnState(worldIn,pos);
+        return super.getSelectedBoundingBox(state,worldIn,pos);
     }
 
     @Override
-    public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)
+    public RayTraceResult collisionRayTrace(IBlockState state,World worldIn, BlockPos pos, Vec3d start, Vec3d end)
     {
-        this.setBlockBoundsBasedOnState(worldIn,pos);
-        return super.collisionRayTrace(worldIn,pos,start,end);
+        //this.setBlockBoundsBasedOnState(worldIn,pos);
+        return super.collisionRayTrace(state,worldIn,pos,start,end);
     }
 
     @Override
-    public boolean isOpaqueCube()
+    public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
 
     @Override
-    public boolean isFullCube()
+    public boolean isFullCube(IBlockState state)
     {
         return false;
     }

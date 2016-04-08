@@ -18,16 +18,16 @@
 
 package matteroverdrive.starmap;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.api.starmap.IShip;
 import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.starmap.data.Star;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 6/17/2015.
@@ -84,7 +84,7 @@ public class GalaxyClient extends GalaxyCommon
 				theGalaxy != null &&
 				!Minecraft.getMinecraft().isGamePaused() &&
 				Minecraft.getMinecraft().theWorld.isRemote &&
-				Minecraft.getMinecraft().theWorld.provider.getDimensionId() == 0 &&
+				Minecraft.getMinecraft().theWorld.provider.getDimension() == 0 &&
 				event.phase == TickEvent.Phase.START &&
                 Minecraft.getMinecraft().theWorld != null)
 		{

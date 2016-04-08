@@ -18,17 +18,19 @@
 
 package matteroverdrive.commands;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -63,25 +65,25 @@ public class AndoidCommands extends CommandBase
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] parameters) throws CommandException
+    public void execute(MinecraftServer server,ICommandSender sender, String[] parameters) throws CommandException
     {
         if (parameters.length == 0)
         {
-            sender.addChatMessage(new ChatComponentText("Invalid Parameters"));
+            sender.addChatMessage(new TextComponentString("Invalid Parameters"));
             return;
         }
 
         if (parameters.length >= 2) {
             EntityPlayer player;
             if (parameters.length >= 3) {
-                player = getPlayer(sender, parameters[2]);
+                player = getPlayer(server,sender, parameters[2]);
             } else {
                 player = getCommandSenderAsPlayer(sender);
             }
 
             if (player != null)
             {
-                AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+                AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
                 if (androidPlayer != null) {
 
                     boolean validCommand = false;
@@ -114,7 +116,7 @@ public class AndoidCommands extends CommandBase
                             IBioticStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
                             androidPlayer.unlock(stat, stat.maxLevel());
                             validCommand = true;
-                            commandInfo = sender.getName() + " now has the ability " + EnumChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]";
+                            commandInfo = sender.getName() + " now has the ability " + ChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]";
                         }
                     }else if (parameters[0].equalsIgnoreCase("forget"))
                     {
@@ -123,25 +125,25 @@ public class AndoidCommands extends CommandBase
                             IBioticStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
                             androidPlayer.reset(stat);
                             validCommand = true;
-                            commandInfo = EnumChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]" + EnumChatFormatting.RESET + " removed from " + sender.getName();
+                            commandInfo = ChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]" + ChatFormatting.RESET + " removed from " + sender.getName();
                         }
                     }
 
                     if (validCommand)
                     {
                         androidPlayer.sync(EnumSet.allOf(AndroidPlayer.DataType.class), false);
-                        sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GOLD + "["+ Reference.MOD_NAME+"] " + EnumChatFormatting.RESET + commandInfo));
+                        sender.addChatMessage(new TextComponentString(ChatFormatting.GOLD + "["+ Reference.MOD_NAME+"] " + ChatFormatting.RESET + commandInfo));
                         return;
                     }
                 }
             }
         }
 
-        sender.addChatMessage(new ChatComponentText("Invalid Android Command. Use /help to learn more."));
+        sender.addChatMessage(new TextComponentString("Invalid Android Command. Use /help to learn more."));
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender commandSender, String[] parameters, BlockPos pos)
+    public List getTabCompletionOptions(MinecraftServer server,ICommandSender commandSender, String[] parameters, BlockPos pos)
     {
         List<String> commands = new ArrayList<>();
 

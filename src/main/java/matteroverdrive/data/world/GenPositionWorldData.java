@@ -20,7 +20,7 @@ package matteroverdrive.data.world;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
@@ -86,7 +86,7 @@ public class GenPositionWorldData extends WorldSavedData
         return true;
     }
 
-    public double getNearestDistance(String name, Vec3 pos)
+    public double getNearestDistance(String name, Vec3d pos)
     {
         List<WorldPosition2D> positions = this.positions.get(name);
         double lastDistance = -1;
@@ -94,7 +94,7 @@ public class GenPositionWorldData extends WorldSavedData
 
         if (positions != null) {
             for (WorldPosition2D worldPosition2D : positions) {
-                tempDist = new Vec3(worldPosition2D.x,pos.yCoord,worldPosition2D.z).distanceTo(pos);
+                tempDist = new Vec3d(worldPosition2D.x,pos.yCoord,worldPosition2D.z).distanceTo(pos);
                 if (lastDistance < 0 || tempDist < lastDistance)
                 {
                     lastDistance = tempDist;

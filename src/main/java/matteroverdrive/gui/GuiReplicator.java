@@ -18,6 +18,7 @@
 
 package matteroverdrive.gui;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.MatterNetworkTaskState;
@@ -36,7 +37,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 
@@ -106,7 +106,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
             }
             else
             {
-                list.set(k, EnumChatFormatting.GRAY + info);
+                list.set(k, ChatFormatting.GRAY + info);
             }
         }
 

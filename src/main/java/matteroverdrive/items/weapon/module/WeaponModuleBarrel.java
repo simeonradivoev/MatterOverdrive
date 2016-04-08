@@ -21,17 +21,13 @@ package matteroverdrive.items.weapon.module;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponModule;
-import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -61,17 +57,6 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
     public int getMetadata(int damage)
     {
         return damage;
-    }
-
-
-    public void register()
-    {
-        //damage barrel
-        super.register();
-        GameRegistry.addRecipe(new ItemStack(this,1,0)," G ","RDR"," T ",'T', MatterOverdriveItems.tritanium_plate,'D',MatterOverdriveItems.dilithium_ctystal,'R', Items.redstone,'G', Blocks.glass);
-        GameRegistry.addRecipe(new ItemStack(this,1,1)," G ","BFB"," T ",'T', MatterOverdriveItems.tritanium_plate,'F',Items.fire_charge,'B', Items.blaze_rod,'G', Blocks.glass);
-        GameRegistry.addRecipe(new ItemStack(this,1,2)," B ","BRB","DTD",'T', MatterOverdriveItems.tritanium_plate,'R',Items.blaze_rod,'B', Blocks.tnt,'G', Blocks.glass,'D',Items.diamond);
-        GameRegistry.addRecipe(new ItemStack(this,1,3)," S ","SAS","ETE",'T', MatterOverdriveItems.tritanium_plate,'A',Items.golden_apple,'S', Items.sugar,'G', Blocks.glass,'E',Items.emerald);
     }
 
     @Override

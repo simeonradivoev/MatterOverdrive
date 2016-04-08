@@ -22,7 +22,7 @@ import matteroverdrive.api.matter.IMatterStorage;
 import matteroverdrive.init.MatterOverdriveFluids;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
@@ -100,7 +100,7 @@ public class MatterStorage implements IMatterStorage, IFluidTank
     {
         int lastAmount = getFluid().amount;
         getFluid().amount += amount;
-        getFluid().amount = net.minecraft.util.MathHelper.clamp_int(getFluid().amount,0,getCapacity());
+        getFluid().amount = MathHelper.clamp_int(getFluid().amount,0,getCapacity());
         return lastAmount - amount;
     }
 

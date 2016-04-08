@@ -18,22 +18,23 @@
 
 package matteroverdrive.items.food;
 
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.Reference;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ChestGenHooks;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -48,6 +49,7 @@ public class AndroidPill extends ItemFood
     public AndroidPill(String name)
     {
         super(0, 0, false);
+        setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
         setUnlocalizedName(name);
         setAlwaysEdible();
         hasSubtypes = true;
@@ -64,7 +66,7 @@ public class AndroidPill extends ItemFood
             String[] infoList = MOStringHelper.translateToLocal(getUnlocalizedName(itemstack) + ".details").split("/n");
             for (String info : infoList)
             {
-                infos.add(EnumChatFormatting.GRAY + info);
+                infos.add(ChatFormatting.GRAY + info);
             }
         }
         else
@@ -73,19 +75,20 @@ public class AndroidPill extends ItemFood
         }
 
         if (itemstack.getItemDamage() == 2) {
-            AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
             if (androidPlayer != null && androidPlayer.isAndroid())
             {
-                infos.add(EnumChatFormatting.GREEN + "XP:" + androidPlayer.getResetXPRequired() + "l");
+                infos.add(ChatFormatting.GREEN + "XP:" + androidPlayer.getResetXPRequired() + "l");
             } else {
-                infos.add(EnumChatFormatting.RED + "Not an Android.");
+                infos.add(ChatFormatting.RED + "Not an Android.");
             }
         }
     }
 
     public void addToDunguns()
     {
-        ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(this,1),1,1,1));
+        // TODO: 3/24/2016 Find new way of adding dungon loot
+        //ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(this,1),1,1,1));
     }
 
     @Override
@@ -136,7 +139,7 @@ public class AndroidPill extends ItemFood
         }
     }*/
 
-    @Override
+   /* @Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)
     {
@@ -177,12 +180,14 @@ public class AndroidPill extends ItemFood
             }
         }
         return itemStack;
-    }
+    }*/
+
+    //// TODO: 3/24/2016 Find New Way to color Items Dynamically
 
     public void register()
     {
         setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
-        GameRegistry.registerItem(this, this.getUnlocalizedName().substring(5));
+        GameRegistry.register(this,new ResourceLocation(Reference.MOD_ID,this.getUnlocalizedName().substring(5)));
     }
 
     @Override
@@ -191,7 +196,7 @@ public class AndroidPill extends ItemFood
         if (world.isRemote)
             return;
 
-        AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+        AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
         if (itemStack.getItemDamage() == 0)
         {
             androidPlayer.startConversion();

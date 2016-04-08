@@ -2,10 +2,10 @@ package matteroverdrive.fx;
 
 import matteroverdrive.Reference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.vecmath.Vector3d;
@@ -20,25 +20,25 @@ public class Lightning extends MOEntityFX
     private float length;
     private float speed;
 
-    public Lightning(World worldIn, Vec3 start, Vec3 destination)
+    public Lightning(World worldIn, Vec3d start, Vec3d destination)
     {
         this(worldIn,start,destination,1,1);
         setColorRGBA(Reference.COLOR_HOLO.multiplyWithoutAlpha(0.5f));
     }
 
-    public Lightning(World worldIn, Vec3 start, Vec3 destination,float randomness,float speed)
+    public Lightning(World worldIn, Vec3d start, Vec3d destination, float randomness, float speed)
     {
         super(worldIn, start.xCoord,start.yCoord,start.zCoord);
         this.destination = new Vector3d(destination.xCoord,destination.yCoord,destination.zCoord);
-        this.length = (float) destination.distanceTo(getPositionVector());
+        this.length = (float) destination.distanceTo(new Vec3d(posX,posY,posZ));
         this.particleMaxAge = 10 + (int) (this.rand.nextFloat() * 10);
         this.randomness = randomness;
         this.speed = speed;
         setEntityBoundingBox(new AxisAlignedBB(start.xCoord,start.yCoord,start.zCoord,destination.xCoord,destination.yCoord,destination.zCoord));
-        this.renderDistanceWeight = Minecraft.getMinecraft().gameSettings.renderDistanceChunks / 6d;
+        this.renderDistanceWeight = Minecraft.getMinecraft().gameSettings.renderDistanceChunks / 6f;
     }
 
-    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float rotX, float rotXZ, float rotZ, float rotYZ, float rotXY)
+    public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotX, float rotXZ, float rotZ, float rotYZ, float rotXY)
     {
         rand.setSeed((long) (particleAge * speed) + hashCode());
         Vector3d lastPos = new Vector3d(prevPosX,prevPosY,prevPosZ);
@@ -83,7 +83,7 @@ public class Lightning extends MOEntityFX
 
         if (this.particleAge++ >= this.particleMaxAge)
         {
-            this.setDead();
+            this.setExpired();
         }
     }
 }

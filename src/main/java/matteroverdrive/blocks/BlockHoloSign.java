@@ -30,10 +30,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.ArrayList;
 
@@ -49,17 +49,11 @@ public class BlockHoloSign extends BlockMonitor implements IDismantleable, ITile
         depth = 2;
         float f = 0.25F;
         float f1 = 1.0F;
-        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
+        // TODO: 3/26/2016 Find how to set block bounds
+        //this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
         this.isBlockContainer = true;
         this.setHardness(20f);
         setHasRotation();
-    }
-
-    @Override
-    public void register()
-    {
-        super.register();
-		GameRegistry.registerTileEntity(TileEntityHoloSign.class, this.getUnlocalizedName().substring(5));
     }
 
 /*    @Override
@@ -122,7 +116,8 @@ public class BlockHoloSign extends BlockMonitor implements IDismantleable, ITile
         EnumFacing l = worldIn.getBlockState(pos).getValue(MOBlock.PROPERTY_DIRECTION);
         flag = true;
 
-        if (worldIn.getBlockState(pos.offset(l)).getBlock().getMaterial().isSolid())
+        IBlockState nState = worldIn.getBlockState(pos.offset(l));
+        if (nState.getBlock().getMaterial(nState).isSolid())
         {
             flag = false;
         }
@@ -137,13 +132,13 @@ public class BlockHoloSign extends BlockMonitor implements IDismantleable, ITile
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         return MachineHelper.canOpenMachine(worldIn,pos,playerIn,true,"alert.no_rights");
     }
 
     @Override
-    public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
         return MachineHelper.canRemoveMachine(world, player, pos, willHarvest) && world.setBlockToAir(pos);
     }

@@ -18,12 +18,14 @@
 
 package matteroverdrive.items.weapon;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.handler.SoundHandler;
 import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.util.MOPhysicsHelper;
 import matteroverdrive.util.WeaponHelper;
 import matteroverdrive.util.animation.MOEasing;
@@ -36,8 +38,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -84,7 +88,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     @SideOnly(Side.CLIENT)
     protected void addCustomDetails(ItemStack weapon,EntityPlayer player,List infos)
     {
-        infos.add(EnumChatFormatting.BLUE + "Stun: " + (GetSleepTime(weapon) / 20f) + "s");
+        infos.add(ChatFormatting.BLUE + "Stun: " + (GetSleepTime(weapon) / 20f) + "s");
     }
 
 	/**
@@ -116,16 +120,16 @@ public class Phaser extends EnergyWeapon implements IWeapon{
         if (w.isRemote)
             return;
 
-        Vec3 dir = getPlayerLook(player,item);
-        MovingObjectPosition hit = MOPhysicsHelper.rayTrace(player, w, getRange(item), 0, new Vec3(0, player.getEyeHeight(), 0), false, true,dir);
+        Vec3d dir = getPlayerLook(player,item);
+        RayTraceResult hit = MOPhysicsHelper.rayTrace(player, w, getRange(item), 0, new Vec3d(0, player.getEyeHeight(), 0), false, true,dir);
         if (hit != null)
         {
-            Vec3 hitVector = hit.hitVec;
+            Vec3d hitVector = hit.hitVec;
 
             if (hit.entityHit != null && hit.entityHit instanceof EntityLivingBase)
             {
 
-				if (hit.entityHit instanceof EntityPlayer && FMLCommonHandler.instance().getSide() == Side.SERVER && !MinecraftServer.getServer().isPVPEnabled()) return;
+				if (hit.entityHit instanceof EntityPlayer && FMLCommonHandler.instance().getSide() == Side.SERVER && !player.getServer().isPVPEnabled()) return;
 
                 DamageSource damageInfo = getDamageSource(item,player);
                 float damage = getWeaponScaledDamage(item,player);
@@ -142,10 +146,10 @@ public class Phaser extends EnergyWeapon implements IWeapon{
                     el.motionZ = moutionZ;
                 }
 
-                el.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, GetSleepTime(item), 100));
+                el.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), GetSleepTime(item), 100));
                 //el.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, GetSleepTime(item), -10));
-                el.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, GetSleepTime(item), 100));
-                el.addPotionEffect(new PotionEffect(Potion.jump.id, GetSleepTime(item), -10));
+                el.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("mining_fatigue"), GetSleepTime(item), 100));
+                el.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("jump_boost"), GetSleepTime(item), -10));
 
                 if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE,item) && isKillMode(item))
                 {
@@ -184,20 +188,20 @@ public class Phaser extends EnergyWeapon implements IWeapon{
         }
 	}
 
-    public Vec3 getPlayerLook(EntityPlayer player,ItemStack weapon)
+    public Vec3d getPlayerLook(EntityPlayer player,ItemStack weapon)
     {
-        Vec3 dir = player.getLookVec();
-        Vec3 rot = getBeamRotation(weapon,player);
+        Vec3d dir = player.getLookVec();
+        Vec3d rot = getBeamRotation(weapon,player);
         dir.rotateYaw((float)rot.xCoord);
         dir.rotatePitch((float) rot.yCoord);
         //dir.rotateAroundZ((float)rot.zCoord);
         return dir;
     }
 
-    public Vec3 getBeamRotation(ItemStack weapon,EntityPlayer entityPlayer)
+    public Vec3d getBeamRotation(ItemStack weapon, EntityPlayer entityPlayer)
     {
         double rotationY = (float)Math.toRadians(5) * MOEasing.Quart.easeIn(getAccuracy(weapon,entityPlayer,false),0,1,1);
-        return new Vec3(0,rotationY,0);
+        return new Vec3d(0,rotationY,0);
     }
 
     @Override
@@ -207,51 +211,53 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer player)
-	{
-		this.TagCompountCheck(item);
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+    {
+        if (hand == EnumHand.OFF_HAND) return ActionResult.newResult(EnumActionResult.PASS,itemStackIn);
+		this.TagCompountCheck(itemStackIn);
 
-		if(player.isSneaking())
+		if(playerIn.isSneaking())
 		{
-			SwitchModes(world,player,item);
+			SwitchModes(worldIn,playerIn,itemStackIn);
 		}
         else
         {
-            if (canFire(item, world,player))
+            if (canFire(itemStackIn, worldIn,playerIn))
             {
-                player.setItemInUse(item, getMaxItemUseDuration(item));
+                playerIn.setActiveHand(hand);
             }
-            if (needsRecharge(item))
+            if (needsRecharge(itemStackIn))
             {
-                chargeFromEnergyPack(item,player);
+                chargeFromEnergyPack(itemStackIn,playerIn);
             }
-            return item;
+            return ActionResult.newResult(EnumActionResult.SUCCESS,itemStackIn);
 		}
 
-		return item;
+		return ActionResult.newResult(EnumActionResult.PASS,itemStackIn);
 	}
 
     @Override
-    public void onUsingTick(ItemStack itemStack, EntityPlayer player, int count)
+    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
     {
-        if (canFire(itemStack,player.worldObj,player))
+        if (!(player instanceof EntityPlayer)) return;
+        if (canFire(stack,player.worldObj,player))
         {
-            DrainEnergy(itemStack,1,false);
-            int powerLevelMultiply = (getPowerLevel(itemStack)+1) / MAX_LEVEL;
-            float newHeat =  (getHeat(itemStack)+1)*(1.1f + (0.05f*powerLevelMultiply));
-            setHeat(itemStack, newHeat);
-            ManageShooting(itemStack, player.worldObj, player,count);
-            manageOverheat(itemStack, player.worldObj, player);
+            DrainEnergy(stack,1,false);
+            int powerLevelMultiply = (getPowerLevel(stack)+1) / MAX_LEVEL;
+            float newHeat =  (getHeat(stack)+1)*(1.1f + (0.05f*powerLevelMultiply));
+            setHeat(stack, newHeat);
+            ManageShooting(stack, player.worldObj, (EntityPlayer) player,count);
+            manageOverheat(stack, player.worldObj, player);
         }
         else {
-            player.stopUsingItem();
+            player.resetActiveHand();
         }
     }
 
 	private void SwitchModes(World world,EntityPlayer player,ItemStack item)
 	{
 		this.TagCompountCheck(item);
-		SoundHandler.PlaySoundAt(world, "phaser_switch_mode", player);
+		SoundHandler.PlaySoundAt(world, MatterOverdriveSounds.weaponsPhaserSwitchMode,SoundCategory.PLAYERS, player);
         byte level = getPowerLevel(item);
         level++;
         if(level >= MAX_LEVEL)
@@ -286,7 +292,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir,WeaponShot shot)
+    public void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3d position, Vec3d dir,WeaponShot shot)
     {
 
     }
@@ -342,7 +348,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onProjectileHit(MovingObjectPosition hit, ItemStack weapon, World world,float amount)
+    public void onProjectileHit(RayTraceResult hit, ItemStack weapon, World world, float amount)
     {
         if (hit.getBlockPos() == null)
             return;
@@ -397,7 +403,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     }
 
     @Override
-    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot,Vec3 position,Vec3 dir,int delay)
+    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot,Vec3d position,Vec3d dir,int delay)
     {
         return false;
     }
@@ -420,7 +426,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
 
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean isWeaponZoomed(EntityPlayer entityPlayer,ItemStack weapon) {
+    public boolean isWeaponZoomed(EntityLivingBase entityPlayer,ItemStack weapon) {
         return false;
     }
 
@@ -428,7 +434,7 @@ public class Phaser extends EnergyWeapon implements IWeapon{
     public WeaponSound getFireSound(ItemStack weapon,EntityLivingBase entity)
     {
         //return Reference.MOD_ID + ":" +"phaser_beam_1";
-        return new WeaponSound(new ResourceLocation(Reference.MOD_ID + ":" +"phaser_beam_1"),(float)entity.posX,(float)entity.posY,(float)entity.posZ,itemRand.nextFloat() * 0.05f + 0.2f,1);
+        return new WeaponSound(MatterOverdriveSounds.weaponsPhaserBeam,SoundCategory.PLAYERS,(float)entity.posX,(float)entity.posY,(float)entity.posZ,itemRand.nextFloat() * 0.05f + 0.2f,1);
     }
 
     public byte getPowerLevel(ItemStack weapon)

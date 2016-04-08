@@ -20,7 +20,7 @@ package matteroverdrive.gui.element;
 
 import matteroverdrive.data.matter_network.ItemPatternMapping;
 import matteroverdrive.gui.MOGuiBase;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Iterator;
 

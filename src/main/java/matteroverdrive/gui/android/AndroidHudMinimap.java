@@ -32,7 +32,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Cylinder;
 import org.lwjgl.util.glu.Sphere;
@@ -87,10 +87,10 @@ public class AndroidHudMinimap extends AndroidHudElement
         {
             if (entityObj instanceof EntityLivingBase) {
                 EntityLivingBase entityLivingBase = (EntityLivingBase) entityObj;
-                Vec3 pos = (entityLivingBase).getPositionEyes(ticks);
-                Vec3 playerPosition = mc.thePlayer.getPositionEyes(ticks);
+                Vec3d pos = (entityLivingBase).getPositionEyes(ticks);
+                Vec3d playerPosition = mc.thePlayer.getPositionEyes(ticks);
                 pos = pos.subtract(playerPosition);
-                pos = new Vec3(pos.xCoord*ZOOM,pos.yCoord*ZOOM,pos.zCoord*ZOOM);
+                pos = new Vec3d(pos.xCoord*ZOOM,pos.yCoord*ZOOM,pos.zCoord*ZOOM);
 
                 if (AndroidPlayer.isVisibleOnMinimap((EntityLivingBase) entityObj, mc.thePlayer, pos)) {
 
@@ -163,10 +163,10 @@ public class AndroidHudMinimap extends AndroidHudElement
 
         RenderUtils.applyColorWithAlpha(baseColor, 0.5f * OPACITY);
 
-        GlStateManager.cullFace(GL_FRONT);
+        GlStateManager.cullFace(GlStateManager.CullFace.FRONT);
         cylinder.draw(RADIUS, RADIUS, 5, 64, 1);
         glNormal3f(0,0,1);
-        GlStateManager.cullFace(GL_BACK);
+        GlStateManager.cullFace(GlStateManager.CullFace.BACK);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         GlStateManager.pushMatrix();
@@ -205,7 +205,7 @@ public class AndroidHudMinimap extends AndroidHudElement
         glEnd();
     }
 
-    private void drawEntity(EntityLivingBase entityLivingBase,float scale,int x,int y,Vec3 pos)
+    private void drawEntity(EntityLivingBase entityLivingBase,float scale,int x,int y,Vec3d pos)
     {
         GlStateManager.translate(x, y, 0);
         GlStateManager.rotate(ROTATION, 1, 0, 0);

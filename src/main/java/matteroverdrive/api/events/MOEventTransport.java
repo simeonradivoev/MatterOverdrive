@@ -2,7 +2,7 @@ package matteroverdrive.api.events;
 
 import matteroverdrive.api.transport.TransportLocation;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.EntityEvent;
 
 /**

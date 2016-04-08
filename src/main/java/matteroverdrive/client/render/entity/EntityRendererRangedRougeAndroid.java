@@ -68,7 +68,7 @@ public class EntityRendererRangedRougeAndroid extends EntityRendererRougeAndroid
             visorModel.setColor(new Color(((EntityRougeAndroidMob) entityLiving).getVisorColor()));
         }
 
-        this.modelBipedMain.aimedBow = true;
+        this.modelBipedMain.rightArmPose = ModelBiped.ArmPose.BOW_AND_ARROW;
         super.doRender(entityLiving,p_76986_2_,p_76986_4_,p_76986_6_,p_76986_8_,p_76986_9_);
     }
 }

@@ -1,11 +1,12 @@
-package matteroverdrive.world.dimensions;
+package matteroverdrive.world.dimensions.space;
 
 import matteroverdrive.world.MOWorldGen;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.WorldChunkManagerHell;
-import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.biome.BiomeProviderSingle;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,16 +16,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WorldProviderSpace extends WorldProvider
 {
     @Override
-    public void registerWorldChunkManager()
+    public void createBiomeProvider()
     {
-        this.worldChunkMgr = new WorldChunkManagerHell(MOWorldGen.biomeSpace,0);
+        this.biomeProvider = new BiomeProviderSingle(MOWorldGen.biomeSpace);
         this.hasNoSky = true;
     }
 
-    @SideOnly(Side.CLIENT)
-    public Vec3 getFogColor(float p_76562_1_, float p_76562_2_)
+    @Override
+    public DimensionType getDimensionType()
     {
-        return new Vec3(0,0,0);
+        // TODO: 3/26/2016 Find how to register dimension type
+        return null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public Vec3d getFogColor(float p_76562_1_, float p_76562_2_)
+    {
+        return new Vec3d(0,0,0);
     }
 
     @SideOnly(Side.CLIENT)
@@ -60,7 +68,7 @@ public class WorldProviderSpace extends WorldProvider
         return null;
     }
 
-    @Override
+    /*@Override
     public String getDimensionName()
     {
         return "Space";
@@ -70,7 +78,7 @@ public class WorldProviderSpace extends WorldProvider
     public String getInternalNameSuffix()
     {
         return "mo_space";
-    }
+    }*/
 
     @SideOnly(Side.CLIENT)
     public boolean doesXZShowFog(int x, int z)
@@ -110,9 +118,9 @@ public class WorldProviderSpace extends WorldProvider
     }
 
     @SideOnly(Side.CLIENT)
-    public Vec3 getSkyColor(net.minecraft.entity.Entity cameraEntity, float partialTicks)
+    public Vec3d getSkyColor(net.minecraft.entity.Entity cameraEntity, float partialTicks)
     {
-        return new Vec3(0,0,0);
+        return new Vec3d(0,0,0);
     }
 
     @SideOnly(Side.CLIENT)
@@ -150,9 +158,9 @@ public class WorldProviderSpace extends WorldProvider
     }
 
     @SideOnly(Side.CLIENT)
-    public Vec3 drawClouds(float partialTicks)
+    public Vec3d drawClouds(float partialTicks)
     {
-        return new Vec3(0,0,0);
+        return new Vec3d(0,0,0);
     }
 
     @SideOnly(Side.CLIENT)
@@ -162,7 +170,7 @@ public class WorldProviderSpace extends WorldProvider
     }
 
     @Override
-    public IChunkProvider createChunkGenerator()
+    public IChunkGenerator createChunkGenerator()
     {
         return new ChunkProviderSpace(this.worldObj, this.worldObj.getSeed());
     }

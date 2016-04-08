@@ -19,23 +19,24 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import matteroverdrive.Reference;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 
@@ -55,7 +56,7 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TICK + MOEnergyHelper.ENERGY_UNIT);
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.YELLOW.toString() + ENERGY_PER_TICK + MOEnergyHelper.ENERGY_UNIT);
     }
 
     @Override
@@ -78,13 +79,13 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     {
         if (isActive(android, level))
         {
-            android.getPlayer().addPotionEffect(new PotionEffect(Potion.nightVision.id, 500));
+            android.getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("night_vision"), 500));
         }
     }
 
     private void setActive(AndroidPlayer androidPlayer, int level, boolean active)
     {
-        androidPlayer.getPlayer().addPotionEffect(new PotionEffect(Potion.nightVision.id, 500));
+        androidPlayer.getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("night_vision"), 500));
         androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_NIGHTVISION,active);
         androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
     }
@@ -115,13 +116,13 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
     {
         if (!android.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_NIGHTVISION))
         {
-            MOPositionedSound sound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":night_vision"), 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f);
+            MOPositionedSound sound = new MOPositionedSound(MatterOverdriveSounds.androidNightVision, SoundCategory.PLAYERS, 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f);
             sound.setAttenuationType(ISound.AttenuationType.NONE);
             Minecraft.getMinecraft().getSoundHandler().playSound(sound);
         }
         else
         {
-            Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":power_down"), 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f).setAttenuationType(ISound.AttenuationType.NONE));
+            Minecraft.getMinecraft().getSoundHandler().playSound(new MOPositionedSound(MatterOverdriveSounds.androidPowerDown,SoundCategory.PLAYERS, 0.05f + android.getPlayer().getRNG().nextFloat() * 0.1f, 0.95f + android.getPlayer().getRNG().nextFloat() * 0.1f).setAttenuationType(ISound.AttenuationType.NONE));
         }
     }
 

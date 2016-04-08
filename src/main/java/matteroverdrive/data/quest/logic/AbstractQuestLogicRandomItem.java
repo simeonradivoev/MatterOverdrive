@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 12/24/2015.
  */
-public abstract class QuestLogicRandomItem extends AbstractQuestLogic
+public abstract class AbstractQuestLogicRandomItem extends AbstractQuestLogic
 {
     QuestItem[] items;
     boolean randomItem;
@@ -147,7 +147,7 @@ public abstract class QuestLogicRandomItem extends AbstractQuestLogic
         getTag(questStack).setByte("ItemType",(byte) itemType);
     }
 
-    public QuestLogicRandomItem setRandomItem(boolean randomItem)
+    public AbstractQuestLogicRandomItem setRandomItem(boolean randomItem)
     {
         this.randomItem = randomItem;
         return this;

@@ -19,13 +19,13 @@ public class VentParticle extends EntityFX
     public VentParticle(World world, double x, double y, double z, double dirX, double dirY, double dirZ, float scale)
     {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
-        this.motionX = dirX;
-        this.motionY = dirY;
-        this.motionZ = dirZ;
+        this.xSpeed = dirX;
+        this.ySpeed = dirY;
+        this.zSpeed = dirZ;
         this.particleRed = this.particleGreen = this.particleBlue = 1 - rand.nextFloat() * 0.3f;
         this.particleScale = scale;
         this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D));
-        this.noClip = false;
+        //this.noClip = false;
     }
 
     /**
@@ -39,14 +39,14 @@ public class VentParticle extends EntityFX
 
         if (this.particleAge++ >= this.particleMaxAge)
         {
-            this.setDead();
+            this.setExpired();
         }
 
         this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        this.moveEntity(this.xSpeed, this.ySpeed, this.zSpeed);
 
-        this.motionX *= 0.9599999785423279D;
-        this.motionY *= 0.9599999785423279D;
-        this.motionZ *= 0.9599999785423279D;
+        this.xSpeed *= 0.9599999785423279D;
+        this.ySpeed *= 0.9599999785423279D;
+        this.zSpeed *= 0.9599999785423279D;
     }
 }

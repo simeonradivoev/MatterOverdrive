@@ -2,14 +2,16 @@ package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.data.quest.QuestBlock;
 import matteroverdrive.data.quest.QuestItem;
 import matteroverdrive.util.MOJsonHelper;
 import matteroverdrive.util.MOQuestHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -19,7 +21,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 1/3/2016.
  */
-public class QuestLogicPlaceBlock extends QuestLogicBlock
+public class QuestLogicPlaceBlock extends AbstractQuestLogicBlock
 {
     private int radius;
     String namePattern;
@@ -83,7 +85,7 @@ public class QuestLogicPlaceBlock extends QuestLogicBlock
         BlockPos pos = MOQuestHelper.getPosition(questStack);
         if (pos != null)
         {
-            double distance = new Vec3(Math.floor(entityPlayer.posX),Math.floor(entityPlayer.posY),Math.floor(entityPlayer.posZ)).distanceTo(new Vec3(pos));
+            double distance = new Vec3d(Math.floor(entityPlayer.posX),Math.floor(entityPlayer.posY),Math.floor(entityPlayer.posZ)).distanceTo(new Vec3d(pos));
             objective = objective.replace("$distance",Integer.toString((int)Math.max(distance - radius,0))+" blocks");
         }else
         {
@@ -99,23 +101,23 @@ public class QuestLogicPlaceBlock extends QuestLogicBlock
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
         if (event instanceof BlockEvent.PlaceEvent)
         {
             BlockEvent.PlaceEvent placeEvent = (BlockEvent.PlaceEvent)event;
             boolean isTheSameBlockFlag = false;
-            if (blockStack != null && placeEvent.itemInHand != null)
+            if (blockStack != null && placeEvent.getItemInHand() != null)
             {
-                isTheSameBlockFlag = areBlockStackTheSame(placeEvent.itemInHand);
+                isTheSameBlockFlag = areBlockStackTheSame(placeEvent.getItemInHand());
             }
             else
             {
-                if (areBlocksTheSame(placeEvent.placedBlock))
+                if (areBlocksTheSame(placeEvent.getPlacedBlock()))
                 {
-                    if (namePattern != null && placeEvent.itemInHand != null)
+                    if (namePattern != null && placeEvent.getItemInHand() != null)
                     {
-                        isTheSameBlockFlag = placeEvent.itemInHand.getDisplayName().matches(namePattern);
+                        isTheSameBlockFlag = placeEvent.getItemInHand().getDisplayName().matches(namePattern);
                     }else
                     {
                         isTheSameBlockFlag = true;
@@ -126,21 +128,20 @@ public class QuestLogicPlaceBlock extends QuestLogicBlock
             BlockPos pos = MOQuestHelper.getPosition(questStack);
             if (pos != null && isTheSameBlockFlag)
             {
-                if (!(new Vec3(placeEvent.pos).distanceTo(new Vec3(pos)) <= radius))
+                if (!(new Vec3d(placeEvent.getPos()).distanceTo(new Vec3d(pos)) <= radius))
                 {
-                    return false;
+                    return null;
                 }
             }
 
             if (isTheSameBlockFlag)
             {
                 setBlockPlaced(questStack,getBlockPlaced(questStack)+1);
-                if (autoComplete)
-                    questStack.markComplited(entityPlayer,false);
+                markComplete(questStack,entityPlayer);
+                return new QuestLogicState(QuestState.Type.COMPLETE,true);
             }
-            return isTheSameBlockFlag;
         }
-        return false;
+        return null;
     }
 
     @Override

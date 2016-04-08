@@ -18,15 +18,18 @@
 
 package matteroverdrive.items;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.client.data.Color;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -47,21 +50,23 @@ public class TransportFlashDrive extends FlashDrive
         if (hasTarget(itemstack))
         {
             BlockPos target = getTarget(itemstack);
-            Block block = player.worldObj.getBlockState(target).getBlock();
-            infos.add(EnumChatFormatting.YELLOW + String.format("[%s] %s", target.toString(),block.getMaterial() != Material.air ? block.getLocalizedName() : "Unknown"));
+            IBlockState state = player.worldObj.getBlockState(target);
+            Block block = state.getBlock();
+            infos.add(ChatFormatting.YELLOW + String.format("[%s] %s", target.toString(),block.getMaterial(state) != Material.air ? block.getLocalizedName() : "Unknown"));
         }
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        if (worldIn.getBlockState(pos).getBlock().getMaterial() != Material.air)
+        IBlockState state = worldIn.getBlockState(pos);
+        if (state.getBlock().getMaterial(state) != Material.air)
         {
             setTarget(stack,pos);
-            return true;
+            return EnumActionResult.SUCCESS;
         }
         removeTarget(stack);
-        return false;
+        return EnumActionResult.FAIL;
     }
 
     public void setTarget(ItemStack itemStack,BlockPos pos)

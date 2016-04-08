@@ -19,6 +19,7 @@
 package matteroverdrive.util;
 
 import cofh.api.energy.IEnergyContainerItem;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
@@ -28,7 +29,6 @@ import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.WeightedRandom;
 
 import java.util.*;
@@ -162,7 +162,7 @@ public class WeaponFactory
 
     public void modifyToLegendary(ItemStack weapon,WeaponGenerationContext context)
     {
-        weapon.setStackDisplayName(Reference.UNICODE_LEGENDARY + " " + EnumChatFormatting.GOLD + MOStringHelper.translateToLocal("rarity.legendary") + " " + weapon.getDisplayName());
+        weapon.setStackDisplayName(Reference.UNICODE_LEGENDARY + " " + ChatFormatting.GOLD + MOStringHelper.translateToLocal("rarity.legendary") + " " + weapon.getDisplayName());
 
         int damageLevel = random.nextInt(context.level+1);
         if (damageLevel > 0)

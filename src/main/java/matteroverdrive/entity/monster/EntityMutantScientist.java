@@ -34,7 +34,7 @@ public class EntityMutantScientist extends EntityMob
     {
         super(p_i1738_1_);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1, false));
+        this.tasks.addTask(2, new EntityAIAttackMelee(this, 1, false));
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
@@ -48,9 +48,9 @@ public class EntityMutantScientist extends EntityMob
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(256);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(256);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4D);
     }
 
     private class TargetSelector implements Predicate<EntityLivingBase>

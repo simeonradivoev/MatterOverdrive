@@ -8,12 +8,14 @@ import matteroverdrive.data.MachineEnergyStorage;
 import matteroverdrive.data.matter_network.IMatterNetworkEvent;
 import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.handler.SoundHandler;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.components.TaskQueueComponent;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskStorePattern;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 
 import java.util.EnumSet;
 
@@ -88,7 +90,7 @@ public class ComponentTaskProcessingAnalyzer extends TaskQueueComponent<MatterNe
             addStorePatternTask(storePattern);
         }
 
-        SoundHandler.PlaySoundAt(getWorld(), "scanner_success", getPos().getX(),getPos().getY(),getPos().getZ());
+        SoundHandler.PlaySoundAt(getWorld(), MatterOverdriveSounds.scannerSuccess, SoundCategory.BLOCKS, getPos().getX(),getPos().getY(),getPos().getZ());
         machine.decrStackSize(machine.input_slot, 1);
         machine.markDirty();
     }

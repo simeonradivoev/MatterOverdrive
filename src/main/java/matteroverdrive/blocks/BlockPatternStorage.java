@@ -22,6 +22,7 @@ import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.machines.pattern_storage.TileEntityMachinePatternStorage;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -67,7 +68,7 @@ public class BlockPatternStorage extends MOBlockMachine
     }*/
 
     @Override
-    public boolean isOpaqueCube()
+    public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }

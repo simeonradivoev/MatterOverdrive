@@ -32,13 +32,13 @@ public class GravitationalStabilizerBeamParticle extends MOEntityFX
         setSize(this.particleScale * 0.1f,this.particleScale * 0.1f);
         this.smokeParticleScale = this.particleScale;
         this.particleMaxAge = time;
-        this.noClip = true;
+        //this.noClip = true;
         this.from = from;
         this.to = to;
         this.up = up;
         this.orbitRadius = orbitRadius + (rand.nextFloat() * orbitRadius * 0.5f);
         startTime = rand.nextInt(time);
-        this.particleIcon = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.star);
+        this.particleTexture = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.star);
     }
 
     public void setColor(float r, float g, float b, float a)
@@ -60,7 +60,7 @@ public class GravitationalStabilizerBeamParticle extends MOEntityFX
 
         if (this.particleAge++ >= this.particleMaxAge)
         {
-            this.setDead();
+            this.setExpired();
         }
 
         float percent = (float)this.particleAge / (float)this.particleMaxAge;

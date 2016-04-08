@@ -30,6 +30,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.IntHashMap;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.FOVUpdateEvent;
@@ -96,9 +97,9 @@ public class ClientWeaponHandler extends CommonWeaponHandler
         {
             EntityPlayer entityPlayer = Minecraft.getMinecraft().thePlayer;
 
-            if (entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof IWeapon)
+            if (entityPlayer.getHeldItem(EnumHand.MAIN_HAND) != null && entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IWeapon)
             {
-                if (((IWeapon) entityPlayer.getHeldItem().getItem()).isWeaponZoomed(entityPlayer,entityPlayer.getHeldItem()))
+                if (((IWeapon) entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem()).isWeaponZoomed(entityPlayer,entityPlayer.getHeldItem(EnumHand.MAIN_HAND)))
                 {
                     ZOOM_TIME = Math.min(ZOOM_TIME+(event.renderTickTime*0.1f),1);
                 }else
@@ -123,10 +124,10 @@ public class ClientWeaponHandler extends CommonWeaponHandler
                 }
             }else if (ZOOM_TIME != 0)
             {
-                if (entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof IWeapon)
+                if (entityPlayer.getHeldItem(EnumHand.MAIN_HAND) != null && entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IWeapon)
                 {
                     hasChangedSensitivity = true;
-                    Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity * (1f - (ZOOM_TIME * ((IWeapon) entityPlayer.getHeldItem().getItem()).getZoomMultiply(entityPlayer,entityPlayer.getHeldItem())));
+                    Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity * (1f - (ZOOM_TIME * ((IWeapon) entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem()).getZoomMultiply(entityPlayer,entityPlayer.getHeldItem(EnumHand.MAIN_HAND))));
                 }else
                 {
                     hasChangedSensitivity = true;
@@ -150,8 +151,8 @@ public class ClientWeaponHandler extends CommonWeaponHandler
     @SubscribeEvent
     public void onFovUpdate(FOVUpdateEvent event)
     {
-        if (Minecraft.getMinecraft().thePlayer.getHeldItem() != null && Minecraft.getMinecraft().thePlayer.getHeldItem().getItem() instanceof IWeapon) {
-            event.newfov -= event.fov * ZOOM_TIME * ((IWeapon) Minecraft.getMinecraft().thePlayer.getHeldItem().getItem()).getZoomMultiply(Minecraft.getMinecraft().thePlayer,Minecraft.getMinecraft().thePlayer.getHeldItem());
+        if (Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND) != null && Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IWeapon) {
+            event.setNewfov(event.getFov() - event.getFov() * ZOOM_TIME * ((IWeapon) Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND).getItem()).getZoomMultiply(Minecraft.getMinecraft().thePlayer,Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND)));
         }
     }
 
@@ -160,7 +161,7 @@ public class ClientWeaponHandler extends CommonWeaponHandler
         for (Object playerObj : Minecraft.getMinecraft().theWorld.playerEntities)
         {
             EntityPlayer player = (EntityPlayer)playerObj;
-            ItemStack currentitem = player.getCurrentEquippedItem();
+            ItemStack currentitem = player.getHeldItem(EnumHand.MAIN_HAND);
             if (currentitem != null && currentitem.getItem() instanceof IWeapon && ((IWeapon) currentitem.getItem()).isAlwaysEquipped(currentitem))
             {
                 if (player == Minecraft.getMinecraft().thePlayer && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0)
@@ -172,7 +173,7 @@ public class ClientWeaponHandler extends CommonWeaponHandler
                 {
                     //this allows the item to play the bow use animation when in 3rd person mode
                     currentitem.setItemDamage(1);
-                    player.setItemInUse(currentitem,player.getItemInUseCount());
+                    player.setActiveHand(EnumHand.MAIN_HAND);
                 }
             }
         }
@@ -212,9 +213,9 @@ public class ClientWeaponHandler extends CommonWeaponHandler
     }
     public float getEquippedWeaponAccuracyPercent(EntityPlayer entityPlayer)
     {
-        if (entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() instanceof IWeapon)
+        if (entityPlayer.getHeldItem(EnumHand.MAIN_HAND) != null && entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IWeapon)
         {
-            return ((IWeapon) entityPlayer.getHeldItem().getItem()).getAccuracy(entityPlayer.getHeldItem(), entityPlayer, ((IWeapon) entityPlayer.getHeldItem().getItem()).isWeaponZoomed(entityPlayer,entityPlayer.getHeldItem())) / ((IWeapon) entityPlayer.getHeldItem().getItem()).getMaxHeat(entityPlayer.getHeldItem());
+            return ((IWeapon) entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem()).getAccuracy(entityPlayer.getHeldItem(EnumHand.MAIN_HAND), entityPlayer, ((IWeapon) entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem()).isWeaponZoomed(entityPlayer,entityPlayer.getHeldItem(EnumHand.MAIN_HAND))) / ((IWeapon) entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem()).getMaxHeat(entityPlayer.getHeldItem(EnumHand.MAIN_HAND));
         }
         return 0;
     }

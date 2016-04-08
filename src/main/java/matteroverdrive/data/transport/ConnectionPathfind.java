@@ -4,8 +4,8 @@ import matteroverdrive.api.transport.IGridNode;
 import matteroverdrive.util.MOLog;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Collection;
 import java.util.HashSet;

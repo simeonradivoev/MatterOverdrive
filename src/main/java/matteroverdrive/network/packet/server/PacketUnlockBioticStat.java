@@ -18,14 +18,15 @@
 
 package matteroverdrive.network.packet.server;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.network.packet.PacketAbstract;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Created by Simeon on 5/29/2015.
@@ -66,7 +67,7 @@ public class PacketUnlockBioticStat extends PacketAbstract
         public void handleServerMessage(EntityPlayerMP player, PacketUnlockBioticStat message, MessageContext ctx)
         {
             IBioticStat stat = MatterOverdrive.statRegistry.getStat(message.name);
-            AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
             if (stat != null && androidPlayer != null && androidPlayer.isAndroid())
             {
                 androidPlayer.tryUnlock(stat, message.level);

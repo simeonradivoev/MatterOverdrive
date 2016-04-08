@@ -36,6 +36,7 @@ import matteroverdrive.matter_network.MatterNetworkTaskQueue;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -155,7 +156,7 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
 
     //region Getters and Setters
     @Override
-    public String getSound() {
+    public SoundEvent getSound() {
         return null;
     }
 

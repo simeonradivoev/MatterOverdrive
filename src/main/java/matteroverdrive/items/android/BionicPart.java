@@ -20,9 +20,11 @@ package matteroverdrive.items.android;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -30,7 +32,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import java.text.DecimalFormat;
@@ -51,20 +52,20 @@ public abstract class BionicPart extends MOBaseItem implements IBionicPart
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
         super.addDetails(itemstack, player, infos);
-        Multimap<String, AttributeModifier> multimap = getModifiers(AndroidPlayer.get(player), itemstack);
+        Multimap<String, AttributeModifier> multimap = getModifiers(MOPlayerCapabilityProvider.GetAndroidCapability(player), itemstack);
         if (multimap != null)
         {
             multimap.values().stream()
 					.forEach(modifier -> {
 						switch (modifier.getOperation()) {
 							case 0:
-								infos.add(EnumChatFormatting.GREEN + String.format("%s: +%s", modifier.getName(), modifier.getAmount()));
+								infos.add(ChatFormatting.GREEN + String.format("%s: +%s", modifier.getName(), modifier.getAmount()));
 								break;
 							case 1:
-								infos.add(EnumChatFormatting.GREEN + String.format("%s: %s", modifier.getName(), (modifier.getAmount() >= 0 ? "+" : "") + DecimalFormat.getPercentInstance().format(modifier.getAmount())));
+								infos.add(ChatFormatting.GREEN + String.format("%s: %s", modifier.getName(), (modifier.getAmount() >= 0 ? "+" : "") + DecimalFormat.getPercentInstance().format(modifier.getAmount())));
 								break;
 							default:
-								infos.add(EnumChatFormatting.GREEN + String.format("%s: %s", modifier.getName(), DecimalFormat.getPercentInstance().format(modifier.getAmount() + 1)));
+								infos.add(ChatFormatting.GREEN + String.format("%s: %s", modifier.getName(), DecimalFormat.getPercentInstance().format(modifier.getAmount() + 1)));
 						}
 					});
         }

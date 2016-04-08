@@ -143,6 +143,25 @@ public class MatterOverdriveRecipes
         addShapedRecipe(new ItemStack(MatterOverdriveItems.plasmaShotgun),"SP ","ICH","SPB",'S',MatterOverdriveItems.weaponReceiver,'P',MatterOverdriveItems.plasmaCore,'I',Items.iron_ingot,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2),'B',MatterOverdriveItems.battery,'H',MatterOverdriveItems.weaponHandle);
         addShapedRecipe(new ItemStack(MatterOverdriveItems.ionSniper),"ICI","SPP"," HB",'I',Items.iron_ingot,'S',MatterOverdriveItems.weaponReceiver,'P',MatterOverdriveItems.plasmaCore,'H',MatterOverdriveItems.weaponHandle,'B',MatterOverdriveItems.battery,'C',new ItemStack(MatterOverdriveItems.isolinear_circuit,1,3));
         addShapedRecipe(new ItemStack(MatterOverdriveItems.portableDecomposer)," T ","IPM"," T ",'T',MatterOverdriveItems.tritanium_plate,'I',MatterOverdriveItems.integration_matrix,'M',MatterOverdriveItems.me_conversion_matrix,'P',Blocks.sticky_piston);
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.item_upgrade, 1, 0), " R ", " C ", " T ", 'G', Blocks.glass, 'R', Items.redstone, 'T', MatterOverdriveItems.tritanium_plate, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 0));
+        //speed
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.item_upgrade,1,1)," R ","GUG"," E ",'U',MatterOverdriveItems.item_upgrade,'G',Items.glowstone_dust,'R',Items.redstone,'E',Items.emerald);
+        //power
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.item_upgrade,1,2)," B ","RUR"," C ",'U',MatterOverdriveItems.item_upgrade,'B',MatterOverdriveItems.battery,'R',Items.redstone,'C',Items.quartz);
+        //failsafe
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.item_upgrade, 1, 3), " D ", "RUR", " G ", 'U', MatterOverdriveItems.item_upgrade, 'D', Items.diamond, 'R', Items.redstone, 'G', Items.gold_ingot);
+        //range
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.item_upgrade, 1, 4), " E ", "RUR", " G ", 'U', MatterOverdriveItems.item_upgrade, 'E', Items.ender_pearl, 'R', Items.redstone, 'G', Items.gold_ingot);
+        //power storage
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.item_upgrade, 1, 5), "   ", "RUR", " B ", 'U', MatterOverdriveItems.item_upgrade, 'B', MatterOverdriveItems.hc_battery, 'R', Items.redstone, 'G', Items.gold_ingot);
+        //hyper speed
+        addShapelessRecipe(new ItemStack(MatterOverdriveItems.item_upgrade, 1, 6), MatterOverdriveItems.dilithium_ctystal,Items.nether_star,new ItemStack(MatterOverdriveItems.item_upgrade,1,1));
+        //matter storage
+        addShapedRecipe(new ItemStack(MatterOverdriveItems.item_upgrade, 1, 7), " R ", "MUM", " R ", 'U', MatterOverdriveItems.item_upgrade, 'M', MatterOverdriveItems.s_magnet, 'R',Items.redstone);
+        GameRegistry.addRecipe(new ItemStack(MatterOverdriveItems.weapon_module_barrel,1,0)," G ","RDR"," T ",'T', MatterOverdriveItems.tritanium_plate,'D',MatterOverdriveItems.dilithium_ctystal,'R', Items.redstone,'G', Blocks.glass);
+        GameRegistry.addRecipe(new ItemStack(MatterOverdriveItems.weapon_module_barrel,1,1)," G ","BFB"," T ",'T', MatterOverdriveItems.tritanium_plate,'F',Items.fire_charge,'B', Items.blaze_rod,'G', Blocks.glass);
+        GameRegistry.addRecipe(new ItemStack(MatterOverdriveItems.weapon_module_barrel,1,2)," B ","BRB","DTD",'T', MatterOverdriveItems.tritanium_plate,'R',Items.blaze_rod,'B', Blocks.tnt,'G', Blocks.glass,'D',Items.diamond);
+        GameRegistry.addRecipe(new ItemStack(MatterOverdriveItems.weapon_module_barrel,1,3)," S ","SAS","ETE",'T', MatterOverdriveItems.tritanium_plate,'A',Items.golden_apple,'S', Items.sugar,'G', Blocks.glass,'E',Items.emerald);
     }
 
     public static void registerInscriberRecipes(FMLInitializationEvent event)

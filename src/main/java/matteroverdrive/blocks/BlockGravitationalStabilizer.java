@@ -28,8 +28,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -77,7 +77,7 @@ public class BlockGravitationalStabilizer extends MOBlockMachine
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
-        EnumFacing l = BlockPistonBase.getFacingFromEntity(worldIn, pos, placer);
+        EnumFacing l = BlockPistonBase.getFacingFromEntity(pos, placer);
 
 
         if (placer.isSneaking())

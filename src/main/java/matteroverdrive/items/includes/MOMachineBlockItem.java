@@ -18,8 +18,7 @@
 
 package matteroverdrive.items.includes;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
@@ -29,8 +28,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -49,22 +49,22 @@ public class MOMachineBlockItem extends ItemBlock
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
 			if(MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
 			{
-				infos.add(EnumChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
+				infos.add(ChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
 			}
 
 			if(stack.hasTagCompound())
 			{
 				if (stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy")) {
-					infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("MaxEnergy")));
+					infos.add(ChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("MaxEnergy")));
 					if (stack.getTagCompound().hasKey("PowerSend") && stack.getTagCompound().hasKey("PowerReceive")) {
 						infos.add("Send/Receive: " + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("PowerSend")) + "/" + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("PowerReceive")) + MOEnergyHelper.ENERGY_UNIT + "/t");
 					}
 				}
 				if (stack.getTagCompound().hasKey("Matter") && stack.getTagCompound().hasKey("MaxMatter")) {
-					infos.add(EnumChatFormatting.BLUE + MatterHelper.formatMatter(stack.getTagCompound().getInteger("Matter"), stack.getTagCompound().getInteger("MaxMatter")));
+					infos.add(ChatFormatting.BLUE + MatterHelper.formatMatter(stack.getTagCompound().getInteger("Matter"), stack.getTagCompound().getInteger("MaxMatter")));
 
 					if (stack.getTagCompound().hasKey("MatterSend") && stack.getTagCompound().hasKey("MatterReceive")) {
-						infos.add(EnumChatFormatting.DARK_BLUE + "Send/Receive: " + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterSend")) + "/" + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterReceive")) + MatterHelper.MATTER_UNIT + "/t");
+						infos.add(ChatFormatting.DARK_BLUE + "Send/Receive: " + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterSend")) + "/" + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterReceive")) + MatterHelper.MATTER_UNIT + "/t");
 					}
 				}
 
@@ -82,7 +82,7 @@ public class MOMachineBlockItem extends ItemBlock
 	public String getItemStackDisplayName(ItemStack itemStack)
 	{
 		if (itemStack.hasTagCompound()) {
-			return super.getItemStackDisplayName(itemStack) + String.format(EnumChatFormatting.AQUA + " [%s]" + EnumChatFormatting.RESET, MOStringHelper.translateToLocal("item.info.configured"));
+			return super.getItemStackDisplayName(itemStack) + String.format(ChatFormatting.AQUA + " [%s]" + ChatFormatting.RESET, MOStringHelper.translateToLocal("item.info.configured"));
 		}else
 		{
 			return super.getItemStackDisplayName(itemStack);
@@ -115,12 +115,12 @@ public class MOMachineBlockItem extends ItemBlock
 
 		if (stackTagList.tagCount() > 0) {
 			infos.add("");
-			infos.add(EnumChatFormatting.YELLOW + "Inventory:");
+			infos.add(ChatFormatting.YELLOW + "Inventory:");
 			for (int i = 0; i < stackTagList.tagCount(); i++) {
 				ItemStack stack = ItemStack.loadItemStackFromNBT(stackTagList.getCompoundTagAt(i));
 				if (stack.getItem() instanceof IUpgrade)
 				{
-					infos.add("   " + EnumChatFormatting.GREEN + stack.getDisplayName());
+					infos.add("   " + ChatFormatting.GREEN + stack.getDisplayName());
 				}else {
 					infos.add("   " + infos.add(stack.getDisplayName()));
 				}

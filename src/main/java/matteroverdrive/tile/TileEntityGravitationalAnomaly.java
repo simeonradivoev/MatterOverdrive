@@ -18,17 +18,14 @@
 
 package matteroverdrive.tile;
 
-import matteroverdrive.Reference;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.events.anomaly.MOEventGravitationalAnomalyConsume;
 import matteroverdrive.api.gravity.AnomalySuppressor;
 import matteroverdrive.api.gravity.IGravitationalAnomaly;
 import matteroverdrive.api.gravity.IGravityEntity;
 import matteroverdrive.client.sound.GravitationalAnomalySound;
-import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.fx.GravitationalAnomalyParticle;
-import matteroverdrive.init.MatterOverdriveBioticStats;
-import matteroverdrive.items.SpacetimeEqualizer;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MatterHelper;
@@ -50,8 +47,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.*;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
@@ -134,7 +136,8 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
             if (tmpSuppression != suppression)
             {
                 suppression = tmpSuppression;
-                worldObj.markBlockForUpdate(getPos());
+                //// TODO: 3/25/2016 Find mark block for update 
+                //worldObj.markBlockForUpdate(getPos());
             }
 
             manageEntityGravitation(worldObj, 0);
@@ -147,8 +150,8 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     public void spawnParticles(World world)
     {
         double radius = (float)getBlockBreakRange();
-        Vector3f point = MOMathHelper.randomSpherePoint(getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, new Vec3(radius, radius, radius), world.rand);
-        GravitationalAnomalyParticle particle = new GravitationalAnomalyParticle(world,point.x, point.y, point.z, new Vec3(getPos().getX() + 0.5f, getPos().getY() + 0.5f, getPos().getZ() + 0.5f));
+        Vector3f point = MOMathHelper.randomSpherePoint(getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, new Vec3d(radius, radius, radius), world.rand);
+        GravitationalAnomalyParticle particle = new GravitationalAnomalyParticle(world,point.x, point.y, point.z, new Vec3d(getPos().getX() + 0.5f, getPos().getY() + 0.5f, getPos().getZ() + 0.5f));
         Minecraft.getMinecraft().effectRenderer.addEffect(particle);
     }
 
@@ -160,20 +163,21 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
         double rangeSq = getMaxRange() + 1;
         rangeSq *= rangeSq;
-        Vec3 blockPos = new Vec3(getPos());
+        Vec3d blockPos = new Vec3d(getPos());
         blockPos.addVector(0.5,0.5,0.5);
-        Vec3 entityPos = Minecraft.getMinecraft().thePlayer.getPositionVector();
+        Vec3d entityPos = Minecraft.getMinecraft().thePlayer.getPositionVector();
 
         double distanceSq = entityPos.squareDistanceTo(blockPos);
         if ( distanceSq < rangeSq)
         {
-            if ((Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3) != null && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3).getItem() instanceof SpacetimeEqualizer)
+            // TODO: 3/25/2016  find how to get equipment in slot
+            /*if ((Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3) != null && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3).getItem() instanceof SpacetimeEqualizer)
                     || Minecraft.getMinecraft().thePlayer.capabilities.disableDamage
                     || AndroidPlayer.get(Minecraft.getMinecraft().thePlayer).isUnlocked(MatterOverdriveBioticStats.equalizer,0))
-                return;
+                return;*/
 
             double acceleration = getAcceleration(distanceSq);
-            Vec3 dir = blockPos.subtract(entityPos).normalize();
+            Vec3d dir = blockPos.subtract(entityPos).normalize();
             Minecraft.getMinecraft().thePlayer.addVelocity(dir.xCoord * acceleration,dir.yCoord * acceleration,dir.zCoord * acceleration);
             Minecraft.getMinecraft().thePlayer.velocityChanged = true;
         }
@@ -188,7 +192,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         double range = getMaxRange() + 1;
         AxisAlignedBB bb = new AxisAlignedBB(getPos().getX() - range, getPos().getY() - range, getPos().getZ() - range, getPos().getX() + range, getPos().getY() + range, getPos().getZ() + range);
         List entities = world.getEntitiesWithinAABB(Entity.class, bb);
-        Vec3 blockPos = new Vec3(getPos()).addVector(0.5,0.5,0.5);
+        Vec3d blockPos = new Vec3d(getPos()).addVector(0.5,0.5,0.5);
 
         for (Object entityObject : entities)
         {
@@ -202,38 +206,39 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                         continue;
                     }
                 }
-                Vec3 entityPos = entity.getPositionVector();
+                Vec3d entityPos = entity.getPositionVector();
 
                 //pos.yCoord += entity.getEyeHeight();
                 double distanceSq = entityPos.squareDistanceTo(blockPos);
                 double acceleration = getAcceleration(distanceSq);
                 double eventHorizon = getEventHorizon();
-                Vec3 dir = blockPos.subtract(entityPos).normalize();
-                dir = new Vec3(dir.xCoord*acceleration,dir.yCoord*acceleration,dir.zCoord*acceleration);
+                Vec3d dir = blockPos.subtract(entityPos).normalize();
+                dir = new Vec3d(dir.xCoord*acceleration,dir.yCoord*acceleration,dir.zCoord*acceleration);
                 if (intersectsAnomaly(entityPos,dir,blockPos,eventHorizon))
                 {
                     consume(entity);
                 }
 
-                if (entityObject instanceof EntityLivingBase) {
+                // TODO: 3/25/2016  find how to get equipment in slot
+                /*if (entityObject instanceof EntityLivingBase) {
                     ItemStack eq = ((EntityLivingBase) entityObject).getEquipmentInSlot(3);
                     if (eq != null && eq.getItem() instanceof SpacetimeEqualizer)
                         continue;
-                }
+                }*/
 
                 entity.addVelocity(dir.xCoord, dir.yCoord, dir.zCoord);
             }
         }
     }
 
-    boolean intersectsAnomaly(Vec3 origin,Vec3 dir,Vec3 anomaly,double radius)
+    boolean intersectsAnomaly(Vec3d origin,Vec3d dir,Vec3d anomaly,double radius)
     {
         if (origin.distanceTo(anomaly) <= radius)
         {
             return true;
         }else
         {
-            Vec3 intersectDir = origin.subtract(anomaly);
+            Vec3d intersectDir = origin.subtract(anomaly);
             double c = intersectDir.lengthVector();
             double v = intersectDir.dotProduct(dir);
             double d = radius*radius - (c*c - v*v);
@@ -259,13 +264,13 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     {
         if (sound == null)
         {
-            sound = new GravitationalAnomalySound(new ResourceLocation(Reference.MOD_ID + ":" + "windy"),getPos(),0.2f,getMaxRange());
+            sound = new GravitationalAnomalySound(MatterOverdriveSounds.windy,SoundCategory.BLOCKS,getPos(),0.2f,getMaxRange());
             FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
         }
         else if (!FMLClientHandler.instance().getClient().getSoundHandler().isSoundPlaying(sound))
         {
             stopSounds();
-            sound = new GravitationalAnomalySound(new ResourceLocation(Reference.MOD_ID + ":" + "windy"),getPos(),0.2f,getMaxRange());
+            sound = new GravitationalAnomalySound(MatterOverdriveSounds.windy,SoundCategory.BLOCKS,getPos(),0.2f,getMaxRange());
             FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
         }
     }
@@ -342,11 +347,11 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
     {
         NBTTagCompound syncData = new NBTTagCompound();
         writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS, false);
-        return new S35PacketUpdateTileEntity(getPos(), 1, syncData);
+        return new SPacketUpdateTileEntity(getPos(), 1, syncData);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
     {
         NBTTagCompound syncData = pkt.getNbtCompound();
         if(syncData != null)
@@ -412,7 +417,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                         blockPos = new BlockPos(getPos().getX() + x,getPos().getY() + y,getPos().getZ() + z);
                         blockState = world.getBlockState(blockPos);
                         distance = Math.sqrt(blockPos.distanceSq(getPos()));
-                        hardness = blockState.getBlock().getBlockHardness(world,blockPos);
+                        hardness = blockState.getBlock().getBlockHardness(blockState,world,blockPos);
                         if (blockState.getBlock() instanceof IFluidBlock || blockState.getBlock() instanceof BlockLiquid)
                         {
                             hardness = 1;
@@ -476,7 +481,8 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
             if (consumedFlag)
             {
                 onEntityConsume(entity, false);
-                worldObj.markBlockForUpdate(pos);
+                /// TODO: 3/25/2016 Find how to mark block for update
+                //worldObj.markBlockForUpdate(pos);
             }
         }
     }
@@ -549,7 +555,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         if (blockState == null)
             return true;
 
-        float hardness = blockState.getBlock().getBlockHardness(worldObj,pos);
+        float hardness = blockState.getBlock().getBlockHardness(blockState,worldObj,pos);
         double distance = Math.sqrt(pos.distanceSq(getPos()));
         if (distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
         {
@@ -563,7 +569,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                     world.spawnEntityInWorld(fallingBlock);
                 }
                 else {
-                    ItemStack bStack = blockState.getBlock().getPickBlock(null,world,pos,null);
+                    ItemStack bStack = blockState.getBlock().getPickBlock(blockState,null,world,pos,null);
                     if (bStack != null)
                     {
                         EntityItem item = new EntityItem(world, pos.getX()+0.5,pos.getY()+0.5,pos.getZ()+0.5, bStack);
@@ -580,7 +586,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 int matter = 0;
 
                 if (blockState.getBlock().canSilkHarvest(worldObj, pos,blockState,null)) {
-                    matter += MatterHelper.getMatterAmountFromItem(blockState.getBlock().getPickBlock(null,world,pos,null));
+                    matter += MatterHelper.getMatterAmountFromItem(blockState.getBlock().getPickBlock(blockState,null,world,pos,null));
                 } else {
                     for (ItemStack stack : blockState.getBlock().getDrops(worldObj, pos, blockState, 0))
                     {
@@ -604,7 +610,8 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
                 }
 
                 world.setBlockToAir(pos);
-                worldObj.markBlockForUpdate(pos);
+                // TODO: 3/25/2016 Find how to mark block for update
+                //worldObj.markBlockForUpdate(pos);
                 return true;
             }
         }

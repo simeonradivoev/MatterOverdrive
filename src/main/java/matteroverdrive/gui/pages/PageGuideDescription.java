@@ -35,8 +35,9 @@ import matteroverdrive.util.MOLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 import org.w3c.dom.Document;
@@ -76,6 +77,7 @@ public class PageGuideDescription extends ElementBaseGroup
     MOElementButton bt_scroll_left;
     public final MOElementButton bt_return;
     private ItemStack dataPadStack;
+    private EnumHand hand;
 
     public PageGuideDescription(MOGuiBase gui, int posX, int posY, int width, int height, String name) {
         super(gui, posX, posY, width, height);
@@ -209,7 +211,7 @@ public class PageGuideDescription extends ElementBaseGroup
 
             loadGuideInfo(id);
             MatterOverdriveItems.dataPad.setOpenGuide(dataPadStack, id);
-            MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
+            MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand,dataPadStack));
             scroll = page;
             tabID = 0;
         }
@@ -288,9 +290,10 @@ public class PageGuideDescription extends ElementBaseGroup
         return null;
     }
 
-    public void setDataPadStack(ItemStack stack)
+    public void setDataPadStack(EnumHand hand,ItemStack stack)
     {
         dataPadStack = stack;
+        this.hand = hand;
     }
 
     private class HistoryEntry

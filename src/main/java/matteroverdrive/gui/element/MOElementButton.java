@@ -26,6 +26,7 @@ import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class MOElementButton extends MOElementBase
     public static final Random rand = new Random();
 
     private int hoverX,hoverY,sheetX,sheetY,disabledX,disabledY;
-    protected String[] sounds = new String[]{"button_soft"};
+    protected ResourceLocation[] sounds = new ResourceLocation[]{new ResourceLocation(Reference.MOD_ID,"button_soft")};
     protected String text;
     protected boolean isDown;
     protected int lastMouseButton;
@@ -87,9 +88,9 @@ public class MOElementButton extends MOElementBase
     {
         if (isEnabled() && intersectsWith(mouseX, mouseY) && isDown)
         {
-            String sound = getSound();
-            if (sound != null && !sound.isEmpty()) {
-                MOGuiBase.playSound(Reference.MOD_ID + ":gui." + sound, getSoundVolume(), 0.9f + rand.nextFloat() * 0.2f);
+            SoundEvent sound = getSound();
+            if (sound != null) {
+                MOGuiBase.playSound(sound, getSoundVolume(), 0.9f + rand.nextFloat() * 0.2f);
             }
             onAction(mouseX, mouseY, lastMouseButton);
         }
@@ -97,16 +98,19 @@ public class MOElementButton extends MOElementBase
         isDown = false;
     }
 
-    public String getSound()
+    public SoundEvent getSound()
     {
         if (sounds != null && sounds.length > 0)
         {
-            return sounds[rand.nextInt(sounds.length)];
+            if(SoundEvent.soundEventRegistry.containsKey(sounds[rand.nextInt(sounds.length)]))
+            {
+                return SoundEvent.soundEventRegistry.getObject(sounds[rand.nextInt(sounds.length)]);
+            }
         }
         return null;
     }
 
-    public void setSounds(String... sounds)
+    public void setSounds(ResourceLocation... sounds)
     {
         this.sounds = sounds;
     }

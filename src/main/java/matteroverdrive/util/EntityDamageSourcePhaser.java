@@ -4,9 +4,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Created by Simeon on 4/16/2015.
@@ -27,21 +27,21 @@ public class EntityDamageSourcePhaser extends EntityDamageSource
         return damageSourceEntity;
     }
 
-    public IChatComponent func_151519_b(EntityLivingBase entity)
+    public ITextComponent func_151519_b(EntityLivingBase entity)
     {
 		String normalMsg = "death.attack." + damageType;
 		String itemMsg = normalMsg + ".item";
 
 		if (damageSourceEntity instanceof EntityLivingBase) {
-			ItemStack itemStack = ((EntityLivingBase)damageSourceEntity).getHeldItem();
+			ItemStack itemStack = ((EntityLivingBase)damageSourceEntity).getActiveItemStack();
 			if (itemStack != null &&
 					itemStack.hasDisplayName() &&
 					MOStringHelper.hasTranslation(itemMsg)) {
-				return new ChatComponentTranslation(itemMsg, entity.getDisplayName().getFormattedText(), damageSourceEntity.getDisplayName().getFormattedText(), itemStack.getChatComponent());
+				return new TextComponentTranslation(itemMsg, entity.getDisplayName().getFormattedText(), damageSourceEntity.getDisplayName().getFormattedText(), itemStack.getChatComponent());
 			}
 		}
 
-		return new ChatComponentTranslation(normalMsg, entity.getDisplayName(), damageSourceEntity.getDisplayName());
+		return new TextComponentTranslation(normalMsg, entity.getDisplayName(), damageSourceEntity.getDisplayName());
     }
 
     /**

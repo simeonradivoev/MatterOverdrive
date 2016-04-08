@@ -20,7 +20,7 @@ package matteroverdrive.fx;/* Created by Simeon on 10/18/2015. */
 
 import matteroverdrive.client.data.Color;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
@@ -31,16 +31,15 @@ public class PhaserBoltRecoil extends EntityFX
     public PhaserBoltRecoil(World world, double x, double y, double z, Color color, double dirX, double dirY, double dirZ)
     {
         super(world, x, y, z, dirX, dirY, dirZ);
-        this.motionY += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
-        this.motionX += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
-        this.motionZ += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
+        this.xSpeed += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
+        this.ySpeed += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
+        this.zSpeed += (double)((this.rand.nextFloat()-0.5f) * 0.2F);
         this.particleRed = color.getFloatR();
         this.particleGreen = color.getFloatG();
         this.particleBlue = color.getFloatB();
         this.particleScale *= this.rand.nextFloat() * 0.5F + 1F;
         this.lavaParticleScale = this.particleScale;
         this.particleMaxAge = (int)(8d / (Math.random() * 0.8D + 0.2D));
-        this.noClip = false;
         this.setParticleTextureIndex(rand.nextInt(2));
     }
 
@@ -78,7 +77,7 @@ public class PhaserBoltRecoil extends EntityFX
     }
 
     @Override
-    public void renderParticle(WorldRenderer worldRenderer, Entity entity, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
+    public void renderParticle(VertexBuffer worldRenderer, Entity entity, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
     {
         float f6 = ((float)this.particleAge + p_70539_2_) / (float)this.particleMaxAge;
         this.particleScale = this.lavaParticleScale * (1.0F - f6 * f6);
@@ -96,28 +95,28 @@ public class PhaserBoltRecoil extends EntityFX
 
         if (this.particleAge++ >= this.particleMaxAge)
         {
-            this.setDead();
+            this.setExpired();
         }
 
         float f = (float)this.particleAge / (float)this.particleMaxAge;
 
-        this.motionY -= 0.03D;
+        this.ySpeed -= 0.03D;
         try {
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+            this.moveEntity(this.xSpeed, this.ySpeed, this.zSpeed);
         }
         catch (Exception e)
         {
-            this.setDead();
+            this.setExpired();
         }
 
-        this.motionX *= 0.9990000128746033D;
-        this.motionY *= 0.9990000128746033D;
-        this.motionZ *= 0.9990000128746033D;
+        this.xSpeed *= 0.9990000128746033D;
+        this.ySpeed *= 0.9990000128746033D;
+        this.zSpeed *= 0.9990000128746033D;
 
-        if (this.onGround)
+        if (this.isCollided)
         {
-            this.motionX *= 0.699999988079071D;
-            this.motionZ *= 0.699999988079071D;
+            this.xSpeed *= 0.699999988079071D;
+            this.ySpeed *= 0.699999988079071D;
         }
     }
 }

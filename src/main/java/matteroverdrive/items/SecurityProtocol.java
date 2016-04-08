@@ -18,16 +18,19 @@
 
 package matteroverdrive.items;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -60,11 +63,11 @@ public class SecurityProtocol extends MOBaseItem {
                 EntityPlayer entityPlayer = player.worldObj.getPlayerEntityByUUID(UUID.fromString(itemstack.getTagCompound().getString("Owner")));
                 if (entityPlayer != null) {
                     String owner = entityPlayer.getGameProfile().getName();
-                    infos.add(EnumChatFormatting.YELLOW + "Owner: " + owner);
+                    infos.add(ChatFormatting.YELLOW + "Owner: " + owner);
                 }
             }catch (Exception e)
             {
-                infos.add(EnumChatFormatting.RED + MOStringHelper.translateToLocal(getUnlocalizedName() + ".invalid"));
+                infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(getUnlocalizedName() + ".invalid"));
             }
         }
     }
@@ -95,33 +98,35 @@ public class SecurityProtocol extends MOBaseItem {
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
-        if (!stack.hasTagCompound())
+        if (!itemStackIn.hasTagCompound())
         {
-            if (player.isSneaking()) {
-                TagCompountCheck(stack);
-                stack.getTagCompound().setString("Owner", player.getGameProfile().getId().toString());
-                stack.setItemDamage(1);
+            if (playerIn.isSneaking()) {
+                TagCompountCheck(itemStackIn);
+                itemStackIn.getTagCompound().setString("Owner", playerIn.getGameProfile().getId().toString());
+                itemStackIn.setItemDamage(1);
+                return ActionResult.newResult(EnumActionResult.SUCCESS,itemStackIn);
             }
         }
-        else if (stack.getTagCompound().getString("Owner").equals(player.getGameProfile().getId().toString()) || player.capabilities.isCreativeMode)
+        else if (itemStackIn.getTagCompound().getString("Owner").equals(playerIn.getGameProfile().getId().toString()) || playerIn.capabilities.isCreativeMode)
         {
-            if (player.isSneaking())
+            if (playerIn.isSneaking())
             {
-                int damage = stack.getItemDamage() + 1;
+                int damage = itemStackIn.getItemDamage() + 1;
                 if (damage >= types.length)
                     damage = 1;
 
-                stack.setItemDamage(damage);
+                itemStackIn.setItemDamage(damage);
+                return ActionResult.newResult(EnumActionResult.SUCCESS,itemStackIn);
             }
         }
 
-        return stack;
+        return ActionResult.newResult(EnumActionResult.PASS,itemStackIn);
     }
 
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
     {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
@@ -129,17 +134,17 @@ public class SecurityProtocol extends MOBaseItem {
                 if (stack.getItemDamage() == 1) {
                     if (((MOTileEntityMachine) tileEntity).claim(stack)) {
                         stack.stackSize--;
-                        return true;
+                        return EnumActionResult.SUCCESS;
                     }
                 } else if (stack.getItemDamage() == 3) {
                     if (((MOTileEntityMachine) tileEntity).unclaim(stack)) {
                         stack.stackSize--;
-                        return true;
+                        return EnumActionResult.SUCCESS;
                     }
                 }
             }
         }
-        return false;
+        return EnumActionResult.FAIL;
     }
 
     @Override

@@ -18,23 +18,27 @@
 
 package matteroverdrive.entity.monster;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.Reference;
 import matteroverdrive.api.entity.IPathableMob;
-import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.tile.TileEntityAndroidSpawner;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -52,7 +56,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     boolean fromSpawner;
     private BlockPos spawnerPosition;
     private int currentPathIndex;
-    private Vec3[] path;
+    private Vec3d[] path;
     private int maxPathTargetRangeSq;
     private int visorColor;
     private ScorePlayerTeam team;
@@ -87,7 +91,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         name += String.format("[%s] ",getAndroidLevel());
         name += names[rand.nextInt(names.length)];
         setCustomNameTag(name);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getIsLegendary() ? 128 : getAndroidLevel() * 10 + 32);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getIsLegendary() ? 128 : getAndroidLevel() * 10 + 32);
         this.setHealth(this.getMaxHealth());
 
         if (fromSpawner)
@@ -120,22 +124,22 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         }
     }
 
-    public EnumChatFormatting getNameColor()
+    public ChatFormatting getNameColor()
     {
         if (getIsLegendary())
         {
-            return EnumChatFormatting.GOLD;
+            return ChatFormatting.GOLD;
         }
         else
         {
             switch (getAndroidLevel())
             {
                 case 0:
-                    return EnumChatFormatting.GRAY;
+                    return ChatFormatting.GRAY;
                 case 1:
-                    return EnumChatFormatting.DARK_AQUA;
+                    return ChatFormatting.DARK_AQUA;
                 case 2:
-                    return EnumChatFormatting.DARK_PURPLE;
+                    return ChatFormatting.DARK_PURPLE;
                 default:
                     return null;
             }
@@ -249,7 +253,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         {
             if (EntityRogueAndroid.dimensionWhitelist.size() > 0)
             {
-                return EntityRogueAndroid.dimensionWhitelist.contains(worldObj.provider.getDimensionId()) && inDimensionBlacklist();
+                return EntityRogueAndroid.dimensionWhitelist.contains(worldObj.provider.getDimension()) && inDimensionBlacklist();
             }
             if (inDimensionBlacklist())
             {
@@ -258,7 +262,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         }
         boolean light = ignoreLight ? true : isValidLightLevel();
         boolean entityCollison = ignoreEntityCollision ? true : this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox());
-        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL && light && entityCollison && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty() && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
+        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL && light && entityCollison && this.worldObj.getCollisionBoxes(this.getEntityBoundingBox()).isEmpty() && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
     }
 
     @Override
@@ -292,53 +296,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
                 ++i;
             }
 
-            for (int j = 3; j >= 0; --j)
-            {
-                ItemStack itemstack = this.getCurrentArmor(j);
-
-                if (j < 3 && this.rand.nextFloat() < f)
-                {
-                    break;
-                }
-
-                if (itemstack == null)
-                {
-                    Item item = null;
-
-                    if (i == 3)
-                    {
-                        if (rand.nextBoolean())
-                        {
-                            switch (j + 1)
-                            {
-                                case 4:
-                                    item = MatterOverdriveItems.tritaniumHelemet;
-                                    break;
-                                case 3:
-                                    item = MatterOverdriveItems.tritaniumChestplate;
-                                    break;
-                                case 2:
-                                    item = MatterOverdriveItems.tritaniumLeggings;
-                                    break;
-                                case 1:
-                                    item = MatterOverdriveItems.tritaniumBoots;
-                                    break;
-                            }
-                        }else
-                        {
-                            item = getArmorItemForSlot(j + 1, i);
-                        }
-                    }else
-                    {
-                        item = getArmorItemForSlot(j + 1, i);
-                    }
-
-                    if (item != null)
-                    {
-                        this.setCurrentItemOrArmor(j + 1, new ItemStack(item));
-                    }
-                }
-            }
+            //// TODO: 3/25/2016 Find how to add armor to mobs
         }
     }
 
@@ -358,12 +316,12 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     @Override
     public BlockPos getHomePosition()
     {
-        Vec3 currentTarget = getCurrentTarget();
+        Vec3d currentTarget = getCurrentTarget();
         return new BlockPos((int)currentTarget.xCoord,(int)currentTarget.yCoord,(int)currentTarget.zCoord);
     }
 
     private boolean inDimensionBlacklist() {
-        return EntityRogueAndroid.dimensionBlacklist.contains(worldObj.provider.getDimensionId());
+        return EntityRogueAndroid.dimensionBlacklist.contains(worldObj.provider.getDimension());
     }
 
     public void setAndroidLevel(int level)
@@ -403,10 +361,10 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     {
         if(hasTeam())
         {
-            return getTeam().formatString(this.dataWatcher.getWatchableObjectString(10));
+            return getTeam().formatString(super.getCustomNameTag());
         }else
         {
-            EnumChatFormatting color = getNameColor();
+            ChatFormatting color = getNameColor();
             if (color != null)
             {
                 return color + super.getCustomNameTag();
@@ -495,7 +453,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     }
 
     @Override
-    public Vec3 getCurrentTarget()
+    public Vec3d getCurrentTarget()
     {
         if (path != null && currentPathIndex < path.length)
         {
@@ -505,7 +463,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     }
 
     @Override
-    public void onTargetReached(Vec3 pos)
+    public void onTargetReached(Vec3d pos)
     {
         if (currentPathIndex < path.length-1)
         {
@@ -514,7 +472,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
     }
 
     @Override
-    public boolean isNearTarget(Vec3 pos)
+    public boolean isNearTarget(Vec3d pos)
     {
         return pos.squareDistanceTo(pos) < maxPathTargetRangeSq;
     }
@@ -525,22 +483,22 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         return this;
     }
 
-    public void setPath(Vec3[] path,int range)
+    public void setPath(Vec3d[] path, int range)
     {
         this.path = path;
         maxPathTargetRangeSq = range*range;
     }
 
     @Override
-    protected String getLivingSound()
+    protected SoundEvent getAmbientSound()
     {
-        return Reference.MOD_ID + ":" + "rogue_android_say";
+        return MatterOverdriveSounds.mobsRogueAndroidSay;
     }
 
     @Override
-    protected String getDeathSound()
+    protected SoundEvent getDeathSound()
     {
-        return Reference.MOD_ID + ":" + "rogue_android_death";
+        return MatterOverdriveSounds.mobsRogueAndroidDeath;
     }
 
     @Override

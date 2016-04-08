@@ -1,9 +1,9 @@
 package matteroverdrive.fx;
 
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -15,14 +15,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GravitationalAnomalyParticle extends EntityFX
 {
     float smokeParticleScale;
-    Vec3 center;
+    Vec3d center;
 
-    public GravitationalAnomalyParticle(World world, double x, double y, double z, Vec3 center)
+    public GravitationalAnomalyParticle(World world, double x, double y, double z, Vec3d center)
     {
         this(world, x, y, z, center, 1.0F);
     }
 
-    public GravitationalAnomalyParticle(World world, double x, double y, double z, Vec3 center, float f)
+    public GravitationalAnomalyParticle(World world, double x, double y, double z, Vec3d center, float f)
     {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
         this.particleRed = this.particleGreen = this.particleBlue = (float)(Math.random() * 0.30000001192092896D);
@@ -31,12 +31,12 @@ public class GravitationalAnomalyParticle extends EntityFX
         this.smokeParticleScale = this.particleScale;
         this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D));
         this.particleMaxAge = (int)((float)this.particleMaxAge * f);
-        this.noClip = true;
+        //this.noClip = true;
         this.center = center;
     }
 
     @Override
-    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)
+    public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)
     {
         float f6 = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge * 32.0F;
 
@@ -65,14 +65,14 @@ public class GravitationalAnomalyParticle extends EntityFX
 
         if (this.particleAge++ >= this.particleMaxAge)
         {
-            this.setDead();
+            this.setExpired();
         }
 
         this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        this.moveEntity(this.xSpeed, this.ySpeed, this.zSpeed);
 
-        this.motionX = (center.xCoord - posX) * 0.1;
-        this.motionY = (center.yCoord - posY) * 0.1;
-        this.motionZ = (center.zCoord - posZ) * 0.1;
+        this.xSpeed = (center.xCoord - posX) * 0.1;
+        this.ySpeed = (center.yCoord - posY) * 0.1;
+        this.zSpeed = (center.zCoord - posZ) * 0.1;
     }
 }

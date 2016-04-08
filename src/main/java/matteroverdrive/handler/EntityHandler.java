@@ -18,19 +18,22 @@
 
 package matteroverdrive.handler;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import matteroverdrive.Reference;
 import matteroverdrive.api.events.MOEventTransport;
 import matteroverdrive.api.events.anomaly.MOEventGravitationalAnomalyConsume;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.EnumSet;
 
@@ -39,7 +42,7 @@ import java.util.EnumSet;
  */
 public class EntityHandler
 {
-    @SubscribeEvent
+   /* @SubscribeEvent
     public void onEntityConstructing(EntityEvent.EntityConstructing event)
     {
         if (event.entity instanceof EntityPlayer)
@@ -48,19 +51,19 @@ public class EntityHandler
             {
                 AndroidPlayer.register((EntityPlayer) event.entity);
             }
-            if (MOExtendedProperties.get((EntityPlayer)event.entity) == null)
+            if (MOPlayerCapabilityProvider.GetExtendedCapability((EntityPlayer)event.entity) == null)
             {
                 MOExtendedProperties.register((EntityPlayer)event.entity);
             }
         }
-    }
+    }*/
 
     @SubscribeEvent
     public void onLivingFallEvent(LivingFallEvent event)
     {
-        if (event.entityLiving instanceof EntityPlayer)
+        if (event.getEntityLiving() instanceof EntityPlayer)
         {
-            AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.entityLiving);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntityLiving());
             if (androidPlayer.isAndroid())
                 androidPlayer.onEntityFall(event);
         }
@@ -69,17 +72,17 @@ public class EntityHandler
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event)
     {
-        if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer) {
-            AndroidPlayer.get((EntityPlayer) event.entity).sync(EnumSet.allOf(AndroidPlayer.DataType.class));
-            MOExtendedProperties.get((EntityPlayer) event.entity).sync(EnumSet.allOf(PlayerQuestData.DataType.class));
+        if (!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayer) {
+            MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntity()).sync(EnumSet.allOf(AndroidPlayer.DataType.class));
+            MOPlayerCapabilityProvider.GetExtendedCapability(event.getEntity()).sync(EnumSet.allOf(PlayerQuestData.DataType.class));
         }
     }
 
     @SubscribeEvent
     public void onEntityJump(LivingEvent.LivingJumpEvent event)
     {
-        if (event.entityLiving instanceof EntityPlayer) {
-            AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.entityLiving);
+        if (event.getEntityLiving() instanceof EntityPlayer) {
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntityLiving());
             if (androidPlayer != null && androidPlayer.isAndroid())
             {
                 androidPlayer.onEntityJump(event);
@@ -91,17 +94,17 @@ public class EntityHandler
     @SubscribeEvent
     public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event)
     {
-        AndroidPlayer newAndroidPlayer = AndroidPlayer.get(event.entityPlayer);
-        AndroidPlayer oldAndroidPlayer = AndroidPlayer.get(event.original);
+        AndroidPlayer newAndroidPlayer =MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntityPlayer());
+        AndroidPlayer oldAndroidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(event.getOriginal());
         if (newAndroidPlayer != null && oldAndroidPlayer != null) {
             newAndroidPlayer.copy(oldAndroidPlayer);
-            if (event.wasDeath) {
+            if (event.isWasDeath()) {
                 newAndroidPlayer.onPlayerRespawn();
             }
             newAndroidPlayer.sync(EnumSet.allOf(AndroidPlayer.DataType.class));
         }
-        MOExtendedProperties newExtendedProperties = MOExtendedProperties.get(event.entityPlayer);
-        MOExtendedProperties oldExtenderDProperties = MOExtendedProperties.get(event.original);
+        MOExtendedProperties newExtendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getEntityPlayer());
+        MOExtendedProperties oldExtenderDProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getOriginal());
         if (newExtendedProperties != null && oldExtenderDProperties != null)
         {
             newExtendedProperties.copy(oldExtenderDProperties);
@@ -112,17 +115,17 @@ public class EntityHandler
     @SubscribeEvent
     public void onEntityAttack(LivingAttackEvent event)
     {
-        if (event.entityLiving instanceof EntityPlayer) {
-            AndroidPlayer.get((EntityPlayer)event.entityLiving).triggerEventOnStats(event);
+        if (event.getEntityLiving() instanceof EntityPlayer) {
+            MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntityLiving()).triggerEventOnStats(event);
         }
     }
 
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent deathEvent)
     {
-        if (deathEvent.source != null && deathEvent.source.getEntity() instanceof EntityPlayer)
+        if (deathEvent.getSource() != null && deathEvent.getSource().getEntity() instanceof EntityPlayer)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get((EntityPlayer) deathEvent.source.getEntity());
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(deathEvent.getSource().getEntity());
             extendedProperties.onEvent(deathEvent);
         }
     }
@@ -130,9 +133,9 @@ public class EntityHandler
     @SubscribeEvent
     public void onEntityHurt(LivingHurtEvent event)
     {
-        if (event.entityLiving instanceof EntityPlayer)
+        if (event.getEntityLiving() instanceof EntityPlayer)
         {
-            AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)event.entityLiving);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntityLiving());
             if (androidPlayer.isAndroid())
                 androidPlayer.onEntityHurt(event);
         }
@@ -141,19 +144,19 @@ public class EntityHandler
     @SubscribeEvent
     public void onEntityItemPickup(EntityItemPickupEvent event)
     {
-        if (event.entityPlayer != null)
+        if (event.getEntityLiving() != null)
         {
-            if (event.item.getEntityItem() != null && MatterHelper.containsMatter(event.item.getEntityItem()))
+            if (event.getItem().getEntityItem() != null && MatterHelper.containsMatter(event.getItem().getEntityItem()))
             {
                 for (int i = 0;i < 9;i++)
                 {
-                    if (event.entityPlayer.inventory.getStackInSlot(i) != null && event.entityPlayer.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.portableDecomposer)
+                    if (event.getEntityPlayer().inventory.getStackInSlot(i) != null && event.getEntityPlayer().inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.portableDecomposer)
                     {
-                        MatterOverdriveItems.portableDecomposer.decomposeItem(event.entityPlayer.inventory.getStackInSlot(i),event.item.getEntityItem());
+                        MatterOverdriveItems.portableDecomposer.decomposeItem(event.getEntityPlayer().inventory.getStackInSlot(i),event.getItem().getEntityItem());
                     }
                 }
             }
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(event.entityPlayer);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getEntityPlayer());
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);
@@ -164,9 +167,9 @@ public class EntityHandler
     @SubscribeEvent
     public void onEntityTransport(MOEventTransport eventTransport)
     {
-        if (eventTransport.entity instanceof EntityPlayer)
+        if (eventTransport.getEntity() instanceof EntityPlayer)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get((EntityPlayer)eventTransport.entity);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(eventTransport.getEntity());
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(eventTransport);
@@ -179,11 +182,20 @@ public class EntityHandler
     {
         if (event.entity instanceof EntityPlayer)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get((EntityPlayer)event.entity);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.entity);
             if (extendedProperties != null)
             {
                 extendedProperties.onEvent(event);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void OnAttachCapability(AttachCapabilitiesEvent.Entity event)
+    {
+        if (event.getEntity() instanceof EntityPlayer)
+        {
+            event.addCapability(new ResourceLocation(Reference.MOD_NAME,"MOPlayer"),new MOPlayerCapabilityProvider((EntityPlayer) event.getEntity()));
         }
     }
 }

@@ -37,7 +37,7 @@ public class TileEntityRendererReplicator extends TileEntitySpecialRenderer<Tile
             }
 
             itemEntity.hoverStart = (float) (Math.PI/2);
-            Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(itemEntity, x + 0.5d, y + 0.05, z + 0.5, 0, 0);
+            Minecraft.getMinecraft().getRenderManager().doRenderEntity(itemEntity, x + 0.5d, y + 0.05, z + 0.5, 0, 0,false);
         }
     }
 }

@@ -9,12 +9,12 @@ import matteroverdrive.client.resources.data.WeaponMetadataSection;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.client.model.IFlexibleBakedModel;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
 
@@ -25,7 +25,7 @@ public class ModuleHoloSightsRender extends ModuleRenderAbstract
 {
     private ResourceLocation sightsModelLocation = new ResourceLocation(Reference.PATH_MODEL + "item/holo_sights.obj");
     private OBJModel sightsModel;
-    private IFlexibleBakedModel sightsBakedModel;
+    private IBakedModel sightsBakedModel;
 
     public ModuleHoloSightsRender(WeaponRenderHandler weaponRenderer)
     {
@@ -35,7 +35,7 @@ public class ModuleHoloSightsRender extends ModuleRenderAbstract
     @Override
     public void renderModule(WeaponMetadataSection weaponMeta, ItemStack weaponStack, ItemStack moduleStack, float ticks, int pass)
     {
-        Vec3 scopePos = weaponMeta.getModulePosition("default_scope");
+        Vec3d scopePos = weaponMeta.getModulePosition("default_scope");
         if (scopePos != null)
         {
             GlStateManager.color(0.7f,0.7f,0.7f);
@@ -65,7 +65,7 @@ public class ModuleHoloSightsRender extends ModuleRenderAbstract
     @Override
     public void transformWeapon(WeaponMetadataSection weaponMeta, ItemStack weaponStack, ItemStack moduleStack, float ticks, float zoomValue)
     {
-        Vec3 scopePos = weaponMeta.getModulePosition("default_scope");
+        Vec3d scopePos = weaponMeta.getModulePosition("default_scope");
         if (scopePos != null)
         {
             GlStateManager.translate(0, MOMathHelper.Lerp(0, -scopePos.yCoord + 0.118f, zoomValue), 0);

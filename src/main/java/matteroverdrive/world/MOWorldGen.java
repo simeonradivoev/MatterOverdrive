@@ -26,14 +26,15 @@ import matteroverdrive.handler.GoogleAnalyticsCommon;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.world.buildings.*;
-import matteroverdrive.world.dimensions.BiomeGeneratorSpace;
-import matteroverdrive.world.dimensions.WorldProviderSpace;
+import matteroverdrive.world.dimensions.alien.BiomeGeneratorAlien;
+import matteroverdrive.world.dimensions.space.BiomeGeneratorSpace;
 import net.minecraft.block.Block;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -45,18 +46,22 @@ import java.util.*;
  */
 public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
 {
+    public static int SPACE_DIM_ID = 3;
+    public static int ALIEN_DIM_ID = 4;
+
+    public DimensionType SpaceDimension;
+    public DimensionType AlienDimension;
+
     final Random oreRandom;
     final Random anomaliesRandom;
     final Random buildingsRandom;
 
     public static WorldGenMinable dilithiumGen;
     public static WorldGenMinable tritaniumGen;
-    public static MOAndroidHouseBuilding androidHouse;
     public static WorldGenGravitationalAnomaly anomalyGen;
-    public static MOSandPit sandPit;
-    public static MOWorldGenCrashedSpaceShip crashedSpaceShip;
 
     public static BiomeGeneratorSpace biomeSpace;
+    public static BiomeGeneratorAlien biomeAlien;
 
     public static float BUILDING_SPAWN_CHANCE = 0.01f;
     public static final int TRITANIUM_VEINS_PER_CHUNK = 10;
@@ -80,10 +85,16 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         buildings = new ArrayList<>();
         worldGenBuildingQueue = new ArrayDeque<>();
 
-        biomeSpace = new BiomeGeneratorSpace(100);
+        //biomeSpace = new BiomeGeneratorSpace(new BiomeGenBase.BiomeProperties("Space").setRainDisabled().setTemperature(-273.15f));
+        //BiomeGenBase.registerBiome(100,"Space",biomeSpace);
+        //biomeAlien = new BiomeGeneratorAlien(new BiomeGenBase.BiomeProperties("Alien").setWaterColor(new Color(250,90,90).getColor()));
+        //BiomeGenBase.registerBiome(101,"Alien",biomeAlien);
 
-        DimensionManager.registerProviderType(3,WorldProviderSpace.class,false);
-        DimensionManager.registerDimension(3,3);
+        //SpaceDimension = DimensionType.register("Space","_space",SPACE_DIM_ID,WorldProviderSpace.class,true);
+        //AlienDimension = DimensionType.register("Aline","_alien",ALIEN_DIM_ID,WorldProviderAlien.class,true);
+
+        //DimensionManager.registerDimension(SPACE_DIM_ID,SpaceDimension);
+        //DimensionManager.registerDimension(ALIEN_DIM_ID,AlienDimension);
 
         tritaniumGen = new WorldGenMinable(MatterOverdriveBlocks.tritaniumOre.getDefaultState(),TRITANIUM_VEIN_SIZE);
         dilithiumGen = new WorldGenMinable(MatterOverdriveBlocks.dilithium_ore.getDefaultState(),DILITHIUM_VEIN_SIZE);
@@ -99,8 +110,8 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     }
 
     @Override
-    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-        switch (world.provider.getDimensionId())
+    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
+        switch (world.provider.getDimension())
         {
             case -1:
                 generateNether(world,random,chunkX * 16,chunkZ * 16);
@@ -123,8 +134,8 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         oreRandom.setSeed(chunkSeed);
         anomaliesRandom.setSeed(chunkSeed);
         buildingsRandom.setSeed(chunkSeed);
-        generateGravitationalAnomalies(world, anomaliesRandom, chunkX * 16, chunkZ * 16, world.provider.getDimensionId());
-        generateOres(world, oreRandom, chunkX * 16, chunkZ * 16, world.provider.getDimensionId());
+        generateGravitationalAnomalies(world, anomaliesRandom, chunkX * 16, chunkZ * 16, world.provider.getDimension());
+        generateOres(world, oreRandom, chunkX * 16, chunkZ * 16, world.provider.getDimension());
         startGenerateBuildings(world,buildingsRandom,chunkX,chunkZ,chunkGenerator,chunkProvider);
     }
 
@@ -192,7 +203,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         return p.getBoolean(true);
     }
 
-    private void startGenerateBuildings(World world, Random random, int chunkX, int chunkZ, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+    private void startGenerateBuildings(World world, Random random, int chunkX, int chunkZ, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
     {
         if (generateBuildings && random.nextDouble() < BUILDING_SPAWN_CHANCE)
         {
@@ -204,7 +215,7 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
         }
     }
 
-    public MOImageGen.ImageGenWorker startBuildingGeneration(MOWorldGenBuilding building, BlockPos pos, Random random, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider, boolean forceGeneration)
+    public MOImageGen.ImageGenWorker startBuildingGeneration(MOWorldGenBuilding building, BlockPos pos, Random random, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider, boolean forceGeneration)
     {
         if (building != null && (forceGeneration || (building.shouldGenerate(random,world,pos) && building.isLocationValid(world,pos))))
         {
@@ -271,15 +282,15 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
     public void onConfigChanged(ConfigurationHandler config)
     {
         Property shouldGenerateOres = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN, ConfigurationHandler.CATEGORY_WORLD_SPAWN_ORES, true);
-        shouldGenerateOres.comment = "Should Matter Overdrive Ore Blocks be Generated ?";
+        shouldGenerateOres.setComment("Should Matter Overdrive Ore Blocks be Generated ?");
         generateTritanium = shouldGenerate(MatterOverdriveBlocks.tritaniumOre, config) && shouldGenerateOres.getBoolean(true);
         generateDilithium = shouldGenerate(MatterOverdriveBlocks.dilithium_ore, config) && shouldGenerateOres.getBoolean(true);
         Property shouldGenerateOthers = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN, ConfigurationHandler.CATEGORY_WORLD_SPAWN_OTHER, true);
-        shouldGenerateOthers.comment = "Should other Matter Overdrive World Blocks be Generated?";
+        shouldGenerateOthers.setComment("Should other Matter Overdrive World Blocks be Generated?");
         generateAnomalies = shouldGenerate(MatterOverdriveBlocks.gravitational_anomaly, config) && shouldGenerateOthers.getBoolean(true);
         this.oreDimentionsBlacklist.clear();
         Property oreDimentionBlacklistProp = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN,"ore_gen_blacklist",new int[]{-1,2});
-        oreDimentionBlacklistProp.comment = "A blacklist of all the Dimensions ores shouldn't spawn in";
+        oreDimentionBlacklistProp.setComment("A blacklist of all the Dimensions ores shouldn't spawn in");
         oreDimentionBlacklistProp.setLanguageKey("config.ore_gen_blacklist.name");
         int[] oreDimentionBlacklist = oreDimentionBlacklistProp.getIntList();
         for (int anOreDimentionBlacklist : oreDimentionBlacklist)

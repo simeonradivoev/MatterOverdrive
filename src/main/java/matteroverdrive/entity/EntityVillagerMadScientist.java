@@ -18,26 +18,23 @@
 
 package matteroverdrive.entity;
 
-import matteroverdrive.api.events.MOEventDialogConstruct;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
 import matteroverdrive.api.dialog.IDialogMessage;
 import matteroverdrive.api.dialog.IDialogNpc;
 import matteroverdrive.api.dialog.IDialogQuestGiver;
 import matteroverdrive.api.dialog.IDialogRegistry;
+import matteroverdrive.api.events.MOEventDialogConstruct;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.client.render.conversation.DialogShot;
 import matteroverdrive.data.dialog.*;
 import matteroverdrive.entity.monster.EntityMutantScientist;
-import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.entity.tasks.EntityAITalkToPlayer;
 import matteroverdrive.entity.tasks.EntityAIWatchDialogPlayer;
 import matteroverdrive.init.MatterOverdriveDialogs;
 import matteroverdrive.init.MatterOverdriveQuests;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.network.packet.server.PacketManageConversation;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.EntityAgeable;
@@ -45,10 +42,19 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Created by Simeon on 5/30/2015.
@@ -63,6 +69,8 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
     private EntityPlayer dialogPlayer;
     private IDialogMessage startMessage;
 
+    private static final DataParameter<Boolean> VARIANT = EntityDataManager.<Boolean>createKey(EntityVillagerMadScientist.class, DataSerializers.BOOLEAN);
+
     public EntityVillagerMadScientist(World world)
     {
         super(world, 666);
@@ -74,7 +82,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(13, (byte) 0);
+        this.dataManager.register(VARIANT, false);
     }
 
     public void writeEntityToNBT(NBTTagCompound nbtTagCompound)
@@ -98,7 +106,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
     }
 
     @Override
-    public boolean interact(EntityPlayer player)
+    public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)
     {
         if (worldObj.isRemote)
         {
@@ -206,7 +214,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
             return mainJunkieMessage;
         }else
         {
-            if (AndroidPlayer.get(player).isAndroid())
+            if (MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid())
             {
                 DialogMessage mainAndroidMessage = new DialogMessage(MOStringHelper.formatVariations("dialog.mad_scientist.main.line","android",3),null);
                 mainAndroidMessage.setUnlocalized(true);
@@ -234,7 +242,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
     @Override
     public boolean canTalkTo(EntityPlayer player)
     {
-        return AndroidPlayer.get(player) == null || !AndroidPlayer.get(player).isTurning();
+        return MOPlayerCapabilityProvider.GetAndroidCapability(player) == null || !MOPlayerCapabilityProvider.GetAndroidCapability(player).isTurning();
     }
 
     @Override
@@ -247,8 +255,8 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
     {
         if (dialogMessage == cocktailOfAscensionComplete)
         {
-            this.addPotionEffect(new PotionEffect(Potion.wither.id,1000,1));
-            worldObj.playSoundAtEntity(this, Reference.MOD_ID + ":" + "failed_animal_die_0",1,1);
+            this.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"),1000,1));
+            worldObj.playSound(null,this.posX,this.posY,this.posZ, MatterOverdriveSounds.failedAnimalDie, SoundCategory.NEUTRAL,1,1);
             //worldObj.createExplosion(this,posX,posY,posZ,3,false);
             this.setDead();
             EntityMutantScientist mutantScientist = new EntityMutantScientist(worldObj);
@@ -259,13 +267,13 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
         }
         else if (dialogMessage == convertMe)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(player);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(player);
             for (QuestStack questStack : extendedProperties.getQuestData().getActiveQuests())
             {
                 if (questStack.getQuest() == MatterOverdriveQuests.punyHumans)
                 {
                     questStack.markComplited(player,false);
-                    AndroidPlayer.get(player).startConversion();
+                    MOPlayerCapabilityProvider.GetAndroidCapability(player).startConversion();
                 }
             }
         }
@@ -276,7 +284,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
     {
         if (questStack != null)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(entityPlayer);
             if (extendedProperties != null && questStack.getQuest().canBeAccepted(questStack,entityPlayer))
             {
                 QuestStack newQuestStack = questStack.copy();
@@ -288,7 +296,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
 
     public void setJunkie(boolean junkie)
     {
-        this.dataWatcher.updateObject(13, junkie ? (byte)1 : (byte)0);
+        this.dataManager.set(VARIANT,junkie);
         if (junkie)
         {
             this.setCustomNameTag(MOStringHelper.translateToLocal("entity.mo.mad_scientist.junkie.name"));
@@ -297,7 +305,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
 
     public boolean getJunkie()
     {
-        return this.dataWatcher.getWatchableObjectByte(13) == (byte)1;
+        return this.dataManager.get(VARIANT);
     }
     //endregion
 }

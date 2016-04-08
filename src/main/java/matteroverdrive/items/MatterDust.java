@@ -1,5 +1,6 @@
 package matteroverdrive.items;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.matter.IMatterItem;
 import matteroverdrive.api.matter.IRecyclable;
 import matteroverdrive.init.MatterOverdriveItems;
@@ -7,7 +8,6 @@ import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class MatterDust extends MOBaseItem implements IRecyclable, IMatterItem
     {
         super.addDetails(itemstack,player,infos);
         if (!isRefined) {
-            infos.add(EnumChatFormatting.BLUE + "Potential Matter: " + MatterHelper.formatMatter(itemstack.getItemDamage()));
+            infos.add(ChatFormatting.BLUE + "Potential Matter: " + MatterHelper.formatMatter(itemstack.getItemDamage()));
         }
     }
 

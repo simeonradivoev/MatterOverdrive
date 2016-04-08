@@ -1,21 +1,27 @@
 package matteroverdrive.entity;
 
 
+import com.google.common.base.Optional;
 import matteroverdrive.entity.ai.EntityAIFollowCreator;
 import matteroverdrive.entity.ai.PathNavigateFly;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PreYggdrasilConverter;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
@@ -28,6 +34,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
 {
     private BlockPos targetPos;
     private EntityLivingBase owner;
+    protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityDrone.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
     public EntityDrone(World worldIn)
     {
@@ -37,14 +44,13 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
 
         this.tasks.addTask(2, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
         this.tasks.addTask(3, new EntityAIFollowCreator(this, 0.2f, 5f, 3.0F));
-
     }
 
     @Override
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(17, "");
+        this.dataManager.register(OWNER_UNIQUE_ID,Optional.absent());
     }
 
     @Override
@@ -54,13 +60,13 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
     }
 
     @Override
-    public boolean interact(EntityPlayer player)
+    public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)
     {
-        if (getOwnerId().isEmpty())
+        if (getOwnerId() != null)
         {
             if (!worldObj.isRemote)
             {
-                setOwnerId(player.getUniqueID().toString());
+                setOwnerId(player.getUniqueID());
                 this.worldObj.setEntityState(this, (byte) 7);
             }else
             {
@@ -81,7 +87,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(12.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(12.0D);
     }
 
     @Override
@@ -96,7 +102,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
 
         if (!getNavigator().noPath())
         {
-            Vec3 target = getNavigator().getPath().getPosition(this);
+            Vec3d target = getNavigator().getPath().getPosition(this);
         }
 
 
@@ -105,7 +111,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
             if (ticksExisted % 2 == 0)
             {
                 int motionSpeed = Math.min(6,(int) (Math.sqrt(motionX*motionX+motionY*motionY+motionZ*motionZ) * 30d));
-                Vec3 look = getLook(1);
+                Vec3d look = getLook(1);
                 for (int i = 0;i < motionSpeed;i++)
                 {
                     worldObj.spawnParticle(EnumParticleTypes.CRIT_MAGIC, posX - look.xCoord * 0.25, posY + getEyeHeight() + 0.2 - look.yCoord * 0.2, posZ - look.zCoord * 0.2, -motionX*2, -motionY*2, -motionZ*2);
@@ -142,7 +148,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
         }
         else
         {
-            tagCompound.setString("OwnerUUID", this.getOwnerId());
+            tagCompound.setString("OwnerUUID", this.getOwnerId().toString());
         }
     }
 
@@ -163,12 +169,12 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
         else
         {
             String s1 = tagCompound.getString("Owner");
-            s = PreYggdrasilConverter.getStringUUIDFromName(s1);
+            s = PreYggdrasilConverter.func_187473_a(this.getServer(),s1);
         }
 
         if (s.length() > 0)
         {
-            this.setOwnerId(s);
+            this.setOwnerId(UUID.fromString(s));
         }
     }
 
@@ -191,7 +197,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
     }
 
     @Override
-    protected void updateFallState(double y, boolean onGroundIn, Block blockIn, BlockPos pos)
+    protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)
     {
 
     }
@@ -278,21 +284,21 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
     }
 
     @Override
-    public String getOwnerId()
+    public UUID getOwnerId()
     {
-        return this.dataWatcher.getWatchableObjectString(17);
+        return this.dataManager.get(OWNER_UNIQUE_ID).get();
     }
 
-    public void setOwnerId(String ownerUuid)
+    public void setOwnerId(UUID ownerUuid)
     {
-        this.dataWatcher.updateObject(17, ownerUuid);
+        this.dataManager.set(OWNER_UNIQUE_ID, Optional.of(ownerUuid));
     }
 
     public EntityLivingBase getOwner()
     {
         try
         {
-            UUID uuid = UUID.fromString(this.getOwnerId());
+            UUID uuid = this.getOwnerId();
             return uuid == null ? null : this.worldObj.getPlayerEntityByUUID(uuid);
         }
         catch (IllegalArgumentException var2)
@@ -348,7 +354,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
 
         public void onUpdateMoveHelper()
         {
-            if (this.update)
+            if (this.action == Action.MOVE_TO)
             {
                 int i = MathHelper.floor_double(this.entity.getEntityBoundingBox().minY + 0.5D);
                 double d0 = this.posX - this.parentEntity.posX;
@@ -365,7 +371,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
                 this.parentEntity.motionX = d0 / d3 * this.speed;
                 this.parentEntity.motionY = d1 / d3 * this.speed;
                 this.parentEntity.motionZ = d2 / d3 * this.speed;
-                this.update = false;
+                this.action = Action.WAIT;
             }
         }
     }

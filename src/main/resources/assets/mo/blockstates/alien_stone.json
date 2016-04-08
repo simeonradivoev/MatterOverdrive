@@ -1,0 +1,12 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mo:alien/stone",
+    "textures": {
+      "all": "mo:blocks/alien/alien_stone"
+    }
+  },
+  "variants": {
+    "normal": { "model": "mo:alien/stone" }
+  }
+}

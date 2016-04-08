@@ -30,8 +30,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -108,7 +108,7 @@ public class MOWorldGenCargoShip extends MOWorldGenBuilding<MOWorldGenCargoShip.
     @Override
     public boolean shouldGenerate(Random random,World world, BlockPos pos)
     {
-        return (world.provider.getDimensionId() == 0 || world.provider.getDimensionId() == 1) && isFarEnoughFromOthers(world,pos.getX(),pos.getZ(),MIN_DISTANCE_APART) && random.nextDouble() < 0.1;
+        return (world.provider.getDimension() == 0 || world.provider.getDimension() == 1) && isFarEnoughFromOthers(world,pos.getX(),pos.getZ(),MIN_DISTANCE_APART) && random.nextDouble() < 0.1;
     }
 
     @Override

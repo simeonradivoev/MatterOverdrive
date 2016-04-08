@@ -40,7 +40,7 @@ public class BioticStatAutoShield extends AbstractBioticStat
     {
         if (event instanceof LivingAttackEvent)
         {
-            DamageSource source = ((LivingAttackEvent) event).source;
+            DamageSource source = ((LivingAttackEvent) event).getSource();
             if (!MatterOverdriveBioticStats.shield.getShieldState(androidPlayer))
             {
                 if (MatterOverdriveBioticStats.shield.isDamageValid(source) && event.isCancelable() && MatterOverdriveBioticStats.shield.canActivate(androidPlayer))

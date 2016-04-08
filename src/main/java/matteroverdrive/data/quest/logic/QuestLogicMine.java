@@ -20,14 +20,16 @@ package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
+import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
+import matteroverdrive.data.quest.QuestBlock;
 import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.block.state.IBlockState;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import matteroverdrive.api.quest.IQuestReward;
-import matteroverdrive.api.quest.QuestStack;
-import matteroverdrive.data.quest.QuestBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,30 +138,32 @@ public class QuestLogicMine extends AbstractQuestLogic
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
         if (event instanceof BlockEvent.HarvestDropsEvent)
         {
             BlockEvent.HarvestDropsEvent harvestEvent = (BlockEvent.HarvestDropsEvent)event;
             IBlockState state = getBlock(questStack);
-            if (state != null && harvestEvent.state.equals(state))
+            if (state != null && harvestEvent.getState().equals(state))
             {
                 if (getMineCount(questStack) < getMaxMineCount(questStack))
                 {
                     if (destryDrops)
-                        harvestEvent.drops.clear();
+                        harvestEvent.getDrops().clear();
 
                     setMineCount(questStack, getMineCount(questStack) + 1);
-                    if (isObjectiveCompleted(questStack,entityPlayer,0) && autoComplete)
+                    if (isObjectiveCompleted(questStack,entityPlayer,0))
                     {
-                        questStack.markComplited(entityPlayer,false);
+                        markComplete(questStack,entityPlayer);
+                        return new QuestLogicState(QuestState.Type.COMPLETE,true);
+                    }else
+                    {
+                        return new QuestLogicState(QuestState.Type.UPDATE,true);
                     }
-
-                    return true;
                 }
             }
         }
-        return false;
+        return null;
     }
 
     @Override

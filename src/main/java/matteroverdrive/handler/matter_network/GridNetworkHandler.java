@@ -49,7 +49,7 @@ public abstract class GridNetworkHandler<K extends IGridNode,T extends IGridNetw
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload unload)
     {
-        if (!unload.world.isRemote && unload.world.provider.getDimensionId() == 0)
+        if (!unload.getWorld().isRemote && unload.getWorld().provider.getDimension() == 0)
         {
             activeNetworkList.forEach(T::recycle);
             activeNetworkList.clear();

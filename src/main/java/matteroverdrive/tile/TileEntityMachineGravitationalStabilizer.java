@@ -24,15 +24,17 @@ import matteroverdrive.blocks.BlockGravitationalAnomaly;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.fx.GravitationalStabilizerBeamParticle;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -46,7 +48,7 @@ import static matteroverdrive.util.MOBlockHelper.getAboveSide;
  */
 public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachineEnergy implements IMOTickable
 {
-    MovingObjectPosition hit;
+    RayTraceResult hit;
 
     public TileEntityMachineGravitationalStabilizer()
     {
@@ -71,7 +73,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
 
     }
 
-    MovingObjectPosition seacrhForAnomalies(World world)
+    RayTraceResult seacrhForAnomalies(World world)
     {
         if (world.getBlockState(getPos()).getBlock() == blockType)
         {
@@ -79,9 +81,9 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
             for (int i = 1; i < 64; i++)
             {
                 IBlockState blockState = world.getBlockState(getPos().offset(front, i));
-                if (blockState.getBlock() instanceof BlockGravitationalAnomaly || blockState.getBlock().getMaterial() == null || blockState.getBlock().getMaterial().isOpaque())
+                if (blockState.getBlock() instanceof BlockGravitationalAnomaly || blockState.getBlock().getMaterial(blockState) == null || blockState.getBlock().getMaterial(blockState).isOpaque())
                 {
-                    return new MovingObjectPosition(new Vec3(getPos().offset(front, i)).subtract(Math.abs(front.getDirectionVec().getX() * 0.5), Math.abs(front.getDirectionVec().getY() * 0.5), Math.abs(front.getDirectionVec().getZ() * 0.5)), front.getOpposite(), getPos().offset(front, i));
+                    return new RayTraceResult(new Vec3d(getPos().offset(front, i)).subtract(Math.abs(front.getDirectionVec().getX() * 0.5), Math.abs(front.getDirectionVec().getY() * 0.5), Math.abs(front.getDirectionVec().getZ() * 0.5)), front.getOpposite(), getPos().offset(front, i));
                 }
             }
         }
@@ -127,7 +129,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     public AxisAlignedBB getRenderBoundingBox()
     {
         Block type = getBlockType();
-        AxisAlignedBB bb = type.getCollisionBoundingBox(worldObj, getPos(),worldObj.getBlockState(getPos()));
+        AxisAlignedBB bb = type.getCollisionBoundingBox(worldObj.getBlockState(getPos()),worldObj, getPos());
         if (hit != null)
         {
             return bb.expand(hit.getBlockPos().getX() - getPos().getX(),hit.getBlockPos().getY() - getPos().getY(),hit.getBlockPos().getZ() - getPos().getZ());
@@ -136,8 +138,8 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     }
 
     @Override
-    public String getSound() {
-        return "force_field";
+    public SoundEvent getSound() {
+        return MatterOverdriveSounds.forceField;
     }
 
     @Override
@@ -170,7 +172,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
         return MOMathHelper.noise(0,0,getPos().getZ() + worldObj.getWorldTime() * 0.01);
     }
 
-    public MovingObjectPosition getHit()
+    public RayTraceResult getHit()
     {
         return hit;
     }

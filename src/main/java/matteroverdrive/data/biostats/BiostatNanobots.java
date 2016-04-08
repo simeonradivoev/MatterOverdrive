@@ -20,12 +20,13 @@ package matteroverdrive.data.biostats;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.data.MOAttributeModifier;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.UUID;
@@ -63,7 +64,7 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level),EnumChatFormatting.GREEN.toString() + (REGEN_AMOUNT_PER_TICK * 20), EnumChatFormatting.GREEN.toString() + "+" + getHealthBoost(level));
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN.toString() + (REGEN_AMOUNT_PER_TICK * 20), ChatFormatting.GREEN.toString() + "+" + getHealthBoost(level));
     }
 
     @Override
@@ -94,7 +95,7 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
     public Multimap attributes(AndroidPlayer androidPlayer,int level)
     {
         Multimap multimap = HashMultimap.create();
-        multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(),new MOAttributeModifier(modifierID, "Android Health", getHealthBoost(level), 0).setSaved(false));
+        multimap.put(SharedMonsterAttributes.MAX_HEALTH.getAttributeUnlocalizedName(),new MOAttributeModifier(modifierID, "Android Health", getHealthBoost(level), 0).setSaved(false));
         return multimap;
     }
 

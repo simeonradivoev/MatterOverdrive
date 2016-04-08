@@ -25,6 +25,7 @@ import matteroverdrive.data.inventory.MatterSlot;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
@@ -35,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -91,8 +93,8 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 	}
 
     @Override
-    public String getSound() {
-        return "decomposer";
+    public SoundEvent getSound() {
+        return MatterOverdriveSounds.decomposer;
     }
 
     @Override

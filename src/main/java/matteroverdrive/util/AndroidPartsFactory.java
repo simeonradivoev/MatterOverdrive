@@ -1,5 +1,6 @@
 package matteroverdrive.util;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.data.WeightedRandomItemStack;
 import matteroverdrive.entity.android_player.AndroidAttributes;
@@ -10,7 +11,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.WeightedRandom;
 import net.minecraftforge.common.util.Constants;
 
@@ -55,25 +55,25 @@ public class AndroidPartsFactory
             int healthLevel = random.nextInt(context.level + 1 * 10);
             if (healthLevel > 0)
             {
-                addAttributeToPart(part, new AttributeModifier(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), healthLevel, 0));
+                addAttributeToPart(part, new AttributeModifier(SharedMonsterAttributes.MAX_HEALTH.getAttributeUnlocalizedName(), healthLevel, 0));
             }
 
             int attackPowerLevel = random.nextInt(context.level + 1);
             if (attackPowerLevel > 0)
             {
-                addAttributeToPart(part, new AttributeModifier(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), attackPowerLevel, 0));
+                addAttributeToPart(part, new AttributeModifier(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), attackPowerLevel, 0));
             }
 
             int knockbackLevel = random.nextInt(context.level + 1);
             if (knockbackLevel > 0)
             {
-                addAttributeToPart(part, new AttributeModifier(SharedMonsterAttributes.knockbackResistance.getAttributeUnlocalizedName(), knockbackLevel * 0.1, 0));
+                addAttributeToPart(part, new AttributeModifier(SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getAttributeUnlocalizedName(), knockbackLevel * 0.1, 0));
             }
 
             int speedLevel = random.nextInt(context.level+1);
             if (speedLevel > 0)
             {
-                addAttributeToPart(part,new AttributeModifier(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(),speedLevel * 0.1,1));
+                addAttributeToPart(part,new AttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(),speedLevel * 0.1,1));
             }
 
             int glitchLevel = random.nextInt(context.level + 1);
@@ -88,7 +88,7 @@ public class AndroidPartsFactory
                 addAttributeToPart(part, new AttributeModifier(AndroidAttributes.attributeBatteryUse.getAttributeUnlocalizedName(), -batteryUse * 0.03, 1));
             }
 
-            part.setStackDisplayName(Reference.UNICODE_LEGENDARY + " " + EnumChatFormatting.GOLD + MOStringHelper.translateToLocal("rarity.legendary") + " " + part.getDisplayName());
+            part.setStackDisplayName(Reference.UNICODE_LEGENDARY + " " + ChatFormatting.GOLD + MOStringHelper.translateToLocal("rarity.legendary") + " " + part.getDisplayName());
         }
     }
 

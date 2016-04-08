@@ -25,7 +25,7 @@ import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Created by Simeon on 5/3/2015.

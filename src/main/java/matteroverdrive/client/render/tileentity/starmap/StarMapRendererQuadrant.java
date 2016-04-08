@@ -37,7 +37,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.text.DecimalFormat;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glLineWidth;
 
 /**
  * Created by Simeon on 6/17/2015.
@@ -59,7 +60,7 @@ public class StarMapRendererQuadrant extends StarMapRendererStars {
             double y = (-quadrant.getY()) * distanceMultiply;
             double z = ((-quadrant.getZ()) - quadrant.getSize() / 2) * distanceMultiply;
             GlStateManager.translate(x, y, z);
-            Tessellator.getInstance().getWorldRenderer().begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+            Tessellator.getInstance().getBuffer().begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
             renderStars(quadrant, starMap, distanceMultiply, distanceMultiply);
             Tessellator.getInstance().draw();
         }

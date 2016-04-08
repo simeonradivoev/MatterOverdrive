@@ -20,8 +20,8 @@ package matteroverdrive.client.render.conversation;
 
 import matteroverdrive.util.MOPhysicsHelper;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Created by Simeon on 8/12/2015.
@@ -40,13 +40,13 @@ public class DialogShotFromBehind extends DialogShot
     @Override
     public boolean positionCamera(EntityLivingBase active, EntityLivingBase other, float ticks, EntityRendererConversation rendererConversation)
     {
-        Vec3 look = rendererConversation.getLook(other, active, ticks);
+        Vec3d look = rendererConversation.getLook(other, active, ticks);
         double lookDistance = look.lengthVector();
-        look = new Vec3(look.xCoord,0,look.zCoord);
+        look = new Vec3d(look.xCoord,0,look.zCoord);
         look = look.normalize();
-        Vec3 left = look.crossProduct(new Vec3(0, 1, 0));
-        Vec3 pos = rendererConversation.getPosition(other, ticks).addVector((left.xCoord  * sideOffset) / lookDistance,(left.yCoord * sideOffset) / lookDistance,(left.zCoord * sideOffset) / lookDistance);
-        MovingObjectPosition position = MOPhysicsHelper.rayTrace(pos, other.worldObj, distance, ticks, null, true, false, look, other);
+        Vec3d left = look.crossProduct(new Vec3d(0, 1, 0));
+        Vec3d pos = rendererConversation.getPosition(other, ticks).addVector((left.xCoord  * sideOffset) / lookDistance,(left.yCoord * sideOffset) / lookDistance,(left.zCoord * sideOffset) / lookDistance);
+        RayTraceResult position = MOPhysicsHelper.rayTrace(pos, other.worldObj, distance, ticks, null, true, false, look, other);
         if (position != null)
         {
             pos = position.hitVec;
@@ -55,7 +55,7 @@ public class DialogShotFromBehind extends DialogShot
             pos.addVector(look.xCoord * distance, look.yCoord * distance, look.zCoord * distance);
         }
         rendererConversation.setCameraPosition(pos);
-        Vec3 rotationLook = pos.subtract(rendererConversation.getPosition(active, ticks)).normalize();
+        Vec3d rotationLook = pos.subtract(rendererConversation.getPosition(active, ticks)).normalize();
         rendererConversation.rotateCameraYawTo(rotationLook, -90);
         rendererConversation.setCameraPitch(0);
         return true;

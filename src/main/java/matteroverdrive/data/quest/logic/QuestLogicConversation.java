@@ -9,7 +9,9 @@ import matteroverdrive.api.events.MOEventDialogConstruct;
 import matteroverdrive.api.events.MOEventDialogInteract;
 import matteroverdrive.api.exceptions.MORuntimeException;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.data.dialog.DialogMessage;
 import matteroverdrive.util.MOJsonHelper;
 import matteroverdrive.util.MOStringHelper;
@@ -93,16 +95,15 @@ public class QuestLogicConversation extends AbstractQuestLogic
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
         if (event instanceof MOEventDialogInteract)
         {
             if (isTarget(((MOEventDialogInteract) event).npc) && targetOption.equalsOption(((MOEventDialogInteract) event).dialogOption))
             {
                 setTalked(questStack,true);
-                if (autoComplete)
-                    questStack.markComplited(entityPlayer,false);
-                return true;
+                markComplete(questStack,entityPlayer);
+                return new QuestLogicState(QuestState.Type.COMPLETE,true);
             }
         }
         else if (event instanceof MOEventDialogConstruct.Post)
@@ -118,7 +119,7 @@ public class QuestLogicConversation extends AbstractQuestLogic
                 }
             }
         }
-        return false;
+        return null;
     }
 
     @Override

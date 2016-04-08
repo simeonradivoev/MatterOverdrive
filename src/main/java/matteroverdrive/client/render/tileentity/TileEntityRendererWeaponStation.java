@@ -5,9 +5,9 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 
@@ -47,7 +47,7 @@ public class TileEntityRendererWeaponStation extends TileEntityRendererStation<T
                 GlStateManager.rotate(getWorld().getWorldTime(),0,1,0);
                 RenderUtils.bindTexture(TextureMap.locationBlocksTexture);
                 IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(stack);
-                model = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.GROUND);
+                model = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.GROUND,false);
                 Minecraft.getMinecraft().getRenderItem().renderItem(stack,model);
                 RenderHelper.disableStandardItemLighting();
             }

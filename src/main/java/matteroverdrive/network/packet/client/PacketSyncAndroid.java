@@ -18,16 +18,17 @@
 
 package matteroverdrive.network.packet.client;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.util.MOEnumHelper;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -117,7 +118,7 @@ public class PacketSyncAndroid extends PacketAbstract
 
             if (entity instanceof EntityPlayer) {
                 EntityPlayer source = (EntityPlayer) entity;
-                AndroidPlayer ex = AndroidPlayer.get(source);
+                AndroidPlayer ex = MOPlayerCapabilityProvider.GetAndroidCapability(source);
 
                 ex.readFromNBT(message.data,MOEnumHelper.decode(message.dataType, AndroidPlayer.DataType.class));
 

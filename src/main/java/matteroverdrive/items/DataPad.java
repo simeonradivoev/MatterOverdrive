@@ -18,12 +18,12 @@
 
 package matteroverdrive.items;
 
-import matteroverdrive.Reference;
 import matteroverdrive.api.events.MOEventScan;
 import matteroverdrive.api.inventory.IBlockScanner;
 import matteroverdrive.client.sound.MachineSound;
 import matteroverdrive.gui.GuiDataPad;
 import matteroverdrive.handler.SoundHandler;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOLog;
 import matteroverdrive.util.MOPhysicsHelper;
@@ -31,6 +31,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
@@ -39,6 +40,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
@@ -60,21 +64,22 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
-        if (world.isRemote && hasGui(itemstack))
+        if (worldIn.isRemote && hasGui(itemStackIn))
         {
-            openGui(itemstack);
+            openGui(hand,itemStackIn);
+            return ActionResult.newResult(EnumActionResult.SUCCESS,itemStackIn);
         }
-        return itemstack;
+        return ActionResult.newResult(EnumActionResult.PASS,itemStackIn);
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if (!playerIn.isSneaking() && worldIn.getBlockState(pos).getBlock() != Blocks.air && canScan(stack,worldIn.getBlockState(pos)))
         {
-            playerIn.setItemInUse(stack,getMaxItemUseDuration(stack));
+            playerIn.setActiveHand(hand);
             if (worldIn.isRemote)
             {
                 playSound(playerIn.getPosition());
@@ -82,9 +87,9 @@ public class DataPad extends MOBaseItem implements IBlockScanner
             {
                 setLastBlock(stack,worldIn.getBlockState(pos).getBlock());
             }
-            return true;
+            return EnumActionResult.SUCCESS;
         }
-        return false;
+        return EnumActionResult.FAIL;
     }
 
     @Override
@@ -100,10 +105,10 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     }
 
     @SideOnly(Side.CLIENT)
-    private void openGui(ItemStack stack)
+    private void openGui(EnumHand hand,ItemStack stack)
     {
         try {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiDataPad(stack));
+            Minecraft.getMinecraft().displayGuiScreen(new GuiDataPad(hand,stack));
         }
         catch (Exception e)
         {
@@ -120,7 +125,7 @@ public class DataPad extends MOBaseItem implements IBlockScanner
         if (world.isRemote) {
             if (entity instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) entity;
-                if (player.isUsingItem())
+                if (player.isHandActive())
                 {
 
                 } else
@@ -132,42 +137,45 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     }
 
     @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
     {
+        if (!(entityLiving instanceof EntityPlayer)) return stack;
         if (worldIn.isRemote)
         {
-            if (!MinecraftForge.EVENT_BUS.post(new MOEventScan(playerIn,stack,getScanningPos(stack,playerIn))))
+            if (!MinecraftForge.EVENT_BUS.post(new MOEventScan((EntityPlayer)entityLiving,stack,getScanningPos(stack,(EntityPlayer)entityLiving))))
             {
                 stopScanSounds();
             }
         }else
         {
-            MOEventScan event = new MOEventScan(playerIn,stack,getScanningPos(stack,playerIn));
+            MOEventScan event = new MOEventScan((EntityPlayer)entityLiving,stack,getScanningPos(stack,(EntityPlayer)entityLiving));
             if (!MinecraftForge.EVENT_BUS.post(event))
             {
-                if (destroysBlocks(stack) && worldIn.isBlockModifiable(playerIn,event.position.getBlockPos()))
+                if (destroysBlocks(stack) && worldIn.isBlockModifiable((EntityPlayer)entityLiving,event.position.getBlockPos()))
                 {
                     worldIn.setBlockToAir(event.position.getBlockPos());
                 }
-                SoundHandler.PlaySoundAt(worldIn, "scanner_success", playerIn);
+                SoundHandler.PlaySoundAt(worldIn, MatterOverdriveSounds.scannerSuccess,SoundCategory.PLAYERS, entityLiving);
             }
         }
         return stack;
     }
 
     @Override
-    public void onUsingTick(ItemStack scanner, EntityPlayer player, int count)
+    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
     {
-        MovingObjectPosition hit = getScanningPos(scanner,player);
+        if (!(player instanceof EntityPlayer)) return;
+
+        RayTraceResult hit = getScanningPos(stack,(EntityPlayer) player);
 
         if (hit != null) {
 
-            if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                Block lastBlock = getLastBlock(scanner);
+            if (hit.typeOfHit == RayTraceResult.Type.BLOCK) {
+                Block lastBlock = getLastBlock(stack);
                 if (lastBlock != null && lastBlock != player.worldObj.getBlockState(hit.getBlockPos()).getBlock())
                 {
                     //player.setItemInUse(scanner,getMaxItemUseDuration(scanner));
-                    player.clearItemInUse();
+                    player.resetActiveHand();
                     //player.stopUsingItem();
                 }
             }
@@ -177,7 +185,7 @@ public class DataPad extends MOBaseItem implements IBlockScanner
             if (player.worldObj.isRemote)
             {
                 stopScanSounds();
-                player.stopUsingItem();
+                player.resetActiveHand();
             }
         }
     }
@@ -212,7 +220,7 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     {
         if(scanningSound == null)
         {
-            scanningSound = new MachineSound(new ResourceLocation(Reference.MOD_ID + ":" +"scanner_scanning"),pos,0.6f,1);
+            scanningSound = new MachineSound(MatterOverdriveSounds.scannerScanning,SoundCategory.PLAYERS,pos,0.6f,1);
             Minecraft.getMinecraft().getSoundHandler().playSound(scanningSound);
         }
     }
@@ -228,9 +236,9 @@ public class DataPad extends MOBaseItem implements IBlockScanner
     }
 
     @Override
-    public MovingObjectPosition getScanningPos(ItemStack itemStack,EntityPlayer player)
+    public RayTraceResult getScanningPos(ItemStack itemStack, EntityLivingBase player)
     {
-        return MOPhysicsHelper.rayTrace(player, player.worldObj, 5, 0, new Vec3(0, player.getEyeHeight(), 0), true, false);
+        return MOPhysicsHelper.rayTrace(player, player.worldObj, 5, 0, new Vec3d(0, player.getEyeHeight(), 0), true, false);
     }
 
     @Override
@@ -248,7 +256,7 @@ public class DataPad extends MOBaseItem implements IBlockScanner
 
     public void addToScanWhitelist(ItemStack itemStack,Block block)
     {
-        String id = block.getRegistryName();
+        String id = block.getRegistryName().toString();
         if (id != null)
         {
             NBTTagList list = itemStack.getTagCompound().getTagList("whitelist", Constants.NBT.TAG_STRING);

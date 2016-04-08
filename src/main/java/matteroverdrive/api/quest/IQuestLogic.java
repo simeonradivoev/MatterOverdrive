@@ -38,7 +38,7 @@ public interface IQuestLogic
     String modifyObjective(QuestStack questStack,EntityPlayer entityPlayer,String objective,int objectiveIndex);
     int modifyObjectiveCount(QuestStack questStack,EntityPlayer entityPlayer,int count);
     void initQuestStack(Random random,QuestStack questStack);
-    boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer);
+    QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer);
     boolean areQuestStacksEqual(QuestStack questStackOne,QuestStack questStackTwo);
     void onQuestTaken(QuestStack questStack, EntityPlayer entityPlayer);
     void onQuestCompleted(QuestStack questStack, EntityPlayer entityPlayer);

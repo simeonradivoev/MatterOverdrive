@@ -18,16 +18,18 @@
 
 package matteroverdrive.network.packet.client.quest;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.network.packet.client.AbstractClientPacketHandler;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,19 +44,22 @@ public class PacketUpdateQuest extends PacketAbstract
     private byte questUpdateOperation;
     private int questIndex;
     private QuestStack questStack;
+    private QuestState questState;
 
     public PacketUpdateQuest(){}
 
-    public PacketUpdateQuest(int questIndex, PlayerQuestData playerQuestData,byte questUpdateOperation)
+    public PacketUpdateQuest(int questIndex,QuestState questState, PlayerQuestData playerQuestData,byte questUpdateOperation)
     {
         this.questIndex = questIndex;
+        this.questState = questState;
         this.questUpdateOperation = questUpdateOperation;
         questStack = playerQuestData.getActiveQuests().get(questIndex);
     }
 
-    public PacketUpdateQuest(int questIndex,QuestStack questStack,byte questUpdateOperation)
+    public PacketUpdateQuest(int questIndex,QuestState questState,QuestStack questStack,byte questUpdateOperation)
     {
         this.questIndex = questIndex;
+        this.questState = questState;
         this.questUpdateOperation = questUpdateOperation;
         this.questStack = questStack;
     }
@@ -71,6 +76,16 @@ public class PacketUpdateQuest extends PacketAbstract
     {
         this.questIndex = buf.readInt();
         this.questUpdateOperation = buf.readByte();
+        if (buf.readBoolean())
+        {
+            int indexesSize = buf.readByte();
+            int[] indexes = new int[]{indexesSize};
+            for (int i = 0; i < indexesSize; i++)
+            {
+                indexes[i] = buf.readShort();
+            }
+            this.questState = new QuestState(QuestState.Type.values()[buf.readByte()], indexes, buf.readBoolean());
+        }
         questStack = QuestStack.loadFromNBT(ByteBufUtils.readTag(buf));
     }
 
@@ -78,6 +93,20 @@ public class PacketUpdateQuest extends PacketAbstract
     public void toBytes(ByteBuf buf) {
         buf.writeInt(questIndex);
         buf.writeByte(questUpdateOperation);
+        if (questState != null)
+        {
+            buf.writeBoolean(true);
+            buf.writeByte(questState.getObjectiveIds().length);
+            for (int i : questState.getObjectiveIds())
+            {
+                buf.writeShort(i);
+            }
+            buf.writeByte(questState.getType().ordinal());
+            buf.writeBoolean(questState.isShowOnHud());
+        }else
+        {
+            buf.writeBoolean(false);
+        }
         NBTTagCompound questStackNBT = new NBTTagCompound();
         questStack.writeToNBT(questStackNBT);
         ByteBufUtils.writeTag(buf,questStackNBT);
@@ -91,12 +120,12 @@ public class PacketUpdateQuest extends PacketAbstract
         @Override
         public void handleClientMessage(EntityPlayerSP player, PacketUpdateQuest message, MessageContext ctx)
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(player);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(player);
             if (extendedProperties != null)
             {
                 if (message.questUpdateOperation == UPDATE_QUEST)
                 {
-                    extendedProperties.updateQuestFromServer(message.questIndex,message.questStack);
+                    extendedProperties.updateQuestFromServer(message.questIndex,message.questStack,message.questState);
                 }else if (message.questUpdateOperation == ADD_QUEST)
                 {
                     extendedProperties.addQuest(message.questStack);

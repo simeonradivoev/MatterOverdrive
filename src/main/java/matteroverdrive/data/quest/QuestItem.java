@@ -2,10 +2,10 @@ package matteroverdrive.data.quest;
 
 import com.google.gson.JsonObject;
 import matteroverdrive.util.MOJsonHelper;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.Loader;
 
 /**
  * Created by Simeon on 12/24/2015.
@@ -96,7 +96,7 @@ public class QuestItem
             return itemStack.getItem().equals(this.itemStack.getItem()) && (ignoreDamage || itemStack.getItemDamage() == this.itemStack.getItemDamage()) && (ignoreNBT || ItemStack.areItemStackTagsEqual(itemStack,this.itemStack));
         }else
         {
-            return itemStack.getItem().getRegistryName().equals(name) && (ignoreDamage || itemDamage == itemStack.getItemDamage()) && (ignoreNBT || (nbtTagCompound == null || nbtTagCompound.equals(itemStack.getTagCompound())));
+            return itemStack.getItem().getRegistryName().toString().equals(name) && (ignoreDamage || itemDamage == itemStack.getItemDamage()) && (ignoreNBT || (nbtTagCompound == null || nbtTagCompound.equals(itemStack.getTagCompound())));
         }
     }
 

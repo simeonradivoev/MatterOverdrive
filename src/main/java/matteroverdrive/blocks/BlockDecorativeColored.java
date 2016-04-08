@@ -2,18 +2,15 @@ package matteroverdrive.blocks;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,7 +50,7 @@ public class BlockDecorativeColored extends BlockDecorative
         return getStateFromMeta(meta);
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public int getRenderColor(IBlockState blockState)
     {
@@ -67,7 +64,9 @@ public class BlockDecorativeColored extends BlockDecorative
     {
         EnumDyeColor color = world.getBlockState(pos).getValue(COLOR);
         return ItemDye.dyeColors[MathHelper.clamp_int(color.getMetadata(),0,ItemDye.dyeColors.length-1)];
-    }
+    }*/
+
+    //// TODO: 3/24/2016 Find New Way of coloring blocks
 
     @Override
     public int getMetaFromState(IBlockState state)
@@ -82,9 +81,9 @@ public class BlockDecorativeColored extends BlockDecorative
     }
 
     @Override
-    protected BlockState createBlockState()
+    protected BlockStateContainer createBlockState()
     {
-        return new BlockState(this, COLOR);
+        return new BlockStateContainer(this, COLOR);
     }
 
     @Override

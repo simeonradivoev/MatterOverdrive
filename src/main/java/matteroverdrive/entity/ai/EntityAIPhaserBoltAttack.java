@@ -25,7 +25,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Created by Simeon on 11/15/2015.
@@ -37,7 +37,7 @@ public class EntityAIPhaserBoltAttack extends EntityAIBase
     /** The entity (as a RangedAttackMob) the AI instance has been applied to. */
     private final IRangedEnergyWeaponAttackMob rangedAttackEntityHost;
     private EntityLivingBase attackTarget;
-    private Vec3 lastKnownShootLocation;
+    private Vec3d lastKnownShootLocation;
     /**
      * A decrementing tick that spawns a ranged attack once this value reaches 0. It is then set back to the
      * maxRangedAttackDelay.
@@ -125,7 +125,7 @@ public class EntityAIPhaserBoltAttack extends EntityAIBase
 
         if (canSee)
         {
-            lastKnownShootLocation = new Vec3(attackTarget.prevPosX,attackTarget.prevPosY,attackTarget.prevPosZ);
+            lastKnownShootLocation = new Vec3d(attackTarget.prevPosX,attackTarget.prevPosY,attackTarget.prevPosZ);
             shootPatienceTime = 60;
             ++this.pathRetryTimer;
         }

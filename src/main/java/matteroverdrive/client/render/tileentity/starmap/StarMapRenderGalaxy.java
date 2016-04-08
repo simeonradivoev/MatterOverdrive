@@ -30,7 +30,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -50,7 +50,7 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
 
         glLineWidth(1);
 
-        Tessellator.getInstance().getWorldRenderer().begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+        Tessellator.getInstance().getBuffer().begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
         for (Quadrant quadrant : galaxy.getQuadrants())
         {
             renderStars(quadrant, starMap,distanceMultiply,2);
@@ -65,16 +65,16 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
             if (travelEvent.isValid(GalaxyClient.getInstance().getTheGalaxy()))
             {
 
-                Vec3 from = GalaxyClient.getInstance().getTheGalaxy().getPlanet(travelEvent.getFrom()).getStar().getPosition(2);
-                Vec3 to = GalaxyClient.getInstance().getTheGalaxy().getPlanet(travelEvent.getTo()).getStar().getPosition(2);
-                Vec3 dir = from.subtract(to);
+                Vec3d from = GalaxyClient.getInstance().getTheGalaxy().getPlanet(travelEvent.getFrom()).getStar().getPosition(2);
+                Vec3d to = GalaxyClient.getInstance().getTheGalaxy().getPlanet(travelEvent.getTo()).getStar().getPosition(2);
+                Vec3d dir = from.subtract(to);
                 double percent = travelEvent.getPercent(starMap.getWorld());
 
                 RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.5f);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(from.xCoord + dir.xCoord * percent, from.yCoord + dir.yCoord * percent, from.zCoord + dir.zCoord * percent);
-                RenderUtils.rotateTowards(new Vec3(-1, 0, 0.0), dir.normalize(), new Vec3(0, 1, 0));
+                RenderUtils.rotateTowards(new Vec3d(-1, 0, 0.0), dir.normalize(), new Vec3d(0, 1, 0));
                 RenderUtils.drawShip(0, 0, 0, 0.02);
                 GlStateManager.popMatrix();
 

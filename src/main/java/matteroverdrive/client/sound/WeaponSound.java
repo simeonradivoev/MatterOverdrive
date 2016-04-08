@@ -20,7 +20,8 @@ package matteroverdrive.client.sound;
 
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.audio.PositionedSound;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 
 /**
  * Created by Simeon on 4/16/2015.
@@ -29,9 +30,9 @@ public class WeaponSound extends PositionedSound implements ITickableSound
 {
     private boolean donePlaying;
 
-    public WeaponSound(ResourceLocation sound, float x, float y, float z, float volume, float pitch)
+    public WeaponSound(SoundEvent sound, SoundCategory category, float x, float y, float z, float volume, float pitch)
     {
-        super(sound);
+        super(sound,category);
         setPosition(x, y, z);
         this.volume = volume;
         this.pitch = pitch;

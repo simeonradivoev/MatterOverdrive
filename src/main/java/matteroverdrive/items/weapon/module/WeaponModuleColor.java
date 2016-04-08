@@ -18,8 +18,6 @@
 
 package matteroverdrive.items.weapon.module;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeaponColor;
@@ -30,9 +28,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraftforge.common.ChestGenHooks;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -71,16 +68,18 @@ public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
     {
         for (int i = 0;i < colors.length;i++)
         {
-            ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
+            // TODO: 3/25/2016 Find how to add to dungons
+            /*ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
             ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
             ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
             ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
             ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
-            ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,10));
+            ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,10));*/
         }
     }
 
-    @Override
+    // TODO: 3/25/2016 Find how to control stack color
+    /*@Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)
     {
@@ -91,12 +90,12 @@ public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
         {
             return 16777215;
         }
-    }
+    }*/
 
     @Override
     public String getItemStackDisplayName(ItemStack itemStack)
     {
-        return ("" + StatCollector.translateToLocal(this.getUnlocalizedNameInefficiently(itemStack) + ".name")).trim() + " ("+ MOStringHelper.translateToLocal("module.color." + names[itemStack.getItemDamage()])+")";
+        return ("" + MOStringHelper.translateToLocal(this.getUnlocalizedNameInefficiently(itemStack) + ".name")).trim() + " ("+ MOStringHelper.translateToLocal("module.color." + names[itemStack.getItemDamage()])+")";
     }
 
     /*@Override

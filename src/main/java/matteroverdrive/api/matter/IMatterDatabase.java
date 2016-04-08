@@ -20,7 +20,7 @@ package matteroverdrive.api.matter;
 
 import matteroverdrive.data.matter_network.ItemPattern;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 

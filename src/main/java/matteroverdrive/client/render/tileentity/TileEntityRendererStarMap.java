@@ -27,13 +27,13 @@ import matteroverdrive.tile.TileEntityMachineStarMap;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collection;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ONE;
 
 /**
  * Created by Simeon on 6/13/2015.
@@ -69,7 +69,7 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
         GlStateManager.disableLighting();
         RenderUtils.disableLightmap();
         GlStateManager.blendFunc(GL_ONE, GL_ONE);
-        float distance = (float) new Vec3(x, y, z).lengthVector();
+        float distance = (float) new Vec3d(x, y, z).lengthVector();
 
         if (starMap.getActiveSpaceBody() != null)
         {
@@ -91,12 +91,12 @@ public class TileEntityRendererStarMap extends TileEntityRendererStation<TileEnt
                             if (drawHoloLights())
                             {
                                 GlStateManager.pushMatrix();
-                                Vec3 playerPosition = Minecraft.getMinecraft().getRenderViewEntity().getPositionEyes(partialTicks);
-                                playerPosition = new Vec3(playerPosition.xCoord,0,playerPosition.zCoord);
-                                Vec3 mapPosition = new Vec3(starMap.getPos().getX() + 0.5, 0, starMap.getPos().getZ() + 0.5);
-                                Vec3 dir = mapPosition.subtract(playerPosition).normalize();
-                                double angle = Math.acos(dir.dotProduct(new Vec3(1, 0, 0)));
-                                if (new Vec3(0, 1, 0).dotProduct(dir.crossProduct(new Vec3(1, 0, 0))) < 0)
+                                Vec3d playerPosition = Minecraft.getMinecraft().getRenderViewEntity().getPositionEyes(partialTicks);
+                                playerPosition = new Vec3d(playerPosition.xCoord,0,playerPosition.zCoord);
+                                Vec3d mapPosition = new Vec3d(starMap.getPos().getX() + 0.5, 0, starMap.getPos().getZ() + 0.5);
+                                Vec3d dir = mapPosition.subtract(playerPosition).normalize();
+                                double angle = Math.acos(dir.dotProduct(new Vec3d(1, 0, 0)));
+                                if (new Vec3d(0, 1, 0).dotProduct(dir.crossProduct(new Vec3d(1, 0, 0))) < 0)
                                 {
                                     angle = Math.PI * 2 - angle;
                                 }

@@ -67,7 +67,7 @@ public class GuiContractMarket extends MOGuiMachine<TileEntityMachineContractMar
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         if (pages.get(0).isVisible())
         {
-            fontRendererObj.drawString(String.format(MOStringHelper.translateToLocal("gui.time_until_next_quest"),MOStringHelper.formatRemainingTime(machine.getTimeUntilNextQuest()/20f)),64,30, Reference.COLOR_GUI_LIGHT.getColor());
+            fontRendererObj.drawString(MOStringHelper.translateToLocal("gui.time_until_next_quest",MOStringHelper.formatRemainingTime(machine.getTimeUntilNextQuest()/20f)),64,30, Reference.COLOR_GUI_LIGHT.getColor());
         }
     }
 }

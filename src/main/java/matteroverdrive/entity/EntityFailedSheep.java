@@ -1,8 +1,9 @@
 package matteroverdrive.entity;
 
-import matteroverdrive.Reference;
+import matteroverdrive.init.MatterOverdriveSounds;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 /**
@@ -21,20 +22,20 @@ public class EntityFailedSheep extends EntitySheep
     }
 
     @Override
-    protected String getLivingSound()
+    protected SoundEvent getAmbientSound()
     {
-        return Reference.MOD_ID + ":failed_animal_idle_sheep";
+        return MatterOverdriveSounds.failedAnimalIdleSheep;
     }
 
-    protected String getHurtSound()
+    protected SoundEvent getHurtSound()
     {
-        return Reference.MOD_ID + ":failed_animal_idle_sheep";
+        return MatterOverdriveSounds.failedAnimalIdleSheep;
     }
 
     @Override
-    protected String getDeathSound()
+    protected SoundEvent getDeathSound()
     {
-        return Reference.MOD_ID + ":failed_animal_die_" + rand.nextInt(2);
+        return MatterOverdriveSounds.failedAnimalDie;
     }
 
     public EntitySheep createChild(EntityAgeable entity)

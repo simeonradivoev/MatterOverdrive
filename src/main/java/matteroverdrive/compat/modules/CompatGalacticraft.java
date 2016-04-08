@@ -1,14 +1,8 @@
 package matteroverdrive.compat.modules;
 
 import matteroverdrive.compat.Compat;
-import matteroverdrive.entity.android_player.AndroidPlayer;
-import matteroverdrive.init.MatterOverdriveBioticStats;
-import micdoodle8.mods.galacticraft.api.event.oxygen.GCCoreOxygenSuffocationEvent;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Created by Simeon on 2/26/2016.
@@ -22,7 +16,7 @@ public class CompatGalacticraft
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @Optional.Method(modid = "GalacticraftCore")
+    /*@Optional.Method(modid = "GalacticraftCore")
     @SubscribeEvent
     public void onLivingEvent(GCCoreOxygenSuffocationEvent event)
     {
@@ -31,5 +25,5 @@ public class CompatGalacticraft
         {
             event.setCanceled(true);
         }
-    }
+    }*/
 }

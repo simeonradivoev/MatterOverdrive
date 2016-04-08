@@ -7,6 +7,7 @@ import matteroverdrive.api.quest.IQuest;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
@@ -61,7 +62,7 @@ public class QuestStackReward implements IQuestReward
 
         if (questStack != null && questStack.canAccept(entityPlayer,questStack))
         {
-            MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
+            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(entityPlayer);
             if (extendedProperties != null)
             {
                 QuestStack questStackCopy = questStack.copy();

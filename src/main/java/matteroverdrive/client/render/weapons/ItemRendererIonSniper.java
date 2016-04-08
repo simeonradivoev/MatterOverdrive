@@ -32,6 +32,4 @@ public class ItemRendererIonSniper extends WeaponItemRenderer
     {
         super(new ResourceLocation(MODEL));
     }
-
-
 }

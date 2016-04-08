@@ -22,8 +22,6 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.handler.thread.RegisterItemsFromRecipes;
 import matteroverdrive.network.packet.client.PacketUpdateMatterRegistry;
 import matteroverdrive.util.MOLog;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -42,10 +40,10 @@ public class MatterRegistrationHandler
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load load)
     {
-        if (!load.world.isRemote && load.world.provider.getDimensionId() == 0)
+        if (!load.getWorld().isRemote && load.getWorld().provider.getDimension() == 0)
         {
-            File matterRegistryFile = getMatterRegistryFile(load.world);
-            File customHandlersFile = getCustomHandlersFile(load.world);
+            File matterRegistryFile = getMatterRegistryFile(load.getWorld());
+            File customHandlersFile = getCustomHandlersFile(load.getWorld());
 
             try
             {
@@ -61,7 +59,7 @@ public class MatterRegistrationHandler
                 {
                     try
                     {
-                        runCalculationThread(load.world);
+                        runCalculationThread(load.getWorld());
                     } catch (Exception e)
                     {
                         MOLog.log(Level.ERROR, e, "There was a problem calculating Matter from Recipes or Furnaces");
@@ -77,7 +75,7 @@ public class MatterRegistrationHandler
                         if (MatterOverdrive.matterRegistry.AUTOMATIC_CALCULATION)
                         {
                             MOLog.log(Level.INFO, e, "Starting automatic matter calculation thread.");
-                            runCalculationThread(load.world);
+                            runCalculationThread(load.getWorld());
                         } else
                         {
                             MOLog.log(Level.INFO, e, "Automatic matter calculation disabled. To enable go to Matter Overdrive configs");
@@ -94,7 +92,7 @@ public class MatterRegistrationHandler
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload unload)
     {
-        if (!unload.world.isRemote && unload.world.provider.getDimensionId() == 0)
+        if (!unload.getWorld().isRemote && unload.getWorld().provider.getDimension() == 0)
         {
             MatterOverdrive.matterRegistry.unload();
         }
@@ -115,7 +113,8 @@ public class MatterRegistrationHandler
     public void onRegistrationComplete()
     {
         PacketUpdateMatterRegistry updateMatterRegistry = new PacketUpdateMatterRegistry(MatterOverdrive.matterRegistry);
-        MinecraftServer.getServer().getEntityWorld().playerEntities.stream().filter(playerMP -> playerMP instanceof EntityPlayerMP).forEach(playerMP -> MatterOverdrive.packetPipeline.sendTo(updateMatterRegistry, (EntityPlayerMP) playerMP));
+        // TODO: 3/26/2016 Find how to get Minecraft server
+        //MinecraftServer.getServer().getEntityWorld().playerEntities.stream().filter(playerMP -> playerMP instanceof EntityPlayerMP).forEach(playerMP -> MatterOverdrive.packetPipeline.sendTo(updateMatterRegistry, (EntityPlayerMP) playerMP));
     }
 
     private File getMatterRegistryFile(World world)

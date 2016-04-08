@@ -19,7 +19,7 @@
 package matteroverdrive.api.events.anomaly;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**

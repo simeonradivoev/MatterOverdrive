@@ -18,10 +18,6 @@
 
 package matteroverdrive.starmap;
 
-import matteroverdrive.util.MOLog;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IBuilding;
@@ -32,6 +28,7 @@ import matteroverdrive.network.packet.client.starmap.PacketUpdateGalaxy;
 import matteroverdrive.network.packet.client.starmap.PacketUpdatePlanet;
 import matteroverdrive.starmap.data.*;
 import matteroverdrive.util.IConfigSubscriber;
+import matteroverdrive.util.MOLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -39,6 +36,9 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,7 +70,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
     //region Saving and Creation
     public void createGalaxy(File file,World world)
     {
-        theGalaxy = galaxyGenerator.generateGalaxy("Galaxy",world.provider.getDimensionId(),world.getWorldInfo().getSeed(),world);
+        theGalaxy = galaxyGenerator.generateGalaxy("Galaxy",world.provider.getDimension(),world.getWorldInfo().getSeed(),world);
         saveGalaxy(file);
     }
 
@@ -257,13 +257,13 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load load)
     {
-        if (!load.world.isRemote && load.world.provider.getDimensionId() == 0)
+        if (!load.getWorld().isRemote && load.getWorld().provider.getDimension() == 0)
         {
-            world = load.world;
-            File galaxyFile = getGalaxyFile(load.world);
+            world = load.getWorld();
+            File galaxyFile = getGalaxyFile(load.getWorld());
             long start = System.nanoTime();
-            if (!loadGalaxy(galaxyFile,load.world)) {
-                createGalaxy(galaxyFile, load.world);
+            if (!loadGalaxy(galaxyFile,load.getWorld())) {
+                createGalaxy(galaxyFile, load.getWorld());
 				MOLog.info("Galaxy Generated and saved to '%1$s'. Took %2$s milliseconds", galaxyFile.getPath(), ((System.nanoTime() - start) / 1000000));
             }else
             {
@@ -275,17 +275,17 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
     @SubscribeEvent
     public void onWorldSave(WorldEvent.Save save)
     {
-        if (save.world == null || theGalaxy == null)
+        if (save.getWorld() == null || theGalaxy == null)
             return;
 
-        if (!save.world.isRemote && save.world.provider.getDimensionId() == 0)
+        if (!save.getWorld().isRemote && save.getWorld().provider.getDimension() == 0)
         {
             if (theGalaxy.isDirty())
             {
                 long start = System.nanoTime();
-                File galaxyFile = getGalaxyFile(save.world);
+                File galaxyFile = getGalaxyFile(save.getWorld());
                 if (saveGalaxy(galaxyFile)) {
-                    theGalaxy.onSave(galaxyFile,save.world);
+                    theGalaxy.onSave(galaxyFile,save.getWorld());
 					MOLog.info("Galaxy saved to '%s'. Took %s milliseconds", galaxyFile.getPath(), ((System.nanoTime() - start) / 1000000));
                 }
             }
@@ -295,10 +295,10 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload unload)
     {
-        if (unload.world == null || theGalaxy == null)
+        if (unload.getWorld() == null || theGalaxy == null)
             return;
 
-        if (unload.world.isRemote && unload.world.provider.getDimensionId() == 0) {
+        if (unload.getWorld().isRemote && unload.getWorld().provider.getDimension() == 0) {
             this.world = null;
             theGalaxy = null;
             homePlanets.clear();
@@ -311,7 +311,7 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
         if (event.world == null || theGalaxy == null)
             return;
 
-        if (!event.world.isRemote && event.world.provider.getDimensionId() == 0)
+        if (!event.world.isRemote && event.world.provider.getDimension() == 0)
         {
             theGalaxy.update(event.world);
         }

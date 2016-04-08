@@ -61,7 +61,7 @@ public class TritaniumSpine extends BionicPart
         Multimap multimap = super.getModifiers(player,itemStack);
         if (multimap.isEmpty())
         {
-            multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), new AttributeModifier(healthModifierID, MOStringHelper.translateToLocal("attribute.name." + SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName()), 2f, 0));
+            multimap.put(SharedMonsterAttributes.MAX_HEALTH.getAttributeUnlocalizedName(), new AttributeModifier(healthModifierID, MOStringHelper.translateToLocal("attribute.name." + SharedMonsterAttributes.MAX_HEALTH.getAttributeUnlocalizedName()), 2f, 0));
             multimap.put(AndroidAttributes.attributeGlitchTime.getAttributeUnlocalizedName(), new AttributeModifier(glitchModifierID, MOStringHelper.translateToLocal("attribute.name.android.glitchTime"), -0.5f, 2));
         }
         return multimap;

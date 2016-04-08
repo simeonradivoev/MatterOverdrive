@@ -1,16 +1,18 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
-import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
 import java.util.Random;
@@ -91,9 +93,9 @@ public class QuestLogicBecomeAndroid extends AbstractQuestLogic
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
-        return false;
+        return null;
     }
 
     @Override
@@ -124,8 +126,8 @@ public class QuestLogicBecomeAndroid extends AbstractQuestLogic
         for (boolean hasPart : hasParts) {
             if (!hasPart) {
                 if (!entityPlayer.worldObj.isRemote) {
-                    ChatComponentText componentText = new ChatComponentText(EnumChatFormatting.GOLD + "<Mad Scientist>" + EnumChatFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + entityPlayer.getRNG().nextInt(4)));
-                    componentText.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
+                    TextComponentString componentText = new TextComponentString(ChatFormatting.GOLD + "<Mad Scientist>" + ChatFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + entityPlayer.getRNG().nextInt(4)));
+                    componentText.setChatStyle(new Style().setColor(TextFormatting.RED));
                     entityPlayer.addChatMessage(componentText);
                 }
                 return;
@@ -138,7 +140,7 @@ public class QuestLogicBecomeAndroid extends AbstractQuestLogic
             }
         }
 
-        AndroidPlayer.get(entityPlayer).startConversion();
+        MOPlayerCapabilityProvider.GetAndroidCapability(entityPlayer).startConversion();
         entityPlayer.closeScreen();
     }
 

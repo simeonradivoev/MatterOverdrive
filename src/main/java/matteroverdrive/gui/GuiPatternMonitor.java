@@ -21,20 +21,20 @@ package matteroverdrive.gui;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.network.MatterNetworkTaskState;
-import matteroverdrive.container.matter_network.ContainerPatternMonitor;
 import matteroverdrive.container.MOBaseContainer;
+import matteroverdrive.container.matter_network.ContainerPatternMonitor;
 import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.data.matter_network.ItemPatternMapping;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.pages.PageTasks;
+import matteroverdrive.machines.pattern_monitor.TileEntityMachinePatternMonitor;
 import matteroverdrive.network.packet.server.pattern_monitor.PacketPatternMonitorAddRequest;
 import matteroverdrive.network.packet.server.task_queue.PacketRemoveTask;
-import matteroverdrive.machines.pattern_monitor.TileEntityMachinePatternMonitor;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 
 /**

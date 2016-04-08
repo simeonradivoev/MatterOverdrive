@@ -20,7 +20,7 @@ package matteroverdrive.api.entity;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Created by Simeon on 11/15/2015.
@@ -28,5 +28,5 @@ import net.minecraft.util.Vec3;
 public interface IRangedEnergyWeaponAttackMob
 {
     ItemStack getWeapon();
-    void attackEntityWithRangedAttack(EntityLivingBase target, Vec3 lastSeenPosition, boolean canSee);
+    void attackEntityWithRangedAttack(EntityLivingBase target, Vec3d lastSeenPosition, boolean canSee);
 }

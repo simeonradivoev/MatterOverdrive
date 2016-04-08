@@ -33,18 +33,19 @@ import matteroverdrive.data.Inventory;
 import matteroverdrive.data.MinimapEntityInfo;
 import matteroverdrive.data.inventory.BionicSlot;
 import matteroverdrive.data.inventory.EnergySlot;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.gui.GuiAndroidHud;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
 import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.network.packet.client.PacketAndroidTransformation;
 import matteroverdrive.network.packet.client.PacketSendAndroidEffects;
 import matteroverdrive.network.packet.client.PacketSendMinimapInfo;
 import matteroverdrive.network.packet.client.PacketSyncAndroid;
 import matteroverdrive.network.packet.server.PacketAndroidChangeAbility;
 import matteroverdrive.proxy.ClientProxy;
-import matteroverdrive.util.MOLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.entity.Entity;
@@ -56,11 +57,24 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -68,7 +82,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.Level;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -78,6 +91,9 @@ import java.util.stream.Collectors;
  */
 public class AndroidPlayer implements IEnergyStorage, IAndroid
 {
+    @CapabilityInject(value = AndroidPlayer.class)
+    public static Capability<AndroidPlayer> CAPIBILITY;
+
     public static final int EFFECT_GLITCH_TIME = 0;
     public static final int EFFECT_CLOAKED = 1;
     public static final int EFFECT_SHIELD = 2;
@@ -98,7 +114,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     private final static int BUILTIN_ENERGY_TRANSFER = 1024;
     public final static short TRANSFORM_TIME = 20 * 34;
     private final static int ENERGY_WATCHER_DEFAULT = 29;
-    private static int energyWatchID;
+    private static DataParameter<Integer> ENERGY;
     private final static int ENERGY_PER_JUMP = 512;
     public final static int MINIMAP_SEND_TIMEOUT = 20*2;
     private static boolean TRANSFORMATION_DEATH = true;
@@ -109,7 +125,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     private ItemStack[] previousBionicParts = new ItemStack[5];
 
     private final int ENERGY_SLOT;
-    private final EntityPlayer player;
+    private EntityPlayer player;
     private final Inventory inventory;
     private IBioticStat activeStat;
     private NBTTagCompound unlocked;
@@ -118,9 +134,8 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     private boolean hasRunOutOfPower;
     private AndroidEffects androidEffects;
 
-    private AndroidPlayer(EntityPlayer player)
+    public AndroidPlayer(EntityPlayer player)
     {
-        this.player = player;
         this.maxEnergy = 512000;
         inventory = new Inventory("Android");
         inventory.AddSlot(new BionicSlot(false, Reference.BIONIC_HEAD));
@@ -131,37 +146,17 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
         ENERGY_SLOT = inventory.AddSlot(new EnergySlot(false));
         unlocked = new NBTTagCompound();
         androidEffects = new AndroidEffects(this);
-
-        int energyWatchID = MatterOverdrive.configHandler.getInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID, ConfigurationHandler.CATEGORY_ABILITIES,ENERGY_WATCHER_DEFAULT);
-        try
-        {
-            player.getDataWatcher().addObject(energyWatchID, this.maxEnergy);
-        }
-        catch (IllegalArgumentException e)
-        {
-            energyWatchID = 8;
-            MOLog.log(Level.ERROR,e,"Android Energy Watch ID taken. Starting id iteration.");
-            while (energyWatchID <= 31)
-            {
-                try
-                {
-                    player.getDataWatcher().addObject(energyWatchID, this.maxEnergy);
-                    break;
-                }
-                catch (IllegalArgumentException ex)
-                {
-                    MOLog.log(Level.ERROR,ex,"Android Energy Watch ID '%s' taken.", energyWatchID);
-                    energyWatchID++;
-                }
-            }
-        }
-
-        MatterOverdrive.configHandler.setInt(ConfigurationHandler.KEY_ANDROID_ENERGY_WATCH_ID, ConfigurationHandler.CATEGORY_ABILITIES, energyWatchID);
-        MatterOverdrive.configHandler.save();
-        AndroidPlayer.energyWatchID = energyWatchID;
-
-        registerAttributes(player);
         registerEffects(androidEffects);
+
+        init(player);
+    }
+
+    public void init(EntityPlayer player)
+    {
+        if (ENERGY == null) ENERGY = EntityDataManager.createKey(EntityPlayer.class,DataSerializers.VARINT);
+        player.getDataManager().register(ENERGY,maxEnergy);
+        registerAttributes(player);
+        this.player = player;
     }
 
     private void registerEffects(AndroidEffects effects)
@@ -185,14 +180,24 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
         player.getAttributeMap().registerAttribute(AndroidAttributes.attributeBatteryUse);
     }
 
-    public static void register(EntityPlayer player)
+    public static void register()
     {
-        player.registerExtendedProperties(EXT_PROP_NAME, new AndroidPlayer(player));
-    }
+        CapabilityManager.INSTANCE.register(IAndroid.class, new Capability.IStorage<IAndroid>()
+        {
+            @Override
+            public NBTBase writeNBT(Capability<IAndroid> capability, IAndroid instance, EnumFacing side)
+            {
+                NBTTagCompound data = new NBTTagCompound();
+                instance.writeToNBT(data, EnumSet.allOf(IAndroid.DataType.class));
+                return data;
+            }
 
-    public static AndroidPlayer get(EntityPlayer player)
-    {
-        return (AndroidPlayer) player.getExtendedProperties(EXT_PROP_NAME);
+            @Override
+            public void readNBT(Capability<IAndroid> capability, IAndroid instance, EnumFacing side, NBTBase nbt)
+            {
+                instance.readFromNBT((NBTTagCompound)nbt,EnumSet.allOf(IAndroid.DataType.class));
+            }
+        }, AndroidPlayer.class);
     }
 
     public static void loadConfigs(ConfigurationHandler configurationHandler)
@@ -203,23 +208,11 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
         RECHARGE_AMOUNT_ON_RESPAWN = configurationHandler.getInt("recharge_amount_on_respawn",ConfigurationHandler.CATEGORY_ANDROID_PLAYER, RECHARGE_AMOUNT_ON_RESPAWN,"How much does the android player recharge after respawning");
     }
 
-    @Override
-    public void saveNBTData(NBTTagCompound compound)
-    {
-        writeToNBT(compound,EnumSet.allOf(DataType.class));
-    }
-
-    @Override
-    public void loadNBTData(NBTTagCompound compound)
-    {
-        readFromNBT(compound,EnumSet.allOf(DataType.class));
-    }
-
     public void writeToNBT(NBTTagCompound compound,EnumSet<DataType> dataTypes)
     {
         NBTTagCompound prop = new NBTTagCompound();
         if (dataTypes.contains(DataType.ENERGY)) {
-            prop.setInteger("Energy", player.getDataWatcher().getWatchableObjectInt(energyWatchID));
+            prop.setInteger("Energy", player.getDataManager().get(ENERGY));
             prop.setInteger("MaxEnergy", this.maxEnergy);
         }
         if (dataTypes.contains(DataType.DATA)) {
@@ -256,7 +249,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
         if (prop != null) {
             boolean initFlag = false;
             if (dataTypes.contains(DataType.ENERGY)) {
-                player.getDataWatcher().updateObject(energyWatchID, prop.getInteger("Energy"));
+                player.getDataManager().set(ENERGY, prop.getInteger("Energy"));
                 this.maxEnergy = prop.getInteger("MaxEnergy");
             }
             if (dataTypes.contains(DataType.DATA)) {
@@ -288,17 +281,17 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
                 }
             }
             if (initFlag) {
-                init(this.player, this.player.worldObj);
+                //init(this.player, this.player.worldObj);
             }
         }
     }
 
-    @Override
+    /*@Override
     public void init(Entity entity, World world)
     {
         manageStatAttributeModifiers();
         manageEquipmentAttributeModifiers();
-    }
+    }*/
 
     public int extractEnergyRaw(int amount, boolean simulate)
     {
@@ -318,13 +311,13 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
         }
         else
         {
-            int energy = this.player.getDataWatcher().getWatchableObjectInt(energyWatchID);
+            int energy = this.player.getDataManager().get(ENERGY);
             energyExtracted = Math.min(Math.min(energy, amount),BUILTIN_ENERGY_TRANSFER);
 
             if (!simulate) {
                 energy -= energyExtracted;
                 energy = MathHelper.clamp_int(energy,0,getMaxEnergyStored());
-                this.player.getDataWatcher().updateObject(energyWatchID,energy);
+                this.player.getDataManager().set(ENERGY,energy);
             }
         }
 
@@ -393,7 +386,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
         }
         else
         {
-            return this.player.getDataWatcher().getWatchableObjectInt(energyWatchID);
+            return this.player.getDataManager().get(ENERGY);
         }
     }
 
@@ -422,13 +415,13 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
         }
         else
         {
-            int energy = this.player.getDataWatcher().getWatchableObjectInt(energyWatchID);
+            int energy = this.player.getDataManager().get(ENERGY);
             energyReceived = Math.min(Math.min(getMaxEnergyStored() - energy, amount), BUILTIN_ENERGY_TRANSFER);
 
             if (!simulate) {
                 energy += energyReceived;
                 energy = MathHelper.clamp_int(energy, 0, getMaxEnergyStored());
-                this.player.getDataWatcher().updateObject(energyWatchID, energy);
+                this.player.getDataManager().set(ENERGY, energy);
             }
         }
         return energyReceived;
@@ -488,8 +481,8 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     public void copy(AndroidPlayer player)
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
-        player.saveNBTData(tagCompound);
-        loadNBTData(tagCompound);
+        player.writeToNBT(tagCompound,EnumSet.allOf(IAndroid.DataType.class));
+        readFromNBT(tagCompound,EnumSet.allOf(IAndroid.DataType.class));
         manageStatAttributeModifiers();
     }
 
@@ -710,7 +703,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
             List<MinimapEntityInfo> entityList = new ArrayList<>();
             for (Object entityObject : getPlayer().worldObj.loadedEntityList) {
                 if (entityObject instanceof EntityLivingBase) {
-                    if (isVisibleOnMinimap((EntityLivingBase) entityObject, player, new Vec3(((EntityLivingBase) entityObject).posX, ((EntityLivingBase) entityObject).posY, ((EntityLivingBase) entityObject).posZ).subtract(new Vec3(player.posX, player.posY, player.posZ))) && MinimapEntityInfo.hasInfo((EntityLivingBase)entityObject, player)) {
+                    if (isVisibleOnMinimap((EntityLivingBase) entityObject, player, new Vec3d(((EntityLivingBase) entityObject).posX, ((EntityLivingBase) entityObject).posY, ((EntityLivingBase) entityObject).posZ).subtract(new Vec3d(player.posX, player.posY, player.posZ))) && MinimapEntityInfo.hasInfo((EntityLivingBase)entityObject, player)) {
                         entityList.add(new MinimapEntityInfo((EntityLivingBase)entityObject, getPlayer()));
                     }
                 }
@@ -721,21 +714,22 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
         }
     }
 
-    public static boolean isVisibleOnMinimap(EntityLivingBase entityLivingBase, EntityPlayer player, Vec3 relativePosition)
+    public static boolean isVisibleOnMinimap(EntityLivingBase entityLivingBase, EntityPlayer player, Vec3d relativePosition)
     {
         return !entityLivingBase.isInvisible() && Math.abs(relativePosition.yCoord) < 16 && isInRangeToRenderDist(entityLivingBase, 256);
     }
 
+    @SideOnly(Side.CLIENT)
     private static boolean isInRangeToRenderDist(EntityLivingBase entity, double distance)
     {
         double d1 = entity.getEntityBoundingBox().getAverageEdgeLength();
-        d1 *= 64.0D * entity.renderDistanceWeight;
+        d1 *= 64.0D * Entity.getRenderDistanceWeight();
         return distance < d1 * d1;
     }
 
     private void manageOutOfPower()
     {
-        IAttributeInstance speed = player.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+        IAttributeInstance speed = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
         if (speed.getModifier(outOfPowerSpeedModifier.getID()) == null)
         {
             speed.applyModifier(outOfPowerSpeedModifier);
@@ -749,7 +743,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 
     private void manageHasPower()
     {
-        IAttributeInstance speed = player.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+        IAttributeInstance speed = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
         if (speed.getModifier(outOfPowerSpeedModifier.getID()) != null)
         {
             speed.removeModifier(outOfPowerSpeedModifier);
@@ -758,9 +752,10 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 
     private void manageCharging()
     {
-        if (player != null && player.isSneaking() && player.getHeldItem() != null && (player.getHeldItem().getItem() == MatterOverdriveItems.battery || player.getHeldItem().getItem() == MatterOverdriveItems.hc_battery)) {
+        //// TODO: 3/24/2016 Add support for off hand
+        if (player != null && player.isSneaking() && player.getHeldItem(EnumHand.MAIN_HAND) != null && (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == MatterOverdriveItems.battery || player.getHeldItem(EnumHand.MAIN_HAND).getItem() == MatterOverdriveItems.hc_battery)) {
             int freeEnergy = getMaxEnergyStored() - getEnergyStored();
-            int receivedAmount = ((IEnergyContainerItem) player.getHeldItem().getItem()).extractEnergy(player.getHeldItem(), freeEnergy, false);
+            int receivedAmount = ((IEnergyContainerItem) player.getHeldItem(EnumHand.MAIN_HAND).getItem()).extractEnergy(player.getHeldItem(EnumHand.MAIN_HAND), freeEnergy, false);
             receiveEnergy(receivedAmount, false);
         }
     }
@@ -849,7 +844,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
             {
                 if (!isAndroid() && !isTurning())
                 {
-                    AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+                    AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
                     androidPlayer.startTurningToAndroid();
                     if (player instanceof EntityPlayerMP)
                         MatterOverdrive.packetPipeline.sendTo(new PacketAndroidTransformation(), (EntityPlayerMP) player);
@@ -861,7 +856,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     @SideOnly(Side.CLIENT)
     private void playTransformMusic()
     {
-        MOPositionedSound sound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "transformation_music"),1,1);
+        MOPositionedSound sound = new MOPositionedSound(MatterOverdriveSounds.musicTransformation,SoundCategory.MUSIC,1,1);
         sound.setAttenuationType(ISound.AttenuationType.NONE);
         Minecraft.getMinecraft().getSoundHandler().playSound(sound);
     }
@@ -876,7 +871,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 
     public double getSpeedMultiply()
     {
-        return player.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue() / player.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getBaseValue();
+        return player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue() / player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue();
     }
 
     private void manageGlitch()
@@ -931,10 +926,10 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 
             if (turnningTime > 0) {
                 getAndroidEffects().updateEffect(EFFECT_TURNNING,--turnningTime);
-                getPlayer().addPotionEffect(new PotionEffect(9, AndroidPlayer.TRANSFORM_TIME));
-                getPlayer().addPotionEffect(new PotionEffect(2, AndroidPlayer.TRANSFORM_TIME, 1));
-                getPlayer().addPotionEffect(new PotionEffect(17, AndroidPlayer.TRANSFORM_TIME));
-                getPlayer().addPotionEffect(new PotionEffect(18, AndroidPlayer.TRANSFORM_TIME));
+                getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionById(9), AndroidPlayer.TRANSFORM_TIME));
+                getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionById(2), AndroidPlayer.TRANSFORM_TIME, 1));
+                getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionById(17), AndroidPlayer.TRANSFORM_TIME));
+                getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionById(18), AndroidPlayer.TRANSFORM_TIME));
 
 
                 if (turnningTime % 40 == 0) {
@@ -959,13 +954,13 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     }
 
     private void playGlitchSound(AndroidPlayer player, Random random, float amount) {
-        player.getPlayer().worldObj.playSoundAtEntity(player.getPlayer(),Reference.MOD_ID + ":gui.glitch", amount, 0.9f + random.nextFloat() * 0.2f);
+        player.getPlayer().worldObj.playSound(player.getPlayer().posX,player.getPlayer().posY,player.getPlayer().posZ,MatterOverdriveSounds.guiGlitch,SoundCategory.PLAYERS, amount, 0.9f + random.nextFloat() * 0.2f,true);
     }
 
     @SideOnly(Side.CLIENT)
     private void playGlitchSoundClient(Random random, float amount)
     {
-        player.worldObj.playSoundAtEntity(player,Reference.MOD_ID + ":" + "gui.glitch",amount, 0.9f + random.nextFloat() * 0.2f);
+        player.worldObj.playSound(null,player.posX,player.posY,player.posZ,MatterOverdriveSounds.guiGlitch,SoundCategory.PLAYERS,amount, 0.9f + random.nextFloat() * 0.2f);
     }
 
     @Override
@@ -977,9 +972,9 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     //region Events
     public void triggerEventOnStats(LivingEvent event)
     {
-        if (event.entityLiving instanceof EntityPlayer)
+        if (event.getEntityLiving() instanceof EntityPlayer)
         {
-            AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer) event.entityLiving);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntityLiving());
 
             if (androidPlayer.isAndroid())
             {
@@ -1010,7 +1005,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     {
         if (!event.isCanceled())
         {
-            if (HURT_GLITCHING && event.ammount > 0)
+            if (HURT_GLITCHING && event.getAmount() > 0)
             {
                 androidEffects.updateEffect(EFFECT_GLITCH_TIME,modify(10, AndroidAttributes.attributeGlitchTime));
                 sync(EnumSet.of(DataType.EFFECTS));
@@ -1022,7 +1017,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     }
     public void onEntityJump(LivingEvent.LivingJumpEvent event)
     {
-        if (!event.entity.worldObj.isRemote)
+        if (!event.getEntity().worldObj.isRemote)
         {
             extractEnergyScaled(ENERGY_PER_JUMP);
         }
@@ -1109,7 +1104,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
     }
 
     @Override
-    public IChatComponent getDisplayName() {
+    public ITextComponent getDisplayName() {
         return player.getDisplayName();
     }
 
@@ -1189,8 +1184,4 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 
     //endregion
 
-    public enum DataType
-    {
-        DATA,ENERGY,EFFECTS,STATS,ACTIVE_ABILITY,INVENTORY, BATTERY
-    }
 }

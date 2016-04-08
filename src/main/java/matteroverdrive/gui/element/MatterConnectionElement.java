@@ -20,12 +20,12 @@ package matteroverdrive.gui.element;
 
 import matteroverdrive.Reference;
 import matteroverdrive.gui.MOGuiBase;
+import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class MatterConnectionElement extends MOElementBase
     @Override
     public void addTooltip(List<String> list,int mouseX,int mouseY)
     {
-        list.add(StatCollector.translateToLocal(Item.getItemById(id).getUnlocalizedName() + ".name") + " [" + count + "]");
+        list.add(MOStringHelper.translateToLocal(Item.getItemById(id).getUnlocalizedName() + ".name") + " [" + count + "]");
     }
 
     public MatterConnectionElement(MOGuiBase gui,int id,int count)

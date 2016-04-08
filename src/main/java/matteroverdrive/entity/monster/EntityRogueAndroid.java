@@ -24,12 +24,13 @@ import matteroverdrive.handler.GoogleAnalyticsCommon;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Property;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -49,16 +50,17 @@ public class EntityRogueAndroid implements IConfigSubscriber
     public static void addAsBiomeGen(Class<? extends EntityLiving> entityClass)
     {
         spawnListEntries.add(new BiomeGenBase.SpawnListEntry(entityClass, 15, 1, 2));
-        addInBiome(BiomeGenBase.getBiomeGenArray());
+        addInBiome(BiomeGenBase.biomeRegistry.iterator());
     }
 
-    private static void addInBiome(BiomeGenBase[] biomes)
+    private static void addInBiome(Iterator<BiomeGenBase> biomes)
     {
         loadBiomeBlacklist(MatterOverdrive.configHandler);
         loadBiomesWhitelist(MatterOverdrive.configHandler);
 
-        for (BiomeGenBase biome : biomes)
+        while (biomes.hasNext())
         {
+            BiomeGenBase biome = biomes.next();
             if (biome != null)
             {
                 List spawnList = biome.getSpawnableList(EnumCreatureType.MONSTER);
@@ -78,9 +80,9 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         if (biome != null) {
             if (biomesWhitelist.size() > 0) {
-                return biomesWhitelist.contains(biome.biomeName.toLowerCase());
+                return biomesWhitelist.contains(biome.getBiomeName().toLowerCase());
             } else {
-                return !biomesBlacklist.contains(biome.biomeName.toLowerCase());
+                return !biomesBlacklist.contains(biome.getBiomeName().toLowerCase());
             }
         }
         return false;
@@ -141,7 +143,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         dimensionBlacklist.clear();
         Property blacklistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_ENTITIES + "." + "rogue_android","dimension.blacklist",new int[]{1});
-        blacklistProp.comment = "Rogue Android Dimension ID blacklist";
+        blacklistProp.setComment("Rogue Android Dimension ID blacklist");
         int[] blacklist = blacklistProp.getIntList();
         for (int aBlacklist : blacklist)
         {
@@ -153,7 +155,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
     {
         dimensionWhitelist.clear();
         Property whitelistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android", "dimension.whitelist", new int[0]);
-        whitelistProp.comment = "Rogue Android Dimension ID whitelist";
+        whitelistProp.setComment("Rogue Android Dimension ID whitelist");
         int[] whitelist = whitelistProp.getIntList();
 
         for (int item : whitelist)

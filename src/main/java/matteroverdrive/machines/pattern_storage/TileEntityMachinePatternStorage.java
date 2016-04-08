@@ -18,6 +18,7 @@
 
 package matteroverdrive.machines.pattern_storage;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
@@ -50,9 +51,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
@@ -237,7 +238,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         if (!MatterHelper.CanScan(itemStack))
         {
             if (info != null)
-                info.append(String.format("%s%s cannot be analyzed!",EnumChatFormatting.RED,itemStack.getDisplayName()));
+                info.append(String.format("%s%s cannot be analyzed!", ChatFormatting.RED,itemStack.getDisplayName()));
             return false;
         }
 
@@ -262,12 +263,12 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
                                     getNetwork().post(new MatterDatabaseEvent.PatternChanged(this,p,i));
                             }
                             if (info != null)
-                                info.append(String.format("%s added to Pattern Storage. Progress is now at %s", EnumChatFormatting.GREEN + itemStack.getDisplayName(), pattern.getProgress() + "%"));
+                                info.append(String.format("%s added to Pattern Storage. Progress is now at %s", ChatFormatting.GREEN + itemStack.getDisplayName(), pattern.getProgress() + "%"));
                             return true;
                         }else
                         {
                             if (info != null)
-                                info.append(String.format("%s is fully analyzed!",EnumChatFormatting.RED + itemStack.getDisplayName()));
+                                info.append(String.format("%s is fully analyzed!", ChatFormatting.RED + itemStack.getDisplayName()));
                             return false;
                         }
                     }
@@ -294,7 +295,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
                             forceSync();
                         }
                         if (info != null)
-                            info.append(String.format("%s added to Pattern Storage. Progress is now at %s",EnumChatFormatting.GREEN + itemStack.getDisplayName(),amount + "%"));
+                            info.append(String.format("%s added to Pattern Storage. Progress is now at %s", ChatFormatting.GREEN + itemStack.getDisplayName(),amount + "%"));
                         return true;
                     }
                 }
@@ -302,7 +303,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
         }
 
         if (info != null)
-            info.append(String.format("%sNo space available for '%s' !",EnumChatFormatting.RED,itemStack.getDisplayName()));
+            info.append(String.format("%sNo space available for '%s' !", ChatFormatting.RED,itemStack.getDisplayName()));
         return false;
     }
 
@@ -458,7 +459,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
     //region Getters and Setters
     @Override
-    public String getSound() {
+    public SoundEvent getSound() {
         return null;
     }
 

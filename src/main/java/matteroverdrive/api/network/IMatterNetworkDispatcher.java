@@ -19,7 +19,7 @@
 package matteroverdrive.api.network;
 
 import matteroverdrive.matter_network.MatterNetworkTaskQueue;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Created by Simeon on 4/20/2015.

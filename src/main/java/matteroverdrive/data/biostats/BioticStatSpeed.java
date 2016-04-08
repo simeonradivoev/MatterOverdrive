@@ -20,10 +20,11 @@ package matteroverdrive.data.biostats;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.data.MOAttributeModifier;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.UUID;
@@ -54,7 +55,7 @@ public class BioticStatSpeed extends AbstractBioticStat
 
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level),EnumChatFormatting.GREEN + Integer.toString(Math.round(getSpeedModify(level) * 100f)) + "%" + EnumChatFormatting.GRAY);
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN + Integer.toString(Math.round(getSpeedModify(level) * 100f)) + "%" + ChatFormatting.GRAY);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class BioticStatSpeed extends AbstractBioticStat
     public Multimap attributes(AndroidPlayer androidPlayer, int level)
     {
         Multimap multimap = HashMultimap.create();
-        multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(), new MOAttributeModifier(modifierID, "Android Speed", getSpeedModify(level), 2).setSaved(false));
+        multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new MOAttributeModifier(modifierID, "Android Speed", getSpeedModify(level), 2).setSaved(false));
         return multimap;
     }
 

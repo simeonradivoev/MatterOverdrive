@@ -9,7 +9,7 @@ import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.texture.IIconCreator;
@@ -20,9 +20,9 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -70,7 +70,7 @@ public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
 
     public void onRenderWorldLast(RenderHandler renderHandler, RenderWorldLastEvent event)
     {
-        renderParticles(Minecraft.getMinecraft().thePlayer, event.partialTicks);
+        renderParticles(Minecraft.getMinecraft().thePlayer, event.getPartialTicks());
     }
 
     public void onClientTick(TickEvent.ClientTickEvent event)
@@ -116,7 +116,7 @@ public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
                     throw new ReportedException(crashreport);
                 }
 
-                if (entityfx == null || entityfx.isDead)
+                if (entityfx == null || !entityfx.isAlive())
                 {
                     fxe.remove(j--);
                 }
@@ -147,7 +147,7 @@ public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
         {
             if (!this.fxes[k].isEmpty())
             {
-                WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+                VertexBuffer wr = Tessellator.getInstance().getBuffer();
                 Blending blending = Blending.values()[k];
 
                 switch (blending)
@@ -186,10 +186,11 @@ public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
                         if (bb != null && !camera.isBoundingBoxInFrustum(bb))
                             continue;
 
-                        if (!entityfx.isInRangeToRender3d(entity.posX,entity.posY,entity.posZ))
-                            continue;
+                        // TODO: 3/25/2016 Add my own distance check for effects
+                        //if (!entityfx.isInRangeToRender3d(entity.posX,entity.posY,entity.posZ))
+                            //continue;
 
-                        entityfx.renderParticle(wr,entityfx, f, f1, f5, f2, f3, f4);
+                        entityfx.renderParticle(wr,null, f, f1, f5, f2, f3, f4);
                     }
                     catch (Throwable throwable)
                     {

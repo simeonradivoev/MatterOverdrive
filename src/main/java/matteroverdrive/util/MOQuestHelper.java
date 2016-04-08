@@ -1,7 +1,7 @@
 package matteroverdrive.util;
 
 import matteroverdrive.api.quest.QuestStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 
 /**

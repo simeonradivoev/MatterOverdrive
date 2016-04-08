@@ -18,18 +18,19 @@
 
 package matteroverdrive.tile;
 
-import matteroverdrive.machines.events.MachineEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.machines.IUpgradeHandler;
-import net.minecraft.util.BlockPos;
-import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
+import matteroverdrive.machines.events.MachineEvent;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,11 +69,11 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
             AxisAlignedBB radius = new AxisAlignedBB(getPos().add(-range,-range,-range), getPos().add(range,range,range));
             List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, radius);
             for (EntityPlayer player : players) {
-                if (AndroidPlayer.get(player).isAndroid()) {
+                if (MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid()) {
 					int required = getRequiredEnergy(player,range);
 					int max = Math.min(getEnergyStored(EnumFacing.DOWN),getMaxCharging());
 					int toExtract = Math.min(required, max);
-					extractEnergy(EnumFacing.DOWN, AndroidPlayer.get(player).receiveEnergy(toExtract, false), false);
+					extractEnergy(EnumFacing.DOWN, MOPlayerCapabilityProvider.GetAndroidCapability(player).receiveEnergy(toExtract, false), false);
                 }
             }
         }
@@ -90,11 +91,11 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
 
     private int getRequiredEnergy(EntityPlayer player,int maxRange)
     {
-        return (int)(ENERGY_TRANSFER * (1.0D - MathHelper.clamp_double((new Vec3(player.posX,player.posY,player.posZ).subtract(new Vec3(getPos())).lengthVector() / (double)maxRange),0,1)));
+        return (int)(ENERGY_TRANSFER * (1.0D - MathHelper.clamp_double((new Vec3d(player.posX,player.posY,player.posZ).subtract(new Vec3d(getPos())).lengthVector() / (double)maxRange),0,1)));
     }
 
     @Override
-    public String getSound() {
+    public SoundEvent getSound() {
         return null;
     }
 

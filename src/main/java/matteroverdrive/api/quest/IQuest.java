@@ -136,9 +136,9 @@ public interface IQuest
      * @param questStack the quest stack.
      * @param event the event.
      * @param entityPlayer the Entity player.
-     * @return did the event change the quest stack in any way. This is used to synchronize with clients and display objective changes in the Quest HUD.
+     * @return in what way did the event change the quest and what objective did it change, represented in the QuestState. This is used to synchronize with clients and display objective changes in the Quest HUD.
      */
-    boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer);
+    QuestState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer);
 
     /**
      * Called once the quest has completed.

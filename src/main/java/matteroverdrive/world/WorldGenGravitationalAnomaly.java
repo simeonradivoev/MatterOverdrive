@@ -24,7 +24,7 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.tile.TileEntityGravitationalAnomaly;
 import matteroverdrive.util.IConfigSubscriber;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.config.Property;
@@ -74,10 +74,10 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
     {
         if (whitelist.size() > 0)
         {
-            return whitelist.contains(world.provider.getDimensionId()) && !blacklist.contains(world.provider.getDimensionId());
+            return whitelist.contains(world.provider.getDimension()) && !blacklist.contains(world.provider.getDimension());
         }
 
-        return !blacklist.contains(world.provider.getDimensionId());
+        return !blacklist.contains(world.provider.getDimension());
     }
 
     @Override
@@ -92,7 +92,7 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
     {
         whitelist.clear();
         Property whitelistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN + "." + "gravitational_anomaly","whitelist",new int[]{-1,0,2});
-        whitelistProp.comment = "Gravitational Anomaly Dimension ID whitelist";
+        whitelistProp.setComment("Gravitational Anomaly Dimension ID whitelist");
         int[] dimentions = whitelistProp.getIntList();
         for (int dimention : dimentions)
         {
@@ -104,7 +104,7 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
     {
         blacklist.clear();
         Property blacklistProp = configurationHandler.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN + "." + "gravitational_anomaly","blacklist",new int[]{});
-        blacklistProp.comment = "Gravitational Anomaly Dimension ID blacklist";
+        blacklistProp.setComment("Gravitational Anomaly Dimension ID blacklist");
         int[] dimentions = blacklistProp.getIntList();
         for (int dimention : dimentions)
         {

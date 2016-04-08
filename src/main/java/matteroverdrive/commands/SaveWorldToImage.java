@@ -20,6 +20,7 @@ package matteroverdrive.commands;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 
 /**
  * Created by Simeon on 11/26/2015.
@@ -37,7 +38,7 @@ public class SaveWorldToImage extends CommandBase
     }
 
     @Override
-    public void processCommand(ICommandSender commandSender, String[] parameters)
+    public void execute(MinecraftServer server,ICommandSender commandSender, String[] parameters)
     {
         /*if (parameters.length >= 1)
         {

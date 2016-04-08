@@ -43,7 +43,6 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import org.lwjgl.util.glu.Project;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -69,8 +68,8 @@ public class GuiStarMap extends MOGuiMachine<TileEntityMachineStarMap>
         mc = Minecraft.getMinecraft();
         try
         {
-            sphere = OBJLoader.instance.loadModel(new ResourceLocation(Reference.MODEL_SPHERE));
-        } catch (IOException e)
+            sphere = OBJLoader.INSTANCE.loadModel(new ResourceLocation(Reference.MODEL_SPHERE));
+        } catch (Exception e)
         {
             e.printStackTrace();
         }

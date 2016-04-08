@@ -18,6 +18,7 @@
 
 package matteroverdrive.starmap.data;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
@@ -33,9 +34,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import org.apache.logging.log4j.Level;
@@ -173,9 +173,9 @@ public class Planet extends SpaceBody implements IInventory
                     EntityPlayer owner = world.getPlayerEntityByUUID(ownerID);
                     if (owner != null) {
                         owner.addChatMessage(
-                                new ChatComponentText(
-                                        EnumChatFormatting.GOLD + "[" + Reference.MOD_NAME + "]" +
-                                                EnumChatFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.ship_arrive"), ship.getDisplayName(), name)
+                                new TextComponentString(
+                                        ChatFormatting.GOLD + "[" + Reference.MOD_NAME + "]" +
+                                                ChatFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.ship_arrive"), ship.getDisplayName(), name)
                                 )
                         );
                     }
@@ -201,9 +201,9 @@ public class Planet extends SpaceBody implements IInventory
             EntityPlayer entityPlayer = world.getPlayerEntityByUUID(ownerID);
             if(entityPlayer != null) {
                 entityPlayer.addChatMessage(
-                        new ChatComponentText(
-                                EnumChatFormatting.GOLD + "[" + Reference.MOD_NAME + "]" +
-                                        EnumChatFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.on_build"), buildableStack.getDisplayName(), name)
+                        new TextComponentString(
+                                ChatFormatting.GOLD + "[" + Reference.MOD_NAME + "]" +
+                                        ChatFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.on_build"), buildableStack.getDisplayName(), name)
                         )
                 );
             }
@@ -688,9 +688,9 @@ public class Planet extends SpaceBody implements IInventory
     }
 
     @Override
-    public IChatComponent getDisplayName()
+    public ITextComponent getDisplayName()
     {
-        return new ChatComponentText(getName());
+        return new TextComponentString(getName());
     }
     //endregion
 }

@@ -19,13 +19,13 @@
 package matteroverdrive.util;
 
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.quest.IQuest;
 import matteroverdrive.api.quest.QuestStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -51,18 +51,18 @@ public class QuestFactory
         if (isCompleted)
         {
             //completed
-            return EnumChatFormatting.GREEN + Reference.UNICODE_COMPLETED_OBJECTIVE + " " + questStack.getObjective(entityPlayer,objectiveInex);
+            return ChatFormatting.GREEN + Reference.UNICODE_COMPLETED_OBJECTIVE + " " + questStack.getObjective(entityPlayer,objectiveInex);
         }else
         {
             //not completed
-            return EnumChatFormatting.DARK_GREEN + Reference.UNICODE_UNCOMPLETED_OBJECTIVE + " " + questStack.getObjective(entityPlayer,objectiveInex);
+            return ChatFormatting.DARK_GREEN + Reference.UNICODE_UNCOMPLETED_OBJECTIVE + " " + questStack.getObjective(entityPlayer,objectiveInex);
         }
     }
 
     @SideOnly(Side.CLIENT)
     public List<String> getFormattedQuestObjective(EntityPlayer entityPlayer,QuestStack questStack,int objectiveInex,int length)
     {
-        return getFormattedQuestObjective(entityPlayer,questStack,objectiveInex,length,EnumChatFormatting.DARK_GREEN.toString(),EnumChatFormatting.GREEN.toString());
+        return getFormattedQuestObjective(entityPlayer,questStack,objectiveInex,length, ChatFormatting.DARK_GREEN.toString(), ChatFormatting.GREEN.toString());
     }
 
     @SideOnly(Side.CLIENT)

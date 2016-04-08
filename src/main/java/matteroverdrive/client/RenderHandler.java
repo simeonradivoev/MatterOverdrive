@@ -46,6 +46,7 @@ import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.entity.monster.EntityMutantScientist;
 import matteroverdrive.entity.monster.EntityRangedRogueAndroidMob;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
@@ -70,16 +71,22 @@ import matteroverdrive.starmap.data.Quadrant;
 import matteroverdrive.starmap.data.Star;
 import matteroverdrive.tile.*;
 import matteroverdrive.util.MOLog;
+import matteroverdrive.world.dimensions.alien.AlienColorsReloadListener;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLeaves;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -89,9 +96,8 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.Attributes;
-import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.common.MinecraftForge;
@@ -102,7 +108,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -200,7 +205,10 @@ public class RenderHandler
     public ModelTritaniumArmor modelTritaniumArmorFeet;
     public ModelBiped modelMeleeRogueAndroidParts;
     public ModelBiped modelRangedRogueAndroidParts;
-    public IFlexibleBakedModel doubleHelixModel;
+    public IBakedModel doubleHelixModel;
+    //endregion
+    //region World
+    private final AlienColorsReloadListener alienColorsReloadListener = new AlienColorsReloadListener();
     //endregion
 
     public RenderHandler(World world, TextureManager textureManager)
@@ -224,10 +232,11 @@ public class RenderHandler
         addCustomRenderer(renderDialogSystem);
         addCustomRenderer(dimensionalRiftsRender);
 
-        OBJLoader.instance.addDomain(Reference.MOD_ID);
+        OBJLoader.INSTANCE.addDomain(Reference.MOD_ID);
 
         MinecraftForge.EVENT_BUS.register(pipeRenderManager);
         MinecraftForge.EVENT_BUS.register(weaponRenderHandler);
+        ((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(alienColorsReloadListener);
         if(Minecraft.getMinecraft().getFramebuffer().enableStencil())
         {
             stencilBuffer = MinecraftForgeClient.reserveStencilBit();
@@ -247,7 +256,7 @@ public class RenderHandler
             {
                 for (IBioticStatRenderer renderer : statRendererCollection)
                 {
-                    renderer.onWorldRender(stat, AndroidPlayer.get(Minecraft.getMinecraft().thePlayer).getUnlockedLevel(stat), event);
+                    renderer.onWorldRender(stat, MOPlayerCapabilityProvider.GetAndroidCapability(Minecraft.getMinecraft().thePlayer).getUnlockedLevel(stat), event);
                 }
             }
         }
@@ -290,8 +299,8 @@ public class RenderHandler
         //GL11.glEnable(GL11.GL_LIGHTING);
         //GL11.glColor3f(1, 1, 1);
 
-        AndroidPlayer androidPlayer = AndroidPlayer.get(event.entityPlayer);
-        if (androidPlayer != null && androidPlayer.isAndroid() && !event.entityPlayer.isInvisible()) {
+        AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntity());
+        if (androidPlayer != null && androidPlayer.isAndroid() && !event.getEntity().isInvisible()) {
             for (int i = 0; i < 5; i++)
             {
                 ItemStack part = androidPlayer.getStackInSlot(i);
@@ -301,7 +310,7 @@ public class RenderHandler
                     if (renderer != null) {
                         try {
                             GlStateManager.pushMatrix();
-                            renderer.renderPart(part, androidPlayer, event.renderer, event.partialRenderTick);
+                            renderer.renderPart(part, androidPlayer, event.getRenderer(), event.getPartialRenderTick());
                             GlStateManager.popMatrix();
                         }
                         catch (Exception e)
@@ -320,8 +329,8 @@ public class RenderHandler
         //GL11.glEnable(GL11.GL_LIGHTING);
         //GL11.glColor3f(1, 1, 1);
 
-        AndroidPlayer androidPlayer = AndroidPlayer.get(event.entityPlayer);
-        if (androidPlayer != null && androidPlayer.isAndroid() && !event.entityPlayer.isInvisible()) {
+        AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(event.getEntity());
+        if (androidPlayer != null && androidPlayer.isAndroid() && !event.getEntity().isInvisible()) {
             for (int i = 0; i < 5; i++)
             {
                 ItemStack part = androidPlayer.getStackInSlot(i);
@@ -329,7 +338,7 @@ public class RenderHandler
                 {
                     IBionicPartRenderer renderer = bionicPartRenderRegistry.getRenderer(((IBionicPart) part.getItem()).getClass());
                     if (renderer != null) {
-                        renderer.affectPlayerRenderer(part, androidPlayer, event.renderer, event.partialRenderTick);
+                        renderer.affectPlayerRenderer(part, androidPlayer, event.getRenderer(), event.getPartialRenderTick());
                     }
                 }
             }
@@ -393,10 +402,10 @@ public class RenderHandler
     {
         try
         {
-            OBJModel model = (OBJModel)OBJLoader.instance.loadModel(location);
+            OBJModel model = (OBJModel)OBJLoader.INSTANCE.loadModel(location);
             model = (OBJModel)model.process(customOptions);
             return model;
-        } catch (IOException e)
+        } catch (Exception e)
         {
             MOLog.log(Level.ERROR,e,"There was a problem while baking %s model",location.getResourcePath());
         }
@@ -406,11 +415,11 @@ public class RenderHandler
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event)
     {
-        event.modelRegistry.putObject(new ModelResourceLocation(MatterOverdriveItems.phaser.getRegistryName(),"inventory"),rendererPhaser);
-        event.modelRegistry.putObject(new ModelResourceLocation(MatterOverdriveItems.phaserRifle.getRegistryName(),"inventory"),rendererPhaserRifle);
-        event.modelRegistry.putObject(new ModelResourceLocation(MatterOverdriveItems.omniTool.getRegistryName(),"inventory"),rendererOmniTool);
-        event.modelRegistry.putObject(new ModelResourceLocation(MatterOverdriveItems.ionSniper.getRegistryName(),"inventory"),rendererIonSniper);
-        event.modelRegistry.putObject(new ModelResourceLocation(MatterOverdriveItems.plasmaShotgun.getRegistryName(),"inventory"),renderPlasmaShotgun);
+        event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdriveItems.phaser.getRegistryName(),"inventory"),rendererPhaser);
+        event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdriveItems.phaserRifle.getRegistryName(),"inventory"),rendererPhaserRifle);
+        event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdriveItems.omniTool.getRegistryName(),"inventory"),rendererOmniTool);
+        event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdriveItems.ionSniper.getRegistryName(),"inventory"),rendererIonSniper);
+        event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdriveItems.plasmaShotgun.getRegistryName(),"inventory"),renderPlasmaShotgun);
 
         bakeItemModels();
     }
@@ -418,7 +427,7 @@ public class RenderHandler
     @SubscribeEvent
     public void onTextureStich(TextureStitchEvent.Pre event)
     {
-        if (event.map == Minecraft.getMinecraft().getTextureMapBlocks())
+        if (event.getMap() == Minecraft.getMinecraft().getTextureMapBlocks())
         {
             weaponRenderHandler.onTextureStich(Minecraft.getMinecraft().getTextureMapBlocks(), this);
         }
@@ -433,6 +442,11 @@ public class RenderHandler
         regItemRenderVer(MatterOverdriveItems.security_protocol,"security_protocol",SecurityProtocol.types);
         regItemRenderVer(MatterOverdriveItems.androidParts,"rogue_android_part",RougeAndroidParts.names);
         regItemRenderVer(MatterOverdriveItems.androidParts,"weapon_module_color",WeaponModuleColor.names);
+    }
+
+    public static void registerCustomStateMappers()
+    {
+        ModelLoader.setCustomStateMapper(MatterOverdriveBlocks.alienLeaves, new StateMap.Builder().ignore(BlockLeaves.CHECK_DECAY,BlockLeaves.DECAYABLE).build());
     }
 
     private static void regItemRenderVer(Item item,String name,String[] subNames)
@@ -582,19 +596,19 @@ public class RenderHandler
 
     private <T extends Item> void regItemRender(T item,int meta)
     {
-        String name = item.getRegistryName();
+        ResourceLocation name = item.getRegistryName();
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item,meta,new ModelResourceLocation(name,"inventory"));
     }
 
     private <T extends Item> void regItemRender(T item)
     {
-        String name = item.getRegistryName();
+        ResourceLocation name = item.getRegistryName();
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item,0,new ModelResourceLocation(name,"inventory"));
     }
 
     private void regItemRender(Block block,int metaCount)
     {
-        String name = block.getRegistryName();
+        ResourceLocation name = block.getRegistryName();
         for (int i = 0;i < metaCount;i++)
         {
             Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), i, new ModelResourceLocation(name, "inventory"));
@@ -603,7 +617,7 @@ public class RenderHandler
 
     private void regItemRender(Block block)
     {
-        String name = block.getRegistryName();
+        ResourceLocation name = block.getRegistryName();
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block),0,new ModelResourceLocation(name,"inventory"));
     }
 
@@ -679,8 +693,8 @@ public class RenderHandler
         modelRangedRogueAndroidParts = new ModelBiped(0, 0, 96, 64);
         try
         {
-            IModel model = OBJLoader.instance.loadModel(new ResourceLocation(Reference.PATH_MODEL + "gui/double_helix.obj"));
-            doubleHelixModel = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, new Function<ResourceLocation, TextureAtlasSprite>()
+            IModel model = OBJLoader.INSTANCE.loadModel(new ResourceLocation(Reference.PATH_MODEL + "gui/double_helix.obj"));
+            doubleHelixModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, new Function<ResourceLocation, TextureAtlasSprite>()
             {
                 @Nullable
                 @Override
@@ -689,7 +703,7 @@ public class RenderHandler
                     return Minecraft.getMinecraft().getTextureMapBlocks().registerSprite(input);
                 }
             });
-        } catch (IOException e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }

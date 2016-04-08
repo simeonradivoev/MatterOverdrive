@@ -18,9 +18,9 @@
 
 package matteroverdrive.api.network;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -146,20 +146,20 @@ public abstract class MatterNetworkTask
      * @param state the state of the task.
      * @return the chat color based on the state.
      */
-    private EnumChatFormatting getColorForState(MatterNetworkTaskState state)
+    private ChatFormatting getColorForState(MatterNetworkTaskState state)
     {
         switch (state)
         {
             case WAITING:
-                return EnumChatFormatting.AQUA;
+                return ChatFormatting.AQUA;
             case QUEUED:
-                return EnumChatFormatting.BLUE;
+                return ChatFormatting.BLUE;
             case PROCESSING:
-                return EnumChatFormatting.YELLOW;
+                return ChatFormatting.YELLOW;
             case FINISHED:
-                return EnumChatFormatting.GREEN;
+                return ChatFormatting.GREEN;
             default:
-                return EnumChatFormatting.GRAY;
+                return ChatFormatting.GRAY;
         }
     }
 

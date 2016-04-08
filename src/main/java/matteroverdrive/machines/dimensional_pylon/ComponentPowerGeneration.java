@@ -8,6 +8,7 @@ import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.fx.Lightning;
 import matteroverdrive.init.MatterOverdriveBlocks;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineComponentAbstract;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
@@ -23,7 +24,13 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -120,22 +127,23 @@ public class ComponentPowerGeneration extends MachineComponentAbstract<TileEntit
                         }
                         if (entity instanceof EntityLivingBase)
                         {
-                            hasFullIron = true;
-                            for (int i = 0;i < 4;i++)
+                            // TODO: 3/25/2016 Find out how to access armor
+                            /*hasFullIron = true;
+                            for (ItemStack armor : entity.getArmorInventoryList())
                             {
                                 ItemStack eqStack = ((EntityLivingBase)entity).getCurrentArmor(i);
                                 if (!isIronMaterial(eqStack))
                                 {
                                     hasFullIron = false;
                                 }
-                            }
+                            }*/
                         }
 
                         y = getPos().getY() + random.nextDouble() * 2;
                         dirX = random.nextGaussian() * 0.2;
                         dirZ = random.nextGaussian() * 0.2;
-                        Vec3 start = new Vec3(getPos().getX() + dirX, y, getPos().getZ() + dirZ);
-                        Vec3 destination = entity.getPositionEyes(1);
+                        Vec3d start = new Vec3d(getPos().getX() + dirX, y, getPos().getZ() + dirZ);
+                        Vec3d destination = entity.getPositionEyes(1);
                         spawnSpark(color,start,destination);
                         if (!hasFullIron)
                         {
@@ -145,7 +153,7 @@ public class ComponentPowerGeneration extends MachineComponentAbstract<TileEntit
 
                         if (entity instanceof EntityCreeper)
                         {
-                            entity.getDataWatcher().updateObject(17, Byte.valueOf((byte)1));
+                            ((EntityCreeper) entity).setCreeperState(1);
                         }else if (entity instanceof EntityPig)
                         {
                             entity.onStruckByLightning(null);
@@ -170,32 +178,32 @@ public class ComponentPowerGeneration extends MachineComponentAbstract<TileEntit
                             y = getPos().getY() + random.nextDouble() * 2;
                             dirX = random.nextGaussian() * 0.2;
                             dirZ = random.nextGaussian() * 0.2;
-                            Vec3 start = new Vec3(getPos().getX() + dirX, y, getPos().getZ() + dirZ);
-                            Vec3 destination = new Vec3(((TileEntityMachineDimensionalPylon) tileEntity).mainBlock).addVector(0, 1, 0);
+                            Vec3d start = new Vec3d(getPos().getX() + dirX, y, getPos().getZ() + dirZ);
+                            Vec3d destination = new Vec3d(((TileEntityMachineDimensionalPylon) tileEntity).mainBlock).addVector(0, 1, 0);
                             spawnSpark(color,start,destination);
                             machine.removeCharge(MathHelper.ceiling_float_int(CHARGE_DECREASE_ON_HIT * dimValue));
                             dimensionalPylon.addCharge(MathHelper.ceiling_float_int(CHARGE_INCREASE_RATE * dimValue));
                         }
                     }
                 }
-            }else if (state.getBlock().getMaterial().equals(Material.iron) || state.getBlock().getMaterial().equals(Material.iron))
+            }else if (state.getBlock().getMaterial(state).equals(Material.iron) || state.getBlock().getMaterial(state).equals(Material.iron))
             {
                 y = getPos().getY() + random.nextDouble() * 2;
                 dirX = random.nextGaussian() * 0.2;
                 dirZ = random.nextGaussian() * 0.2;
-                Vec3 start = new Vec3(getPos().getX() + dirX, y, getPos().getZ() + dirZ);
-                Vec3 destination = new Vec3(destPos).addVector(0.5, 0.5, 0.5);
+                Vec3d start = new Vec3d(getPos().getX() + dirX, y, getPos().getZ() + dirZ);
+                Vec3d destination = new Vec3d(destPos).addVector(0.5, 0.5, 0.5);
                 spawnSpark(color,start,destination);
             }
         }
     }
 
-    private void spawnSpark(Color color,Vec3 from,Vec3 to)
+    private void spawnSpark(Color color,Vec3d from,Vec3d to)
     {
         Lightning lightning = new Lightning(getWorld(), from, to, 1, 1f);
         lightning.setColorRGBA(color);
         MatterOverdrive.packetPipeline.sendToAllAround(new PacketSpawnParticle("lightning", new double[]{from.xCoord, from.yCoord, from.zCoord, to.xCoord, to.yCoord, to.zCoord}, 1, RenderParticlesHandler.Blending.LinesAdditive, 0), machine, 64);
-        getWorld().playSoundEffect(to.xCoord, to.yCoord, to.zCoord, Reference.MOD_ID + ":" + "electric_arc", 0.8f + random.nextFloat() * 0.2f, 0.8f + random.nextFloat() * 0.4f);
+        getWorld().playSound(null,to.xCoord, to.yCoord, to.zCoord, MatterOverdriveSounds.fxElectricArc,SoundCategory.BLOCKS, 0.8f + random.nextFloat() * 0.2f, 0.8f + random.nextFloat() * 0.4f);
     }
 
     private boolean isIronMaterial(ItemStack itemStack)

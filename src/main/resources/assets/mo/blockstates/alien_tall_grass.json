@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "tallgrass",
+    "textures": {
+      "cross": "mo:blocks/alien/tallgrass_0"
+    }
+  },
+  "variants": {
+    "normal": { "model": "tallgrass" },
+    "type=0":{ "model": "tallgrass", "textures":{"cross":"mo:blocks/alien/tallgrass_0"}},
+    "type=1":{ "model": "tallgrass" , "textures":{"cross":"mo:blocks/alien/tallgrass_1"}},
+    "type=2":{ "model": "tallgrass" , "textures":{"cross":"mo:blocks/alien/tallgrass_2"}},
+    "type=3":{ "model": "tallgrass" , "textures":{"cross":"mo:blocks/alien/tallgrass_3"}},
+    "type=4":{ "model": "tallgrass" , "textures":{"cross":"mo:blocks/alien/tallgrass_4"}}
+  }
+}

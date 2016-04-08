@@ -24,13 +24,15 @@ import matteroverdrive.data.inventory.InscriberSlot;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.data.recipes.InscriberRecipe;
 import matteroverdrive.handler.recipes.InscriberRecipes;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -183,8 +185,8 @@ public class TileEntityInscriber extends MOTileEntityMachineEnergy
     }
 
     @Override
-    public String getSound() {
-        return "machine";
+    public SoundEvent getSound() {
+        return MatterOverdriveSounds.machine;
     }
 
     @Override

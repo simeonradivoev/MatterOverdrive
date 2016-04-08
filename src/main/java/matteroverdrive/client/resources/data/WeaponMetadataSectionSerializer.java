@@ -21,7 +21,7 @@ package matteroverdrive.client.resources.data;
 import com.google.gson.*;
 import net.minecraft.client.resources.data.BaseMetadataSectionSerializer;
 import net.minecraft.util.JsonUtils;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -63,7 +63,7 @@ public class WeaponMetadataSectionSerializer extends BaseMetadataSectionSerializ
     {
         JsonObject jsonobject = new JsonObject();
         JsonObject modules = new JsonObject();
-        for (Map.Entry<String,Vec3> position : section.getModulePositions().entrySet())
+        for (Map.Entry<String,Vec3d> position : section.getModulePositions().entrySet())
         {
 
             modules.add(position.getKey(),toObject(position.getValue()));
@@ -72,7 +72,7 @@ public class WeaponMetadataSectionSerializer extends BaseMetadataSectionSerializ
         return jsonobject;
     }
 
-    public JsonObject toObject(Vec3 vec3)
+    public JsonObject toObject(Vec3d vec3)
     {
         JsonObject object = new JsonObject();
         object.add("x",new JsonPrimitive(vec3.xCoord));
@@ -81,8 +81,8 @@ public class WeaponMetadataSectionSerializer extends BaseMetadataSectionSerializ
         return object;
     }
 
-    public Vec3 fromJson(JsonObject object)
+    public Vec3d fromJson(JsonObject object)
     {
-        return new Vec3(object.get("x").getAsDouble(),object.get("y").getAsDouble(),object.get("z").getAsDouble());
+        return new Vec3d(object.get("x").getAsDouble(),object.get("y").getAsDouble(),object.get("z").getAsDouble());
     }
 }

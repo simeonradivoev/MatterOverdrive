@@ -20,8 +20,8 @@ package matteroverdrive.client.render.conversation;
 
 import matteroverdrive.util.MOPhysicsHelper;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Created by Simeon on 8/9/2015.
@@ -42,12 +42,12 @@ public class DialogShotWide extends DialogShot
     @Override
     public boolean positionCamera(EntityLivingBase active, EntityLivingBase other, float ticks, EntityRendererConversation rendererConversation)
     {
-        Vec3 centerDir = rendererConversation.getPosition(other, ticks).addVector(0, heightOffset, 0).subtract(rendererConversation.getPosition(active, ticks).addVector(0,heightOffset, 0));
+        Vec3d centerDir = rendererConversation.getPosition(other, ticks).addVector(0, heightOffset, 0).subtract(rendererConversation.getPosition(active, ticks).addVector(0,heightOffset, 0));
         double distance = centerDir.lengthVector() / 2 * this.distance;
-        Vec3 center = rendererConversation.getPosition(active, ticks).addVector(centerDir.xCoord / 2, centerDir.yCoord / 2, centerDir.zCoord / 2);
-        Vec3 centerCross = centerDir.normalize().crossProduct(new Vec3(0, oppositeSide ? -1 : 1, 0)).normalize();
-        MovingObjectPosition hit = MOPhysicsHelper.rayTraceForBlocks(center, active.worldObj, distance, ticks, null, true, true, centerCross);
-        Vec3 pos = center.addVector(centerCross.xCoord * distance, centerCross.yCoord * distance, centerCross.zCoord * distance);
+        Vec3d center = rendererConversation.getPosition(active, ticks).addVector(centerDir.xCoord / 2, centerDir.yCoord / 2, centerDir.zCoord / 2);
+        Vec3d centerCross = centerDir.normalize().crossProduct(new Vec3d(0, oppositeSide ? -1 : 1, 0)).normalize();
+        RayTraceResult hit = MOPhysicsHelper.rayTraceForBlocks(center, active.worldObj, distance, ticks, null, true, true, centerCross);
+        Vec3d pos = center.addVector(centerCross.xCoord * distance, centerCross.yCoord * distance, centerCross.zCoord * distance);
         if (hit != null) {
             pos = hit.hitVec;
         }

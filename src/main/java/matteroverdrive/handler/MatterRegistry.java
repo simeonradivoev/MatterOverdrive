@@ -38,7 +38,6 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -235,7 +234,8 @@ public class MatterRegistry implements IMatterRegistry
         Item item = stack.getItem();
         if (item != null)
         {
-            return modBlacklist.contains(GameRegistry.findUniqueIdentifierFor(item).modId);
+            //todo find how to get mod for specific item
+            return modBlacklist.contains(item.getRegistryName().getResourceDomain());
         }
         return false;
     }

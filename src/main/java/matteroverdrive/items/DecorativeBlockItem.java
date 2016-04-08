@@ -26,9 +26,7 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Created by Simeon on 11/27/2015.
@@ -63,7 +61,8 @@ public class DecorativeBlockItem extends ItemBlock
         return 0;
     }
 
-    @SideOnly(Side.CLIENT)
+    // TODO: 3/26/2016 Find how to get color for stack
+    /*@SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack stack, int renderPass)
     {
         if (block instanceof BlockDecorativeColored)
@@ -71,7 +70,7 @@ public class DecorativeBlockItem extends ItemBlock
             return block.getRenderColor(block.getStateFromMeta(stack.getMetadata()));
         }
         return super.getColorFromItemStack(stack,renderPass);
-    }
+    }*/
 
     @Override
     public String getItemStackDisplayName(ItemStack itemStack)

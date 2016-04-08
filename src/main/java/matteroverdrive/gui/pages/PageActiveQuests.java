@@ -18,6 +18,7 @@
 
 package matteroverdrive.gui.pages;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.quest.IQuestReward;
@@ -38,7 +39,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumHand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,7 @@ import java.util.List;
  */
 public class PageActiveQuests extends ElementBaseGroup implements IListHandler
 {
+    EnumHand hand;
     ItemStack dataPadStack;
     MOElementListBox quests;
     ElementTextList questInfo;
@@ -122,7 +124,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
         ((DataPad)dataPadStack.getItem()).setSelectedActiveQuest(dataPadStack,selected);
         questInfoGroup.setScroll(0);
         loadSelectedQuestInfo();
-        MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
+        MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand,dataPadStack));
     }
 
     private void loadSelectedQuestInfo()
@@ -149,7 +151,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
                 questInfo.addLines(objectiveLines);
             }
             questInfo.addLine("");
-            questInfo.addLine(EnumChatFormatting.GOLD + String.format("Rewards: +%sxp", selectedQuest.getXP(Minecraft.getMinecraft().thePlayer)));
+            questInfo.addLine(ChatFormatting.GOLD + String.format("Rewards: +%sxp", selectedQuest.getXP(Minecraft.getMinecraft().thePlayer)));
             List<IQuestReward> rewards = new ArrayList<>();
             selectedQuest.addRewards(rewards, Minecraft.getMinecraft().thePlayer);
             questRewards.getElements().clear();
@@ -184,9 +186,10 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
         }
     }
 
-    public void setDataPadStack(ItemStack dataPadStack)
+    public void setDataPadStack(EnumHand hand, ItemStack dataPadStack)
     {
         this.dataPadStack = dataPadStack;
+        this.hand = hand;
         if (dataPadStack.getTagCompound() != null)
         {
             quests.setSelectedIndex(((DataPad)dataPadStack.getItem()).getActiveSelectedQuest(dataPadStack));
@@ -201,7 +204,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
         {
             dataPadStack.getTagCompound().setShort("QuestInfoScroll",(short) questInfoGroup.getScroll());
         }
-        MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPadStack));
+        MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand,dataPadStack));
     }
 
     @Override

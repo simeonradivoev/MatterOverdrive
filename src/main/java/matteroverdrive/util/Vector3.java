@@ -1,6 +1,6 @@
 package matteroverdrive.util;
 
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class Vector3
 {
@@ -87,7 +87,7 @@ public class Vector3
 
     public Vector3 normalize()
     {
-    	 double d0 = (double)MathHelper.sqrt_double(this.x * this.x + this.y * this.y + this.z * this.z);
+    	 double d0 = (double) MathHelper.sqrt_double(this.x * this.x + this.y * this.y + this.z * this.z);
     	 if(d0 < 1.0E-4D)
     	 {
     		 this.set(0.0D, 0.0D, 0.0D);

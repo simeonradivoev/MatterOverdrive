@@ -28,7 +28,7 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.Random;
 
@@ -85,22 +85,22 @@ public class EntityRendererConversation extends EntityRenderer
         mc.gameSettings.hideGUI = lastHideGui;
     }
 
-    public Vec3 getLook(EntityLivingBase active, EntityLivingBase other, float ticks)
+    public Vec3d getLook(EntityLivingBase active, EntityLivingBase other, float ticks)
     {
         return getPosition(active, ticks).subtract(getPosition(other, ticks));
     }
 
-    public Vec3 getPosition(EntityLivingBase entityLivingBase, float ticks)
+    public Vec3d getPosition(EntityLivingBase entityLivingBase, float ticks)
     {
-        Vec3 pos = entityLivingBase.getPositionVector();
+        Vec3d pos = entityLivingBase.getPositionVector();
         return pos;
     }
 
-    public void rotateCameraYawTo(Vec3 dir, float offset)
+    public void rotateCameraYawTo(Vec3d dir, float offset)
     {
-        double yaw = Math.acos(new Vec3(-1, 0, 0).dotProduct(dir));
-        Vec3 cross = new Vec3(-1, 0, 0).crossProduct(dir);
-        Vec3 up = new Vec3(0, -1, 0);
+        double yaw = Math.acos(new Vec3d(-1, 0, 0).dotProduct(dir));
+        Vec3d cross = new Vec3d(-1, 0, 0).crossProduct(dir);
+        Vec3d up = new Vec3d(0, -1, 0);
         if (up.dotProduct(cross) < 0)
         {
             yaw = -yaw;
@@ -109,7 +109,7 @@ public class EntityRendererConversation extends EntityRenderer
         setCameraYaw((float) Math.toDegrees(yaw) + offset);
     }
 
-    private void rotatePitchToDir(Vec3 dir, float yaw,float offset)
+    private void rotatePitchToDir(Vec3d dir, float yaw, float offset)
     {
         setCameraPitch((float) Math.asin(Math.sqrt(dir.xCoord * dir.xCoord + dir.yCoord * dir.yCoord) / dir.zCoord) + offset);
     }
@@ -120,7 +120,7 @@ public class EntityRendererConversation extends EntityRenderer
         fakePlayer.posY = y;
         fakePlayer.posZ = z;
     }
-    public void setCameraPosition(Vec3 position)
+    public void setCameraPosition(Vec3d position)
     {
         fakePlayer.posX = position.xCoord;
         fakePlayer.posY = position.yCoord;

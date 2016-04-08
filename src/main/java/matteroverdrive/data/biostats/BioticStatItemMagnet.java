@@ -1,13 +1,14 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOEnergyHelper;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -36,13 +37,13 @@ public class BioticStatItemMagnet extends AbstractBioticStat
                     {
                         if (!((EntityItem)entityitem).cannotPickup())
                         {
-                            Vec3 dir = android.getPlayer().getPositionVector().addVector(0, android.getPlayer().getEyeHeight(), 0).subtract(entityitem.getPositionVector()).normalize();
+                            Vec3d dir = android.getPlayer().getPositionVector().addVector(0, android.getPlayer().getEyeHeight(), 0).subtract(entityitem.getPositionVector()).normalize();
                             entityitem.addVelocity(dir.xCoord * ITEM_SPEED, dir.yCoord * ITEM_SPEED, dir.zCoord * ITEM_SPEED);
                             android.extractEnergyScaled(ENERGY_PULL_PER_ITEM);
                         }
                     }else if (entityitem instanceof EntityXPOrb && ((EntityXPOrb) entityitem).delayBeforeCanPickup <= 0 && android.getPlayer().xpCooldown == 0)
                     {
-                        Vec3 dir = android.getPlayer().getPositionVector().addVector(0, android.getPlayer().getEyeHeight(), 0).subtract(entityitem.getPositionVector()).normalize();
+                        Vec3d dir = android.getPlayer().getPositionVector().addVector(0, android.getPlayer().getEyeHeight(), 0).subtract(entityitem.getPositionVector()).normalize();
                         entityitem.addVelocity(dir.xCoord * ITEM_SPEED, dir.yCoord * ITEM_SPEED, dir.zCoord * ITEM_SPEED);
                         android.extractEnergyScaled(ENERGY_PULL_PER_ITEM);
                     }
@@ -54,7 +55,7 @@ public class BioticStatItemMagnet extends AbstractBioticStat
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), EnumChatFormatting.YELLOW + (ENERGY_PULL_PER_ITEM + MOEnergyHelper.ENERGY_UNIT) + EnumChatFormatting.GRAY);
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.YELLOW + (ENERGY_PULL_PER_ITEM + MOEnergyHelper.ENERGY_UNIT) + ChatFormatting.GRAY);
     }
 
     @Override

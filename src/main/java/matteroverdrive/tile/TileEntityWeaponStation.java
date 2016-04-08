@@ -29,8 +29,9 @@ import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.util.WeaponHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -76,7 +77,7 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
     }
 
     @Override
-    public String getSound() {
+    public SoundEvent getSound() {
         return null;
     }
 

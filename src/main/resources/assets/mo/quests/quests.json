@@ -144,7 +144,8 @@
     "logic":[
       {
         "type":"interact_block",
-        "intractable":true
+        "intractable":true,
+        "rewards":[{"type":"sound","name":"mo:shield_power_up"}]
       },
       {
         "type":"interact_item",

@@ -22,11 +22,11 @@ import io.netty.buffer.ByteBuf;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.util.MOLog;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S23PacketBlockChange;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
@@ -67,36 +67,38 @@ public class PacketDigBlock  extends PacketAbstract
     {
         @Override
         public void handleServerMessage(EntityPlayerMP player, PacketDigBlock message, MessageContext ctx) {
-            WorldServer worldserver = MinecraftServer.getServer().worldServerForDimension(player.dimension);
+            WorldServer worldserver = player.getServer().worldServerForDimension(player.dimension);
             EntityPlayerMP playerMP = player;
 
             if (message.typeOfDig == 0)
             {
-                if (!MinecraftServer.getServer().isBlockProtected(worldserver, message.pos, player))
+                if (!player.getServer().isBlockProtected(worldserver, message.pos, player))
                 {
-                    playerMP.theItemInWorldManager.onBlockClicked(message.pos, message.side);
+                    playerMP.interactionManager.onBlockClicked(message.pos, message.side);
                 }
                 else
                 {
-                    playerMP.playerNetServerHandler.sendPacket(new S23PacketBlockChange(worldserver,message.pos));
+                    playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver,message.pos));
                 }
             }
             else if (message.typeOfDig == 2)
             {
-                playerMP.theItemInWorldManager.tryHarvestBlock(message.pos);
+                playerMP.interactionManager.tryHarvestBlock(message.pos);
 
-                if (worldserver.getBlockState(message.pos).getBlock().getMaterial() != Material.air)
+                IBlockState state = worldserver.getBlockState(message.pos);
+                if (state.getBlock().getMaterial(state) != Material.air)
                 {
-                    playerMP.playerNetServerHandler.sendPacket(new S23PacketBlockChange(worldserver,message.pos));
+                    playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver,message.pos));
                 }
             }
             else if (message.typeOfDig == 1)
             {
-                playerMP.theItemInWorldManager.cancelDestroyingBlock();
+                playerMP.interactionManager.cancelDestroyingBlock();
 
-                if (worldserver.getBlockState(message.pos).getBlock().getMaterial() != Material.air)
+                IBlockState state = worldserver.getBlockState(message.pos);
+                if (state.getBlock().getMaterial(state) != Material.air)
                 {
-                    playerMP.playerNetServerHandler.sendPacket(new S23PacketBlockChange(worldserver,message.pos));
+                    playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver,message.pos));
                 }
             }
         }

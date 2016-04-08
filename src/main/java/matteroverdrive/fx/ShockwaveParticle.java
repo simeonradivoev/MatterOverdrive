@@ -4,9 +4,9 @@ import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.animation.MOEasing;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 /**
@@ -20,14 +20,14 @@ public class ShockwaveParticle extends MOEntityFX
     {
         super(p_i1218_1_, p_i1218_2_, p_i1218_4_, p_i1218_6_);
         this.maxScale = maxScale;
-        this.particleIcon = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.shockwave);
+        this.particleTexture = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.shockwave);
         this.particleMaxAge = (int) (maxScale * 5);
         this.setEntityBoundingBox(new AxisAlignedBB(p_i1218_2_ - maxScale,p_i1218_4_ - 0.5,p_i1218_6_ - maxScale,p_i1218_2_ + maxScale,p_i1218_4_ + 0.5,p_i1218_6_ + maxScale));
-        this.renderDistanceWeight = Minecraft.getMinecraft().gameSettings.renderDistanceChunks / 6d;
+        this.renderDistanceWeight = Minecraft.getMinecraft().gameSettings.renderDistanceChunks / 6f;
     }
 
     @Override
-    public void renderParticle(WorldRenderer worldRenderer, Entity entity, float partialTicks, float xOffset, float yOffset, float zOffset, float p_70539_6_, float p_70539_7_)
+    public void renderParticle(VertexBuffer worldRenderer, Entity entity, float partialTicks, float xOffset, float yOffset, float zOffset, float p_70539_6_, float p_70539_7_)
     {
         float f6 = (float)this.particleTextureIndexX / 16.0F;
         float f7 = f6 + 0.0624375F;
@@ -35,12 +35,12 @@ public class ShockwaveParticle extends MOEntityFX
         float f9 = f8 + 0.0624375F;
         float particleScale = this.particleScale;
 
-        if (this.particleIcon != null)
+        if (this.particleTexture != null)
         {
-            f6 = this.particleIcon.getMinU();
-            f7 = this.particleIcon.getMaxU();
-            f8 = this.particleIcon.getMinV();
-            f9 = this.particleIcon.getMaxV();
+            f6 = this.particleTexture.getMinU();
+            f7 = this.particleTexture.getMaxU();
+            f8 = this.particleTexture.getMinV();
+            f9 = this.particleTexture.getMaxV();
         }
 
         float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
@@ -69,7 +69,7 @@ public class ShockwaveParticle extends MOEntityFX
 
         if (this.particleAge++ >= this.particleMaxAge)
         {
-            this.setDead();
+            this.setExpired();
         }
 
         this.particleScale = MOEasing.Quart.easeOut((float)this.particleAge / (float)this.particleMaxAge,0,1,1) * maxScale;

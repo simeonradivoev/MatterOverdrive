@@ -19,7 +19,7 @@
 package matteroverdrive.data.dialog;
 
 import matteroverdrive.api.dialog.IDialogNpc;
-import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -42,6 +42,6 @@ public class DialogMessageHumanOnly extends DialogMessage
     @Override
     public boolean isVisible(IDialogNpc npc,EntityPlayer player)
     {
-        return AndroidPlayer.get(player) == null || !AndroidPlayer.get(player).isAndroid();
+        return MOPlayerCapabilityProvider.GetAndroidCapability(player) == null || !MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid();
     }
 }

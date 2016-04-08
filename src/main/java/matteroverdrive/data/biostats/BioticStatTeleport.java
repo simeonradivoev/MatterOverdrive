@@ -19,6 +19,7 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.entity.android_player.AndroidPlayer;
@@ -28,9 +29,13 @@ import matteroverdrive.network.packet.server.PacketTeleportPlayer;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOPhysicsHelper;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -64,8 +69,8 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
     @Override
     public String getDetails(int level)
     {
-        String keyName = EnumChatFormatting.AQUA + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()) + EnumChatFormatting.GRAY;
-        return String.format(super.getDetails(level), keyName, EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + EnumChatFormatting.GRAY);
+        String keyName = ChatFormatting.AQUA + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()) + ChatFormatting.GRAY;
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), keyName, ChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + ChatFormatting.GRAY);
     }
 
     @Override
@@ -86,7 +91,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
         }
         else if (hasPressedKey)
         {
-            Vec3 pos = getPos(androidPlayer);
+            Vec3d pos = getPos(androidPlayer);
             if (pos != null && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this,androidPlayer.getUnlockedLevel(this),androidPlayer))) {
                 MatterOverdrive.packetPipeline.sendToServer(new PacketTeleportPlayer(pos.xCoord, pos.yCoord, pos.zCoord));
                 hasPressedKey = false;
@@ -107,19 +112,19 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
 
     }
 
-    public Vec3 getPos(AndroidPlayer androidPlayer)
+    public Vec3d getPos(AndroidPlayer androidPlayer)
     {
-        MovingObjectPosition position = MOPhysicsHelper.rayTraceForBlocks(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, MAX_TELEPORT_DISTANCE, 0, new Vec3(0, androidPlayer.getPlayer().getEyeHeight(), 0), true, true);
-        if (position != null && position.typeOfHit != MovingObjectPosition.MovingObjectType.MISS && position.getBlockPos() != null)
+        RayTraceResult position = MOPhysicsHelper.rayTraceForBlocks(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, MAX_TELEPORT_DISTANCE, 0, new Vec3d(0, androidPlayer.getPlayer().getEyeHeight(), 0), true, true);
+        if (position != null && position.typeOfHit != RayTraceResult.Type.MISS && position.getBlockPos() != null)
         {
             BlockPos pos = getTopSafeBlock(androidPlayer.getPlayer().worldObj, position.getBlockPos(), position.sideHit);
             if (pos != null) {
-                return new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                return new Vec3d(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             }
             return null;
         }
 
-        position = MOPhysicsHelper.rayTrace(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, 6, 0, new Vec3(0, androidPlayer.getPlayer().getEyeHeight(), 0), true, true);
+        position = MOPhysicsHelper.rayTrace(androidPlayer.getPlayer(), androidPlayer.getPlayer().worldObj, 6, 0, new Vec3d(0, androidPlayer.getPlayer().getEyeHeight(), 0), true, true);
         if (position != null)
         {
             return position.hitVec;

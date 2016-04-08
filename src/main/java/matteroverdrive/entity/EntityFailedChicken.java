@@ -1,8 +1,9 @@
 package matteroverdrive.entity;
 
-import matteroverdrive.Reference;
+import matteroverdrive.init.MatterOverdriveSounds;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 /**
@@ -16,20 +17,20 @@ public class EntityFailedChicken extends EntityChicken
     }
 
     @Override
-    protected String getLivingSound()
+    protected SoundEvent getAmbientSound()
     {
-        return Reference.MOD_ID + ":failed_animal_idle_chicken";
+        return MatterOverdriveSounds.failedAnimalUdleChicken;
     }
 
-    protected String getHurtSound()
+    protected SoundEvent getHurtSound()
     {
-        return Reference.MOD_ID + ":failed_animal_idle_chicken";
+        return MatterOverdriveSounds.failedAnimalUdleChicken;
     }
 
     @Override
-    protected String getDeathSound()
+    protected SoundEvent getDeathSound()
     {
-        return Reference.MOD_ID + ":failed_animal_die_" + rand.nextInt(2);
+        return MatterOverdriveSounds.failedAnimalDie;
     }
 
     @Override

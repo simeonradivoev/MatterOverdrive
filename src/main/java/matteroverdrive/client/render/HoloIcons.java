@@ -25,12 +25,12 @@ import matteroverdrive.util.MOLog;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.IIconCreator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
@@ -106,7 +106,7 @@ public class HoloIcons implements IIconCreator{
 
     public static void tessalateParticleIcon(TextureAtlasSprite icon, double x, double y, double z, float size, Color color)
     {
-        RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), icon, size, new Vec3(x, y, z), color);
+        RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), icon, size, new Vec3d(x, y, z), color);
     }
 
     public static void tessalateStaticIcon(TextureAtlasSprite icon, double x, double y, double z, float size, Color color)
@@ -122,7 +122,7 @@ public class HoloIcons implements IIconCreator{
         float vMin = icon.getMinV();
         float vMax = icon.getMaxV();
 
-        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        VertexBuffer wr = Tessellator.getInstance().getBuffer();
         wr.pos(x - halfSize, y - halfSize, z).tex(uMax, vMax).color(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA()).endVertex();
         wr.pos(x + halfSize,y - halfSize,z).tex(uMin,vMax).color(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA()).endVertex();
         wr.pos(x + halfSize,y + halfSize,z).tex(uMin,vMin).color(color.getFloatR() * multiply, color.getFloatG() * multiply, color.getFloatB() * multiply, color.getFloatA()).endVertex();

@@ -22,7 +22,7 @@ import cofh.api.energy.IEnergyStorage;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.machines.MOTileEntityMachine;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Created by Simeon on 8/7/2015.

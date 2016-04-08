@@ -22,6 +22,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.MOEventQuest;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.data.quest.PlayerQuestData;
 import matteroverdrive.gui.GuiDataPad;
 import matteroverdrive.handler.GoogleAnalyticsCommon;
@@ -30,15 +31,17 @@ import matteroverdrive.network.packet.client.quest.PacketSyncQuests;
 import matteroverdrive.network.packet.client.quest.PacketUpdateQuest;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.World;
-import net.minecraftforge.common.IExtendedEntityProperties;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -50,8 +53,11 @@ import java.util.List;
 /**
  * Created by Simeon on 11/19/2015.
  */
-public class MOExtendedProperties implements IExtendedEntityProperties
+public class MOExtendedProperties
 {
+    @CapabilityInject(value = MOExtendedProperties.class)
+    public static Capability<MOExtendedProperties> CAPIBILITY;
+
     public static final String EXT_PROP_NAME = "MOPlayer";
     private final EntityPlayer player;
     private final PlayerQuestData questData;
@@ -62,24 +68,32 @@ public class MOExtendedProperties implements IExtendedEntityProperties
         questData = new PlayerQuestData(this);
     }
 
-    public static void register(EntityPlayer player)
+    public static void register()
     {
-        player.registerExtendedProperties(EXT_PROP_NAME, new MOExtendedProperties(player));
+        CapabilityManager.INSTANCE.register(MOExtendedProperties.class, new Capability.IStorage<MOExtendedProperties>()
+        {
+            @Override
+            public NBTBase writeNBT(Capability<MOExtendedProperties> capability, MOExtendedProperties instance, EnumFacing side)
+            {
+                NBTTagCompound data = new NBTTagCompound();
+                instance.saveNBTData(data);
+                return data;
+            }
+
+            @Override
+            public void readNBT(Capability<MOExtendedProperties> capability, MOExtendedProperties instance, EnumFacing side, NBTBase nbt)
+            {
+                instance.loadNBTData((NBTTagCompound)nbt);
+            }
+        }, MOExtendedProperties.class);
     }
 
-    public static MOExtendedProperties get(EntityPlayer player)
-    {
-        return (MOExtendedProperties) player.getExtendedProperties(EXT_PROP_NAME);
-    }
-
-    @Override
     public void saveNBTData(NBTTagCompound compound) {
         NBTTagCompound questNBT = new NBTTagCompound();
         questData.writeToNBT(questNBT, EnumSet.allOf(PlayerQuestData.DataType.class));
         compound.setTag("QuestData",questNBT);
     }
 
-    @Override
     public void loadNBTData(NBTTagCompound compound)
     {
         NBTTagCompound questNBT = compound.getCompoundTag("QuestData");
@@ -164,9 +178,9 @@ public class MOExtendedProperties implements IExtendedEntityProperties
                 }
                 questStack.getQuest().onCompleted(questStack,player);
 
-                player.addChatMessage(new ChatComponentText(String.format("[Matter Overdrive] %1$s completed %2$s", player.getDisplayName().getFormattedText(), questStack.getTitle(player))));
+                player.addChatMessage(new TextComponentString(String.format("[Matter Overdrive] %1$s completed %2$s", player.getDisplayName().getFormattedText(), questStack.getTitle(player))));
             }
-            MatterOverdrive.packetPipeline.sendTo(new PacketUpdateQuest(index, questStack, PacketUpdateQuest.COMPLETE_QUEST), (EntityPlayerMP) player);
+            MatterOverdrive.packetPipeline.sendTo(new PacketUpdateQuest(index, null,questStack, PacketUpdateQuest.COMPLETE_QUEST), (EntityPlayerMP) player);
         }else
         {
             ClientProxy.questHud.addCompletedQuest(questStack);
@@ -196,11 +210,11 @@ public class MOExtendedProperties implements IExtendedEntityProperties
     }
 
     @SideOnly(Side.CLIENT)
-    public void updateQuestFromServer(int index, QuestStack questStack)
+    public void updateQuestFromServer(int index, QuestStack questStack,QuestState questState)
     {
         if (index < getQuestData().getActiveQuests().size())
         {
-            ClientProxy.questHud.addObjectivesChanged(getQuestData().getActiveQuests().get(index),questStack);
+            ClientProxy.questHud.addObjectivesChanged(getQuestData().getActiveQuests().get(index),questStack,questState);
             getQuestData().getActiveQuests().set(index, questStack);
         }
     }
@@ -218,12 +232,6 @@ public class MOExtendedProperties implements IExtendedEntityProperties
     public void onEvent(Event event)
     {
         questData.onEvent(event);
-    }
-
-    @Override
-    public void init(Entity entity, World world)
-    {
-
     }
 
     public EntityPlayer getPlayer()

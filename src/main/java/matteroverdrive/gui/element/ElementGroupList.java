@@ -22,7 +22,7 @@ import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.gui.events.IListHandler;
 import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.math.MOMathHelper;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Created by Simeon on 6/20/2015.

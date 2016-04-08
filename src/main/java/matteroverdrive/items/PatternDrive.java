@@ -18,6 +18,7 @@
 
 package matteroverdrive.items;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.items.includes.MOBaseItem;
@@ -27,7 +28,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -122,7 +122,7 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
                         infos.add(MatterDatabaseHelper.getPatternInfoColor(pattern.getProgress()) + displayName + " [" + pattern.getProgress() + "%]");
                     } else
                     {
-                        infos.add(EnumChatFormatting.RED + "[Invalid] " + MatterDatabaseHelper.getPatternInfoColor(pattern.getProgress()) + displayName + " [" + pattern.getProgress() + "%]");
+                        infos.add(ChatFormatting.RED + "[Invalid] " + MatterDatabaseHelper.getPatternInfoColor(pattern.getProgress()) + displayName + " [" + pattern.getProgress() + "%]");
                     }
                 }
             }

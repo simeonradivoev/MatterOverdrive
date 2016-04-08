@@ -15,6 +15,7 @@ import matteroverdrive.data.quest.logic.*;
 import matteroverdrive.data.quest.rewards.EntityReward;
 import matteroverdrive.data.quest.rewards.ItemStackReward;
 import matteroverdrive.data.quest.rewards.QuestStackReward;
+import matteroverdrive.data.quest.rewards.SoundReward;
 import matteroverdrive.init.MatterOverdriveQuests;
 import matteroverdrive.util.MOJsonHelper;
 import matteroverdrive.util.MOLog;
@@ -66,6 +67,7 @@ public class QuestAssembler
         addQuestRewardClass("item", ItemStackReward.class);
         addQuestRewardClass("quest",QuestStackReward.class);
         addQuestRewardClass("entity", EntityReward.class);
+        addQuestRewardClass("sound", SoundReward.class);
     }
 
     public void loadQuests(Quests quests)
@@ -195,7 +197,7 @@ public class QuestAssembler
         return null;
     }
 
-    private List<IQuestReward> parseRewards(JsonArray rewards)
+    public List<IQuestReward> parseRewards(JsonArray rewards)
     {
         List<IQuestReward> rewardList = new ArrayList<>();
 

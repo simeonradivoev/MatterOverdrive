@@ -19,9 +19,7 @@
 package matteroverdrive.items.android;
 
 import com.google.common.collect.Multimap;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.client.render.entity.EntityRendererRangedRougeAndroid;
 import matteroverdrive.client.render.entity.EntityRendererRougeAndroid;
@@ -35,9 +33,11 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.UUID;
@@ -65,14 +65,14 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
         {
             if (itemstack.getTagCompound().getByte("Type") == 1)
             {
-                infos.add(EnumChatFormatting.AQUA + MOStringHelper.translateToLocal("item.rouge_android_part.range"));
+                infos.add(ChatFormatting.AQUA + MOStringHelper.translateToLocal("item.rouge_android_part.range"));
             }else
             {
-                infos.add(EnumChatFormatting.GOLD + MOStringHelper.translateToLocal("item.rouge_android_part.melee"));
+                infos.add(ChatFormatting.GOLD + MOStringHelper.translateToLocal("item.rouge_android_part.melee"));
             }
         }else
         {
-            infos.add(EnumChatFormatting.GOLD + MOStringHelper.translateToLocal("item.rouge_android_part.melee"));
+            infos.add(ChatFormatting.GOLD + MOStringHelper.translateToLocal("item.rouge_android_part.melee"));
         }
         super.addDetails(itemstack,player,infos);
     }
@@ -132,7 +132,7 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
         Multimap multimap = super.getModifiers(player,itemStack);
         if (multimap.isEmpty())
         {
-            multimap.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), new AttributeModifier(UUID.fromString(healtModifiersIDs[itemStack.getItemDamage()]), MOStringHelper.translateToLocal("attribute.name." + SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName()), 1f, 0));
+            multimap.put(SharedMonsterAttributes.MAX_HEALTH.getAttributeUnlocalizedName(), new AttributeModifier(UUID.fromString(healtModifiersIDs[itemStack.getItemDamage()]), MOStringHelper.translateToLocal("attribute.name." + SharedMonsterAttributes.MAX_HEALTH.getAttributeUnlocalizedName()), 1f, 0));
         }
         return multimap;
     }

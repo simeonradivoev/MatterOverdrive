@@ -3,6 +3,7 @@ package matteroverdrive.network.packet.client;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.entity.android_player.AndroidEffects;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.util.MOLog;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -66,7 +67,7 @@ public class PacketSendAndroidEffects extends PacketAbstract
                 Entity entity = player.worldObj.getEntityByID(message.androidId);
                 if (entity instanceof EntityPlayer)
                 {
-                    AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer)entity);
+                    AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(entity);
                     androidPlayer.getAndroidEffects().updateEffectsFromList(message.effects);
                 }
             }

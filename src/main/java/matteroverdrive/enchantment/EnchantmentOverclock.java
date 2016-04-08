@@ -21,17 +21,17 @@ package matteroverdrive.enchantment;
 import matteroverdrive.api.weapon.IWeapon;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Simeon on 8/7/2015.
  */
 public class EnchantmentOverclock extends Enchantment
 {
-    public EnchantmentOverclock(int id)
+    public EnchantmentOverclock(Enchantment.Rarity rarity)
     {
-        super(id, new ResourceLocation("overclock"),10,EnumEnchantmentType.ALL);
+        super(rarity, EnumEnchantmentType.ALL,new EntityEquipmentSlot[]{EntityEquipmentSlot.MAINHAND,EntityEquipmentSlot.OFFHAND});
         setName("matteroverdrive.weapon.damage");
     }
 

@@ -18,14 +18,15 @@
 
 package matteroverdrive.items.includes;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.Reference;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -36,13 +37,9 @@ public class MOBaseItem extends Item
 {
 	public MOBaseItem(String name)
 	{
-		this.init(name);
-	}
-
-	protected void init(String name)
-	{
-		this.setUnlocalizedName(name);
-		this.setCreativeTab(MatterOverdrive.tabMatterOverdrive);
+        this.setUnlocalizedName(name);
+        this.setCreativeTab(MatterOverdrive.tabMatterOverdrive);
+        setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -70,19 +67,9 @@ public class MOBaseItem extends Item
 			String[] infoList = MOStringHelper.translateToLocal(getUnlocalizedName(itemstack) + ".details").split("/n");
 			for (String info : infoList)
 			{
-				infos.add(EnumChatFormatting.GRAY + info);
+				infos.add(ChatFormatting.GRAY + info);
 			}
 		}
-	}
-
-	public void register(String name)
-	{
-		GameRegistry.registerItem(this, name);
-	}
-
-	public void register()
-	{
-		this.register(this.getUnlocalizedName().substring(5));
 	}
 
 	public void InitTagCompount(ItemStack stack)

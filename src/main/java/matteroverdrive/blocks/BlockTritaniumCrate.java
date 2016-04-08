@@ -18,16 +18,19 @@
 
 package matteroverdrive.blocks;
 
-import matteroverdrive.Reference;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.data.Inventory;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.tile.TileEntityTritaniumCrate;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -39,7 +42,8 @@ public class BlockTritaniumCrate extends MOBlockMachine
         super(material, name);
         setHardness(20.0F);
         this.setResistance(9.0f);
-        setBlockBounds(0, 0, 0, 1, 12 * (1 / 16f), 1);
+        // TODO: 3/26/2016 Find how to set block bounds
+        //setBlockBounds(0, 0, 0, 1, 12 * (1 / 16f), 1);
         this.setHarvestLevel("pickaxe", 2);
         setHasRotation();
     }
@@ -50,13 +54,13 @@ public class BlockTritaniumCrate extends MOBlockMachine
     }
 
     @Override
-    public boolean isOpaqueCube()
+    public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
         {
@@ -67,7 +71,7 @@ public class BlockTritaniumCrate extends MOBlockMachine
             TileEntity entity = worldIn.getTileEntity(pos);
             if (entity instanceof TileEntityTritaniumCrate) {
                 //FMLNetworkHandler.openGui(entityPlayer, MatterOverdrive.instance, GuiHandler.TRITANIUM_CRATE, world, x, y, z);
-                worldIn.playSoundEffect(pos.getX(),pos.getY(),pos.getZ(),Reference.MOD_ID + ":" + "crate_open",0.5f,1);
+                worldIn.playSound(null,pos.getX(),pos.getY(),pos.getZ(), MatterOverdriveSounds.blocksCrateOpen, SoundCategory.BLOCKS,0.5f,1);
                 playerIn.displayGUIChest(((TileEntityTritaniumCrate) entity).getInventory());
                 return true;
             }

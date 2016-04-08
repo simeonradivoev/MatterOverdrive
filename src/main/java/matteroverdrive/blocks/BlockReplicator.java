@@ -18,19 +18,20 @@
 
 package matteroverdrive.blocks;
 
-import matteroverdrive.machines.replicator.ComponentTaskProcessingReplicator;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.blocks.includes.MOMatterEnergyStorageBlock;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.machines.replicator.ComponentTaskProcessingReplicator;
 import matteroverdrive.machines.replicator.TileEntityMachineReplicator;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockReplicator extends MOMatterEnergyStorageBlock
 {
@@ -50,25 +51,25 @@ public class BlockReplicator extends MOMatterEnergyStorageBlock
 
     @Override
 	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
+	public BlockRenderLayer getBlockLayer()
 	{
-		return EnumWorldBlockLayer.CUTOUT_MIPPED;
+		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
 	 @Override
-	 public boolean isOpaqueCube()
+	 public boolean isOpaqueCube(IBlockState state)
 	    {
 	        return true;
 	    }
 
 	 @Override
-	 public boolean canPlaceTorchOnTop(IBlockAccess world, BlockPos pos)
+	 public boolean canPlaceTorchOnTop(IBlockState state,IBlockAccess world, BlockPos pos)
 	 {
 		 return true;
 	 }
 
 	@Override
-	 public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
+	 public boolean isSideSolid(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing side)
 	 {
 		 return true;
 	 }

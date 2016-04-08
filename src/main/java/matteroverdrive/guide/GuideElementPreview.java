@@ -21,7 +21,7 @@ package matteroverdrive.guide;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import org.w3c.dom.Element;
 
 import java.util.Random;

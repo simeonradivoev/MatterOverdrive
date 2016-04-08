@@ -1,13 +1,14 @@
 package matteroverdrive.util;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.machines.MOTileEntityMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 
@@ -31,8 +32,8 @@ public class MachineHelper
                     return true;
                 } else
                 {
-                    ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal(errorMessage).replace("$0", ((MOTileEntityMachine) tileEntity).getDisplayName().toString()));
-                    message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
+                    TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal(errorMessage).replace("$0", ((MOTileEntityMachine) tileEntity).getDisplayName().toString()));
+                    message.setChatStyle(new Style().setColor(TextFormatting.RED));
                     player.addChatMessage(message);
                 }
             }
@@ -49,8 +50,8 @@ public class MachineHelper
             if (!player.capabilities.isCreativeMode &&
                     ((MOTileEntityMachine) tileEntity).hasOwner() && !((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getId()))
             {
-                ChatComponentText message = new ChatComponentText(EnumChatFormatting.GOLD + "[Matter Overdrive] " + EnumChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.break").replace("$0",((MOTileEntityMachine) tileEntity).getDisplayName().toString()));
-                message.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
+                TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.break").replace("$0",((MOTileEntityMachine) tileEntity).getDisplayName().toString()));
+                message.setChatStyle(new Style().setColor(TextFormatting.RED));
                 player.addChatMessage(message);
                 return false;
             }

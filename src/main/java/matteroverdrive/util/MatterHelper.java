@@ -18,6 +18,7 @@
 
 package matteroverdrive.util;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.matter.IMatterItem;
@@ -35,9 +36,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -207,8 +207,8 @@ public class MatterHelper
         int matter = MatterHelper.getMatterAmountFromItem(itemStack);
         if(matter > 0)
         {
-            tooltips.add(EnumChatFormatting.ITALIC.toString() + EnumChatFormatting.BLUE.toString() + "Matter: " + MatterHelper.formatMatter(matter));
-            tooltips.add(EnumChatFormatting.ITALIC.toString() + EnumChatFormatting.DARK_RED + "Power: " + MOEnergyHelper.formatEnergy(speed * matter * energyPerTick));
+            tooltips.add(ChatFormatting.ITALIC.toString() + ChatFormatting.BLUE.toString() + "Matter: " + MatterHelper.formatMatter(matter));
+            tooltips.add(ChatFormatting.ITALIC.toString() + ChatFormatting.DARK_RED + "Power: " + MOEnergyHelper.formatEnergy(speed * matter * energyPerTick));
         }
     }
 }

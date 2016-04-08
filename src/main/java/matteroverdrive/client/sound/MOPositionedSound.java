@@ -20,16 +20,17 @@ package matteroverdrive.client.sound;
 
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSound;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 
 /**
  * Created by Simeon on 12/6/2015.
  */
 public class MOPositionedSound extends PositionedSound
 {
-    public MOPositionedSound(ResourceLocation p_i45103_1_,float volume,float pitch)
+    public MOPositionedSound(SoundEvent event, SoundCategory category, float volume, float pitch)
     {
-        super(p_i45103_1_);
+        super(event,category);
         this.pitch = pitch;
         this.volume = volume;
     }

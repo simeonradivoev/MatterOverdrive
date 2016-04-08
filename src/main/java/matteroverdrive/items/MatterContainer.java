@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import matteroverdrive.Reference;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.includes.MOBaseItem;
@@ -27,11 +26,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 8/20/2015.
@@ -69,7 +66,7 @@ public class MatterContainer extends MOBaseItem
 
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
     {
-        MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world, entityPlayer, !isFull);
+        RayTraceResult movingobjectposition = this.getMovingObjectPositionFromPlayer(world, entityPlayer, !isFull);
 
         if (movingobjectposition == null)
         {
@@ -77,7 +74,7 @@ public class MatterContainer extends MOBaseItem
         }
         else
         {
-            if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+            if (movingobjectposition.typeOfHit == RayTraceResult.Type.BLOCK)
             {
                 BlockPos pos = movingobjectposition.getBlockPos();
 
@@ -162,7 +159,7 @@ public class MatterContainer extends MOBaseItem
         }
         else
         {
-            Material material = world.getBlockState(pos).getBlock().getMaterial();
+            Material material = world.getBlockState(pos).getBlock().getMaterial(world.getBlockState(pos));
 
             if (!world.isAirBlock(pos))
             {
@@ -182,23 +179,8 @@ public class MatterContainer extends MOBaseItem
         }
     }
 
+    // TODO: 3/26/2016 Find how to get color from stack
     /*@Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamageForRenderPass(int damage, int pass)
-    {
-        if (pass == 1 && isFull)
-        {
-            return centerFill;
-        }else if (pass == 2 && isFull)
-        {
-            return bottomFill;
-        }else
-        {
-            return itemIcon;
-        }
-    }*/
-
-    @Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)
     {
@@ -210,5 +192,5 @@ public class MatterContainer extends MOBaseItem
             return Reference.COLOR_YELLOW_STRIPES.getColor();
         }
         return super.getColorFromItemStack(itemStack,pass);
-    }
+    }*/
 }

@@ -19,15 +19,17 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
-import matteroverdrive.util.MOJsonHelper;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.data.quest.QuestItem;
+import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
 import java.util.Random;
@@ -35,7 +37,7 @@ import java.util.Random;
 /**
  * Created by Simeon on 11/25/2015.
  */
-public class QuestLogicCollectItem extends QuestLogicRandomItem
+public class QuestLogicCollectItem extends AbstractQuestLogicRandomItem
 {
     int dimensionID;
     boolean inSpecificDimension;
@@ -180,14 +182,14 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
-        if (destroyOnCollect && event instanceof EntityItemPickupEvent && ((EntityItemPickupEvent) event).item.getEntityItem() != null)
+        if (destroyOnCollect && event instanceof EntityItemPickupEvent && ((EntityItemPickupEvent) event).getItem().getEntityItem() != null)
         {
-            if (inSpecificDimension && entityPlayer.worldObj.provider.getDimensionId() != dimensionID)
-            return false;
+            if (inSpecificDimension && entityPlayer.worldObj.provider.getDimension() != dimensionID)
+            return null;
 
-            ItemStack itemStack = ((EntityItemPickupEvent) event).item.getEntityItem();
+            ItemStack itemStack = ((EntityItemPickupEvent) event).getItem().getEntityItem();
             if (itemStack != null && matches(questStack,itemStack))
             {
                 initTag(questStack);
@@ -197,16 +199,18 @@ public class QuestLogicCollectItem extends QuestLogicRandomItem
                 {
                     setItemCount(questStack,++currentItemCount);
 
-                    if (isObjectiveCompleted(questStack,entityPlayer,0) && autoComplete)
+                    if (isObjectiveCompleted(questStack,entityPlayer,0))
                     {
-                        questStack.markComplited(entityPlayer,false);
+                        markComplete(questStack,entityPlayer);
+                        return new QuestLogicState(QuestState.Type.COMPLETE,true);
+                    }else
+                    {
+                        return new QuestLogicState(QuestState.Type.UPDATE,true);
                     }
-
-                    return true;
                 }
             }
         }
-        return false;
+        return null;
     }
 
     @Override

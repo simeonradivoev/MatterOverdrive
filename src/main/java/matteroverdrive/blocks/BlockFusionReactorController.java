@@ -30,8 +30,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -77,18 +78,18 @@ public class BlockFusionReactorController extends MOBlockMachine
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
-        EnumFacing l = BlockPistonBase.getFacingFromEntity(worldIn,pos,placer);
+        EnumFacing l = BlockPistonBase.getFacingFromEntity(pos,placer);
         worldIn.setBlockState(pos,state.withProperty(MOBlock.PROPERTY_DIRECTION,l),2);
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof TileEntityMachineFusionReactorController) {
             if (((TileEntityMachineFusionReactorController) tileEntity).isValidStructure())
             {
-                return super.onBlockActivated(worldIn,pos,state,playerIn, side, hitX, hitY, hitZ);
+                return super.onBlockActivated(worldIn,pos,state,playerIn,hand,heldItem, side, hitX, hitY, hitZ);
             }
         }
         return false;

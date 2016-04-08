@@ -39,7 +39,12 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -99,7 +104,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
     }
 
     @Override
-    public String getSound() {
+    public SoundEvent getSound() {
         return null;
     }
 
@@ -166,12 +171,12 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
         return 0;
     }
 
-    public Vec3 getPosition(int i, EnumFacing facing)
+    public Vec3d getPosition(int i, EnumFacing facing)
     {
         if (i < positionsCount)
         {
             EnumFacing back = facing.getOpposite();
-            Vec3 pos = new Vec3(TileEntityMachineFusionReactorController.positions[i * 2], 0, TileEntityMachineFusionReactorController.positions[(i * 2) + 1]);
+            Vec3d pos = new Vec3d(TileEntityMachineFusionReactorController.positions[i * 2], 0, TileEntityMachineFusionReactorController.positions[(i * 2) + 1]);
 
             if (back == EnumFacing.NORTH)
             {
@@ -220,7 +225,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
             float matterPerTick = this.matterPerTick;
 
             for (int i = 0; i < positionsCount; i++) {
-                Vec3 offset = getPosition(i, side);
+                Vec3d offset = getPosition(i, side);
                 BlockPos position = new BlockPos(getPos().getX() + (int) round(offset.xCoord), getPos().getY() + (int) round(offset.yCoord), getPos().getZ() + (int) round(offset.zCoord));
 
                 if (blocks[i] == 255)

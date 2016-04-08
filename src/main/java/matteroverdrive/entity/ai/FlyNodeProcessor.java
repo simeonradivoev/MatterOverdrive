@@ -2,29 +2,23 @@ package matteroverdrive.entity.ai;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.pathfinding.NodeProcessor;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.pathfinder.NodeProcessor;
 
 /**
  * Created by Simeon on 1/22/2016.
  */
 public class FlyNodeProcessor extends NodeProcessor
 {
-    public void initProcessor(IBlockAccess iblockaccessIn, Entity entityIn)
-    {
-        super.initProcessor(iblockaccessIn, entityIn);
-    }
 
-    /**
-     * This method is called when all nodes have been processed and PathEntity is created.
-     * {@link net.minecraft.world.pathfinder.WalkNodeProcessor WalkNodeProcessor} uses this to change its field {@link
-     * net.minecraft.world.pathfinder.WalkNodeProcessor#avoidsWater avoidsWater}
-     */
     public void postProcess()
     {
         super.postProcess();
@@ -52,7 +46,7 @@ public class FlyNodeProcessor extends NodeProcessor
 
         for (EnumFacing enumfacing : EnumFacing.values())
         {
-            PathPoint pathpoint = this.getSafePoint(entityIn, currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(), currentPoint.zCoord + enumfacing.getFrontOffsetZ());
+            PathPoint pathpoint = this.func_186328_b(currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(), currentPoint.zCoord + enumfacing.getFrontOffsetZ());
 
             if (pathpoint != null && !pathpoint.visited && pathpoint.distanceTo(targetPoint) < maxDistance)
             {
@@ -63,16 +57,51 @@ public class FlyNodeProcessor extends NodeProcessor
         return i;
     }
 
+    public PathNodeType func_186319_a(IBlockAccess p_186319_1_, int p_186319_2_, int p_186319_3_, int p_186319_4_, EntityLiving p_186319_5_, int p_186319_6_, int p_186319_7_, int p_186319_8_, boolean p_186319_9_, boolean p_186319_10_)
+    {
+        return PathNodeType.OPEN;
+    }
+
+    @Override
+    public int func_186320_a(PathPoint[] p_186320_1_, PathPoint p_186320_2_, PathPoint p_186320_3_, float p_186320_4_)
+    {
+        int i = 0;
+
+        for (EnumFacing enumfacing : EnumFacing.values())
+        {
+            PathPoint pathpoint = this.func_186328_b(p_186320_2_.xCoord + enumfacing.getFrontOffsetX(), p_186320_2_.yCoord + enumfacing.getFrontOffsetY(), p_186320_2_.zCoord + enumfacing.getFrontOffsetZ());
+
+            if (pathpoint != null && !pathpoint.visited && pathpoint.distanceTo(p_186320_3_) < p_186320_4_)
+            {
+                p_186320_1_[i++] = pathpoint;
+            }
+        }
+
+        return i;
+    }
+
+    @Override
+    public PathPoint func_186318_b()
+    {
+        return this.openPoint(MathHelper.floor_double(this.field_186326_b.getEntityBoundingBox().minX), MathHelper.floor_double(this.field_186326_b.getEntityBoundingBox().minY + 0.5D), MathHelper.floor_double(this.field_186326_b.getEntityBoundingBox().minZ));
+    }
+
+    @Override
+    public PathPoint func_186325_a(double p_186325_1_, double p_186325_3_, double p_186325_5_)
+    {
+        return this.openPoint(MathHelper.floor_double(p_186325_1_ - (double)(this.field_186326_b.width / 2.0F)), MathHelper.floor_double(p_186325_3_ + 0.5D), MathHelper.floor_double(p_186325_5_ - (double)(this.field_186326_b.width / 2.0F)));
+    }
+
     /**
      * Returns a point that the entity can safely move to
      */
-    private PathPoint getSafePoint(Entity entityIn, int x, int y, int z)
+    private PathPoint func_186328_b(int x, int y, int z)
     {
-        int i = this.func_176186_b(entityIn, x, y, z);
+        int i = this.func_186327_c(x, y, z);
         return i == -1 ? this.openPoint(x, y, z) : null;
     }
 
-    private int func_176186_b(Entity entityIn, int x, int y, int z)
+    private int func_186327_c(int x, int y, int z)
     {
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
@@ -82,9 +111,10 @@ public class FlyNodeProcessor extends NodeProcessor
             {
                 for (int k = z; k < z + this.entitySizeZ; ++k)
                 {
-                    Block block = this.blockaccess.getBlockState(blockpos$mutableblockpos.set(i, j, k)).getBlock();
+                    IBlockState state = this.blockaccess.getBlockState(blockpos$mutableblockpos.set(i, j, k));
+                    Block block = state.getBlock();
 
-                    if (block.getMaterial() != Material.air)
+                    if (block.getMaterial(state) != Material.air)
                     {
                         return 0;
                     }

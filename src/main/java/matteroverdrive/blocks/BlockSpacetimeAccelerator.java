@@ -4,6 +4,7 @@ import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.tile.TileEntityMachineSpacetimeAccelerator;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -20,7 +21,7 @@ public class BlockSpacetimeAccelerator extends MOBlockMachine
         setHardness(20.0F);
         this.setResistance(9.0f);
         this.setHarvestLevel("pickaxe", 2);
-        setBlockBounds(4f/16f,0,4f/16f,12f/16f,1,12f/16f);
+        //setBlockBounds(4f/16f,0,4f/16f,12f/16f,1,12f/16f);
         setLightLevel(1);
         setHasGui(true);
     }
@@ -32,13 +33,13 @@ public class BlockSpacetimeAccelerator extends MOBlockMachine
     }
 
     @Override
-    public boolean isFullCube()
+    public boolean isFullCube(IBlockState state)
     {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube()
+    public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }

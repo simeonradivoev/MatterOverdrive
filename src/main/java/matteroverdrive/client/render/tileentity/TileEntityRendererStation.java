@@ -30,7 +30,7 @@ import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
@@ -80,7 +80,7 @@ public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> e
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x,y + height,z);
-        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        VertexBuffer wr = Tessellator.getInstance().getBuffer();
         wr.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         RenderUtils.applyColor(getHoloColor(entity));
 

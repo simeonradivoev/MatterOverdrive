@@ -19,8 +19,9 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.entity.android_player.AndroidPlayer;
-import net.minecraft.util.EnumChatFormatting;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
@@ -59,7 +60,7 @@ public class BioticStatNanoArmor extends AbstractBioticStat
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), EnumChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(getDamageNegate(level)) + EnumChatFormatting.GRAY);
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(getDamageNegate(level)) + ChatFormatting.GRAY);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class BioticStatNanoArmor extends AbstractBioticStat
     {
         if (event instanceof LivingHurtEvent)
         {
-            ((LivingHurtEvent) event).ammount *= (1 - getDamageNegate(level));
+            ((LivingHurtEvent) event).setAmount(((LivingHurtEvent) event).getAmount() * (1 - getDamageNegate(level)));
         }
     }
 

@@ -7,6 +7,7 @@ import matteroverdrive.blocks.BlockReplicator;
 import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.handler.GoogleAnalyticsCommon;
 import matteroverdrive.handler.SoundHandler;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.components.TaskQueueComponent;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
@@ -17,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -78,7 +80,7 @@ public class ComponentTaskProcessingReplicator extends TaskQueueComponent<Matter
                             this.replicateTime = 0;
                             this.replicateItem(replicatePattern.getPattern(), patternStack);
                             MatterOverdrive.packetPipeline.sendToDimention(new PacketReplicationComplete(machine), getWorld());
-                            SoundHandler.PlaySoundAt(getWorld(), "replicate_success", this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 0.25F * machine.getBlockType(BlockReplicator.class).replication_volume, 1.0F, 0.2F, 0.8F);
+                            SoundHandler.PlaySoundAt(getWorld(), MatterOverdriveSounds.replicateSuccess, SoundCategory.BLOCKS, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 0.25F * machine.getBlockType(BlockReplicator.class).replication_volume, 1.0F, 0.2F, 0.8F);
                         }
                         if (radiationTimeTracker.hasDelayPassed(getWorld(), TileEntityMachineReplicator.RADIATION_DAMAGE_DELAY)) {
                             machine.manageRadiation();

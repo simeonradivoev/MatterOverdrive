@@ -18,23 +18,15 @@
 
 package matteroverdrive.world.buildings;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.entity.monster.EntityRangedRogueAndroidMob;
 import matteroverdrive.init.MatterOverdriveBlocks;
-import matteroverdrive.util.MOInventoryHelper;
-import matteroverdrive.util.WeaponFactory;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ChestGenHooks;
 
 import java.util.Random;
 
@@ -79,23 +71,24 @@ public class MOAndroidHouseBuilding extends MOWorldGenBuilding
 
     @Override
     public boolean shouldGenerate(Random random, World world, BlockPos pos) {
-        return world.provider.getDimensionId() == 0;
+        return world.provider.getDimension() == 0;
     }
 
     @Override
     public void onBlockPlace(World world, IBlockState block, BlockPos pos, Random random, int color,ImageGenWorker worker)
     {
-        if ((color & 0xffffff) == 0xc8d43d)
+        // TODO: 3/25/2016 Find how to get chest gen hook
+        /*if ((color & 0xffffff) == 0xc8d43d)
         {
             TileEntity inventory = world.getTileEntity(pos);
             if (inventory instanceof IInventory) {
-                WeightedRandomChestContent.generateChestContents(random,ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).getItems(random), (IInventory) inventory,random.nextInt(10) + 10);
+                WeightedRandomChestContent.generateDispenserContents(random,ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).getItems(random), (IInventory) inventory,random.nextInt(10) + 10);
                 if (random.nextInt(200) < 10)
                 {
                     MOInventoryHelper.insertItemStackIntoInventory((IInventory)inventory, MatterOverdrive.weaponFactory.getRandomDecoratedEnergyWeapon(new WeaponFactory.WeaponGenerationContext(3,null,true)), EnumFacing.DOWN);
                 }
             }
-        }
+        }*/
     }
 
     public void spawnAndroid(World world,Random random,BlockPos pos)

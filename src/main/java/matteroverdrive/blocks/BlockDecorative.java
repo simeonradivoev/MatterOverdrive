@@ -21,15 +21,13 @@ package matteroverdrive.blocks;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.blocks.includes.IImageGenBlock;
 import matteroverdrive.blocks.includes.MOBlock;
-import matteroverdrive.items.DecorativeBlockItem;
 import matteroverdrive.world.MOImageGen;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +51,6 @@ public class BlockDecorative extends MOBlock implements IImageGenBlock {
         decorativeBlocks.add(this);
         MOImageGen.worldGenerationBlockColors.put(this,getBlockColor(0));
         setRotationType(-1);
-    }
-
-    @Override
-    protected void registerBlock()
-    {
-        GameRegistry.registerBlock(this, DecorativeBlockItem.class, this.getUnlocalizedName().substring(5));
     }
 
     @Override

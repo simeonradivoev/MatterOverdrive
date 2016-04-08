@@ -18,15 +18,12 @@
 
 package matteroverdrive.items.weapon;
 
-import matteroverdrive.Reference;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -46,7 +43,7 @@ public class EnergyPack extends MOBaseItem implements IEnergyPack
     public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
     {
         super.addDetails(itemstack,player,infos);
-        infos.add(EnumChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(null,getEnergyAmount(itemstack)));
+        infos.add(ChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(null,getEnergyAmount(itemstack)));
     }
 
     @Override
@@ -54,7 +51,8 @@ public class EnergyPack extends MOBaseItem implements IEnergyPack
         return 32000;
     }
 
-    @Override
+    // TODO: 3/26/2016 FInd how to get Color from stack
+    /*@Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)
     {
@@ -63,5 +61,5 @@ public class EnergyPack extends MOBaseItem implements IEnergyPack
             return Reference.COLOR_HOLO_RED.getColor();
         }
         return super.getColorFromItemStack(itemStack,pass);
-    }
+    }*/
 }

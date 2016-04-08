@@ -24,6 +24,7 @@ import matteroverdrive.container.ContainerFalse;
 import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.data.ScaleTexture;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.gui.element.ElementGuideCategory;
 import matteroverdrive.gui.element.MOElementBase;
 import matteroverdrive.gui.element.MOElementButton;
@@ -38,6 +39,7 @@ import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -53,16 +55,18 @@ public class GuiDataPad extends MOGuiBase
     public MOElementButtonScaled abandonQuestButton;
     public MOElementButtonScaled completeQuestButton;
     ItemStack dataPad;
+    EnumHand hand;
 
-    public GuiDataPad(ItemStack dataPadStack)
+    public GuiDataPad(EnumHand hand,ItemStack dataPadStack)
     {
         super(new ContainerFalse(),300,260);
         background = new ScaleTexture(BG,93,115).setOffsets(46,46,40,73);
         dataPad = dataPadStack;
+        this.hand = hand;
         setPage(MatterOverdriveItems.dataPad.getPage(dataPadStack));
-        guideEntries.setDataPadStack(dataPadStack);
-        guideDescription.setDataPadStack(dataPadStack);
-        activeQuests.setDataPadStack(dataPadStack);
+        guideEntries.setDataPadStack(hand,dataPadStack);
+        guideDescription.setDataPadStack(hand,dataPadStack);
+        activeQuests.setDataPadStack(hand,dataPadStack);
     }
 
     @Override
@@ -70,7 +74,7 @@ public class GuiDataPad extends MOGuiBase
     {
         guideDescription = new PageGuideDescription(this,14,14,xSize-28,ySize-14-49,"Guide Description");
         guideEntries = new PageGuideEntries(this,14,14,xSize-28,ySize-14-49,"Guide Entries",guideDescription);
-        activeQuests = new PageActiveQuests(this,0,0,xSize-28,ySize-28,"Active Quests", MOExtendedProperties.get(Minecraft.getMinecraft().thePlayer));
+        activeQuests = new PageActiveQuests(this,0,0,xSize-28,ySize-28,"Active Quests", MOPlayerCapabilityProvider.GetExtendedCapability(Minecraft.getMinecraft().thePlayer));
 
         activeQuestsButton = new MOElementButtonScaled(this,this,xSize - 96,ySize - 28,"",22,22);
         activeQuestsButton.setDisabledTexture(MOElementButton.HOVER_TEXTURE_DARK);
@@ -119,7 +123,7 @@ public class GuiDataPad extends MOGuiBase
     {
         if (newPage != MatterOverdriveItems.dataPad.getPage(dataPad)) {
             MatterOverdriveItems.dataPad.setOpenPage(dataPad, newPage);
-            MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(dataPad));
+            MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand,dataPad));
         }
     }
 

@@ -26,8 +26,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -62,12 +62,12 @@ public class BlockNetworkPipe extends BlockPipe implements IDismantleable
 
         if (!returnDrops)
         {
-            state.getBlock().harvestBlock(world, player, pos,state,null);
-            state.getBlock().removedByPlayer(world, pos,player, true);
+            state.getBlock().harvestBlock(world, player, pos,state,world.getTileEntity(pos),null);
+            state.getBlock().removedByPlayer(state,world, pos,player, true);
         }
         else
         {
-            state.getBlock().removedByPlayer(world,pos, player, true);
+            state.getBlock().removedByPlayer(state,world,pos, player, true);
             state.getBlock().breakBlock(world, pos,state);
             for (ItemStack itemStack : getDrops(world, pos,state,0))
                 MOInventoryHelper.insertItemStackIntoInventory(player.inventory, itemStack, EnumFacing.DOWN);

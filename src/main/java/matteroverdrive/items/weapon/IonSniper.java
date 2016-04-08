@@ -24,6 +24,7 @@ import matteroverdrive.api.weapon.WeaponShot;
 import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
@@ -31,10 +32,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -122,8 +126,8 @@ public class IonSniper extends EnergyWeapon
         if (Mouse.isButtonDown(0) && hasShootDelayPassed()) {
             if (canFire(itemStack,world,entityPlayer))
             {
-                Vec3 dir = entityPlayer.getLook(1);
-                Vec3 pos = getFirePosition(entityPlayer, dir, isWeaponZoomed(entityPlayer,itemStack));
+                Vec3d dir = entityPlayer.getLook(1);
+                Vec3d pos = getFirePosition(entityPlayer, dir, isWeaponZoomed(entityPlayer,itemStack));
                 WeaponShot shot = createClientShot(itemStack,entityPlayer, isWeaponZoomed(entityPlayer,itemStack));
                 onClientShot(itemStack, entityPlayer, pos, dir, shot);
                 addShootDelay(itemStack);
@@ -148,9 +152,9 @@ public class IonSniper extends EnergyWeapon
     }
 
     @SideOnly(Side.CLIENT)
-    private Vec3 getFirePosition(EntityPlayer entityPlayer,Vec3 dir,boolean isAiming)
+    private Vec3d getFirePosition(EntityPlayer entityPlayer, Vec3d dir, boolean isAiming)
     {
-        Vec3 pos = entityPlayer.getPositionEyes(1);
+        Vec3d pos = entityPlayer.getPositionEyes(1);
         if (!isAiming) {
             pos = pos.subtract((double)(MathHelper.cos(entityPlayer.rotationYaw / 180.0F * (float) Math.PI) * 0.16F),0,(double)(MathHelper.sin(entityPlayer.rotationYaw / 180.0F * (float) Math.PI) * 0.16F));
         }
@@ -160,16 +164,16 @@ public class IonSniper extends EnergyWeapon
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3 position, Vec3 dir, WeaponShot shot)
+    public void onClientShot(ItemStack weapon, EntityLivingBase shooter, Vec3d position, Vec3d dir, WeaponShot shot)
     {
-        MOPositionedSound sound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "sniper_rifle_fire"),3f + itemRand.nextFloat()*0.5f, 0.9f + itemRand.nextFloat() * 0.2f);
+        MOPositionedSound sound = new MOPositionedSound(MatterOverdriveSounds.weaponsSniperRifleFire, SoundCategory.PLAYERS,3f + itemRand.nextFloat()*0.5f, 0.9f + itemRand.nextFloat() * 0.2f);
         sound.setPosition((float) position.xCoord,(float)position.yCoord,(float)position.zCoord);
         Minecraft.getMinecraft().getSoundHandler().playSound(sound);
         spawnProjectile(weapon,shooter,position,dir,shot);
     }
 
     @Override
-    public void onProjectileHit(MovingObjectPosition hit, ItemStack weapon, World world, float amount) {
+    public void onProjectileHit(RayTraceResult hit, ItemStack weapon, World world, float amount) {
 
     }
 
@@ -211,7 +215,7 @@ public class IonSniper extends EnergyWeapon
     }
 
     @Override
-    public PlasmaBolt getDefaultProjectile(ItemStack weapon,EntityLivingBase shooter,Vec3 position,Vec3 dir,WeaponShot shot)
+    public PlasmaBolt getDefaultProjectile(ItemStack weapon, EntityLivingBase shooter, Vec3d position, Vec3d dir, WeaponShot shot)
     {
         PlasmaBolt bolt = super.getDefaultProjectile(weapon,shooter,position,dir,shot);
         bolt.setKnockBack(1);
@@ -236,15 +240,16 @@ public class IonSniper extends EnergyWeapon
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer player)
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
-        player.setItemInUse(item, Integer.MAX_VALUE);
-        if(world.isRemote)
+        if (hand == EnumHand.OFF_HAND) return ActionResult.newResult(EnumActionResult.PASS,itemStackIn);
+        playerIn.setActiveHand(hand);
+        if(worldIn.isRemote)
         {
             for(int i = 0; i < 3; i++)
                 Minecraft.getMinecraft().entityRenderer.itemRenderer.updateEquippedItem();
         }
-        return item;
+        return ActionResult.newResult(EnumActionResult.SUCCESS,itemStackIn);
     }
 
     @Override
@@ -258,7 +263,7 @@ public class IonSniper extends EnergyWeapon
     }
 
     @Override
-    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot,Vec3 position,Vec3 dir,int delay)
+    public boolean onServerFire(ItemStack weapon, EntityLivingBase shooter, WeaponShot shot, Vec3d position, Vec3d dir, int delay)
     {
         DrainEnergy(weapon, getShootCooldown(weapon), false);
         float newHeat =  getHeat(weapon) + getMaxHeat(weapon) * 0.8f;
@@ -276,8 +281,8 @@ public class IonSniper extends EnergyWeapon
 
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean isWeaponZoomed(EntityPlayer entityPlayer, ItemStack weapon) {
-        return Mouse.isButtonDown(1) && entityPlayer.isUsingItem();
+    public boolean isWeaponZoomed(EntityLivingBase entityPlayer, ItemStack weapon) {
+        return Mouse.isButtonDown(1) && entityPlayer.isHandActive() && entityPlayer.getActiveHand() == EnumHand.MAIN_HAND;
     }
 
     @Override

@@ -22,6 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.container.slot.SlotEnergy;
 import matteroverdrive.container.slot.SlotInventory;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -39,7 +40,7 @@ public class ContainerAndroidStation extends ContainerMachine<TileEntityAndroidS
     @Override
     protected void init(InventoryPlayer inventory)
     {
-        AndroidPlayer android = AndroidPlayer.get(inventory.player);
+        AndroidPlayer android = MOPlayerCapabilityProvider.GetAndroidCapability(inventory.player);
 
         for (int i = 0; i < Reference.BIONIC_OTHER+1; i++)
         {

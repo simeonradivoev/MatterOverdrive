@@ -71,7 +71,7 @@ public class ElementStates extends MOElementButtonScaled
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.enableAlpha();
         GlStateManager.alphaFunc(GL11.GL_GREATER,0.5f);
-        GlStateManager.cullFace(GL11.GL_BACK);
+        GlStateManager.cullFace(GlStateManager.CullFace.BACK);
         getFontRenderer().drawString(label,posX + sizeX + 4,posY - getFontRenderer().FONT_HEIGHT/2 + sizeY/2,getTextColor());
     }
 

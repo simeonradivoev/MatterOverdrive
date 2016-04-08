@@ -21,8 +21,8 @@ package matteroverdrive.blocks;
 import matteroverdrive.blocks.includes.MOBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 /**
@@ -95,8 +95,8 @@ public abstract class BlockCT extends MOBlock
         return icon;
     }*/
 
-    public abstract boolean canConnect(IBlockAccess world, BlockPos pos, IBlockState blockState);
+    public abstract boolean canConnect(IBlockState state,IBlockAccess world, BlockPos pos, IBlockState blockState);
 
-    public abstract boolean isSideCT(IBlockAccess world, BlockPos pos, EnumFacing side);
+    public abstract boolean isSideCT(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing side);
 
 }

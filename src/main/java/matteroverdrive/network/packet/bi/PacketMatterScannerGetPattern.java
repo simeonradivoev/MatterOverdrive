@@ -2,7 +2,7 @@ package matteroverdrive.network.packet.bi;
 
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Created by Simeon on 6/12/2015.

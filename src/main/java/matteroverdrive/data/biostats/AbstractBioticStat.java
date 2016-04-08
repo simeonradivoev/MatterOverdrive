@@ -18,6 +18,7 @@
 
 package matteroverdrive.data.biostats;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.android.BionicStatGuiInfo;
 import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.client.render.HoloIcon;
@@ -26,7 +27,6 @@ import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -39,7 +39,7 @@ import java.util.List;
 public abstract class AbstractBioticStat implements IBioticStat
 {
     private int xp;
-    private String name;
+    protected String name;
     private IBioticStat root;
     private BionicStatGuiInfo guiInfo;
     private boolean rootMaxLevel;
@@ -66,6 +66,8 @@ public abstract class AbstractBioticStat implements IBioticStat
     public String getUnlocalizedName() {
         return name;
     }
+
+    protected String getUnlocalizedDetails(){return "biotic_stat." + name + ".details";}
 
     @Override
     public String getDisplayName(AndroidPlayer androidPlayer, int level)
@@ -163,17 +165,17 @@ public abstract class AbstractBioticStat implements IBioticStat
     @Override
     public void onTooltip(AndroidPlayer android, int level, List<String> list, int mouseX, int mouseY)
     {
-        String name = EnumChatFormatting.BOLD + getDisplayName(android, level);
+        String name = ChatFormatting.BOLD + getDisplayName(android, level);
         if (maxLevel() > 1)
         {
-            name += EnumChatFormatting.RESET + String.format(" [%s/%s]",level,maxLevel());
+            name += ChatFormatting.RESET + String.format(" [%s/%s]",level,maxLevel());
         }
-        list.add(EnumChatFormatting.WHITE + name);
+        list.add(ChatFormatting.WHITE + name);
         String details = getDetails(level);
         String[] detailsSplit = details.split("/n/");
         for (String detail : detailsSplit)
         {
-            list.add(EnumChatFormatting.GRAY + detail);
+            list.add(ChatFormatting.GRAY + detail);
         }
 
         if (root != null)
@@ -186,7 +188,7 @@ public abstract class AbstractBioticStat implements IBioticStat
                     rootLevel = " " + root.maxLevel();
                 }
             }
-            list.add(EnumChatFormatting.DARK_AQUA + MOStringHelper.translateToLocal("gui.tooltip.parent") + ": " + EnumChatFormatting.GOLD+String.format("[%s%s]",root.getDisplayName(android,0),rootLevel));
+            list.add(ChatFormatting.DARK_AQUA + MOStringHelper.translateToLocal("gui.tooltip.parent") + ": " + ChatFormatting.GOLD+String.format("[%s%s]",root.getDisplayName(android,0),rootLevel));
         }
 
         String requires = "";
@@ -196,25 +198,25 @@ public abstract class AbstractBioticStat implements IBioticStat
             {
                 if (!requires.isEmpty())
                 {
-                    requires += EnumChatFormatting.GRAY + ", ";
+                    requires += ChatFormatting.GRAY + ", ";
                 }
                 if (itemStack.stackSize > 1)
                 {
-                    requires += EnumChatFormatting.DARK_GREEN.toString() + itemStack.stackSize + "x";
+                    requires += ChatFormatting.DARK_GREEN.toString() + itemStack.stackSize + "x";
                 }
 
-                requires += EnumChatFormatting.DARK_GREEN + "[" + itemStack.getDisplayName() + "]";
+                requires += ChatFormatting.DARK_GREEN + "[" + itemStack.getDisplayName() + "]";
             }
         }
 
         if (!requires.isEmpty())
         {
-           list.add(EnumChatFormatting.DARK_AQUA + MOStringHelper.translateToLocal("gui.tooltip.requires") + ": " + requires);
+           list.add(ChatFormatting.DARK_AQUA + MOStringHelper.translateToLocal("gui.tooltip.requires") + ": " + requires);
         }
 
         if (competitors.size() > 0)
         {
-            String locks = EnumChatFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.locks") + ": ";
+            String locks = ChatFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.locks") + ": ";
             for (IBioticStat compeditor : competitors)
             {
                 locks += String.format("[%s] ",compeditor.getDisplayName(android,0));
@@ -224,7 +226,7 @@ public abstract class AbstractBioticStat implements IBioticStat
 
         if (level < maxLevel())
         {
-            list.add((android.getPlayer().experienceLevel < xp ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + "XP: " + xp);
+            list.add((android.getPlayer().experienceLevel < xp ? ChatFormatting.RED : ChatFormatting.GREEN) + "XP: " + xp);
         }
     }
 

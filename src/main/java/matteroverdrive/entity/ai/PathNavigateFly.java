@@ -3,8 +3,8 @@ package matteroverdrive.entity.ai;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.pathfinding.PathFinder;
 import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -30,14 +30,14 @@ public class PathNavigateFly extends PathNavigate
         return true;
     }
 
-    protected Vec3 getEntityPosition()
+    protected Vec3d getEntityPosition()
     {
-        return new Vec3(this.theEntity.posX, this.theEntity.posY, this.theEntity.posZ);
+        return new Vec3d(this.theEntity.posX, this.theEntity.posY, this.theEntity.posZ);
     }
 
     protected void pathFollow()
     {
-        Vec3 vec3 = this.getEntityPosition();
+        Vec3d vec3 = this.getEntityPosition();
         float f = this.theEntity.width * this.theEntity.width;
         int i = 6;
 
@@ -48,7 +48,7 @@ public class PathNavigateFly extends PathNavigate
 
         for (int j = Math.min(this.currentPath.getCurrentPathIndex() + i, this.currentPath.getCurrentPathLength() - 1); j > this.currentPath.getCurrentPathIndex(); --j)
         {
-            Vec3 vec31 = this.currentPath.getVectorFromIndex(this.theEntity, j);
+            Vec3d vec31 = this.currentPath.getVectorFromIndex(this.theEntity, j);
 
             if (vec31.squareDistanceTo(vec3) <= 36.0D && this.isDirectPathBetweenPoints(vec3, vec31, 0, 0, 0))
             {
@@ -72,9 +72,9 @@ public class PathNavigateFly extends PathNavigate
      * Returns true when an entity of specified size could safely walk in a straight line between the two points. Args:
      * pos1, pos2, entityXSize, entityYSize, entityZSize
      */
-    protected boolean isDirectPathBetweenPoints(Vec3 posVec31, Vec3 posVec32, int sizeX, int sizeY, int sizeZ)
+    protected boolean isDirectPathBetweenPoints(Vec3d posVec31, Vec3d posVec32, int sizeX, int sizeY, int sizeZ)
     {
-        MovingObjectPosition movingobjectposition = this.worldObj.rayTraceBlocks(posVec31, new Vec3(posVec32.xCoord, posVec32.yCoord + (double)this.theEntity.height * 0.5D, posVec32.zCoord), false, true, false);
-        return movingobjectposition == null || movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.MISS;
+        RayTraceResult movingobjectposition = this.worldObj.rayTraceBlocks(posVec31, new Vec3d(posVec32.xCoord, posVec32.yCoord + (double)this.theEntity.height * 0.5D, posVec32.zCoord), false, true, false);
+        return movingobjectposition == null || movingobjectposition.typeOfHit == RayTraceResult.Type.MISS;
     }
 }

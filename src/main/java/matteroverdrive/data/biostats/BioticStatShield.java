@@ -19,20 +19,21 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.entity.android_player.AndroidAttributes;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.handler.KeyHandler;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.util.IConfigSubscriber;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -120,7 +121,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
         androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_SHIELD,on);
         setLastShieldTime(androidPlayer,androidPlayer.getPlayer().worldObj.getTotalWorldTime() + SHIELD_COOLDOWN + SHIELD_TIME);
         androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
-        androidPlayer.getPlayer().worldObj.playSoundAtEntity(androidPlayer.getPlayer(),Reference.MOD_ID + ":" + "shield_power_up",0.6f + random.nextFloat()*0.2f,1);
+        androidPlayer.getPlayer().worldObj.playSound(null,androidPlayer.getPlayer().posX,androidPlayer.getPlayer().posY,androidPlayer.getPlayer().posZ, MatterOverdriveSounds.androidShieldPowerUp, SoundCategory.PLAYERS,0.6f + random.nextFloat()*0.2f,1);
         //androidPlayer.getPlayer().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.movementSpeed).removeModifier(modifyer);
         //androidPlayer.getPlayer().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.movementSpeed).applyModifier(modifyer);
     }
@@ -135,7 +136,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
         {
 
         }
-        return String.format(super.getDetails(level), key);
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), key);
     }
 
     public boolean getShieldState(AndroidPlayer androidPlayer)
@@ -163,10 +164,10 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     {
         if (event instanceof LivingAttackEvent)
         {
-            DamageSource source = ((LivingAttackEvent) event).source;
+            DamageSource source = ((LivingAttackEvent) event).getSource();
             if (getShieldState(androidPlayer))
             {
-                int energyReqired = MathHelper.ceiling_float_int(((LivingAttackEvent) event).ammount * ENERGY_PER_DAMAGE);
+                int energyReqired = MathHelper.ceiling_float_int(((LivingAttackEvent) event).getAmount() * ENERGY_PER_DAMAGE);
 
                 if (isDamageValid(source) && event.isCancelable())
                 {
@@ -181,7 +182,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
                         //attackList.appendTag(attack);
                         //androidPlayer.setEffectsTag(AndroidPlayer.NBT_HITS, attackList);
                         //androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
-                        androidPlayer.getPlayer().worldObj.playSoundAtEntity(androidPlayer.getPlayer(),Reference.MOD_ID + ":" + "shield_hit",0.5f,0.9f + random.nextFloat() * 0.2f);
+                        androidPlayer.getPlayer().worldObj.playSound(null,androidPlayer.getPlayer().posX,androidPlayer.getPlayer().posY,androidPlayer.getPlayer().posZ,MatterOverdriveSounds.androidShieldHit,SoundCategory.PLAYERS,0.5f,0.9f + random.nextFloat() * 0.2f);
                     }
 
                     if (androidPlayer.hasEnoughEnergyScaled(energyReqired))
@@ -193,15 +194,15 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
             }
         }else if (event instanceof LivingHurtEvent)
         {
-            DamageSource source = ((LivingHurtEvent) event).source;
+            DamageSource source = ((LivingHurtEvent) event).getSource();
             if (getShieldState(androidPlayer)) {
-                int energyReqired = MathHelper.ceiling_float_int(((LivingHurtEvent) event).ammount * ENERGY_PER_DAMAGE);
+                int energyReqired = MathHelper.ceiling_float_int(((LivingHurtEvent) event).getAmount() * ENERGY_PER_DAMAGE);
 
                 if (isDamageValid(source)) {
                     double energyMultiply = androidPlayer.getPlayer().getAttributeMap().getAttributeInstance(AndroidAttributes.attributeBatteryUse).getAttributeValue();
                     energyReqired *= energyMultiply;
                     int energyExtracted = androidPlayer.extractEnergy(energyReqired, true);
-                    ((LivingHurtEvent) event).ammount *= (float) energyExtracted / (float) energyReqired;
+                    ((LivingHurtEvent) event).setAmount(((LivingHurtEvent) event).getAmount() + (float) energyExtracted / (float) energyReqired);
                 }
             }
         }
@@ -232,7 +233,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
                 androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_SHIELD,false);
                 //androidPlayer.removeEffect(AndroidPlayer.NBT_HITS);
                 //androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS),true);
-                androidPlayer.getPlayer().worldObj.playSoundAtEntity(androidPlayer.getPlayer(),Reference.MOD_ID + ":" + "shield_power_down",0.6f + random.nextFloat() * 0.2f,1);
+                androidPlayer.getPlayer().worldObj.playSound(null,androidPlayer.getPlayer().posX,androidPlayer.getPlayer().posY,androidPlayer.getPlayer().posZ,MatterOverdriveSounds.androidShieldPowerDown,SoundCategory.PLAYERS,0.6f + random.nextFloat() * 0.2f,1);
                 //androidPlayer.init(androidPlayer.getPlayer(),androidPlayer.getPlayer().worldObj);
             }
         }
@@ -251,7 +252,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
     {
         if(shieldSound == null && !Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(shieldSound))
         {
-            shieldSound = new MOPositionedSound(new ResourceLocation(Reference.MOD_ID + ":" + "shield_loop"),0.3f + random.nextFloat() * 0.2f,1);
+            shieldSound = new MOPositionedSound(MatterOverdriveSounds.androidShieldLoop,SoundCategory.PLAYERS,0.3f + random.nextFloat() * 0.2f,1);
             shieldSound.setRepeat(true);
             Minecraft.getMinecraft().getSoundHandler().playSound(shieldSound);
         }

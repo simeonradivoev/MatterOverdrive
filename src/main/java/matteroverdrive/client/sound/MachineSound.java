@@ -2,8 +2,9 @@ package matteroverdrive.client.sound;
 
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.audio.PositionedSound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Created by Simeon on 3/18/2015.
@@ -12,8 +13,8 @@ public class MachineSound extends PositionedSound implements ITickableSound
 {
     private boolean donePlaying;
 
-    public MachineSound(ResourceLocation sound, BlockPos pos, float volume, float pitch) {
-        super(sound);
+    public MachineSound(SoundEvent sound, SoundCategory category, BlockPos pos, float volume, float pitch) {
+        super(sound,category);
         setPosition(pos);
         this.volume = volume;
         this.pitch = pitch;

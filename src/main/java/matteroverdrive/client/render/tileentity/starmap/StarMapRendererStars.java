@@ -28,7 +28,7 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -44,7 +44,7 @@ public abstract class StarMapRendererStars extends StarMapRendererAbstract
     {
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         GlStateManager.color(1, 1, 1, 1);
-        Vec3 pos;
+        Vec3d pos;
 
         if (quadrant != null)
         {
@@ -54,7 +54,7 @@ public abstract class StarMapRendererStars extends StarMapRendererAbstract
             ClientProxy.renderHandler.getRenderParticlesHandler().bindSheet();
             for (Star star : quadrant.getStars())
             {
-                pos = new Vec3(star.getPosition().xCoord * distanceMultiply,star.getPosition().yCoord * distanceMultiply,star.getPosition().zCoord * distanceMultiply);
+                pos = new Vec3d(star.getPosition().xCoord * distanceMultiply,star.getPosition().yCoord * distanceMultiply,star.getPosition().zCoord * distanceMultiply);
                 drawStarParticle(quadrant, star, pos, player, starMap, starSizeMultiply);
                 if (starMap.getGalaxyPosition().equals(star))
                 {
@@ -83,7 +83,7 @@ public abstract class StarMapRendererStars extends StarMapRendererAbstract
         GlStateManager.enableTexture2D();
     }
 
-    protected void drawStarParticle(Quadrant quadrant, Star star, Vec3 pos, EntityPlayer player, TileEntityMachineStarMap starMap, double starSizeMultiply)
+    protected void drawStarParticle(Quadrant quadrant, Star star, Vec3d pos, EntityPlayer player, TileEntityMachineStarMap starMap, double starSizeMultiply)
     {
         Color color = getStarColor(star, player);
         double size = 0.01;

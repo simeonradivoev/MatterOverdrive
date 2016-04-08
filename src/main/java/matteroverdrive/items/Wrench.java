@@ -6,8 +6,11 @@ import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -25,15 +28,15 @@ public class Wrench extends MOBaseItem
     }
 
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
     {
         IBlockState state = world.getBlockState(pos);
         boolean result = false;
 
         if (state != null) {
-            PlayerInteractEvent e = new PlayerInteractEvent(player, PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK, pos, side, world);
-            if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Event.Result.DENY || e.useBlock == Event.Result.DENY || e.useItem == Event.Result.DENY) {
-                return false;
+            PlayerInteractEvent e = new PlayerInteractEvent.RightClickBlock(player,hand,stack, pos, side, new Vec3d(hitX,hitY,hitZ));
+            if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Event.Result.DENY) {
+                return EnumActionResult.FAIL;
             }
             if (player.isSneaking() && state.getBlock() instanceof IDismantleable && ((IDismantleable) state.getBlock()).canDismantle(player,world,pos)) {
                 if (!world.isRemote) {
@@ -52,10 +55,10 @@ public class Wrench extends MOBaseItem
 
         if (result)
         {
-            player.swingItem();
+            player.swingArm(hand);
         }
 
-        return result && !world.isRemote;
+        return result && !world.isRemote ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
     }
 
     @Override

@@ -2,7 +2,7 @@ package matteroverdrive.gui.element;
 
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Created by Simeon on 1/31/2016.

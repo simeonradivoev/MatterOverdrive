@@ -29,6 +29,7 @@ import matteroverdrive.matter_network.components.MatterNetworkComponentQueue;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -154,7 +155,7 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
 
     //region Getters and Setters
     @Override
-    public String getSound() {
+    public SoundEvent getSound() {
         return null;
     }
 

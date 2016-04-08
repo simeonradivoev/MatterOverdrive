@@ -18,10 +18,12 @@
 
 package matteroverdrive.init;
 
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import matteroverdrive.enchantment.EnchantmentOverclock;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 /**
  * Created by Simeon on 8/7/2015.
@@ -32,11 +34,13 @@ public class MatterOverdriveEnchantments implements IConfigSubscriber
 
     public static void init(FMLPreInitializationEvent event,ConfigurationHandler configurationHandler)
     {
-        int id = configurationHandler.getInt("Overclock",ConfigurationHandler.CATEGORY_ENCHANTMENTS,69);
+        overclock = new EnchantmentOverclock(Enchantment.Rarity.COMMON);
+
+        int id = configurationHandler.getInt("Overclock",ConfigurationHandler.CATEGORY_ENCHANTMENTS,80);
         while (id < 256)
         {
             try {
-                overclock = new EnchantmentOverclock(id);
+                Enchantment.enchantmentRegistry.register(id,new ResourceLocation("overclock"),overclock);
                 break;
             } catch (IllegalArgumentException e) {
                 id++;

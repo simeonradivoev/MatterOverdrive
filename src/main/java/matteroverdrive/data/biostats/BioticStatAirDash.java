@@ -6,7 +6,7 @@ import matteroverdrive.util.MOLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -87,7 +87,7 @@ public class BioticStatAirDash extends AbstractBioticStat
     @SideOnly(Side.CLIENT)
     private void dash(EntityPlayerSP playerSP)
     {
-        Vec3 look = playerSP.getLookVec().addVector(0,0.75,0).normalize();
+        Vec3d look = playerSP.getLookVec().addVector(0,0.75,0).normalize();
         playerSP.addVelocity(look.xCoord, look.yCoord, look.zCoord);
         for (int i = 0;i < 30;i++)
         {

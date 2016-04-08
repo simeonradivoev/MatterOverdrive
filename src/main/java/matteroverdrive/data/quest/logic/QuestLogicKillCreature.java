@@ -22,8 +22,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import matteroverdrive.api.exceptions.MOQuestParseException;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.entity.player.MOExtendedProperties;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.util.MOJsonHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -132,27 +135,27 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event,EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
         if (event instanceof LivingDeathEvent)
         {
             LivingDeathEvent deathEvent = (LivingDeathEvent)event;
-            if (deathEvent.entityLiving != null && isTarget(questStack,deathEvent.entityLiving))
+            if (deathEvent.getEntityLiving() != null && isTarget(questStack,deathEvent.getEntityLiving()))
             {
-                if (regex != null && !isTargetNameValid(((LivingDeathEvent) event).entity))
-                    return false;
-                if (shootOnly && !((LivingDeathEvent) event).source.isProjectile())
-                    return false;
-                if (burnOnly && !((LivingDeathEvent) event).source.isFireDamage())
-                    return false;
-                if (explosionOnly && !((LivingDeathEvent) event).source.isExplosion())
-                    return false;
-                if (killWithItem != null && (entityPlayer.getHeldItem() == null || entityPlayer.getHeldItem().getItem() != killWithItem))
-                    return false;
-                if (killWithItemStack != null && (entityPlayer.getHeldItem() == null || !ItemStack.areItemStacksEqual(entityPlayer.getHeldItem(),killWithItemStack)))
-                    return false;
-                if (onlyChildren && !((LivingDeathEvent) event).entityLiving.isChild())
-                    return false;
+                if (regex != null && !isTargetNameValid(((LivingDeathEvent) event).getEntity()))
+                    return null;
+                if (shootOnly && !((LivingDeathEvent) event).getSource().isProjectile())
+                    return null;
+                if (burnOnly && !((LivingDeathEvent) event).getSource().isFireDamage())
+                    return null;
+                if (explosionOnly && !((LivingDeathEvent) event).getSource().isExplosion())
+                    return null;
+                if (killWithItem != null && (entityPlayer.getHeldItemMainhand() == null || entityPlayer.getHeldItemMainhand().getItem() != killWithItem))
+                    return null;
+                if (killWithItemStack != null && (entityPlayer.getHeldItemMainhand() == null || !ItemStack.areItemStacksEqual(entityPlayer.getHeldItemMainhand(),killWithItemStack)))
+                    return null;
+                if (onlyChildren && !((LivingDeathEvent) event).getEntityLiving().isChild())
+                    return null;
 
                 initTag(questStack);
                 int currentKillCount = getKillCount(questStack);
@@ -161,18 +164,20 @@ public class QuestLogicKillCreature extends AbstractQuestLogic
                     setKillCount(questStack,++currentKillCount);
                     if (isObjectiveCompleted(questStack,entityPlayer,0) && autoComplete)
                     {
-                        MOExtendedProperties extendedProperties = MOExtendedProperties.get(entityPlayer);
+                        MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(entityPlayer);
                         if (extendedProperties != null)
                         {
-                            questStack.markComplited(entityPlayer,false);
+                            markComplete(questStack,entityPlayer);
+                            return new QuestLogicState(QuestState.Type.COMPLETE,true);
+                        }else
+                        {
+                            return new QuestLogicState(QuestState.Type.UPDATE,true);
                         }
                     }
-
-                    return true;
                 }
             }
         }
-        return false;
+        return null;
     }
 
     public boolean isTarget(QuestStack questStack,Entity entity)

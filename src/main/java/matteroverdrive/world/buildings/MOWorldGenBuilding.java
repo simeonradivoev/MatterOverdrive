@@ -26,9 +26,10 @@ import matteroverdrive.world.MOWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 import org.apache.logging.log4j.Level;
 
@@ -53,7 +54,7 @@ public abstract class MOWorldGenBuilding<T extends MOWorldGenBuilding.WorldGenBu
     }
 
     @Override
-    public void generate(Random random, BlockPos pos, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider, int layer, int placeNotify,T worker)
+    public void generate(Random random, BlockPos pos, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider, int layer, int placeNotify, T worker)
     {
         generateFromImage(world, random, pos.add(0,getYOffset(),0),layer,placeNotify,worker);
     }

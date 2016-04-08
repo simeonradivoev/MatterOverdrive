@@ -31,14 +31,17 @@ import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.network.packet.bi.PacketFirePlasmaShot;
 import matteroverdrive.util.AndroidPartsFactory;
 import matteroverdrive.util.WeaponFactory;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -95,7 +98,7 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
 
             if (j < 5 || getIsLegendary())
             {
-                this.entityDropItem(getEquipmentInSlot(0).copy(),0);
+                this.entityDropItem(getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).copy(),0);
             }
         }
     }
@@ -104,18 +107,8 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(24);
-    }
-
-    @Override
-    public void onLivingUpdate()
-    {
-        super.onLivingUpdate();
-        if (getHeldItem() != null)
-        {
-            //getHeldItem().getItem().onUpdate(getHeldItem(),worldObj,this,0,true);
-        }
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(24);
     }
 
     @Override
@@ -153,13 +146,13 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
         super.addRandomArmor();
         int androidLevel = getAndroidLevel();
         ItemStack gun = MatterOverdrive.weaponFactory.getRandomDecoratedEnergyWeapon(new WeaponFactory.WeaponGenerationContext(androidLevel,this,getIsLegendary()));
-        setCurrentItemOrArmor(0,gun);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(((EnergyWeapon)gun.getItem()).getRange(gun)-2);
+        setItemStackToSlot(EntityEquipmentSlot.MAINHAND,gun);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(((EnergyWeapon)gun.getItem()).getRange(gun)-2);
     }
 
     public void setCombatTask()
     {
-        ItemStack itemstack = this.getHeldItem();
+        ItemStack itemstack = this.getHeldItem(EnumHand.MAIN_HAND);
 
         if (itemstack != null && itemstack.getItem() instanceof EnergyWeapon)
         {
@@ -184,8 +177,8 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     }
 
     @Override
-    public void attackEntityWithRangedAttack(EntityLivingBase target, Vec3 lastSeenPosition, boolean canSee) {
-        ItemStack weapon = this.getHeldItem();
+    public void attackEntityWithRangedAttack(EntityLivingBase target, Vec3d lastSeenPosition, boolean canSee) {
+        ItemStack weapon = this.getHeldItem(EnumHand.MAIN_HAND);
         if (!worldObj.isRemote)
         {
             if (lastSeenPosition == null)
@@ -195,8 +188,8 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
             if (weapon.getItem() instanceof EnergyWeapon) {
                 EnergyWeapon energyWeapon = (EnergyWeapon) weapon.getItem();
                 //magic number from MC
-                Vec3 pos = new Vec3(this.posX, this.posY + getEyeHeight(), this.posZ);
-                Vec3 dir = lastSeenPosition.subtract(this.getPositionVector());
+                Vec3d pos = new Vec3d(this.posX, this.posY + getEyeHeight(), this.posZ);
+                Vec3d dir = lastSeenPosition.subtract(this.getPositionVector());
                 WeaponShot shot = energyWeapon.createServerShot(weapon, this, true);
                 float difficulty = MathHelper.clamp_float((0.6f/3f)*worldObj.getDifficulty().getDifficultyId(),0,0.6f) + getAndroidLevel()*(0.4f/3f) + (getIsLegendary() ? 0.3f : 0);
                 shot.setDamage(shot.getDamage()*difficulty);
@@ -206,7 +199,7 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
                 energyWeapon.setHeat(weapon,0);
                 if (UNLIMITED_WEAPON_ENERGY)
                     energyWeapon.rechargeFully(weapon);
-                MatterOverdrive.packetPipeline.sendToAllAround(new PacketFirePlasmaShot(this.getEntityId(),pos,dir,shot),worldObj.provider.getDimensionId(),posX,posY,posZ,64);
+                MatterOverdrive.packetPipeline.sendToAllAround(new PacketFirePlasmaShot(this.getEntityId(),pos,dir,shot),worldObj.provider.getDimension(),posX,posY,posZ,64);
 
                 difficulty = 1 + (3 - worldObj.getDifficulty().getDifficultyId())*0.5f;
                 this.aiBoltAttack.setMaxRangedAttackDelay((int) (((EnergyWeapon) weapon.getItem()).getShootCooldown(weapon) * difficulty));
@@ -223,7 +216,7 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
     /**
      * Sets the held item, or an armor slot. Slot 0 is held item. Slot 1-4 is armor. Params: Item, slot
      */
-    @Override
+    /*@Override
     public void setCurrentItemOrArmor(int slot, ItemStack itemStack)
     {
         super.setCurrentItemOrArmor(slot, itemStack);
@@ -232,19 +225,19 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
         {
             this.setCombatTask();
         }
-    }
+    }*/
 
     @Override
     public ItemStack getWeapon() {
-        return getHeldItem();
+        return getHeldItem(EnumHand.MAIN_HAND);
     }
 
     @SideOnly(Side.CLIENT)
     public boolean isInRangeToRenderDist(double p_70112_1_)
     {
         double d1 = this.getEntityBoundingBox().getAverageEdgeLength();
-        d1 *= 64.0D * this.renderDistanceWeight;
-        d1 += getEntityAttribute(SharedMonsterAttributes.followRange).getAttributeValue();
+        d1 *= 64.0D * Entity.getRenderDistanceWeight();
+        d1 += getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).getAttributeValue();
         return p_70112_1_ < d1 * d1;
     }
 }

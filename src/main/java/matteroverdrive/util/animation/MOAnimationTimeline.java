@@ -19,7 +19,7 @@
 package matteroverdrive.util.animation;
 
 import matteroverdrive.util.math.MOMathHelper;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.List;

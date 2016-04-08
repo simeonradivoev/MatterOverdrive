@@ -29,6 +29,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -81,24 +84,27 @@ public class Contract extends MOBaseItem
         return super.getItemStackDisplayName(itemStack);
     }
 
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
-        if (world.isRemote)
+        if (worldIn.isRemote)
         {
-            openGui(itemstack);
+            openGui(itemStackIn);
+            return ActionResult.newResult(EnumActionResult.SUCCESS,itemStackIn);
         }else
         {
-            QuestStack questStack = getQuest(itemstack);
+            QuestStack questStack = getQuest(itemStackIn);
             if (questStack == null)
             {
                 Quest quest = ((WeightedRandomQuest) WeightedRandom.getRandomItem(itemRand, MatterOverdriveQuests.contractGeneration)).getQuest();
                 questStack = MatterOverdrive.questFactory.generateQuestStack(itemRand,quest);
                 NBTTagCompound questTag = new NBTTagCompound();
                 questStack.writeToNBT(questTag);
-                itemstack.setTagCompound(questTag);
+                itemStackIn.setTagCompound(questTag);
+                return ActionResult.newResult(EnumActionResult.SUCCESS,itemStackIn);
             }
         }
-        return itemstack;
+        return ActionResult.newResult(EnumActionResult.PASS,itemStackIn);
     }
 
     @SideOnly(Side.CLIENT)

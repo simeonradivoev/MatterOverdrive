@@ -24,13 +24,13 @@ import matteroverdrive.util.RenderUtils;
 import matteroverdrive.util.animation.MOEasing;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -74,7 +74,7 @@ public class EntityRendererPhaserFire extends Render
         float f9 = (float)(10 + b0 * 10) / 32.0F;
         float f10 = 0.05625F;
         float renderSize = plasmaBolt.getRenderSize();
-        double length = 6 * new Vec3(plasmaBolt.motionX,plasmaBolt.motionY,plasmaBolt.motionZ).lengthVector() + 10;
+        double length = 6 * new Vec3d(plasmaBolt.motionX,plasmaBolt.motionY,plasmaBolt.motionZ).lengthVector() + 10;
         GlStateManager.enableRescaleNormal();
         GlStateManager.disableCull();
 
@@ -82,7 +82,7 @@ public class EntityRendererPhaserFire extends Render
         GlStateManager.scale(f10, f10, f10);
         GlStateManager.translate(-4.0F, 0.0F, 0.0F);
         GL11.glNormal3f(f10, 0.0F, 0.0F);
-        WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+        VertexBuffer wr = Tessellator.getInstance().getBuffer();
         wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         wr.pos(1, -renderSize, -renderSize).tex((double)f6, (double)f8).endVertex();
         wr.pos(1, -renderSize, renderSize).tex((double)f7, (double)f8).endVertex();

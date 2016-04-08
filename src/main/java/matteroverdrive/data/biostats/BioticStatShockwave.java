@@ -1,18 +1,25 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.KeyHandler;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.network.packet.client.PacketSpawnParticle;
 import matteroverdrive.proxy.ClientProxy;
+import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -38,8 +45,8 @@ public class BioticStatShockwave extends AbstractBioticStat
     @Override
     public String getDetails(int level)
     {
-        String keyName = EnumChatFormatting.AQUA + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()) + EnumChatFormatting.GRAY;
-        return String.format(super.getDetails(level), EnumChatFormatting.YELLOW + Integer.toString(10) + EnumChatFormatting.GRAY,keyName);
+        String keyName = ChatFormatting.AQUA + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()) + ChatFormatting.GRAY;
+        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.YELLOW + Integer.toString(10) + ChatFormatting.GRAY,keyName);
     }
 
     @Override
@@ -47,7 +54,7 @@ public class BioticStatShockwave extends AbstractBioticStat
     {
         if (this.equals(android.getActiveStat()) && !android.getPlayer().onGround && android.getPlayer().motionY < 0 && android.getPlayer().isSneaking())
         {
-            Vec3 motion = new Vec3(android.getPlayer().motionX,android.getPlayer().motionY,android.getPlayer().motionZ).subtract(new Vec3(0,1,0)).normalize();
+            Vec3d motion = new Vec3d(android.getPlayer().motionX,android.getPlayer().motionY,android.getPlayer().motionZ).subtract(new Vec3d(0,1,0)).normalize();
             android.getPlayer().addVelocity(motion.xCoord*0.2,motion.yCoord*0.2,motion.zCoord*0.2);
         }
     }
@@ -70,14 +77,14 @@ public class BioticStatShockwave extends AbstractBioticStat
     @Override
     public void onLivingEvent(AndroidPlayer androidPlayer, int level, LivingEvent event)
     {
-        if ((event instanceof LivingFallEvent || event instanceof PlayerFlyableFallEvent) && event.entityLiving.isSneaking() && this.equals(androidPlayer.getActiveStat()))
+        if ((event instanceof LivingFallEvent || event instanceof PlayerFlyableFallEvent) && event.getEntityLiving().isSneaking() && this.equals(androidPlayer.getActiveStat()))
         {
             if (event instanceof LivingFallEvent)
             {
-                createShockwave(androidPlayer,event.entityLiving,((LivingFallEvent) event).distance);
+                createShockwave(androidPlayer,event.getEntityLiving(),((LivingFallEvent) event).getDistance());
             }else
             {
-                createShockwave(androidPlayer,event.entityLiving,((PlayerFlyableFallEvent) event).distance);
+                createShockwave(androidPlayer,event.getEntityLiving(),((PlayerFlyableFallEvent) event).getDistance());
             }
         }
     }
@@ -100,7 +107,7 @@ public class BioticStatShockwave extends AbstractBioticStat
                         {
                             if (entityLivingBase != entityPlayer)
                             {
-                                Vec3 dir = entityLivingBase.getPositionVector().subtract(entityPlayer.getPositionVector());
+                                Vec3d dir = entityLivingBase.getPositionVector().subtract(entityPlayer.getPositionVector());
                                 double localDistance = dir.lengthVector();
                                 double distanceMultiply = range / Math.max(1, localDistance);
                                 dir = dir.normalize();
@@ -112,7 +119,7 @@ public class BioticStatShockwave extends AbstractBioticStat
                         }
                         setLastShockwaveTime(androidPlayer, androidPlayer.getPlayer().worldObj.getTotalWorldTime() + DELAY);
                         androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS));
-                        entityPlayer.worldObj.playSoundAtEntity(entityPlayer, Reference.MOD_ID + ":" + "shockwave", 1, 0.9f + entityPlayer.getRNG().nextFloat() * 0.1f);
+                        entityPlayer.worldObj.playSound(null,entityPlayer.posX,entityPlayer.posY,entityPlayer.posZ, MatterOverdriveSounds.androidShockwave,SoundCategory.PLAYERS, 1, 0.9f + entityPlayer.getRNG().nextFloat() * 0.1f);
                         for (int i = 0; i < 20; ++i)
                         {
                             double d0 = entityPlayer.getRNG().nextGaussian() * 0.02D;

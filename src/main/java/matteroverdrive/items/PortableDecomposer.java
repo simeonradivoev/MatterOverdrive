@@ -1,5 +1,6 @@
 package matteroverdrive.items;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.util.MatterHelper;
@@ -7,12 +8,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -46,23 +48,23 @@ public class PortableDecomposer extends MOItemEnergyContainer
             for (int i = 0;i < list.tagCount();i++)
             {
                 s = ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i));
-                infos.add(EnumChatFormatting.GRAY + s.getDisplayName());
+                infos.add(ChatFormatting.GRAY + s.getDisplayName());
             }
         }
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if (worldIn.getTileEntity(pos) instanceof IFluidHandler)
         {
             IFluidHandler fluidHandler = (IFluidHandler)worldIn.getTileEntity(pos);
             FluidStack fluidStack = new FluidStack(MatterOverdriveFluids.matterPlasma,getMatter(stack));
-            int filled = fluidHandler.fill(side,fluidStack,true);
+            int filled = fluidHandler.fill(facing,fluidStack,true);
             setMatter(stack,Math.max(0,fluidStack.amount-filled));
-            return true;
+            return EnumActionResult.SUCCESS;
         }
-        return false;
+        return EnumActionResult.FAIL;
     }
 
     public int getMatter(ItemStack itemStack)

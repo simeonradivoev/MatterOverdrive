@@ -24,23 +24,22 @@ import matteroverdrive.client.resources.data.WeaponMetadataSection;
 import matteroverdrive.items.weapon.EnergyWeapon;
 import matteroverdrive.util.MOLog;
 import matteroverdrive.util.math.MOMathHelper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.data.IMetadataSection;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
-import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -56,7 +55,7 @@ import java.util.List;
 /**
  * Created by Simeon on 11/8/2015.
  */
-public abstract class WeaponItemRenderer implements IPerspectiveAwareModel, ISmartItemModel
+public abstract class WeaponItemRenderer implements IPerspectiveAwareModel
 {
     protected ResourceLocation weaponModelLocation;
     protected OBJModel weaponModel;
@@ -93,10 +92,10 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel, ISma
     {
         try
         {
-            weaponModel = (OBJModel) OBJLoader.instance.loadModel(weaponModelLocation);
+            weaponModel = (OBJModel) OBJLoader.INSTANCE.loadModel(weaponModelLocation);
             ImmutableMap<String,String> customOptions = new ImmutableMap.Builder<String,String>().put("flip-v","true").put("ambient","false").build();
             weaponModel = (OBJModel)weaponModel.process(customOptions);
-        } catch (IOException e)
+        } catch (Exception e)
         {
             MOLog.error("Missing weapon model.",e);
         }
@@ -118,24 +117,29 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel, ISma
     }
 
     @Override
-    public Pair<? extends IFlexibleBakedModel, javax.vecmath.Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)
+    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)
     {
         matrix.setIdentity();
-        if (cameraTransformType == ItemCameraTransforms.TransformType.THIRD_PERSON)
+        if (cameraTransformType == ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)
         {
             GlStateManager.scale(1.6f,1.6f,1.6f);
-            GlStateManager.translate(0.25f,0.2f,-0.35f);
-            GlStateManager.rotate(-100,1,0,0);
+            GlStateManager.rotate(180,0,1,0);
+            GlStateManager.translate(0.5f,0.5f,0.35f);
         }
         else if (cameraTransformType == ItemCameraTransforms.TransformType.GUI)
         {
-            GlStateManager.translate(0.7,0.6,0.3);
-            GlStateManager.scale(2.5f,2.5f,2.5f);
+            //matrix.setRotation(new AxisAngle4f(new Vector3f(0,1,0),90));
+            GlStateManager.rotate(25,0,0,1);
+            GlStateManager.rotate(90,0,1,0);
+
+
+            GlStateManager.translate(0.7,0.5,0.3);
+            //GlStateManager.scale(2.5f,2.5f,2.5f);
         }
         else if (cameraTransformType == ItemCameraTransforms.TransformType.GROUND)
         {
-            matrix.setScale(4f);
-            matrix.setTranslation(new javax.vecmath.Vector3f(1f,1f,0.5f));
+            matrix.setScale(1.2f);
+            matrix.setTranslation(new javax.vecmath.Vector3f(0.6f,0.5f,0.3f));
         }
         return new ImmutablePair<>(this,matrix);
     }
@@ -167,27 +171,9 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel, ISma
     }
 
     @Override
-    public IBakedModel handleItemState(ItemStack stack)
+    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
     {
-        return this;
-    }
-
-    @Override
-    public VertexFormat getFormat()
-    {
-        return bakedModel.getFormat();
-    }
-
-    @Override
-    public List<BakedQuad> getFaceQuads(EnumFacing side)
-    {
-        return bakedModel.getFaceQuads(side);
-    }
-
-    @Override
-    public List<BakedQuad> getGeneralQuads()
-    {
-        return bakedModel.getGeneralQuads();
+        return bakedModel.getQuads(state,side,rand);
     }
 
     @Override
@@ -229,5 +215,11 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel, ISma
     public WeaponMetadataSection getWeaponMetadata()
     {
         return weaponMetadata;
+    }
+
+    @Override
+    public ItemOverrideList getOverrides()
+    {
+        return ItemOverrideList.NONE;
     }
 }

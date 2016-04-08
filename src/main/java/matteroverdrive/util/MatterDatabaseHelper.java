@@ -18,6 +18,7 @@
 
 package matteroverdrive.util;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.data.matter_network.ItemPattern;
@@ -26,9 +27,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -186,27 +186,27 @@ public class MatterDatabaseHelper
         Item item = Item.getItemFromBlock(blockState.getBlock());
         if (item != null)
         {
-            return new ItemStack(item, 1, blockState.getBlock().getDamageValue(world, pos));
+            return new ItemStack(item, 1, blockState.getBlock().getMetaFromState(blockState));
         }
         return null;
 	}
 
-	public static EnumChatFormatting getPatternInfoColor(int progress)
+	public static ChatFormatting getPatternInfoColor(int progress)
 	{
-		EnumChatFormatting color;
+		ChatFormatting color;
 
 		if (progress > 0 && progress <= 20)
-			color = EnumChatFormatting.RED;
+			color = ChatFormatting.RED;
 		else if (progress > 20 && progress <= 40)
-			color = EnumChatFormatting.GOLD;
+			color = ChatFormatting.GOLD;
 		else if (progress > 40 && progress <= 60)
-			color = EnumChatFormatting.YELLOW;
+			color = ChatFormatting.YELLOW;
 		else if (progress > 40 && progress <= 80)
-			color = EnumChatFormatting.AQUA;
+			color = ChatFormatting.AQUA;
 		else if (progress > 80 && progress <= 100)
-			color = EnumChatFormatting.GREEN;
+			color = ChatFormatting.GREEN;
 		else
-			color = EnumChatFormatting.GREEN;
+			color = ChatFormatting.GREEN;
 
 		return color;
 	}

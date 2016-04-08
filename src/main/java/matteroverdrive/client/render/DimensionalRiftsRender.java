@@ -8,12 +8,13 @@ import matteroverdrive.util.math.MOMathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -31,9 +32,10 @@ public class DimensionalRiftsRender implements IWorldLastRenderer
     @Override
     public void onRenderWorldLast(RenderHandler handler, RenderWorldLastEvent event)
     {
-        if (Minecraft.getMinecraft().thePlayer.getHeldItem() != null)
+        //// TODO: 3/24/2016 Add support for offhand
+        if (Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND) != null)
         {
-            ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem();
+            ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
             if (heldItem.getItem() instanceof  IBlockScanner && ((IBlockScanner) heldItem.getItem()).showsGravitationalWaves(heldItem))
             {
                 GlStateManager.pushMatrix();
@@ -45,15 +47,15 @@ public class DimensionalRiftsRender implements IWorldLastRenderer
                 GL11.glPointSize(6);
                 GL11.glLineWidth(1);
                 Entity renderViewEntity = Minecraft.getMinecraft().getRenderViewEntity();
-                Vec3 viewEntityPos = renderViewEntity.getPositionEyes(event.partialTicks).subtract(0, renderViewEntity.getEyeHeight(), 0);
+                Vec3d viewEntityPos = renderViewEntity.getPositionEyes(event.getPartialTicks()).subtract(0, renderViewEntity.getEyeHeight(), 0);
                 if (lastY == 0)
                     lastY = 64;
                 if (renderViewEntity.onGround)
                     lastY = MOMathHelper.Lerp(lastY, viewEntityPos.yCoord, 0.05);
-                Vec3 viewEntityPosRound = new Vec3(Math.floor(viewEntityPos.xCoord), lastY, Math.floor(viewEntityPos.zCoord));
+                Vec3d viewEntityPosRound = new Vec3d(Math.floor(viewEntityPos.xCoord), lastY, Math.floor(viewEntityPos.zCoord));
 
                 GlStateManager.translate(-viewEntityPos.xCoord, -viewEntityPos.yCoord, -viewEntityPos.zCoord);
-                WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
+                VertexBuffer worldRenderer = Tessellator.getInstance().getBuffer();
 
                 int vewDistance = 128;
                 double height = 5;
@@ -64,7 +66,7 @@ public class DimensionalRiftsRender implements IWorldLastRenderer
                 {
                     for (int z = 0; z < vewDistance; z++)
                     {
-                        float yPos = MatterOverdrive.moWorld.getDimensionalRifts().getValueAt(new Vec3(viewEntityPosRound.xCoord + x - vewDistance / 2,0,viewEntityPosRound.zCoord + z - vewDistance / 2));
+                        float yPos = MatterOverdrive.moWorld.getDimensionalRifts().getValueAt(new Vec3d(viewEntityPosRound.xCoord + x - vewDistance / 2,0,viewEntityPosRound.zCoord + z - vewDistance / 2));
                         yPos *= Math.sin((x / (double) vewDistance) * Math.PI) * Math.sin((z / (double) vewDistance) * Math.PI);
                         points[x][z] = yPos;
                     }

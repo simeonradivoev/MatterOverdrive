@@ -1,0 +1,26 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "leaves",
+    "textures": {
+      "all": "mo:blocks/alien/alien_leaves_oak"
+    }
+  },
+  "variants": {
+    "normal": {
+      "model": "leaves"
+    },
+    "check_decay=false,decayable=true,variant=oak":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_oak"}},
+    "check_decay=false,decayable=true,variant=glowing":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_glowing"}},
+    "check_decay=false,decayable=true,variant=bush":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_bush"}},
+    "check_decay=true,decayable=true,variant=oak":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_oak"}},
+    "check_decay=true,decayable=true,variant=glowing":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_glowing"}},
+    "check_decay=true,decayable=true,variant=bush":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_bush"}},
+    "check_decay=false,decayable=false,variant=oak":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_oak"}},
+    "check_decay=false,decayable=false,variant=glowing":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_glowing"}},
+    "check_decay=false,decayable=false,variant=bush":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_bush"}},
+    "check_decay=true,decayable=false,variant=oak":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_oak"}},
+    "check_decay=true,decayable=false,variant=glowing":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_glowing"}},
+    "check_decay=true,decayable=false,variant=bush":{"model":"leaves","textures": {"all": "mo:blocks/alien/alien_leaves_bush"}}
+  }
+}

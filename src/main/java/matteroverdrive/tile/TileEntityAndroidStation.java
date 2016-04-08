@@ -23,14 +23,15 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.BionicSlot;
 import matteroverdrive.data.inventory.EnergySlot;
-import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.events.MachineEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -69,7 +70,7 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     }
 
     @Override
-    public String getSound() {
+    public SoundEvent getSound() {
         return null;
     }
 
@@ -132,7 +133,7 @@ public class TileEntityAndroidStation extends MOTileEntityMachine
     @Override
     public boolean isUseableByPlayer(EntityPlayer player)
     {
-        return AndroidPlayer.get(player) != null && AndroidPlayer.get(player).isAndroid() && super.isUseableByPlayer(player);
+        return MOPlayerCapabilityProvider.GetAndroidCapability(player) != null && MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid() && super.isUseableByPlayer(player);
     }
 
     @Override

@@ -22,7 +22,8 @@ import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 
 /**
@@ -172,7 +173,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
     }
 
     @Override
-    public String getSound() {
+    public SoundEvent getSound() {
         return null;
     }
 

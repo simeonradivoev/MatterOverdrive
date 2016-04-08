@@ -10,8 +10,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.apache.logging.log4j.Level;
@@ -26,7 +26,7 @@ public class EntityReward implements IQuestReward
     private String entityId;
     private int count;
     private boolean positionFromNbt;
-    private Vec3 positionOffset;
+    private Vec3d positionOffset;
     private NBTTagCompound nbtTagCompound;
 
     public EntityReward(){}
@@ -51,7 +51,7 @@ public class EntityReward implements IQuestReward
         }
         count = MOJsonHelper.getInt(object,"count");
         nbtTagCompound = MOJsonHelper.getNbt(object,"nbt",null);
-        positionOffset = MOJsonHelper.getVec3(object,"offset",new Vec3(0,0,0));
+        positionOffset = MOJsonHelper.getVec3(object,"offset",new Vec3d(0,0,0));
     }
 
     @Override
@@ -139,12 +139,12 @@ public class EntityReward implements IQuestReward
         this.positionFromNbt = positionFromNbt;
     }
 
-    public Vec3 getPositionOffset()
+    public Vec3d getPositionOffset()
     {
         return positionOffset;
     }
 
-    public void setPositionOffset(Vec3 positionOffset)
+    public void setPositionOffset(Vec3d positionOffset)
     {
         this.positionOffset = positionOffset;
     }

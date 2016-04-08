@@ -2,14 +2,16 @@ package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
 import matteroverdrive.api.quest.IQuestReward;
+import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
+import matteroverdrive.api.quest.QuestState;
 import matteroverdrive.data.quest.QuestBlock;
 import matteroverdrive.util.MOJsonHelper;
 import matteroverdrive.util.MOQuestHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -90,41 +92,39 @@ public class QuestLogicBlockInteract extends AbstractQuestLogic
     }
 
     @Override
-    public boolean onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
+    public QuestLogicState onEvent(QuestStack questStack, Event event, EntityPlayer entityPlayer)
     {
-        if (event instanceof PlayerInteractEvent)
+        if (event instanceof PlayerInteractEvent.RightClickBlock)
         {
             PlayerInteractEvent interactEvent = (PlayerInteractEvent)event;
-            if (interactEvent.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) && !hasInteracted(questStack))
+            if (!hasInteracted(questStack))
             {
                 BlockPos pos = MOQuestHelper.getPosition(questStack);
                 if (pos != null)
                 {
-                    if (!pos.equals(((PlayerInteractEvent) event).pos))
-                        return false;
+                    if (!pos.equals(((PlayerInteractEvent) event).getPos()))
+                        return null;
                 }
 
                 if (mustBeInteractable)
                 {
-                    TileEntity tileEntity = interactEvent.world.getTileEntity(interactEvent.pos);
+                    TileEntity tileEntity = interactEvent.getWorld().getTileEntity(interactEvent.getPos());
                     if (!(tileEntity instanceof IInteractionObject))
-                        return false;
+                        return null;
 
                     if (regex != null && ((!((IInteractionObject) tileEntity).hasCustomName()) || !((IInteractionObject) tileEntity).getName().matches(regex)))
-                        return false;
+                        return null;
                 }
 
                 if (destoryBlock && pos != null)
-                    ((PlayerInteractEvent) event).world.setBlockToAir(pos);
+                    ((PlayerInteractEvent) event).getWorld().setBlockToAir(pos);
 
                 setInteracted(questStack,true);
-
-                if (autoComplete)
-                    questStack.markComplited(entityPlayer,false);
-                return true;
+                markComplete(questStack,entityPlayer);
+                return new QuestLogicState(QuestState.Type.COMPLETE,true);
             }
         }
-        return false;
+        return null;
     }
 
     @Override

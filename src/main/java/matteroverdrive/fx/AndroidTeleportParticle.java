@@ -19,8 +19,8 @@ public class AndroidTeleportParticle extends MOEntityFX
         setSize(1,1);
         this.particleRed = this.particleGreen = this.particleBlue = 1.0F;
         this.particleMaxAge = 16;
-        this.noClip = true;
-        this.particleIcon = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.star);
+        //this.noClip = true;
+        this.particleTexture = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.star);
     }
 
     @Override
@@ -52,28 +52,6 @@ public class AndroidTeleportParticle extends MOEntityFX
     }
 
     /**
-     * Gets how bright this entity is.
-     */
-    @Override
-    public float getBrightness(float f)
-    {
-        float f1 = ((float)this.particleAge + f) / (float)this.particleMaxAge;
-
-        if (f1 < 0.0F)
-        {
-            f1 = 0.0F;
-        }
-
-        if (f1 > 1.0F)
-        {
-            f1 = 1.0F;
-        }
-
-        float f2 = super.getBrightness(f);
-        return f2 * f1 + (1.0F - f1);
-    }
-
-    /**
      * Called to update the entity's position/logic.
      */
     @Override
@@ -85,7 +63,7 @@ public class AndroidTeleportParticle extends MOEntityFX
 
         if (this.particleAge++ >= this.particleMaxAge)
         {
-            this.setDead();
+            this.setExpired();
         }
 
         this.particleScale = (float)MOMathHelper.easeIn(particleAge, 10, -10, particleMaxAge);

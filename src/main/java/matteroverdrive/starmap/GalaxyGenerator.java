@@ -11,8 +11,8 @@ import matteroverdrive.starmap.gen.PlanetNormalGen;
 import matteroverdrive.starmap.gen.StarGen;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.math.MOMathHelper;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class GalaxyGenerator implements IConfigSubscriber
         {
             star.clearPlanets();
             starRandom.setSeed(star.getSeed());
-            Vec3 starPos = generateStarPosition(starRandom);
+            Vec3d starPos = generateStarPosition(starRandom);
             star.setPosition((float) starPos.xCoord, (float) starPos.yCoord, (float) starPos.zCoord);
             starGen.getRandomGen(star,starRandom).generateSpaceBody(star, starRandom);
             if (generatePLanets)
@@ -189,12 +189,12 @@ public class GalaxyGenerator implements IConfigSubscriber
     //endregion
 
     //region Other Gen
-    public Vec3 generateStarPosition(Random random)
+    public Vec3d generateStarPosition(Random random)
     {
         double x = MathHelper.clamp_double(MOMathHelper.nextGaussian(random, 0, 1d / 3d), -1, 1);
         double y = MathHelper.clamp_double(MOMathHelper.nextGaussian(random, 0, 1d / 3d), -1, 1);
         double z = MathHelper.clamp_double(MOMathHelper.nextGaussian(random, 0, 1d / 3d), -1, 1);
-        return new Vec3(x,y,z);
+        return new Vec3d(x,y,z);
     }
     //endregion
 

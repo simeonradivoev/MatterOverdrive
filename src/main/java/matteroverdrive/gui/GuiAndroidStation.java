@@ -18,6 +18,7 @@
 
 package matteroverdrive.gui;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.BionicStatGuiInfo;
@@ -25,8 +26,9 @@ import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.container.ContainerAndroidStation;
 import matteroverdrive.container.slot.MOSlot;
 import matteroverdrive.data.inventory.BionicSlot;
-import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.element.android_station.ElementBioStat;
 import matteroverdrive.gui.element.android_station.ElementDoubleHelix;
@@ -34,11 +36,12 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.proxy.ClientProxy;
 import matteroverdrive.tile.TileEntityAndroidStation;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 
 /**
@@ -58,7 +61,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         super(new ContainerAndroidStation(inventoryPlayer,machine), machine,364,280);
         texW = 255;
         texH = 237;
-        AndroidPlayer androidPlayer = AndroidPlayer.get(inventoryPlayer.player);
+        AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(inventoryPlayer.player);
 
         background = GuiWeaponStation.BG;
 
@@ -184,7 +187,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
             String info = Minecraft.getMinecraft().thePlayer.experienceLevel + " XP";
             GlStateManager.disableLighting();
             int width = fontRendererObj.getStringWidth(info);
-            fontRendererObj.drawString(EnumChatFormatting.GREEN + info, 280 - width / 2, ySize - 20, 0xFFFFFF);
+            fontRendererObj.drawString(ChatFormatting.GREEN + info, 280 - width / 2, ySize - 20, 0xFFFFFF);
         }
     }
 
@@ -234,7 +237,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
         RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
         rendermanager.setRenderShadow(false);
-        rendermanager.renderEntityWithPosYaw(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+        rendermanager.doRenderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F,false);
         rendermanager.setRenderShadow(true);
         ent.renderYawOffset = f;
         ent.rotationYaw = f1;

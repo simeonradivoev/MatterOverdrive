@@ -19,12 +19,13 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import matteroverdrive.Reference;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
+import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.EnumSet;
@@ -45,7 +46,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     @Override
     public String getDetails(int level)
     {
-        return String.format(super.getDetails(level), EnumChatFormatting.YELLOW.toString() + ENERGY_PER_TICK + MOEnergyHelper.ENERGY_UNIT + EnumChatFormatting.GRAY);
+        return String.format(super.getDetails(level), ChatFormatting.YELLOW.toString() + ENERGY_PER_TICK + MOEnergyHelper.ENERGY_UNIT + ChatFormatting.GRAY);
     }
 
     @Override
@@ -57,14 +58,14 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
             {
                 if (!android.getPlayer().isInvisible())
                 {
-                    android.getPlayer().worldObj.playSoundAtEntity(android.getPlayer(), Reference.MOD_ID + ":cloak_on", 1, 1);
+                    android.getPlayer().worldObj.playSound(null,android.getPlayer().posX,android.getPlayer().posY,android.getPlayer().posZ, MatterOverdriveSounds.androidCloakOn,SoundCategory.PLAYERS, 1, 1);
                 }
                 android.getPlayer().setInvisible(true);
                 android.extractEnergyScaled(ENERGY_PER_TICK);
             } else {
                 if (android.getPlayer().isInvisible())
                 {
-                    android.getPlayer().worldObj.playSoundAtEntity(android.getPlayer(),Reference.MOD_ID + ":cloak_off", 1, 1);
+                    android.getPlayer().worldObj.playSound(null,android.getPlayer().posX,android.getPlayer().posY,android.getPlayer().posZ,MatterOverdriveSounds.androidCloakOff, SoundCategory.PLAYERS, 1, 1);
                 }
                 android.getPlayer().setInvisible(false);
             }
@@ -115,7 +116,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
     @Override
     public boolean isActive(AndroidPlayer androidPlayer, int level)
     {
-        return androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_CLOAKED) && !androidPlayer.getPlayer().isUsingItem();
+        return androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_CLOAKED) && !androidPlayer.getPlayer().isHandActive();
     }
 
     @Override

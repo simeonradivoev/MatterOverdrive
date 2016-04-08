@@ -24,10 +24,11 @@ import matteroverdrive.tile.TileEntityBoundingBox;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * @author shadowfacts
@@ -42,22 +43,14 @@ public class BlockBoundingBox extends MOBlock implements ITileEntityProvider
 		setCreativeTab(null);
 	}
 
-
 	@Override
-	public void register()
+	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		GameRegistry.registerTileEntity(TileEntityBoundingBox.class, getUnlocalizedName().substring(5));
-		super.register();
+		return EnumBlockRenderType.INVISIBLE;
 	}
 
 	@Override
-	public int getRenderType()
-	{
-		return -1;
-	}
-
-	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}

@@ -18,16 +18,17 @@
 
 package matteroverdrive.items;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -39,8 +40,9 @@ public class SpacetimeEqualizer extends ItemArmor
 {
     public SpacetimeEqualizer(String name)
     {
-        super(ItemArmor.ArmorMaterial.IRON,0,1);
+        super(ItemArmor.ArmorMaterial.IRON,0, EntityEquipmentSlot.CHEST);
         setUnlocalizedName(name);
+        setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
         this.setCreativeTab(MatterOverdrive.tabMatterOverdrive);
     }
 
@@ -60,24 +62,14 @@ public class SpacetimeEqualizer extends ItemArmor
     {
         if (MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
         {
-            infos.add(EnumChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
+            infos.add(ChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
         }
     }
 
-    public void Register(String name)
-    {
-        GameRegistry.registerItem(this, name);
-    }
-
-    public void Register()
-    {
-        this.Register(this.getUnlocalizedName().substring(5));
-    }
-
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
+    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
     {
-        return Reference.PATH_ARMOR + this.getUnlocalizedName().substring(5) + "_" + (this.armorType == 2 ? "2" : "1") + ".png";
+        return Reference.PATH_ARMOR + this.getUnlocalizedName().substring(5) + "_" + (this.armorType == EntityEquipmentSlot.CHEST ? "2" : "1") + ".png";
     }
 
     @Override

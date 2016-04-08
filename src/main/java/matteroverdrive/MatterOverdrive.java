@@ -20,11 +20,12 @@ package matteroverdrive;
 
 import matteroverdrive.commands.*;
 import matteroverdrive.compat.MatterOverdriveCompat;
-import matteroverdrive.handler.dialog.DialogAssembler;
-import matteroverdrive.handler.dialog.DialogRegistry;
 import matteroverdrive.entity.EntityVillagerMadScientist;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOExtendedProperties;
 import matteroverdrive.handler.*;
+import matteroverdrive.handler.dialog.DialogAssembler;
+import matteroverdrive.handler.dialog.DialogRegistry;
 import matteroverdrive.handler.matter_network.FluidNetworkHandler;
 import matteroverdrive.handler.matter_network.MatterNetworkHandler;
 import matteroverdrive.handler.quest.QuestAssembler;
@@ -91,6 +92,9 @@ public class MatterOverdrive
 	public void preInit(FMLPreInitializationEvent event)
 	{
         checkJavaVersion();
+
+		AndroidPlayer.register();
+		MOExtendedProperties.register();
 		matterRegistry = new MatterRegistry();
 		statRegistry = new AndroidStatRegistry();
 		dialogRegistry = new DialogRegistry();
@@ -156,6 +160,7 @@ public class MatterOverdrive
 		MatterOverdriveDialogs.init(event, configHandler, dialogRegistry);
         MatterOverdriveQuests.init(event);
 		MatterOverdriveQuests.register(event,quests);
+		MatterOverdriveSounds.register();
 		EntityVillagerMadScientist.registerDialogMessages(dialogRegistry,event.getSide());
 
         proxy.init(event);

@@ -1,10 +1,11 @@
 package matteroverdrive.network.packet.client;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.network.packet.PacketAbstract;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,7 +34,7 @@ public class PacketAndroidTransformation extends PacketAbstract
         @Override
         public void handleClientMessage(EntityPlayerSP player, PacketAndroidTransformation message, MessageContext ctx)
         {
-            AndroidPlayer androidPlayer = AndroidPlayer.get(player);
+            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
             if (androidPlayer != null)
             {
                 androidPlayer.startConversion();

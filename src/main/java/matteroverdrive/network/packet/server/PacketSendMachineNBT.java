@@ -18,18 +18,18 @@
 
 package matteroverdrive.network.packet.server;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.AbstractBiPacketHandler;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.tile.MOTileEntity;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -98,7 +98,8 @@ public class PacketSendMachineNBT extends TileEntityUpdatePacket
                         ((MOTileEntityMachine) tileEntity).forceSync();
                     }else
                     {
-                        player.worldObj.markBlockForUpdate(tileEntity.getPos());
+                        // TODO: 3/26/2016 Find how to mark block for update
+                        //player.worldObj.markBlockForUpdate(tileEntity.getPos());
                     }
                 }
             }
