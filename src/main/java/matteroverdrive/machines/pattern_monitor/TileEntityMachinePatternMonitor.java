@@ -45,163 +45,168 @@ import java.util.List;
 /**
  * Created by Simeon on 4/26/2015.
  */
-public class TileEntityMachinePatternMonitor extends MOTileEntityMachine implements IMatterNetworkClient,IMatterDatabaseMonitor,IMatterNetworkDispatcher,IMatterNetworkConnection
+public class TileEntityMachinePatternMonitor extends MOTileEntityMachine implements IMatterNetworkClient, IMatterDatabaseMonitor, IMatterNetworkDispatcher, IMatterNetworkConnection
 {
-    private ComponentMatterNetworkPatternMonitor networkComponent;
-    private ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
-    private ComponentTaskProcessingPatternMonitor taskProcessingComponent;
+	private ComponentMatterNetworkPatternMonitor networkComponent;
+	private ComponentMatterNetworkConfigs componentMatterNetworkConfigs;
+	private ComponentTaskProcessingPatternMonitor taskProcessingComponent;
 
-    public TileEntityMachinePatternMonitor()
-    {
-        super(4);
-        playerSlotsHotbar = true;
-    }
+	public TileEntityMachinePatternMonitor()
+	{
+		super(4);
+		playerSlotsHotbar = true;
+	}
 
-    //region Machine Functions
-    @Override
-    protected void registerComponents() {
-        super.registerComponents();
-        networkComponent = new ComponentMatterNetworkPatternMonitor(this);
-        componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
-        taskProcessingComponent = new ComponentTaskProcessingPatternMonitor("Replication Tasks",this,8,0);
-        addComponent(networkComponent);
-        addComponent(componentMatterNetworkConfigs);
-        addComponent(taskProcessingComponent);
-    }
+	//region Machine Functions
+	@Override
+	protected void registerComponents()
+	{
+		super.registerComponents();
+		networkComponent = new ComponentMatterNetworkPatternMonitor(this);
+		componentMatterNetworkConfigs = new ComponentMatterNetworkConfigs(this);
+		taskProcessingComponent = new ComponentTaskProcessingPatternMonitor("Replication Tasks", this, 8, 0);
+		addComponent(networkComponent);
+		addComponent(componentMatterNetworkConfigs);
+		addComponent(taskProcessingComponent);
+	}
 
-    @Override
-    protected void onMachineEvent(MachineEvent event)
-    {
+	@Override
+	protected void onMachineEvent(MachineEvent event)
+	{
 
-    }
+	}
 
-    @Override
-    public boolean shouldRenderInPass(int pass)
-    {
-        return pass == 1;
-    }
-    //endregion
+	@Override
+	public boolean shouldRenderInPass(int pass)
+	{
+		return pass == 1;
+	}
+	//endregion
 
-    //region NBT
-    @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
-    {
-        super.writeCustomNBT(nbt, categories, toDisk);
-    }
+	//region NBT
+	@Override
+	public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
+	{
+		super.writeCustomNBT(nbt, categories, toDisk);
+	}
 
-    @Override
-    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
-    {
-        super.readCustomNBT(nbt, categories);
-    }
-    //endregion
+	@Override
+	public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+	{
+		super.readCustomNBT(nbt, categories);
+	}
+	//endregion
 
-    //region Matter Network Functions
+	//region Matter Network Functions
 
-    @Override
-    public boolean canConnectFromSide(IBlockState blockState, EnumFacing side)
-    {
-        EnumFacing facing = blockState.getValue(MOBlock.PROPERTY_DIRECTION);
-        return facing.getOpposite() == side;
-    }
+	@Override
+	public boolean canConnectFromSide(IBlockState blockState, EnumFacing side)
+	{
+		EnumFacing facing = blockState.getValue(MOBlock.PROPERTY_DIRECTION);
+		return facing.getOpposite() == side;
+	}
 
-    @Override
-    public boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side)
-    {
-        return networkComponent.establishConnectionFromSide(blockState, side);
-    }
+	@Override
+	public boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side)
+	{
+		return networkComponent.establishConnectionFromSide(blockState, side);
+	}
 
-    @Override
-    public void breakConnection(IBlockState blockState, EnumFacing side)
-    {
-        networkComponent.breakConnection(blockState, side);
-    }
+	@Override
+	public void breakConnection(IBlockState blockState, EnumFacing side)
+	{
+		networkComponent.breakConnection(blockState, side);
+	}
 
-    @Override
-    public MatterNetwork getNetwork()
-    {
-        return networkComponent.getNetwork();
-    }
+	@Override
+	public MatterNetwork getNetwork()
+	{
+		return networkComponent.getNetwork();
+	}
 
-    @Override
-    public void setNetwork(MatterNetwork network)
-    {
-        networkComponent.setNetwork(network);
-    }
+	@Override
+	public void setNetwork(MatterNetwork network)
+	{
+		networkComponent.setNetwork(network);
+	}
 
-    @Override
-    public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
-    {
-        return networkComponent.canConnectToNetworkNode(blockState, toNode, direction);
-    }
+	@Override
+	public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
+	{
+		return networkComponent.canConnectToNetworkNode(blockState, toNode, direction);
+	}
 
-    //endregion
+	//endregion
 
-    //region Matter Database Watcher
-    @Override
-    public List<IMatterDatabase> getConnectedDatabases()
-    {
-        List<IMatterNetworkClient> clients = getNetwork().getClients();
-        List<IMatterDatabase> databases = new ArrayList<>();
-        for (IMatterNetworkClient client : clients)
-        {
-            if (client instanceof IMatterDatabase)
-            {
-                databases.add((IMatterDatabase)client);
-            }
-        }
-        return databases;
-    }
-    //endregion
+	//region Matter Database Watcher
+	@Override
+	public List<IMatterDatabase> getConnectedDatabases()
+	{
+		List<IMatterNetworkClient> clients = getNetwork().getClients();
+		List<IMatterDatabase> databases = new ArrayList<>();
+		for (IMatterNetworkClient client : clients)
+		{
+			if (client instanceof IMatterDatabase)
+			{
+				databases.add((IMatterDatabase)client);
+			}
+		}
+		return databases;
+	}
+	//endregion
 
-    //region Getters and Setters
-    @Override
-    public SoundEvent getSound() {
-        return null;
-    }
+	//region Getters and Setters
+	@Override
+	public SoundEvent getSound()
+	{
+		return null;
+	}
 
-    @Override
-    public boolean hasSound() {
-        return false;
-    }
+	@Override
+	public boolean hasSound()
+	{
+		return false;
+	}
 
-    @Override
-    public boolean getServerActive()
-    {
-        return false;
-    }
+	@Override
+	public boolean getServerActive()
+	{
+		return false;
+	}
 
-    @Override
-    public float soundVolume() {
-        return 0;
-    }
+	@Override
+	public float soundVolume()
+	{
+		return 0;
+	}
 
-    public boolean isAffectedByUpgrade(UpgradeTypes type)
-    {
-        return false;
-    }
+	public boolean isAffectedByUpgrade(UpgradeTypes type)
+	{
+		return false;
+	}
 
-    @Override
-    public int[] getSlotsForFace(EnumFacing side)
-    {
-        return new int[0];
-    }
-    @Override
-    public IMatterNetworkComponent getMatterNetworkComponent()
-    {
-        return networkComponent;
-    }
+	@Override
+	public int[] getSlotsForFace(EnumFacing side)
+	{
+		return new int[0];
+	}
 
-    @Override
-    public MatterNetworkTaskQueue getTaskQueue(int queueID)
-    {
-        return taskProcessingComponent.getTaskQueue();
-    }
+	@Override
+	public IMatterNetworkComponent getMatterNetworkComponent()
+	{
+		return networkComponent;
+	}
 
-    @Override
-    public int getTaskQueueCount()
-    {
-        return 1;
-    }
-    //endregion
+	@Override
+	public MatterNetworkTaskQueue getTaskQueue(int queueID)
+	{
+		return taskProcessingComponent.getTaskQueue();
+	}
+
+	@Override
+	public int getTaskQueueCount()
+	{
+		return 1;
+	}
+	//endregion
 }

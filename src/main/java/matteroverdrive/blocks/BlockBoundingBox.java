@@ -43,6 +43,18 @@ public class BlockBoundingBox extends MOBlock implements ITileEntityProvider
 		setCreativeTab(null);
 	}
 
+	public static void createBoundingBox(World world, BlockPos pos, BlockPos ownerPos, Block ownerBlock)
+	{
+		world.setBlockState(pos, MatterOverdriveBlocks.boundingBox.getDefaultState());
+		TileEntity te = world.getTileEntity(pos);
+		if (te != null && te instanceof TileEntityBoundingBox)
+		{
+			TileEntityBoundingBox boundingBox = (TileEntityBoundingBox)te;
+			boundingBox.setOwnerPos(ownerPos);
+			boundingBox.setOwnerBlock(ownerBlock);
+		}
+	}
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
@@ -56,17 +68,8 @@ public class BlockBoundingBox extends MOBlock implements ITileEntityProvider
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
 		return new TileEntityBoundingBox();
-	}
-
-	public static void createBoundingBox(World world, BlockPos pos, BlockPos ownerPos, Block ownerBlock) {
-		world.setBlockState(pos, MatterOverdriveBlocks.boundingBox.getDefaultState());
-		TileEntity te = world.getTileEntity(pos);
-		if (te != null && te instanceof TileEntityBoundingBox) {
-			TileEntityBoundingBox boundingBox = (TileEntityBoundingBox)te;
-			boundingBox.setOwnerPos(ownerPos);
-			boundingBox.setOwnerBlock(ownerBlock);
-		}
 	}
 }

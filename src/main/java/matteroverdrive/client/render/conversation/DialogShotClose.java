@@ -29,35 +29,35 @@ import net.minecraft.util.math.Vec3d;
  */
 public class DialogShotClose extends DialogShot
 {
-    private final float maxZoom;
-    private final float minZoom;
+	private final float maxZoom;
+	private final float minZoom;
 
-    public DialogShotClose(float maxZoom, float minZoom)
-    {
-        this.maxZoom = maxZoom;
-        this.minZoom = minZoom;
-    }
+	public DialogShotClose(float maxZoom, float minZoom)
+	{
+		this.maxZoom = maxZoom;
+		this.minZoom = minZoom;
+	}
 
-    @Override
-    public boolean positionCamera(EntityLivingBase active, EntityLivingBase other, float ticks, EntityRendererConversation rendererConversation)
-    {
-        Vec3d look = rendererConversation.getLook(other, active, ticks);
-        double distance = look.lengthVector();
-        double clammpedDistance = MathHelper.clamp_double(distance, minZoom, maxZoom);
-        look = new Vec3d(look.xCoord,0,look.zCoord);
-        look = look.normalize();
+	@Override
+	public boolean positionCamera(EntityLivingBase active, EntityLivingBase other, float ticks, EntityRendererConversation rendererConversation)
+	{
+		Vec3d look = rendererConversation.getLook(other, active, ticks);
+		double distance = look.lengthVector();
+		double clammpedDistance = MathHelper.clamp_double(distance, minZoom, maxZoom);
+		look = new Vec3d(look.xCoord, 0, look.zCoord);
+		look = look.normalize();
 
-        Vec3d pos = rendererConversation.getPosition(active, ticks).subtract(0, 0.1, 0).addVector(look.xCoord * clammpedDistance, look.yCoord * clammpedDistance, look.zCoord * clammpedDistance);
-        RayTraceResult movingObjectPosition = MOPhysicsHelper.rayTrace(rendererConversation.getPosition(active, ticks), active.worldObj, maxZoom, ticks, new Vec3d(0, active.getEyeHeight(), 0), true, true, look.normalize(), active);
-        if (movingObjectPosition != null)
-        {
-            pos = movingObjectPosition.hitVec;
-        }
-        Vec3d left = look.crossProduct(new Vec3d(0, 1, 0));
-        float leftAmount = 0.1f;
-        rendererConversation.setCameraPosition(pos.xCoord + left.xCoord * leftAmount, pos.yCoord + left.yCoord * leftAmount, pos.zCoord + left.zCoord * leftAmount);
-        rendererConversation.rotateCameraYawTo(look.normalize(), 90);
-        rendererConversation.setCameraPitch(10);
-        return true;
-    }
+		Vec3d pos = rendererConversation.getPosition(active, ticks).subtract(0, 0.1, 0).addVector(look.xCoord * clammpedDistance, look.yCoord * clammpedDistance, look.zCoord * clammpedDistance);
+		RayTraceResult movingObjectPosition = MOPhysicsHelper.rayTrace(rendererConversation.getPosition(active, ticks), active.worldObj, maxZoom, ticks, new Vec3d(0, active.getEyeHeight(), 0), true, true, look.normalize(), active);
+		if (movingObjectPosition != null)
+		{
+			pos = movingObjectPosition.hitVec;
+		}
+		Vec3d left = look.crossProduct(new Vec3d(0, 1, 0));
+		float leftAmount = 0.1f;
+		rendererConversation.setCameraPosition(pos.xCoord + left.xCoord * leftAmount, pos.yCoord + left.yCoord * leftAmount, pos.zCoord + left.zCoord * leftAmount);
+		rendererConversation.rotateCameraYawTo(look.normalize(), 90);
+		rendererConversation.setCameraPitch(10);
+		return true;
+	}
 }

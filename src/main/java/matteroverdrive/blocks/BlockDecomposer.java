@@ -34,41 +34,41 @@ public class BlockDecomposer extends MOMatterEnergyStorageBlock
 	public BlockDecomposer(Material material, String name)
 	{
 		super(material, name, true, true);
-        setHasRotation();
-        setHardness(20.0F);
-        this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe",2);
-        setHasGui(true);
+		setHasRotation();
+		setHardness(20.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		setHasGui(true);
 	}
 
-    @Override
-    public boolean canPlaceTorchOnTop(IBlockState state,IBlockAccess world, BlockPos pos)
-	 {
-		 return true;
-	 }
+	@Override
+	public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return true;
+	}
 
-    @Override
-	 public boolean isSideSolid(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing side)
-	 {
-		 return true;
-	 }
+	@Override
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		return true;
+	}
 
-	 @Override
-		public TileEntity createNewTileEntity(World world, int meta)
-		{
-			return new TileEntityMachineDecomposer();
-		}
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachineDecomposer();
+	}
 
-    @Override
-    public void onConfigChanged(ConfigurationHandler config)
-    {
-        super.onConfigChanged(config);
-        config.initMachineCategory(getUnlocalizedName());
-        TileEntityMachineDecomposer.MATTER_STORAGE = config.getMachineInt(getUnlocalizedName(), "storage.matter" ,1024, String.format("How much matter can the %s hold", getLocalizedName()));
-        TileEntityMachineDecomposer.ENERGY_STORAGE = config.getMachineInt(getUnlocalizedName(),"storage.energy", 512000, String.format("How much energy can the %s hold", getLocalizedName()));
-        TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER = config.getMachineInt(getUnlocalizedName(), "speed.decompose", 80, "The speed in ticks, of decomposing. (per matter)");
-        TileEntityMachineDecomposer.DECOMPOSE_ENERGY_PER_MATTER = config.getMachineInt(getUnlocalizedName(), "cost.decompose", 6000, "Decomposing cost per matter");
+	@Override
+	public void onConfigChanged(ConfigurationHandler config)
+	{
+		super.onConfigChanged(config);
+		config.initMachineCategory(getUnlocalizedName());
+		TileEntityMachineDecomposer.MATTER_STORAGE = config.getMachineInt(getUnlocalizedName(), "storage.matter", 1024, String.format("How much matter can the %s hold", getLocalizedName()));
+		TileEntityMachineDecomposer.ENERGY_STORAGE = config.getMachineInt(getUnlocalizedName(), "storage.energy", 512000, String.format("How much energy can the %s hold", getLocalizedName()));
+		TileEntityMachineDecomposer.DECEOPOSE_SPEED_PER_MATTER = config.getMachineInt(getUnlocalizedName(), "speed.decompose", 80, "The speed in ticks, of decomposing. (per matter)");
+		TileEntityMachineDecomposer.DECOMPOSE_ENERGY_PER_MATTER = config.getMachineInt(getUnlocalizedName(), "cost.decompose", 6000, "Decomposing cost per matter");
 
-    }
+	}
 
 }

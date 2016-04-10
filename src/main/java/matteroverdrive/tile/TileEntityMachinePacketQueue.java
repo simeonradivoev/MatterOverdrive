@@ -37,66 +37,66 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Created by Simeon on 4/30/2015.
  */
-public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine implements IMatterNetworkClient,IMatterNetworkConnection
+public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine implements IMatterNetworkClient, IMatterNetworkConnection
 {
-    public static int BROADCAST_DELAY = 2;
-    public static int TASK_QUEUE_SIZE = 16;
-    protected MatterNetworkComponentQueue networkComponent;
-    @SideOnly(Side.CLIENT)
-    public int flashTime;
+	public static int BROADCAST_DELAY = 2;
+	public static int TASK_QUEUE_SIZE = 16;
+	@SideOnly(Side.CLIENT)
+	public int flashTime;
+	protected MatterNetworkComponentQueue networkComponent;
 
-    public TileEntityMachinePacketQueue(int upgradeCount)
-    {
-        super(upgradeCount);
-    }
+	public TileEntityMachinePacketQueue(int upgradeCount)
+	{
+		super(upgradeCount);
+	}
 
-    protected void registerComponents()
-    {
-        super.registerComponents();
-        networkComponent = new MatterNetworkComponentQueue(this);
-        addComponent(networkComponent);
-    }
+	protected void registerComponents()
+	{
+		super.registerComponents();
+		networkComponent = new MatterNetworkComponentQueue(this);
+		addComponent(networkComponent);
+	}
 
-    @Override
-    public void update()
-    {
-        super.update();
-        if (worldObj.isRemote)
-        {
-            if (flashTime > 0)
-            {
-                flashTime--;
-            }
-        }
-    }
+	@Override
+	public void update()
+	{
+		super.update();
+		if (worldObj.isRemote)
+		{
+			if (flashTime > 0)
+			{
+				flashTime--;
+			}
+		}
+	}
 
-    @Override
-    public boolean canConnectFromSide(IBlockState blockState, EnumFacing side)
-    {
-        return true;
-    }
+	@Override
+	public boolean canConnectFromSide(IBlockState blockState, EnumFacing side)
+	{
+		return true;
+	}
 
-    @Override
-    public boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side)
-    {
-        return canConnectFromSide(blockState, side);
-    }
+	@Override
+	public boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side)
+	{
+		return canConnectFromSide(blockState, side);
+	}
 
-    @Override
-    public void breakConnection(IBlockState blockState, EnumFacing side)
-    {
+	@Override
+	public void breakConnection(IBlockState blockState, EnumFacing side)
+	{
 
-    }
+	}
 
-    @Override
-    public boolean isAffectedByUpgrade(UpgradeTypes type)
-    {
-        return type.equals(UpgradeTypes.Speed);
-    }
+	@Override
+	public boolean isAffectedByUpgrade(UpgradeTypes type)
+	{
+		return type.equals(UpgradeTypes.Speed);
+	}
 
 
-    //region Matter Network
-    /*@Override
+	//region Matter Network
+	/*@Override
     public int onNetworkTick(World world,TickEvent.Phase phase)
     {
         return networkComponent.onNetworkTick(world, phase);
@@ -119,76 +119,82 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
         return networkComponent.getPacketQueue(queueID);
     }*/
 
-    @Override
-    public MatterNetwork getNetwork()
-    {
-        return networkComponent.getNetwork();
-    }
+	@Override
+	public MatterNetwork getNetwork()
+	{
+		return networkComponent.getNetwork();
+	}
 
-    @Override
-    public void setNetwork(MatterNetwork network)
-    {
-        networkComponent.setNetwork(network);
-    }
+	@Override
+	public void setNetwork(MatterNetwork network)
+	{
+		networkComponent.setNetwork(network);
+	}
 
-    @Override
-    public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
-    {
-        return networkComponent.canConnectToNetworkNode(blockState, toNode, direction);
-    }
+	@Override
+	public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
+	{
+		return networkComponent.canConnectToNetworkNode(blockState, toNode, direction);
+	}
 
-    //endregion
+	//endregion
 
-    //region Events
+	//region Events
 
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
+	@Override
+	public void onPlaced(World world, EntityLivingBase entityLiving)
+	{
 
-    }
+	}
 
-    @Override
-    protected void onAwake(Side side)
-    {
+	@Override
+	protected void onAwake(Side side)
+	{
 
-    }
-    //endregion
+	}
+	//endregion
 
-    //region Getters and Setters
-    @Override
-    public SoundEvent getSound() {
-        return null;
-    }
+	//region Getters and Setters
+	@Override
+	public SoundEvent getSound()
+	{
+		return null;
+	}
 
-    @Override
-    public boolean hasSound() {
-        return false;
-    }
+	@Override
+	public boolean hasSound()
+	{
+		return false;
+	}
 
-    @Override
-    public boolean getServerActive()
-    {
-        return false;
-    }
+	@Override
+	public boolean getServerActive()
+	{
+		return false;
+	}
 
-    @Override
-    public float soundVolume() { return 0;}
+	@Override
+	public float soundVolume()
+	{
+		return 0;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
-        return 1024.0D;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public double getMaxRenderDistanceSquared()
+	{
+		return 1024.0D;
+	}
 
-    @Override
-    public IMatterNetworkComponent getMatterNetworkComponent()
-    {
-        return networkComponent;
-    }
+	@Override
+	public IMatterNetworkComponent getMatterNetworkComponent()
+	{
+		return networkComponent;
+	}
 
 /*    @Override
     public int getPacketQueueCount() {
         return networkComponent.getPacketQueueCount();
     }*/
-    //endregion
+	//endregion
 }

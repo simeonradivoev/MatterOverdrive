@@ -33,45 +33,45 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class PacketUnlockBioticStat extends PacketAbstract
 {
-    String name;
-    int level;
+	String name;
+	int level;
 
-    public PacketUnlockBioticStat()
-    {
+	public PacketUnlockBioticStat()
+	{
 
-    }
+	}
 
-    public PacketUnlockBioticStat(String name, int level)
-    {
-        this.name = name;
-        this.level = level;
-    }
+	public PacketUnlockBioticStat(String name, int level)
+	{
+		this.name = name;
+		this.level = level;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        name = ByteBufUtils.readUTF8String(buf);
-        level = buf.readInt();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		name = ByteBufUtils.readUTF8String(buf);
+		level = buf.readInt();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        ByteBufUtils.writeUTF8String(buf,name);
-        buf.writeInt(level);
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		ByteBufUtils.writeUTF8String(buf, name);
+		buf.writeInt(level);
+	}
 
-    public static class ServerHandler extends AbstractServerPacketHandler<PacketUnlockBioticStat>
-    {
-        @Override
-        public void handleServerMessage(EntityPlayerMP player, PacketUnlockBioticStat message, MessageContext ctx)
-        {
-            IBioticStat stat = MatterOverdrive.statRegistry.getStat(message.name);
-            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
-            if (stat != null && androidPlayer != null && androidPlayer.isAndroid())
-            {
-                androidPlayer.tryUnlock(stat, message.level);
-            }
-        }
-    }
+	public static class ServerHandler extends AbstractServerPacketHandler<PacketUnlockBioticStat>
+	{
+		@Override
+		public void handleServerMessage(EntityPlayerMP player, PacketUnlockBioticStat message, MessageContext ctx)
+		{
+			IBioticStat stat = MatterOverdrive.statRegistry.getStat(message.name);
+			AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
+			if (stat != null && androidPlayer != null && androidPlayer.isAndroid())
+			{
+				androidPlayer.tryUnlock(stat, message.level);
+			}
+		}
+	}
 }

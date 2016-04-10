@@ -31,16 +31,16 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 	MOElementEnergy energyElement;
 	ElementMatterStored matterElement;
 	ElementDualScaled decompose_progress;
-    ElementSlot outputSlot;
+	ElementSlot outputSlot;
 
-	public GuiDecomposer(InventoryPlayer inventoryPlayer,TileEntityMachineDecomposer entity)
+	public GuiDecomposer(InventoryPlayer inventoryPlayer, TileEntityMachineDecomposer entity)
 	{
-		super(ContainerFactory.createMachineContainer(entity,inventoryPlayer),entity);
+		super(ContainerFactory.createMachineContainer(entity, inventoryPlayer), entity);
 		name = "decomposer";
-		matterElement = new ElementMatterStored(this,74,39,machine.getMatterStorage());
-		energyElement = new MOElementEnergy(this,100,39,machine.getEnergyStorage());
-		decompose_progress = new ElementDualScaled(this,32,55);
-        outputSlot = new ElementInventorySlot(this,getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),129,55,22,22,"big");
+		matterElement = new ElementMatterStored(this, 74, 39, machine.getMatterStorage());
+		energyElement = new MOElementEnergy(this, 100, 39, machine.getEnergyStorage());
+		decompose_progress = new ElementDualScaled(this, 32, 55);
+		outputSlot = new ElementInventorySlot(this, getContainer().getSlotAt(machine.OUTPUT_SLOT_ID), 129, 55, 22, 22, "big");
 
 		decompose_progress.setMode(1);
 		decompose_progress.setSize(24, 16);
@@ -56,15 +56,15 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 		pages.get(0).addElement(outputSlot);
 		pages.get(0).addElement(energyElement);
 		pages.get(0).addElement(matterElement);
-        this.addElement(decompose_progress);
+		this.addElement(decompose_progress);
 
-        AddMainPlayerSlots(this.inventorySlots, pages.get(0));
-		AddHotbarPlayerSlots(this.inventorySlots,this);
+		AddMainPlayerSlots(this.inventorySlots, pages.get(0));
+		AddHotbarPlayerSlots(this.inventorySlots, this);
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
-			int p_146976_2_, int p_146976_3_)
+												   int p_146976_2_, int p_146976_3_)
 	{
 		super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
 		decompose_progress.setQuantity(Math.round((((ContainerMachine)getContainer()).getProgress() * 24)));
@@ -73,7 +73,7 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 
 	void ManageReqiremnetsTooltips()
 	{
-		if(machine.getStackInSlot(machine.INPUT_SLOT_ID) != null)
+		if (machine.getStackInSlot(machine.INPUT_SLOT_ID) != null)
 		{
 			int matterAmount = MatterHelper.getMatterAmountFromItem(machine.getStackInSlot(machine.INPUT_SLOT_ID));
 			energyElement.setEnergyRequired(-(machine.getEnergyDrainMax()));

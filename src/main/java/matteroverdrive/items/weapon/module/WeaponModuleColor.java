@@ -38,47 +38,50 @@ import java.util.List;
  */
 public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
 {
-    public static final Color defaultColor = new Color(255,255,255);
-    public static final Color colors[] = {
-            new Color(204,0,0),      //red
-            new Color(0,153,51),     //green
-            new Color(0,102,255),    //blue
-            new Color(102,51,51),    //brown
-            new Color(255,153,255),  //pink
-            new Color(153,204,255),  //sky blue
-            new Color(212,175,55),   //gold
-            new Color(102,255,102),  //lime green
-            new Color(30,30,30),     //black
-            new Color(128,128,128)   //grey
-            };
-    public static final String names[] = {"red","green","blue","brown","pink","sky_blue","gold","lime_green","black","grey"};
+	public static final Color defaultColor = new Color(255, 255, 255);
+	public static final Color colors[] = {
+			new Color(204, 0, 0),      //red
+			new Color(0, 153, 51),     //green
+			new Color(0, 102, 255),    //blue
+			new Color(102, 51, 51),    //brown
+			new Color(255, 153, 255),  //pink
+			new Color(153, 204, 255),  //sky blue
+			new Color(212, 175, 55),   //gold
+			new Color(102, 255, 102),  //lime green
+			new Color(30, 30, 30),     //black
+			new Color(128, 128, 128)   //grey
+	};
+	public static final String names[] = {"red", "green", "blue", "brown", "pink", "sky_blue", "gold", "lime_green", "black", "grey"};
 
-    public int getMetadata(int damage){return 0;}
+	public WeaponModuleColor(String name)
+	{
+		super(name);
+		setCreativeTab(MatterOverdrive.tabMatterOverdrive_modules);
+		this.setHasSubtypes(true);
+		this.setMaxDamage(0);
+		this.setMaxStackSize(1);
+	}
 
-    public WeaponModuleColor(String name)
-    {
-        super(name);
-        setCreativeTab(MatterOverdrive.tabMatterOverdrive_modules);
-        this.setHasSubtypes(true);
-        this.setMaxDamage(0);
-        this.setMaxStackSize(1);
-    }
+	public int getMetadata(int damage)
+	{
+		return 0;
+	}
 
-    public void addToDunguns()
-    {
-        for (int i = 0;i < colors.length;i++)
-        {
-            // TODO: 3/25/2016 Find how to add to dungons
-            /*ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
+	public void addToDunguns()
+	{
+		for (int i = 0; i < colors.length; i++)
+		{
+			// TODO: 3/25/2016 Find how to add to dungons
+			/*ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
             ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
             ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
             ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
             ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,1));
             ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).addItem(new WeightedRandomChestContent(new ItemStack(this,1,i),1,1,10));*/
-        }
-    }
+		}
+	}
 
-    // TODO: 3/25/2016 Find how to control stack color
+	// TODO: 3/25/2016 Find how to control stack color
     /*@Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)
@@ -92,11 +95,11 @@ public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
         }
     }*/
 
-    @Override
-    public String getItemStackDisplayName(ItemStack itemStack)
-    {
-        return ("" + MOStringHelper.translateToLocal(this.getUnlocalizedNameInefficiently(itemStack) + ".name")).trim() + " ("+ MOStringHelper.translateToLocal("module.color." + names[itemStack.getItemDamage()])+")";
-    }
+	@Override
+	public String getItemStackDisplayName(ItemStack itemStack)
+	{
+		return ("" + MOStringHelper.translateToLocal(this.getUnlocalizedNameInefficiently(itemStack) + ".name")).trim() + " (" + MOStringHelper.translateToLocal("module.color." + names[itemStack.getItemDamage()]) + ")";
+	}
 
     /*@Override
     @SideOnly(Side.CLIENT)
@@ -120,50 +123,54 @@ public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
         return true;
     }*/
 
-    @Override
-    public int getSlot(ItemStack module)
-    {
-        return Reference.MODULE_COLOR;
-    }
+	@Override
+	public int getSlot(ItemStack module)
+	{
+		return Reference.MODULE_COLOR;
+	}
 
-    @Override
-    public String getModelPath() {
-        return null;
-    }
+	@Override
+	public String getModelPath()
+	{
+		return null;
+	}
 
-    @Override
-    public ResourceLocation getModelTexture(ItemStack module)
-    {
-        return null;
-    }
+	@Override
+	public ResourceLocation getModelTexture(ItemStack module)
+	{
+		return null;
+	}
 
-    @Override
-    public String getModelName(ItemStack module) {
-        return null;
-    }
+	@Override
+	public String getModelName(ItemStack module)
+	{
+		return null;
+	}
 
-    @Override
-    public float modifyWeaponStat(int statID, ItemStack module, ItemStack weapon, float originalStat) {
-        return originalStat;
-    }
+	@Override
+	public float modifyWeaponStat(int statID, ItemStack module, ItemStack weapon, float originalStat)
+	{
+		return originalStat;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List list)
-    {
-        for (int i = 0; i < colors.length;i++)
-        {
-            list.add(new ItemStack(item, 1, i));
-        }
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item item, CreativeTabs creativeTabs, List list)
+	{
+		for (int i = 0; i < colors.length; i++)
+		{
+			list.add(new ItemStack(item, 1, i));
+		}
+	}
 
-    @Override
-    public int getColor(ItemStack module, ItemStack weapon) {
-        int damage = module.getItemDamage();
-        if (damage >= 0 && damage < colors.length)
-        {
-            return colors[damage].getColor();
-        }
-        return defaultColor.getColor();
-    }
+	@Override
+	public int getColor(ItemStack module, ItemStack weapon)
+	{
+		int damage = module.getItemDamage();
+		if (damage >= 0 && damage < colors.length)
+		{
+			return colors[damage].getColor();
+		}
+		return defaultColor.getColor();
+	}
 }

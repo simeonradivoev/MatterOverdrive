@@ -7,5 +7,5 @@ import matteroverdrive.data.matter_network.IMatterNetworkEvent;
  */
 public interface IMatterNetworkComponent
 {
-    void onNetworkEvent(IMatterNetworkEvent event);
+	void onNetworkEvent(IMatterNetworkEvent event);
 }

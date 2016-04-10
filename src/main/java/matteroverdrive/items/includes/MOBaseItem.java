@@ -37,20 +37,20 @@ public class MOBaseItem extends Item
 {
 	public MOBaseItem(String name)
 	{
-        this.setUnlocalizedName(name);
-        this.setCreativeTab(MatterOverdrive.tabMatterOverdrive);
-        setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
+		this.setUnlocalizedName(name);
+		this.setCreativeTab(MatterOverdrive.tabMatterOverdrive);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
 	{
-		if(hasDetails(itemstack))
+		if (hasDetails(itemstack))
 		{
 			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || p_77624_4_)
 			{
-				addDetails(itemstack,player,infos);
+				addDetails(itemstack, player, infos);
 			}
 			else
 			{
@@ -79,12 +79,15 @@ public class MOBaseItem extends Item
 
 	public void TagCompountCheck(ItemStack stack)
 	{
-		if(!stack.hasTagCompound())
+		if (!stack.hasTagCompound())
 		{
 			InitTagCompount(stack);
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	public boolean hasDetails(ItemStack stack){return false;}
+	public boolean hasDetails(ItemStack stack)
+	{
+		return false;
+	}
 }

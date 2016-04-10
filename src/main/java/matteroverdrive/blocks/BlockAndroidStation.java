@@ -12,19 +12,19 @@ import net.minecraft.world.World;
  */
 public class BlockAndroidStation extends MOBlockMachine
 {
-    public BlockAndroidStation(Material material, String name)
-    {
-        super(material, name);
-        //setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
-        setHardness(20.0F);
-        this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe", 2);
-        lightValue = 10;
-        setHasGui(true);
-    }
+	public BlockAndroidStation(Material material, String name)
+	{
+		super(material, name);
+		//setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
+		setHardness(20.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		lightValue = 10;
+		setHasGui(true);
+	}
 
     /*@SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
+	public void registerBlockIcons(IIconRegister iconRegister)
     {
         super.registerBlockIcons(iconRegister);
         topIcon = iconRegister.registerIcon(Reference.MOD_ID + ":weapon_station_top");
@@ -50,27 +50,27 @@ public class BlockAndroidStation extends MOBlockMachine
         }
     }*/
 
-    @Override
-    protected String getUnlocalizedMessage(int type)
-    {
-        switch (type)
-        {
-            case 0:
-                return "alert.not_android";
-            default:
-                return  getUnlocalizedMessage(type);
-        }
-    }
+	@Override
+	protected String getUnlocalizedMessage(int type)
+	{
+		switch (type)
+		{
+			case 0:
+				return "alert.not_android";
+			default:
+				return getUnlocalizedMessage(type);
+		}
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityAndroidStation();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityAndroidStation();
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
 }

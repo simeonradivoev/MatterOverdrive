@@ -8,19 +8,19 @@ import net.minecraft.tileentity.TileEntity;
  */
 public class ItemRendererPipe
 {
-    private TileEntitySpecialRenderer renderer;
-    private TileEntity pipe;
-    private float size;
+	private TileEntitySpecialRenderer renderer;
+	private TileEntity pipe;
+	private float size;
 
-    public ItemRendererPipe(TileEntitySpecialRenderer renderer,TileEntity pipe,float size)
-    {
-        this.renderer = renderer;
-        this.pipe = pipe;
-        this.size = size;
-    }
+	public ItemRendererPipe(TileEntitySpecialRenderer renderer, TileEntity pipe, float size)
+	{
+		this.renderer = renderer;
+		this.pipe = pipe;
+		this.size = size;
+	}
 
     /*@Override
-    public boolean handleRenderType(ItemStack item, ItemRenderType type) {
+	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
         return true;
     }
 

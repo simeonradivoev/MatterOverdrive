@@ -41,15 +41,16 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 
 	public MOTileEntityMachineMatter(int upgradesCount)
 	{
-        super(upgradesCount);
-		matterStorage = new MachineMatterStorage(this,32768);
+		super(upgradesCount);
+		matterStorage = new MachineMatterStorage(this, 32768);
 	}
 
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
 	{
 		super.writeCustomNBT(nbt, categories, toDisk);
-		if (categories.contains(MachineNBTCategory.DATA) && getMatterStorage() != null) {
+		if (categories.contains(MachineNBTCategory.DATA) && getMatterStorage() != null)
+		{
 			getMatterStorage().writeToNBT(nbt);
 		}
 
@@ -59,7 +60,8 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
 	{
 		super.readCustomNBT(nbt, categories);
-		if (categories.contains(MachineNBTCategory.DATA) && getMatterStorage() != null) {
+		if (categories.contains(MachineNBTCategory.DATA) && getMatterStorage() != null)
+		{
 			getMatterStorage().readFromNBT(nbt);
 		}
 
@@ -69,7 +71,9 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public int getMatterStored()
 	{
 		if (getMatterStorage() != null)
+		{
 			return this.getMatterStorage().getMatterStored();
+		}
 		return 0;
 	}
 
@@ -77,7 +81,9 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public int getMatterCapacity()
 	{
 		if (getMatterStorage() != null)
+		{
 			return getMatterStorage().getCapacity();
+		}
 		return 0;
 	}
 
@@ -85,7 +91,9 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public int receiveMatter(EnumFacing side, int amount, boolean simulate)
 	{
 		if (getMatterStorage() != null)
-			return getMatterStorage().receiveMatter(side,amount,simulate);
+		{
+			return getMatterStorage().receiveMatter(side, amount, simulate);
+		}
 		return 0;
 	}
 
@@ -93,25 +101,39 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public int extractMatter(EnumFacing direction, int amount, boolean simulate)
 	{
 		if (getMatterStorage() != null)
-			return getMatterStorage().extractMatter(direction,amount,simulate);
+		{
+			return getMatterStorage().extractMatter(direction, amount, simulate);
+		}
 		return 0;
 	}
 
-    protected int modifyEnergyStored(int amount)
-    {
-        int energyModified = energyStorage.modifyEnergyStored(amount);
-        if (energyModified != 0)
-        {
-            UpdateClientPower();
-        }
-        return energyModified;
-    }
+	protected int modifyEnergyStored(int amount)
+	{
+		int energyModified = energyStorage.modifyEnergyStored(amount);
+		if (energyModified != 0)
+		{
+			UpdateClientPower();
+		}
+		return energyModified;
+	}
 
 	@Override
 	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
 	{
 		if (getMatterStorage() != null)
-			return getMatterStorage().fill(resource,doFill);
+		{
+			return getMatterStorage().fill(resource, doFill);
+		}
+		return 0;
+	}
+
+	@Override
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
+	{
+		if (getMatterStorage() != null)
+		{
+			return getMatterStorage().fill(resource, doFill);
+		}
 		return 0;
 	}
 
@@ -119,15 +141,22 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
 	{
 		if (getMatterStorage() != null)
-			return getMatterStorage().drain(resource.amount,doDrain);
-		else return null;
+		{
+			return getMatterStorage().drain(resource.amount, doDrain);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	@Override
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
 	{
 		if (getMatterStorage() != null)
-			return getMatterStorage().drain(maxDrain,doDrain);
+		{
+			return getMatterStorage().drain(maxDrain, doDrain);
+		}
 		return null;
 	}
 
@@ -147,27 +176,29 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public FluidTankInfo[] getTankInfo(EnumFacing from)
 	{
 		if (getMatterStorage() != null)
-			return new FluidTankInfo[]{getMatterStorage().getInfo()};
+		{
+			return new FluidTankInfo[] {getMatterStorage().getInfo()};
+		}
 		return new FluidTankInfo[0];
 	}
-	
+
 	public MachineMatterStorage getMatterStorage()
 	{
 		return this.matterStorage;
-	}
-
-	public void setMatterStored(int matter)
+	}	public void setMatterStored(int matter)
 	{
 		if (getMatterStorage() != null)
+		{
 			getMatterStorage().setMatterStored(matter);
+		}
 	}
 
 	public void updateClientMatter()
 	{
-        if (worldObj != null)
-        {
-            MatterOverdrive.packetPipeline.sendToAllAround(new PacketMatterUpdate(this), this, 64);
-        }
+		if (worldObj != null)
+		{
+			MatterOverdrive.packetPipeline.sendToAllAround(new PacketMatterUpdate(this), this, 64);
+		}
 	}
 
 	@Override
@@ -175,9 +206,9 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	{
 		super.readFromPlaceItem(itemStack);
 
-		if(itemStack != null && getMatterStorage() != null)
+		if (itemStack != null && getMatterStorage() != null)
 		{
-			if(itemStack.hasTagCompound())
+			if (itemStack.hasTagCompound())
 			{
 				getMatterStorage().readFromNBT(itemStack.getTagCompound());
 			}
@@ -189,11 +220,14 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	{
 		super.writeToDropItem(itemStack);
 
-		if(itemStack != null && getMatterStorage() != null)
+		if (itemStack != null && getMatterStorage() != null)
 		{
-			if(getMatterStorage().getMatterStored() > 0) {
+			if (getMatterStorage().getMatterStored() > 0)
+			{
 				if (!itemStack.hasTagCompound())
+				{
 					itemStack.setTagCompound(new NBTTagCompound());
+				}
 
 				getMatterStorage().writeToNBT(itemStack.getTagCompound());
 				itemStack.getTagCompound().setInteger("MaxMatter", matterStorage.getCapacity());

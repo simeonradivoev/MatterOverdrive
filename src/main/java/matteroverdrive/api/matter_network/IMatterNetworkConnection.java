@@ -32,15 +32,15 @@ import net.minecraft.util.math.BlockPos;
  */
 public interface IMatterNetworkConnection extends IPipe<MatterNetwork>
 {
-    /**
-     * The block position of the Connection.
-     * This is the MAC address equivalent.
-     * Used mainly in Packet filters to filter the machines the packet can reach.
-     * @return the block position of the Matter Network connection.
-     */
-    BlockPos getPos();
+	/**
+	 * The block position of the Connection.
+	 * This is the MAC address equivalent.
+	 * Used mainly in Packet filters to filter the machines the packet can reach.
+	 * @return the block position of the Matter Network connection.
+	 */
+	BlockPos getPos();
 
-    boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side);
+	boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side);
 
-    void breakConnection(IBlockState blockState, EnumFacing side);
+	void breakConnection(IBlockState blockState, EnumFacing side);
 }

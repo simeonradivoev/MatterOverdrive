@@ -29,14 +29,15 @@ import net.minecraft.world.World;
 public class BlockHeavyMatterPipe extends BlockMatterPipe
 {
 
-    public BlockHeavyMatterPipe(Material material, String name) {
-        super(material, name);
-    }
+	public BlockHeavyMatterPipe(Material material, String name)
+	{
+		super(material, name);
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityHeavyMatterPipe();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityHeavyMatterPipe();
+	}
 
 }

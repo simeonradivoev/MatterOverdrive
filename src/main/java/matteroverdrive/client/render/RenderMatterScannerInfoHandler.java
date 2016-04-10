@@ -48,241 +48,258 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_GREATER;
+import static org.lwjgl.opengl.GL11.GL_ONE;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_COLOR;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glPushAttrib;
+import static org.lwjgl.opengl.GL11.glRotatef;
 
 /**
  * Created by Simeon on 5/11/2015.
  */
 public class RenderMatterScannerInfoHandler implements IWorldLastRenderer
 {
-    private final DecimalFormat healthFormater = new DecimalFormat("#.##");
-    public final ResourceLocation spinnerTexture = new ResourceLocation(Reference.PATH_ELEMENTS + "spinner.png");
+	public final ResourceLocation spinnerTexture = new ResourceLocation(Reference.PATH_ELEMENTS + "spinner.png");
+	private final DecimalFormat healthFormater = new DecimalFormat("#.##");
 
-    public void onRenderWorldLast(RenderHandler renderHandler,RenderWorldLastEvent event)
-    {
-        // TODO: 3/26/2016 Add support for Offhand
-        ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
+	public static void rotateFromSide(EnumFacing side, float yaw)
+	{
+		if (side == EnumFacing.UP)
+		{
+			glRotatef(Math.round(yaw / 90) * 90 - 180, 0, -1, 0);
+			GlStateManager.rotate(90, 1, 0, 0);
+		}
+		else if (side == EnumFacing.DOWN)
+		{
+			glRotatef(Math.round(yaw / 90) * 90 - 180, 0, -1, 0);
+			GlStateManager.rotate(-90, 1, 0, 0);
+		}
+		else if (side == EnumFacing.WEST)
+		{
+			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.rotate(180, 0, 0, 1);
+		}
+		else if (side == EnumFacing.EAST)
+		{
+			GlStateManager.rotate(-90, 0, 1, 0);
+			GlStateManager.rotate(180, 0, 0, 1);
+		}
+		else if (side == EnumFacing.NORTH)
+		{
+			GlStateManager.rotate(180, 0, 0, 1);
+		}
+		else if (side == EnumFacing.SOUTH)
+		{
+			GlStateManager.rotate(180, 0, 1, 0);
+			GlStateManager.rotate(180, 0, 0, 1);
+		}
+	}
 
-        if (heldItem != null && heldItem.getItem() instanceof IBlockScanner && Minecraft.getMinecraft().thePlayer.getActiveHand() == EnumHand.MAIN_HAND)
-        {
-            GlStateManager.pushMatrix();
-            renderInfo(Minecraft.getMinecraft().thePlayer, heldItem, event.getPartialTicks());
-            GlStateManager.popMatrix();
-        }
-        else if (MOPlayerCapabilityProvider.GetAndroidCapability(Minecraft.getMinecraft().thePlayer).isAndroid())
-        {
-            renderInfo(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().objectMouseOver, null, event.getPartialTicks());
-        }
-    }
+	public void onRenderWorldLast(RenderHandler renderHandler, RenderWorldLastEvent event)
+	{
+		// TODO: 3/26/2016 Add support for Offhand
+		ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
 
-    private void renderInfo(EntityPlayer player, ItemStack scanner, float ticks)
-    {
-        IBlockScanner scannerItem = (IBlockScanner)scanner.getItem();
-        RayTraceResult position = scannerItem.getScanningPos(scanner,player);
-        renderInfo(player, position, scanner, ticks);
-    }
+		if (heldItem != null && heldItem.getItem() instanceof IBlockScanner && Minecraft.getMinecraft().thePlayer.getActiveHand() == EnumHand.MAIN_HAND)
+		{
+			GlStateManager.pushMatrix();
+			renderInfo(Minecraft.getMinecraft().thePlayer, heldItem, event.getPartialTicks());
+			GlStateManager.popMatrix();
+		}
+		else if (MOPlayerCapabilityProvider.GetAndroidCapability(Minecraft.getMinecraft().thePlayer).isAndroid())
+		{
+			renderInfo(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().objectMouseOver, null, event.getPartialTicks());
+		}
+	}
 
-    private void renderInfo(EntityPlayer player, RayTraceResult position, ItemStack scanner, float ticks)
-    {
-        Vec3d playerPos = player.getPositionEyes(ticks);
+	private void renderInfo(EntityPlayer player, ItemStack scanner, float ticks)
+	{
+		IBlockScanner scannerItem = (IBlockScanner)scanner.getItem();
+		RayTraceResult position = scannerItem.getScanningPos(scanner, player);
+		renderInfo(player, position, scanner, ticks);
+	}
 
-        glPushAttrib(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        GlStateManager.disableDepth();
-        GlStateManager.blendFunc(GL_ONE,GL_ONE);
-        GlStateManager.enableBlend();
-        RenderUtils.applyColor(Reference.COLOR_HOLO);
+	private void renderInfo(EntityPlayer player, RayTraceResult position, ItemStack scanner, float ticks)
+	{
+		Vec3d playerPos = player.getPositionEyes(ticks);
 
-        if (position != null) {
+		glPushAttrib(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		GlStateManager.disableDepth();
+		GlStateManager.blendFunc(GL_ONE, GL_ONE);
+		GlStateManager.enableBlend();
+		RenderUtils.applyColor(Reference.COLOR_HOLO);
 
-            if (position.typeOfHit == RayTraceResult.Type.BLOCK) {
+		if (position != null)
+		{
 
-                IBlockState blockState = player.worldObj.getBlockState(position.getBlockPos());
-                if (blockState != null)
-                {
-                    renderBlockInfo(blockState, position, player, playerPos, scanner, scanner == null);
-                }
-            }
-            else if (position.typeOfHit == RayTraceResult.Type.ENTITY)
-            {
-                if (position.entityHit != null)
-                {
-                    renderEntityInfo(position.entityHit, position, player, playerPos, ticks);
-                }
-            }
-        }
-        GlStateManager.disableBlend();
-        GlStateManager.enableDepth();
-        GlStateManager.popAttrib();
-    }
+			if (position.typeOfHit == RayTraceResult.Type.BLOCK)
+			{
 
-    private void renderBlockInfo(IBlockState block, RayTraceResult position, EntityPlayer player, Vec3d playerPos, ItemStack scanner, boolean infoOnly)
-    {
-        double offset = 0.1;
-        EnumFacing side = position.sideHit;
-        List<String> infos = new ArrayList<>();
-        if (block instanceof IScannable)
-        {
-            ((IScannable) block).addInfo(player.worldObj, position.getBlockPos().getX(),position.getBlockPos().getY(),position.getBlockPos().getZ(), infos);
+				IBlockState blockState = player.worldObj.getBlockState(position.getBlockPos());
+				if (blockState != null)
+				{
+					renderBlockInfo(blockState, position, player, playerPos, scanner, scanner == null);
+				}
+			}
+			else if (position.typeOfHit == RayTraceResult.Type.ENTITY)
+			{
+				if (position.entityHit != null)
+				{
+					renderEntityInfo(position.entityHit, position, player, playerPos, ticks);
+				}
+			}
+		}
+		GlStateManager.disableBlend();
+		GlStateManager.enableDepth();
+		GlStateManager.popAttrib();
+	}
 
-        }
-        else if (player.worldObj.getTileEntity(position.getBlockPos()) instanceof IScannable)
-        {
-            ((IScannable) player.worldObj.getTileEntity(position.getBlockPos())).addInfo(player.worldObj, position.getBlockPos().getX(),position.getBlockPos().getY(),position.getBlockPos().getZ(), infos);
-        }
-        else if (infoOnly)
-        {
-            return;
-        }
+	private void renderBlockInfo(IBlockState block, RayTraceResult position, EntityPlayer player, Vec3d playerPos, ItemStack scanner, boolean infoOnly)
+	{
+		double offset = 0.1;
+		EnumFacing side = position.sideHit;
+		List<String> infos = new ArrayList<>();
+		if (block instanceof IScannable)
+		{
+			((IScannable)block).addInfo(player.worldObj, position.getBlockPos().getX(), position.getBlockPos().getY(), position.getBlockPos().getZ(), infos);
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(side.getDirectionVec().getX() * 0.5 + (position.getBlockPos().getX() + 0.5) - playerPos.xCoord, side.getDirectionVec().getY() * 0.5 + (position.getBlockPos().getY() + 0.5) - playerPos.yCoord + player.getEyeHeight(), side.getDirectionVec().getZ() * 0.5 + (position.getBlockPos().getZ() + 0.5) - playerPos.zCoord);
-        rotateFromSide(side, player.rotationYaw);
-        GlStateManager.translate(-0.5, -0.5, -offset);
-        drawInfoPlane(0);
+		}
+		else if (player.worldObj.getTileEntity(position.getBlockPos()) instanceof IScannable)
+		{
+			((IScannable)player.worldObj.getTileEntity(position.getBlockPos())).addInfo(player.worldObj, position.getBlockPos().getX(), position.getBlockPos().getY(), position.getBlockPos().getZ(), infos);
+		}
+		else if (infoOnly)
+		{
+			return;
+		}
 
-        ItemStack blockItemStack = MatterDatabaseHelper.GetItemStackFromWorld(player.worldObj, position.getBlockPos());
-        int matter = MatterHelper.getMatterAmountFromItem(blockItemStack);
-        if (matter > 0) {
-            infos.add("Matter: " + MatterHelper.formatMatter(matter));
-        }
-        String blockName = "Unknown";
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(side.getDirectionVec().getX() * 0.5 + (position.getBlockPos().getX() + 0.5) - playerPos.xCoord, side.getDirectionVec().getY() * 0.5 + (position.getBlockPos().getY() + 0.5) - playerPos.yCoord + player.getEyeHeight(), side.getDirectionVec().getZ() * 0.5 + (position.getBlockPos().getZ() + 0.5) - playerPos.zCoord);
+		rotateFromSide(side, player.rotationYaw);
+		GlStateManager.translate(-0.5, -0.5, -offset);
+		drawInfoPlane(0);
 
-        try {
-            if (blockItemStack != null) {
-                blockName = blockItemStack.getDisplayName();
-            }
-            else
-            {
-                blockName = player.worldObj.getBlockState(position.getBlockPos()).getBlock().getLocalizedName();
-            }
-        }
-        catch (Exception e)
-        {
-            blockName = player.worldObj.getBlockState(position.getBlockPos()).getBlock().getLocalizedName();
-        }
-        finally
-        {
-            drawInfoList(blockName, infos);
-        }
+		ItemStack blockItemStack = MatterDatabaseHelper.GetItemStackFromWorld(player.worldObj, position.getBlockPos());
+		int matter = MatterHelper.getMatterAmountFromItem(blockItemStack);
+		if (matter > 0)
+		{
+			infos.add("Matter: " + MatterHelper.formatMatter(matter));
+		}
+		String blockName = "Unknown";
 
-        if (!(block instanceof IScannable) && scanner != null)
-        {
-            drawProgressBar(scanner, player);
-        }
-        GlStateManager.popMatrix();
-    }
+		try
+		{
+			if (blockItemStack != null)
+			{
+				blockName = blockItemStack.getDisplayName();
+			}
+			else
+			{
+				blockName = player.worldObj.getBlockState(position.getBlockPos()).getBlock().getLocalizedName();
+			}
+		}
+		catch (Exception e)
+		{
+			blockName = player.worldObj.getBlockState(position.getBlockPos()).getBlock().getLocalizedName();
+		}
+		finally
+		{
+			drawInfoList(blockName, infos);
+		}
 
-    private void drawProgressBar(ItemStack scanner, EntityPlayer player)
-    {
-        GlStateManager.pushMatrix();
-        renderer().bindTexture(spinnerTexture);
+		if (!(block instanceof IScannable) && scanner != null)
+		{
+			drawProgressBar(scanner, player);
+		}
+		GlStateManager.popMatrix();
+	}
 
-        int count = player.getItemInUseCount();
-        int maxCount = scanner.getMaxItemUseDuration();
+	private void drawProgressBar(ItemStack scanner, EntityPlayer player)
+	{
+		GlStateManager.pushMatrix();
+		renderer().bindTexture(spinnerTexture);
 
-        GlStateManager.alphaFunc(GL_GREATER, (float) count / (float) maxCount);
-        RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
-        RenderUtils.drawPlane(0.35,0.45,-0.1,0.3,0.3);
-        GlStateManager.popMatrix();
-    }
+		int count = player.getItemInUseCount();
+		int maxCount = scanner.getMaxItemUseDuration();
 
-    private void renderEntityInfo(Entity entity, RayTraceResult position, EntityPlayer player, Vec3d playerPos, float ticks)
-    {
-        if (!entity.isInvisibleToPlayer(player))
-        {
-            double offset = 0.1;
-            Vec3d entityPos;
-            String name = entity.getDisplayName().getFormattedText();
-            List<String> infos = new ArrayList<>();
-            if (entity instanceof EntityLivingBase)
-            {
-                entityPos = entity.getPositionEyes(ticks);
-                entityPos = entityPos.addVector(0,entity.getEyeHeight(),0);
-                infos.add("Health: " + (healthFormater.format(((EntityLivingBase) entity).getHealth()) + " / " + ((EntityLivingBase) entity).getMaxHealth()));
+		GlStateManager.alphaFunc(GL_GREATER, (float)count / (float)maxCount);
+		RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.5f);
+		RenderUtils.drawPlane(0.35, 0.45, -0.1, 0.3, 0.3);
+		GlStateManager.popMatrix();
+	}
 
-                GlStateManager.pushMatrix();
-                GlStateManager.translate(entityPos.xCoord - playerPos.xCoord, entityPos.yCoord - playerPos.yCoord, entityPos.zCoord - playerPos.zCoord);
-                GlStateManager.rotate(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * ticks, 0, -1, 0);
-                GlStateManager.rotate(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * ticks, 1, 0, 0);
-                GlStateManager.translate(1, 0, 0);
-                GlStateManager.rotate(180, 0, 0, 1);
-                GlStateManager.translate(-0.5, -0.5, -offset);
-                drawInfoPlane(0.5);
-                drawInfoList(name, infos);
-                GlStateManager.popMatrix();
-            }
-        }
-    }
+	private void renderEntityInfo(Entity entity, RayTraceResult position, EntityPlayer player, Vec3d playerPos, float ticks)
+	{
+		if (!entity.isInvisibleToPlayer(player))
+		{
+			double offset = 0.1;
+			Vec3d entityPos;
+			String name = entity.getDisplayName().getFormattedText();
+			List<String> infos = new ArrayList<>();
+			if (entity instanceof EntityLivingBase)
+			{
+				entityPos = entity.getPositionEyes(ticks);
+				entityPos = entityPos.addVector(0, entity.getEyeHeight(), 0);
+				infos.add("Health: " + (healthFormater.format(((EntityLivingBase)entity).getHealth()) + " / " + ((EntityLivingBase)entity).getMaxHealth()));
 
-    private void drawInfoPlane(double opacity)
-    {
-        if (opacity > 0)
-        {
-            GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            GlStateManager.disableTexture2D();
-            GlStateManager.color(0, 0, 0, (float) opacity);
-            RenderUtils.drawPlane(1);
-            GlStateManager.enableTexture2D();
-        }
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(entityPos.xCoord - playerPos.xCoord, entityPos.yCoord - playerPos.yCoord, entityPos.zCoord - playerPos.zCoord);
+				GlStateManager.rotate(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * ticks, 0, -1, 0);
+				GlStateManager.rotate(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * ticks, 1, 0, 0);
+				GlStateManager.translate(1, 0, 0);
+				GlStateManager.rotate(180, 0, 0, 1);
+				GlStateManager.translate(-0.5, -0.5, -offset);
+				drawInfoPlane(0.5);
+				drawInfoList(name, infos);
+				GlStateManager.popMatrix();
+			}
+		}
+	}
 
-        GlStateManager.blendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
-        RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.05f);
-        renderer().bindTexture(TileEntityRendererPatternMonitor.screenTextureBack);
-        RenderUtils.drawPlane(0,0,-0.01,1,1);
-    }
+	private void drawInfoPlane(double opacity)
+	{
+		if (opacity > 0)
+		{
+			GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.disableTexture2D();
+			GlStateManager.color(0, 0, 0, (float)opacity);
+			RenderUtils.drawPlane(1);
+			GlStateManager.enableTexture2D();
+		}
 
-    private void drawInfoList(String name, List<String> infos)
-    {
-        GlStateManager.pushMatrix();
-        int width = fontRenderer().getStringWidth(name);
-        GlStateManager.translate(0.5, 0.5, -0.05);
-        GlStateManager.scale(0.01, 0.01, 0.01);
-        fontRenderer().drawString(name, -width / 2, -40, Reference.COLOR_HOLO.getColor());
+		GlStateManager.blendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+		RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.05f);
+		renderer().bindTexture(TileEntityRendererPatternMonitor.screenTextureBack);
+		RenderUtils.drawPlane(0, 0, -0.01, 1, 1);
+	}
 
-        for (int i = 0;i < infos.size();i++)
-        {
-            width = fontRenderer().getStringWidth(infos.get(i));
-            fontRenderer().drawString(infos.get(i), -width / 2, -24 + 16 * i, Reference.COLOR_HOLO.getColor());
-        }
-        GlStateManager.popMatrix();
-    }
+	private void drawInfoList(String name, List<String> infos)
+	{
+		GlStateManager.pushMatrix();
+		int width = fontRenderer().getStringWidth(name);
+		GlStateManager.translate(0.5, 0.5, -0.05);
+		GlStateManager.scale(0.01, 0.01, 0.01);
+		fontRenderer().drawString(name, -width / 2, -40, Reference.COLOR_HOLO.getColor());
 
-    public static void rotateFromSide(EnumFacing side, float yaw)
-    {
-        if (side == EnumFacing.UP)
-        {
-            glRotatef(Math.round(yaw / 90) * 90 - 180, 0, -1, 0);
-            GlStateManager.rotate(90,1,0,0);
-        }else if (side == EnumFacing.DOWN)
-        {
-            glRotatef(Math.round(yaw / 90) * 90 - 180, 0, -1, 0);
-            GlStateManager.rotate(-90, 1, 0, 0);
-        }else if (side == EnumFacing.WEST)
-        {
-            GlStateManager.rotate(90,0,1,0);
-            GlStateManager.rotate(180,0,0,1);
-        }else if (side == EnumFacing.EAST)
-        {
-            GlStateManager.rotate(-90,0,1,0);
-            GlStateManager.rotate(180,0,0,1);
-        }else if (side == EnumFacing.NORTH)
-        {
-            GlStateManager.rotate(180,0,0,1);
-        }
-        else if (side == EnumFacing.SOUTH)
-        {
-            GlStateManager.rotate(180,0,1,0);
-            GlStateManager.rotate(180,0,0,1);
-        }
-    }
+		for (int i = 0; i < infos.size(); i++)
+		{
+			width = fontRenderer().getStringWidth(infos.get(i));
+			fontRenderer().drawString(infos.get(i), -width / 2, -24 + 16 * i, Reference.COLOR_HOLO.getColor());
+		}
+		GlStateManager.popMatrix();
+	}
 
-    private FontRenderer fontRenderer()
-    {
-        return ClientProxy.moFontRender;
-    }
+	private FontRenderer fontRenderer()
+	{
+		return ClientProxy.moFontRender;
+	}
 
-    private TextureManager renderer()
-    {
-        return Minecraft.getMinecraft().renderEngine;
-    }
+	private TextureManager renderer()
+	{
+		return Minecraft.getMinecraft().renderEngine;
+	}
 }

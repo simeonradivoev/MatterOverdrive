@@ -14,30 +14,30 @@ import java.util.Random;
  */
 public class WorldGenAlienFlowers extends WorldGenerator
 {
-    private IBlockState flowerBlockState;
+	private IBlockState flowerBlockState;
 
-    public WorldGenAlienFlowers(BlockFlowerAlien.EnumAlienFlowerType alienFlowerType)
-    {
-        this.setGeneratedBlock(alienFlowerType);
-    }
+	public WorldGenAlienFlowers(BlockFlowerAlien.EnumAlienFlowerType alienFlowerType)
+	{
+		this.setGeneratedBlock(alienFlowerType);
+	}
 
-    public void setGeneratedBlock(BlockFlowerAlien.EnumAlienFlowerType alienFlowerType)
-    {
-        this.flowerBlockState = MatterOverdriveBlocks.alienFlower.getDefaultState().withProperty(BlockFlowerAlien.TYPE, alienFlowerType);
-    }
+	public void setGeneratedBlock(BlockFlowerAlien.EnumAlienFlowerType alienFlowerType)
+	{
+		this.flowerBlockState = MatterOverdriveBlocks.alienFlower.getDefaultState().withProperty(BlockFlowerAlien.TYPE, alienFlowerType);
+	}
 
-    public boolean generate(World worldIn, Random rand, BlockPos position)
-    {
-        for (int i = 0; i < 64; ++i)
-        {
-            BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
+	public boolean generate(World worldIn, Random rand, BlockPos position)
+	{
+		for (int i = 0; i < 64; ++i)
+		{
+			BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 
-            if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.getHasNoSky() || blockpos.getY() < 255) && MatterOverdriveBlocks.alienFlower.canBlockStay(worldIn, blockpos, this.flowerBlockState))
-            {
-                worldIn.setBlockState(blockpos, this.flowerBlockState, 2);
-            }
-        }
+			if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.getHasNoSky() || blockpos.getY() < 255) && MatterOverdriveBlocks.alienFlower.canBlockStay(worldIn, blockpos, this.flowerBlockState))
+			{
+				worldIn.setBlockState(blockpos, this.flowerBlockState, 2);
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 }

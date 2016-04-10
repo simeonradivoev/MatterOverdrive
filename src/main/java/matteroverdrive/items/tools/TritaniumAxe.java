@@ -34,17 +34,17 @@ import java.util.Set;
  */
 public class TritaniumAxe extends ItemTool
 {
-    private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin, Blocks.melon_block, Blocks.ladder, Blocks.wooden_button, Blocks.wooden_pressure_plate});
+	private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin, Blocks.melon_block, Blocks.ladder, Blocks.wooden_button, Blocks.wooden_pressure_plate});
 
-    public TritaniumAxe(String name)
-    {
-        super(MatterOverdriveItems.toolMaterialTritanium,EFFECTIVE_ON);
-        this.setUnlocalizedName(name);
-    }
+	public TritaniumAxe(String name)
+	{
+		super(MatterOverdriveItems.toolMaterialTritanium, EFFECTIVE_ON);
+		this.setUnlocalizedName(name);
+	}
 
-    public float getStrVsBlock(ItemStack stack, IBlockState state)
-    {
-        Material material = state.getMaterial();
-        return material != Material.wood && material != Material.plants && material != Material.vine ? super.getStrVsBlock(stack, state) : this.efficiencyOnProperMaterial;
-    }
+	public float getStrVsBlock(ItemStack stack, IBlockState state)
+	{
+		Material material = state.getMaterial();
+		return material != Material.wood && material != Material.plants && material != Material.vine ? super.getStrVsBlock(stack, state) : this.efficiencyOnProperMaterial;
+	}
 }

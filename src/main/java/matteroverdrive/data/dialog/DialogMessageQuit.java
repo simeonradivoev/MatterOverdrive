@@ -27,39 +27,39 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class DialogMessageQuit extends DialogMessage
 {
-    public DialogMessageQuit(JsonObject object)
-    {
-        super(object);
-    }
+	public DialogMessageQuit(JsonObject object)
+	{
+		super(object);
+	}
 
-    public DialogMessageQuit()
-    {
-    }
+	public DialogMessageQuit()
+	{
+	}
 
-    public DialogMessageQuit(String message)
-    {
-        super(message);
-    }
+	public DialogMessageQuit(String message)
+	{
+		super(message);
+	}
 
-    public DialogMessageQuit(String message, String question)
-    {
-        super(message, question);
-    }
+	public DialogMessageQuit(String message, String question)
+	{
+		super(message, question);
+	}
 
-    public DialogMessageQuit(String[] messages, String[] questions)
-    {
-        super(messages, questions);
-    }
+	public DialogMessageQuit(String[] messages, String[] questions)
+	{
+		super(messages, questions);
+	}
 
-    @Override
-    public void onInteract(IDialogNpc npc,EntityPlayer player)
-    {
-        player.closeScreen();
-    }
+	@Override
+	public void onInteract(IDialogNpc npc, EntityPlayer player)
+	{
+		player.closeScreen();
+	}
 
-    @Override
-    public boolean canInteract(IDialogNpc npc,EntityPlayer player)
-    {
-        return true;
-    }
+	@Override
+	public boolean canInteract(IDialogNpc npc, EntityPlayer player)
+	{
+		return true;
+	}
 }

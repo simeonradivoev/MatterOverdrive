@@ -43,9 +43,11 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity, 
 	private Block ownerBlock;
 
 	@Override
-	public void update() {
+	public void update()
+	{
 		tick++;
-		if (tick == 80) { // update every 4 seconds (assuming 20 TPS)
+		if (tick == 80)
+		{ // update every 4 seconds (assuming 20 TPS)
 			tick = 0;
 
 			if (worldObj != null)
@@ -69,62 +71,76 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity, 
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag) {
+	public void readFromNBT(NBTTagCompound tag)
+	{
 		super.readFromNBT(tag);
 		ownerPos = BlockPos.fromLong(tag.getLong("owner"));
 
 		String ownerModid = tag.getString("owner_block_modid");
 		String ownerName = tag.getString("owner_block_name");
 		Block block = GameRegistry.findBlock(ownerModid, ownerName);
-		if (block == null) {
+		if (block == null)
+		{
 			MOLog.error("Missing owner block " + ownerModid + ":" + ownerName);
-		} else {
+		}
+		else
+		{
 			ownerBlock = block;
 		}
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public void writeToNBT(NBTTagCompound tag)
+	{
 		super.writeToNBT(tag);
-		if (ownerPos != null) {
-			tag.setLong("owner",ownerPos.toLong());
+		if (ownerPos != null)
+		{
+			tag.setLong("owner", ownerPos.toLong());
 		}
 
-		if (ownerBlock != null) {
+		if (ownerBlock != null)
+		{
 			ResourceLocation id = ownerBlock.getRegistryName();
 			tag.setString("owner_block_modid", id.getResourceDomain());
 			tag.setString("owner_block_name", id.getResourcePath());
 		}
 	}
 
-	public BlockPos getOwnerPos() {
+	public BlockPos getOwnerPos()
+	{
 		return ownerPos;
 	}
 
-	public void setOwnerPos(BlockPos ownerPos) {
+	public void setOwnerPos(BlockPos ownerPos)
+	{
 		this.ownerPos = ownerPos;
 	}
 
-	public Block getOwnerBlock() {
+	public Block getOwnerBlock()
+	{
 		return ownerBlock;
 	}
 
-	public void setOwnerBlock(Block ownerBlock) {
+	public void setOwnerBlock(Block ownerBlock)
+	{
 		this.ownerBlock = ownerBlock;
 	}
 
 	@Override
-	public void onPlaced(World world, EntityLivingBase entityLiving) {
+	public void onPlaced(World world, EntityLivingBase entityLiving)
+	{
 
 	}
 
 	@Override
-	public void writeToDropItem(ItemStack itemStack) {
+	public void writeToDropItem(ItemStack itemStack)
+	{
 
 	}
 
 	@Override
-	public void readFromPlaceItem(ItemStack itemStack) {
+	public void readFromPlaceItem(ItemStack itemStack)
+	{
 
 	}
 

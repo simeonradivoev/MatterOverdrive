@@ -36,7 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockReplicator extends MOMatterEnergyStorageBlock
 {
 	public float replication_volume;
-    public boolean hasVentParticles;
+	public boolean hasVentParticles;
 
 	public BlockReplicator(Material material, String name)
 	{
@@ -46,35 +46,35 @@ public class BlockReplicator extends MOMatterEnergyStorageBlock
 		setLightOpacity(2);
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);
-        setHasGui(true);
+		setHasGui(true);
 	}
 
-    @Override
+	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
-	 @Override
-	 public boolean isOpaqueCube(IBlockState state)
-	    {
-	        return true;
-	    }
-
-	 @Override
-	 public boolean canPlaceTorchOnTop(IBlockState state,IBlockAccess world, BlockPos pos)
-	 {
-		 return true;
-	 }
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return true;
+	}
 
 	@Override
-	 public boolean isSideSolid(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing side)
-	 {
-		 return true;
-	 }
+	public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return true;
+	}
 
-	 @Override
+	@Override
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		return true;
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return new TileEntityMachineReplicator();
@@ -85,7 +85,7 @@ public class BlockReplicator extends MOMatterEnergyStorageBlock
 	{
 		super.onConfigChanged(config);
 		replication_volume = (float)config.getMachineDouble(getUnlocalizedName(), "volume.replicate", 1, "The volume of the replication animation");
-        hasVentParticles = config.getMachineBool(getUnlocalizedName(), "particles.vent", true, "Should vent particles be displayed");
+		hasVentParticles = config.getMachineBool(getUnlocalizedName(), "particles.vent", true, "Should vent particles be displayed");
 		TileEntityMachineReplicator.MATTER_STORAGE = config.getMachineInt(getUnlocalizedName(), "storage.matter", 1024, "How much matter can the replicator hold");
 		TileEntityMachineReplicator.ENERGY_STORAGE = config.getMachineInt(getUnlocalizedName(), "storage.energy", 512000, "How much energy can the replicator hold");
 		ComponentTaskProcessingReplicator.REPLICATE_ENERGY_PER_MATTER = config.getMachineInt(getUnlocalizedName(), "cost.replication.energy", 16000, "The total replication cost of each matter value. The energy cost is calculated like so: (matterAmount*EnergyCost)");

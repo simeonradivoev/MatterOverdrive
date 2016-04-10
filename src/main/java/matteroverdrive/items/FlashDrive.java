@@ -27,23 +27,27 @@ import net.minecraft.item.ItemStack;
  */
 public class FlashDrive extends MOBaseItem
 {
-    protected final Color color;
+	protected final Color color;
 
-    public FlashDrive(String name,Color color) {
-        super(name);
-        this.color = color;
-        setMaxStackSize(1);
-    }
+	public FlashDrive(String name, Color color)
+	{
+		super(name);
+		this.color = color;
+		setMaxStackSize(1);
+	}
 
   /*  @Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister p_94581_1_)
     {
         this.itemIcon = p_94581_1_.registerIcon(Reference.MOD_ID + ":" + "flash_drive");
         overlay = p_94581_1_.registerIcon(Reference.MOD_ID + ":" + "flash_drive_overlay");
     }*/
 
-    public boolean hasDetails(ItemStack stack){return true;}
+	public boolean hasDetails(ItemStack stack)
+	{
+		return true;
+	}
 /*
     @Override
     @SideOnly(Side.CLIENT)
@@ -71,7 +75,7 @@ public class FlashDrive extends MOBaseItem
         }
     }*/
 
-    // TODO: 3/26/2016 Find how to get color for stack
+	// TODO: 3/26/2016 Find how to get color for stack
     /*@Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)

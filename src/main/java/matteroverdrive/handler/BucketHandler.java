@@ -32,23 +32,24 @@ import java.util.Map;
  */
 public class BucketHandler
 {
-    private final Map<Block, Item> buckets;
+	private final Map<Block, Item> buckets;
 
-    public BucketHandler()
-    {
-        buckets = new HashMap<>();
-    }
+	public BucketHandler()
+	{
+		buckets = new HashMap<>();
+	}
 
-    @SubscribeEvent
-    public void onBucketFill(FillBucketEvent event) {
+	@SubscribeEvent
+	public void onBucketFill(FillBucketEvent event)
+	{
 
-        Block block = event.getWorld().getBlockState(event.getTarget().getBlockPos()).getBlock();
-        if (block instanceof BlockFluidMatterPlasma)
-        {
-            if (event.isCancelable())
-            {
-                event.setCanceled(true);
-            }
-        }
-    }
+		Block block = event.getWorld().getBlockState(event.getTarget().getBlockPos()).getBlock();
+		if (block instanceof BlockFluidMatterPlasma)
+		{
+			if (event.isCancelable())
+			{
+				event.setCanceled(true);
+			}
+		}
+	}
 }

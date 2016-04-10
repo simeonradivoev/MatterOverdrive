@@ -34,58 +34,63 @@ import net.minecraft.client.Minecraft;
 /**
  * Created by Simeon on 6/18/2015.
  */
-public class PageQuadrant extends ElementBaseGroup implements IListHandler {
+public class PageQuadrant extends ElementBaseGroup implements IListHandler
+{
 
-    public static int scroll;
-    TileEntityMachineStarMap starMap;
-    ElementGroupList starList;
+	public static int scroll;
+	TileEntityMachineStarMap starMap;
+	ElementGroupList starList;
 
-    public PageQuadrant(GuiStarMap gui, int posX, int posY, int width, int height,TileEntityMachineStarMap starMap) {
-        super(gui, posX, posY, width, height);
-        this.starMap = starMap;
-        starList = new ElementGroupList(gui,this,16,16,0,0);
-        starList.setName("Stars");
-    }
+	public PageQuadrant(GuiStarMap gui, int posX, int posY, int width, int height, TileEntityMachineStarMap starMap)
+	{
+		super(gui, posX, posY, width, height);
+		this.starMap = starMap;
+		starList = new ElementGroupList(gui, this, 16, 16, 0, 0);
+		starList.setName("Stars");
+	}
 
-    private void loadStars()
-    {
-        starList.init();
-        Quadrant quadrant = GalaxyClient.getInstance().getTheGalaxy().getQuadrant(starMap.getDestination());
-        if (quadrant != null) {
-            for (Star star : quadrant.getStars()) {
-                Color color = StarMapRendererStars.getStarColor(star, Minecraft.getMinecraft().thePlayer);
-                starList.addElement(new ElementStarEntry((GuiStarMap) gui, starList, 128 + 64, 32, star));
+	private void loadStars()
+	{
+		starList.init();
+		Quadrant quadrant = GalaxyClient.getInstance().getTheGalaxy().getQuadrant(starMap.getDestination());
+		if (quadrant != null)
+		{
+			for (Star star : quadrant.getStars())
+			{
+				Color color = StarMapRendererStars.getStarColor(star, Minecraft.getMinecraft().thePlayer);
+				starList.addElement(new ElementStarEntry((GuiStarMap)gui, starList, 128 + 64, 32, star));
 
-                if (starMap.getDestination().equals(star)) {
-                    starList.setSelectedIndex(starList.getElements().size() - 1);
-                }
-            }
-        }
-        starList.limitScroll();
-    }
+				if (starMap.getDestination().equals(star))
+				{
+					starList.setSelectedIndex(starList.getElements().size() - 1);
+				}
+			}
+		}
+		starList.limitScroll();
+	}
 
-    @Override
-    public void init()
-    {
-        super.init();
-        starList.setSize(sizeX,sizeY-100-32);
-        starList.setScroll(scroll);
-        starList.resetSmoothScroll();
-        addElement(starList);
-        loadStars();
+	@Override
+	public void init()
+	{
+		super.init();
+		starList.setSize(sizeX, sizeY - 100 - 32);
+		starList.setScroll(scroll);
+		starList.resetSmoothScroll();
+		addElement(starList);
+		loadStars();
 
-    }
+	}
 
-    @Override
-    public void ListSelectionChange(String name, int selected)
-    {
+	@Override
+	public void ListSelectionChange(String name, int selected)
+	{
 
-    }
+	}
 
-    @Override
-    public void update(int mouseX, int mouseY,float partialTicks)
-    {
-        super.update(mouseX,mouseY,partialTicks);
-        scroll = starList.getScroll();
-    }
+	@Override
+	public void update(int mouseX, int mouseY, float partialTicks)
+	{
+		super.update(mouseX, mouseY, partialTicks);
+		scroll = starList.getScroll();
+	}
 }

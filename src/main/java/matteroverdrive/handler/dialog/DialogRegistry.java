@@ -31,49 +31,56 @@ import java.util.Map;
  */
 public class DialogRegistry implements IDialogRegistry
 {
-    private int nextMessageID = 0;
-    private final Map<Integer,IDialogMessage> messageMap;
-    private final Map<IDialogMessage,Integer> messageIntegerMap;
-    private final Map<ResourceLocation,IDialogMessage> namedDialogMessages;
+	private final Map<Integer, IDialogMessage> messageMap;
+	private final Map<IDialogMessage, Integer> messageIntegerMap;
+	private final Map<ResourceLocation, IDialogMessage> namedDialogMessages;
+	private int nextMessageID = 0;
 
-    public DialogRegistry()
-    {
-        messageMap = new HashMap<>();
-        messageIntegerMap = new HashMap<>();
-        namedDialogMessages = new HashMap<>();
-    }
+	public DialogRegistry()
+	{
+		messageMap = new HashMap<>();
+		messageIntegerMap = new HashMap<>();
+		namedDialogMessages = new HashMap<>();
+	}
 
-    public IDialogMessage getMessage(int id)
-    {
-        return messageMap.get(id);
-    }
+	public IDialogMessage getMessage(int id)
+	{
+		return messageMap.get(id);
+	}
 
-    public IDialogMessage getMessage(ResourceLocation id)
-    {
-        return namedDialogMessages.get(id);
-    }
+	public IDialogMessage getMessage(ResourceLocation id)
+	{
+		return namedDialogMessages.get(id);
+	}
 
-    public int getMessageId(IDialogMessage dialogMessage)
-    {
-        Integer id = messageIntegerMap.get(dialogMessage);
-        if (id == null)
-            return -1;
-        else return id;
-    }
+	public int getMessageId(IDialogMessage dialogMessage)
+	{
+		Integer id = messageIntegerMap.get(dialogMessage);
+		if (id == null)
+		{
+			return -1;
+		}
+		else
+		{
+			return id;
+		}
+	}
 
-    public void registerMessage(IDialogMessage message)
-    {
-        messageMap.put(nextMessageID,message);
-        messageIntegerMap.put(message,nextMessageID);
-        nextMessageID++;
-    }
+	public void registerMessage(IDialogMessage message)
+	{
+		messageMap.put(nextMessageID, message);
+		messageIntegerMap.put(message, nextMessageID);
+		nextMessageID++;
+	}
 
-    @Override
-    public void registerMessage(ResourceLocation name, IDialogMessage message)
-    {
-        registerMessage(message);
-        if (namedDialogMessages.containsKey(name))
-            throw new MORuntimeException(String.format("Dialog Message name '%s' already present",name));
-        namedDialogMessages.put(name,message);
-    }
+	@Override
+	public void registerMessage(ResourceLocation name, IDialogMessage message)
+	{
+		registerMessage(message);
+		if (namedDialogMessages.containsKey(name))
+		{
+			throw new MORuntimeException(String.format("Dialog Message name '%s' already present", name));
+		}
+		namedDialogMessages.put(name, message);
+	}
 }

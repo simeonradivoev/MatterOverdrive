@@ -37,229 +37,270 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public abstract class MOElementBase
 {
-    protected final MOGuiBase gui;
-    protected ResourceLocation texture;
-    private FontRenderer fontRenderer;
-    protected int posX;
-    protected int posY;
-    protected int posZ;
-    protected int sizeX;
-    protected int sizeY;
-    protected int texW = 256;
-    protected int texH = 256;
-    protected String name;
-    private boolean visible = true;
-    private boolean enabled = true;
-    private Color color = new Color(255,255,255);
-    public MOElementBase parent;
-    public MOElementBase(MOGuiBase gui, int posX, int posY)
-    {
-        this.gui = gui;
-        this.posX = posX;
-        this.posY = posY;
-    }
-    public MOElementBase(MOGuiBase gui, int posX, int posY, int width, int height)
-    {
-        this.gui = gui;
-        this.posX = posX;
-        this.posY = posY;
-        this.sizeX = width;
-        this.sizeY = height;
-    }
+	protected final MOGuiBase gui;
+	public MOElementBase parent;
+	protected ResourceLocation texture;
+	protected int posX;
+	protected int posY;
+	protected int posZ;
+	protected int sizeX;
+	protected int sizeY;
+	protected int texW = 256;
+	protected int texH = 256;
+	protected String name;
+	private FontRenderer fontRenderer;
+	private boolean visible = true;
+	private boolean enabled = true;
+	private Color color = new Color(255, 255, 255);
 
-    public Color getColor() {
-        return color;
-    }
+	public MOElementBase(MOGuiBase gui, int posX, int posY)
+	{
+		this.gui = gui;
+		this.posX = posX;
+		this.posY = posY;
+	}
 
-    public void setColor(int r,int g,int b,int alpha)
-    {
-        this.color = new Color(r,g,b,alpha);
-    }
+	public MOElementBase(MOGuiBase gui, int posX, int posY, int width, int height)
+	{
+		this.gui = gui;
+		this.posX = posX;
+		this.posY = posY;
+		this.sizeX = width;
+		this.sizeY = height;
+	}
 
-    public void setColor(Color color)
-    {
-        this.color = color;
-    }
+	public Color getColor()
+	{
+		return color;
+	}
 
-    protected void ApplyColor()
-    {
-        if (color != null) {
-            RenderUtils.applyColor(color);
-        }
-    }
+	public void setColor(Color color)
+	{
+		this.color = color;
+	}
 
-    protected void ResetColor()
-    {
-        GlStateManager.color(1,1,1);
-    }
+	public void setColor(int r, int g, int b, int alpha)
+	{
+		this.color = new Color(r, g, b, alpha);
+	}
 
-    protected int getGlobalX()
-    {
-        int x = posX;
+	protected void ApplyColor()
+	{
+		if (color != null)
+		{
+			RenderUtils.applyColor(color);
+		}
+	}
 
-        if (parent != null)
-        {
-            x += parent.getGlobalX();
-        }
-        return x;
-    }
+	protected void ResetColor()
+	{
+		GlStateManager.color(1, 1, 1);
+	}
 
-    protected int getGlobalY()
-    {
-        int y = posY;
+	protected int getGlobalX()
+	{
+		int x = posX;
 
-        if (parent != null)
-        {
-            y += parent.getGlobalY();
-        }
-        return y;
-    }
+		if (parent != null)
+		{
+			x += parent.getGlobalX();
+		}
+		return x;
+	}
 
-    public MOElementBase setName(String var1) {
-        this.name = var1;
-        return this;
-    }
+	protected int getGlobalY()
+	{
+		int y = posY;
 
-    public MOElementBase setPosition(int var1, int var2) {
-        this.posX = var1;
-        this.posY = var2;
-        return this;
-    }
+		if (parent != null)
+		{
+			y += parent.getGlobalY();
+		}
+		return y;
+	}
 
-    public MOElementBase setSize(int var1, int var2) {
-        this.sizeX = var1;
-        this.sizeY = var2;
-        return this;
-    }
+	public MOElementBase setPosition(int var1, int var2)
+	{
+		this.posX = var1;
+		this.posY = var2;
+		return this;
+	}
 
-    public MOElementBase setTexture(String var1, int var2, int var3) {
-        this.texture = new ResourceLocation(var1);
-        this.texW = var2;
-        this.texH = var3;
-        return this;
-    }
+	public MOElementBase setSize(int var1, int var2)
+	{
+		this.sizeX = var1;
+		this.sizeY = var2;
+		return this;
+	}
 
-    public final MOElementBase setVisible(boolean var1) {
-        this.visible = var1;
-        return this;
-    }
+	public MOElementBase setTexture(String var1, int var2, int var3)
+	{
+		this.texture = new ResourceLocation(var1);
+		this.texW = var2;
+		this.texH = var3;
+		return this;
+	}
 
-    public boolean isVisible() {
-        return this.visible;
-    }
+	public boolean isVisible()
+	{
+		return this.visible;
+	}
 
-    public final MOElementBase setEnabled(boolean var1) {
-        this.enabled = var1;
-        return this;
-    }
+	public final MOElementBase setVisible(boolean var1)
+	{
+		this.visible = var1;
+		return this;
+	}
 
-    public boolean isEnabled() {
-        return this.enabled;
-    }
+	public boolean isEnabled()
+	{
+		return this.enabled;
+	}
 
-    public void update(int mouseX, int mouseY,float partialTicks) {
-        this.update();
-    }
+	public final MOElementBase setEnabled(boolean var1)
+	{
+		this.enabled = var1;
+		return this;
+	}
 
-    public void update() {
-    }
+	public void update(int mouseX, int mouseY, float partialTicks)
+	{
+		this.update();
+	}
 
-    public abstract void updateInfo();
-    public abstract void init();
-    public abstract void addTooltip(List<String> var1,int mouseX,int mouseY);
-    public abstract void drawBackground(int var1, int var2, float var3);
-    public abstract void drawForeground(int var1, int var2);
+	public void update()
+	{
+	}
 
-    public void drawModalRect(int var1, int var2, int var3, int var4, int var5) {
-        this.gui.drawSizedModalRect(var1, var2, var3, var4, var5);
-    }
+	public abstract void updateInfo();
 
-    public void drawStencil(int xStart, int yStart, int xEnd, int yEnd, int flag) {
-        GlStateManager.disableTexture2D();
-        glStencilFunc(GL_ALWAYS, flag, flag);
-        glStencilOp(GL_ZERO, GL_ZERO, GL_REPLACE);
-        glStencilMask(flag);
-        GlStateManager.colorMask(false, false, false, false);
-        GlStateManager.depthMask(false);
-        glClearStencil(0);
-        GlStateManager.clear(GL_STENCIL_BUFFER_BIT);
+	public abstract void init();
 
-        VertexBuffer vb = Tessellator.getInstance().getBuffer();
-        vb.begin(GL_QUADS, DefaultVertexFormats.POSITION);
-        vb.pos(xStart, yEnd, 0).endVertex();
-        vb.pos(xEnd, yEnd, 0).endVertex();
-        vb.pos(xEnd, yStart, 0).endVertex();
-        vb.pos(xStart, yStart, 0).endVertex();
-        Tessellator.getInstance().draw();
+	public abstract void addTooltip(List<String> var1, int mouseX, int mouseY);
 
-        GlStateManager.enableTexture2D();
-        glStencilFunc(GL_EQUAL, flag, flag);
-        glStencilMask(0);
-        GlStateManager.colorMask(true, true, true, false);
-        GlStateManager.depthMask(true);
-    }
+	public abstract void drawBackground(int var1, int var2, float var3);
 
-    public void drawTexturedModalRect(int var1, int var2, int var3, int var4, int var5, int var6) {
-        this.gui.drawSizedTexturedModalRect(var1, var2, var3, var4, var5, var6, (float)this.texW, (float)this.texH);
-    }
+	public abstract void drawForeground(int var1, int var2);
 
-    public void drawCenteredString(FontRenderer var1, String var2, int var3, int var4, int var5) {
-        var1.drawStringWithShadow(var2, var3 - var1.getStringWidth(var2) / 2, var4, var5);
-    }
+	public void drawModalRect(int var1, int var2, int var3, int var4, int var5)
+	{
+		this.gui.drawSizedModalRect(var1, var2, var3, var4, var5);
+	}
 
-    public boolean onMousePressed(int var1, int var2, int var3) {
-        return false;
-    }
+	public void drawStencil(int xStart, int yStart, int xEnd, int yEnd, int flag)
+	{
+		GlStateManager.disableTexture2D();
+		glStencilFunc(GL_ALWAYS, flag, flag);
+		glStencilOp(GL_ZERO, GL_ZERO, GL_REPLACE);
+		glStencilMask(flag);
+		GlStateManager.colorMask(false, false, false, false);
+		GlStateManager.depthMask(false);
+		glClearStencil(0);
+		GlStateManager.clear(GL_STENCIL_BUFFER_BIT);
 
-    public void onMouseReleased(int var1, int var2) {
-    }
+		VertexBuffer vb = Tessellator.getInstance().getBuffer();
+		vb.begin(GL_QUADS, DefaultVertexFormats.POSITION);
+		vb.pos(xStart, yEnd, 0).endVertex();
+		vb.pos(xEnd, yEnd, 0).endVertex();
+		vb.pos(xEnd, yStart, 0).endVertex();
+		vb.pos(xStart, yStart, 0).endVertex();
+		Tessellator.getInstance().draw();
 
-    public boolean onMouseWheel(int var1, int var2, int var3) {
-        return false;
-    }
+		GlStateManager.enableTexture2D();
+		glStencilFunc(GL_EQUAL, flag, flag);
+		glStencilMask(0);
+		GlStateManager.colorMask(true, true, true, false);
+		GlStateManager.depthMask(true);
+	}
 
-    public boolean onKeyTyped(char var1, int var2) {
-        return false;
-    }
+	public void drawTexturedModalRect(int var1, int var2, int var3, int var4, int var5, int var6)
+	{
+		this.gui.drawSizedTexturedModalRect(var1, var2, var3, var4, var5, var6, (float)this.texW, (float)this.texH);
+	}
 
-    public boolean intersectsWith(int var1, int var2) {
-        return var1 >= this.posX && var1 <= this.posX + this.sizeX && var2 >= this.posY && var2 <= this.posY + this.sizeY;
-    }
+	public void drawCenteredString(FontRenderer var1, String var2, int var3, int var4, int var5)
+	{
+		var1.drawStringWithShadow(var2, var3 - var1.getStringWidth(var2) / 2, var4, var5);
+	}
 
-    public FontRenderer getFontRenderer() {
-        return this.fontRenderer == null?this.gui.getFontRenderer():this.fontRenderer;
-    }
+	public boolean onMousePressed(int var1, int var2, int var3)
+	{
+		return false;
+	}
 
-    public MOElementBase setFontRenderer(FontRenderer var1) {
-        this.fontRenderer = var1;
-        return this;
-    }
+	public void onMouseReleased(int var1, int var2)
+	{
+	}
 
-    public final String getName() {
-        return this.name;
-    }
+	public boolean onMouseWheel(int var1, int var2, int var3)
+	{
+		return false;
+	}
 
-    public final MOGuiBase getContainerScreen() {
-        return this.gui;
-    }
+	public boolean onKeyTyped(char var1, int var2)
+	{
+		return false;
+	}
 
-    public final int getPosY() {
-        return this.posY;
-    }
+	public boolean intersectsWith(int var1, int var2)
+	{
+		return var1 >= this.posX && var1 <= this.posX + this.sizeX && var2 >= this.posY && var2 <= this.posY + this.sizeY;
+	}
 
-    public final int getPosX() {
-        return this.posX;
-    }
+	public FontRenderer getFontRenderer()
+	{
+		return this.fontRenderer == null ? this.gui.getFontRenderer() : this.fontRenderer;
+	}
 
-    public final int getHeight() {
-        return this.sizeY;
-    }
+	public MOElementBase setFontRenderer(FontRenderer var1)
+	{
+		this.fontRenderer = var1;
+		return this;
+	}
 
-    public final int getWidth() {
-        return this.sizeX;
-    }
+	public final String getName()
+	{
+		return this.name;
+	}
 
-    public final void setPosZ(int z){this.posZ = z;}
+	public MOElementBase setName(String var1)
+	{
+		this.name = var1;
+		return this;
+	}
 
-    public final int getPosZ(){return posZ;}
+	public final MOGuiBase getContainerScreen()
+	{
+		return this.gui;
+	}
+
+	public final int getPosY()
+	{
+		return this.posY;
+	}
+
+	public final int getPosX()
+	{
+		return this.posX;
+	}
+
+	public final int getHeight()
+	{
+		return this.sizeY;
+	}
+
+	public final int getWidth()
+	{
+		return this.sizeX;
+	}
+
+	public final int getPosZ()
+	{
+		return posZ;
+	}
+
+	public final void setPosZ(int z)
+	{
+		this.posZ = z;
+	}
 }

@@ -32,16 +32,16 @@ import net.minecraft.world.World;
  */
 public interface IMOTileEntity
 {
-    void onAdded(World world, BlockPos pos, IBlockState state);
+	void onAdded(World world, BlockPos pos, IBlockState state);
 
-    void onPlaced(World world, EntityLivingBase entityLiving);
+	void onPlaced(World world, EntityLivingBase entityLiving);
 
-    void onDestroyed(World worldIn, BlockPos pos, IBlockState state);
+	void onDestroyed(World worldIn, BlockPos pos, IBlockState state);
 
-    void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock);
+	void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock);
 
-    void writeToDropItem(ItemStack itemStack);
+	void writeToDropItem(ItemStack itemStack);
 
-    void readFromPlaceItem(ItemStack itemStack);
+	void readFromPlaceItem(ItemStack itemStack);
 
 }

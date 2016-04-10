@@ -32,14 +32,14 @@ import java.util.EnumSet;
  * Created by Simeon on 7/21/2015.
  */
 /*@Optional.InterfaceList({
-        @Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral"),
+		@Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral"),
 })*/
 public class ComponentComputers extends MachineComponentAbstract<TileEntityMachineTransporter>// implements IPeripheral
 {
-    public ComponentComputers(TileEntityMachineTransporter machine)
-    {
-        super(machine);
-    }
+	public ComponentComputers(TileEntityMachineTransporter machine)
+	{
+		super(machine);
+	}
     /*private static String[] methodNames = new String[] {
             "getLocations",
             "getSelectedLocation",
@@ -110,9 +110,9 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     *//**
-     * args:
-     * id (number) numeric index of the location to select (First location has index 0)
-     *//*
+ * args:
+ * id (number) numeric index of the location to select (First location has index 0)
+ *//*
     private Object[] computerGetLocation(Object[] args) {
 
         if (!(args[0] instanceof Double)) {
@@ -133,12 +133,12 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     *//**
-     * args:
-     * name (string) name of the new location
-     * x (number) x coord of the new location
-     * y (number) y coord of the new location
-     * z (number) z coord of the new location
-     *//*
+ * args:
+ * name (string) name of the new location
+ * x (number) x coord of the new location
+ * y (number) y coord of the new location
+ * z (number) z coord of the new location
+ *//*
     private Object[] computerAddLocation(Object[] args) {
         if (!(args[0] instanceof String)) {
             throw new IllegalArgumentException("First argument must be a string containing the name of the transport location");
@@ -157,9 +157,9 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     *//**
-     * args:
-     * id (number) numeric index of the location to select (First location has index 0)
-     *//*
+ * args:
+ * id (number) numeric index of the location to select (First location has index 0)
+ *//*
     private Object[] computerSetSelectedLocation(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number");
@@ -169,10 +169,10 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     *//**
-     * args:
-     * id (number) numeric index of the location to select (First location has index 0)
-     * name (string) the new name
-     *//*
+ * args:
+ * id (number) numeric index of the location to select (First location has index 0)
+ * name (string) the new name
+ *//*
     private Object[] computerSetName(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number");
@@ -189,10 +189,10 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     *//**
-     * args:
-     * id (number) numeric index of the location to select (first location has index 0)
-     * x (number) the new X coordinate
-     *//*
+ * args:
+ * id (number) numeric index of the location to select (first location has index 0)
+ * x (number) the new X coordinate
+ *//*
     private Object[] computerSetX(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number");
@@ -208,10 +208,10 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     *//**
-     * args:
-     * id (number) numeric index of the location to select (first location has index 0)
-     * y (number) the new Y coordinate
-     *//*
+ * args:
+ * id (number) numeric index of the location to select (first location has index 0)
+ * y (number) the new Y coordinate
+ *//*
     private Object[] computerSetY(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number");
@@ -227,10 +227,10 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
 
     *//**
-     * args:
-     * id (number) numeric index of the location to select (first location has index 0)
-     * z (number) the new Z coordinate
-     *//*
+ * args:
+ * id (number) numeric index of the location to select (first location has index 0)
+ * z (number) the new Z coordinate
+ *//*
     private Object[] computerSetZ(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number");
@@ -245,13 +245,15 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
         return null;
     }
 
-    *//**
-     * args:
-     * mode (number) the redstone mode of the transporter
-     * 		0: High redstone signal
-     * 		1: Low redstone signal
-     * 		2: Redstone disabled
-     *//*
+    */
+
+	/**
+	 * args:
+	 * mode (number) the redstone mode of the transporter
+	 * 		0: High redstone signal
+	 * 		1: Low redstone signal
+	 * 		2: Redstone disabled
+	 *//*
     private Object[] computerSetRedstoneMode(Object[] args) {
         if (!(args[0] instanceof Double)) {
             throw new IllegalArgumentException("Argument 1 must be a number from 0 to 2");
@@ -342,37 +344,42 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
     //endregion*/
 
-    //region Component Functions
-    @Override
-    public void readFromNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories) {
+	//region Component Functions
+	@Override
+	public void readFromNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+	{
 
-    }
+	}
 
-    @Override
-    public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk) {
+	@Override
+	public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
+	{
 
-    }
+	}
 
-    @Override
-    public void registerSlots(Inventory inventory) {
+	@Override
+	public void registerSlots(Inventory inventory)
+	{
 
-    }
+	}
 
-    @Override
-    public boolean isAffectedByUpgrade(UpgradeTypes type) {
-        return false;
-    }
+	@Override
+	public boolean isAffectedByUpgrade(UpgradeTypes type)
+	{
+		return false;
+	}
 
-    @Override
-    public boolean isActive() {
-        return false;
-    }
+	@Override
+	public boolean isActive()
+	{
+		return false;
+	}
 
-    @Override
-    public void onMachineEvent(MachineEvent event)
-    {
+	@Override
+	public void onMachineEvent(MachineEvent event)
+	{
 
-    }
+	}
 
-    //endregion
+	//endregion
 }

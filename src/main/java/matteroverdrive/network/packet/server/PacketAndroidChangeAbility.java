@@ -35,46 +35,46 @@ import java.util.EnumSet;
  */
 public class PacketAndroidChangeAbility extends PacketAbstract
 {
-    String ability;
+	String ability;
 
-    public PacketAndroidChangeAbility()
-    {
+	public PacketAndroidChangeAbility()
+	{
 
-    }
+	}
 
-    public PacketAndroidChangeAbility(String ability)
-    {
-        this.ability = ability;
-    }
+	public PacketAndroidChangeAbility(String ability)
+	{
+		this.ability = ability;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        ability = ByteBufUtils.readUTF8String(buf);
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		ability = ByteBufUtils.readUTF8String(buf);
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        ByteBufUtils.writeUTF8String(buf,ability);
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		ByteBufUtils.writeUTF8String(buf, ability);
+	}
 
-    public static class ServerHandler extends AbstractServerPacketHandler<PacketAndroidChangeAbility>
-    {
+	public static class ServerHandler extends AbstractServerPacketHandler<PacketAndroidChangeAbility>
+	{
 
-        @Override
-        public void handleServerMessage(EntityPlayerMP player, PacketAndroidChangeAbility message, MessageContext ctx)
-        {
-            IBioticStat stat = MatterOverdrive.statRegistry.getStat(message.ability);
-            if (stat != null)
-            {
-                AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
-                if (androidPlayer.isUnlocked(stat,0) && stat.showOnWheel(androidPlayer,androidPlayer.getUnlockedLevel(stat)))
-                {
-                    androidPlayer.setActiveStat(stat);
-                    androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.STATS));
-                }
-            }
-        }
-    }
+		@Override
+		public void handleServerMessage(EntityPlayerMP player, PacketAndroidChangeAbility message, MessageContext ctx)
+		{
+			IBioticStat stat = MatterOverdrive.statRegistry.getStat(message.ability);
+			if (stat != null)
+			{
+				AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
+				if (androidPlayer.isUnlocked(stat, 0) && stat.showOnWheel(androidPlayer, androidPlayer.getUnlockedLevel(stat)))
+				{
+					androidPlayer.setActiveStat(stat);
+					androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.STATS));
+				}
+			}
+		}
+	}
 }

@@ -11,86 +11,89 @@ import net.minecraftforge.fml.common.Loader;
  */
 public class QuestBlock
 {
-    IBlockState block;
-    String blockName;
-    int blockMeta;
-    boolean hasMeta;
-    String mod;
+	IBlockState block;
+	String blockName;
+	int blockMeta;
+	boolean hasMeta;
+	String mod;
 
-    public QuestBlock(JsonObject object)
-    {
-        if (object.has("meta"))
-        {
-            setBlockMeta(MOJsonHelper.getInt(object,"meta"));
-        }
-        blockName = MOJsonHelper.getString(object,"id");
-        mod = MOJsonHelper.getString(object,"mod",null);
-    }
+	public QuestBlock(JsonObject object)
+	{
+		if (object.has("meta"))
+		{
+			setBlockMeta(MOJsonHelper.getInt(object, "meta"));
+		}
+		blockName = MOJsonHelper.getString(object, "id");
+		mod = MOJsonHelper.getString(object, "mod", null);
+	}
 
-    public QuestBlock(IBlockState block)
-    {
-        this.block = block;
-    }
+	public QuestBlock(IBlockState block)
+	{
+		this.block = block;
+	}
 
-    public QuestBlock(String blockName,String mod)
-    {
-        this.blockName = blockName;
-        this.mod = mod;
-    }
+	public QuestBlock(String blockName, String mod)
+	{
+		this.blockName = blockName;
+		this.mod = mod;
+	}
 
-    public boolean isModded()
-    {
-        return mod != null && !mod.isEmpty();
-    }
+	public static QuestBlock fromBlock(IBlockState block)
+	{
+		return new QuestBlock(block);
+	}
 
-    public boolean isModPresent()
-    {
-        return Loader.isModLoaded(mod);
-    }
+	public boolean isModded()
+	{
+		return mod != null && !mod.isEmpty();
+	}
 
-    public boolean canBlockExist()
-    {
-        if (isModded())
-        {
-            return isModPresent();
-        }return true;
-    }
+	public boolean isModPresent()
+	{
+		return Loader.isModLoaded(mod);
+	}
 
-    public IBlockState getBlockState()
-    {
-        if (isModded() || block == null)
-        {
-            if (hasMeta)
-            {
-                return Block.getBlockFromName(blockName).getStateFromMeta(blockMeta);
-            }
-            return Block.getBlockFromName(blockName).getDefaultState();
+	public boolean canBlockExist()
+	{
+		if (isModded())
+		{
+			return isModPresent();
+		}
+		return true;
+	}
 
-        }else
-        {
-            return block;
-        }
-    }
+	public IBlockState getBlockState()
+	{
+		if (isModded() || block == null)
+		{
+			if (hasMeta)
+			{
+				return Block.getBlockFromName(blockName).getStateFromMeta(blockMeta);
+			}
+			return Block.getBlockFromName(blockName).getDefaultState();
 
-    public boolean isTheSame(IBlockState blockState)
-    {
-        if (hasMeta)
-        {
-            return getBlockState().equals(blockState);
-        }else
-        {
-            return getBlockState().getBlock().equals(blockState.getBlock());
-        }
-    }
+		}
+		else
+		{
+			return block;
+		}
+	}
 
-    public void setBlockMeta(int meta)
-    {
-        this.blockMeta = meta;
-        this.hasMeta = true;
-    }
+	public boolean isTheSame(IBlockState blockState)
+	{
+		if (hasMeta)
+		{
+			return getBlockState().equals(blockState);
+		}
+		else
+		{
+			return getBlockState().getBlock().equals(blockState.getBlock());
+		}
+	}
 
-    public static QuestBlock fromBlock(IBlockState block)
-    {
-        return new QuestBlock(block);
-    }
+	public void setBlockMeta(int meta)
+	{
+		this.blockMeta = meta;
+		this.hasMeta = true;
+	}
 }

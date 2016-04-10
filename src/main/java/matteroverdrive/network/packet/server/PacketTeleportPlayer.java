@@ -40,69 +40,72 @@ import java.util.EnumSet;
 /**
  * Created by Simeon on 6/1/2015.
  */
-public class PacketTeleportPlayer extends PacketAbstract {
+public class PacketTeleportPlayer extends PacketAbstract
+{
 
-    double x,y,z;
+	double x, y, z;
 
-    public PacketTeleportPlayer()
-    {
+	public PacketTeleportPlayer()
+	{
 
-    }
+	}
 
-    public PacketTeleportPlayer(Vec3d vec3)
-    {
-        x = vec3.xCoord;
-        y = vec3.yCoord;
-        z = vec3.zCoord;
-    }
+	public PacketTeleportPlayer(Vec3d vec3)
+	{
+		x = vec3.xCoord;
+		y = vec3.yCoord;
+		z = vec3.zCoord;
+	}
 
-    public PacketTeleportPlayer(double x,double y,double z)
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
+	public PacketTeleportPlayer(double x, double y, double z)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        x = buf.readDouble();
-        y = buf.readDouble();
-        z = buf.readDouble();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		x = buf.readDouble();
+		y = buf.readDouble();
+		z = buf.readDouble();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeDouble(x);
-        buf.writeDouble(y);
-        buf.writeDouble(z);
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		buf.writeDouble(x);
+		buf.writeDouble(y);
+		buf.writeDouble(z);
+	}
 
-    public static class ServerHandler extends AbstractServerPacketHandler<PacketTeleportPlayer>
-    {
+	public static class ServerHandler extends AbstractServerPacketHandler<PacketTeleportPlayer>
+	{
 
-        @Override
-        public void handleServerMessage(EntityPlayerMP player, PacketTeleportPlayer message, MessageContext ctx)
-        {
-            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
-            if (androidPlayer != null && androidPlayer.isAndroid())
-            {
-                int unlockedLevel = androidPlayer.getUnlockedLevel(MatterOverdriveBioticStats.teleport);
-                if(!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(MatterOverdriveBioticStats.teleport,unlockedLevel,androidPlayer)))
-                {
-                    if (MatterOverdriveBioticStats.teleport.isEnabled(androidPlayer,unlockedLevel))
-                    {
-                        MatterOverdrive.packetPipeline.sendToAllAround(new PacketSpawnParticle("teleport", player.posX, player.posY + 1, player.posZ, 1, RenderParticlesHandler.Blending.Additive), player, 64);
-                        player.worldObj.playSound(player,player.posX,player.posY,player.posZ, MatterOverdriveSounds.androidTeleport, SoundCategory.BLOCKS, 0.2f, 0.8f + 0.4f * player.worldObj.rand.nextFloat());
-                        player.setPositionAndUpdate(message.x, message.y, message.z);
-                        player.worldObj.playSound(null,message.x, message.y, message.z, MatterOverdriveSounds.androidTeleport,SoundCategory.BLOCKS, 0.2f, 0.8f + 0.4f * player.worldObj.rand.nextFloat());
-                        androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_LAST_TELEPORT, player.worldObj.getTotalWorldTime() + BioticStatTeleport.TELEPORT_DELAY);
-                        androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_GLITCH_TIME, 5);
-                        androidPlayer.extractEnergyScaled(BioticStatTeleport.ENERGY_PER_TELEPORT);
-                        androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS));
-                        androidPlayer.getPlayer().fallDistance = 0;
-                    }
-                }
-            }
-        }
-    }
+		@Override
+		public void handleServerMessage(EntityPlayerMP player, PacketTeleportPlayer message, MessageContext ctx)
+		{
+			AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
+			if (androidPlayer != null && androidPlayer.isAndroid())
+			{
+				int unlockedLevel = androidPlayer.getUnlockedLevel(MatterOverdriveBioticStats.teleport);
+				if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(MatterOverdriveBioticStats.teleport, unlockedLevel, androidPlayer)))
+				{
+					if (MatterOverdriveBioticStats.teleport.isEnabled(androidPlayer, unlockedLevel))
+					{
+						MatterOverdrive.packetPipeline.sendToAllAround(new PacketSpawnParticle("teleport", player.posX, player.posY + 1, player.posZ, 1, RenderParticlesHandler.Blending.Additive), player, 64);
+						player.worldObj.playSound(player, player.posX, player.posY, player.posZ, MatterOverdriveSounds.androidTeleport, SoundCategory.BLOCKS, 0.2f, 0.8f + 0.4f * player.worldObj.rand.nextFloat());
+						player.setPositionAndUpdate(message.x, message.y, message.z);
+						player.worldObj.playSound(null, message.x, message.y, message.z, MatterOverdriveSounds.androidTeleport, SoundCategory.BLOCKS, 0.2f, 0.8f + 0.4f * player.worldObj.rand.nextFloat());
+						androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_LAST_TELEPORT, player.worldObj.getTotalWorldTime() + BioticStatTeleport.TELEPORT_DELAY);
+						androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_GLITCH_TIME, 5);
+						androidPlayer.extractEnergyScaled(BioticStatTeleport.ENERGY_PER_TELEPORT);
+						androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS));
+						androidPlayer.getPlayer().fallDistance = 0;
+					}
+				}
+			}
+		}
+	}
 }

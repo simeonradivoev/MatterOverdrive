@@ -33,86 +33,99 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class DialogMessageAndroidTransformation extends DialogMessage
 {
-    public DialogMessageAndroidTransformation(){super();}
-    public DialogMessageAndroidTransformation(String message, String question) {
-        super(message, question);
-    }
+	public DialogMessageAndroidTransformation()
+	{
+		super();
+	}
 
-    public DialogMessageAndroidTransformation(String message) {
-        super(message);
-    }
+	public DialogMessageAndroidTransformation(String message, String question)
+	{
+		super(message, question);
+	}
 
-    @Override
-    public boolean canInteract(IDialogNpc npc, EntityPlayer player)
-    {
-        boolean[] hasParts = new boolean[4];
-        int[] slots = new int[4];
+	public DialogMessageAndroidTransformation(String message)
+	{
+		super(message);
+	}
 
-        for (int i = 0; i < player.inventory.getSizeInventory();i++)
-        {
-            if(player.inventory.getStackInSlot(i) != null && player.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.androidParts)
-            {
-                int damage = player.inventory.getStackInSlot(i).getItemDamage();
-                if (damage < hasParts.length)
-                {
-                    hasParts[damage] = true;
-                    slots[damage] = i;
-                }
-            }
-        }
+	@Override
+	public boolean canInteract(IDialogNpc npc, EntityPlayer player)
+	{
+		boolean[] hasParts = new boolean[4];
+		int[] slots = new int[4];
 
-        for (boolean hasPart : hasParts) {
-            if (!hasPart) {
-                return false;
-            }
-        }
+		for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+		{
+			if (player.inventory.getStackInSlot(i) != null && player.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.androidParts)
+			{
+				int damage = player.inventory.getStackInSlot(i).getItemDamage();
+				if (damage < hasParts.length)
+				{
+					hasParts[damage] = true;
+					slots[damage] = i;
+				}
+			}
+		}
 
-        return true;
-    }
+		for (boolean hasPart : hasParts)
+		{
+			if (!hasPart)
+			{
+				return false;
+			}
+		}
 
-    @Override
-    public void onInteract(IDialogNpc npc, EntityPlayer player)
-    {
-        boolean[] hasParts = new boolean[4];
-        int[] slots = new int[4];
+		return true;
+	}
 
-        for (int i = 0; i < player.inventory.getSizeInventory();i++)
-        {
-            if(player.inventory.getStackInSlot(i) != null && player.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.androidParts)
-            {
-                int damage = player.inventory.getStackInSlot(i).getItemDamage();
-                if (damage < hasParts.length)
-                {
-                    hasParts[damage] = true;
-                    slots[damage] = i;
-                }
-            }
-        }
+	@Override
+	public void onInteract(IDialogNpc npc, EntityPlayer player)
+	{
+		boolean[] hasParts = new boolean[4];
+		int[] slots = new int[4];
 
-        for (boolean hasPart : hasParts) {
-            if (!hasPart) {
-                if (!player.worldObj.isRemote) {
-                    TextComponentString componentText = new TextComponentString(ChatFormatting.GOLD + "<Mad Scientist>" + ChatFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + player.getRNG().nextInt(4)));
-                    componentText.setChatStyle(new Style().setColor(TextFormatting.RED));
-                    player.addChatMessage(componentText);
-                }
-                return;
-            }
-        }
+		for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+		{
+			if (player.inventory.getStackInSlot(i) != null && player.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.androidParts)
+			{
+				int damage = player.inventory.getStackInSlot(i).getItemDamage();
+				if (damage < hasParts.length)
+				{
+					hasParts[damage] = true;
+					slots[damage] = i;
+				}
+			}
+		}
 
-        if (!player.worldObj.isRemote) {
-            for (int slot : slots) {
-                player.inventory.decrStackSize(slot, 1);
-            }
-        }
+		for (boolean hasPart : hasParts)
+		{
+			if (!hasPart)
+			{
+				if (!player.worldObj.isRemote)
+				{
+					TextComponentString componentText = new TextComponentString(ChatFormatting.GOLD + "<Mad Scientist>" + ChatFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + player.getRNG().nextInt(4)));
+					componentText.setChatStyle(new Style().setColor(TextFormatting.RED));
+					player.addChatMessage(componentText);
+				}
+				return;
+			}
+		}
 
-        MOPlayerCapabilityProvider.GetAndroidCapability(player).startConversion();
-        player.closeScreen();
-    }
+		if (!player.worldObj.isRemote)
+		{
+			for (int slot : slots)
+			{
+				player.inventory.decrStackSize(slot, 1);
+			}
+		}
 
-    @Override
-    public boolean isVisible(IDialogNpc npc, EntityPlayer player)
-    {
-        return MOPlayerCapabilityProvider.GetAndroidCapability(player) == null || !MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid();
-    }
+		MOPlayerCapabilityProvider.GetAndroidCapability(player).startConversion();
+		player.closeScreen();
+	}
+
+	@Override
+	public boolean isVisible(IDialogNpc npc, EntityPlayer player)
+	{
+		return MOPlayerCapabilityProvider.GetAndroidCapability(player) == null || !MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid();
+	}
 }

@@ -29,103 +29,111 @@ import net.minecraft.util.math.MathHelper;
  */
 public class MachineEnergyStorage<T extends MOTileEntityMachine> implements IEnergyStorage
 {
-    protected int energy;
-    protected int capacity;
-    protected int maxReceive;
-    protected int maxExtract;
-    protected final T machine;
+	protected final T machine;
+	protected int energy;
+	protected int capacity;
+	protected int maxReceive;
+	protected int maxExtract;
 
-    public MachineEnergyStorage(T machine,int capacity)
-    {
-        this(machine, capacity, capacity, capacity);
-    }
-    public MachineEnergyStorage(T machine,int capacity, int maxReceive, int maxExtract)
-    {
-        this.machine = machine;
-        this.capacity = capacity;
-        this.maxReceive = maxReceive;
-        this.maxExtract = maxExtract;
-    }
+	public MachineEnergyStorage(T machine, int capacity)
+	{
+		this(machine, capacity, capacity, capacity);
+	}
 
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        this.energy = tagCompound.getInteger("Energy");
-    }
+	public MachineEnergyStorage(T machine, int capacity, int maxReceive, int maxExtract)
+	{
+		this.machine = machine;
+		this.capacity = capacity;
+		this.maxReceive = maxReceive;
+		this.maxExtract = maxExtract;
+	}
 
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
-        tagCompound.setInteger("Energy", energy);
-    }
+	public void readFromNBT(NBTTagCompound tagCompound)
+	{
+		this.energy = tagCompound.getInteger("Energy");
+	}
 
-    public int modifyEnergyStored(int amount) {
-        int lastEnergy = this.energy;
-        this.energy = MathHelper.clamp_int(this.energy + amount, 0, getMaxEnergyStored());
-        return this.energy - lastEnergy;
-    }
+	public void writeToNBT(NBTTagCompound tagCompound)
+	{
+		tagCompound.setInteger("Energy", energy);
+	}
 
-    @Override
-    public int receiveEnergy(int amount, boolean simulate) {
-        int clampedAmount = Math.min(getMaxEnergyStored() - this.energy, Math.min(getMaxReceive(), amount));
-        if(!simulate) {
-            this.energy += clampedAmount;
-        }
+	public int modifyEnergyStored(int amount)
+	{
+		int lastEnergy = this.energy;
+		this.energy = MathHelper.clamp_int(this.energy + amount, 0, getMaxEnergyStored());
+		return this.energy - lastEnergy;
+	}
 
-        return clampedAmount;
-    }
+	@Override
+	public int receiveEnergy(int amount, boolean simulate)
+	{
+		int clampedAmount = Math.min(getMaxEnergyStored() - this.energy, Math.min(getMaxReceive(), amount));
+		if (!simulate)
+		{
+			this.energy += clampedAmount;
+		}
 
-    @Override
-    public int extractEnergy(int amount, boolean simulate) {
-        int clampedAmount = Math.min(getMaxEnergyStored(), Math.min(getMaxExtract(), amount));
-        if(!simulate) {
-            this.energy -= clampedAmount;
-        }
+		return clampedAmount;
+	}
 
-        return clampedAmount;
-    }
+	@Override
+	public int extractEnergy(int amount, boolean simulate)
+	{
+		int clampedAmount = Math.min(getMaxEnergyStored(), Math.min(getMaxExtract(), amount));
+		if (!simulate)
+		{
+			this.energy -= clampedAmount;
+		}
 
-    public int getMaxReceive()
-    {
-        return Math.max(0, (int)(maxReceive * machine.getUpgradeMultiply(UpgradeTypes.PowerTransfer)));
-    }
+		return clampedAmount;
+	}
 
-    public int getMaxExtract()
-    {
-        return Math.max(0,(int)(maxExtract * machine.getUpgradeMultiply(UpgradeTypes.PowerTransfer)));
-    }
+	public int getMaxReceive()
+	{
+		return Math.max(0, (int)(maxReceive * machine.getUpgradeMultiply(UpgradeTypes.PowerTransfer)));
+	}
 
-    @Override
-    public int getEnergyStored() {
-        return energy;
-    }
+	public void setMaxReceive(int maxReceive)
+	{
+		this.maxReceive = maxReceive;
+	}
 
-    @Override
-    public int getMaxEnergyStored() {
-        return Math.max(0, (int) (capacity * machine.getUpgradeMultiply(UpgradeTypes.PowerStorage)));
-    }
+	public int getMaxExtract()
+	{
+		return Math.max(0, (int)(maxExtract * machine.getUpgradeMultiply(UpgradeTypes.PowerTransfer)));
+	}
 
-    public void setMaxTransfer(int amount)
-    {
-        this.setMaxReceive(amount);
-        this.setMaxExtract(amount);
-    }
+	public void setMaxExtract(int maxExtract)
+	{
+		this.maxExtract = maxExtract;
+	}
 
-    public void setEnergyStored(int energy)
-    {
-        this.energy = energy;
-    }
+	@Override
+	public int getEnergyStored()
+	{
+		return energy;
+	}
 
-    public void setCapacity(int capacity)
-    {
-        this.capacity = capacity;
-    }
+	public void setEnergyStored(int energy)
+	{
+		this.energy = energy;
+	}
 
-    public void setMaxReceive(int maxReceive)
-    {
-        this.maxReceive = maxReceive;
-    }
+	@Override
+	public int getMaxEnergyStored()
+	{
+		return Math.max(0, (int)(capacity * machine.getUpgradeMultiply(UpgradeTypes.PowerStorage)));
+	}
 
-    public void setMaxExtract(int maxExtract)
-    {
-        this.maxExtract = maxExtract;
-    }
+	public void setMaxTransfer(int amount)
+	{
+		this.setMaxReceive(amount);
+		this.setMaxExtract(amount);
+	}
+
+	public void setCapacity(int capacity)
+	{
+		this.capacity = capacity;
+	}
 }

@@ -33,26 +33,28 @@ import java.util.List;
 public class GuiConfig extends net.minecraftforge.fml.client.config.GuiConfig
 {
 
-    public GuiConfig(GuiScreen parent)
-    {
-        super(parent,getAllGuiCategories(),Reference.MOD_ID,false,false,"Matter Overdrive Configurations");
-    }
+	public GuiConfig(GuiScreen parent)
+	{
+		super(parent, getAllGuiCategories(), Reference.MOD_ID, false, false, "Matter Overdrive Configurations");
+	}
 
-    public GuiConfig(GuiScreen parent,String category) {
-        super(parent, getConfigElements(parent,category), Reference.MOD_ID, false, false, GuiConfig.getAbridgedConfigPath(MatterOverdrive.configHandler.toString()),Reference.MOD_NAME + " Configurations");
-    }
+	public GuiConfig(GuiScreen parent, String category)
+	{
+		super(parent, getConfigElements(parent, category), Reference.MOD_ID, false, false, GuiConfig.getAbridgedConfigPath(MatterOverdrive.configHandler.toString()), Reference.MOD_NAME + " Configurations");
+	}
 
-    private static List<IConfigElement> getConfigElements(GuiScreen parent, String category) {
+	private static List<IConfigElement> getConfigElements(GuiScreen parent, String category)
+	{
 
-        List<IConfigElement> list = new ArrayList<>();
-        list.add(new ConfigElement(MatterOverdrive.configHandler.getCategory(category)));
-        return list;
-    }
+		List<IConfigElement> list = new ArrayList<>();
+		list.add(new ConfigElement(MatterOverdrive.configHandler.getCategory(category)));
+		return list;
+	}
 
-    private static List<IConfigElement> getAllGuiCategories()
-    {
-        List<IConfigElement> list = new ArrayList<>();
-        MatterOverdrive.configHandler.addCategoryToGui(list);
-        return list;
-    }
+	private static List<IConfigElement> getAllGuiCategories()
+	{
+		List<IConfigElement> list = new ArrayList<>();
+		MatterOverdrive.configHandler.addCategoryToGui(list);
+		return list;
+	}
 }

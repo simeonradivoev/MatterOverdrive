@@ -37,51 +37,52 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EntityRendererRougeAndroid<T extends EntityRougeAndroidMob> extends RenderBiped
 {
-    private final boolean hologram;
-    public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "android.png");
-    public static final ResourceLocation texture_hologram = new ResourceLocation(Reference.PATH_ENTETIES + "android_holo.png");
+	public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "android.png");
+	public static final ResourceLocation texture_hologram = new ResourceLocation(Reference.PATH_ENTETIES + "android_holo.png");
+	private final boolean hologram;
 
-    public EntityRendererRougeAndroid(ModelBiped modelBase, float f,boolean hologram)
-    {
-        super(Minecraft.getMinecraft().getRenderManager(),modelBase, f,1);
-        this.hologram = hologram;
-    }
+	public EntityRendererRougeAndroid(ModelBiped modelBase, float f, boolean hologram)
+	{
+		super(Minecraft.getMinecraft().getRenderManager(), modelBase, f, 1);
+		this.hologram = hologram;
+	}
 
-    @Override
-    protected ResourceLocation getEntityTexture(Entity entity)
-    {
-        if (hologram)
-        {
-            return texture_hologram;
-        }else
-        {
-            return texture;
-        }
-    }
+	@Override
+	protected ResourceLocation getEntityTexture(Entity entity)
+	{
+		if (hologram)
+		{
+			return texture_hologram;
+		}
+		else
+		{
+			return texture;
+		}
+	}
 
-    @Override
-    protected boolean canRenderName(EntityLiving entityLiving)
-    {
-        return entityLiving.getTeam() != null || Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entityLiving) < 18;
-    }
+	@Override
+	protected boolean canRenderName(EntityLiving entityLiving)
+	{
+		return entityLiving.getTeam() != null || Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entityLiving) < 18;
+	}
 
-    @Override
-    protected void preRenderCallback(EntityLivingBase entityLiving, float p_77041_2_)
-    {
-        if (entityLiving instanceof EntityRougeAndroidMob)
-        {
-            if (((EntityRougeAndroidMob) entityLiving).getIsLegendary())
-            {
-                GlStateManager.scale(1.5,1.5,1.5);
-            }
-        }
-        super.preRenderCallback(entityLiving, p_77041_2_);
-    }
+	@Override
+	protected void preRenderCallback(EntityLivingBase entityLiving, float p_77041_2_)
+	{
+		if (entityLiving instanceof EntityRougeAndroidMob)
+		{
+			if (((EntityRougeAndroidMob)entityLiving).getIsLegendary())
+			{
+				GlStateManager.scale(1.5, 1.5, 1.5);
+			}
+		}
+		super.preRenderCallback(entityLiving, p_77041_2_);
+	}
 
-    @Override
-    public void doRender(EntityLiving entity, double x, double y, double z, float entityYaw, float partialTicks)
-    {
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
-        //this.renderLeash(entity, x, y, z, entityYaw, partialTicks);
-    }
+	@Override
+	public void doRender(EntityLiving entity, double x, double y, double z, float entityYaw, float partialTicks)
+	{
+		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+		//this.renderLeash(entity, x, y, z, entityYaw, partialTicks);
+	}
 }

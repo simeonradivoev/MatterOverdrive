@@ -1,13 +1,16 @@
 package matteroverdrive.compat.modules;
 
 import cofh.api.modhelpers.ThermalExpansionHelper;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import matteroverdrive.compat.Compat;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 import static matteroverdrive.init.MatterOverdriveBlocks.dilithium_ore;
 import static matteroverdrive.init.MatterOverdriveBlocks.tritaniumOre;
-import static matteroverdrive.init.MatterOverdriveItems.*;
+import static matteroverdrive.init.MatterOverdriveItems.dilithium_ctystal;
+import static matteroverdrive.init.MatterOverdriveItems.tritanium_dust;
+import static matteroverdrive.init.MatterOverdriveItems.tritanium_ingot;
+import static matteroverdrive.init.MatterOverdriveItems.tritanium_plate;
 
 /**
  * Compatibility for Thermal Expansion

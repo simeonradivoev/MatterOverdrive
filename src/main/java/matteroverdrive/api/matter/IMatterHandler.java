@@ -56,5 +56,5 @@ public interface IMatterHandler extends IMatterProvider, IMatterReceiver, IFluid
 	 * @return amount of actually extracted matter.
 	 */
 	@Override
-	int extractMatter(EnumFacing direction,int amount,boolean simulate);
+	int extractMatter(EnumFacing direction, int amount, boolean simulate);
 }

@@ -57,169 +57,175 @@ import java.util.List;
  */
 public abstract class WeaponItemRenderer implements IPerspectiveAwareModel
 {
-    protected ResourceLocation weaponModelLocation;
-    protected OBJModel weaponModel;
-    protected WeaponMetadataSection weaponMetadata;
-    protected OBJModel.OBJBakedModel bakedModel;
-    private Matrix4f matrix;
+	protected ResourceLocation weaponModelLocation;
+	protected OBJModel weaponModel;
+	protected WeaponMetadataSection weaponMetadata;
+	protected OBJModel.OBJBakedModel bakedModel;
+	private Matrix4f matrix;
 
-    public WeaponItemRenderer(ResourceLocation weaponModelLocation)
-    {
-        matrix = new Matrix4f();
-        this.weaponModelLocation = weaponModelLocation;
-        createModel(this.weaponModelLocation);
-        loadWeaponMetadata();
-    }
+	public WeaponItemRenderer(ResourceLocation weaponModelLocation)
+	{
+		matrix = new Matrix4f();
+		this.weaponModelLocation = weaponModelLocation;
+		createModel(this.weaponModelLocation);
+		loadWeaponMetadata();
+	}
 
-    protected void loadWeaponMetadata()
-    {
-        weaponMetadata = new WeaponMetadataSection();
+	protected void loadWeaponMetadata()
+	{
+		weaponMetadata = new WeaponMetadataSection();
 
-        try {
-            IResource metadataResource = Minecraft.getMinecraft().getResourceManager().getResource(weaponModelLocation);
-            if (metadataResource.hasMetadata()) {
-                IMetadataSection section = metadataResource.getMetadata("weapon");
-                if (section instanceof WeaponMetadataSection) {
-                    weaponMetadata = ((WeaponMetadataSection) section);
-                }
-            }
-        } catch (IOException e) {
-            MOLog.log(Level.ERROR,e,"There was a problem reading weapon metadata from %s",weaponMetadata);
-        }
-    }
+		try
+		{
+			IResource metadataResource = Minecraft.getMinecraft().getResourceManager().getResource(weaponModelLocation);
+			if (metadataResource.hasMetadata())
+			{
+				IMetadataSection section = metadataResource.getMetadata("weapon");
+				if (section instanceof WeaponMetadataSection)
+				{
+					weaponMetadata = ((WeaponMetadataSection)section);
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			MOLog.log(Level.ERROR, e, "There was a problem reading weapon metadata from %s", weaponMetadata);
+		}
+	}
 
-    protected void createModel(ResourceLocation weaponModelLocation)
-    {
-        try
-        {
-            weaponModel = (OBJModel) OBJLoader.INSTANCE.loadModel(weaponModelLocation);
-            ImmutableMap<String,String> customOptions = new ImmutableMap.Builder<String,String>().put("flip-v","true").put("ambient","false").build();
-            weaponModel = (OBJModel)weaponModel.process(customOptions);
-        } catch (Exception e)
-        {
-            MOLog.error("Missing weapon model.",e);
-        }
-    }
+	protected void createModel(ResourceLocation weaponModelLocation)
+	{
+		try
+		{
+			weaponModel = (OBJModel)OBJLoader.INSTANCE.loadModel(weaponModelLocation);
+			ImmutableMap<String, String> customOptions = new ImmutableMap.Builder<String, String>().put("flip-v", "true").put("ambient", "false").build();
+			weaponModel = (OBJModel)weaponModel.process(customOptions);
+		}
+		catch (Exception e)
+		{
+			MOLog.error("Missing weapon model.", e);
+		}
+	}
 
-    public void bakeModel()
-    {
-        List<String> visibleGroups = new ArrayList<>();
-        visibleGroups.add(OBJModel.Group.ALL);
-        bakedModel = (OBJModel.OBJBakedModel)weaponModel.bake(new OBJModel.OBJState(visibleGroups,true), DefaultVertexFormats.ITEM, new Function<ResourceLocation, TextureAtlasSprite>()
-        {
-            @Nullable
-            @Override
-            public TextureAtlasSprite apply(@Nullable ResourceLocation input)
-            {
-                return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(input.toString());
-            }
-        });
-    }
+	public void bakeModel()
+	{
+		List<String> visibleGroups = new ArrayList<>();
+		visibleGroups.add(OBJModel.Group.ALL);
+		bakedModel = (OBJModel.OBJBakedModel)weaponModel.bake(new OBJModel.OBJState(visibleGroups, true), DefaultVertexFormats.ITEM, new Function<ResourceLocation, TextureAtlasSprite>()
+		{
+			@Nullable
+			@Override
+			public TextureAtlasSprite apply(@Nullable ResourceLocation input)
+			{
+				return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(input.toString());
+			}
+		});
+	}
 
-    @Override
-    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)
-    {
-        matrix.setIdentity();
-        if (cameraTransformType == ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)
-        {
-            GlStateManager.scale(1.6f,1.6f,1.6f);
-            GlStateManager.rotate(180,0,1,0);
-            GlStateManager.translate(0.5f,0.5f,0.35f);
-        }
-        else if (cameraTransformType == ItemCameraTransforms.TransformType.GUI)
-        {
-            //matrix.setRotation(new AxisAngle4f(new Vector3f(0,1,0),90));
-            GlStateManager.rotate(25,0,0,1);
-            GlStateManager.rotate(90,0,1,0);
-
-
-            GlStateManager.translate(0.7,0.5,0.3);
-            //GlStateManager.scale(2.5f,2.5f,2.5f);
-        }
-        else if (cameraTransformType == ItemCameraTransforms.TransformType.GROUND)
-        {
-            matrix.setScale(1.2f);
-            matrix.setTranslation(new javax.vecmath.Vector3f(0.6f,0.5f,0.3f));
-        }
-        return new ImmutablePair<>(this,matrix);
-    }
-
-    public void transformFirstPersonWeapon(EnergyWeapon energyWeapon,ItemStack weaponStack,float zoomValue,float recoilValue)
-    {
-        transformRecoil(recoilValue,zoomValue);
-        GlStateManager.translate(0,MOMathHelper.Lerp(0,0.04,zoomValue),MOMathHelper.Lerp(0,-0.3,zoomValue));
-    }
-
-    protected void transformRecoil(float recoilValue,float zoomValue)
-    {
-        GlStateManager.translate(0,recoilValue * -0.005f,recoilValue * -0.02f);
-        GlStateManager.rotate(recoilValue * 0.7f, -1, 0, 0);
-    }
-
-    public void renderHand(RenderPlayer renderPlayer)
-    {
-        renderPlayer.renderLeftArm(Minecraft.getMinecraft().thePlayer);
-    }
-
-    public void transformHand(float recoilValue,float zoomValue)
-    {
-        transformRecoil(recoilValue,zoomValue);
-        GlStateManager.translate(MOMathHelper.Lerp(0.01,-0.15,zoomValue),-0.3,0.4);
-        GlStateManager.rotate(MOMathHelper.Lerp(35,10,zoomValue),0,0,1);
-        GlStateManager.rotate(MOMathHelper.Lerp(20,0,zoomValue),1,0,0);
-        GlStateManager.scale(0.4,0.4,0.4);
-    }
-
-    @Override
-    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
-    {
-        return bakedModel.getQuads(state,side,rand);
-    }
-
-    @Override
-    public boolean isAmbientOcclusion()
-    {
-        return true;
-    }
-
-    @Override
-    public boolean isGui3d()
-    {
-        return true;
-    }
-
-    @Override
-    public boolean isBuiltInRenderer()
-    {
-        return false;
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleTexture()
-    {
-        return bakedModel.getParticleTexture();
-    }
-
-    @Override
-    public ItemCameraTransforms getItemCameraTransforms()
-    {
-        return bakedModel.getItemCameraTransforms();
-    }
+	@Override
+	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)
+	{
+		matrix.setIdentity();
+		if (cameraTransformType == ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)
+		{
+			GlStateManager.scale(1.6f, 1.6f, 1.6f);
+			GlStateManager.rotate(180, 0, 1, 0);
+			GlStateManager.translate(0.5f, 0.5f, 0.35f);
+		}
+		else if (cameraTransformType == ItemCameraTransforms.TransformType.GUI)
+		{
+			//matrix.setRotation(new AxisAngle4f(new Vector3f(0,1,0),90));
+			GlStateManager.rotate(25, 0, 0, 1);
+			GlStateManager.rotate(90, 0, 1, 0);
 
 
-    public float getHorizontalSpeed()
-    {
-        return 0.05f;
-    }
+			GlStateManager.translate(0.7, 0.5, 0.3);
+			//GlStateManager.scale(2.5f,2.5f,2.5f);
+		}
+		else if (cameraTransformType == ItemCameraTransforms.TransformType.GROUND)
+		{
+			matrix.setScale(1.2f);
+			matrix.setTranslation(new javax.vecmath.Vector3f(0.6f, 0.5f, 0.3f));
+		}
+		return new ImmutablePair<>(this, matrix);
+	}
 
-    public WeaponMetadataSection getWeaponMetadata()
-    {
-        return weaponMetadata;
-    }
+	public void transformFirstPersonWeapon(EnergyWeapon energyWeapon, ItemStack weaponStack, float zoomValue, float recoilValue)
+	{
+		transformRecoil(recoilValue, zoomValue);
+		GlStateManager.translate(0, MOMathHelper.Lerp(0, 0.04, zoomValue), MOMathHelper.Lerp(0, -0.3, zoomValue));
+	}
 
-    @Override
-    public ItemOverrideList getOverrides()
-    {
-        return ItemOverrideList.NONE;
-    }
+	protected void transformRecoil(float recoilValue, float zoomValue)
+	{
+		GlStateManager.translate(0, recoilValue * -0.005f, recoilValue * -0.02f);
+		GlStateManager.rotate(recoilValue * 0.7f, -1, 0, 0);
+	}
+
+	public void renderHand(RenderPlayer renderPlayer)
+	{
+		renderPlayer.renderLeftArm(Minecraft.getMinecraft().thePlayer);
+	}
+
+	public void transformHand(float recoilValue, float zoomValue)
+	{
+		transformRecoil(recoilValue, zoomValue);
+		GlStateManager.translate(MOMathHelper.Lerp(0.01, -0.15, zoomValue), -0.3, 0.4);
+		GlStateManager.rotate(MOMathHelper.Lerp(35, 10, zoomValue), 0, 0, 1);
+		GlStateManager.rotate(MOMathHelper.Lerp(20, 0, zoomValue), 1, 0, 0);
+		GlStateManager.scale(0.4, 0.4, 0.4);
+	}
+
+	@Override
+	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
+	{
+		return bakedModel.getQuads(state, side, rand);
+	}
+
+	@Override
+	public boolean isAmbientOcclusion()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean isGui3d()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean isBuiltInRenderer()
+	{
+		return false;
+	}
+
+	@Override
+	public TextureAtlasSprite getParticleTexture()
+	{
+		return bakedModel.getParticleTexture();
+	}
+
+	@Override
+	public ItemCameraTransforms getItemCameraTransforms()
+	{
+		return bakedModel.getItemCameraTransforms();
+	}
+
+
+	public float getHorizontalSpeed()
+	{
+		return 0.05f;
+	}
+
+	public WeaponMetadataSection getWeaponMetadata()
+	{
+		return weaponMetadata;
+	}
+
+	@Override
+	public ItemOverrideList getOverrides()
+	{
+		return ItemOverrideList.NONE;
+	}
 }

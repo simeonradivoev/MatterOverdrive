@@ -40,127 +40,136 @@ import java.util.List;
  */
 public class GuideElementRecipe extends GuideElementAbstract
 {
-    private static final ResourceLocation background = new ResourceLocation(Reference.PATH_ELEMENTS + "guide_recipe.png");
-    IRecipe recipe;
-    Object[] recipeItems;
-    ItemStack output;
+	private static final ResourceLocation background = new ResourceLocation(Reference.PATH_ELEMENTS + "guide_recipe.png");
+	IRecipe recipe;
+	Object[] recipeItems;
+	ItemStack output;
 
-    @Override
-    public void drawElement(int width,int mouseX,int mouseY)
-    {
-        GlStateManager.pushMatrix();
-        if (textAlign == 1) {
-            GlStateManager.translate(marginLeft + this.width/2 - 110/2, marginTop, 0);
-        }
-        else
-        {
-            GlStateManager.translate(marginLeft, marginTop, 0);
-        }
-        bindTexture(background);
-        RenderUtils.applyColor(Reference.COLOR_MATTER);
-        RenderUtils.drawPlane(8, 8, 0, 96, 96);
-        if (recipeItems != null && recipe != null)
-        {
+	@Override
+	public void drawElement(int width, int mouseX, int mouseY)
+	{
+		GlStateManager.pushMatrix();
+		if (textAlign == 1)
+		{
+			GlStateManager.translate(marginLeft + this.width / 2 - 110 / 2, marginTop, 0);
+		}
+		else
+		{
+			GlStateManager.translate(marginLeft, marginTop, 0);
+		}
+		bindTexture(background);
+		RenderUtils.applyColor(Reference.COLOR_MATTER);
+		RenderUtils.drawPlane(8, 8, 0, 96, 96);
+		if (recipeItems != null && recipe != null)
+		{
 
-            for (int x = 0;x < 3;x++)
-            {
-                for (int y = 0;y < 3;y++)
-                {
-                    int index = x + y * 3;
-                    if (index < recipeItems.length) {
-                        if (recipeItems[index] instanceof ItemStack) {
-                            ItemStack stack = (ItemStack)recipeItems[index];
-                            renderStack(stack,x,y);
-                        }else if (recipeItems[index] instanceof List)
-                        {
-                            List stacks = (List)recipeItems[index];
-                            if (stacks.size() > 0) {
-                                int stackIndex = (int) ((Minecraft.getMinecraft().theWorld.getWorldTime() / 100) % (stacks.size()));
-                                if (stackIndex < stacks.size() && stacks.get(stackIndex) instanceof ItemStack) {
-                                    renderStack((ItemStack) stacks.get(stackIndex), x, y);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        GlStateManager.popMatrix();
-    }
+			for (int x = 0; x < 3; x++)
+			{
+				for (int y = 0; y < 3; y++)
+				{
+					int index = x + y * 3;
+					if (index < recipeItems.length)
+					{
+						if (recipeItems[index] instanceof ItemStack)
+						{
+							ItemStack stack = (ItemStack)recipeItems[index];
+							renderStack(stack, x, y);
+						}
+						else if (recipeItems[index] instanceof List)
+						{
+							List stacks = (List)recipeItems[index];
+							if (stacks.size() > 0)
+							{
+								int stackIndex = (int)((Minecraft.getMinecraft().theWorld.getWorldTime() / 100) % (stacks.size()));
+								if (stackIndex < stacks.size() && stacks.get(stackIndex) instanceof ItemStack)
+								{
+									renderStack((ItemStack)stacks.get(stackIndex), x, y);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		GlStateManager.popMatrix();
+	}
 
-    private void renderStack(ItemStack stack,int x,int y)
-    {
-        if (stack != null) {
+	private void renderStack(ItemStack stack, int x, int y)
+	{
+		if (stack != null)
+		{
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(10 + x * 33, 9 + y * 33, 0);
-            GlStateManager.scale(1.5, 1.5, 1.5);
-            RenderUtils.renderStack(0, 0, stack);
-            GlStateManager.popMatrix();
-        }
-    }
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(10 + x * 33, 9 + y * 33, 0);
+			GlStateManager.scale(1.5, 1.5, 1.5);
+			RenderUtils.renderStack(0, 0, stack);
+			GlStateManager.popMatrix();
+		}
+	}
 
-    @Override
-    protected void loadContent(MOGuideEntry entry, Element element, int width, int height)
-    {
-        if (element.hasAttribute("item"))
-        {
-            output = shortCodeToStack(decodeShortcode(element.getAttribute("item")));
-        }else
-        {
-            output = entry.getStackIcons()[0];
-        }
+	@Override
+	protected void loadContent(MOGuideEntry entry, Element element, int width, int height)
+	{
+		if (element.hasAttribute("item"))
+		{
+			output = shortCodeToStack(decodeShortcode(element.getAttribute("item")));
+		}
+		else
+		{
+			output = entry.getStackIcons()[0];
+		}
 
-        if (output != null)
-        {
-            for (IRecipe recipe : MatterOverdriveRecipes.recipes)
-            {
-                if (ItemStack.areItemStacksEqual(recipe.getRecipeOutput(),output))
-                {
-                    this.recipe = recipe;
-                    break;
-                }
-            }
+		if (output != null)
+		{
+			for (IRecipe recipe : MatterOverdriveRecipes.recipes)
+			{
+				if (ItemStack.areItemStacksEqual(recipe.getRecipeOutput(), output))
+				{
+					this.recipe = recipe;
+					break;
+				}
+			}
 
-            if (recipe == null)
-            {
-                for (IRecipe recipe : CraftingManager.getInstance().getRecipeList())
-                {
-                    if (ItemStack.areItemStacksEqual(recipe.getRecipeOutput(),output))
-                    {
-                        this.recipe = recipe;
-                        break;
-                    }
-                }
-            }
-        }
-        else
-        {
-            MOLog.warn("There is no output Itemstack to recipe Guide Element");
-        }
+			if (recipe == null)
+			{
+				for (IRecipe recipe : CraftingManager.getInstance().getRecipeList())
+				{
+					if (ItemStack.areItemStacksEqual(recipe.getRecipeOutput(), output))
+					{
+						this.recipe = recipe;
+						break;
+					}
+				}
+			}
+		}
+		else
+		{
+			MOLog.warn("There is no output Itemstack to recipe Guide Element");
+		}
 
 
-        if (recipe != null)
-        {
-            if (recipe instanceof ShapedRecipes)
-            {
-                recipeItems = ((ShapedRecipes) recipe).recipeItems;
-            }
-            else if (recipe instanceof ShapelessRecipes)
-            {
-                recipeItems = new ItemStack[((ShapelessRecipes) recipe).recipeItems.size()];
-                recipeItems = ((ShapelessRecipes) recipe).recipeItems.toArray(recipeItems);
-            }
-            else if (recipe instanceof ShapedOreRecipe)
-            {
-                recipeItems = ((ShapedOreRecipe) recipe).getInput();
-            }
-        }else
-        {
-            MOLog.warn("Could not find recipe for %s in Guide Recipe Element",output);
-        }
+		if (recipe != null)
+		{
+			if (recipe instanceof ShapedRecipes)
+			{
+				recipeItems = ((ShapedRecipes)recipe).recipeItems;
+			}
+			else if (recipe instanceof ShapelessRecipes)
+			{
+				recipeItems = new ItemStack[((ShapelessRecipes)recipe).recipeItems.size()];
+				recipeItems = ((ShapelessRecipes)recipe).recipeItems.toArray(recipeItems);
+			}
+			else if (recipe instanceof ShapedOreRecipe)
+			{
+				recipeItems = ((ShapedOreRecipe)recipe).getInput();
+			}
+		}
+		else
+		{
+			MOLog.warn("Could not find recipe for %s in Guide Recipe Element", output);
+		}
 
-        this.height = 100;
-        this.width = 100;
-    }
+		this.height = 100;
+		this.width = 100;
+	}
 }

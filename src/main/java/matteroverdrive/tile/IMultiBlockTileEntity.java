@@ -27,7 +27,8 @@ import java.util.List;
  *
  * @author shadowfacts
  */
-public interface IMultiBlockTileEntity {
+public interface IMultiBlockTileEntity
+{
 
 	List<BlockPos> getBoundingBlocks();
 

@@ -46,24 +46,29 @@ public class MOMachineBlockItem extends ItemBlock
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List infos, boolean p_77624_4_)
 	{
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-			if(MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+		{
+			if (MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
 			{
 				infos.add(ChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
 			}
 
-			if(stack.hasTagCompound())
+			if (stack.hasTagCompound())
 			{
-				if (stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy")) {
+				if (stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy"))
+				{
 					infos.add(ChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("MaxEnergy")));
-					if (stack.getTagCompound().hasKey("PowerSend") && stack.getTagCompound().hasKey("PowerReceive")) {
+					if (stack.getTagCompound().hasKey("PowerSend") && stack.getTagCompound().hasKey("PowerReceive"))
+					{
 						infos.add("Send/Receive: " + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("PowerSend")) + "/" + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("PowerReceive")) + MOEnergyHelper.ENERGY_UNIT + "/t");
 					}
 				}
-				if (stack.getTagCompound().hasKey("Matter") && stack.getTagCompound().hasKey("MaxMatter")) {
+				if (stack.getTagCompound().hasKey("Matter") && stack.getTagCompound().hasKey("MaxMatter"))
+				{
 					infos.add(ChatFormatting.BLUE + MatterHelper.formatMatter(stack.getTagCompound().getInteger("Matter"), stack.getTagCompound().getInteger("MaxMatter")));
 
-					if (stack.getTagCompound().hasKey("MatterSend") && stack.getTagCompound().hasKey("MatterReceive")) {
+					if (stack.getTagCompound().hasKey("MatterSend") && stack.getTagCompound().hasKey("MatterReceive"))
+					{
 						infos.add(ChatFormatting.DARK_BLUE + "Send/Receive: " + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterSend")) + "/" + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterReceive")) + MatterHelper.MATTER_UNIT + "/t");
 					}
 				}
@@ -81,9 +86,11 @@ public class MOMachineBlockItem extends ItemBlock
 
 	public String getItemStackDisplayName(ItemStack itemStack)
 	{
-		if (itemStack.hasTagCompound()) {
+		if (itemStack.hasTagCompound())
+		{
 			return super.getItemStackDisplayName(itemStack) + String.format(ChatFormatting.AQUA + " [%s]" + ChatFormatting.RESET, MOStringHelper.translateToLocal("item.info.configured"));
-		}else
+		}
+		else
 		{
 			return super.getItemStackDisplayName(itemStack);
 		}
@@ -91,18 +98,18 @@ public class MOMachineBlockItem extends ItemBlock
 
 	@Override
 	public int getDamage(ItemStack stack)
-	 {
-		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy"))
+	{
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy"))
 		{
 			return stack.getTagCompound().getInteger("MaxEnergy") - stack.getTagCompound().getInteger("Energy") + 1;
 		}
 		return 0;
-	 }
+	}
 
 	@Override
 	public int getMaxDamage(ItemStack stack)
 	{
-		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("MaxEnergy"))
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("MaxEnergy"))
 		{
 			return stack.getTagCompound().getInteger("MaxEnergy");
 		}
@@ -113,15 +120,19 @@ public class MOMachineBlockItem extends ItemBlock
 	{
 		NBTTagList stackTagList = itemStack.getTagCompound().getCompoundTag("Machine").getTagList("Items", Constants.NBT.TAG_COMPOUND);
 
-		if (stackTagList.tagCount() > 0) {
+		if (stackTagList.tagCount() > 0)
+		{
 			infos.add("");
 			infos.add(ChatFormatting.YELLOW + "Inventory:");
-			for (int i = 0; i < stackTagList.tagCount(); i++) {
+			for (int i = 0; i < stackTagList.tagCount(); i++)
+			{
 				ItemStack stack = ItemStack.loadItemStackFromNBT(stackTagList.getCompoundTagAt(i));
 				if (stack.getItem() instanceof IUpgrade)
 				{
 					infos.add("   " + ChatFormatting.GREEN + stack.getDisplayName());
-				}else {
+				}
+				else
+				{
 					infos.add("   " + infos.add(stack.getDisplayName()));
 				}
 			}
@@ -130,7 +141,7 @@ public class MOMachineBlockItem extends ItemBlock
 
 	@Override
 	public boolean showDurabilityBar(ItemStack stack)
-    {
-        return getDamage(stack) > 0;
-    }
+	{
+		return getDamage(stack) > 0;
+	}
 }

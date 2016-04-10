@@ -18,8 +18,6 @@
 
 package matteroverdrive.core;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IMOApi;
 import matteroverdrive.api.android.IAndroidStatRegistry;
@@ -29,49 +27,51 @@ import matteroverdrive.api.matter.IMatterRegistry;
 import matteroverdrive.api.renderer.IBionicPartRenderRegistry;
 import matteroverdrive.api.starmap.IStarmapRenderRegistry;
 import matteroverdrive.proxy.ClientProxy;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 7/20/2015.
  */
 public class Api implements IMOApi
 {
-    public static final Api INSTANCE = new Api();
+	public static final Api INSTANCE = new Api();
 
-    @Override
-    public IMatterRegistry getMatterRegistry()
-    {
-        return MatterOverdrive.matterRegistry;
-    }
+	@Override
+	public IMatterRegistry getMatterRegistry()
+	{
+		return MatterOverdrive.matterRegistry;
+	}
 
-    @Override
-    public IAndroidStatRegistry getAndroidStatRegistry()
-    {
+	@Override
+	public IAndroidStatRegistry getAndroidStatRegistry()
+	{
 		return MatterOverdrive.statRegistry;
 	}
 
-    @Override
-    public IDialogRegistry getDialogRegistry()
-    {
-        return MatterOverdrive.dialogRegistry;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IAndroidStatRenderRegistry getAndroidStatRenderRegistry()
+	@Override
+	public IDialogRegistry getDialogRegistry()
 	{
-        return ClientProxy.renderHandler.getStatRenderRegistry();
-    }
+		return MatterOverdrive.dialogRegistry;
+	}
 
-    @Override
-    public IBionicPartRenderRegistry getBionicStatRenderRegistry()
-    {
-        return ClientProxy.renderHandler.getBionicPartRenderRegistry();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IStarmapRenderRegistry getStarmapRenderRegistry()
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IAndroidStatRenderRegistry getAndroidStatRenderRegistry()
 	{
-        return ClientProxy.renderHandler.getStarmapRenderRegistry();
-    }
+		return ClientProxy.renderHandler.getStatRenderRegistry();
+	}
+
+	@Override
+	public IBionicPartRenderRegistry getBionicStatRenderRegistry()
+	{
+		return ClientProxy.renderHandler.getBionicPartRenderRegistry();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IStarmapRenderRegistry getStarmapRenderRegistry()
+	{
+		return ClientProxy.renderHandler.getStarmapRenderRegistry();
+	}
 }

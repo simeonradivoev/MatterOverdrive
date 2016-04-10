@@ -7,5 +7,5 @@ import net.minecraft.item.ItemStack;
  */
 public interface IBuilding extends IBuildable
 {
-    BuildingType getType(ItemStack building);
+	BuildingType getType(ItemStack building);
 }

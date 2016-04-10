@@ -24,23 +24,24 @@ import matteroverdrive.tile.TileEntityMachinePacketQueue;
 /**
  * Created by Simeon on 7/15/2015.
  */
-public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<TileEntityMachinePacketQueue> {
+public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<TileEntityMachinePacketQueue>
+{
 
-    public static final int[] directions = {0,1,2,3,4,5};
+	public static final int[] directions = {0, 1, 2, 3, 4, 5};
 
-    public MatterNetworkComponentQueue(TileEntityMachinePacketQueue queue)
-    {
-        super(queue);
-    }
+	public MatterNetworkComponentQueue(TileEntityMachinePacketQueue queue)
+	{
+		super(queue);
+	}
 
-    @Override
-    public void onNetworkEvent(IMatterNetworkEvent event)
-    {
+	@Override
+	public void onNetworkEvent(IMatterNetworkEvent event)
+	{
 
-    }
+	}
 
     /*@Override
-    public boolean canPreform(MatterNetworkPacket packet)
+	public boolean canPreform(MatterNetworkPacket packet)
     {
         return rootClient.getRedstoneActive();
     }

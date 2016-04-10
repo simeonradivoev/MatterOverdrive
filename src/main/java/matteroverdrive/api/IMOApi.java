@@ -18,33 +18,33 @@
 
 package matteroverdrive.api;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.api.android.IAndroidStatRegistry;
 import matteroverdrive.api.android.IAndroidStatRenderRegistry;
 import matteroverdrive.api.dialog.IDialogRegistry;
 import matteroverdrive.api.matter.IMatterRegistry;
 import matteroverdrive.api.renderer.IBionicPartRenderRegistry;
 import matteroverdrive.api.starmap.IStarmapRenderRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 7/20/2015.
  */
 public interface IMOApi
 {
-    IMatterRegistry getMatterRegistry();
+	IMatterRegistry getMatterRegistry();
 
-    IAndroidStatRegistry getAndroidStatRegistry();
+	IAndroidStatRegistry getAndroidStatRegistry();
 
-    IDialogRegistry getDialogRegistry();
+	IDialogRegistry getDialogRegistry();
 
-    @SideOnly(Side.CLIENT)
-    IAndroidStatRenderRegistry getAndroidStatRenderRegistry();
+	@SideOnly(Side.CLIENT)
+	IAndroidStatRenderRegistry getAndroidStatRenderRegistry();
 
-    @SideOnly(Side.CLIENT)
-    IBionicPartRenderRegistry getBionicStatRenderRegistry();
+	@SideOnly(Side.CLIENT)
+	IBionicPartRenderRegistry getBionicStatRenderRegistry();
 
-    @SideOnly(Side.CLIENT)
-    IStarmapRenderRegistry getStarmapRenderRegistry();
+	@SideOnly(Side.CLIENT)
+	IStarmapRenderRegistry getStarmapRenderRegistry();
 
 }

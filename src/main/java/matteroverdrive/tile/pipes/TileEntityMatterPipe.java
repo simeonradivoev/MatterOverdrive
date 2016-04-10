@@ -50,45 +50,45 @@ import java.util.Random;
  */
 public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 {
-    protected final MatterStorage storage;
-    protected FluidPipeNetwork fluidPipeNetwork;
-    public  static Random rand = new Random();
-    protected int transferSpeed;
-    TimeTracker t;
+	public static Random rand = new Random();
+	protected final MatterStorage storage;
+	protected FluidPipeNetwork fluidPipeNetwork;
+	protected int transferSpeed;
+	TimeTracker t;
 
-    public TileEntityMatterPipe()
-    {
-        t = new TimeTracker();
-        storage = new MatterStorage(32);
-        this.transferSpeed = 10;
-    }
+	public TileEntityMatterPipe()
+	{
+		t = new TimeTracker();
+		storage = new MatterStorage(32);
+		this.transferSpeed = 10;
+	}
 
-    @Override
-    public  void update()
-    {
-        super.update();
-        if (!worldObj.isRemote)
-        {
-            manageTransfer();
-            manageNetwork();
-        }
-    }
+	@Override
+	public void update()
+	{
+		super.update();
+		if (!worldObj.isRemote)
+		{
+			manageTransfer();
+			manageNetwork();
+		}
+	}
 
-    public void manageNetwork()
-    {
-        if (fluidPipeNetwork == null)
-        {
-            if(!tryConnectToNeighborNetworks(worldObj))
-            {
-                FluidPipeNetwork network = MatterOverdrive.fluidNetworkHandler.getNetwork(this);
-                network.addNode(this);
-            }
-        }
-    }
+	public void manageNetwork()
+	{
+		if (fluidPipeNetwork == null)
+		{
+			if (!tryConnectToNeighborNetworks(worldObj))
+			{
+				FluidPipeNetwork network = MatterOverdrive.fluidNetworkHandler.getNetwork(this);
+				network.addNode(this);
+			}
+		}
+	}
 
-    public void manageTransfer()
-    {
-        /*if (getMatterStored() > 0 && getNetwork() != null)
+	public void manageTransfer()
+	{
+		/*if (getMatterStored() > 0 && getNetwork() != null)
         {
             for (IFluidPipe pipe : getNetwork().getFluidHandlers())
             {
@@ -103,184 +103,196 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 
             }
         }*/
-    }
+	}
 
-    @Override
-    public boolean canConnectToPipe(TileEntity entity, EnumFacing direction)
-    {
-        if (entity != null)
-        {
-            if (entity instanceof TileEntityMatterPipe)
-            {
-                if (this.getBlockType() != entity.getBlockType())
-                    return false;
-            }
-            if (entity instanceof IFluidHandler)
-            {
-                return ((IFluidHandler) entity).canDrain(direction, MatterOverdriveFluids.matterPlasma) || ((IFluidHandler) entity).canFill(direction,MatterOverdriveFluids.matterPlasma);
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean canConnectToPipe(TileEntity entity, EnumFacing direction)
+	{
+		if (entity != null)
+		{
+			if (entity instanceof TileEntityMatterPipe)
+			{
+				if (this.getBlockType() != entity.getBlockType())
+				{
+					return false;
+				}
+			}
+			if (entity instanceof IFluidHandler)
+			{
+				return ((IFluidHandler)entity).canDrain(direction, MatterOverdriveFluids.matterPlasma) || ((IFluidHandler)entity).canFill(direction, MatterOverdriveFluids.matterPlasma);
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public void writeCustomNBT(NBTTagCompound comp, EnumSet<MachineNBTCategory> categories, boolean toDisk)
-    {
-        if(!worldObj.isRemote && categories.contains(MachineNBTCategory.DATA) && toDisk)
-        {
-            storage.writeToNBT(comp);
-        }
-    }
+	@Override
+	public void writeCustomNBT(NBTTagCompound comp, EnumSet<MachineNBTCategory> categories, boolean toDisk)
+	{
+		if (!worldObj.isRemote && categories.contains(MachineNBTCategory.DATA) && toDisk)
+		{
+			storage.writeToNBT(comp);
+		}
+	}
 
-    @Override
-    public  void  readCustomNBT(NBTTagCompound comp, EnumSet<MachineNBTCategory> categories)
-    {
-        if (categories.contains(MachineNBTCategory.DATA)) {
-            storage.readFromNBT(comp);
-        }
-    }
+	@Override
+	public void readCustomNBT(NBTTagCompound comp, EnumSet<MachineNBTCategory> categories)
+	{
+		if (categories.contains(MachineNBTCategory.DATA))
+		{
+			storage.readFromNBT(comp);
+		}
+	}
 
-    @Override
-    protected void onAwake(Side side)
-    {
+	@Override
+	protected void onAwake(Side side)
+	{
 
-    }
+	}
 
-    @Override
-    public int getMatterStored()
-    {
-        return storage.getMatterStored();
-    }
+	@Override
+	public int getMatterStored()
+	{
+		return storage.getMatterStored();
+	}
 
-    @Override
-    public int getMatterCapacity()
-    {
-        return storage.getCapacity();
-    }
+	@Override
+	public int getMatterCapacity()
+	{
+		return storage.getCapacity();
+	}
 
-    @Override
-    public int receiveMatter(EnumFacing side, int amount, boolean simulate)
-    {
-        return storage.receiveMatter(side,amount,simulate);
-    }
+	@Override
+	public int receiveMatter(EnumFacing side, int amount, boolean simulate)
+	{
+		return storage.receiveMatter(side, amount, simulate);
+	}
 
-    @Override
-    public int extractMatter(EnumFacing direction, int amount, boolean simulate)
-    {
-        return storage.extractMatter(direction,amount,simulate);
-    }
+	@Override
+	public int extractMatter(EnumFacing direction, int amount, boolean simulate)
+	{
+		return storage.extractMatter(direction, amount, simulate);
+	}
 
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
+	@Override
+	public void onPlaced(World world, EntityLivingBase entityLiving)
+	{
 
-    }
+	}
 
-    @Override
-    public void onAdded(World world, BlockPos pos, IBlockState state)
-    {
+	@Override
+	public void onAdded(World world, BlockPos pos, IBlockState state)
+	{
 
-    }
+	}
 
-    public boolean tryConnectToNeighborNetworks(World world)
-    {
-        boolean hasConnected = false;
-        for (EnumFacing side : EnumFacing.VALUES)
-        {
-            TileEntity neighborEntity = world.getTileEntity(pos.offset(side));
-            if (neighborEntity instanceof TileEntityMatterPipe && this.getBlockType() == neighborEntity.getBlockType())
-            {
-                if (((TileEntityMatterPipe) neighborEntity).getNetwork() != null && ((TileEntityMatterPipe) neighborEntity).getNetwork() != this.fluidPipeNetwork)
-                {
-                    ((TileEntityMatterPipe) neighborEntity).getNetwork().addNode(this);
-                    hasConnected = true;
-                }
-            }
-        }
-        return hasConnected;
-    }
+	public boolean tryConnectToNeighborNetworks(World world)
+	{
+		boolean hasConnected = false;
+		for (EnumFacing side : EnumFacing.VALUES)
+		{
+			TileEntity neighborEntity = world.getTileEntity(pos.offset(side));
+			if (neighborEntity instanceof TileEntityMatterPipe && this.getBlockType() == neighborEntity.getBlockType())
+			{
+				if (((TileEntityMatterPipe)neighborEntity).getNetwork() != null && ((TileEntityMatterPipe)neighborEntity).getNetwork() != this.fluidPipeNetwork)
+				{
+					((TileEntityMatterPipe)neighborEntity).getNetwork().addNode(this);
+					hasConnected = true;
+				}
+			}
+		}
+		return hasConnected;
+	}
 
-    @Override
-    public void onDestroyed(World worldIn, BlockPos pos, IBlockState state)
-    {
-        if (fluidPipeNetwork != null)
-        {
-            fluidPipeNetwork.onNodeDestroy(state, this);
-        }
-    }
+	@Override
+	public void onDestroyed(World worldIn, BlockPos pos, IBlockState state)
+	{
+		if (fluidPipeNetwork != null)
+		{
+			fluidPipeNetwork.onNodeDestroy(state, this);
+		}
+	}
 
-    @Override
-    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
-    {
-        updateSides(true);
-    }
+	@Override
+	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	{
+		updateSides(true);
+	}
 
-    @Override
-    public void writeToDropItem(ItemStack itemStack) {
+	@Override
+	public void writeToDropItem(ItemStack itemStack)
+	{
 
-    }
+	}
 
-    @Override
-    public void readFromPlaceItem(ItemStack itemStack) {
+	@Override
+	public void readFromPlaceItem(ItemStack itemStack)
+	{
 
-    }
+	}
 
-    @Override
-    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-        return storage.fill(resource,doFill);
-    }
+	@Override
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
+	{
+		return storage.fill(resource, doFill);
+	}
 
-    @Override
-    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-        return storage.drain(resource.amount,doDrain);
-    }
+	@Override
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
+	{
+		return storage.drain(resource.amount, doDrain);
+	}
 
-    @Override
-    public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-        return storage.drain(maxDrain,doDrain);
-    }
+	@Override
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
+	{
+		return storage.drain(maxDrain, doDrain);
+	}
 
-    @Override
-    public boolean canFill(EnumFacing from, Fluid fluid) {
-        return fluid instanceof FluidMatterPlasma;
-    }
+	@Override
+	public boolean canFill(EnumFacing from, Fluid fluid)
+	{
+		return fluid instanceof FluidMatterPlasma;
+	}
 
-    @Override
-    public boolean canDrain(EnumFacing from, Fluid fluid) {
-        return fluid instanceof FluidMatterPlasma;
-    }
+	@Override
+	public boolean canDrain(EnumFacing from, Fluid fluid)
+	{
+		return fluid instanceof FluidMatterPlasma;
+	}
 
-    @Override
-    public FluidTankInfo[] getTankInfo(EnumFacing from) {
-        return new FluidTankInfo[]{storage.getInfo()};
-    }
+	@Override
+	public FluidTankInfo[] getTankInfo(EnumFacing from)
+	{
+		return new FluidTankInfo[] {storage.getInfo()};
+	}
 
-    @Override
-    public TileEntity getTile()
-    {
-        return this;
-    }
+	@Override
+	public TileEntity getTile()
+	{
+		return this;
+	}
 
-    @Override
-    public FluidPipeNetwork getNetwork()
-    {
-        return fluidPipeNetwork;
-    }
+	@Override
+	public FluidPipeNetwork getNetwork()
+	{
+		return fluidPipeNetwork;
+	}
 
-    @Override
-    public void setNetwork(FluidPipeNetwork network)
-    {
-        this.fluidPipeNetwork = network;
-    }
+	@Override
+	public void setNetwork(FluidPipeNetwork network)
+	{
+		this.fluidPipeNetwork = network;
+	}
 
-    @Override
-    public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
-    {
-        return toNode instanceof TileEntityMatterPipe;
-    }
+	@Override
+	public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
+	{
+		return toNode instanceof TileEntityMatterPipe;
+	}
 
-    @Override
-    public boolean canConnectFromSide(IBlockState blockState, EnumFacing side)
-    {
-        return true;
-    }
+	@Override
+	public boolean canConnectFromSide(IBlockState blockState, EnumFacing side)
+	{
+		return true;
+	}
 }

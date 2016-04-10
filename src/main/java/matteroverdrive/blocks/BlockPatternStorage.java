@@ -31,21 +31,21 @@ import net.minecraft.world.World;
  */
 public class BlockPatternStorage extends MOBlockMachine
 {
-    public boolean hasVentParticles;
+	public boolean hasVentParticles;
 
-    public BlockPatternStorage(Material material, String name)
-    {
-        super(material, name);
-        setHardness(20.0F);
-        setLightOpacity(5);
-        this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe", 2);
-        setHasGui(true);
-        setHasRotation();
-    }
+	public BlockPatternStorage(Material material, String name)
+	{
+		super(material, name);
+		setHardness(20.0F);
+		setLightOpacity(5);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		setHasGui(true);
+		setHasRotation();
+	}
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metadata)
     {
         if(side == getOppositeSide(metadata))
@@ -56,10 +56,11 @@ public class BlockPatternStorage extends MOBlockMachine
         return MatterOverdriveIcons.Base;
     }*/
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
-        return new TileEntityMachinePatternStorage();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachinePatternStorage();
+	}
 
     /*@Override
     public int getRenderType()
@@ -67,17 +68,17 @@ public class BlockPatternStorage extends MOBlockMachine
         return RendererBlockPatternStorage.renderID;
     }*/
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
 
-    public void onConfigChanged(ConfigurationHandler config)
-    {
-        super.onConfigChanged(config);
-        hasVentParticles = config.getMachineBool(getUnlocalizedName(), "particles.vent", true, "Should vent particles be displayed");
-        TileEntityMachinePatternStorage.ENERGY_CAPACITY = config.getMachineInt(getUnlocalizedName(), "storage.energy", 64000, String.format("How much energy can the %s hold", getLocalizedName()));
-        TileEntityMachinePatternStorage.ENERGY_TRANSFER = config.getMachineInt(getUnlocalizedName(), "transfer.energy", 128, String.format("The Transfer speed of the %s", getLocalizedName()));
-    }
+	public void onConfigChanged(ConfigurationHandler config)
+	{
+		super.onConfigChanged(config);
+		hasVentParticles = config.getMachineBool(getUnlocalizedName(), "particles.vent", true, "Should vent particles be displayed");
+		TileEntityMachinePatternStorage.ENERGY_CAPACITY = config.getMachineInt(getUnlocalizedName(), "storage.energy", 64000, String.format("How much energy can the %s hold", getLocalizedName()));
+		TileEntityMachinePatternStorage.ENERGY_TRANSFER = config.getMachineInt(getUnlocalizedName(), "transfer.energy", 128, String.format("The Transfer speed of the %s", getLocalizedName()));
+	}
 }

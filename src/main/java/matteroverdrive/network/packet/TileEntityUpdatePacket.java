@@ -10,36 +10,37 @@ import net.minecraft.world.World;
  */
 public class TileEntityUpdatePacket extends PacketAbstract
 {
-    public BlockPos pos;
+	public BlockPos pos;
 
-    public TileEntityUpdatePacket()
-    {
-        super();
-    }
+	public TileEntityUpdatePacket()
+	{
+		super();
+	}
 
-    public TileEntityUpdatePacket(BlockPos pos)
-    {
-        this.pos = pos;
-    }
-    public TileEntityUpdatePacket(TileEntity entity)
-    {
-        this(entity.getPos());
-    }
+	public TileEntityUpdatePacket(BlockPos pos)
+	{
+		this.pos = pos;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        pos = BlockPos.fromLong(buf.readLong());
-    }
+	public TileEntityUpdatePacket(TileEntity entity)
+	{
+		this(entity.getPos());
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        buf.writeLong(pos.toLong());
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		pos = BlockPos.fromLong(buf.readLong());
+	}
 
-    public TileEntity getTileEntity(World world)
-    {
-        return world.getTileEntity(pos);
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		buf.writeLong(pos.toLong());
+	}
+
+	public TileEntity getTileEntity(World world)
+	{
+		return world.getTileEntity(pos);
+	}
 }

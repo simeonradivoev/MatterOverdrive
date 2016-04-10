@@ -56,126 +56,130 @@ import net.minecraftforge.fml.relauncher.Side;
 @ChannelHandler.Sharable
 public class PacketPipeline
 {
-    protected int packetID;
-    public final SimpleNetworkWrapper dispatcher;
+	public final SimpleNetworkWrapper dispatcher;
+	protected int packetID;
 
-    public PacketPipeline()
-    {
-        dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.CHANNEL_NAME);
-        packetID = 0;
-    }
+	public PacketPipeline()
+	{
+		dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.CHANNEL_NAME);
+		packetID = 0;
+	}
 
-    public void registerPackets()
-    {
-        registerPacket(PacketMatterScannerUpdate.ServerHandler.class, PacketMatterScannerUpdate.class);
-        registerPacket(PacketPowerUpdate.ClientHandler.class, PacketPowerUpdate.class);
-        registerPacket(PacketMatterUpdate.ClientHandler.class, PacketMatterUpdate.class);
-        registerPacket(PacketSendItemPattern.ClientHandler.class,PacketSendItemPattern.class);
-        registerPacket(PacketPatternMonitorAddRequest.ServerHandler.class,PacketPatternMonitorAddRequest.class);
-        registerPacket(PacketReplicationComplete.ClientHandler.class,PacketReplicationComplete.class);
-        registerPacket(PacketRemoveTask.ServerHandler.class,PacketRemoveTask.class);
-        registerPacket(PacketSyncTransportProgress.ClientHandler.class,PacketSyncTransportProgress.class);
-        registerBiPacket(PacketMatterScannerGetDatabase.Handler.class, PacketMatterScannerGetDatabase.class);
-        registerPacket(PacketUpdateMatterRegistry.ClientHandler.class, PacketUpdateMatterRegistry.class);
-        registerPacket(PacketSyncAndroid.ClientHandler.class,PacketSyncAndroid.class);
-        registerPacket(PacketUnlockBioticStat.ServerHandler.class,PacketUnlockBioticStat.class);
-        registerPacket(PacketTeleportPlayer.ServerHandler.class,PacketTeleportPlayer.class);
-        registerPacket(PacketSpawnParticle.ClientHandler.class,PacketSpawnParticle.class);
-        registerPacket(PacketUpdatePlanet.ClientHandler.class,PacketUpdatePlanet.class);
-        registerPacket(PacketUpdateGalaxy.ClientHandler.class,PacketUpdateGalaxy.class);
-        registerPacket(PacketStarMapClientCommands.ServerHandler.class,PacketStarMapClientCommands.class);
-        registerPacket(PacketStarMapAttack.ServerHandler.class,PacketStarMapAttack.class);
-        registerPacket(PacketUpdateTravelEvents.ClientHandler.class,PacketUpdateTravelEvents.class);
-        registerPacket(PacketAndroidChangeAbility.ServerHandler.class,PacketAndroidChangeAbility.class);
-        registerBiPacket(PacketFirePlasmaShot.BiHandler.class, PacketFirePlasmaShot.class);
-        registerPacket(PacketReloadEnergyWeapon.ServerHandler.class, PacketReloadEnergyWeapon.class);
-        registerBiPacket(PacketManageConversation.BiHandler.class, PacketManageConversation.class);
-        registerPacket(PacketConversationInteract.ServerHandler.class, PacketConversationInteract.class);
-        registerBiPacket(PacketSendMachineNBT.BiHandler.class, PacketSendMachineNBT.class);
-        registerPacket(PacketSendQueueFlash.ClientHandler.class, PacketSendQueueFlash.class);
-        registerPacket(PacketDataPadCommands.ServerHandler.class,PacketDataPadCommands.class);
-        registerPacket(PacketSendMinimapInfo.ClientHandler.class,PacketSendMinimapInfo.class);
-        registerPacket(PacketResetBioStats.ServerHandler.class,PacketResetBioStats.class);
-        registerPacket(PacketDigBlock.ServerHandler.class,PacketDigBlock.class);
-        registerPacket(PacketUpdateQuest.ClientHandler.class,PacketUpdateQuest.class);
-        registerPacket(PacketSyncQuests.ClientHandler.class,PacketSyncQuests.class);
-        registerPacket(PacketQuestActions.ServerHandler.class,PacketQuestActions.class);
-        registerPacket(PacketWeaponTick.ServerHandler.class,PacketWeaponTick.class);
-        registerBiPacket(PacketStarLoading.BiHandler.class,PacketStarLoading.class);
-        registerPacket(PacketAndroidTransformation.ClientHandler.class,PacketAndroidTransformation.class);
-        registerPacket(PacketSyncTaskQueue.ClientHandler.class,PacketSyncTaskQueue.class);
-        registerPacket(PacketBioticActionKey.ServerHandler.class,PacketBioticActionKey.class);
-        registerPacket(PacketUpdatePlasmaBolt.ClientHandler.class,PacketUpdatePlasmaBolt.class);
-        registerPacket(PacketClearPatterns.ClientHandler.class,PacketClearPatterns.class);
-        registerPacket(PacketSendAndroidEffects.ClientHandler.class,PacketSendAndroidEffects.class);
-    }
+	public void registerPackets()
+	{
+		registerPacket(PacketMatterScannerUpdate.ServerHandler.class, PacketMatterScannerUpdate.class);
+		registerPacket(PacketPowerUpdate.ClientHandler.class, PacketPowerUpdate.class);
+		registerPacket(PacketMatterUpdate.ClientHandler.class, PacketMatterUpdate.class);
+		registerPacket(PacketSendItemPattern.ClientHandler.class, PacketSendItemPattern.class);
+		registerPacket(PacketPatternMonitorAddRequest.ServerHandler.class, PacketPatternMonitorAddRequest.class);
+		registerPacket(PacketReplicationComplete.ClientHandler.class, PacketReplicationComplete.class);
+		registerPacket(PacketRemoveTask.ServerHandler.class, PacketRemoveTask.class);
+		registerPacket(PacketSyncTransportProgress.ClientHandler.class, PacketSyncTransportProgress.class);
+		registerBiPacket(PacketMatterScannerGetDatabase.Handler.class, PacketMatterScannerGetDatabase.class);
+		registerPacket(PacketUpdateMatterRegistry.ClientHandler.class, PacketUpdateMatterRegistry.class);
+		registerPacket(PacketSyncAndroid.ClientHandler.class, PacketSyncAndroid.class);
+		registerPacket(PacketUnlockBioticStat.ServerHandler.class, PacketUnlockBioticStat.class);
+		registerPacket(PacketTeleportPlayer.ServerHandler.class, PacketTeleportPlayer.class);
+		registerPacket(PacketSpawnParticle.ClientHandler.class, PacketSpawnParticle.class);
+		registerPacket(PacketUpdatePlanet.ClientHandler.class, PacketUpdatePlanet.class);
+		registerPacket(PacketUpdateGalaxy.ClientHandler.class, PacketUpdateGalaxy.class);
+		registerPacket(PacketStarMapClientCommands.ServerHandler.class, PacketStarMapClientCommands.class);
+		registerPacket(PacketStarMapAttack.ServerHandler.class, PacketStarMapAttack.class);
+		registerPacket(PacketUpdateTravelEvents.ClientHandler.class, PacketUpdateTravelEvents.class);
+		registerPacket(PacketAndroidChangeAbility.ServerHandler.class, PacketAndroidChangeAbility.class);
+		registerBiPacket(PacketFirePlasmaShot.BiHandler.class, PacketFirePlasmaShot.class);
+		registerPacket(PacketReloadEnergyWeapon.ServerHandler.class, PacketReloadEnergyWeapon.class);
+		registerBiPacket(PacketManageConversation.BiHandler.class, PacketManageConversation.class);
+		registerPacket(PacketConversationInteract.ServerHandler.class, PacketConversationInteract.class);
+		registerBiPacket(PacketSendMachineNBT.BiHandler.class, PacketSendMachineNBT.class);
+		registerPacket(PacketSendQueueFlash.ClientHandler.class, PacketSendQueueFlash.class);
+		registerPacket(PacketDataPadCommands.ServerHandler.class, PacketDataPadCommands.class);
+		registerPacket(PacketSendMinimapInfo.ClientHandler.class, PacketSendMinimapInfo.class);
+		registerPacket(PacketResetBioStats.ServerHandler.class, PacketResetBioStats.class);
+		registerPacket(PacketDigBlock.ServerHandler.class, PacketDigBlock.class);
+		registerPacket(PacketUpdateQuest.ClientHandler.class, PacketUpdateQuest.class);
+		registerPacket(PacketSyncQuests.ClientHandler.class, PacketSyncQuests.class);
+		registerPacket(PacketQuestActions.ServerHandler.class, PacketQuestActions.class);
+		registerPacket(PacketWeaponTick.ServerHandler.class, PacketWeaponTick.class);
+		registerBiPacket(PacketStarLoading.BiHandler.class, PacketStarLoading.class);
+		registerPacket(PacketAndroidTransformation.ClientHandler.class, PacketAndroidTransformation.class);
+		registerPacket(PacketSyncTaskQueue.ClientHandler.class, PacketSyncTaskQueue.class);
+		registerPacket(PacketBioticActionKey.ServerHandler.class, PacketBioticActionKey.class);
+		registerPacket(PacketUpdatePlasmaBolt.ClientHandler.class, PacketUpdatePlasmaBolt.class);
+		registerPacket(PacketClearPatterns.ClientHandler.class, PacketClearPatterns.class);
+		registerPacket(PacketSendAndroidEffects.ClientHandler.class, PacketSendAndroidEffects.class);
+	}
 
-    public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)
-    {
-        try {
-            Side side = AbstractClientPacketHandler.class.isAssignableFrom(messageHandler) ? Side.CLIENT : Side.SERVER;
+	public <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)
+	{
+		try
+		{
+			Side side = AbstractClientPacketHandler.class.isAssignableFrom(messageHandler) ? Side.CLIENT : Side.SERVER;
 			dispatcher.registerMessage(messageHandler, requestMessageType, packetID++, side);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
-    public <REQ extends IMessage, REPLY extends IMessage> void registerBiPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)
-    {
-        if (AbstractBiPacketHandler.class.isAssignableFrom(messageHandler))
-        {
-            dispatcher.registerMessage(messageHandler,requestMessageType,packetID,Side.CLIENT);
-            dispatcher.registerMessage(messageHandler,requestMessageType,packetID++,Side.SERVER);
-        }
-        else
-        {
-            throw new IllegalArgumentException("Cannot register " + messageHandler.getName() + " on both sides - must extend AbstractBiMessageHandler!");
-        }
-    }
+	public <REQ extends IMessage, REPLY extends IMessage> void registerBiPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)
+	{
+		if (AbstractBiPacketHandler.class.isAssignableFrom(messageHandler))
+		{
+			dispatcher.registerMessage(messageHandler, requestMessageType, packetID, Side.CLIENT);
+			dispatcher.registerMessage(messageHandler, requestMessageType, packetID++, Side.SERVER);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Cannot register " + messageHandler.getName() + " on both sides - must extend AbstractBiMessageHandler!");
+		}
+	}
 
-    //region Util functions
-    public void sendToServer(IMessage message)
-    {
-        dispatcher.sendToServer(message);
-    }
+	//region Util functions
+	public void sendToServer(IMessage message)
+	{
+		dispatcher.sendToServer(message);
+	}
 
-    public void sendToAllAround(IMessage message,NetworkRegistry.TargetPoint point)
-    {
-        dispatcher.sendToAllAround(message, point);
-    }
+	public void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point)
+	{
+		dispatcher.sendToAllAround(message, point);
+	}
 
-    public void sendToAllAround(IMessage message,int dimention,double x,double y,double z,double range)
-    {
-        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(dimention, x, y, z, range));
-    }
+	public void sendToAllAround(IMessage message, int dimention, double x, double y, double z, double range)
+	{
+		dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(dimention, x, y, z, range));
+	}
 
-    public void sendToAllAround(IMessage message,EntityPlayer player,double range)
-    {
-        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimension(),player.posX,player.posY,player.posZ,range));
-    }
+	public void sendToAllAround(IMessage message, EntityPlayer player, double range)
+	{
+		dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimension(), player.posX, player.posY, player.posZ, range));
+	}
 
-    public void sendToAllAround(IMessage message,TileEntity tileEntity,double range)
-    {
-        dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(tileEntity.getWorld().provider.getDimension(),tileEntity.getPos().getX(),tileEntity.getPos().getY(),tileEntity.getPos().getZ(),range));
-    }
+	public void sendToAllAround(IMessage message, TileEntity tileEntity, double range)
+	{
+		dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(tileEntity.getWorld().provider.getDimension(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), range));
+	}
 
-    public void sendTo(IMessage message,EntityPlayerMP player)
-    {
-        dispatcher.sendTo(message, player);
-    }
+	public void sendTo(IMessage message, EntityPlayerMP player)
+	{
+		dispatcher.sendTo(message, player);
+	}
 
-    public void sendToDimention(IMessage message,int dimention)
-    {
-        dispatcher.sendToDimension(message, dimention);
-    }
-    public void sendToDimention(IMessage message,World world)
-    {
-        sendToDimention(message,world.provider);
-    }
-    public void sendToDimention(IMessage message,WorldProvider worldProvider)
-    {
-        dispatcher.sendToDimension(message, worldProvider.getDimension());
-    }
-    //endregion
+	public void sendToDimention(IMessage message, int dimention)
+	{
+		dispatcher.sendToDimension(message, dimention);
+	}
+
+	public void sendToDimention(IMessage message, World world)
+	{
+		sendToDimention(message, world.provider);
+	}
+
+	public void sendToDimention(IMessage message, WorldProvider worldProvider)
+	{
+		dispatcher.sendToDimension(message, worldProvider.getDimension());
+	}
+	//endregion
 }

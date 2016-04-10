@@ -14,31 +14,33 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class PacketAndroidTransformation extends PacketAbstract
 {
-    public PacketAndroidTransformation(){}
+	public PacketAndroidTransformation()
+	{
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
 
-    }
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
 
-    }
+	}
 
-    public static class ClientHandler extends AbstractClientPacketHandler<PacketAndroidTransformation>
-    {
-        @SideOnly(Side.CLIENT)
-        @Override
-        public void handleClientMessage(EntityPlayerSP player, PacketAndroidTransformation message, MessageContext ctx)
-        {
-            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
-            if (androidPlayer != null)
-            {
-                androidPlayer.startConversion();
-            }
-        }
-    }
+	public static class ClientHandler extends AbstractClientPacketHandler<PacketAndroidTransformation>
+	{
+		@SideOnly(Side.CLIENT)
+		@Override
+		public void handleClientMessage(EntityPlayerSP player, PacketAndroidTransformation message, MessageContext ctx)
+		{
+			AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
+			if (androidPlayer != null)
+			{
+				androidPlayer.startConversion();
+			}
+		}
+	}
 }

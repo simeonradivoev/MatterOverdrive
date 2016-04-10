@@ -50,35 +50,35 @@ public class Reference
 	public static final String PATH_ELEMENTS = PATH_GUI + "elements/";
 	public static final String PATH_ICON = PATH_GUI + "icons/";
 	public static final String PATH_ENTETIES = PATH_GFX + "entities/";
-    public static final String PATH_ITEM = PATH_GFX + "items/";
+	public static final String PATH_ITEM = PATH_GFX + "items/";
 	public static final String PATH_GUI_ITEM = PATH_GUI + "items/";
-    public static final String PATH_MODEL = "mo:models/";
-    public static final String PATH_MODEL_BLOCKS = PATH_MODEL + "block/";
+	public static final String PATH_MODEL = "mo:models/";
+	public static final String PATH_MODEL_BLOCKS = PATH_MODEL + "block/";
 	public static final String PATH_MODEL_ITEMS = PATH_MODEL + "item/";
-    public static final String PATH_SOUNDS = "mo:sounds/";
-    public static final String PATH_SOUNDS_BLOCKS = PATH_SOUNDS + "blocks/";
+	public static final String PATH_SOUNDS = "mo:sounds/";
+	public static final String PATH_SOUNDS_BLOCKS = PATH_SOUNDS + "blocks/";
 	public static final String PATH_INFO = "mo:info/";
 	//endregion
 
-    //region GUI Textures
-    public static final String TEXTURE_ARROW_PROGRESS = Reference.PATH_ELEMENTS + "Progress_Arrow_Right.png";
-    public static final String TEXTURE_ENERGY_METER = Reference.PATH_ELEMENTS + "Energy.png";
+	//region GUI Textures
+	public static final String TEXTURE_ARROW_PROGRESS = Reference.PATH_ELEMENTS + "Progress_Arrow_Right.png";
+	public static final String TEXTURE_ENERGY_METER = Reference.PATH_ELEMENTS + "Energy.png";
 	//endregion
 
 	//region Colors
-	public static final Color COLOR_MATTER = new Color(191,228,230);
-    public static final Color COLOR_HOLO = new Color(169,226,251);
-	public static final Color COLOR_YELLOW_STRIPES = new Color(254,203,4);
-	public static final Color COLOR_HOLO_RED = new Color(230,80,20);
-	public static final Color COLOR_HOLO_GREEN = new Color(24,207,0);
-	public static final Color COLOR_HOLO_YELLOW = new Color(252,223,116);
-    public static final Color COLOR_HOLO_PURPLE = new Color(116,23,230);
-	public static final Color COLOR_GUI_NORMAL = new Color(62,81,84);
-	public static final Color COLOR_GUI_LIGHT = new Color(100,113,136);
-	public static final Color COLOR_GUI_LIGHTER = new Color(139,126,168);
-	public static final Color COLOR_GUI_DARK = new Color(44,54,52);
-	public static final Color COLOR_GUI_DARKER = new Color(34,40,37);
-	public static final Color COLOR_GUI_ENERGY = new Color(224,0,0);
+	public static final Color COLOR_MATTER = new Color(191, 228, 230);
+	public static final Color COLOR_HOLO = new Color(169, 226, 251);
+	public static final Color COLOR_YELLOW_STRIPES = new Color(254, 203, 4);
+	public static final Color COLOR_HOLO_RED = new Color(230, 80, 20);
+	public static final Color COLOR_HOLO_GREEN = new Color(24, 207, 0);
+	public static final Color COLOR_HOLO_YELLOW = new Color(252, 223, 116);
+	public static final Color COLOR_HOLO_PURPLE = new Color(116, 23, 230);
+	public static final Color COLOR_GUI_NORMAL = new Color(62, 81, 84);
+	public static final Color COLOR_GUI_LIGHT = new Color(100, 113, 136);
+	public static final Color COLOR_GUI_LIGHTER = new Color(139, 126, 168);
+	public static final Color COLOR_GUI_DARK = new Color(44, 54, 52);
+	public static final Color COLOR_GUI_DARKER = new Color(34, 40, 37);
+	public static final Color COLOR_GUI_ENERGY = new Color(224, 0, 0);
 	//endregion
 
 	//region Modules
@@ -115,21 +115,21 @@ public class Reference
 	//endregion
 
 	//region Request Packet Type
-    public static final int PACKET_REQUEST_CONNECTION = 0;
+	public static final int PACKET_REQUEST_CONNECTION = 0;
 	public static final int PACKET_REQUEST_PATTERN_SEARCH = 1;
-    public static final int PACKET_REQUEST_NEIGHBOR_CONNECTION = 2;
+	public static final int PACKET_REQUEST_NEIGHBOR_CONNECTION = 2;
 	public static final int PACKET_REQUEST_VALID_PATTERN_DESTINATION = 3;
-    //endregion
+	//endregion
 
 	//region Broadcast Packet Type
 	public static final int PACKET_BROADCAST_CONNECTION = 0;
 	//endregion
 
-    //region Packet Responce Type
-    public static final int PACKET_RESPONCE_ERROR = -1;
-    public static final int PACKET_RESPONCE_INVALID = 0;
-    public static final int PACKET_RESPONCE_VALID = 1;
-    //endregion
+	//region Packet Responce Type
+	public static final int PACKET_RESPONCE_ERROR = -1;
+	public static final int PACKET_RESPONCE_INVALID = 0;
+	public static final int PACKET_RESPONCE_VALID = 1;
+	//endregion
 
 	//region machine mods
 	public static final byte MODE_REDSTONE_NONE = 2;
@@ -152,8 +152,13 @@ public class Reference
 
 	//region other mods
 	private static Boolean eioLoaded;
-	public static boolean eioLoaded() {
-		if (eioLoaded == null) eioLoaded = Loader.isModLoaded("EnderIO");
+
+	public static boolean eioLoaded()
+	{
+		if (eioLoaded == null)
+		{
+			eioLoaded = Loader.isModLoaded("EnderIO");
+		}
 		return eioLoaded;
 	}
 	//endregion
@@ -166,6 +171,13 @@ public class Reference
 	//region Unicodes
 	public static final String UNICODE_LEGENDARY = "\u272a";
 	public static final String UNICODE_COMPLETED_OBJECTIVE = "\u25a0";
-	public static final String UNICODE_UNCOMPLETED_OBJECTIVE = "\u25a1";
+	public static boolean eioLoaded()
+	{
+		if (eioLoaded == null)
+		{
+			eioLoaded = Loader.isModLoaded("EnderIO");
+		}
+		return eioLoaded;
+	}	public static final String UNICODE_UNCOMPLETED_OBJECTIVE = "\u25a1";
 	//endregion
 }

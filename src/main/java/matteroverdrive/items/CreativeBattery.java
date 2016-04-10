@@ -18,13 +18,13 @@
 
 package matteroverdrive.items;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class CreativeBattery extends Battery
 {
 	public CreativeBattery(String name, int capacity, Color color, int input, int output)
 	{
-		super(name, capacity,color,input,output);
+		super(name, capacity, color, input, output);
 		this.setMaxStackSize(1);
 	}
 
@@ -50,7 +50,7 @@ public class CreativeBattery extends Battery
 	}
 
 	@Override
-	public void setEnergyStored(ItemStack container,int amount)
+	public void setEnergyStored(ItemStack container, int amount)
 	{
 		MOEnergyHelper.setDefaultEnergyTag(container, capacity);
 	}

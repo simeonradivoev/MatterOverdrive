@@ -30,28 +30,32 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
  */
 public class MatterOverdriveEnchantments implements IConfigSubscriber
 {
-    public static EnchantmentOverclock overclock;
+	public static EnchantmentOverclock overclock;
 
-    public static void init(FMLPreInitializationEvent event,ConfigurationHandler configurationHandler)
-    {
-        overclock = new EnchantmentOverclock(Enchantment.Rarity.COMMON);
+	public static void init(FMLPreInitializationEvent event, ConfigurationHandler configurationHandler)
+	{
+		overclock = new EnchantmentOverclock(Enchantment.Rarity.COMMON);
 
-        int id = configurationHandler.getInt("Overclock",ConfigurationHandler.CATEGORY_ENCHANTMENTS,80);
-        while (id < 256)
-        {
-            try {
-                Enchantment.enchantmentRegistry.register(id,new ResourceLocation("overclock"),overclock);
-                break;
-            } catch (IllegalArgumentException e) {
-                id++;
-            }
-        }
+		int id = configurationHandler.getInt("Overclock", ConfigurationHandler.CATEGORY_ENCHANTMENTS, 80);
+		while (id < 256)
+		{
+			try
+			{
+				Enchantment.enchantmentRegistry.register(id, new ResourceLocation("overclock"), overclock);
+				break;
+			}
+			catch (IllegalArgumentException e)
+			{
+				id++;
+			}
+		}
 
-        configurationHandler.setInt("Overclock",ConfigurationHandler.CATEGORY_ENCHANTMENTS,id);
-    }
+		configurationHandler.setInt("Overclock", ConfigurationHandler.CATEGORY_ENCHANTMENTS, id);
+	}
 
-    @Override
-    public void onConfigChanged(ConfigurationHandler config) {
+	@Override
+	public void onConfigChanged(ConfigurationHandler config)
+	{
 
-    }
+	}
 }

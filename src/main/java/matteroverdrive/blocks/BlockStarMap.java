@@ -17,20 +17,20 @@ import net.minecraft.world.World;
  */
 public class BlockStarMap extends MOBlockMachine
 {
-    public BlockStarMap(Material material, String name)
-    {
-        super(material, name);
-        // TODO: 3/26/2016 Find how to set block bounds
-        //setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
-        setHardness(20.0F);
-        this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe", 2);
-        lightValue = 10;
-        setHasGui(true);
-    }
+	public BlockStarMap(Material material, String name)
+	{
+		super(material, name);
+		// TODO: 3/26/2016 Find how to set block bounds
+		//setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
+		setHardness(20.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		lightValue = 10;
+		setHasGui(true);
+	}
 
     /*@SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
+	public void registerBlockIcons(IIconRegister iconRegister)
     {
         super.registerBlockIcons(iconRegister);
         topIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "weapon_station_top");
@@ -56,29 +56,30 @@ public class BlockStarMap extends MOBlockMachine
         }
     }*/
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
-        if (playerIn.isSneaking()) {
-            TileEntityMachineStarMap starMap = (TileEntityMachineStarMap) worldIn.getTileEntity(pos);
-            starMap.zoom();
-            return true;
-        }
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	{
+		if (playerIn.isSneaking())
+		{
+			TileEntityMachineStarMap starMap = (TileEntityMachineStarMap)worldIn.getTileEntity(pos);
+			starMap.zoom();
+			return true;
+		}
 		else
-        {
-            return super.onBlockActivated(worldIn,pos,state,playerIn,hand,heldItem, side, hitX, hitY, hitZ);
-        }
-    }
+		{
+			return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
+		}
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMachineStarMap();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachineStarMap();
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
 }

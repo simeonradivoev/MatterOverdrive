@@ -10,14 +10,14 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 @Compat("GalacticraftCore")
 public class CompatGalacticraft
 {
-    @Compat.Init
-    public void init(FMLInitializationEvent event)
-    {
-        MinecraftForge.EVENT_BUS.register(this);
-    }
+	@Compat.Init
+	public void init(FMLInitializationEvent event)
+	{
+		MinecraftForge.EVENT_BUS.register(this);
+	}
 
     /*@Optional.Method(modid = "GalacticraftCore")
-    @SubscribeEvent
+	@SubscribeEvent
     public void onLivingEvent(GCCoreOxygenSuffocationEvent event)
     {
         AndroidPlayer androidPlayer = AndroidPlayer.get((EntityPlayer) event.entityLiving);

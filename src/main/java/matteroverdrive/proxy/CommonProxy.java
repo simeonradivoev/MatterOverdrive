@@ -32,43 +32,51 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class CommonProxy
 {
-    private final CommonWeaponHandler commonWeaponHandler;
-    protected GoogleAnalyticsCommon googleAnalyticsCommon;
+	private final CommonWeaponHandler commonWeaponHandler;
+	protected GoogleAnalyticsCommon googleAnalyticsCommon;
 
-    public CommonProxy()
-    {
-        commonWeaponHandler = new CommonWeaponHandler();
-        googleAnalyticsCommon = new GoogleAnalyticsCommon();
-    }
+	public CommonProxy()
+	{
+		commonWeaponHandler = new CommonWeaponHandler();
+		googleAnalyticsCommon = new GoogleAnalyticsCommon();
+	}
 
-    public void registerCompatModules()
-    {
-        MatterOverdriveCompat.registerModules();
-    }
+	public void registerCompatModules()
+	{
+		MatterOverdriveCompat.registerModules();
+	}
 
-    public EntityPlayer getPlayerEntity(MessageContext ctx)
-    {
-        return ctx.getServerHandler().playerEntity;
-    }
+	public EntityPlayer getPlayerEntity(MessageContext ctx)
+	{
+		return ctx.getServerHandler().playerEntity;
+	}
 
-    public void preInit(FMLPreInitializationEvent event)
-    {
-        registerCompatModules();
-    }
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		registerCompatModules();
+	}
 
-    public void init(FMLInitializationEvent event)
-    {
-        MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
-        MinecraftForge.EVENT_BUS.register(getWeaponHandler());
-        MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
-        MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance());
-        MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance().getGalaxyGenerator());
-        MatterOverdrive.configHandler.subscribe(googleAnalyticsCommon);
-    }
+	public void init(FMLInitializationEvent event)
+	{
+		MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
+		MinecraftForge.EVENT_BUS.register(getWeaponHandler());
+		MinecraftForge.EVENT_BUS.register(GalaxyServer.getInstance());
+		MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance());
+		MatterOverdrive.configHandler.subscribe(GalaxyServer.getInstance().getGalaxyGenerator());
+		MatterOverdrive.configHandler.subscribe(googleAnalyticsCommon);
+	}
 
-    public void postInit(FMLPostInitializationEvent event){}
+	public void postInit(FMLPostInitializationEvent event)
+	{
+	}
 
-    public CommonWeaponHandler getWeaponHandler(){return commonWeaponHandler;}
+	public CommonWeaponHandler getWeaponHandler()
+	{
+		return commonWeaponHandler;
+	}
 
-    public GoogleAnalyticsCommon getGoogleAnalytics(){return googleAnalyticsCommon;}
+	public GoogleAnalyticsCommon getGoogleAnalytics()
+	{
+		return googleAnalyticsCommon;
+	}
 }

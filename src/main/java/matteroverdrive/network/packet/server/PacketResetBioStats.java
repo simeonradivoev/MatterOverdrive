@@ -30,27 +30,29 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class PacketResetBioStats extends PacketAbstract
 {
-    @Override
-    public void fromBytes(ByteBuf buf) {
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
 
-    }
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
 
-    }
+	}
 
-    public static class ServerHandler extends AbstractServerPacketHandler<PacketResetBioStats>
-    {
+	public static class ServerHandler extends AbstractServerPacketHandler<PacketResetBioStats>
+	{
 
-        @Override
-        public void handleServerMessage(EntityPlayerMP player, PacketResetBioStats message, MessageContext ctx)
-        {
-            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
-            if (androidPlayer != null && androidPlayer.isAndroid())
-            {
-                player.addExperienceLevel(androidPlayer.resetUnlocked());
-            }
-        }
-    }
+		@Override
+		public void handleServerMessage(EntityPlayerMP player, PacketResetBioStats message, MessageContext ctx)
+		{
+			AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
+			if (androidPlayer != null && androidPlayer.isAndroid())
+			{
+				player.addExperienceLevel(androidPlayer.resetUnlocked());
+			}
+		}
+	}
 }

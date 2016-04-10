@@ -27,17 +27,17 @@ import net.minecraft.item.ItemStack;
  */
 public interface IMatterPatternStorage
 {
-    ItemPattern getPatternAt(ItemStack storage,int slot);
+	ItemPattern getPatternAt(ItemStack storage, int slot);
 
-    void setItemPatternAt(ItemStack storage,int slot,ItemPattern itemPattern);
+	void setItemPatternAt(ItemStack storage, int slot, ItemPattern itemPattern);
 
-    boolean increasePatternProgress(ItemStack itemStack,int slot,int amount);
+	boolean increasePatternProgress(ItemStack itemStack, int slot, int amount);
 
-    /**
-     * Gets the capacity of the storage item.
-     * How much pattern can it store.
-     * @param item The storage stack.
-     * @return the pattern capacity of the storage.
-     */
-    int getCapacity(ItemStack item);
+	/**
+	 * Gets the capacity of the storage item.
+	 * How much pattern can it store.
+	 * @param item The storage stack.
+	 * @return the pattern capacity of the storage.
+	 */
+	int getCapacity(ItemStack item);
 }

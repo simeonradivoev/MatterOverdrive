@@ -35,54 +35,55 @@ import java.util.HashMap;
  */
 public class AndroidStatRegistry implements IAndroidStatRegistry
 {
-    private final HashMap<String,IBioticStat> stats = new HashMap<>();
+	private final HashMap<String, IBioticStat> stats = new HashMap<>();
 
-    @Override
-    public boolean registerStat(IBioticStat stat)
-    {
-        if (stats.containsKey(stat.getUnlocalizedName()))
-        {
-            MOLog.warn("Stat with the name '%s' is already present!", stat.getUnlocalizedName());
-            MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Biotic Stat Registration with existing name");
-        }
-        else
-        {
-            if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterAndroidStat(stat))) {
-                stats.put(stat.getUnlocalizedName(), stat);
-                return true;
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean registerStat(IBioticStat stat)
+	{
+		if (stats.containsKey(stat.getUnlocalizedName()))
+		{
+			MOLog.warn("Stat with the name '%s' is already present!", stat.getUnlocalizedName());
+			MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Biotic Stat Registration with existing name");
+		}
+		else
+		{
+			if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterAndroidStat(stat)))
+			{
+				stats.put(stat.getUnlocalizedName(), stat);
+				return true;
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public IBioticStat getStat(String name)
-    {
-        return stats.get(name);
-    }
+	@Override
+	public IBioticStat getStat(String name)
+	{
+		return stats.get(name);
+	}
 
-    @Override
-    public boolean hasStat(String name)
-    {
-        return stats.containsKey(name);
-    }
+	@Override
+	public boolean hasStat(String name)
+	{
+		return stats.containsKey(name);
+	}
 
-    @Override
-    public IBioticStat unregisterStat(String statName)
-    {
-        return stats.remove(statName);
-    }
+	@Override
+	public IBioticStat unregisterStat(String statName)
+	{
+		return stats.remove(statName);
+	}
 
-    public void registerIcons(TextureMap textureMap,HoloIcons holoIcons)
-    {
-        for (IBioticStat stat : stats.values())
-        {
-            stat.registerIcons(textureMap,holoIcons);
-        }
-    }
+	public void registerIcons(TextureMap textureMap, HoloIcons holoIcons)
+	{
+		for (IBioticStat stat : stats.values())
+		{
+			stat.registerIcons(textureMap, holoIcons);
+		}
+	}
 
-    public Collection<IBioticStat> getStats()
-    {
-        return stats.values();
-    }
+	public Collection<IBioticStat> getStats()
+	{
+		return stats.values();
+	}
 }

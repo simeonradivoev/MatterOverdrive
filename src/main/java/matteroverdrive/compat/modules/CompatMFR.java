@@ -1,20 +1,22 @@
 package matteroverdrive.compat.modules;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
 import matteroverdrive.compat.Compat;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 /**
  * @author shadowfacts
  */
 @Compat("MineFactoryReloaded")
-public class CompatMFR {
+public class CompatMFR
+{
 
 	@Compat.Init
-	public void init(FMLInitializationEvent event) {
+	public void init(FMLInitializationEvent event)
+	{
 		NBTTagCompound dilithiumTag = new NBTTagCompound();
 		new ItemStack(MatterOverdriveBlocks.dilithium_ore).writeToNBT(dilithiumTag);
 		dilithiumTag.setInteger("value", 3);

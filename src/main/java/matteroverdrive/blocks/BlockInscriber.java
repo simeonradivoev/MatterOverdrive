@@ -30,22 +30,24 @@ import net.minecraft.world.World;
  */
 public class BlockInscriber extends MOBlockMachine
 {
-    public BlockInscriber(Material material, String name) {
-        super(material, name);
-        setHardness(20.0F);
-        this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe",2);
-        setHasGui(true);
-        setHasRotation();
-    }
+	public BlockInscriber(Material material, String name)
+	{
+		super(material, name);
+		setHardness(20.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		setHasGui(true);
+		setHasRotation();
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-        return new TileEntityInscriber();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	{
+		return new TileEntityInscriber();
+	}
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister p_149651_1_)
     {
         return;
@@ -57,9 +59,9 @@ public class BlockInscriber extends MOBlockMachine
         return RendererBlockInscriber.renderID;
     }*/
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
 }

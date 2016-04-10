@@ -30,13 +30,13 @@ import net.minecraft.item.ItemStack;
 public interface IBionicPartRenderer
 {
 	/**
-     * Called when the part is to be rendered
-     * @param partStack
-     * @param androidPlayer
-     * @param renderPlayer
-     * @param ticks
-     */
-    void renderPart(ItemStack partStack, AndroidPlayer androidPlayer, RenderPlayer renderPlayer, float ticks);
+	 * Called when the part is to be rendered
+	 * @param partStack
+	 * @param androidPlayer
+	 * @param renderPlayer
+	 * @param ticks
+	 */
+	void renderPart(ItemStack partStack, AndroidPlayer androidPlayer, RenderPlayer renderPlayer, float ticks);
 
-    void affectPlayerRenderer(ItemStack partStack,AndroidPlayer androidPlayer,RenderPlayer renderPlayer,float ticks);
+	void affectPlayerRenderer(ItemStack partStack, AndroidPlayer androidPlayer, RenderPlayer renderPlayer, float ticks);
 }

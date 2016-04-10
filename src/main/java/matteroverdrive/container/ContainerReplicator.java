@@ -13,60 +13,62 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ContainerReplicator extends ContainerTaskQueueMachine<TileEntityMachineReplicator>
 {
-    private int patternReplicateCount;
+	private int patternReplicateCount;
 
-    public ContainerReplicator(InventoryPlayer inventory, TileEntityMachineReplicator machine)
-    {
-        super(inventory, machine);
-    }
+	public ContainerReplicator(InventoryPlayer inventory, TileEntityMachineReplicator machine)
+	{
+		super(inventory, machine);
+	}
 
-    @Override
-    public void init(InventoryPlayer inventory)
-    {
-        addAllSlotsFromInventory(machine.getInventoryContainer());
-        MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, true, true);
-    }
+	@Override
+	public void init(InventoryPlayer inventory)
+	{
+		addAllSlotsFromInventory(machine.getInventoryContainer());
+		MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, true, true);
+	}
 
-    @Override
-    public void onCraftGuiOpened(ICrafting icrafting)
-    {
-        super.onCraftGuiOpened(icrafting);
-        icrafting.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
-        icrafting.sendProgressBarUpdate(this,2,this.machine.getEnergyDrainPerTick());
-        icrafting.sendProgressBarUpdate(this,3,this.machine.getEnergyDrainMax());
-    }
+	@Override
+	public void onCraftGuiOpened(ICrafting icrafting)
+	{
+		super.onCraftGuiOpened(icrafting);
+		icrafting.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
+		icrafting.sendProgressBarUpdate(this, 2, this.machine.getEnergyDrainPerTick());
+		icrafting.sendProgressBarUpdate(this, 3, this.machine.getEnergyDrainMax());
+	}
 
-    @Override
-    public void detectAndSendChanges()
-    {
-        super.detectAndSendChanges();
+	@Override
+	public void detectAndSendChanges()
+	{
+		super.detectAndSendChanges();
 
-        for (Object crafter : this.crafters) {
-            ICrafting icrafting = (ICrafting) crafter;
+		for (Object crafter : this.crafters)
+		{
+			ICrafting icrafting = (ICrafting)crafter;
 
-            if (this.patternReplicateCount != this.machine.getTaskReplicateCount()) {
-                icrafting.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
-            }
-        }
+			if (this.patternReplicateCount != this.machine.getTaskReplicateCount())
+			{
+				icrafting.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
+			}
+		}
 
-        this.patternReplicateCount = this.machine.getTaskReplicateCount();
-    }
+		this.patternReplicateCount = this.machine.getTaskReplicateCount();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int slot,int newValue)
-    {
-        super.updateProgressBar(slot,newValue);
-        switch (slot)
-        {
-            case 1:
-                patternReplicateCount = newValue;
-                break;
-        }
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void updateProgressBar(int slot, int newValue)
+	{
+		super.updateProgressBar(slot, newValue);
+		switch (slot)
+		{
+			case 1:
+				patternReplicateCount = newValue;
+				break;
+		}
+	}
 
-    public int getPatternReplicateCount()
-    {
-        return patternReplicateCount;
-    }
+	public int getPatternReplicateCount()
+	{
+		return patternReplicateCount;
+	}
 }

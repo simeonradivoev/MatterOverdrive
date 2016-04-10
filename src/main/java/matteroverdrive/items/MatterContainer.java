@@ -35,16 +35,17 @@ import net.minecraft.world.World;
  */
 public class MatterContainer extends MOBaseItem
 {
-    final boolean isFull;
+	final boolean isFull;
 
-    public MatterContainer(String name,boolean isFull) {
-        super(name);
-        this.isFull = isFull;
-        setMaxStackSize(8);
-    }
+	public MatterContainer(String name, boolean isFull)
+	{
+		super(name);
+		this.isFull = isFull;
+		setMaxStackSize(8);
+	}
 
     /*@SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister iconRegister)
+	public void registerIcons(IIconRegister iconRegister)
     {
         this.itemIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "container");
         centerFill = iconRegister.registerIcon(Reference.MOD_ID + ":" + "container_center_fill");
@@ -64,122 +65,125 @@ public class MatterContainer extends MOBaseItem
         return isFull ? 3 : 1;
     }*/
 
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
-    {
-        RayTraceResult movingobjectposition = this.getMovingObjectPositionFromPlayer(world, entityPlayer, !isFull);
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
+	{
+		RayTraceResult movingobjectposition = this.getMovingObjectPositionFromPlayer(world, entityPlayer, !isFull);
 
-        if (movingobjectposition == null)
-        {
-            return itemStack;
-        }
-        else
-        {
-            if (movingobjectposition.typeOfHit == RayTraceResult.Type.BLOCK)
-            {
-                BlockPos pos = movingobjectposition.getBlockPos();
+		if (movingobjectposition == null)
+		{
+			return itemStack;
+		}
+		else
+		{
+			if (movingobjectposition.typeOfHit == RayTraceResult.Type.BLOCK)
+			{
+				BlockPos pos = movingobjectposition.getBlockPos();
 
-                if (!world.getBlockState(pos).getBlock().canHarvestBlock(world,pos,entityPlayer))
-                {
-                    return itemStack;
-                }
+				if (!world.getBlockState(pos).getBlock().canHarvestBlock(world, pos, entityPlayer))
+				{
+					return itemStack;
+				}
 
-                if (!isFull)
-                {
-                    if (!entityPlayer.canPlayerEdit(pos, movingobjectposition.sideHit, itemStack))
-                    {
-                        return itemStack;
-                    }
+				if (!isFull)
+				{
+					if (!entityPlayer.canPlayerEdit(pos, movingobjectposition.sideHit, itemStack))
+					{
+						return itemStack;
+					}
 
-                    IBlockState block = world.getBlockState(pos);
+					IBlockState block = world.getBlockState(pos);
 
-                    if (block.getBlock() == MatterOverdriveBlocks.blockMatterPlasma)
-                    {
-                        world.setBlockToAir(pos);
-                        return this.darinFluid(itemStack, entityPlayer, MatterOverdriveItems.matterContainerFull);
-                    }
-                }
-                else
-                {
-                    if (!this.isFull)
-                    {
-                        return new ItemStack(MatterOverdriveItems.matterContainer);
-                    }
+					if (block.getBlock() == MatterOverdriveBlocks.blockMatterPlasma)
+					{
+						world.setBlockToAir(pos);
+						return this.darinFluid(itemStack, entityPlayer, MatterOverdriveItems.matterContainerFull);
+					}
+				}
+				else
+				{
+					if (!this.isFull)
+					{
+						return new ItemStack(MatterOverdriveItems.matterContainer);
+					}
 
-                    pos = pos.offset(movingobjectposition.sideHit);
+					pos = pos.offset(movingobjectposition.sideHit);
 
-                    if (!entityPlayer.canPlayerEdit(pos, movingobjectposition.sideHit, itemStack))
-                    {
-                        return itemStack;
-                    }
+					if (!entityPlayer.canPlayerEdit(pos, movingobjectposition.sideHit, itemStack))
+					{
+						return itemStack;
+					}
 
-                    if (this.tryPlaceContainedLiquid(world, pos) && !entityPlayer.capabilities.isCreativeMode)
-                    {
-                        itemStack.stackSize--;
-                        if (itemStack.stackSize > 1) {
-                            if (!entityPlayer.inventory.addItemStackToInventory(new ItemStack(MatterOverdriveItems.matterContainer))) {
-                                entityPlayer.dropPlayerItemWithRandomChoice(new ItemStack(MatterOverdriveItems.matterContainer), false);
-                            }
-                        }else if (itemStack.stackSize <= 0)
-                        {
-                            return new ItemStack(MatterOverdriveItems.matterContainer);
-                        }
-                    }
-                }
-            }
-        }
-        return itemStack;
-    }
+					if (this.tryPlaceContainedLiquid(world, pos) && !entityPlayer.capabilities.isCreativeMode)
+					{
+						itemStack.stackSize--;
+						if (itemStack.stackSize > 1)
+						{
+							if (!entityPlayer.inventory.addItemStackToInventory(new ItemStack(MatterOverdriveItems.matterContainer)))
+							{
+								entityPlayer.dropPlayerItemWithRandomChoice(new ItemStack(MatterOverdriveItems.matterContainer), false);
+							}
+						}
+						else if (itemStack.stackSize <= 0)
+						{
+							return new ItemStack(MatterOverdriveItems.matterContainer);
+						}
+					}
+				}
+			}
+		}
+		return itemStack;
+	}
 
-    private ItemStack darinFluid(ItemStack itemStack, EntityPlayer entityPlayer, Item item)
-    {
-        if (entityPlayer.capabilities.isCreativeMode)
-        {
-            return itemStack;
-        }
-        else if (--itemStack.stackSize <= 0)
-        {
-            return new ItemStack(item);
-        }
-        else
-        {
-            if (!entityPlayer.inventory.addItemStackToInventory(new ItemStack(item)))
-            {
-                entityPlayer.dropPlayerItemWithRandomChoice(new ItemStack(item, 1, 0), false);
-            }
+	private ItemStack darinFluid(ItemStack itemStack, EntityPlayer entityPlayer, Item item)
+	{
+		if (entityPlayer.capabilities.isCreativeMode)
+		{
+			return itemStack;
+		}
+		else if (--itemStack.stackSize <= 0)
+		{
+			return new ItemStack(item);
+		}
+		else
+		{
+			if (!entityPlayer.inventory.addItemStackToInventory(new ItemStack(item)))
+			{
+				entityPlayer.dropPlayerItemWithRandomChoice(new ItemStack(item, 1, 0), false);
+			}
 
-            return itemStack;
-        }
-    }
+			return itemStack;
+		}
+	}
 
-    public boolean tryPlaceContainedLiquid(World world, BlockPos pos)
-    {
-        if (!isFull)
-        {
-            return false;
-        }
-        else
-        {
-            Material material = world.getBlockState(pos).getBlock().getMaterial(world.getBlockState(pos));
+	public boolean tryPlaceContainedLiquid(World world, BlockPos pos)
+	{
+		if (!isFull)
+		{
+			return false;
+		}
+		else
+		{
+			Material material = world.getBlockState(pos).getBlock().getMaterial(world.getBlockState(pos));
 
-            if (!world.isAirBlock(pos))
-            {
-                return false;
-            }
-            else
-            {
-                if (!world.isRemote && !material.isLiquid())
-                {
-                    world.destroyBlock(pos, true);
-                }
+			if (!world.isAirBlock(pos))
+			{
+				return false;
+			}
+			else
+			{
+				if (!world.isRemote && !material.isLiquid())
+				{
+					world.destroyBlock(pos, true);
+				}
 
-                world.setBlockState(pos,MatterOverdriveBlocks.blockMatterPlasma.getDefaultState(),3);
+				world.setBlockState(pos, MatterOverdriveBlocks.blockMatterPlasma.getDefaultState(), 3);
 
-                return true;
-            }
-        }
-    }
+				return true;
+			}
+		}
+	}
 
-    // TODO: 3/26/2016 Find how to get color from stack
+	// TODO: 3/26/2016 Find how to get color from stack
     /*@Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)

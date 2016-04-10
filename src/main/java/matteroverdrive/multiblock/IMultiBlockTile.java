@@ -23,8 +23,11 @@ package matteroverdrive.multiblock;
  */
 public interface IMultiBlockTile
 {
-    boolean canJoinMultiBlockStructure(IMultiBlockTileStructure structure);
-    boolean isInvalid();
-    IMultiBlockTileStructure getMultiBlockHandler();
-    void setMultiBlockTileStructure(IMultiBlockTileStructure structure);
+	boolean canJoinMultiBlockStructure(IMultiBlockTileStructure structure);
+
+	boolean isInvalid();
+
+	IMultiBlockTileStructure getMultiBlockHandler();
+
+	void setMultiBlockTileStructure(IMultiBlockTileStructure structure);
 }

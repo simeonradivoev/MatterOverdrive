@@ -28,15 +28,15 @@ import net.minecraft.world.World;
  */
 public class BlockPatternMonitor extends BlockMonitor
 {
-    public BlockPatternMonitor(Material material, String name)
-    {
-        super(material, name);
-        setHasGui(true);
-    }
+	public BlockPatternMonitor(Material material, String name)
+	{
+		super(material, name);
+		setHasGui(true);
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMachinePatternMonitor();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachinePatternMonitor();
+	}
 }

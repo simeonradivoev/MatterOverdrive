@@ -65,360 +65,375 @@ import java.util.List;
 })*/
 public class TileEntityMachineTransporter extends MOTileEntityMachineMatter implements ITransportList//, IWailaBodyProvider, IPeripheral, SimpleComponent, ManagedPeripheral
 {
-    private static final EnumSet<UpgradeTypes> upgradeTypes = EnumSet.of(UpgradeTypes.PowerUsage,UpgradeTypes.Speed,UpgradeTypes.Range,UpgradeTypes.PowerStorage);
-    public static final int MAX_ENTETIES_PRE_TRANSPORT = 3;
-    public static final int TRANSPORT_TIME = 70;
-    public static final int TRANSPORT_DELAY = 80;
-    private static final int TRANSPORT_RANGE = 32;
-    public static final int ENERGY_STORAGE = 1024000;
-    public static final int MAX_ENERGY_EXTRACT = 32000;
-    public static final int ENERGY_PER_UNIT = 16;
-    public final List<TransportLocation> locations;
-    public int selectedLocation;
-    public int usbSlotID;
-    int transportTimer;
-    long transportTracker;
-    private ComponentComputers computerComponent;
+	public static final int MAX_ENTETIES_PRE_TRANSPORT = 3;
+	public static final int TRANSPORT_TIME = 70;
+	public static final int TRANSPORT_DELAY = 80;
+	public static final int ENERGY_STORAGE = 1024000;
+	public static final int MAX_ENERGY_EXTRACT = 32000;
+	public static final int ENERGY_PER_UNIT = 16;
+	private static final EnumSet<UpgradeTypes> upgradeTypes = EnumSet.of(UpgradeTypes.PowerUsage, UpgradeTypes.Speed, UpgradeTypes.Range, UpgradeTypes.PowerStorage);
+	private static final int TRANSPORT_RANGE = 32;
+	public final List<TransportLocation> locations;
+	public int selectedLocation;
+	public int usbSlotID;
+	int transportTimer;
+	long transportTracker;
+	private ComponentComputers computerComponent;
 
-    public TileEntityMachineTransporter()
-    {
-        super(5);
-        energyStorage.setCapacity(ENERGY_STORAGE);
-        energyStorage.setMaxExtract(MAX_ENERGY_EXTRACT);
-        matterStorage.setCapacity(512);
-        locations = new ArrayList<>();
-        selectedLocation = 0;
-        playerSlotsHotbar = true;
-    }
+	public TileEntityMachineTransporter()
+	{
+		super(5);
+		energyStorage.setCapacity(ENERGY_STORAGE);
+		energyStorage.setMaxExtract(MAX_ENERGY_EXTRACT);
+		matterStorage.setCapacity(512);
+		locations = new ArrayList<>();
+		selectedLocation = 0;
+		playerSlotsHotbar = true;
+	}
 
-    @Override
-    protected void RegisterSlots(Inventory inventory)
-    {
-        super.RegisterSlots(inventory);
-        usbSlotID = inventory.AddSlot(new TeleportFlashDriveSlot(true));
-    }
+	@Override
+	protected void RegisterSlots(Inventory inventory)
+	{
+		super.RegisterSlots(inventory);
+		usbSlotID = inventory.AddSlot(new TeleportFlashDriveSlot(true));
+	}
 
-    @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
-    {
-        super.writeCustomNBT(nbt, categories, toDisk);
-        if (categories.contains(MachineNBTCategory.CONFIGS))
-        {
-            writeLocations(nbt);
-        }
-    }
+	@Override
+	public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
+	{
+		super.writeCustomNBT(nbt, categories, toDisk);
+		if (categories.contains(MachineNBTCategory.CONFIGS))
+		{
+			writeLocations(nbt);
+		}
+	}
 
-    @Override
-    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
-    {
-        super.readCustomNBT(nbt, categories);
-        if (categories.contains(MachineNBTCategory.CONFIGS)) {
-            readLocations(nbt);
-        }
-    }
+	@Override
+	public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+	{
+		super.readCustomNBT(nbt, categories);
+		if (categories.contains(MachineNBTCategory.CONFIGS))
+		{
+			readLocations(nbt);
+		}
+	}
 
-    public void readLocations(NBTTagCompound nbt)
-    {
-        locations.clear();
-        NBTTagList locationsList = nbt.getTagList("transportLocations",10);
-        for (int i = 0;i < locationsList.tagCount();i++)
-        {
-            locations.add(new TransportLocation(locationsList.getCompoundTagAt(i)));
-        }
-        selectedLocation = nbt.getInteger("selectedTransport");
-    }
+	public void readLocations(NBTTagCompound nbt)
+	{
+		locations.clear();
+		NBTTagList locationsList = nbt.getTagList("transportLocations", 10);
+		for (int i = 0; i < locationsList.tagCount(); i++)
+		{
+			locations.add(new TransportLocation(locationsList.getCompoundTagAt(i)));
+		}
+		selectedLocation = nbt.getInteger("selectedTransport");
+	}
 
-    public void writeLocations(NBTTagCompound nbt)
-    {
-        NBTTagList locationsList = new NBTTagList();
-        for (TransportLocation location : locations)
-        {
-            NBTTagCompound positionTag = new NBTTagCompound();
-            location.writeToNBT(positionTag);
-            locationsList.appendTag(positionTag);
-        }
-        nbt.setTag("transportLocations", locationsList);
-        nbt.setInteger("selectedTransport", selectedLocation);
-    }
+	public void writeLocations(NBTTagCompound nbt)
+	{
+		NBTTagList locationsList = new NBTTagList();
+		for (TransportLocation location : locations)
+		{
+			NBTTagCompound positionTag = new NBTTagCompound();
+			location.writeToNBT(positionTag);
+			locationsList.appendTag(positionTag);
+		}
+		nbt.setTag("transportLocations", locationsList);
+		nbt.setInteger("selectedTransport", selectedLocation);
+	}
 
-    @Override
-    public void writeToDropItem(ItemStack itemStack)
-    {
-        super.writeToDropItem(itemStack);
-        if (!itemStack.hasTagCompound())
-            itemStack.setTagCompound(new NBTTagCompound());
+	@Override
+	public void writeToDropItem(ItemStack itemStack)
+	{
+		super.writeToDropItem(itemStack);
+		if (!itemStack.hasTagCompound())
+		{
+			itemStack.setTagCompound(new NBTTagCompound());
+		}
 
-        writeLocations(itemStack.getTagCompound());
-    }
+		writeLocations(itemStack.getTagCompound());
+	}
 
-    @Override
-    public void readFromPlaceItem(ItemStack itemStack)
-    {
-        super.readFromPlaceItem(itemStack);
-        if (!itemStack.hasTagCompound())
-            itemStack.setTagCompound(new NBTTagCompound());
+	@Override
+	public void readFromPlaceItem(ItemStack itemStack)
+	{
+		super.readFromPlaceItem(itemStack);
+		if (!itemStack.hasTagCompound())
+		{
+			itemStack.setTagCompound(new NBTTagCompound());
+		}
 
-            readLocations(itemStack.getTagCompound());
-    }
+		readLocations(itemStack.getTagCompound());
+	}
 
-    @Override
-    public void update()
-    {
-        super.update();
-        manageTeleportation();
-    }
+	@Override
+	public void update()
+	{
+		super.update();
+		manageTeleportation();
+	}
 
-    @Override
-    protected void registerComponents()
-    {
-        super.registerComponents();
-        computerComponent = new ComponentComputers(this);
-        addComponent(computerComponent);
-    }
+	@Override
+	protected void registerComponents()
+	{
+		super.registerComponents();
+		computerComponent = new ComponentComputers(this);
+		addComponent(computerComponent);
+	}
 
-    void manageTeleportation()
-    {
-        List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos(),getPos().add(1,2,1)));
-        TransportLocation position = getSelectedLocation();
+	void manageTeleportation()
+	{
+		List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos(), getPos().add(1, 2, 1)));
+		TransportLocation position = getSelectedLocation();
 
-        if (!worldObj.isRemote) {
-            if (getEnergyStorage().getEnergyStored() > getEnergyDrain() && entities.size() > 0 && isLocationValid(getSelectedLocation()))
-            {
-                if (transportTracker < worldObj.getTotalWorldTime())
-                {
-                    transportTimer++;
+		if (!worldObj.isRemote)
+		{
+			if (getEnergyStorage().getEnergyStored() > getEnergyDrain() && entities.size() > 0 && isLocationValid(getSelectedLocation()))
+			{
+				if (transportTracker < worldObj.getTotalWorldTime())
+				{
+					transportTimer++;
 
-                    if (transportTimer >= getSpeed())
-                    {
-                        for (int i = 0;i < Math.min(entities.size(),MAX_ENTETIES_PRE_TRANSPORT);i++)
-                        {
-                            Teleport(entities.get(i),position);
-                            transportTracker = worldObj.getTotalWorldTime() + getTransportDelay();
-                        }
+					if (transportTimer >= getSpeed())
+					{
+						for (int i = 0; i < Math.min(entities.size(), MAX_ENTETIES_PRE_TRANSPORT); i++)
+						{
+							Teleport(entities.get(i), position);
+							transportTracker = worldObj.getTotalWorldTime() + getTransportDelay();
+						}
 
-                        energyStorage.modifyEnergyStored(-getEnergyDrain());
+						energyStorage.modifyEnergyStored(-getEnergyDrain());
 
-                        transportTimer = 0;
-                        MatterOverdrive.packetPipeline.sendToDimention(new PacketSyncTransportProgress(this),worldObj);
-                    }
-                    else
-                    {
-                        MatterOverdrive.packetPipeline.sendToAllAround(new PacketSyncTransportProgress(this), this, TRANSPORT_RANGE);
-                    }
-                }
-            }
-            else
-            {
-                if (transportTimer != 0)
-                {
-                    transportTimer = 0;
-                    MatterOverdrive.packetPipeline.sendToDimention(new PacketSyncTransportProgress(this),worldObj);
-                }
-            }
+						transportTimer = 0;
+						MatterOverdrive.packetPipeline.sendToDimention(new PacketSyncTransportProgress(this), worldObj);
+					}
+					else
+					{
+						MatterOverdrive.packetPipeline.sendToAllAround(new PacketSyncTransportProgress(this), this, TRANSPORT_RANGE);
+					}
+				}
+			}
+			else
+			{
+				if (transportTimer != 0)
+				{
+					transportTimer = 0;
+					MatterOverdrive.packetPipeline.sendToDimention(new PacketSyncTransportProgress(this), worldObj);
+				}
+			}
 
-        }
-        else {
-            if (transportTimer > 0) {
-                for (Entity entity : entities)
-                {
-                    SpawnReplicateParticles(entity,new Vector3f((float)entity.posX,getPos().getY(),(float)entity.posZ));
-                }
+		}
+		else
+		{
+			if (transportTimer > 0)
+			{
+				for (Entity entity : entities)
+				{
+					SpawnReplicateParticles(entity, new Vector3f((float)entity.posX, getPos().getY(), (float)entity.posZ));
+				}
 
 
-                for (Entity entity : entities)
-                {
-                    SpawnReplicateParticles(entity,new Vector3f(position.pos.getX(),position.pos.getY(),position.pos.getZ()));
-                }
-            }
-        }
-    }
+				for (Entity entity : entities)
+				{
+					SpawnReplicateParticles(entity, new Vector3f(position.pos.getX(), position.pos.getY(), position.pos.getZ()));
+				}
+			}
+		}
+	}
 
-    @Override
-    protected void onMachineEvent(MachineEvent event)
-    {
+	@Override
+	protected void onMachineEvent(MachineEvent event)
+	{
 
-    }
+	}
 
-    public void Teleport(Entity entity, TransportLocation position)
-    {
-        if(!MinecraftForge.EVENT_BUS.post(new MOEventTransport(getPos(),position,entity)))
-        {
-            if (entity instanceof EntityLivingBase)
-            {
-                entity.setPositionAndUpdate(position.pos.getX(),position.pos.getY()+1,position.pos.getZ());
-            } else
-            {
-                entity.setPosition(position.pos.getX(),position.pos.getY()+1,position.pos.getZ());
-            }
-        }
-    }
+	public void Teleport(Entity entity, TransportLocation position)
+	{
+		if (!MinecraftForge.EVENT_BUS.post(new MOEventTransport(getPos(), position, entity)))
+		{
+			if (entity instanceof EntityLivingBase)
+			{
+				entity.setPositionAndUpdate(position.pos.getX(), position.pos.getY() + 1, position.pos.getZ());
+			}
+			else
+			{
+				entity.setPosition(position.pos.getX(), position.pos.getY() + 1, position.pos.getZ());
+			}
+		}
+	}
 
-    public TransportLocation getSelectedLocation()
-    {
-        if (selectedLocation < locations.size() && selectedLocation >= 0)
-        {
-            TransportLocation location = locations.get(selectedLocation);
-            int range = getTransportRange();
-            //location.x = MathHelper.clampI(location.x,xCoord - range,xCoord + range);
-            //location.y = MathHelper.clampI(location.y,yCoord - range,yCoord + range);
-            //location.z = MathHelper.clampI(location.z,zCoord - range,zCoord + range);
-            return location;
-        }
-        return new TransportLocation(getPos(),"Unknown");
-    }
+	public TransportLocation getSelectedLocation()
+	{
+		if (selectedLocation < locations.size() && selectedLocation >= 0)
+		{
+			TransportLocation location = locations.get(selectedLocation);
+			int range = getTransportRange();
+			//location.x = MathHelper.clampI(location.x,xCoord - range,xCoord + range);
+			//location.y = MathHelper.clampI(location.y,yCoord - range,yCoord + range);
+			//location.z = MathHelper.clampI(location.z,zCoord - range,zCoord + range);
+			return location;
+		}
+		return new TransportLocation(getPos(), "Unknown");
+	}
 
-    public boolean isLocationValid(TransportLocation location)
-    {
-        return !(location.pos.getX() == getPos().getX() && location.pos.getY() < getPos().getY() + 4 && location.pos.getY() > getPos().getY() - 4 && location.pos.getZ() == getPos().getZ()) && location.getDistance(getPos()) < getTransportRange();
-    }
+	public boolean isLocationValid(TransportLocation location)
+	{
+		return !(location.pos.getX() == getPos().getX() && location.pos.getY() < getPos().getY() + 4 && location.pos.getY() > getPos().getY() - 4 && location.pos.getZ() == getPos().getZ()) && location.getDistance(getPos()) < getTransportRange();
+	}
 
-    public void setSelectedLocation(BlockPos pos, String name)
-    {
-        if (selectedLocation < locations.size() && selectedLocation >= 0)
-        {
-            TransportLocation location = locations.get(selectedLocation);
-            if (location != null)
-            {
-                location.setPosition(pos);
-                location.setName(name);
-            }else
-            {
-                locations.set(selectedLocation,new TransportLocation(pos,name));
-            }
+	public void setSelectedLocation(BlockPos pos, String name)
+	{
+		if (selectedLocation < locations.size() && selectedLocation >= 0)
+		{
+			TransportLocation location = locations.get(selectedLocation);
+			if (location != null)
+			{
+				location.setPosition(pos);
+				location.setName(name);
+			}
+			else
+			{
+				locations.set(selectedLocation, new TransportLocation(pos, name));
+			}
 
-        }else
-        {
-            selectedLocation = 0;
-            locations.add(new TransportLocation(pos,name));
-        }
-    }
+		}
+		else
+		{
+			selectedLocation = 0;
+			locations.add(new TransportLocation(pos, name));
+		}
+	}
 
-    public void addNewLocation(BlockPos pos,String name)
-    {
-        locations.add(new TransportLocation(pos,name));
-    }
+	public void addNewLocation(BlockPos pos, String name)
+	{
+		locations.add(new TransportLocation(pos, name));
+	}
 
-    public void removeLocation(int at)
-    {
-        if (at < locations.size() && at >= 0) {
-            locations.remove(at);
-            selectedLocation = MathHelper.clamp_int(selectedLocation,0,locations.size()-1);
-        }
-    }
+	public void removeLocation(int at)
+	{
+		if (at < locations.size() && at >= 0)
+		{
+			locations.remove(at);
+			selectedLocation = MathHelper.clamp_int(selectedLocation, 0, locations.size() - 1);
+		}
+	}
 
-    @SideOnly(Side.CLIENT)
-    public void SpawnReplicateParticles(Entity entity,Vector3f p)
-    {
-        double entityRadius = entity.width;
-        double entityArea = Math.max(entityRadius * entity.height,0.3);
+	@SideOnly(Side.CLIENT)
+	public void SpawnReplicateParticles(Entity entity, Vector3f p)
+	{
+		double entityRadius = entity.width;
+		double entityArea = Math.max(entityRadius * entity.height, 0.3);
 
-        double radiusX = entityRadius + random.nextDouble() * 0.2f;
-        double radiusZ = entityRadius + random.nextDouble() * 0.2f;
-        double time = Math.min((double) (transportTimer) / (double) (getTransportDelay()), 1);
-        double gravity = 0.015f;
-        int age = (int)Math.round(MOMathHelper.easeIn(time, 5, 15, 1));
-        int count = (int)Math.round(MOMathHelper.easeIn(time, 2, entityArea * 15, 1));
+		double radiusX = entityRadius + random.nextDouble() * 0.2f;
+		double radiusZ = entityRadius + random.nextDouble() * 0.2f;
+		double time = Math.min((double)(transportTimer) / (double)(getTransportDelay()), 1);
+		double gravity = 0.015f;
+		int age = (int)Math.round(MOMathHelper.easeIn(time, 5, 15, 1));
+		int count = (int)Math.round(MOMathHelper.easeIn(time, 2, entityArea * 15, 1));
 
-        for(int i = 0;i < count;i++)
-        {
-            float speed = random.nextFloat() * 0.05f + 0.15f;
-            float height = p.y + 1 + random.nextFloat() * entity.height;
+		for (int i = 0; i < count; i++)
+		{
+			float speed = random.nextFloat() * 0.05f + 0.15f;
+			float height = p.y + 1 + random.nextFloat() * entity.height;
 
-            Vector3f origin = new Vector3f(p.x ,height, p.z);
-            Vector3f pos = MOMathHelper.randomSpherePoint(origin.x,origin.y,origin.z, new Vec3d(radiusX, 0,radiusZ), random);
-            Vector3f dir = Vector3f.cross(Vector3f.sub(origin, pos,null), new Vector3f(0,1,0),null);
-            dir.scale(speed);
-            ReplicatorParticle replicatorParticle = new ReplicatorParticle(this.worldObj,pos.x,pos.y ,pos.z,dir.x,dir.y,dir.z);
-            replicatorParticle.setCenter(origin.x,origin.y,origin.z);
+			Vector3f origin = new Vector3f(p.x, height, p.z);
+			Vector3f pos = MOMathHelper.randomSpherePoint(origin.x, origin.y, origin.z, new Vec3d(radiusX, 0, radiusZ), random);
+			Vector3f dir = Vector3f.cross(Vector3f.sub(origin, pos, null), new Vector3f(0, 1, 0), null);
+			dir.scale(speed);
+			ReplicatorParticle replicatorParticle = new ReplicatorParticle(this.worldObj, pos.x, pos.y, pos.z, dir.x, dir.y, dir.z);
+			replicatorParticle.setCenter(origin.x, origin.y, origin.z);
 
-            replicatorParticle.setParticleAge(age);
-            replicatorParticle.setPointGravityScale(gravity);
+			replicatorParticle.setParticleAge(age);
+			replicatorParticle.setPointGravityScale(gravity);
 
-            Minecraft.getMinecraft().effectRenderer.addEffect(replicatorParticle);
-        }
-    }
+			Minecraft.getMinecraft().effectRenderer.addEffect(replicatorParticle);
+		}
+	}
 
-    public int getEnergyDrain()
-    {
-        TransportLocation location = getSelectedLocation();
-        return (int)Math.round(getUpgradeMultiply(UpgradeTypes.PowerUsage) * (location.getDistance(getPos()) * ENERGY_PER_UNIT));
-    }
+	public int getEnergyDrain()
+	{
+		TransportLocation location = getSelectedLocation();
+		return (int)Math.round(getUpgradeMultiply(UpgradeTypes.PowerUsage) * (location.getDistance(getPos()) * ENERGY_PER_UNIT));
+	}
 
-    private int getSpeed()
-    {
-        return (int)Math.round(getUpgradeMultiply(UpgradeTypes.Speed) * TRANSPORT_TIME);
-    }
+	private int getSpeed()
+	{
+		return (int)Math.round(getUpgradeMultiply(UpgradeTypes.Speed) * TRANSPORT_TIME);
+	}
 
-    private int getTransportDelay()
-    {
-        return (int)Math.round(getUpgradeMultiply(UpgradeTypes.Speed) * TRANSPORT_DELAY);
-    }
+	private int getTransportDelay()
+	{
+		return (int)Math.round(getUpgradeMultiply(UpgradeTypes.Speed) * TRANSPORT_DELAY);
+	}
 
-    public int getTransportRange()
-    {
-        return (int)Math.round(getUpgradeMultiply(UpgradeTypes.Range) * TRANSPORT_RANGE);
-    }
+	public int getTransportRange()
+	{
+		return (int)Math.round(getUpgradeMultiply(UpgradeTypes.Range) * TRANSPORT_RANGE);
+	}
 
-    @Override
-    public SoundEvent getSound()
-    {
-        return MatterOverdriveSounds.transporter;
-    }
+	@Override
+	public SoundEvent getSound()
+	{
+		return MatterOverdriveSounds.transporter;
+	}
 
-    @Override
-    public boolean hasSound() {
-        return true;
-    }
+	@Override
+	public boolean hasSound()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean getServerActive()
-    {
-        return  transportTimer > 0;
-    }
+	@Override
+	public boolean getServerActive()
+	{
+		return transportTimer > 0;
+	}
 
-    @Override
-    public float soundVolume() {
-        return 0.5f;
-    }
+	@Override
+	public float soundVolume()
+	{
+		return 0.5f;
+	}
 
-    @Override
-    public boolean canFill(EnumFacing from, Fluid fluid)
-    {
-        return from != EnumFacing.UP && super.canFill(from,fluid);
-    }
+	@Override
+	public boolean canFill(EnumFacing from, Fluid fluid)
+	{
+		return from != EnumFacing.UP && super.canFill(from, fluid);
+	}
 
-    @Override
-    public boolean canDrain(EnumFacing from, Fluid fluid)
-    {
-        return from != EnumFacing.UP && super.canDrain(from,fluid);
-    }
+	@Override
+	public boolean canDrain(EnumFacing from, Fluid fluid)
+	{
+		return from != EnumFacing.UP && super.canDrain(from, fluid);
+	}
 
-    @Override
-    public boolean isAffectedByUpgrade(UpgradeTypes type)
-    {
-        return upgradeTypes.contains(type);
-    }
+	@Override
+	public boolean isAffectedByUpgrade(UpgradeTypes type)
+	{
+		return upgradeTypes.contains(type);
+	}
 
-    public void setTransportTime(int time)
-    {
-        transportTimer = time;
-    }
+	public int getTransportTime()
+	{
+		return transportTimer;
+	}
 
-    public int getTransportTime()
-    {
-        return transportTimer;
-    }
+	public void setTransportTime(int time)
+	{
+		transportTimer = time;
+	}
 
-    @Override
-    public List<TransportLocation> getPositions() {
-        return locations;
-    }
+	@Override
+	public List<TransportLocation> getPositions()
+	{
+		return locations;
+	}
 
-    @Override
-    public int[] getSlotsForFace(EnumFacing side)
-    {
-        return new int[0];
-    }
+	@Override
+	public int[] getSlotsForFace(EnumFacing side)
+	{
+		return new int[0];
+	}
 
 
     /*//region WAILA

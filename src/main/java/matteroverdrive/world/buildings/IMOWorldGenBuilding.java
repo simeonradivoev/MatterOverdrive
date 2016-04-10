@@ -30,6 +30,7 @@ import java.util.Random;
  */
 public interface IMOWorldGenBuilding<T extends MOWorldGenBuilding.ImageGenWorker>
 {
-    String getName();
-    void generate(Random random, BlockPos pos, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider, int layer, int placeNotify, T worker);
+	String getName();
+
+	void generate(Random random, BlockPos pos, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider, int layer, int placeNotify, T worker);
 }

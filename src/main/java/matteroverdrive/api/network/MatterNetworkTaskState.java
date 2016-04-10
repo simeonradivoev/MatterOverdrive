@@ -39,9 +39,14 @@ public enum MatterNetworkTaskState
 	{
 		return ordinal() < state.ordinal();
 	}
+
 	public boolean belowOrEqual(MatterNetworkTaskState state)
 	{
 		return ordinal() <= state.ordinal();
 	}
-	public boolean above(MatterNetworkTaskState state){return ordinal() > state.ordinal();}
+
+	public boolean above(MatterNetworkTaskState state)
+	{
+		return ordinal() > state.ordinal();
+	}
 }

@@ -29,254 +29,288 @@ import java.util.List;
  */
 public class MOAnimationTimeline
 {
-    boolean autoLength;
-    boolean isPlaying;
-    final List<Slice> slices = new ArrayList<>();
-    private float maxTime;
-    private boolean repeat;
-    private float time;
-    private float defaultValue;
+	final List<Slice> slices = new ArrayList<>();
+	boolean autoLength;
+	boolean isPlaying;
+	private float maxTime;
+	private boolean repeat;
+	private float time;
+	private float defaultValue;
 
-    public MOAnimationTimeline(float maxTime, boolean repeat,boolean autoPlay,float defaultValue)
-    {
-        this.maxTime = maxTime;
-        this.repeat = repeat;
-        isPlaying = autoPlay;
-        this.defaultValue = defaultValue;
-    }
+	public MOAnimationTimeline(float maxTime, boolean repeat, boolean autoPlay, float defaultValue)
+	{
+		this.maxTime = maxTime;
+		this.repeat = repeat;
+		isPlaying = autoPlay;
+		this.defaultValue = defaultValue;
+	}
 
-    public void addSlice(Slice slice)
-    {
-        slices.add(slice);
-    }
+	public void addSlice(Slice slice)
+	{
+		slices.add(slice);
+	}
 
-    public void getActiveSlices(int time,List<Slice> list)
-    {
-        for (Slice slice : this.slices)
-        {
-            if (time <= slice.from + slice.length && time >= slice.from)
-            {
-                list.add(slice);
-            }
-        }
-    }
+	public void getActiveSlices(int time, List<Slice> list)
+	{
+		for (Slice slice : this.slices)
+		{
+			if (time <= slice.from + slice.length && time >= slice.from)
+			{
+				list.add(slice);
+			}
+		}
+	}
 
-    public List<Slice> getActiveSlices(int time)
-    {
-        List<Slice> slices = new ArrayList<>();
-        getActiveSlices(time,slices);
-        return slices;
-    }
+	public List<Slice> getActiveSlices(int time)
+	{
+		List<Slice> slices = new ArrayList<>();
+		getActiveSlices(time, slices);
+		return slices;
+	}
 
-    public float getValueAt(float time)
-    {
-        float value = defaultValue;
-        for (Slice slice : this.slices)
-        {
-            if (time <= slice.from + slice.length && time >= slice.from)
-            {
-                float localTime = slice.getLocalTime(time);
-                value = slice.valueFrom + localTime*(slice.valueTo-slice.valueFrom);
-            }
-        }
-        return value;
-    }
+	public float getValueAt(float time)
+	{
+		float value = defaultValue;
+		for (Slice slice : this.slices)
+		{
+			if (time <= slice.from + slice.length && time >= slice.from)
+			{
+				float localTime = slice.getLocalTime(time);
+				value = slice.valueFrom + localTime * (slice.valueTo - slice.valueFrom);
+			}
+		}
+		return value;
+	}
 
-    public void recalculateTime()
-    {
-        if (autoLength)
-        {
-            float maxTime = 0;
-            for (Slice slice : slices)
-            {
-                if (slice.from + slice.length > time)
-                {
-                    maxTime = slice.from + slice.length;
-                }
-            }
-            this.maxTime = maxTime;
-        }
-    }
+	public void recalculateTime()
+	{
+		if (autoLength)
+		{
+			float maxTime = 0;
+			for (Slice slice : slices)
+			{
+				if (slice.from + slice.length > time)
+				{
+					maxTime = slice.from + slice.length;
+				}
+			}
+			this.maxTime = maxTime;
+		}
+	}
 
-    public float getCurrentValue()
-    {
-        return getValueAt(time);
-    }
+	public float getCurrentValue()
+	{
+		return getValueAt(time);
+	}
 
-    public void play()
-    {
-        recalculateTime();
-        isPlaying = true;
-        if (time >= maxTime)
-        {
-            time = 0;
-        }
-    }
+	public void play()
+	{
+		recalculateTime();
+		isPlaying = true;
+		if (time >= maxTime)
+		{
+			time = 0;
+		}
+	}
 
-    public void replay()
-    {
-        time = 0;
-        play();
-    }
+	public void replay()
+	{
+		time = 0;
+		play();
+	}
 
-    public void stop()
-    {
-        recalculateTime();
-        isPlaying = false;
-        time = 0;
-    }
+	public void stop()
+	{
+		recalculateTime();
+		isPlaying = false;
+		time = 0;
+	}
 
-    public void pause()
-    {
-        isPlaying = false;
-    }
+	public void pause()
+	{
+		isPlaying = false;
+	}
 
-    public void tick()
-    {
-        tick(1);
-    }
+	public void tick()
+	{
+		tick(1);
+	}
 
-    public void tick(float tick)
-    {
-        if (isPlaying) {
-            if (time < maxTime) {
-                time = MathHelper.clamp_float(time+tick,0,maxTime);
-            }
-            else if (repeat)
-            {
-                time = 0;
-            }else
-            {
-                pause();
-            }
-        }
-    }
+	public void tick(float tick)
+	{
+		if (isPlaying)
+		{
+			if (time < maxTime)
+			{
+				time = MathHelper.clamp_float(time + tick, 0, maxTime);
+			}
+			else if (repeat)
+			{
+				time = 0;
+			}
+			else
+			{
+				pause();
+			}
+		}
+	}
 
-    public void sort()
-    {
-        float lastFinish = 0;
-        for (Slice slice : slices)
-        {
-            slice.from = lastFinish;
-            lastFinish += slice.length;
-        }
-    }
+	public void sort()
+	{
+		float lastFinish = 0;
+		for (Slice slice : slices)
+		{
+			slice.from = lastFinish;
+			lastFinish += slice.length;
+		}
+	}
 
-    public void setTime(float time)
-    {
-        this.time = time;
-    }
+	public boolean isPlaying()
+	{
+		return isPlaying;
+	}
 
-    public boolean isPlaying()
-    {
-        return isPlaying;
-    }
-    public void setAutoLength(boolean autoLength){this.autoLength = true;}
-    public boolean isAutoLength(){return this.autoLength;}
-    public float getTime()
-    {
-        return time;
-    }
-    public float getMaxTime(){return maxTime;}
-    public Slice getSlice(int index)
-    {
-        return slices.get(index);
-    }
+	public boolean isAutoLength()
+	{
+		return this.autoLength;
+	}
 
-    public static class Slice
-    {
-        private float valueFrom,valueTo;
-        private float from,length;
+	public void setAutoLength(boolean autoLength)
+	{
+		this.autoLength = true;
+	}
 
-        public Easing getEasing() {
-            return easing;
-        }
+	public float getTime()
+	{
+		return time;
+	}
 
-        public void setEasing(Easing easing) {
-            this.easing = easing;
-        }
+	public void setTime(float time)
+	{
+		this.time = time;
+	}
 
-        public float getValueFrom() {
-            return valueFrom;
-        }
+	public float getMaxTime()
+	{
+		return maxTime;
+	}
 
-        public void setValueFrom(float valueFrom) {
-            this.valueFrom = valueFrom;
-        }
+	public Slice getSlice(int index)
+	{
+		return slices.get(index);
+	}
 
-        public float getValueTo() {
-            return valueTo;
-        }
+	public static class Slice
+	{
+		private float valueFrom, valueTo;
+		private float from, length;
+		private Easing easing;
 
-        public void setValueTo(float valueTo) {
-            this.valueTo = valueTo;
-        }
+		public Slice(float valueFrom, float valueTo, float from, float length, Easing easing)
+		{
+			this.valueFrom = valueFrom;
+			this.valueTo = valueTo;
+			this.from = from;
+			this.length = length;
+			this.easing = easing;
+		}
 
-        public float getFrom() {
-            return from;
-        }
+		public Easing getEasing()
+		{
+			return easing;
+		}
 
-        public void setFrom(float from) {
-            this.from = from;
-        }
+		public void setEasing(Easing easing)
+		{
+			this.easing = easing;
+		}
 
-        public float getLength() {
-            return length;
-        }
+		public float getValueFrom()
+		{
+			return valueFrom;
+		}
 
-        public void setLength(float length) {
-            this.length = length;
-        }
+		public void setValueFrom(float valueFrom)
+		{
+			this.valueFrom = valueFrom;
+		}
 
-        private Easing easing;
+		public float getValueTo()
+		{
+			return valueTo;
+		}
 
-        public Slice(float valueFrom,float valueTo,float from,float length,Easing easing)
-        {
-            this.valueFrom = valueFrom;
-            this.valueTo = valueTo;
-            this.from = from;
-            this.length = length;
-            this.easing = easing;
-        }
+		public void setValueTo(float valueTo)
+		{
+			this.valueTo = valueTo;
+		}
 
-        public float getLocalTime(float time)
-        {
-            if(easing != null) {
-                return MathHelper.clamp_float(easing.calculate(time - from, 0, 1, length), 0, 1);
-            }else
-            {
-                return MOMathHelper.Lerp(0,1,(time - from)/length);
-            }
-        }
-    }
+		public float getFrom()
+		{
+			return from;
+		}
 
-    public abstract static class Easing
-    {
-        public abstract float calculate(float t,float b , float c, float d);
+		public void setFrom(float from)
+		{
+			this.from = from;
+		}
 
-        public static class QuadEaseIn extends Easing
-        {
-            @Override
-            public float calculate(float t,float b , float c, float d) {
-                return c*(t/=d)*t + b;
-            }
-        }
+		public float getLength()
+		{
+			return length;
+		}
 
-        public static class QuadEaseOut extends Easing
-        {
-            @Override
-            public float calculate(float t,float b , float c, float d) {
-                return -c *(t/=d)*(t-2) + b;
-            }
-        }
+		public void setLength(float length)
+		{
+			this.length = length;
+		}
 
-        public static class QuadEaseInOut extends Easing
-        {
-            @Override
-            public float calculate(float t,float b , float c, float d) {
-                if ((t/=d/2) < 1) return c/2*t*t + b;
-                return -c/2 * ((--t)*(t-2) - 1) + b;
-            }
-        }
-    }
+		public float getLocalTime(float time)
+		{
+			if (easing != null)
+			{
+				return MathHelper.clamp_float(easing.calculate(time - from, 0, 1, length), 0, 1);
+			}
+			else
+			{
+				return MOMathHelper.Lerp(0, 1, (time - from) / length);
+			}
+		}
+	}
+
+	public abstract static class Easing
+	{
+		public abstract float calculate(float t, float b, float c, float d);
+
+		public static class QuadEaseIn extends Easing
+		{
+			@Override
+			public float calculate(float t, float b, float c, float d)
+			{
+				return c * (t /= d) * t + b;
+			}
+		}
+
+		public static class QuadEaseOut extends Easing
+		{
+			@Override
+			public float calculate(float t, float b, float c, float d)
+			{
+				return -c * (t /= d) * (t - 2) + b;
+			}
+		}
+
+		public static class QuadEaseInOut extends Easing
+		{
+			@Override
+			public float calculate(float t, float b, float c, float d)
+			{
+				if ((t /= d / 2) < 1)
+				{
+					return c / 2 * t * t + b;
+				}
+				return -c / 2 * ((--t) * (t - 2) - 1) + b;
+			}
+		}
+	}
 }

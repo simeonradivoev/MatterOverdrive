@@ -31,35 +31,35 @@ import java.util.List;
  */
 public class GuideElementDetails extends GuideElementAbstract
 {
-    List<String> details;
+	List<String> details;
 
 
-    @Override
-    protected void loadContent(MOGuideEntry entry, Element element, int width, int height)
-    {
-        if(element.hasAttribute("item"))
-        {
-            ItemStack stack = shortCodeToStack(decodeShortcode(element.getAttribute("item")));
-            if (stack != null && stack.getItem() != null && stack.getItem() instanceof MOBaseItem)
-            {
-                List<String> details = new ArrayList<>();
-                ((MOBaseItem) stack.getItem()).addDetails(stack, Minecraft.getMinecraft().thePlayer, details);
-                this.details = details;
-                for (String detail : details)
-                {
-                    width = Math.max(getFontRenderer().getStringWidth(detail), width);
-                }
-                this.height = details.size()*getFontRenderer().FONT_HEIGHT;
-            }
-        }
-    }
+	@Override
+	protected void loadContent(MOGuideEntry entry, Element element, int width, int height)
+	{
+		if (element.hasAttribute("item"))
+		{
+			ItemStack stack = shortCodeToStack(decodeShortcode(element.getAttribute("item")));
+			if (stack != null && stack.getItem() != null && stack.getItem() instanceof MOBaseItem)
+			{
+				List<String> details = new ArrayList<>();
+				((MOBaseItem)stack.getItem()).addDetails(stack, Minecraft.getMinecraft().thePlayer, details);
+				this.details = details;
+				for (String detail : details)
+				{
+					width = Math.max(getFontRenderer().getStringWidth(detail), width);
+				}
+				this.height = details.size() * getFontRenderer().FONT_HEIGHT;
+			}
+		}
+	}
 
-    @Override
-    public void drawElement(int width, int mouseX, int mouseY)
-    {
-        for (int i = 0;i < details.size();i++)
-        {
-            getFontRenderer().drawString(details.get(i),marginLeft,marginTop + i * getFontRenderer().FONT_HEIGHT,color.getColor());
-        }
-    }
+	@Override
+	public void drawElement(int width, int mouseX, int mouseY)
+	{
+		for (int i = 0; i < details.size(); i++)
+		{
+			getFontRenderer().drawString(details.get(i), marginLeft, marginTop + i * getFontRenderer().FONT_HEIGHT, color.getColor());
+		}
+	}
 }

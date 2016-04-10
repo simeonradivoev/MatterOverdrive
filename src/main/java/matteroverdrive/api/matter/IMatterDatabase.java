@@ -47,7 +47,7 @@ public interface IMatterDatabase
 	 *             It gives useful information about why the pattern didn't get stored in the database.
 	 * @return did the item pattern get stored in the database.
 	 */
-	boolean addItem(ItemStack itemStack,int initialAmount,boolean simulate,@Nullable StringBuilder info);
+	boolean addItem(ItemStack itemStack, int initialAmount, boolean simulate, @Nullable StringBuilder info);
 
 	/**
 	 * Used to get an item pattern of the specified Item stack.
@@ -56,23 +56,23 @@ public interface IMatterDatabase
 	 */
 	ItemPattern getPattern(ItemStack item);
 
-    /**
-     * Used to get the pattern instance in the storage.
-     * @param item The item stack to search for.
-     * @return The pattern instance of the given pattern, {@code null} if the pattern wasn't found.
-     */
-    ItemPattern getPattern(ItemPattern item);
+	/**
+	 * Used to get the pattern instance in the storage.
+	 * @param item The item stack to search for.
+	 * @return The pattern instance of the given pattern, {@code null} if the pattern wasn't found.
+	 */
+	ItemPattern getPattern(ItemPattern item);
 
 	/**
 	 * @return a list of Pattern Storages in the database if any.
 	 */
 	ItemStack[] getPatternStorageList();
 
-    void onPatternStorageChange(int storageId);
+	void onPatternStorageChange(int storageId);
 
 	ItemStack getPatternStorage(int storageId);
 
 	int getPatternStorageCount();
 
-    BlockPos getPos();
+	BlockPos getPos();
 }

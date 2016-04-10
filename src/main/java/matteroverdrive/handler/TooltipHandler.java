@@ -32,19 +32,23 @@ import org.lwjgl.input.Keyboard;
  */
 public class TooltipHandler
 {
-    @SubscribeEvent
-    public void onItemTooltip(ItemTooltipEvent event) {
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-        {
-            MOEventMatterTooltip tooltipEvent = new MOEventMatterTooltip(event.getItemStack(), MatterHelper.getMatterAmountFromItem(event.getItemStack()), event.getEntityPlayer());
-            if (!MinecraftForge.EVENT_BUS.post(tooltipEvent)) {
-                if (tooltipEvent.matter > 0) {
-                    event.getToolTip().add(ChatFormatting.BLUE + MOStringHelper.translateToLocal("gui.tooltip.matter") + ": " + ChatFormatting.GOLD + MatterHelper.formatMatter(tooltipEvent.matter));
-                }else
-                {
-                    event.getToolTip().add(ChatFormatting.BLUE + MOStringHelper.translateToLocal("gui.tooltip.matter") + ": " + ChatFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.matter.none"));
-                }
-            }
-        }
-    }
+	@SubscribeEvent
+	public void onItemTooltip(ItemTooltipEvent event)
+	{
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+		{
+			MOEventMatterTooltip tooltipEvent = new MOEventMatterTooltip(event.getItemStack(), MatterHelper.getMatterAmountFromItem(event.getItemStack()), event.getEntityPlayer());
+			if (!MinecraftForge.EVENT_BUS.post(tooltipEvent))
+			{
+				if (tooltipEvent.matter > 0)
+				{
+					event.getToolTip().add(ChatFormatting.BLUE + MOStringHelper.translateToLocal("gui.tooltip.matter") + ": " + ChatFormatting.GOLD + MatterHelper.formatMatter(tooltipEvent.matter));
+				}
+				else
+				{
+					event.getToolTip().add(ChatFormatting.BLUE + MOStringHelper.translateToLocal("gui.tooltip.matter") + ": " + ChatFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.matter.none"));
+				}
+			}
+		}
+	}
 }

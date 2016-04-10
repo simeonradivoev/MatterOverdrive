@@ -15,23 +15,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EntityRendererDrone extends RenderLiving<EntityDrone>
 {
-    private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "drone_default.png");
+	private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "drone_default.png");
 
-    public EntityRendererDrone(RenderManager rendermanagerIn, ModelDrone modelIn, float shadowsizeIn)
-    {
-        super(rendermanagerIn, modelIn, shadowsizeIn);
-    }
+	public EntityRendererDrone(RenderManager rendermanagerIn, ModelDrone modelIn, float shadowsizeIn)
+	{
+		super(rendermanagerIn, modelIn, shadowsizeIn);
+	}
 
-    @Override
-    public void doRender(EntityDrone entity, double x, double y, double z, float entityYaw, float partialTicks)
-    {
-        mainModel = new ModelDrone();
-        super.doRender(entity,x,y,z,entityYaw,partialTicks);
-    }
+	@Override
+	public void doRender(EntityDrone entity, double x, double y, double z, float entityYaw, float partialTicks)
+	{
+		mainModel = new ModelDrone();
+		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+	}
 
-    @Override
-    protected ResourceLocation getEntityTexture(EntityDrone entity)
-    {
-        return texture;
-    }
+	@Override
+	protected ResourceLocation getEntityTexture(EntityDrone entity)
+	{
+		return texture;
+	}
 }

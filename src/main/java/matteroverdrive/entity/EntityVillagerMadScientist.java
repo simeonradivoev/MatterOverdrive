@@ -61,251 +61,254 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class EntityVillagerMadScientist extends EntityVillager implements IDialogNpc, IDialogQuestGiver
 {
-    private static DialogMessage convertMe;
-    private static DialogMessage canYouConvert;
-    private static DialogMessage whatDidYouDo;
-    private static DialogMessage cocktailOfAscension;
-    public static DialogMessage cocktailOfAscensionComplete;
-    private EntityPlayer dialogPlayer;
-    private IDialogMessage startMessage;
+	private static final DataParameter<Boolean> VARIANT = EntityDataManager.<Boolean>createKey(EntityVillagerMadScientist.class, DataSerializers.BOOLEAN);
+	public static DialogMessage cocktailOfAscensionComplete;
+	private static DialogMessage convertMe;
+	private static DialogMessage canYouConvert;
+	private static DialogMessage whatDidYouDo;
+	private static DialogMessage cocktailOfAscension;
+	private EntityPlayer dialogPlayer;
+	private IDialogMessage startMessage;
 
-    private static final DataParameter<Boolean> VARIANT = EntityDataManager.<Boolean>createKey(EntityVillagerMadScientist.class, DataSerializers.BOOLEAN);
+	public EntityVillagerMadScientist(World world)
+	{
+		super(world, 666);
+		this.tasks.addTask(1, new EntityAITalkToPlayer(this));
+		this.tasks.addTask(1, new EntityAIWatchDialogPlayer(this));
+	}
 
-    public EntityVillagerMadScientist(World world)
-    {
-        super(world, 666);
-        this.tasks.addTask(1,new EntityAITalkToPlayer(this));
-        this.tasks.addTask(1, new EntityAIWatchDialogPlayer(this));
-    }
+	//region Dialog Functions
+	public static void registerDialogMessages(IDialogRegistry registry, Side side)
+	{
+		//region Human
+		convertMe = new DialogMessageQuestOnObjectivesCompleted(null, "dialog.mad_scientist.convert.question", new QuestStack(MatterOverdriveQuests.punyHumans), new int[] {0}).setUnlocalized(true);
+		registry.registerMessage(convertMe);
 
-    @Override
-    protected void entityInit()
-    {
-        super.entityInit();
-        this.dataManager.register(VARIANT, false);
-    }
+		canYouConvert = new DialogMessageQuestGive("dialog.mad_scientist.requirements.line", "dialog.mad_scientist.requirements.question", new QuestStack(MatterOverdriveQuests.punyHumans));
+		registry.registerMessage(canYouConvert);
+		canYouConvert.addOption(convertMe);
+		canYouConvert.addOption(MatterOverdriveDialogs.backHomeMessage);
+		canYouConvert.setUnlocalized(true);
+		//endregion
 
-    public void writeEntityToNBT(NBTTagCompound nbtTagCompound)
-    {
-        super.writeEntityToNBT(nbtTagCompound);
-        nbtTagCompound.setBoolean("junkie", getJunkie());
-    }
+		//region Android
+		DialogMessage undo = new DialogMessage("dialog.mad_scientist.undo.line", "dialog.mad_scientist.undo.question");
+		registry.registerMessage(undo);
+		undo.setUnlocalized(true);
+		undo.addOption(MatterOverdriveDialogs.trade);
+		undo.addOption(MatterOverdriveDialogs.backHomeMessage);
 
-    public void readEntityFromNBT(NBTTagCompound nbtTagCompound)
-    {
-        super.readEntityFromNBT(nbtTagCompound);
-        setJunkie(nbtTagCompound.getBoolean("junkie"));
-    }
+		whatDidYouDo = new DialogMessageAndroidOnly("dialog.mad_scientist.whatDidYouDo.line", "dialog.mad_scientist.whatDidYouDo.question");
+		registry.registerMessage(whatDidYouDo);
+		whatDidYouDo.setUnlocalized(true);
+		whatDidYouDo.addOption(undo);
+		whatDidYouDo.addOption(MatterOverdriveDialogs.backHomeMessage);
+		//endregion
 
-    @Override
-    public EntityVillager createChild(EntityAgeable entity)
-    {
-        EntityVillagerMadScientist villager = new EntityVillagerMadScientist(this.worldObj);
-        villager.onInitialSpawn(worldObj.getDifficultyForLocation(getPosition()),null);
-        return villager;
-    }
+		//region Junkie
+		DialogMessage acceptCocktail = new DialogMessageQuestGive(null, "dialog.mad_scientist.junkie.cocktail_quest.question.accept", new QuestStack(MatterOverdriveQuests.cocktailOfAscension)).setReturnToMain(true).setUnlocalized(true);
+		registry.registerMessage(acceptCocktail);
+		DialogMessage declineCocktail = new DialogMessageBackToMain(null, "dialog.mad_scientist.junkie.cocktail_quest.question.decline").setUnlocalized(true);
+		registry.registerMessage(declineCocktail);
+		DialogMessage[] cocktailQuest = MatterOverdrive.dialogFactory.constructMultipleLineDialog(DialogMessageQuestStart.class, "dialog.mad_scientist.junkie.cocktail_quest", 8, ". . . . . .");
+		((DialogMessageQuestStart)cocktailQuest[0]).setQuest(new QuestStack(MatterOverdriveQuests.cocktailOfAscension));
+		cocktailOfAscension = cocktailQuest[0];
+		DialogMessage lastLine = cocktailQuest[cocktailQuest.length - 1];
+		lastLine.addOption(acceptCocktail);
+		lastLine.addOption(declineCocktail);
 
-    @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)
-    {
-        if (worldObj.isRemote)
-        {
-            MatterOverdrive.packetPipeline.sendToServer(new PacketManageConversation(this, true));
-            return true;
-        }
+		cocktailOfAscensionComplete = new DialogMessageQuestOnObjectivesCompleted("dialog.mad_scientist.junkie.cocktail_quest.line", "dialog.mad_scientist.junkie.cocktail_quest.complete.question", new QuestStack(MatterOverdriveQuests.cocktailOfAscension), new int[] {0, 1, 2}).setUnlocalized(true);
+		DialogMessage areYouOk = new DialogMessageQuit(null, "dialog.mad_scientist.junkie.cocktail_quest.are_you_ok.question").setUnlocalized(true);
+		cocktailOfAscensionComplete.addOption(areYouOk);
+		//endregion
 
-        return false;
-    }
+		if (side == Side.CLIENT)
+		{
+			canYouConvert.setShots(DialogShot.closeUp);
+			undo.setShots(DialogShot.closeUp);
+			whatDidYouDo.setShots(DialogShot.fromBehindLeftClose);
+			for (DialogMessage aCocktailQuest : cocktailQuest)
+			{
+				MatterOverdrive.dialogFactory.addRandomShots(aCocktailQuest);
+			}
+		}
+	}
 
-    @Override
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
-    {
-        super.onInitialSpawn(difficulty,livingdata);
-        setJunkie(rand.nextBoolean());
-        return livingdata;
-    }
+	@Override
+	protected void entityInit()
+	{
+		super.entityInit();
+		this.dataManager.register(VARIANT, false);
+	}
 
-    //region Dialog Functions
-    public static void registerDialogMessages(IDialogRegistry registry, Side side)
-    {
-        //region Human
-        convertMe = new DialogMessageQuestOnObjectivesCompleted(null,"dialog.mad_scientist.convert.question",new QuestStack(MatterOverdriveQuests.punyHumans),new int[]{0}).setUnlocalized(true);
-        registry.registerMessage(convertMe);
+	public void writeEntityToNBT(NBTTagCompound nbtTagCompound)
+	{
+		super.writeEntityToNBT(nbtTagCompound);
+		nbtTagCompound.setBoolean("junkie", getJunkie());
+	}
 
-        canYouConvert = new DialogMessageQuestGive("dialog.mad_scientist.requirements.line","dialog.mad_scientist.requirements.question",new QuestStack(MatterOverdriveQuests.punyHumans));
-        registry.registerMessage(canYouConvert);
-        canYouConvert.addOption(convertMe);
-        canYouConvert.addOption(MatterOverdriveDialogs.backHomeMessage);
-        canYouConvert.setUnlocalized(true);
-        //endregion
+	public void readEntityFromNBT(NBTTagCompound nbtTagCompound)
+	{
+		super.readEntityFromNBT(nbtTagCompound);
+		setJunkie(nbtTagCompound.getBoolean("junkie"));
+	}
 
-        //region Android
-        DialogMessage undo = new DialogMessage("dialog.mad_scientist.undo.line","dialog.mad_scientist.undo.question");
-        registry.registerMessage(undo);
-        undo.setUnlocalized(true);
-        undo.addOption(MatterOverdriveDialogs.trade);
-        undo.addOption(MatterOverdriveDialogs.backHomeMessage);
+	@Override
+	public EntityVillager createChild(EntityAgeable entity)
+	{
+		EntityVillagerMadScientist villager = new EntityVillagerMadScientist(this.worldObj);
+		villager.onInitialSpawn(worldObj.getDifficultyForLocation(getPosition()), null);
+		return villager;
+	}
 
-        whatDidYouDo = new DialogMessageAndroidOnly("dialog.mad_scientist.whatDidYouDo.line","dialog.mad_scientist.whatDidYouDo.question");
-        registry.registerMessage(whatDidYouDo);
-        whatDidYouDo.setUnlocalized(true);
-        whatDidYouDo.addOption(undo);
-        whatDidYouDo.addOption(MatterOverdriveDialogs.backHomeMessage);
-        //endregion
+	@Override
+	public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)
+	{
+		if (worldObj.isRemote)
+		{
+			MatterOverdrive.packetPipeline.sendToServer(new PacketManageConversation(this, true));
+			return true;
+		}
 
-        //region Junkie
-        DialogMessage acceptCocktail = new DialogMessageQuestGive(null,"dialog.mad_scientist.junkie.cocktail_quest.question.accept",new QuestStack(MatterOverdriveQuests.cocktailOfAscension)).setReturnToMain(true).setUnlocalized(true);
-        registry.registerMessage(acceptCocktail);
-        DialogMessage declineCocktail = new DialogMessageBackToMain(null,"dialog.mad_scientist.junkie.cocktail_quest.question.decline").setUnlocalized(true);
-        registry.registerMessage(declineCocktail);
-        DialogMessage[] cocktailQuest = MatterOverdrive.dialogFactory.constructMultipleLineDialog(DialogMessageQuestStart.class,"dialog.mad_scientist.junkie.cocktail_quest",8,". . . . . .");
-        ((DialogMessageQuestStart)cocktailQuest[0]).setQuest(new QuestStack(MatterOverdriveQuests.cocktailOfAscension));
-        cocktailOfAscension = cocktailQuest[0];
-        DialogMessage lastLine = cocktailQuest[cocktailQuest.length-1];
-        lastLine.addOption(acceptCocktail);
-        lastLine.addOption(declineCocktail);
+		return false;
+	}
 
-        cocktailOfAscensionComplete = new DialogMessageQuestOnObjectivesCompleted("dialog.mad_scientist.junkie.cocktail_quest.line","dialog.mad_scientist.junkie.cocktail_quest.complete.question",new QuestStack(MatterOverdriveQuests.cocktailOfAscension),new int[]{0,1,2}).setUnlocalized(true);
-        DialogMessage areYouOk = new DialogMessageQuit(null,"dialog.mad_scientist.junkie.cocktail_quest.are_you_ok.question").setUnlocalized(true);
-        cocktailOfAscensionComplete.addOption(areYouOk);
-        //endregion
+	@Override
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
+	{
+		super.onInitialSpawn(difficulty, livingdata);
+		setJunkie(rand.nextBoolean());
+		return livingdata;
+	}
 
-        if (side == Side.CLIENT)
-        {
-            canYouConvert.setShots(DialogShot.closeUp);
-            undo.setShots(DialogShot.closeUp);
-            whatDidYouDo.setShots(DialogShot.fromBehindLeftClose);
-            for (DialogMessage aCocktailQuest : cocktailQuest)
-            {
-                MatterOverdrive.dialogFactory.addRandomShots(aCocktailQuest);
-            }
-        }
-    }
+	@Override
+	public IDialogMessage getStartDialogMessage(EntityPlayer player)
+	{
+		return this.startMessage;
+	}
 
-    @Override
-    public IDialogMessage getStartDialogMessage(EntityPlayer player)
-    {
-        return this.startMessage;
-    }
+	private IDialogMessage assembleStartingMessage(EntityPlayer player)
+	{
+		if (getJunkie())
+		{
+			DialogMessage mainJunkieMessage = new DialogMessage(MOStringHelper.formatVariations("dialog.mad_scientist.junkie.main", "line", 2), null).setUnlocalized(true);
+			MatterOverdrive.dialogFactory.addOnlyVisibleOptions(player, this, mainJunkieMessage, canYouConvert, MatterOverdriveDialogs.trade, cocktailOfAscension, cocktailOfAscensionComplete, MatterOverdriveDialogs.quitMessage);
+			return mainJunkieMessage;
+		}
+		else
+		{
+			if (MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid())
+			{
+				DialogMessage mainAndroidMessage = new DialogMessage(MOStringHelper.formatVariations("dialog.mad_scientist.main.line", "android", 3), null);
+				mainAndroidMessage.setUnlocalized(true);
+				mainAndroidMessage.addOption(whatDidYouDo);
+				mainAndroidMessage.addOption(MatterOverdriveDialogs.trade);
+				mainAndroidMessage.addOption(MatterOverdriveDialogs.quitMessage);
+				return mainAndroidMessage;
+			}
+			else
+			{
+				DialogMessage mainHumanMessage = new DialogMessage(MOStringHelper.formatVariations("dialog.mad_scientist.main.line", "human", 3), null);
+				mainHumanMessage.setUnlocalized(true);
+				mainHumanMessage.addOption(canYouConvert);
+				mainHumanMessage.addOption(MatterOverdriveDialogs.quitMessage);
+				return mainHumanMessage;
+			}
+		}
+	}
 
-    @Override
-    public void setDialogPlayer(EntityPlayer player)
-    {
-        dialogPlayer = player;
-        if (player != null)
-        {
-            if (!MinecraftForge.EVENT_BUS.post(new MOEventDialogConstruct.Pre(this,player,startMessage)))
-            {
-                startMessage = assembleStartingMessage(player);
-                MinecraftForge.EVENT_BUS.post(new MOEventDialogConstruct.Post(this, player, startMessage));
-            }
-        }else
-        {
-            startMessage = null;
-        }
-    }
+	@Override
+	public EntityPlayer getDialogPlayer()
+	{
+		return dialogPlayer;
+	}
 
-    private IDialogMessage assembleStartingMessage(EntityPlayer player)
-    {
-        if (getJunkie())
-        {
-            DialogMessage mainJunkieMessage = new DialogMessage(MOStringHelper.formatVariations("dialog.mad_scientist.junkie.main","line",2),null).setUnlocalized(true);
-            MatterOverdrive.dialogFactory.addOnlyVisibleOptions(player,this,mainJunkieMessage,canYouConvert,MatterOverdriveDialogs.trade,cocktailOfAscension,cocktailOfAscensionComplete,MatterOverdriveDialogs.quitMessage);
-            return mainJunkieMessage;
-        }else
-        {
-            if (MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid())
-            {
-                DialogMessage mainAndroidMessage = new DialogMessage(MOStringHelper.formatVariations("dialog.mad_scientist.main.line","android",3),null);
-                mainAndroidMessage.setUnlocalized(true);
-                mainAndroidMessage.addOption(whatDidYouDo);
-                mainAndroidMessage.addOption(MatterOverdriveDialogs.trade);
-                mainAndroidMessage.addOption(MatterOverdriveDialogs.quitMessage);
-                return mainAndroidMessage;
-            }
-            else
-            {
-                DialogMessage mainHumanMessage = new DialogMessage(MOStringHelper.formatVariations("dialog.mad_scientist.main.line","human",3),null);
-                mainHumanMessage.setUnlocalized(true);
-                mainHumanMessage.addOption(canYouConvert);
-                mainHumanMessage.addOption(MatterOverdriveDialogs.quitMessage);
-                return mainHumanMessage;
-            }
-        }
-    }
+	@Override
+	public void setDialogPlayer(EntityPlayer player)
+	{
+		dialogPlayer = player;
+		if (player != null)
+		{
+			if (!MinecraftForge.EVENT_BUS.post(new MOEventDialogConstruct.Pre(this, player, startMessage)))
+			{
+				startMessage = assembleStartingMessage(player);
+				MinecraftForge.EVENT_BUS.post(new MOEventDialogConstruct.Post(this, player, startMessage));
+			}
+		}
+		else
+		{
+			startMessage = null;
+		}
+	}
 
-    @Override
-    public EntityPlayer getDialogPlayer() {
-        return dialogPlayer;
-    }
+	@Override
+	public boolean canTalkTo(EntityPlayer player)
+	{
+		return MOPlayerCapabilityProvider.GetAndroidCapability(player) == null || !MOPlayerCapabilityProvider.GetAndroidCapability(player).isTurning();
+	}
 
-    @Override
-    public boolean canTalkTo(EntityPlayer player)
-    {
-        return MOPlayerCapabilityProvider.GetAndroidCapability(player) == null || !MOPlayerCapabilityProvider.GetAndroidCapability(player).isTurning();
-    }
+	@Override
+	public EntityLiving getEntity()
+	{
+		return this;
+	}
 
-    @Override
-    public EntityLiving getEntity() {
-        return this;
-    }
+	@Override
+	public void onPlayerInteract(EntityPlayer player, DialogMessage dialogMessage)
+	{
+		if (dialogMessage == cocktailOfAscensionComplete)
+		{
+			this.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 1000, 1));
+			worldObj.playSound(null, this.posX, this.posY, this.posZ, MatterOverdriveSounds.failedAnimalDie, SoundCategory.NEUTRAL, 1, 1);
+			//worldObj.createExplosion(this,posX,posY,posZ,3,false);
+			this.setDead();
+			EntityMutantScientist mutantScientist = new EntityMutantScientist(worldObj);
+			mutantScientist.spawnExplosionParticle();
+			mutantScientist.setPosition(posX, posY, posZ);
+			mutantScientist.onInitialSpawn(worldObj.getDifficultyForLocation(getPosition()), null);
+			worldObj.spawnEntityInWorld(mutantScientist);
+		}
+		else if (dialogMessage == convertMe)
+		{
+			MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(player);
+			for (QuestStack questStack : extendedProperties.getQuestData().getActiveQuests())
+			{
+				if (questStack.getQuest() == MatterOverdriveQuests.punyHumans)
+				{
+					questStack.markComplited(player, false);
+					MOPlayerCapabilityProvider.GetAndroidCapability(player).startConversion();
+				}
+			}
+		}
+	}
 
-    @Override
-    public void onPlayerInteract(EntityPlayer player,DialogMessage dialogMessage)
-    {
-        if (dialogMessage == cocktailOfAscensionComplete)
-        {
-            this.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"),1000,1));
-            worldObj.playSound(null,this.posX,this.posY,this.posZ, MatterOverdriveSounds.failedAnimalDie, SoundCategory.NEUTRAL,1,1);
-            //worldObj.createExplosion(this,posX,posY,posZ,3,false);
-            this.setDead();
-            EntityMutantScientist mutantScientist = new EntityMutantScientist(worldObj);
-            mutantScientist.spawnExplosionParticle();
-            mutantScientist.setPosition(posX,posY,posZ);
-            mutantScientist.onInitialSpawn(worldObj.getDifficultyForLocation(getPosition()),null);
-            worldObj.spawnEntityInWorld(mutantScientist);
-        }
-        else if (dialogMessage == convertMe)
-        {
-            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(player);
-            for (QuestStack questStack : extendedProperties.getQuestData().getActiveQuests())
-            {
-                if (questStack.getQuest() == MatterOverdriveQuests.punyHumans)
-                {
-                    questStack.markComplited(player,false);
-                    MOPlayerCapabilityProvider.GetAndroidCapability(player).startConversion();
-                }
-            }
-        }
-    }
+	@Override
+	public void giveQuest(IDialogMessage message, QuestStack questStack, EntityPlayer entityPlayer)
+	{
+		if (questStack != null)
+		{
+			MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(entityPlayer);
+			if (extendedProperties != null && questStack.getQuest().canBeAccepted(questStack, entityPlayer))
+			{
+				QuestStack newQuestStack = questStack.copy();
+				newQuestStack.setGiver(this);
+				extendedProperties.addQuest(newQuestStack);
+			}
+		}
+	}
 
-    @Override
-    public void giveQuest(IDialogMessage message,QuestStack questStack,EntityPlayer entityPlayer)
-    {
-        if (questStack != null)
-        {
-            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(entityPlayer);
-            if (extendedProperties != null && questStack.getQuest().canBeAccepted(questStack,entityPlayer))
-            {
-                QuestStack newQuestStack = questStack.copy();
-                newQuestStack.setGiver(this);
-                extendedProperties.addQuest(newQuestStack);
-            }
-        }
-    }
+	public boolean getJunkie()
+	{
+		return this.dataManager.get(VARIANT);
+	}
 
-    public void setJunkie(boolean junkie)
-    {
-        this.dataManager.set(VARIANT,junkie);
-        if (junkie)
-        {
-            this.setCustomNameTag(MOStringHelper.translateToLocal("entity.mo.mad_scientist.junkie.name"));
-        }
-    }
-
-    public boolean getJunkie()
-    {
-        return this.dataManager.get(VARIANT);
-    }
-    //endregion
+	public void setJunkie(boolean junkie)
+	{
+		this.dataManager.set(VARIANT, junkie);
+		if (junkie)
+		{
+			this.setCustomNameTag(MOStringHelper.translateToLocal("entity.mo.mad_scientist.junkie.name"));
+		}
+	}
+	//endregion
 }

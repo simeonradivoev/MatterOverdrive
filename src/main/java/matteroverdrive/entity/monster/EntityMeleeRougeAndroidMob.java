@@ -35,61 +35,61 @@ import net.minecraft.world.World;
  */
 public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
 {
-    public EntityMeleeRougeAndroidMob(World world)
-    {
-        super(world);
-        this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAIAndroidAttackOnCollide(this, 1.0D, false));
-        this.tasks.addTask(3, new EntityAIMoveAlongPath(this, 1.0D));
-        this.tasks.addTask(4, new EntityAIWander(this, 1.0D));
-        this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
-        this.tasks.addTask(5, new EntityAILookIdle(this));
+	public EntityMeleeRougeAndroidMob(World world)
+	{
+		super(world);
+		this.tasks.addTask(1, new EntityAISwimming(this));
+		this.tasks.addTask(2, new EntityAIAndroidAttackOnCollide(this, 1.0D, false));
+		this.tasks.addTask(3, new EntityAIMoveAlongPath(this, 1.0D));
+		this.tasks.addTask(4, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
+		this.tasks.addTask(5, new EntityAILookIdle(this));
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 0, false, true, new AndroidTargetSelector(this)));
-    }
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 0, false, true, new AndroidTargetSelector(this)));
+	}
 
-    @Override
-    protected void applyEntityAttributes()
-    {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(64.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(24);
-    }
+	@Override
+	protected void applyEntityAttributes()
+	{
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(64.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
+		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(24);
+	}
 
-    public void setAndroidLevel(int level)
-    {
-        super.setAndroidLevel(level);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D + level);
-    }
+	public void setAndroidLevel(int level)
+	{
+		super.setAndroidLevel(level);
+		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D + level);
+	}
 
-    public void setLegendary(boolean legendary)
-    {
-        super.setLegendary(legendary);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(8);
-    }
+	public void setLegendary(boolean legendary)
+	{
+		super.setLegendary(legendary);
+		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(8);
+	}
 
-    @Override
-    protected void dropFewItems(boolean hit, int looting)
-    {
-        if (recentlyHit > 0)
-        {
-            float lootingModifier = (Math.min(looting, 10) / 10f);
-            if (rand.nextFloat() < (0.1f + lootingModifier) || getIsLegendary())
-            {
+	@Override
+	protected void dropFewItems(boolean hit, int looting)
+	{
+		if (recentlyHit > 0)
+		{
+			float lootingModifier = (Math.min(looting, 10) / 10f);
+			if (rand.nextFloat() < (0.1f + lootingModifier) || getIsLegendary())
+			{
 
-                this.entityDropItem(MatterOverdrive.androidPartsFactory.generateRandomDecoratedPart(new AndroidPartsFactory.AndroidPartFactoryContext(getAndroidLevel(),this,getIsLegendary())), 0.0F);
-            }
-        }
-    }
+				this.entityDropItem(MatterOverdrive.androidPartsFactory.generateRandomDecoratedPart(new AndroidPartsFactory.AndroidPartFactoryContext(getAndroidLevel(), this, getIsLegendary())), 0.0F);
+			}
+		}
+	}
 
-    @Override
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
-    {
-        IEntityLivingData entityLivingData = super.onInitialSpawn(difficulty,livingdata);
-        this.addRandomArmor();
-        this.setEnchantmentBasedOnDifficulty(difficulty);
-        return entityLivingData;
-    }
+	@Override
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
+	{
+		IEntityLivingData entityLivingData = super.onInitialSpawn(difficulty, livingdata);
+		this.addRandomArmor();
+		this.setEnchantmentBasedOnDifficulty(difficulty);
+		return entityLivingData;
+	}
 }

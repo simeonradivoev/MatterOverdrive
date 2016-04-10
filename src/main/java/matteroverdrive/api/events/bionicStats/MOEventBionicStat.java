@@ -29,29 +29,31 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
  */
 public class MOEventBionicStat extends PlayerEvent
 {
-    /**
-     * The android player using the ability.
-     */
-    public final AndroidPlayer android;
-    /**
-     * The Ability itself.
-     */
-    public final IBioticStat stat;
-    /**
-     * The level of the ability being used.
-     */
-    public final int level;
+	/**
+	 * The android player using the ability.
+	 */
+	public final AndroidPlayer android;
+	/**
+	 * The Ability itself.
+	 */
+	public final IBioticStat stat;
+	/**
+	 * The level of the ability being used.
+	 */
+	public final int level;
 
 
-    public MOEventBionicStat(IBioticStat stat, int level, AndroidPlayer android) {
-        super(android.getPlayer());
-        this.android = android;
-        this.stat = stat;
-        this.level = level;
-    }
-    @Override
-    public boolean isCancelable()
-    {
-        return true;
-    }
+	public MOEventBionicStat(IBioticStat stat, int level, AndroidPlayer android)
+	{
+		super(android.getPlayer());
+		this.android = android;
+		this.stat = stat;
+		this.level = level;
+	}
+
+	@Override
+	public boolean isCancelable()
+	{
+		return true;
+	}
 }

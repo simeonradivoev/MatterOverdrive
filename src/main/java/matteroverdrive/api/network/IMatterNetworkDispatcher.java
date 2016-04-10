@@ -27,17 +27,17 @@ import net.minecraft.util.math.BlockPos;
  */
 public interface IMatterNetworkDispatcher
 {
-    /**
-     * Gets the Task queue of the Machine at the given ID.
-     * @param queueID the ID of the Queue.
-     * @return the task queue at the given ID.
-     */
-    MatterNetworkTaskQueue getTaskQueue(int queueID);
+	/**
+	 * Gets the Task queue of the Machine at the given ID.
+	 * @param queueID the ID of the Queue.
+	 * @return the task queue at the given ID.
+	 */
+	MatterNetworkTaskQueue getTaskQueue(int queueID);
 
-    /**
-     * @return the number of task queues in the machine.
-     */
-    int getTaskQueueCount();
+	/**
+	 * @return the number of task queues in the machine.
+	 */
+	int getTaskQueueCount();
 
-    BlockPos getPos();
+	BlockPos getPos();
 }

@@ -20,47 +20,47 @@ import java.util.List;
  */
 public class DimesionTeleportCommends extends CommandBase
 {
-    @Override
-    public String getCommandName()
-    {
-        return "tpx";
-    }
+	@Override
+	public String getCommandName()
+	{
+		return "tpx";
+	}
 
-    @Override
-    public String getCommandUsage(ICommandSender sender)
-    {
-        return "tpx <x> <y> <z> <dim>";
-    }
+	@Override
+	public String getCommandUsage(ICommandSender sender)
+	{
+		return "tpx <x> <y> <z> <dim>";
+	}
 
-    public int getRequiredPermissionLevel()
-    {
-        return 2;
-    }
+	public int getRequiredPermissionLevel()
+	{
+		return 2;
+	}
 
-    @Override
-    public void execute(MinecraftServer server,ICommandSender sender, String[] args) throws CommandException
-    {
-        if (args.length < 1)
-        {
-            throw new WrongUsageException("commands.tp.usage", new Object[0]);
-        }
-        else
-        {
-            int i = 0;
-            Entity entity;
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		if (args.length < 1)
+		{
+			throw new WrongUsageException("commands.tp.usage", new Object[0]);
+		}
+		else
+		{
+			int i = 0;
+			Entity entity;
 
-            if (args.length != 2 && args.length != 5 && args.length != 7)
-            {
-                entity = getCommandSenderAsPlayer(sender);
-            }
-            else
-            {
-                entity = getEntity(server,sender, args[0]);
-                i = 1;
-            }
+			if (args.length != 2 && args.length != 5 && args.length != 7)
+			{
+				entity = getCommandSenderAsPlayer(sender);
+			}
+			else
+			{
+				entity = getEntity(server, sender, args[0]);
+				i = 1;
+			}
 
             /*if (args.length != 1 && args.length != 2)
-            {
+			{
                 if (args.length < i + 3)
                 {
                     throw new WrongUsageException("commands.tp.usage", new Object[0]);
@@ -174,97 +174,100 @@ public class DimesionTeleportCommends extends CommandBase
                     notifyOperators(sender, this, "commands.tp.success", new Object[] {entity.getName(), entity1.getName()});
                 }
             }*/
-        }
-    }
+		}
+	}
 
-    public void travelToDimension(EntityPlayerMP theEntity, int dimensionId)
-    {
-        if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(theEntity, dimensionId)) return;
+	public void travelToDimension(EntityPlayerMP theEntity, int dimensionId)
+	{
+		if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(theEntity, dimensionId))
+		{
+			return;
+		}
 
-        WorldServer fromWorld = theEntity.mcServer.worldServerForDimension(theEntity.dimension);
-        WorldServer toWorld = theEntity.mcServer.worldServerForDimension(dimensionId);
+		WorldServer fromWorld = theEntity.mcServer.worldServerForDimension(theEntity.dimension);
+		WorldServer toWorld = theEntity.mcServer.worldServerForDimension(dimensionId);
 
-        if (theEntity.dimension == 1 && dimensionId == 1)
-        {
-            //theEntity.triggerAchievement(AchievementList.theEnd2);
-            //theEntity.worldObj.removeEntity(theEntity);
-            //theEntity.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(4, 0.0F));
-        }
-        else
-        {
-            if (theEntity.dimension == 0 && dimensionId == 1)
-            {
-                //theEntity.triggerAchievement(AchievementList.theEnd);
-                BlockPos blockpos = theEntity.mcServer.worldServerForDimension(dimensionId).getSpawnCoordinate();
+		if (theEntity.dimension == 1 && dimensionId == 1)
+		{
+			//theEntity.triggerAchievement(AchievementList.theEnd2);
+			//theEntity.worldObj.removeEntity(theEntity);
+			//theEntity.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(4, 0.0F));
+		}
+		else
+		{
+			if (theEntity.dimension == 0 && dimensionId == 1)
+			{
+				//theEntity.triggerAchievement(AchievementList.theEnd);
+				BlockPos blockpos = theEntity.mcServer.worldServerForDimension(dimensionId).getSpawnCoordinate();
 
-                if (blockpos != null)
-                {
-                    theEntity.playerNetServerHandler.setPlayerLocation((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), 0.0F, 0.0F);
-                }
+				if (blockpos != null)
+				{
+					theEntity.playerNetServerHandler.setPlayerLocation((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), 0.0F, 0.0F);
+				}
 
-                dimensionId = 1;
-            }
-            else
-            {
-                //theEntity.triggerAchievement(AchievementList.portal);
-            }
+				dimensionId = 1;
+			}
+			else
+			{
+				//theEntity.triggerAchievement(AchievementList.portal);
+			}
 
-            IBlockState[][][] states = new IBlockState[8][8][8];
-            NBTTagCompound[][][] theEntitiesData = new NBTTagCompound[8][8][8];
+			IBlockState[][][] states = new IBlockState[8][8][8];
+			NBTTagCompound[][][] theEntitiesData = new NBTTagCompound[8][8][8];
 
-            for (int x = 0;x < 8;x++)
-            {
-                for (int y = 0; y < 8;y++)
-                {
-                    for (int z = 0; z < 8;z++)
-                    {
-                        BlockPos pos = new BlockPos(theEntity.posX + x - 4,theEntity.posY + y - 4,theEntity.posZ + z - 4);
-                        TileEntity tileEntity = fromWorld.getTileEntity(pos);
-                        if (tileEntity != null)
-                        {
-                            theEntitiesData[x][y][z] = new NBTTagCompound();
-                            tileEntity.writeToNBT(theEntitiesData[x][y][z]);
-                        }
-                        fromWorld.removeTileEntity(pos);
-                        states[x][y][z] = fromWorld.getBlockState(pos);
-                        fromWorld.setBlockToAir(pos);
-                    }
-                }
-            }
+			for (int x = 0; x < 8; x++)
+			{
+				for (int y = 0; y < 8; y++)
+				{
+					for (int z = 0; z < 8; z++)
+					{
+						BlockPos pos = new BlockPos(theEntity.posX + x - 4, theEntity.posY + y - 4, theEntity.posZ + z - 4);
+						TileEntity tileEntity = fromWorld.getTileEntity(pos);
+						if (tileEntity != null)
+						{
+							theEntitiesData[x][y][z] = new NBTTagCompound();
+							tileEntity.writeToNBT(theEntitiesData[x][y][z]);
+						}
+						fromWorld.removeTileEntity(pos);
+						states[x][y][z] = fromWorld.getBlockState(pos);
+						fromWorld.setBlockToAir(pos);
+					}
+				}
+			}
 
-            for (int x = 0;x < 8;x++)
-            {
-                for (int y = 0; y < 8; y++)
-                {
-                    for (int z = 0; z < 8; z++)
-                    {
-                        BlockPos pos = new BlockPos(theEntity.posX + x - 4,theEntity.posY + y - 4,theEntity.posZ + z - 4);
-                        toWorld.setBlockState(pos,states[x][y][z]);
-                        TileEntity tileEntity = toWorld.getTileEntity(pos);
-                        if (tileEntity != null && theEntitiesData[x][y][z] != null)
-                        {
-                            tileEntity.readFromNBT(theEntitiesData[x][y][z]);
-                        }
-                    }
-                }
-            }
+			for (int x = 0; x < 8; x++)
+			{
+				for (int y = 0; y < 8; y++)
+				{
+					for (int z = 0; z < 8; z++)
+					{
+						BlockPos pos = new BlockPos(theEntity.posX + x - 4, theEntity.posY + y - 4, theEntity.posZ + z - 4);
+						toWorld.setBlockState(pos, states[x][y][z]);
+						TileEntity tileEntity = toWorld.getTileEntity(pos);
+						if (tileEntity != null && theEntitiesData[x][y][z] != null)
+						{
+							tileEntity.readFromNBT(theEntitiesData[x][y][z]);
+						}
+					}
+				}
+			}
 
-            AbsoluteDimensionTeleporter absoluteDimensionTeleporter = new AbsoluteDimensionTeleporter(theEntity.getServerForPlayer());
-            // TODO: 3/26/2016 Find how to access configuration manager
-            //theEntity.mcServer.getConfigurationManager().transferPlayerToDimension(theEntity, dimensionId,absoluteDimensionTeleporter);
-        }
-    }
+			AbsoluteDimensionTeleporter absoluteDimensionTeleporter = new AbsoluteDimensionTeleporter(theEntity.getServerForPlayer());
+			// TODO: 3/26/2016 Find how to access configuration manager
+			//theEntity.mcServer.getConfigurationManager().transferPlayerToDimension(theEntity, dimensionId,absoluteDimensionTeleporter);
+		}
+	}
 
-    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
-    {
-        return args.length != 1 && args.length != 2 ? null : getListOfStringsMatchingLastWord(args, sender.getServer().getAllUsernames());
-    }
+	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+	{
+		return args.length != 1 && args.length != 2 ? null : getListOfStringsMatchingLastWord(args, sender.getServer().getAllUsernames());
+	}
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
-    public boolean isUsernameIndex(String[] args, int index)
-    {
-        return index == 0;
-    }
+	/**
+	 * Return whether the specified command parameter index is a username parameter.
+	 */
+	public boolean isUsernameIndex(String[] args, int index)
+	{
+		return index == 0;
+	}
 }

@@ -37,19 +37,19 @@ import java.util.List;
  */
 public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
 {
-    /*private IIcon storageFull;
-    private IIcon storagePartiallyFull;*/
-    final int capacity;
+	/*private IIcon storageFull;
+	private IIcon storagePartiallyFull;*/
+	final int capacity;
 
-    public PatternDrive(String name, int capacity)
-    {
-        super(name);
-        this.capacity = capacity;
-        this.setMaxStackSize(1);
-    }
+	public PatternDrive(String name, int capacity)
+	{
+		super(name);
+		this.capacity = capacity;
+		this.setMaxStackSize(1);
+	}
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister p_94581_1_)
     {
         this.itemIcon = p_94581_1_.registerIcon(this.getIconString());
@@ -71,132 +71,137 @@ public class PatternDrive extends MOBaseItem implements IMatterPatternStorage
         }
     }*/
 
-    @Override
-    public int getDamage(ItemStack stack)
-    {
-        if (stack.hasTagCompound())
-        {
-            if (stack.getTagCompound().getKeySet().size() > 0)
-            {
-                if (stack.getTagCompound().getKeySet().size() < getCapacity(stack))
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 2;
-                }
-            }
-        }
-        return 0;
-    }
+	@Override
+	public int getDamage(ItemStack stack)
+	{
+		if (stack.hasTagCompound())
+		{
+			if (stack.getTagCompound().getKeySet().size() > 0)
+			{
+				if (stack.getTagCompound().getKeySet().size() < getCapacity(stack))
+				{
+					return 1;
+				}
+				else
+				{
+					return 2;
+				}
+			}
+		}
+		return 0;
+	}
 
-    @Override
-    public boolean hasDetails(ItemStack itemStack)
-    {
-        return true;
-    }
+	@Override
+	public boolean hasDetails(ItemStack itemStack)
+	{
+		return true;
+	}
 
-    @Override
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-    {
-        if(itemstack.hasTagCompound())
-        {
-            for (int i = 0; i < getCapacity(itemstack); i++)
-            {
-                ItemPattern pattern = getPatternAt(itemstack,i);
-                if (pattern != null)
-                {
-                    ItemStack stack = pattern.toItemStack(false);
-                    String displayName;
-                    try
-                    {
-                        displayName = stack.getDisplayName();
-                    } catch (Exception e)
-                    {
-                        displayName = "Unknown";
-                    }
+	@Override
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		if (itemstack.hasTagCompound())
+		{
+			for (int i = 0; i < getCapacity(itemstack); i++)
+			{
+				ItemPattern pattern = getPatternAt(itemstack, i);
+				if (pattern != null)
+				{
+					ItemStack stack = pattern.toItemStack(false);
+					String displayName;
+					try
+					{
+						displayName = stack.getDisplayName();
+					}
+					catch (Exception e)
+					{
+						displayName = "Unknown";
+					}
 
-                    if (MatterHelper.getMatterAmountFromItem(stack) > 0)
-                    {
-                        infos.add(MatterDatabaseHelper.getPatternInfoColor(pattern.getProgress()) + displayName + " [" + pattern.getProgress() + "%]");
-                    } else
-                    {
-                        infos.add(ChatFormatting.RED + "[Invalid] " + MatterDatabaseHelper.getPatternInfoColor(pattern.getProgress()) + displayName + " [" + pattern.getProgress() + "%]");
-                    }
-                }
-            }
-        }
-    }
+					if (MatterHelper.getMatterAmountFromItem(stack) > 0)
+					{
+						infos.add(MatterDatabaseHelper.getPatternInfoColor(pattern.getProgress()) + displayName + " [" + pattern.getProgress() + "%]");
+					}
+					else
+					{
+						infos.add(ChatFormatting.RED + "[Invalid] " + MatterDatabaseHelper.getPatternInfoColor(pattern.getProgress()) + displayName + " [" + pattern.getProgress() + "%]");
+					}
+				}
+			}
+		}
+	}
 
-    @Override
-    public void InitTagCompount(ItemStack stack)
-    {
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setShort(MatterDatabaseHelper.CAPACITY_TAG_NAME, (short) capacity);
-        NBTTagList itemList = new NBTTagList();
-        tagCompound.setTag(MatterDatabaseHelper.ITEMS_TAG_NAME,itemList);
-        stack.setTagCompound(tagCompound);
-    }
+	@Override
+	public void InitTagCompount(ItemStack stack)
+	{
+		NBTTagCompound tagCompound = new NBTTagCompound();
+		tagCompound.setShort(MatterDatabaseHelper.CAPACITY_TAG_NAME, (short)capacity);
+		NBTTagList itemList = new NBTTagList();
+		tagCompound.setTag(MatterDatabaseHelper.ITEMS_TAG_NAME, itemList);
+		stack.setTagCompound(tagCompound);
+	}
 
-    @Override
-    public ItemPattern getPatternAt(ItemStack storage, int slot)
-    {
-        if (storage.getTagCompound() != null)
-        {
-            if (slot < getCapacity(storage) && storage.getTagCompound().hasKey("p"+slot))
-            {
-                ItemPattern pattern = new ItemPattern(storage.getTagCompound().getCompoundTag("p"+slot));
-                return pattern;
-            }
-        }
-        return null;
-    }
+	@Override
+	public ItemPattern getPatternAt(ItemStack storage, int slot)
+	{
+		if (storage.getTagCompound() != null)
+		{
+			if (slot < getCapacity(storage) && storage.getTagCompound().hasKey("p" + slot))
+			{
+				ItemPattern pattern = new ItemPattern(storage.getTagCompound().getCompoundTag("p" + slot));
+				return pattern;
+			}
+		}
+		return null;
+	}
 
-    @Override
-    public void setItemPatternAt(ItemStack storage, int slot, ItemPattern itemPattern)
-    {
-        if (storage.getTagCompound() == null)
-            storage.setTagCompound(new NBTTagCompound());
+	@Override
+	public void setItemPatternAt(ItemStack storage, int slot, ItemPattern itemPattern)
+	{
+		if (storage.getTagCompound() == null)
+		{
+			storage.setTagCompound(new NBTTagCompound());
+		}
 
-        if (itemPattern != null)
-        {
-            NBTTagCompound patternTag = new NBTTagCompound();
-            itemPattern.writeToNBT(patternTag);
-            storage.getTagCompound().setTag("p" + slot, patternTag);
-        }else
-        {
-            storage.getTagCompound().removeTag("p"+slot);
-        }
-    }
+		if (itemPattern != null)
+		{
+			NBTTagCompound patternTag = new NBTTagCompound();
+			itemPattern.writeToNBT(patternTag);
+			storage.getTagCompound().setTag("p" + slot, patternTag);
+		}
+		else
+		{
+			storage.getTagCompound().removeTag("p" + slot);
+		}
+	}
 
-    @Override
-    public boolean increasePatternProgress(ItemStack itemStack, int slot, int amount)
-    {
-        return false;
-    }
+	@Override
+	public boolean increasePatternProgress(ItemStack itemStack, int slot, int amount)
+	{
+		return false;
+	}
 
-    @Override
-    public int getCapacity(ItemStack item)
-    {
-        TagCompountCheck(item);
-        return item.getTagCompound().getShort(MatterDatabaseHelper.CAPACITY_TAG_NAME);
-    }
+	@Override
+	public int getCapacity(ItemStack item)
+	{
+		TagCompountCheck(item);
+		return item.getTagCompound().getShort(MatterDatabaseHelper.CAPACITY_TAG_NAME);
+	}
 
-    public void clearStorage(ItemStack itemStack)
-    {
-        if (MatterHelper.isMatterPatternStorage(itemStack))
-        {
-            itemStack.setTagCompound(null);
-        }
-    }
+	public void clearStorage(ItemStack itemStack)
+	{
+		if (MatterHelper.isMatterPatternStorage(itemStack))
+		{
+			itemStack.setTagCompound(null);
+		}
+	}
 
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
-    {
-        if (player.isSneaking())
-        {
-            clearStorage(itemStack);
-        }
-        return itemStack;
-    }
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
+	{
+		if (player.isSneaking())
+		{
+			clearStorage(itemStack);
+		}
+		return itemStack;
+	}
 }

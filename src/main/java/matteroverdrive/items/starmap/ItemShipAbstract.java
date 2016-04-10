@@ -27,12 +27,15 @@ import net.minecraft.item.ItemStack;
  */
 public abstract class ItemShipAbstract extends ItemBuildableAbstract implements IShip
 {
-    public ItemShipAbstract(String name)
-    {
-        super(name);
-        setMaxStackSize(1);
-        setCreativeTab(MatterOverdrive.tabMatterOverdrive_ships);
-    }
+	public ItemShipAbstract(String name)
+	{
+		super(name);
+		setMaxStackSize(1);
+		setCreativeTab(MatterOverdrive.tabMatterOverdrive_ships);
+	}
 
-    public boolean hasDetails(ItemStack stack){return true;}
+	public boolean hasDetails(ItemStack stack)
+	{
+		return true;
+	}
 }

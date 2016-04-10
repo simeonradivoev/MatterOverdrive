@@ -9,7 +9,9 @@ import net.minecraft.util.math.RayTraceResult;
  */
 public interface IBlockScanner
 {
-    RayTraceResult getScanningPos(ItemStack itemStack, EntityLivingBase player);
-    boolean destroysBlocks(ItemStack itemStack);
-    boolean showsGravitationalWaves(ItemStack itemStack);
+	RayTraceResult getScanningPos(ItemStack itemStack, EntityLivingBase player);
+
+	boolean destroysBlocks(ItemStack itemStack);
+
+	boolean showsGravitationalWaves(ItemStack itemStack);
 }

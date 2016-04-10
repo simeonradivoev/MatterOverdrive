@@ -38,10 +38,61 @@ public class MatterDatabaseListBox extends MOElementListBox
 	public String filter = "";
 
 
-	public MatterDatabaseListBox(MOGuiBase gui,int x,int y,int width,int height, ItemStack scanner)
+	public MatterDatabaseListBox(MOGuiBase gui, int x, int y, int width, int height, ItemStack scanner)
 	{
-		super(gui,x,y,width,height);
+		super(gui, x, y, width, height);
 		this.scanner = scanner;
+	}
+
+	public MOGuiBase getGui()
+	{
+		return this.gui;
+	}
+
+	@Override
+	protected boolean shouldBeDisplayed(IMOListBoxElement element)
+	{
+		return element.getName().toLowerCase().contains(filter.toLowerCase());
+	}
+
+	public String getFilter()
+	{
+		return this.filter;
+	}
+
+	public void setFilter(String filter)
+	{
+		this.filter = filter;
+	}
+
+	public void updateList(List<ItemPattern> patternList)
+	{
+		//System.out.println("List Updated");
+		this.clear();
+		ItemPattern selected = MatterScanner.getSelectedAsPattern(scanner);
+
+		if (patternList != null)
+		{
+			for (int i = 0; i < patternList.size(); i++)
+			{
+				if (selected.equals(patternList.get(i)))
+				{
+					_selectedIndex = i;
+				}
+
+				MatterDatabaseEntry selectedEntry = new MatterDatabaseEntry(patternList.get(i));
+				this.add(selectedEntry);
+			}
+		}
+	}
+
+	@Override
+	protected void onSelectionChanged(int newIndex, IMOListBoxElement newElement)
+	{
+		MatterDatabaseEntry entry = (MatterDatabaseEntry)newElement;
+		MatterScanner.setSelected(scanner, entry.itemComp);
+		//updateList(this.filter);
+		(gui).handleElementButtonClick(this, this.name, newIndex);
 	}
 
 	class MatterDatabaseEntry implements IMOListBoxElement
@@ -62,12 +113,14 @@ public class MatterDatabaseListBox extends MOElementListBox
 		}
 
 		@Override
-		public int getHeight() {
+		public int getHeight()
+		{
 			return 25;
 		}
 
 		@Override
-		public int getWidth() {
+		public int getWidth()
+		{
 			return 25;
 		}
 
@@ -78,19 +131,24 @@ public class MatterDatabaseListBox extends MOElementListBox
 		}
 
 		@Override
-		public void draw(MOElementListBox listBox, int x, int y, int backColor,int textColor, boolean selected,boolean BG)
+		public void draw(MOElementListBox listBox, int x, int y, int backColor, int textColor, boolean selected, boolean BG)
 		{
-			GlStateManager.color(1.0F, 1.0F, 1.0F,1.0F);
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-			if (BG) {
-				if (selected) {
+			if (BG)
+			{
+				if (selected)
+				{
 					gui.bindTexture(ACTIVE_SLOT_BG);
 					gui.drawSizedTexturedModalRect(x, y, 0, 0, 38, 22, 38, 22);
-				} else {
+				}
+				else
+				{
 					gui.bindTexture(SLOT_BG);
 					gui.drawSizedTexturedModalRect(x, y, 0, 0, 22, 22, 22, 22);
 				}
-			}else
+			}
+			else
 			{
 				ItemStack itemStack = itemComp.toItemStack(false);
 				RenderUtils.renderStack(3 + x, 3 + y, itemStack);
@@ -107,54 +165,6 @@ public class MatterDatabaseListBox extends MOElementListBox
 			((MatterDatabaseListBox)listBox).getGui().setTooltip(tooltip);
 			GlStateManager.color(1, 1, 1, 1);
 		}
-	}
-
-	public MOGuiBase getGui()
-	{
-		return this.gui;
-	}
-
-	public void setFilter(String filter)
-	{
-		this.filter = filter;
-	}
-
-	@Override
-	protected boolean shouldBeDisplayed(IMOListBoxElement element)
-	{
-		return element.getName().toLowerCase().contains(filter.toLowerCase());
-	}
-
-	public String getFilter()
-	{
-		return this.filter;
-	}
-
-
-
-	public void updateList(List<ItemPattern> patternList) {
-		//System.out.println("List Updated");
-		this.clear();
-		ItemPattern selected = MatterScanner.getSelectedAsPattern(scanner);
-
-		if (patternList != null) {
-			for (int i = 0; i < patternList.size(); i++) {
-				if (selected.equals(patternList.get(i)))
-					_selectedIndex = i;
-
-				MatterDatabaseEntry selectedEntry = new MatterDatabaseEntry(patternList.get(i));
-				this.add(selectedEntry);
-			}
-		}
-	}
-
-	@Override
-	protected void onSelectionChanged(int newIndex, IMOListBoxElement newElement)
-	{
-		MatterDatabaseEntry entry = (MatterDatabaseEntry) newElement;
-		MatterScanner.setSelected(scanner, entry.itemComp);
-		//updateList(this.filter);
-		(gui).handleElementButtonClick(this,this.name,newIndex);
 	}
 
 }

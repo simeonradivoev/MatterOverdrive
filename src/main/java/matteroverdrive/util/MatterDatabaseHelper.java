@@ -39,13 +39,13 @@ public class MatterDatabaseHelper
 	public static final String ITEMS_TAG_NAME = "items";
 	public static final String CAPACITY_TAG_NAME = "Capacity";
 
-    public static void initTagCompound(ItemStack scanner)
-    {
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        scanner.setTagCompound(tagCompound);
-        initItemListTagCompound(scanner);
+	public static void initTagCompound(ItemStack scanner)
+	{
+		NBTTagCompound tagCompound = new NBTTagCompound();
+		scanner.setTagCompound(tagCompound);
+		initItemListTagCompound(scanner);
 
-    }
+	}
 
 	public static void initItemListTagCompound(ItemStack scanner)
 	{
@@ -66,15 +66,17 @@ public class MatterDatabaseHelper
 	{
 		if (storage != null)
 		{
-			if(MatterHelper.isMatterPatternStorage(storage))
+			if (MatterHelper.isMatterPatternStorage(storage))
 			{
-                IMatterPatternStorage patternStorage = (IMatterPatternStorage)storage.getItem();
-                for (int i = 0;i < patternStorage.getCapacity(storage);i++)
-                {
-                    ItemPattern itemPattern = patternStorage.getPatternAt(storage,i);
-                    if (itemPattern == null)
-                        return true;
-                }
+				IMatterPatternStorage patternStorage = (IMatterPatternStorage)storage.getItem();
+				for (int i = 0; i < patternStorage.getCapacity(storage); i++)
+				{
+					ItemPattern itemPattern = patternStorage.getPatternAt(storage, i);
+					if (itemPattern == null)
+					{
+						return true;
+					}
+				}
 			}
 
 		}
@@ -98,97 +100,100 @@ public class MatterDatabaseHelper
 		return null;
 	}
 
-    public static void addProgressToPatternStorage(ItemStack patternStorage, ItemStack item, int progress,boolean existingOnly)
-    {
-        if (!patternStorage.hasTagCompound()) {
-            initItemListTagCompound(patternStorage);
-        }
+	public static void addProgressToPatternStorage(ItemStack patternStorage, ItemStack item, int progress, boolean existingOnly)
+	{
+		if (!patternStorage.hasTagCompound())
+		{
+			initItemListTagCompound(patternStorage);
+		}
 
-        NBTTagList patternsTagList = patternStorage.getTagCompound().getTagList(ITEMS_TAG_NAME, Constants.NBT.TAG_COMPOUND);
-        for (int i = 0;i < patternsTagList.tagCount();i++)
-        {
-            ItemPattern pattern = new ItemPattern(patternsTagList.getCompoundTagAt(i));
-            if (areEqual(pattern.toItemStack(false),item))
-            {
-                int oldProgress = patternsTagList.getCompoundTagAt(i).getByte(PROGRESS_TAG_NAME);
-                patternsTagList.getCompoundTagAt(i).setByte(PROGRESS_TAG_NAME,(byte) MathHelper.clamp_int(oldProgress + progress,0,MAX_ITEM_PROGRESS));
-                return;
-            }
-        }
+		NBTTagList patternsTagList = patternStorage.getTagCompound().getTagList(ITEMS_TAG_NAME, Constants.NBT.TAG_COMPOUND);
+		for (int i = 0; i < patternsTagList.tagCount(); i++)
+		{
+			ItemPattern pattern = new ItemPattern(patternsTagList.getCompoundTagAt(i));
+			if (areEqual(pattern.toItemStack(false), item))
+			{
+				int oldProgress = patternsTagList.getCompoundTagAt(i).getByte(PROGRESS_TAG_NAME);
+				patternsTagList.getCompoundTagAt(i).setByte(PROGRESS_TAG_NAME, (byte)MathHelper.clamp_int(oldProgress + progress, 0, MAX_ITEM_PROGRESS));
+				return;
+			}
+		}
 
-        if (!existingOnly)
-        {
-            ItemPattern pattern = new ItemPattern(item, progress);
-            NBTTagCompound patternTag = new NBTTagCompound();
-            pattern.writeToNBT(patternTag);
-            patternsTagList.appendTag(patternTag);
-        }
-    }
+		if (!existingOnly)
+		{
+			ItemPattern pattern = new ItemPattern(item, progress);
+			NBTTagCompound patternTag = new NBTTagCompound();
+			pattern.writeToNBT(patternTag);
+			patternsTagList.appendTag(patternTag);
+		}
+	}
 
 	public static int getItemStackProgress(ItemStack storage, ItemStack item)
 	{
-        ItemPattern itemPattern = getPatternFromStorage(storage,item);
-        if (itemPattern != null)
-        {
-            return itemPattern.getProgress();
-        }
+		ItemPattern itemPattern = getPatternFromStorage(storage, item);
+		if (itemPattern != null)
+		{
+			return itemPattern.getProgress();
+		}
 		return -1;
 	}
 
 	public static ItemPattern getPatternFromStorage(ItemStack patternStorage, ItemStack item)
 	{
-        IMatterPatternStorage storage = (IMatterPatternStorage)patternStorage.getItem();
-        for (int i = 0;i < storage.getCapacity(patternStorage);i++)
-        {
-            ItemPattern pattern = storage.getPatternAt(patternStorage,i);
-            if (pattern != null && pattern.equals(item))
-            {
-                return pattern;
-            }
-        }
+		IMatterPatternStorage storage = (IMatterPatternStorage)patternStorage.getItem();
+		for (int i = 0; i < storage.getCapacity(patternStorage); i++)
+		{
+			ItemPattern pattern = storage.getPatternAt(patternStorage, i);
+			if (pattern != null && pattern.equals(item))
+			{
+				return pattern;
+			}
+		}
 		return null;
 	}
 
 
-	public static boolean areEqual(ItemStack one,ItemStack two)
+	public static boolean areEqual(ItemStack one, ItemStack two)
 	{
-        if(one != null && two != null)
-        {
-            if(one.getItem() == two.getItem())
-            {
-                if(one.getHasSubtypes() && two.getHasSubtypes())
-                {
-                    if(one.getItemDamage() == two.getItemDamage())
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    return true;
-                }
-            }
-        }
+		if (one != null && two != null)
+		{
+			if (one.getItem() == two.getItem())
+			{
+				if (one.getHasSubtypes() && two.getHasSubtypes())
+				{
+					if (one.getItemDamage() == two.getItemDamage())
+					{
+						return true;
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
-	public static boolean areEqual(NBTTagCompound one,NBTTagCompound two)
+	public static boolean areEqual(NBTTagCompound one, NBTTagCompound two)
 	{
-		if(one == null || two == null)
+		if (one == null || two == null)
+		{
 			return false;
+		}
 
-		return areEqual(ItemStack.loadItemStackFromNBT(one),ItemStack.loadItemStackFromNBT(two));
+		return areEqual(ItemStack.loadItemStackFromNBT(one), ItemStack.loadItemStackFromNBT(two));
 	}
 
 	public static ItemStack GetItemStackFromWorld(World world, BlockPos pos)
 	{
 		IBlockState blockState = world.getBlockState(pos);
-        Item item = Item.getItemFromBlock(blockState.getBlock());
-        if (item != null)
-        {
-            return new ItemStack(item, 1, blockState.getBlock().getMetaFromState(blockState));
-        }
-        return null;
+		Item item = Item.getItemFromBlock(blockState.getBlock());
+		if (item != null)
+		{
+			return new ItemStack(item, 1, blockState.getBlock().getMetaFromState(blockState));
+		}
+		return null;
 	}
 
 	public static ChatFormatting getPatternInfoColor(int progress)
@@ -196,17 +201,29 @@ public class MatterDatabaseHelper
 		ChatFormatting color;
 
 		if (progress > 0 && progress <= 20)
+		{
 			color = ChatFormatting.RED;
+		}
 		else if (progress > 20 && progress <= 40)
+		{
 			color = ChatFormatting.GOLD;
+		}
 		else if (progress > 40 && progress <= 60)
+		{
 			color = ChatFormatting.YELLOW;
+		}
 		else if (progress > 40 && progress <= 80)
+		{
 			color = ChatFormatting.AQUA;
+		}
 		else if (progress > 80 && progress <= 100)
+		{
 			color = ChatFormatting.GREEN;
+		}
 		else
+		{
 			color = ChatFormatting.GREEN;
+		}
 
 		return color;
 	}

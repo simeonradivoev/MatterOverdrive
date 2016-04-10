@@ -57,144 +57,141 @@ public class MOElementTextField extends MOElementBase
 	protected int selectionStart, selectionEnd;
 	protected int renderStartX, renderStartY;
 	protected int caret, prevCaret, caretX;
-
-	private boolean isFocused;
-	private boolean canFocusChange = true;
-
-	private boolean selecting, pressed;
-
-	private byte caretCounter;
 	protected boolean caretInsert;
 	protected boolean smartCaret = true;
 	protected boolean smartCaretCase = true;
-
 	protected boolean multiline = false;
-
 	protected boolean enableStencil = true;
 	protected boolean includeVanilla = true;
 	protected CharSequence seq;
 	protected Matcher filter;
-	protected int textOffsetX,textOffsetY;
-	private ScaleTexture background;
+	protected int textOffsetX, textOffsetY;
 	ITextHandler textHandler;
+	private boolean isFocused;
+	private boolean canFocusChange = true;
+	private boolean selecting, pressed;
+	private byte caretCounter;
+	private ScaleTexture background;
 	private HoloIcon holoIcon;
-    private Color color;
+	private Color color;
 
-    public MOElementTextField(MOGuiBase gui,ITextHandler textHandler, int posX, int posY,int width,int height) {
-        this(gui,textHandler,posX,posY,width,height,(short) 32);
-    }
-
-	public MOElementTextField(MOGuiBase gui,ITextHandler textHandler, int posX, int posY,int width,int height,short limit) {
-		super(gui, posX, posY, width, height);
-		background = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "search_field.png"),166,14).setOffsets(18,12,9,3);
-		this.textHandler = textHandler;
-        setMaxLength(limit);
-	}
-
-    public MOElementTextField(MOGuiBase gui, int posX, int posY,int width,int height)
-    {
-        this(gui, gui, posX, posY, width, height);
-    }
-
-	public MOElementTextField(MOGuiBase gui, int posX, int posY,int width,int height,short limit)
+	public MOElementTextField(MOGuiBase gui, ITextHandler textHandler, int posX, int posY, int width, int height)
 	{
-		this(gui, gui, posX, posY, width, height,limit);
+		this(gui, textHandler, posX, posY, width, height, (short)32);
 	}
 
-	public MOElementTextField setTextColor(Number textColor, Number selectedTextColor) {
+	public MOElementTextField(MOGuiBase gui, ITextHandler textHandler, int posX, int posY, int width, int height, short limit)
+	{
+		super(gui, posX, posY, width, height);
+		background = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "search_field.png"), 166, 14).setOffsets(18, 12, 9, 3);
+		this.textHandler = textHandler;
+		setMaxLength(limit);
+	}
 
-		if (textColor != null) {
+	public MOElementTextField(MOGuiBase gui, int posX, int posY, int width, int height)
+	{
+		this(gui, gui, posX, posY, width, height);
+	}
+
+	public MOElementTextField(MOGuiBase gui, int posX, int posY, int width, int height, short limit)
+	{
+		this(gui, gui, posX, posY, width, height, limit);
+	}
+
+	public MOElementTextField setTextColor(Number textColor, Number selectedTextColor)
+	{
+
+		if (textColor != null)
+		{
 			this.textColor = textColor.intValue();
 		}
-		if (selectedTextColor != null) {
+		if (selectedTextColor != null)
+		{
 			this.selectedTextColor = selectedTextColor.intValue();
 		}
 		return this;
 	}
 
-	public MOElementTextField setSelectionColor(Number selectedLineColor, Number defaultCaretColor) {
+	public MOElementTextField setSelectionColor(Number selectedLineColor, Number defaultCaretColor)
+	{
 
-		if (selectedLineColor != null) {
+		if (selectedLineColor != null)
+		{
 			this.selectedLineColor = selectedLineColor.intValue();
 		}
-		if (defaultCaretColor != null) {
+		if (defaultCaretColor != null)
+		{
 			this.defaultCaretColor = defaultCaretColor.intValue();
 		}
 		return this;
 	}
 
-	public MOElementTextField setBackgroundColor(Number backgroundColor, Number disabledColor, Number borderColor) {
+	public MOElementTextField setBackgroundColor(Number backgroundColor, Number disabledColor, Number borderColor)
+	{
 
-		if (backgroundColor != null) {
+		if (backgroundColor != null)
+		{
 			this.backgroundColor = backgroundColor.intValue();
 		}
-		if (disabledColor != null) {
+		if (disabledColor != null)
+		{
 			this.disabledColor = disabledColor.intValue();
 		}
-		if (borderColor != null) {
+		if (borderColor != null)
+		{
 			this.borderColor = borderColor.intValue();
 		}
 		return this;
 	}
 
-	public MOElementTextField setMultiline(boolean multi) {
+	public MOElementTextField setMultiline(boolean multi)
+	{
 
 		multiline = multi;
 		return this;
 	}
 
-	public MOElementTextField setFocusable(boolean focusable) {
+	public boolean isFocused()
+	{
 
-		canFocusChange = focusable;
-		return this;
+		return isEnabled() && isFocused;
 	}
 
-	public MOElementTextField setFocused(boolean focused) {
+	public MOElementTextField setFocused(boolean focused)
+	{
 
-		if (isFocusable()) {
+		if (isFocusable())
+		{
 			isFocused = focused;
 			caretCounter = 0;
 		}
 		return this;
 	}
 
-	public MOElementTextField setText(String text) {
-
-		selectionStart = 0;
-		selectionEnd = textLength;
-		writeText(text);
-		return this;
-	}
-
-	public MOElementTextField setMaxLength(short limit) {
-
-		char[] oldText = text;
-		text = new char[limit];
-		textLength = Math.min(limit, textLength);
-		if (oldText != null) {
-			System.arraycopy(oldText, 0, text, 0, textLength);
-		}
-		findRenderStart();
-		return this;
-	}
-
-	public boolean isFocused() {
-
-		return isEnabled() && isFocused;
-	}
-
-	public boolean isFocusable() {
+	public boolean isFocusable()
+	{
 
 		return canFocusChange;
 	}
 
-	public int getContentHeight() {
+	public MOElementTextField setFocusable(boolean focusable)
+	{
+
+		canFocusChange = focusable;
+		return this;
+	}
+
+	public int getContentHeight()
+	{
 
 		FontRenderer font = getFontRenderer();
 		int height = font.FONT_HEIGHT;
-		if (multiline) {
-			for (int i = 0; i < textLength; ++i) {
-				if (text[i] == '\n') {
+		if (multiline)
+		{
+			for (int i = 0; i < textLength; ++i)
+			{
+				if (text[i] == '\n')
+				{
 					height += font.FONT_HEIGHT;
 				}
 			}
@@ -202,13 +199,17 @@ public class MOElementTextField extends MOElementBase
 		return height;
 	}
 
-	public int getVisibleHeight() {
+	public int getVisibleHeight()
+	{
 
 		FontRenderer font = getFontRenderer();
 		int height = font.FONT_HEIGHT;
-		if (multiline) {
-			for (int i = 0; i < textLength; ++i) {
-				if (text[i] == '\n') {
+		if (multiline)
+		{
+			for (int i = 0; i < textLength; ++i)
+			{
+				if (text[i] == '\n')
+				{
 					height += font.FONT_HEIGHT;
 				}
 			}
@@ -216,42 +217,55 @@ public class MOElementTextField extends MOElementBase
 		return Math.min(height - renderStartY, sizeY);
 	}
 
-	public int getContentWidth() {
+	public int getContentWidth()
+	{
 
 		FontRenderer font = getFontRenderer();
 		int width = 0;
-		for (int i = 0; i < textLength; ++i) {
+		for (int i = 0; i < textLength; ++i)
+		{
 			width += font.getCharWidth(text[i]);
 		}
 		return width;
 	}
 
-	public int getVisibleWidth() {
+	public int getVisibleWidth()
+	{
 
 		FontRenderer font = getFontRenderer();
 		int width = 0, endX = sizeX - 1, maxWidth = 0;
-		if (multiline) {
-			for (int i = 0; i < textLength; ++i) {
+		if (multiline)
+		{
+			for (int i = 0; i < textLength; ++i)
+			{
 				char c = text[i];
 				int charW = font.getCharWidth(c);
-				if (c == '\n') {
+				if (c == '\n')
+				{
 					maxWidth = Math.max(maxWidth, width);
 					width = 0;
-				} else {
+				}
+				else
+				{
 					width += charW;
 				}
-				if ((width - renderStartX) >= endX) {
+				if ((width - renderStartX) >= endX)
+				{
 					maxWidth = endX + renderStartX;
 					break;
 				}
 			}
 			maxWidth -= renderStartX;
-		} else {
-			for (int i = renderStartX; i < textLength; ++i) {
+		}
+		else
+		{
+			for (int i = renderStartX; i < textLength; ++i)
+			{
 				char c = text[i];
 				int charW = font.getCharWidth(c);
 				maxWidth += charW;
-				if (maxWidth >= endX) {
+				if (maxWidth >= endX)
+				{
 					maxWidth = endX;
 					break;
 				}
@@ -260,24 +274,39 @@ public class MOElementTextField extends MOElementBase
 		return maxWidth;
 	}
 
-	public String getText() {
+	public String getText()
+	{
 
 		return new String(text, 0, textLength);
 	}
 
-	public String getSelectedText() {
+	public MOElementTextField setText(String text)
+	{
 
-		if (selectionStart != selectionEnd) {
+		selectionStart = 0;
+		selectionEnd = textLength;
+		writeText(text);
+		return this;
+	}
+
+	public String getSelectedText()
+	{
+
+		if (selectionStart != selectionEnd)
+		{
 			return new String(text, selectionStart, selectionEnd);
 		}
 		return getText();
 	}
 
-	public void writeText(String text) {
+	public void writeText(String text)
+	{
 
 		int i = 0;
-		for (int e = text.length(); i < e; ++i) {
-			if (!insertCharacter(text.charAt(i))) {
+		for (int e = text.length(); i < e; ++i)
+		{
+			if (!insertCharacter(text.charAt(i)))
+			{
 				break;
 			}
 		}
@@ -286,20 +315,26 @@ public class MOElementTextField extends MOElementBase
 		onCharacterEntered(i > 0);
 	}
 
-	public boolean isAllowedCharacter(char charTyped) {
+	public boolean isAllowedCharacter(char charTyped)
+	{
 
 		return (multiline && charTyped == '\n') || ChatAllowedCharacters.isAllowedCharacter(charTyped);
 	}
 
-	protected boolean onEnter() {
+	protected boolean onEnter()
+	{
 
-		if (multiline) {
+		if (multiline)
+		{
 			boolean typed;
-			if (caretInsert && selectionStart == selectionEnd) {
+			if (caretInsert && selectionStart == selectionEnd)
+			{
 				caretInsert = false;
 				typed = insertCharacter('\n');
 				caretInsert = true;
-			} else {
+			}
+			else
+			{
 				typed = insertCharacter('\n');
 			}
 			clearSelection();
@@ -310,16 +345,21 @@ public class MOElementTextField extends MOElementBase
 		return false;
 	}
 
-	protected void onFocusLost() {
+	protected void onFocusLost()
+	{
 
 	}
 
-	protected boolean insertCharacter(char charTyped) {
+	protected boolean insertCharacter(char charTyped)
+	{
 
-		if (isAllowedCharacter(charTyped)) {
+		if (isAllowedCharacter(charTyped))
+		{
 
-			if (selectionStart != selectionEnd) {
-				if (caret == selectionStart) {
+			if (selectionStart != selectionEnd)
+			{
+				if (caret == selectionStart)
+				{
 					++caret;
 				}
 				text[selectionStart++] = charTyped;
@@ -327,38 +367,47 @@ public class MOElementTextField extends MOElementBase
 			}
 
 			int len = getMaxLength();
-			if ((caretInsert && caret == len) || textLength == len) {
+			if ((caretInsert && caret == len) || textLength == len)
+			{
 				return false;
 			}
 
-			if (!caretInsert || (multiline && text[caret] == '\n')) {
-				if (caret < textLength) {
+			if (!caretInsert || (multiline && text[caret] == '\n'))
+			{
+				if (caret < textLength)
+				{
 					System.arraycopy(text, caret, text, caret + 1, textLength - caret);
 				}
 				++textLength;
 			}
 			text[caret++] = charTyped;
 			return true;
-		} else {
+		}
+		else
+		{
 			return true;
 		}
 	}
 
-	protected void findRenderStart() {
+	protected void findRenderStart()
+	{
 
 		caret = MathHelper.clamp_int(caret, 0, textLength);
-		if (selectionStart == selectionEnd) {
+		if (selectionStart == selectionEnd)
+		{
 			selectionStart = selectionEnd = caret;
 		}
 
-		if (multiline) {
+		if (multiline)
+		{
 			findRenderStartML();
 			return;
 		}
 
 		renderStartY = 0;
 
-		if (caret < renderStartX) {
+		if (caret < renderStartX)
+		{
 			renderStartX = caret;
 			return;
 		}
@@ -366,42 +415,67 @@ public class MOElementTextField extends MOElementBase
 		FontRenderer font = getFontRenderer();
 		int endX = sizeX - 2;
 
-		for (int i = renderStartX, width = 0; i < caret; ++i) {
+		for (int i = renderStartX, width = 0; i < caret; ++i)
+		{
 			width += font.getCharWidth(text[i]);
-			while (width >= endX) {
+			while (width >= endX)
+			{
 				width -= font.getCharWidth(text[renderStartX++]);
-				if (renderStartX >= textLength) {
+				if (renderStartX >= textLength)
+				{
 					return;
 				}
 			}
 		}
 	}
 
-	public int getContentLength() {
+	public int getContentLength()
+	{
 
 		return textLength;
 	}
 
-	public int getMaxLength() {
+	public int getMaxLength()
+	{
 
 		return text.length;
 	}
 
-	protected void findRenderStartML() {
+	public MOElementTextField setMaxLength(short limit)
+	{
 
-		if (caret == textLength && textLength == 0) {
+		char[] oldText = text;
+		text = new char[limit];
+		textLength = Math.min(limit, textLength);
+		if (oldText != null)
+		{
+			System.arraycopy(oldText, 0, text, 0, textLength);
+		}
+		findRenderStart();
+		return this;
+	}
+
+	protected void findRenderStartML()
+	{
+
+		if (caret == textLength && textLength == 0)
+		{
 			renderStartX = renderStartY = 0;
 			return;
 		}
 		FontRenderer font = getFontRenderer();
 		int widthLeft = 0;
 		int breaksAbove = 0;
-		for (int i = caret; i-- > 0;) {
+		for (int i = caret; i-- > 0; )
+		{
 			char c = text[i];
-			if (c == '\n') {
-				for (; i > 0; --i) {
+			if (c == '\n')
+			{
+				for (; i > 0; --i)
+				{
 					c = text[i];
-					if (c == '\n') {
+					if (c == '\n')
+					{
 						breaksAbove += font.FONT_HEIGHT;
 					}
 				}
@@ -412,41 +486,51 @@ public class MOElementTextField extends MOElementBase
 		caretX = widthLeft;
 
 		int pos = Math.max(0, (sizeY - 2) / font.FONT_HEIGHT) * font.FONT_HEIGHT;
-		if (caret > 0 && text[caret - 1] == '\n') {
+		if (caret > 0 && text[caret - 1] == '\n')
+		{
 			renderStartX = 0;
-			if (caret == textLength) {
+			if (caret == textLength)
+			{
 				renderStartY -= pos;
 				renderStartY &= ~renderStartY >> 31;
 			}
 		}
 
-		while ((breaksAbove - renderStartY) < 0) {
+		while ((breaksAbove - renderStartY) < 0)
+		{
 			renderStartY -= font.FONT_HEIGHT;
 		}
-		while ((breaksAbove - renderStartY) >= pos) {
+		while ((breaksAbove - renderStartY) >= pos)
+		{
 			renderStartY += font.FONT_HEIGHT;
 		}
 
 		int dir = prevCaret > caret ? 1 : -1;
-		for (int i = 0; (widthLeft - renderStartX) < 0; i += dir) {
+		for (int i = 0; (widthLeft - renderStartX) < 0; i += dir)
+		{
 			char c = text[caret + i];
-			if (c == '\n') {
+			if (c == '\n')
+			{
 				break;
 			}
 			renderStartX -= font.getCharWidth(c);
 		}
 		renderStartX &= ~renderStartX >> 31;
 		pos = sizeX - 2 - 3;
-		for (int i = 0; (widthLeft - renderStartX) >= pos; ++i) {
+		for (int i = 0; (widthLeft - renderStartX) >= pos; ++i)
+		{
 			renderStartX += font.getCharWidth(text[caret - i]);
 		}
 		prevCaret = caret;
 	}
 
-	protected void clearSelection() {
+	protected void clearSelection()
+	{
 
-		if (selectionStart != selectionEnd) {
-			if (selectionEnd < textLength) {
+		if (selectionStart != selectionEnd)
+		{
+			if (selectionEnd < textLength)
+			{
 				System.arraycopy(text, selectionEnd, text, selectionStart, textLength - selectionEnd);
 			}
 			textLength -= selectionEnd - selectionStart;
@@ -457,46 +541,64 @@ public class MOElementTextField extends MOElementBase
 		}
 	}
 
-	protected final int seekNextCaretLocation(int pos) {
+	protected final int seekNextCaretLocation(int pos)
+	{
 
 		return seekNextCaretLocation(pos, true);
 	}
 
-	protected int seekNextCaretLocation(int pos, boolean forward) {
+	protected int seekNextCaretLocation(int pos, boolean forward)
+	{
 
 		int dir = forward ? 1 : -1;
 		int e = forward ? textLength : 0;
-		if (pos != e) {
+		if (pos != e)
+		{
 			pos += dir;
 		}
 		char prevChar = pos == textLength ? 0 : text[pos];
-		if (!forward) {
-			if (pos != e && Character.isSpaceChar(prevChar)) {
+		if (!forward)
+		{
+			if (pos != e && Character.isSpaceChar(prevChar))
+			{
 				pos += !Character.isSpaceChar(text[pos + dir]) ? dir : 0;
 			}
-		} else if (pos != e && Character.isSpaceChar(prevChar)) {
+		}
+		else if (pos != e && Character.isSpaceChar(prevChar))
+		{
 			pos -= !Character.isSpaceChar(text[pos - dir]) ? dir : 0;
 		}
 		prevChar = text[pos];
 		int i = pos;
 
-		if (smartCaret) {
-			for (; i != e; i += dir) {
+		if (smartCaret)
+		{
+			for (; i != e; i += dir)
+			{
 				char curChar = text[i];
 				boolean dig = Character.isLetterOrDigit(curChar) != Character.isLetterOrDigit(prevChar);
 				boolean caze = !dig && Character.isUpperCase(curChar) != Character.isUpperCase(prevChar);
 				boolean space = Character.isWhitespace(prevChar) != Character.isWhitespace(curChar);
-				if (dig || caze || space) {
+				if (dig || caze || space)
+				{
 					int o = 0;
-					if (smartCaretCase && caze) {
+					if (smartCaretCase && caze)
+					{
 						o = !forward ? 0 : -dir;
-					} else {
-						if (space) {
-							if (forward) {
-								if (i != e && !Character.isWhitespace(text[i + dir])) {
+					}
+					else
+					{
+						if (space)
+						{
+							if (forward)
+							{
+								if (i != e && !Character.isWhitespace(text[i + dir]))
+								{
 									o = Character.isWhitespace(curChar) ? 1 : 0;
 								}
-							} else {
+							}
+							else
+							{
 								o = 1;
 							}
 						}
@@ -505,10 +607,14 @@ public class MOElementTextField extends MOElementBase
 				}
 				prevChar = curChar;
 			}
-		} else {
-			for (; i != e; i += dir) {
+		}
+		else
+		{
+			for (; i != e; i += dir)
+			{
 				char curChar = text[i];
-				if (Character.isSpaceChar(curChar) != Character.isSpaceChar(prevChar)) {
+				if (Character.isSpaceChar(curChar) != Character.isSpaceChar(prevChar))
+				{
 					return i;
 				}
 			}
@@ -517,25 +623,30 @@ public class MOElementTextField extends MOElementBase
 	}
 
 	@Override
-	public boolean onKeyTyped(char charTyped, int keyTyped) {
+	public boolean onKeyTyped(char charTyped, int keyTyped)
+	{
 
-		if (!isFocused()) {
+		if (!isFocused())
+		{
 			return false;
 		}
 
-		switch (charTyped) {
+		switch (charTyped)
+		{
 			case 1: // ^A
 				selectionEnd = caret = textLength;
 				selectionStart = 0;
 				findRenderStart();
 				return true;
 			case 3: // ^C
-				if (selectionStart != selectionEnd) {
+				if (selectionStart != selectionEnd)
+				{
 					GuiScreen.setClipboardString(getSelectedText());
 				}
 				return true;
 			case 24: // ^X
-				if (selectionStart != selectionEnd) {
+				if (selectionStart != selectionEnd)
+				{
 					GuiScreen.setClipboardString(getSelectedText());
 					clearSelection();
 				}
@@ -546,7 +657,8 @@ public class MOElementTextField extends MOElementBase
 
 				return true;
 			default:
-				switch (keyTyped) {
+				switch (keyTyped)
+				{
 					case Keyboard.KEY_ESCAPE:
 						setFocused(false);
 						return !isFocused();
@@ -554,9 +666,12 @@ public class MOElementTextField extends MOElementBase
 					case Keyboard.KEY_NUMPADENTER:
 						return onEnter();
 					case Keyboard.KEY_INSERT:
-						if (GuiScreen.isShiftKeyDown()) {
+						if (GuiScreen.isShiftKeyDown())
+						{
 							writeText(GuiScreen.getClipboardString());
-						} else {
+						}
+						else
+						{
 							caretInsert = !caretInsert;
 						}
 
@@ -567,16 +682,23 @@ public class MOElementTextField extends MOElementBase
 						return true;
 					case Keyboard.KEY_DELETE: // delete
 						boolean changed = false;
-						if (!GuiScreen.isShiftKeyDown()) {
-							if (selectionStart != selectionEnd) {
+						if (!GuiScreen.isShiftKeyDown())
+						{
+							if (selectionStart != selectionEnd)
+							{
 								clearSelection();
-							} else if (GuiScreen.isCtrlKeyDown()) {
+							}
+							else if (GuiScreen.isCtrlKeyDown())
+							{
 								int size = seekNextCaretLocation(caret, true) - caret;
 								selectionStart = caret;
 								selectionEnd = caret + size;
 								clearSelection();
-							} else {
-								if (caret < textLength && textLength > 0) {
+							}
+							else
+							{
+								if (caret < textLength && textLength > 0)
+								{
 									--textLength;
 									System.arraycopy(text, caret + 1, text, caret, textLength - caret);
 									changed = true;
@@ -593,17 +715,24 @@ public class MOElementTextField extends MOElementBase
 						changed = false;
 						boolean calledEntered = true,
 								onBreak = false;
-						if (selectionStart != selectionEnd) {
+						if (selectionStart != selectionEnd)
+						{
 							clearSelection();
-						} else if (GuiScreen.isCtrlKeyDown()) {
+						}
+						else if (GuiScreen.isCtrlKeyDown())
+						{
 							int size = seekNextCaretLocation(caret, false) - caret;
 							selectionStart = caret + size;
 							selectionEnd = caret;
 							clearSelection();
-						} else {
+						}
+						else
+						{
 							calledEntered = false;
-							if (caret > 0 && textLength > 0) {
-								if (caret != textLength) {
+							if (caret > 0 && textLength > 0)
+							{
+								if (caret != textLength)
+								{
 									System.arraycopy(text, caret, text, caret - 1, textLength - caret);
 								}
 								onBreak = text[--caret] == '\n';
@@ -612,35 +741,45 @@ public class MOElementTextField extends MOElementBase
 							}
 						}
 						int old = caret;
-						if (!onBreak) {
-							for (int i = 3; i-- > 0 && caret > 1 && text[caret - 1] != '\n'; --caret) {
+						if (!onBreak)
+						{
+							for (int i = 3; i-- > 0 && caret > 1 && text[caret - 1] != '\n'; --caret)
+							{
 							}
 						}
 						findRenderStart();
 						caret = old;
 
-						if (!calledEntered) {
+						if (!calledEntered)
+						{
 							onCharacterEntered(changed);
 						}
 
 						return true;
 					case Keyboard.KEY_HOME: // home
 						int begin = 0;
-						if (!GuiScreen.isCtrlKeyDown()) {
-							for (int i = caret - 1; i > 0; --i) {
-								if (text[i] == '\n') {
+						if (!GuiScreen.isCtrlKeyDown())
+						{
+							for (int i = caret - 1; i > 0; --i)
+							{
+								if (text[i] == '\n')
+								{
 									begin = Math.min(i + 1, textLength);
 									break;
 								}
 							}
 						}
 
-						if (GuiScreen.isShiftKeyDown()) {
-							if (caret >= selectionEnd) {
+						if (GuiScreen.isShiftKeyDown())
+						{
+							if (caret >= selectionEnd)
+							{
 								selectionEnd = selectionStart;
 							}
 							selectionStart = begin;
-						} else {
+						}
+						else
+						{
 							selectionStart = selectionEnd = begin;
 						}
 						caret = begin;
@@ -649,21 +788,28 @@ public class MOElementTextField extends MOElementBase
 						return true;
 					case Keyboard.KEY_END: // end
 						int end = textLength;
-						if (!GuiScreen.isCtrlKeyDown()) {
-							for (int i = caret; i < textLength; ++i) {
-								if (text[i] == '\n') {
+						if (!GuiScreen.isCtrlKeyDown())
+						{
+							for (int i = caret; i < textLength; ++i)
+							{
+								if (text[i] == '\n')
+								{
 									end = i;
 									break;
 								}
 							}
 						}
 
-						if (GuiScreen.isShiftKeyDown()) {
-							if (caret <= selectionStart) {
+						if (GuiScreen.isShiftKeyDown())
+						{
+							if (caret <= selectionStart)
+							{
 								selectionStart = selectionEnd;
 							}
 							selectionEnd = end;
-						} else {
+						}
+						else
+						{
 							selectionStart = selectionEnd = end;
 						}
 						caret = end;
@@ -674,16 +820,20 @@ public class MOElementTextField extends MOElementBase
 					case Keyboard.KEY_RIGHT: // right arrow
 						int size = keyTyped == 203 ? -1 : 1;
 						boolean shiftCaret = false;
-						if (GuiScreen.isCtrlKeyDown()) {
+						if (GuiScreen.isCtrlKeyDown())
+						{
 							size = seekNextCaretLocation(caret, keyTyped == 205) - caret;
-						} else if (MOStringHelper.isAltKeyDown() && GuiScreen.isShiftKeyDown()) {
+						}
+						else if (MOStringHelper.isAltKeyDown() && GuiScreen.isShiftKeyDown())
+						{
 							caret = seekNextCaretLocation(caret, keyTyped == 205);
 							selectionStart = selectionEnd = caret;
 							size = seekNextCaretLocation(caret, keyTyped != 205) - caret;
 							shiftCaret = true;
 						}
 
-						if (!GuiScreen.isShiftKeyDown()) {
+						if (!GuiScreen.isShiftKeyDown())
+						{
 							selectionStart = selectionEnd = caret;
 						}
 
@@ -693,21 +843,27 @@ public class MOElementTextField extends MOElementBase
 						size = caret - t;
 					}
 
-					if (GuiScreen.isShiftKeyDown()) {
-						if (caret == selectionStart + size) {
+					if (GuiScreen.isShiftKeyDown())
+					{
+						if (caret == selectionStart + size)
+						{
 							selectionStart = caret;
-						} else if (caret == selectionEnd + size) {
+						}
+						else if (caret == selectionEnd + size)
+						{
 							selectionEnd = caret;
 						}
 
-						if (selectionStart > selectionEnd) {
+						if (selectionStart > selectionEnd)
+						{
 							int t = selectionStart;
 							selectionStart = selectionEnd;
 							selectionEnd = t;
 						}
 					}
 
-					if (shiftCaret) {
+					if (shiftCaret)
+					{
 						caret = caret - size;
 					}
 					findRenderStart();
@@ -715,11 +871,13 @@ public class MOElementTextField extends MOElementBase
 					return true;
 					case Keyboard.KEY_UP:
 					case Keyboard.KEY_DOWN:
-						if (!multiline) {
+						if (!multiline)
+						{
 							return false;
 						}
 
-						if (!GuiScreen.isShiftKeyDown()) {
+						if (!GuiScreen.isShiftKeyDown())
+						{
 							selectionStart = selectionEnd = caret;
 						}
 						int dir = keyTyped == Keyboard.KEY_UP ? -1 : 1;
@@ -727,21 +885,31 @@ public class MOElementTextField extends MOElementBase
 						int i = caret,
 								pos = caretX;
 						old = i;
-						for (; i != end; i += dir) {
-							if ((dir == -1 ? i != caret : true) && text[i] == '\n') {
-								if (i != end) {
+						for (; i != end; i += dir)
+						{
+							if ((dir == -1 ? i != caret : true) && text[i] == '\n')
+							{
+								if (i != end)
+								{
 									i += dir;
-								} else {
+								}
+								else
+								{
 									return true;
 								}
 								break;
 							}
 						}
-						l: if (dir == -1) {
-							for (; i > 0 && text[i] != '\n'; --i) {
+						l:
+						if (dir == -1)
+						{
+							for (; i > 0 && text[i] != '\n'; --i)
+							{
 							}
-							if (i == 0) {
-								if (text[0] == '\n') {
+							if (i == 0)
+							{
+								if (text[0] == '\n')
+								{
 									caret = 0;
 									findRenderStart();
 									caretX = pos;
@@ -751,31 +919,41 @@ public class MOElementTextField extends MOElementBase
 							++i;
 						}
 						FontRenderer font = getFontRenderer();
-						for (int width = 0; i <= textLength; ++i) {
+						for (int width = 0; i <= textLength; ++i)
+						{
 							char c = i < textLength ? text[i] : 0;
-							if (i == textLength || c == '\n' || width >= pos) {
+							if (i == textLength || c == '\n' || width >= pos)
+							{
 								caret = i;
 								findRenderStart();
 								caretX = pos;
 								break;
-							} else {
+							}
+							else
+							{
 								width += font.getCharWidth(c);
 							}
 						}
 
 						size = caret - old;
 
-						if (GuiScreen.isShiftKeyDown()) {
-							if (selectionStart == selectionEnd) {
+						if (GuiScreen.isShiftKeyDown())
+						{
+							if (selectionStart == selectionEnd)
+							{
 								selectionStart = selectionEnd = old;
 							}
-							if (caret == selectionStart + size) {
+							if (caret == selectionStart + size)
+							{
 								selectionStart = caret;
-							} else if (caret == selectionEnd + size) {
+							}
+							else if (caret == selectionEnd + size)
+							{
 								selectionEnd = caret;
 							}
 
-							if (selectionStart > selectionEnd) {
+							if (selectionStart > selectionEnd)
+							{
 								int t = selectionStart;
 								selectionStart = selectionEnd;
 								selectionEnd = t;
@@ -784,13 +962,16 @@ public class MOElementTextField extends MOElementBase
 
 						return true;
 					default:
-						if (isAllowedCharacter(charTyped)) {
+						if (isAllowedCharacter(charTyped))
+						{
 							boolean typed = insertCharacter(charTyped);
 							clearSelection();
 							findRenderStart();
 							onCharacterEntered(typed);
 							return true;
-						} else {
+						}
+						else
+						{
 							return false;
 						}
 				}
@@ -798,52 +979,72 @@ public class MOElementTextField extends MOElementBase
 	}
 
 	@Override
-	public boolean onMousePressed(int mouseX, int mouseY, int mouseButton) {
+	public boolean onMousePressed(int mouseX, int mouseY, int mouseButton)
+	{
 
 		pressed = mouseButton == 0;
 		selecting = mouseButton == 0 && isFocused();
-		l: if (selecting) {
-			if (textLength == 0) {
+		l:
+		if (selecting)
+		{
+			if (textLength == 0)
+			{
 				selectionStart = selectionEnd = caret = 0;
 				break l;
 			}
 			FontRenderer font = getFontRenderer();
 			int posX = mouseX - this.posX - 1, posY = mouseY - this.posY - 1;
-			s: if (!multiline) {
-				for (int i = renderStartX, width = 0;;) {
+			s:
+			if (!multiline)
+			{
+				for (int i = renderStartX, width = 0; ; )
+				{
 					int charW = font.getCharWidth(text[i]);
-					if ((width += charW) > posX || ++i >= textLength) {
+					if ((width += charW) > posX || ++i >= textLength)
+					{
 						selectionStart = selectionEnd = caret = i;
 						break;
 					}
 				}
-			} else {
+			}
+			else
+			{
 				posX += renderStartX;
 				posY += renderStartY;
 				int maxX = 0;
 				boolean found = false;
-				for (int i = 0, width = 0, height = font.FONT_HEIGHT; i < textLength;) {
+				for (int i = 0, width = 0, height = font.FONT_HEIGHT; i < textLength; )
+				{
 					char c = text[i];
 					int charW = 0;
-					if (c == '\n') {
-						if (height > posY) {
+					if (c == '\n')
+					{
+						if (height > posY)
+						{
 							maxX = i;
 							break;
 						}
 						found = false;
 						width = 0;
 						height += font.FONT_HEIGHT;
-					} else {
+					}
+					else
+					{
 						charW = font.getCharWidth(c);
 					}
-					if (!found) {
+					if (!found)
+					{
 						maxX = i;
 					}
-					if ((width += charW) > posX || ++i >= textLength) {
-						if (posY < height || i >= textLength) {
+					if ((width += charW) > posX || ++i >= textLength)
+					{
+						if (posY < height || i >= textLength)
+						{
 							selectionStart = selectionEnd = caret = i;
 							break s;
-						} else {
+						}
+						else
+						{
 							++i;
 							found = true;
 						}
@@ -859,9 +1060,10 @@ public class MOElementTextField extends MOElementBase
 	}
 
 	@Override
-	public void update(int mouseX, int mouseY,float partialTicks) {
+	public void update(int mouseX, int mouseY, float partialTicks)
+	{
 
-		caretCounter = (byte) (Minecraft.getMinecraft().ingameGUI.getUpdateCounter() & 0xFF);
+		caretCounter = (byte)(Minecraft.getMinecraft().ingameGUI.getUpdateCounter() & 0xFF);
 		// if (selecting) {
 		// FontRenderer font = getFontRenderer();
 		// int pos = mouseX - posX - 1;
@@ -873,9 +1075,10 @@ public class MOElementTextField extends MOElementBase
 	@Override
 	public void drawBackground(int mouseX, int mouseY, float gameTicks)
 	{
-        if (background != null) {
-            background.render(posX - textOffsetX, posY - textOffsetY, sizeX + textOffsetX, sizeY + textOffsetY);
-        }
+		if (background != null)
+		{
+			background.render(posX - textOffsetX, posY - textOffsetY, sizeX + textOffsetX, sizeY + textOffsetY);
+		}
 	}
 
 	public void setBackground(ScaleTexture texture)
@@ -883,20 +1086,24 @@ public class MOElementTextField extends MOElementBase
 		background = texture;
 	}
 
-	public void setTextOffset(int x,int y)
+	public void setTextOffset(int x, int y)
 	{
 		textOffsetX = x;
 		textOffsetY = y;
 	}
 
 	@Override
-	public void drawForeground(int mouseX, int mouseY) {
+	public void drawForeground(int mouseX, int mouseY)
+	{
 
 		boolean enableStencil = this.enableStencil;
 		int bit = -1;
-		l: if (enableStencil) {
+		l:
+		if (enableStencil)
+		{
 			bit = MinecraftForgeClient.reserveStencilBit();
-			if (bit == -1) {
+			if (bit == -1)
+			{
 				enableStencil = false;
 				break l;
 			}
@@ -909,32 +1116,43 @@ public class MOElementTextField extends MOElementBase
 		int startX = posX + 1 - (multiline ? renderStartX : 0), endX = sizeX - 1;
 		int startY = posY + 1 - renderStartY, endY = startY + font.FONT_HEIGHT;
 		int drawY = renderStartY + Math.max(0, (sizeY - 2) / font.FONT_HEIGHT) * font.FONT_HEIGHT;
-		if (enableStencil) {
-			if (sizeY - (drawY - renderStartY) > 2) {
+		if (enableStencil)
+		{
+			if (sizeY - (drawY - renderStartY) > 2)
+			{
 				drawY += font.FONT_HEIGHT;
 			}
 		}
 		int drawX = endX + (multiline ? renderStartX : 0);
-		for (int i = multiline ? 0 : renderStartX, width = 0, height = 0; i <= textLength; ++i) {
+		for (int i = multiline ? 0 : renderStartX, width = 0, height = 0; i <= textLength; ++i)
+		{
 			boolean end = i == textLength, draw = height >= renderStartY && width < drawX && height < drawY;
 			int charW = 2;
 			char c = 0;
-			if (!end) {
+			if (!end)
+			{
 				c = text[i];
-				if (draw) {
+				if (draw)
+				{
 					charW = multiline && c == '\n' ? 2 : font.getCharWidth(c);
 				}
 				int tWidth = width + charW;
-				if (multiline) {
-					if (!enableStencil) {
+				if (multiline)
+				{
+					if (!enableStencil)
+					{
 						draw &= width >= renderStartX;
 					}
 					draw &= tWidth > renderStartX;
 				}
-				l: if (!enableStencil && tWidth > endX) {
+				l:
+				if (!enableStencil && tWidth > endX)
+				{
 					draw = false;
-					if (multiline) {
-						if (c == '\n') {
+					if (multiline)
+					{
+						if (c == '\n')
+						{
 							break l;
 						}
 						continue;
@@ -944,28 +1162,35 @@ public class MOElementTextField extends MOElementBase
 			}
 
 			boolean drawCaret = draw && i == caret && (caretCounter &= 31) < 16 && isFocused();
-			if (drawCaret) {
+			if (drawCaret)
+			{
 				int caretEnd = width + 2;
-				if (caretInsert) {
+				if (caretInsert)
+				{
 					caretEnd = width + charW;
 				}
 				drawModalRect(startX + width, startY - 1 + height, startX + caretEnd, endY + height, (0xFF000000 & defaultCaretColor)
 						| (~defaultCaretColor & 0xFFFFFF));
 			}
 
-			if (draw && !end) {
+			if (draw && !end)
+			{
 				boolean selected = i >= selectionStart & i < selectionEnd;
-				if (selected) {
+				if (selected)
+				{
 					drawModalRect(startX + width, startY + height, startX + width + charW, endY + height, selectedLineColor);
 				}
-				if (c != '\n') {
+				if (c != '\n')
+				{
 					font.drawString(String.valueOf(c), startX + width, startY + height, selected ? selectedTextColor : textColor);
 				}
 			}
 
-			if (drawCaret) {
+			if (drawCaret)
+			{
 				int caretEnd = width + 2;
-				if (caretInsert) {
+				if (caretInsert)
+				{
 					caretEnd = width + charW;
 				}
 
@@ -975,21 +1200,25 @@ public class MOElementTextField extends MOElementBase
 				GlStateManager.disableBlend();
 			}
 
-			if (c == '\n') {
+			if (c == '\n')
+			{
 				height += font.FONT_HEIGHT;
 				charW = width = 0;
-				if (height > drawY) {
+				if (height > drawY)
+				{
 					break;
 				}
 			}
 
 			width += charW;
-			if (!multiline && width > endX) {
+			if (!multiline && width > endX)
+			{
 				break;
 			}
 		}
 
-		if (enableStencil) {
+		if (enableStencil)
+		{
 			GL11.glDisable(GL11.GL_STENCIL_TEST);
 			MinecraftForgeClient.releaseStencilBit(bit);
 		}
@@ -997,10 +1226,12 @@ public class MOElementTextField extends MOElementBase
 		if (holoIcon != null)
 		{
 			if (color != null)
+			{
 				RenderUtils.applyColor(color);
+			}
 
 			float heightScale = (float)Math.min(holoIcon.getOriginalHeight(), sizeY) / (float)holoIcon.getOriginalHeight();
-			ClientProxy.holoIcons.renderIcon(holoIcon,posX - holoIcon.getOriginalWidth() - 2,posY,(int)(holoIcon.getOriginalWidth() * heightScale),(int)(holoIcon.getOriginalHeight() * heightScale));
+			ClientProxy.holoIcons.renderIcon(holoIcon, posX - holoIcon.getOriginalWidth() - 2, posY, (int)(holoIcon.getOriginalWidth() * heightScale), (int)(holoIcon.getOriginalHeight() * heightScale));
 		}
 	}
 
@@ -1010,10 +1241,10 @@ public class MOElementTextField extends MOElementBase
 		this.holoIcon = holoIcon;
 	}
 
-    public void setColor(Color color)
-    {
-        this.color = color;
-    }
+	public void setColor(Color color)
+	{
+		this.color = color;
+	}
 
 	@Override
 	public void updateInfo()
@@ -1036,13 +1267,16 @@ public class MOElementTextField extends MOElementBase
 	protected void onCharacterEntered(boolean success)
 	{
 		if (isFocused())
-			textHandler.textChanged(getName(),getText(),success);
+		{
+			textHandler.textChanged(getName(), getText(), success);
+		}
 	}
 
-    public MOElementTextField setFilter(Pattern pattern, boolean includeVanilla) {
+	public MOElementTextField setFilter(Pattern pattern, boolean includeVanilla)
+	{
 
-        filter = pattern.matcher(seq);
-        this.includeVanilla = includeVanilla;
-        return this;
-    }
+		filter = pattern.matcher(seq);
+		this.includeVanilla = includeVanilla;
+		return this;
+	}
 }

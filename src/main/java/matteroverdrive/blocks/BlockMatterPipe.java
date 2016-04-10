@@ -29,17 +29,17 @@ import net.minecraft.world.World;
  */
 public class BlockMatterPipe extends BlockPipe
 {
-    public BlockMatterPipe(Material material, String name)
-    {
-        super(material, name);
-        setHardness(10.0F);
-        this.setResistance(5.0f);
-        setRotationType(MOBlockHelper.RotationType.PREVENT);
-    }
+	public BlockMatterPipe(Material material, String name)
+	{
+		super(material, name);
+		setHardness(10.0F);
+		this.setResistance(5.0f);
+		setRotationType(MOBlockHelper.RotationType.PREVENT);
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMatterPipe();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMatterPipe();
+	}
 }

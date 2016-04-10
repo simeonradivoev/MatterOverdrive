@@ -38,30 +38,31 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TritaniumArmor extends ItemArmor
 {
-    public TritaniumArmor(ArmorMaterial armorMaterial, int renderIndex, EntityEquipmentSlot slot) {
-        super(armorMaterial, renderIndex, slot);
-    }
+	public TritaniumArmor(ArmorMaterial armorMaterial, int renderIndex, EntityEquipmentSlot slot)
+	{
+		super(armorMaterial, renderIndex, slot);
+	}
 
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
-    {
-        return String.format(Reference.PATH_ARMOR + "Tritanium_Armor2_layer_%d.png",slot == EntityEquipmentSlot.FEET ? 2 : 1);
-        //return String.format(Reference.PATH_ARMOR + "tritanium_layer_%d%s.png",(slot == 2 ? 2 : 1),type == null ? "" : String.format("_%s", type));
-    }
+	@Override
+	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
+	{
+		return String.format(Reference.PATH_ARMOR + "Tritanium_Armor2_layer_%d.png", slot == EntityEquipmentSlot.FEET ? 2 : 1);
+		//return String.format(Reference.PATH_ARMOR + "tritanium_layer_%d%s.png",(slot == 2 ? 2 : 1),type == null ? "" : String.format("_%s", type));
+	}
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public net.minecraft.client.model.ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, net.minecraft.client.model.ModelBiped _default)
-    {
-        ModelTritaniumArmor armorModel = armorSlot == EntityEquipmentSlot.FEET ? ClientProxy.renderHandler.modelTritaniumArmorFeet : ClientProxy.renderHandler.modelTritaniumArmor;
-        Render<AbstractClientPlayer> render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject((AbstractClientPlayer)entityLiving);
-        if (render instanceof RenderPlayer)
-        {
-            armorModel.setModelAttributes(_default);
-            //armorModel.setModelAttributes(((RenderPlayer) render).getMainModel());
-            //armorModel.setLivingAnimations(entityLiving, p_177182_2_, p_177182_3_, p_177182_4_);
-        }
-        /*armorModel.bipedHead.showModel = armorSlot == 0;
+	@SideOnly(Side.CLIENT)
+	@Override
+	public net.minecraft.client.model.ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, net.minecraft.client.model.ModelBiped _default)
+	{
+		ModelTritaniumArmor armorModel = armorSlot == EntityEquipmentSlot.FEET ? ClientProxy.renderHandler.modelTritaniumArmorFeet : ClientProxy.renderHandler.modelTritaniumArmor;
+		Render<AbstractClientPlayer> render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject((AbstractClientPlayer)entityLiving);
+		if (render instanceof RenderPlayer)
+		{
+			armorModel.setModelAttributes(_default);
+			//armorModel.setModelAttributes(((RenderPlayer) render).getMainModel());
+			//armorModel.setLivingAnimations(entityLiving, p_177182_2_, p_177182_3_, p_177182_4_);
+		}
+		/*armorModel.bipedHead.showModel = armorSlot == 0;
         armorModel.bipedHeadwear.showModel = armorSlot == 0;
         armorModel.bipedBody.showModel = armorSlot == 1;
         armorModel.bipedRightArm.showModel = armorSlot == 1;
@@ -81,6 +82,6 @@ public class TritaniumArmor extends ItemArmor
             armorModel.aimedBow = renderPlayer.getMainModel().aimedBow;
         }*/
 
-        return armorModel;
-    }
+		return armorModel;
+	}
 }

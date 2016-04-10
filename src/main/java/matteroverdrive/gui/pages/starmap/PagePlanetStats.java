@@ -32,41 +32,41 @@ import matteroverdrive.tile.TileEntityMachineStarMap;
  */
 public class PagePlanetStats extends ElementBaseGroup implements IListHandler
 {
-    TileEntityMachineStarMap starMap;
-    ElementGroupList shipList;
+	TileEntityMachineStarMap starMap;
+	ElementGroupList shipList;
 
-    public PagePlanetStats(GuiStarMap gui, int posX, int posY, int width, int height,TileEntityMachineStarMap starMap)
-    {
-        super(gui, posX, posY, width, height);
-        this.starMap = starMap;
-        shipList = new ElementGroupList(gui,this,16,16,width,256);
-    }
+	public PagePlanetStats(GuiStarMap gui, int posX, int posY, int width, int height, TileEntityMachineStarMap starMap)
+	{
+		super(gui, posX, posY, width, height);
+		this.starMap = starMap;
+		shipList = new ElementGroupList(gui, this, 16, 16, width, 256);
+	}
 
-    @Override
-    public void init()
-    {
-        super.init();
-        addElement(shipList);
-        loadShips();
-    }
+	@Override
+	public void init()
+	{
+		super.init();
+		addElement(shipList);
+		loadShips();
+	}
 
-    public void loadShips()
-    {
-        shipList.init();
-        Planet planet = GalaxyClient.getInstance().getTheGalaxy().getPlanet(starMap.getGalaxyPosition());
-        if (planet != null && !starMap.getGalaxyPosition().equals(starMap.getDestination()))
-        {
-            for (int i = 0;i < planet.getFleet().size();i++)
-            {
-                shipList.addElement(new ElementShipEntry((GuiStarMap)gui,shipList,186,32,planet,planet.getFleet().get(i),i));
-            }
-        }
-        shipList.update(0,0,0);
-    }
+	public void loadShips()
+	{
+		shipList.init();
+		Planet planet = GalaxyClient.getInstance().getTheGalaxy().getPlanet(starMap.getGalaxyPosition());
+		if (planet != null && !starMap.getGalaxyPosition().equals(starMap.getDestination()))
+		{
+			for (int i = 0; i < planet.getFleet().size(); i++)
+			{
+				shipList.addElement(new ElementShipEntry((GuiStarMap)gui, shipList, 186, 32, planet, planet.getFleet().get(i), i));
+			}
+		}
+		shipList.update(0, 0, 0);
+	}
 
-    @Override
-    public void ListSelectionChange(String name, int selected)
-    {
+	@Override
+	public void ListSelectionChange(String name, int selected)
+	{
 
-    }
+	}
 }

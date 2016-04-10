@@ -30,127 +30,131 @@ import net.minecraft.util.text.ITextComponent;
  */
 public class ItemInventoryWrapper implements IInventory
 {
-    ItemStack inventory;
-    int size;
-    boolean dirty;
+	ItemStack inventory;
+	int size;
+	boolean dirty;
 
-    public ItemInventoryWrapper(ItemStack itemStack, int size)
-    {
-        this.inventory = itemStack;
-        this.size = size;
-    }
+	public ItemInventoryWrapper(ItemStack itemStack, int size)
+	{
+		this.inventory = itemStack;
+		this.size = size;
+	}
 
-    @Override
-    public int getSizeInventory()
-    {
-        return size;
-    }
+	@Override
+	public int getSizeInventory()
+	{
+		return size;
+	}
 
-    @Override
-    public ItemStack getStackInSlot(int slot)
-    {
-       return MOInventoryHelper.getStackInSlot(inventory, slot);
-    }
+	@Override
+	public ItemStack getStackInSlot(int slot)
+	{
+		return MOInventoryHelper.getStackInSlot(inventory, slot);
+	}
 
-    @Override
-    public ItemStack decrStackSize(int slot, int amount)
-    {
-        return MOInventoryHelper.decrStackSize(inventory,slot,amount);
-    }
+	@Override
+	public ItemStack decrStackSize(int slot, int amount)
+	{
+		return MOInventoryHelper.decrStackSize(inventory, slot, amount);
+	}
 
-    @Override
-    public ItemStack removeStackFromSlot(int index)
-    {
-        ItemStack itemStack = MOInventoryHelper.getStackInSlot(inventory,index);
-        MOInventoryHelper.setInventorySlotContents(inventory,index,null);
-        return itemStack;
-    }
+	@Override
+	public ItemStack removeStackFromSlot(int index)
+	{
+		ItemStack itemStack = MOInventoryHelper.getStackInSlot(inventory, index);
+		MOInventoryHelper.setInventorySlotContents(inventory, index, null);
+		return itemStack;
+	}
 
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack stack)
-    {
-        if (inventory.getTagCompound() == null)
-            inventory.setTagCompound(new NBTTagCompound());
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack)
+	{
+		if (inventory.getTagCompound() == null)
+		{
+			inventory.setTagCompound(new NBTTagCompound());
+		}
 
-        MOInventoryHelper.setInventorySlotContents(inventory, slot, stack);
-    }
+		MOInventoryHelper.setInventorySlotContents(inventory, slot, stack);
+	}
 
-    @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return 64;
+	}
 
-    @Override
-    public void markDirty()
-    {
-        dirty = true;
-    }
+	@Override
+	public void markDirty()
+	{
+		dirty = true;
+	}
 
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return true;
-    }
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player)
+	{
+		return true;
+	}
 
-    @Override
-    public void openInventory(EntityPlayer player)
-    {
+	@Override
+	public void openInventory(EntityPlayer player)
+	{
 
-    }
+	}
 
-    @Override
-    public void closeInventory(EntityPlayer player)
-    {
+	@Override
+	public void closeInventory(EntityPlayer player)
+	{
 
-    }
+	}
 
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack)
-    {
-        return true;
-    }
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack)
+	{
+		return true;
+	}
 
-    @Override
-    public int getField(int id)
-    {
-        return 0;
-    }
+	@Override
+	public int getField(int id)
+	{
+		return 0;
+	}
 
-    @Override
-    public void setField(int id, int value)
-    {
+	@Override
+	public void setField(int id, int value)
+	{
 
-    }
+	}
 
-    @Override
-    public int getFieldCount()
-    {
-        return 0;
-    }
+	@Override
+	public int getFieldCount()
+	{
+		return 0;
+	}
 
-    @Override
-    public void clear()
-    {
-        for (int i = 0;i < getSizeInventory();i++)
-        {
-            removeStackFromSlot(i);
-        }
-    }
+	@Override
+	public void clear()
+	{
+		for (int i = 0; i < getSizeInventory(); i++)
+		{
+			removeStackFromSlot(i);
+		}
+	}
 
-    @Override
-    public String getName()
-    {
-        return inventory.getDisplayName();
-    }
+	@Override
+	public String getName()
+	{
+		return inventory.getDisplayName();
+	}
 
-    @Override
-    public boolean hasCustomName()
-    {
-        return true;
-    }
+	@Override
+	public boolean hasCustomName()
+	{
+		return true;
+	}
 
-    @Override
-    public ITextComponent getDisplayName()
-    {
-        return inventory.getChatComponent();
-    }
+	@Override
+	public ITextComponent getDisplayName()
+	{
+		return inventory.getChatComponent();
+	}
 }

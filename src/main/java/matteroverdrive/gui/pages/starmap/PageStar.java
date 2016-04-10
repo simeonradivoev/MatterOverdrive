@@ -33,54 +33,59 @@ import matteroverdrive.tile.TileEntityMachineStarMap;
  */
 public class PageStar extends ElementBaseGroup implements IListHandler
 {
-    TileEntityMachineStarMap starMap;
-    ElementGroupList planetList;
+	TileEntityMachineStarMap starMap;
+	ElementGroupList planetList;
 
-    public PageStar(GuiStarMap gui, int posX, int posY, int width, int height,TileEntityMachineStarMap starMap) {
-        super(gui, posX, posY, width, height);
-        planetList = new ElementGroupList(gui,this,16,16,sizeX,sizeY-100-32);
-        planetList.setName("Stars");
-        planetList.resetSmoothScroll();
-        //planetList.textColor = Reference.COLOR_HOLO.getColor();
-        //planetList.selectedTextColor = Reference.COLOR_HOLO_YELLOW.getColor();
-        this.starMap = starMap;
-    }
+	public PageStar(GuiStarMap gui, int posX, int posY, int width, int height, TileEntityMachineStarMap starMap)
+	{
+		super(gui, posX, posY, width, height);
+		planetList = new ElementGroupList(gui, this, 16, 16, sizeX, sizeY - 100 - 32);
+		planetList.setName("Stars");
+		planetList.resetSmoothScroll();
+		//planetList.textColor = Reference.COLOR_HOLO.getColor();
+		//planetList.selectedTextColor = Reference.COLOR_HOLO_YELLOW.getColor();
+		this.starMap = starMap;
+	}
 
-    private void loadPlanets()
-    {
-        planetList.init();
-        Star star = GalaxyClient.getInstance().getTheGalaxy().getStar(starMap.getDestination());
-        if (star != null) {
-            for (Planet planet : star.getPlanets()) {
-                planetList.addElement(new ElementPlanetEntry((GuiStarMap) gui, planetList, 128 + 64, 32, planet));
+	private void loadPlanets()
+	{
+		planetList.init();
+		Star star = GalaxyClient.getInstance().getTheGalaxy().getStar(starMap.getDestination());
+		if (star != null)
+		{
+			for (Planet planet : star.getPlanets())
+			{
+				planetList.addElement(new ElementPlanetEntry((GuiStarMap)gui, planetList, 128 + 64, 32, planet));
 
-                if (starMap.getDestination().equals(planet)) {
-                    planetList.setSelectedIndex(planetList.getElements().size() - 1);
-                }
-            }
-        }
-        planetList.limitScroll();
-        planetList.update(0,0,0);
-    }
+				if (starMap.getDestination().equals(planet))
+				{
+					planetList.setSelectedIndex(planetList.getElements().size() - 1);
+				}
+			}
+		}
+		planetList.limitScroll();
+		planetList.update(0, 0, 0);
+	}
 
-    @Override
-    public void init()
-    {
-        super.init();
-        planetList.setSize(sizeX,sizeY-100-32);
-        addElement(planetList);
-        loadPlanets();
+	@Override
+	public void init()
+	{
+		super.init();
+		planetList.setSize(sizeX, sizeY - 100 - 32);
+		addElement(planetList);
+		loadPlanets();
 
-    }
+	}
 
-    @Override
-    public void ListSelectionChange(String name, int selected) {
+	@Override
+	public void ListSelectionChange(String name, int selected)
+	{
 
-    }
+	}
 
-    @Override
-    public void update(int mouseX, int mouseY,float partialTicks)
-    {
-        super.update(mouseX,mouseY,partialTicks);
-    }
+	@Override
+	public void update(int mouseX, int mouseY, float partialTicks)
+	{
+		super.update(mouseX, mouseY, partialTicks);
+	}
 }

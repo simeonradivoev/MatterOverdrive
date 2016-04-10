@@ -8,5 +8,5 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
  */
 public interface IWorldLastRenderer
 {
-    void onRenderWorldLast(RenderHandler handler, RenderWorldLastEvent event);
+	void onRenderWorldLast(RenderHandler handler, RenderWorldLastEvent event);
 }

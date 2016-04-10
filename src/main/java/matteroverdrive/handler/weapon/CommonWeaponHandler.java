@@ -34,50 +34,50 @@ import java.util.Map;
  */
 public class CommonWeaponHandler
 {
-    private static final PacketFirePlasmaShot.BiHandler firePlasmaShotHandler = new PacketFirePlasmaShot.BiHandler();
-    private final Map<EntityPlayer, Long> weaponTimestamps;
+	private static final PacketFirePlasmaShot.BiHandler firePlasmaShotHandler = new PacketFirePlasmaShot.BiHandler();
+	private final Map<EntityPlayer, Long> weaponTimestamps;
 
-    public CommonWeaponHandler()
-    {
-        weaponTimestamps = new HashMap<>();
-    }
+	public CommonWeaponHandler()
+	{
+		weaponTimestamps = new HashMap<>();
+	}
 
-    public void addTimestamp(EntityPlayer player, long timestamp)
-    {
-        weaponTimestamps.put(player, timestamp);
-    }
+	public void addTimestamp(EntityPlayer player, long timestamp)
+	{
+		weaponTimestamps.put(player, timestamp);
+	}
 
-    public boolean hasTimestamp(EntityPlayer player)
-    {
-        return weaponTimestamps.containsKey(player);
-    }
+	public boolean hasTimestamp(EntityPlayer player)
+	{
+		return weaponTimestamps.containsKey(player);
+	}
 
-    public long getTimestamp(EntityPlayer entityPlayer)
-    {
-        if (entityPlayer != null)
-        {
-            return weaponTimestamps.get(entityPlayer);
-        }
-        return 0;
-    }
+	public long getTimestamp(EntityPlayer entityPlayer)
+	{
+		if (entityPlayer != null)
+		{
+			return weaponTimestamps.get(entityPlayer);
+		}
+		return 0;
+	}
 
-    public void handlePlasmaShotFire(EntityPlayer entityPlayer, PacketFirePlasmaShot plasmaShot, long timeStamp)
-    {
-        int delay = (int) (timeStamp - getTimestamp(entityPlayer));
-        firePlasmaShotHandler.handleServerShot(entityPlayer, plasmaShot, delay);
-        MatterOverdrive.packetPipeline.sendToAllAround(plasmaShot, entityPlayer, plasmaShot.getShot().getRange() + 64);
-    }
+	public void handlePlasmaShotFire(EntityPlayer entityPlayer, PacketFirePlasmaShot plasmaShot, long timeStamp)
+	{
+		int delay = (int)(timeStamp - getTimestamp(entityPlayer));
+		firePlasmaShotHandler.handleServerShot(entityPlayer, plasmaShot, delay);
+		MatterOverdrive.packetPipeline.sendToAllAround(plasmaShot, entityPlayer, plasmaShot.getShot().getRange() + 64);
+	}
 
-    @SubscribeEvent
-    public void onEnergyWeaponEvent(MOEventEnergyWeapon eventEnergyWeapon)
-    {
-        if (eventEnergyWeapon.getEntity() != null)
-        {
-            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(eventEnergyWeapon.getEntity());
-            if (androidPlayer != null)
-            {
-                androidPlayer.onWeaponEvent(eventEnergyWeapon);
-            }
-        }
-    }
+	@SubscribeEvent
+	public void onEnergyWeaponEvent(MOEventEnergyWeapon eventEnergyWeapon)
+	{
+		if (eventEnergyWeapon.getEntity() != null)
+		{
+			AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(eventEnergyWeapon.getEntity());
+			if (androidPlayer != null)
+			{
+				androidPlayer.onWeaponEvent(eventEnergyWeapon);
+			}
+		}
+	}
 }

@@ -22,36 +22,36 @@ import java.util.List;
  */
 public class BlockDecorativeColored extends BlockDecorative
 {
-    public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
+	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
 
-    public BlockDecorativeColored(Material material, String name, float hardness, int harvestLevel, float resistance, int mapColor)
-    {
-        super(material, name, hardness, harvestLevel, resistance, mapColor);
-    }
+	public BlockDecorativeColored(Material material, String name, float hardness, int harvestLevel, float resistance, int mapColor)
+	{
+		super(material, name, hardness, harvestLevel, resistance, mapColor);
+	}
 
-    public static void registerRecipes()
-    {
+	public static void registerRecipes()
+	{
 
-    }
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_)
-    {
-        for (int i = 0;i < 16;i++)
-        {
-            p_149666_3_.add(new ItemStack(p_149666_1_, 1, i));
-        }
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_)
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			p_149666_3_.add(new ItemStack(p_149666_1_, 1, i));
+		}
+	}
 
-    @Override
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
-        return getStateFromMeta(meta);
-    }
+	@Override
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	{
+		return getStateFromMeta(meta);
+	}
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public int getRenderColor(IBlockState blockState)
     {
         EnumDyeColor color = blockState.getValue(COLOR);
@@ -66,29 +66,29 @@ public class BlockDecorativeColored extends BlockDecorative
         return ItemDye.dyeColors[MathHelper.clamp_int(color.getMetadata(),0,ItemDye.dyeColors.length-1)];
     }*/
 
-    //// TODO: 3/24/2016 Find New Way of coloring blocks
+	//// TODO: 3/24/2016 Find New Way of coloring blocks
 
-    @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        return state.getValue(COLOR).getMetadata();
-    }
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return state.getValue(COLOR).getMetadata();
+	}
 
-    @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
-        return this.getDefaultState().withProperty(COLOR, EnumDyeColor.byMetadata(meta));
-    }
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return this.getDefaultState().withProperty(COLOR, EnumDyeColor.byMetadata(meta));
+	}
 
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, COLOR);
-    }
+	@Override
+	protected BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, COLOR);
+	}
 
-    @Override
-    public int damageDropped(IBlockState state)
-    {
-        return state.getValue(COLOR).getMetadata();
-    }
+	@Override
+	public int damageDropped(IBlockState state)
+	{
+		return state.getValue(COLOR).getMetadata();
+	}
 }

@@ -40,63 +40,72 @@ import java.util.List;
  */
 public class PacketMatterScannerGetDatabase extends TileEntityUpdatePacket
 {
-    List<ItemPattern> list;
+	List<ItemPattern> list;
 
-    public PacketMatterScannerGetDatabase(){super();}
-    public PacketMatterScannerGetDatabase(BlockPos position)
-    {
-        super(position);
-    }
-    public PacketMatterScannerGetDatabase(List<ItemPattern> list)
-    {
-        this.list = list;
-    }
+	public PacketMatterScannerGetDatabase()
+	{
+		super();
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
-        int size = buf.readInt();
-        //for (int i = 0;i < size;i++)
-        //{
-            //list.add(new ItemPattern(buf));
-        //}
-    }
+	public PacketMatterScannerGetDatabase(BlockPos position)
+	{
+		super(position);
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
-        //buf.writeInt(list.size());
-        //for (ItemPattern pattern : list)
-        //{
-            //pattern.writeToBuffer(buf);
-        //}
-    }
+	public PacketMatterScannerGetDatabase(List<ItemPattern> list)
+	{
+		this.list = list;
+	}
 
-    public static class Handler extends AbstractBiPacketHandler<PacketMatterScannerGetDatabase>
-    {
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		super.fromBytes(buf);
+		int size = buf.readInt();
+		//for (int i = 0;i < size;i++)
+		//{
+		//list.add(new ItemPattern(buf));
+		//}
+	}
 
-        public Handler(){}
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		super.toBytes(buf);
+		//buf.writeInt(list.size());
+		//for (ItemPattern pattern : list)
+		//{
+		//pattern.writeToBuffer(buf);
+		//}
+	}
 
-        @Override
-        public void handleServerMessage(EntityPlayerMP player, PacketMatterScannerGetDatabase message, MessageContext ctx)
-        {
-            TileEntity tileEntity = message.getTileEntity(player.worldObj);
-            if (tileEntity instanceof IMatterDatabase)
-            {
-                //IMatterDatabase database = (IMatterDatabase) tileEntity;
-                //MatterOverdrive.packetPipeline.sendTo(new PacketMatterScannerGetDatabase(database.getPatterns()),player);
-            }
-        }
+	public static class Handler extends AbstractBiPacketHandler<PacketMatterScannerGetDatabase>
+	{
 
-        @SideOnly(Side.CLIENT)
-        @Override
-        public void handleClientMessage(EntityPlayerSP player, PacketMatterScannerGetDatabase message, MessageContext ctx)
-        {
-            if (Minecraft.getMinecraft().currentScreen instanceof GuiMatterScanner)
-            {
-                //GuiMatterScanner guiMatterScanner = (GuiMatterScanner)Minecraft.getMinecraft().currentScreen;
-                //guiMatterScanner.UpdatePatternList(message.list);
-            }
-        }
-    }
+		public Handler()
+		{
+		}
+
+		@Override
+		public void handleServerMessage(EntityPlayerMP player, PacketMatterScannerGetDatabase message, MessageContext ctx)
+		{
+			TileEntity tileEntity = message.getTileEntity(player.worldObj);
+			if (tileEntity instanceof IMatterDatabase)
+			{
+				//IMatterDatabase database = (IMatterDatabase) tileEntity;
+				//MatterOverdrive.packetPipeline.sendTo(new PacketMatterScannerGetDatabase(database.getPatterns()),player);
+			}
+		}
+
+		@SideOnly(Side.CLIENT)
+		@Override
+		public void handleClientMessage(EntityPlayerSP player, PacketMatterScannerGetDatabase message, MessageContext ctx)
+		{
+			if (Minecraft.getMinecraft().currentScreen instanceof GuiMatterScanner)
+			{
+				//GuiMatterScanner guiMatterScanner = (GuiMatterScanner)Minecraft.getMinecraft().currentScreen;
+				//guiMatterScanner.UpdatePatternList(message.list);
+			}
+		}
+	}
 }

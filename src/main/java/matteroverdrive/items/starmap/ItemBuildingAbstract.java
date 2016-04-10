@@ -25,14 +25,18 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Simeon on 6/23/2015.
  */
-public abstract class ItemBuildingAbstract extends ItemBuildableAbstract implements IBuilding {
+public abstract class ItemBuildingAbstract extends ItemBuildableAbstract implements IBuilding
+{
 
-    public ItemBuildingAbstract(String name)
-    {
-        super(name);
-        setMaxStackSize(1);
-        setCreativeTab(MatterOverdrive.tabMatterOverdrive_buildings);
-    }
+	public ItemBuildingAbstract(String name)
+	{
+		super(name);
+		setMaxStackSize(1);
+		setCreativeTab(MatterOverdrive.tabMatterOverdrive_buildings);
+	}
 
-    public boolean hasDetails(ItemStack stack){return true;}
+	public boolean hasDetails(ItemStack stack)
+	{
+		return true;
+	}
 }

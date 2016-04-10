@@ -7,10 +7,10 @@ import matteroverdrive.client.render.weapons.WeaponRenderHandler;
  */
 public abstract class ModuleRenderAbstract implements IModuleRender
 {
-    protected final WeaponRenderHandler weaponRenderer;
+	protected final WeaponRenderHandler weaponRenderer;
 
-    public ModuleRenderAbstract(WeaponRenderHandler weaponRenderer)
-    {
-        this.weaponRenderer = weaponRenderer;
-    }
+	public ModuleRenderAbstract(WeaponRenderHandler weaponRenderer)
+	{
+		this.weaponRenderer = weaponRenderer;
+	}
 }

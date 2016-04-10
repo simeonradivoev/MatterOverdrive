@@ -36,32 +36,34 @@ import java.util.List;
  * Created by Simeon on 10/6/2015.
  * @since 0.4.0
  */
-public class BlockDecorative extends MOBlock implements IImageGenBlock {
+public class BlockDecorative extends MOBlock implements IImageGenBlock
+{
 
-    public static final List<BlockDecorative> decorativeBlocks = new ArrayList<>();
-    private int mapColor;
+	public static final List<BlockDecorative> decorativeBlocks = new ArrayList<>();
+	private int mapColor;
 
-    public BlockDecorative(Material material, String name, float hardness, int harvestLevel, float resistance,int mapColor) {
-        super(material, name);
-        setHardness(hardness);
-        setHarvestLevel("pickaxe", harvestLevel);
-        setResistance(resistance);
-        setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative);
-        this.mapColor = mapColor;
-        decorativeBlocks.add(this);
-        MOImageGen.worldGenerationBlockColors.put(this,getBlockColor(0));
-        setRotationType(-1);
-    }
+	public BlockDecorative(Material material, String name, float hardness, int harvestLevel, float resistance, int mapColor)
+	{
+		super(material, name);
+		setHardness(hardness);
+		setHarvestLevel("pickaxe", harvestLevel);
+		setResistance(resistance);
+		setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative);
+		this.mapColor = mapColor;
+		decorativeBlocks.add(this);
+		MOImageGen.worldGenerationBlockColors.put(this, getBlockColor(0));
+		setRotationType(-1);
+	}
 
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
-        //worldIn.setBlockState(pos,state.withProperty(MOBlock.PROPERTY_DIRECTION, EnumFacing.VALUES[stack.getItemDamage()]));
-    }
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+	{
+		//worldIn.setBlockState(pos,state.withProperty(MOBlock.PROPERTY_DIRECTION, EnumFacing.VALUES[stack.getItemDamage()]));
+	}
 
-    @Override
-    public int getBlockColor(int meta)
-    {
-        return mapColor;
-    }
+	@Override
+	public int getBlockColor(int meta)
+	{
+		return mapColor;
+	}
 }

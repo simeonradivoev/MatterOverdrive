@@ -28,32 +28,33 @@ import net.minecraft.util.math.Vec3d;
  */
 public class DialogShotWide extends DialogShot
 {
-    private final float distance;
-    private final float heightOffset;
-    private final boolean oppositeSide;
+	private final float distance;
+	private final float heightOffset;
+	private final boolean oppositeSide;
 
-    public DialogShotWide(float heightOffset, boolean oppositeSide, float distance)
-    {
-        this.heightOffset = heightOffset;
-        this.oppositeSide = oppositeSide;
-        this.distance = distance;
-    }
+	public DialogShotWide(float heightOffset, boolean oppositeSide, float distance)
+	{
+		this.heightOffset = heightOffset;
+		this.oppositeSide = oppositeSide;
+		this.distance = distance;
+	}
 
-    @Override
-    public boolean positionCamera(EntityLivingBase active, EntityLivingBase other, float ticks, EntityRendererConversation rendererConversation)
-    {
-        Vec3d centerDir = rendererConversation.getPosition(other, ticks).addVector(0, heightOffset, 0).subtract(rendererConversation.getPosition(active, ticks).addVector(0,heightOffset, 0));
-        double distance = centerDir.lengthVector() / 2 * this.distance;
-        Vec3d center = rendererConversation.getPosition(active, ticks).addVector(centerDir.xCoord / 2, centerDir.yCoord / 2, centerDir.zCoord / 2);
-        Vec3d centerCross = centerDir.normalize().crossProduct(new Vec3d(0, oppositeSide ? -1 : 1, 0)).normalize();
-        RayTraceResult hit = MOPhysicsHelper.rayTraceForBlocks(center, active.worldObj, distance, ticks, null, true, true, centerCross);
-        Vec3d pos = center.addVector(centerCross.xCoord * distance, centerCross.yCoord * distance, centerCross.zCoord * distance);
-        if (hit != null) {
-            pos = hit.hitVec;
-        }
+	@Override
+	public boolean positionCamera(EntityLivingBase active, EntityLivingBase other, float ticks, EntityRendererConversation rendererConversation)
+	{
+		Vec3d centerDir = rendererConversation.getPosition(other, ticks).addVector(0, heightOffset, 0).subtract(rendererConversation.getPosition(active, ticks).addVector(0, heightOffset, 0));
+		double distance = centerDir.lengthVector() / 2 * this.distance;
+		Vec3d center = rendererConversation.getPosition(active, ticks).addVector(centerDir.xCoord / 2, centerDir.yCoord / 2, centerDir.zCoord / 2);
+		Vec3d centerCross = centerDir.normalize().crossProduct(new Vec3d(0, oppositeSide ? -1 : 1, 0)).normalize();
+		RayTraceResult hit = MOPhysicsHelper.rayTraceForBlocks(center, active.worldObj, distance, ticks, null, true, true, centerCross);
+		Vec3d pos = center.addVector(centerCross.xCoord * distance, centerCross.yCoord * distance, centerCross.zCoord * distance);
+		if (hit != null)
+		{
+			pos = hit.hitVec;
+		}
 
-        rendererConversation.setCameraPosition(pos.xCoord, pos.yCoord, pos.zCoord);
-        rendererConversation.rotateCameraYawTo(centerCross, 90);
-        return true;
-    }
+		rendererConversation.setCameraPosition(pos.xCoord, pos.yCoord, pos.zCoord);
+		rendererConversation.rotateCameraYawTo(centerCross, 90);
+		return true;
+	}
 }

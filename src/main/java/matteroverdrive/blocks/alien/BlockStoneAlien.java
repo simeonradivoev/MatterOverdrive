@@ -15,28 +15,28 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockStoneAlien extends Block
 {
-    public BlockStoneAlien(Material p_i46399_1_)
-    {
-        super(p_i46399_1_);
-    }
+	public BlockStoneAlien(Material p_i46399_1_)
+	{
+		super(p_i46399_1_);
+	}
 
-    // TODO: 3/26/2016 Find how to set block color
-    /*@SideOnly(Side.CLIENT)
+	// TODO: 3/26/2016 Find how to set block color
+	/*@SideOnly(Side.CLIENT)
     @Override
     public int getBlockColor()
     {
         return ColorizerAlien.getStoneColor(0.5D, 1.0D);
     }*/
 
-    @SideOnly(Side.CLIENT)
-    public int getRenderColor(IBlockState state)
-    {
-        return ColorizerAlien.getStoneBasicColor();
-    }
+	@SideOnly(Side.CLIENT)
+	public int getRenderColor(IBlockState state)
+	{
+		return ColorizerAlien.getStoneBasicColor();
+	}
 
-    @SideOnly(Side.CLIENT)
-    public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
-    {
-        return BiomeAlienColorHelper.getStoneColorAtPos(worldIn, pos);
-    }
+	@SideOnly(Side.CLIENT)
+	public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
+	{
+		return BiomeAlienColorHelper.getStoneColorAtPos(worldIn, pos);
+	}
 }

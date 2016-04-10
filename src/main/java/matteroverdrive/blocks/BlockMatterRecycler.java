@@ -27,20 +27,21 @@ import net.minecraft.world.World;
 /**
  * Created by Simeon on 5/15/2015.
  */
-public class BlockMatterRecycler extends MOMatterEnergyStorageBlock {
+public class BlockMatterRecycler extends MOMatterEnergyStorageBlock
+{
 
-    public BlockMatterRecycler(Material material, String name)
-    {
-        super(material, name, true, true);
-        setHasRotation();
-        setHardness(20.0F);
-        this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe", 2);
-        setHasGui(true);
-    }
+	public BlockMatterRecycler(Material material, String name)
+	{
+		super(material, name, true, true);
+		setHasRotation();
+		setHardness(20.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		setHasGui(true);
+	}
 
     /*@SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
+	public void registerBlockIcons(IIconRegister iconRegister)
     {
         this.iconTop = iconRegister.registerIcon(Reference.MOD_ID + ":decomposer_top");
         this.iconSideAnim = iconRegister.registerIcon(Reference.MOD_ID + ":recycler_side_anim");
@@ -73,11 +74,11 @@ public class BlockMatterRecycler extends MOMatterEnergyStorageBlock {
         return this.getIcon(side, blockAccess.getBlockMetadata(x, y, z));
     }*/
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMachineMatterRecycler();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachineMatterRecycler();
+	}
 /*
     @Override
     public int getRenderType()

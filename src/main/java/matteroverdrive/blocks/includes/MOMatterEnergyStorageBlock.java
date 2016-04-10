@@ -12,11 +12,11 @@ import net.minecraft.world.World;
 
 public abstract class MOMatterEnergyStorageBlock extends MOBlockMachine
 {
+	protected boolean dropsItself;
 	private boolean keepsMatter;
 	private boolean keepsEnergy;
-	protected boolean dropsItself;
 
-	public MOMatterEnergyStorageBlock(Material material, String name,boolean keepsEnergy,boolean keepsMatter)
+	public MOMatterEnergyStorageBlock(Material material, String name, boolean keepsEnergy, boolean keepsMatter)
 	{
 		super(material, name);
 		this.keepsEnergy = keepsEnergy;
@@ -24,25 +24,32 @@ public abstract class MOMatterEnergyStorageBlock extends MOBlockMachine
 	}
 
 	@Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
-	    	super.onBlockPlacedBy(worldIn,pos,state,placer,stack);
-            if(stack.hasTagCompound()) {
-                TileEntity entity = worldIn.getTileEntity(pos);
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+	{
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+		if (stack.hasTagCompound())
+		{
+			TileEntity entity = worldIn.getTileEntity(pos);
 
-                if (entity instanceof MOTileEntityMachineEnergy) {
-                    if(this.keepsEnergy)
-                        ((MOTileEntityMachineEnergy)entity).setEnergyStored(stack.getTagCompound().getInteger("Energy"));
-                }
-                if (entity instanceof MOTileEntityMachineMatter) {
-                    if(this.keepsMatter)
-                        ((MOTileEntityMachineMatter)entity).setMatterStored(stack.getTagCompound().getInteger("Matter"));
-                }
-            }
-	    }
+			if (entity instanceof MOTileEntityMachineEnergy)
+			{
+				if (this.keepsEnergy)
+				{
+					((MOTileEntityMachineEnergy)entity).setEnergyStored(stack.getTagCompound().getInteger("Energy"));
+				}
+			}
+			if (entity instanceof MOTileEntityMachineMatter)
+			{
+				if (this.keepsMatter)
+				{
+					((MOTileEntityMachineMatter)entity).setMatterStored(stack.getTagCompound().getInteger("Matter"));
+				}
+			}
+		}
+	}
 
     /*@Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
     {
         if(dropsItself)
         {

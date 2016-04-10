@@ -45,133 +45,159 @@ import java.util.concurrent.Future;
 /**
  * Created by Simeon on 5/7/2015.
  */
-public class VersionCheckerHandler implements IConfigSubscriber {
-    private boolean updateInfoDisplayed = false;
-    public Future<String> download;
-    public static final String[] mirrors = new String[]{Reference.VERSIONS_CHECK_URL};
-    private int currentMirror = 0;
-    int lastPoll = 400;
-    private boolean checkForUpdates;
+public class VersionCheckerHandler implements IConfigSubscriber
+{
+	public static final String[] mirrors = new String[] {Reference.VERSIONS_CHECK_URL};
+	public Future<String> download;
+	int lastPoll = 400;
+	private boolean updateInfoDisplayed = false;
+	private int currentMirror = 0;
+	private boolean checkForUpdates;
 
-    //Called when a player ticks.
-    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+	//Called when a player ticks.
+	public void onPlayerTick(TickEvent.PlayerTickEvent event)
+	{
 
-        if (event.phase != TickEvent.Phase.START || !checkForUpdates) {
-            return;
-        }
+		if (event.phase != TickEvent.Phase.START || !checkForUpdates)
+		{
+			return;
+		}
 
-        if (FMLCommonHandler.instance().getSide() == Side.SERVER && FMLCommonHandler.instance().getMinecraftServerInstance().isServerRunning()) {
-            // TODO: 3/25/2016 Find how to acccess the configuration manager
-            /*if (!event.player.getServer().getConfigurationManager().canSendCommands(event.player.getGameProfile())) {
+		if (FMLCommonHandler.instance().getSide() == Side.SERVER && FMLCommonHandler.instance().getMinecraftServerInstance().isServerRunning())
+		{
+			// TODO: 3/25/2016 Find how to acccess the configuration manager
+			/*if (!event.player.getServer().getConfigurationManager().canSendCommands(event.player.getGameProfile())) {
                 return;
             }*/
-        }
+		}
 
-        if (lastPoll > 0) {
-            --lastPoll;
-            return;
-        }
-        lastPoll = 400;
+		if (lastPoll > 0)
+		{
+			--lastPoll;
+			return;
+		}
+		lastPoll = 400;
 
-        if (updateInfoDisplayed)
-            return;
+		if (updateInfoDisplayed)
+		{
+			return;
+		}
 
-        if (currentMirror < mirrors.length) {
-            if (download == null) {
-                download = MatterOverdrive.threadPool.submit(new VersionCheckThread(mirrors[currentMirror]));
-                currentMirror++;
-            }
-        }
+		if (currentMirror < mirrors.length)
+		{
+			if (download == null)
+			{
+				download = MatterOverdrive.threadPool.submit(new VersionCheckThread(mirrors[currentMirror]));
+				currentMirror++;
+			}
+		}
 
-        if (download != null && download.isDone()) {
-            String result = null;
+		if (download != null && download.isDone())
+		{
+			String result = null;
 
-            try {
-                result = download.get();
-            } catch (InterruptedException e) {
-				MOLog.log(Level.ERROR,e,"Version checking from '%1$s' was interrupted", mirrors[currentMirror - 1]);
-                MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Version Checking interrupted");
-            } catch (ExecutionException e) {
-				MOLog.log(Level.ERROR,e,"Version checking from '%1$s' has failed", mirrors[currentMirror - 1]);
-                MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Version Checking failed");
-            } finally {
-                if (result != null)
-                {
-                    try {
-                        updateInfoDisplayed = constructVersionAndCheck(result, event.player);
-                    }catch (Exception e)
-                    {
-                        MOLog.log(Level.ERROR,e,"There was a problem while decoding the update info from website.");
-                    }
-                }
+			try
+			{
+				result = download.get();
+			}
+			catch (InterruptedException e)
+			{
+				MOLog.log(Level.ERROR, e, "Version checking from '%1$s' was interrupted", mirrors[currentMirror - 1]);
+				MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Version Checking interrupted");
+			}
+			catch (ExecutionException e)
+			{
+				MOLog.log(Level.ERROR, e, "Version checking from '%1$s' has failed", mirrors[currentMirror - 1]);
+				MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Version Checking failed");
+			}
+			finally
+			{
+				if (result != null)
+				{
+					try
+					{
+						updateInfoDisplayed = constructVersionAndCheck(result, event.player);
+					}
+					catch (Exception e)
+					{
+						MOLog.log(Level.ERROR, e, "There was a problem while decoding the update info from website.");
+					}
+				}
 
-                download.cancel(false);
-                download = null;
-            }
-        }
-    }
+				download.cancel(false);
+				download = null;
+			}
+		}
+	}
 
-    private boolean constructVersionAndCheck(String jsonText,EntityPlayer player)
-    {
-        JsonParser parser = new JsonParser();
-        JsonObject root = parser.parse(jsonText).getAsJsonArray().get(0).getAsJsonObject();
-        SimpleDateFormat websiteDatePraser = new SimpleDateFormat("y-M-d");
-        SimpleDateFormat modDateFormat = new SimpleDateFormat("d.M.y");
-        String websiteDateString = root.get("date").getAsString();
-        websiteDateString = websiteDateString.substring(0, websiteDateString.indexOf('T'));
-        Date websiteDate = null;
-        Date modDate = null;
-        try {
-            websiteDate = websiteDatePraser.parse(websiteDateString);
-        } catch (ParseException e)
-        {
+	private boolean constructVersionAndCheck(String jsonText, EntityPlayer player)
+	{
+		JsonParser parser = new JsonParser();
+		JsonObject root = parser.parse(jsonText).getAsJsonArray().get(0).getAsJsonObject();
+		SimpleDateFormat websiteDatePraser = new SimpleDateFormat("y-M-d");
+		SimpleDateFormat modDateFormat = new SimpleDateFormat("d.M.y");
+		String websiteDateString = root.get("date").getAsString();
+		websiteDateString = websiteDateString.substring(0, websiteDateString.indexOf('T'));
+		Date websiteDate = null;
+		Date modDate = null;
+		try
+		{
+			websiteDate = websiteDatePraser.parse(websiteDateString);
+		}
+		catch (ParseException e)
+		{
 			MOLog.warn("Website date was incorrect", e);
-        }
-        try {
-            modDate = modDateFormat.parse(Reference.VERSION_DATE);
-        } catch (ParseException e) {
+		}
+		try
+		{
+			modDate = modDateFormat.parse(Reference.VERSION_DATE);
+		}
+		catch (ParseException e)
+		{
 			MOLog.warn("Mod version date was incorrect", e);
-        }
+		}
 
-        if (modDate != null && websiteDate != null ) {
+		if (modDate != null && websiteDate != null)
+		{
 
-            if (modDate.before(websiteDate))
-            {
-                TextComponentString chat = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.WHITE + MOStringHelper.translateToLocal("alert.new_update"));
-                Style style = new Style();
-                player.addChatMessage(chat);
+			if (modDate.before(websiteDate))
+			{
+				TextComponentString chat = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.WHITE + MOStringHelper.translateToLocal("alert.new_update"));
+				Style style = new Style();
+				player.addChatMessage(chat);
 
-                chat = new TextComponentString("");
-                ITextComponent versionName = new TextComponentString(root.get("title").getAsString() + " ").setChatStyle(new Style().setColor(TextFormatting.AQUA));
-                chat.appendSibling(versionName);
-                chat.appendText(ChatFormatting.WHITE + "[");
-                style.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Reference.DOWNLOAD_URL));
-                style.setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.hover").setChatStyle(new Style().setColor(TextFormatting.YELLOW))));
-                style.setColor(TextFormatting.GREEN);
-                chat.appendSibling(new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.download")).setChatStyle(style);
-                chat.appendText(ChatFormatting.WHITE + "]");
-                player.addChatMessage(chat);
+				chat = new TextComponentString("");
+				ITextComponent versionName = new TextComponentString(root.get("title").getAsString() + " ").setChatStyle(new Style().setColor(TextFormatting.AQUA));
+				chat.appendSibling(versionName);
+				chat.appendText(ChatFormatting.WHITE + "[");
+				style.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Reference.DOWNLOAD_URL));
+				style.setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.hover").setChatStyle(new Style().setColor(TextFormatting.YELLOW))));
+				style.setColor(TextFormatting.GREEN);
+				chat.appendSibling(new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.download")).setChatStyle(style);
+				chat.appendText(ChatFormatting.WHITE + "]");
+				player.addChatMessage(chat);
 
-                chat = new TextComponentString(root.get("excerpt").getAsString().replaceAll("<.*?>", ""));
-                style = new Style();
-                style.setColor(TextFormatting.GRAY);
-                chat.setChatStyle(style);
-                player.addChatMessage(chat);
-                return true;
+				chat = new TextComponentString(root.get("excerpt").getAsString().replaceAll("<.*?>", ""));
+				style = new Style();
+				style.setColor(TextFormatting.GRAY);
+				chat.setChatStyle(style);
+				player.addChatMessage(chat);
+				return true;
 
-            } else
-            {
+			}
+			else
+			{
 				MOLog.info("Matter Overdrive Version %1$s is up to date. From '%2$s'", root.get("title").getAsString(), mirrors[currentMirror - 1]);
-            }
-        }
-        return false;
-    }
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public void onConfigChanged(ConfigurationHandler config)
-    {
-        String comment = "Should Matter Overdrive check for newer versions, every time the world starts";
-        checkForUpdates = config.getBool(ConfigurationHandler.KEY_VERSION_CHECK, ConfigurationHandler.CATEGORY_CLIENT,true,comment);
-        config.config.get(ConfigurationHandler.CATEGORY_CLIENT, ConfigurationHandler.KEY_VERSION_CHECK,true).setComment(comment);
-    }
+	@Override
+	public void onConfigChanged(ConfigurationHandler config)
+	{
+		String comment = "Should Matter Overdrive check for newer versions, every time the world starts";
+		checkForUpdates = config.getBool(ConfigurationHandler.KEY_VERSION_CHECK, ConfigurationHandler.CATEGORY_CLIENT, true, comment);
+		config.config.get(ConfigurationHandler.CATEGORY_CLIENT, ConfigurationHandler.KEY_VERSION_CHECK, true).setComment(comment);
+	}
 }

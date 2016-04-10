@@ -12,11 +12,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class AbstractServerPacketHandler<T extends IMessage> extends AbstractPacketHandler<T>
 {
-    public AbstractServerPacketHandler(){}
+	public AbstractServerPacketHandler()
+	{
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void handleClientMessage(EntityPlayerSP player, T message, MessageContext ctx)
-    {
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void handleClientMessage(EntityPlayerSP player, T message, MessageContext ctx)
+	{
+	}
 }

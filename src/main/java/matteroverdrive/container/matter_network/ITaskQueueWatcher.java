@@ -8,7 +8,9 @@ import matteroverdrive.api.network.IMatterNetworkDispatcher;
  */
 public interface ITaskQueueWatcher extends IMachineWatcher
 {
-    void onTaskAdded(IMatterNetworkDispatcher dispatcher,long taskId,int queueId);
-    void onTaskRemoved(IMatterNetworkDispatcher dispatcher,long taskId,int queueId);
-    void onTaskChanged(IMatterNetworkDispatcher dispatcher,long taskId,int queueId);
+	void onTaskAdded(IMatterNetworkDispatcher dispatcher, long taskId, int queueId);
+
+	void onTaskRemoved(IMatterNetworkDispatcher dispatcher, long taskId, int queueId);
+
+	void onTaskChanged(IMatterNetworkDispatcher dispatcher, long taskId, int queueId);
 }

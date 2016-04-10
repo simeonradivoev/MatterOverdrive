@@ -26,11 +26,11 @@ import net.minecraft.util.ResourceLocation;
  */
 public class CraftingHandlerInscriber //extends TemplateRecipeHandler
 {
-    ResourceLocation background = new ResourceLocation(Reference.PATH_GUI + "inscriber_nei.png");
-    ResourceLocation arrowTexture = new ResourceLocation(Reference.TEXTURE_ARROW_PROGRESS);
+	ResourceLocation background = new ResourceLocation(Reference.PATH_GUI + "inscriber_nei.png");
+	ResourceLocation arrowTexture = new ResourceLocation(Reference.TEXTURE_ARROW_PROGRESS);
 
     /*@Override
-    public void loadTransferRects()
+	public void loadTransferRects()
     {
         this.transferRects.add(new RecipeTransferRect(new Rectangle(55,20, 26, 18), "mo_inscriber", new Object[0]));
     }

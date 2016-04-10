@@ -10,17 +10,22 @@ import net.minecraft.world.World;
  */
 public interface IGridNode<T extends IGridNetwork>
 {
-    T getNetwork();
-    void setNetwork(T network);
-    BlockPos getPos();
-    World getWorld();
-    boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction);
-    /**
-     * Can the Matter Connection connect form a given side.
-     *
-     * @param blockState
-     * @param side the side of the tested connection.
-     * @return can the connection be made trough the given side.
-     */
-    boolean canConnectFromSide(IBlockState blockState, EnumFacing side);
+	T getNetwork();
+
+	void setNetwork(T network);
+
+	BlockPos getPos();
+
+	World getWorld();
+
+	boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction);
+
+	/**
+	 * Can the Matter Connection connect form a given side.
+	 *
+	 * @param blockState
+	 * @param side the side of the tested connection.
+	 * @return can the connection be made trough the given side.
+	 */
+	boolean canConnectFromSide(IBlockState blockState, EnumFacing side);
 }

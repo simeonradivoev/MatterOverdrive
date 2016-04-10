@@ -35,39 +35,53 @@ import net.minecraft.world.World;
 /**
  * @author shadowfacts
  */
-public class RomulanAle extends ItemFood {
+public class RomulanAle extends ItemFood
+{
 
-	public RomulanAle(String name) {
+	public RomulanAle(String name)
+	{
 		super(4, 0.6f, false);
 		setUnlocalizedName(name);
-		setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
 		setAlwaysEdible();
 		setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
+	{
 		super.onItemUseFinish(stack, worldIn, entityLiving);
 
-		if (!(entityLiving instanceof EntityPlayer)) return stack;
-		if (!((EntityPlayer)entityLiving).capabilities.isCreativeMode && !worldIn.isRemote) {
+		if (!(entityLiving instanceof EntityPlayer))
+		{
+			return stack;
+		}
+		if (!((EntityPlayer)entityLiving).capabilities.isCreativeMode && !worldIn.isRemote)
+		{
 			--stack.stackSize;
 		}
 
 
-		if (!MOPlayerCapabilityProvider.GetAndroidCapability(entityLiving).isAndroid()) entityLiving.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 160, 8));
+		if (!MOPlayerCapabilityProvider.GetAndroidCapability(entityLiving).isAndroid())
+		{
+			entityLiving.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 160, 8));
+		}
 
-		if (stack.stackSize > 0) {
+		if (stack.stackSize > 0)
+		{
 			((EntityPlayer)entityLiving).inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
 			return stack;
-		} else {
+		}
+		else
+		{
 			return new ItemStack(Items.glass_bottle);
 		}
 	}
 
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack p_77661_1_) {
+	public EnumAction getItemUseAction(ItemStack p_77661_1_)
+	{
 		return EnumAction.DRINK;
 	}
 }

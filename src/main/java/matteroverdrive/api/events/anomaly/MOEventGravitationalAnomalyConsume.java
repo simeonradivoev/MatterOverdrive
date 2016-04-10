@@ -28,34 +28,37 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public class MOEventGravitationalAnomalyConsume extends Event
 {
-    /**
-     * The entity being consumed.
-     */
-    public final Entity entity;
-    public final BlockPos pos;
-    public MOEventGravitationalAnomalyConsume(Entity entity, BlockPos pos)
-    {
-        this.entity = entity;
-        this.pos = pos;
-    }
+	/**
+	 * The entity being consumed.
+	 */
+	public final Entity entity;
+	public final BlockPos pos;
 
-    public static class Pre extends MOEventGravitationalAnomalyConsume
-    {
-        public Pre(Entity entity, BlockPos pos) {
-            super(entity, pos);
-        }
+	public MOEventGravitationalAnomalyConsume(Entity entity, BlockPos pos)
+	{
+		this.entity = entity;
+		this.pos = pos;
+	}
 
-        @Override
-        public boolean isCancelable()
-        {
-            return true;
-        }
-    }
+	public static class Pre extends MOEventGravitationalAnomalyConsume
+	{
+		public Pre(Entity entity, BlockPos pos)
+		{
+			super(entity, pos);
+		}
 
-    public static class Post extends MOEventGravitationalAnomalyConsume
-    {
-        public Post(Entity entity, BlockPos pos) {
-            super(entity, pos);
-        }
-    }
+		@Override
+		public boolean isCancelable()
+		{
+			return true;
+		}
+	}
+
+	public static class Post extends MOEventGravitationalAnomalyConsume
+	{
+		public Post(Entity entity, BlockPos pos)
+		{
+			super(entity, pos);
+		}
+	}
 }

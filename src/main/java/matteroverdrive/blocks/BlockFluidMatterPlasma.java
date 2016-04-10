@@ -31,12 +31,13 @@ import net.minecraftforge.fluids.Fluid;
  */
 public class BlockFluidMatterPlasma extends BlockFluidClassic
 {
-    public BlockFluidMatterPlasma(Fluid fluid, Material material) {
-        super(fluid, material);
-    }
+	public BlockFluidMatterPlasma(Fluid fluid, Material material)
+	{
+		super(fluid, material);
+	}
 
     /*@Override
-    public IIcon getIcon(int side, int meta) {
+	public IIcon getIcon(int side, int meta) {
         return (side == 0 || side == 1) ? this.getFluid().getStillIcon() : this.getFluid().getFlowingIcon();
     }
 
@@ -47,17 +48,17 @@ public class BlockFluidMatterPlasma extends BlockFluidClassic
 
     }*/
 
-    @Override
-    public boolean canDisplace(IBlockAccess world, BlockPos pos)
-    {
-        IBlockState state = world.getBlockState(pos);
-        return !state.getBlock().getMaterial(state).isLiquid() && super.canDisplace(world, pos);
-    }
+	@Override
+	public boolean canDisplace(IBlockAccess world, BlockPos pos)
+	{
+		IBlockState state = world.getBlockState(pos);
+		return !state.getBlock().getMaterial(state).isLiquid() && super.canDisplace(world, pos);
+	}
 
-    @Override
-    public boolean displaceIfPossible(World world, BlockPos pos)
-    {
-        IBlockState state = world.getBlockState(pos);
-        return !state.getBlock().getMaterial(state).isLiquid() && super.displaceIfPossible(world, pos);
-    }
+	@Override
+	public boolean displaceIfPossible(World world, BlockPos pos)
+	{
+		IBlockState state = world.getBlockState(pos);
+		return !state.getBlock().getMaterial(state).isLiquid() && super.displaceIfPossible(world, pos);
+	}
 }

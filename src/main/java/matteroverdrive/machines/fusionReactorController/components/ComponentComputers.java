@@ -33,63 +33,79 @@ import java.util.EnumSet;
  * Created by Simeon on 7/21/2015.
  */
 /*@Optional.InterfaceList({
-        @Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral")
+		@Optional.Interface(modid = "ComputerCraft", iface = "dan200.computercraft.api.peripheral.IPeripheral")
 })*/
 public class ComponentComputers extends MachineComponentAbstract<TileEntityMachineFusionReactorController> //implements IPeripheral
 {
 
-    private String[] methodNames = new String[]
-            {
-            "getStatus",
-            "isValid",
-            "getEnergyGenerated",
-            "getMatterUsed",
-            "getEnergyStored",
-            "getMatterStored"
-    };
-    private String peripheralName = "mo_fusion_reactor_controller";
+	private String[] methodNames = new String[]
+			{
+					"getStatus",
+					"isValid",
+					"getEnergyGenerated",
+					"getMatterUsed",
+					"getEnergyStored",
+					"getMatterStored"
+			};
+	private String peripheralName = "mo_fusion_reactor_controller";
 
-    public ComponentComputers(TileEntityMachineFusionReactorController machine)
-    {
-        super(machine);
-    }
+	public ComponentComputers(TileEntityMachineFusionReactorController machine)
+	{
+		super(machine);
+	}
 
-    //region Computer Methods
-    private Object[] callMethod(int method, Object[] args) {
-        switch (method) {
-            case 0:
-                return computerGetStatus(args);
-            case 1:
-                return computerIsValid(args);
-            case 2:
-                return computerGetEnergyGenerated(args);
-            case 3:
-                return computerGetMatterUsed(args);
-            case 4:
-                return computerGetEnergyStored(args);
-            case 5:
-                return computerGetMatterStored(args);
-            default: throw new IllegalArgumentException("Invalid method id");
-        }
-    }
+	//region Computer Methods
+	private Object[] callMethod(int method, Object[] args)
+	{
+		switch (method)
+		{
+			case 0:
+				return computerGetStatus(args);
+			case 1:
+				return computerIsValid(args);
+			case 2:
+				return computerGetEnergyGenerated(args);
+			case 3:
+				return computerGetMatterUsed(args);
+			case 4:
+				return computerGetEnergyStored(args);
+			case 5:
+				return computerGetMatterStored(args);
+			default:
+				throw new IllegalArgumentException("Invalid method id");
+		}
+	}
 
-    private Object[] computerGetStatus(Object[] args) {
-        return new Object[]{machine.getMonitorInfo()};
-    }
-    private Object[] computerIsValid(Object[] args) {
-        return new Object[]{machine.isValidStructure()};
-    }
-    private Object[] computerGetEnergyGenerated(Object[] args) {
-        return new Object[]{machine.getEnergyPerTick()};
-    }
-    private Object[] computerGetMatterUsed(Object[] args) {
-        return new Object[]{machine.getMatterDrainPerTick()};
-    }
-    private Object[] computerGetEnergyStored(Object[] args) {return new Object[]{machine.getEnergyStored(EnumFacing.DOWN)};}
-    private Object[] computerGetMatterStored(Object[] args) {
-        return new Object[]{machine.getMatterStored()};
-    }
-    //endregion
+	private Object[] computerGetStatus(Object[] args)
+	{
+		return new Object[] {machine.getMonitorInfo()};
+	}
+
+	private Object[] computerIsValid(Object[] args)
+	{
+		return new Object[] {machine.isValidStructure()};
+	}
+
+	private Object[] computerGetEnergyGenerated(Object[] args)
+	{
+		return new Object[] {machine.getEnergyPerTick()};
+	}
+
+	private Object[] computerGetMatterUsed(Object[] args)
+	{
+		return new Object[] {machine.getMatterDrainPerTick()};
+	}
+
+	private Object[] computerGetEnergyStored(Object[] args)
+	{
+		return new Object[] {machine.getEnergyStored(EnumFacing.DOWN)};
+	}
+
+	private Object[] computerGetMatterStored(Object[] args)
+	{
+		return new Object[] {machine.getMatterStored()};
+	}
+	//endregion
 
     /*//region ComputerCraft
     @Override
@@ -156,37 +172,42 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
     }
     //endregion*/
 
-    //region Component Functions
-    @Override
-    public void readFromNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories) {
+	//region Component Functions
+	@Override
+	public void readFromNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+	{
 
-    }
+	}
 
-    @Override
-    public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk) {
+	@Override
+	public void writeToNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
+	{
 
-    }
+	}
 
-    @Override
-    public void registerSlots(Inventory inventory) {
+	@Override
+	public void registerSlots(Inventory inventory)
+	{
 
-    }
+	}
 
-    @Override
-    public boolean isAffectedByUpgrade(UpgradeTypes type) {
-        return false;
-    }
+	@Override
+	public boolean isAffectedByUpgrade(UpgradeTypes type)
+	{
+		return false;
+	}
 
-    @Override
-    public boolean isActive() {
-        return false;
-    }
+	@Override
+	public boolean isActive()
+	{
+		return false;
+	}
 
-    @Override
-    public void onMachineEvent(MachineEvent event)
-    {
+	@Override
+	public void onMachineEvent(MachineEvent event)
+	{
 
-    }
+	}
 
-    //endregion
+	//endregion
 }

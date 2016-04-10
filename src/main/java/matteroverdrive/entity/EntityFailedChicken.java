@@ -11,32 +11,32 @@ import net.minecraft.world.World;
  */
 public class EntityFailedChicken extends EntityChicken
 {
-    public EntityFailedChicken(World world)
-    {
-        super(world);
-    }
+	public EntityFailedChicken(World world)
+	{
+		super(world);
+	}
 
-    @Override
-    protected SoundEvent getAmbientSound()
-    {
-        return MatterOverdriveSounds.failedAnimalUdleChicken;
-    }
+	@Override
+	protected SoundEvent getAmbientSound()
+	{
+		return MatterOverdriveSounds.failedAnimalUdleChicken;
+	}
 
-    protected SoundEvent getHurtSound()
-    {
-        return MatterOverdriveSounds.failedAnimalUdleChicken;
-    }
+	protected SoundEvent getHurtSound()
+	{
+		return MatterOverdriveSounds.failedAnimalUdleChicken;
+	}
 
-    @Override
-    protected SoundEvent getDeathSound()
-    {
-        return MatterOverdriveSounds.failedAnimalDie;
-    }
+	@Override
+	protected SoundEvent getDeathSound()
+	{
+		return MatterOverdriveSounds.failedAnimalDie;
+	}
 
-    @Override
-    public EntityChicken createChild(EntityAgeable entity)
-    {
-        return new EntityFailedChicken(this.worldObj);
-    }
+	@Override
+	public EntityChicken createChild(EntityAgeable entity)
+	{
+		return new EntityFailedChicken(this.worldObj);
+	}
 
 }

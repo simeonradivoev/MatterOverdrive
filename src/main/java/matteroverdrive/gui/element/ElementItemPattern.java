@@ -35,87 +35,89 @@ import java.util.List;
  */
 public class ElementItemPattern extends ElementSlot
 {
-    protected ScaleTexture texture;
-    protected ItemPatternMapping patternMapping;
-    protected ItemStack itemStack;
-    protected int amount = 0;
+	protected ScaleTexture texture;
+	protected ItemPatternMapping patternMapping;
+	protected ItemStack itemStack;
+	protected int amount = 0;
 
-    public ElementItemPattern(MOGuiBase gui, ItemPatternMapping patternMapping, String bgType, int width, int height)
-    {
-        super(gui, 0, 0, width, height, bgType);
-        this.texture = new ScaleTexture(getTexture(bgType),width,height).setOffsets(2,2,2,2);
-        this.setPatternMapping(patternMapping);
-    }
+	public ElementItemPattern(MOGuiBase gui, ItemPatternMapping patternMapping, String bgType, int width, int height)
+	{
+		super(gui, 0, 0, width, height, bgType);
+		this.texture = new ScaleTexture(getTexture(bgType), width, height).setOffsets(2, 2, 2, 2);
+		this.setPatternMapping(patternMapping);
+	}
 
-    @Override
-    public void drawForeground(int mouseX, int mouseY)
-    {
-        if (patternMapping != null)
-        {
-            itemStack.stackSize = amount;
-            RenderHelper.enableGUIStandardItemLighting();
-            GlStateManager.disableLighting();
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.enableColorMaterial();
-            GlStateManager.enableLighting();
-            RenderUtils.renderStack(posX + 3, posY + 3, 100, itemStack, true);
-            GlStateManager.disableLighting();
-            GlStateManager.depthMask(true);
-            GlStateManager.enableDepth();
-        }
-    }
+	@Override
+	public void drawForeground(int mouseX, int mouseY)
+	{
+		if (patternMapping != null)
+		{
+			itemStack.stackSize = amount;
+			RenderHelper.enableGUIStandardItemLighting();
+			GlStateManager.disableLighting();
+			GlStateManager.enableRescaleNormal();
+			GlStateManager.enableColorMaterial();
+			GlStateManager.enableLighting();
+			RenderUtils.renderStack(posX + 3, posY + 3, 100, itemStack, true);
+			GlStateManager.disableLighting();
+			GlStateManager.depthMask(true);
+			GlStateManager.enableDepth();
+		}
+	}
 
-    @Override
-    public void drawBackground(int mouseX, int mouseY, float gameTicks)
-    {
-        texture.render(posX, posY, sizeX, sizeY);
-    }
+	@Override
+	public void drawBackground(int mouseX, int mouseY, float gameTicks)
+	{
+		texture.render(posX, posY, sizeX, sizeY);
+	}
 
-    @Override
-    public void addTooltip(List<String> list,int mouseX,int mouseY)
-    {
-        if (patternMapping != null)
-        {
-            if (itemStack != null) {
-                list.addAll(itemStack.getTooltip(Minecraft.getMinecraft().thePlayer, false));
-                String name = list.get(0);
-                int progress = patternMapping.getItemPattern().getProgress();
-                name = MatterDatabaseHelper.getPatternInfoColor(progress) + name + " [" + progress + "%]";
-                list.set(0, name);
-            }
-        }
-    }
+	@Override
+	public void addTooltip(List<String> list, int mouseX, int mouseY)
+	{
+		if (patternMapping != null)
+		{
+			if (itemStack != null)
+			{
+				list.addAll(itemStack.getTooltip(Minecraft.getMinecraft().thePlayer, false));
+				String name = list.get(0);
+				int progress = patternMapping.getItemPattern().getProgress();
+				name = MatterDatabaseHelper.getPatternInfoColor(progress) + name + " [" + progress + "%]";
+				list.set(0, name);
+			}
+		}
+	}
 
-    public ItemPatternMapping getPatternMapping()
-    {
-        return patternMapping;
-    }
+	public ItemPatternMapping getPatternMapping()
+	{
+		return patternMapping;
+	}
 
-    public int getAmount() {
-        return amount;
-    }
+	public void setPatternMapping(ItemPatternMapping patternMapping)
+	{
+		this.patternMapping = patternMapping;
+		if (patternMapping != null)
+		{
+			itemStack = patternMapping.getItemPattern().toItemStack(false);
+			this.name = itemStack.getDisplayName();
+		}
+		else
+		{
+			itemStack = null;
+		}
+	}
 
-    public void setAmount(int amount)
-    {
-        this.amount = amount;
-    }
+	public int getAmount()
+	{
+		return amount;
+	}
 
-    public ScaleTexture getTexture()
-    {
-        return texture;
-    }
+	public void setAmount(int amount)
+	{
+		this.amount = amount;
+	}
 
-    public void setPatternMapping(ItemPatternMapping patternMapping)
-    {
-        this.patternMapping = patternMapping;
-        if (patternMapping != null)
-        {
-            itemStack = patternMapping.getItemPattern().toItemStack(false);
-            this.name = itemStack.getDisplayName();
-        }
-        else
-        {
-            itemStack = null;
-        }
-    }
+	public ScaleTexture getTexture()
+	{
+		return texture;
+	}
 }

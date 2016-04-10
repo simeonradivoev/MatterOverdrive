@@ -27,8 +27,8 @@ import net.minecraftforge.fluids.Fluid;
  */
 public class FluidMoltenTritanium extends Fluid
 {
-    public FluidMoltenTritanium(String fluidName)
-    {
-        super(fluidName,new ResourceLocation(Reference.PATH_BLOCKS + "molten_tritanium_flowing.png"),new ResourceLocation(Reference.PATH_BLOCKS + "molten_tritanium_still.png"));
-    }
+	public FluidMoltenTritanium(String fluidName)
+	{
+		super(fluidName, new ResourceLocation(Reference.PATH_BLOCKS + "molten_tritanium_flowing.png"), new ResourceLocation(Reference.PATH_BLOCKS + "molten_tritanium_still.png"));
+	}
 }

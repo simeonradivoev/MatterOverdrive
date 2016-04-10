@@ -36,9 +36,9 @@ public class Battery extends MOItemEnergyContainer
 {
 	private final Color color;
 
-	public Battery(String name, int capacity,Color color,int input,int output)
+	public Battery(String name, int capacity, Color color, int input, int output)
 	{
-		super(name, capacity,input,output);
+		super(name, capacity, input, output);
 		this.color = color;
 		this.setMaxStackSize(1);
 	}
@@ -53,15 +53,15 @@ public class Battery extends MOItemEnergyContainer
 		list.add(powered);
 	}
 
-    @Override
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-    {
-        super.addDetails(itemstack, player, infos);
-        infos.add(ChatFormatting.GRAY + MOStringHelper.translateToLocal("gui.tooltip.energy.io") + ": " + maxReceive + "/" + maxExtract + MOEnergyHelper.ENERGY_UNIT + "/t");
-    }
+	@Override
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		super.addDetails(itemstack, player, infos);
+		infos.add(ChatFormatting.GRAY + MOStringHelper.translateToLocal("gui.tooltip.energy.io") + ": " + maxReceive + "/" + maxExtract + MOEnergyHelper.ENERGY_UNIT + "/t");
+	}
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public boolean requiresMultipleRenderPasses()
     {
         return true;
@@ -107,7 +107,7 @@ public class Battery extends MOItemEnergyContainer
 	}*/
 
 	@Override
-	public void setEnergyStored(ItemStack container,int amount)
+	public void setEnergyStored(ItemStack container, int amount)
 	{
 		super.setEnergyStored(container, amount);
 	}

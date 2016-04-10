@@ -35,62 +35,65 @@ import net.minecraft.world.World;
 public class BlockChargingStation extends MOBlockMachine
 {
 
-    public BlockChargingStation(Material material, String name)
-    {
-        super(material, name);
-        setHardness(20.0F);
-        this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe", 2);
-        lightValue = 10;
-        setHasGui(true);
-    }
+	public BlockChargingStation(Material material, String name)
+	{
+		super(material, name);
+		setHardness(20.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		lightValue = 10;
+		setHasGui(true);
+	}
 
 
-//	Multiblock
+	//	Multiblock
 	@Override
-	public boolean canPlaceBlockAt(World world, BlockPos pos) {
+	public boolean canPlaceBlockAt(World world, BlockPos pos)
+	{
 		return world.getBlockState(pos).getBlock().isReplaceable(world, pos) &&
-				world.getBlockState(pos.add(0,1,0)).getBlock().isReplaceable(world, pos.add(0,1,0)) &&
-				world.getBlockState(pos.add(0,2,0)).getBlock().isReplaceable(world, pos.add(0,2,0));
+				world.getBlockState(pos.add(0, 1, 0)).getBlock().isReplaceable(world, pos.add(0, 1, 0)) &&
+				world.getBlockState(pos.add(0, 2, 0)).getBlock().isReplaceable(world, pos.add(0, 2, 0));
 	}
 
 	@Override
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
-		BlockBoundingBox.createBoundingBox(worldIn, pos.add(0,1,0), pos, this);
-		BlockBoundingBox.createBoundingBox(worldIn, pos.add(0,2,0), pos, this);
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	{
+		BlockBoundingBox.createBoundingBox(worldIn, pos.add(0, 1, 0), pos, this);
+		BlockBoundingBox.createBoundingBox(worldIn, pos.add(0, 2, 0), pos, this);
 
 		return worldIn.getBlockState(pos);
 	}
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
+	public void breakBlock(World world, BlockPos pos, IBlockState blockState)
+	{
 		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof TileEntityMachineChargingStation) {
+		if (te instanceof TileEntityMachineChargingStation)
+		{
 			TileEntityMachineChargingStation chargingStation = (TileEntityMachineChargingStation)te;
 			chargingStation.getBoundingBlocks().forEach(coord -> world.setBlockToAir(pos));
 		}
 
-		super.breakBlock(world, pos,blockState);
+		super.breakBlock(world, pos, blockState);
 	}
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMachineChargingStation();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachineChargingStation();
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
 
-    @Override
-    public void onConfigChanged(ConfigurationHandler config)
-    {
-        super.onConfigChanged(config);
-        TileEntityMachineChargingStation.BASE_MAX_RANGE = config.getInt("charge station range", ConfigurationHandler.CATEGORY_MACHINES, 8, "The range of the Charge Station");
-    }
+	@Override
+	public void onConfigChanged(ConfigurationHandler config)
+	{
+		super.onConfigChanged(config);
+		TileEntityMachineChargingStation.BASE_MAX_RANGE = config.getInt("charge station range", ConfigurationHandler.CATEGORY_MACHINES, 8, "The range of the Charge Station");
+	}
 
 }

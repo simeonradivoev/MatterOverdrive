@@ -20,57 +20,62 @@ import java.util.List;
  */
 public class PacketSendAndroidEffects extends PacketAbstract
 {
-    int androidId;
-    List<AndroidEffects.Effect> effects;
+	int androidId;
+	List<AndroidEffects.Effect> effects;
 
-    public PacketSendAndroidEffects(){}
-    public PacketSendAndroidEffects(int androidId, List<AndroidEffects.Effect> effects)
-    {
-        this.androidId = androidId;
-        this.effects = effects;
-    }
+	public PacketSendAndroidEffects()
+	{
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        androidId = buf.readInt();
-        try
-        {
-            effects = AndroidEffects.readEffectsListFromBuffer(buf);
-        } catch (IOException e)
-        {
-            MOLog.log(Level.ERROR,e,"There was a problem while receiving android effects for player");
-        }
+	public PacketSendAndroidEffects(int androidId, List<AndroidEffects.Effect> effects)
+	{
+		this.androidId = androidId;
+		this.effects = effects;
+	}
 
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		androidId = buf.readInt();
+		try
+		{
+			effects = AndroidEffects.readEffectsListFromBuffer(buf);
+		}
+		catch (IOException e)
+		{
+			MOLog.log(Level.ERROR, e, "There was a problem while receiving android effects for player");
+		}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        buf.writeInt(androidId);
-        try
-        {
-            AndroidEffects.writeEffectsListToPacketBuffer(effects,buf);
-        } catch (IOException e)
-        {
-            MOLog.log(Level.ERROR,e,"There was a problem while sending android effects to player");
-        }
-    }
+	}
 
-    public static class ClientHandler extends AbstractClientPacketHandler<PacketSendAndroidEffects>
-    {
-        @Override
-        public void handleClientMessage(EntityPlayerSP player, PacketSendAndroidEffects message, MessageContext ctx)
-        {
-            if (message.effects != null)
-            {
-                Entity entity = player.worldObj.getEntityByID(message.androidId);
-                if (entity instanceof EntityPlayer)
-                {
-                    AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(entity);
-                    androidPlayer.getAndroidEffects().updateEffectsFromList(message.effects);
-                }
-            }
-        }
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		buf.writeInt(androidId);
+		try
+		{
+			AndroidEffects.writeEffectsListToPacketBuffer(effects, buf);
+		}
+		catch (IOException e)
+		{
+			MOLog.log(Level.ERROR, e, "There was a problem while sending android effects to player");
+		}
+	}
+
+	public static class ClientHandler extends AbstractClientPacketHandler<PacketSendAndroidEffects>
+	{
+		@Override
+		public void handleClientMessage(EntityPlayerSP player, PacketSendAndroidEffects message, MessageContext ctx)
+		{
+			if (message.effects != null)
+			{
+				Entity entity = player.worldObj.getEntityByID(message.androidId);
+				if (entity instanceof EntityPlayer)
+				{
+					AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(entity);
+					androidPlayer.getAndroidEffects().updateEffectsFromList(message.effects);
+				}
+			}
+		}
+	}
 }

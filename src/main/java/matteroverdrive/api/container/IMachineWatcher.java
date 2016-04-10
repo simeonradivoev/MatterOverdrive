@@ -8,7 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public interface IMachineWatcher
 {
-    EntityPlayer getPlayer();
-    void onWatcherAdded(MOTileEntityMachine machine);
-    boolean isWatcherValid();
+	EntityPlayer getPlayer();
+
+	void onWatcherAdded(MOTileEntityMachine machine);
+
+	boolean isWatcherValid();
 }

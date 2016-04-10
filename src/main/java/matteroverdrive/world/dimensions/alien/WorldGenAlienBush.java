@@ -16,23 +16,23 @@ import java.util.Random;
  */
 public class WorldGenAlienBush extends WorldGenerator
 {
-    @Override
-    public boolean generate(World worldIn, Random rand, BlockPos position)
-    {
-        boolean flag = false;
+	@Override
+	public boolean generate(World worldIn, Random rand, BlockPos position)
+	{
+		boolean flag = false;
 
-        for (int i = 0; i < 64; ++i)
-        {
-            BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
+		for (int i = 0; i < 64; ++i)
+		{
+			BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 
-            if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.getHasNoSky() || blockpos.getY() < 254) && Blocks.double_plant.canPlaceBlockAt(worldIn, blockpos))
-            {
-                worldIn.setBlockState(blockpos, MatterOverdriveBlocks.alienLeaves.getDefaultState().withProperty(BlockLeavesAlien.VARIANT, BlockLeavesAlien.EnumType.BUSH).withProperty(BlockLeaves.DECAYABLE,false),2);
-                worldIn.setBlockState(blockpos.offset(EnumFacing.UP), MatterOverdriveBlocks.alienLeaves.getDefaultState().withProperty(BlockLeavesAlien.VARIANT, BlockLeavesAlien.EnumType.BUSH).withProperty(BlockLeaves.DECAYABLE,false),2);
-                flag = true;
-            }
-        }
+			if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.getHasNoSky() || blockpos.getY() < 254) && Blocks.double_plant.canPlaceBlockAt(worldIn, blockpos))
+			{
+				worldIn.setBlockState(blockpos, MatterOverdriveBlocks.alienLeaves.getDefaultState().withProperty(BlockLeavesAlien.VARIANT, BlockLeavesAlien.EnumType.BUSH).withProperty(BlockLeaves.DECAYABLE, false), 2);
+				worldIn.setBlockState(blockpos.offset(EnumFacing.UP), MatterOverdriveBlocks.alienLeaves.getDefaultState().withProperty(BlockLeavesAlien.VARIANT, BlockLeavesAlien.EnumType.BUSH).withProperty(BlockLeaves.DECAYABLE, false), 2);
+				flag = true;
+			}
+		}
 
-        return flag;
-    }
+		return flag;
+	}
 }

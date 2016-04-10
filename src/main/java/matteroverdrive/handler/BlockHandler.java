@@ -13,34 +13,34 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class BlockHandler
 {
-    @SubscribeEvent
-    public void onHarvestDropsEvent(BlockEvent.HarvestDropsEvent event)
-    {
-        if (event.getHarvester() != null)
-        {
-            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getHarvester());
-            if (extendedProperties != null)
-            {
-                extendedProperties.onEvent(event);
-            }
-        }
-    }
+	@SubscribeEvent
+	public void onHarvestDropsEvent(BlockEvent.HarvestDropsEvent event)
+	{
+		if (event.getHarvester() != null)
+		{
+			MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getHarvester());
+			if (extendedProperties != null)
+			{
+				extendedProperties.onEvent(event);
+			}
+		}
+	}
 
-    @SubscribeEvent
-    public void onBlockPlaceEvent(BlockEvent.PlaceEvent event)
-    {
-        if (event.getPlayer() != null)
-        {
-            ResourceLocation blockName = event.getState().getBlock().getRegistryName();
-            if (blockName.getResourceDomain().equals(Reference.MOD_ID))
-            {
-                MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BLOCK_PLACEING, blockName.getResourceDomain(), blockName.getResourcePath(), event.getPlayer());
-            }
-            MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getPlayer());
-            if (extendedProperties != null)
-            {
-                extendedProperties.onEvent(event);
-            }
-        }
-    }
+	@SubscribeEvent
+	public void onBlockPlaceEvent(BlockEvent.PlaceEvent event)
+	{
+		if (event.getPlayer() != null)
+		{
+			ResourceLocation blockName = event.getState().getBlock().getRegistryName();
+			if (blockName.getResourceDomain().equals(Reference.MOD_ID))
+			{
+				MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_BLOCK_PLACEING, blockName.getResourceDomain(), blockName.getResourcePath(), event.getPlayer());
+			}
+			MOExtendedProperties extendedProperties = MOPlayerCapabilityProvider.GetExtendedCapability(event.getPlayer());
+			if (extendedProperties != null)
+			{
+				extendedProperties.onEvent(event);
+			}
+		}
+	}
 }

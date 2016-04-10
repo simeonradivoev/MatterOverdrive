@@ -28,17 +28,17 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public interface IMatterNetworkFilter
 {
-    /**
-     * The NBT Tag name of the connections list.
-     */
-    String CONNECTIONS_TAG = "CONNECTIONS";
+	/**
+	 * The NBT Tag name of the connections list.
+	 */
+	String CONNECTIONS_TAG = "CONNECTIONS";
 
-    /**
-     * Gets the filter for a given stack filter.
-     * This is used to get the filter from the item in the item filter slot of the machine.
-     * @see matteroverdrive.items.NetworkFlashDrive
-     * @param stack the filter stack
-     * @return the NBT of the filter.
-     */
-    NBTTagCompound getFilter(ItemStack stack);
+	/**
+	 * Gets the filter for a given stack filter.
+	 * This is used to get the filter from the item in the item filter slot of the machine.
+	 * @see matteroverdrive.items.NetworkFlashDrive
+	 * @param stack the filter stack
+	 * @return the NBT of the filter.
+	 */
+	NBTTagCompound getFilter(ItemStack stack);
 }

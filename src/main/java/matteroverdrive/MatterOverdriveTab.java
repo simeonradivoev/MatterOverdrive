@@ -16,7 +16,9 @@ public class MatterOverdriveTab extends CreativeTabs
 	public Item getTabIconItem()
 	{
 		if (item == null)
+		{
 			return MatterOverdriveItems.matter_scanner;
+		}
 		return item;
 	}
 }

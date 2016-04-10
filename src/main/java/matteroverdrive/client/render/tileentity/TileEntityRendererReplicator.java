@@ -12,32 +12,32 @@ import net.minecraft.item.ItemStack;
  */
 public class TileEntityRendererReplicator extends TileEntitySpecialRenderer<TileEntityMachineReplicator>
 {
-    EntityItem itemEntity;
+	EntityItem itemEntity;
 
-    @Override
-    public void renderTileEntityAt(TileEntityMachineReplicator replicator, double x, double y, double z, float ticks,int destoryStage)
-    {
-        GlStateManager.pushMatrix();
-        renderItem(replicator, x, y, z);
-        GlStateManager.popMatrix();
-    }
+	@Override
+	public void renderTileEntityAt(TileEntityMachineReplicator replicator, double x, double y, double z, float ticks, int destoryStage)
+	{
+		GlStateManager.pushMatrix();
+		renderItem(replicator, x, y, z);
+		GlStateManager.popMatrix();
+	}
 
-    private void renderItem(TileEntityMachineReplicator replicator,double x,double y,double z)
-    {
-        ItemStack stack = replicator.getStackInSlot(replicator.OUTPUT_SLOT_ID);
-        if(stack != null)
-        {
-            if(itemEntity == null)
-            {
-                itemEntity = new EntityItem(replicator.getWorld(), x, y, z, stack);
-            }
-            else if(!ItemStack.areItemStacksEqual(itemEntity.getEntityItem(), stack))
-            {
-                itemEntity.setEntityItemStack(stack);
-            }
+	private void renderItem(TileEntityMachineReplicator replicator, double x, double y, double z)
+	{
+		ItemStack stack = replicator.getStackInSlot(replicator.OUTPUT_SLOT_ID);
+		if (stack != null)
+		{
+			if (itemEntity == null)
+			{
+				itemEntity = new EntityItem(replicator.getWorld(), x, y, z, stack);
+			}
+			else if (!ItemStack.areItemStacksEqual(itemEntity.getEntityItem(), stack))
+			{
+				itemEntity.setEntityItemStack(stack);
+			}
 
-            itemEntity.hoverStart = (float) (Math.PI/2);
-            Minecraft.getMinecraft().getRenderManager().doRenderEntity(itemEntity, x + 0.5d, y + 0.05, z + 0.5, 0, 0,false);
-        }
-    }
+			itemEntity.hoverStart = (float)(Math.PI / 2);
+			Minecraft.getMinecraft().getRenderManager().doRenderEntity(itemEntity, x + 0.5d, y + 0.05, z + 0.5, 0, 0, false);
+		}
+	}
 }

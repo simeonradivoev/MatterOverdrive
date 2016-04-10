@@ -34,105 +34,112 @@ import java.util.EnumSet;
 /**
  * Created by Simeon on 5/30/2015.
  */
-public class BioticStatHighJump extends AbstractBioticStat implements IConfigSubscriber {
+public class BioticStatHighJump extends AbstractBioticStat implements IConfigSubscriber
+{
 
-    private static int ENERGY_PER_JUMP = 1024;
+	private static int ENERGY_PER_JUMP = 1024;
 
-    public BioticStatHighJump(String name, int xp)
-    {
-        super(name, xp);
-        setMaxLevel(2);
-    }
+	public BioticStatHighJump(String name, int xp)
+	{
+		super(name, xp);
+		setMaxLevel(2);
+	}
 
-    @Override
-    public void onAndroidUpdate(AndroidPlayer android, int level) {
+	@Override
+	public void onAndroidUpdate(AndroidPlayer android, int level)
+	{
 
-    }
+	}
 
-    @Override
-    public String getDetails(int level)
-    {
-        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.YELLOW.toString() + ENERGY_PER_JUMP + " RF" + ChatFormatting.GRAY);
-    }
+	@Override
+	public String getDetails(int level)
+	{
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.YELLOW.toString() + ENERGY_PER_JUMP + " RF" + ChatFormatting.GRAY);
+	}
 
-    @Override
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
-    {
-        if (server && this.equals(androidPlayer.getActiveStat()))
-        {
-            androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_HIGH_JUMP,!androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_HIGH_JUMP));
-            androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS));
-        }
-    }
+	@Override
+	public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
+	{
+		if (server && this.equals(androidPlayer.getActiveStat()))
+		{
+			androidPlayer.getAndroidEffects().updateEffect(AndroidPlayer.EFFECT_HIGH_JUMP, !androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_HIGH_JUMP));
+			androidPlayer.sync(EnumSet.of(AndroidPlayer.DataType.EFFECTS));
+		}
+	}
 
-    @Override
-    public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down) {
+	@Override
+	public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
+	{
 
-    }
+	}
 
-    @Override
-    public void onLivingEvent(AndroidPlayer androidPlayer, int level, LivingEvent event)
-    {
-        if (event instanceof LivingEvent.LivingJumpEvent && isActive(androidPlayer,level))
-        {
-            if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this, level, androidPlayer)))
-            {
-                if (!androidPlayer.getPlayer().isSneaking())
-                {
-                    if (!event.getEntity().worldObj.isRemote)
-                        androidPlayer.extractEnergyScaled(ENERGY_PER_JUMP * level);
+	@Override
+	public void onLivingEvent(AndroidPlayer androidPlayer, int level, LivingEvent event)
+	{
+		if (event instanceof LivingEvent.LivingJumpEvent && isActive(androidPlayer, level))
+		{
+			if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this, level, androidPlayer)))
+			{
+				if (!androidPlayer.getPlayer().isSneaking())
+				{
+					if (!event.getEntity().worldObj.isRemote)
+					{
+						androidPlayer.extractEnergyScaled(ENERGY_PER_JUMP * level);
+					}
 
-                    Vec3d motion = new Vec3d(event.getEntityLiving().motionX, event.getEntityLiving().motionY, event.getEntityLiving().motionZ);
-                    motion = motion.normalize().addVector(0, 1, 0).normalize();
-                    event.getEntityLiving().addVelocity(motion.xCoord * 0.25 * level, motion.yCoord * 0.25 * level, motion.zCoord * 0.25 * level);
-                }
-            }
-        }
-    }
+					Vec3d motion = new Vec3d(event.getEntityLiving().motionX, event.getEntityLiving().motionY, event.getEntityLiving().motionZ);
+					motion = motion.normalize().addVector(0, 1, 0).normalize();
+					event.getEntityLiving().addVelocity(motion.xCoord * 0.25 * level, motion.yCoord * 0.25 * level, motion.zCoord * 0.25 * level);
+				}
+			}
+		}
+	}
 
-    @Override
-    public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled) {
+	@Override
+	public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
+	{
 
-    }
+	}
 
-    @Override
-    public Multimap attributes(AndroidPlayer androidPlayer, int level) {
-        return null;
-    }
+	@Override
+	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	{
+		return null;
+	}
 
-    @Override
-    public boolean isEnabled(AndroidPlayer android, int level)
-    {
-        return super.isEnabled(android,level) && android.hasEnoughEnergyScaled(ENERGY_PER_JUMP) && android.getPlayer().onGround;
-    }
+	@Override
+	public boolean isEnabled(AndroidPlayer android, int level)
+	{
+		return super.isEnabled(android, level) && android.hasEnoughEnergyScaled(ENERGY_PER_JUMP) && android.getPlayer().onGround;
+	}
 
-    @Override
-    public boolean showOnHud(AndroidPlayer android, int level)
-    {
-        return isActive(android,level);
-    }
+	@Override
+	public boolean showOnHud(AndroidPlayer android, int level)
+	{
+		return isActive(android, level);
+	}
 
-    @Override
-    public boolean showOnWheel(AndroidPlayer androidPlayer, int level)
-    {
-        return androidPlayer.getPlayer().isSneaking();
-    }
+	@Override
+	public boolean showOnWheel(AndroidPlayer androidPlayer, int level)
+	{
+		return androidPlayer.getPlayer().isSneaking();
+	}
 
-    @Override
-    public boolean isActive(AndroidPlayer androidPlayer, int level)
-    {
-        return androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_HIGH_JUMP);
-    }
+	@Override
+	public boolean isActive(AndroidPlayer androidPlayer, int level)
+	{
+		return androidPlayer.getAndroidEffects().getEffectBool(AndroidPlayer.EFFECT_HIGH_JUMP);
+	}
 
-    @Override
-    public int getDelay(AndroidPlayer androidPlayer, int level)
-    {
-        return 0;
-    }
+	@Override
+	public int getDelay(AndroidPlayer androidPlayer, int level)
+	{
+		return 0;
+	}
 
-    @Override
-    public void onConfigChanged(ConfigurationHandler config)
-    {
-        ENERGY_PER_JUMP = config.getInt("high_jump_energy", ConfigurationHandler.CATEGORY_ABILITIES, 1024, "The energy cost of each High Jump");
-    }
+	@Override
+	public void onConfigChanged(ConfigurationHandler config)
+	{
+		ENERGY_PER_JUMP = config.getInt("high_jump_energy", ConfigurationHandler.CATEGORY_ABILITIES, 1024, "The energy cost of each High Jump");
+	}
 }

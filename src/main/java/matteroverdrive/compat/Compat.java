@@ -27,7 +27,9 @@ public @interface Compat
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
-	@interface PreInit {}
+	@interface PreInit
+	{
+	}
 
 	/**
 	 * Used to mark a method of a compatibility module to be run in the initialization phase.
@@ -36,7 +38,9 @@ public @interface Compat
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
-	@interface Init {}
+	@interface Init
+	{
+	}
 
 	/**
 	 * Used to mark a method of a compatibility module to be run in the post-initialization phase.
@@ -45,6 +49,8 @@ public @interface Compat
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
-	@interface PostInit {}
+	@interface PostInit
+	{
+	}
 
 }

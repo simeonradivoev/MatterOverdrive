@@ -30,77 +30,83 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketDigBlock  extends PacketAbstract
+public class PacketDigBlock extends PacketAbstract
 {
-    int typeOfDig;
-    BlockPos pos;
-    EnumFacing side;
+	int typeOfDig;
+	BlockPos pos;
+	EnumFacing side;
 
-    public PacketDigBlock(){pos = new BlockPos(0,0,0);}
+	public PacketDigBlock()
+	{
+		pos = new BlockPos(0, 0, 0);
+	}
 
-    public PacketDigBlock(BlockPos pos,int typeOfDig,EnumFacing side)
-    {
-        if (pos == null)
-        {
-            MOLog.error("Empty Pos");
-        }
-        this.pos = pos;
-        this.side = side;
-        this.typeOfDig = typeOfDig;
-    }
+	public PacketDigBlock(BlockPos pos, int typeOfDig, EnumFacing side)
+	{
+		if (pos == null)
+		{
+			MOLog.error("Empty Pos");
+		}
+		this.pos = pos;
+		this.side = side;
+		this.typeOfDig = typeOfDig;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        pos = BlockPos.fromLong(buf.readLong());
-        side = EnumFacing.VALUES[buf.readByte()];
-        typeOfDig = buf.readByte();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		pos = BlockPos.fromLong(buf.readLong());
+		side = EnumFacing.VALUES[buf.readByte()];
+		typeOfDig = buf.readByte();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeLong(pos.toLong());
-        buf.writeByte(side.ordinal());
-        buf.writeByte(typeOfDig);
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		buf.writeLong(pos.toLong());
+		buf.writeByte(side.ordinal());
+		buf.writeByte(typeOfDig);
+	}
 
-    public static class ServerHandler extends AbstractServerPacketHandler<PacketDigBlock>
-    {
-        @Override
-        public void handleServerMessage(EntityPlayerMP player, PacketDigBlock message, MessageContext ctx) {
-            WorldServer worldserver = player.getServer().worldServerForDimension(player.dimension);
-            EntityPlayerMP playerMP = player;
+	public static class ServerHandler extends AbstractServerPacketHandler<PacketDigBlock>
+	{
+		@Override
+		public void handleServerMessage(EntityPlayerMP player, PacketDigBlock message, MessageContext ctx)
+		{
+			WorldServer worldserver = player.getServer().worldServerForDimension(player.dimension);
+			EntityPlayerMP playerMP = player;
 
-            if (message.typeOfDig == 0)
-            {
-                if (!player.getServer().isBlockProtected(worldserver, message.pos, player))
-                {
-                    playerMP.interactionManager.onBlockClicked(message.pos, message.side);
-                }
-                else
-                {
-                    playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver,message.pos));
-                }
-            }
-            else if (message.typeOfDig == 2)
-            {
-                playerMP.interactionManager.tryHarvestBlock(message.pos);
+			if (message.typeOfDig == 0)
+			{
+				if (!player.getServer().isBlockProtected(worldserver, message.pos, player))
+				{
+					playerMP.interactionManager.onBlockClicked(message.pos, message.side);
+				}
+				else
+				{
+					playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver, message.pos));
+				}
+			}
+			else if (message.typeOfDig == 2)
+			{
+				playerMP.interactionManager.tryHarvestBlock(message.pos);
 
-                IBlockState state = worldserver.getBlockState(message.pos);
-                if (state.getBlock().getMaterial(state) != Material.air)
-                {
-                    playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver,message.pos));
-                }
-            }
-            else if (message.typeOfDig == 1)
-            {
-                playerMP.interactionManager.cancelDestroyingBlock();
+				IBlockState state = worldserver.getBlockState(message.pos);
+				if (state.getBlock().getMaterial(state) != Material.air)
+				{
+					playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver, message.pos));
+				}
+			}
+			else if (message.typeOfDig == 1)
+			{
+				playerMP.interactionManager.cancelDestroyingBlock();
 
-                IBlockState state = worldserver.getBlockState(message.pos);
-                if (state.getBlock().getMaterial(state) != Material.air)
-                {
-                    playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver,message.pos));
-                }
-            }
-        }
-    }
+				IBlockState state = worldserver.getBlockState(message.pos);
+				if (state.getBlock().getMaterial(state) != Material.air)
+				{
+					playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver, message.pos));
+				}
+			}
+		}
+	}
 }

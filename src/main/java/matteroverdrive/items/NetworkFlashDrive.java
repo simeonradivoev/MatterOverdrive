@@ -41,70 +41,73 @@ import java.util.List;
 /**
  * Created by Simeon on 7/21/2015.
  */
-public class NetworkFlashDrive extends FlashDrive implements IMatterNetworkFilter {
+public class NetworkFlashDrive extends FlashDrive implements IMatterNetworkFilter
+{
 
-    public NetworkFlashDrive(String name, Color color)
-    {
-        super(name,color);
-        setMaxStackSize(1);
-    }
+	public NetworkFlashDrive(String name, Color color)
+	{
+		super(name, color);
+		setMaxStackSize(1);
+	}
 
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos) {
-        super.addDetails(itemstack,player,infos);
-        if (itemstack.hasTagCompound())
-        {
-            NBTTagList list = itemstack.getTagCompound().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_LONG);
-            for (int i = 0;i < list.tagCount();i++) {
-                BlockPos pos = BlockPos.fromLong(((NBTTagLong)list.get(i)).getLong());
-                IBlockState block = player.worldObj.getBlockState(pos);
-                if (block != null)
-                {
-                    infos.add(String.format("[%s] %s", pos.toString(),block.getBlock() != Blocks.air ? block.getBlock().getLocalizedName() : "Unknown"));
-                }
-            }
-        }
-    }
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		super.addDetails(itemstack, player, infos);
+		if (itemstack.hasTagCompound())
+		{
+			NBTTagList list = itemstack.getTagCompound().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_LONG);
+			for (int i = 0; i < list.tagCount(); i++)
+			{
+				BlockPos pos = BlockPos.fromLong(((NBTTagLong)list.get(i)).getLong());
+				IBlockState block = player.worldObj.getBlockState(pos);
+				if (block != null)
+				{
+					infos.add(String.format("[%s] %s", pos.toString(), block.getBlock() != Blocks.air ? block.getBlock().getLocalizedName() : "Unknown"));
+				}
+			}
+		}
+	}
 
-    @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof IMatterNetworkConnection)
-        {
-            BlockPos connectionPosition = tileEntity.getPos();
-            if (!stack.hasTagCompound())
-            {
-                stack.setTagCompound(new NBTTagCompound());
-            }
+	@Override
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (tileEntity instanceof IMatterNetworkConnection)
+		{
+			BlockPos connectionPosition = tileEntity.getPos();
+			if (!stack.hasTagCompound())
+			{
+				stack.setTagCompound(new NBTTagCompound());
+			}
 
-            boolean hasPos = false;
-            NBTTagList list = stack.getTagCompound().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_LONG);
-            for (int i = 0;i < list.tagCount();i++)
-            {
-                BlockPos p = BlockPos.fromLong(((NBTTagLong)list.get(i)).getLong());
-                if (p.equals(connectionPosition))
-                {
-                    hasPos = true;
-                    list.removeTag(i);
-                    break;
-                }
-            }
+			boolean hasPos = false;
+			NBTTagList list = stack.getTagCompound().getTagList(IMatterNetworkFilter.CONNECTIONS_TAG, Constants.NBT.TAG_LONG);
+			for (int i = 0; i < list.tagCount(); i++)
+			{
+				BlockPos p = BlockPos.fromLong(((NBTTagLong)list.get(i)).getLong());
+				if (p.equals(connectionPosition))
+				{
+					hasPos = true;
+					list.removeTag(i);
+					break;
+				}
+			}
 
-            if (!hasPos)
-            {
-                list.appendTag(new NBTTagLong(pos.toLong()));
-            }
+			if (!hasPos)
+			{
+				list.appendTag(new NBTTagLong(pos.toLong()));
+			}
 
-            stack.getTagCompound().setTag(IMatterNetworkFilter.CONNECTIONS_TAG, list);
+			stack.getTagCompound().setTag(IMatterNetworkFilter.CONNECTIONS_TAG, list);
 
-            return EnumActionResult.SUCCESS;
-        }
-        return EnumActionResult.FAIL;
-    }
+			return EnumActionResult.SUCCESS;
+		}
+		return EnumActionResult.FAIL;
+	}
 
-    @Override
-    public NBTTagCompound getFilter(ItemStack stack)
-    {
-        return stack.getTagCompound();
-    }
+	@Override
+	public NBTTagCompound getFilter(ItemStack stack)
+	{
+		return stack.getTagCompound();
+	}
 }

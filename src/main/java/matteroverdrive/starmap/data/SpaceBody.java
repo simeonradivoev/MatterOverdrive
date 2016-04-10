@@ -10,59 +10,70 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  */
 public abstract class SpaceBody
 {
-    //region Protected Vars
-    protected int id;
-    protected String name;
-    //endregion
+	//region Protected Vars
+	protected int id;
+	protected String name;
+	//endregion
 
-    //region Constructors
-    public SpaceBody() {}
-    public SpaceBody(String name,int id)
-    {
-        this.id = id;
-        this.name = name;
-    }
-    //endregion
+	//region Constructors
+	public SpaceBody()
+	{
+	}
 
-    //region Read - Write
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
-        tagCompound.setInteger("ID", id);
-        tagCompound.setString("Name", name);
-    }
+	public SpaceBody(String name, int id)
+	{
+		this.id = id;
+		this.name = name;
+	}
+	//endregion
 
-    public void writeToBuffer(ByteBuf buf)
-    {
-        buf.writeInt(id);
-        ByteBufUtils.writeUTF8String(buf, name);
-    }
+	//region Read - Write
+	public void writeToNBT(NBTTagCompound tagCompound)
+	{
+		tagCompound.setInteger("ID", id);
+		tagCompound.setString("Name", name);
+	}
 
-    public void readFromNBT(NBTTagCompound tagCompound,GalaxyGenerator generator)
-    {
-        id = tagCompound.getInteger("ID");
-        name = tagCompound.getString("Name");
-    }
+	public void writeToBuffer(ByteBuf buf)
+	{
+		buf.writeInt(id);
+		ByteBufUtils.writeUTF8String(buf, name);
+	}
 
-    public void readFromBuffer(ByteBuf buf)
-    {
-        id = buf.readInt();
-        name = ByteBufUtils.readUTF8String(buf);
-    }
-    //endregion
+	public void readFromNBT(NBTTagCompound tagCompound, GalaxyGenerator generator)
+	{
+		id = tagCompound.getInteger("ID");
+		name = tagCompound.getString("Name");
+	}
 
-    //region Getters and Setters
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public abstract SpaceBody getParent();
-    //endregion
+	public void readFromBuffer(ByteBuf buf)
+	{
+		id = buf.readInt();
+		name = ByteBufUtils.readUTF8String(buf);
+	}
+	//endregion
+
+	//region Getters and Setters
+	public int getId()
+	{
+		return id;
+	}
+
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public abstract SpaceBody getParent();
+	//endregion
 }

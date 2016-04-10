@@ -36,71 +36,71 @@ import java.util.List;
  */
 public class ItemBuildingResidential extends ItemBuildingAbstract implements IPlanetStatChange
 {
-    private static final int POPULATION_COUNT = 10000;
-    private static final int ENERGY_DRAIN = 4;
-    private static final int MATTER_DRAIN = 2;
-    private static final int BUILDING_SIZE_INCREASE = 4;
+	private static final int POPULATION_COUNT = 10000;
+	private static final int ENERGY_DRAIN = 4;
+	private static final int MATTER_DRAIN = 2;
+	private static final int BUILDING_SIZE_INCREASE = 4;
 
-    public ItemBuildingResidential(String name)
-    {
-        super(name);
-    }
+	public ItemBuildingResidential(String name)
+	{
+		super(name);
+	}
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-    {
-        super.addDetails(itemstack,player,infos);
-        infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.POPULATION_COUNT) + ": +" + POPULATION_COUNT);
-        infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.BUILDINGS_SIZE) + ": +" + BUILDING_SIZE_INCREASE);
-        infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.ENERGY_PRODUCTION) + ": -" + ENERGY_DRAIN);
-        infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.MATTER_PRODUCTION) + ": -" + MATTER_DRAIN);
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		super.addDetails(itemstack, player, infos);
+		infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.POPULATION_COUNT) + ": +" + POPULATION_COUNT);
+		infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.BUILDINGS_SIZE) + ": +" + BUILDING_SIZE_INCREASE);
+		infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.ENERGY_PRODUCTION) + ": -" + ENERGY_DRAIN);
+		infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.MATTER_PRODUCTION) + ": -" + MATTER_DRAIN);
+	}
 
-    @Override
-    public BuildingType getType(ItemStack building)
-    {
-        return BuildingType.RESIDENTIAL;
-    }
+	@Override
+	public BuildingType getType(ItemStack building)
+	{
+		return BuildingType.RESIDENTIAL;
+	}
 
-    @Override
-    protected int getBuildLengthUnscaled(ItemStack buildableStack, Planet planet)
-    {
-        return 20*60*5;
-    }
+	@Override
+	protected int getBuildLengthUnscaled(ItemStack buildableStack, Planet planet)
+	{
+		return 20 * 60 * 5;
+	}
 
-    @Override
-    public boolean canBuild(ItemStack building, Planet planet, List<String> info)
-    {
-        return true;
-    }
+	@Override
+	public boolean canBuild(ItemStack building, Planet planet, List<String> info)
+	{
+		return true;
+	}
 
-    @Override
-    public float changeStat(ItemStack stack, Planet planet, PlanetStatType statType, float original)
-    {
-        switch (statType)
-        {
-            case POPULATION_COUNT:
-                return original + POPULATION_COUNT;
-            case ENERGY_PRODUCTION:
-                return original - ENERGY_DRAIN;
-            case MATTER_PRODUCTION:
-                return original - MATTER_DRAIN;
-            case BUILDINGS_SIZE:
-                return original + BUILDING_SIZE_INCREASE;
-            case HAPPINESS:
-                return original + calculateHappiness(stack,planet);
-            default:
-                return original;
-        }
-    }
+	@Override
+	public float changeStat(ItemStack stack, Planet planet, PlanetStatType statType, float original)
+	{
+		switch (statType)
+		{
+			case POPULATION_COUNT:
+				return original + POPULATION_COUNT;
+			case ENERGY_PRODUCTION:
+				return original - ENERGY_DRAIN;
+			case MATTER_PRODUCTION:
+				return original - MATTER_DRAIN;
+			case BUILDINGS_SIZE:
+				return original + BUILDING_SIZE_INCREASE;
+			case HAPPINESS:
+				return original + calculateHappiness(stack, planet);
+			default:
+				return original;
+		}
+	}
 
-    public float calculateHappiness(ItemStack stack, Planet planet)
-    {
-        float happiness = 0;
-        happiness += planet.getPowerProducation() >= 0 ? 0.5f : -0.4f;
-        float matterProdruction = planet.getMatterProduction();
-        happiness += matterProdruction >= 0 ? 0.5f : -0.6f;
-        return happiness;
-    }
+	public float calculateHappiness(ItemStack stack, Planet planet)
+	{
+		float happiness = 0;
+		happiness += planet.getPowerProducation() >= 0 ? 0.5f : -0.4f;
+		float matterProdruction = planet.getMatterProduction();
+		happiness += matterProdruction >= 0 ? 0.5f : -0.6f;
+		return happiness;
+	}
 }

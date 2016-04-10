@@ -36,20 +36,22 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 
 	public MOItemEnergyContainer(String name)
 	{
-		this(name,32000);
+		this(name, 32000);
 	}
 
-	public MOItemEnergyContainer(String name,int capacity)
+	public MOItemEnergyContainer(String name, int capacity)
 	{
-		this(name,capacity, capacity, capacity);
+		this(name, capacity, capacity, capacity);
 	}
 
-	public MOItemEnergyContainer(String name,int capacity, int maxTransfer) {
+	public MOItemEnergyContainer(String name, int capacity, int maxTransfer)
+	{
 
-		this(name,capacity, maxTransfer, maxTransfer);
+		this(name, capacity, maxTransfer, maxTransfer);
 	}
 
-	public MOItemEnergyContainer(String name,int capacity, int maxReceive, int maxExtract) {
+	public MOItemEnergyContainer(String name, int capacity, int maxReceive, int maxExtract)
+	{
 		super(name);
 		this.capacity = capacity;
 		this.maxReceive = maxReceive;
@@ -64,9 +66,9 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 
 	@Override
 	public boolean showDurabilityBar(ItemStack stack)
-    {
-        return true;
-    }
+	{
+		return true;
+	}
 
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack)
@@ -76,10 +78,10 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 
 	@Override
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-	 {
+	{
 		this.TagCompountCheck(itemstack);
 		infos.add(ChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(getEnergyStored(itemstack), getMaxEnergyStored(itemstack)));
-	 }
+	}
 
 	@Override
 	public boolean hasDetails(ItemStack itemStack)
@@ -87,31 +89,36 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 		return true;
 	}
 
-	public MOItemEnergyContainer setCapacity(int capacity) {
+	public MOItemEnergyContainer setCapacity(int capacity)
+	{
 
 		this.capacity = capacity;
 		return this;
 	}
 
-	public void setMaxTransfer(int maxTransfer) {
+	public void setMaxTransfer(int maxTransfer)
+	{
 
 		setMaxReceive(maxTransfer);
 		setMaxExtract(maxTransfer);
 	}
 
-	public void setMaxReceive(int maxReceive) {
+	public void setMaxReceive(int maxReceive)
+	{
 
 		this.maxReceive = maxReceive;
 	}
 
-	public void setMaxExtract(int maxExtract) {
+	public void setMaxExtract(int maxExtract)
+	{
 
 		this.maxExtract = maxExtract;
 	}
 
 	/* IEnergyContainerItem */
 	@Override
-	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
+	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate)
+	{
 
 		this.TagCompountCheck(container);
 
@@ -120,30 +127,32 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 
 		if (!simulate)
 		{
-            energy += energyReceived;
+			energy += energyReceived;
 			container.getTagCompound().setInteger("Energy", energy);
 		}
 		return energyReceived;
 	}
 
 	@Override
-	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
+	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate)
+	{
 
-        if(container.getTagCompound() != null && container.getTagCompound().hasKey("Energy"))
-        {
-            int energy = container.getTagCompound().getInteger("Energy");
-            int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+		if (container.getTagCompound() != null && container.getTagCompound().hasKey("Energy"))
+		{
+			int energy = container.getTagCompound().getInteger("Energy");
+			int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
 
-            if (!simulate) {
-                energy -= energyExtracted;
-                container.getTagCompound().setInteger("Energy", energy);
-            }
-            return energyExtracted;
-        }
-        return 0;
+			if (!simulate)
+			{
+				energy -= energyExtracted;
+				container.getTagCompound().setInteger("Energy", energy);
+			}
+			return energyExtracted;
+		}
+		return 0;
 	}
 
-	protected void setEnergyStored(ItemStack container,int amount)
+	protected void setEnergyStored(ItemStack container, int amount)
 	{
 		setDefaultEnergyTag(container, amount);
 	}

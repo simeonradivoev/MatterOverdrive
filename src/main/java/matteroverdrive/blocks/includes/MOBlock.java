@@ -42,149 +42,157 @@ import static matteroverdrive.util.MOBlockHelper.SIDE_LEFT;
  */
 public class MOBlock extends Block
 {
-    private BlockStateContainer blockState;
-    private boolean hasRotation;
-    private int rotationType;
-    public static final PropertyDirection PROPERTY_DIRECTION = PropertyDirection.create("facing");
+	public static final PropertyDirection PROPERTY_DIRECTION = PropertyDirection.create("facing");
+	private BlockStateContainer blockState;
+	private boolean hasRotation;
+	private int rotationType;
 
-    public MOBlock(Material material, String name)
-    {
-        super(material);
-        setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
-        this.blockState = createBlockState();
-        this.setDefaultState(getBlockState().getBaseState());
-        this.fullBlock = getDefaultState().isOpaqueCube();
-        this.lightOpacity = fullBlock ? 255 : 0;
-        this.setUnlocalizedName(name);
-        setCreativeTab(MatterOverdrive.tabMatterOverdrive);
-        rotationType = RotationType.FOUR_WAY;
-    }
+	public MOBlock(Material material, String name)
+	{
+		super(material);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
+		this.blockState = createBlockState();
+		this.setDefaultState(getBlockState().getBaseState());
+		this.fullBlock = getDefaultState().isOpaqueCube();
+		this.lightOpacity = fullBlock ? 255 : 0;
+		this.setUnlocalizedName(name);
+		setCreativeTab(MatterOverdrive.tabMatterOverdrive);
+		rotationType = RotationType.FOUR_WAY;
+	}
 
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        if (hasRotation)
-        {
-            return new BlockStateContainer(this, PROPERTY_DIRECTION);
-        }
-        return super.createBlockState();
-    }
+	@Override
+	protected BlockStateContainer createBlockState()
+	{
+		if (hasRotation)
+		{
+			return new BlockStateContainer(this, PROPERTY_DIRECTION);
+		}
+		return super.createBlockState();
+	}
 
-    @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
-        if (hasRotation)
-        {
-            return getDefaultState().withProperty(PROPERTY_DIRECTION,EnumFacing.VALUES[meta]);
-        }else
-        {
-            return super.getStateFromMeta(meta);
-        }
-    }
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		if (hasRotation)
+		{
+			return getDefaultState().withProperty(PROPERTY_DIRECTION, EnumFacing.VALUES[meta]);
+		}
+		else
+		{
+			return super.getStateFromMeta(meta);
+		}
+	}
 
-    @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        if (hasRotation)
-        {
-            EnumFacing facing = state.getValue(PROPERTY_DIRECTION);
-            return facing.ordinal();
-        }else
-        {
-            return super.getMetaFromState(state);
-        }
-    }
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		if (hasRotation)
+		{
+			EnumFacing facing = state.getValue(PROPERTY_DIRECTION);
+			return facing.ordinal();
+		}
+		else
+		{
+			return super.getMetaFromState(state);
+		}
+	}
 
-    /**
-     * Called whenever the block is added into the world. Args: world, x, y, z
-     */
-    @Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
-    {
-        super.onBlockAdded(worldIn, pos,state);
+	/**
+	 * Called whenever the block is added into the world. Args: world, x, y, z
+	 */
+	@Override
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
+	{
+		super.onBlockAdded(worldIn, pos, state);
 
-        IMOTileEntity tileEntity = (IMOTileEntity)worldIn.getTileEntity(pos);
-        if(tileEntity != null)
-            tileEntity.onAdded(worldIn, pos,state);
-    }
+		IMOTileEntity tileEntity = (IMOTileEntity)worldIn.getTileEntity(pos);
+		if (tileEntity != null)
+		{
+			tileEntity.onAdded(worldIn, pos, state);
+		}
+	}
 
-    @Override
-    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
-    {
-        super.onNeighborBlockChange(worldIn, pos, state,neighborBlock);
-        IMOTileEntity tileEntity = (IMOTileEntity)worldIn.getTileEntity(pos);
-        if(tileEntity != null)
-            tileEntity.onNeighborBlockChange(worldIn,pos,state,neighborBlock);
-    }
+	@Override
+	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	{
+		super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
+		IMOTileEntity tileEntity = (IMOTileEntity)worldIn.getTileEntity(pos);
+		if (tileEntity != null)
+		{
+			tileEntity.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
+		}
+	}
 
-    /**
-     * Called when the block is placed in the world.
-     */
-    @Override
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
-        if (hasRotation)
-        {
-            EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.fromAngle(placer.rotationYaw).getOpposite();
-            return getDefaultState().withProperty(PROPERTY_DIRECTION,enumfacing);
-        }
-        return getDefaultState();
-    }
+	/**
+	 * Called when the block is placed in the world.
+	 */
+	@Override
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	{
+		if (hasRotation)
+		{
+			EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.fromAngle(placer.rotationYaw).getOpposite();
+			return getDefaultState().withProperty(PROPERTY_DIRECTION, enumfacing);
+		}
+		return getDefaultState();
+	}
 
-    public boolean rotateBlock(World worldObj,BlockPos pos, EnumFacing axis)
-    {
-        if (rotationType >= 0) {
-            IBlockState state  = worldObj.getBlockState(pos);
-            for (IProperty prop : state.getProperties().keySet())
-            {
-                if (prop.getName().equals(PROPERTY_DIRECTION))
-                {
-                    EnumFacing facing = state.getValue(PROPERTY_DIRECTION);
+	public boolean rotateBlock(World worldObj, BlockPos pos, EnumFacing axis)
+	{
+		if (rotationType >= 0)
+		{
+			IBlockState state = worldObj.getBlockState(pos);
+			for (IProperty prop : state.getProperties().keySet())
+			{
+				if (prop.getName().equals(PROPERTY_DIRECTION))
+				{
+					EnumFacing facing = state.getValue(PROPERTY_DIRECTION);
 
-                    if (rotationType == RotationType.FOUR_WAY)
-                    {
-                        facing = EnumFacing.VALUES[SIDE_LEFT[facing.ordinal() % SIDE_LEFT.length]];
-                    } else if (rotationType == RotationType.SIX_WAY)
-                    {
-                        if (facing.ordinal() < 6)
-                        {
-                            facing = EnumFacing.VALUES[(facing.ordinal() + 1) % 6];
-                        }
-                    }
+					if (rotationType == RotationType.FOUR_WAY)
+					{
+						facing = EnumFacing.VALUES[SIDE_LEFT[facing.ordinal() % SIDE_LEFT.length]];
+					}
+					else if (rotationType == RotationType.SIX_WAY)
+					{
+						if (facing.ordinal() < 6)
+						{
+							facing = EnumFacing.VALUES[(facing.ordinal() + 1) % 6];
+						}
+					}
 
-                    worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(PROPERTY_DIRECTION, facing), 3);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+					worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(PROPERTY_DIRECTION, facing), 3);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
-        if (hasTileEntity(state) && worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos) instanceof MOTileEntity)
-        {
-            ((MOTileEntity) worldIn.getTileEntity(pos)).onDestroyed(worldIn,pos,state);
-        }
-        super.breakBlock(worldIn,pos,state);
-    }
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+	{
+		if (hasTileEntity(state) && worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos) instanceof MOTileEntity)
+		{
+			((MOTileEntity)worldIn.getTileEntity(pos)).onDestroyed(worldIn, pos, state);
+		}
+		super.breakBlock(worldIn, pos, state);
+	}
 
-    public void setRotationType(int type)
-    {
-        rotationType = type;
-    }
+	public void setRotationType(int type)
+	{
+		rotationType = type;
+	}
 
-    public void setHasRotation()
-    {
-        this.hasRotation = true;
-        this.blockState = createBlockState();
-        this.setDefaultState(this.blockState.getBaseState());
-    }
+	public void setHasRotation()
+	{
+		this.hasRotation = true;
+		this.blockState = createBlockState();
+		this.setDefaultState(this.blockState.getBaseState());
+	}
 
-    @Override
-    public BlockStateContainer getBlockState()
-    {
-        return this.blockState;
-    }
+	@Override
+	public BlockStateContainer getBlockState()
+	{
+		return this.blockState;
+	}
 }

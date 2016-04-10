@@ -33,46 +33,49 @@ import java.util.List;
  */
 public class IsolinearCircuit extends MOBaseItem
 {
-    public static final String[] subItemNames = {"mk1","mk2","mk3","mk4"};
+	public static final String[] subItemNames = {"mk1", "mk2", "mk3", "mk4"};
 
-    public IsolinearCircuit(String name)
-    {
-        super(name);
-        this.setHasSubtypes(true);
-        this.setMaxDamage(0);
-    }
+	public IsolinearCircuit(String name)
+	{
+		super(name);
+		this.setHasSubtypes(true);
+		this.setMaxDamage(0);
+	}
 
-    @Override
-    public int getMetadata(int damage){return damage;}
+	@Override
+	public int getMetadata(int damage)
+	{
+		return damage;
+	}
 
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List list)
-    {
-        list.add(new ItemStack(item, 1, 0));
-        list.add(new ItemStack(item, 1, 1));
-        list.add(new ItemStack(item, 1, 2));
-        list.add(new ItemStack(item, 1, 3));
-    }
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item item, CreativeTabs creativeTabs, List list)
+	{
+		list.add(new ItemStack(item, 1, 0));
+		list.add(new ItemStack(item, 1, 1));
+		list.add(new ItemStack(item, 1, 2));
+		list.add(new ItemStack(item, 1, 3));
+	}
 
-    /**
-     * Gets an holoIcon index based on an item's damage value
-     */
-    /*@SideOnly(Side.CLIENT)
+	/**
+	 * Gets an holoIcon index based on an item's damage value
+	 */
+	/*@SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int damage)
     {
         int j = MathHelper.clamp_int(damage, 0, 3);
         return this.icons[j];
     }*/
 
-    /**
-     * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have
-     * different names based on their damage or NBT.
-     */
-    public String getUnlocalizedName(ItemStack stack)
-    {
-        int i = MathHelper.clamp_int(stack.getItemDamage(), 0, 3);
-        return super.getUnlocalizedName() + "." + subItemNames[i];
-    }
+	/**
+	 * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have
+	 * different names based on their damage or NBT.
+	 */
+	public String getUnlocalizedName(ItemStack stack)
+	{
+		int i = MathHelper.clamp_int(stack.getItemDamage(), 0, 3);
+		return super.getUnlocalizedName() + "." + subItemNames[i];
+	}
 
     /*@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)

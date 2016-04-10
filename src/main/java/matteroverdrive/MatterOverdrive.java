@@ -50,9 +50,6 @@ import java.util.concurrent.Executors;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, guiFactory = Reference.GUI_FACTORY_CLASS, dependencies = Reference.DEPEDNENCIES)
 public class MatterOverdrive
 {
-	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
-	public static CommonProxy proxy;
-
 	public static final MatterOverdriveTab tabMatterOverdrive = new MatterOverdriveTab("tabMatterOverdrive");
 	public static final MatterOverdriveTab tabMatterOverdrive_modules = new MatterOverdriveTab("tabMatterOverdrive_modules");
 	public static final MatterOverdriveTab tabMatterOverdrive_upgrades = new MatterOverdriveTab("tabMatterOverdrive_upgrades");
@@ -61,12 +58,14 @@ public class MatterOverdrive
 	public static final MatterOverdriveTab tabMatterOverdrive_buildings = new MatterOverdriveTab("tabMatterOverdrive_buildings");
 	public static final MatterOverdriveTab tabMatterOverdrive_decorative = new MatterOverdriveTab("tabMatterOverdrive_decorative");
 	public static final MatterOverdriveTab tabMatterOverdrive_androidParts = new MatterOverdriveTab("tabMatterOverdrive_androidParts");
-
-    public static TickHandler tickHandler;
-    public static PlayerEventHandler playerEventHandler;
+	public static final ExecutorService threadPool = Executors.newFixedThreadPool(2);
+	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
+	public static CommonProxy proxy;
+	public static TickHandler tickHandler;
+	public static PlayerEventHandler playerEventHandler;
 	public static ConfigurationHandler configHandler;
-    public static GuiHandler guiHandler;
-    public static PacketPipeline packetPipeline;
+	public static GuiHandler guiHandler;
+	public static PacketPipeline packetPipeline;
 	public static BucketHandler bucketHandler;
 	@Mod.Instance(Reference.MOD_ID)
 	public static MatterOverdrive instance;
@@ -75,9 +74,9 @@ public class MatterOverdrive
 	public static MatterRegistry matterRegistry;
 	public static AndroidStatRegistry statRegistry;
 	public static DialogRegistry dialogRegistry;
-    public static MatterRegistrationHandler matterRegistrationHandler;
+	public static MatterRegistrationHandler matterRegistrationHandler;
 	public static WeaponFactory weaponFactory;
-    public static AndroidPartsFactory androidPartsFactory;
+	public static AndroidPartsFactory androidPartsFactory;
 	public static Quests quests;
 	public static QuestFactory questFactory;
 	public static DialogFactory dialogFactory;
@@ -85,28 +84,27 @@ public class MatterOverdrive
 	public static QuestAssembler questAssembler;
 	public static DialogAssembler dialogAssembler;
 	public static MatterNetworkHandler matterNetworkHandler;
-    public static FluidNetworkHandler fluidNetworkHandler;
-	public static final ExecutorService threadPool = Executors.newFixedThreadPool(2);
+	public static FluidNetworkHandler fluidNetworkHandler;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-        checkJavaVersion();
+		checkJavaVersion();
 
 		AndroidPlayer.register();
 		MOExtendedProperties.register();
 		matterRegistry = new MatterRegistry();
 		statRegistry = new AndroidStatRegistry();
 		dialogRegistry = new DialogRegistry();
-        guiHandler = new GuiHandler();
+		guiHandler = new GuiHandler();
 		packetPipeline = new PacketPipeline();
 		entityHandler = new EntityHandler();
-        configHandler = new ConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
+		configHandler = new ConfigurationHandler(new File(event.getModConfigurationDirectory().getAbsolutePath() + File.separator + "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"));
 		playerEventHandler = new PlayerEventHandler(configHandler);
 		bucketHandler = new BucketHandler();
-        matterRegistrationHandler = new MatterRegistrationHandler();
+		matterRegistrationHandler = new MatterRegistrationHandler();
 		weaponFactory = new WeaponFactory();
-        androidPartsFactory = new AndroidPartsFactory();
+		androidPartsFactory = new AndroidPartsFactory();
 		quests = new Quests();
 		questFactory = new QuestFactory();
 		dialogFactory = new DialogFactory(dialogRegistry);
@@ -114,30 +112,30 @@ public class MatterOverdrive
 		questAssembler = new QuestAssembler();
 		dialogAssembler = new DialogAssembler();
 		matterNetworkHandler = new MatterNetworkHandler();
-        fluidNetworkHandler = new FluidNetworkHandler();
+		fluidNetworkHandler = new FluidNetworkHandler();
 
 		MinecraftForge.EVENT_BUS.register(matterRegistrationHandler);
 		MinecraftForge.EVENT_BUS.register(configHandler);
-		tickHandler = new TickHandler(configHandler,playerEventHandler);
+		tickHandler = new TickHandler(configHandler, playerEventHandler);
 		MinecraftForge.EVENT_BUS.register(tickHandler);
 		MinecraftForge.EVENT_BUS.register(playerEventHandler);
 		MinecraftForge.EVENT_BUS.register(playerEventHandler);
 		MinecraftForge.EVENT_BUS.register(bucketHandler);
 		MinecraftForge.EVENT_BUS.register(blockHandler);
 		MatterOverdriveFluids.init(event);
-        MatterOverdriveBlocks.init(event);
+		MatterOverdriveBlocks.init(event);
 		MatterOverdriveItems.init(event);
 		moWorld = new MatterOverdriveWorld(configHandler);
 		MatterOverdriveEntities.init(event, configHandler);
 		MatterOverdriveEnchantments.init(event, configHandler);
 		moWorld.register();
 		MatterNetworkRegistry.register();
-        packetPipeline.registerPackets();
+		packetPipeline.registerPackets();
 		MatterOverdriveBioticStats.init(event);
 		MatterOverdriveBioticStats.registerAll(configHandler, MatterOverdrive.statRegistry);
-		matterRegistry.preInit(event,configHandler);
-        MinecraftForge.EVENT_BUS.register(matterNetworkHandler);
-        MinecraftForge.EVENT_BUS.register(fluidNetworkHandler);
+		matterRegistry.preInit(event, configHandler);
+		MinecraftForge.EVENT_BUS.register(matterNetworkHandler);
+		MinecraftForge.EVENT_BUS.register(fluidNetworkHandler);
 		UpdateTabs();
 
 		proxy.preInit(event);
@@ -147,7 +145,7 @@ public class MatterOverdrive
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-        guiHandler.register(event.getSide());
+		guiHandler.register(event.getSide());
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 		MinecraftForge.EVENT_BUS.register(entityHandler);
 		configHandler.init();
@@ -158,12 +156,12 @@ public class MatterOverdrive
 		MatterOverdriveFluids.register(event);
 		MatterOverdriveBioticStats.configure(event);
 		MatterOverdriveDialogs.init(event, configHandler, dialogRegistry);
-        MatterOverdriveQuests.init(event);
-		MatterOverdriveQuests.register(event,quests);
+		MatterOverdriveQuests.init(event);
+		MatterOverdriveQuests.register(event, quests);
 		MatterOverdriveSounds.register();
-		EntityVillagerMadScientist.registerDialogMessages(dialogRegistry,event.getSide());
+		EntityVillagerMadScientist.registerDialogMessages(dialogRegistry, event.getSide());
 
-        proxy.init(event);
+		proxy.init(event);
 
 		MatterOverdriveRecipes.registerBlockRecipes(event);
 		MatterOverdriveRecipes.registerItemRecipes(event);
@@ -171,7 +169,7 @@ public class MatterOverdrive
 
 		weaponFactory.initModules();
 		weaponFactory.initWeapons();
-        androidPartsFactory.initParts();
+		androidPartsFactory.initParts();
 
 		AndroidPlayer.loadConfigs(configHandler);
 	}
@@ -185,10 +183,10 @@ public class MatterOverdrive
 		MatterOverdriveItems.addToDungons();
 		MatterOverdriveItems.addToMODungons();
 
-        questAssembler.loadQuests(quests);
+		questAssembler.loadQuests(quests);
 		questAssembler.loadCustomQuests(quests);
 		dialogAssembler.loadDialogs(dialogRegistry);
-        dialogAssembler.loadCustomDialogs(dialogRegistry);
+		dialogAssembler.loadCustomDialogs(dialogRegistry);
 
 		MatterOverdriveMatter.registerBlacklistFromConfig(configHandler);
 		MatterOverdriveMatter.registerBasic(configHandler);
@@ -206,24 +204,25 @@ public class MatterOverdrive
 		event.registerServerCommand(new SaveWorldToImage());
 		event.registerServerCommand(new WorldGenCommands());
 		event.registerServerCommand(new DimesionTeleportCommends());
-        proxy.getGoogleAnalytics().load();
+		proxy.getGoogleAnalytics().load();
 	}
 
-    @Mod.EventHandler
-    public void serverStopping(FMLServerStoppingEvent event)
-    {
-        proxy.getGoogleAnalytics().unload();
-    }
-
-    @Mod.EventHandler
-    public void serverStart(FMLServerStartedEvent event)
-    {
-		//matterRegistrationHandler.serverStart(event);
-		tickHandler.onServerStart(event);
-    }
+	@Mod.EventHandler
+	public void serverStopping(FMLServerStoppingEvent event)
+	{
+		proxy.getGoogleAnalytics().unload();
+	}
 
 	@Mod.EventHandler
-	public void imcCallback(FMLInterModComms.IMCEvent event) {
+	public void serverStart(FMLServerStartedEvent event)
+	{
+		//matterRegistrationHandler.serverStart(event);
+		tickHandler.onServerStart(event);
+	}
+
+	@Mod.EventHandler
+	public void imcCallback(FMLInterModComms.IMCEvent event)
+	{
 		MOIMCHandler.imcCallback(event);
 	}
 
@@ -241,14 +240,14 @@ public class MatterOverdrive
 
 	private void checkJavaVersion()
 	{
-        String versionString = System.getProperty("java.version");
-        int pos = versionString.indexOf('.');
-        pos = versionString.indexOf('.', pos+1);
-        double version = Double.parseDouble(versionString.substring(0, pos));
-        if (version < 1.8)
-        {
+		String versionString = System.getProperty("java.version");
+		int pos = versionString.indexOf('.');
+		pos = versionString.indexOf('.', pos + 1);
+		double version = Double.parseDouble(versionString.substring(0, pos));
+		if (version < 1.8)
+		{
 			MOLog.warn("Matter Overdrive only supports Java 8 and above. Please update your Java version. You are currently using: " + version);
-            MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Java version lower than 8",true);
-        }
+			MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Java version lower than 8", true);
+		}
 	}
 }

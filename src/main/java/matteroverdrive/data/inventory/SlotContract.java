@@ -26,14 +26,14 @@ import net.minecraft.item.ItemStack;
  */
 public class SlotContract extends Slot
 {
-    public SlotContract(boolean isMainSlot)
-    {
-        super(isMainSlot);
-    }
+	public SlotContract(boolean isMainSlot)
+	{
+		super(isMainSlot);
+	}
 
-    @Override
-    public boolean isValidForSlot(ItemStack item)
-    {
-        return item.getItem() instanceof Contract;
-    }
+	@Override
+	public boolean isValidForSlot(ItemStack item)
+	{
+		return item.getItem() instanceof Contract;
+	}
 }

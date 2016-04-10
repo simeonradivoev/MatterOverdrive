@@ -33,26 +33,30 @@ import java.util.List;
 public class EnergyPack extends MOBaseItem implements IEnergyPack
 {
 
-    public EnergyPack(String name)
-    {
-        super(name);
-    }
+	public EnergyPack(String name)
+	{
+		super(name);
+	}
 
-    public boolean hasDetails(ItemStack stack){return true;}
+	public boolean hasDetails(ItemStack stack)
+	{
+		return true;
+	}
 
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-    {
-        super.addDetails(itemstack,player,infos);
-        infos.add(ChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(null,getEnergyAmount(itemstack)));
-    }
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		super.addDetails(itemstack, player, infos);
+		infos.add(ChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(null, getEnergyAmount(itemstack)));
+	}
 
-    @Override
-    public int getEnergyAmount(ItemStack pack) {
-        return 32000;
-    }
+	@Override
+	public int getEnergyAmount(ItemStack pack)
+	{
+		return 32000;
+	}
 
-    // TODO: 3/26/2016 FInd how to get Color from stack
-    /*@Override
+	// TODO: 3/26/2016 FInd how to get Color from stack
+	/*@Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)
     {

@@ -13,20 +13,20 @@ import net.minecraft.world.World;
 public class BlockWeaponStation extends MOBlockMachine
 {
 
-    public BlockWeaponStation(Material material, String name)
-    {
-        super(material, name);
-        // TODO: 3/26/2016 Find how to set block bounds
-        //setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
-        setHardness(20.0F);
-        this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe", 2);
-        lightValue = 10;
-        setHasGui(true);
-    }
+	public BlockWeaponStation(Material material, String name)
+	{
+		super(material, name);
+		// TODO: 3/26/2016 Find how to set block bounds
+		//setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
+		setHardness(20.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		lightValue = 10;
+		setHasGui(true);
+	}
 
     /*@SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
+	public void registerBlockIcons(IIconRegister iconRegister)
     {
         super.registerBlockIcons(iconRegister);
         topIcon = iconRegister.registerIcon(Reference.MOD_ID + ":weapon_station_top");
@@ -52,17 +52,17 @@ public class BlockWeaponStation extends MOBlockMachine
         }
     }*/
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityWeaponStation();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityWeaponStation();
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
 
     /*@Override
     public int getRenderType()

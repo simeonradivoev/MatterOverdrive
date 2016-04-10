@@ -28,9 +28,9 @@ import net.minecraft.item.ItemStack;
  */
 public interface IMatterItem
 {
-    /**
-     * @param itemStack the item stack.
-     * @return the matter of the Item stack.
-     */
-    int getMatter(ItemStack itemStack);
+	/**
+	 * @param itemStack the item stack.
+	 * @return the matter of the Item stack.
+	 */
+	int getMatter(ItemStack itemStack);
 }

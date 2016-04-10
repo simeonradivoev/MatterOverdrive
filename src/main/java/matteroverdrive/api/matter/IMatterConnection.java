@@ -27,5 +27,5 @@ import net.minecraft.util.EnumFacing;
  */
 public interface IMatterConnection
 {
-    boolean canConnectFrom(EnumFacing dir);
+	boolean canConnectFrom(EnumFacing dir);
 }

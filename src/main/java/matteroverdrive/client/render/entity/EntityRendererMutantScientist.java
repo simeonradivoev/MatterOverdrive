@@ -29,22 +29,24 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by Simeon on 11/27/2015.
  */
-public class EntityRendererMutantScientist extends RenderBiped {
+public class EntityRendererMutantScientist extends RenderBiped
+{
 
-    private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "hulking_scinetist.png");
-    public EntityRendererMutantScientist(RenderManager renderManager,ModelBiped modelBiped, float f, float size)
-    {
-        super(renderManager,modelBiped, f, size);
-    }
+	private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "hulking_scinetist.png");
 
-    @Override
-    protected ResourceLocation getEntityTexture(Entity entity)
-    {
-        return texture;
-    }
+	public EntityRendererMutantScientist(RenderManager renderManager, ModelBiped modelBiped, float f, float size)
+	{
+		super(renderManager, modelBiped, f, size);
+	}
 
-    public void doRender(EntityLiving p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
-    {
-        super.doRender(p_76986_1_,p_76986_2_,p_76986_4_,p_76986_6_,p_76986_8_,p_76986_9_);
-    }
+	@Override
+	protected ResourceLocation getEntityTexture(Entity entity)
+	{
+		return texture;
+	}
+
+	public void doRender(EntityLiving p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
+	{
+		super.doRender(p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+	}
 }

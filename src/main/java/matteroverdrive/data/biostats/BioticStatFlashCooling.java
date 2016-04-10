@@ -22,90 +22,90 @@ import java.util.Random;
  */
 public class BioticStatFlashCooling extends AbstractBioticStat
 {
-    private final Random random;
-    private static final float COOLDOWN_CHANGE = 0.2f;
-    private static final int ENERGY_PER_COOLDOWN = 1024;
+	private static final float COOLDOWN_CHANGE = 0.2f;
+	private static final int ENERGY_PER_COOLDOWN = 1024;
+	private final Random random;
 
-    public BioticStatFlashCooling(String name, int xp)
-    {
-        super(name, xp);
-        random = new Random();
-    }
+	public BioticStatFlashCooling(String name, int xp)
+	{
+		super(name, xp);
+		random = new Random();
+	}
 
-    @Override
-    public String getDetails(int level)
-    {
-        return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(COOLDOWN_CHANGE) + ChatFormatting.GRAY, ChatFormatting.YELLOW + (ENERGY_PER_COOLDOWN + MOEnergyHelper.ENERGY_UNIT) + ChatFormatting.GRAY);
-    }
+	@Override
+	public String getDetails(int level)
+	{
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(COOLDOWN_CHANGE) + ChatFormatting.GRAY, ChatFormatting.YELLOW + (ENERGY_PER_COOLDOWN + MOEnergyHelper.ENERGY_UNIT) + ChatFormatting.GRAY);
+	}
 
-    @Override
-    public void registerIcons(TextureMap textureMap,HoloIcons holoIcons)
-    {
-        this.icon = holoIcons.getIcon("temperature");
-    }
+	@Override
+	public void registerIcons(TextureMap textureMap, HoloIcons holoIcons)
+	{
+		this.icon = holoIcons.getIcon("temperature");
+	}
 
-    @Override
-    public void onAndroidUpdate(AndroidPlayer android, int level)
-    {
+	@Override
+	public void onAndroidUpdate(AndroidPlayer android, int level)
+	{
 
-    }
+	}
 
-    @Override
-    public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
-    {
+	@Override
+	public void onActionKeyPress(AndroidPlayer androidPlayer, int level, boolean server)
+	{
 
-    }
+	}
 
-    @Override
-    public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
-    {
+	@Override
+	public void onKeyPress(AndroidPlayer androidPlayer, int level, int keycode, boolean down)
+	{
 
-    }
+	}
 
-    @Override
-    public void onLivingEvent(AndroidPlayer androidPlayer, int level, LivingEvent event)
-    {
-        if (event instanceof MOEventEnergyWeapon.Overheat && random.nextFloat() < COOLDOWN_CHANGE)
-        {
-            event.setCanceled(true);
-            ((MOEventEnergyWeapon.Overheat) event).energyWeapon.setHeat(((MOEventEnergyWeapon.Overheat) event).weaponStack,0);
-            event.getEntity().worldObj.playSound(null,event.getEntityLiving().posX,event.getEntityLiving().posY,event.getEntityLiving().posZ, MatterOverdriveSounds.weaponsOverheat, SoundCategory.PLAYERS, 1F, 1f);
-        }
-    }
+	@Override
+	public void onLivingEvent(AndroidPlayer androidPlayer, int level, LivingEvent event)
+	{
+		if (event instanceof MOEventEnergyWeapon.Overheat && random.nextFloat() < COOLDOWN_CHANGE)
+		{
+			event.setCanceled(true);
+			((MOEventEnergyWeapon.Overheat)event).energyWeapon.setHeat(((MOEventEnergyWeapon.Overheat)event).weaponStack, 0);
+			event.getEntity().worldObj.playSound(null, event.getEntityLiving().posX, event.getEntityLiving().posY, event.getEntityLiving().posZ, MatterOverdriveSounds.weaponsOverheat, SoundCategory.PLAYERS, 1F, 1f);
+		}
+	}
 
-    @Override
-    public boolean isEnabled(AndroidPlayer android, int level)
-    {
-        return super.isEnabled(android,level) && android.getEnergyStored() > 0;
-    }
+	@Override
+	public boolean isEnabled(AndroidPlayer android, int level)
+	{
+		return super.isEnabled(android, level) && android.getEnergyStored() > 0;
+	}
 
-    @Override
-    public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
-    {
+	@Override
+	public void changeAndroidStats(AndroidPlayer androidPlayer, int level, boolean enabled)
+	{
 
-    }
+	}
 
-    @Override
-    public Multimap attributes(AndroidPlayer androidPlayer, int level)
-    {
-        return null;
-    }
+	@Override
+	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	{
+		return null;
+	}
 
-    @Override
-    public boolean isActive(AndroidPlayer androidPlayer, int level)
-    {
-        return false;
-    }
+	@Override
+	public boolean isActive(AndroidPlayer androidPlayer, int level)
+	{
+		return false;
+	}
 
-    @Override
-    public int getDelay(AndroidPlayer androidPlayer, int level)
-    {
-        return 0;
-    }
+	@Override
+	public int getDelay(AndroidPlayer androidPlayer, int level)
+	{
+		return 0;
+	}
 
-    @Override
-    public boolean showOnHud(AndroidPlayer android, int level)
-    {
-        return android.getPlayer().getHeldItem(EnumHand.MAIN_HAND) != null && android.getPlayer().getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IWeapon;
-    }
+	@Override
+	public boolean showOnHud(AndroidPlayer android, int level)
+	{
+		return android.getPlayer().getHeldItem(EnumHand.MAIN_HAND) != null && android.getPlayer().getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IWeapon;
+	}
 }

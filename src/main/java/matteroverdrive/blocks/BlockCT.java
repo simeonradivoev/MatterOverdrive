@@ -31,13 +31,14 @@ import net.minecraft.world.IBlockAccess;
 public abstract class BlockCT extends MOBlock
 {
 
-    public BlockCT(Material material, String name) {
-        super(material, name);
+	public BlockCT(Material material, String name)
+	{
+		super(material, name);
 
-    }
+	}
 
 /*    @Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         super.registerBlockIcons(iconRegister);
@@ -95,8 +96,8 @@ public abstract class BlockCT extends MOBlock
         return icon;
     }*/
 
-    public abstract boolean canConnect(IBlockState state,IBlockAccess world, BlockPos pos, IBlockState blockState);
+	public abstract boolean canConnect(IBlockState state, IBlockAccess world, BlockPos pos, IBlockState blockState);
 
-    public abstract boolean isSideCT(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing side);
+	public abstract boolean isSideCT(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side);
 
 }

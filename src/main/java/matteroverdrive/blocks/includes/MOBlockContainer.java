@@ -24,8 +24,8 @@ import net.minecraft.block.material.Material;
 public abstract class MOBlockContainer extends MOBlock implements ITileEntityProvider
 {
 	public MOBlockContainer(Material material, String name)
-    {
-        super(material, name);
-        this.isBlockContainer = true;
-    }
+	{
+		super(material, name);
+		this.isBlockContainer = true;
+	}
 }

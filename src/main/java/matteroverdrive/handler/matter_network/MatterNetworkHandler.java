@@ -6,11 +6,11 @@ import matteroverdrive.data.transport.MatterNetwork;
 /**
  * Created by Simeon on 1/28/2016.
  */
-public class MatterNetworkHandler extends GridNetworkHandler<IMatterNetworkConnection,MatterNetwork>
+public class MatterNetworkHandler extends GridNetworkHandler<IMatterNetworkConnection, MatterNetwork>
 {
-    @Override
-    public MatterNetwork createNewNetwork(IMatterNetworkConnection node)
-    {
-        return new MatterNetwork(this);
-    }
+	@Override
+	public MatterNetwork createNewNetwork(IMatterNetworkConnection node)
+	{
+		return new MatterNetwork(this);
+	}
 }

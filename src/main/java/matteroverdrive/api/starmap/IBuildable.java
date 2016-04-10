@@ -31,25 +31,25 @@ import java.util.UUID;
  */
 public interface IBuildable
 {
-    boolean canBuild(ItemStack building, Planet planet, List<String> info);
+	boolean canBuild(ItemStack building, Planet planet, List<String> info);
 
-    int getBuildLength(ItemStack building, Planet planet);
+	int getBuildLength(ItemStack building, Planet planet);
 
-    long getBuildStart(ItemStack building);
+	long getBuildStart(ItemStack building);
 
-    void setBuildStart(ItemStack building, long buildStart);
+	void setBuildStart(ItemStack building, long buildStart);
 
-    boolean isReadyToBuild(World world, ItemStack stack, Planet planet);
+	boolean isReadyToBuild(World world, ItemStack stack, Planet planet);
 
-    boolean isOwner(ItemStack ship, EntityPlayer player);
+	boolean isOwner(ItemStack ship, EntityPlayer player);
 
-    UUID getOwnerID(ItemStack stack);
+	UUID getOwnerID(ItemStack stack);
 
-    void setOwner(ItemStack ship, UUID ownerID);
+	void setOwner(ItemStack ship, UUID ownerID);
 
 
-    default long getRemainingBuildTimeTicks(ItemStack stack, Planet planet, World world)
-    {
-        return (getBuildStart(stack) + getBuildLength(stack, planet)) - world.getTotalWorldTime();
-    }
+	default long getRemainingBuildTimeTicks(ItemStack stack, Planet planet, World world)
+	{
+		return (getBuildStart(stack) + getBuildLength(stack, planet)) - world.getTotalWorldTime();
+	}
 }

@@ -33,15 +33,14 @@ public class ElementMatterStored extends MOElementBase
 {
 	public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(Reference.PATH_ELEMENTS + "Matter.png");
 	public static final int DEFAULT_SCALE = 42;
-    private int drain = 0;
-	private double drainPerTick = 0;
-
 	protected IMatterStorage storage;
-
 	// If this is enabled, 1 pixel of energy will always show in the bar as long as it is non-zero.
 	protected boolean alwaysShowMinimum = false;
+	private int drain = 0;
+	private double drainPerTick = 0;
 
-	public ElementMatterStored(MOGuiBase gui, int posX, int posY, IMatterStorage storage) {
+	public ElementMatterStored(MOGuiBase gui, int posX, int posY, IMatterStorage storage)
+	{
 
 		super(gui, posX, posY);
 		this.storage = storage;
@@ -54,14 +53,16 @@ public class ElementMatterStored extends MOElementBase
 		this.texH = 64;
 	}
 
-	public ElementMatterStored setAlwaysShow(boolean show) {
+	public ElementMatterStored setAlwaysShow(boolean show)
+	{
 
 		alwaysShowMinimum = show;
 		return this;
 	}
 
 	@Override
-	public void drawBackground(int mouseX, int mouseY, float gameTicks) {
+	public void drawBackground(int mouseX, int mouseY, float gameTicks)
+	{
 
 		int amount = getScaled();
 
@@ -71,7 +72,8 @@ public class ElementMatterStored extends MOElementBase
 	}
 
 	@Override
-	public void drawForeground(int mouseX, int mouseY) {
+	public void drawForeground(int mouseX, int mouseY)
+	{
 
 	}
 
@@ -88,50 +90,53 @@ public class ElementMatterStored extends MOElementBase
 	}
 
 	@Override
-	public void addTooltip(List<String> list,int mouseX,int mouseY) {
+	public void addTooltip(List<String> list, int mouseX, int mouseY)
+	{
 
 		if (storage.getCapacity() < 0)
-        {
+		{
 			list.add("Infinite " + MatterHelper.MATTER_UNIT);
-		} else
-        {
+		}
+		else
+		{
 			list.add(storage.getMatterStored() + " / " + storage.getCapacity() + MatterHelper.MATTER_UNIT);
 		}
 
-        if(drain > 0)
-        {
-            list.add(ChatFormatting.GREEN + "+" +  MatterHelper.formatMatter(drain));
-        }
-        else if(drain < 0)
-        {
-            list.add(ChatFormatting.RED +  MatterHelper.formatMatter(drain));
-        }
-
-		if(drainPerTick > 0)
+		if (drain > 0)
 		{
-			list.add(ChatFormatting.GREEN + "+" +  MatterHelper.formatMatter(drainPerTick) + "/t");
+			list.add(ChatFormatting.GREEN + "+" + MatterHelper.formatMatter(drain));
 		}
-		else if(drainPerTick < 0)
+		else if (drain < 0)
 		{
-			list.add(ChatFormatting.RED +  MatterHelper.formatMatter(drainPerTick) + "/t");
+			list.add(ChatFormatting.RED + MatterHelper.formatMatter(drain));
+		}
+
+		if (drainPerTick > 0)
+		{
+			list.add(ChatFormatting.GREEN + "+" + MatterHelper.formatMatter(drainPerTick) + "/t");
+		}
+		else if (drainPerTick < 0)
+		{
+			list.add(ChatFormatting.RED + MatterHelper.formatMatter(drainPerTick) + "/t");
 		}
 	}
 
-	protected int getScaled() {
+	protected int getScaled()
+	{
 
 		if (storage.getCapacity() <= 0)
 		{
 			return sizeY;
 		}
-		long fraction = (long) storage.getMatterStored() * sizeY / storage.getCapacity();
+		long fraction = (long)storage.getMatterStored() * sizeY / storage.getCapacity();
 
 		return alwaysShowMinimum && storage.getMatterStored() > 0 ? Math.max(1, Math.round(fraction)) : Math.round(fraction);
 	}
 
-    public void setDrain(int amount)
-    {
-        this.drain = amount;
-    }
+	public void setDrain(int amount)
+	{
+		this.drain = amount;
+	}
 
 	public void setDrainPerTick(double amount)
 	{

@@ -29,26 +29,26 @@ import net.minecraft.world.World;
  */
 public class BlockMatterAnalyzer extends MOBlockMachine
 {
-    public static float MACHINE_VOLUME;
+	public static float MACHINE_VOLUME;
 /*    private IIcon iconTop;
-    private IIcon iconFront;
+	private IIcon iconFront;
     private IIcon iconFronAnim;*/
 
-    public BlockMatterAnalyzer(Material material, String name)
-    {
-        super(material, name);
-        setHasRotation();
-        setHardness(20.0F);
-        this.setResistance(5.0f);
-        this.setHarvestLevel("pickaxe", 2);
-        setHasGui(true);
-    }
+	public BlockMatterAnalyzer(Material material, String name)
+	{
+		super(material, name);
+		setHasRotation();
+		setHardness(20.0F);
+		this.setResistance(5.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		setHasGui(true);
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMachineMatterAnalyzer();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachineMatterAnalyzer();
+	}
 
     /*@Override
     @SideOnly(Side.CLIENT)

@@ -27,6 +27,7 @@ import net.minecraft.util.math.Vec3d;
  */
 public interface IRangedEnergyWeaponAttackMob
 {
-    ItemStack getWeapon();
-    void attackEntityWithRangedAttack(EntityLivingBase target, Vec3d lastSeenPosition, boolean canSee);
+	ItemStack getWeapon();
+
+	void attackEntityWithRangedAttack(EntityLivingBase target, Vec3d lastSeenPosition, boolean canSee);
 }

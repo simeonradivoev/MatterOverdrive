@@ -29,21 +29,22 @@ import net.minecraft.world.World;
  */
 public class BlockFusionReactorIO extends MOBlockMachine
 {
-    public BlockFusionReactorIO(Material material, String name)
-    {
-        super(material, name);
-        setHardness(30.0F);
-        this.setResistance(10.0f);
-        this.setHarvestLevel("pickaxe", 2);
-    }
+	public BlockFusionReactorIO(Material material, String name)
+	{
+		super(material, name);
+		setHardness(30.0F);
+		this.setResistance(10.0f);
+		this.setHarvestLevel("pickaxe", 2);
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int mea) {
-        return new TileEntityFusionReactorPart();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int mea)
+	{
+		return new TileEntityFusionReactorPart();
+	}
 
     /*@SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
     {
         return MatterOverdriveIcons.Network_port_square;
     }*/

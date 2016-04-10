@@ -40,62 +40,65 @@ import java.util.List;
  */
 public class TransportFlashDrive extends FlashDrive
 {
-    public TransportFlashDrive(String name,Color color)
-    {
-        super(name,color);
-    }
+	public TransportFlashDrive(String name, Color color)
+	{
+		super(name, color);
+	}
 
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos) {
-        super.addDetails(itemstack, player, infos);
-        if (hasTarget(itemstack))
-        {
-            BlockPos target = getTarget(itemstack);
-            IBlockState state = player.worldObj.getBlockState(target);
-            Block block = state.getBlock();
-            infos.add(ChatFormatting.YELLOW + String.format("[%s] %s", target.toString(),block.getMaterial(state) != Material.air ? block.getLocalizedName() : "Unknown"));
-        }
-    }
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		super.addDetails(itemstack, player, infos);
+		if (hasTarget(itemstack))
+		{
+			BlockPos target = getTarget(itemstack);
+			IBlockState state = player.worldObj.getBlockState(target);
+			Block block = state.getBlock();
+			infos.add(ChatFormatting.YELLOW + String.format("[%s] %s", target.toString(), block.getMaterial(state) != Material.air ? block.getLocalizedName() : "Unknown"));
+		}
+	}
 
-    @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
-        IBlockState state = worldIn.getBlockState(pos);
-        if (state.getBlock().getMaterial(state) != Material.air)
-        {
-            setTarget(stack,pos);
-            return EnumActionResult.SUCCESS;
-        }
-        removeTarget(stack);
-        return EnumActionResult.FAIL;
-    }
+	@Override
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
+		IBlockState state = worldIn.getBlockState(pos);
+		if (state.getBlock().getMaterial(state) != Material.air)
+		{
+			setTarget(stack, pos);
+			return EnumActionResult.SUCCESS;
+		}
+		removeTarget(stack);
+		return EnumActionResult.FAIL;
+	}
 
-    public void setTarget(ItemStack itemStack,BlockPos pos)
-    {
-        if (!itemStack.hasTagCompound())
-            itemStack.setTagCompound(new NBTTagCompound());
+	public void setTarget(ItemStack itemStack, BlockPos pos)
+	{
+		if (!itemStack.hasTagCompound())
+		{
+			itemStack.setTagCompound(new NBTTagCompound());
+		}
 
-        itemStack.getTagCompound().setLong("target",pos.toLong());
-    }
+		itemStack.getTagCompound().setLong("target", pos.toLong());
+	}
 
-    public void removeTarget(ItemStack itemStack)
-    {
-        if (itemStack.hasTagCompound())
-        {
-            itemStack.setTagCompound(null);
-        }
-    }
+	public void removeTarget(ItemStack itemStack)
+	{
+		if (itemStack.hasTagCompound())
+		{
+			itemStack.setTagCompound(null);
+		}
+	}
 
-    public BlockPos getTarget(ItemStack itemStack)
-    {
-        if (itemStack.getTagCompound() != null)
-        {
-            return BlockPos.fromLong(itemStack.getTagCompound().getLong("target"));
-        }
-        return null;
-    }
+	public BlockPos getTarget(ItemStack itemStack)
+	{
+		if (itemStack.getTagCompound() != null)
+		{
+			return BlockPos.fromLong(itemStack.getTagCompound().getLong("target"));
+		}
+		return null;
+	}
 
-    public boolean hasTarget(ItemStack itemStack)
-    {
-        return itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("taget", Constants.NBT.TAG_LONG);
-    }
+	public boolean hasTarget(ItemStack itemStack)
+	{
+		return itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("taget", Constants.NBT.TAG_LONG);
+	}
 }

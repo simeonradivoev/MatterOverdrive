@@ -18,9 +18,9 @@
 
 package matteroverdrive.compat.modules.waila;
 
+import matteroverdrive.compat.Compat;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
-import matteroverdrive.compat.Compat;
 
 /**
  * Compatibility for WAILA

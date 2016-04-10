@@ -10,15 +10,15 @@ import net.minecraft.entity.player.InventoryPlayer;
  */
 public class ContainerAnalyzer extends ContainerTaskQueueMachine<TileEntityMachineMatterAnalyzer>
 {
-    public ContainerAnalyzer(InventoryPlayer inventory, TileEntityMachineMatterAnalyzer machine)
-    {
-        super(inventory, machine);
-    }
+	public ContainerAnalyzer(InventoryPlayer inventory, TileEntityMachineMatterAnalyzer machine)
+	{
+		super(inventory, machine);
+	}
 
-    @Override
-    public void init(InventoryPlayer inventory)
-    {
-        addAllSlotsFromInventory(machine.getInventoryContainer());
-        MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, true, true);
-    }
+	@Override
+	public void init(InventoryPlayer inventory)
+	{
+		addAllSlotsFromInventory(machine.getInventoryContainer());
+		MOContainerHelper.AddPlayerSlots(inventory, this, 45, 89, true, true);
+	}
 }

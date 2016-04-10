@@ -11,26 +11,26 @@ import net.minecraft.util.math.Vec3d;
  */
 public class DimensionalRifts
 {
-    private double noiseScale;
+	private double noiseScale;
 
-    public DimensionalRifts(double noiseScale)
-    {
-        this.noiseScale = noiseScale;
-    }
+	public DimensionalRifts(double noiseScale)
+	{
+		this.noiseScale = noiseScale;
+	}
 
-    public float getValueAt(BlockPos pos)
-    {
-        return this.getValueAt(new Vec3d(pos));
-    }
+	public float getValueAt(BlockPos pos)
+	{
+		return this.getValueAt(new Vec3d(pos));
+	}
 
-    public float getValueAt(Vec3d pos)
-    {
-        if (Minecraft.getMinecraft().theWorld != null)
-        {
-            float yPos = (float) MOMathHelper.noise(pos.xCoord * noiseScale, Minecraft.getMinecraft().theWorld.provider.getSeed(), pos.zCoord * noiseScale);
-            yPos = MathHelper.clamp_float((float) Math.pow((yPos - 0.45f), 5) * 180, 0, 1);
-            return yPos;
-        }
-        return 0;
-    }
+	public float getValueAt(Vec3d pos)
+	{
+		if (Minecraft.getMinecraft().theWorld != null)
+		{
+			float yPos = (float)MOMathHelper.noise(pos.xCoord * noiseScale, Minecraft.getMinecraft().theWorld.provider.getSeed(), pos.zCoord * noiseScale);
+			yPos = MathHelper.clamp_float((float)Math.pow((yPos - 0.45f), 5) * 180, 0, 1);
+			return yPos;
+		}
+		return 0;
+	}
 }

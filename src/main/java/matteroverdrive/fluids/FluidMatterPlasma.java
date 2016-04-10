@@ -27,7 +27,8 @@ import net.minecraftforge.fluids.Fluid;
  */
 public class FluidMatterPlasma extends Fluid
 {
-    public FluidMatterPlasma(String fluidName) {
-        super(fluidName,new ResourceLocation(Reference.PATH_BLOCKS + "matter_plasma_flowing.png"),new ResourceLocation(Reference.PATH_BLOCKS + "matter_plasma_still.png"));
-    }
+	public FluidMatterPlasma(String fluidName)
+	{
+		super(fluidName, new ResourceLocation(Reference.PATH_BLOCKS + "matter_plasma_flowing.png"), new ResourceLocation(Reference.PATH_BLOCKS + "matter_plasma_still.png"));
+	}
 }

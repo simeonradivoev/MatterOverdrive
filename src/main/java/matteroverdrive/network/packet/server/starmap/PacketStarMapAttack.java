@@ -16,46 +16,47 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class PacketStarMapAttack extends PacketAbstract
 {
-    GalacticPosition from,to;
-    int shipID;
+	GalacticPosition from, to;
+	int shipID;
 
-    public PacketStarMapAttack()
-    {
+	public PacketStarMapAttack()
+	{
 
-    }
+	}
 
-    public PacketStarMapAttack(GalacticPosition from,GalacticPosition to,int shipID)
-    {
-        this.from = from;
-        this.to = to;
-        this.shipID = shipID;
-    }
+	public PacketStarMapAttack(GalacticPosition from, GalacticPosition to, int shipID)
+	{
+		this.from = from;
+		this.to = to;
+		this.shipID = shipID;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        from = new GalacticPosition(buf);
-        to = new GalacticPosition(buf);
-        shipID = buf.readInt();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		from = new GalacticPosition(buf);
+		to = new GalacticPosition(buf);
+		shipID = buf.readInt();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        from.writeToBuffer(buf);
-        to.writeToBuffer(buf);
-        buf.writeInt(shipID);
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		from.writeToBuffer(buf);
+		to.writeToBuffer(buf);
+		buf.writeInt(shipID);
+	}
 
-    public static class ServerHandler extends AbstractServerPacketHandler<PacketStarMapAttack>
-    {
-        @Override
-        public void handleServerMessage(EntityPlayerMP player, PacketStarMapAttack message, MessageContext ctx)
-        {
-            TravelEvent travelEvent = GalaxyServer.getInstance().createTravelEvent(message.from,message.to,message.shipID);
-            if (travelEvent != null) {
-                MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdateTravelEvents(GalaxyServer.getInstance().getTheGalaxy()), player.worldObj);
-            }
-        }
-    }
+	public static class ServerHandler extends AbstractServerPacketHandler<PacketStarMapAttack>
+	{
+		@Override
+		public void handleServerMessage(EntityPlayerMP player, PacketStarMapAttack message, MessageContext ctx)
+		{
+			TravelEvent travelEvent = GalaxyServer.getInstance().createTravelEvent(message.from, message.to, message.shipID);
+			if (travelEvent != null)
+			{
+				MatterOverdrive.packetPipeline.sendToDimention(new PacketUpdateTravelEvents(GalaxyServer.getInstance().getTheGalaxy()), player.worldObj);
+			}
+		}
+	}
 }

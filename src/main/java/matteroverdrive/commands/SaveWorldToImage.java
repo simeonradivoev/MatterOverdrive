@@ -27,20 +27,22 @@ import net.minecraft.server.MinecraftServer;
  */
 public class SaveWorldToImage extends CommandBase
 {
-    @Override
-    public String getCommandName() {
-        return "world_image_gen";
-    }
+	@Override
+	public String getCommandName()
+	{
+		return "world_image_gen";
+	}
 
-    @Override
-    public String getCommandUsage(ICommandSender p_71518_1_) {
-        return "world_image_gen <command> <coordinates> <filename>";
-    }
+	@Override
+	public String getCommandUsage(ICommandSender p_71518_1_)
+	{
+		return "world_image_gen <command> <coordinates> <filename>";
+	}
 
-    @Override
-    public void execute(MinecraftServer server,ICommandSender commandSender, String[] parameters)
-    {
-        /*if (parameters.length >= 1)
+	@Override
+	public void execute(MinecraftServer server, ICommandSender commandSender, String[] parameters)
+	{
+		/*if (parameters.length >= 1)
         {
             if (parameters[0].equalsIgnoreCase("generate"))
             {
@@ -168,5 +170,5 @@ public class SaveWorldToImage extends CommandBase
                 }
             }
         }*/
-    }
+	}
 }

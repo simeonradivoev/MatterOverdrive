@@ -11,5 +11,5 @@ import net.minecraft.world.World;
  */
 public interface IMultiBlock
 {
-    boolean onWrenchHit(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ);
+	boolean onWrenchHit(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ);
 }

@@ -26,5 +26,5 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
  */
 public interface IMOTickable
 {
-    void onServerTick(TickEvent.Phase phase, World world);
+	void onServerTick(TickEvent.Phase phase, World world);
 }

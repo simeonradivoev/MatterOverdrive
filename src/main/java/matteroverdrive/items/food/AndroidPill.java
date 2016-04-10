@@ -44,61 +44,67 @@ import java.util.List;
  */
 public class AndroidPill extends ItemFood
 {
-    public static final String[] names = new String[]{"red","blue","yellow"};
+	public static final String[] names = new String[] {"red", "blue", "yellow"};
 
-    public AndroidPill(String name)
-    {
-        super(0, 0, false);
-        setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
-        setUnlocalizedName(name);
-        setAlwaysEdible();
-        hasSubtypes = true;
-    }
+	public AndroidPill(String name)
+	{
+		super(0, 0, false);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
+		setUnlocalizedName(name);
+		setAlwaysEdible();
+		hasSubtypes = true;
+	}
 
-    @Override
-    public int getMetadata(int damage){return damage;}
+	@Override
+	public int getMetadata(int damage)
+	{
+		return damage;
+	}
 
-    @Override
-    public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
-    {
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-        {
-            String[] infoList = MOStringHelper.translateToLocal(getUnlocalizedName(itemstack) + ".details").split("/n");
-            for (String info : infoList)
-            {
-                infos.add(ChatFormatting.GRAY + info);
-            }
-        }
-        else
-        {
-            infos.add(MOStringHelper.MORE_INFO);
-        }
+	@Override
+	public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
+	{
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+		{
+			String[] infoList = MOStringHelper.translateToLocal(getUnlocalizedName(itemstack) + ".details").split("/n");
+			for (String info : infoList)
+			{
+				infos.add(ChatFormatting.GRAY + info);
+			}
+		}
+		else
+		{
+			infos.add(MOStringHelper.MORE_INFO);
+		}
 
-        if (itemstack.getItemDamage() == 2) {
-            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
-            if (androidPlayer != null && androidPlayer.isAndroid())
-            {
-                infos.add(ChatFormatting.GREEN + "XP:" + androidPlayer.getResetXPRequired() + "l");
-            } else {
-                infos.add(ChatFormatting.RED + "Not an Android.");
-            }
-        }
-    }
+		if (itemstack.getItemDamage() == 2)
+		{
+			AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
+			if (androidPlayer != null && androidPlayer.isAndroid())
+			{
+				infos.add(ChatFormatting.GREEN + "XP:" + androidPlayer.getResetXPRequired() + "l");
+			}
+			else
+			{
+				infos.add(ChatFormatting.RED + "Not an Android.");
+			}
+		}
+	}
 
-    public void addToDunguns()
-    {
-        // TODO: 3/24/2016 Find new way of adding dungon loot
-        //ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(this,1),1,1,1));
-    }
+	public void addToDunguns()
+	{
+		// TODO: 3/24/2016 Find new way of adding dungon loot
+		//ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(this,1),1,1,1));
+	}
 
-    @Override
-    public String getUnlocalizedName(ItemStack itemStack)
-    {
-        return getUnlocalizedName() + "_" + names[MathHelper.clamp_int(itemStack.getItemDamage(),0,names.length-1)];
-    }
+	@Override
+	public String getUnlocalizedName(ItemStack itemStack)
+	{
+		return getUnlocalizedName() + "_" + names[MathHelper.clamp_int(itemStack.getItemDamage(), 0, names.length - 1)];
+	}
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
         this.itemIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "pill_bottom");
@@ -112,13 +118,13 @@ public class AndroidPill extends ItemFood
         return true;
     }*/
 
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List list)
-    {
-        list.add(new ItemStack(item, 1, 0));
-        list.add(new ItemStack(item, 1, 1));
-        list.add(new ItemStack(item,1,2));
-    }
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item item, CreativeTabs creativeTabs, List list)
+	{
+		list.add(new ItemStack(item, 1, 0));
+		list.add(new ItemStack(item, 1, 1));
+		list.add(new ItemStack(item, 1, 2));
+	}
 
     /*@Override
     public int getRenderPasses(int metadata)
@@ -182,36 +188,38 @@ public class AndroidPill extends ItemFood
         return itemStack;
     }*/
 
-    //// TODO: 3/24/2016 Find New Way to color Items Dynamically
+	//// TODO: 3/24/2016 Find New Way to color Items Dynamically
 
-    public void register()
-    {
-        setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
-        GameRegistry.register(this,new ResourceLocation(Reference.MOD_ID,this.getUnlocalizedName().substring(5)));
-    }
+	public void register()
+	{
+		setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
+		GameRegistry.register(this, new ResourceLocation(Reference.MOD_ID, this.getUnlocalizedName().substring(5)));
+	}
 
-    @Override
-    protected void onFoodEaten(ItemStack itemStack, World world, EntityPlayer player)
-    {
-        if (world.isRemote)
-            return;
+	@Override
+	protected void onFoodEaten(ItemStack itemStack, World world, EntityPlayer player)
+	{
+		if (world.isRemote)
+		{
+			return;
+		}
 
-        AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
-        if (itemStack.getItemDamage() == 0)
-        {
-            androidPlayer.startConversion();
-        }
-        else if (itemStack.getItemDamage() == 1)
-        {
-            androidPlayer.setAndroid(false);
-        }
-        else if (itemStack.getItemDamage() == 2)
-        {
-            if (!androidPlayer.isTurning() && androidPlayer.isAndroid())
-            {
-                int xpLevels = androidPlayer.resetUnlocked();
-                player.addExperienceLevel(xpLevels);
-            }
-        }
-    }
+		AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
+		if (itemStack.getItemDamage() == 0)
+		{
+			androidPlayer.startConversion();
+		}
+		else if (itemStack.getItemDamage() == 1)
+		{
+			androidPlayer.setAndroid(false);
+		}
+		else if (itemStack.getItemDamage() == 2)
+		{
+			if (!androidPlayer.isTurning() && androidPlayer.isAndroid())
+			{
+				int xpLevels = androidPlayer.resetUnlocked();
+				player.addExperienceLevel(xpLevels);
+			}
+		}
+	}
 }

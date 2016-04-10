@@ -43,21 +43,22 @@ import java.util.UUID;
  */
 public abstract class BionicPart extends MOBaseItem implements IBionicPart
 {
-    public BionicPart(String name)
-    {
-        super(name);
-        this.setCreativeTab(MatterOverdrive.tabMatterOverdrive_androidParts);
-    }
+	public BionicPart(String name)
+	{
+		super(name);
+		this.setCreativeTab(MatterOverdrive.tabMatterOverdrive_androidParts);
+	}
 
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-    {
-        super.addDetails(itemstack, player, infos);
-        Multimap<String, AttributeModifier> multimap = getModifiers(MOPlayerCapabilityProvider.GetAndroidCapability(player), itemstack);
-        if (multimap != null)
-        {
-            multimap.values().stream()
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		super.addDetails(itemstack, player, infos);
+		Multimap<String, AttributeModifier> multimap = getModifiers(MOPlayerCapabilityProvider.GetAndroidCapability(player), itemstack);
+		if (multimap != null)
+		{
+			multimap.values().stream()
 					.forEach(modifier -> {
-						switch (modifier.getOperation()) {
+						switch (modifier.getOperation())
+						{
 							case 0:
 								infos.add(ChatFormatting.GREEN + String.format("%s: +%s", modifier.getName(), modifier.getAmount()));
 								break;
@@ -68,31 +69,34 @@ public abstract class BionicPart extends MOBaseItem implements IBionicPart
 								infos.add(ChatFormatting.GREEN + String.format("%s: %s", modifier.getName(), DecimalFormat.getPercentInstance().format(modifier.getAmount() + 1)));
 						}
 					});
-        }
-    }
+		}
+	}
 
-    public Multimap<String, AttributeModifier> getModifiers(AndroidPlayer player, ItemStack itemStack)
-    {
-        Multimap multimap = HashMultimap.create();
-        loadCustomAttributes(itemStack,multimap);
-        return multimap;
-    }
+	public Multimap<String, AttributeModifier> getModifiers(AndroidPlayer player, ItemStack itemStack)
+	{
+		Multimap multimap = HashMultimap.create();
+		loadCustomAttributes(itemStack, multimap);
+		return multimap;
+	}
 
-    private void loadCustomAttributes(ItemStack itemStack, Multimap<String, AttributeModifier> multimap)
-    {
-        if (itemStack.getTagCompound() != null)
-        {
-            NBTTagList attributeList = itemStack.getTagCompound().getTagList("CustomAttributes", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0;i < attributeList.tagCount();i++)
-            {
-                NBTTagCompound tagCompound = attributeList.getCompoundTagAt(i);
-                String attributeName = tagCompound.getString("Name");
-                double amount = tagCompound.getDouble("Amount");
-                int operation = tagCompound.getByte("Operation");
-                multimap.put(attributeName,new AttributeModifier(UUID.fromString(tagCompound.getString("UUID")),MOStringHelper.translateToLocal("attribute.name."+attributeName),amount,operation));
-            }
-        }
-    }
+	private void loadCustomAttributes(ItemStack itemStack, Multimap<String, AttributeModifier> multimap)
+	{
+		if (itemStack.getTagCompound() != null)
+		{
+			NBTTagList attributeList = itemStack.getTagCompound().getTagList("CustomAttributes", Constants.NBT.TAG_COMPOUND);
+			for (int i = 0; i < attributeList.tagCount(); i++)
+			{
+				NBTTagCompound tagCompound = attributeList.getCompoundTagAt(i);
+				String attributeName = tagCompound.getString("Name");
+				double amount = tagCompound.getDouble("Amount");
+				int operation = tagCompound.getByte("Operation");
+				multimap.put(attributeName, new AttributeModifier(UUID.fromString(tagCompound.getString("UUID")), MOStringHelper.translateToLocal("attribute.name." + attributeName), amount, operation));
+			}
+		}
+	}
 
-    public boolean hasDetails(ItemStack stack){return true;}
+	public boolean hasDetails(ItemStack stack)
+	{
+		return true;
+	}
 }

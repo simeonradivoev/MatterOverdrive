@@ -29,11 +29,11 @@ import matteroverdrive.machines.UpgradeHandlerGeneric;
  */
 public interface IUpgradeHandler
 {
-    /**
-     * Called when a specified Upgrade Type is changed.
-     * @param type The Upgrade Type being changed.
-     * @param multiply The multiply amount of all the upgrades that change the given Upgrade Type
-     * @return The affected and handled multiply of the original Multiply parameter.
-     */
-    double affectUpgrade(UpgradeTypes type, double multiply);
+	/**
+	 * Called when a specified Upgrade Type is changed.
+	 * @param type The Upgrade Type being changed.
+	 * @param multiply The multiply amount of all the upgrades that change the given Upgrade Type
+	 * @return The affected and handled multiply of the original Multiply parameter.
+	 */
+	double affectUpgrade(UpgradeTypes type, double multiply);
 }

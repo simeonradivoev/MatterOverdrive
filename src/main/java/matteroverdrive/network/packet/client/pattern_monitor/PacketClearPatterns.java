@@ -15,73 +15,78 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class PacketClearPatterns extends PacketAbstract
 {
-    private int windowID;
-    private BlockPos database;
-    private int patternStorageId;
+	private int windowID;
+	private BlockPos database;
+	private int patternStorageId;
 
-    public PacketClearPatterns(){}
-    public PacketClearPatterns(int windowID)
-    {
-        this.windowID = windowID;
-    }
+	public PacketClearPatterns()
+	{
+	}
 
-    public PacketClearPatterns(int windowID,BlockPos database)
-    {
-        this(windowID);
-        this.database = database;
-    }
+	public PacketClearPatterns(int windowID)
+	{
+		this.windowID = windowID;
+	}
 
-    public PacketClearPatterns(int windowID,BlockPos database,int patternStorageId)
-    {
-        this(windowID,database);
-        this.patternStorageId = patternStorageId;
-    }
+	public PacketClearPatterns(int windowID, BlockPos database)
+	{
+		this(windowID);
+		this.database = database;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        windowID = buf.readByte();
-        if (buf.readBoolean())
-        {
-            database = BlockPos.fromLong(buf.readLong());
-        }
-        patternStorageId = buf.readByte();
-    }
+	public PacketClearPatterns(int windowID, BlockPos database, int patternStorageId)
+	{
+		this(windowID, database);
+		this.patternStorageId = patternStorageId;
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        buf.writeByte(windowID);
-        buf.writeBoolean(database != null);
-        if (database != null)
-        {
-            buf.writeLong(database.toLong());
-        }
-        buf.writeByte(patternStorageId);
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		windowID = buf.readByte();
+		if (buf.readBoolean())
+		{
+			database = BlockPos.fromLong(buf.readLong());
+		}
+		patternStorageId = buf.readByte();
+	}
 
-    public static class ClientHandler extends AbstractClientPacketHandler<PacketClearPatterns>
-    {
-        @SideOnly(Side.CLIENT)
-        @Override
-        public void handleClientMessage(EntityPlayerSP player, PacketClearPatterns message, MessageContext ctx)
-        {
-            if (player.openContainer instanceof ContainerPatternMonitor)
-            {
-                if (message.database != null)
-                {
-                    if (message.patternStorageId >= 0)
-                    {
-                        ((ContainerPatternMonitor) player.openContainer).clearPatternStoragePatterns(message.database,message.patternStorageId);
-                    }else
-                    {
-                        ((ContainerPatternMonitor) player.openContainer).clearDatabasePatterns(message.database);
-                    }
-                }else
-                {
-                    ((ContainerPatternMonitor) player.openContainer).clearAllPatterns();
-                }
-            }
-        }
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		buf.writeByte(windowID);
+		buf.writeBoolean(database != null);
+		if (database != null)
+		{
+			buf.writeLong(database.toLong());
+		}
+		buf.writeByte(patternStorageId);
+	}
+
+	public static class ClientHandler extends AbstractClientPacketHandler<PacketClearPatterns>
+	{
+		@SideOnly(Side.CLIENT)
+		@Override
+		public void handleClientMessage(EntityPlayerSP player, PacketClearPatterns message, MessageContext ctx)
+		{
+			if (player.openContainer instanceof ContainerPatternMonitor)
+			{
+				if (message.database != null)
+				{
+					if (message.patternStorageId >= 0)
+					{
+						((ContainerPatternMonitor)player.openContainer).clearPatternStoragePatterns(message.database, message.patternStorageId);
+					}
+					else
+					{
+						((ContainerPatternMonitor)player.openContainer).clearDatabasePatterns(message.database);
+					}
+				}
+				else
+				{
+					((ContainerPatternMonitor)player.openContainer).clearAllPatterns();
+				}
+			}
+		}
+	}
 }

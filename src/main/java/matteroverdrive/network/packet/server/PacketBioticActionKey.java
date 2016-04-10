@@ -16,38 +16,40 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class PacketBioticActionKey extends PacketAbstract
 {
-    public PacketBioticActionKey(){}
+	public PacketBioticActionKey()
+	{
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
 
-    }
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
 
-    }
+	}
 
-    public static class ServerHandler extends AbstractServerPacketHandler<PacketBioticActionKey>
-    {
-        @SideOnly(Side.CLIENT)
-        @Override
-        public void handleServerMessage(EntityPlayerMP player, PacketBioticActionKey message, MessageContext ctx)
-        {
-            AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
-            if (androidPlayer.isAndroid())
-            {
-                for (IBioticStat stat : MatterOverdrive.statRegistry.getStats())
-                {
-                    int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
-                    if (unlockedLevel > 0 && stat.isEnabled(androidPlayer, unlockedLevel))
-                    {
-                        stat.onActionKeyPress(androidPlayer, unlockedLevel, true);
-                    }
-                }
-            }
-        }
-    }
+	public static class ServerHandler extends AbstractServerPacketHandler<PacketBioticActionKey>
+	{
+		@SideOnly(Side.CLIENT)
+		@Override
+		public void handleServerMessage(EntityPlayerMP player, PacketBioticActionKey message, MessageContext ctx)
+		{
+			AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
+			if (androidPlayer.isAndroid())
+			{
+				for (IBioticStat stat : MatterOverdrive.statRegistry.getStats())
+				{
+					int unlockedLevel = androidPlayer.getUnlockedLevel(stat);
+					if (unlockedLevel > 0 && stat.isEnabled(androidPlayer, unlockedLevel))
+					{
+						stat.onActionKeyPress(androidPlayer, unlockedLevel, true);
+					}
+				}
+			}
+		}
+	}
 }

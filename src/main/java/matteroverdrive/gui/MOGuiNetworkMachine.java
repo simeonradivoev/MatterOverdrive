@@ -27,22 +27,25 @@ import matteroverdrive.machines.MOTileEntityMachine;
 /**
  * Created by Simeon on 7/17/2015.
  */
-public abstract class MOGuiNetworkMachine<T extends MOTileEntityMachine & IMatterNetworkConnection> extends MOGuiMachine<T> {
+public abstract class MOGuiNetworkMachine<T extends MOTileEntityMachine & IMatterNetworkConnection> extends MOGuiMachine<T>
+{
 
-    public MOGuiNetworkMachine(ContainerMachine<T> container, T machine) {
-        super(container, machine);
-    }
+	public MOGuiNetworkMachine(ContainerMachine<T> container, T machine)
+	{
+		super(container, machine);
+	}
 
-    public MOGuiNetworkMachine(ContainerMachine<T> container, T machine, int width, int height) {
-        super(container, machine, width, height);
-    }
+	public MOGuiNetworkMachine(ContainerMachine<T> container, T machine, int width, int height)
+	{
+		super(container, machine, width, height);
+	}
 
-    public void registerPages(MOBaseContainer container,T machine)
-    {
-        super.registerPages(container, machine);
-        MatterNetworkConfigPage configPage = new MatterNetworkConfigPage(this,48,32,xSize-76,ySize);
-        configPage.setName("Configurations");
+	public void registerPages(MOBaseContainer container, T machine)
+	{
+		super.registerPages(container, machine);
+		MatterNetworkConfigPage configPage = new MatterNetworkConfigPage(this, 48, 32, xSize - 76, ySize);
+		configPage.setName("Configurations");
 
-        pages.set(1,configPage);
-    }
+		pages.set(1, configPage);
+	}
 }

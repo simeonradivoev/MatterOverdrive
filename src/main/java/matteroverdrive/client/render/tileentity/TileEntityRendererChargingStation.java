@@ -26,16 +26,16 @@ import net.minecraft.tileentity.TileEntity;
  */
 public class TileEntityRendererChargingStation extends TileEntitySpecialRenderer
 {
-    /*private IModelCustom model;
+	/*private IModelCustom model;
 
     public TileEntityRendererChargingStation()
     {
         model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.MODEL_CHARGING_STATION));
     }*/
 
-    @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks,int destroyStage)
-    {
+	@Override
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks, int destroyStage)
+	{
         /*if (tileEntity != null) {
             glPushMatrix();
             float colorMul = (float)(Math.sin(Minecraft.getMinecraft().theWorld.getWorldTime() * 0.2));
@@ -53,5 +53,5 @@ public class TileEntityRendererChargingStation extends TileEntitySpecialRenderer
             GlStateManager.enableLighting();
             glPopMatrix();
         }*/
-    }
+	}
 }

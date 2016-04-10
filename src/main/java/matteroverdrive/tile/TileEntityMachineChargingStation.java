@@ -38,129 +38,141 @@ import java.util.List;
 /**
  * Created by Simeon on 7/8/2015.
  */
-public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy implements IMultiBlockTileEntity {
+public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy implements IMultiBlockTileEntity
+{
 
-    public static final int ENERGY_CAPACITY = 512000;
-    public static final int ENERGY_TRANSFER = 512;
-    public static int BASE_MAX_RANGE = 8;
-    private static final UpgradeHandler upgradeHandler = new UpgradeHandler();
+	public static final int ENERGY_CAPACITY = 512000;
+	public static final int ENERGY_TRANSFER = 512;
+	private static final UpgradeHandler upgradeHandler = new UpgradeHandler();
+	public static int BASE_MAX_RANGE = 8;
 
-    public TileEntityMachineChargingStation()
-    {
-        super(2);
-        energyStorage.setCapacity(ENERGY_CAPACITY);
-        energyStorage.setMaxExtract(ENERGY_TRANSFER);
-        energyStorage.setMaxReceive(ENERGY_TRANSFER);
-        playerSlotsHotbar = true;
-        playerSlotsMain = true;
-    }
-
-    @Override
-    public void update()
-    {
-        super.update();
-        manageAndroidCharging();
-    }
-
-    private void manageAndroidCharging()
-    {
-        if (!worldObj.isRemote && getEnergyStored(EnumFacing.DOWN) > 0) {
-            int range = getRage();
-            AxisAlignedBB radius = new AxisAlignedBB(getPos().add(-range,-range,-range), getPos().add(range,range,range));
-            List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, radius);
-            for (EntityPlayer player : players) {
-                if (MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid()) {
-					int required = getRequiredEnergy(player,range);
-					int max = Math.min(getEnergyStored(EnumFacing.DOWN),getMaxCharging());
-					int toExtract = Math.min(required, max);
-					extractEnergy(EnumFacing.DOWN, MOPlayerCapabilityProvider.GetAndroidCapability(player).receiveEnergy(toExtract, false), false);
-                }
-            }
-        }
-    }
-
-    public int getRage()
-    {
-        return (int)(BASE_MAX_RANGE * getUpgradeMultiply(UpgradeTypes.Range));
-    }
-
-    public int getMaxCharging()
-    {
-        return (int)(ENERGY_TRANSFER / getUpgradeMultiply(UpgradeTypes.PowerUsage));
-    }
-
-    private int getRequiredEnergy(EntityPlayer player,int maxRange)
-    {
-        return (int)(ENERGY_TRANSFER * (1.0D - MathHelper.clamp_double((new Vec3d(player.posX,player.posY,player.posZ).subtract(new Vec3d(getPos())).lengthVector() / (double)maxRange),0,1)));
-    }
-
-    @Override
-    public SoundEvent getSound() {
-        return null;
-    }
-
-    @Override
-    public boolean hasSound() {
-        return false;
-    }
-
-    @Override
-    public boolean getServerActive() {
-        return false;
-    }
-
-    @Override
-    public float soundVolume() {
-        return 0;
-    }
-
-    @Override
-    protected void onMachineEvent(MachineEvent event)
-    {
-
-    }
-
-    @Override
-    public boolean isAffectedByUpgrade(UpgradeTypes type)
-    {
-        return type.equals(UpgradeTypes.Range) || type.equals(UpgradeTypes.PowerStorage) || type.equals(UpgradeTypes.PowerUsage);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
-        return 8192.0D;
-    }
+	public TileEntityMachineChargingStation()
+	{
+		super(2);
+		energyStorage.setCapacity(ENERGY_CAPACITY);
+		energyStorage.setMaxExtract(ENERGY_TRANSFER);
+		energyStorage.setMaxReceive(ENERGY_TRANSFER);
+		playerSlotsHotbar = true;
+		playerSlotsMain = true;
+	}
 
 	@Override
-	public List<BlockPos> getBoundingBlocks() {
+	public void update()
+	{
+		super.update();
+		manageAndroidCharging();
+	}
+
+	private void manageAndroidCharging()
+	{
+		if (!worldObj.isRemote && getEnergyStored(EnumFacing.DOWN) > 0)
+		{
+			int range = getRage();
+			AxisAlignedBB radius = new AxisAlignedBB(getPos().add(-range, -range, -range), getPos().add(range, range, range));
+			List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, radius);
+			for (EntityPlayer player : players)
+			{
+				if (MOPlayerCapabilityProvider.GetAndroidCapability(player).isAndroid())
+				{
+					int required = getRequiredEnergy(player, range);
+					int max = Math.min(getEnergyStored(EnumFacing.DOWN), getMaxCharging());
+					int toExtract = Math.min(required, max);
+					extractEnergy(EnumFacing.DOWN, MOPlayerCapabilityProvider.GetAndroidCapability(player).receiveEnergy(toExtract, false), false);
+				}
+			}
+		}
+	}
+
+	public int getRage()
+	{
+		return (int)(BASE_MAX_RANGE * getUpgradeMultiply(UpgradeTypes.Range));
+	}
+
+	public int getMaxCharging()
+	{
+		return (int)(ENERGY_TRANSFER / getUpgradeMultiply(UpgradeTypes.PowerUsage));
+	}
+
+	private int getRequiredEnergy(EntityPlayer player, int maxRange)
+	{
+		return (int)(ENERGY_TRANSFER * (1.0D - MathHelper.clamp_double((new Vec3d(player.posX, player.posY, player.posZ).subtract(new Vec3d(getPos())).lengthVector() / (double)maxRange), 0, 1)));
+	}
+
+	@Override
+	public SoundEvent getSound()
+	{
+		return null;
+	}
+
+	@Override
+	public boolean hasSound()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean getServerActive()
+	{
+		return false;
+	}
+
+	@Override
+	public float soundVolume()
+	{
+		return 0;
+	}
+
+	@Override
+	protected void onMachineEvent(MachineEvent event)
+	{
+
+	}
+
+	@Override
+	public boolean isAffectedByUpgrade(UpgradeTypes type)
+	{
+		return type.equals(UpgradeTypes.Range) || type.equals(UpgradeTypes.PowerStorage) || type.equals(UpgradeTypes.PowerUsage);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public double getMaxRenderDistanceSquared()
+	{
+		return 8192.0D;
+	}
+
+	@Override
+	public List<BlockPos> getBoundingBlocks()
+	{
 		List<BlockPos> coords = new ArrayList<>();
 
-		coords.add(getPos().add(0,1,0));
-		coords.add(getPos().add(0,2,0));
+		coords.add(getPos().add(0, 1, 0));
+		coords.add(getPos().add(0, 2, 0));
 
 		return coords;
 	}
 
-    public IUpgradeHandler getUpgradeHandler(){return upgradeHandler;}
+	public IUpgradeHandler getUpgradeHandler()
+	{
+		return upgradeHandler;
+	}
 
-    @Override
-    public int[] getSlotsForFace(EnumFacing side)
-    {
-        return new int[0];
-    }
+	@Override
+	public int[] getSlotsForFace(EnumFacing side)
+	{
+		return new int[0];
+	}
 
-    public static class UpgradeHandler implements IUpgradeHandler
-    {
+	public static class UpgradeHandler implements IUpgradeHandler
+	{
 
-        @Override
-        public double affectUpgrade(UpgradeTypes type, double multiply)
-        {
-            if (type.equals(UpgradeTypes.Range))
-            {
-                return Math.min(8,multiply);
-            }
-            return multiply;
-        }
-    }
+		@Override
+		public double affectUpgrade(UpgradeTypes type, double multiply)
+		{
+			if (type.equals(UpgradeTypes.Range))
+			{
+				return Math.min(8, multiply);
+			}
+			return multiply;
+		}
+	}
 }

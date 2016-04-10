@@ -30,7 +30,7 @@ import java.util.List;
 
 public class ElementProgress extends MOElementBase
 {
-	public static final ScaleTexture FILL_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "progress_slider_fill.png"),9,9).setOffsets(3,6,4,4);
+	public static final ScaleTexture FILL_TEXTURE = new ScaleTexture(new ResourceLocation(Reference.PATH_ELEMENTS + "progress_slider_fill.png"), 9, 9).setOffsets(3, 6, 4, 4);
 
 	float value;
 	float maxValue;
@@ -50,7 +50,7 @@ public class ElementProgress extends MOElementBase
 
 	public ElementProgress(MOGuiBase gui, int fillX, int fillY, int posX, int posY, int bgU, int bgV, int fillU, int fillV, int fillSizeX, int fillSizeY, int sizeX, int sizeY)
 	{
-		super(gui, posX, posY,sizeX,sizeY);
+		super(gui, posX, posY, sizeX, sizeY);
 		this.fillU = fillU;
 		this.fillV = fillV;
 		this.bgU = bgU;
@@ -80,15 +80,16 @@ public class ElementProgress extends MOElementBase
 	}
 
 	@Override
-	public void drawBackground(int mouseX, int mouseY, float gameTicks) {
+	public void drawBackground(int mouseX, int mouseY, float gameTicks)
+	{
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderUtils.bindTexture(texture);
 		drawTexturedModalRect(this.posX, this.posY, this.bgU, this.bgV, this.sizeX, this.sizeY);
 
-		FILL_TEXTURE.render(this.fillX,this.fillY,this.Scale(this.fillSizeX),fillSizeY);
+		FILL_TEXTURE.render(this.fillX, this.fillY, this.Scale(this.fillSizeX), fillSizeY);
 		//drawTexturedModalRect(this.fillX,this.fillY,this.fillU,this.fillV,,this.fillSizeY);
 
-		if(this.isShowText())
+		if (this.isShowText())
 		{
 			this.drawCenteredString(Minecraft.getMinecraft().fontRendererObj, this.text, this.posX + this.textX, this.posY + this.textY, this.textColor);
 		}
@@ -99,17 +100,18 @@ public class ElementProgress extends MOElementBase
 	{
 	}
 
-	public void setValue(float value)
-	{
-		this.value = value;
-	}
-
 	public float getValue()
 	{
 		return value;
 	}
 
-	public boolean isShowText() {
+	public void setValue(float value)
+	{
+		this.value = value;
+	}
+
+	public boolean isShowText()
+	{
 		return showText;
 	}
 
@@ -120,36 +122,42 @@ public class ElementProgress extends MOElementBase
 
 	private int Scale(int value)
 	{
-		return (int)(value * (this.value/maxValue));
+		return (int)(value * (this.value / maxValue));
 	}
 
-	public float getMaxValue() {
+	public float getMaxValue()
+	{
 		return maxValue;
 	}
 
-	public void setMaxValue(float maxValue) {
+	public void setMaxValue(float maxValue)
+	{
 		this.maxValue = maxValue;
 	}
 
-	public void SetTextPostition(int x,int y)
+	public void SetTextPostition(int x, int y)
 	{
 		this.textX = x;
 		this.textY = y;
 	}
 
-	public String getText() {
+	public String getText()
+	{
 		return text;
 	}
 
-	public void setText(String text) {
+	public void setText(String text)
+	{
 		this.text = text;
 	}
 
-	public int getTextColor() {
+	public int getTextColor()
+	{
 		return textColor;
 	}
 
-	public void setTextColor(int textColor) {
+	public void setTextColor(int textColor)
+	{
 		this.textColor = textColor;
 	}
 }

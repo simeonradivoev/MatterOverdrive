@@ -17,45 +17,48 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
  */
 public class MachineHelper
 {
-    public static boolean canOpenMachine(World world, BlockPos pos, EntityPlayer player, boolean hasGui, String errorMessage)
-    {
-        if (world.isRemote)
-        {
-            return true;
-        } else if (hasGui)
-        {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof MOTileEntityMachine)
-            {
-                if (((MOTileEntityMachine) tileEntity).isUseableByPlayer(player)) {
-                    FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, pos.getX(),pos.getY(),pos.getZ());
-                    return true;
-                } else
-                {
-                    TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal(errorMessage).replace("$0", ((MOTileEntityMachine) tileEntity).getDisplayName().toString()));
-                    message.setChatStyle(new Style().setColor(TextFormatting.RED));
-                    player.addChatMessage(message);
-                }
-            }
-        }
+	public static boolean canOpenMachine(World world, BlockPos pos, EntityPlayer player, boolean hasGui, String errorMessage)
+	{
+		if (world.isRemote)
+		{
+			return true;
+		}
+		else if (hasGui)
+		{
+			TileEntity tileEntity = world.getTileEntity(pos);
+			if (tileEntity instanceof MOTileEntityMachine)
+			{
+				if (((MOTileEntityMachine)tileEntity).isUseableByPlayer(player))
+				{
+					FMLNetworkHandler.openGui(player, MatterOverdrive.instance, -1, world, pos.getX(), pos.getY(), pos.getZ());
+					return true;
+				}
+				else
+				{
+					TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal(errorMessage).replace("$0", ((MOTileEntityMachine)tileEntity).getDisplayName().toString()));
+					message.setChatStyle(new Style().setColor(TextFormatting.RED));
+					player.addChatMessage(message);
+				}
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public static boolean canRemoveMachine(World world, EntityPlayer player, BlockPos pos, boolean willHarvest)
-    {
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity != null && tileEntity instanceof MOTileEntityMachine)
-        {
-            if (!player.capabilities.isCreativeMode &&
-                    ((MOTileEntityMachine) tileEntity).hasOwner() && !((MOTileEntityMachine) tileEntity).getOwner().equals(player.getGameProfile().getId()))
-            {
-                TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.break").replace("$0",((MOTileEntityMachine) tileEntity).getDisplayName().toString()));
-                message.setChatStyle(new Style().setColor(TextFormatting.RED));
-                player.addChatMessage(message);
-                return false;
-            }
-        }
-        return true;
-    }
+	public static boolean canRemoveMachine(World world, EntityPlayer player, BlockPos pos, boolean willHarvest)
+	{
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if (tileEntity != null && tileEntity instanceof MOTileEntityMachine)
+		{
+			if (!player.capabilities.isCreativeMode &&
+					((MOTileEntityMachine)tileEntity).hasOwner() && !((MOTileEntityMachine)tileEntity).getOwner().equals(player.getGameProfile().getId()))
+			{
+				TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.break").replace("$0", ((MOTileEntityMachine)tileEntity).getDisplayName().toString()));
+				message.setChatStyle(new Style().setColor(TextFormatting.RED));
+				player.addChatMessage(message);
+				return false;
+			}
+		}
+		return true;
+	}
 }

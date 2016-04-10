@@ -9,9 +9,9 @@ import net.minecraft.block.material.Material;
 public class MaterialTritanium extends Material
 {
 
-    public MaterialTritanium(MapColor color)
-    {
-        super(color);
-        setRequiresTool();
-    }
+	public MaterialTritanium(MapColor color)
+	{
+		super(color);
+		setRequiresTool();
+	}
 }

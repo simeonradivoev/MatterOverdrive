@@ -38,47 +38,49 @@ import java.util.List;
  */
 public class SpacetimeEqualizer extends ItemArmor
 {
-    public SpacetimeEqualizer(String name)
-    {
-        super(ItemArmor.ArmorMaterial.IRON,0, EntityEquipmentSlot.CHEST);
-        setUnlocalizedName(name);
-        setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
-        this.setCreativeTab(MatterOverdrive.tabMatterOverdrive);
-    }
+	public SpacetimeEqualizer(String name)
+	{
+		super(ItemArmor.ArmorMaterial.IRON, 0, EntityEquipmentSlot.CHEST);
+		setUnlocalizedName(name);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
+		this.setCreativeTab(MatterOverdrive.tabMatterOverdrive);
+	}
 
-    public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
-    {
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-        {
-            addDetails(itemstack,player,infos);
-        }
-        else
-        {
-            infos.add(MOStringHelper.MORE_INFO);
-        }
-    }
+	public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
+	{
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+		{
+			addDetails(itemstack, player, infos);
+		}
+		else
+		{
+			infos.add(MOStringHelper.MORE_INFO);
+		}
+	}
 
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-    {
-        if (MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
-        {
-            infos.add(ChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
-        }
-    }
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		if (MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
+		{
+			infos.add(ChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
+		}
+	}
 
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
-    {
-        return Reference.PATH_ARMOR + this.getUnlocalizedName().substring(5) + "_" + (this.armorType == EntityEquipmentSlot.CHEST ? "2" : "1") + ".png";
-    }
+	@Override
+	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
+	{
+		return Reference.PATH_ARMOR + this.getUnlocalizedName().substring(5) + "_" + (this.armorType == EntityEquipmentSlot.CHEST ? "2" : "1") + ".png";
+	}
 
-    @Override
-    public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)
-    {
-        player.motionX *= 0.5;
-        if(player.motionY > 0)
-            player.motionY *= 0.9;
-        player.motionZ *= 0.5;
-    }
+	@Override
+	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)
+	{
+		player.motionX *= 0.5;
+		if (player.motionY > 0)
+		{
+			player.motionY *= 0.9;
+		}
+		player.motionZ *= 0.5;
+	}
 
 }

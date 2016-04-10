@@ -23,7 +23,7 @@ package matteroverdrive.client.render;
  */
 public class WeaponModuleModelRegistry
 {
-    /*Map<String,WavefrontObject> models;
+	/*Map<String,WavefrontObject> models;
 
     public WeaponModuleModelRegistry()
     {

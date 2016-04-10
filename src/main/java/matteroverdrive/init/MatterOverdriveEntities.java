@@ -37,56 +37,56 @@ import net.minecraftforge.fml.common.registry.VillagerRegistry;
  */
 public class MatterOverdriveEntities
 {
-    public static final int ENTITY_STARTING_ID = 171;
-    public static EntityRogueAndroid rogueandroid;
+	public static final int ENTITY_STARTING_ID = 171;
+	public static EntityRogueAndroid rogueandroid;
 
-    public static void init(FMLPreInitializationEvent event,ConfigurationHandler configurationHandler)
-    {
-        rogueandroid = new EntityRogueAndroid();
-        configurationHandler.subscribe(rogueandroid);
-    }
+	public static void init(FMLPreInitializationEvent event, ConfigurationHandler configurationHandler)
+	{
+		rogueandroid = new EntityRogueAndroid();
+		configurationHandler.subscribe(rogueandroid);
+	}
 
-    public static void register(FMLPostInitializationEvent event)
-    {
-        MatterOverdrive.configHandler.config.load();
-        int id = 0;
-        addEntity(EntityFailedPig.class, "failed_pig", 15771042, 0x33CC33,id++);
-        addEntity(EntityFailedCow.class,"failed_cow",4470310,0x33CC33,id++);
-        addEntity(EntityFailedChicken.class,"failed_chicken",10592673,0x33CC33,id++);
-        addEntity(EntityFailedSheep.class, "failed_sheep", 15198183, 0x33CC33,id++);
-        addEntity(EntityVillagerMadScientist.class, "mad_scientist", 0xFFFFFF, 0,id++);
-        addEntity(EntityMutantScientist.class,"mutant_scientist",0xFFFFFF,0x00FF00,id++);
-        addEntity(EntityMeleeRougeAndroidMob.class, "rogue_android", 0xFFFFF, 0,id++);
-        addEntity(EntityRangedRogueAndroidMob.class,"ranged_rogue_android",0xFFFFF, 0,id++);
-        addEntity(EntityDrone.class,"drone",0x3e5154, 0xbaa1c4,id++);
+	public static void register(FMLPostInitializationEvent event)
+	{
+		MatterOverdrive.configHandler.config.load();
+		int id = 0;
+		addEntity(EntityFailedPig.class, "failed_pig", 15771042, 0x33CC33, id++);
+		addEntity(EntityFailedCow.class, "failed_cow", 4470310, 0x33CC33, id++);
+		addEntity(EntityFailedChicken.class, "failed_chicken", 10592673, 0x33CC33, id++);
+		addEntity(EntityFailedSheep.class, "failed_sheep", 15198183, 0x33CC33, id++);
+		addEntity(EntityVillagerMadScientist.class, "mad_scientist", 0xFFFFFF, 0, id++);
+		addEntity(EntityMutantScientist.class, "mutant_scientist", 0xFFFFFF, 0x00FF00, id++);
+		addEntity(EntityMeleeRougeAndroidMob.class, "rogue_android", 0xFFFFF, 0, id++);
+		addEntity(EntityRangedRogueAndroidMob.class, "ranged_rogue_android", 0xFFFFF, 0, id++);
+		addEntity(EntityDrone.class, "drone", 0x3e5154, 0xbaa1c4, id++);
 
-        //VillagerRegistry.instance().registerVillageTradeHandler(666, new TradeHandlerMadScientist());
-        VillageCreatationMadScientist creatationMadScientist = new VillageCreatationMadScientist();
-        VillagerRegistry.instance().registerVillageCreationHandler(creatationMadScientist);
-        EntityRogueAndroid.addAsBiomeGen(EntityMeleeRougeAndroidMob.class);
-        EntityRogueAndroid.addAsBiomeGen(EntityRangedRogueAndroidMob.class);
+		//VillagerRegistry.instance().registerVillageTradeHandler(666, new TradeHandlerMadScientist());
+		VillageCreatationMadScientist creatationMadScientist = new VillageCreatationMadScientist();
+		VillagerRegistry.instance().registerVillageCreationHandler(creatationMadScientist);
+		EntityRogueAndroid.addAsBiomeGen(EntityMeleeRougeAndroidMob.class);
+		EntityRogueAndroid.addAsBiomeGen(EntityRangedRogueAndroidMob.class);
 
-        //int phaserFireID = loadIDFromConfig(PlasmaBolt.class,"phaser_fire",170);
-        //EntityRegistry.registerGlobalEntityID(PlasmaBolt.class, "phaser_fire", phaserFireID);
-        MatterOverdrive.configHandler.save();
-    }
+		//int phaserFireID = loadIDFromConfig(PlasmaBolt.class,"phaser_fire",170);
+		//EntityRegistry.registerGlobalEntityID(PlasmaBolt.class, "phaser_fire", phaserFireID);
+		MatterOverdrive.configHandler.save();
+	}
 
-    public static int addEntity(Class<? extends Entity> enityClass,String name,int mainColor,int spotsColor,int id)
-    {
-        //id = loadIDFromConfig(enityClass,name,id);
-        //EntityRegistry.registerGlobalEntityID(enityClass,name,id);
-        EntityRegistry.registerModEntity(enityClass, name, id, MatterOverdrive.instance, 64, 1, true);
-        EntityRegistry.registerEgg(enityClass,mainColor,spotsColor);
-        return id;
-    }
+	public static int addEntity(Class<? extends Entity> enityClass, String name, int mainColor, int spotsColor, int id)
+	{
+		//id = loadIDFromConfig(enityClass,name,id);
+		//EntityRegistry.registerGlobalEntityID(enityClass,name,id);
+		EntityRegistry.registerModEntity(enityClass, name, id, MatterOverdrive.instance, 64, 1, true);
+		EntityRegistry.registerEgg(enityClass, mainColor, spotsColor);
+		return id;
+	}
 
-    public static int loadIDFromConfig(Class<? extends Entity> entityClass,String name,int id)
-    {
-        return MatterOverdrive.configHandler.getInt(getEntityConfigKey(name),ConfigurationHandler.CATEGORY_ENTITIES,id);
-    }
+	public static int loadIDFromConfig(Class<? extends Entity> entityClass, String name, int id)
+	{
+		return MatterOverdrive.configHandler.getInt(getEntityConfigKey(name), ConfigurationHandler.CATEGORY_ENTITIES, id);
+	}
 
-    private static String getEntityConfigKey(String name)
-    {
-        return "entity." + name + ".id";
-    }
+	private static String getEntityConfigKey(String name)
+	{
+		return "entity." + name + ".id";
+	}
 }

@@ -26,9 +26,9 @@ import net.minecraft.item.ItemPickaxe;
  */
 public class TritaniumPickaxe extends ItemPickaxe
 {
-    public TritaniumPickaxe(String name)
-    {
-        super(MatterOverdriveItems.toolMaterialTritanium);
-        setUnlocalizedName(name);
-    }
+	public TritaniumPickaxe(String name)
+	{
+		super(MatterOverdriveItems.toolMaterialTritanium);
+		setUnlocalizedName(name);
+	}
 }

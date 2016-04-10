@@ -45,285 +45,290 @@ import java.util.Random;
 
 public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter implements ISidedInventory
 {
-    private static EnumSet<UpgradeTypes> upgradeTypes = EnumSet.of(UpgradeTypes.Fail,UpgradeTypes.MatterStorage,UpgradeTypes.MatterTransfer,UpgradeTypes.PowerStorage,UpgradeTypes.PowerUsage,UpgradeTypes.Speed);
+	public static final int MATTER_EXTRACT_SPEED = 32;
+	public static final float FAIL_CHANGE = 0.005f;
+	private static final Random random = new Random();
 	public static int MATTER_STORAGE = 1024;
 	public static int ENERGY_STORAGE = 512000;
-    public static final int MATTER_EXTRACT_SPEED = 32;
-    public static final float FAIL_CHANGE = 0.005f;
-
-    public static int DECEOPOSE_SPEED_PER_MATTER = 80;
-    public static int DECOMPOSE_ENERGY_PER_MATTER = 6000;
-
-    public int INPUT_SLOT_ID;
-    public int OUTPUT_SLOT_ID;
-
-    private final TimeTracker time;
-    private static final Random random = new Random();
+	public static int DECEOPOSE_SPEED_PER_MATTER = 80;
+	public static int DECOMPOSE_ENERGY_PER_MATTER = 6000;
+	private static EnumSet<UpgradeTypes> upgradeTypes = EnumSet.of(UpgradeTypes.Fail, UpgradeTypes.MatterStorage, UpgradeTypes.MatterTransfer, UpgradeTypes.PowerStorage, UpgradeTypes.PowerUsage, UpgradeTypes.Speed);
+	private final TimeTracker time;
+	public int INPUT_SLOT_ID;
+	public int OUTPUT_SLOT_ID;
 	public int decomposeTime;
 
 	public TileEntityMachineDecomposer()
 	{
 		super(4);
-        this.energyStorage.setCapacity(ENERGY_STORAGE);
-        this.energyStorage.setMaxExtract(ENERGY_STORAGE);
-        this.energyStorage.setMaxReceive(ENERGY_STORAGE);
+		this.energyStorage.setCapacity(ENERGY_STORAGE);
+		this.energyStorage.setMaxExtract(ENERGY_STORAGE);
+		this.energyStorage.setMaxReceive(ENERGY_STORAGE);
 
-        this.matterStorage.setCapacity(MATTER_STORAGE);
-        this.matterStorage.setMaxReceive(0);
-        this.matterStorage.setMaxExtract(MATTER_STORAGE);
-        time = new TimeTracker();
-        playerSlotsMain = true;
-        playerSlotsHotbar = true;
+		this.matterStorage.setCapacity(MATTER_STORAGE);
+		this.matterStorage.setMaxReceive(0);
+		this.matterStorage.setMaxExtract(MATTER_STORAGE);
+		time = new TimeTracker();
+		playerSlotsMain = true;
+		playerSlotsHotbar = true;
 	}
 
-    @Override
-    protected void RegisterSlots(Inventory inventory)
-    {
-        INPUT_SLOT_ID = inventory.AddSlot(new MatterSlot(true));
-        OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
-        super.RegisterSlots(inventory);
-    }
+	@Override
+	protected void RegisterSlots(Inventory inventory)
+	{
+		INPUT_SLOT_ID = inventory.AddSlot(new MatterSlot(true));
+		OUTPUT_SLOT_ID = inventory.AddSlot(new RemoveOnlySlot(false));
+		super.RegisterSlots(inventory);
+	}
 
-    @Override
+	@Override
 	public void update()
 	{
 		super.update();
 		this.manageDecompose();
-        this.manageExtract();
+		this.manageExtract();
 	}
 
-    @Override
-    public SoundEvent getSound() {
-        return MatterOverdriveSounds.decomposer;
-    }
+	@Override
+	public SoundEvent getSound()
+	{
+		return MatterOverdriveSounds.decomposer;
+	}
 
-    @Override
-    public boolean hasSound() {
-        return true;
-    }
+	@Override
+	public boolean hasSound()
+	{
+		return true;
+	}
 
-    @Override
-    public float soundVolume() { return 0.3f;}
+	@Override
+	public float soundVolume()
+	{
+		return 0.3f;
+	}
 
-    private void  manageExtract()
-    {
-        if(!worldObj.isRemote)
-        {
-            if(time.hasDelayPassed(worldObj,MATTER_EXTRACT_SPEED))
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    EnumFacing dir = EnumFacing.VALUES[i];
-                    TileEntity e = worldObj.getTileEntity(getPos().offset(dir));
-                    if(e instanceof IMatterHandler)
-                    {
-                        EnumFacing oposite = dir.getOpposite();
-                        int recived = ((IMatterHandler)e).fill(oposite, new FluidStack(MatterOverdriveFluids.matterPlasma,matterStorage.getFluidAmount()), true);
-                        if(recived != 0)
-                        {
-                            matterStorage.setMatterStored(Math.max(0,matterStorage.getMatterStored()-recived));
-                            updateClientMatter();
-                        }
-                    }
-                }
-            }
-        }
-    }
+	private void manageExtract()
+	{
+		if (!worldObj.isRemote)
+		{
+			if (time.hasDelayPassed(worldObj, MATTER_EXTRACT_SPEED))
+			{
+				for (int i = 0; i < 6; i++)
+				{
+					EnumFacing dir = EnumFacing.VALUES[i];
+					TileEntity e = worldObj.getTileEntity(getPos().offset(dir));
+					if (e instanceof IMatterHandler)
+					{
+						EnumFacing oposite = dir.getOpposite();
+						int recived = ((IMatterHandler)e).fill(oposite, new FluidStack(MatterOverdriveFluids.matterPlasma, matterStorage.getFluidAmount()), true);
+						if (recived != 0)
+						{
+							matterStorage.setMatterStored(Math.max(0, matterStorage.getMatterStored() - recived));
+							updateClientMatter();
+						}
+					}
+				}
+			}
+		}
+	}
 
 	protected void manageDecompose()
 	{
-        if(!worldObj.isRemote)
-        {
-            if (this.isDecomposing())
-            {
-                if(this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick())
-                {
-                    this.decomposeTime++;
-                    extractEnergy(EnumFacing.DOWN, getEnergyDrainPerTick(), false);
+		if (!worldObj.isRemote)
+		{
+			if (this.isDecomposing())
+			{
+				if (this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick())
+				{
+					this.decomposeTime++;
+					extractEnergy(EnumFacing.DOWN, getEnergyDrainPerTick(), false);
 
-                    if (this.decomposeTime >= getSpeed())
-                    {
-                        this.decomposeTime = 0;
-                        this.decomposeItem();
-                    }
-                }
-            }
-        }
+					if (this.decomposeTime >= getSpeed())
+					{
+						this.decomposeTime = 0;
+						this.decomposeItem();
+					}
+				}
+			}
+		}
 
-        if (!this.isDecomposing())
-        {
+		if (!this.isDecomposing())
+		{
 			this.decomposeTime = 0;
 		}
 	}
 
 	public boolean isDecomposing()
-    {
-        int matter = MatterHelper.getMatterAmountFromItem(this.getStackInSlot(INPUT_SLOT_ID));
-        return getRedstoneActive()
-                && this.getStackInSlot(INPUT_SLOT_ID) != null
-                && MatterHelper.containsMatter(this.getStackInSlot(INPUT_SLOT_ID))
-                && isItemValidForSlot(INPUT_SLOT_ID, getStackInSlot(INPUT_SLOT_ID))
-                && matter <= this.getMatterCapacity() - this.getMatterStored()
-                && canPutInOutput(matter);
-    }
-
-    @Override
-    public boolean getServerActive()
-    {
-        return isDecomposing() && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick();
-    }
-
-    public double getFailChance()
-    {
-        double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.Fail);
-        //this does not nagate all fail chance if item is not fully scanned
-        return FAIL_CHANGE * upgradeMultiply * upgradeMultiply;
-    }
-
-    public int getSpeed()
-    {
-        double matter = Math.log1p(MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(INPUT_SLOT_ID)));
-        matter*=matter;
-        return (int)Math.round((matter+6) * DECEOPOSE_SPEED_PER_MATTER * getUpgradeMultiply(UpgradeTypes.Speed));
-    }
-
-    public int getEnergyDrainPerTick()
-    {
-        int speed = getSpeed();
-        return getEnergyDrainMax() / speed;
-    }
-
-    public int getEnergyDrainMax()
-    {
-        int matter = MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(INPUT_SLOT_ID));
-        double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.PowerUsage);
-        return (int)Math.round(Math.log1p(matter * 0.01) * 15 * DECOMPOSE_ENERGY_PER_MATTER * upgradeMultiply);
-    }
-
-    private boolean canPutInOutput(int matter)
-    {
-        ItemStack stack = getStackInSlot(OUTPUT_SLOT_ID);
-        if(stack == null)
-        {
-            return true;
-        }
-        else
-        {
-            if(stack.getItem() == MatterOverdriveItems.matter_dust)
-            {
-                if (stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private void failDecompose()
-    {
-        ItemStack stack = getStackInSlot(OUTPUT_SLOT_ID);
-        int matter =MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
-
-        if (stack != null)
-        {
-            if (stack.getItem() == MatterOverdriveItems.matter_dust && stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
-            {
-                stack.stackSize++;
-            }
-        }
-        else
-        {
-            stack = new ItemStack(MatterOverdriveItems.matter_dust);
-            MatterOverdriveItems.matter_dust.setMatter(stack, matter);
-            setInventorySlotContents(OUTPUT_SLOT_ID, stack);
-        }
-    }
-
-	private void decomposeItem()
 	{
-        int matterAmount = MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
+		int matter = MatterHelper.getMatterAmountFromItem(this.getStackInSlot(INPUT_SLOT_ID));
+		return getRedstoneActive()
+				&& this.getStackInSlot(INPUT_SLOT_ID) != null
+				&& MatterHelper.containsMatter(this.getStackInSlot(INPUT_SLOT_ID))
+				&& isItemValidForSlot(INPUT_SLOT_ID, getStackInSlot(INPUT_SLOT_ID))
+				&& matter <= this.getMatterCapacity() - this.getMatterStored()
+				&& canPutInOutput(matter);
+	}
 
-		if(getStackInSlot(INPUT_SLOT_ID) != null && canPutInOutput(matterAmount))
+	@Override
+	public boolean getServerActive()
+	{
+		return isDecomposing() && this.energyStorage.getEnergyStored() >= getEnergyDrainPerTick();
+	}
+
+	public double getFailChance()
+	{
+		double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.Fail);
+		//this does not nagate all fail chance if item is not fully scanned
+		return FAIL_CHANGE * upgradeMultiply * upgradeMultiply;
+	}
+
+	public int getSpeed()
+	{
+		double matter = Math.log1p(MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(INPUT_SLOT_ID)));
+		matter *= matter;
+		return (int)Math.round((matter + 6) * DECEOPOSE_SPEED_PER_MATTER * getUpgradeMultiply(UpgradeTypes.Speed));
+	}
+
+	public int getEnergyDrainPerTick()
+	{
+		int speed = getSpeed();
+		return getEnergyDrainMax() / speed;
+	}
+
+	public int getEnergyDrainMax()
+	{
+		int matter = MatterHelper.getMatterAmountFromItem(inventory.getStackInSlot(INPUT_SLOT_ID));
+		double upgradeMultiply = getUpgradeMultiply(UpgradeTypes.PowerUsage);
+		return (int)Math.round(Math.log1p(matter * 0.01) * 15 * DECOMPOSE_ENERGY_PER_MATTER * upgradeMultiply);
+	}
+
+	private boolean canPutInOutput(int matter)
+	{
+		ItemStack stack = getStackInSlot(OUTPUT_SLOT_ID);
+		if (stack == null)
 		{
-            if(random.nextFloat() < getFailChance())
-            {
-                failDecompose();
-            }
-            else
-            {
-                int matter = this.matterStorage.getMatterStored();
-                this.matterStorage.setMatterStored(matterAmount + matter);
-                updateClientMatter();
-            }
+			return true;
+		}
+		else
+		{
+			if (stack.getItem() == MatterOverdriveItems.matter_dust)
+			{
+				if (stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
+				{
+					return true;
+				}
+			}
+		}
 
-            this.decrStackSize(INPUT_SLOT_ID, 1);
-            forceSync();
+		return false;
+	}
+
+	private void failDecompose()
+	{
+		ItemStack stack = getStackInSlot(OUTPUT_SLOT_ID);
+		int matter = MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
+
+		if (stack != null)
+		{
+			if (stack.getItem() == MatterOverdriveItems.matter_dust && stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
+			{
+				stack.stackSize++;
+			}
+		}
+		else
+		{
+			stack = new ItemStack(MatterOverdriveItems.matter_dust);
+			MatterOverdriveItems.matter_dust.setMatter(stack, matter);
+			setInventorySlotContents(OUTPUT_SLOT_ID, stack);
 		}
 	}
 
-    @Override
+	private void decomposeItem()
+	{
+		int matterAmount = MatterHelper.getMatterAmountFromItem(getStackInSlot(INPUT_SLOT_ID));
+
+		if (getStackInSlot(INPUT_SLOT_ID) != null && canPutInOutput(matterAmount))
+		{
+			if (random.nextFloat() < getFailChance())
+			{
+				failDecompose();
+			}
+			else
+			{
+				int matter = this.matterStorage.getMatterStored();
+				this.matterStorage.setMatterStored(matterAmount + matter);
+				updateClientMatter();
+			}
+
+			this.decrStackSize(INPUT_SLOT_ID, 1);
+			forceSync();
+		}
+	}
+
+	@Override
 	public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
-    {
-        super.readCustomNBT(nbt, categories);
-        if (categories.contains(MachineNBTCategory.DATA)) {
-            this.decomposeTime = nbt.getShort("DecomposeTime");
-        }
-    }
+	{
+		super.readCustomNBT(nbt, categories);
+		if (categories.contains(MachineNBTCategory.DATA))
+		{
+			this.decomposeTime = nbt.getShort("DecomposeTime");
+		}
+	}
 
-    @Override
+	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
-    {
-        super.writeCustomNBT(nbt, categories, toDisk);
-        if (categories.contains(MachineNBTCategory.DATA)) {
-            nbt.setShort("DecomposeTime", (short) this.decomposeTime);
-        }
-    }
+	{
+		super.writeCustomNBT(nbt, categories, toDisk);
+		if (categories.contains(MachineNBTCategory.DATA))
+		{
+			nbt.setShort("DecomposeTime", (short)this.decomposeTime);
+		}
+	}
 
-    @Override
-    protected void onMachineEvent(MachineEvent event)
-    {
+	@Override
+	protected void onMachineEvent(MachineEvent event)
+	{
 
-    }
+	}
 
-    @Override
-    public int[] getSlotsForFace(EnumFacing side)
-    {
-        return new int[]{INPUT_SLOT_ID,OUTPUT_SLOT_ID};
-    }
+	@Override
+	public int[] getSlotsForFace(EnumFacing side)
+	{
+		return new int[] {INPUT_SLOT_ID, OUTPUT_SLOT_ID};
+	}
 
-    @Override
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
-    {
-        return index == INPUT_SLOT_ID;
-    }
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
+	{
+		return index == INPUT_SLOT_ID;
+	}
 
-    @Override
-    public int receiveMatter(EnumFacing side, int amount, boolean simulate)
-    {
-        return 0;
-    }
+	@Override
+	public int receiveMatter(EnumFacing side, int amount, boolean simulate)
+	{
+		return 0;
+	}
 
-    @Override
-    public boolean isAffectedByUpgrade(UpgradeTypes type)
-    {
-        return upgradeTypes.contains(type);
-    }
+	@Override
+	public boolean isAffectedByUpgrade(UpgradeTypes type)
+	{
+		return upgradeTypes.contains(type);
+	}
 
-    @Override
-    public float getProgress()
-    {
-        float speed = (float) getSpeed();
-        if (speed > 0) {
-            return (float) (decomposeTime) / speed;
-        }
-        return 0;
-    }
+	@Override
+	public float getProgress()
+	{
+		float speed = (float)getSpeed();
+		if (speed > 0)
+		{
+			return (float)(decomposeTime) / speed;
+		}
+		return 0;
+	}
 
-    @Override
-    public boolean canFill(EnumFacing from, Fluid fluid)
-    {
-        return false;
-    }
+	@Override
+	public boolean canFill(EnumFacing from, Fluid fluid)
+	{
+		return false;
+	}
 }

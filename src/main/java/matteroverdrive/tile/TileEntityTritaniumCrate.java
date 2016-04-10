@@ -45,192 +45,202 @@ import java.util.EnumSet;
  */
 public class TileEntityTritaniumCrate extends MOTileEntity implements IInventory, IInteractionObject
 {
-    final TileEntityInventory inventory;
+	final TileEntityInventory inventory;
 
-    public TileEntityTritaniumCrate()
-    {
-        inventory = new TileEntityInventory(this, MOStringHelper.translateToLocal("container.tritanium_crate"));
-        for (int i = 0;i < 54;i++)
-        {
-            CrateSlot slot = new CrateSlot(false);
-            inventory.AddSlot(slot);
-        }
-    }
+	public TileEntityTritaniumCrate()
+	{
+		inventory = new TileEntityInventory(this, MOStringHelper.translateToLocal("container.tritanium_crate"));
+		for (int i = 0; i < 54; i++)
+		{
+			CrateSlot slot = new CrateSlot(false);
+			inventory.AddSlot(slot);
+		}
+	}
 
-    @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
-    {
-        if (categories.contains(MachineNBTCategory.INVENTORY) && toDisk)
-        {
-            inventory.writeToNBT(nbt,true);
-        }
-    }
+	@Override
+	public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
+	{
+		if (categories.contains(MachineNBTCategory.INVENTORY) && toDisk)
+		{
+			inventory.writeToNBT(nbt, true);
+		}
+	}
 
-    @Override
-    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
-    {
-        if (categories.contains(MachineNBTCategory.INVENTORY))
-        {
-            inventory.readFromNBT(nbt);
-        }
-    }
+	@Override
+	public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+	{
+		if (categories.contains(MachineNBTCategory.INVENTORY))
+		{
+			inventory.readFromNBT(nbt);
+		}
+	}
 
-    @Override
-    protected void onAwake(Side side)
-    {
+	@Override
+	protected void onAwake(Side side)
+	{
 
-    }
+	}
 
-    @Override
-    public void onAdded(World world, BlockPos pos, IBlockState state)
-    {
+	@Override
+	public void onAdded(World world, BlockPos pos, IBlockState state)
+	{
 
-    }
+	}
 
-    @Override
-    public void onPlaced(World world, EntityLivingBase entityLiving) {
+	@Override
+	public void onPlaced(World world, EntityLivingBase entityLiving)
+	{
 
-    }
+	}
 
-    @Override
-    public void onDestroyed(World worldIn, BlockPos pos, IBlockState state)
-    {
+	@Override
+	public void onDestroyed(World worldIn, BlockPos pos, IBlockState state)
+	{
 
-    }
+	}
 
-    @Override
-    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
-    {
+	@Override
+	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	{
 
-    }
+	}
 
-    @Override
-    public void writeToDropItem(ItemStack itemStack)
-    {
-        if (!itemStack.hasTagCompound())
-        {
-            itemStack.setTagCompound(new NBTTagCompound());
-        }
+	@Override
+	public void writeToDropItem(ItemStack itemStack)
+	{
+		if (!itemStack.hasTagCompound())
+		{
+			itemStack.setTagCompound(new NBTTagCompound());
+		}
 
-        inventory.writeToNBT(itemStack.getTagCompound(),true);
-    }
+		inventory.writeToNBT(itemStack.getTagCompound(), true);
+	}
 
-    @Override
-    public void readFromPlaceItem(ItemStack itemStack)
-    {
-        if (itemStack.hasTagCompound())
-        {
-            inventory.readFromNBT(itemStack.getTagCompound());
-        }
-    }
+	@Override
+	public void readFromPlaceItem(ItemStack itemStack)
+	{
+		if (itemStack.hasTagCompound())
+		{
+			inventory.readFromNBT(itemStack.getTagCompound());
+		}
+	}
 
-    public TileEntityInventory getInventory()
-    {
-        return inventory;
-    }
+	public TileEntityInventory getInventory()
+	{
+		return inventory;
+	}
 
-    @Override
-    public int getSizeInventory() {
-        return inventory.getSizeInventory();
-    }
+	@Override
+	public int getSizeInventory()
+	{
+		return inventory.getSizeInventory();
+	}
 
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return inventory.getStackInSlot(slot);
-    }
+	@Override
+	public ItemStack getStackInSlot(int slot)
+	{
+		return inventory.getStackInSlot(slot);
+	}
 
-    @Override
-    public ItemStack decrStackSize(int slot, int amount) {
-        return inventory.decrStackSize(slot,amount);
-    }
+	@Override
+	public ItemStack decrStackSize(int slot, int amount)
+	{
+		return inventory.decrStackSize(slot, amount);
+	}
 
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) {
-        inventory.setInventorySlotContents(slot,stack);
-    }
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack)
+	{
+		inventory.setInventorySlotContents(slot, stack);
+	}
 
-    @Override
-    public ItemStack removeStackFromSlot(int index)
-    {
-        return inventory.removeStackFromSlot(index);
-    }
+	@Override
+	public ItemStack removeStackFromSlot(int index)
+	{
+		return inventory.removeStackFromSlot(index);
+	}
 
-    @Override
-    public int getField(int id)
-    {
-        return inventory.getField(id);
-    }
+	@Override
+	public int getField(int id)
+	{
+		return inventory.getField(id);
+	}
 
-    @Override
-    public void setField(int id, int value)
-    {
-        inventory.setField(id,value);
-    }
+	@Override
+	public void setField(int id, int value)
+	{
+		inventory.setField(id, value);
+	}
 
-    @Override
-    public int getFieldCount()
-    {
-        return inventory.getFieldCount();
-    }
+	@Override
+	public int getFieldCount()
+	{
+		return inventory.getFieldCount();
+	}
 
-    @Override
-    public void clear()
-    {
-        inventory.clear();
-    }
+	@Override
+	public void clear()
+	{
+		inventory.clear();
+	}
 
-    @Override
-    public String getName()
-    {
-        return inventory.getName();
-    }
+	@Override
+	public String getName()
+	{
+		return inventory.getName();
+	}
 
-    @Override
-    public boolean hasCustomName()
-    {
-        return inventory.hasCustomName();
-    }
+	@Override
+	public boolean hasCustomName()
+	{
+		return inventory.hasCustomName();
+	}
 
-    @Override
-    public ITextComponent getDisplayName()
-    {
-        return inventory.getDisplayName();
-    }
+	@Override
+	public ITextComponent getDisplayName()
+	{
+		return inventory.getDisplayName();
+	}
 
-    @Override
-    public int getInventoryStackLimit() {
-        return inventory.getInventoryStackLimit();
-    }
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return inventory.getInventoryStackLimit();
+	}
 
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
-        return true;
-    }
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer p_70300_1_)
+	{
+		return true;
+	}
 
-    @Override
-    public void openInventory(EntityPlayer entityPlayer) {
-        inventory.openInventory(entityPlayer);
-    }
+	@Override
+	public void openInventory(EntityPlayer entityPlayer)
+	{
+		inventory.openInventory(entityPlayer);
+	}
 
-    @Override
-    public void closeInventory(EntityPlayer entityPlayer) {
-        inventory.closeInventory(entityPlayer);
-    }
+	@Override
+	public void closeInventory(EntityPlayer entityPlayer)
+	{
+		inventory.closeInventory(entityPlayer);
+	}
 
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return inventory.isItemValidForSlot(slot,stack);
-    }
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack)
+	{
+		return inventory.isItemValidForSlot(slot, stack);
+	}
 
-    @Override
-    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
-    {
-        return new ContainerChest(playerInventory,getInventory(),playerIn);
-    }
+	@Override
+	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
+	{
+		return new ContainerChest(playerInventory, getInventory(), playerIn);
+	}
 
-    @Override
-    public String getGuiID()
-    {
-        return "minecraft:chest";
-    }
+	@Override
+	public String getGuiID()
+	{
+		return "minecraft:chest";
+	}
 }

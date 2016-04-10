@@ -21,57 +21,63 @@ import java.util.List;
 
 public abstract class BlockPipe extends MOBlockContainer
 {
-    public static final float PIPE_MIN_POS = 0.35f;
-    public static final float PIPE_MAX_POS = 0.65f;
+	public static final float PIPE_MIN_POS = 0.35f;
+	public static final float PIPE_MAX_POS = 0.65f;
 
-    public static final ImmutableList<PropertyBool> CONNECTED_PROPERTIES = ImmutableList.of(PropertyBool.create(EnumFacing.DOWN.getName()),PropertyBool.create(EnumFacing.UP.getName()),PropertyBool.create(EnumFacing.SOUTH.getName()),PropertyBool.create(EnumFacing.NORTH.getName()),PropertyBool.create(EnumFacing.WEST.getName()),PropertyBool.create(EnumFacing.EAST.getName()));
+	public static final ImmutableList<PropertyBool> CONNECTED_PROPERTIES = ImmutableList.of(PropertyBool.create(EnumFacing.DOWN.getName()), PropertyBool.create(EnumFacing.UP.getName()), PropertyBool.create(EnumFacing.SOUTH.getName()), PropertyBool.create(EnumFacing.NORTH.getName()), PropertyBool.create(EnumFacing.WEST.getName()), PropertyBool.create(EnumFacing.EAST.getName()));
 
 	public BlockPipe(Material material, String name)
 	{
 		super(material, name);
 		this.useNeighborBrightness = true;
-        this.setRotationType(-1);
+		this.setRotationType(-1);
 	}
 
-    @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        return 0;
-    }
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return 0;
+	}
 
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, CONNECTED_PROPERTIES.toArray(new IProperty[CONNECTED_PROPERTIES.size()]));
-    }
+	@Override
+	protected BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, CONNECTED_PROPERTIES.toArray(new IProperty[CONNECTED_PROPERTIES.size()]));
+	}
 
-    @Override
-    public IBlockState getActualState(IBlockState state,IBlockAccess world,BlockPos pos) {
-        for (EnumFacing facing : EnumFacing.VALUES) {
-            state = state.withProperty(CONNECTED_PROPERTIES.get(facing.getIndex()), isConnectableSide(facing, world, pos));
-        }
-        return state;
-    }
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		for (EnumFacing facing : EnumFacing.VALUES)
+		{
+			state = state.withProperty(CONNECTED_PROPERTIES.get(facing.getIndex()), isConnectableSide(facing, world, pos));
+		}
+		return state;
+	}
 
-    @Override
-    public void addCollisionBoxToList(IBlockState state,World worldIn, BlockPos pos, AxisAlignedBB mask, List list, Entity collidingEntity) {
-        super.addCollisionBoxToList(state,worldIn, pos, mask, list, collidingEntity);
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List list, Entity collidingEntity)
+	{
+		super.addCollisionBoxToList(state, worldIn, pos, mask, list, collidingEntity);
 
-        state = getActualState(state, worldIn, pos);
+		state = getActualState(state, worldIn, pos);
 
-        for (EnumFacing facing : EnumFacing.VALUES) {
-            if (isConnectableSide(facing,worldIn,pos)) {
-                Vec3i directionVec = facing.getDirectionVec();
-                AxisAlignedBB axisAlignedBB = new AxisAlignedBB(
-                        PIPE_MIN_POS,PIPE_MIN_POS,PIPE_MIN_POS,
-                        PIPE_MAX_POS,PIPE_MAX_POS,PIPE_MAX_POS
-                ).offset(facing.getFrontOffsetX() * (PIPE_MAX_POS - PIPE_MIN_POS/2),facing.getFrontOffsetY() * (PIPE_MAX_POS - PIPE_MIN_POS/2),facing.getFrontOffsetZ() * (PIPE_MAX_POS - PIPE_MIN_POS/2));
-                super.addCollisionBoxToList(state,worldIn, pos, mask, list, collidingEntity);
-            }
-        }
-    }
+		for (EnumFacing facing : EnumFacing.VALUES)
+		{
+			if (isConnectableSide(facing, worldIn, pos))
+			{
+				Vec3i directionVec = facing.getDirectionVec();
+				AxisAlignedBB axisAlignedBB = new AxisAlignedBB(
+						PIPE_MIN_POS, PIPE_MIN_POS, PIPE_MIN_POS,
+						PIPE_MAX_POS, PIPE_MAX_POS, PIPE_MAX_POS
+				).offset(facing.getFrontOffsetX() * (PIPE_MAX_POS - PIPE_MIN_POS / 2), facing.getFrontOffsetY() * (PIPE_MAX_POS - PIPE_MIN_POS / 2), facing.getFrontOffsetZ() * (PIPE_MAX_POS - PIPE_MIN_POS / 2));
+				super.addCollisionBoxToList(state, worldIn, pos, mask, list, collidingEntity);
+			}
+		}
+	}
 
     /*@Override
-    public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
+	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
     {
 		float size = 0.34375f;
 
@@ -103,7 +109,7 @@ public abstract class BlockPipe extends MOBlockContainer
         }
     }*/
 
-    // TODO: 3/25/2016 Find how to se block bounds based on state
+	// TODO: 3/25/2016 Find how to se block bounds based on state
     /*@Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
     {
@@ -148,31 +154,32 @@ public abstract class BlockPipe extends MOBlockContainer
         this.setBlockBounds(xMin, yMin, zMin, xMax, yMax, zMax);
     }*/
 
-    public boolean isConnectableSide(EnumFacing dir, IBlockAccess world, BlockPos pos) {
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity instanceof TileEntityPipe)
-        {
-            return ((TileEntityPipe)tileEntity).isConnectableSide(dir);
-        }
-       return false;
-    }
+	public boolean isConnectableSide(EnumFacing dir, IBlockAccess world, BlockPos pos)
+	{
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if (tileEntity instanceof TileEntityPipe)
+		{
+			return ((TileEntityPipe)tileEntity).isConnectableSide(dir);
+		}
+		return false;
+	}
 
-    @Override
+	@Override
 	public boolean isOpaqueCube(IBlockState blockState)
 	{
 		return false;
 	}
 
-    @Override
-    public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
-    {
-        return false;
-    }
+	@Override
+	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+	{
+		return false;
+	}
 
-    @Override
-    public boolean isFullCube(IBlockState blockState)
-    {
-        return false;
-    }
+	@Override
+	public boolean isFullCube(IBlockState blockState)
+	{
+		return false;
+	}
 
 }

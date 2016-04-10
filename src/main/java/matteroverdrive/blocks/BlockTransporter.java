@@ -45,9 +45,9 @@ public class BlockTransporter extends MOMatterEnergyStorageBlock
 	}*/
 
 	/**
-     * Gets the block's texture. Args: side, meta
-     */
-    /*@SideOnly(Side.CLIENT)
+	 * Gets the block's texture. Args: side, meta
+	 */
+	/*@SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metadata)
     {
     	if(side == 0 || side == 1)
@@ -61,10 +61,9 @@ public class BlockTransporter extends MOMatterEnergyStorageBlock
 
     	return this.blockIcon;
     }*/
-
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMachineTransporter();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachineTransporter();
+	}
 }

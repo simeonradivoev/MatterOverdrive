@@ -35,73 +35,73 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GalaxyClient extends GalaxyCommon
 {
-    //region Private Vars
-    private static GalaxyClient instance;
-    //endregion
+	//region Private Vars
+	private static GalaxyClient instance;
+	//endregion
 
-    //region Constructors
-    public GalaxyClient()
-    {
-        super();
-    }
-    //endregion
+	//region Constructors
+	public GalaxyClient()
+	{
+		super();
+	}
+	//endregion
 
-    public boolean canSeePlanetInfo(Planet planet,EntityPlayer player)
-    {
-        if (planet.isOwner(player) || player.capabilities.isCreativeMode)
-        {
-            return true;
-        }
+	//region Getters and Setters
+	public static GalaxyClient getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new GalaxyClient();
+		}
 
-        for (ItemStack shipStack : planet.getFleet())
-        {
-            if (((IShip)shipStack.getItem()).isOwner(shipStack,player))
-            {
-                return true;
-            }
-        }
+		return instance;
+	}
 
-        return false;
-    }
+	public boolean canSeePlanetInfo(Planet planet, EntityPlayer player)
+	{
+		if (planet.isOwner(player) || player.capabilities.isCreativeMode)
+		{
+			return true;
+		}
 
-    public boolean canSeeStarInfo(Star star,EntityPlayer player)
-    {
-        for (Planet planet : star.getPlanets())
-        {
-            if (canSeePlanetInfo(planet,player))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+		for (ItemStack shipStack : planet.getFleet())
+		{
+			if (((IShip)shipStack.getItem()).isOwner(shipStack, player))
+			{
+				return true;
+			}
+		}
 
-    //region Events
-    @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event)
-    {
+		return false;
+	}
+
+	public boolean canSeeStarInfo(Star star, EntityPlayer player)
+	{
+		for (Planet planet : star.getPlanets())
+		{
+			if (canSeePlanetInfo(planet, player))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	//endregion
+
+	//region Events
+	@SubscribeEvent
+	public void onClientTick(TickEvent.ClientTickEvent event)
+	{
 		if (Minecraft.getMinecraft().theWorld != null &&
 				theGalaxy != null &&
 				!Minecraft.getMinecraft().isGamePaused() &&
 				Minecraft.getMinecraft().theWorld.isRemote &&
 				Minecraft.getMinecraft().theWorld.provider.getDimension() == 0 &&
 				event.phase == TickEvent.Phase.START &&
-                Minecraft.getMinecraft().theWorld != null)
+				Minecraft.getMinecraft().theWorld != null)
 		{
 			theGalaxy.update(Minecraft.getMinecraft().theWorld);
 		}
-    }
-    //endregion
-
-    //region Getters and Setters
-    public static GalaxyClient getInstance()
-    {
-        if (instance == null)
-        {
-            instance = new GalaxyClient();
-        }
-
-        return instance;
-    }
-    //endregion
+	}
+	//endregion
 }

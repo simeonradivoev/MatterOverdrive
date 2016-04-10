@@ -9,8 +9,8 @@ import net.minecraft.world.biome.BiomeGenBase;
 public class BiomeDecoratorSpace extends BiomeDecorator
 {
 
-    protected void genDecorations(BiomeGenBase biomeGenBaseIn)
-    {
+	protected void genDecorations(BiomeGenBase biomeGenBaseIn)
+	{
 
-    }
+	}
 }

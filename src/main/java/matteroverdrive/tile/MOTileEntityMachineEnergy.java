@@ -41,172 +41,181 @@ import java.util.EnumSet;
  */
 public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler
 {
-    public static final int ENERGY_CLIENT_SYNC_RANGE = 16;
-    protected MachineEnergyStorage energyStorage;
-    protected int energySlotID;
+	public static final int ENERGY_CLIENT_SYNC_RANGE = 16;
+	protected MachineEnergyStorage energyStorage;
+	protected int energySlotID;
 
-    public MOTileEntityMachineEnergy(int upgradeCount)
-    {
-        super(upgradeCount);
-        this.energyStorage = new MachineEnergyStorage(this,512);
-    }
+	public MOTileEntityMachineEnergy(int upgradeCount)
+	{
+		super(upgradeCount);
+		this.energyStorage = new MachineEnergyStorage(this, 512);
+	}
 
-    @Override
-    protected void RegisterSlots(Inventory inventory)
-    {
-        energySlotID = inventory.AddSlot(new EnergySlot(true));
-        super.RegisterSlots(inventory);
-    }
+	@Override
+	protected void RegisterSlots(Inventory inventory)
+	{
+		energySlotID = inventory.AddSlot(new EnergySlot(true));
+		super.RegisterSlots(inventory);
+	}
 
-    @Override
-    public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
-    {
-        super.writeCustomNBT(nbt, categories, toDisk);
-        if (categories.contains(MachineNBTCategory.DATA)) {
-            energyStorage.writeToNBT(nbt);
-        }
-    }
+	@Override
+	public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
+	{
+		super.writeCustomNBT(nbt, categories, toDisk);
+		if (categories.contains(MachineNBTCategory.DATA))
+		{
+			energyStorage.writeToNBT(nbt);
+		}
+	}
 
-    @Override
-    public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
-    {
-        super.readCustomNBT(nbt, categories);
-        if (categories.contains(MachineNBTCategory.DATA)) {
-            energyStorage.readFromNBT(nbt);
-        }
-    }
+	@Override
+	public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
+	{
+		super.readCustomNBT(nbt, categories);
+		if (categories.contains(MachineNBTCategory.DATA))
+		{
+			energyStorage.readFromNBT(nbt);
+		}
+	}
 
-    public void update()
-    {
-        super.update();
-        manageCharging();
-    }
+	public void update()
+	{
+		super.update();
+		manageCharging();
+	}
 
-    protected void manageCharging()
-    {
-        if(isCharging())
-        {
-            if(!this.worldObj.isRemote)
-            {
-                int emptyEnergySpace = getFreeEnergySpace(EnumFacing.DOWN);
-                int maxEnergyCanSpare = MOEnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, true);
+	protected void manageCharging()
+	{
+		if (isCharging())
+		{
+			if (!this.worldObj.isRemote)
+			{
+				int emptyEnergySpace = getFreeEnergySpace(EnumFacing.DOWN);
+				int maxEnergyCanSpare = MOEnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, true);
 
-                if(emptyEnergySpace > 0 && maxEnergyCanSpare > 0)
-                {
-                    this.receiveEnergy(EnumFacing.DOWN, MOEnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, false), false);
-                }
-            }
-        }
-    }
+				if (emptyEnergySpace > 0 && maxEnergyCanSpare > 0)
+				{
+					this.receiveEnergy(EnumFacing.DOWN, MOEnergyHelper.extractEnergyFromContainer(this.inventory.getStackInSlot(energySlotID), emptyEnergySpace, false), false);
+				}
+			}
+		}
+	}
 
-    public boolean isCharging()
-    {
-        return this.inventory.getStackInSlot(energySlotID) != null
-                && MOEnergyHelper.isEnergyContainerItem(this.inventory.getStackInSlot(energySlotID))
-                && ((IEnergyContainerItem)this.inventory.getStackInSlot(energySlotID).getItem()).extractEnergy(this.inventory.getStackInSlot(energySlotID), getFreeEnergySpace(EnumFacing.DOWN), true) > 0;
-    }
+	public boolean isCharging()
+	{
+		return this.inventory.getStackInSlot(energySlotID) != null
+				&& MOEnergyHelper.isEnergyContainerItem(this.inventory.getStackInSlot(energySlotID))
+				&& ((IEnergyContainerItem)this.inventory.getStackInSlot(energySlotID).getItem()).extractEnergy(this.inventory.getStackInSlot(energySlotID), getFreeEnergySpace(EnumFacing.DOWN), true) > 0;
+	}
 
-    public int getEnergySlotID()
-    {
-        return this.energySlotID;
-    }
+	public int getEnergySlotID()
+	{
+		return this.energySlotID;
+	}
 
-    @Override
-    public boolean canConnectEnergy(EnumFacing from) {
-        return true;
-    }
+	@Override
+	public boolean canConnectEnergy(EnumFacing from)
+	{
+		return true;
+	}
 
-    @Override
-    public int receiveEnergy(EnumFacing from, int maxReceive,
-                             boolean simulate) {
-        int lastEnergy = energyStorage.getEnergyStored();
-        int received = energyStorage.receiveEnergy(maxReceive, simulate);
-        if (lastEnergy != energyStorage.getEnergyStored() && !simulate)
-        {
-            UpdateClientPower();
-        }
-        return received;
-    }
+	@Override
+	public int receiveEnergy(EnumFacing from, int maxReceive,
+							 boolean simulate)
+	{
+		int lastEnergy = energyStorage.getEnergyStored();
+		int received = energyStorage.receiveEnergy(maxReceive, simulate);
+		if (lastEnergy != energyStorage.getEnergyStored() && !simulate)
+		{
+			UpdateClientPower();
+		}
+		return received;
+	}
 
-    @Override
-    public int extractEnergy(EnumFacing from, int maxExtract,
-                             boolean simulate)
-    {
-        int lastEnergy = energyStorage.getEnergyStored();
-        int extracted = energyStorage.extractEnergy(maxExtract, simulate);
-        if (lastEnergy != energyStorage.getEnergyStored() && !simulate)
-        {
-            UpdateClientPower();
-        }
-        return extracted;
-    }
+	@Override
+	public int extractEnergy(EnumFacing from, int maxExtract,
+							 boolean simulate)
+	{
+		int lastEnergy = energyStorage.getEnergyStored();
+		int extracted = energyStorage.extractEnergy(maxExtract, simulate);
+		if (lastEnergy != energyStorage.getEnergyStored() && !simulate)
+		{
+			UpdateClientPower();
+		}
+		return extracted;
+	}
 
-    @Override
-    public int getEnergyStored(EnumFacing from) {
-        return energyStorage.getEnergyStored();
-    }
+	@Override
+	public int getEnergyStored(EnumFacing from)
+	{
+		return energyStorage.getEnergyStored();
+	}
 
-    @Override
-    public int getMaxEnergyStored(EnumFacing from) {
-        return energyStorage.getMaxEnergyStored();
-    }
+	@Override
+	public int getMaxEnergyStored(EnumFacing from)
+	{
+		return energyStorage.getMaxEnergyStored();
+	}
 
-    public MachineEnergyStorage getEnergyStorage()
-    {
-        return this.energyStorage;
-    }
+	public MachineEnergyStorage getEnergyStorage()
+	{
+		return this.energyStorage;
+	}
 
-    public int GetEnergyStoredScaled(int i)
-    {
-        return MathHelper.ceiling_float_int(((float) this.getEnergyStored(EnumFacing.DOWN) / (float) this.energyStorage.getMaxEnergyStored()) * i);
-    }
+	public int GetEnergyStoredScaled(int i)
+	{
+		return MathHelper.ceiling_float_int(((float)this.getEnergyStored(EnumFacing.DOWN) / (float)this.energyStorage.getMaxEnergyStored()) * i);
+	}
 
-    public int getFreeEnergySpace(EnumFacing dir)
-    {
-        return this.getMaxEnergyStored(dir) - this.getEnergyStored(dir);
-    }
+	public int getFreeEnergySpace(EnumFacing dir)
+	{
+		return this.getMaxEnergyStored(dir) - this.getEnergyStored(dir);
+	}
 
-    public void setEnergyStored(int storage)
-    {
-        this.energyStorage.setEnergyStored(storage);
+	public void setEnergyStored(int storage)
+	{
+		this.energyStorage.setEnergyStored(storage);
 
-    }
+	}
 
-    public void UpdateClientPower()
-    {
-        MatterOverdrive.packetPipeline.sendToAllAround(new PacketPowerUpdate(this), new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(),getPos().getX(),getPos().getY(),getPos().getZ(),ENERGY_CLIENT_SYNC_RANGE));
-    }
+	public void UpdateClientPower()
+	{
+		MatterOverdrive.packetPipeline.sendToAllAround(new PacketPowerUpdate(this), new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), ENERGY_CLIENT_SYNC_RANGE));
+	}
 
-    @Override
-    public void readFromPlaceItem(ItemStack itemStack)
-    {
-        super.readFromPlaceItem(itemStack);
+	@Override
+	public void readFromPlaceItem(ItemStack itemStack)
+	{
+		super.readFromPlaceItem(itemStack);
 
-        if(itemStack != null)
-        {
-            if(itemStack.hasTagCompound())
-            {
-                energyStorage.readFromNBT(itemStack.getTagCompound());
-            }
-        }
-    }
+		if (itemStack != null)
+		{
+			if (itemStack.hasTagCompound())
+			{
+				energyStorage.readFromNBT(itemStack.getTagCompound());
+			}
+		}
+	}
 
-    @Override
-    public void writeToDropItem(ItemStack itemStack)
-    {
-        super.writeToDropItem(itemStack);
+	@Override
+	public void writeToDropItem(ItemStack itemStack)
+	{
+		super.writeToDropItem(itemStack);
 
-        if(itemStack != null)
-        {
-            if(energyStorage.getEnergyStored() > 0) {
-                if (!itemStack.hasTagCompound())
-                    itemStack.setTagCompound(new NBTTagCompound());
+		if (itemStack != null)
+		{
+			if (energyStorage.getEnergyStored() > 0)
+			{
+				if (!itemStack.hasTagCompound())
+				{
+					itemStack.setTagCompound(new NBTTagCompound());
+				}
 
-                energyStorage.writeToNBT(itemStack.getTagCompound());
-                itemStack.getTagCompound().setInteger("MaxEnergy",energyStorage.getMaxEnergyStored());
-                itemStack.getTagCompound().setInteger("PowerSend", energyStorage.getMaxExtract());
-                itemStack.getTagCompound().setInteger("PowerReceive",energyStorage.getMaxReceive());
-            }
-        }
-    }
+				energyStorage.writeToNBT(itemStack.getTagCompound());
+				itemStack.getTagCompound().setInteger("MaxEnergy", energyStorage.getMaxEnergyStored());
+				itemStack.getTagCompound().setInteger("PowerSend", energyStorage.getMaxExtract());
+				itemStack.getTagCompound().setInteger("PowerReceive", energyStorage.getMaxReceive());
+			}
+		}
+	}
 }

@@ -11,16 +11,16 @@ import net.minecraft.util.ResourceLocation;
  */
 public class EntityRendererMadScientist extends RenderVillager
 {
-    public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "mad_scientist.png");
+	public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "mad_scientist.png");
 
-    public EntityRendererMadScientist(RenderManager renderManagerIn)
-    {
-        super(renderManagerIn);
-    }
+	public EntityRendererMadScientist(RenderManager renderManagerIn)
+	{
+		super(renderManagerIn);
+	}
 
-    @Override
-    protected ResourceLocation getEntityTexture(EntityVillager entity)
-    {
-        return texture;
-    }
+	@Override
+	protected ResourceLocation getEntityTexture(EntityVillager entity)
+	{
+		return texture;
+	}
 }

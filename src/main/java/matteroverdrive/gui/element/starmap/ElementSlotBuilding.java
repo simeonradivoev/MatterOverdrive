@@ -37,39 +37,44 @@ import java.util.List;
  */
 public class ElementSlotBuilding extends ElementInventorySlot
 {
-    TileEntityMachineStarMap starMap;
+	TileEntityMachineStarMap starMap;
 
-    public ElementSlotBuilding(MOGuiBase gui, MOSlot slot, int posX, int posY, int width, int height, String type, HoloIcon icon, TileEntityMachineStarMap starMap) {
-        super(gui, slot, posX, posY, width, height, type, icon);
-        this.starMap = starMap;
-    }
+	public ElementSlotBuilding(MOGuiBase gui, MOSlot slot, int posX, int posY, int width, int height, String type, HoloIcon icon, TileEntityMachineStarMap starMap)
+	{
+		super(gui, slot, posX, posY, width, height, type, icon);
+		this.starMap = starMap;
+	}
 
-    @Override
-    public void drawForeground(int mouseX, int mouseY)
-    {
-        if (starMap.getPlanet() != null) {
-            if (getSlot().getStack() != null) {
-                if (getSlot().getStack().getItem() instanceof IBuilding)
-                {
-                    List<String> info = new ArrayList<>();
+	@Override
+	public void drawForeground(int mouseX, int mouseY)
+	{
+		if (starMap.getPlanet() != null)
+		{
+			if (getSlot().getStack() != null)
+			{
+				if (getSlot().getStack().getItem() instanceof IBuilding)
+				{
+					List<String> info = new ArrayList<>();
 
-                    if (starMap.getPlanet().canBuild((IBuilding)getSlot().getStack().getItem(),getSlot().getStack(),info)) {
-                        ItemStack buildingStack = getSlot().getStack();
-                        long remainningTime = ((IBuilding) buildingStack.getItem()).getRemainingBuildTimeTicks(buildingStack, starMap.getPlanet(), Minecraft.getMinecraft().theWorld) / 20;
-                        if (remainningTime >= 0)
-                        {
-                            String time = MOStringHelper.formatRemainingTime(remainningTime);
-                            int timeWidth = getFontRenderer().getStringWidth(time);
-                            getFontRenderer().drawString(time, posX - timeWidth - 4, posY + 6, Reference.COLOR_HOLO.getColor());
-                        }
-                    }else
-                    {
-                        String infoText = String.join(". ",info);
-                        int width = getFontRenderer().getStringWidth(infoText);
-                        getFontRenderer().drawString(infoText, posX - width - 4, posY + 7, Reference.COLOR_HOLO_RED.getColor());
-                    }
-                }
-            }
-        }
-    }
+					if (starMap.getPlanet().canBuild((IBuilding)getSlot().getStack().getItem(), getSlot().getStack(), info))
+					{
+						ItemStack buildingStack = getSlot().getStack();
+						long remainningTime = ((IBuilding)buildingStack.getItem()).getRemainingBuildTimeTicks(buildingStack, starMap.getPlanet(), Minecraft.getMinecraft().theWorld) / 20;
+						if (remainningTime >= 0)
+						{
+							String time = MOStringHelper.formatRemainingTime(remainningTime);
+							int timeWidth = getFontRenderer().getStringWidth(time);
+							getFontRenderer().drawString(time, posX - timeWidth - 4, posY + 6, Reference.COLOR_HOLO.getColor());
+						}
+					}
+					else
+					{
+						String infoText = String.join(". ", info);
+						int width = getFontRenderer().getStringWidth(infoText);
+						getFontRenderer().drawString(infoText, posX - width - 4, posY + 7, Reference.COLOR_HOLO_RED.getColor());
+					}
+				}
+			}
+		}
+	}
 }

@@ -7,36 +7,37 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemHandler extends MatterEntryHandlerAbstract<ItemStack>
 {
-    private final int matter;
-    private final boolean finalHandle;
+	private final int matter;
+	private final boolean finalHandle;
 
-    public ItemHandler(int matter)
-    {
-        this.matter = matter;
-        this.finalHandle = false;
-    }
-    public ItemHandler(int matter,boolean finalHandle)
-    {
-        this.matter = matter;
-        this.finalHandle = finalHandle;
-    }
+	public ItemHandler(int matter)
+	{
+		this.matter = matter;
+		this.finalHandle = false;
+	}
 
-    public ItemHandler(int matter,boolean finalHandle,int priority)
-    {
-        this.priority = priority;
-        this.matter = matter;
-        this.finalHandle = finalHandle;
-    }
+	public ItemHandler(int matter, boolean finalHandle)
+	{
+		this.matter = matter;
+		this.finalHandle = finalHandle;
+	}
 
-    @Override
-    public int modifyMatter(ItemStack itemStack, int originalMatter)
-    {
-        return matter;
-    }
+	public ItemHandler(int matter, boolean finalHandle, int priority)
+	{
+		this.priority = priority;
+		this.matter = matter;
+		this.finalHandle = finalHandle;
+	}
 
-    @Override
-    public boolean finalModification(ItemStack itemStack)
-    {
-        return finalHandle;
-    }
+	@Override
+	public int modifyMatter(ItemStack itemStack, int originalMatter)
+	{
+		return matter;
+	}
+
+	@Override
+	public boolean finalModification(ItemStack itemStack)
+	{
+		return finalHandle;
+	}
 }

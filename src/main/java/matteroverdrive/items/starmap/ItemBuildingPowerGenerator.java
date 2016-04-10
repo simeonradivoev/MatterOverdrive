@@ -36,52 +36,52 @@ import java.util.List;
  */
 public class ItemBuildingPowerGenerator extends ItemBuildingAbstract implements IPlanetStatChange
 {
-    private static final int POWER_GENERATION = 8;
-    private static final int MATTER_CONSUPTION = 2;
+	private static final int POWER_GENERATION = 8;
+	private static final int MATTER_CONSUPTION = 2;
 
-    public ItemBuildingPowerGenerator(String name)
-    {
-        super(name);
-    }
+	public ItemBuildingPowerGenerator(String name)
+	{
+		super(name);
+	}
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-    {
-        super.addDetails(itemstack,player,infos);
-        infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.ENERGY_PRODUCTION) + ": +" + POWER_GENERATION);
-        infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.MATTER_PRODUCTION) + ": -" + MATTER_CONSUPTION);
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		super.addDetails(itemstack, player, infos);
+		infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.ENERGY_PRODUCTION) + ": +" + POWER_GENERATION);
+		infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.MATTER_PRODUCTION) + ": -" + MATTER_CONSUPTION);
+	}
 
-    @Override
-    public BuildingType getType(ItemStack building)
-    {
-        return BuildingType.GENERATOR;
-    }
+	@Override
+	public BuildingType getType(ItemStack building)
+	{
+		return BuildingType.GENERATOR;
+	}
 
-    @Override
-    protected int getBuildLengthUnscaled(ItemStack buildableStack, Planet planet)
-    {
-        return 20*60*12;
-    }
+	@Override
+	protected int getBuildLengthUnscaled(ItemStack buildableStack, Planet planet)
+	{
+		return 20 * 60 * 12;
+	}
 
-    @Override
-    public boolean canBuild(ItemStack building, Planet planet, List<String> info)
-    {
-        return true;
-    }
+	@Override
+	public boolean canBuild(ItemStack building, Planet planet, List<String> info)
+	{
+		return true;
+	}
 
-    @Override
-    public float changeStat(ItemStack stack, Planet planet, PlanetStatType statType, float original)
-    {
-        switch (statType)
-        {
-            case ENERGY_PRODUCTION:
-                return original + POWER_GENERATION;
-            case MATTER_PRODUCTION:
-                return original - MATTER_CONSUPTION;
-            default:
-                return original;
-        }
-    }
+	@Override
+	public float changeStat(ItemStack stack, Planet planet, PlanetStatType statType, float original)
+	{
+		switch (statType)
+		{
+			case ENERGY_PRODUCTION:
+				return original + POWER_GENERATION;
+			case MATTER_PRODUCTION:
+				return original - MATTER_CONSUPTION;
+			default:
+				return original;
+		}
+	}
 }

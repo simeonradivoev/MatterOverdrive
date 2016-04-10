@@ -9,9 +9,9 @@ import net.minecraftforge.client.IRenderHandler;
  */
 public class SpaceSkyRenderer extends IRenderHandler
 {
-    @Override
-    public void render(float partialTicks, WorldClient world, Minecraft mc)
-    {
+	@Override
+	public void render(float partialTicks, WorldClient world, Minecraft mc)
+	{
 
-    }
+	}
 }

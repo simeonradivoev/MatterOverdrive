@@ -42,143 +42,154 @@ import java.util.stream.Collectors;
  */
 public class AndoidCommands extends CommandBase
 {
-    @Override
-    public String getCommandName() {
-        return "android";
-    }
+	@Override
+	public String getCommandName()
+	{
+		return "android";
+	}
 
-    public int getRequiredPermissionLevel()
-    {
-        return 2;
-    }
+	public int getRequiredPermissionLevel()
+	{
+		return 2;
+	}
 
-    @Override
-    public String getCommandUsage(ICommandSender sender)
-    {
-        return "android <command> <value> <player>";
-    }
+	@Override
+	public String getCommandUsage(ICommandSender sender)
+	{
+		return "android <command> <value> <player>";
+	}
 
-    @Override
-    public List getCommandAliases()
-    {
-        return new ArrayList();
-    }
+	@Override
+	public List getCommandAliases()
+	{
+		return new ArrayList();
+	}
 
-    @Override
-    public void execute(MinecraftServer server,ICommandSender sender, String[] parameters) throws CommandException
-    {
-        if (parameters.length == 0)
-        {
-            sender.addChatMessage(new TextComponentString("Invalid Parameters"));
-            return;
-        }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] parameters) throws CommandException
+	{
+		if (parameters.length == 0)
+		{
+			sender.addChatMessage(new TextComponentString("Invalid Parameters"));
+			return;
+		}
 
-        if (parameters.length >= 2) {
-            EntityPlayer player;
-            if (parameters.length >= 3) {
-                player = getPlayer(server,sender, parameters[2]);
-            } else {
-                player = getCommandSenderAsPlayer(sender);
-            }
+		if (parameters.length >= 2)
+		{
+			EntityPlayer player;
+			if (parameters.length >= 3)
+			{
+				player = getPlayer(server, sender, parameters[2]);
+			}
+			else
+			{
+				player = getCommandSenderAsPlayer(sender);
+			}
 
-            if (player != null)
-            {
-                AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
-                if (androidPlayer != null) {
+			if (player != null)
+			{
+				AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
+				if (androidPlayer != null)
+				{
 
-                    boolean validCommand = false;
-                    String commandInfo = "";
+					boolean validCommand = false;
+					String commandInfo = "";
 
-                    if (parameters[0].equalsIgnoreCase("set")) {
-                        boolean android = parseBoolean(parameters[1]);
-                        androidPlayer.setAndroid(android);
-                        validCommand = true;
-                        if (android)
-                        {
-                            commandInfo = sender.getName() + " is now an Android";
-                        }else
-                        {
-                            commandInfo = sender.getName() + " is no longer an Android";
-                        }
-                    }
-                    else if (parameters[0].equalsIgnoreCase("stats"))
-                    {
-                        if (parameters[1].equalsIgnoreCase("reset"))
-                        {
-                            androidPlayer.resetUnlocked();
-                            validCommand = true;
-                            commandInfo = sender.getName() + " stats are now Reset";
-                        }
-                    }else if (parameters[0].equalsIgnoreCase("unlock"))
-                    {
-                        if (MatterOverdrive.statRegistry.hasStat(parameters[1]))
-                        {
-                            IBioticStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
-                            androidPlayer.unlock(stat, stat.maxLevel());
-                            validCommand = true;
-                            commandInfo = sender.getName() + " now has the ability " + ChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]";
-                        }
-                    }else if (parameters[0].equalsIgnoreCase("forget"))
-                    {
-                        if (MatterOverdrive.statRegistry.hasStat(parameters[1]))
-                        {
-                            IBioticStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
-                            androidPlayer.reset(stat);
-                            validCommand = true;
-                            commandInfo = ChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer,stat.maxLevel()) + "]" + ChatFormatting.RESET + " removed from " + sender.getName();
-                        }
-                    }
+					if (parameters[0].equalsIgnoreCase("set"))
+					{
+						boolean android = parseBoolean(parameters[1]);
+						androidPlayer.setAndroid(android);
+						validCommand = true;
+						if (android)
+						{
+							commandInfo = sender.getName() + " is now an Android";
+						}
+						else
+						{
+							commandInfo = sender.getName() + " is no longer an Android";
+						}
+					}
+					else if (parameters[0].equalsIgnoreCase("stats"))
+					{
+						if (parameters[1].equalsIgnoreCase("reset"))
+						{
+							androidPlayer.resetUnlocked();
+							validCommand = true;
+							commandInfo = sender.getName() + " stats are now Reset";
+						}
+					}
+					else if (parameters[0].equalsIgnoreCase("unlock"))
+					{
+						if (MatterOverdrive.statRegistry.hasStat(parameters[1]))
+						{
+							IBioticStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
+							androidPlayer.unlock(stat, stat.maxLevel());
+							validCommand = true;
+							commandInfo = sender.getName() + " now has the ability " + ChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer, stat.maxLevel()) + "]";
+						}
+					}
+					else if (parameters[0].equalsIgnoreCase("forget"))
+					{
+						if (MatterOverdrive.statRegistry.hasStat(parameters[1]))
+						{
+							IBioticStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
+							androidPlayer.reset(stat);
+							validCommand = true;
+							commandInfo = ChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer, stat.maxLevel()) + "]" + ChatFormatting.RESET + " removed from " + sender.getName();
+						}
+					}
 
-                    if (validCommand)
-                    {
-                        androidPlayer.sync(EnumSet.allOf(AndroidPlayer.DataType.class), false);
-                        sender.addChatMessage(new TextComponentString(ChatFormatting.GOLD + "["+ Reference.MOD_NAME+"] " + ChatFormatting.RESET + commandInfo));
-                        return;
-                    }
-                }
-            }
-        }
+					if (validCommand)
+					{
+						androidPlayer.sync(EnumSet.allOf(AndroidPlayer.DataType.class), false);
+						sender.addChatMessage(new TextComponentString(ChatFormatting.GOLD + "[" + Reference.MOD_NAME + "] " + ChatFormatting.RESET + commandInfo));
+						return;
+					}
+				}
+			}
+		}
 
-        sender.addChatMessage(new TextComponentString("Invalid Android Command. Use /help to learn more."));
-    }
+		sender.addChatMessage(new TextComponentString("Invalid Android Command. Use /help to learn more."));
+	}
 
-    @Override
-    public List getTabCompletionOptions(MinecraftServer server,ICommandSender commandSender, String[] parameters, BlockPos pos)
-    {
-        List<String> commands = new ArrayList<>();
+	@Override
+	public List getTabCompletionOptions(MinecraftServer server, ICommandSender commandSender, String[] parameters, BlockPos pos)
+	{
+		List<String> commands = new ArrayList<>();
 
-        if (parameters.length == 2)
-        {
-            if (parameters[0].equalsIgnoreCase("set"))
-            {
-                commands.add("true");
-                commands.add("false");
-            }
-            else if (parameters[0].equalsIgnoreCase("stats"))
-            {
-                commands.add("reset");
-            }
-            else if (parameters[0].equalsIgnoreCase("unlock"))
-            {
-                commands.addAll(MatterOverdrive.statRegistry.getStats().stream().map(IBioticStat::getUnlocalizedName).collect(Collectors.toList()));
-            }
-            else if (parameters[0].equalsIgnoreCase("forget"))
-            {
-                commands.addAll(MatterOverdrive.statRegistry.getStats().stream().map(IBioticStat::getUnlocalizedName).collect(Collectors.toList()));
-            }
-        }else
-        {
-            commands.add("set");
-            commands.add("stats");
-            commands.add("unlock");
-            commands.add("forget");
-        }
-        return commands;
-    }
+		if (parameters.length == 2)
+		{
+			if (parameters[0].equalsIgnoreCase("set"))
+			{
+				commands.add("true");
+				commands.add("false");
+			}
+			else if (parameters[0].equalsIgnoreCase("stats"))
+			{
+				commands.add("reset");
+			}
+			else if (parameters[0].equalsIgnoreCase("unlock"))
+			{
+				commands.addAll(MatterOverdrive.statRegistry.getStats().stream().map(IBioticStat::getUnlocalizedName).collect(Collectors.toList()));
+			}
+			else if (parameters[0].equalsIgnoreCase("forget"))
+			{
+				commands.addAll(MatterOverdrive.statRegistry.getStats().stream().map(IBioticStat::getUnlocalizedName).collect(Collectors.toList()));
+			}
+		}
+		else
+		{
+			commands.add("set");
+			commands.add("stats");
+			commands.add("unlock");
+			commands.add("forget");
+		}
+		return commands;
+	}
 
-    @Override
-    public boolean isUsernameIndex(String[] params, int index)
-    {
-        return index == 2;
-    }
+	@Override
+	public boolean isUsernameIndex(String[] params, int index)
+	{
+		return index == 2;
+	}
 }

@@ -33,56 +33,58 @@ import net.minecraft.entity.player.InventoryPlayer;
  */
 public class GuiRecycler extends MOGuiMachine<TileEntityMachineMatterRecycler>
 {
-    MOElementEnergy energyElement;
-    ElementDualScaled recycle_progress;
-    ElementSlot outputSlot;
+	MOElementEnergy energyElement;
+	ElementDualScaled recycle_progress;
+	ElementSlot outputSlot;
 
-    public GuiRecycler(InventoryPlayer inventoryPlayer, TileEntityMachineMatterRecycler machine) {
-        super(ContainerFactory.createMachineContainer(machine,inventoryPlayer), machine);
+	public GuiRecycler(InventoryPlayer inventoryPlayer, TileEntityMachineMatterRecycler machine)
+	{
+		super(ContainerFactory.createMachineContainer(machine, inventoryPlayer), machine);
 
-        name = "recycler";
-        energyElement = new MOElementEnergy(this,100,39,machine.getEnergyStorage());
-        recycle_progress = new ElementDualScaled(this,32,54);
-        outputSlot = new ElementInventorySlot(this,getContainer().getSlotAt(machine.OUTPUT_SLOT_ID),64,52,22,22,"big");
+		name = "recycler";
+		energyElement = new MOElementEnergy(this, 100, 39, machine.getEnergyStorage());
+		recycle_progress = new ElementDualScaled(this, 32, 54);
+		outputSlot = new ElementInventorySlot(this, getContainer().getSlotAt(machine.OUTPUT_SLOT_ID), 64, 52, 22, 22, "big");
 
-        recycle_progress.setMode(1);
-        recycle_progress.setSize(24, 16);
-        recycle_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
-        energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
-    }
+		recycle_progress.setMode(1);
+		recycle_progress.setSize(24, 16);
+		recycle_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
+		energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
+	}
 
-    @Override
-    public void initGui()
-    {
-        super.initGui();
+	@Override
+	public void initGui()
+	{
+		super.initGui();
 
-        pages.get(0).addElement(outputSlot);
-        pages.get(0).addElement(energyElement);
-        this.addElement(recycle_progress);
+		pages.get(0).addElement(outputSlot);
+		pages.get(0).addElement(energyElement);
+		this.addElement(recycle_progress);
 
-        AddMainPlayerSlots(this.inventorySlots, pages.get(0));
-        AddHotbarPlayerSlots(this.inventorySlots, this);
-    }
+		AddMainPlayerSlots(this.inventorySlots, pages.get(0));
+		AddHotbarPlayerSlots(this.inventorySlots, this);
+	}
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
-                                                   int p_146976_2_, int p_146976_3_) {
-        super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
-        recycle_progress.setQuantity(Math.round(((ContainerMachine)getContainer()).getProgress() * 24));
-        ManageReqiremnetsTooltips();
-    }
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
+												   int p_146976_2_, int p_146976_3_)
+	{
+		super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
+		recycle_progress.setQuantity(Math.round(((ContainerMachine)getContainer()).getProgress() * 24));
+		ManageReqiremnetsTooltips();
+	}
 
-    void ManageReqiremnetsTooltips()
-    {
-        if(machine.getStackInSlot(machine.INPUT_SLOT_ID) != null)
-        {
-            energyElement.setEnergyRequired(-(machine.getEnergyDrainMax()));
-            energyElement.setEnergyRequiredPerTick(-machine.getEnergyDrainPerTick());
-        }
-        else
-        {
-            energyElement.setEnergyRequired(0);
-            energyElement.setEnergyRequiredPerTick(0);
-        }
-    }
+	void ManageReqiremnetsTooltips()
+	{
+		if (machine.getStackInSlot(machine.INPUT_SLOT_ID) != null)
+		{
+			energyElement.setEnergyRequired(-(machine.getEnergyDrainMax()));
+			energyElement.setEnergyRequiredPerTick(-machine.getEnergyDrainPerTick());
+		}
+		else
+		{
+			energyElement.setEnergyRequired(0);
+			energyElement.setEnergyRequiredPerTick(0);
+		}
+	}
 }

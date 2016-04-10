@@ -35,39 +35,42 @@ import java.util.EnumSet;
  */
 public abstract class MOTileEntity extends TileEntity implements IMOTileEntity
 {
-    public MOTileEntity(){super();}
+	public MOTileEntity()
+	{
+		super();
+	}
 
-    public MOTileEntity(World world,int meta)
-    {
-        super();
-    }
+	public MOTileEntity(World world, int meta)
+	{
+		super();
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
-        super.readFromNBT(nbt);
-        readCustomNBT(nbt, MachineNBTCategory.ALL_OPTS);
-    }
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		readCustomNBT(nbt, MachineNBTCategory.ALL_OPTS);
+	}
 
-    @Override
-    public void writeToNBT(NBTTagCompound nbt)
-    {
-        super.writeToNBT(nbt);
-        writeCustomNBT(nbt, MachineNBTCategory.ALL_OPTS, true);
-    }
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		writeCustomNBT(nbt, MachineNBTCategory.ALL_OPTS, true);
+	}
 
-    public abstract void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk);
+	public abstract void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk);
 
-    public abstract void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories);
+	public abstract void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories);
 
-    @SideOnly(Side.CLIENT)
-    public void sendNBTToServer(EnumSet<MachineNBTCategory> categories,boolean forceUpdate,boolean sendDisk)
-    {
-        if (worldObj.isRemote)
-        {
-            MatterOverdrive.packetPipeline.sendToServer(new PacketSendMachineNBT(categories,this,forceUpdate,sendDisk));
-        }
-    }
+	@SideOnly(Side.CLIENT)
+	public void sendNBTToServer(EnumSet<MachineNBTCategory> categories, boolean forceUpdate, boolean sendDisk)
+	{
+		if (worldObj.isRemote)
+		{
+			MatterOverdrive.packetPipeline.sendToServer(new PacketSendMachineNBT(categories, this, forceUpdate, sendDisk));
+		}
+	}
 
-    protected abstract void onAwake(Side side);
+	protected abstract void onAwake(Side side);
 }

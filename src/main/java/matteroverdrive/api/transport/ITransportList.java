@@ -25,12 +25,13 @@ import java.util.List;
  * A list of Transform Locations.
  * Used by Transporters.
  */
-public interface ITransportList {
+public interface ITransportList
+{
 
-    /**
-     * Gets a list of transportable locations.
-     * @return the list of transport locations.
-     */
-    List<TransportLocation> getPositions();
+	/**
+	 * Gets a list of transportable locations.
+	 * @return the list of transport locations.
+	 */
+	List<TransportLocation> getPositions();
 
 }

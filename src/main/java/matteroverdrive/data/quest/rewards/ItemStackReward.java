@@ -15,73 +15,79 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemStackReward implements IQuestReward
 {
-    private ItemStack itemStack;
-    private boolean visible;
+	private ItemStack itemStack;
+	private boolean visible;
 
-    public ItemStackReward(){}
+	public ItemStackReward()
+	{
+	}
 
-    public ItemStackReward(Item item,int amount,int damage)
-    {
-        this.itemStack = new ItemStack(item,amount,damage);
-    }
+	public ItemStackReward(Item item, int amount, int damage)
+	{
+		this.itemStack = new ItemStack(item, amount, damage);
+	}
 
-    public ItemStackReward(Item item,int amount)
-    {
-        this(item,amount,0);
-    }
+	public ItemStackReward(Item item, int amount)
+	{
+		this(item, amount, 0);
+	}
 
-    public ItemStackReward(Item item)
-    {
-        this(item,1,0);
-    }
+	public ItemStackReward(Item item)
+	{
+		this(item, 1, 0);
+	}
 
-    public ItemStackReward(Block block, int amount, int damage)
-    {
-        this.itemStack = new ItemStack(block,amount,damage);
-    }
+	public ItemStackReward(Block block, int amount, int damage)
+	{
+		this.itemStack = new ItemStack(block, amount, damage);
+	}
 
-    public ItemStackReward(Block block, int amount)
-    {
-        this(block,amount,0);
-    }
+	public ItemStackReward(Block block, int amount)
+	{
+		this(block, amount, 0);
+	}
 
-    public ItemStackReward(Block block)
-    {
-        this(block,1,0);
-    }
+	public ItemStackReward(Block block)
+	{
+		this(block, 1, 0);
+	}
 
-    public ItemStackReward(ItemStack itemStack)
-    {
-        this.itemStack = itemStack;
-    }
+	public ItemStackReward(ItemStack itemStack)
+	{
+		this.itemStack = itemStack;
+	}
 
-    @Override
-    public void loadFromJson(JsonObject object)
-    {
-        Item item = Item.getByNameOrId(MOJsonHelper.getString(object,"id"));
-        if (item != null)
-        {
-            int amount = MOJsonHelper.getInt(object,"count",1);
-            int damage = MOJsonHelper.getInt(object,"damage",0);
-            itemStack = new ItemStack(item,amount,damage);
-            itemStack.setTagCompound(MOJsonHelper.getNbt(object,"nbt",null));
-        }
-        visible = MOJsonHelper.getBool(object,"visible",true);
-    }
+	@Override
+	public void loadFromJson(JsonObject object)
+	{
+		Item item = Item.getByNameOrId(MOJsonHelper.getString(object, "id"));
+		if (item != null)
+		{
+			int amount = MOJsonHelper.getInt(object, "count", 1);
+			int damage = MOJsonHelper.getInt(object, "damage", 0);
+			itemStack = new ItemStack(item, amount, damage);
+			itemStack.setTagCompound(MOJsonHelper.getNbt(object, "nbt", null));
+		}
+		visible = MOJsonHelper.getBool(object, "visible", true);
+	}
 
-    @Override
-    public void giveReward(QuestStack questStack,EntityPlayer entityPlayer)
-    {
-        if (!entityPlayer.inventory.addItemStackToInventory(itemStack.copy()))
-        {
-            entityPlayer.worldObj.spawnEntityInWorld(new EntityItem(entityPlayer.worldObj,entityPlayer.posX,entityPlayer.posY+entityPlayer.getEyeHeight(),entityPlayer.posZ,itemStack.copy()));
-        }
-    }
+	@Override
+	public void giveReward(QuestStack questStack, EntityPlayer entityPlayer)
+	{
+		if (!entityPlayer.inventory.addItemStackToInventory(itemStack.copy()))
+		{
+			entityPlayer.worldObj.spawnEntityInWorld(new EntityItem(entityPlayer.worldObj, entityPlayer.posX, entityPlayer.posY + entityPlayer.getEyeHeight(), entityPlayer.posZ, itemStack.copy()));
+		}
+	}
 
-    public ItemStack getItemStack(){
-        return itemStack;
-    }
+	public ItemStack getItemStack()
+	{
+		return itemStack;
+	}
 
-    @Override
-    public boolean isVisible(QuestStack questStack){return visible;}
+	@Override
+	public boolean isVisible(QuestStack questStack)
+	{
+		return visible;
+	}
 }

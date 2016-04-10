@@ -54,330 +54,359 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class DataPad extends MOBaseItem implements IBlockScanner
 {
-    @SideOnly(Side.CLIENT)
-    private static MachineSound scanningSound;
+	@SideOnly(Side.CLIENT)
+	private static MachineSound scanningSound;
 
-    public DataPad(String name)
-    {
-        super(name);
-        setMaxStackSize(1);
-    }
+	public DataPad(String name)
+	{
+		super(name);
+		setMaxStackSize(1);
+	}
 
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
-    {
-        if (worldIn.isRemote && hasGui(itemStackIn))
-        {
-            openGui(hand,itemStackIn);
-            return ActionResult.newResult(EnumActionResult.SUCCESS,itemStackIn);
-        }
-        return ActionResult.newResult(EnumActionResult.PASS,itemStackIn);
-    }
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+	{
+		if (worldIn.isRemote && hasGui(itemStackIn))
+		{
+			openGui(hand, itemStackIn);
+			return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+		}
+		return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
+	}
 
-    @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
-        if (!playerIn.isSneaking() && worldIn.getBlockState(pos).getBlock() != Blocks.air && canScan(stack,worldIn.getBlockState(pos)))
-        {
-            playerIn.setActiveHand(hand);
-            if (worldIn.isRemote)
-            {
-                playSound(playerIn.getPosition());
-            }else
-            {
-                setLastBlock(stack,worldIn.getBlockState(pos).getBlock());
-            }
-            return EnumActionResult.SUCCESS;
-        }
-        return EnumActionResult.FAIL;
-    }
+	@Override
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
+		if (!playerIn.isSneaking() && worldIn.getBlockState(pos).getBlock() != Blocks.air && canScan(stack, worldIn.getBlockState(pos)))
+		{
+			playerIn.setActiveHand(hand);
+			if (worldIn.isRemote)
+			{
+				playSound(playerIn.getPosition());
+			}
+			else
+			{
+				setLastBlock(stack, worldIn.getBlockState(pos).getBlock());
+			}
+			return EnumActionResult.SUCCESS;
+		}
+		return EnumActionResult.FAIL;
+	}
 
-    @Override
-    public int getMaxItemUseDuration(ItemStack scanner)
-    {
-        return 20*2;
-    }
+	@Override
+	public int getMaxItemUseDuration(ItemStack scanner)
+	{
+		return 20 * 2;
+	}
 
-    @Override
-    public boolean hasDetails(ItemStack stack)
-    {
-        return true;
-    }
+	@Override
+	public boolean hasDetails(ItemStack stack)
+	{
+		return true;
+	}
 
-    @SideOnly(Side.CLIENT)
-    private void openGui(EnumHand hand,ItemStack stack)
-    {
-        try {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiDataPad(hand,stack));
-        }
-        catch (Exception e)
-        {
-            MOLog.error("There was a problem while trying to open the Data Pad Gui",e);
-        }
+	@SideOnly(Side.CLIENT)
+	private void openGui(EnumHand hand, ItemStack stack)
+	{
+		try
+		{
+			Minecraft.getMinecraft().displayGuiScreen(new GuiDataPad(hand, stack));
+		}
+		catch (Exception e)
+		{
+			MOLog.error("There was a problem while trying to open the Data Pad Gui", e);
+		}
 
-    }
+	}
 
-    @Override
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
-    {
-        super.onUpdate(itemStack,world,entity,p_77663_4_,p_77663_5_);
+	@Override
+	public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_)
+	{
+		super.onUpdate(itemStack, world, entity, p_77663_4_, p_77663_5_);
 
-        if (world.isRemote) {
-            if (entity instanceof EntityPlayer) {
-                EntityPlayer player = (EntityPlayer) entity;
-                if (player.isHandActive())
-                {
+		if (world.isRemote)
+		{
+			if (entity instanceof EntityPlayer)
+			{
+				EntityPlayer player = (EntityPlayer)entity;
+				if (player.isHandActive())
+				{
 
-                } else
-                {
-                    stopScanSounds();
-                }
-            }
-        }
-    }
+				}
+				else
+				{
+					stopScanSounds();
+				}
+			}
+		}
+	}
 
-    @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
-    {
-        if (!(entityLiving instanceof EntityPlayer)) return stack;
-        if (worldIn.isRemote)
-        {
-            if (!MinecraftForge.EVENT_BUS.post(new MOEventScan((EntityPlayer)entityLiving,stack,getScanningPos(stack,(EntityPlayer)entityLiving))))
-            {
-                stopScanSounds();
-            }
-        }else
-        {
-            MOEventScan event = new MOEventScan((EntityPlayer)entityLiving,stack,getScanningPos(stack,(EntityPlayer)entityLiving));
-            if (!MinecraftForge.EVENT_BUS.post(event))
-            {
-                if (destroysBlocks(stack) && worldIn.isBlockModifiable((EntityPlayer)entityLiving,event.position.getBlockPos()))
-                {
-                    worldIn.setBlockToAir(event.position.getBlockPos());
-                }
-                SoundHandler.PlaySoundAt(worldIn, MatterOverdriveSounds.scannerSuccess,SoundCategory.PLAYERS, entityLiving);
-            }
-        }
-        return stack;
-    }
+	@Override
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
+	{
+		if (!(entityLiving instanceof EntityPlayer))
+		{
+			return stack;
+		}
+		if (worldIn.isRemote)
+		{
+			if (!MinecraftForge.EVENT_BUS.post(new MOEventScan((EntityPlayer)entityLiving, stack, getScanningPos(stack, (EntityPlayer)entityLiving))))
+			{
+				stopScanSounds();
+			}
+		}
+		else
+		{
+			MOEventScan event = new MOEventScan((EntityPlayer)entityLiving, stack, getScanningPos(stack, (EntityPlayer)entityLiving));
+			if (!MinecraftForge.EVENT_BUS.post(event))
+			{
+				if (destroysBlocks(stack) && worldIn.isBlockModifiable((EntityPlayer)entityLiving, event.position.getBlockPos()))
+				{
+					worldIn.setBlockToAir(event.position.getBlockPos());
+				}
+				SoundHandler.PlaySoundAt(worldIn, MatterOverdriveSounds.scannerSuccess, SoundCategory.PLAYERS, entityLiving);
+			}
+		}
+		return stack;
+	}
 
-    @Override
-    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
-    {
-        if (!(player instanceof EntityPlayer)) return;
+	@Override
+	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
+	{
+		if (!(player instanceof EntityPlayer))
+		{
+			return;
+		}
 
-        RayTraceResult hit = getScanningPos(stack,(EntityPlayer) player);
+		RayTraceResult hit = getScanningPos(stack, (EntityPlayer)player);
 
-        if (hit != null) {
+		if (hit != null)
+		{
 
-            if (hit.typeOfHit == RayTraceResult.Type.BLOCK) {
-                Block lastBlock = getLastBlock(stack);
-                if (lastBlock != null && lastBlock != player.worldObj.getBlockState(hit.getBlockPos()).getBlock())
-                {
-                    //player.setItemInUse(scanner,getMaxItemUseDuration(scanner));
-                    player.resetActiveHand();
-                    //player.stopUsingItem();
-                }
-            }
-        }
-        else
-        {
-            if (player.worldObj.isRemote)
-            {
-                stopScanSounds();
-                player.resetActiveHand();
-            }
-        }
-    }
+			if (hit.typeOfHit == RayTraceResult.Type.BLOCK)
+			{
+				Block lastBlock = getLastBlock(stack);
+				if (lastBlock != null && lastBlock != player.worldObj.getBlockState(hit.getBlockPos()).getBlock())
+				{
+					//player.setItemInUse(scanner,getMaxItemUseDuration(scanner));
+					player.resetActiveHand();
+					//player.stopUsingItem();
+				}
+			}
+		}
+		else
+		{
+			if (player.worldObj.isRemote)
+			{
+				stopScanSounds();
+				player.resetActiveHand();
+			}
+		}
+	}
 
-    public Block getLastBlock(ItemStack itemStack)
-    {
-        if (itemStack.getTagCompound() != null)
-        {
-            return Block.getBlockById(itemStack.getTagCompound().getInteger("LastBlock"));
-        }
-        return null;
-    }
+	public Block getLastBlock(ItemStack itemStack)
+	{
+		if (itemStack.getTagCompound() != null)
+		{
+			return Block.getBlockById(itemStack.getTagCompound().getInteger("LastBlock"));
+		}
+		return null;
+	}
 
-    public void setLastBlock(ItemStack itemStack,Block block)
-    {
-        if (itemStack.getTagCompound() == null)
-            itemStack.setTagCompound(new NBTTagCompound());
+	public void setLastBlock(ItemStack itemStack, Block block)
+	{
+		if (itemStack.getTagCompound() == null)
+		{
+			itemStack.setTagCompound(new NBTTagCompound());
+		}
 
-        int blockID = Block.getIdFromBlock(block);
-        if (itemStack.getTagCompound().getInteger("LastBlock") != blockID)
-            itemStack.getTagCompound().setInteger("LastBlock",blockID);
-    }
+		int blockID = Block.getIdFromBlock(block);
+		if (itemStack.getTagCompound().getInteger("LastBlock") != blockID)
+		{
+			itemStack.getTagCompound().setInteger("LastBlock", blockID);
+		}
+	}
 
-    public void onPlayerStoppedUsing(ItemStack scanner, World world, EntityPlayer player, int count)
-    {
-        if (world.isRemote)
-            stopScanSounds();
-    }
+	public void onPlayerStoppedUsing(ItemStack scanner, World world, EntityPlayer player, int count)
+	{
+		if (world.isRemote)
+		{
+			stopScanSounds();
+		}
+	}
 
-    @SideOnly(Side.CLIENT)
-    private void playSound(BlockPos pos)
-    {
-        if(scanningSound == null)
-        {
-            scanningSound = new MachineSound(MatterOverdriveSounds.scannerScanning,SoundCategory.PLAYERS,pos,0.6f,1);
-            Minecraft.getMinecraft().getSoundHandler().playSound(scanningSound);
-        }
-    }
+	@SideOnly(Side.CLIENT)
+	private void playSound(BlockPos pos)
+	{
+		if (scanningSound == null)
+		{
+			scanningSound = new MachineSound(MatterOverdriveSounds.scannerScanning, SoundCategory.PLAYERS, pos, 0.6f, 1);
+			Minecraft.getMinecraft().getSoundHandler().playSound(scanningSound);
+		}
+	}
 
-    @SideOnly(Side.CLIENT)
-    private void stopScanSounds()
-    {
-        if(scanningSound != null)
-        {
-            scanningSound.stopPlaying();
-            scanningSound = null;
-        }
-    }
+	@SideOnly(Side.CLIENT)
+	private void stopScanSounds()
+	{
+		if (scanningSound != null)
+		{
+			scanningSound.stopPlaying();
+			scanningSound = null;
+		}
+	}
 
-    @Override
-    public RayTraceResult getScanningPos(ItemStack itemStack, EntityLivingBase player)
-    {
-        return MOPhysicsHelper.rayTrace(player, player.worldObj, 5, 0, new Vec3d(0, player.getEyeHeight(), 0), true, false);
-    }
+	@Override
+	public RayTraceResult getScanningPos(ItemStack itemStack, EntityLivingBase player)
+	{
+		return MOPhysicsHelper.rayTrace(player, player.worldObj, 5, 0, new Vec3d(0, player.getEyeHeight(), 0), true, false);
+	}
 
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
-    {
-        return false;
-    }
+	@Override
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
+	{
+		return false;
+	}
 
 
-    @Override
-    public EnumAction getItemUseAction(ItemStack p_77661_1_)
-    {
-        return EnumAction.NONE;
-    }
+	@Override
+	public EnumAction getItemUseAction(ItemStack p_77661_1_)
+	{
+		return EnumAction.NONE;
+	}
 
-    public void addToScanWhitelist(ItemStack itemStack,Block block)
-    {
-        String id = block.getRegistryName().toString();
-        if (id != null)
-        {
-            NBTTagList list = itemStack.getTagCompound().getTagList("whitelist", Constants.NBT.TAG_STRING);
-            list.appendTag(new NBTTagString(id));
-            itemStack.getTagCompound().setTag("whitelist",list);
-        }
-    }
+	public void addToScanWhitelist(ItemStack itemStack, Block block)
+	{
+		String id = block.getRegistryName().toString();
+		if (id != null)
+		{
+			NBTTagList list = itemStack.getTagCompound().getTagList("whitelist", Constants.NBT.TAG_STRING);
+			list.appendTag(new NBTTagString(id));
+			itemStack.getTagCompound().setTag("whitelist", list);
+		}
+	}
 
-    //region Setters
-    public void setOrdering(ItemStack stack,int order)
-    {
-        TagCompountCheck(stack);
-        stack.getTagCompound().setInteger("Ordering", order);
-    }
+	//region Setters
+	public void setOrdering(ItemStack stack, int order)
+	{
+		TagCompountCheck(stack);
+		stack.getTagCompound().setInteger("Ordering", order);
+	}
 
-    public void setOpenGuide(ItemStack stack,int guideID)
-    {
-        TagCompountCheck(stack);
-        stack.getTagCompound().setInteger("guideID",guideID);
-    }
+	public void setOpenGuide(ItemStack stack, int guideID)
+	{
+		TagCompountCheck(stack);
+		stack.getTagCompound().setInteger("guideID", guideID);
+	}
 
-    public void setOpenPage(ItemStack stack,int page)
-    {
-        TagCompountCheck(stack);
-        stack.getTagCompound().setInteger("page",page);
-    }
-    public void setCategory(ItemStack stack,String category)
-    {
-        TagCompountCheck(stack);
-        stack.getTagCompound().setString("Category",category);
-    }
-    public void setSelectedActiveQuest(ItemStack itemStack,int quest)
-    {
-        TagCompountCheck(itemStack);
-        itemStack.getTagCompound().setShort("SelectedActiveQuest",(short) quest);
-    }
-    //endregion
+	public void setOpenPage(ItemStack stack, int page)
+	{
+		TagCompountCheck(stack);
+		stack.getTagCompound().setInteger("page", page);
+	}
 
-    //region Getters
-    public int getGuideID(ItemStack stack)
-    {
-        TagCompountCheck(stack);
-        if (hasOpenGuide(stack))
-        {
-            return stack.getTagCompound().getInteger("guideID");
-        }
-        return -1;
-    }
-    public int getPage(ItemStack stack)
-    {
-        TagCompountCheck(stack);
-        return stack.getTagCompound().getInteger("page");
-    }
-    public boolean hasOpenGuide(ItemStack stack)
-    {
-        TagCompountCheck(stack);
-        return stack.getTagCompound().hasKey("guideID", Constants.NBT.TAG_INT);
-    }
-    public int getOrdering(ItemStack stack)
-    {
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Ordering", Constants.NBT.TAG_STRING))
-        {
-            return stack.getTagCompound().getInteger("Ordering");
-        }
-        return 2;
-    }
-    public String getCategory(ItemStack stack)
-    {
-        if (stack.hasTagCompound())
-        {
-            return stack.getTagCompound().getString("Category");
-        }
-        return "";
-    }
-    public int getActiveSelectedQuest(ItemStack stack)
-    {
-        if (stack.hasTagCompound())
-        {
-            return stack.getTagCompound().getShort("SelectedActiveQuest");
-        }
-        return 0;
-    }
-    @Override
-    public boolean destroysBlocks(ItemStack itemStack)
-    {
-        return itemStack.hasTagCompound() && itemStack.getTagCompound().getBoolean("Destroys");
-    }
+	public void setCategory(ItemStack stack, String category)
+	{
+		TagCompountCheck(stack);
+		stack.getTagCompound().setString("Category", category);
+	}
 
-    @Override
-    public boolean showsGravitationalWaves(ItemStack itemStack)
-    {
-        if (itemStack.getTagCompound() != null)
-        {
-            if (itemStack.getTagCompound().hasKey("showGravWaves"))
-            {
-                return itemStack.getTagCompound().getBoolean("showGravWaves");
-            }
-        }
-        return true;
-    }
+	public void setSelectedActiveQuest(ItemStack itemStack, int quest)
+	{
+		TagCompountCheck(itemStack);
+		itemStack.getTagCompound().setShort("SelectedActiveQuest", (short)quest);
+	}
+	//endregion
 
-    public boolean canScan(ItemStack itemStack,IBlockState state)
-    {
-        if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("whitelist", Constants.NBT.TAG_LIST))
-        {
-            NBTTagList tagList = itemStack.getTagCompound().getTagList("whitelist", Constants.NBT.TAG_STRING);
-            for (int i = 0;i < tagList.tagCount();i++)
-            {
-                if (tagList.getStringTagAt(i).equals(state.getBlock().getRegistryName()))
-                {
-                    return true;
-                }
-            }
+	//region Getters
+	public int getGuideID(ItemStack stack)
+	{
+		TagCompountCheck(stack);
+		if (hasOpenGuide(stack))
+		{
+			return stack.getTagCompound().getInteger("guideID");
+		}
+		return -1;
+	}
 
-            return false;
-        }
-        return true;
-    }
-    public boolean hasGui(ItemStack itemStack)
-    {
-        return itemStack.getTagCompound() == null || !itemStack.getTagCompound().getBoolean("nogui");
-    }
-    //endregion
+	public int getPage(ItemStack stack)
+	{
+		TagCompountCheck(stack);
+		return stack.getTagCompound().getInteger("page");
+	}
+
+	public boolean hasOpenGuide(ItemStack stack)
+	{
+		TagCompountCheck(stack);
+		return stack.getTagCompound().hasKey("guideID", Constants.NBT.TAG_INT);
+	}
+
+	public int getOrdering(ItemStack stack)
+	{
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Ordering", Constants.NBT.TAG_STRING))
+		{
+			return stack.getTagCompound().getInteger("Ordering");
+		}
+		return 2;
+	}
+
+	public String getCategory(ItemStack stack)
+	{
+		if (stack.hasTagCompound())
+		{
+			return stack.getTagCompound().getString("Category");
+		}
+		return "";
+	}
+
+	public int getActiveSelectedQuest(ItemStack stack)
+	{
+		if (stack.hasTagCompound())
+		{
+			return stack.getTagCompound().getShort("SelectedActiveQuest");
+		}
+		return 0;
+	}
+
+	@Override
+	public boolean destroysBlocks(ItemStack itemStack)
+	{
+		return itemStack.hasTagCompound() && itemStack.getTagCompound().getBoolean("Destroys");
+	}
+
+	@Override
+	public boolean showsGravitationalWaves(ItemStack itemStack)
+	{
+		if (itemStack.getTagCompound() != null)
+		{
+			if (itemStack.getTagCompound().hasKey("showGravWaves"))
+			{
+				return itemStack.getTagCompound().getBoolean("showGravWaves");
+			}
+		}
+		return true;
+	}
+
+	public boolean canScan(ItemStack itemStack, IBlockState state)
+	{
+		if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("whitelist", Constants.NBT.TAG_LIST))
+		{
+			NBTTagList tagList = itemStack.getTagCompound().getTagList("whitelist", Constants.NBT.TAG_STRING);
+			for (int i = 0; i < tagList.tagCount(); i++)
+			{
+				if (tagList.getStringTagAt(i).equals(state.getBlock().getRegistryName()))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+		return true;
+	}
+
+	public boolean hasGui(ItemStack itemStack)
+	{
+		return itemStack.getTagCompound() == null || !itemStack.getTagCompound().getBoolean("nogui");
+	}
+	//endregion
 }

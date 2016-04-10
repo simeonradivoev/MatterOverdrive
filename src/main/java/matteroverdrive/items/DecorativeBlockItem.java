@@ -33,36 +33,37 @@ import net.minecraft.util.math.MathHelper;
  */
 public class DecorativeBlockItem extends ItemBlock
 {
-    public DecorativeBlockItem(Block block)
-    {
-        super(block);
-        if (block instanceof BlockDecorativeRotated)
-        {
-            setHasSubtypes(true);
-            setMaxDamage(0);
-        }
-        else if (block instanceof BlockDecorativeColored)
-        {
-            setHasSubtypes(true);
-            setMaxDamage(0);
-        }
-    }
+	public DecorativeBlockItem(Block block)
+	{
+		super(block);
+		if (block instanceof BlockDecorativeRotated)
+		{
+			setHasSubtypes(true);
+			setMaxDamage(0);
+		}
+		else if (block instanceof BlockDecorativeColored)
+		{
+			setHasSubtypes(true);
+			setMaxDamage(0);
+		}
+	}
 
-    @Override
-    public int getMetadata(int damage)
-    {
-        if (block instanceof BlockDecorativeRotated)
-        {
-            return MathHelper.clamp_int(damage,0,1);
-        }else if (block instanceof BlockDecorativeColored)
-        {
-            return MathHelper.clamp_int(damage,0,15);
-        }
-        return 0;
-    }
+	@Override
+	public int getMetadata(int damage)
+	{
+		if (block instanceof BlockDecorativeRotated)
+		{
+			return MathHelper.clamp_int(damage, 0, 1);
+		}
+		else if (block instanceof BlockDecorativeColored)
+		{
+			return MathHelper.clamp_int(damage, 0, 15);
+		}
+		return 0;
+	}
 
-    // TODO: 3/26/2016 Find how to get color for stack
-    /*@SideOnly(Side.CLIENT)
+	// TODO: 3/26/2016 Find how to get color for stack
+	/*@SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack stack, int renderPass)
     {
         if (block instanceof BlockDecorativeColored)
@@ -72,19 +73,20 @@ public class DecorativeBlockItem extends ItemBlock
         return super.getColorFromItemStack(stack,renderPass);
     }*/
 
-    @Override
-    public String getItemStackDisplayName(ItemStack itemStack)
-    {
-        if (block instanceof BlockDecorativeRotated)
-        {
-            if (itemStack.getItemDamage() == 1)
-            {
-                return super.getItemStackDisplayName(itemStack) + " [Rotated]";
-            }
-        }else if (block instanceof BlockDecorativeColored)
-        {
-            return MOStringHelper.translateToLocal("color." + EnumDyeColor.byMetadata(MathHelper.clamp_int(itemStack.getItemDamage(),0,ItemDye.dyeColors.length-1)).getUnlocalizedName() + " " + super.getItemStackDisplayName(itemStack));
-        }
-        return super.getItemStackDisplayName(itemStack);
-    }
+	@Override
+	public String getItemStackDisplayName(ItemStack itemStack)
+	{
+		if (block instanceof BlockDecorativeRotated)
+		{
+			if (itemStack.getItemDamage() == 1)
+			{
+				return super.getItemStackDisplayName(itemStack) + " [Rotated]";
+			}
+		}
+		else if (block instanceof BlockDecorativeColored)
+		{
+			return MOStringHelper.translateToLocal("color." + EnumDyeColor.byMetadata(MathHelper.clamp_int(itemStack.getItemDamage(), 0, ItemDye.dyeColors.length - 1)).getUnlocalizedName() + " " + super.getItemStackDisplayName(itemStack));
+		}
+		return super.getItemStackDisplayName(itemStack);
+	}
 }

@@ -31,46 +31,50 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public class TileEntityRendererAndroidStation extends TileEntityRendererStation<TileEntityAndroidStation>
 {
-    EntityMeleeRougeAndroidMob mob;
+	EntityMeleeRougeAndroidMob mob;
 
-    public TileEntityRendererAndroidStation()
-    {
-        super();
-    }
+	public TileEntityRendererAndroidStation()
+	{
+		super();
+	}
 
-    @Override
-    protected void renderHologram(TileEntityAndroidStation station, double x, double y, double z, float partialTicks, double noise)
-    {
-        if ((station).isUseableByPlayer(Minecraft.getMinecraft().thePlayer)) {
-            if (mob == null) {
-                mob = new EntityMeleeRougeAndroidMob(Minecraft.getMinecraft().theWorld);
-                mob.getEntityData().setBoolean("Hologram", true);
-            }
+	@Override
+	protected void renderHologram(TileEntityAndroidStation station, double x, double y, double z, float partialTicks, double noise)
+	{
+		if ((station).isUseableByPlayer(Minecraft.getMinecraft().thePlayer))
+		{
+			if (mob == null)
+			{
+				mob = new EntityMeleeRougeAndroidMob(Minecraft.getMinecraft().theWorld);
+				mob.getEntityData().setBoolean("Hologram", true);
+			}
 
-            GlStateManager.depthMask(false);
-            //glDisable(GL_DEPTH_TEST);
-            //GlStateManager.enableBlend();
-            //GlStateManager.blendFunc(GL_ONE, GL_ONE);
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(x + 0.5, y + 0.8, z + 0.5);
-            rotate(station, noise);
+			GlStateManager.depthMask(false);
+			//glDisable(GL_DEPTH_TEST);
+			//GlStateManager.enableBlend();
+			//GlStateManager.blendFunc(GL_ONE, GL_ONE);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x + 0.5, y + 0.8, z + 0.5);
+			rotate(station, noise);
 
-            RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.3f);
+			RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.3f);
 
-            if (station.isUseableByPlayer(Minecraft.getMinecraft().thePlayer)) {
-                ClientProxy.renderHandler.rendererRougeAndroidHologram.doRender(mob,0,0,0,0,0);
-                //Render render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(Minecraft.getMinecraft().getRenderViewEntity());
-                //render.doRender(Minecraft.getMinecraft().thePlayer,0,0,0,0,partialTicks);
-                //ModelBiped biped = new ModelBiped(0);
-                //biped.render(mob,0,0,0,0,0,0.1f);
-                //Render render = RenderManager.instance.getEntityRenderObject(mob);
-                //render.doRender(mob,0,0,0,0,0);
-            }
+			if (station.isUseableByPlayer(Minecraft.getMinecraft().thePlayer))
+			{
+				ClientProxy.renderHandler.rendererRougeAndroidHologram.doRender(mob, 0, 0, 0, 0, 0);
+				//Render render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(Minecraft.getMinecraft().getRenderViewEntity());
+				//render.doRender(Minecraft.getMinecraft().thePlayer,0,0,0,0,partialTicks);
+				//ModelBiped biped = new ModelBiped(0);
+				//biped.render(mob,0,0,0,0,0,0.1f);
+				//Render render = RenderManager.instance.getEntityRenderObject(mob);
+				//render.doRender(mob,0,0,0,0,0);
+			}
 
-            GlStateManager.popMatrix();
-        }else
-        {
-            super.renderHologram(station, x, y, z, partialTicks, noise);
-        }
-    }
+			GlStateManager.popMatrix();
+		}
+		else
+		{
+			super.renderHologram(station, x, y, z, partialTicks, noise);
+		}
+	}
 }

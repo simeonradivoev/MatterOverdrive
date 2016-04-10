@@ -33,226 +33,242 @@ import java.util.List;
  */
 public class ElementBaseGroup extends MOElementBase implements IButtonHandler, GuiElementList, ITextHandler
 {
-    protected final ArrayList<MOElementBase> elements = new ArrayList<>();
+	protected final ArrayList<MOElementBase> elements = new ArrayList<>();
 
-    public ElementBaseGroup(MOGuiBase gui, int posX, int posY)
-    {
-        super(gui, posX, posY);
-    }
-    public ElementBaseGroup(MOGuiBase gui, int posX, int posY,int width,int height)
-    {
-        super(gui, posX, posY, width, height);
-    }
+	public ElementBaseGroup(MOGuiBase gui, int posX, int posY)
+	{
+		super(gui, posX, posY);
+	}
 
-    @Override
-    public void init()
-    {
-        elements.clear();
-    }
+	public ElementBaseGroup(MOGuiBase gui, int posX, int posY, int width, int height)
+	{
+		super(gui, posX, posY, width, height);
+	}
 
-    protected MOElementBase getElementAtPosition(int mX, int mY)
-    {
-        for (int i = getElements().size(); i-- > 0;)
-        {
-            MOElementBase element = getElements().get(i);
-            if (mY >= 0 && mY <= sizeY && mX >= 0 && mX <= sizeX && element.intersectsWith(mX, mY) && element.isVisible())
-            {
-                return element;
-            }
-        }
-        return null;
-    }
+	@Override
+	public void init()
+	{
+		elements.clear();
+	}
 
-    public void addTooltip(List<String> var1,int mouseX,int mouseY)
-    {
-        mouseX -= posX;
-        mouseY -= posY;
+	protected MOElementBase getElementAtPosition(int mX, int mY)
+	{
+		for (int i = getElements().size(); i-- > 0; )
+		{
+			MOElementBase element = getElements().get(i);
+			if (mY >= 0 && mY <= sizeY && mX >= 0 && mX <= sizeX && element.intersectsWith(mX, mY) && element.isVisible())
+			{
+				return element;
+			}
+		}
+		return null;
+	}
 
-        for (int i = getElements().size(); i-- > 0;)
-        {
-            MOElementBase element = getElements().get(i);
-            if (mouseY >= 0 && mouseY <= sizeY && mouseX >= 0 && mouseX <= sizeX && element.intersectsWith(mouseX, mouseY) && element.isVisible())
-            {
-                element.addTooltip(var1,mouseX,mouseY);
-            }
-        }
-    }
+	public void addTooltip(List<String> var1, int mouseX, int mouseY)
+	{
+		mouseX -= posX;
+		mouseY -= posY;
 
-    @Override
-    public void drawBackground(int mouseX, int mouseY, float gameTicks)
-    {
-        mouseX -= posX;
-        mouseY -= posY;
+		for (int i = getElements().size(); i-- > 0; )
+		{
+			MOElementBase element = getElements().get(i);
+			if (mouseY >= 0 && mouseY <= sizeY && mouseX >= 0 && mouseX <= sizeX && element.intersectsWith(mouseX, mouseY) && element.isVisible())
+			{
+				element.addTooltip(var1, mouseX, mouseY);
+			}
+		}
+	}
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(this.posX, this.posY, 0);
-        GlStateManager.color(1,1,1);
-        for (int i = getElements().size(); i-- > 0;)
-        {
-            MOElementBase c = getElements().get(i);
+	@Override
+	public void drawBackground(int mouseX, int mouseY, float gameTicks)
+	{
+		mouseX -= posX;
+		mouseY -= posY;
 
-            if(c.isVisible())
-                c.drawBackground(mouseX,mouseY,gameTicks);
-        }
-        GlStateManager.popMatrix();
-    }
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(this.posX, this.posY, 0);
+		GlStateManager.color(1, 1, 1);
+		for (int i = getElements().size(); i-- > 0; )
+		{
+			MOElementBase c = getElements().get(i);
 
-    @Override
-    public void drawForeground(int mouseX, int mouseY)
-    {
-        mouseX -= posX;
-        mouseY -= posY;
+			if (c.isVisible())
+			{
+				c.drawBackground(mouseX, mouseY, gameTicks);
+			}
+		}
+		GlStateManager.popMatrix();
+	}
 
-        GlStateManager.pushMatrix();
-        GL11.glTranslatef(this.posX, this.posY, 0);
-        GL11.glColor3f(1, 1, 1);
-        for (int i = getElements().size(); i-- > 0;)
-        {
-            MOElementBase c = getElements().get(i);
-            if(c.isVisible())
-                c.drawForeground(mouseX, mouseY);
-        }
-        GlStateManager.popMatrix();
-    }
+	@Override
+	public void drawForeground(int mouseX, int mouseY)
+	{
+		mouseX -= posX;
+		mouseY -= posY;
 
-    @Override
-    public void update(int mouseX, int mouseY,float partialTicks)
-    {
-        mouseX -= posX;
-        mouseY -= posY;
+		GlStateManager.pushMatrix();
+		GL11.glTranslatef(this.posX, this.posY, 0);
+		GL11.glColor3f(1, 1, 1);
+		for (int i = getElements().size(); i-- > 0; )
+		{
+			MOElementBase c = getElements().get(i);
+			if (c.isVisible())
+			{
+				c.drawForeground(mouseX, mouseY);
+			}
+		}
+		GlStateManager.popMatrix();
+	}
 
-        for (int i = elements.size(); i-- > 0;)
-        {
-            getElements().get(i).update(mouseX, mouseY,partialTicks);
-        }
+	@Override
+	public void update(int mouseX, int mouseY, float partialTicks)
+	{
+		mouseX -= posX;
+		mouseY -= posY;
 
-        update();
-    }
+		for (int i = elements.size(); i-- > 0; )
+		{
+			getElements().get(i).update(mouseX, mouseY, partialTicks);
+		}
 
-    @Override
-    public void updateInfo()
-    {
-        for (int i = elements.size(); i-- > 0;)
-        {
-            MOElementBase element = elements.get(i);
-            element.updateInfo();
-        }
+		update();
+	}
 
-    }
+	@Override
+	public void updateInfo()
+	{
+		for (int i = elements.size(); i-- > 0; )
+		{
+			MOElementBase element = elements.get(i);
+			element.updateInfo();
+		}
 
-    @Override
-    public boolean onMousePressed(int mouseX, int mouseY, int mouseButton)
-    {
-        mouseX -= posX;
-        mouseY -= posY;
+	}
 
-        for (int i = getElements().size(); i-- > 0;)
-        {
-            MOElementBase c = getElements().get(i);
-            if (!c.isVisible() || !c.isEnabled() || !c.intersectsWith(mouseX, mouseY)) {
-                continue;
-            }
-            if (c.onMousePressed(mouseX, mouseY, mouseButton))
-            {
-                return true;
-            }
-        }
+	@Override
+	public boolean onMousePressed(int mouseX, int mouseY, int mouseButton)
+	{
+		mouseX -= posX;
+		mouseY -= posY;
 
-        return false;
-    }
+		for (int i = getElements().size(); i-- > 0; )
+		{
+			MOElementBase c = getElements().get(i);
+			if (!c.isVisible() || !c.isEnabled() || !c.intersectsWith(mouseX, mouseY))
+			{
+				continue;
+			}
+			if (c.onMousePressed(mouseX, mouseY, mouseButton))
+			{
+				return true;
+			}
+		}
 
-    @Override
-    public void onMouseReleased(int mouseX, int mouseY) {
+		return false;
+	}
 
-        mouseX -= posX;
-        mouseY -= posY;
+	@Override
+	public void onMouseReleased(int mouseX, int mouseY)
+	{
 
-        for (MOElementBase child : elements)
-        {
-            if (!child.isVisible() || !child.isEnabled()) {
-                continue;
-            }
-            child.onMouseReleased(mouseX, mouseY);
-        }
-    }
+		mouseX -= posX;
+		mouseY -= posY;
 
-    @Override
-    public boolean onMouseWheel(int mouseX, int mouseY, int movement) {
+		for (MOElementBase child : elements)
+		{
+			if (!child.isVisible() || !child.isEnabled())
+			{
+				continue;
+			}
+			child.onMouseReleased(mouseX, mouseY);
+		}
+	}
 
-        mouseX -= posX;
-        mouseY -= posY;
+	@Override
+	public boolean onMouseWheel(int mouseX, int mouseY, int movement)
+	{
 
-        for (int i = getElements().size(); i-- > 0;)
-        {
-            MOElementBase c = getElements().get(i);
-            if (!c.isVisible() || !c.isEnabled() || !c.intersectsWith(mouseX, mouseY)) {
-                continue;
-            }
-            if (c.onMouseWheel(mouseX, mouseY, movement)) {
-                return true;
-            }
-        }
-        return false;
-    }
+		mouseX -= posX;
+		mouseY -= posY;
 
-    @Override
-    public boolean onKeyTyped(char characterTyped, int keyPressed) {
+		for (int i = getElements().size(); i-- > 0; )
+		{
+			MOElementBase c = getElements().get(i);
+			if (!c.isVisible() || !c.isEnabled() || !c.intersectsWith(mouseX, mouseY))
+			{
+				continue;
+			}
+			if (c.onMouseWheel(mouseX, mouseY, movement))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
-        for (int i = getElements().size(); i-- > 0;)
-        {
-            MOElementBase c = getElements().get(i);
-            if (!c.isVisible() || !c.isEnabled()) {
-                continue;
-            }
-            if (c.onKeyTyped(characterTyped, keyPressed)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean onKeyTyped(char characterTyped, int keyPressed)
+	{
 
-    public MOElementBase setGroupVisible(boolean visible)
-    {
-        super.setVisible(visible);
-        return this;
-    }
+		for (int i = getElements().size(); i-- > 0; )
+		{
+			MOElementBase c = getElements().get(i);
+			if (!c.isVisible() || !c.isEnabled())
+			{
+				continue;
+			}
+			if (c.onKeyTyped(characterTyped, keyPressed))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public void handleElementButtonClick(MOElementBase element,String buttonName, int mouseButton)
-    {
+	public MOElementBase setGroupVisible(boolean visible)
+	{
+		super.setVisible(visible);
+		return this;
+	}
 
-    }
+	@Override
+	public void handleElementButtonClick(MOElementBase element, String buttonName, int mouseButton)
+	{
 
-    public List<MOElementBase> getElements()
-    {
-        return elements;
-    }
+	}
 
-    public void clearElements()
-    {
-        this.elements.clear();
-    }
+	public List<MOElementBase> getElements()
+	{
+		return elements;
+	}
 
-    public MOElementBase addElementAt(int i,MOElementBase element)
-    {
-        element.parent = this;
-        elements.add(i,element);
-        return element;
-    }
+	public void clearElements()
+	{
+		this.elements.clear();
+	}
 
-    public MOElementBase addElement(MOElementBase element)
-    {
-        if (element == null)
-            return null;
+	public MOElementBase addElementAt(int i, MOElementBase element)
+	{
+		element.parent = this;
+		elements.add(i, element);
+		return element;
+	}
 
-        element.parent = this;
-        elements.add(element);
-        return element;
-    }
+	public MOElementBase addElement(MOElementBase element)
+	{
+		if (element == null)
+		{
+			return null;
+		}
 
-    @Override
-    public void textChanged(String elementName, String text, boolean typed)
-    {
+		element.parent = this;
+		elements.add(element);
+		return element;
+	}
 
-    }
+	@Override
+	public void textChanged(String elementName, String text, boolean typed)
+	{
+
+	}
 }

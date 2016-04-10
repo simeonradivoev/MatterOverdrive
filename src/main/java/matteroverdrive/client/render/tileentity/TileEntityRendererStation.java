@@ -47,164 +47,165 @@ import static org.lwjgl.opengl.GL11.GL_QUADS;
  */
 public abstract class TileEntityRendererStation<T extends MOTileEntityMachine> extends TileEntitySpecialRenderer<T> implements IConfigSubscriber
 {
-    public static final ResourceLocation glowTexture = new ResourceLocation(Reference.PATH_FX + "hologram_beam.png");
-    protected int shaderProgram;
-    protected boolean validShader = true;
-    private boolean enableHoloShader = true;
-    final Random fliker;
+	public static final ResourceLocation glowTexture = new ResourceLocation(Reference.PATH_FX + "hologram_beam.png");
+	final Random fliker;
+	protected int shaderProgram;
+	protected boolean validShader = true;
+	protected Color holoColor;
+	protected Color red_holoColor;
+	private boolean enableHoloShader = true;
 
-    protected Color holoColor;
-    protected Color red_holoColor;
+	public TileEntityRendererStation()
+	{
+		holoColor = Reference.COLOR_HOLO.multiplyWithoutAlpha(0.25f);
+		red_holoColor = Reference.COLOR_HOLO_RED.multiplyWithoutAlpha(0.25f);
+		fliker = new Random();
+	}
 
-    public TileEntityRendererStation()
-    {
-        holoColor = Reference.COLOR_HOLO.multiplyWithoutAlpha(0.25f);
-        red_holoColor = Reference.COLOR_HOLO_RED.multiplyWithoutAlpha(0.25f);
-        fliker = new Random();
-    }
+	private void drawHoloLights(TileEntity entity, World world, double x, double y, double z, double t)
+	{
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL_ONE, GL_ONE);
+		GlStateManager.disableLighting();
+		GlStateManager.depthMask(false);
+		RenderUtils.disableLightmap();
+		GlStateManager.disableCull();
 
-    private void drawHoloLights(TileEntity entity,World world, double x, double y, double z,double t)
-    {
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL_ONE,GL_ONE);
-        GlStateManager.disableLighting();
-        GlStateManager.depthMask(false);
-        RenderUtils.disableLightmap();
-        GlStateManager.disableCull();
+		Minecraft.getMinecraft().renderEngine.bindTexture(glowTexture);
 
-        Minecraft.getMinecraft().renderEngine.bindTexture(glowTexture);
+		double height = 9f * (1f / 16f);
+		double hologramHeight = getLightHeight();
+		double topSize = getLightsSize() - 1;
 
-        double height = 9f * (1f / 16f);
-        double hologramHeight = getLightHeight();
-        double topSize = getLightsSize() - 1;
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y + height, z);
+		VertexBuffer wr = Tessellator.getInstance().getBuffer();
+		wr.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		RenderUtils.applyColor(getHoloColor(entity));
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x,y + height,z);
-        VertexBuffer wr = Tessellator.getInstance().getBuffer();
-        wr.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        RenderUtils.applyColor(getHoloColor(entity));
+		wr.pos(0, 0, 0).tex(1, 1).endVertex();
+		wr.pos(-topSize, hologramHeight, -topSize).tex(1, 0).endVertex();
+		wr.pos(1 + topSize, hologramHeight, -topSize).tex(0, 0).endVertex();
+		wr.pos(1, 0, 0).tex(0, 1).endVertex();
 
-        wr.pos(0, 0, 0).tex(1, 1).endVertex();
-        wr.pos(-topSize, hologramHeight, -topSize).tex(1, 0).endVertex();
-        wr.pos(1 + topSize, hologramHeight, -topSize).tex(0, 0).endVertex();
-        wr.pos(1, 0, 0).tex(0, 1).endVertex();
+		wr.pos(1, 0, 0).tex(1, 1).endVertex();
+		wr.pos(1 + topSize, hologramHeight, -topSize).tex(1, 0).endVertex();
+		wr.pos(1 + topSize, hologramHeight, 1 + topSize).tex(0, 0).endVertex();
+		wr.pos(1, 0, 1).tex(0, 1).endVertex();
 
-        wr.pos(1, 0, 0).tex(1, 1).endVertex();
-        wr.pos(1 + topSize, hologramHeight, -topSize).tex(1, 0).endVertex();
-        wr.pos(1 + topSize, hologramHeight, 1 + topSize).tex(0, 0).endVertex();
-        wr.pos(1, 0, 1).tex(0, 1).endVertex();
+		wr.pos(1, 0, 1).tex(1, 1).endVertex();
+		wr.pos(1 + topSize, hologramHeight, 1 + topSize).tex(1, 0).endVertex();
+		wr.pos(-topSize, hologramHeight, 1 + topSize).tex(0, 0).endVertex();
+		wr.pos(0, 0, 1).tex(0, 1).endVertex();
 
-        wr.pos(1, 0, 1).tex(1, 1).endVertex();
-        wr.pos(1 + topSize, hologramHeight, 1 + topSize).tex(1, 0).endVertex();
-        wr.pos(-topSize, hologramHeight, 1 + topSize).tex(0, 0).endVertex();
-        wr.pos(0, 0, 1).tex(0, 1).endVertex();
+		wr.pos(0, 0, 1).tex(1, 1).endVertex();
+		wr.pos(-topSize, hologramHeight, 1 + topSize).tex(1, 0).endVertex();
+		wr.pos(-topSize, hologramHeight, -topSize).tex(0, 0).endVertex();
+		wr.pos(0, 0, 0).tex(0, 1).endVertex();
 
-        wr.pos(0, 0, 1).tex(1, 1).endVertex();
-        wr.pos(-topSize, hologramHeight, 1 + topSize).tex( 1, 0).endVertex();
-        wr.pos(-topSize, hologramHeight, -topSize).tex(0, 0).endVertex();
-        wr.pos(0, 0, 0).tex(0, 1).endVertex();
+		Tessellator.getInstance().draw();
+		GlStateManager.popMatrix();
 
-        Tessellator.getInstance().draw();
-        GlStateManager.popMatrix();
+		GlStateManager.disableBlend();
+		GlStateManager.enableLighting();
+		GlStateManager.enableCull();
+		RenderUtils.enableLightmap();
+	}
 
-        GlStateManager.disableBlend();
-        GlStateManager.enableLighting();
-        GlStateManager.enableCull();
-        RenderUtils.enableLightmap();
-    }
+	protected double getLightHeight()
+	{
+		return 1;
+	}
 
-    protected double getLightHeight()
-    {
-        return 1;
-    }
+	protected double getLightsSize()
+	{
+		return 1.3;
+	}
 
-    protected double getLightsSize()
-    {
-        return 1.3;
-    }
-
-    protected Color getHoloColor(TileEntity entity)
-    {
-        if (((MOTileEntityMachine)entity).isUseableByPlayer(Minecraft.getMinecraft().thePlayer))
-        {
-            return holoColor;
-        }
-        return red_holoColor;
-    }
-
-    @Override
-    public void renderTileEntityAt(T machine, double x, double y, double z, float ticks,int destroyStage)
-    {
-        double t = MOMathHelper.noise(machine.getPos().getX() * 0.3, machine.getPos().getY() * 0.3, machine.getPos().getZ() * 0.3);
-        GlStateManager.pushMatrix();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL_ONE,GL_ONE);
-        try
+	protected Color getHoloColor(TileEntity entity)
+	{
+		if (((MOTileEntityMachine)entity).isUseableByPlayer(Minecraft.getMinecraft().thePlayer))
 		{
-            renderHologram(machine, x, y, z, ticks, t);
-        }
-        catch (ClassCastException e)
-        {
-            MOLog.warn("Could not cast to desired station class", e);
-        }
-        catch (Exception e)
-        {
+			return holoColor;
+		}
+		return red_holoColor;
+	}
+
+	@Override
+	public void renderTileEntityAt(T machine, double x, double y, double z, float ticks, int destroyStage)
+	{
+		double t = MOMathHelper.noise(machine.getPos().getX() * 0.3, machine.getPos().getY() * 0.3, machine.getPos().getZ() * 0.3);
+		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL_ONE, GL_ONE);
+		try
+		{
+			renderHologram(machine, x, y, z, ticks, t);
+		}
+		catch (ClassCastException e)
+		{
+			MOLog.warn("Could not cast to desired station class", e);
+		}
+		catch (Exception e)
+		{
 			MOLog.warn("Error while render a station", e);
-        }
-        GlStateManager.popMatrix();
+		}
+		GlStateManager.popMatrix();
 
-        if (drawHoloLights())
-            drawHoloLights(machine,machine.getWorld(), x, y, z,ticks);
+		if (drawHoloLights())
+		{
+			drawHoloLights(machine, machine.getWorld(), x, y, z, ticks);
+		}
 
-        GlStateManager.disableBlend();
-    }
+		GlStateManager.disableBlend();
+	}
 
-    protected boolean drawHoloLights()
-    {
-        return true;
-    }
+	protected boolean drawHoloLights()
+	{
+		return true;
+	}
 
-    protected void rotate(T station,double noise)
-    {
-        GlStateManager.rotate((Minecraft.getMinecraft().theWorld.getWorldTime() * 0.5f) + (1800 * (float)noise), 0, -1, 0);
-    }
+	protected void rotate(T station, double noise)
+	{
+		GlStateManager.rotate((Minecraft.getMinecraft().theWorld.getWorldTime() * 0.5f) + (1800 * (float)noise), 0, -1, 0);
+	}
 
-    protected boolean isUsable(T station)
-    {
-        return (station).isUseableByPlayer(Minecraft.getMinecraft().thePlayer);
-    }
+	protected boolean isUsable(T station)
+	{
+		return (station).isUseableByPlayer(Minecraft.getMinecraft().thePlayer);
+	}
 
-    protected void renderHologram(T station, double x, double y, double z, float partialTicks, double noise)
-    {
-        if (!isUsable(station))
-        {
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(x + 0.5, y + 0.8, z + 0.5);
-            rotate(station, noise);
+	protected void renderHologram(T station, double x, double y, double z, float partialTicks, double noise)
+	{
+		if (!isUsable(station))
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x + 0.5, y + 0.8, z + 0.5);
+			rotate(station, noise);
 
-            GlStateManager.disableCull();
-            GlStateManager.disableLighting();
-            GlStateManager.scale(0.02, 0.02, 0.02);
-            GlStateManager.rotate(180, 1, 0, 0);
+			GlStateManager.disableCull();
+			GlStateManager.disableLighting();
+			GlStateManager.scale(0.02, 0.02, 0.02);
+			GlStateManager.rotate(180, 1, 0, 0);
 
-            Color color = Reference.COLOR_HOLO_RED.multiplyWithoutAlpha(0.33f);
-            String info[] = MOStringHelper.translateToLocal("gui.hologram.access_denied").split(" ");
-            for (int i = 0; i < info.length; i++)
-            {
-                int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(info[i]);
-                GlStateManager.pushMatrix();
-                GlStateManager.translate(-width / 2, -32, 0);
-                Minecraft.getMinecraft().fontRendererObj.drawString(info[i], 0, i * 10, color.getColor());
-                GlStateManager.popMatrix();
-            }
+			Color color = Reference.COLOR_HOLO_RED.multiplyWithoutAlpha(0.33f);
+			String info[] = MOStringHelper.translateToLocal("gui.hologram.access_denied").split(" ");
+			for (int i = 0; i < info.length; i++)
+			{
+				int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(info[i]);
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(-width / 2, -32, 0);
+				Minecraft.getMinecraft().fontRendererObj.drawString(info[i], 0, i * 10, color.getColor());
+				GlStateManager.popMatrix();
+			}
 
-            GlStateManager.popMatrix();
-        }
-    }
+			GlStateManager.popMatrix();
+		}
+	}
 
-    @Override
-    public void onConfigChanged(ConfigurationHandler config)
-    {
-        enableHoloShader = config.getBool("use holo shader",ConfigurationHandler.CATEGORY_CLIENT,true,"Use the custom holo shader for holographic items");
-    }
+	@Override
+	public void onConfigChanged(ConfigurationHandler config)
+	{
+		enableHoloShader = config.getBool("use holo shader", ConfigurationHandler.CATEGORY_CLIENT, true, "Use the custom holo shader for holographic items");
+	}
 }

@@ -11,25 +11,25 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BiomeGeneratorSpace extends BiomeGenBase
 {
-    public BiomeGeneratorSpace(BiomeProperties biomeProperties)
-    {
-        super(biomeProperties);
-        this.spawnableMonsterList.clear();
-        this.spawnableCreatureList.clear();
-        this.spawnableWaterCreatureList.clear();
-        this.spawnableCaveCreatureList.clear();
-        this.topBlock = Blocks.air.getDefaultState();
-        this.fillerBlock = Blocks.air.getDefaultState();
-    }
+	public BiomeGeneratorSpace(BiomeProperties biomeProperties)
+	{
+		super(biomeProperties);
+		this.spawnableMonsterList.clear();
+		this.spawnableCreatureList.clear();
+		this.spawnableWaterCreatureList.clear();
+		this.spawnableCaveCreatureList.clear();
+		this.topBlock = Blocks.air.getDefaultState();
+		this.fillerBlock = Blocks.air.getDefaultState();
+	}
 
-    public BiomeDecorator createBiomeDecorator()
-    {
-        return getModdedBiomeDecorator(new BiomeDecoratorSpace());
-    }
+	public BiomeDecorator createBiomeDecorator()
+	{
+		return getModdedBiomeDecorator(new BiomeDecoratorSpace());
+	}
 
-    @SideOnly(Side.CLIENT)
-    public int getSkyColorByTemp(float p_76731_1_)
-    {
-        return 0;
-    }
+	@SideOnly(Side.CLIENT)
+	public int getSkyColorByTemp(float p_76731_1_)
+	{
+		return 0;
+	}
 }

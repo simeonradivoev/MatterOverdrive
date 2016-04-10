@@ -28,19 +28,19 @@ public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends M
 
 	public MachineMatterStorage(T machine, int capacity)
 	{
-        	this(machine, capacity, capacity, capacity);
+		this(machine, capacity, capacity, capacity);
 	}
 
-    public MachineMatterStorage(T machine, int capacity, int maxExtract)
-    {
-        this(machine, capacity, maxExtract, maxExtract);
-    }
+	public MachineMatterStorage(T machine, int capacity, int maxExtract)
+	{
+		this(machine, capacity, maxExtract, maxExtract);
+	}
 
-    public MachineMatterStorage(T machine, int capacity, int maxExtract, int maxReceive)
-    {
+	public MachineMatterStorage(T machine, int capacity, int maxExtract, int maxReceive)
+	{
 		super(capacity, maxExtract, maxReceive);
 		this.machine = machine;
-    }
+	}
 
 	@Override
 	public int getCapacity()
@@ -55,15 +55,17 @@ public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends M
 	}
 
 	@Override
-	public int getMaxReceive() {
+	public int getMaxReceive()
+	{
 		return Math.max(0, (int)(super.getMaxReceive() * machine.getUpgradeMultiply(UpgradeTypes.MatterTransfer)));
 	}
 
 	@Override
-	public int extractMatter(int amount,boolean simulate)
+	public int extractMatter(int amount, boolean simulate)
 	{
 		int extracted = super.extractMatter(amount, simulate);
-		if (!simulate && extracted != 0) {
+		if (!simulate && extracted != 0)
+		{
 			machine.updateClientMatter();
 		}
 		return extracted;
@@ -85,7 +87,8 @@ public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends M
 	{
 		int lastMatter = super.getMatterStored();
 		super.setMatterStored(amount);
-		if (lastMatter != amount) {
+		if (lastMatter != amount)
+		{
 			machine.updateClientMatter();
 		}
 	}

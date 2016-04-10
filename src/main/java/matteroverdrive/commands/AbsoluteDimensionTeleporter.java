@@ -9,18 +9,18 @@ import net.minecraft.world.WorldServer;
  */
 public class AbsoluteDimensionTeleporter extends Teleporter
 {
-    WorldServer worldServer;
+	WorldServer worldServer;
 
-    public AbsoluteDimensionTeleporter(WorldServer worldIn)
-    {
-        super(worldIn);
-        this.worldServer = worldIn;
-    }
+	public AbsoluteDimensionTeleporter(WorldServer worldIn)
+	{
+		super(worldIn);
+		this.worldServer = worldIn;
+	}
 
-    @Override
-    public void placeInPortal(Entity entityIn, float rotationYaw)
-    {
-        entityIn.setLocationAndAngles(entityIn.posX,entityIn.posY,entityIn.posZ, entityIn.rotationYaw, 0.0F);
-        entityIn.motionX = entityIn.motionY = entityIn.motionZ = 0.0D;
-    }
+	@Override
+	public void placeInPortal(Entity entityIn, float rotationYaw)
+	{
+		entityIn.setLocationAndAngles(entityIn.posX, entityIn.posY, entityIn.posZ, entityIn.rotationYaw, 0.0F);
+		entityIn.motionX = entityIn.motionY = entityIn.motionZ = 0.0D;
+	}
 }

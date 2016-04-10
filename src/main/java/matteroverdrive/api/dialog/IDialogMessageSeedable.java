@@ -24,9 +24,9 @@ package matteroverdrive.api.dialog;
  */
 public interface IDialogMessageSeedable
 {
-    /**
-     * Sets the seed.
-     * @param seed The seed.
-     */
-    void setSeed(long seed);
+	/**
+	 * Sets the seed.
+	 * @param seed The seed.
+	 */
+	void setSeed(long seed);
 }

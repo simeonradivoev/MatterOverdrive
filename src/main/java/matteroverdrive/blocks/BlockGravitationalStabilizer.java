@@ -37,19 +37,19 @@ import net.minecraft.world.World;
  */
 public class BlockGravitationalStabilizer extends MOBlockMachine
 {
-    public BlockGravitationalStabilizer(Material material, String name)
-    {
-        super(material, name);
-        setHardness(20.0F);
-        this.setResistance(10.0f);
-        this.setHarvestLevel("pickaxe", 2);
-        lightValue = 10;
-        setRotationType(MOBlockHelper.RotationType.SIX_WAY);
-        setHasRotation();
-    }
+	public BlockGravitationalStabilizer(Material material, String name)
+	{
+		super(material, name);
+		setHardness(20.0F);
+		this.setResistance(10.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		lightValue = 10;
+		setRotationType(MOBlockHelper.RotationType.SIX_WAY);
+		setHasRotation();
+	}
 
     /*@SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
     {
         if (side == meta)
         {
@@ -67,27 +67,27 @@ public class BlockGravitationalStabilizer extends MOBlockMachine
         return MatterOverdriveIcons.Coil;
     }*/
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMachineGravitationalStabilizer();
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachineGravitationalStabilizer();
 
-    }
+	}
 
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
-        EnumFacing l = BlockPistonBase.getFacingFromEntity(pos, placer);
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+	{
+		EnumFacing l = BlockPistonBase.getFacingFromEntity(pos, placer);
 
 
-        if (placer.isSneaking())
-        {
-            worldIn.setBlockState(pos, state.withProperty(MOBlock.PROPERTY_DIRECTION,l.getOpposite()), 2);
-        }
-        else
-        {
-            worldIn.setBlockState(pos,state.withProperty(MOBlock.PROPERTY_DIRECTION,l),2);
-        }
+		if (placer.isSneaking())
+		{
+			worldIn.setBlockState(pos, state.withProperty(MOBlock.PROPERTY_DIRECTION, l.getOpposite()), 2);
+		}
+		else
+		{
+			worldIn.setBlockState(pos, state.withProperty(MOBlock.PROPERTY_DIRECTION, l), 2);
+		}
 
-    }
+	}
 }

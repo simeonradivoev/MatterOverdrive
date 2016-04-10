@@ -39,41 +39,48 @@ import java.util.UUID;
 /**
  * Created by Simeon on 5/10/2015.
  */
-public class SecurityProtocol extends MOBaseItem {
+public class SecurityProtocol extends MOBaseItem
+{
 
-    public static final String[] types = new String[]{"empty","claim","access","remove"};
+	public static final String[] types = new String[] {"empty", "claim", "access", "remove"};
 
-    public SecurityProtocol(String name)
-    {
-        super(name);
-        setMaxStackSize(16);
-    }
+	public SecurityProtocol(String name)
+	{
+		super(name);
+		setMaxStackSize(16);
+	}
 
-    @Override
-    public int getMetadata(int damage){return damage;}
+	@Override
+	public int getMetadata(int damage)
+	{
+		return damage;
+	}
 
-    @Override
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-    {
-        super.addDetails(itemstack, player, infos);
+	@Override
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		super.addDetails(itemstack, player, infos);
 
-        if (itemstack.hasTagCompound())
-        {
-            try {
-                EntityPlayer entityPlayer = player.worldObj.getPlayerEntityByUUID(UUID.fromString(itemstack.getTagCompound().getString("Owner")));
-                if (entityPlayer != null) {
-                    String owner = entityPlayer.getGameProfile().getName();
-                    infos.add(ChatFormatting.YELLOW + "Owner: " + owner);
-                }
-            }catch (Exception e)
-            {
-                infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(getUnlocalizedName() + ".invalid"));
-            }
-        }
-    }
+		if (itemstack.hasTagCompound())
+		{
+			try
+			{
+				EntityPlayer entityPlayer = player.worldObj.getPlayerEntityByUUID(UUID.fromString(itemstack.getTagCompound().getString("Owner")));
+				if (entityPlayer != null)
+				{
+					String owner = entityPlayer.getGameProfile().getName();
+					infos.add(ChatFormatting.YELLOW + "Owner: " + owner);
+				}
+			}
+			catch (Exception e)
+			{
+				infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(getUnlocalizedName() + ".invalid"));
+			}
+		}
+	}
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister p_94581_1_)
     {
         icons = new IIcon[types.length];
@@ -91,65 +98,75 @@ public class SecurityProtocol extends MOBaseItem {
         return icons[damage];
     }*/
 
-    @Override
-    public String getUnlocalizedName(ItemStack stack)
-    {
-        return super.getUnlocalizedName(stack) + "." + types[MathHelper.clamp_int(stack.getItemDamage(),0,types.length)];
-    }
+	@Override
+	public String getUnlocalizedName(ItemStack stack)
+	{
+		return super.getUnlocalizedName(stack) + "." + types[MathHelper.clamp_int(stack.getItemDamage(), 0, types.length)];
+	}
 
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
-    {
-        if (!itemStackIn.hasTagCompound())
-        {
-            if (playerIn.isSneaking()) {
-                TagCompountCheck(itemStackIn);
-                itemStackIn.getTagCompound().setString("Owner", playerIn.getGameProfile().getId().toString());
-                itemStackIn.setItemDamage(1);
-                return ActionResult.newResult(EnumActionResult.SUCCESS,itemStackIn);
-            }
-        }
-        else if (itemStackIn.getTagCompound().getString("Owner").equals(playerIn.getGameProfile().getId().toString()) || playerIn.capabilities.isCreativeMode)
-        {
-            if (playerIn.isSneaking())
-            {
-                int damage = itemStackIn.getItemDamage() + 1;
-                if (damage >= types.length)
-                    damage = 1;
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+	{
+		if (!itemStackIn.hasTagCompound())
+		{
+			if (playerIn.isSneaking())
+			{
+				TagCompountCheck(itemStackIn);
+				itemStackIn.getTagCompound().setString("Owner", playerIn.getGameProfile().getId().toString());
+				itemStackIn.setItemDamage(1);
+				return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+			}
+		}
+		else if (itemStackIn.getTagCompound().getString("Owner").equals(playerIn.getGameProfile().getId().toString()) || playerIn.capabilities.isCreativeMode)
+		{
+			if (playerIn.isSneaking())
+			{
+				int damage = itemStackIn.getItemDamage() + 1;
+				if (damage >= types.length)
+				{
+					damage = 1;
+				}
 
-                itemStackIn.setItemDamage(damage);
-                return ActionResult.newResult(EnumActionResult.SUCCESS,itemStackIn);
-            }
-        }
+				itemStackIn.setItemDamage(damage);
+				return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+			}
+		}
 
-        return ActionResult.newResult(EnumActionResult.PASS,itemStackIn);
-    }
+		return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
+	}
 
-    @Override
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
-    {
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof MOTileEntityMachine) {
-                if (stack.getItemDamage() == 1) {
-                    if (((MOTileEntityMachine) tileEntity).claim(stack)) {
-                        stack.stackSize--;
-                        return EnumActionResult.SUCCESS;
-                    }
-                } else if (stack.getItemDamage() == 3) {
-                    if (((MOTileEntityMachine) tileEntity).unclaim(stack)) {
-                        stack.stackSize--;
-                        return EnumActionResult.SUCCESS;
-                    }
-                }
-            }
-        }
-        return EnumActionResult.FAIL;
-    }
+	@Override
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
+	{
+		if (!world.isRemote)
+		{
+			TileEntity tileEntity = world.getTileEntity(pos);
+			if (tileEntity instanceof MOTileEntityMachine)
+			{
+				if (stack.getItemDamage() == 1)
+				{
+					if (((MOTileEntityMachine)tileEntity).claim(stack))
+					{
+						stack.stackSize--;
+						return EnumActionResult.SUCCESS;
+					}
+				}
+				else if (stack.getItemDamage() == 3)
+				{
+					if (((MOTileEntityMachine)tileEntity).unclaim(stack))
+					{
+						stack.stackSize--;
+						return EnumActionResult.SUCCESS;
+					}
+				}
+			}
+		}
+		return EnumActionResult.FAIL;
+	}
 
-    @Override
-    public boolean hasDetails(ItemStack stack)
-    {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey("Owner");
-    }
+	@Override
+	public boolean hasDetails(ItemStack stack)
+	{
+		return stack.hasTagCompound() && stack.getTagCompound().hasKey("Owner");
+	}
 }

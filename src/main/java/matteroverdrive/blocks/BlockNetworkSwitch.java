@@ -31,17 +31,17 @@ import static matteroverdrive.util.MOBlockHelper.RotationType;
  */
 public class BlockNetworkSwitch extends MOBlockMachine
 {
-    public BlockNetworkSwitch(Material material, String name)
-    {
-        super(material, name);
-        setHardness(20.0F);
-        this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe", 2);
-        setRotationType(RotationType.PREVENT);
-    }
+	public BlockNetworkSwitch(Material material, String name)
+	{
+		super(material, name);
+		setHardness(20.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		setRotationType(RotationType.PREVENT);
+	}
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister registrar)
     {
         activeIcon = registrar.registerIcon(this.getTextureName() + "_active");
@@ -63,9 +63,9 @@ public class BlockNetworkSwitch extends MOBlockMachine
         return blockIcon;
     }*/
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMachineNetworkSwitch();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachineNetworkSwitch();
+	}
 }

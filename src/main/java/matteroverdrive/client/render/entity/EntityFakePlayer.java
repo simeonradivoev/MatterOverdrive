@@ -28,30 +28,32 @@ import net.minecraft.world.World;
  */
 public class EntityFakePlayer extends EntityPlayer
 {
-    public EntityFakePlayer(World world, GameProfile gameProfile)
-    {
-        super(world, gameProfile);
-    }
+	public EntityFakePlayer(World world, GameProfile gameProfile)
+	{
+		super(world, gameProfile);
+	}
 
-    @Override
-    public boolean isSpectator()
-    {
-        return false;
-    }
+	@Override
+	public boolean isSpectator()
+	{
+		return false;
+	}
 
-    @Override
-    public boolean isCreative()
-    {
-        return false;
-    }
+	@Override
+	public boolean isCreative()
+	{
+		return false;
+	}
 
-    @Override
-    public void addChatMessage(ITextComponent chatComponent) {
+	@Override
+	public void addChatMessage(ITextComponent chatComponent)
+	{
 
-    }
+	}
 
-    @Override
-    public boolean canCommandSenderUseCommand(int permissionLevel, String command) {
-        return false;
-    }
+	@Override
+	public boolean canCommandSenderUseCommand(int permissionLevel, String command)
+	{
+		return false;
+	}
 }

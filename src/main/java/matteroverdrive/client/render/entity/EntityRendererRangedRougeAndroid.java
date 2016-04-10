@@ -33,20 +33,21 @@ import net.minecraft.util.ResourceLocation;
  */
 public class EntityRendererRangedRougeAndroid extends EntityRendererRougeAndroid<EntityRangedRogueAndroidMob>
 {
-    public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "android_ranged.png");
-    final MOModelRenderColored visorModel;
+	public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "android_ranged.png");
+	final MOModelRenderColored visorModel;
 
-    public EntityRendererRangedRougeAndroid(float f) {
-        super(new ModelBiped(0,0,96,64), f,false);
-        visorModel = new MOModelRenderColored(modelBipedMain,64,0);
-        visorModel.setDisableLighting(true);
-        visorModel.addBox(-4,-8,-4,8,8,8);
-        ((ModelBiped)mainModel).bipedHead.addChild(visorModel);
-        modelBipedMain.bipedHead.addChild(visorModel);
-    }
+	public EntityRendererRangedRougeAndroid(float f)
+	{
+		super(new ModelBiped(0, 0, 96, 64), f, false);
+		visorModel = new MOModelRenderColored(modelBipedMain, 64, 0);
+		visorModel.setDisableLighting(true);
+		visorModel.addBox(-4, -8, -4, 8, 8, 8);
+		((ModelBiped)mainModel).bipedHead.addChild(visorModel);
+		modelBipedMain.bipedHead.addChild(visorModel);
+	}
 
     /*@Override
-    protected void func_82422_c()
+	protected void func_82422_c()
     {
         GlStateManager.translate(0,0.2,-0.3);
         GL11.glRotatef(-97, 0, 0, 1.0F);
@@ -54,21 +55,21 @@ public class EntityRendererRangedRougeAndroid extends EntityRendererRougeAndroid
         GlStateManager.scale(0.6,0.6,0.6);
     }*/
 
-    @Override
-    protected ResourceLocation getEntityTexture(Entity entity)
-    {
-        return texture;
-    }
+	@Override
+	protected ResourceLocation getEntityTexture(Entity entity)
+	{
+		return texture;
+	}
 
-    @Override
-    public void doRender(EntityLiving entityLiving, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
-    {
-        if (entityLiving instanceof EntityRougeAndroidMob)
-        {
-            visorModel.setColor(new Color(((EntityRougeAndroidMob) entityLiving).getVisorColor()));
-        }
+	@Override
+	public void doRender(EntityLiving entityLiving, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
+	{
+		if (entityLiving instanceof EntityRougeAndroidMob)
+		{
+			visorModel.setColor(new Color(((EntityRougeAndroidMob)entityLiving).getVisorColor()));
+		}
 
-        this.modelBipedMain.rightArmPose = ModelBiped.ArmPose.BOW_AND_ARROW;
-        super.doRender(entityLiving,p_76986_2_,p_76986_4_,p_76986_6_,p_76986_8_,p_76986_9_);
-    }
+		this.modelBipedMain.rightArmPose = ModelBiped.ArmPose.BOW_AND_ARROW;
+		super.doRender(entityLiving, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+	}
 }

@@ -18,13 +18,16 @@
 
 package matteroverdrive.init;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import matteroverdrive.data.quest.*;
-import matteroverdrive.data.quest.logic.*;
+import matteroverdrive.data.quest.GenericQuest;
+import matteroverdrive.data.quest.QuestItem;
+import matteroverdrive.data.quest.logic.QuestLogicBecomeAndroid;
+import matteroverdrive.data.quest.logic.QuestLogicCocktailOfAscension;
+import matteroverdrive.data.quest.logic.QuestLogicCraft;
 import matteroverdrive.data.quest.rewards.ItemStackReward;
 import matteroverdrive.handler.quest.Quests;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,75 +37,75 @@ import java.util.List;
  */
 public class MatterOverdriveQuests
 {
-    public static final List<WeightedRandom.Item> contractGeneration = new ArrayList<>();
-    //public static RandomQuestText killAndroids;
-    public static GenericQuest cocktailOfAscension;
-    //public static GenericQuest sacrifice;
-    //public static GenericQuest departmentOfAgriculture;
-    //public static GenericQuest weaponsOfWar;
-    //public static GenericQuest oneTrueLove;
-    public static GenericQuest toThePowerOf;
-    public static GenericQuest punyHumans;
-    //public static GenericQuest is_it_really_me;
-    //public static GenericQuest beast_belly;
-    //public static GenericQuest crashLanding;
-    //public static GenericQuest weMustKnow;
-    //public static GenericMultiQuest gmo;
-    //public static GenericMultiQuest trade_route;
+	public static final List<WeightedRandom.Item> contractGeneration = new ArrayList<>();
+	//public static RandomQuestText killAndroids;
+	public static GenericQuest cocktailOfAscension;
+	//public static GenericQuest sacrifice;
+	//public static GenericQuest departmentOfAgriculture;
+	//public static GenericQuest weaponsOfWar;
+	//public static GenericQuest oneTrueLove;
+	public static GenericQuest toThePowerOf;
+	public static GenericQuest punyHumans;
+	//public static GenericQuest is_it_really_me;
+	//public static GenericQuest beast_belly;
+	//public static GenericQuest crashLanding;
+	//public static GenericQuest weMustKnow;
+	//public static GenericMultiQuest gmo;
+	//public static GenericMultiQuest trade_route;
 
-    public static void init(FMLInitializationEvent event)
-    {
-        initMatterOverdriveQuests();
-        initModdedQuests();
-    }
+	public static void init(FMLInitializationEvent event)
+	{
+		initMatterOverdriveQuests();
+		initModdedQuests();
+	}
 
-    private static void initMatterOverdriveQuests()
-    {
-        cocktailOfAscension = (GenericQuest)new GenericQuest(new QuestLogicCocktailOfAscension(),"cocktail_of_ascension",512).addQuestRewards(new ItemStackReward(MatterOverdriveItems.androidPill,1,0),new ItemStackReward(MatterOverdriveItems.androidPill,1,1),new ItemStackReward(MatterOverdriveItems.androidPill,1,2));
-        //oneTrueLove = (GenericQuest)new GenericQuest(new QuestLogicMine(Blocks.diamond_ore.getDefaultState(),1,1,180).setAutoComplete(true),"one_true_love",0).addQuestRewards(new ItemStackReward(Items.emerald,6));
-        punyHumans = (GenericQuest)new GenericQuest(new QuestLogicBecomeAndroid(),"puny_humans",256).addQuestRewards(new ItemStackReward(MatterOverdriveItems.battery),new ItemStackReward(MatterOverdriveItems.androidPill,1,1),new ItemStackReward(MatterOverdriveItems.androidPill,5,2));
-        //is_it_really_me = (GenericQuest)new GenericQuest(new QuestLogicSingleEvent(MOEventTransport.class).setAutoComplete(true),"is_it_really_me",120).addQuestRewards(new ItemStackReward(MatterOverdriveItems.item_upgrade,2,4));
-        //beast_belly = (GenericQuest)new GenericQuest(new QuestLogicSingleEvent(MOEventGravitationalAnomalyConsume.class),"beast_belly",210).addQuestRewards(new ItemStackReward(MatterOverdriveBlocks.gravitational_stabilizer,2));
-        //weMustKnow = (GenericQuest)new GenericQuest(new QuestLogicPlaceBlock(4,new QuestItem(new ItemStack(MatterOverdriveBlocks.decorative_coils).setStackDisplayName("Communication Relay")),1,1).setAutoComplete(true),"we_must_know",120).addQuestRewards(new ItemStackReward(Items.emerald,8));
-        //crashLanding = (GenericQuest)new GenericQuest(new QuestLogicCraft(new ItemStack(MatterOverdriveItems.security_protocol),0,0,0).setAutoComplete(true),"crash_landing",60).addQuestRewards(new ItemStackReward(new ItemStack(MatterOverdriveBlocks.decorative_coils).setStackDisplayName("Communication Relay")),new QuestStackReward(new QuestStack(weMustKnow)).setCopyNBT("Pos"));
-        //gmo = (GenericMultiQuest)new GenericMultiQuest(new IQuestLogic[]{new QuestLogicScanBlock(new QuestBlock(Blocks.carrots.getDefaultState()),12,24,10).setOnlyDestroyable(true),new QuestLogicScanBlock(new QuestBlock(Blocks.potatoes.getDefaultState()),12,24,10).setOnlyDestroyable(true)},"gmo",0).setAutoComplete(true).setSequential(true).addQuestRewards(new ItemStackReward(MatterOverdrive.androidPartsFactory.addAttributeToPart(MatterOverdrive.androidPartsFactory.addAttributeToPart(new ItemStack(MatterOverdriveItems.tritaniumSpine),new AttributeModifier(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), 5, 0)),new AttributeModifier(AndroidAttributes.attributeGlitchTime.getAttributeUnlocalizedName(), -1, 2)).setStackDisplayName("Hardened Tritanium Spine")));
-        //trade_route = new GenericMultiQuest(new IQuestLogic[]{new QuestLogicBlockInteract(null,true,false),new QuestLogicItemInteract(new QuestItem(new ItemStack(MatterOverdriveItems.isolinear_circuit).setStackDisplayName("Trade Route Agreement")),true),new QuestLogicConversation("mo.mad_scientist",MatterOverdriveDialogs.tradeRouteQuest,MatterOverdriveDialogs.tradeRouteQuest)},"trade_route",180).setAutoComplete(true).setSequential(true);
-    }
+	private static void initMatterOverdriveQuests()
+	{
+		cocktailOfAscension = (GenericQuest)new GenericQuest(new QuestLogicCocktailOfAscension(), "cocktail_of_ascension", 512).addQuestRewards(new ItemStackReward(MatterOverdriveItems.androidPill, 1, 0), new ItemStackReward(MatterOverdriveItems.androidPill, 1, 1), new ItemStackReward(MatterOverdriveItems.androidPill, 1, 2));
+		//oneTrueLove = (GenericQuest)new GenericQuest(new QuestLogicMine(Blocks.diamond_ore.getDefaultState(),1,1,180).setAutoComplete(true),"one_true_love",0).addQuestRewards(new ItemStackReward(Items.emerald,6));
+		punyHumans = (GenericQuest)new GenericQuest(new QuestLogicBecomeAndroid(), "puny_humans", 256).addQuestRewards(new ItemStackReward(MatterOverdriveItems.battery), new ItemStackReward(MatterOverdriveItems.androidPill, 1, 1), new ItemStackReward(MatterOverdriveItems.androidPill, 5, 2));
+		//is_it_really_me = (GenericQuest)new GenericQuest(new QuestLogicSingleEvent(MOEventTransport.class).setAutoComplete(true),"is_it_really_me",120).addQuestRewards(new ItemStackReward(MatterOverdriveItems.item_upgrade,2,4));
+		//beast_belly = (GenericQuest)new GenericQuest(new QuestLogicSingleEvent(MOEventGravitationalAnomalyConsume.class),"beast_belly",210).addQuestRewards(new ItemStackReward(MatterOverdriveBlocks.gravitational_stabilizer,2));
+		//weMustKnow = (GenericQuest)new GenericQuest(new QuestLogicPlaceBlock(4,new QuestItem(new ItemStack(MatterOverdriveBlocks.decorative_coils).setStackDisplayName("Communication Relay")),1,1).setAutoComplete(true),"we_must_know",120).addQuestRewards(new ItemStackReward(Items.emerald,8));
+		//crashLanding = (GenericQuest)new GenericQuest(new QuestLogicCraft(new ItemStack(MatterOverdriveItems.security_protocol),0,0,0).setAutoComplete(true),"crash_landing",60).addQuestRewards(new ItemStackReward(new ItemStack(MatterOverdriveBlocks.decorative_coils).setStackDisplayName("Communication Relay")),new QuestStackReward(new QuestStack(weMustKnow)).setCopyNBT("Pos"));
+		//gmo = (GenericMultiQuest)new GenericMultiQuest(new IQuestLogic[]{new QuestLogicScanBlock(new QuestBlock(Blocks.carrots.getDefaultState()),12,24,10).setOnlyDestroyable(true),new QuestLogicScanBlock(new QuestBlock(Blocks.potatoes.getDefaultState()),12,24,10).setOnlyDestroyable(true)},"gmo",0).setAutoComplete(true).setSequential(true).addQuestRewards(new ItemStackReward(MatterOverdrive.androidPartsFactory.addAttributeToPart(MatterOverdrive.androidPartsFactory.addAttributeToPart(new ItemStack(MatterOverdriveItems.tritaniumSpine),new AttributeModifier(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), 5, 0)),new AttributeModifier(AndroidAttributes.attributeGlitchTime.getAttributeUnlocalizedName(), -1, 2)).setStackDisplayName("Hardened Tritanium Spine")));
+		//trade_route = new GenericMultiQuest(new IQuestLogic[]{new QuestLogicBlockInteract(null,true,false),new QuestLogicItemInteract(new QuestItem(new ItemStack(MatterOverdriveItems.isolinear_circuit).setStackDisplayName("Trade Route Agreement")),true),new QuestLogicConversation("mo.mad_scientist",MatterOverdriveDialogs.tradeRouteQuest,MatterOverdriveDialogs.tradeRouteQuest)},"trade_route",180).setAutoComplete(true).setSequential(true);
+	}
 
-    private static void initModdedQuests()
-    {
-        toThePowerOf = (GenericQuest)new GenericQuest(new QuestLogicCraft(new QuestItem[]{
-                new QuestItem("BigReactors:BRReactorPart","BigReactors"),
-                new QuestItem("ExtraUtilities:generator","ExtraUtilities",1,1),
-                new QuestItem(new ItemStack(MatterOverdriveItems.battery))
-        },1,1,120).setRandomItem(false).setAutoComplete(true),"to_the_power_of",0).addQuestRewards(new ItemStackReward(MatterOverdriveItems.tritanium_ingot,10),new ItemStackReward(MatterOverdriveItems.tritanium_plate,4));
-    }
+	private static void initModdedQuests()
+	{
+		toThePowerOf = (GenericQuest)new GenericQuest(new QuestLogicCraft(new QuestItem[] {
+				new QuestItem("BigReactors:BRReactorPart", "BigReactors"),
+				new QuestItem("ExtraUtilities:generator", "ExtraUtilities", 1, 1),
+				new QuestItem(new ItemStack(MatterOverdriveItems.battery))
+		}, 1, 1, 120).setRandomItem(false).setAutoComplete(true), "to_the_power_of", 0).addQuestRewards(new ItemStackReward(MatterOverdriveItems.tritanium_ingot, 10), new ItemStackReward(MatterOverdriveItems.tritanium_plate, 4));
+	}
 
-    public static void register(FMLInitializationEvent event, Quests quests)
-    {
-        registerMatterOverdriveQuests(quests);
-        registerModdedQuests(quests);
-    }
+	public static void register(FMLInitializationEvent event, Quests quests)
+	{
+		registerMatterOverdriveQuests(quests);
+		registerModdedQuests(quests);
+	}
 
-    private static void registerMatterOverdriveQuests(Quests quests)
-    {
-        quests.registerQuest("cocktail_of_ascension",cocktailOfAscension);
-        //quests.registerQuest("one_true_love",oneTrueLove);
-        quests.registerQuest("puny_humans",punyHumans);
-        //quests.registerQuest("is_it_really_me",is_it_really_me);
-        //quests.registerQuest("beast_belly",beast_belly);
-        //quests.registerQuest("crash_landing",crashLanding);
-        //quests.registerQuest("weMustKnow",weMustKnow);
-        //quests.registerQuest("gmo",gmo);
-        //quests.registerQuest("trade_route",trade_route);
+	private static void registerMatterOverdriveQuests(Quests quests)
+	{
+		quests.registerQuest("cocktail_of_ascension", cocktailOfAscension);
+		//quests.registerQuest("one_true_love",oneTrueLove);
+		quests.registerQuest("puny_humans", punyHumans);
+		//quests.registerQuest("is_it_really_me",is_it_really_me);
+		//quests.registerQuest("beast_belly",beast_belly);
+		//quests.registerQuest("crash_landing",crashLanding);
+		//quests.registerQuest("weMustKnow",weMustKnow);
+		//quests.registerQuest("gmo",gmo);
+		//quests.registerQuest("trade_route",trade_route);
 
-        //contractGeneration.add(new WeightedRandomQuest(oneTrueLove,100));
-        //contractGeneration.add(new WeightedRandomQuest(is_it_really_me,80));
-        //contractGeneration.add(new WeightedRandomQuest(beast_belly,60));
-    }
+		//contractGeneration.add(new WeightedRandomQuest(oneTrueLove,100));
+		//contractGeneration.add(new WeightedRandomQuest(is_it_really_me,80));
+		//contractGeneration.add(new WeightedRandomQuest(beast_belly,60));
+	}
 
-    private static void registerModdedQuests(Quests quests)
-    {
-        quests.registerQuest("to_the_power_of",toThePowerOf);
-    }
+	private static void registerModdedQuests(Quests quests)
+	{
+		quests.registerQuest("to_the_power_of", toThePowerOf);
+	}
 }

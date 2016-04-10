@@ -32,18 +32,18 @@ import static matteroverdrive.util.MOBlockHelper.RotationType;
 public class BlockNetworkRouter extends MOBlockMachine
 {
 
-    public BlockNetworkRouter(Material material, String name)
-    {
-        super(material, name);
-        setHardness(20.0F);
-        this.setResistance(9.0f);
-        this.setHarvestLevel("pickaxe", 2);
-        setHasGui(true);
-        setRotationType(RotationType.PREVENT);
-    }
+	public BlockNetworkRouter(Material material, String name)
+	{
+		super(material, name);
+		setHardness(20.0F);
+		this.setResistance(9.0f);
+		this.setHarvestLevel("pickaxe", 2);
+		setHasGui(true);
+		setRotationType(RotationType.PREVENT);
+	}
 
   /*  @Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int meta)
     {
         TileEntity entity = world.getTileEntity(x,y,z);
@@ -57,9 +57,9 @@ public class BlockNetworkRouter extends MOBlockMachine
         return blockIcon;
     }*/
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new TileEntityMachineNetworkRouter();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		return new TileEntityMachineNetworkRouter();
+	}
 }

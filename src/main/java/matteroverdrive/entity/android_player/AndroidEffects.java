@@ -29,468 +29,496 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class AndroidEffects
 {
-    private final AndroidPlayer androidPlayer;
-    private static final Map<Class<?>,Integer> typeMap = Maps.newHashMap();
-    private Map<Integer,Effect> effectMap = Maps.newHashMap();
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private boolean effectsChanged;
+	private static final Map<Class<?>, Integer> typeMap = Maps.newHashMap();
 
-    public AndroidEffects(AndroidPlayer androidPlayer)
-    {
-        this.androidPlayer = androidPlayer;
-    }
+	static
+	{
+		typeMap.put(Byte.class, Integer.valueOf(0));
+		typeMap.put(Short.class, Integer.valueOf(1));
+		typeMap.put(Integer.class, Integer.valueOf(2));
+		typeMap.put(Long.class, Integer.valueOf(3));
+		typeMap.put(Float.class, Integer.valueOf(4));
+		typeMap.put(Boolean.class, Integer.valueOf(5));
+		typeMap.put(String.class, Integer.valueOf(6));
+		typeMap.put(ItemStack.class, Integer.valueOf(7));
+		typeMap.put(BlockPos.class, Integer.valueOf(8));
+		typeMap.put(Rotations.class, Integer.valueOf(9));
+	}
 
-    public Effect registerEffect(int id,Object value)
-    {
-        return registerEffect(id,value,false,false);
-    }
+	private final AndroidPlayer androidPlayer;
+	private Map<Integer, Effect> effectMap = Maps.newHashMap();
+	private ReadWriteLock lock = new ReentrantReadWriteLock();
+	private boolean effectsChanged;
 
-    public Effect registerEffect(int id,Object value,boolean sendToOwner,boolean sendToOthers)
-    {
-        Integer dataType = typeMap.get(value.getClass());
-        if (dataType == null)
-        {
-            throw new IllegalArgumentException("Unknown data type: " + value.getClass());
-        }else if (id > 31)
-        {
-            throw new IllegalArgumentException("Data value id is too big with " + id + "! (Max is " + 31 + ")");
-        }
-        else if (this.effectMap.containsKey(Integer.valueOf(id)))
-        {
-            throw new IllegalArgumentException("Duplicate id value for " + id + "!");
-        }
-        return effectMap.put(id,new Effect(id,value,dataType,sendToOwner,sendToOthers));
-    }
+	public AndroidEffects(AndroidPlayer androidPlayer)
+	{
+		this.androidPlayer = androidPlayer;
+	}
 
-    public byte getEffectByte(int id)
-    {
-        return ((Byte)this.getEffect(id).value).byteValue();
-    }
-    public short getEffectShort(int id)
-    {
-        return ((Short)this.getEffect(id).value).shortValue();
-    }
-    public int getEffectInt(int id)
-    {
-        return ((Integer)this.getEffect(id).value).intValue();
-    }
-    public boolean getEffectBool(int id){return ((Boolean)this.getEffect(id).value).booleanValue();}
-    public float getEffectFloat(int id) {return ((Float)this.getEffect(id).value).floatValue();}
-    public long getEffectLong(int id){return ((Long)this.getEffect(id).value).longValue();}
-    public String getEffectString(int id)
-    {
-        return (String)this.getEffect(id).value;
-    }
-    public ItemStack getEffectItemStack(int id)
-    {
-        return (ItemStack)this.getEffect(id).value;
-    }
-    public Rotations getWatchableObjectRotations(int id)
-    {
-        return (Rotations)this.getEffect(id).value;
-    }
+	public static void writeEffectsListToPacketBuffer(List<Effect> objectsList, ByteBuf buf) throws IOException
+	{
+		if (objectsList != null)
+		{
+			for (Effect effect : objectsList)
+			{
+				writeEffectToBuffer(buf, effect);
+			}
+		}
 
-    /**
-     * is threadsafe, unless it throws an exception, then
-     */
-    private Effect getEffect(int id)
-    {
-        this.lock.readLock().lock();
-        Effect effect;
+		buf.writeByte(127);
+	}
 
-        try
-        {
-            effect = this.effectMap.get(Integer.valueOf(id));
-        }
-        catch (Throwable throwable)
-        {
-            CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Getting synched android effects data");
-            CrashReportCategory crashreportcategory = crashreport.makeCategory("Synched android effects data");
-            crashreportcategory.addCrashSection("Data ID", Integer.valueOf(id));
-            throw new ReportedException(crashreport);
-        }
+	private static void writeEffectToBuffer(ByteBuf buf, Effect effect) throws IOException
+	{
+		int i = (effect.typeId << 5 | effect.id & 31) & 255;
+		buf.writeByte(i);
 
-        this.lock.readLock().unlock();
-        return effect;
-    }
+		switch (effect.typeId)
+		{
+			case 0:
+				buf.writeByte(((Byte)effect.value).byteValue());
+				break;
+			case 1:
+				buf.writeShort(((Short)effect.value).shortValue());
+				break;
+			case 2:
+				buf.writeInt(((Integer)effect.value).intValue());
+				break;
+			case 3:
+				buf.writeLong(((Long)effect.value).longValue());
+				break;
+			case 4:
+				buf.writeFloat(((Float)effect.value).floatValue());
+				break;
+			case 5:
+				buf.writeBoolean(((Boolean)effect.value).booleanValue());
+				break;
+			case 6:
+				ByteBufUtils.writeUTF8String(buf, (String)effect.value);
+				break;
+			case 7:
+				ItemStack itemstack = (ItemStack)effect.value;
+				ByteBufUtils.writeItemStack(buf, itemstack);
+				break;
+			case 8:
+				BlockPos blockpos = (BlockPos)effect.value;
+				buf.writeInt(blockpos.getX());
+				buf.writeInt(blockpos.getY());
+				buf.writeInt(blockpos.getZ());
+				break;
+			case 9:
+				Rotations rotations = (Rotations)effect.value;
+				buf.writeFloat(rotations.getX());
+				buf.writeFloat(rotations.getY());
+				buf.writeFloat(rotations.getZ());
+		}
+	}
 
-    public <T> void updateEffect(int id, T newData)
-    {
-        Effect effect = this.getEffect(id);
+	private static void writeEffectToNBT(NBTTagCompound tagCompound, Effect effect)
+	{
+		switch (effect.typeId)
+		{
+			case 0:
+				tagCompound.setByte("value", ((Byte)effect.value).byteValue());
+				break;
+			case 1:
+				tagCompound.setShort("value", ((Short)effect.value).shortValue());
+				break;
+			case 2:
+				tagCompound.setInteger("value", ((Integer)effect.value).intValue());
+				break;
+			case 3:
+				tagCompound.setLong("value", ((Long)effect.value).longValue());
+				break;
+			case 4:
+				tagCompound.setFloat("value", ((Float)effect.value).floatValue());
+				break;
+			case 5:
+				tagCompound.setBoolean("value", ((Boolean)effect.value).booleanValue());
+				break;
+			case 6:
+				tagCompound.setString("value", (String)effect.value);
+				break;
+			case 7:
+				NBTTagCompound itemTag = new NBTTagCompound();
+				ItemStack itemstack = (ItemStack)effect.value;
+				itemstack.writeToNBT(itemTag);
+				tagCompound.setTag("value", itemTag);
+				break;
+			case 8:
+				NBTTagList blockTag = new NBTTagList();
+				BlockPos blockpos = (BlockPos)effect.value;
+				blockTag.appendTag(new NBTTagInt(blockpos.getX()));
+				blockTag.appendTag(new NBTTagInt(blockpos.getY()));
+				blockTag.appendTag(new NBTTagInt(blockpos.getZ()));
+				tagCompound.setTag("value", blockTag);
+				break;
+			case 9:
+				Rotations rotations = (Rotations)effect.value;
+				tagCompound.setTag("value", rotations.writeToNBT());
+		}
+	}
 
-        if(!typeMap.get(newData.getClass()).equals(effect.typeId))
-        {
-            throw new ClassCastException(String.format("Class: %s of value not the same as in stored effect",newData.getClass().getName()));
-        }
+	public static List<Effect> readEffectsListFromBuffer(ByteBuf buf) throws IOException
+	{
+		List<Effect> list = null;
 
-        if (ObjectUtils.notEqual(newData, effect.value))
-        {
-            effect.value = newData;
-            this.androidPlayer.onEffectsUpdate(id);
-            effect.setWatched(true);
-            this.effectsChanged = true;
-        }
-    }
+		for (int i = buf.readByte(); i != 127; i = buf.readByte())
+		{
+			if (list == null)
+			{
+				list = Lists.<Effect>newArrayList();
+			}
 
-    public void setEffectWatched(int id)
-    {
-        this.getEffect(id).setWatched(true);
-        this.effectsChanged = true;
-    }
+			int typeId = (i & 224) >> 5;
+			int id = i & 31;
+			Effect effect = null;
 
-    public boolean haveEffectsChanged()
-    {
-        return this.effectsChanged;
-    }
+			switch (typeId)
+			{
+				case 0:
+					effect = new Effect(id, Byte.valueOf(buf.readByte()), typeId);
+					break;
+				case 1:
+					effect = new Effect(id, Short.valueOf(buf.readShort()), typeId);
+					break;
+				case 2:
+					effect = new Effect(id, Integer.valueOf(buf.readInt()), typeId);
+					break;
+				case 3:
+					effect = new Effect(id, Long.valueOf(buf.readLong()), typeId);
+					break;
+				case 4:
+					effect = new Effect(id, Float.valueOf(buf.readFloat()), typeId);
+					break;
+				case 5:
+					effect = new Effect(id, Boolean.valueOf(buf.readBoolean()), typeId);
+					break;
+				case 6:
+					effect = new Effect(id, ByteBufUtils.readUTF8String(buf), typeId);
+					break;
+				case 7:
+					effect = new Effect(id, ByteBufUtils.readItemStack(buf), typeId);
+					break;
+				case 8:
+					int l = buf.readInt();
+					int i1 = buf.readInt();
+					int j1 = buf.readInt();
+					effect = new Effect(id, new BlockPos(l, i1, j1), typeId);
+					break;
+				case 9:
+					float f = buf.readFloat();
+					float f1 = buf.readFloat();
+					float f2 = buf.readFloat();
+					effect = new Effect(id, new Rotations(f, f1, f2), typeId);
+			}
 
-    public static void writeEffectsListToPacketBuffer(List<Effect> objectsList, ByteBuf buf) throws IOException
-    {
-        if (objectsList != null)
-        {
-            for (Effect effect : objectsList)
-            {
-                writeEffectToBuffer(buf, effect);
-            }
-        }
+			list.add(effect);
+		}
 
-        buf.writeByte(127);
-    }
+		return list;
+	}
 
-    public List<Effect> getChanged()
-    {
-        List<Effect> list = null;
+	public static void readEffectFromNBT(NBTTagCompound tagCompound, Effect effect)
+	{
+		switch (effect.typeId)
+		{
+			case 0:
+				effect.value = Byte.valueOf(tagCompound.getByte("value"));
+				break;
+			case 1:
+				effect.value = Short.valueOf(tagCompound.getShort("value"));
+				break;
+			case 2:
+				effect.value = Integer.valueOf(tagCompound.getInteger("value"));
+				break;
+			case 3:
+				effect.value = Long.valueOf(tagCompound.getLong("value"));
+				break;
+			case 4:
+				effect.value = Float.valueOf(tagCompound.getFloat("value"));
+				break;
+			case 5:
+				effect.value = Boolean.valueOf(tagCompound.getBoolean("value"));
+				break;
+			case 6:
+				effect.value = tagCompound.getString("value");
+				break;
+			case 7:
+				NBTTagCompound itemTag = tagCompound.getCompoundTag("value");
+				effect.value = ItemStack.loadItemStackFromNBT(itemTag);
+				break;
+			case 8:
+				NBTTagList blockTag = tagCompound.getTagList("value", Constants.NBT.TAG_INT);
+				effect.value = new BlockPos(((NBTTagInt)blockTag.get(0)).getInt(), ((NBTTagInt)blockTag.get(1)).getInt(), ((NBTTagInt)blockTag.get(2)).getInt());
+				break;
+			case 9:
+				effect.value = new Rotations(tagCompound.getTagList("value", Constants.NBT.TAG_FLOAT));
+		}
+	}
 
-        if (this.effectsChanged)
-        {
-            this.lock.readLock().lock();
+	public Effect registerEffect(int id, Object value)
+	{
+		return registerEffect(id, value, false, false);
+	}
 
-            for (Effect effect : this.effectMap.values())
-            {
-                if (effect.isWatched())
-                {
-                    effect.setWatched(false);
+	public Effect registerEffect(int id, Object value, boolean sendToOwner, boolean sendToOthers)
+	{
+		Integer dataType = typeMap.get(value.getClass());
+		if (dataType == null)
+		{
+			throw new IllegalArgumentException("Unknown data type: " + value.getClass());
+		}
+		else if (id > 31)
+		{
+			throw new IllegalArgumentException("Data value id is too big with " + id + "! (Max is " + 31 + ")");
+		}
+		else if (this.effectMap.containsKey(Integer.valueOf(id)))
+		{
+			throw new IllegalArgumentException("Duplicate id value for " + id + "!");
+		}
+		return effectMap.put(id, new Effect(id, value, dataType, sendToOwner, sendToOthers));
+	}
 
-                    if (list == null)
-                    {
-                        list = Lists.<Effect>newArrayList();
-                    }
+	public byte getEffectByte(int id)
+	{
+		return ((Byte)this.getEffect(id).value).byteValue();
+	}
 
-                    list.add(effect);
-                }
-            }
+	public short getEffectShort(int id)
+	{
+		return ((Short)this.getEffect(id).value).shortValue();
+	}
 
-            this.lock.readLock().unlock();
-        }
+	public int getEffectInt(int id)
+	{
+		return ((Integer)this.getEffect(id).value).intValue();
+	}
 
-        this.effectsChanged = false;
-        return list;
-    }
+	public boolean getEffectBool(int id)
+	{
+		return ((Boolean)this.getEffect(id).value).booleanValue();
+	}
 
-    public void writeTo(ByteBuf buffer) throws IOException
-    {
-        this.lock.readLock().lock();
+	public float getEffectFloat(int id)
+	{
+		return ((Float)this.getEffect(id).value).floatValue();
+	}
 
-        for (Effect effect : this.effectMap.values())
-        {
-            writeEffectToBuffer(buffer, effect);
-        }
+	public long getEffectLong(int id)
+	{
+		return ((Long)this.getEffect(id).value).longValue();
+	}
 
-        this.lock.readLock().unlock();
-        buffer.writeByte(127);
-    }
+	public String getEffectString(int id)
+	{
+		return (String)this.getEffect(id).value;
+	}
 
-    public void writeToNBT(NBTTagCompound nbtTagCompound)
-    {
-        for (Map.Entry<Integer,Effect> effectEntry : effectMap.entrySet())
-        {
-            NBTTagCompound tagCompound = new NBTTagCompound();
-            writeEffectToNBT(tagCompound,effectEntry.getValue());
-            nbtTagCompound.setTag(String.valueOf(effectEntry.getKey()),tagCompound);
-        }
-    }
+	public ItemStack getEffectItemStack(int id)
+	{
+		return (ItemStack)this.getEffect(id).value;
+	}
 
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        for (Map.Entry<Integer,Effect> effectEntry : effectMap.entrySet())
-        {
-            if (tagCompound.hasKey(String.valueOf(effectEntry.getKey())))
-            {
-                NBTTagCompound tag = tagCompound.getCompoundTag(String.valueOf(effectEntry.getKey()));
-                readEffectFromNBT(tag,effectEntry.getValue());
-            }
-        }
-    }
+	public Rotations getWatchableObjectRotations(int id)
+	{
+		return (Rotations)this.getEffect(id).value;
+	}
 
-    public List<Effect> getAllWatched()
-    {
-        List<Effect> list = null;
-        this.lock.readLock().lock();
+	/**
+	 * is threadsafe, unless it throws an exception, then
+	 */
+	private Effect getEffect(int id)
+	{
+		this.lock.readLock().lock();
+		Effect effect;
 
-        for (Effect datawatcher$watchableobject : this.effectMap.values())
-        {
-            if (list == null)
-            {
-                list = Lists.<Effect>newArrayList();
-            }
+		try
+		{
+			effect = this.effectMap.get(Integer.valueOf(id));
+		}
+		catch (Throwable throwable)
+		{
+			CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Getting synched android effects data");
+			CrashReportCategory crashreportcategory = crashreport.makeCategory("Synched android effects data");
+			crashreportcategory.addCrashSection("Data ID", Integer.valueOf(id));
+			throw new ReportedException(crashreport);
+		}
 
-            list.add(datawatcher$watchableobject);
-        }
+		this.lock.readLock().unlock();
+		return effect;
+	}
 
-        this.lock.readLock().unlock();
-        return list;
-    }
+	public <T> void updateEffect(int id, T newData)
+	{
+		Effect effect = this.getEffect(id);
 
-    private static void writeEffectToBuffer(ByteBuf buf, Effect effect) throws IOException
-    {
-        int i = (effect.typeId << 5 | effect.id & 31) & 255;
-        buf.writeByte(i);
+		if (!typeMap.get(newData.getClass()).equals(effect.typeId))
+		{
+			throw new ClassCastException(String.format("Class: %s of value not the same as in stored effect", newData.getClass().getName()));
+		}
 
-        switch (effect.typeId)
-        {
-            case 0:
-                buf.writeByte(((Byte)effect.value).byteValue());
-                break;
-            case 1:
-                buf.writeShort(((Short)effect.value).shortValue());
-                break;
-            case 2:
-                buf.writeInt(((Integer)effect.value).intValue());
-                break;
-            case 3:
-                buf.writeLong(((Long)effect.value).longValue());
-                break;
-            case 4:
-                buf.writeFloat(((Float)effect.value).floatValue());
-                break;
-            case 5:
-                buf.writeBoolean(((Boolean)effect.value).booleanValue());
-                break;
-            case 6:
-                ByteBufUtils.writeUTF8String(buf,(String)effect.value);
-                break;
-            case 7:
-                ItemStack itemstack = (ItemStack)effect.value;
-                ByteBufUtils.writeItemStack(buf,itemstack);
-                break;
-            case 8:
-                BlockPos blockpos = (BlockPos)effect.value;
-                buf.writeInt(blockpos.getX());
-                buf.writeInt(blockpos.getY());
-                buf.writeInt(blockpos.getZ());
-                break;
-            case 9:
-                Rotations rotations = (Rotations)effect.value;
-                buf.writeFloat(rotations.getX());
-                buf.writeFloat(rotations.getY());
-                buf.writeFloat(rotations.getZ());
-        }
-    }
+		if (ObjectUtils.notEqual(newData, effect.value))
+		{
+			effect.value = newData;
+			this.androidPlayer.onEffectsUpdate(id);
+			effect.setWatched(true);
+			this.effectsChanged = true;
+		}
+	}
 
-    private static void writeEffectToNBT(NBTTagCompound tagCompound,Effect effect)
-    {
-        switch (effect.typeId)
-        {
-            case 0:
-                tagCompound.setByte("value",((Byte)effect.value).byteValue());
-                break;
-            case 1:
-                tagCompound.setShort("value",((Short)effect.value).shortValue());
-                break;
-            case 2:
-                tagCompound.setInteger("value",((Integer)effect.value).intValue());
-                break;
-            case 3:
-                tagCompound.setLong("value",((Long)effect.value).longValue());
-                break;
-            case 4:
-                tagCompound.setFloat("value",((Float)effect.value).floatValue());
-                break;
-            case 5:
-                tagCompound.setBoolean("value",((Boolean)effect.value).booleanValue());
-                break;
-            case 6:
-                tagCompound.setString("value",(String)effect.value);
-                break;
-            case 7:
-                NBTTagCompound itemTag = new NBTTagCompound();
-                ItemStack itemstack = (ItemStack)effect.value;
-                itemstack.writeToNBT(itemTag);
-                tagCompound.setTag("value",itemTag);
-                break;
-            case 8:
-                NBTTagList blockTag = new NBTTagList();
-                BlockPos blockpos = (BlockPos)effect.value;
-                blockTag.appendTag(new NBTTagInt(blockpos.getX()));
-                blockTag.appendTag(new NBTTagInt(blockpos.getY()));
-                blockTag.appendTag(new NBTTagInt(blockpos.getZ()));
-                tagCompound.setTag("value",blockTag);
-                break;
-            case 9:
-                Rotations rotations = (Rotations)effect.value;
-                tagCompound.setTag("value",rotations.writeToNBT());
-        }
-    }
+	public void setEffectWatched(int id)
+	{
+		this.getEffect(id).setWatched(true);
+		this.effectsChanged = true;
+	}
 
-    public static List<Effect> readEffectsListFromBuffer(ByteBuf buf) throws IOException
-    {
-        List<Effect> list = null;
+	public boolean haveEffectsChanged()
+	{
+		return this.effectsChanged;
+	}
 
-        for (int i = buf.readByte(); i != 127; i = buf.readByte())
-        {
-            if (list == null)
-            {
-                list = Lists.<Effect>newArrayList();
-            }
+	public List<Effect> getChanged()
+	{
+		List<Effect> list = null;
 
-            int typeId = (i & 224) >> 5;
-            int id = i & 31;
-            Effect effect = null;
+		if (this.effectsChanged)
+		{
+			this.lock.readLock().lock();
 
-            switch (typeId)
-            {
-                case 0:
-                    effect = new Effect(id, Byte.valueOf(buf.readByte()),typeId);
-                    break;
-                case 1:
-                    effect = new Effect(id, Short.valueOf(buf.readShort()),typeId);
-                    break;
-                case 2:
-                    effect = new Effect(id, Integer.valueOf(buf.readInt()),typeId);
-                    break;
-                case 3:
-                    effect = new Effect(id,Long.valueOf(buf.readLong()),typeId);
-                    break;
-                case 4:
-                    effect = new Effect(id, Float.valueOf(buf.readFloat()),typeId);
-                    break;
-                case 5:
-                    effect = new Effect(id,Boolean.valueOf(buf.readBoolean()),typeId);
-                    break;
-                case 6:
-                    effect = new Effect(id, ByteBufUtils.readUTF8String(buf),typeId);
-                    break;
-                case 7:
-                    effect = new Effect(id, ByteBufUtils.readItemStack(buf),typeId);
-                    break;
-                case 8:
-                    int l = buf.readInt();
-                    int i1 = buf.readInt();
-                    int j1 = buf.readInt();
-                    effect = new Effect(id, new BlockPos(l, i1, j1),typeId);
-                    break;
-                case 9:
-                    float f = buf.readFloat();
-                    float f1 = buf.readFloat();
-                    float f2 = buf.readFloat();
-                    effect = new Effect(id, new Rotations(f, f1, f2),typeId);
-            }
+			for (Effect effect : this.effectMap.values())
+			{
+				if (effect.isWatched())
+				{
+					effect.setWatched(false);
 
-            list.add(effect);
-        }
+					if (list == null)
+					{
+						list = Lists.<Effect>newArrayList();
+					}
 
-        return list;
-    }
+					list.add(effect);
+				}
+			}
 
-    public static void readEffectFromNBT(NBTTagCompound tagCompound,Effect effect)
-    {
-        switch (effect.typeId)
-        {
-            case 0:
-                effect.value = Byte.valueOf(tagCompound.getByte("value"));
-                break;
-            case 1:
-                effect.value = Short.valueOf(tagCompound.getShort("value"));
-                break;
-            case 2:
-                effect.value = Integer.valueOf(tagCompound.getInteger("value"));
-                break;
-            case 3:
-                effect.value = Long.valueOf(tagCompound.getLong("value"));
-                break;
-            case 4:
-                effect.value = Float.valueOf(tagCompound.getFloat("value"));
-                break;
-            case 5:
-                effect.value = Boolean.valueOf(tagCompound.getBoolean("value"));
-                break;
-            case 6:
-                effect.value = tagCompound.getString("value");
-                break;
-            case 7:
-                NBTTagCompound itemTag = tagCompound.getCompoundTag("value");
-                effect.value = ItemStack.loadItemStackFromNBT(itemTag);
-                break;
-            case 8:
-                NBTTagList blockTag = tagCompound.getTagList("value", Constants.NBT.TAG_INT);
-                effect.value = new BlockPos(((NBTTagInt)blockTag.get(0)).getInt(),((NBTTagInt)blockTag.get(1)).getInt(),((NBTTagInt)blockTag.get(2)).getInt());
-                break;
-            case 9:
-                effect.value = new Rotations(tagCompound.getTagList("value", Constants.NBT.TAG_FLOAT));
-        }
-    }
+			this.lock.readLock().unlock();
+		}
 
-    @SideOnly(Side.CLIENT)
-    public void updateEffectsFromList(List<Effect> effects)
-    {
-        this.lock.writeLock().lock();
+		this.effectsChanged = false;
+		return list;
+	}
 
-        for (Effect effect : effects)
-        {
-            Effect existingEffect = this.effectMap.get(Integer.valueOf(effect.id));
+	public void writeTo(ByteBuf buffer) throws IOException
+	{
+		this.lock.readLock().lock();
 
-            if (existingEffect != null)
-            {
-                existingEffect.value = effect.value;
-                this.androidPlayer.onEffectsUpdate(effect.id);
-            }
-        }
+		for (Effect effect : this.effectMap.values())
+		{
+			writeEffectToBuffer(buffer, effect);
+		}
 
-        this.lock.writeLock().unlock();
-        this.effectsChanged = true;
-    }
+		this.lock.readLock().unlock();
+		buffer.writeByte(127);
+	}
 
-    static
-    {
-        typeMap.put(Byte.class, Integer.valueOf(0));
-        typeMap.put(Short.class, Integer.valueOf(1));
-        typeMap.put(Integer.class, Integer.valueOf(2));
-        typeMap.put(Long.class,Integer.valueOf(3));
-        typeMap.put(Float.class, Integer.valueOf(4));
-        typeMap.put(Boolean.class,Integer.valueOf(5));
-        typeMap.put(String.class, Integer.valueOf(6));
-        typeMap.put(ItemStack.class, Integer.valueOf(7));
-        typeMap.put(BlockPos.class, Integer.valueOf(8));
-        typeMap.put(Rotations.class, Integer.valueOf(9));
-    }
+	public void writeToNBT(NBTTagCompound nbtTagCompound)
+	{
+		for (Map.Entry<Integer, Effect> effectEntry : effectMap.entrySet())
+		{
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			writeEffectToNBT(tagCompound, effectEntry.getValue());
+			nbtTagCompound.setTag(String.valueOf(effectEntry.getKey()), tagCompound);
+		}
+	}
 
-    public static class Effect
-    {
-        private final int id;
-        private final boolean sendToOwner;
-        private final boolean sendToOthers;
-        private final int typeId;
-        private Object value;
-        private boolean watched;
+	public void readFromNBT(NBTTagCompound tagCompound)
+	{
+		for (Map.Entry<Integer, Effect> effectEntry : effectMap.entrySet())
+		{
+			if (tagCompound.hasKey(String.valueOf(effectEntry.getKey())))
+			{
+				NBTTagCompound tag = tagCompound.getCompoundTag(String.valueOf(effectEntry.getKey()));
+				readEffectFromNBT(tag, effectEntry.getValue());
+			}
+		}
+	}
 
-        public Effect(int id, Object value, int typeId)
-        {
-            this(id,value,typeId,false,false);
-        }
-        public Effect(int id, Object value, int typeId, boolean sendToOwner,boolean sendToOthers)
-        {
-            this.id = id;
-            this.value = value;
-            this.typeId = typeId;
-            this.sendToOwner = sendToOwner;
-            this.sendToOthers = sendToOthers;
-            this.watched = true;
-        }
+	public List<Effect> getAllWatched()
+	{
+		List<Effect> list = null;
+		this.lock.readLock().lock();
 
-        public void setWatched(boolean watched){this.watched = watched;}
-        public boolean isWatched(){return watched;}
-        public boolean isSendToOthers()
-        {
-            return sendToOthers;
-        }
-    }
+		for (Effect datawatcher$watchableobject : this.effectMap.values())
+		{
+			if (list == null)
+			{
+				list = Lists.<Effect>newArrayList();
+			}
+
+			list.add(datawatcher$watchableobject);
+		}
+
+		this.lock.readLock().unlock();
+		return list;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void updateEffectsFromList(List<Effect> effects)
+	{
+		this.lock.writeLock().lock();
+
+		for (Effect effect : effects)
+		{
+			Effect existingEffect = this.effectMap.get(Integer.valueOf(effect.id));
+
+			if (existingEffect != null)
+			{
+				existingEffect.value = effect.value;
+				this.androidPlayer.onEffectsUpdate(effect.id);
+			}
+		}
+
+		this.lock.writeLock().unlock();
+		this.effectsChanged = true;
+	}
+
+	public static class Effect
+	{
+		private final int id;
+		private final boolean sendToOwner;
+		private final boolean sendToOthers;
+		private final int typeId;
+		private Object value;
+		private boolean watched;
+
+		public Effect(int id, Object value, int typeId)
+		{
+			this(id, value, typeId, false, false);
+		}
+
+		public Effect(int id, Object value, int typeId, boolean sendToOwner, boolean sendToOthers)
+		{
+			this.id = id;
+			this.value = value;
+			this.typeId = typeId;
+			this.sendToOwner = sendToOwner;
+			this.sendToOthers = sendToOthers;
+			this.watched = true;
+		}
+
+		public boolean isWatched()
+		{
+			return watched;
+		}
+
+		public void setWatched(boolean watched)
+		{
+			this.watched = watched;
+		}
+
+		public boolean isSendToOthers()
+		{
+			return sendToOthers;
+		}
+	}
 }

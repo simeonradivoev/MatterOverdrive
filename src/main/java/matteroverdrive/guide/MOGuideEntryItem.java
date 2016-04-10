@@ -26,19 +26,20 @@ import net.minecraft.item.ItemStack;
  */
 public class MOGuideEntryItem extends MOGuideEntry
 {
-    public MOGuideEntryItem(Item item)
-    {
-        super(item.getUnlocalizedName());
-        setStackIcons(item);
-    }
-    public MOGuideEntryItem(Item itemIcon,String name)
-    {
-        super(name,new ItemStack(itemIcon));
-    }
+	public MOGuideEntryItem(Item item)
+	{
+		super(item.getUnlocalizedName());
+		setStackIcons(item);
+	}
 
-    @Override
-    public String getDisplayName()
-    {
-        return getStackIcons()[0].getDisplayName();
-    }
+	public MOGuideEntryItem(Item itemIcon, String name)
+	{
+		super(name, new ItemStack(itemIcon));
+	}
+
+	@Override
+	public String getDisplayName()
+	{
+		return getStackIcons()[0].getDisplayName();
+	}
 }

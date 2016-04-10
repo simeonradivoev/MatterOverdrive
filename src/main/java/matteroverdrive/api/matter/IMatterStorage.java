@@ -30,6 +30,8 @@ public interface IMatterStorage
 	 */
 	int getMatterStored();
 
+	void setMatterStored(int amount);
+
 	/**
 	 * @return the maximum capacity.
 	 */
@@ -57,6 +59,4 @@ public interface IMatterStorage
 	 * This is the same, no matter if the call is a simulation.
 	 */
 	int extractMatter(EnumFacing direction, int amount, boolean simulate);
-
-	void setMatterStored(int amount);
 }

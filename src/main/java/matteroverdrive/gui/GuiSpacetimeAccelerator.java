@@ -11,35 +11,35 @@ import net.minecraft.entity.player.InventoryPlayer;
  */
 public class GuiSpacetimeAccelerator extends MOGuiMachine<TileEntityMachineSpacetimeAccelerator>
 {
-    private final ElementMatterStored matterStored;
-    private final MOElementEnergy energy;
+	private final ElementMatterStored matterStored;
+	private final MOElementEnergy energy;
 
-    public GuiSpacetimeAccelerator(InventoryPlayer inventoryPlayer, TileEntityMachineSpacetimeAccelerator machine)
-    {
-        super(ContainerFactory.createMachineContainer(machine,inventoryPlayer), machine);
+	public GuiSpacetimeAccelerator(InventoryPlayer inventoryPlayer, TileEntityMachineSpacetimeAccelerator machine)
+	{
+		super(ContainerFactory.createMachineContainer(machine, inventoryPlayer), machine);
 
-        matterStored = new ElementMatterStored(this,74,39,machine.getMatterStorage());
-        energy = new MOElementEnergy(this,100,39,machine.getEnergyStorage());
-    }
+		matterStored = new ElementMatterStored(this, 74, 39, machine.getMatterStorage());
+		energy = new MOElementEnergy(this, 100, 39, machine.getEnergyStorage());
+	}
 
-    @Override
-    public void initGui()
-    {
-        super.initGui();
-        pages.get(0).addElement(matterStored);
-        pages.get(0).addElement(energy);
+	@Override
+	public void initGui()
+	{
+		super.initGui();
+		pages.get(0).addElement(matterStored);
+		pages.get(0).addElement(energy);
 
-        AddMainPlayerSlots(this.inventorySlots, pages.get(0));
-        AddHotbarPlayerSlots(this.inventorySlots,this);
-    }
+		AddMainPlayerSlots(this.inventorySlots, pages.get(0));
+		AddHotbarPlayerSlots(this.inventorySlots, this);
+	}
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTick, int x, int y)
-    {
-        super.drawGuiContainerBackgroundLayer(partialTick,x,y);
-        int energyDrain = machine.getEnergyUsage();
-        energy.setEnergyRequiredPerTick(-energyDrain);
-        double matterDrain = machine.getMatterUsage();
-        matterStored.setDrainPerTick(-matterDrain);
-    }
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float partialTick, int x, int y)
+	{
+		super.drawGuiContainerBackgroundLayer(partialTick, x, y);
+		int energyDrain = machine.getEnergyUsage();
+		energy.setEnergyRequiredPerTick(-energyDrain);
+		double matterDrain = machine.getMatterUsage();
+		matterStored.setDrainPerTick(-matterDrain);
+	}
 }

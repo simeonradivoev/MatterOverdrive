@@ -41,81 +41,86 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class PacketFirePlasmaShot extends PacketAbstract
 {
-    WeaponShot shot;
-    private int sender;
-    private Vec3d position;
-    private Vec3d direction;
+	WeaponShot shot;
+	private int sender;
+	private Vec3d position;
+	private Vec3d direction;
 
-    public PacketFirePlasmaShot(){}
-    public PacketFirePlasmaShot(int sender, Vec3d pos, Vec3d dir, WeaponShot shot)
-    {
-        this.shot = shot;
-        this.sender = sender;
-        this.position = pos;
-        this.direction = dir;
-    }
+	public PacketFirePlasmaShot()
+	{
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        this.shot = new WeaponShot(buf);
-        this.sender = buf.readInt();
-        this.position = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-        this.direction = new Vec3d(buf.readFloat(),buf.readFloat(),buf.readFloat());
-    }
+	public PacketFirePlasmaShot(int sender, Vec3d pos, Vec3d dir, WeaponShot shot)
+	{
+		this.shot = shot;
+		this.sender = sender;
+		this.position = pos;
+		this.direction = dir;
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        shot.writeTo(buf);
-        buf.writeInt(sender);
-        buf.writeDouble(position.xCoord);
-        buf.writeDouble(position.yCoord);
-        buf.writeDouble(position.zCoord);
-        buf.writeFloat((float) direction.xCoord);
-        buf.writeFloat((float)direction.yCoord);
-        buf.writeFloat((float)direction.zCoord);
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		this.shot = new WeaponShot(buf);
+		this.sender = buf.readInt();
+		this.position = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+		this.direction = new Vec3d(buf.readFloat(), buf.readFloat(), buf.readFloat());
+	}
 
-    public WeaponShot getShot()
-    {
-        return shot;
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		shot.writeTo(buf);
+		buf.writeInt(sender);
+		buf.writeDouble(position.xCoord);
+		buf.writeDouble(position.yCoord);
+		buf.writeDouble(position.zCoord);
+		buf.writeFloat((float)direction.xCoord);
+		buf.writeFloat((float)direction.yCoord);
+		buf.writeFloat((float)direction.zCoord);
+	}
 
-    public static class BiHandler extends AbstractBiPacketHandler<PacketFirePlasmaShot>
-    {
-        @SideOnly(Side.CLIENT)
-        @Override
-        public void handleClientMessage(EntityPlayerSP player, PacketFirePlasmaShot message, MessageContext ctx)
-        {
-            // TODO: 3/26/2016 Add support of Off hand
-            if (player.getEntityId() != message.sender)
-            {
-                Entity entity = player.worldObj.getEntityByID(message.sender);
-                if (entity != null && entity instanceof EntityLivingBase)
-                {
-                    EntityLivingBase livingBase = (EntityLivingBase)entity;
-                    if (livingBase.getHeldItem(EnumHand.MAIN_HAND) != null && livingBase.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof EnergyWeapon) {
-                        ((EnergyWeapon)livingBase.getHeldItem(EnumHand.MAIN_HAND).getItem()).onClientShot(livingBase.getHeldItem(EnumHand.MAIN_HAND), livingBase, message.position, message.direction,message.shot);
-                    }
-                }
+	public WeaponShot getShot()
+	{
+		return shot;
+	}
 
-            }
-        }
+	public static class BiHandler extends AbstractBiPacketHandler<PacketFirePlasmaShot>
+	{
+		@SideOnly(Side.CLIENT)
+		@Override
+		public void handleClientMessage(EntityPlayerSP player, PacketFirePlasmaShot message, MessageContext ctx)
+		{
+			// TODO: 3/26/2016 Add support of Off hand
+			if (player.getEntityId() != message.sender)
+			{
+				Entity entity = player.worldObj.getEntityByID(message.sender);
+				if (entity != null && entity instanceof EntityLivingBase)
+				{
+					EntityLivingBase livingBase = (EntityLivingBase)entity;
+					if (livingBase.getHeldItem(EnumHand.MAIN_HAND) != null && livingBase.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof EnergyWeapon)
+					{
+						((EnergyWeapon)livingBase.getHeldItem(EnumHand.MAIN_HAND).getItem()).onClientShot(livingBase.getHeldItem(EnumHand.MAIN_HAND), livingBase, message.position, message.direction, message.shot);
+					}
+				}
 
-        @Override
-        public void handleServerMessage(EntityPlayerMP player, PacketFirePlasmaShot message, MessageContext ctx)
-        {
-            handleServerShot(player,message,0);
-            MatterOverdrive.packetPipeline.sendToAllAround(message,player,message.shot.getRange()+64);
-        }
+			}
+		}
 
-        public void handleServerShot(EntityPlayer player,PacketFirePlasmaShot shot,int delay)
-        {
-            ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
-            if (heldItem != null && heldItem.getItem() instanceof EnergyWeapon && ((EnergyWeapon)heldItem.getItem()).canFire(player.getHeldItem(EnumHand.MAIN_HAND),player.worldObj,player))
-            {
-                ((EnergyWeapon)heldItem.getItem()).onServerFire(heldItem, player,shot.shot, shot.position, shot.direction,delay);
-            }
-        }
-    }
+		@Override
+		public void handleServerMessage(EntityPlayerMP player, PacketFirePlasmaShot message, MessageContext ctx)
+		{
+			handleServerShot(player, message, 0);
+			MatterOverdrive.packetPipeline.sendToAllAround(message, player, message.shot.getRange() + 64);
+		}
+
+		public void handleServerShot(EntityPlayer player, PacketFirePlasmaShot shot, int delay)
+		{
+			ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
+			if (heldItem != null && heldItem.getItem() instanceof EnergyWeapon && ((EnergyWeapon)heldItem.getItem()).canFire(player.getHeldItem(EnumHand.MAIN_HAND), player.worldObj, player))
+			{
+				((EnergyWeapon)heldItem.getItem()).onServerFire(heldItem, player, shot.shot, shot.position, shot.direction, delay);
+			}
+		}
+	}
 }

@@ -16,42 +16,45 @@ import net.minecraft.world.World;
  */
 public class EarlGrayTea extends ItemFood
 {
-    public EarlGrayTea(String name)
-    {
-        super(4, 0.8F, false);
-        setUnlocalizedName(name);
-        setRegistryName(new ResourceLocation(Reference.MOD_ID,name));
-        setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
-        setAlwaysEdible();
-    }
+	public EarlGrayTea(String name)
+	{
+		super(4, 0.8F, false);
+		setUnlocalizedName(name);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
+		setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
+		setAlwaysEdible();
+	}
 
-    @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
-    {
-        super.onItemUseFinish(stack,worldIn,entityLiving);
+	@Override
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
+	{
+		super.onItemUseFinish(stack, worldIn, entityLiving);
 
-        if (!(entityLiving instanceof EntityPlayer)) return stack;
-        if (!((EntityPlayer)entityLiving).capabilities.isCreativeMode)
-        {
-            --stack.stackSize;
-        }
+		if (!(entityLiving instanceof EntityPlayer))
+		{
+			return stack;
+		}
+		if (!((EntityPlayer)entityLiving).capabilities.isCreativeMode)
+		{
+			--stack.stackSize;
+		}
 
-        if (!worldIn.isRemote)
-        {
-            entityLiving.curePotionEffects(stack);
-        }
+		if (!worldIn.isRemote)
+		{
+			entityLiving.curePotionEffects(stack);
+		}
 
-        if (stack.stackSize > 0)
-        {
-            ((EntityPlayer)entityLiving).inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
-        }
+		if (stack.stackSize > 0)
+		{
+			((EntityPlayer)entityLiving).inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
+		}
 
-        return stack.stackSize <= 0 ? new ItemStack(Items.glass_bottle) : stack;
-    }
+		return stack.stackSize <= 0 ? new ItemStack(Items.glass_bottle) : stack;
+	}
 
-    @Override
-    public EnumAction getItemUseAction(ItemStack itemStack)
-    {
-        return EnumAction.DRINK;
-    }
+	@Override
+	public EnumAction getItemUseAction(ItemStack itemStack)
+	{
+		return EnumAction.DRINK;
+	}
 }

@@ -41,142 +41,156 @@ import java.util.Random;
 public abstract class MOWorldGenBuilding<T extends MOWorldGenBuilding.WorldGenBuildingWorker> extends MOImageGen<T> implements IMOWorldGenBuilding<T>
 {
 
-    int yOffset = -1;
-    int maxDistanceToAir = 2;
-    String name;
-    protected Block[] validSpawnBlocks;
+	protected Block[] validSpawnBlocks;
+	int yOffset = -1;
+	int maxDistanceToAir = 2;
+	String name;
 
-    public MOWorldGenBuilding(String name,ResourceLocation texture, int layerWidth,int layerHeight)
-    {
-        super(texture,layerWidth,layerHeight);
-        this.name = name;
-        validSpawnBlocks = new Block[] {Blocks.stone,Blocks.grass,Blocks.dirt};
-    }
+	public MOWorldGenBuilding(String name, ResourceLocation texture, int layerWidth, int layerHeight)
+	{
+		super(texture, layerWidth, layerHeight);
+		this.name = name;
+		validSpawnBlocks = new Block[] {Blocks.stone, Blocks.grass, Blocks.dirt};
+	}
 
-    @Override
-    public void generate(Random random, BlockPos pos, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider, int layer, int placeNotify, T worker)
-    {
-        generateFromImage(world, random, pos.add(0,getYOffset(),0),layer,placeNotify,worker);
-    }
+	@Override
+	public void generate(Random random, BlockPos pos, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider, int layer, int placeNotify, T worker)
+	{
+		generateFromImage(world, random, pos.add(0, getYOffset(), 0), layer, placeNotify, worker);
+	}
 
-    public boolean locationIsValidSpawn(World world, BlockPos pos){
-        int distanceToAir = 0;
-        IBlockState blockState = world.getBlockState(pos);
+	public boolean locationIsValidSpawn(World world, BlockPos pos)
+	{
+		int distanceToAir = 0;
+		IBlockState blockState = world.getBlockState(pos);
 
-        while (blockState.getBlock() != Blocks.air){
-            if (distanceToAir > getMaxDistanceToAir()){
-                return false;
-            }
+		while (blockState.getBlock() != Blocks.air)
+		{
+			if (distanceToAir > getMaxDistanceToAir())
+			{
+				return false;
+			}
 
-            distanceToAir++;
-            blockState = world.getBlockState(pos.add(0,distanceToAir,0));
-        }
+			distanceToAir++;
+			blockState = world.getBlockState(pos.add(0, distanceToAir, 0));
+		}
 
-        pos = pos.add(0,distanceToAir - 1,0);
+		pos = pos.add(0, distanceToAir - 1, 0);
 
-        IBlockState block = world.getBlockState(pos);
-        IBlockState blockAbove = world.getBlockState(pos.add(0,1,0));
-        IBlockState blockBelow = world.getBlockState(pos.add(0,-1,0));
+		IBlockState block = world.getBlockState(pos);
+		IBlockState blockAbove = world.getBlockState(pos.add(0, 1, 0));
+		IBlockState blockBelow = world.getBlockState(pos.add(0, -1, 0));
 
-        for (Block x : getValidSpawnBlocks()){
-            if (blockAbove != Blocks.air){
-                return false;
-            }
-            if (block == x){
-                return true;
-            }else if (block == Blocks.snow && blockBelow == x){
-                return true;
-            }
-        }
+		for (Block x : getValidSpawnBlocks())
+		{
+			if (blockAbove != Blocks.air)
+			{
+				return false;
+			}
+			if (block == x)
+			{
+				return true;
+			}
+			else if (block == Blocks.snow && blockBelow == x)
+			{
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    @Override
-    public String getName() {
-        return name;
-    }
-    
-    public void setMaxDistanceToAir(int maxDistanceToAir)
-    {
-        this.maxDistanceToAir = maxDistanceToAir;
-    }
-    
-    protected int getMaxDistanceToAir()
-    {
-        return maxDistanceToAir;
-    }
+	@Override
+	public String getName()
+	{
+		return name;
+	}
 
-    protected Block[] getValidSpawnBlocks() {
-        return validSpawnBlocks;
-    }
+	protected int getMaxDistanceToAir()
+	{
+		return maxDistanceToAir;
+	}
 
-    public int getYOffset()
-    {
-        return yOffset;
-    }
+	public void setMaxDistanceToAir(int maxDistanceToAir)
+	{
+		this.maxDistanceToAir = maxDistanceToAir;
+	}
 
-    public void setyOffset(int yOffset)
-    {
-        this.yOffset = yOffset;
-    }
+	protected Block[] getValidSpawnBlocks()
+	{
+		return validSpawnBlocks;
+	}
 
-    protected abstract void onGeneration(Random random,World world,BlockPos pos,T worker);
-    public abstract boolean shouldGenerate(Random random,World world, BlockPos pos);
-    public boolean isLocationValid(World world,BlockPos pos)
-    {
-        return locationIsValidSpawn(world, pos) && locationIsValidSpawn(world, pos.add(layerWidth,0,0)) && locationIsValidSpawn(world, pos.add(layerWidth,0,layerHeight)) && locationIsValidSpawn(world, pos.add(0,0,layerHeight));
-    }
+	public int getYOffset()
+	{
+		return yOffset;
+	}
 
-    @Override
-    public void onGenerationWorkerCreated(T worker)
-    {
-        worker.setWorldGenBuilding(this);
-        GenPositionWorldData data = MOWorldGen.getWorldPositionData(worker.getWorld());
-        data.addPosition(getName(),new WorldPosition2D(worker.getPos().getX()+layerWidth/2,worker.getPos().getZ()+layerHeight/2));
-    }
+	public void setyOffset(int yOffset)
+	{
+		this.yOffset = yOffset;
+	}
 
-    public boolean isFarEnoughFromOthers(World world,int x,int z,int minDistance)
-    {
-        GenPositionWorldData worldData = MOWorldGen.getWorldPositionData(world);
-        if (worldData != null)
-        {
-            return worldData.isFarEnough(getName(),x,z,minDistance);
-        }
-        return true;
-    }
+	protected abstract void onGeneration(Random random, World world, BlockPos pos, T worker);
+
+	public abstract boolean shouldGenerate(Random random, World world, BlockPos pos);
+
+	public boolean isLocationValid(World world, BlockPos pos)
+	{
+		return locationIsValidSpawn(world, pos) && locationIsValidSpawn(world, pos.add(layerWidth, 0, 0)) && locationIsValidSpawn(world, pos.add(layerWidth, 0, layerHeight)) && locationIsValidSpawn(world, pos.add(0, 0, layerHeight));
+	}
+
+	@Override
+	public void onGenerationWorkerCreated(T worker)
+	{
+		worker.setWorldGenBuilding(this);
+		GenPositionWorldData data = MOWorldGen.getWorldPositionData(worker.getWorld());
+		data.addPosition(getName(), new WorldPosition2D(worker.getPos().getX() + layerWidth / 2, worker.getPos().getZ() + layerHeight / 2));
+	}
+
+	public boolean isFarEnoughFromOthers(World world, int x, int z, int minDistance)
+	{
+		GenPositionWorldData worldData = MOWorldGen.getWorldPositionData(world);
+		if (worldData != null)
+		{
+			return worldData.isFarEnough(getName(), x, z, minDistance);
+		}
+		return true;
+	}
 
 
-    public static class WorldGenBuildingWorker extends ImageGenWorker
-    {
-        MOWorldGenBuilding worldGenBuilding;
+	public static class WorldGenBuildingWorker extends ImageGenWorker
+	{
+		MOWorldGenBuilding worldGenBuilding;
 
-        public void setWorldGenBuilding(MOWorldGenBuilding worldGenBuilding)
-        {
-            this.worldGenBuilding = worldGenBuilding;
-            this.worldGenBuilding.manageTextureLoading();
-        }
+		public void setWorldGenBuilding(MOWorldGenBuilding worldGenBuilding)
+		{
+			this.worldGenBuilding = worldGenBuilding;
+			this.worldGenBuilding.manageTextureLoading();
+		}
 
-        public boolean generate()
-        {
-            try
-            {
-                if (currentLayer >= worldGenBuilding.getLayerCount())
-                {
-                    worldGenBuilding.onGeneration(random,getWorld(),getPos(),this);
-                    return true;
-                }else
-                {
-                    worldGenBuilding.generate(random,getPos(),getWorld(),getChunkGenerator(),getChunkProvider(),currentLayer,getPlaceNotify(), this);
-                    currentLayer++;
-                    return false;
-                }
+		public boolean generate()
+		{
+			try
+			{
+				if (currentLayer >= worldGenBuilding.getLayerCount())
+				{
+					worldGenBuilding.onGeneration(random, getWorld(), getPos(), this);
+					return true;
+				}
+				else
+				{
+					worldGenBuilding.generate(random, getPos(), getWorld(), getChunkGenerator(), getChunkProvider(), currentLayer, getPlaceNotify(), this);
+					currentLayer++;
+					return false;
+				}
 
-            }catch (Exception e)
-            {
-                MOLog.log(Level.ERROR,e,"There was a problem while generating layer %s of %s",currentLayer,worldGenBuilding.getName());
-            }
-            return false;
-        }
-    }
+			}
+			catch (Exception e)
+			{
+				MOLog.log(Level.ERROR, e, "There was a problem while generating layer %s of %s", currentLayer, worldGenBuilding.getName());
+			}
+			return false;
+		}
+	}
 }

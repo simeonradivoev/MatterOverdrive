@@ -32,7 +32,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LINE_STRIP;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLineWidth;
+import static org.lwjgl.opengl.GL11.glVertex3d;
 
 /**
  * Created by Simeon on 6/17/2015.
@@ -40,72 +44,74 @@ import static org.lwjgl.opengl.GL11.*;
 @SideOnly(Side.CLIENT)
 public abstract class StarMapRendererStars extends StarMapRendererAbstract
 {
-    protected void renderStars(Quadrant quadrant, TileEntityMachineStarMap starMap, double distanceMultiply, double starSizeMultiply)
-    {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        GlStateManager.color(1, 1, 1, 1);
-        Vec3d pos;
+	public static Color getStarColor(Star star, EntityPlayer player)
+	{
+		return new Color(star.getColor());
+	}
 
-        if (quadrant != null)
-        {
-            glLineWidth(1);
+	protected void renderStars(Quadrant quadrant, TileEntityMachineStarMap starMap, double distanceMultiply, double starSizeMultiply)
+	{
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		GlStateManager.color(1, 1, 1, 1);
+		Vec3d pos;
 
-            Star from = null, to = null;
-            ClientProxy.renderHandler.getRenderParticlesHandler().bindSheet();
-            for (Star star : quadrant.getStars())
-            {
-                pos = new Vec3d(star.getPosition().xCoord * distanceMultiply,star.getPosition().yCoord * distanceMultiply,star.getPosition().zCoord * distanceMultiply);
-                drawStarParticle(quadrant, star, pos, player, starMap, starSizeMultiply);
-                if (starMap.getGalaxyPosition().equals(star))
-                {
-                    from = star;
-                }
-                if (starMap.getDestination().equals(star))
-                {
-                    to = star;
-                }
-            }
+		if (quadrant != null)
+		{
+			glLineWidth(1);
 
-            if (from != null && to != null && from != to)
-                drawConnection(from, to, distanceMultiply);
-            //Tessellator.getInstance().draw();
-        }
-    }
+			Star from = null, to = null;
+			ClientProxy.renderHandler.getRenderParticlesHandler().bindSheet();
+			for (Star star : quadrant.getStars())
+			{
+				pos = new Vec3d(star.getPosition().xCoord * distanceMultiply, star.getPosition().yCoord * distanceMultiply, star.getPosition().zCoord * distanceMultiply);
+				drawStarParticle(quadrant, star, pos, player, starMap, starSizeMultiply);
+				if (starMap.getGalaxyPosition().equals(star))
+				{
+					from = star;
+				}
+				if (starMap.getDestination().equals(star))
+				{
+					to = star;
+				}
+			}
 
-    protected void drawConnection(Star from,Star to,double distanceMultiply)
-    {
-        GlStateManager.disableTexture2D();
-        RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.3f);
-        glBegin(GL_LINE_STRIP);
-        glVertex3d(from.getX() * distanceMultiply, from.getY() * distanceMultiply,from.getZ() * distanceMultiply);
-        glVertex3d(to.getX() * distanceMultiply, to.getY() * distanceMultiply, to.getZ() * distanceMultiply);
-        glEnd();
-        GlStateManager.enableTexture2D();
-    }
+			if (from != null && to != null && from != to)
+			{
+				drawConnection(from, to, distanceMultiply);
+			}
+			//Tessellator.getInstance().draw();
+		}
+	}
 
-    protected void drawStarParticle(Quadrant quadrant, Star star, Vec3d pos, EntityPlayer player, TileEntityMachineStarMap starMap, double starSizeMultiply)
-    {
-        Color color = getStarColor(star, player);
-        double size = 0.01;
-        if (starMap.getDestination().equals(star))
-        {
-            size = 0.035;
-            RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), selectedIcon, star.getSize() * 0.05 * starSizeMultiply, pos, color);
-        }
-        if (starMap.getGalaxyPosition().equals(star))
-        {
-            size = 0.035;
-            RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), currentIcon, star.getSize() * 0.05 * starSizeMultiply, pos, color);
-        }
-        if (star.isClaimed(player) == 3)
-        {
-            size = 0.025;
-        }
-        RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), star_icon, star.getSize() * size * starSizeMultiply, pos, color);
-    }
+	protected void drawConnection(Star from, Star to, double distanceMultiply)
+	{
+		GlStateManager.disableTexture2D();
+		RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, 0.3f);
+		glBegin(GL_LINE_STRIP);
+		glVertex3d(from.getX() * distanceMultiply, from.getY() * distanceMultiply, from.getZ() * distanceMultiply);
+		glVertex3d(to.getX() * distanceMultiply, to.getY() * distanceMultiply, to.getZ() * distanceMultiply);
+		glEnd();
+		GlStateManager.enableTexture2D();
+	}
 
-    public static Color getStarColor(Star star, EntityPlayer player)
-    {
-        return new Color(star.getColor());
-    }
+	protected void drawStarParticle(Quadrant quadrant, Star star, Vec3d pos, EntityPlayer player, TileEntityMachineStarMap starMap, double starSizeMultiply)
+	{
+		Color color = getStarColor(star, player);
+		double size = 0.01;
+		if (starMap.getDestination().equals(star))
+		{
+			size = 0.035;
+			RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), selectedIcon, star.getSize() * 0.05 * starSizeMultiply, pos, color);
+		}
+		if (starMap.getGalaxyPosition().equals(star))
+		{
+			size = 0.035;
+			RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), currentIcon, star.getSize() * 0.05 * starSizeMultiply, pos, color);
+		}
+		if (star.isClaimed(player) == 3)
+		{
+			size = 0.025;
+		}
+		RenderUtils.tessalateParticle(Minecraft.getMinecraft().getRenderViewEntity(), star_icon, star.getSize() * size * starSizeMultiply, pos, color);
+	}
 }

@@ -36,48 +36,48 @@ import java.util.List;
  */
 public class ItemBuildingShipHangar extends ItemBuildingAbstract implements IPlanetStatChange
 {
-    private static final int SHIP_SPACES = 2;
+	private static final int SHIP_SPACES = 2;
 
-    public ItemBuildingShipHangar(String name)
-    {
-        super(name);
-    }
+	public ItemBuildingShipHangar(String name)
+	{
+		super(name);
+	}
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
-    {
-        super.addDetails(itemstack,player,infos);
-        infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.FLEET_SIZE) + ": +" + SHIP_SPACES);
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	{
+		super.addDetails(itemstack, player, infos);
+		infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.FLEET_SIZE) + ": +" + SHIP_SPACES);
+	}
 
-    @Override
-    public BuildingType getType(ItemStack building)
-    {
-        return BuildingType.OTHER;
-    }
+	@Override
+	public BuildingType getType(ItemStack building)
+	{
+		return BuildingType.OTHER;
+	}
 
-    @Override
-    protected int getBuildLengthUnscaled(ItemStack buildableStack, Planet planet)
-    {
-        return 20*60*4;
-    }
+	@Override
+	protected int getBuildLengthUnscaled(ItemStack buildableStack, Planet planet)
+	{
+		return 20 * 60 * 4;
+	}
 
-    @Override
-    public boolean canBuild(ItemStack building, Planet planet, List<String> info)
-    {
-        return true;
-    }
+	@Override
+	public boolean canBuild(ItemStack building, Planet planet, List<String> info)
+	{
+		return true;
+	}
 
-    @Override
-    public float changeStat(ItemStack stack, Planet planet, PlanetStatType statType, float original)
-    {
-        switch (statType)
-        {
-            case FLEET_SIZE:
-                return original + SHIP_SPACES;
-            default:
-                return original;
-        }
-    }
+	@Override
+	public float changeStat(ItemStack stack, Planet planet, PlanetStatType statType, float original)
+	{
+		switch (statType)
+		{
+			case FLEET_SIZE:
+				return original + SHIP_SPACES;
+			default:
+				return original;
+		}
+	}
 }

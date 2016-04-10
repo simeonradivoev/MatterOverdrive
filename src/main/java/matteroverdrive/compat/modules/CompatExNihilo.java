@@ -1,11 +1,11 @@
 package matteroverdrive.compat.modules;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import matteroverdrive.compat.Compat;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

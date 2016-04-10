@@ -39,28 +39,28 @@ import java.util.ArrayList;
  */
 public class ForceGlass extends BlockCT implements IDismantleable
 {
-    public ForceGlass(Material material, String name)
-    {
-        super(material, name);
-        setHardness(40);
-        setRotationType(-1);
-    }
+	public ForceGlass(Material material, String name)
+	{
+		super(material, name);
+		setHardness(40);
+		setRotationType(-1);
+	}
 
-    @Override
-    public boolean canConnect(IBlockState state,IBlockAccess world, BlockPos blockPos, IBlockState blockState)
-    {
+	@Override
+	public boolean canConnect(IBlockState state, IBlockAccess world, BlockPos blockPos, IBlockState blockState)
+	{
 		/*boolean eio = false;
 		eio = checkEIO(world, block, x, y, z);
         return block instanceof ForceGlass || eio;*/
-        return blockState.getBlock() instanceof ForceGlass;
-    }
+		return blockState.getBlock() instanceof ForceGlass;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
-        return BlockRenderLayer.CUTOUT;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.CUTOUT;
+	}
 
 /*//	Check if the block is an EIO conduit facade painted with Tritanium Glass
 	private boolean checkEIO(IBlockAccess world, Block block, int x, int y, int z)
@@ -72,57 +72,59 @@ public class ForceGlass extends BlockCT implements IDismantleable
         return false;
 	}*/
 
-    @Override
-    public boolean isSideCT(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing enumFacing) {
-        return true;
-    }
+	@Override
+	public boolean isSideCT(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing enumFacing)
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
 
-    @Override
-    public boolean isFullCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isFullCube(IBlockState state)
+	{
+		return false;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState state,IBlockAccess world, BlockPos pos,EnumFacing side)
-    {
-        /*Block block = world.getBlock(x, y, z);
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		/*Block block = world.getBlock(x, y, z);
         return !(block instanceof ForceGlass || checkEIO(world, block, x, y, z));*/
-        return !(world.getBlockState(pos).getBlock() instanceof ForceGlass);
-    }
+		return !(world.getBlockState(pos).getBlock() instanceof ForceGlass);
+	}
 
-    @Override
-    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops)
-    {
-        IBlockState blockState = world.getBlockState(pos);
-        //Block block = world.getBlock(x, y, z);
-        //int l = world.getBlockMetadata(x, y, z);
-        //boolean flag = block.removedByPlayer(world, player, x, y, z, true);
-        ItemStack blockItem = new ItemStack(getItemDropped(blockState, world.rand, 1));
+	@Override
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops)
+	{
+		IBlockState blockState = world.getBlockState(pos);
+		//Block block = world.getBlock(x, y, z);
+		//int l = world.getBlockMetadata(x, y, z);
+		//boolean flag = block.removedByPlayer(world, player, x, y, z, true);
+		ItemStack blockItem = new ItemStack(getItemDropped(blockState, world.rand, 1));
 
-        if (!returnDrops)
-        {
-            dropBlockAsItem(world, pos, blockState,0);
-        }
-        else
-        {
-            MOInventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, EnumFacing.DOWN);
-        }
+		if (!returnDrops)
+		{
+			dropBlockAsItem(world, pos, blockState, 0);
+		}
+		else
+		{
+			MOInventoryHelper.insertItemStackIntoInventory(player.inventory, blockItem, EnumFacing.DOWN);
+		}
 
-        ArrayList<ItemStack> list = new ArrayList<>();
-        list.add(blockItem);
-        return list;
-    }
+		ArrayList<ItemStack> list = new ArrayList<>();
+		list.add(blockItem);
+		return list;
+	}
 
-    @Override
-    public boolean canDismantle(EntityPlayer entityPlayer, World world, BlockPos pos) {
-        return true;
-    }
+	@Override
+	public boolean canDismantle(EntityPlayer entityPlayer, World world, BlockPos pos)
+	{
+		return true;
+	}
 }
