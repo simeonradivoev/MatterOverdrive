@@ -491,6 +491,7 @@ public class RenderHandler
 		regItemRender(MatterOverdriveItems.tritanium_dust);
 		regItemRender(MatterOverdriveItems.tritaniumHelemet);
 		regItemRender(MatterOverdriveItems.tritaniumHoe);
+		regItemRender(MatterOverdriveItems.tritaniumShovel);
 		regItemRender(MatterOverdriveItems.tritanium_nugget);
 		regItemRender(MatterOverdriveItems.tritaniumLeggings);
 		regItemRender(MatterOverdriveItems.tritaniumPickaxe);

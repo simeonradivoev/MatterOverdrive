@@ -131,6 +131,7 @@ public class MatterOverdriveRecipes
 		addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumPickaxe), "XXX", " # ", " # ", 'X', MatterOverdriveItems.tritanium_ingot, '#', Items.stick);
 		addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumSword), " X ", " X ", " # ", 'X', MatterOverdriveItems.tritanium_ingot, '#', Items.stick);
 		addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumHoe), "XX ", " # ", " # ", 'X', MatterOverdriveItems.tritanium_ingot, '#', Items.stick);
+		addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumShovel), " X ", " # ", " # ", 'X', MatterOverdriveItems.tritanium_ingot, '#', Items.stick);
 		addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumHelemet), "XCX", "X X", "   ", 'X', MatterOverdriveItems.tritanium_ingot, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1));
 		addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumChestplate), "X X", "XCX", "XXX", 'X', MatterOverdriveItems.tritanium_ingot, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1));
 		addShapedRecipe(new ItemStack(MatterOverdriveItems.tritaniumLeggings), "XCX", "X X", "X X", 'X', MatterOverdriveItems.tritanium_ingot, 'C', new ItemStack(MatterOverdriveItems.isolinear_circuit, 1, 1));
