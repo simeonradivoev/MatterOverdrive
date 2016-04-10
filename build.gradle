@@ -49,6 +49,8 @@ minecraft {
     version = config.mc_version + "-" + config.forge_version
     runDir = "run"
 	mappings = config.mcp_mappings
+
+    makeObfSourceJar = false
 }
 
 bintray {
