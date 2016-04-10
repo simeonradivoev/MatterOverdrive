@@ -171,13 +171,6 @@ public class Reference
 	//region Unicodes
 	public static final String UNICODE_LEGENDARY = "\u272a";
 	public static final String UNICODE_COMPLETED_OBJECTIVE = "\u25a0";
-	public static boolean eioLoaded()
-	{
-		if (eioLoaded == null)
-		{
-			eioLoaded = Loader.isModLoaded("EnderIO");
-		}
-		return eioLoaded;
-	}	public static final String UNICODE_UNCOMPLETED_OBJECTIVE = "\u25a1";
+	public static final String UNICODE_UNCOMPLETED_OBJECTIVE = "\u25a1";
 	//endregion
 }

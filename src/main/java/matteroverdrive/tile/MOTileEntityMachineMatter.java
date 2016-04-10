@@ -128,16 +128,6 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	}
 
 	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		if (getMatterStorage() != null)
-		{
-			return getMatterStorage().fill(resource, doFill);
-		}
-		return 0;
-	}
-
-	@Override
 	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
 	{
 		if (getMatterStorage() != null)
