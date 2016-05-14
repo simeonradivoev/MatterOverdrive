@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.events.MOEventScan;
 import matteroverdrive.api.inventory.IBlockScanner;
@@ -48,6 +47,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
@@ -227,7 +227,7 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		{
 			if (itemstack.hasTagCompound())
 			{
-				infos.add(ChatFormatting.GREEN + "Online");
+				infos.add(TextFormatting.GREEN + "Online");
 			}
 
 			ItemPattern lastSelected = getSelectedAsPattern(itemstack);
@@ -239,7 +239,7 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		}
 		else
 		{
-			infos.add(ChatFormatting.RED + "Offline");
+			infos.add(TextFormatting.RED + "Offline");
 		}
 	}
 
@@ -467,19 +467,19 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		if (database != null && MatterHelper.CanScan(worldBlock))
 		{
 			resetScanProgress(scanner);
-			scanInfo.append(ChatFormatting.YELLOW + "[").append(scanner.getDisplayName()).append("] ");
+			scanInfo.append(TextFormatting.YELLOW + "[").append(scanner.getDisplayName()).append("] ");
 
 			if (database.addItem(worldBlock, PROGRESS_PER_ITEM, false, scanInfo))
 			{
 				//scan successful
 				SoundHandler.PlaySoundAt(world, MatterOverdriveSounds.scannerSuccess, SoundCategory.PLAYERS, player);
-				DisplayInfo(player, scanInfo, ChatFormatting.GREEN);
+				DisplayInfo(player, scanInfo, TextFormatting.GREEN);
 				return HarvestBlock(scanner, player, world, pos);
 			}
 			else
 			{
 				//scan fail
-				DisplayInfo(player, scanInfo, ChatFormatting.RED);
+				DisplayInfo(player, scanInfo, TextFormatting.RED);
 				SoundHandler.PlaySoundAt(world, MatterOverdriveSounds.scannerFail, SoundCategory.PLAYERS, player);
 				return false;
 			}
@@ -502,7 +502,7 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 		return false;
 	}
 
-	private void DisplayInfo(EntityPlayer player, StringBuilder scanInfo, ChatFormatting formatting)
+	private void DisplayInfo(EntityPlayer player, StringBuilder scanInfo, TextFormatting formatting)
 	{
 		if (player != null && !scanInfo.toString().isEmpty())
 		{
