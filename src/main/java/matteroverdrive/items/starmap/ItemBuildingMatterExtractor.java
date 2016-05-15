@@ -26,6 +26,7 @@ import matteroverdrive.starmap.data.Planet;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -49,8 +50,8 @@ public class ItemBuildingMatterExtractor extends ItemBuildingAbstract implements
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
 	{
 		super.addDetails(itemstack, player, infos);
-		infos.add(ChatFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.MATTER_PRODUCTION) + ": +" + MATTER_PRODUCTION);
-		infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.ENERGY_PRODUCTION) + ": -" + ENERGY_DRAIN);
+		infos.add(TextFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.MATTER_PRODUCTION) + ": +" + MATTER_PRODUCTION);
+		infos.add(TextFormatting.RED + MOStringHelper.translateToLocal(PlanetStatType.ENERGY_PRODUCTION) + ": -" + ENERGY_DRAIN);
 	}
 
 	@Override

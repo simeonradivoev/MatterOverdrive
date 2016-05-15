@@ -12,6 +12,7 @@ import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.text.DecimalFormat;
@@ -35,7 +36,7 @@ public class BioticStatFlashCooling extends AbstractBioticStat
 	@Override
 	public String getDetails(int level)
 	{
-		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(COOLDOWN_CHANGE) + ChatFormatting.GRAY, ChatFormatting.YELLOW + (ENERGY_PER_COOLDOWN + MOEnergyHelper.ENERGY_UNIT) + ChatFormatting.GRAY);
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), TextFormatting.GREEN + DecimalFormat.getPercentInstance().format(COOLDOWN_CHANGE) + TextFormatting.GRAY, TextFormatting.YELLOW + (ENERGY_PER_COOLDOWN + MOEnergyHelper.ENERGY_UNIT) + TextFormatting.GRAY);
 	}
 
 	@Override

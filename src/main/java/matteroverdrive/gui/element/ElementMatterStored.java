@@ -25,6 +25,7 @@ import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -104,20 +105,20 @@ public class ElementMatterStored extends MOElementBase
 
 		if (drain > 0)
 		{
-			list.add(ChatFormatting.GREEN + "+" + MatterHelper.formatMatter(drain));
+			list.add(TextFormatting.GREEN + "+" + MatterHelper.formatMatter(drain));
 		}
 		else if (drain < 0)
 		{
-			list.add(ChatFormatting.RED + MatterHelper.formatMatter(drain));
+			list.add(TextFormatting.RED + MatterHelper.formatMatter(drain));
 		}
 
 		if (drainPerTick > 0)
 		{
-			list.add(ChatFormatting.GREEN + "+" + MatterHelper.formatMatter(drainPerTick) + "/t");
+			list.add(TextFormatting.GREEN + "+" + MatterHelper.formatMatter(drainPerTick) + "/t");
 		}
 		else if (drainPerTick < 0)
 		{
-			list.add(ChatFormatting.RED + MatterHelper.formatMatter(drainPerTick) + "/t");
+			list.add(TextFormatting.RED + MatterHelper.formatMatter(drainPerTick) + "/t");
 		}
 	}
 

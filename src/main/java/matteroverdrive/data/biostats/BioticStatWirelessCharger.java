@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.EnumSet;
@@ -23,7 +24,7 @@ public class BioticStatWirelessCharger extends AbstractBioticStat
 
 	public String getDetails(int level)
 	{
-		return String.format(super.getDetails(level), ChatFormatting.YELLOW.toString() + CHARGE_SPEED + ChatFormatting.GRAY);
+		return String.format(super.getDetails(level), TextFormatting.YELLOW.toString() + CHARGE_SPEED + TextFormatting.GRAY);
 	}
 
 	@Override

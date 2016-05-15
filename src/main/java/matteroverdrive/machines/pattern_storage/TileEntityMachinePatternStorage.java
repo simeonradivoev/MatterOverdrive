@@ -54,6 +54,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
@@ -244,7 +245,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 		{
 			if (info != null)
 			{
-				info.append(String.format("%s%s cannot be analyzed!", ChatFormatting.RED, itemStack.getDisplayName()));
+				info.append(String.format("%s%s cannot be analyzed!", TextFormatting.RED, itemStack.getDisplayName()));
 			}
 			return false;
 		}
@@ -273,7 +274,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 							}
 							if (info != null)
 							{
-								info.append(String.format("%s added to Pattern Storage. Progress is now at %s", ChatFormatting.GREEN + itemStack.getDisplayName(), pattern.getProgress() + "%"));
+								info.append(String.format("%s added to Pattern Storage. Progress is now at %s", TextFormatting.GREEN + itemStack.getDisplayName(), pattern.getProgress() + "%"));
 							}
 							return true;
 						}
@@ -281,7 +282,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 						{
 							if (info != null)
 							{
-								info.append(String.format("%s is fully analyzed!", ChatFormatting.RED + itemStack.getDisplayName()));
+								info.append(String.format("%s is fully analyzed!", TextFormatting.RED + itemStack.getDisplayName()));
 							}
 							return false;
 						}
@@ -312,7 +313,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 						}
 						if (info != null)
 						{
-							info.append(String.format("%s added to Pattern Storage. Progress is now at %s", ChatFormatting.GREEN + itemStack.getDisplayName(), amount + "%"));
+							info.append(String.format("%s added to Pattern Storage. Progress is now at %s", TextFormatting.GREEN + itemStack.getDisplayName(), amount + "%"));
 						}
 						return true;
 					}
@@ -322,7 +323,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
 		if (info != null)
 		{
-			info.append(String.format("%sNo space available for '%s' !", ChatFormatting.RED, itemStack.getDisplayName()));
+			info.append(String.format("%sNo space available for '%s' !", TextFormatting.RED, itemStack.getDisplayName()));
 		}
 		return false;
 	}

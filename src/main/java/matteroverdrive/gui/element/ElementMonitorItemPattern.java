@@ -25,6 +25,7 @@ import matteroverdrive.data.matter_network.ItemPatternMapping;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -65,10 +66,10 @@ public class ElementMonitorItemPattern extends ElementItemPattern
 		{
 			ApplyColor();
 			MOElementButton.NORMAL_TEXTURE.render(posX + 22, posY + 2, 18, 18);
-			getFontRenderer().drawString(ChatFormatting.BOLD + "+", posX + 28, posY + 7, Reference.COLOR_MATTER.getColor());
+			getFontRenderer().drawString(TextFormatting.BOLD + "+", posX + 28, posY + 7, Reference.COLOR_MATTER.getColor());
 			ApplyColor();
 			MOElementButton.NORMAL_TEXTURE.render(posX + 22, posY + 22, 18, 18);
-			getFontRenderer().drawString(ChatFormatting.BOLD + "-", posX + 28, posY + 28, Reference.COLOR_MATTER.getColor());
+			getFontRenderer().drawString(TextFormatting.BOLD + "-", posX + 28, posY + 28, Reference.COLOR_MATTER.getColor());
 			ApplyColor();
 			MOElementButton.HOVER_TEXTURE_DARK.render(posX + 2, posY + 22, 18, 18);
 			gui.drawCenteredString(getFontRenderer(), Integer.toString(amount), posX + 11, posY + 28, Reference.COLOR_MATTER.getColor());

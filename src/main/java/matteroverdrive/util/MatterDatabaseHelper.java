@@ -29,6 +29,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -196,33 +197,33 @@ public class MatterDatabaseHelper
 		return null;
 	}
 
-	public static ChatFormatting getPatternInfoColor(int progress)
+	public static TextFormatting getPatternInfoColor(int progress)
 	{
-		ChatFormatting color;
+		TextFormatting color;
 
 		if (progress > 0 && progress <= 20)
 		{
-			color = ChatFormatting.RED;
+			color = TextFormatting.RED;
 		}
 		else if (progress > 20 && progress <= 40)
 		{
-			color = ChatFormatting.GOLD;
+			color = TextFormatting.GOLD;
 		}
 		else if (progress > 40 && progress <= 60)
 		{
-			color = ChatFormatting.YELLOW;
+			color = TextFormatting.YELLOW;
 		}
 		else if (progress > 40 && progress <= 80)
 		{
-			color = ChatFormatting.AQUA;
+			color = TextFormatting.AQUA;
 		}
 		else if (progress > 80 && progress <= 100)
 		{
-			color = ChatFormatting.GREEN;
+			color = TextFormatting.GREEN;
 		}
 		else
 		{
-			color = ChatFormatting.GREEN;
+			color = TextFormatting.GREEN;
 		}
 
 		return color;

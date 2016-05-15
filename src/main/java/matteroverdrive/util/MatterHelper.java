@@ -38,6 +38,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -208,8 +209,8 @@ public class MatterHelper
 		int matter = MatterHelper.getMatterAmountFromItem(itemStack);
 		if (matter > 0)
 		{
-			tooltips.add(ChatFormatting.ITALIC.toString() + ChatFormatting.BLUE.toString() + "Matter: " + MatterHelper.formatMatter(matter));
-			tooltips.add(ChatFormatting.ITALIC.toString() + ChatFormatting.DARK_RED + "Power: " + MOEnergyHelper.formatEnergy(speed * matter * energyPerTick));
+			tooltips.add(TextFormatting.ITALIC.toString() + TextFormatting.BLUE.toString() + "Matter: " + MatterHelper.formatMatter(matter));
+			tooltips.add(TextFormatting.ITALIC.toString() + TextFormatting.DARK_RED + "Power: " + MOEnergyHelper.formatEnergy(speed * matter * energyPerTick));
 		}
 	}
 }

@@ -103,7 +103,7 @@ public class DialogMessageAndroidTransformation extends DialogMessage
 			{
 				if (!player.worldObj.isRemote)
 				{
-					TextComponentString componentText = new TextComponentString(ChatFormatting.GOLD + "<Mad Scientist>" + ChatFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + player.getRNG().nextInt(4)));
+					TextComponentString componentText = new TextComponentString(TextFormatting.GOLD + "<Mad Scientist>" + TextFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + player.getRNG().nextInt(4)));
 					componentText.setChatStyle(new Style().setColor(TextFormatting.RED));
 					player.addChatMessage(componentText);
 				}

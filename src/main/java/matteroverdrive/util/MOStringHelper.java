@@ -25,6 +25,7 @@ import matteroverdrive.api.starmap.PlanetStatType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ import java.text.DecimalFormat;
  */
 public class MOStringHelper
 {
-	public static final String MORE_INFO = ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Hold " + ChatFormatting.ITALIC + ChatFormatting.YELLOW + "Shift" + ChatFormatting.RESET.toString() + ChatFormatting.GRAY + " for Details.";
+	public static final String MORE_INFO = TextFormatting.RESET.toString() + TextFormatting.GRAY + "Hold " + TextFormatting.ITALIC + TextFormatting.YELLOW + "Shift" + TextFormatting.RESET.toString() + TextFormatting.GRAY + " for Details.";
 
 	private static String[] suffix = new String[] {"", "K", "M", "B", "T"};
 	private static int MAX_LENGTH = 4;
@@ -134,11 +135,11 @@ public class MOStringHelper
 		String info = "";
 		if (good)
 		{
-			info += ChatFormatting.GREEN;
+			info += TextFormatting.GREEN;
 		}
 		else
 		{
-			info += ChatFormatting.RED;
+			info += TextFormatting.RED;
 		}
 
 
@@ -153,11 +154,11 @@ public class MOStringHelper
 		String info = "";
 		if (good)
 		{
-			info += ChatFormatting.GREEN;
+			info += TextFormatting.GREEN;
 		}
 		else
 		{
-			info += ChatFormatting.RED;
+			info += TextFormatting.RED;
 		}
 
 

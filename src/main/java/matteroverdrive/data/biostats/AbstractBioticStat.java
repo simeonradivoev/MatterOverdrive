@@ -27,6 +27,7 @@ import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -178,17 +179,17 @@ public abstract class AbstractBioticStat implements IBioticStat
 	@Override
 	public void onTooltip(AndroidPlayer android, int level, List<String> list, int mouseX, int mouseY)
 	{
-		String name = ChatFormatting.BOLD + getDisplayName(android, level);
+		String name = TextFormatting.BOLD + getDisplayName(android, level);
 		if (maxLevel() > 1)
 		{
-			name += ChatFormatting.RESET + String.format(" [%s/%s]", level, maxLevel());
+			name += TextFormatting.RESET + String.format(" [%s/%s]", level, maxLevel());
 		}
-		list.add(ChatFormatting.WHITE + name);
+		list.add(TextFormatting.WHITE + name);
 		String details = getDetails(level);
 		String[] detailsSplit = details.split("/n/");
 		for (String detail : detailsSplit)
 		{
-			list.add(ChatFormatting.GRAY + detail);
+			list.add(TextFormatting.GRAY + detail);
 		}
 
 		if (root != null)
@@ -201,7 +202,7 @@ public abstract class AbstractBioticStat implements IBioticStat
 					rootLevel = " " + root.maxLevel();
 				}
 			}
-			list.add(ChatFormatting.DARK_AQUA + MOStringHelper.translateToLocal("gui.tooltip.parent") + ": " + ChatFormatting.GOLD + String.format("[%s%s]", root.getDisplayName(android, 0), rootLevel));
+			list.add(TextFormatting.DARK_AQUA + MOStringHelper.translateToLocal("gui.tooltip.parent") + ": " + TextFormatting.GOLD + String.format("[%s%s]", root.getDisplayName(android, 0), rootLevel));
 		}
 
 		String requires = "";
@@ -211,25 +212,25 @@ public abstract class AbstractBioticStat implements IBioticStat
 			{
 				if (!requires.isEmpty())
 				{
-					requires += ChatFormatting.GRAY + ", ";
+					requires += TextFormatting.GRAY + ", ";
 				}
 				if (itemStack.stackSize > 1)
 				{
-					requires += ChatFormatting.DARK_GREEN.toString() + itemStack.stackSize + "x";
+					requires += TextFormatting.DARK_GREEN.toString() + itemStack.stackSize + "x";
 				}
 
-				requires += ChatFormatting.DARK_GREEN + "[" + itemStack.getDisplayName() + "]";
+				requires += TextFormatting.DARK_GREEN + "[" + itemStack.getDisplayName() + "]";
 			}
 		}
 
 		if (!requires.isEmpty())
 		{
-			list.add(ChatFormatting.DARK_AQUA + MOStringHelper.translateToLocal("gui.tooltip.requires") + ": " + requires);
+			list.add(TextFormatting.DARK_AQUA + MOStringHelper.translateToLocal("gui.tooltip.requires") + ": " + requires);
 		}
 
 		if (competitors.size() > 0)
 		{
-			String locks = ChatFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.locks") + ": ";
+			String locks = TextFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.locks") + ": ";
 			for (IBioticStat compeditor : competitors)
 			{
 				locks += String.format("[%s] ", compeditor.getDisplayName(android, 0));
@@ -239,7 +240,7 @@ public abstract class AbstractBioticStat implements IBioticStat
 
 		if (level < maxLevel())
 		{
-			list.add((android.getPlayer().experienceLevel < xp ? ChatFormatting.RED : ChatFormatting.GREEN) + "XP: " + xp);
+			list.add((android.getPlayer().experienceLevel < xp ? TextFormatting.RED : TextFormatting.GREEN) + "XP: " + xp);
 		}
 	}
 

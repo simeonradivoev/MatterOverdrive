@@ -18,7 +18,6 @@
 
 package matteroverdrive.commands;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.matter.DamageAwareStackHandler;
 import matteroverdrive.data.matter.ItemHandler;
@@ -33,6 +32,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public class MatterRegistryCommands extends CommandBase
 					newBlacklist[oldBlacklist.length] = key;
 					MatterOverdrive.configHandler.config.get(ConfigurationHandler.CATEGORY_MATTER, ConfigurationHandler.KEY_MBLACKLIST, new String[] {}, "").set(newBlacklist);
 					MatterOverdrive.configHandler.save();
-					commandSender.addChatMessage(new TextComponentString(ChatFormatting.GOLD + "[" + key + "]" + ChatFormatting.RESET + " Added $s to matter blacklist and config.\nYou must recalculate the registry for changes to take effect.\nUse /matter_registry recalculate."));
+					commandSender.addChatMessage(new TextComponentString(TextFormatting.GOLD + "[" + key + "]" + TextFormatting.RESET + " Added $s to matter blacklist and config.\nYou must recalculate the registry for changes to take effect.\nUse /matter_registry recalculate."));
 				}
 				else
 				{
@@ -179,7 +179,7 @@ public class MatterRegistryCommands extends CommandBase
 
 					MatterOverdrive.configHandler.setInt(key, ConfigurationHandler.CATEGORY_NEW_ITEMS, matter);
 					MatterOverdrive.configHandler.save();
-					commandSender.addChatMessage(new TextComponentString(ChatFormatting.GOLD + "[" + key + "]" + ChatFormatting.RESET + " Added $s to matter registry and config.\nYou can now recalculated the registry.\nUse /matter_registry recalculate."));
+					commandSender.addChatMessage(new TextComponentString(TextFormatting.GOLD + "[" + key + "]" + TextFormatting.RESET + " Added $s to matter registry and config.\nYou can now recalculated the registry.\nUse /matter_registry recalculate."));
 				}
 				else
 				{

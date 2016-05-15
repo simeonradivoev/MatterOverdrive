@@ -24,6 +24,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.RenderUtils;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -74,19 +75,19 @@ public class MOElementEnergy extends MOElementBase
 
 		if (energyRequired > 0)
 		{
-			list.add(ChatFormatting.GREEN + "+" + String.valueOf(energyRequired) + MOEnergyHelper.ENERGY_UNIT + ChatFormatting.RESET);
+			list.add(TextFormatting.GREEN + "+" + String.valueOf(energyRequired) + MOEnergyHelper.ENERGY_UNIT + TextFormatting.RESET);
 		}
 		else if (energyRequired < 0)
 		{
-			list.add(ChatFormatting.RED + String.valueOf(energyRequired) + MOEnergyHelper.ENERGY_UNIT + ChatFormatting.RESET);
+			list.add(TextFormatting.RED + String.valueOf(energyRequired) + MOEnergyHelper.ENERGY_UNIT + TextFormatting.RESET);
 		}
 		if (energyRequiredPerTick > 0)
 		{
-			list.add(ChatFormatting.GREEN + "+" + String.valueOf(energyRequiredPerTick) + MOEnergyHelper.ENERGY_UNIT + "/t" + ChatFormatting.RESET);
+			list.add(TextFormatting.GREEN + "+" + String.valueOf(energyRequiredPerTick) + MOEnergyHelper.ENERGY_UNIT + "/t" + TextFormatting.RESET);
 		}
 		else if (energyRequiredPerTick < 0)
 		{
-			list.add(ChatFormatting.RED + String.valueOf(energyRequiredPerTick) + MOEnergyHelper.ENERGY_UNIT + "/t" + ChatFormatting.RESET);
+			list.add(TextFormatting.RED + String.valueOf(energyRequiredPerTick) + MOEnergyHelper.ENERGY_UNIT + "/t" + TextFormatting.RESET);
 		}
 	}
 

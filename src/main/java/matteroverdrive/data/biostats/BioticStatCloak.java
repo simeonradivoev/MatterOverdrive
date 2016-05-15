@@ -26,6 +26,7 @@ import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.EnumSet;
@@ -47,7 +48,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
 	@Override
 	public String getDetails(int level)
 	{
-		return String.format(super.getDetails(level), ChatFormatting.YELLOW.toString() + ENERGY_PER_TICK + MOEnergyHelper.ENERGY_UNIT + ChatFormatting.GRAY);
+		return String.format(super.getDetails(level), TextFormatting.YELLOW.toString() + ENERGY_PER_TICK + MOEnergyHelper.ENERGY_UNIT + TextFormatting.GRAY);
 	}
 
 	@Override

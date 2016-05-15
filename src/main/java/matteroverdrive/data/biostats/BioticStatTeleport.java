@@ -36,6 +36,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -71,8 +72,8 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
 	@Override
 	public String getDetails(int level)
 	{
-		String keyName = ChatFormatting.AQUA + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()) + ChatFormatting.GRAY;
-		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), keyName, ChatFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + ChatFormatting.GRAY);
+		String keyName = TextFormatting.AQUA + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()) + TextFormatting.GRAY;
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), keyName, TextFormatting.YELLOW.toString() + ENERGY_PER_TELEPORT + " RF" + TextFormatting.GRAY);
 	}
 
 	@Override

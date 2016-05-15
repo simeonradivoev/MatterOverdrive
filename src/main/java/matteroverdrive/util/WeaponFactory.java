@@ -30,6 +30,7 @@ import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.*;
 
@@ -215,7 +216,7 @@ public class WeaponFactory
 
 	public void modifyToLegendary(ItemStack weapon, WeaponGenerationContext context)
 	{
-		weapon.setStackDisplayName(Reference.UNICODE_LEGENDARY + " " + ChatFormatting.GOLD + MOStringHelper.translateToLocal("rarity.legendary") + " " + weapon.getDisplayName());
+		weapon.setStackDisplayName(Reference.UNICODE_LEGENDARY + " " + TextFormatting.GOLD + MOStringHelper.translateToLocal("rarity.legendary") + " " + weapon.getDisplayName());
 
 		int damageLevel = random.nextInt(context.level + 1);
 		if (damageLevel > 0)

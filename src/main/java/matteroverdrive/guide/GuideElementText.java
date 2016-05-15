@@ -21,6 +21,7 @@ package matteroverdrive.guide;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.gui.GuiDataPad;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Mouse;
 import org.w3c.dom.Element;
 
@@ -35,7 +36,7 @@ public class GuideElementText extends GuideElementTextAbstract
 
 	protected String formatVariableReplace(String variable, String replace)
 	{
-		return ChatFormatting.AQUA + replace + ChatFormatting.RESET;
+		return TextFormatting.AQUA + replace + TextFormatting.RESET;
 	}
 
 	@Override

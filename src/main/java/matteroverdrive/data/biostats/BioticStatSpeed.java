@@ -25,6 +25,7 @@ import matteroverdrive.data.MOAttributeModifier;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.UUID;
@@ -56,7 +57,7 @@ public class BioticStatSpeed extends AbstractBioticStat
 
 	public String getDetails(int level)
 	{
-		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN + Integer.toString(Math.round(getSpeedModify(level) * 100f)) + "%" + ChatFormatting.GRAY);
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), TextFormatting.GREEN + Integer.toString(Math.round(getSpeedModify(level) * 100f)) + "%" + TextFormatting.GRAY);
 	}
 
 	@Override

@@ -28,6 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -50,14 +51,14 @@ public class MOMachineBlockItem extends ItemBlock
 		{
 			if (MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
 			{
-				infos.add(ChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
+				infos.add(TextFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
 			}
 
 			if (stack.hasTagCompound())
 			{
 				if (stack.getTagCompound().hasKey("Energy") && stack.getTagCompound().hasKey("MaxEnergy"))
 				{
-					infos.add(ChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("MaxEnergy")));
+					infos.add(TextFormatting.YELLOW + MOEnergyHelper.formatEnergy(stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("MaxEnergy")));
 					if (stack.getTagCompound().hasKey("PowerSend") && stack.getTagCompound().hasKey("PowerReceive"))
 					{
 						infos.add("Send/Receive: " + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("PowerSend")) + "/" + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("PowerReceive")) + MOEnergyHelper.ENERGY_UNIT + "/t");
@@ -65,11 +66,11 @@ public class MOMachineBlockItem extends ItemBlock
 				}
 				if (stack.getTagCompound().hasKey("Matter") && stack.getTagCompound().hasKey("MaxMatter"))
 				{
-					infos.add(ChatFormatting.BLUE + MatterHelper.formatMatter(stack.getTagCompound().getInteger("Matter"), stack.getTagCompound().getInteger("MaxMatter")));
+					infos.add(TextFormatting.BLUE + MatterHelper.formatMatter(stack.getTagCompound().getInteger("Matter"), stack.getTagCompound().getInteger("MaxMatter")));
 
 					if (stack.getTagCompound().hasKey("MatterSend") && stack.getTagCompound().hasKey("MatterReceive"))
 					{
-						infos.add(ChatFormatting.DARK_BLUE + "Send/Receive: " + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterSend")) + "/" + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterReceive")) + MatterHelper.MATTER_UNIT + "/t");
+						infos.add(TextFormatting.DARK_BLUE + "Send/Receive: " + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterSend")) + "/" + MOStringHelper.formatNumber(stack.getTagCompound().getInteger("MatterReceive")) + MatterHelper.MATTER_UNIT + "/t");
 					}
 				}
 
@@ -88,7 +89,7 @@ public class MOMachineBlockItem extends ItemBlock
 	{
 		if (itemStack.hasTagCompound())
 		{
-			return super.getItemStackDisplayName(itemStack) + String.format(ChatFormatting.AQUA + " [%s]" + ChatFormatting.RESET, MOStringHelper.translateToLocal("item.info.configured"));
+			return super.getItemStackDisplayName(itemStack) + String.format(TextFormatting.AQUA + " [%s]" + TextFormatting.RESET, MOStringHelper.translateToLocal("item.info.configured"));
 		}
 		else
 		{
@@ -123,13 +124,13 @@ public class MOMachineBlockItem extends ItemBlock
 		if (stackTagList.tagCount() > 0)
 		{
 			infos.add("");
-			infos.add(ChatFormatting.YELLOW + "Inventory:");
+			infos.add(TextFormatting.YELLOW + "Inventory:");
 			for (int i = 0; i < stackTagList.tagCount(); i++)
 			{
 				ItemStack stack = ItemStack.loadItemStackFromNBT(stackTagList.getCompoundTagAt(i));
 				if (stack.getItem() instanceof IUpgrade)
 				{
-					infos.add("   " + ChatFormatting.GREEN + stack.getDisplayName());
+					infos.add("   " + TextFormatting.GREEN + stack.getDisplayName());
 				}
 				else
 				{

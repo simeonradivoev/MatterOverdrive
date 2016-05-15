@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -56,7 +57,7 @@ public class BioticStatItemMagnet extends AbstractBioticStat
 	@Override
 	public String getDetails(int level)
 	{
-		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.YELLOW + (ENERGY_PULL_PER_ITEM + MOEnergyHelper.ENERGY_UNIT) + ChatFormatting.GRAY);
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), TextFormatting.YELLOW + (ENERGY_PULL_PER_ITEM + MOEnergyHelper.ENERGY_UNIT) + TextFormatting.GRAY);
 	}
 
 	@Override

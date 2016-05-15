@@ -37,6 +37,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
@@ -104,7 +105,7 @@ public class RenderUtils
 
 				if (text == null && stack.stackSize < 1)
 				{
-					s = ChatFormatting.RED + String.valueOf(stack.stackSize);
+					s = TextFormatting.RED + String.valueOf(stack.stackSize);
 				}
 
 				GlStateManager.disableLighting();

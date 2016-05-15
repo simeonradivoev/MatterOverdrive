@@ -35,6 +35,7 @@ import matteroverdrive.util.StarmapHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +58,7 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
 		GuiStarMap guiStarMap = (GuiStarMap)gui;
 		if (guiStarMap.getMachine().getGalaxyPosition().equals(planet))
 		{
-			name = "@ " + ChatFormatting.ITALIC + name;
+			name = "@ " + TextFormatting.ITALIC + name;
 		}
 
 		StarmapHelper.drawPlanetInfo(planet, name, posX + 16, posY + 10, multiply);

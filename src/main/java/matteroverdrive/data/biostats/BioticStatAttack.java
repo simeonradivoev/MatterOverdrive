@@ -25,6 +25,7 @@ import matteroverdrive.data.MOAttributeModifier;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.text.DecimalFormat;
@@ -103,7 +104,7 @@ public class BioticStatAttack extends AbstractBioticStat
 	@Override
 	public String getDetails(int level)
 	{
-		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(getAttackPower(level)) + ChatFormatting.GRAY);
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), TextFormatting.GREEN + DecimalFormat.getPercentInstance().format(getAttackPower(level)) + TextFormatting.GRAY);
 	}
 
 	private float getAttackPower(int level)

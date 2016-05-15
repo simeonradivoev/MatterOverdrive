@@ -33,6 +33,7 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -57,7 +58,7 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
 	@Override
 	public String getDetails(int level)
 	{
-		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.YELLOW.toString() + ENERGY_PER_TICK + MOEnergyHelper.ENERGY_UNIT);
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), TextFormatting.YELLOW.toString() + ENERGY_PER_TICK + MOEnergyHelper.ENERGY_UNIT);
 	}
 
 	@Override

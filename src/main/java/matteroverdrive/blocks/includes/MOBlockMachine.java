@@ -19,7 +19,6 @@
 package matteroverdrive.blocks.includes;
 
 import cofh.api.block.IDismantleable;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;
@@ -221,7 +220,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
 				{
 					if (world.isRemote)
 					{
-						TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.dismantle").replace("$0", getLocalizedName()));
+						TextComponentString message = new TextComponentString(TextFormatting.GOLD + "[Matter Overdrive] " + TextFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.dismantle").replace("$0", getLocalizedName()));
 						message.setChatStyle(new Style().setColor(TextFormatting.RED));
 						player.addChatMessage(message);
 					}

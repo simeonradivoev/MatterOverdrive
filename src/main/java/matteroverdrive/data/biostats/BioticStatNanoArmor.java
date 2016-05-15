@@ -22,6 +22,7 @@ import com.google.common.collect.Multimap;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
@@ -60,7 +61,7 @@ public class BioticStatNanoArmor extends AbstractBioticStat
 	@Override
 	public String getDetails(int level)
 	{
-		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN + DecimalFormat.getPercentInstance().format(getDamageNegate(level)) + ChatFormatting.GRAY);
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), TextFormatting.GREEN + DecimalFormat.getPercentInstance().format(getDamageNegate(level)) + TextFormatting.GRAY);
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -53,7 +54,7 @@ public class TransportFlashDrive extends FlashDrive
 			BlockPos target = getTarget(itemstack);
 			IBlockState state = player.worldObj.getBlockState(target);
 			Block block = state.getBlock();
-			infos.add(ChatFormatting.YELLOW + String.format("[%s] %s", target.toString(), block.getMaterial(state) != Material.air ? block.getLocalizedName() : "Unknown"));
+			infos.add(TextFormatting.YELLOW + String.format("[%s] %s", target.toString(), block.getMaterial(state) != Material.air ? block.getLocalizedName() : "Unknown"));
 		}
 	}
 

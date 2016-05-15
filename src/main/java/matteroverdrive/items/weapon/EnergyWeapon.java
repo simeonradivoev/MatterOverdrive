@@ -55,6 +55,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
@@ -139,7 +140,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 	public void addDetails(ItemStack weapon, EntityPlayer player, List infos)
 	{
 		super.addDetails(weapon, player, infos);
-		String energyInfo = ChatFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(null, getEnergyUse(weapon) * 20) + "/s";
+		String energyInfo = TextFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(null, getEnergyUse(weapon) * 20) + "/s";
 		float energyMultiply = (float)getEnergyUse(weapon) / (float)getBaseEnergyUse(weapon);
 		if (energyMultiply != 1)
 		{
@@ -154,7 +155,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 		infos.add(addStatWithMultiplyInfo("Range", getRange(weapon), (double)getRange(weapon) / (double)defaultRange, "b"));
 		infos.add(addStatWithMultiplyInfo("Accuracy", "", 1 / (modifyStatFromModules(Reference.WS_ACCURACY, weapon, 1) * getCustomFloatStat(weapon, CUSTOM_ACCURACY_MULTIPLY_TAG, 1)), ""));
 
-		String heatInfo = ChatFormatting.DARK_RED + "Heat: ";
+		String heatInfo = TextFormatting.DARK_RED + "Heat: ";
 		double heatPercent = getHeat(weapon) / getMaxHeat(weapon);
 		for (int i = 0; i < 32 * heatPercent; i++)
 		{
@@ -168,7 +169,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
 	private String addStatWithMultiplyInfo(String statName, Object value, double multiply, String units)
 	{
-		String info = String.format("%s: %s%s", statName, ChatFormatting.DARK_AQUA, value);
+		String info = String.format("%s: %s%s", statName, TextFormatting.DARK_AQUA, value);
 		if (!units.isEmpty())
 		{
 			info += " " + units;
@@ -177,13 +178,13 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 		{
 			if (multiply > 1)
 			{
-				info += ChatFormatting.DARK_GREEN;
+				info += TextFormatting.DARK_GREEN;
 			}
 			else
 			{
-				info += ChatFormatting.DARK_RED;
+				info += TextFormatting.DARK_RED;
 			}
-			info += String.format(" (%s) %s", DecimalFormat.getPercentInstance().format(multiply), ChatFormatting.RESET);
+			info += String.format(" (%s) %s", DecimalFormat.getPercentInstance().format(multiply), TextFormatting.RESET);
 		}
 		return info;
 	}

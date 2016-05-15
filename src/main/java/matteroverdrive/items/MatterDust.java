@@ -8,6 +8,7 @@ import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class MatterDust extends MOBaseItem implements IRecyclable, IMatterItem
 		super.addDetails(itemstack, player, infos);
 		if (!isRefined)
 		{
-			infos.add(ChatFormatting.BLUE + "Potential Matter: " + MatterHelper.formatMatter(itemstack.getItemDamage()));
+			infos.add(TextFormatting.BLUE + "Potential Matter: " + MatterHelper.formatMatter(itemstack.getItemDamage()));
 		}
 	}
 

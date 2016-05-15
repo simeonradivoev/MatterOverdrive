@@ -29,6 +29,7 @@ import matteroverdrive.util.animation.MOAnimationTimeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -97,7 +98,7 @@ public class GuiQuestHud
 				int titleWidth = (int)(fontRenderer.getStringWidth(completeQuestName) * 1.5);
 				GlStateManager.translate(event.getResolution().getScaledWidth() - titleWidth - 30 - time * 30, y - 20, 0);
 				GlStateManager.scale(1.5, 1.5, 1.5);
-				fontRenderer.drawStringWithShadow(ChatFormatting.BOLD + completeQuestName, 0, 40, color.getColor());
+				fontRenderer.drawStringWithShadow(TextFormatting.BOLD + completeQuestName, 0, 40, color.getColor());
 				GlStateManager.popMatrix();
 				fontRenderer.drawStringWithShadow("Completed:", event.getResolution().getScaledWidth() - titleWidth - 20 - (int)(time * 40), y + 28, color.getColor());
 				if (completeQuestXp > 0)
@@ -113,7 +114,7 @@ public class GuiQuestHud
 				int y = (int)(event.getResolution().getScaledHeight() * 0.65);
 				GlStateManager.translate(-10 + time * 30, y, 0);
 				GlStateManager.scale(1.5, 1.5, 1.5);
-				fontRenderer.drawStringWithShadow(ChatFormatting.BOLD + newQuestName, 0, 0, color.getColor());
+				fontRenderer.drawStringWithShadow(TextFormatting.BOLD + newQuestName, 0, 0, color.getColor());
 				GlStateManager.popMatrix();
 				fontRenderer.drawStringWithShadow("Started:", (int)(time * 20), y - 12, color.getColor());
 			}

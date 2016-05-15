@@ -42,6 +42,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -99,7 +100,7 @@ public class Phaser extends EnergyWeapon implements IWeapon
 	@SideOnly(Side.CLIENT)
 	protected void addCustomDetails(ItemStack weapon, EntityPlayer player, List infos)
 	{
-		infos.add(ChatFormatting.BLUE + "Stun: " + (GetSleepTime(weapon) / 20f) + "s");
+		infos.add(TextFormatting.BLUE + "Stun: " + (GetSleepTime(weapon) / 20f) + "s");
 	}
 
 	/**

@@ -24,6 +24,7 @@ import matteroverdrive.gui.GuiDataPad;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
@@ -117,7 +118,7 @@ public abstract class GuideElementTextAbstract extends GuideElementAbstract
 			{
 				String guideName = shortcodeMap.containsKey("guide") ? shortcodeMap.get("guide") : null;
 				int guidePage = shortcodeMap.containsKey("page") ? Integer.parseInt(shortcodeMap.get("page")) : 0;
-				return new ItemstackTextLinkChunk(ChatFormatting.GREEN + stack.getDisplayName() + ChatFormatting.RESET, getFontRenderer(), stack, guideName, guidePage);
+				return new ItemstackTextLinkChunk(TextFormatting.GREEN + stack.getDisplayName() + TextFormatting.RESET, getFontRenderer(), stack, guideName, guidePage);
 			}
 		}
 		else if (shortcodeMap.get("type").equalsIgnoreCase("rf"))
@@ -139,7 +140,7 @@ public abstract class GuideElementTextAbstract extends GuideElementAbstract
 			if (entry != null)
 			{
 				int page = shortcodeMap.containsKey("page") ? Integer.parseInt(shortcodeMap.get("page")) : 0;
-				return new GuideTextLinkChunk(ChatFormatting.YELLOW + entry.getDisplayName() + ChatFormatting.RESET, getFontRenderer(), entry, page);
+				return new GuideTextLinkChunk(TextFormatting.YELLOW + entry.getDisplayName() + TextFormatting.RESET, getFontRenderer(), entry, page);
 			}
 		}
 

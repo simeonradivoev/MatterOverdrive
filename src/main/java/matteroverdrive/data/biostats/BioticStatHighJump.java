@@ -26,6 +26,7 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -54,7 +55,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
 	@Override
 	public String getDetails(int level)
 	{
-		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.YELLOW.toString() + ENERGY_PER_JUMP + " RF" + ChatFormatting.GRAY);
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), TextFormatting.YELLOW.toString() + ENERGY_PER_JUMP + " RF" + TextFormatting.GRAY);
 	}
 
 	@Override

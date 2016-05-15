@@ -18,7 +18,6 @@
 
 package matteroverdrive.commands;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.IBioticStat;
@@ -31,6 +30,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -125,7 +125,7 @@ public class AndoidCommands extends CommandBase
 							IBioticStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
 							androidPlayer.unlock(stat, stat.maxLevel());
 							validCommand = true;
-							commandInfo = sender.getName() + " now has the ability " + ChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer, stat.maxLevel()) + "]";
+							commandInfo = sender.getName() + " now has the ability " + TextFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer, stat.maxLevel()) + "]";
 						}
 					}
 					else if (parameters[0].equalsIgnoreCase("forget"))
@@ -135,14 +135,14 @@ public class AndoidCommands extends CommandBase
 							IBioticStat stat = MatterOverdrive.statRegistry.getStat(parameters[1]);
 							androidPlayer.reset(stat);
 							validCommand = true;
-							commandInfo = ChatFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer, stat.maxLevel()) + "]" + ChatFormatting.RESET + " removed from " + sender.getName();
+							commandInfo = TextFormatting.GREEN + "[" + stat.getDisplayName(androidPlayer, stat.maxLevel()) + "]" + TextFormatting.RESET + " removed from " + sender.getName();
 						}
 					}
 
 					if (validCommand)
 					{
 						androidPlayer.sync(EnumSet.allOf(AndroidPlayer.DataType.class), false);
-						sender.addChatMessage(new TextComponentString(ChatFormatting.GOLD + "[" + Reference.MOD_NAME + "] " + ChatFormatting.RESET + commandInfo));
+						sender.addChatMessage(new TextComponentString(TextFormatting.GOLD + "[" + Reference.MOD_NAME + "] " + TextFormatting.RESET + commandInfo));
 						return;
 					}
 				}

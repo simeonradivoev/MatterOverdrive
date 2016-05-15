@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class AndroidPartsFactory
 				addAttributeToPart(part, new AttributeModifier(AndroidAttributes.attributeBatteryUse.getAttributeUnlocalizedName(), -batteryUse * 0.03, 1));
 			}
 
-			part.setStackDisplayName(Reference.UNICODE_LEGENDARY + " " + ChatFormatting.GOLD + MOStringHelper.translateToLocal("rarity.legendary") + " " + part.getDisplayName());
+			part.setStackDisplayName(Reference.UNICODE_LEGENDARY + " " + TextFormatting.GOLD + MOStringHelper.translateToLocal("rarity.legendary") + " " + part.getDisplayName());
 		}
 	}
 

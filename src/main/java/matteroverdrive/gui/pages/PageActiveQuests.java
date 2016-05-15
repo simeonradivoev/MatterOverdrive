@@ -40,6 +40,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +152,7 @@ public class PageActiveQuests extends ElementBaseGroup implements IListHandler
 				questInfo.addLines(objectiveLines);
 			}
 			questInfo.addLine("");
-			questInfo.addLine(ChatFormatting.GOLD + String.format("Rewards: +%sxp", selectedQuest.getXP(Minecraft.getMinecraft().thePlayer)));
+			questInfo.addLine(TextFormatting.GOLD + String.format("Rewards: +%sxp", selectedQuest.getXP(Minecraft.getMinecraft().thePlayer)));
 			List<IQuestReward> rewards = new ArrayList<>();
 			selectedQuest.addRewards(rewards, Minecraft.getMinecraft().thePlayer);
 			questRewards.getElements().clear();

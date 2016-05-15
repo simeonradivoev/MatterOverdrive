@@ -33,6 +33,7 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +102,7 @@ public class GuiQuestPreview extends MOGuiBase
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(guiLeft + 24, guiTop + 30, 0);
 			GlStateManager.scale(scale, scale, scale);
-			ClientProxy.moFontRender.drawString(ChatFormatting.BOLD + questName, 0, 0, 0x2394e3);
+			ClientProxy.moFontRender.drawString(TextFormatting.BOLD + questName, 0, 0, 0x2394e3);
 			GlStateManager.popMatrix();
 		}
 		super.drawGuiContainerBackgroundLayer(partialTick, x, y);
@@ -120,12 +121,12 @@ public class GuiQuestPreview extends MOGuiBase
 		questInfo.addLine("");
 		for (int i = 0; i < questStack.getObjectivesCount(Minecraft.getMinecraft().thePlayer); i++)
 		{
-			List<String> objectiveLines = MatterOverdrive.questFactory.getFormattedQuestObjective(Minecraft.getMinecraft().thePlayer, questStack, i, width, ChatFormatting.BLUE.toString(), ChatFormatting.BLUE.toString());
+			List<String> objectiveLines = MatterOverdrive.questFactory.getFormattedQuestObjective(Minecraft.getMinecraft().thePlayer, questStack, i, width, TextFormatting.BLUE.toString(), TextFormatting.BLUE.toString());
 			questInfo.addLines(objectiveLines);
 		}
 		questInfo.addLine("");
-		questInfo.addLine(ChatFormatting.DARK_PURPLE + "Rewards:");
-		questInfo.addLine(String.format(ChatFormatting.DARK_PURPLE + "   +%sxp", questStack.getXP(Minecraft.getMinecraft().thePlayer)));
+		questInfo.addLine(TextFormatting.DARK_PURPLE + "Rewards:");
+		questInfo.addLine(String.format(TextFormatting.DARK_PURPLE + "   +%sxp", questStack.getXP(Minecraft.getMinecraft().thePlayer)));
 		List<IQuestReward> rewards = new ArrayList<>();
 		questStack.addRewards(rewards, Minecraft.getMinecraft().thePlayer);
 		questRewards.getElements().clear();

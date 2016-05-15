@@ -24,6 +24,7 @@ import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class EnergyPack extends MOBaseItem implements IEnergyPack
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
 	{
 		super.addDetails(itemstack, player, infos);
-		infos.add(ChatFormatting.YELLOW + MOEnergyHelper.formatEnergy(null, getEnergyAmount(itemstack)));
+		infos.add(TextFormatting.YELLOW + MOEnergyHelper.formatEnergy(null, getEnergyAmount(itemstack)));
 	}
 
 	@Override

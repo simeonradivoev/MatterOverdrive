@@ -39,6 +39,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -125,22 +126,22 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
 		}
 	}
 
-	public ChatFormatting getNameColor()
+	public TextFormatting getNameColor()
 	{
 		if (getIsLegendary())
 		{
-			return ChatFormatting.GOLD;
+			return TextFormatting.GOLD;
 		}
 		else
 		{
 			switch (getAndroidLevel())
 			{
 				case 0:
-					return ChatFormatting.GRAY;
+					return TextFormatting.GRAY;
 				case 1:
-					return ChatFormatting.DARK_AQUA;
+					return TextFormatting.DARK_AQUA;
 				case 2:
-					return ChatFormatting.DARK_PURPLE;
+					return TextFormatting.DARK_PURPLE;
 				default:
 					return null;
 			}
@@ -369,7 +370,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
 		}
 		else
 		{
-			ChatFormatting color = getNameColor();
+			TextFormatting color = getNameColor();
 			if (color != null)
 			{
 				return color + super.getCustomNameTag();

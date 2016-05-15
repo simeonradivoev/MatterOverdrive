@@ -19,7 +19,6 @@
 package matteroverdrive.client.render.tileentity.starmap;
 
 import com.google.common.base.Function;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.proxy.ClientProxy;
@@ -42,6 +41,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -263,7 +263,7 @@ public class StarMapRendererStar extends StarMapRendererAbstract
 			if (planet.isHomeworld(Minecraft.getMinecraft().thePlayer))
 			{
 				width = Minecraft.getMinecraft().fontRendererObj.getStringWidth("[Home]");
-				Minecraft.getMinecraft().fontRendererObj.drawString(ChatFormatting.GOLD + "[Home]", -width / 2, -10, 0xFFFFFF);
+				Minecraft.getMinecraft().fontRendererObj.drawString(TextFormatting.GOLD + "[Home]", -width / 2, -10, 0xFFFFFF);
 			}
 		}
 		else
@@ -278,7 +278,7 @@ public class StarMapRendererStar extends StarMapRendererAbstract
 				{
 					String info = String.format("[%s]", owner.getDisplayName().getFormattedText());
 					width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(info);
-					Minecraft.getMinecraft().fontRendererObj.drawString(ChatFormatting.GOLD + info, -width / 2, -10, 0xFFFFFF);
+					Minecraft.getMinecraft().fontRendererObj.drawString(TextFormatting.GOLD + info, -width / 2, -10, 0xFFFFFF);
 				}
 			}
 		}

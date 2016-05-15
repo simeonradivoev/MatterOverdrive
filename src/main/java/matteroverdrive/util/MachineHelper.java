@@ -35,7 +35,7 @@ public class MachineHelper
 				}
 				else
 				{
-					TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal(errorMessage).replace("$0", ((MOTileEntityMachine)tileEntity).getDisplayName().toString()));
+					TextComponentString message = new TextComponentString(TextFormatting.GOLD + "[Matter Overdrive] " + TextFormatting.RED + MOStringHelper.translateToLocal(errorMessage).replace("$0", ((MOTileEntityMachine)tileEntity).getDisplayName().toString()));
 					message.setChatStyle(new Style().setColor(TextFormatting.RED));
 					player.addChatMessage(message);
 				}
@@ -53,7 +53,7 @@ public class MachineHelper
 			if (!player.capabilities.isCreativeMode &&
 					((MOTileEntityMachine)tileEntity).hasOwner() && !((MOTileEntityMachine)tileEntity).getOwner().equals(player.getGameProfile().getId()))
 			{
-				TextComponentString message = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.break").replace("$0", ((MOTileEntityMachine)tileEntity).getDisplayName().toString()));
+				TextComponentString message = new TextComponentString(TextFormatting.GOLD + "[Matter Overdrive] " + TextFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.break").replace("$0", ((MOTileEntityMachine)tileEntity).getDisplayName().toString()));
 				message.setChatStyle(new Style().setColor(TextFormatting.RED));
 				player.addChatMessage(message);
 				return false;

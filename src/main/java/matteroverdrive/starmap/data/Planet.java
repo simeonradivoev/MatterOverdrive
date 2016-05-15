@@ -36,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import org.apache.logging.log4j.Level;
@@ -207,8 +208,8 @@ public class Planet extends SpaceBody implements IInventory
 					{
 						owner.addChatMessage(
 								new TextComponentString(
-										ChatFormatting.GOLD + "[" + Reference.MOD_NAME + "]" +
-												ChatFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.ship_arrive"), ship.getDisplayName(), name)
+										TextFormatting.GOLD + "[" + Reference.MOD_NAME + "]" +
+												TextFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.ship_arrive"), ship.getDisplayName(), name)
 								)
 						);
 					}
@@ -237,8 +238,8 @@ public class Planet extends SpaceBody implements IInventory
 			{
 				entityPlayer.addChatMessage(
 						new TextComponentString(
-								ChatFormatting.GOLD + "[" + Reference.MOD_NAME + "]" +
-										ChatFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.on_build"), buildableStack.getDisplayName(), name)
+								TextFormatting.GOLD + "[" + Reference.MOD_NAME + "]" +
+										TextFormatting.RESET + String.format(MOStringHelper.translateToLocal("alert.starmap.on_build"), buildableStack.getDisplayName(), name)
 						)
 				);
 			}

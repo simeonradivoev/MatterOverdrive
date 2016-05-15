@@ -20,6 +20,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -45,8 +46,8 @@ public class BioticStatShockwave extends AbstractBioticStat
 	@Override
 	public String getDetails(int level)
 	{
-		String keyName = ChatFormatting.AQUA + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()) + ChatFormatting.GRAY;
-		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.YELLOW + Integer.toString(10) + ChatFormatting.GRAY, keyName);
+		String keyName = TextFormatting.AQUA + GameSettings.getKeyDisplayString(ClientProxy.keyHandler.getBinding(KeyHandler.ABILITY_USE_KEY).getKeyCode()) + TextFormatting.GRAY;
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), TextFormatting.YELLOW + Integer.toString(10) + TextFormatting.GRAY, keyName);
 	}
 
 	@Override

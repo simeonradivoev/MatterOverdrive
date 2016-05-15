@@ -28,6 +28,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
@@ -62,7 +63,7 @@ public class SpacetimeEqualizer extends ItemArmor
 	{
 		if (MOStringHelper.hasTranslation(getUnlocalizedName() + ".details"))
 		{
-			infos.add(ChatFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
+			infos.add(TextFormatting.GRAY + MOStringHelper.translateToLocal(getUnlocalizedName() + ".details"));
 		}
 	}
 

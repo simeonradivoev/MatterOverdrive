@@ -27,6 +27,7 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.UUID;
@@ -65,7 +66,7 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
 	@Override
 	public String getDetails(int level)
 	{
-		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), ChatFormatting.GREEN.toString() + (REGEN_AMOUNT_PER_TICK * 20), ChatFormatting.GREEN.toString() + "+" + getHealthBoost(level));
+		return MOStringHelper.translateToLocal(getUnlocalizedDetails(), TextFormatting.GREEN.toString() + (REGEN_AMOUNT_PER_TICK * 20), TextFormatting.GREEN.toString() + "+" + getHealthBoost(level));
 	}
 
 	@Override

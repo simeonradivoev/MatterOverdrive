@@ -31,6 +31,7 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -69,7 +70,7 @@ public class AndroidPill extends ItemFood
 			String[] infoList = MOStringHelper.translateToLocal(getUnlocalizedName(itemstack) + ".details").split("/n");
 			for (String info : infoList)
 			{
-				infos.add(ChatFormatting.GRAY + info);
+				infos.add(TextFormatting.GRAY + info);
 			}
 		}
 		else
@@ -82,11 +83,11 @@ public class AndroidPill extends ItemFood
 			AndroidPlayer androidPlayer = MOPlayerCapabilityProvider.GetAndroidCapability(player);
 			if (androidPlayer != null && androidPlayer.isAndroid())
 			{
-				infos.add(ChatFormatting.GREEN + "XP:" + androidPlayer.getResetXPRequired() + "l");
+				infos.add(TextFormatting.GREEN + "XP:" + androidPlayer.getResetXPRequired() + "l");
 			}
 			else
 			{
-				infos.add(ChatFormatting.RED + "Not an Android.");
+				infos.add(TextFormatting.RED + "Not an Android.");
 			}
 		}
 	}

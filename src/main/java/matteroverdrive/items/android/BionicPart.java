@@ -32,6 +32,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import java.text.DecimalFormat;
@@ -60,13 +61,13 @@ public abstract class BionicPart extends MOBaseItem implements IBionicPart
 						switch (modifier.getOperation())
 						{
 							case 0:
-								infos.add(ChatFormatting.GREEN + String.format("%s: +%s", modifier.getName(), modifier.getAmount()));
+								infos.add(TextFormatting.GREEN + String.format("%s: +%s", modifier.getName(), modifier.getAmount()));
 								break;
 							case 1:
-								infos.add(ChatFormatting.GREEN + String.format("%s: %s", modifier.getName(), (modifier.getAmount() >= 0 ? "+" : "") + DecimalFormat.getPercentInstance().format(modifier.getAmount())));
+								infos.add(TextFormatting.GREEN + String.format("%s: %s", modifier.getName(), (modifier.getAmount() >= 0 ? "+" : "") + DecimalFormat.getPercentInstance().format(modifier.getAmount())));
 								break;
 							default:
-								infos.add(ChatFormatting.GREEN + String.format("%s: %s", modifier.getName(), DecimalFormat.getPercentInstance().format(modifier.getAmount() + 1)));
+								infos.add(TextFormatting.GREEN + String.format("%s: %s", modifier.getName(), DecimalFormat.getPercentInstance().format(modifier.getAmount() + 1)));
 						}
 					});
 		}

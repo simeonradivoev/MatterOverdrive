@@ -43,6 +43,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Created by Simeon on 5/27/2015.
@@ -187,7 +188,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 			String info = Minecraft.getMinecraft().thePlayer.experienceLevel + " XP";
 			GlStateManager.disableLighting();
 			int width = fontRendererObj.getStringWidth(info);
-			fontRendererObj.drawString(ChatFormatting.GREEN + info, 280 - width / 2, ySize - 20, 0xFFFFFF);
+			fontRendererObj.drawString(TextFormatting.GREEN + info, 280 - width / 2, ySize - 20, 0xFFFFFF);
 		}
 	}
 

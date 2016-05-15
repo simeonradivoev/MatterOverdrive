@@ -37,6 +37,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -107,7 +108,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
 			}
 			else
 			{
-				list.set(k, ChatFormatting.GRAY + info);
+				list.set(k, TextFormatting.GRAY + info);
 			}
 		}
 

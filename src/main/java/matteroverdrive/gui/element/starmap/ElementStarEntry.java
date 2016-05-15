@@ -37,6 +37,7 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
 		GuiStarMap guiStarMap = (GuiStarMap)gui;
 		if (guiStarMap.getMachine().getGalaxyPosition().equals(star))
 		{
-			name = "@ " + ChatFormatting.ITALIC + name;
+			name = "@ " + TextFormatting.ITALIC + name;
 		}
 
 		if (Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode || GalaxyClient.getInstance().canSeeStarInfo(star, Minecraft.getMinecraft().thePlayer))

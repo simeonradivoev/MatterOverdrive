@@ -22,6 +22,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.events.MOEventMatterTooltip;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -42,11 +43,11 @@ public class TooltipHandler
 			{
 				if (tooltipEvent.matter > 0)
 				{
-					event.getToolTip().add(ChatFormatting.BLUE + MOStringHelper.translateToLocal("gui.tooltip.matter") + ": " + ChatFormatting.GOLD + MatterHelper.formatMatter(tooltipEvent.matter));
+					event.getToolTip().add(TextFormatting.BLUE + MOStringHelper.translateToLocal("gui.tooltip.matter") + ": " + TextFormatting.GOLD + MatterHelper.formatMatter(tooltipEvent.matter));
 				}
 				else
 				{
-					event.getToolTip().add(ChatFormatting.BLUE + MOStringHelper.translateToLocal("gui.tooltip.matter") + ": " + ChatFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.matter.none"));
+					event.getToolTip().add(TextFormatting.BLUE + MOStringHelper.translateToLocal("gui.tooltip.matter") + ": " + TextFormatting.RED + MOStringHelper.translateToLocal("gui.tooltip.matter.none"));
 				}
 			}
 		}

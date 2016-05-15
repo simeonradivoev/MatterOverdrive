@@ -31,6 +31,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -69,12 +70,12 @@ public class SecurityProtocol extends MOBaseItem
 				if (entityPlayer != null)
 				{
 					String owner = entityPlayer.getGameProfile().getName();
-					infos.add(ChatFormatting.YELLOW + "Owner: " + owner);
+					infos.add(TextFormatting.YELLOW + "Owner: " + owner);
 				}
 			}
 			catch (Exception e)
 			{
-				infos.add(ChatFormatting.RED + MOStringHelper.translateToLocal(getUnlocalizedName() + ".invalid"));
+				infos.add(TextFormatting.RED + MOStringHelper.translateToLocal(getUnlocalizedName() + ".invalid"));
 			}
 		}
 	}

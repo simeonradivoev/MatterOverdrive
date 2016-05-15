@@ -36,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -68,16 +69,16 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
 		{
 			if (itemstack.getTagCompound().getByte("Type") == 1)
 			{
-				infos.add(ChatFormatting.AQUA + MOStringHelper.translateToLocal("item.rouge_android_part.range"));
+				infos.add(TextFormatting.AQUA + MOStringHelper.translateToLocal("item.rouge_android_part.range"));
 			}
 			else
 			{
-				infos.add(ChatFormatting.GOLD + MOStringHelper.translateToLocal("item.rouge_android_part.melee"));
+				infos.add(TextFormatting.GOLD + MOStringHelper.translateToLocal("item.rouge_android_part.melee"));
 			}
 		}
 		else
 		{
-			infos.add(ChatFormatting.GOLD + MOStringHelper.translateToLocal("item.rouge_android_part.melee"));
+			infos.add(TextFormatting.GOLD + MOStringHelper.translateToLocal("item.rouge_android_part.melee"));
 		}
 		super.addDetails(itemstack, player, infos);
 	}

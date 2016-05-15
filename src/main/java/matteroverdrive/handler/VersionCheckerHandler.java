@@ -162,19 +162,19 @@ public class VersionCheckerHandler implements IConfigSubscriber
 
 			if (modDate.before(websiteDate))
 			{
-				TextComponentString chat = new TextComponentString(ChatFormatting.GOLD + "[Matter Overdrive] " + ChatFormatting.WHITE + MOStringHelper.translateToLocal("alert.new_update"));
+				TextComponentString chat = new TextComponentString(TextFormatting.GOLD + "[Matter Overdrive] " + TextFormatting.WHITE + MOStringHelper.translateToLocal("alert.new_update"));
 				Style style = new Style();
 				player.addChatMessage(chat);
 
 				chat = new TextComponentString("");
 				ITextComponent versionName = new TextComponentString(root.get("title").getAsString() + " ").setChatStyle(new Style().setColor(TextFormatting.AQUA));
 				chat.appendSibling(versionName);
-				chat.appendText(ChatFormatting.WHITE + "[");
+				chat.appendText(TextFormatting.WHITE + "[");
 				style.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Reference.DOWNLOAD_URL));
 				style.setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.hover").setChatStyle(new Style().setColor(TextFormatting.YELLOW))));
 				style.setColor(TextFormatting.GREEN);
 				chat.appendSibling(new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.download")).setChatStyle(style);
-				chat.appendText(ChatFormatting.WHITE + "]");
+				chat.appendText(TextFormatting.WHITE + "]");
 				player.addChatMessage(chat);
 
 				chat = new TextComponentString(root.get("excerpt").getAsString().replaceAll("<.*?>", ""));

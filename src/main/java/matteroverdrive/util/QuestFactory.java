@@ -26,6 +26,7 @@ import matteroverdrive.api.quest.IQuest;
 import matteroverdrive.api.quest.QuestStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -51,19 +52,19 @@ public class QuestFactory
 		if (isCompleted)
 		{
 			//completed
-			return ChatFormatting.GREEN + Reference.UNICODE_COMPLETED_OBJECTIVE + " " + questStack.getObjective(entityPlayer, objectiveInex);
+			return TextFormatting.GREEN + Reference.UNICODE_COMPLETED_OBJECTIVE + " " + questStack.getObjective(entityPlayer, objectiveInex);
 		}
 		else
 		{
 			//not completed
-			return ChatFormatting.DARK_GREEN + Reference.UNICODE_UNCOMPLETED_OBJECTIVE + " " + questStack.getObjective(entityPlayer, objectiveInex);
+			return TextFormatting.DARK_GREEN + Reference.UNICODE_UNCOMPLETED_OBJECTIVE + " " + questStack.getObjective(entityPlayer, objectiveInex);
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	public List<String> getFormattedQuestObjective(EntityPlayer entityPlayer, QuestStack questStack, int objectiveInex, int length)
 	{
-		return getFormattedQuestObjective(entityPlayer, questStack, objectiveInex, length, ChatFormatting.DARK_GREEN.toString(), ChatFormatting.GREEN.toString());
+		return getFormattedQuestObjective(entityPlayer, questStack, objectiveInex, length, TextFormatting.DARK_GREEN.toString(), TextFormatting.GREEN.toString());
 	}
 
 	@SideOnly(Side.CLIENT)
