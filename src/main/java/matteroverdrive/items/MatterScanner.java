@@ -489,7 +489,7 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 			if (world.getBlockState(pos).getBlock() instanceof IScannable)
 			{
 				((IScannable)world.getBlockState(pos).getBlock()).onScan(world, pos.getX(), pos.getY(), pos.getZ(), player, scanner);
-				//DisplayInfo(player, scanInfo, EnumChatFormatting.GREEN);
+				//DisplayInfo(player, scanInfo, TextFormatting.GREEN);
 				return true;
 			}
 			else if (world.getTileEntity(pos) instanceof IScannable)
