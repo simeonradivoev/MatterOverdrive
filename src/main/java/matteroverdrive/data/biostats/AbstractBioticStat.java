@@ -18,7 +18,6 @@
 
 package matteroverdrive.data.biostats;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.android.BionicStatGuiInfo;
 import matteroverdrive.api.android.IBioticStat;
 import matteroverdrive.client.render.HoloIcon;

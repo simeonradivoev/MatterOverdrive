@@ -18,7 +18,6 @@
 
 package matteroverdrive.util;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.matter.IMatterItem;

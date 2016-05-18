@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.util.MOStringHelper;

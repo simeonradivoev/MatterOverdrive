@@ -84,7 +84,7 @@ public class ElementDoubleHelix extends MOElementBase
 
 		List<BakedQuad> quadList = ClientProxy.renderHandler.doubleHelixModel.getQuads(null, null, 0);
 		/*Tessellator.getInstance().getBuffer().begin(GL_QUADS, ClientProxy.renderHandler.doubleHelixModel.getFormat());
-        for (BakedQuad quad : quadList)
+		for (BakedQuad quad : quadList)
         {
             Tessellator.getInstance().getBuffer().addVertexData(quad.getVertexData());
             //LightUtil.renderQuadColorSlow(Tessellator.getInstance().getBuffer(),quad,color);

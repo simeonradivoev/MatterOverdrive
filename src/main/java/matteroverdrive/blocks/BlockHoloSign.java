@@ -69,7 +69,7 @@ public class BlockHoloSign extends BlockMonitor implements IDismantleable, ITile
     }*/
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         this.blockIcon = MatterOverdriveIcons.Monitor_back;

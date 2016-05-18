@@ -43,7 +43,7 @@ public class SaveWorldToImage extends CommandBase
 	public void execute(MinecraftServer server, ICommandSender commandSender, String[] parameters)
 	{
 		/*if (parameters.length >= 1)
-        {
+		{
             if (parameters[0].equalsIgnoreCase("generate"))
             {
                 if (parameters.length >= 2)

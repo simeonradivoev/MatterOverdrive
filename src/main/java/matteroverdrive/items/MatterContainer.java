@@ -184,7 +184,7 @@ public class MatterContainer extends MOBaseItem
 	}
 
 	// TODO: 3/26/2016 Find how to get color from stack
-    /*@Override
+	/*@Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)
     {

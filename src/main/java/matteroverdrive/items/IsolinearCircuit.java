@@ -61,7 +61,7 @@ public class IsolinearCircuit extends MOBaseItem
 	 * Gets an holoIcon index based on an item's damage value
 	 */
 	/*@SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int damage)
+	public IIcon getIconFromDamage(int damage)
     {
         int j = MathHelper.clamp_int(damage, 0, 3);
         return this.icons[j];

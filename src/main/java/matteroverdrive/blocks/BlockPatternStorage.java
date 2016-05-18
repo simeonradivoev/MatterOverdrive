@@ -63,7 +63,7 @@ public class BlockPatternStorage extends MOBlockMachine
 	}
 
     /*@Override
-    public int getRenderType()
+	public int getRenderType()
     {
         return RendererBlockPatternStorage.renderID;
     }*/

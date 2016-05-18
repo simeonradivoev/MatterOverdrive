@@ -1,6 +1,5 @@
 package matteroverdrive.items;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.util.MatterHelper;

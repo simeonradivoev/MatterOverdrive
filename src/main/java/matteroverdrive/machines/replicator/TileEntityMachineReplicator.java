@@ -420,7 +420,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
 	//region Getters and Setters
 /*    public ItemPattern getInternalPatternStorage()
-    {
+	{
         return internalPatternStorage;
     }*/
 /*    public void setInternalPatternStorage(ItemPattern internalPatternStorage){this.internalPatternStorage = internalPatternStorage;}*/

@@ -149,7 +149,15 @@ public class Reference
 	//region config keys
 	public static final String CONFIG_KEY_REDSTONE_MODE = "redstoneMode";
 	//endregion
-
+	//region World Geb
+	public static final String CHEST_GEN_ANDROID_HOUSE = "android_house";
+	public static final String WORLD_DATA_MO_GEN_POSITIONS = "MOWorldGenPositions";
+	//endregion
+	//region Unicodes
+	public static final String UNICODE_LEGENDARY = "\u272a";
+	public static final String UNICODE_COMPLETED_OBJECTIVE = "\u25a0";
+	//endregion
+	public static final String UNICODE_UNCOMPLETED_OBJECTIVE = "\u25a1";
 	//region other mods
 	private static Boolean eioLoaded;
 
@@ -161,16 +169,5 @@ public class Reference
 		}
 		return eioLoaded;
 	}
-	//endregion
-
-	//region World Geb
-	public static final String CHEST_GEN_ANDROID_HOUSE = "android_house";
-	public static final String WORLD_DATA_MO_GEN_POSITIONS = "MOWorldGenPositions";
-	//endregion
-
-	//region Unicodes
-	public static final String UNICODE_LEGENDARY = "\u272a";
-	public static final String UNICODE_COMPLETED_OBJECTIVE = "\u25a0";
-	public static final String UNICODE_UNCOMPLETED_OBJECTIVE = "\u25a1";
 	//endregion
 }

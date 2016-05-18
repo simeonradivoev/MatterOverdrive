@@ -222,7 +222,7 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
 	 * Sets the held item, or an armor slot. Slot 0 is held item. Slot 1-4 is armor. Params: Item, slot
 	 */
 	/*@Override
-    public void setCurrentItemOrArmor(int slot, ItemStack itemStack)
+	public void setCurrentItemOrArmor(int slot, ItemStack itemStack)
     {
         super.setCurrentItemOrArmor(slot, itemStack);
 

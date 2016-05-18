@@ -40,7 +40,7 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
 	{
 		super(machine);
 	}
-    /*private static String[] methodNames = new String[] {
+	/*private static String[] methodNames = new String[] {
             "getLocations",
             "getSelectedLocation",
             "getLocation",

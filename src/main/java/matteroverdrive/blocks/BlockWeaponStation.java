@@ -65,7 +65,7 @@ public class BlockWeaponStation extends MOBlockMachine
 	}
 
     /*@Override
-    public int getRenderType()
+	public int getRenderType()
     {
         return MOBlockRenderer.renderID;
     }*/

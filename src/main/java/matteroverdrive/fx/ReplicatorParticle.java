@@ -8,7 +8,9 @@ import net.minecraft.world.World;
 
 public class ReplicatorParticle extends EntityFX
 {
-	/** the scale of the flame FX */
+	/**
+	 * the scale of the flame FX
+	 */
 	private float flameScale;
 	private double centerX, centerY, centerZ;
 	private double pointGravityScale = 1.0D;

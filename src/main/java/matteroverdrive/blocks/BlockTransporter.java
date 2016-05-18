@@ -48,7 +48,7 @@ public class BlockTransporter extends MOMatterEnergyStorageBlock
 	 * Gets the block's texture. Args: side, meta
 	 */
 	/*@SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int metadata)
+	public IIcon getIcon(int side, int metadata)
     {
     	if(side == 0 || side == 1)
     	{

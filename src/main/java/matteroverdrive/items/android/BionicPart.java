@@ -20,7 +20,6 @@ package matteroverdrive.items.android;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.entity.android_player.AndroidPlayer;

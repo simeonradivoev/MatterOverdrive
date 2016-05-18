@@ -175,7 +175,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 		{
 			// TODO: 3/25/2016  find how to get equipment in slot
 			/*if ((Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3) != null && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3).getItem() instanceof SpacetimeEqualizer)
-                    || Minecraft.getMinecraft().thePlayer.capabilities.disableDamage
+					|| Minecraft.getMinecraft().thePlayer.capabilities.disableDamage
                     || AndroidPlayer.get(Minecraft.getMinecraft().thePlayer).isUnlocked(MatterOverdriveBioticStats.equalizer,0))
                 return;*/
 

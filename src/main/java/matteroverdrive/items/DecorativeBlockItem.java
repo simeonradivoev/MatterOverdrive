@@ -64,7 +64,7 @@ public class DecorativeBlockItem extends ItemBlock
 
 	// TODO: 3/26/2016 Find how to get color for stack
 	/*@SideOnly(Side.CLIENT)
-    public int getColorFromItemStack(ItemStack stack, int renderPass)
+	public int getColorFromItemStack(ItemStack stack, int renderPass)
     {
         if (block instanceof BlockDecorativeColored)
         {

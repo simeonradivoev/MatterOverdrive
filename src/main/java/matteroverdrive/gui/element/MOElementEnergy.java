@@ -19,7 +19,6 @@
 package matteroverdrive.gui.element;
 
 import cofh.api.energy.IEnergyStorage;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MOEnergyHelper;

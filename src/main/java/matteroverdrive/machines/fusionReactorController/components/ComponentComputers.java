@@ -108,7 +108,7 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
 	//endregion
 
     /*//region ComputerCraft
-    @Override
+	@Override
     @Optional.Method(modid = "ComputerCraft")
     public String getType() {
         return peripheralName;

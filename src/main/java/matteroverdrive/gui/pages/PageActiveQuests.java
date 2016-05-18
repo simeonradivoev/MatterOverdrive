@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.pages;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.quest.IQuestReward;

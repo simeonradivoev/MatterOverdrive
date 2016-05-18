@@ -46,7 +46,7 @@ public abstract class BlockCT extends MOBlock
     }*/
 
 /*    @Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
         iconConnectedTexture.setType(0);

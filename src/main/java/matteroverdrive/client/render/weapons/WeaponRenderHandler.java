@@ -282,7 +282,7 @@ public class WeaponRenderHandler
 
 			// TODO: 3/25/2016 Find how get get stack color
 			/*if (flag && bakedquad.hasTintIndex())
-            {
+			{
                 k = stack.getItem().getColorFromItemStack(stack, bakedquad.getTintIndex());
 
                 if (EntityRenderer.anaglyphEnable)

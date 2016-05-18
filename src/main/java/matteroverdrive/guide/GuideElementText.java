@@ -18,7 +18,6 @@
 
 package matteroverdrive.guide;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.gui.GuiDataPad;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;

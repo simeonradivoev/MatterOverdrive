@@ -18,7 +18,6 @@
 
 package matteroverdrive.items.weapon;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.WeaponShot;

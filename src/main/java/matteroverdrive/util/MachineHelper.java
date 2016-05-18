@@ -1,6 +1,5 @@
 package matteroverdrive.util;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.machines.MOTileEntityMachine;
 import net.minecraft.entity.player.EntityPlayer;

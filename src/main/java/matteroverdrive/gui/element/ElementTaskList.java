@@ -180,7 +180,7 @@ public class ElementTaskList extends MOElementListBox
     }*/
 
     /*@Override
-    public void addTooltip(List<String> list)
+	public void addTooltip(List<String> list)
     {
         if (!lastTooltip.isEmpty())
         {

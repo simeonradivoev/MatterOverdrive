@@ -51,7 +51,7 @@ public class BlockMatterAnalyzer extends MOBlockMachine
 	}
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         this.iconFront = iconRegister.registerIcon(Reference.MOD_ID + ":" + "analyzer_front");

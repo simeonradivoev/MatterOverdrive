@@ -20,7 +20,6 @@ package matteroverdrive.handler;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.handler.thread.VersionCheckThread;
@@ -67,7 +66,7 @@ public class VersionCheckerHandler implements IConfigSubscriber
 		{
 			// TODO: 3/25/2016 Find how to acccess the configuration manager
 			/*if (!event.player.getServer().getConfigurationManager().canSendCommands(event.player.getGameProfile())) {
-                return;
+				return;
             }*/
 		}
 

@@ -89,7 +89,7 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 	public void manageTransfer()
 	{
 		/*if (getMatterStored() > 0 && getNetwork() != null)
-        {
+		{
             for (IFluidPipe pipe : getNetwork().getFluidHandlers())
             {
                 for (EnumFacing direction : EnumFacing.VALUES)

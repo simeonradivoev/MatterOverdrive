@@ -80,7 +80,7 @@ public class BlockMatterRecycler extends MOMatterEnergyStorageBlock
 		return new TileEntityMachineMatterRecycler();
 	}
 /*
-    @Override
+	@Override
     public int getRenderType()
     {
         return MOBlockRenderer.renderID;

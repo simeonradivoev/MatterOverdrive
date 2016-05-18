@@ -64,7 +64,7 @@ public abstract class BlockMonitor extends MOBlockMachine
     }*/
 
 	// TODO: 3/25/2016 Find how to set bounds based on state
-    /*@Override
+	/*@Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
     {
         if (world.getBlockState(pos).getBlock() == this)

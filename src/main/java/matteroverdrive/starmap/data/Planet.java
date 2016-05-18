@@ -18,7 +18,6 @@
 
 package matteroverdrive.starmap.data;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;

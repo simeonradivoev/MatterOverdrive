@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.android.BionicStatGuiInfo;
@@ -204,6 +203,7 @@ public class GuiAndroidStation extends MOGuiMachine<TileEntityAndroidStation>
 	/**
 	 * Draws an entity on the screen
 	 * Copied from {@link net.minecraft.client.gui.inventory.GuiInventory}
+	 *
 	 * @param posX
 	 * @param posY
 	 * @param scale

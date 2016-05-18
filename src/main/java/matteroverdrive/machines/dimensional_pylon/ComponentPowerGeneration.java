@@ -131,7 +131,7 @@ public class ComponentPowerGeneration extends MachineComponentAbstract<TileEntit
 						{
 							// TODO: 3/25/2016 Find out how to access armor
 							/*hasFullIron = true;
-                            for (ItemStack armor : entity.getArmorInventoryList())
+							for (ItemStack armor : entity.getArmorInventoryList())
                             {
                                 ItemStack eqStack = ((EntityLivingBase)entity).getCurrentArmor(i);
                                 if (!isIronMaterial(eqStack))

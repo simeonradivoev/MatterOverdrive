@@ -95,7 +95,7 @@ public class ForceGlass extends BlockCT implements IDismantleable
 	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		/*Block block = world.getBlock(x, y, z);
-        return !(block instanceof ForceGlass || checkEIO(world, block, x, y, z));*/
+		return !(block instanceof ForceGlass || checkEIO(world, block, x, y, z));*/
 		return !(world.getBlockState(pos).getBlock() instanceof ForceGlass);
 	}
 

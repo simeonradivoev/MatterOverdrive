@@ -36,7 +36,7 @@ public class TileEntityRendererPatterStorage extends TileEntitySpecialRenderer<T
 	public void renderTileEntityAt(TileEntityMachinePatternStorage patternStorage, double x, double y, double z, float ticks, int destroyStage)
 	{
 		/*GL11.glPushMatrix();
-        GlStateManager.translate(x + 0.5f, y + 0.5f, z + 0.5f);
+		GlStateManager.translate(x + 0.5f, y + 0.5f, z + 0.5f);
         RenderUtils.rotateFromBlock(patternStorage.getWorld(), patternStorage.getPos());
         bindTexture(texture);
 

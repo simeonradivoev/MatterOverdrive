@@ -1,7 +1,6 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.events.bionicStats.MOEventBionicStat;
 import matteroverdrive.client.render.RenderParticlesHandler;

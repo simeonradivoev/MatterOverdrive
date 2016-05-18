@@ -19,7 +19,6 @@
 package matteroverdrive.items.weapon;
 
 import cofh.api.energy.IEnergyContainerItem;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;

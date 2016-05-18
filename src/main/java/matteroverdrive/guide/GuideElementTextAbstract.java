@@ -19,7 +19,6 @@
 package matteroverdrive.guide;
 
 import cofh.api.energy.IEnergyContainerItem;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.gui.GuiDataPad;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.client.gui.FontRenderer;

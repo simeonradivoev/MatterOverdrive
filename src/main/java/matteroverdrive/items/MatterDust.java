@@ -1,6 +1,5 @@
 package matteroverdrive.items;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.matter.IMatterItem;
 import matteroverdrive.api.matter.IRecyclable;
 import matteroverdrive.init.MatterOverdriveItems;

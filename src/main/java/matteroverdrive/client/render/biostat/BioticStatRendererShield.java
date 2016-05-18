@@ -54,7 +54,7 @@ public class BioticStatRendererShield implements IBioticStatRenderer<BioticStatS
 	public BioticStatRendererShield()
 	{
 		/*try
-        {
+		{
             //shield_model = OBJLoader.instance.loadModel(model_path);
             //normal_sphere = OBJLoader.instance.loadModel(new ResourceLocation(Reference.MODEL_SPHERE));
         } catch (IOException e)

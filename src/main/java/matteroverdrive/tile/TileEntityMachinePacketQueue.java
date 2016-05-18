@@ -97,7 +97,7 @@ public abstract class TileEntityMachinePacketQueue extends MOTileEntityMachine i
 
 	//region Matter Network
 	/*@Override
-    public int onNetworkTick(World world,TickEvent.Phase phase)
+	public int onNetworkTick(World world,TickEvent.Phase phase)
     {
         return networkComponent.onNetworkTick(world, phase);
     }

@@ -18,7 +18,6 @@
 
 package matteroverdrive.entity.monster;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import matteroverdrive.Reference;
 import matteroverdrive.api.entity.IPathableMob;

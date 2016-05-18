@@ -18,7 +18,6 @@
 
 package matteroverdrive.data.dialog;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.dialog.IDialogNpc;
 import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.init.MatterOverdriveItems;

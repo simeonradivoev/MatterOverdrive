@@ -18,7 +18,6 @@
 
 package matteroverdrive.util;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.tileentity.TileEntityRendererPatternMonitor;

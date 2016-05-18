@@ -18,14 +18,13 @@
 
 package matteroverdrive.util;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.starmap.PlanetStatType;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;

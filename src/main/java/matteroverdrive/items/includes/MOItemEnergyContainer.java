@@ -19,7 +19,6 @@
 package matteroverdrive.items.includes;
 
 import cofh.api.energy.IEnergyContainerItem;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

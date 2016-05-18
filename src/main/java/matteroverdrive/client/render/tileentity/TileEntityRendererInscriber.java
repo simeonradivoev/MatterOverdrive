@@ -45,7 +45,7 @@ public class TileEntityRendererInscriber extends TileEntitySpecialRenderer
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks, int destoryStage)
 	{
 		/*if (item == null)
-        {
+		{
             item = new EntityItem(tileEntity.getWorldObj());
             item.setEntityItemStack(new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2));
         }

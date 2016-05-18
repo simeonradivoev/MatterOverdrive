@@ -1,6 +1,5 @@
 package matteroverdrive.machines.dimensional_pylon;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;

@@ -406,7 +406,7 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler, 
 	protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
 	{
 		/*Slot var6 = this.getSlotAtPosition(var1, var2);
-        ItemStack var7 = this.mc.thePlayer.inventory.getItemStack();
+		ItemStack var7 = this.mc.thePlayer.inventory.getItemStack();
         if(this.field_147007_t && var6 != null && var7 != null && var6 instanceof SlotFalseCopy) {
             if(this.lastIndex != var6.slotNumber) {
                 this.lastIndex = var6.slotNumber;

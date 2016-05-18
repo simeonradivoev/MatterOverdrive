@@ -100,7 +100,7 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
 	}
 
     /*@SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister iconRegister)
+	public void registerIcons(IIconRegister iconRegister)
     {
         this.icons = new IIcon[subItemNames.length];
 

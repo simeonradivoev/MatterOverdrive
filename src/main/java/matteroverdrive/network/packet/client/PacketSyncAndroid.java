@@ -57,7 +57,7 @@ public class PacketSyncAndroid extends PacketAbstract
 	public PacketSyncAndroid(AndroidPlayer player, EnumSet<AndroidPlayer.DataType> dataTypes)
 	{
 	   /* switch (syncPart)
-        {
+		{
             case SYNC_BATTERY:
                 if (player.getStackInSlot(player.ENERGY_SLOT) != null)
                 {

@@ -18,7 +18,6 @@
 
 package matteroverdrive.gui.element.starmap;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.GalacticPosition;
 import matteroverdrive.api.starmap.IShip;

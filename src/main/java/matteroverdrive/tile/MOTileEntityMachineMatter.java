@@ -77,6 +77,14 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 		return 0;
 	}
 
+	public void setMatterStored(int matter)
+	{
+		if (getMatterStorage() != null)
+		{
+			getMatterStorage().setMatterStored(matter);
+		}
+	}
+
 	@Override
 	public int getMatterCapacity()
 	{
@@ -175,12 +183,6 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public MachineMatterStorage getMatterStorage()
 	{
 		return this.matterStorage;
-	}	public void setMatterStored(int matter)
-	{
-		if (getMatterStorage() != null)
-		{
-			getMatterStorage().setMatterStored(matter);
-		}
 	}
 
 	public void updateClientMatter()

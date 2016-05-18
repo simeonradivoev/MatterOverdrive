@@ -18,7 +18,6 @@
 
 package matteroverdrive.handler;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.events.MOEventMatterTooltip;
 import matteroverdrive.util.MOStringHelper;
 import matteroverdrive.util.MatterHelper;

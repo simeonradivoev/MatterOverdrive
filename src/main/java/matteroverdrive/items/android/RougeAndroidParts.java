@@ -19,7 +19,6 @@
 package matteroverdrive.items.android;
 
 import com.google.common.collect.Multimap;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.client.render.entity.EntityRendererRangedRougeAndroid;
 import matteroverdrive.client.render.entity.EntityRendererRougeAndroid;
@@ -117,7 +116,7 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
 	}
 
     /*@SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int damage)
+	public IIcon getIconFromDamage(int damage)
     {
         int j = MathHelper.clamp_int(damage, 0, names.length-1);
         return this.icons[j];

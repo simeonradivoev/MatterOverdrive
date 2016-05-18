@@ -1,6 +1,5 @@
 package matteroverdrive.util;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.data.WeightedRandomItemStack;
 import matteroverdrive.entity.android_player.AndroidAttributes;

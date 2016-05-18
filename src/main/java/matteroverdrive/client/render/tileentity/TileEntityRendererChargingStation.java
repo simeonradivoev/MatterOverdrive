@@ -36,7 +36,7 @@ public class TileEntityRendererChargingStation extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks, int destroyStage)
 	{
-        /*if (tileEntity != null) {
+		/*if (tileEntity != null) {
             glPushMatrix();
             float colorMul = (float)(Math.sin(Minecraft.getMinecraft().theWorld.getWorldTime() * 0.2));
             GlStateManager.color(colorMul, colorMul, colorMul);

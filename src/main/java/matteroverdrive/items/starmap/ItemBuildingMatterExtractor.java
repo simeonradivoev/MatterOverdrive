@@ -18,7 +18,6 @@
 
 package matteroverdrive.items.starmap;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.starmap.BuildingType;
 import matteroverdrive.api.starmap.IPlanetStatChange;
 import matteroverdrive.api.starmap.PlanetStatType;

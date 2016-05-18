@@ -2,7 +2,6 @@ package matteroverdrive.data.biostats;
 
 import cofh.api.energy.IEnergyContainerItem;
 import com.google.common.collect.Multimap;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;

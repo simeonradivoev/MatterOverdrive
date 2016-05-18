@@ -69,7 +69,7 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
     }*/
 
 /*    protected void manageTopPacket()
-    {
+	{
         for (int i = 0;i < getPacketQueueCount();i++)
         {
             if (getPacketQueue(i).peek() != null)

@@ -88,7 +88,7 @@ public class MatterNetworkConfigPage extends AutoConfigPage implements ITextHand
 		super.update(mouseX, mouseY, partialTicks);
 		int x = destinationTextField.getPosX() + destinationTextField.getWidth() + 10;
 		/*for (ElementSlot slot : networkConfigSlots)
-        {
+		{
             slot.setPosition(x,destinationTextField.getPosY() + 6);
             x += slot.getWidth();
         }*/

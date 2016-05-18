@@ -110,7 +110,7 @@ public abstract class BlockPipe extends MOBlockContainer
     }*/
 
 	// TODO: 3/25/2016 Find how to se block bounds based on state
-    /*@Override
+	/*@Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
     {
         float size = 0.34375f;

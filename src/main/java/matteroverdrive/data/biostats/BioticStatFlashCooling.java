@@ -1,7 +1,6 @@
 package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.events.weapon.MOEventEnergyWeapon;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.client.render.HoloIcons;

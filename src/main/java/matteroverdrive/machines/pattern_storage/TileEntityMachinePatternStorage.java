@@ -18,7 +18,6 @@
 
 package matteroverdrive.machines.pattern_storage;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
@@ -194,7 +193,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 
 	//region Database functions
 	/*@Override
-    public List<ItemPattern> getPatterns()
+	public List<ItemPattern> getPatterns()
     {
         List<ItemPattern> list = new ArrayList<>();
         for (int slotId : pattern_storage_slots)

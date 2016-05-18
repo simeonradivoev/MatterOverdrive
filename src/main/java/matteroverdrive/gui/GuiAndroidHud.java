@@ -372,7 +372,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 				if (MatterOverdriveBioticStats.cloak.isActive(android, 0))
 				{
 					/*GlStateManager.blendFunc(GL_DST_COLOR, GL_ZERO);
-                    GlStateManager.color(1,1,1);
+					GlStateManager.color(1,1,1);
                     mc.renderEngine.bindTexture(cloak_overlay);
                     RenderUtils.drawPlane(0,0,-100,event.resolution.getScaledWidth(),event.resolution.getScaledHeight());*/
 				}

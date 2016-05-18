@@ -219,7 +219,7 @@ public class WeaponModuleBarrel extends MOBaseItem implements IWeaponModule
 	}
 
     /*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
     {
         icons = new IIcon[names.length];

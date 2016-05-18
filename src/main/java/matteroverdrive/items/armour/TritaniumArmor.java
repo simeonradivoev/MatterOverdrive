@@ -63,7 +63,7 @@ public class TritaniumArmor extends ItemArmor
 			//armorModel.setLivingAnimations(entityLiving, p_177182_2_, p_177182_3_, p_177182_4_);
 		}
 		/*armorModel.bipedHead.showModel = armorSlot == 0;
-        armorModel.bipedHeadwear.showModel = armorSlot == 0;
+		armorModel.bipedHeadwear.showModel = armorSlot == 0;
         armorModel.bipedBody.showModel = armorSlot == 1;
         armorModel.bipedRightArm.showModel = armorSlot == 1;
         armorModel.bipedLeftArm.showModel = armorSlot == 1;

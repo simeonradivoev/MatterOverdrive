@@ -33,7 +33,7 @@ public abstract class StarMapRendererAbstract implements ISpaceBodyHoloRenderer
 		disk = new Disk();
 		random = new Random();
 		/*try
-        {
+		{
             sphere_model = OBJLoader.instance.loadModel(new ResourceLocation(Reference.MODEL_SPHERE));
         } catch (IOException e)
         {

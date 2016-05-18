@@ -67,7 +67,7 @@ public class MatterNetworkComponentQueue extends MatterNetworkComponentClient<Ti
     }*/
 
     /*protected int handlePacketBroadcast(World world,MatterNetworkPacket packet)
-    {
+	{
         int broadcastCount = 0;
         for (int direction : directions)
         {

@@ -18,7 +18,6 @@
 
 package matteroverdrive.items.food;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.android_player.AndroidPlayer;
@@ -128,7 +127,7 @@ public class AndroidPill extends ItemFood
 	}
 
     /*@Override
-    public int getRenderPasses(int metadata)
+	public int getRenderPasses(int metadata)
     {
         return 2;
     }*/

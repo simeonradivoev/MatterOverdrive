@@ -58,7 +58,7 @@ public class ElementConnections extends MOElementBase
 	public void drawBackground(int mouseX, int mouseY, float gameTicks)
 	{
 		/*for (int i = 0;i < 6;i++)
-        {
+		{
             BlockPos connection = machine.getConnection(i);
             GL11.glColor3f(1, 1, 1);
             int x = 50;

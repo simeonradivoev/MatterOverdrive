@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.items.includes.MOBaseItem;

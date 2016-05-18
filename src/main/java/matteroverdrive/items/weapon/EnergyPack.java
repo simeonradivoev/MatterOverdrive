@@ -18,7 +18,6 @@
 
 package matteroverdrive.items.weapon;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.inventory.IEnergyPack;
 import matteroverdrive.items.includes.MOBaseItem;
 import matteroverdrive.util.MOEnergyHelper;
@@ -58,7 +57,7 @@ public class EnergyPack extends MOBaseItem implements IEnergyPack
 
 	// TODO: 3/26/2016 FInd how to get Color from stack
 	/*@Override
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int pass)
     {
         if (pass == 1)

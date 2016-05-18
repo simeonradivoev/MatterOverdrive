@@ -22,7 +22,7 @@ public class BlockStoneAlien extends Block
 
 	// TODO: 3/26/2016 Find how to set block color
 	/*@SideOnly(Side.CLIENT)
-    @Override
+	@Override
     public int getBlockColor()
     {
         return ColorizerAlien.getStoneColor(0.5D, 1.0D);

@@ -1,7 +1,6 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;

@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.client.data.Color;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

@@ -81,7 +81,7 @@ public class MOAndroidHouseBuilding extends MOWorldGenBuilding
 	{
 		// TODO: 3/25/2016 Find how to get chest gen hook
 		/*if ((color & 0xffffff) == 0xc8d43d)
-        {
+		{
             TileEntity inventory = world.getTileEntity(pos);
             if (inventory instanceof IInventory) {
                 WeightedRandomChestContent.generateDispenserContents(random,ChestGenHooks.getInfo(Reference.CHEST_GEN_ANDROID_HOUSE).getItems(random), (IInventory) inventory,random.nextInt(10) + 10);

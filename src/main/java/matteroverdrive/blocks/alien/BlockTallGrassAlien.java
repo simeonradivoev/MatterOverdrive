@@ -81,7 +81,7 @@ public class BlockTallGrassAlien extends BlockBush implements net.minecraftforge
 
 	// TODO: 3/26/2016 Find how to set block color
 	/*@SideOnly(Side.CLIENT)
-    public int getRenderColor(IBlockState state)
+	public int getRenderColor(IBlockState state)
     {
         if (state.getBlock() != this)
         {
