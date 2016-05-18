@@ -22,7 +22,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.starmap.PlanetStatType;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
@@ -107,27 +107,27 @@ public class MOStringHelper
 
 	public static boolean hasTranslation(String string)
 	{
-		return I18n.hasKey(string);
+		return I18n.canTranslate(string);
 	}
 
 	public static String translateToLocal(String string, Object... params)
 	{
-		return I18n.format(string, params);
+		return I18n.translateToLocalFormatted(string, params);
 	}
 
 	public static String translateToLocal(PlanetStatType statType)
 	{
-		return I18n.format("planet_stat." + statType.getUnlocalizedName() + ".name");
+		return I18n.translateToLocal("planet_stat." + statType.getUnlocalizedName() + ".name");
 	}
 
 	public static String translateToLocal(UpgradeTypes type)
 	{
-		return I18n.format("upgradetype." + type.name() + ".name");
+		return I18n.translateToLocal("upgradetype." + type.name() + ".name");
 	}
 
 	public static String weaponStatTranslateToLocal(int type)
 	{
-		return I18n.format("weaponstat." + type + ".name");
+		return I18n.translateToLocal("weaponstat." + type + ".name");
 	}
 
 	public static String toInfo(UpgradeTypes type, double value, boolean good)
