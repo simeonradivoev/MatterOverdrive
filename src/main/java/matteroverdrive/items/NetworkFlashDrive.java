@@ -20,7 +20,7 @@ package matteroverdrive.items;
 
 import matteroverdrive.api.matter_network.IMatterNetworkConnection;
 import matteroverdrive.api.network.IMatterNetworkFilter;
-import matteroverdrive.client.data.Color;
+import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -41,12 +41,12 @@ import java.util.List;
 /**
  * Created by Simeon on 7/21/2015.
  */
-public class NetworkFlashDrive extends FlashDrive implements IMatterNetworkFilter
+public class NetworkFlashDrive extends MOBaseItem implements IMatterNetworkFilter
 {
 
-	public NetworkFlashDrive(String name, Color color)
+	public NetworkFlashDrive(String name)
 	{
-		super(name, color);
+		super(name);
 		setMaxStackSize(1);
 	}
 

@@ -18,7 +18,7 @@
 
 package matteroverdrive.items;
 
-import matteroverdrive.client.data.Color;
+import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -38,11 +38,12 @@ import java.util.List;
 /**
  * Created by Simeon on 8/5/2015.
  */
-public class TransportFlashDrive extends FlashDrive
+public class TransportFlashDrive extends MOBaseItem
 {
-	public TransportFlashDrive(String name, Color color)
+	public TransportFlashDrive(String name)
 	{
-		super(name, color);
+		super(name);
+		setMaxStackSize(1);
 	}
 
 	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)

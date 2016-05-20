@@ -54,16 +54,4 @@ public class EnergyPack extends MOBaseItem implements IEnergyPack
 	{
 		return 32000;
 	}
-
-	// TODO: 3/26/2016 FInd how to get Color from stack
-	/*@Override
-	@SideOnly(Side.CLIENT)
-    public int getColorFromItemStack(ItemStack itemStack, int pass)
-    {
-        if (pass == 1)
-        {
-            return Reference.COLOR_HOLO_RED.getColor();
-        }
-        return super.getColorFromItemStack(itemStack,pass);
-    }*/
 }

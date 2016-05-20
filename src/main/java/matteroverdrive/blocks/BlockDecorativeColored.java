@@ -1,5 +1,6 @@
 package matteroverdrive.blocks;
 
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -36,11 +37,11 @@ public class BlockDecorativeColored extends BlockDecorative
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_)
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
 	{
-		for (int i = 0; i < 16; i++)
+		for (EnumDyeColor color : EnumDyeColor.values())
 		{
-			p_149666_3_.add(new ItemStack(p_149666_1_, 1, i));
+			list.add(new ItemStack(itemIn, 1, color.getMetadata()));
 		}
 	}
 
@@ -49,24 +50,6 @@ public class BlockDecorativeColored extends BlockDecorative
 	{
 		return getStateFromMeta(meta);
 	}
-
-    /*@Override
-	@SideOnly(Side.CLIENT)
-    public int getRenderColor(IBlockState blockState)
-    {
-        EnumDyeColor color = blockState.getValue(COLOR);
-        return ItemDye.dyeColors[MathHelper.clamp_int(color.getMetadata(),0,ItemDye.dyeColors.length-1)];
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public int colorMultiplier(IBlockAccess world, BlockPos pos, int renderPass)
-    {
-        EnumDyeColor color = world.getBlockState(pos).getValue(COLOR);
-        return ItemDye.dyeColors[MathHelper.clamp_int(color.getMetadata(),0,ItemDye.dyeColors.length-1)];
-    }*/
-
-	//// TODO: 3/24/2016 Find New Way of coloring blocks
 
 	@Override
 	public int getMetaFromState(IBlockState state)
@@ -90,5 +73,10 @@ public class BlockDecorativeColored extends BlockDecorative
 	public int damageDropped(IBlockState state)
 	{
 		return state.getValue(COLOR).getMetadata();
+	}
+
+	public MapColor getMapColor(IBlockState state)
+	{
+		return (state.getValue(COLOR)).getMapColor();
 	}
 }

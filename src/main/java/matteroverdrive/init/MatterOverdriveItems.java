@@ -56,9 +56,9 @@ public class MatterOverdriveItems
 	public final static RomulanAle romulan_ale = new RomulanAle("romulan_ale");
 	public final static MOBaseItem me_conversion_matrix = new MOBaseItem("me_conversion_matrix");
 	public final static Phaser phaser = new Phaser("phaser");
-	public final static Battery battery = new Battery("battery", 1 << 19, Reference.COLOR_MATTER, 400, 800);
-	public final static Battery hc_battery = new Battery("hc_battery", 1 << 20, Reference.COLOR_YELLOW_STRIPES, 4096, 4096);
-	public final static Battery creative_battery = new CreativeBattery("creative_battery", 1 << 24, Reference.COLOR_HOLO_RED, 8192, 8192);
+	public final static Battery battery = new Battery("battery", 1 << 19, 400, 800);
+	public final static Battery hc_battery = new Battery("hc_battery", 1 << 20, 4096, 4096);
+	public final static Battery creative_battery = new CreativeBattery("creative_battery", 1 << 24, 8192, 8192);
 	public final static MatterDust matter_dust = new MatterDust("matter_dust", false);
 	public final static MatterDust matter_dust_refined = new MatterDust("matter_dust_refined", true);
 	public final static IsolinearCircuit isolinear_circuit = new IsolinearCircuit("isolinear_circuit");
@@ -84,11 +84,11 @@ public class MatterOverdriveItems
 	public final static ItemColonizerShip colonizerShip = new ItemColonizerShip("ship_colonizer");
 	public final static ItemBuildingBase buildingBase = new ItemBuildingBase("building_base");
 	public final static AndroidPill androidPill = new AndroidPill("android_pill");
-	public final static NetworkFlashDrive networkFlashDrive = new NetworkFlashDrive("network_flash_drive", Reference.COLOR_YELLOW_STRIPES);
+	public final static NetworkFlashDrive networkFlashDrive = new NetworkFlashDrive("network_flash_drive");
 	//public static CreativePatternDrive creativePatternDrive;
 	public final static PhaserRifle phaserRifle = new PhaserRifle("phaser_rifle");
 	public final static EnergyPack energyPack = new EnergyPack("energy_pack");
-	public final static TransportFlashDrive transportFlashDrive = new TransportFlashDrive("transport_flash_drive", Reference.COLOR_HOLO_GREEN);
+	public final static TransportFlashDrive transportFlashDrive = new TransportFlashDrive("transport_flash_drive");
 	public final static MatterContainer matterContainerFull = new MatterContainer("matter_container_full", true);
 	public final static MatterContainer matterContainer = new MatterContainer("matter_container", false);
 	public final static DataPad dataPad = new DataPad("data_pad");

@@ -81,47 +81,11 @@ public class WeaponModuleColor extends MOBaseItem implements IWeaponColor
 		}
 	}
 
-	// TODO: 3/25/2016 Find how to control stack color
-    /*@Override
-    @SideOnly(Side.CLIENT)
-    public int getColorFromItemStack(ItemStack itemStack, int pass)
-    {
-        if (pass == 1 && itemStack != null && itemStack.getItem() != null)
-        {
-            return colors[itemStack.getItemDamage()].getColor();
-        }else
-        {
-            return 16777215;
-        }
-    }*/
-
 	@Override
 	public String getItemStackDisplayName(ItemStack itemStack)
 	{
 		return ("" + MOStringHelper.translateToLocal(this.getUnlocalizedNameInefficiently(itemStack) + ".name")).trim() + " (" + MOStringHelper.translateToLocal("module.color." + names[itemStack.getItemDamage()]) + ")";
 	}
-
-    /*@Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister iconRegister)
-    {
-        super.registerIcons(iconRegister);
-        overlayIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + "weapon_module_color_overlay");
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamageForRenderPass(int damage, int pass)
-    {
-        return pass == 1 ? this.overlayIcon : super.getIconFromDamageForRenderPass(damage, pass);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean requiresMultipleRenderPasses()
-    {
-        return true;
-    }*/
 
 	@Override
 	public int getSlot(ItemStack module)

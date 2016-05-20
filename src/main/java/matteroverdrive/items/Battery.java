@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import matteroverdrive.client.data.Color;
 import matteroverdrive.items.includes.MOItemEnergyContainer;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
@@ -34,12 +33,9 @@ import java.util.List;
 
 public class Battery extends MOItemEnergyContainer
 {
-	private final Color color;
-
-	public Battery(String name, int capacity, Color color, int input, int output)
+	public Battery(String name, int capacity, int input, int output)
 	{
 		super(name, capacity, input, output);
-		this.color = color;
 		this.setMaxStackSize(1);
 	}
 
@@ -59,52 +55,6 @@ public class Battery extends MOItemEnergyContainer
 		super.addDetails(itemstack, player, infos);
 		infos.add(TextFormatting.GRAY + MOStringHelper.translateToLocal("gui.tooltip.energy.io") + ": " + maxReceive + "/" + maxExtract + MOEnergyHelper.ENERGY_UNIT + "/t");
 	}
-
-    /*@Override
-	@SideOnly(Side.CLIENT)
-    public boolean requiresMultipleRenderPasses()
-    {
-        return true;
-    }
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister p_94581_1_)
-	{
-		this.itemIcon = p_94581_1_.registerIcon(Reference.MOD_ID + ":" + "battery");
-		overlay = p_94581_1_.registerIcon(Reference.MOD_ID + ":" + "battery_overlay");
-	}
-
-	@Override
-	public int getRenderPasses(int metadata)
-	{
-		return 2;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamageForRenderPass(int damage, int pass)
-	{
-		if (pass == 1)
-		{
-			return overlay;
-		}else
-		{
-			return itemIcon;
-		}
-	}*/
-
-	// TODO: 3/26/2016 Find how to get color for Stack
-	/*@Override
-	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack itemStack, int pass)
-	{
-		if (pass == 1)
-		{
-			return color.getColor();
-		}
-		return super.getColorFromItemStack(itemStack,pass);
-	}*/
 
 	@Override
 	public void setEnergyStored(ItemStack container, int amount)

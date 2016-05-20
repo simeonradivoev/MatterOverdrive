@@ -18,7 +18,6 @@
 
 package matteroverdrive.items;
 
-import matteroverdrive.client.data.Color;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -30,9 +29,9 @@ import java.util.List;
 
 public class CreativeBattery extends Battery
 {
-	public CreativeBattery(String name, int capacity, Color color, int input, int output)
+	public CreativeBattery(String name, int capacity, int input, int output)
 	{
-		super(name, capacity, color, input, output);
+		super(name, capacity, input, output);
 		this.setMaxStackSize(1);
 	}
 

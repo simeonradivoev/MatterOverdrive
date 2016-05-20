@@ -139,7 +139,9 @@ public class ClientProxy extends CommonProxy
 		renderHandler.registerWeaponModuleRenders();
 		renderHandler.registerWeaponLayers();
 		renderHandler.registerTileEntitySpecialRenderers();
+		renderHandler.registerBlockColors();
 		renderHandler.registerItemRenderers();
+		renderHandler.registerItemColors();
 		renderHandler.registerEntityRenderers();
 		renderHandler.registerBioticStatRenderers();
 		renderHandler.registerBionicPartRenderers();

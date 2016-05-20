@@ -32,6 +32,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemColored;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.BlockFluidFinite;
@@ -139,6 +140,10 @@ public class MatterOverdriveBlocks
 					if (block instanceof MOBlockMachine)
 					{
 						GameRegistry.register(new MOMachineBlockItem(block), block.getRegistryName());
+					}
+					else if (block instanceof BlockDecorativeColored)
+					{
+						GameRegistry.register(new ItemColored(block,false), block.getRegistryName());
 					}
 					else
 					{

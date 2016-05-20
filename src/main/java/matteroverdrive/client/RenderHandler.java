@@ -28,6 +28,7 @@ import matteroverdrive.api.inventory.IBionicPart;
 import matteroverdrive.api.renderer.IBionicPartRenderer;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.api.starmap.IStarmapRenderRegistry;
+import matteroverdrive.blocks.BlockDecorativeColored;
 import matteroverdrive.client.model.ModelDrone;
 import matteroverdrive.client.model.ModelHulkingScientist;
 import matteroverdrive.client.model.ModelTritaniumArmor;
@@ -87,9 +88,12 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -101,6 +105,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -403,6 +408,14 @@ public class RenderHandler
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineContractMarket.class, tileEntityRendererContractMarket);
 	}
 
+	public void registerBlockColors()
+	{
+		FMLClientHandler.instance().getClient().getBlockColors().registerBlockColorHandler((state, p_186720_2_, pos, tintIndex) -> {
+			EnumDyeColor color = state.getValue(BlockDecorativeColored.COLOR);
+			return ItemDye.dyeColors[MathHelper.clamp_int(color.getMetadata(),0, ItemDye.dyeColors.length-1)];
+		}, MatterOverdriveBlocks.decorative_tritanium_plate_colored);
+	}
+
 	public void createItemRenderers()
 	{
 		rendererPhaser = new ItemRendererPhaser();
@@ -586,6 +599,35 @@ public class RenderHandler
 		regItemRender(MatterOverdriveBlocks.decorative_matter_tube, 2);
 		regItemRender(MatterOverdriveBlocks.decorative_tritanium_lamp, 2);
 		regItemRender(MatterOverdriveBlocks.decorative_separator, 2);
+	}
+
+	public void registerItemColors()
+	{
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_RED.getColor() : -1,MatterOverdriveItems.energyPack);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_MATTER.getColor() : -1,MatterOverdriveItems.battery);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdriveItems.hc_battery);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_RED.getColor() : -1,MatterOverdriveItems.creative_battery);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdriveItems.networkFlashDrive);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_GREEN.getColor() : -1,MatterOverdriveItems.transportFlashDrive);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_MATTER.getColor() : tintIndex == 2 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdriveItems.matterContainerFull);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+			if (tintIndex == 1 && stack != null && stack.getItem() != null)
+			{
+				return WeaponModuleColor.colors[stack.getItemDamage()].getColor();
+			}else
+			{
+				return 16777215;
+			}
+		}, MatterOverdriveItems.weapon_module_color);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+			if (tintIndex == 0 && stack != null && stack.getItem() != null)
+			{
+				return ItemDye.dyeColors[MathHelper.clamp_int(stack.getItemDamage(),0, ItemDye.dyeColors.length-1)];
+			}else
+			{
+				return -1;
+			}
+		}, Item.getItemFromBlock(MatterOverdriveBlocks.decorative_tritanium_plate_colored));
 	}
 
 	private <T extends Item> void regItemRender(T item, String name, String[] subNames)
