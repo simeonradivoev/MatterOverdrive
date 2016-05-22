@@ -53,7 +53,7 @@ public class ElementPlanetEntry extends ElementAbstractStarMapEntry<Planet>
 	@Override
 	protected void drawElementName(Planet planet, Color color, float multiply)
 	{
-		String name = spaceBody.getName();
+		String name = spaceBody.getSpaceBodyName();
 		GuiStarMap guiStarMap = (GuiStarMap)gui;
 		if (guiStarMap.getMachine().getGalaxyPosition().equals(planet))
 		{

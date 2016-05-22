@@ -151,7 +151,7 @@ public class GalaxyGenerator implements IConfigSubscriber
 	{
 		for (int i = 0; i < amount; i++)
 		{
-			Planet planet = new Planet(star.getName() + " " + i, i);
+			Planet planet = new Planet(star.getSpaceBodyName() + " " + i, i);
 			planet.setSeed(random.nextInt());
 			star.addPlanet(planet);
 			planet.setStar(star);

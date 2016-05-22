@@ -333,7 +333,7 @@ public class MatterRegistry implements IMatterRegistry
 
 				if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterMatterEntry(entry)))
 				{
-					//debug("Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
+					//debug("Registered: %1$s - %2$s kM", entry.getSpaceBodyName(), entry.getMatter());
 					itemEntires.put(entry.getKey(), entry);
 				}
 				return entry;
@@ -359,7 +359,7 @@ public class MatterRegistry implements IMatterRegistry
 			matterEntryOre.addHandler(handler);
 			if (!MinecraftForge.EVENT_BUS.post(new MOEventRegisterMatterEntry(matterEntryOre)))
 			{
-				//debug("Registered: %1$s - %2$s kM", entry.getName(), entry.getMatter());
+				//debug("Registered: %1$s - %2$s kM", entry.getSpaceBodyName(), entry.getMatter());
 				oreEntries.put(ore, matterEntryOre);
 			}
 			return matterEntryOre;

@@ -119,7 +119,7 @@ public class StarMapRenderGalaxy extends StarMapRendererStars
 				Planet from = GalaxyClient.getInstance().getTheGalaxy().getPlanet(travelEvent.getFrom());
 				Planet to = GalaxyClient.getInstance().getTheGalaxy().getPlanet(travelEvent.getTo());
 
-				RenderUtils.drawString(String.format("%s -> %s : %s", from.getName(), to.getName(), MOStringHelper.formatRemainingTime(galaxy.getTravelEvents().get(i).getTimeRemainning(starMap.getWorld()) / 20)), 0, -48 - i * 10, Reference.COLOR_HOLO, opacity);
+				RenderUtils.drawString(String.format("%s -> %s : %s", from.getSpaceBodyName(), to.getSpaceBodyName(), MOStringHelper.formatRemainingTime(galaxy.getTravelEvents().get(i).getTimeRemainning(starMap.getWorld()) / 20)), 0, -48 - i * 10, Reference.COLOR_HOLO, opacity);
 			}
 		}
 		GlStateManager.disableAlpha();

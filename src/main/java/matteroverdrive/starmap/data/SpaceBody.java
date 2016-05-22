@@ -64,12 +64,12 @@ public abstract class SpaceBody
 		this.id = id;
 	}
 
-	public String getName()
+	public String getSpaceBodyName()
 	{
 		return name;
 	}
 
-	public void setName(String name)
+	public void setSpaceBodyName(String name)
 	{
 		this.name = name;
 	}

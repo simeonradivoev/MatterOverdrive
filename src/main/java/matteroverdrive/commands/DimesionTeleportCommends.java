@@ -147,7 +147,7 @@ public class DimesionTeleportCommends extends CommandBase
                             //travelToDimension((EntityPlayerMP)entity,dimension);
                     }
 
-                    notifyOperators(sender, this, "commands.tp.success.coordinates", new Object[] {entity.getName(), Double.valueOf(commandbase$coordinatearg.func_179628_a()), Double.valueOf(commandbase$coordinatearg1.func_179628_a()), Double.valueOf(commandbase$coordinatearg2.func_179628_a())});
+                    notifyOperators(sender, this, "commands.tp.success.coordinates", new Object[] {entity.getSpaceBodyName(), Double.valueOf(commandbase$coordinatearg.func_179628_a()), Double.valueOf(commandbase$coordinatearg1.func_179628_a()), Double.valueOf(commandbase$coordinatearg2.func_179628_a())});
                 }
             }
             else
@@ -171,7 +171,7 @@ public class DimesionTeleportCommends extends CommandBase
                         entity.setLocationAndAngles(entity1.posX, entity1.posY, entity1.posZ, entity1.rotationYaw, entity1.rotationPitch);
                     }
 
-                    notifyOperators(sender, this, "commands.tp.success", new Object[] {entity.getName(), entity1.getName()});
+                    notifyOperators(sender, this, "commands.tp.success", new Object[] {entity.getSpaceBodyName(), entity1.getSpaceBodyName()});
                 }
             }*/
 		}

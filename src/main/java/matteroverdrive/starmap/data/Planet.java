@@ -317,7 +317,7 @@ public class Planet extends SpaceBody implements IInventory
 				}
 				else
 				{
-					MOLog.error("There was a problem loading a building from NBT of planet %s", getName());
+					MOLog.error("There was a problem loading a building from NBT of planet %s", getSpaceBodyName());
 					MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Problem while loading Building from NBT");
 				}
 			}
@@ -334,7 +334,7 @@ public class Planet extends SpaceBody implements IInventory
 				}
 				else
 				{
-					MOLog.error("There was a problem loading a ship from NBT of planet %s", getName());
+					MOLog.error("There was a problem loading a ship from NBT of planet %s", getSpaceBodyName());
 					MatterOverdrive.proxy.getGoogleAnalytics().setExceptionHit("Problem while loading Ship from NBT");
 				}
 			}
@@ -572,7 +572,7 @@ public class Planet extends SpaceBody implements IInventory
 		}
 		else
 		{
-			MOLog.error("Trying to add a null Ship itemstack to %s", getName());
+			MOLog.error("Trying to add a null Ship itemstack to %s", getSpaceBodyName());
 		}
 	}
 
@@ -627,7 +627,7 @@ public class Planet extends SpaceBody implements IInventory
 		}
 		else
 		{
-			MOLog.error("Trying to add a null building to planet %s", getName());
+			MOLog.error("Trying to add a null building to planet %s", getSpaceBodyName());
 		}
 	}
 
@@ -883,6 +883,12 @@ public class Planet extends SpaceBody implements IInventory
 	}
 
 	@Override
+	public String getName()
+	{
+		return getSpaceBodyName();
+	}
+
+	@Override
 	public boolean hasCustomName()
 	{
 		return true;
@@ -891,7 +897,7 @@ public class Planet extends SpaceBody implements IInventory
 	@Override
 	public ITextComponent getDisplayName()
 	{
-		return new TextComponentString(getName());
+		return new TextComponentString(getSpaceBodyName());
 	}
 	//endregion
 }

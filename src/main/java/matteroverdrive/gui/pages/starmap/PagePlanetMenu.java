@@ -93,10 +93,10 @@ public class PagePlanetMenu extends ElementBaseGroup
 		if (starMap.getPlanet() != null)
 		{
 			GlStateManager.pushMatrix();
-			int width = getFontRenderer().getStringWidth(starMap.getPlanet().getName());
+			int width = getFontRenderer().getStringWidth(starMap.getPlanet().getSpaceBodyName());
 			GlStateManager.translate(sizeY / 2 + width / 2, 16, 0);
 			GlStateManager.scale(1, 1, 1);
-			StarmapHelper.drawPlanetInfo(starMap.getPlanet(), starMap.getPlanet().getName(), 12 - width / 2, 4);
+			StarmapHelper.drawPlanetInfo(starMap.getPlanet(), starMap.getPlanet().getSpaceBodyName(), 12 - width / 2, 4);
 			GlStateManager.popMatrix();
 		}
 	}

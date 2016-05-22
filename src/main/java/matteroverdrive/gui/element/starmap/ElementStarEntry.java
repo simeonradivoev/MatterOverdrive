@@ -55,7 +55,7 @@ public class ElementStarEntry extends ElementAbstractStarMapEntry<Star>
 	@Override
 	protected void drawElementName(Star star, Color color, float multiply)
 	{
-		String name = spaceBody.getName();
+		String name = spaceBody.getSpaceBodyName();
 		GuiStarMap guiStarMap = (GuiStarMap)gui;
 		if (guiStarMap.getMachine().getGalaxyPosition().equals(star))
 		{

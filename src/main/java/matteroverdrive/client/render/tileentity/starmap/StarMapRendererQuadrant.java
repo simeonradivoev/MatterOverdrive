@@ -89,11 +89,11 @@ public class StarMapRendererQuadrant extends StarMapRendererStars
 			DecimalFormat format = new DecimalFormat("#");
 			if (GalaxyClient.getInstance().canSeeStarInfo(star, Minecraft.getMinecraft().thePlayer))
 			{
-				RenderUtils.drawString(star.getName(), 0, -52, Reference.COLOR_HOLO, opacity);
+				RenderUtils.drawString(star.getSpaceBodyName(), 0, -52, Reference.COLOR_HOLO, opacity);
 			}
 			else
 			{
-				RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer, star.getName(), 0, -52, Reference.COLOR_HOLO, opacity);
+				RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer, star.getSpaceBodyName(), 0, -52, Reference.COLOR_HOLO, opacity);
 			}
 
 			ClientProxy.holoIcons.renderIcon("icon_size", 48, -28);

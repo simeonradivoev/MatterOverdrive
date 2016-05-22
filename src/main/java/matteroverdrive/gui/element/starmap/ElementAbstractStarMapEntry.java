@@ -57,7 +57,7 @@ public abstract class ElementAbstractStarMapEntry<T extends SpaceBody> extends M
 
 	public ElementAbstractStarMapEntry(GuiStarMap gui, ElementGroupList groupList, int width, int height, T spaceBody)
 	{
-		super(gui, groupList, 0, 0, spaceBody.getName(), 0, 0, 0, 0, width, height, "");
+		super(gui, groupList, 0, 0, spaceBody.getSpaceBodyName(), 0, 0, 0, 0, width, height, "");
 		this.spaceBody = spaceBody;
 		this.groupList = groupList;
 		this.travelIcon = ClientProxy.holoIcons.getIcon("travel_icon");

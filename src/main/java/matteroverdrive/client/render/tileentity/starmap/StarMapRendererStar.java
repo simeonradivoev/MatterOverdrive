@@ -205,11 +205,11 @@ public class StarMapRendererStar extends StarMapRendererAbstract
 			{
 				if (GalaxyClient.getInstance().canSeePlanetInfo(planet, Minecraft.getMinecraft().thePlayer))
 				{
-					RenderUtils.drawString(planet.getName(), 72, -42, Reference.COLOR_HOLO, opacity);
+					RenderUtils.drawString(planet.getSpaceBodyName(), 72, -42, Reference.COLOR_HOLO, opacity);
 				}
 				else
 				{
-					RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer, planet.getName(), 72, -42, Reference.COLOR_HOLO, opacity);
+					RenderUtils.drawString(Minecraft.getMinecraft().standardGalacticFontRenderer, planet.getSpaceBodyName(), 72, -42, Reference.COLOR_HOLO, opacity);
 				}
 
 				RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO, opacity);
@@ -257,8 +257,8 @@ public class StarMapRendererStar extends StarMapRendererAbstract
 		GlStateManager.rotate(180, 0, 0, 1);
 		if (GalaxyClient.getInstance().canSeePlanetInfo(planet, Minecraft.getMinecraft().thePlayer))
 		{
-			int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(planet.getName());
-			Minecraft.getMinecraft().fontRendererObj.drawString(planet.getName(), -width / 2, 0, Planet.getGuiColor(planet).getColor());
+			int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(planet.getSpaceBodyName());
+			Minecraft.getMinecraft().fontRendererObj.drawString(planet.getSpaceBodyName(), -width / 2, 0, Planet.getGuiColor(planet).getColor());
 
 			if (planet.isHomeworld(Minecraft.getMinecraft().thePlayer))
 			{
@@ -268,8 +268,8 @@ public class StarMapRendererStar extends StarMapRendererAbstract
 		}
 		else
 		{
-			int width = Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(planet.getName());
-			Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(planet.getName(), -width / 2, 0, Planet.getGuiColor(planet).getColor());
+			int width = Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(planet.getSpaceBodyName());
+			Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(planet.getSpaceBodyName(), -width / 2, 0, Planet.getGuiColor(planet).getColor());
 
 			if (planet.hasOwner())
 			{

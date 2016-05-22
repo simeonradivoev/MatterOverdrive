@@ -50,7 +50,7 @@ public class ElementQuadrantEntry extends ElementAbstractStarMapEntry<Quadrant>
 	@Override
 	protected void drawElementName(Quadrant quadrant, Color color, float multiply)
 	{
-		RenderUtils.drawString(spaceBody.getName(), posX + 16, posY + 10, color, multiply);
+		RenderUtils.drawString(spaceBody.getSpaceBodyName(), posX + 16, posY + 10, color, multiply);
 	}
 
 	@Override
