@@ -24,6 +24,7 @@ import matteroverdrive.client.model.MOModelRenderColored;
 import matteroverdrive.entity.monster.EntityRangedRogueAndroidMob;
 import matteroverdrive.entity.monster.EntityRougeAndroidMob;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
@@ -36,9 +37,9 @@ public class EntityRendererRangedRougeAndroid extends EntityRendererRougeAndroid
 	public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "android_ranged.png");
 	final MOModelRenderColored visorModel;
 
-	public EntityRendererRangedRougeAndroid(float f)
+	public EntityRendererRangedRougeAndroid(RenderManager renderManager)
 	{
-		super(new ModelBiped(0, 0, 96, 64), f, false);
+		super(renderManager, new ModelBiped(0, 0, 96, 64), 0, false);
 		visorModel = new MOModelRenderColored(modelBipedMain, 64, 0);
 		visorModel.setDisableLighting(true);
 		visorModel.addBox(-4, -8, -4, 8, 8, 8);

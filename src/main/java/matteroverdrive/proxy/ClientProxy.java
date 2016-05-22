@@ -108,11 +108,24 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		super.preInit(event);
+
+		RenderHandler.registerItemRendererVarients();
+
+		renderHandler = new RenderHandler();
+		renderHandler.registerEntityRenderers();
+	}
+
+	@Override
 	public void init(FMLInitializationEvent event)
 	{
 		super.init(event);
 
-		renderHandler = new RenderHandler(Minecraft.getMinecraft().theWorld, Minecraft.getMinecraft().getTextureManager());
+		renderHandler.init(Minecraft.getMinecraft().theWorld, Minecraft.getMinecraft().getTextureManager());
+		renderHandler.createEntityRenderers(Minecraft.getMinecraft().getRenderManager());
+
 		androidHud = new GuiAndroidHud(Minecraft.getMinecraft());
 		keyHandler = new KeyHandler();
 		mouseHandler = new MouseHandler();
@@ -130,7 +143,6 @@ public class ClientProxy extends CommonProxy
 		//renderHandler.createBlockRenderers();
 		renderHandler.createItemRenderers();
 		renderHandler.createTileEntityRenderers(MatterOverdrive.configHandler);
-		renderHandler.createEntityRenderers(Minecraft.getMinecraft().getRenderManager());
 		renderHandler.createBioticStatRenderers();
 		renderHandler.createStarmapRenderers();
 		renderHandler.createModels();
@@ -142,7 +154,6 @@ public class ClientProxy extends CommonProxy
 		renderHandler.registerBlockColors();
 		renderHandler.registerItemRenderers();
 		renderHandler.registerItemColors();
-		renderHandler.registerEntityRenderers();
 		renderHandler.registerBioticStatRenderers();
 		renderHandler.registerBionicPartRenderers();
 		renderHandler.registerStarmapRenderers();
@@ -161,13 +172,6 @@ public class ClientProxy extends CommonProxy
 		MatterOverdriveGuides.registerGuideElements(event);
 		moFontRender = new FontRenderer(Minecraft.getMinecraft().gameSettings, new ResourceLocation(Reference.MOD_ID, "textures/font/ascii.png"), Minecraft.getMinecraft().renderEngine, false);
 		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(moFontRender);
-	}
-
-	@Override
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		super.preInit(event);
-		RenderHandler.registerItemRendererVarients();
 	}
 
 	@Override

@@ -141,19 +141,19 @@ public class RenderHandler
 	private static ItemRenderPlasmaShotgun renderPlasmaShotgun;
 	private static ItemRendererIonSniper rendererIonSniper;
 	private final Random random = new Random();
-	private final RenderMatterScannerInfoHandler matterScannerInfoHandler;
-	private final RenderParticlesHandler renderParticlesHandler;
-	private final RenderWeaponsBeam renderWeaponsBeam;
-	private final List<IWorldLastRenderer> customRenderers;
-	private final AndroidStatRenderRegistry statRenderRegistry;
-	private final StarmapRenderRegistry starmapRenderRegistry;
-	private final RenderDialogSystem renderDialogSystem;
-	private final AndroidBionicPartRenderRegistry bionicPartRenderRegistry;
-	private final WeaponModuleModelRegistry weaponModuleModelRegistry;
-	private final PipeRenderManager pipeRenderManager;
-	private final DimensionalRiftsRender dimensionalRiftsRender;
-	private final SpaceSkyRenderer spaceSkyRenderer;
-	private final WeaponRenderHandler weaponRenderHandler = new WeaponRenderHandler();
+	private RenderMatterScannerInfoHandler matterScannerInfoHandler;
+	private RenderParticlesHandler renderParticlesHandler;
+	private RenderWeaponsBeam renderWeaponsBeam;
+	private List<IWorldLastRenderer> customRenderers;
+	private AndroidStatRenderRegistry statRenderRegistry;
+	private StarmapRenderRegistry starmapRenderRegistry;
+	private RenderDialogSystem renderDialogSystem;
+	private AndroidBionicPartRenderRegistry bionicPartRenderRegistry;
+	private WeaponModuleModelRegistry weaponModuleModelRegistry;
+	private PipeRenderManager pipeRenderManager;
+	private DimensionalRiftsRender dimensionalRiftsRender;
+	private SpaceSkyRenderer spaceSkyRenderer;
+	private WeaponRenderHandler weaponRenderHandler;
 	//region Weapon Module Renderers
 	private final ModuleSniperScopeRender moduleSniperScopeRender = new ModuleSniperScopeRender(weaponRenderHandler);
 	private final ModuleHoloSightsRender moduleHoloSightsRender = new ModuleHoloSightsRender(weaponRenderHandler);
@@ -183,18 +183,6 @@ public class RenderHandler
 	private StarMapRenderGalaxy starMapRenderGalaxy;
 	private StarMapRenderPlanetStats starMapRenderPlanetStats;
 	//endregion
-	//region Entity Renderers
-	private EntityRendererRougeAndroid<EntityMeleeRougeAndroidMob> rendererRougeAndroid;
-	private EntityRendererMadScientist rendererMadScientist;
-	private EntityRendererFailedCow rendererFailedCow;
-	private EntityRendererFailedChicken rendererFailedChicken;
-	private EntityRendererFailedPig rendererFailedPig;
-	private EntityRendererFailedSheep rendererFailedSheep;
-	private EntityRendererPhaserFire rendererPhaserFire;
-	private EntityRendererRangedRougeAndroid rendererRangedRougeAndroid;
-	private EntityRendererMutantScientist rendererMutantScientist;
-	private EntityRendererDrone rendererDrone;
-	//endregion
 	//region Tile Entity Renderers
 	private TileEntityRendererReplicator tileEntityRendererReplicator;
 	private TileEntityRendererPipe tileEntityRendererPipe;
@@ -215,9 +203,12 @@ public class RenderHandler
 	private TileEntityRendererContractMarket tileEntityRendererContractMarket;
 	//endregion
 
-	public RenderHandler(World world, TextureManager textureManager)
+	public RenderHandler()
 	{
 		customRenderers = new ArrayList<>();
+	}
+
+	public void init(World world, TextureManager textureManager) {
 		matterScannerInfoHandler = new RenderMatterScannerInfoHandler();
 		renderParticlesHandler = new RenderParticlesHandler(world, textureManager);
 		renderWeaponsBeam = new RenderWeaponsBeam();
@@ -229,6 +220,7 @@ public class RenderHandler
 		pipeRenderManager = new PipeRenderManager();
 		dimensionalRiftsRender = new DimensionalRiftsRender();
 		spaceSkyRenderer = new SpaceSkyRenderer();
+		weaponRenderHandler = new WeaponRenderHandler();
 
 		addCustomRenderer(matterScannerInfoHandler);
 		addCustomRenderer(renderParticlesHandler);
@@ -672,31 +664,21 @@ public class RenderHandler
 
 	public void createEntityRenderers(RenderManager renderManager)
 	{
-		rendererRougeAndroid = new EntityRendererRougeAndroid(new ModelBiped(), 0, false);
-		rendererMadScientist = new EntityRendererMadScientist(renderManager);
-		rendererFailedPig = new EntityRendererFailedPig(renderManager, new ModelPig(), 0.7F);
-		rendererFailedCow = new EntityRendererFailedCow(renderManager, new ModelCow(), 0.7f);
-		rendererFailedChicken = new EntityRendererFailedChicken(renderManager, new ModelChicken(), 0.3f);
-		rendererFailedSheep = new EntityRendererFailedSheep(renderManager, new ModelSheep2(), 0.7f);
-		rendererPhaserFire = new EntityRendererPhaserFire(renderManager);
-		rendererRangedRougeAndroid = new EntityRendererRangedRougeAndroid(0);
-		rendererRougeAndroidHologram = new EntityRendererRougeAndroid(new ModelBiped(), 0, true);
-		rendererMutantScientist = new EntityRendererMutantScientist(renderManager, new ModelHulkingScientist(), 0, 1);
-		rendererDrone = new EntityRendererDrone(renderManager, new ModelDrone(), 0.5f);
+		rendererRougeAndroidHologram = new EntityRendererRougeAndroid(renderManager, true);
 	}
 
 	public void registerEntityRenderers()
 	{
-		RenderingRegistry.registerEntityRenderingHandler(EntityMeleeRougeAndroidMob.class, rendererRougeAndroid);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFailedPig.class, rendererFailedPig);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFailedCow.class, rendererFailedCow);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFailedChicken.class, rendererFailedChicken);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFailedSheep.class, rendererFailedSheep);
-		RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class, rendererMadScientist);
-		RenderingRegistry.registerEntityRenderingHandler(PlasmaBolt.class, rendererPhaserFire);
-		RenderingRegistry.registerEntityRenderingHandler(EntityRangedRogueAndroidMob.class, rendererRangedRougeAndroid);
-		RenderingRegistry.registerEntityRenderingHandler(EntityMutantScientist.class, rendererMutantScientist);
-		RenderingRegistry.registerEntityRenderingHandler(EntityDrone.class, rendererDrone);
+		RenderingRegistry.registerEntityRenderingHandler(EntityMeleeRougeAndroidMob.class, renderManager -> new EntityRendererRougeAndroid(renderManager, false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityVillagerMadScientist.class, EntityRendererMadScientist::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFailedPig.class, EntityRendererFailedPig::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFailedCow.class, EntityRendererFailedCow::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFailedChicken.class, EntityRendererFailedChicken::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFailedSheep.class, EntityRendererFailedSheep::new);
+		RenderingRegistry.registerEntityRenderingHandler(PlasmaBolt.class, EntityRendererPhaserFire::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityRangedRogueAndroidMob.class, EntityRendererRangedRougeAndroid::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityMutantScientist.class, EntityRendererMutantScientist::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityDrone.class, EntityRendererDrone::new);
 	}
 
 	public void createBioticStatRenderers()

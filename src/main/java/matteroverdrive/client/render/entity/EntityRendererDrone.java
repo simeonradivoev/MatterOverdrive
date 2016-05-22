@@ -17,9 +17,9 @@ public class EntityRendererDrone extends RenderLiving<EntityDrone>
 {
 	private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "drone_default.png");
 
-	public EntityRendererDrone(RenderManager rendermanagerIn, ModelDrone modelIn, float shadowsizeIn)
+	public EntityRendererDrone(RenderManager rendermanagerIn)
 	{
-		super(rendermanagerIn, modelIn, shadowsizeIn);
+		super(rendermanagerIn, new ModelDrone(), 0.5f);
 	}
 
 	@Override

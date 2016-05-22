@@ -24,6 +24,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,10 +42,14 @@ public class EntityRendererRougeAndroid<T extends EntityRougeAndroidMob> extends
 	public static final ResourceLocation texture_hologram = new ResourceLocation(Reference.PATH_ENTETIES + "android_holo.png");
 	private final boolean hologram;
 
-	public EntityRendererRougeAndroid(ModelBiped modelBase, float f, boolean hologram)
-	{
-		super(Minecraft.getMinecraft().getRenderManager(), modelBase, f, 1);
+	public EntityRendererRougeAndroid(RenderManager renderManager, ModelBiped modelBiped, float f, boolean hologram) {
+		super(renderManager, modelBiped, f, 1);
 		this.hologram = hologram;
+	}
+
+	public EntityRendererRougeAndroid(RenderManager renderManager, boolean hologram)
+	{
+		this(renderManager, new ModelBiped(), 0, hologram);
 	}
 
 	@Override

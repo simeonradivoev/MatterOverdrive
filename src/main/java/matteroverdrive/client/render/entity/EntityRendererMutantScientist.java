@@ -19,6 +19,7 @@
 package matteroverdrive.client.render.entity;
 
 import matteroverdrive.Reference;
+import matteroverdrive.client.model.ModelHulkingScientist;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -34,9 +35,9 @@ public class EntityRendererMutantScientist extends RenderBiped
 
 	private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "hulking_scinetist.png");
 
-	public EntityRendererMutantScientist(RenderManager renderManager, ModelBiped modelBiped, float f, float size)
+	public EntityRendererMutantScientist(RenderManager renderManager)
 	{
-		super(renderManager, modelBiped, f, size);
+		super(renderManager, new ModelHulkingScientist(), 0, 1);
 	}
 
 	@Override
