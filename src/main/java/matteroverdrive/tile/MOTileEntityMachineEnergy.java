@@ -20,6 +20,8 @@ package matteroverdrive.tile;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.MachineEnergyStorage;
@@ -39,7 +41,7 @@ import java.util.EnumSet;
 /**
  * Created by Simeon on 3/18/2015.
  */
-public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyHandler
+public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine implements IEnergyReceiver, IEnergyProvider
 {
 	public static final int ENERGY_CLIENT_SYNC_RANGE = 16;
 	protected MachineEnergyStorage energyStorage;
