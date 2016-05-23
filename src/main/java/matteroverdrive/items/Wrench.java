@@ -1,6 +1,6 @@
 package matteroverdrive.items;
 
-import cofh.api.block.IDismantleable;
+import matteroverdrive.api.machines.IDismantleable;
 import matteroverdrive.blocks.includes.IMultiBlock;
 import matteroverdrive.items.includes.MOBaseItem;
 import net.minecraft.block.state.IBlockState;

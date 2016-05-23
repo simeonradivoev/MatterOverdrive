@@ -45,7 +45,6 @@ public class MatterOverdriveCompat
 	//	Add additional modules that need to run on the Server and/or Client here
 	public static void registerModules()
 	{
-		register(CompatThermalExpansion.class);
 		register(CompatExNihilo.class);
 		register(CompatEnderIO.class);
 		register(CompatComputerCraft.class);

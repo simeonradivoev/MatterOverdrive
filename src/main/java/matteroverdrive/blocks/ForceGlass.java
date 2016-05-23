@@ -18,7 +18,7 @@
 
 package matteroverdrive.blocks;
 
-import cofh.api.block.IDismantleable;
+import matteroverdrive.api.machines.IDismantleable;
 import matteroverdrive.util.MOInventoryHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

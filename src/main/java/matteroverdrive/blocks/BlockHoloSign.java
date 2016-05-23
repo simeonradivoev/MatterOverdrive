@@ -18,7 +18,7 @@
 
 package matteroverdrive.blocks;
 
-import cofh.api.block.IDismantleable;
+import matteroverdrive.api.machines.IDismantleable;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.tile.TileEntityHoloSign;
 import matteroverdrive.util.MOInventoryHelper;

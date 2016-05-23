@@ -18,7 +18,7 @@
 
 package matteroverdrive.blocks.includes;
 
-import cofh.api.block.IDismantleable;
+import matteroverdrive.api.machines.IDismantleable;
 import matteroverdrive.api.IMOTileEntity;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.Slot;

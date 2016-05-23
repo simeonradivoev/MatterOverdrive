@@ -1,4 +1,4 @@
-package cofh.api.block;
+package matteroverdrive.api.machines;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
