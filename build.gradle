@@ -48,7 +48,7 @@ archivesBaseName = "${config.mo_base_name}"
 minecraft {
     version = config.mc_version + "-" + config.forge_version
     runDir = "run"
-	mappings = config.mcp_mappings
+    mappings = config.mcp_mappings
 
     makeObfSourceJar = false
 }
