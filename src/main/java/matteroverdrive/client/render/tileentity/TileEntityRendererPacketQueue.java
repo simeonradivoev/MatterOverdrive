@@ -31,7 +31,7 @@ import net.minecraft.tileentity.TileEntity;
  */
 public class TileEntityRendererPacketQueue extends TileEntitySpecialRenderer
 {
-	final Block fakeBlock = new BlockNetworkSwitch(Material.iron, "fake_block");
+	final Block fakeBlock = new BlockNetworkSwitch(Material.IRON, "fake_block");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float ticks, int destoryStage)

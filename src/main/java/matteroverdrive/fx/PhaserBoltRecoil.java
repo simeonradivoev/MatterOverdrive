@@ -16,24 +16,27 @@
  * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
  */
 
-package matteroverdrive.fx;/* Created by Simeon on 10/18/2015. */
+package matteroverdrive.fx;
 
 import matteroverdrive.client.data.Color;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
-public class PhaserBoltRecoil extends EntityFX
+/**
+ * Created by Simeon on 10/18/2015
+ */
+public class PhaserBoltRecoil extends Particle
 {
 	private float lavaParticleScale;
 
 	public PhaserBoltRecoil(World world, double x, double y, double z, Color color, double dirX, double dirY, double dirZ)
 	{
 		super(world, x, y, z, dirX, dirY, dirZ);
-		this.xSpeed += (double)((this.rand.nextFloat() - 0.5f) * 0.2F);
-		this.ySpeed += (double)((this.rand.nextFloat() - 0.5f) * 0.2F);
-		this.zSpeed += (double)((this.rand.nextFloat() - 0.5f) * 0.2F);
+		this.motionX += (double)((this.rand.nextFloat() - 0.5f) * 0.2F);
+		this.motionY += (double)((this.rand.nextFloat() - 0.5f) * 0.2F);
+		this.motionZ += (double)((this.rand.nextFloat() - 0.5f) * 0.2F);
 		this.particleRed = color.getFloatR();
 		this.particleGreen = color.getFloatG();
 		this.particleBlue = color.getFloatB();
@@ -100,24 +103,24 @@ public class PhaserBoltRecoil extends EntityFX
 
 		float f = (float)this.particleAge / (float)this.particleMaxAge;
 
-		this.ySpeed -= 0.03D;
+		this.motionY -= 0.03D;
 		try
 		{
-			this.moveEntity(this.xSpeed, this.ySpeed, this.zSpeed);
+			this.moveEntity(this.motionX, this.motionY, this.motionZ);
 		}
 		catch (Exception e)
 		{
 			this.setExpired();
 		}
 
-		this.xSpeed *= 0.9990000128746033D;
-		this.ySpeed *= 0.9990000128746033D;
-		this.zSpeed *= 0.9990000128746033D;
+		this.motionX *= 0.9990000128746033D;
+		this.motionY *= 0.9990000128746033D;
+		this.motionZ *= 0.9990000128746033D;
 
 		if (this.isCollided)
 		{
-			this.xSpeed *= 0.699999988079071D;
-			this.ySpeed *= 0.699999988079071D;
+			this.motionX *= 0.699999988079071D;
+			this.motionY *= 0.699999988079071D;
 		}
 	}
 }

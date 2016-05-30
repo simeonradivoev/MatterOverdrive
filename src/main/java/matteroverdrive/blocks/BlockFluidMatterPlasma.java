@@ -52,13 +52,13 @@ public class BlockFluidMatterPlasma extends BlockFluidClassic
 	public boolean canDisplace(IBlockAccess world, BlockPos pos)
 	{
 		IBlockState state = world.getBlockState(pos);
-		return !state.getBlock().getMaterial(state).isLiquid() && super.canDisplace(world, pos);
+		return !state.getMaterial().isLiquid() && super.canDisplace(world, pos);
 	}
 
 	@Override
 	public boolean displaceIfPossible(World world, BlockPos pos)
 	{
 		IBlockState state = world.getBlockState(pos);
-		return !state.getBlock().getMaterial(state).isLiquid() && super.displaceIfPossible(world, pos);
+		return !state.getMaterial().isLiquid() && super.displaceIfPossible(world, pos);
 	}
 }

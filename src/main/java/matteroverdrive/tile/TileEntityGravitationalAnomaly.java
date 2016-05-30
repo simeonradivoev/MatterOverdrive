@@ -54,6 +54,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
@@ -65,6 +66,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -317,7 +319,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 	}
 
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void onNeighborBlockChange(IBlockAccess world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
 
 	}
@@ -354,8 +356,9 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 
 	}
 
+	@Nullable
 	@Override
-	public Packet getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound syncData = new NBTTagCompound();
 		writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS, false);
@@ -432,14 +435,14 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 						blockPos = new BlockPos(getPos().getX() + x, getPos().getY() + y, getPos().getZ() + z);
 						blockState = world.getBlockState(blockPos);
 						distance = Math.sqrt(blockPos.distanceSq(getPos()));
-						hardness = blockState.getBlock().getBlockHardness(blockState, world, blockPos);
+						hardness = blockState.getBlockHardness(world, blockPos);
 						if (blockState.getBlock() instanceof IFluidBlock || blockState.getBlock() instanceof BlockLiquid)
 						{
 							hardness = 1;
 						}
 
 						float strength = getBreakStrength((float)distance, range);
-						if (blockState != null && blockState.getBlock() != null && blockState.getBlock() != Blocks.air && distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
+						if (blockState != null && blockState.getBlock() != null && blockState.getBlock() != Blocks.AIR && distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
 						{
 							blocks.add(blockPos);
 						}
@@ -531,7 +534,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 			worldObj.removeEntity(entityItem);
 
 			//Todo made the gravitational anomaly collapse on Antimatter
-			if (entityItem.getEntityItem().getItem().equals(Items.nether_star))
+			if (entityItem.getEntityItem().getItem().equals(Items.NETHER_STAR))
 			{
 				collapse();
 			}
@@ -592,7 +595,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 			return true;
 		}
 
-		float hardness = blockState.getBlock().getBlockHardness(blockState, worldObj, pos);
+		float hardness = blockState.getBlockHardness(worldObj, pos);
 		double distance = Math.sqrt(pos.distanceSq(getPos()));
 		if (distance <= range && hardness >= 0 && (distance < eventHorizon || hardness < strength))
 		{
@@ -617,7 +620,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 				}
 
 				blockState.getBlock().breakBlock(world, pos, blockState);
-				worldObj.playAuxSFXAtEntity(null, 2001, pos, Block.getIdFromBlock(blockState.getBlock()));
+				worldObj.playBroadcastSound(2001, pos, Block.getIdFromBlock(blockState.getBlock()));
 				world.setBlockToAir(pos);
 				return true;
 			}
@@ -637,7 +640,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 					}
 				}
 
-				worldObj.playAuxSFXAtEntity(null, 2001, pos, Block.getIdFromBlock(blockState.getBlock()));
+				worldObj.playBroadcastSound(2001, pos, Block.getIdFromBlock(blockState.getBlock()));
 
 				List<EntityItem> result = worldObj.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 3, pos.getY() + 3, pos.getZ() + 3));
 				for (EntityItem entityItem : result)
@@ -688,7 +691,7 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 		else if (blockState.getBlock() instanceof BlockLiquid && VANILLA_FLUIDS)
 		{
 			IBlockState state = worldObj.getBlockState(pos);
-			if (worldObj.setBlockState(pos, Blocks.air.getDefaultState(), 2))
+			if (worldObj.setBlockState(pos, Blocks.AIR.getDefaultState(), 2))
 			{
 				if (FALLING_BLOCKS)
 				{
@@ -708,9 +711,9 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 	{
 		if (VANILLA_FLUIDS)
 		{
-			if (block == Blocks.flowing_water || block == Blocks.flowing_lava)
+			if (block == Blocks.FLOWING_WATER || block == Blocks.FLOWING_LAVA)
 			{
-				return worldObj.setBlockState(pos, Blocks.air.getDefaultState(), 2);
+				return worldObj.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
 			}
 		}
 		return false;

@@ -41,7 +41,7 @@ public class MatterOverdriveEnchantments implements IConfigSubscriber
 		{
 			try
 			{
-				Enchantment.enchantmentRegistry.register(id, new ResourceLocation("overclock"), overclock);
+				Enchantment.REGISTRY.register(id, new ResourceLocation("overclock"), overclock);
 				break;
 			}
 			catch (IllegalArgumentException e)

@@ -95,7 +95,7 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
 	{
 		IBlockState iblockstate = this.theWorld.getBlockState(p_181065_1_);
 		Block block = iblockstate.getBlock();
-		return block == Blocks.air ? true : !block.isFullCube(iblockstate);
+		return block == Blocks.AIR ? true : !block.isFullCube(iblockstate);
 	}
 
 	/**

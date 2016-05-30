@@ -1,7 +1,7 @@
 package matteroverdrive.fx;
 
 import matteroverdrive.client.data.Color;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Simeon on 1/18/2016.
  */
 @SideOnly(Side.CLIENT)
-public abstract class MOEntityFX extends EntityFX
+public abstract class MOEntityFX extends Particle
 {
 	protected float renderDistanceWeight;
 

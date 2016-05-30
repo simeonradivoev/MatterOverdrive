@@ -53,10 +53,11 @@ public abstract class MOTileEntity extends TileEntity implements IMOTileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		writeCustomNBT(nbt, MachineNBTCategory.ALL_OPTS, true);
+		return nbt;
 	}
 
 	public abstract void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk);

@@ -27,7 +27,7 @@ import matteroverdrive.util.MOInventoryHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -62,9 +62,9 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 	}
 
 	@Override
-	public void onCraftGuiOpened(ICrafting icrafting)
+	public void addListener(IContainerListener icrafting)
 	{
-		super.onCraftGuiOpened(icrafting);
+		super.addListener(icrafting);
 		if (icrafting instanceof EntityPlayerMP)
 		{
 			machine.addWatcher(this);
@@ -87,11 +87,11 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 		if (this.machine != null)
 		{
 			short progressScaled = (short)(this.machine.getProgress() * Short.MAX_VALUE);
-			for (Object icrafting : this.crafters)
+			for (IContainerListener listener : this.listeners)
 			{
 				if (this.progressScaled != progressScaled)
 				{
-					((ICrafting)icrafting).sendProgressBarUpdate(this, 0, progressScaled);
+					listener.sendProgressBarUpdate(this, 0, progressScaled);
 				}
 			}
 
@@ -218,7 +218,7 @@ public class ContainerMachine<T extends MOTileEntityMachine> extends MOBaseConta
 	{
 		if (entityPlayer instanceof EntityPlayerMP)
 		{
-			return ((EntityPlayerMP)entityPlayer).getServerForPlayer().getPlayerEntityByUUID(entityPlayer.getUniqueID()) != null;
+			return ((EntityPlayerMP)entityPlayer).getServerWorld().getPlayerEntityByUUID(entityPlayer.getUniqueID()) != null;
 		}
 		return false;
 	}

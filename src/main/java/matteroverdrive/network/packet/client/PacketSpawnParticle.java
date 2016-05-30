@@ -8,7 +8,7 @@ import matteroverdrive.fx.ShockwaveParticle;
 import matteroverdrive.network.packet.PacketAbstract;
 import matteroverdrive.proxy.ClientProxy;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -92,7 +92,7 @@ public class PacketSpawnParticle extends PacketAbstract
 		@SideOnly(Side.CLIENT)
 		public void spawnParticle(World world, PacketSpawnParticle message)
 		{
-			EntityFX particle = null;
+			Particle particle = null;
 			if (message.particleType.equalsIgnoreCase("teleport"))
 			{
 				particle = new AndroidTeleportParticle(world, message.coordinates[0], message.coordinates[1], message.coordinates[2]);

@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkGenerator;
@@ -44,11 +44,11 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 	/** Reference to the World object. */
 	private World worldObj;
 	private ChunkProviderSettings settings;
-	private Block oceanBlock = Blocks.water;
+	private Block oceanBlock = Blocks.WATER;
 	private double[] stoneNoise = new double[256];
 	private MapGenBase caveGenerator = new MapGenCaves();
 	private MapGenBase ravineGenerator = new MapGenRavine();
-	private BiomeGenBase[] biomesForGeneration;
+	private Biome[] biomesForGeneration;
 
 	public ChunkGeneratorAlien(World worldIn, long seed, String settingsString)
 	{
@@ -75,8 +75,8 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 
 		if (settingsString != null)
 		{
-			this.settings = ChunkProviderSettings.Factory.jsonToFactory(settingsString).func_177864_b();
-			this.oceanBlock = this.settings.useLavaOceans ? Blocks.lava : Blocks.water;
+			this.settings = ChunkProviderSettings.Factory.jsonToFactory(settingsString).build();
+			this.oceanBlock = this.settings.useLavaOceans ? Blocks.LAVA : Blocks.WATER;
 			worldIn.setSeaLevel(this.settings.seaLevel);
 		}
 
@@ -138,7 +138,7 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 							{
 								if ((lvt_45_1_ += d16) > 0.0D)
 								{
-									p_180518_3_.setBlockState(i * 4 + k2, i2 * 8 + j2, l * 4 + l2, Blocks.stone.getDefaultState());
+									p_180518_3_.setBlockState(i * 4 + k2, i2 * 8 + j2, l * 4 + l2, Blocks.STONE.getDefaultState());
 								}
 								else if (i2 * 8 + j2 < this.settings.seaLevel)
 								{
@@ -160,7 +160,7 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 		}
 	}
 
-	public void replaceBlocksForBiome(int p_180517_1_, int p_180517_2_, ChunkPrimer p_180517_3_, BiomeGenBase[] p_180517_4_)
+	public void replaceBlocksForBiome(int p_180517_1_, int p_180517_2_, ChunkPrimer p_180517_3_, Biome[] p_180517_4_)
 	{
 		net.minecraftforge.event.terraingen.ChunkGeneratorEvent.ReplaceBiomeBlocks event = new net.minecraftforge.event.terraingen.ChunkGeneratorEvent.ReplaceBiomeBlocks(this, p_180517_1_, p_180517_2_, p_180517_3_, this.worldObj);
 		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
@@ -170,13 +170,13 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 		}
 
 		double d0 = 0.03125D;
-		this.stoneNoise = this.noiseGen4.func_151599_a(this.stoneNoise, (double)(p_180517_1_ * 16), (double)(p_180517_2_ * 16), 16, 16, d0 * 2.0D, d0 * 2.0D, 1.0D);
+		this.stoneNoise = this.noiseGen4.getRegion(this.stoneNoise, (double)(p_180517_1_ * 16), (double)(p_180517_2_ * 16), 16, 16, d0 * 2.0D, d0 * 2.0D, 1.0D);
 
 		for (int i = 0; i < 16; ++i)
 		{
 			for (int j = 0; j < 16; ++j)
 			{
-				BiomeGenBase biomegenbase = p_180517_4_[j + i * 16];
+				Biome biomegenbase = p_180517_4_[j + i * 16];
 				biomegenbase.genTerrainBlocks(this.worldObj, this.rand, p_180517_3_, p_180517_1_ * 16 + i, p_180517_2_ * 16 + j, this.stoneNoise[j + i * 16]);
 			}
 		}
@@ -201,13 +201,13 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 				float f3 = 0.0F;
 				float f4 = 0.0F;
 				int i1 = 2;
-				BiomeGenBase biomegenbase = this.biomesForGeneration[k + 2 + (l + 2) * 10];
+				Biome biomegenbase = this.biomesForGeneration[k + 2 + (l + 2) * 10];
 
 				for (int j1 = -i1; j1 <= i1; ++j1)
 				{
 					for (int k1 = -i1; k1 <= i1; ++k1)
 					{
-						BiomeGenBase biomegenbase1 = this.biomesForGeneration[k + j1 + 2 + (l + k1 + 2) * 10];
+						Biome biomegenbase1 = this.biomesForGeneration[k + j1 + 2 + (l + k1 + 2) * 10];
 						float f5 = this.settings.biomeDepthOffSet + biomegenbase1.getBaseHeight() * this.settings.biomeDepthWeight;
 						float f6 = this.settings.biomeScaleOffset + biomegenbase1.getHeightVariation() * this.settings.biomeScaleWeight;
 
@@ -299,7 +299,7 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 		this.rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
 		ChunkPrimer chunkprimer = new ChunkPrimer();
 		this.setBlocksInChunk(x, z, chunkprimer);
-		this.biomesForGeneration = this.worldObj.getBiomeProvider().loadBlockGeneratorData(this.biomesForGeneration, x * 16, z * 16, 16, 16);
+		this.biomesForGeneration = this.worldObj.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16, 16);
 		this.replaceBlocksForBiome(x, z, chunkprimer, this.biomesForGeneration);
 
 		if (this.settings.useCaves)
@@ -325,7 +325,7 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 		int i = p_73153_2_ * 16;
 		int j = p_73153_3_ * 16;
 		BlockPos blockpos = new BlockPos(i, 0, j);
-		BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(blockpos.add(16, 0, 16));
+		Biome biomegenbase = this.worldObj.getBiome(blockpos.add(16, 0, 16));
 		this.rand.setSeed(this.worldObj.getSeed());
 		long k = this.rand.nextLong() / 2L * 2L + 1L;
 		long l = this.rand.nextLong() / 2L * 2L + 1L;
@@ -340,7 +340,7 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 			int i1 = this.rand.nextInt(16) + 8;
 			int j1 = this.rand.nextInt(256);
 			int k1 = this.rand.nextInt(16) + 8;
-			(new WorldGenLakes(Blocks.water)).generate(this.worldObj, this.rand, blockpos.add(i1, j1, k1));
+			(new WorldGenLakes(Blocks.WATER)).generate(this.worldObj, this.rand, blockpos.add(i1, j1, k1));
 		}
 
 		if (!flag && this.rand.nextInt(this.settings.lavaLakeChance / 10) == 0 && this.settings.useLavaLakes &&
@@ -352,7 +352,7 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 
 			if (l2 < this.worldObj.getSeaLevel() || this.rand.nextInt(this.settings.lavaLakeChance / 8) == 0)
 			{
-				(new WorldGenLakes(Blocks.lava)).generate(this.worldObj, this.rand, blockpos.add(i2, l2, k3));
+				(new WorldGenLakes(Blocks.LAVA)).generate(this.worldObj, this.rand, blockpos.add(i2, l2, k3));
 			}
 		}
 
@@ -373,12 +373,12 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 
 				if (this.worldObj.canBlockFreezeWater(blockpos2))
 				{
-					this.worldObj.setBlockState(blockpos2, Blocks.ice.getDefaultState(), 2);
+					this.worldObj.setBlockState(blockpos2, Blocks.ICE.getDefaultState(), 2);
 				}
 
 				if (this.worldObj.canSnowAt(blockpos1, true))
 				{
-					this.worldObj.setBlockState(blockpos1, Blocks.snow_layer.getDefaultState(), 2);
+					this.worldObj.setBlockState(blockpos1, Blocks.SNOW_LAYER.getDefaultState(), 2);
 				}
 			}
 		}
@@ -389,9 +389,9 @@ public class ChunkGeneratorAlien implements IChunkGenerator
 	}
 
 	@Override
-	public List<BiomeGenBase.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
+	public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
 	{
-		BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(pos);
+		Biome biomegenbase = this.worldObj.getBiome(pos);
 		return biomegenbase.getSpawnableList(creatureType);
 	}
 

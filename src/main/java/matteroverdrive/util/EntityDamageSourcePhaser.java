@@ -39,7 +39,7 @@ public class EntityDamageSourcePhaser extends EntityDamageSource
 					itemStack.hasDisplayName() &&
 					MOStringHelper.hasTranslation(itemMsg))
 			{
-				return new TextComponentTranslation(itemMsg, entity.getDisplayName().getFormattedText(), damageSourceEntity.getDisplayName().getFormattedText(), itemStack.getChatComponent());
+				return new TextComponentTranslation(itemMsg, entity.getDisplayName().getFormattedText(), damageSourceEntity.getDisplayName().getFormattedText(), itemStack.getTextComponent());
 			}
 		}
 

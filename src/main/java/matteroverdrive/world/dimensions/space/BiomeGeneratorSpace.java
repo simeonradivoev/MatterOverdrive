@@ -2,14 +2,14 @@ package matteroverdrive.world.dimensions.space;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeDecorator;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Simeon on 2/5/2016.
  */
-public class BiomeGeneratorSpace extends BiomeGenBase
+public class BiomeGeneratorSpace extends Biome
 {
 	public BiomeGeneratorSpace(BiomeProperties biomeProperties)
 	{
@@ -18,8 +18,8 @@ public class BiomeGeneratorSpace extends BiomeGenBase
 		this.spawnableCreatureList.clear();
 		this.spawnableWaterCreatureList.clear();
 		this.spawnableCaveCreatureList.clear();
-		this.topBlock = Blocks.air.getDefaultState();
-		this.fillerBlock = Blocks.air.getDefaultState();
+		this.topBlock = Blocks.AIR.getDefaultState();
+		this.fillerBlock = Blocks.AIR.getDefaultState();
 	}
 
 	public BiomeDecorator createBiomeDecorator()

@@ -25,7 +25,7 @@ import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.config.Property;
 
 import java.util.ArrayList;
@@ -42,29 +42,29 @@ public class EntityRogueAndroid implements IConfigSubscriber
 	public static final HashSet<Integer> dimensionWhitelist = new HashSet<>();
 	private static final HashSet<String> biomesBlacklist = new HashSet<>();
 	private static final HashSet<String> biomesWhitelist = new HashSet<>();
-	private static final List<BiomeGenBase.SpawnListEntry> spawnListEntries = new ArrayList<>();
+	private static final List<Biome.SpawnListEntry> spawnListEntries = new ArrayList<>();
 	public static float LEGENDARY_SPAWN_CHANCE;
 	public static float SPAWN_CHANCE;
 	public static int MAX_ANDROIDS_PER_CHUNK = 4;
 
 	public static void addAsBiomeGen(Class<? extends EntityLiving> entityClass)
 	{
-		spawnListEntries.add(new BiomeGenBase.SpawnListEntry(entityClass, 15, 1, 2));
-		addInBiome(BiomeGenBase.biomeRegistry.iterator());
+		spawnListEntries.add(new Biome.SpawnListEntry(entityClass, 15, 1, 2));
+		addInBiome(Biome.REGISTRY.iterator());
 	}
 
-	private static void addInBiome(Iterator<BiomeGenBase> biomes)
+	private static void addInBiome(Iterator<Biome> biomes)
 	{
 		loadBiomeBlacklist(MatterOverdrive.configHandler);
 		loadBiomesWhitelist(MatterOverdrive.configHandler);
 
 		while (biomes.hasNext())
 		{
-			BiomeGenBase biome = biomes.next();
+			Biome biome = biomes.next();
 			if (biome != null)
 			{
 				List spawnList = biome.getSpawnableList(EnumCreatureType.MONSTER);
-				for (BiomeGenBase.SpawnListEntry entry : spawnListEntries)
+				for (Biome.SpawnListEntry entry : spawnListEntries)
 				{
 					if (isBiomeValid(biome) && !spawnList.contains(entry) && entry.itemWeight > 0)
 					{
@@ -76,7 +76,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
 		}
 	}
 
-	private static boolean isBiomeValid(BiomeGenBase biome)
+	private static boolean isBiomeValid(Biome biome)
 	{
 		if (biome != null)
 		{
@@ -145,7 +145,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
 		int spawn_weight = config.config.getInt("spawn_weight", category, 25, 0, 100, "The spawn weight of Androids. This controls how likely are to be chosen to spawn next.");
 		MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_CONFIG, category, "spawn_weight", spawn_weight, null);
 
-		for (BiomeGenBase.SpawnListEntry entry : spawnListEntries)
+		for (Biome.SpawnListEntry entry : spawnListEntries)
 		{
 			entry.itemWeight = spawn_weight;
 		}

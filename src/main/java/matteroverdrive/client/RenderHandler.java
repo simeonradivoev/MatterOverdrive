@@ -404,7 +404,7 @@ public class RenderHandler
 	{
 		FMLClientHandler.instance().getClient().getBlockColors().registerBlockColorHandler((state, p_186720_2_, pos, tintIndex) -> {
 			EnumDyeColor color = state.getValue(BlockDecorativeColored.COLOR);
-			return ItemDye.dyeColors[MathHelper.clamp_int(color.getMetadata(),0, ItemDye.dyeColors.length-1)];
+			return ItemDye.DYE_COLORS[MathHelper.clamp_int(color.getMetadata(),0, ItemDye.DYE_COLORS.length-1)];
 		}, MatterOverdriveBlocks.decorative_tritanium_plate_colored);
 	}
 
@@ -614,7 +614,7 @@ public class RenderHandler
 		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
 			if (tintIndex == 0 && stack != null && stack.getItem() != null)
 			{
-				return ItemDye.dyeColors[MathHelper.clamp_int(stack.getItemDamage(),0, ItemDye.dyeColors.length-1)];
+				return ItemDye.DYE_COLORS[MathHelper.clamp_int(stack.getItemDamage(),0, ItemDye.DYE_COLORS.length-1)];
 			}else
 			{
 				return -1;

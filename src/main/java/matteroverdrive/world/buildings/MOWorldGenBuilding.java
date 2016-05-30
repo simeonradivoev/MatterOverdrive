@@ -50,7 +50,7 @@ public abstract class MOWorldGenBuilding<T extends MOWorldGenBuilding.WorldGenBu
 	{
 		super(texture, layerWidth, layerHeight);
 		this.name = name;
-		validSpawnBlocks = new Block[] {Blocks.stone, Blocks.grass, Blocks.dirt};
+		validSpawnBlocks = new Block[] {Blocks.STONE, Blocks.GRASS, Blocks.DIRT};
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public abstract class MOWorldGenBuilding<T extends MOWorldGenBuilding.WorldGenBu
 		int distanceToAir = 0;
 		IBlockState blockState = world.getBlockState(pos);
 
-		while (blockState.getBlock() != Blocks.air)
+		while (blockState.getBlock() != Blocks.AIR)
 		{
 			if (distanceToAir > getMaxDistanceToAir())
 			{
@@ -83,7 +83,7 @@ public abstract class MOWorldGenBuilding<T extends MOWorldGenBuilding.WorldGenBu
 
 		for (Block x : getValidSpawnBlocks())
 		{
-			if (blockAbove != Blocks.air)
+			if (blockAbove != Blocks.AIR)
 			{
 				return false;
 			}
@@ -91,7 +91,7 @@ public abstract class MOWorldGenBuilding<T extends MOWorldGenBuilding.WorldGenBu
 			{
 				return true;
 			}
-			else if (block == Blocks.snow && blockBelow == x)
+			else if (block == Blocks.SNOW && blockBelow == x)
 			{
 				return true;
 			}

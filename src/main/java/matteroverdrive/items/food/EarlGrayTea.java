@@ -46,10 +46,10 @@ public class EarlGrayTea extends ItemFood
 
 		if (stack.stackSize > 0)
 		{
-			((EntityPlayer)entityLiving).inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
+			((EntityPlayer)entityLiving).inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
 		}
 
-		return stack.stackSize <= 0 ? new ItemStack(Items.glass_bottle) : stack;
+		return stack.stackSize <= 0 ? new ItemStack(Items.GLASS_BOTTLE) : stack;
 	}
 
 	@Override

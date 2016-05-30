@@ -5,7 +5,7 @@ import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeDecorator;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenSand;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -29,23 +29,23 @@ public class BiomeDecoratorAlien extends BiomeDecorator
 	}
 
 	@Override
-	protected void genDecorations(BiomeGenBase biomeGenBaseIn, World worldIn, Random random)
+	protected void genDecorations(Biome biomeGenBaseIn, World worldIn, Random random)
 	{
 		super.genDecorations(biomeGenBaseIn, worldIn, random);
 		if (biomeGenBaseIn instanceof BiomeGeneratorAlien)
 		{
-			if (net.minecraftforge.event.terraingen.TerrainGen.decorate(worldIn, random, field_180294_c, net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.FLOWERS))
+			if (net.minecraftforge.event.terraingen.TerrainGen.decorate(worldIn, random, chunkPos, net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.FLOWERS))
 			{
 				for (int l2 = 0; l2 < this.alienFlowerPerChunk; ++l2)
 				{
 					int i7 = random.nextInt(16) + 8;
 					int l10 = random.nextInt(16) + 8;
-					int j14 = worldIn.getHeight(this.field_180294_c.add(i7, 0, l10)).getY() + 32;
+					int j14 = worldIn.getHeight(this.chunkPos.add(i7, 0, l10)).getY() + 32;
 
 					if (j14 > 0)
 					{
 						int k17 = random.nextInt(j14);
-						BlockPos blockpos1 = this.field_180294_c.add(i7, k17, l10);
+						BlockPos blockpos1 = this.chunkPos.add(i7, k17, l10);
 						BlockFlowerAlien.EnumAlienFlowerType flowerType = ((BiomeGeneratorAlien)biomeGenBaseIn).pickRandomAlienFlower(random, blockpos1);
 						this.worldGenAlienFlowers.setGeneratedBlock(flowerType);
 						this.worldGenAlienFlowers.generate(worldIn, random, blockpos1);
@@ -56,7 +56,7 @@ public class BiomeDecoratorAlien extends BiomeDecorator
 	}
 
 	@Override
-	public void decorate(World worldIn, Random random, BiomeGenBase p_180292_3_, BlockPos p_180292_4_)
+	public void decorate(World worldIn, Random random, Biome p_180292_3_, BlockPos p_180292_4_)
 	{
 		super.decorate(worldIn, random, p_180292_3_, p_180292_4_);
 		if (worldIn == null)

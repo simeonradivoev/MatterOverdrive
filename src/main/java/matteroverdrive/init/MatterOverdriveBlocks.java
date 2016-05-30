@@ -47,7 +47,7 @@ import java.util.List;
 
 public class MatterOverdriveBlocks
 {
-	public final static MaterialTritanium tritanium = new MaterialTritanium(MapColor.clayColor);
+	public final static MaterialTritanium tritanium = new MaterialTritanium(MapColor.CLAY);
 	public final static BlockReplicator replicator = new BlockReplicator(tritanium, "replicator");
 	public final static BlockDecomposer decomposer = new BlockDecomposer(tritanium, "decomposer");
 	public final static BlockTransporter transporter = new BlockTransporter(tritanium, "transporter");
@@ -55,8 +55,8 @@ public class MatterOverdriveBlocks
 	public final static BlockNetworkPipe network_pipe = new BlockNetworkPipe(tritanium, "network_pipe");
 	public final static BlockNetworkRouter network_router = new BlockNetworkRouter(tritanium, "network_router");
 	public final static BlockMatterAnalyzer matter_analyzer = new BlockMatterAnalyzer(tritanium, "matter_analyzer");
-	public final static DilithiumOre dilithium_ore = new DilithiumOre(Material.rock, "dilithium_ore");
-	public final static MOBlock tritaniumOre = (MOBlock)new MOBlock(Material.rock, "tritanium_ore").setHardness(8f).setResistance(5.0F);
+	public final static DilithiumOre dilithium_ore = new DilithiumOre(Material.ROCK, "dilithium_ore");
+	public final static MOBlock tritaniumOre = (MOBlock)new MOBlock(Material.ROCK, "tritanium_ore").setHardness(8f).setResistance(5.0F);
 	public final static MOBlock tritanium_block = (MOBlock)new MOBlock(tritanium, "tritanium_block").setHardness(15.0F).setResistance(10.0F);
 	public final static MOBlock machine_hull = (MOBlock)new MOBlock(tritanium, "machine_hull").setHardness(15.0F).setResistance(8.0F);
 	public final static BlockPatternStorage pattern_storage = new BlockPatternStorage(tritanium, "pattern_storage");
@@ -65,7 +65,7 @@ public class MatterOverdriveBlocks
 	public final static BlockWeaponStation weapon_station = new BlockWeaponStation(tritanium, "weapon_station");
 	public final static BlockPatternMonitor pattern_monitor = new BlockPatternMonitor(tritanium, "pattern_monitor");
 	public final static BlockNetworkSwitch network_switch = new BlockNetworkSwitch(tritanium, "network_switch");
-	public final static BlockGravitationalAnomaly gravitational_anomaly = new BlockGravitationalAnomaly(Material.portal, "gravitational_anomaly");
+	public final static BlockGravitationalAnomaly gravitational_anomaly = new BlockGravitationalAnomaly(Material.PORTAL, "gravitational_anomaly");
 	public final static BlockGravitationalStabilizer gravitational_stabilizer = new BlockGravitationalStabilizer(tritanium, "gravitational_stabilizer");
 	public final static BlockFusionReactorController fusion_reactor_controller = new BlockFusionReactorController(tritanium, "fusion_reactor_controller");
 	public final static BlockFusionReactorCoil fusion_reactor_coil = new BlockFusionReactorCoil(tritanium, "fusion_reactor_coil");
@@ -75,10 +75,10 @@ public class MatterOverdriveBlocks
 	public final static BlockChargingStation chargingStation = new BlockChargingStation(tritanium, "charging_station");
 	public final static BlockMatterPipe heavy_matter_pipe = new BlockHeavyMatterPipe(tritanium, "heavy_matter_pipe");
 	public final static BlockHoloSign holoSign = new BlockHoloSign(tritanium, "holo_sign");
-	public final static ForceGlass forceGlass = new ForceGlass(Material.glass, "force_glass");
-	public final static BlockFluidMatterPlasma blockMatterPlasma = (BlockFluidMatterPlasma)new BlockFluidMatterPlasma(MatterOverdriveFluids.matterPlasma, Material.water).setRegistryName(new ResourceLocation(Reference.MOD_ID, "matter_plasma"));
-	public final static BlockFluidFinite blockMoltenTritanium = (BlockFluidFinite)new BlockFluidFinite(MatterOverdriveFluids.moltenTritanium, Material.lava).setRegistryName(new ResourceLocation(Reference.MOD_ID, "molten_tritanium"));
-	public final static BlockBoundingBox boundingBox = new BlockBoundingBox(Material.air, "bounding_box");
+	public final static ForceGlass forceGlass = new ForceGlass(Material.GLASS, "force_glass");
+	public final static BlockFluidMatterPlasma blockMatterPlasma = (BlockFluidMatterPlasma)new BlockFluidMatterPlasma(MatterOverdriveFluids.matterPlasma, Material.WATER).setRegistryName(new ResourceLocation(Reference.MOD_ID, "matter_plasma"));
+	public final static BlockFluidFinite blockMoltenTritanium = (BlockFluidFinite)new BlockFluidFinite(MatterOverdriveFluids.moltenTritanium, Material.LAVA).setRegistryName(new ResourceLocation(Reference.MOD_ID, "molten_tritanium"));
+	public final static BlockBoundingBox boundingBox = new BlockBoundingBox(Material.AIR, "bounding_box");
 	public final static BlockFusionReactorIO fusionReactorIO = new BlockFusionReactorIO(tritanium, "fusion_reactor_io");
 	public final static BlockTritaniumCrate tritaniumCrate = new BlockTritaniumCrate(tritanium, "tritanium_crate");
 	public final static BlockTritaniumCrate tritaniumCrateYellow = new BlockTritaniumCrate(tritanium, "tritanium_crate_yellow");
@@ -96,27 +96,27 @@ public class MatterOverdriveBlocks
 	public final static BlockDecorative decorative_holo_matrix = new BlockDecorative(tritanium, "decorative.holo_matrix", 3, 1, 4, 0x323b3a);
 	public final static BlockDecorative decorative_tritanium_plate = new BlockDecorative(tritanium, "decorative.tritanium_plate", 10, 1, 10, 0x475459);
 	public final static BlockDecorative decorative_carbon_fiber_plate = new BlockDecorative(tritanium, "decorative.carbon_fiber_plate", 10, 1, 12, 0x1c1f20);
-	public final static BlockDecorative decorative_matter_tube = new BlockDecorativeRotated(Material.glass, "decorative.matter_tube", 3, 1, 4, 0x5088a5);
+	public final static BlockDecorative decorative_matter_tube = new BlockDecorativeRotated(Material.GLASS, "decorative.matter_tube", 3, 1, 4, 0x5088a5);
 	public final static BlockDecorative decorative_beams = new BlockDecorativeRotated(tritanium, "decorative.beams", 8, 1, 8, 0x1e2220);
-	public final static BlockDecorative decorative_floor_tiles = new BlockDecorative(Material.clay, "decorative.floor_tiles", 4, 0, 4, 0x958d7c);
-	public final static BlockDecorative decorative_floor_tiles_green = new BlockDecorative(Material.clay, "decorative.floor_tiles_green", 4, 0, 4, 0x53593f);
-	public final static BlockDecorative decorative_floor_noise = new BlockDecorative(Material.clay, "decorative.floor_noise", 4, 0, 4, 0x7f7e7b);
+	public final static BlockDecorative decorative_floor_tiles = new BlockDecorative(Material.CLAY, "decorative.floor_tiles", 4, 0, 4, 0x958d7c);
+	public final static BlockDecorative decorative_floor_tiles_green = new BlockDecorative(Material.CLAY, "decorative.floor_tiles_green", 4, 0, 4, 0x53593f);
+	public final static BlockDecorative decorative_floor_noise = new BlockDecorative(Material.CLAY, "decorative.floor_noise", 4, 0, 4, 0x7f7e7b);
 	public final static BlockDecorative decorative_tritanium_plate_stripe = new BlockDecorative(tritanium, "decorative.tritanium_plate_stripe", 10, 1, 10, 0x576468);
-	public final static BlockDecorative decorative_floot_tile_white = new BlockDecorative(Material.clay, "decorative.floor_tile_white", 4, 0, 4, 0xa3a49c);
+	public final static BlockDecorative decorative_floot_tile_white = new BlockDecorative(Material.CLAY, "decorative.floor_tile_white", 4, 0, 4, 0xa3a49c);
 	public final static BlockDecorative decorative_white_plate = new BlockDecorative(tritanium, "decorative.white_plate", 8, 1, 8, 0xe3e3e3);
 	public final static BlockDecorative decorative_separator = new BlockDecorativeRotated(tritanium, "decorative.separator", 8, 1, 8, 0x303837);
 	public final static BlockDecorative decorative_tritanium_lamp = (BlockDecorative)new BlockDecorativeRotated(tritanium, "decorative.tritanium_lamp", 2, 1, 4, 0xd4f8f5).setLightLevel(1);
 	public final static BlockDecorative decorative_tritanium_plate_colored = new BlockDecorativeColored(tritanium, "decorative.tritanium_plate_colored", 10, 1, 10, 0x505050);
-	public final static BlockDecorative decorative_engine_exhaust_plasma = (BlockDecorative)new BlockDecorative(Material.cactus, "decorative.engine_exhaust_plasma", 1, 1, 1, 0x387c9e).setLightLevel(1);
+	public final static BlockDecorative decorative_engine_exhaust_plasma = (BlockDecorative)new BlockDecorative(Material.CACTUS, "decorative.engine_exhaust_plasma", 1, 1, 1, 0x387c9e).setLightLevel(1);
 
 	// TODO: 3/26/2016 Find how to set block step sounds
 	public final static BlockTallGrassAlien alienTallGrass = (BlockTallGrassAlien)new BlockTallGrassAlien().setHardness(0).setUnlocalizedName("alien_tall_grass").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_tall_grass"));
 	public final static BlockFlowerAlien alienFlower = (BlockFlowerAlien)new BlockFlowerAlien().setHardness(0).setUnlocalizedName("alien_flower").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_flower"));
 	public final static BlockLogAlien alienLog = (BlockLogAlien)new BlockLogAlien().setUnlocalizedName("alien_log").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_log"));
 	public final static BlockLeavesAlien alienLeaves = (BlockLeavesAlien)new BlockLeavesAlien().setUnlocalizedName("alien_leaves").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_leaves"));
-	public final static BlockFalling alienSand = (BlockFalling)new BlockFalling(Material.sand).setHardness(1).setUnlocalizedName("alien_sand").setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative).setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_sand"));
-	public final static BlockFalling alienGravel = (BlockFalling)new BlockFalling(Material.sand).setHardness(1).setUnlocalizedName("alien_gravel").setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative).setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_gravel"));
-	public final static BlockStoneAlien alienStone = (BlockStoneAlien)new BlockStoneAlien(Material.rock).setHardness(1.5f).setResistance(10.0f).setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative).setUnlocalizedName("alien_stone").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_stone"));
+	public final static BlockFalling alienSand = (BlockFalling)new BlockFalling(Material.SAND).setHardness(1).setUnlocalizedName("alien_sand").setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative).setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_sand"));
+	public final static BlockFalling alienGravel = (BlockFalling)new BlockFalling(Material.SAND).setHardness(1).setUnlocalizedName("alien_gravel").setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative).setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_gravel"));
+	public final static BlockStoneAlien alienStone = (BlockStoneAlien)new BlockStoneAlien(Material.ROCK).setHardness(1.5f).setResistance(10.0f).setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative).setUnlocalizedName("alien_stone").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_stone"));
 
 	public static final List<IRecipe> recipes = new ArrayList<>();
 

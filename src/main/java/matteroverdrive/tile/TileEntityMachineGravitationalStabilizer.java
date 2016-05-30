@@ -81,7 +81,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
 			for (int i = 1; i < 64; i++)
 			{
 				IBlockState blockState = world.getBlockState(getPos().offset(front, i));
-				if (blockState.getBlock() instanceof BlockGravitationalAnomaly || blockState.getBlock().getMaterial(blockState) == null || blockState.getBlock().getMaterial(blockState).isOpaque())
+				if (blockState.getBlock() instanceof BlockGravitationalAnomaly || blockState.getMaterial() == null || blockState.getMaterial().isOpaque())
 				{
 					return new RayTraceResult(new Vec3d(getPos().offset(front, i)).subtract(Math.abs(front.getDirectionVec().getX() * 0.5), Math.abs(front.getDirectionVec().getY() * 0.5), Math.abs(front.getDirectionVec().getZ() * 0.5)), front.getOpposite(), getPos().offset(front, i));
 				}

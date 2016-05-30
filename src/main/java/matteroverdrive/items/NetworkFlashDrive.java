@@ -62,7 +62,7 @@ public class NetworkFlashDrive extends MOBaseItem implements IMatterNetworkFilte
 				IBlockState block = player.worldObj.getBlockState(pos);
 				if (block != null)
 				{
-					infos.add(String.format("[%s] %s", pos.toString(), block.getBlock() != Blocks.air ? block.getBlock().getLocalizedName() : "Unknown"));
+					infos.add(String.format("[%s] %s", pos.toString(), block.getBlock() != Blocks.AIR ? block.getBlock().getLocalizedName() : "Unknown"));
 				}
 			}
 		}

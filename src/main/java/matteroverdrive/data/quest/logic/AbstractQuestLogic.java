@@ -105,7 +105,7 @@ public abstract class AbstractQuestLogic implements IQuestLogic
 			}
 			else
 			{
-				String name = EntityList.classToStringMapping.get(entityClass);
+				String name = EntityList.CLASS_TO_NAME.get(entityClass);
 				if (name != null)
 				{
 					return name;

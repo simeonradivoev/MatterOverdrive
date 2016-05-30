@@ -178,7 +178,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 				renderCrosshair(event);
 			}
 
-			mc.getTextureManager().bindTexture(Gui.icons);
+			mc.getTextureManager().bindTexture(Gui.ICONS);
 		}
 		else if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR)
 		{

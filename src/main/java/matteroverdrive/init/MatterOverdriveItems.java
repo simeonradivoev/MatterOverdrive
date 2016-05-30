@@ -34,6 +34,7 @@ import matteroverdrive.items.tools.TritaniumAxe;
 import matteroverdrive.items.tools.TritaniumPickaxe;
 import matteroverdrive.items.weapon.*;
 import matteroverdrive.items.weapon.module.*;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
@@ -48,7 +49,7 @@ import java.lang.reflect.Field;
 public class MatterOverdriveItems
 {
 	public final static Item.ToolMaterial toolMaterialTritanium = EnumHelper.addToolMaterial("tritanium", 2, 3122, 6f, 2f, 14);
-	public final static ItemArmor.ArmorMaterial armorMaterialTritanium = EnumHelper.addArmorMaterial("tritanium", "tritanium", 66, new int[] {4, 9, 7, 4}, 20, null);
+	public final static ItemArmor.ArmorMaterial armorMaterialTritanium = EnumHelper.addArmorMaterial("tritanium", "tritanium", 66, new int[] {4, 9, 7, 4}, 20, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2f);
 
 	public final static MOBaseItem matter_scanner = new MatterScanner("matter_scanner");
 	public final static ItemFood emergency_ration = (ItemFood)new ItemFood(8, 0.8F, false).setUnlocalizedName("emergency_ration").setCreativeTab(MatterOverdrive.tabMatterOverdrive_food).setRegistryName(new ResourceLocation(Reference.MOD_ID, "emergency_ration"));

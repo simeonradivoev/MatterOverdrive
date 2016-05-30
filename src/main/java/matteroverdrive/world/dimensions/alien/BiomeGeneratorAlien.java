@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeDecorator;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenBigTree;
@@ -24,14 +24,14 @@ import java.util.Random;
 /**
  * Created by Simeon on 2/23/2016.
  */
-public class BiomeGeneratorAlien extends BiomeGenBase
+public class BiomeGeneratorAlien extends Biome
 {
 	protected static final WorldGenAlienBush WORLD_GEN_ALIEN_BUSH = new WorldGenAlienBush();
 	protected static final WorldGenBigTree worldGenBigTree = new WorldGenBigTree(false);
 	private static final WorldGenAlienForest alienForestTall = new WorldGenAlienForest(false, true);
 	private static final WorldGenAlienForest alienForestSmall = new WorldGenAlienForest(false, false);
 
-	public BiomeGeneratorAlien(BiomeGenBase.BiomeProperties properties)
+	public BiomeGeneratorAlien(Biome.BiomeProperties properties)
 	{
 		super(properties);
 		this.fillerBlock = MatterOverdriveBlocks.alienStone.getDefaultState();
@@ -74,7 +74,7 @@ public class BiomeGeneratorAlien extends BiomeGenBase
 	@Override
 	public BlockFlower.EnumFlowerType pickRandomFlower(Random rand, BlockPos pos)
 	{
-		double d0 = MathHelper.clamp_double((1.0D + GRASS_COLOR_NOISE.func_151601_a((double)pos.getX() / 48.0D, (double)pos.getZ() / 48.0D)) / 2.0D, 0.0D, 0.9999D);
+		double d0 = MathHelper.clamp_double((1.0D + GRASS_COLOR_NOISE.getValue((double)pos.getX() / 48.0D, (double)pos.getZ() / 48.0D)) / 2.0D, 0.0D, 0.9999D);
 		BlockFlower.EnumFlowerType blockflower$enumflowertype = BlockFlower.EnumFlowerType.values()[(int)(d0 * (double)BlockFlower.EnumFlowerType.values().length)];
 		return blockflower$enumflowertype == BlockFlower.EnumFlowerType.BLUE_ORCHID ? BlockFlower.EnumFlowerType.POPPY : blockflower$enumflowertype;
 	}
@@ -117,24 +117,24 @@ public class BiomeGeneratorAlien extends BiomeGenBase
 		{
 			if (j1 <= rand.nextInt(5))
 			{
-				chunkPrimerIn.setBlockState(i1, j1, l, Blocks.bedrock.getDefaultState());
+				chunkPrimerIn.setBlockState(i1, j1, l, Blocks.BEDROCK.getDefaultState());
 			}
 			else
 			{
 				IBlockState iblockstate2 = chunkPrimerIn.getBlockState(i1, j1, l);
 
-				if (iblockstate2.getBlock().getMaterial(iblockstate2) == Material.air)
+				if (iblockstate2.getMaterial() == Material.AIR)
 				{
 					j = -1;
 				}
-				else if (iblockstate2.getBlock() == Blocks.stone)
+				else if (iblockstate2.getBlock() == Blocks.STONE)
 				{
 					if (j == -1)
 					{
 						if (k <= 0)
 						{
 							iblockstate = null;
-							iblockstate1 = Blocks.stone.getDefaultState();
+							iblockstate1 = Blocks.STONE.getDefaultState();
 						}
 						else if (j1 >= i - 4 && j1 <= i + 1)
 						{
@@ -142,15 +142,15 @@ public class BiomeGeneratorAlien extends BiomeGenBase
 							iblockstate1 = this.fillerBlock;
 						}
 
-						if (j1 < i && (iblockstate == null || iblockstate.getBlock().getMaterial(iblockstate) == Material.air))
+						if (j1 < i && (iblockstate == null || iblockstate.getMaterial() == Material.AIR))
 						{
-							if (this.getFloatTemperature(blockpos$mutableblockpos.set(p_180622_4_, j1, p_180622_5_)) < 0.15F)
+							if (this.getFloatTemperature(blockpos$mutableblockpos.setPos(p_180622_4_, j1, p_180622_5_)) < 0.15F)
 							{
-								iblockstate = Blocks.ice.getDefaultState();
+								iblockstate = Blocks.ICE.getDefaultState();
 							}
 							else
 							{
-								iblockstate = Blocks.water.getDefaultState();
+								iblockstate = Blocks.WATER.getDefaultState();
 							}
 						}
 
@@ -163,8 +163,8 @@ public class BiomeGeneratorAlien extends BiomeGenBase
 						else if (j1 < i - 7 - k)
 						{
 							iblockstate = null;
-							iblockstate1 = Blocks.stone.getDefaultState();
-							chunkPrimerIn.setBlockState(i1, j1, l, Blocks.gravel.getDefaultState());
+							iblockstate1 = Blocks.STONE.getDefaultState();
+							chunkPrimerIn.setBlockState(i1, j1, l, Blocks.GRAVEL.getDefaultState());
 						}
 						else
 						{
@@ -176,10 +176,10 @@ public class BiomeGeneratorAlien extends BiomeGenBase
 						--j;
 						chunkPrimerIn.setBlockState(i1, j1, l, iblockstate1);
 
-						if (j == 0 && iblockstate1.getBlock() == Blocks.sand)
+						if (j == 0 && iblockstate1.getBlock() == Blocks.SAND)
 						{
 							j = rand.nextInt(4) + Math.max(0, j1 - 63);
-							iblockstate1 = iblockstate1.getValue(BlockSand.VARIANT) == BlockSand.EnumType.RED_SAND ? Blocks.red_sandstone.getDefaultState() : Blocks.sandstone.getDefaultState();
+							iblockstate1 = iblockstate1.getValue(BlockSand.VARIANT) == BlockSand.EnumType.RED_SAND ? Blocks.RED_SANDSTONE.getDefaultState() : Blocks.SANDSTONE.getDefaultState();
 						}
 					}
 					else

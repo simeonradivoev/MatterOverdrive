@@ -156,14 +156,14 @@ public class BlockLeavesAlien extends BlockLeaves
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
-		return Blocks.leaves2.isOpaqueCube(state);
+		return Blocks.LEAVES2.isOpaqueCube(state);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public BlockRenderLayer getBlockLayer()
 	{
-		return Blocks.leaves2.getBlockLayer();
+		return Blocks.LEAVES2.getBlockLayer();
 	}
 
 	@Override
@@ -174,9 +174,9 @@ public class BlockLeavesAlien extends BlockLeaves
 
 	public enum EnumType implements IStringSerializable
 	{
-		OAK(0, "oak", MapColor.woodColor),
-		GLOWING(1, "glowing", MapColor.obsidianColor),
-		BUSH(2, "bush", MapColor.redColor);
+		OAK(0, "oak", MapColor.WOOD),
+		GLOWING(1, "glowing", MapColor.OBSIDIAN),
+		BUSH(2, "bush", MapColor.RED);
 
 		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
 

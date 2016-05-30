@@ -166,20 +166,20 @@ public class VersionCheckerHandler implements IConfigSubscriber
 				player.addChatMessage(chat);
 
 				chat = new TextComponentString("");
-				ITextComponent versionName = new TextComponentString(root.get("title").getAsString() + " ").setChatStyle(new Style().setColor(TextFormatting.AQUA));
+				ITextComponent versionName = new TextComponentString(root.get("title").getAsString() + " ").setStyle(new Style().setColor(TextFormatting.AQUA));
 				chat.appendSibling(versionName);
 				chat.appendText(TextFormatting.WHITE + "[");
-				style.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Reference.DOWNLOAD_URL));
-				style.setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.hover").setChatStyle(new Style().setColor(TextFormatting.YELLOW))));
+				style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Reference.DOWNLOAD_URL));
+				style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.hover").setStyle(new Style().setColor(TextFormatting.YELLOW))));
 				style.setColor(TextFormatting.GREEN);
-				chat.appendSibling(new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.download")).setChatStyle(style);
+				chat.appendSibling(new TextComponentTranslation("info." + Reference.MOD_ID + ".updater.download")).setStyle(style);
 				chat.appendText(TextFormatting.WHITE + "]");
 				player.addChatMessage(chat);
 
 				chat = new TextComponentString(root.get("excerpt").getAsString().replaceAll("<.*?>", ""));
 				style = new Style();
 				style.setColor(TextFormatting.GRAY);
-				chat.setChatStyle(style);
+				chat.setStyle(style);
 				player.addChatMessage(chat);
 				return true;
 

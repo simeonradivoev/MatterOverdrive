@@ -32,6 +32,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import static matteroverdrive.util.MOBlockHelper.RotationType;
@@ -113,13 +114,13 @@ public class MOBlock extends Block
 	}
 
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
-		super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
-		IMOTileEntity tileEntity = (IMOTileEntity)worldIn.getTileEntity(pos);
+		super.onNeighborChange(world, pos, neighbor);
+		IMOTileEntity tileEntity = (IMOTileEntity)world.getTileEntity(pos);
 		if (tileEntity != null)
 		{
-			tileEntity.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
+			tileEntity.onNeighborBlockChange(world, pos, world.getBlockState(pos), world.getBlockState(neighbor).getBlock());
 		}
 	}
 

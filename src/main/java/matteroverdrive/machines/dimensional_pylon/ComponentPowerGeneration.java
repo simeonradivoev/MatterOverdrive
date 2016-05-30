@@ -190,7 +190,7 @@ public class ComponentPowerGeneration extends MachineComponentAbstract<TileEntit
 					}
 				}
 			}
-			else if (state.getBlock().getMaterial(state).equals(Material.iron) || state.getBlock().getMaterial(state).equals(Material.iron))
+			else if (state.getMaterial().equals(Material.IRON) || state.getMaterial().equals(Material.IRON))
 			{
 				y = getPos().getY() + random.nextDouble() * 2;
 				dirX = random.nextGaussian() * 0.2;

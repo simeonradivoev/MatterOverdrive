@@ -1,6 +1,6 @@
 package matteroverdrive.fx;
 
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Simeon on 5/13/2015.
  */
 @SideOnly(Side.CLIENT)
-public class GravitationalAnomalyParticle extends EntityFX
+public class GravitationalAnomalyParticle extends Particle
 {
 	float smokeParticleScale;
 	Vec3d center;
@@ -69,10 +69,10 @@ public class GravitationalAnomalyParticle extends EntityFX
 		}
 
 		this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
-		this.moveEntity(this.xSpeed, this.ySpeed, this.zSpeed);
+		this.moveEntity(this.motionX, this.motionY, this.motionZ);
 
-		this.xSpeed = (center.xCoord - posX) * 0.1;
-		this.ySpeed = (center.yCoord - posY) * 0.1;
-		this.zSpeed = (center.zCoord - posZ) * 0.1;
+		this.motionX = (center.xCoord - posX) * 0.1;
+		this.motionY = (center.yCoord - posY) * 0.1;
+		this.motionZ = (center.zCoord - posZ) * 0.1;
 	}
 }

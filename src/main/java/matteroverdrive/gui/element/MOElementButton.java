@@ -105,9 +105,9 @@ public class MOElementButton extends MOElementBase
 	{
 		if (sounds != null && sounds.length > 0)
 		{
-			if (SoundEvent.soundEventRegistry.containsKey(sounds[rand.nextInt(sounds.length)]))
+			if (SoundEvent.REGISTRY.containsKey(sounds[rand.nextInt(sounds.length)]))
 			{
-				return SoundEvent.soundEventRegistry.getObject(sounds[rand.nextInt(sounds.length)]);
+				return SoundEvent.REGISTRY.getObject(sounds[rand.nextInt(sounds.length)]);
 			}
 		}
 		return null;

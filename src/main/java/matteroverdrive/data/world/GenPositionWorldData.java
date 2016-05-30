@@ -58,7 +58,7 @@ public class GenPositionWorldData extends WorldSavedData
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbtTagCompound)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound)
 	{
 		for (Map.Entry<String, List<WorldPosition2D>> entry : positions.entrySet())
 		{
@@ -71,6 +71,7 @@ public class GenPositionWorldData extends WorldSavedData
 			}
 			nbtTagCompound.setTag(entry.getKey(), tagList);
 		}
+		return nbtTagCompound;
 	}
 
 	public boolean isFarEnough(String name, int x, int y, int distance)

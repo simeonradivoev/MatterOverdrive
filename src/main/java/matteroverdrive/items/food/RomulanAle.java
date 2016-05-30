@@ -69,12 +69,12 @@ public class RomulanAle extends ItemFood
 
 		if (stack.stackSize > 0)
 		{
-			((EntityPlayer)entityLiving).inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
+			((EntityPlayer)entityLiving).inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
 			return stack;
 		}
 		else
 		{
-			return new ItemStack(Items.glass_bottle);
+			return new ItemStack(Items.GLASS_BOTTLE);
 		}
 	}
 

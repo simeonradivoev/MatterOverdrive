@@ -33,6 +33,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -110,25 +111,25 @@ public class BlockHoloSign extends BlockMonitor implements IDismantleable, ITile
 	}
 
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
 		boolean flag;
-		EnumFacing l = worldIn.getBlockState(pos).getValue(MOBlock.PROPERTY_DIRECTION);
+		EnumFacing l = world.getBlockState(pos).getValue(MOBlock.PROPERTY_DIRECTION);
 		flag = true;
 
-		IBlockState nState = worldIn.getBlockState(pos.offset(l));
-		if (nState.getBlock().getMaterial(nState).isSolid())
+		IBlockState nState = world.getBlockState(pos.offset(l));
+		if (nState.getMaterial().isSolid())
 		{
 			flag = false;
 		}
 
-		if (flag)
+		if (flag && world instanceof World)
 		{
-			this.dropBlockAsItem(worldIn, pos, worldIn.getBlockState(pos), 0);
-			worldIn.setBlockToAir(pos);
+			this.dropBlockAsItem((World)world, pos, world.getBlockState(pos), 0);
+			((World)world).setBlockToAir(pos);
 		}
 
-		super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
+		super.onNeighborChange(world, pos, neighbor);
 	}
 
 	@Override

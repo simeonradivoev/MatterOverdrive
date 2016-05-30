@@ -171,7 +171,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
 		IBlockState blockState = worldObj.getBlockState(blockPos);
 		Block block = blockState.getBlock();
 
-		if (block != null && block.getMaterial(blockState) != Material.air)
+		if (block != null && blockState.getMaterial() != Material.AIR)
 		{
 			//block.setBlockBoundsBasedOnState(this.worldObj,blockPos);
 			AxisAlignedBB axisalignedbb = block.getCollisionBoundingBox(blockState, this.worldObj, blockPos);
@@ -298,7 +298,7 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
 
 						if (this.shootingEntity != null && movingobjectposition.entityHit != this.shootingEntity && movingobjectposition.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP)
 						{
-							((EntityPlayerMP)this.shootingEntity).playerNetServerHandler.sendPacket(new SPacketChangeGameState(6, 0.0F));
+							((EntityPlayerMP)this.shootingEntity).connection.sendPacket(new SPacketChangeGameState(6, 0.0F));
 						}
 					}
 
@@ -336,9 +336,9 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
 				this.blockPos = movingobjectposition.getBlockPos();
 				this.blockState = this.worldObj.getBlockState(blockPos);
 
-				if (this.blockState.getBlock().getMaterial(this.blockState) != Material.air)
+				if (this.blockState.getMaterial() != Material.AIR)
 				{
-					this.blockState.getBlock().onEntityCollidedWithBlock(this.worldObj, blockPos, this);
+					this.blockState.getBlock().onEntityCollidedWithBlock(this.worldObj, blockPos, this.blockState, this);
 					if (this.blockState instanceof BlockTNT)
 					{
 						worldObj.setBlockToAir(blockPos);

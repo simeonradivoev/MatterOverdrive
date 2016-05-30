@@ -2,7 +2,7 @@ package matteroverdrive.world.dimensions.alien;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -21,7 +21,7 @@ public class BiomeAlienColorHelper
 
 		for (BlockPos.MutableBlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(p_180285_1_.add(-1, 0, -1), p_180285_1_.add(1, 0, 1)))
 		{
-			BiomeGenBase biomeGenBase = p_180285_0_.getBiomeGenForCoords(blockpos$mutableblockpos);
+			Biome biomeGenBase = p_180285_0_.getBiome(blockpos$mutableblockpos);
 			if (biomeGenBase instanceof BiomeGeneratorAlien)
 			{
 				int l = p_180285_2_.getColorAtPos((BiomeGeneratorAlien)biomeGenBase, blockpos$mutableblockpos);

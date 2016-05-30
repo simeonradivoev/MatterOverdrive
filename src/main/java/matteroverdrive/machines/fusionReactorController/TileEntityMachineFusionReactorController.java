@@ -268,7 +268,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 					Block block = worldObj.getBlockState(position).getBlock();
 					TileEntity tileEntity = worldObj.getTileEntity(position);
 
-					if (block == Blocks.air)
+					if (block == Blocks.AIR)
 					{
 						validStructure = false;
 						info = "INVALID\nSTRUCTURE";

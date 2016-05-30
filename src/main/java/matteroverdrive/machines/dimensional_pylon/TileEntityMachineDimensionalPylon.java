@@ -410,7 +410,7 @@ public class TileEntityMachineDimensionalPylon extends MOTileEntityMachineMatter
 				else
 				{
 					TextComponentString message = new TextComponentString(TextFormatting.GOLD + "[Matter Overdrive] " + TextFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights").replace("$0", ((MOTileEntityMachine)mainPylon).getDisplayName().toString()));
-					message.setChatStyle(new Style().setColor(TextFormatting.RED));
+					message.setStyle(new Style().setColor(TextFormatting.RED));
 					entityPlayer.addChatMessage(message);
 				}
 			}

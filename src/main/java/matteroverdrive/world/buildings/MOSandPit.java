@@ -26,7 +26,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 import java.util.Random;
 
@@ -42,17 +42,17 @@ public class MOSandPit extends MOWorldGenBuilding
 		super(name, new ResourceLocation(Reference.PATH_WORLD_TEXTURES + "sand_pit.png"), 24, 24);
 		setMaxDistanceToAir(airLeeway);
 		setyOffset(-9);
-		validSpawnBlocks = new Block[] {Blocks.sand};
+		validSpawnBlocks = new Block[] {Blocks.SAND};
 		this.airLeeway = airLeeway;
 		this.name = name;
-		addMapping(0xe1db35, Blocks.sandstone);
-		addMapping(0xf1f1f1, Blocks.air);
-		addMapping(0xffff00, Blocks.sand);
-		addMapping(0xc735e1, Blocks.glowstone);
-		addMapping(0x35a2e1, Blocks.water);
+		addMapping(0xe1db35, Blocks.SANDSTONE);
+		addMapping(0xf1f1f1, Blocks.AIR);
+		addMapping(0xffff00, Blocks.SAND);
+		addMapping(0xc735e1, Blocks.GLOWSTONE);
+		addMapping(0x35a2e1, Blocks.WATER);
 		addMapping(0x359ae1, MatterOverdriveBlocks.decorative_tritanium_plate);
 		addMapping(0xff8400, MatterOverdriveBlocks.decorative_coils);
-		addMapping(0x6b4400, Blocks.oak_fence);
+		addMapping(0x6b4400, Blocks.OAK_FENCE);
 	}
 
 	public boolean isFlat(World world, BlockPos pos)
@@ -62,7 +62,7 @@ public class MOSandPit extends MOWorldGenBuilding
 		BlockPos y01 = world.getHeight(pos.add(0, 0, layerHeight));
 		if (Math.abs(pos.getY() - y10.getY()) <= airLeeway && Math.abs(pos.getY() - y11.getY()) <= airLeeway && Math.abs(pos.getY() - y01.getY()) <= airLeeway)
 		{
-			return blockBelowMatches(airLeeway, world, Blocks.sand, pos) && blockBelowMatches(airLeeway, world, Blocks.sand, pos.add(layerWidth, 0, 0)) && blockBelowMatches(airLeeway, world, Blocks.sand, pos.add(0, 0, layerHeight)) && blockBelowMatches(airLeeway, world, Blocks.sand, pos.add(layerWidth, 0, layerHeight));
+			return blockBelowMatches(airLeeway, world, Blocks.SAND, pos) && blockBelowMatches(airLeeway, world, Blocks.SAND, pos.add(layerWidth, 0, 0)) && blockBelowMatches(airLeeway, world, Blocks.SAND, pos.add(0, 0, layerHeight)) && blockBelowMatches(airLeeway, world, Blocks.SAND, pos.add(layerWidth, 0, layerHeight));
 		}
 		return false;
 	}
@@ -81,7 +81,7 @@ public class MOSandPit extends MOWorldGenBuilding
 
 	private boolean isPointOnSurface(World world, BlockPos pos)
 	{
-		return world.getBlockState(pos.add(0, 1, 0)).getBlock() == Blocks.air;
+		return world.getBlockState(pos.add(0, 1, 0)).getBlock() == Blocks.AIR;
 	}
 
 	@Override
@@ -123,6 +123,6 @@ public class MOSandPit extends MOWorldGenBuilding
 	@Override
 	public boolean shouldGenerate(Random random, World world, BlockPos pos)
 	{
-		return world.getBiomeGenForCoords(pos) == BiomeGenBase.getBiome(2);
+		return world.getBiome(pos) == Biome.REGISTRY.getObject(new ResourceLocation("minecraft", "desert"));
 	}
 }

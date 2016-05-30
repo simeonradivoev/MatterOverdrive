@@ -122,7 +122,7 @@ public class TileEntityAndroidSpawner extends MOTileEntityMachine
 							entity.setSpawnerPosition(getPos());
 							entity.enablePersistence();
 							addSpawnedAndroid(entity);
-							worldObj.playAuxSFX(2004, getPos(), 0);
+							worldObj.playBroadcastSound(2004, getPos(), 0);
 							ScorePlayerTeam team = getTeam();
 							if (team != null)
 							{

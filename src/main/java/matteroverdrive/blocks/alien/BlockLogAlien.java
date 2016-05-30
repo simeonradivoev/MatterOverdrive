@@ -35,7 +35,7 @@ public class BlockLogAlien extends BlockLog
 			case Z:
 			case NONE:
 			default:
-				return MapColor.stoneColor;
+				return MapColor.STONE;
 		}
 	}
 

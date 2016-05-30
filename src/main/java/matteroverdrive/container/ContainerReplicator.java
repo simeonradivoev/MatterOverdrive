@@ -4,7 +4,7 @@ import matteroverdrive.container.matter_network.ContainerTaskQueueMachine;
 import matteroverdrive.machines.replicator.TileEntityMachineReplicator;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,12 +28,12 @@ public class ContainerReplicator extends ContainerTaskQueueMachine<TileEntityMac
 	}
 
 	@Override
-	public void onCraftGuiOpened(ICrafting icrafting)
+	public void addListener(IContainerListener listener)
 	{
-		super.onCraftGuiOpened(icrafting);
-		icrafting.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
-		icrafting.sendProgressBarUpdate(this, 2, this.machine.getEnergyDrainPerTick());
-		icrafting.sendProgressBarUpdate(this, 3, this.machine.getEnergyDrainMax());
+		super.addListener(listener);
+		listener.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
+		listener.sendProgressBarUpdate(this, 2, this.machine.getEnergyDrainPerTick());
+		listener.sendProgressBarUpdate(this, 3, this.machine.getEnergyDrainMax());
 	}
 
 	@Override
@@ -41,13 +41,11 @@ public class ContainerReplicator extends ContainerTaskQueueMachine<TileEntityMac
 	{
 		super.detectAndSendChanges();
 
-		for (Object crafter : this.crafters)
+		for (IContainerListener listener : this.listeners)
 		{
-			ICrafting icrafting = (ICrafting)crafter;
-
 			if (this.patternReplicateCount != this.machine.getTaskReplicateCount())
 			{
-				icrafting.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
+				listener.sendProgressBarUpdate(this, 1, this.machine.getTaskReplicateCount());
 			}
 		}
 

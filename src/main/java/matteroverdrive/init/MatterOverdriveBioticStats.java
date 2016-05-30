@@ -65,7 +65,7 @@ public class MatterOverdriveBioticStats
 		flotation = new BioticStatFlotation("floatation", 14);
 		speed = new BioticStatSpeed("speed", 18);
 		highJump = new BioticStatHighJump("high_jump", 36);
-		highJump.addReqiredItm(new ItemStack(Blocks.piston));
+		highJump.addReqiredItm(new ItemStack(Blocks.PISTON));
 		equalizer = new BioticStatEqualizer("equalizer", 24);
 		equalizer.addReqiredItm(new ItemStack(MatterOverdriveItems.spacetime_equalizer));
 		shield = new BioticStatShield("shield", 36);
@@ -100,7 +100,7 @@ public class MatterOverdriveBioticStats
 		attack.addCompetitor(nanoArmor);
 		attack.setRoot(nanobots, false);
 		cloak.setRoot(shield, true);
-		minimap.addReqiredItm(new ItemStack(Items.compass));
+		minimap.addReqiredItm(new ItemStack(Items.COMPASS));
 		flashCooling.setRoot(attack, true);
 		shockwave.setRoot(flashCooling, true);
 		autoShield.setRoot(shield, true);

@@ -53,21 +53,21 @@ public class MOWorldGenCargoShip extends MOWorldGenBuilding<MOWorldGenCargoShip.
 		addMapping(0xdb9c3a, MatterOverdriveBlocks.holoSign);
 		addMapping(0x5fffbe, MatterOverdriveBlocks.transporter);
 		addMapping(0xd2fb50, MatterOverdriveBlocks.forceGlass);
-		addMapping(0xdc01d8, Blocks.wooden_pressure_plate);
-		addMapping(0xfc6b34, new BlockMapping(true, Blocks.gold_ore, Blocks.iron_ore, Blocks.coal_ore, MatterOverdriveBlocks.tritaniumOre));
+		addMapping(0xdc01d8, Blocks.WOODEN_PRESSURE_PLATE);
+		addMapping(0xfc6b34, new BlockMapping(true, Blocks.GOLD_ORE, Blocks.IRON_ORE, Blocks.COAL_ORE, MatterOverdriveBlocks.tritaniumOre));
 		addMapping(0xd1626, MatterOverdriveBlocks.fusionReactorIO);
 		addMapping(0x1b2ff7, MatterOverdriveBlocks.network_pipe);
 		addMapping(0x1f2312, MatterOverdriveBlocks.tritaniumCrate);
-		addMapping(0xab4824, Blocks.oak_fence);
-		addMapping(0x68d738, Blocks.carpet);
-		addMapping(0xbdea8f, Blocks.ladder);
+		addMapping(0xab4824, Blocks.OAK_FENCE);
+		addMapping(0x68d738, Blocks.CARPET);
+		addMapping(0xbdea8f, Blocks.LADDER);
 		addMapping(0xeff73d, MatterOverdriveBlocks.network_switch);
 		addMapping(0xa8ed1c, MatterOverdriveBlocks.heavy_matter_pipe);
-		addMapping(0x4b285d, Blocks.oak_stairs);
+		addMapping(0x4b285d, Blocks.OAK_STAIRS);
 		addMapping(0xcfd752, MatterOverdriveBlocks.network_router);
 		addMapping(0x4d8dd3, MatterOverdriveBlocks.pattern_monitor);
-		addMapping(0x6b3534, Blocks.bed);
-		addMapping(0xff00ff, Blocks.air);
+		addMapping(0x6b3534, Blocks.BED);
+		addMapping(0xff00ff, Blocks.AIR);
 		addMapping(0x69960c, MatterOverdriveBlocks.tritaniumCrate);
 	}
 
@@ -95,14 +95,14 @@ public class MOWorldGenCargoShip extends MOWorldGenBuilding<MOWorldGenCargoShip.
 	public boolean isLocationValid(World world, BlockPos pos)
 	{
 		pos = new BlockPos(pos.getX(), Math.min(pos.getY() + 86, world.getHeight() - 18), pos.getZ());
-		return world.getBlockState(pos).getBlock() == Blocks.air
-				&& world.getBlockState(pos.add(layerWidth, 0, 0)) == Blocks.air
-				&& world.getBlockState(pos.add(0, 0, layerHeight)) == Blocks.air
-				&& world.getBlockState(pos.add(layerWidth, 0, layerHeight)) == Blocks.air
-				&& world.getBlockState(pos.add(0, 16, 0)) == Blocks.air
-				&& world.getBlockState(pos.add(layerWidth, 16, 0)) == Blocks.air
-				&& world.getBlockState(pos.add(0, 16, layerHeight)) == Blocks.air
-				&& world.getBlockState(pos.add(layerWidth, 16, layerHeight)) == Blocks.air;
+		return world.getBlockState(pos).getBlock() == Blocks.AIR
+				&& world.getBlockState(pos.add(layerWidth, 0, 0)) == Blocks.AIR
+				&& world.getBlockState(pos.add(0, 0, layerHeight)) == Blocks.AIR
+				&& world.getBlockState(pos.add(layerWidth, 0, layerHeight)) == Blocks.AIR
+				&& world.getBlockState(pos.add(0, 16, 0)) == Blocks.AIR
+				&& world.getBlockState(pos.add(layerWidth, 16, 0)) == Blocks.AIR
+				&& world.getBlockState(pos.add(0, 16, layerHeight)) == Blocks.AIR
+				&& world.getBlockState(pos.add(layerWidth, 16, layerHeight)) == Blocks.AIR;
 	}
 
 	@Override

@@ -661,7 +661,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 					othersEffects.add(effect);
 				}
 			}
-			Set<? extends EntityPlayer> trackers = ((EntityPlayerMP)player).getServerForPlayer().getEntityTracker().getTrackingPlayers(player);
+			Set<? extends EntityPlayer> trackers = ((EntityPlayerMP)player).getServerWorld().getEntityTracker().getTrackingPlayers(player);
 			for (EntityPlayer entityPlayer : trackers)
 			{
 				if (entityPlayer instanceof EntityPlayerMP && entityPlayer != player)

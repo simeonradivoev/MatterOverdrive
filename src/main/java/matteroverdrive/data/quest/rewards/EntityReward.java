@@ -59,11 +59,11 @@ public class EntityReward implements IQuestReward
 	@Override
 	public void giveReward(QuestStack questStack, EntityPlayer entityPlayer)
 	{
-		for (String key : EntityList.stringToClassMapping.keySet())
+		for (String key : EntityList.NAME_TO_CLASS.keySet())
 		{
 			MOLog.info(key);
 		}
-		Class<? extends Entity> entityClass = EntityList.stringToClassMapping.get(entityId);
+		Class<? extends Entity> entityClass = EntityList.NAME_TO_CLASS.get(entityId);
 		EntityRegistry.EntityRegistration entityRegistration = EntityRegistry.instance().lookupModSpawn(entityClass, true);
 		if (entityRegistration != null)
 		{

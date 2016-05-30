@@ -3,7 +3,7 @@ package matteroverdrive.world.dimensions.space;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkGenerator;
 
@@ -16,7 +16,7 @@ import java.util.Random;
 public class ChunkProviderSpace implements IChunkGenerator
 {
 	private World spaceWorld;
-	private BiomeGenBase[] biomesForGeneration;
+	private Biome[] biomesForGeneration;
 	private Random spaceRandom;
 
 	public ChunkProviderSpace(World world, long seed)
@@ -46,9 +46,9 @@ public class ChunkProviderSpace implements IChunkGenerator
 	}
 
 	@Override
-	public List<BiomeGenBase.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
+	public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
 	{
-		return this.spaceWorld.getBiomeGenForCoords(pos).getSpawnableList(creatureType);
+		return this.spaceWorld.getBiome(pos).getSpawnableList(creatureType);
 	}
 
 	@Override

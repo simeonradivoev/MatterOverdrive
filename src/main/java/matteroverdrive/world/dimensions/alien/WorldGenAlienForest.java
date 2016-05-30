@@ -61,7 +61,7 @@ public class WorldGenAlienForest extends WorldGenAbstractTree
 					{
 						if (j >= 0 && j < 256)
 						{
-							if (!this.isReplaceable(worldIn, blockpos$mutableblockpos.set(l, j, i1)))
+							if (!this.isReplaceable(worldIn, blockpos$mutableblockpos.setPos(l, j, i1)))
 							{
 								flag = false;
 							}
@@ -83,7 +83,7 @@ public class WorldGenAlienForest extends WorldGenAbstractTree
 				BlockPos down = position.down();
 				IBlockState state = worldIn.getBlockState(down);
 				Block block1 = state.getBlock();
-				boolean isSoil = block1.canSustainPlant(state, worldIn, down, net.minecraft.util.EnumFacing.UP, ((net.minecraft.block.BlockSapling)Blocks.sapling));
+				boolean isSoil = block1.canSustainPlant(state, worldIn, down, net.minecraft.util.EnumFacing.UP, ((net.minecraft.block.BlockSapling)Blocks.SAPLING));
 
 				if (isSoil && position.getY() < 256 - i - 1)
 				{

@@ -22,7 +22,7 @@ import matteroverdrive.tile.TileEntityAndroidSpawner;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -46,23 +46,21 @@ public class ContainerAndroidSpawner extends ContainerMachine<TileEntityAndroidS
 	}
 
 	@Override
-	public void onCraftGuiOpened(ICrafting icrafting)
+	public void addListener(IContainerListener listener)
 	{
-		super.onCraftGuiOpened(icrafting);
-		icrafting.sendProgressBarUpdate(this, 0, spawnedAndroids);
+		super.addListener(listener);
+		listener.sendProgressBarUpdate(this, 0, spawnedAndroids);
 	}
 
 	@Override
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for (Object crafter : this.crafters)
+		for (IContainerListener listener: this.listeners)
 		{
-			ICrafting icrafting = (ICrafting)crafter;
-
 			if (this.spawnedAndroids != this.machine.getSpawnedCount())
 			{
-				icrafting.sendProgressBarUpdate(this, 0, this.machine.getMaxSpawnCount());
+				listener.sendProgressBarUpdate(this, 0, this.machine.getMaxSpawnCount());
 			}
 		}
 

@@ -182,7 +182,7 @@ public class Phaser extends EnergyWeapon implements IWeapon
 							if (player.worldObj.isAirBlock(pos))
 							{
 								//player.worldObj.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
-								player.worldObj.setBlockState(pos, Blocks.fire.getDefaultState());
+								player.worldObj.setBlockState(pos, Blocks.FIRE.getDefaultState());
 							}
 						}
 					}
@@ -399,7 +399,7 @@ public class Phaser extends EnergyWeapon implements IWeapon
 			}
 
 		}
-		else if (b != null && b != Blocks.air)
+		else if (b != null && b != Blocks.AIR)
 		{
 			if (WeaponHelper.hasStat(Reference.WS_FIRE_DAMAGE, weapon) && isKillMode(weapon))
 			{

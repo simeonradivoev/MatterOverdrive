@@ -221,7 +221,7 @@ public abstract class MOBlockMachine extends MOBlockContainer implements IDisman
 					if (world.isRemote)
 					{
 						TextComponentString message = new TextComponentString(TextFormatting.GOLD + "[Matter Overdrive] " + TextFormatting.RED + MOStringHelper.translateToLocal("alert.no_rights.dismantle").replace("$0", getLocalizedName()));
-						message.setChatStyle(new Style().setColor(TextFormatting.RED));
+						message.setStyle(new Style().setColor(TextFormatting.RED));
 						player.addChatMessage(message);
 					}
 					return false;

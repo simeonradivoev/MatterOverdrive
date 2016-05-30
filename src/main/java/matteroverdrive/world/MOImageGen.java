@@ -267,7 +267,7 @@ public abstract class MOImageGen<T extends MOImageGen.ImageGenWorker>
 	public boolean isBlockSolid(World world, BlockPos pos)
 	{
 		IBlockState block = world.getBlockState(pos);
-		if (block.getBlock() == Blocks.log || block.getBlock() == Blocks.log2 && block.getBlock() == Blocks.leaves2 || block.getBlock() == Blocks.leaves)
+		if (block.getBlock() == Blocks.LOG || block.getBlock() == Blocks.LOG2 && block.getBlock() == Blocks.LEAVES2 || block.getBlock() == Blocks.LEAVES)
 		{
 			return false;
 		}

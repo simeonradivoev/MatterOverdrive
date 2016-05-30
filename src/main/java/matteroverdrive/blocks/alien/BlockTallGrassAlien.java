@@ -32,7 +32,7 @@ public class BlockTallGrassAlien extends BlockBush implements net.minecraftforge
 
 	public BlockTallGrassAlien()
 	{
-		super(Material.vine);
+		super(Material.VINE);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, 0));
 		float f = 0.4F;
 		// TODO: 3/26/2016 Find how to set block bounds
@@ -96,7 +96,7 @@ public class BlockTallGrassAlien extends BlockBush implements net.minecraftforge
 	@SideOnly(Side.CLIENT)
 	public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
 	{
-		return worldIn.getBiomeGenForCoords(pos).getGrassColorAtPos(pos);
+		return worldIn.getBiome(pos).getGrassColorAtPos(pos);
 	}
 
 	public int getDamageValue(World worldIn, BlockPos pos)
@@ -157,7 +157,7 @@ public class BlockTallGrassAlien extends BlockBush implements net.minecraftforge
 	public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)
 	{
 		List<ItemStack> ret = new java.util.ArrayList<ItemStack>();
-		ret.add(new ItemStack(Blocks.tallgrass, 1, world.getBlockState(pos).getValue(TYPE)));
+		ret.add(new ItemStack(Blocks.TALLGRASS, 1, world.getBlockState(pos).getValue(TYPE)));
 		return ret;
 	}
 

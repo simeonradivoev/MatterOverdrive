@@ -13,6 +13,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 public abstract class TileEntityPipe extends MOTileEntity implements ITickable
 {
 	protected boolean needsUpdate = true;
@@ -26,8 +28,9 @@ public abstract class TileEntityPipe extends MOTileEntity implements ITickable
 		worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 	}
 
+	@Nullable
 	@Override
-	public Packet getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound tagCompound = new NBTTagCompound();
 		tagCompound.setInteger("Connections", connections);

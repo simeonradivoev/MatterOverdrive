@@ -84,7 +84,7 @@ public class PacketDigBlock extends PacketAbstract
 				}
 				else
 				{
-					playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver, message.pos));
+					playerMP.connection.sendPacket(new SPacketBlockChange(worldserver, message.pos));
 				}
 			}
 			else if (message.typeOfDig == 2)
@@ -92,9 +92,9 @@ public class PacketDigBlock extends PacketAbstract
 				playerMP.interactionManager.tryHarvestBlock(message.pos);
 
 				IBlockState state = worldserver.getBlockState(message.pos);
-				if (state.getBlock().getMaterial(state) != Material.air)
+				if (state.getMaterial() != Material.AIR)
 				{
-					playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver, message.pos));
+					playerMP.connection.sendPacket(new SPacketBlockChange(worldserver, message.pos));
 				}
 			}
 			else if (message.typeOfDig == 1)
@@ -102,9 +102,9 @@ public class PacketDigBlock extends PacketAbstract
 				playerMP.interactionManager.cancelDestroyingBlock();
 
 				IBlockState state = worldserver.getBlockState(message.pos);
-				if (state.getBlock().getMaterial(state) != Material.air)
+				if (state.getMaterial() != Material.AIR)
 				{
-					playerMP.playerNetServerHandler.sendPacket(new SPacketBlockChange(worldserver, message.pos));
+					playerMP.connection.sendPacket(new SPacketBlockChange(worldserver, message.pos));
 				}
 			}
 		}

@@ -21,7 +21,7 @@ package matteroverdrive.container;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -45,9 +45,9 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
 	}
 
 	@Override
-	public void onCraftGuiOpened(ICrafting icrafting)
+	public void addListener(IContainerListener icrafting)
 	{
-		super.onCraftGuiOpened(icrafting);
+		super.addListener(icrafting);
 		icrafting.sendProgressBarUpdate(this, 1, this.machine.getEnergyPerTick());
 	}
 
@@ -55,13 +55,11 @@ public class ContainerFusionReactor extends ContainerMachine<TileEntityMachineFu
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for (Object crafter : this.crafters)
+		for (IContainerListener listener : this.listeners)
 		{
-			ICrafting icrafting = (ICrafting)crafter;
-
 			if (this.energyPerTick != this.machine.getEnergyPerTick())
 			{
-				icrafting.sendProgressBarUpdate(this, 1, this.machine.getEnergyPerTick());
+				listener.sendProgressBarUpdate(this, 1, this.machine.getEnergyPerTick());
 			}
 		}
 

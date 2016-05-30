@@ -29,11 +29,11 @@ public class SoundReward implements IQuestReward
 	@Override
 	public void giveReward(QuestStack questStack, EntityPlayer entityPlayer)
 	{
-		if (!SoundEvent.soundEventRegistry.containsKey(new ResourceLocation(soundName)))
+		if (!SoundEvent.REGISTRY.containsKey(new ResourceLocation(soundName)))
 		{
 			return;
 		}
-		entityPlayer.worldObj.playSound(null, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundEvent.soundEventRegistry.getObject(new ResourceLocation(soundName)), SoundCategory.MUSIC, volume, pitch);
+		entityPlayer.worldObj.playSound(null, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundEvent.REGISTRY.getObject(new ResourceLocation(soundName)), SoundCategory.MUSIC, volume, pitch);
 	}
 
 	@Override

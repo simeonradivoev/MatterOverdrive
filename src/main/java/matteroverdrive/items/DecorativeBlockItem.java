@@ -85,7 +85,7 @@ public class DecorativeBlockItem extends ItemBlock
 		}
 		else if (block instanceof BlockDecorativeColored)
 		{
-			return MOStringHelper.translateToLocal("color." + EnumDyeColor.byMetadata(MathHelper.clamp_int(itemStack.getItemDamage(), 0, ItemDye.dyeColors.length - 1)).getUnlocalizedName() + " " + super.getItemStackDisplayName(itemStack));
+			return MOStringHelper.translateToLocal("color." + EnumDyeColor.byMetadata(MathHelper.clamp_int(itemStack.getItemDamage(), 0, ItemDye.DYE_COLORS.length - 1)).getUnlocalizedName() + " " + super.getItemStackDisplayName(itemStack));
 		}
 		return super.getItemStackDisplayName(itemStack);
 	}

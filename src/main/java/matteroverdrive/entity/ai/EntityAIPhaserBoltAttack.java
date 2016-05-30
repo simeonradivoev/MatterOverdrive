@@ -24,7 +24,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -50,7 +50,7 @@ public class EntityAIPhaserBoltAttack extends EntityAIBase
 	private int maxRangedAttackDelay;
 	private float maxChaseDistance;
 	private float maxChaseDistanceSq;
-	private PathEntity lastChasePath;
+	private Path lastChasePath;
 
 	public EntityAIPhaserBoltAttack(IRangedEnergyWeaponAttackMob rangedAttackEntityHost, double entityMoveSpeed, int maxRangedAttackDelay, float maxChaseDistance)
 	{

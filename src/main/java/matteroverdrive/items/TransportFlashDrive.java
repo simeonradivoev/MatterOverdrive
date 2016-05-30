@@ -54,7 +54,7 @@ public class TransportFlashDrive extends MOBaseItem
 			BlockPos target = getTarget(itemstack);
 			IBlockState state = player.worldObj.getBlockState(target);
 			Block block = state.getBlock();
-			infos.add(TextFormatting.YELLOW + String.format("[%s] %s", target.toString(), block.getMaterial(state) != Material.air ? block.getLocalizedName() : "Unknown"));
+			infos.add(TextFormatting.YELLOW + String.format("[%s] %s", target.toString(), state.getMaterial() != Material.AIR ? block.getLocalizedName() : "Unknown"));
 		}
 	}
 
@@ -62,7 +62,7 @@ public class TransportFlashDrive extends MOBaseItem
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		IBlockState state = worldIn.getBlockState(pos);
-		if (state.getBlock().getMaterial(state) != Material.air)
+		if (state.getMaterial() != Material.AIR)
 		{
 			setTarget(stack, pos);
 			return EnumActionResult.SUCCESS;

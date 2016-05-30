@@ -37,14 +37,14 @@ public class MOAndroidHouseBuilding extends MOWorldGenBuilding
 		super(name, new ResourceLocation(Reference.PATH_WORLD_TEXTURES + "android_house.png"), 21, 21);
 		setyOffset(-2);
 		addMapping(0x00fffc, MatterOverdriveBlocks.decorative_beams, MatterOverdriveBlocks.decorative_carbon_fiber_plate, MatterOverdriveBlocks.decorative_white_plate);
-		addMapping(0x623200, Blocks.dirt);
+		addMapping(0x623200, Blocks.DIRT);
 		addMapping(0xffa200, MatterOverdriveBlocks.decorative_floor_tiles);
 		addMapping(0xfff600, MatterOverdriveBlocks.decorative_holo_matrix);
-		addMapping(0x80b956, Blocks.grass);
+		addMapping(0x80b956, Blocks.GRASS);
 		addMapping(0x539ac3, MatterOverdriveBlocks.decorative_tritanium_plate);
 		addMapping(0xb1c8d5, MatterOverdriveBlocks.decorative_floor_noise, MatterOverdriveBlocks.decorative_floor_tiles_green, MatterOverdriveBlocks.decorative_floot_tile_white);
 		addMapping(0x5f6569, MatterOverdriveBlocks.decorative_vent_dark);
-		addMapping(0xf1f1f1, Blocks.air);
+		addMapping(0xf1f1f1, Blocks.AIR);
 		addMapping(0xe400ff, MatterOverdriveBlocks.starMap);
 		addMapping(0x1850ad, MatterOverdriveBlocks.decorative_clean);
 		addMapping(0x9553c3, MatterOverdriveBlocks.forceGlass);

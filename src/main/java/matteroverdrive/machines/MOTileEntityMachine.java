@@ -63,6 +63,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -72,6 +73,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -397,8 +399,10 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 	}
 	//endregion
 
+
+	@Nullable
 	@Override
-	public Packet getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound syncData = new NBTTagCompound();
 		writeCustomNBT(syncData, MachineNBTCategory.ALL_OPTS, false);
@@ -470,9 +474,9 @@ public abstract class MOTileEntityMachine extends MOTileEntity implements IMOTil
 	}
 
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void onNeighborBlockChange(IBlockAccess world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
-		MachineEvent event = new MachineEvent.NeighborChange(worldIn, pos, state, neighborBlock);
+		MachineEvent event = new MachineEvent.NeighborChange(world, pos, state, neighborBlock);
 		onMachineEvent(event);
 		onMachineEventCompoments(event);
 		redstoneStateDirty = true;

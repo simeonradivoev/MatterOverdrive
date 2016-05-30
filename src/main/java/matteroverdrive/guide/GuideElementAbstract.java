@@ -155,7 +155,7 @@ public abstract class GuideElementAbstract implements IGuideElement
 
 		if (shortCodeMap.get("type").equalsIgnoreCase("block") && shortCodeMap.containsKey("name"))
 		{
-			Block block = GameRegistry.findBlock(mod, shortCodeMap.get("name"));
+			Block block = Block.REGISTRY.getObject(new ResourceLocation(mod, shortCodeMap.get("name")));
 			if (block != null)
 			{
 				return new ItemStack(block, count, damage);
@@ -163,7 +163,7 @@ public abstract class GuideElementAbstract implements IGuideElement
 		}
 		else if (shortCodeMap.containsKey("name"))
 		{
-			Item item = GameRegistry.findItem(mod, shortCodeMap.get("name"));
+			Item item = Item.REGISTRY.getObject(new ResourceLocation(mod, shortCodeMap.get("name")));
 			if (item != null)
 			{
 				return new ItemStack(item, count, damage);

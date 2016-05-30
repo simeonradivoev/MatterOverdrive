@@ -55,7 +55,7 @@ public class PipeRenderManager
 				IBlockState state = world.getBlockState(blockPos);
 				Block block = state.getBlock();
 
-				if (block.getMaterial(state) != Material.air && world.getWorldBorder().contains(blockPos))
+				if (state.getMaterial() != Material.AIR && world.getWorldBorder().contains(blockPos))
 				{
 					//block.setBlockBoundsBasedOnState(world, blockPos);
 					double d0 = e.getPlayer().lastTickPosX + (e.getPlayer().posX - e.getPlayer().lastTickPosX) * (double)e.getPartialTicks();

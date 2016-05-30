@@ -202,7 +202,7 @@ public class DimesionTeleportCommends extends CommandBase
 
 				if (blockpos != null)
 				{
-					theEntity.playerNetServerHandler.setPlayerLocation((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), 0.0F, 0.0F);
+					theEntity.connection.setPlayerLocation((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), 0.0F, 0.0F);
 				}
 
 				dimensionId = 1;
@@ -252,7 +252,7 @@ public class DimesionTeleportCommends extends CommandBase
 				}
 			}
 
-			AbsoluteDimensionTeleporter absoluteDimensionTeleporter = new AbsoluteDimensionTeleporter(theEntity.getServerForPlayer());
+			AbsoluteDimensionTeleporter absoluteDimensionTeleporter = new AbsoluteDimensionTeleporter(theEntity.getServerWorld());
 			// TODO: 3/26/2016 Find how to access configuration manager
 			//theEntity.mcServer.getConfigurationManager().transferPlayerToDimension(theEntity, dimensionId,absoluteDimensionTeleporter);
 		}

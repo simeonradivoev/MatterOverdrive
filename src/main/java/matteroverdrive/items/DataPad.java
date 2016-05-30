@@ -77,7 +77,7 @@ public class DataPad extends MOBaseItem implements IBlockScanner
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if (!playerIn.isSneaking() && worldIn.getBlockState(pos).getBlock() != Blocks.air && canScan(stack, worldIn.getBlockState(pos)))
+		if (!playerIn.isSneaking() && worldIn.getBlockState(pos).getBlock() != Blocks.AIR && canScan(stack, worldIn.getBlockState(pos)))
 		{
 			playerIn.setActiveHand(hand);
 			if (worldIn.isRemote)

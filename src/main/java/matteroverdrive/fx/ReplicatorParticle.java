@@ -1,12 +1,12 @@
 package matteroverdrive.fx;
 
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ReplicatorParticle extends EntityFX
+public class ReplicatorParticle extends Particle
 {
 	/**
 	 * the scale of the flame FX
@@ -18,9 +18,9 @@ public class ReplicatorParticle extends EntityFX
 	public ReplicatorParticle(World world, double p_i1209_2_, double p_i1209_4_, double p_i1209_6_, double p_i1209_8_, double p_i1209_10_, double p_i1209_12_)
 	{
 		super(world, p_i1209_2_, p_i1209_4_, p_i1209_6_, p_i1209_8_, p_i1209_10_, p_i1209_12_);
-		this.xSpeed = this.xSpeed * 0.009999999776482582D + p_i1209_8_;
-		this.ySpeed = this.ySpeed * 0.009999999776482582D + p_i1209_10_;
-		this.zSpeed = this.zSpeed * 0.009999999776482582D + p_i1209_12_;
+		this.motionX = this.motionX * 0.009999999776482582D + p_i1209_8_;
+		this.motionY = this.motionY * 0.009999999776482582D + p_i1209_10_;
+		this.motionZ = this.motionZ * 0.009999999776482582D + p_i1209_12_;
 		double d6 = p_i1209_2_ + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
 		d6 = p_i1209_4_ + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
 		d6 = p_i1209_6_ + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
@@ -102,27 +102,27 @@ public class ReplicatorParticle extends EntityFX
 		}
 
 		//this.moveEntity(this.motionX, this.motionY, this.motionZ);
-		Vec3d motion = new Vec3d(this.xSpeed, this.ySpeed, this.zSpeed);
+		Vec3d motion = new Vec3d(this.motionX, this.motionY, this.motionZ);
 		Vec3d center = new Vec3d(this.centerX, this.centerY, this.centerZ);
 		Vec3d position = new Vec3d(this.posX, this.posY, this.posZ);
 		Vec3d gravityCenter = center.subtract(position);
 		gravityCenter = new Vec3d(gravityCenter.xCoord * pointGravityScale, gravityCenter.yCoord * pointGravityScale, gravityCenter.zCoord * pointGravityScale);
 		Vec3d dir = gravityCenter.add(motion);
 
-		this.xSpeed = dir.xCoord;
-		this.ySpeed = dir.yCoord;
-		this.zSpeed = dir.zCoord;
+		this.motionX = dir.xCoord;
+		this.motionY = dir.yCoord;
+		this.motionZ = dir.zCoord;
 
-		this.getEntityBoundingBox().offset(this.xSpeed, this.ySpeed, this.zSpeed);
+		this.getEntityBoundingBox().offset(this.motionX, this.motionY, this.motionZ);
 		this.posX = (this.getEntityBoundingBox().minX + this.getEntityBoundingBox().maxX) / 2.0D;
 		this.posY = this.getEntityBoundingBox().minY - (double)this.height;
 		this.posZ = (this.getEntityBoundingBox().minZ + this.getEntityBoundingBox().maxZ) / 2.0D;
 
 		double speedOverTime = 1D;
-		this.xSpeed *= speedOverTime;
-		this.ySpeed *= speedOverTime;
-		this.zSpeed *= speedOverTime;
-		moveEntity(this.zSpeed, this.ySpeed, this.zSpeed);
+		this.motionX *= speedOverTime;
+		this.motionY *= speedOverTime;
+		this.motionZ *= speedOverTime;
+		moveEntity(this.motionZ, this.motionY, this.motionZ);
 	}
 
 	public void setCenter(double x, double y, double z)

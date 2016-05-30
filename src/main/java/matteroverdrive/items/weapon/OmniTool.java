@@ -118,7 +118,7 @@ public class OmniTool extends EnergyWeapon
 					IBlockState state = player.worldObj.getBlockState(hit.getBlockPos());
 					boolean canMine = state.getBlock().canHarvestBlock(player.worldObj, hit.getBlockPos(), (EntityPlayer)player) && ((EntityPlayer)player).capabilities.allowEdit;
 
-					if (state.getBlock() != null && state.getBlock().getMaterial(state) != Material.air && canMine)
+					if (state.getBlock() != null && state.getMaterial() != Material.AIR && canMine)
 					{
 
 						++STEP_SOUND_COUNTER;
@@ -140,7 +140,7 @@ public class OmniTool extends EnergyWeapon
 								MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(hit.getBlockPos(), 0, hit.sideHit));
 							}
 
-							BLOCK_DAMAGE = MathHelper.clamp_float(modifyStatFromModules(Reference.WS_DAMAGE, stack, BLOCK_DAMAGE + state.getBlock().getPlayerRelativeBlockHardness(state, (EntityPlayer)player, player.worldObj, hit.getBlockPos())), 0, 1);
+							BLOCK_DAMAGE = MathHelper.clamp_float(modifyStatFromModules(Reference.WS_DAMAGE, stack, BLOCK_DAMAGE + state.getPlayerRelativeBlockHardness((EntityPlayer)player, player.worldObj, hit.getBlockPos())), 0, 1);
 							player.worldObj.sendBlockBreakProgress(player.getEntityId(), hit.getBlockPos(), (int)(BLOCK_DAMAGE * 10));
 						}
 						else

@@ -26,7 +26,7 @@ import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.texture.IIconCreator;
+import net.minecraft.client.renderer.texture.ITextureMapPopulator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
@@ -43,7 +43,7 @@ import java.util.Map;
  * Created by Simeon on 6/15/2015.
  */
 @SideOnly(Side.CLIENT)
-public class HoloIcons implements IIconCreator
+public class HoloIcons implements ITextureMapPopulator
 {
 	public final TextureMap textureMap;
 	public final ResourceLocation sheet = new ResourceLocation(Reference.MOD_ID, "textures/gui/holo_icons.png");

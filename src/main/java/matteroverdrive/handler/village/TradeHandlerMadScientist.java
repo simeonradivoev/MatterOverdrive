@@ -57,7 +57,7 @@ public class TradeHandlerMadScientist //implements VillagerRegistry.VillagerProf
 	{
 		if (random.nextFloat() < chance)
 		{
-			MerchantRecipe recipe = new MerchantRecipe(new ItemStack(MatterOverdriveItems.androidParts, 1, part), null, new ItemStack(Items.emerald, price + random.nextInt(variation)));
+			MerchantRecipe recipe = new MerchantRecipe(new ItemStack(MatterOverdriveItems.androidParts, 1, part), null, new ItemStack(Items.EMERALD, price + random.nextInt(variation)));
 			recipeList.add(recipe);
 		}
 	}
@@ -66,7 +66,7 @@ public class TradeHandlerMadScientist //implements VillagerRegistry.VillagerProf
 	{
 		if (random.nextFloat() < chance)
 		{
-			MerchantRecipe recipe = new MerchantRecipe(new ItemStack(Items.emerald, price + random.nextInt(variation)), null, new ItemStack(MatterOverdriveItems.androidParts, 1, part));
+			MerchantRecipe recipe = new MerchantRecipe(new ItemStack(Items.EMERALD, price + random.nextInt(variation)), null, new ItemStack(MatterOverdriveItems.androidParts, 1, part));
 			recipeList.add(recipe);
 		}
 	}
@@ -75,7 +75,7 @@ public class TradeHandlerMadScientist //implements VillagerRegistry.VillagerProf
 	{
 		if (random.nextFloat() < chance)
 		{
-			MerchantRecipe recipe = new MerchantRecipe(stack, null, new ItemStack(Items.emerald, price + random.nextInt(variation)));
+			MerchantRecipe recipe = new MerchantRecipe(stack, null, new ItemStack(Items.EMERALD, price + random.nextInt(variation)));
 			recipeList.add(recipe);
 		}
 	}
@@ -84,7 +84,7 @@ public class TradeHandlerMadScientist //implements VillagerRegistry.VillagerProf
 	{
 		if (random.nextFloat() < chance)
 		{
-			MerchantRecipe recipe = new MerchantRecipe(new ItemStack(Items.emerald, price + random.nextInt(variation)), null, stack);
+			MerchantRecipe recipe = new MerchantRecipe(new ItemStack(Items.EMERALD, price + random.nextInt(variation)), null, stack);
 			recipeList.add(recipe);
 		}
 	}

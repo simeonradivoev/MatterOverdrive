@@ -135,7 +135,7 @@ public class MatterHelper
 		{
 			Block block = Block.getBlockFromItem(item);
 
-			if (block == Blocks.bedrock || block == Blocks.air)
+			if (block == Blocks.BEDROCK || block == Blocks.AIR)
 			{
 				return false;
 			}

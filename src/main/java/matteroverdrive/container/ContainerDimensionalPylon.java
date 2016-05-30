@@ -3,7 +3,7 @@ package matteroverdrive.container;
 import matteroverdrive.machines.dimensional_pylon.TileEntityMachineDimensionalPylon;
 import matteroverdrive.util.MOContainerHelper;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -21,9 +21,9 @@ public class ContainerDimensionalPylon extends ContainerMachine<TileEntityMachin
 	}
 
 	@Override
-	public void onCraftGuiOpened(ICrafting icrafting)
+	public void addListener(IContainerListener icrafting)
 	{
-		super.onCraftGuiOpened(icrafting);
+		super.addListener(icrafting);
 		icrafting.sendProgressBarUpdate(this, 1, this.machine.getEnergyGenPerTick());
 		icrafting.sendProgressBarUpdate(this, 2, this.machine.getMatterDrainPerSec());
 	}
@@ -32,17 +32,15 @@ public class ContainerDimensionalPylon extends ContainerMachine<TileEntityMachin
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for (Object crafter : this.crafters)
+		for (IContainerListener listener : this.listeners)
 		{
-			ICrafting icrafting = (ICrafting)crafter;
-
 			if (this.energyGenPerTick != this.machine.getEnergyGenPerTick())
 			{
-				icrafting.sendProgressBarUpdate(this, 1, this.machine.getEnergyGenPerTick());
+				listener.sendProgressBarUpdate(this, 1, this.machine.getEnergyGenPerTick());
 			}
 			if (this.matterDrainPerSec != this.machine.getMatterDrainPerSec())
 			{
-				icrafting.sendProgressBarUpdate(this, 2, this.machine.getMatterDrainPerSec());
+				listener.sendProgressBarUpdate(this, 2, this.machine.getMatterDrainPerSec());
 			}
 		}
 

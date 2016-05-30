@@ -129,7 +129,7 @@ public class QuestLogicBecomeAndroid extends AbstractQuestLogic
 				if (!entityPlayer.worldObj.isRemote)
 				{
 					TextComponentString componentText = new TextComponentString(TextFormatting.GOLD + "<Mad Scientist>" + TextFormatting.RED + MOStringHelper.translateToLocal("entity.mad_scientist.line.fail." + entityPlayer.getRNG().nextInt(4)));
-					componentText.setChatStyle(new Style().setColor(TextFormatting.RED));
+					componentText.setStyle(new Style().setColor(TextFormatting.RED));
 					entityPlayer.addChatMessage(componentText);
 				}
 				return;

@@ -269,7 +269,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
 		}
 		boolean light = ignoreLight ? true : isValidLightLevel();
 		boolean entityCollison = ignoreEntityCollision ? true : this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox());
-		return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL && light && entityCollison && this.worldObj.getCollisionBoxes(this.getEntityBoundingBox()).isEmpty() && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
+		return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL && light && entityCollison && this.worldObj.getCollisionBoxes(this.getEntityBoundingBox()).isEmpty() && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox());
 	}
 
 	@Override

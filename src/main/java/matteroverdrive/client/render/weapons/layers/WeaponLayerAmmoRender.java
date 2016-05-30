@@ -63,6 +63,6 @@ public class WeaponLayerAmmoRender implements IWeaponLayer
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
 		RenderUtils.enableLightmap();
-		RenderUtils.bindTexture(TextureMap.locationBlocksTexture);
+		RenderUtils.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 	}
 }

@@ -29,6 +29,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -78,7 +79,7 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity, 
 
 		String ownerModid = tag.getString("owner_block_modid");
 		String ownerName = tag.getString("owner_block_name");
-		Block block = GameRegistry.findBlock(ownerModid, ownerName);
+		Block block = Block.REGISTRY.getObject(new ResourceLocation(ownerModid, ownerName));
 		if (block == null)
 		{
 			MOLog.error("Missing owner block " + ownerModid + ":" + ownerName);
@@ -90,7 +91,7 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity, 
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		if (ownerPos != null)
@@ -104,6 +105,7 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity, 
 			tag.setString("owner_block_modid", id.getResourceDomain());
 			tag.setString("owner_block_name", id.getResourcePath());
 		}
+		return tag;
 	}
 
 	public BlockPos getOwnerPos()
@@ -157,7 +159,7 @@ public class TileEntityBoundingBox extends TileEntity implements IMOTileEntity, 
 	}
 
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void onNeighborBlockChange(IBlockAccess world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
 
 	}

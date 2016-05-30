@@ -155,6 +155,6 @@ public class ItemInventoryWrapper implements IInventory
 	@Override
 	public ITextComponent getDisplayName()
 	{
-		return inventory.getChatComponent();
+		return inventory.getTextComponent();
 	}
 }

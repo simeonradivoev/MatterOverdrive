@@ -5,20 +5,21 @@ import matteroverdrive.client.RenderHandler;
 import matteroverdrive.client.data.TextureAtlasSpriteParticle;
 import matteroverdrive.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.texture.IIconCreator;
+import net.minecraft.client.renderer.texture.ITextureMapPopulator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.crash.ICrashReportDetail;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
@@ -36,7 +37,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by Simeon on 5/13/2015.
  */
-public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
+public class RenderParticlesHandler implements IWorldLastRenderer, ITextureMapPopulator
 {
 	public static ResourceLocation star = new ResourceLocation(Reference.MOD_ID, "sprite_star");
 	public static ResourceLocation shockwave = new ResourceLocation(Reference.MOD_ID, "sprite_shockwave");
@@ -47,7 +48,7 @@ public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
 	public static ResourceLocation smoke = new ResourceLocation(Reference.MOD_ID, "sprite_smoke");
 	public static ResourceLocation explosion = new ResourceLocation(Reference.MOD_ID, "sprite_explosion");
 	protected final World worldObj;
-	final List<EntityFX>[] fxes;
+	final List<Particle>[] particles;
 	private final TextureMap textureMap;
 	private final ResourceLocation sheet = new ResourceLocation(Reference.MOD_ID, "textures/particle/mo_particles.png");
 	private final TextureManager renderer;
@@ -57,12 +58,12 @@ public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
 	{
 		this.worldObj = world;
 		this.renderer = renderer;
-		fxes = new List[Blending.values().length];
+		particles = new List[Blending.values().length];
 		textureMap = new TextureMap("textures/particle", this);
 		Minecraft.getMinecraft().renderEngine.loadTickableTexture(sheet, textureMap);
 		for (int i = 0; i < Blending.values().length; i++)
 		{
-			fxes[i] = new ArrayList<>();
+			particles[i] = new ArrayList<>();
 		}
 		textureMap.loadTextureAtlas(Minecraft.getMinecraft().getResourceManager());
 	}
@@ -80,46 +81,38 @@ public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
 		}
 	}
 
-	public void addEffect(EntityFX entityFX, Blending blendingLayer)
+	public void addEffect(Particle particle, Blending blendingLayer)
 	{
-		fxes[blendingLayer.ordinal()].add(entityFX);
+		particles[blendingLayer.ordinal()].add(particle);
 	}
 
 	private void updateEffects()
 	{
-		for (List<EntityFX> fxe : fxes)
+		for (List<Particle> particleList : particles)
 		{
 
-			for (int j = 0; j < fxe.size(); ++j)
+			for (int j = 0; j < particleList.size(); ++j)
 			{
-				final EntityFX entityfx = fxe.get(j);
+				final Particle particle = particleList.get(j);
 
 				try
 				{
-					if (entityfx != null)
+					if (particle != null)
 					{
-						entityfx.onUpdate();
+						particle.onUpdate();
 					}
 				}
 				catch (Throwable throwable)
 				{
 					CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Ticking Particle");
 					CrashReportCategory crashreportcategory = crashreport.makeCategory("Particle being ticked");
-					crashreportcategory.addCrashSectionCallable("Particle", new Callable()
-					{
-						private static final String __OBFID = "CL_00000916";
-
-						public String call()
-						{
-							return entityfx.toString();
-						}
-					});
+					crashreportcategory.setDetail("Particle", particle::toString);
 					throw new ReportedException(crashreport);
 				}
 
-				if (entityfx == null || !entityfx.isAlive())
+				if (particle == null || !particle.isAlive())
 				{
-					fxe.remove(j--);
+					particleList.remove(j--);
 				}
 			}
 		}
@@ -132,21 +125,21 @@ public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
 		float f3 = ActiveRenderInfo.getRotationYZ();
 		float f4 = ActiveRenderInfo.getRotationXY();
 		float f5 = ActiveRenderInfo.getRotationXZ();
-		EntityFX.interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)f;
-		EntityFX.interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)f;
-		EntityFX.interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)f;
+		Particle.interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)f;
+		Particle.interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)f;
+		Particle.interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)f;
 
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
 		ICamera camera = new Frustum();
-		camera.setPosition(EntityFX.interpPosX, EntityFX.interpPosY, EntityFX.interpPosZ);
+		camera.setPosition(Particle.interpPosX, Particle.interpPosY, Particle.interpPosZ);
 		renderer.bindTexture(sheet);
 
-		for (int k = 0; k < fxes.length; ++k)
+		for (int k = 0; k < particles.length; ++k)
 		{
-			if (!this.fxes[k].isEmpty())
+			if (!this.particles[k].isEmpty())
 			{
 				VertexBuffer wr = Tessellator.getInstance().getBuffer();
 				Blending blending = Blending.values()[k];
@@ -174,35 +167,35 @@ public class RenderParticlesHandler implements IWorldLastRenderer, IIconCreator
 						break;
 				}
 
-				for (int j = 0; j < this.fxes[k].size(); ++j)
+				for (int j = 0; j < this.particles[k].size(); ++j)
 				{
-					final EntityFX entityfx = this.fxes[k].get(j);
-					if (entityfx == null)
+					final Particle particle = this.particles[k].get(j);
+					if (particle == null)
 					{
 						continue;
 					}
-					//int brightness = entityfx.getBrightnessForRender(f);
+					//int brightness = particle.getBrightnessForRender(f);
 					//wr.putBrightness4(brightness,brightness,brightness,brightness);
 
 					try
 					{
-						AxisAlignedBB bb = entityfx.getEntityBoundingBox();
+						AxisAlignedBB bb = particle.getEntityBoundingBox();
 						if (bb != null && !camera.isBoundingBoxInFrustum(bb))
 						{
 							continue;
 						}
 
 						// TODO: 3/25/2016 Add my own distance check for effects
-						//if (!entityfx.isInRangeToRender3d(entity.posX,entity.posY,entity.posZ))
+						//if (!particle.isInRangeToRender3d(entity.posX,entity.posY,entity.posZ))
 						//continue;
 
-						entityfx.renderParticle(wr, null, f, f1, f5, f2, f3, f4);
+						particle.renderParticle(wr, null, f, f1, f5, f2, f3, f4);
 					}
 					catch (Throwable throwable)
 					{
 						CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Rendering Particle");
 						CrashReportCategory crashreportcategory = crashreport.makeCategory("Particle being rendered");
-						crashreportcategory.addCrashSectionCallable("Particle", entityfx::toString);
+						crashreportcategory.setDetail("Particle", particle::toString);
 						throw new ReportedException(crashreport);
 					}
 				}

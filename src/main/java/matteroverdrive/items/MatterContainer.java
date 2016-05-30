@@ -67,7 +67,7 @@ public class MatterContainer extends MOBaseItem
 
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
 	{
-		RayTraceResult movingobjectposition = this.getMovingObjectPositionFromPlayer(world, entityPlayer, !isFull);
+		RayTraceResult movingobjectposition = this.rayTrace(world, entityPlayer, !isFull);
 
 		if (movingobjectposition == null)
 		{
@@ -120,7 +120,7 @@ public class MatterContainer extends MOBaseItem
 						{
 							if (!entityPlayer.inventory.addItemStackToInventory(new ItemStack(MatterOverdriveItems.matterContainer)))
 							{
-								entityPlayer.dropPlayerItemWithRandomChoice(new ItemStack(MatterOverdriveItems.matterContainer), false);
+								entityPlayer.dropItem(new ItemStack(MatterOverdriveItems.matterContainer), false);
 							}
 						}
 						else if (itemStack.stackSize <= 0)
@@ -148,7 +148,7 @@ public class MatterContainer extends MOBaseItem
 		{
 			if (!entityPlayer.inventory.addItemStackToInventory(new ItemStack(item)))
 			{
-				entityPlayer.dropPlayerItemWithRandomChoice(new ItemStack(item, 1, 0), false);
+				entityPlayer.dropItem(new ItemStack(item, 1, 0), false);
 			}
 
 			return itemStack;
@@ -163,7 +163,7 @@ public class MatterContainer extends MOBaseItem
 		}
 		else
 		{
-			Material material = world.getBlockState(pos).getBlock().getMaterial(world.getBlockState(pos));
+			Material material = world.getBlockState(pos).getMaterial();
 
 			if (!world.isAirBlock(pos))
 			{

@@ -251,7 +251,7 @@ public class WeaponRenderHandler
 
 	public void renderModel(IBakedModel model, ItemStack weapon)
 	{
-		RenderUtils.bindTexture(TextureMap.locationBlocksTexture);
+		RenderUtils.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer worldrenderer = tessellator.getBuffer();
 		worldrenderer.begin(7, DefaultVertexFormats.ITEM);

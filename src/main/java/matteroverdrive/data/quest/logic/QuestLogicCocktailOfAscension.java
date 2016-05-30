@@ -177,7 +177,7 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
 			ItemStack itemStack = ((EntityItemPickupEvent)event).getItem().getEntityItem();
 			if (itemStack != null)
 			{
-				if (itemStack.getItem() instanceof ItemBlock && ((ItemBlock)itemStack.getItem()).getBlock() == Blocks.red_mushroom && entityPlayer.worldObj.provider.getDimension() == -1)
+				if (itemStack.getItem() instanceof ItemBlock && ((ItemBlock)itemStack.getItem()).getBlock() == Blocks.RED_MUSHROOM && entityPlayer.worldObj.provider.getDimension() == -1)
 				{
 					initTag(questStack);
 					byte mushroomCount = getTag(questStack).getByte("MushroomCount");
@@ -190,7 +190,7 @@ public class QuestLogicCocktailOfAscension extends AbstractQuestLogic
 						return new QuestLogicState(QuestState.Type.UPDATE, true);
 					}
 				}
-				else if (itemStack.getItem() == Items.gunpowder)
+				else if (itemStack.getItem() == Items.GUNPOWDER)
 				{
 					initTag(questStack);
 

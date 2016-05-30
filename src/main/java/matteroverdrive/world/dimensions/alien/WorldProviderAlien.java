@@ -8,7 +8,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
@@ -46,11 +46,11 @@ public class WorldProviderAlien extends WorldProvider
 		float f1 = MathHelper.cos(f * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
 		f1 = MathHelper.clamp_float(f1, 0.0F, 1.0F);
 		Color color = new Color(188, 147, 221).multiplyWithoutAlpha(0.7f);
-		BiomeGenBase biomeGenBase = getBiomeGenForCoords(cameraEntity.getPosition());
-		if (biomeGenBase != null)
+		Biome biome = getBiomeForCoords(cameraEntity.getPosition());
+		if (biome != null)
 		{
-			double d0 = (double)MathHelper.clamp_float(biomeGenBase.getFloatTemperature(cameraEntity.getPosition()), 0.0F, 1.0F);
-			double d1 = (double)MathHelper.clamp_float(biomeGenBase.getRainfall(), 0.0F, 1.0F);
+			double d0 = (double)MathHelper.clamp_float(biome.getFloatTemperature(cameraEntity.getPosition()), 0.0F, 1.0F);
+			double d1 = (double)MathHelper.clamp_float(biome.getRainfall(), 0.0F, 1.0F);
 			color = new Color(ColorizerAlien.getSkyColor(d0, d1));
 		}
 		return new Vec3d(color.getFloatR() * f1, color.getFloatG() * f1, color.getFloatB() * f1);
@@ -66,7 +66,7 @@ public class WorldProviderAlien extends WorldProvider
 		Entity renderViewEntity = Minecraft.getMinecraft().getRenderViewEntity();
 		if (renderViewEntity != null)
 		{
-			BiomeGenBase biomeGenBase = getBiomeGenForCoords(renderViewEntity.getPosition());
+			Biome biomeGenBase = getBiomeForCoords(renderViewEntity.getPosition());
 			if (biomeGenBase != null)
 			{
 				double d0 = (double)MathHelper.clamp_float(biomeGenBase.getFloatTemperature(renderViewEntity.getPosition()), 0.0F, 1.0F);

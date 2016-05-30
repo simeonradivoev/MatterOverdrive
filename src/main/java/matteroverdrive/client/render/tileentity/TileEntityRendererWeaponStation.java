@@ -46,7 +46,7 @@ public class TileEntityRendererWeaponStation extends TileEntityRendererStation<T
 				GlStateManager.scale(0.5, 0.5, 0.5);
 				RenderHelper.enableStandardItemLighting();
 				GlStateManager.rotate(getWorld().getWorldTime(), 0, 1, 0);
-				RenderUtils.bindTexture(TextureMap.locationBlocksTexture);
+				RenderUtils.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 				IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(stack);
 				model = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.GROUND, false);
 				Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);

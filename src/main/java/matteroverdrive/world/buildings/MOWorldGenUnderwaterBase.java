@@ -30,7 +30,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.NoiseGeneratorSimplex;
 
 import java.util.Random;
@@ -46,30 +46,30 @@ public class MOWorldGenUnderwaterBase extends MOWorldGenBuilding
 	public MOWorldGenUnderwaterBase(String name)
 	{
 		super(name, new ResourceLocation(Reference.PATH_WORLD_TEXTURES + "underwater_base.png"), 43, 43);
-		validSpawnBlocks = new Block[] {Blocks.water};
+		validSpawnBlocks = new Block[] {Blocks.WATER};
 		setyOffset(-24);
 		noise = new NoiseGeneratorSimplex(new Random());
 		for (BlockDecorative blockDecorative : BlockDecorative.decorativeBlocks)
 		{
 			addMapping(blockDecorative.getBlockColor(0), blockDecorative);
 		}
-		addMapping(0xdc979c, Blocks.tallgrass);
-		addMapping(0x77d1b6, Blocks.red_flower);
+		addMapping(0xdc979c, Blocks.TALLGRASS);
+		addMapping(0x77d1b6, Blocks.RED_FLOWER);
 		addMapping(0xd2fb50, MatterOverdriveBlocks.forceGlass);
-		addMapping(0xc1e4e, Blocks.farmland);
+		addMapping(0xc1e4e, Blocks.FARMLAND);
 		addMapping(0xa7ac65, MatterOverdriveBlocks.tritaniumCrate); //orange crate
-		addMapping(0xd6a714, Blocks.stained_glass);
+		addMapping(0xd6a714, Blocks.STAINED_GLASS);
 		addMapping(0x2c5ae9, MatterOverdriveBlocks.weapon_station);
 		addMapping(0xacd8c, MatterOverdriveBlocks.androidStation);
 		addMapping(0x7018f9, MatterOverdriveBlocks.tritaniumCrate); //light blue
 		addMapping(0x4657cc, MatterOverdriveBlocks.tritaniumCrate); //lime
 		addMapping(0x1f2312, MatterOverdriveBlocks.tritaniumCrate); //white
 		addMapping(0xd3371d, MatterOverdriveBlocks.machine_hull);
-		addMapping(0x3640f9, Blocks.stone_button);
+		addMapping(0x3640f9, Blocks.STONE_BUTTON);
 		addMapping(0xeff73d, MatterOverdriveBlocks.network_switch);
 		addMapping(0x5a6388, MatterOverdriveBlocks.boundingBox);
-		addMapping(0xbf19a9, Blocks.grass);
-		addMapping(0xc05e5e, Blocks.flower_pot);
+		addMapping(0xbf19a9, Blocks.GRASS);
+		addMapping(0xc05e5e, Blocks.FLOWER_POT);
 		addMapping(0x4d8dd3, MatterOverdriveBlocks.pattern_monitor);
 		addMapping(0xdb9c3a, MatterOverdriveBlocks.holoSign);
 		addMapping(0x68b68c, MatterOverdriveBlocks.matter_analyzer);
@@ -77,14 +77,14 @@ public class MOWorldGenUnderwaterBase extends MOWorldGenBuilding
 		addMapping(0x1b2ff7, MatterOverdriveBlocks.network_pipe);
 		addMapping(0x5eaab, MatterOverdriveBlocks.tritaniumCrate);
 		addMapping(0x11003e, MatterOverdriveBlocks.chargingStation);
-		addMapping(0xb31e83, Blocks.carrots);
+		addMapping(0xb31e83, Blocks.CARROTS);
 		addMapping(0xc78e77, MatterOverdriveBlocks.replicator);
-		addMapping(0x338a42, Blocks.potatoes);
-		addMapping(0xbdea8f, Blocks.ladder);
+		addMapping(0x338a42, Blocks.POTATOES);
+		addMapping(0xbdea8f, Blocks.LADDER);
 		addMapping(0x4d12f4, MatterOverdriveBlocks.pattern_storage);
-		addMapping(0xf7d20b, Blocks.sapling);
-		addMapping(0x854b38, Blocks.iron_door);
-		addMapping(0xff00ff, Blocks.air);
+		addMapping(0xf7d20b, Blocks.SAPLING);
+		addMapping(0x854b38, Blocks.IRON_DOOR);
+		addMapping(0xff00ff, Blocks.AIR);
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class MOWorldGenUnderwaterBase extends MOWorldGenBuilding
 		int blocksInWater = 0;
 		while (pos.getY() > 0)
 		{
-			if (world.getBlockState(pos).getBlock() == Blocks.water || world.getBlockState(pos).getBlock() == Blocks.flowing_water)
+			if (world.getBlockState(pos).getBlock() == Blocks.WATER || world.getBlockState(pos).getBlock() == Blocks.FLOWING_WATER)
 			{
 				blocksInWater++;
 			}
@@ -133,7 +133,7 @@ public class MOWorldGenUnderwaterBase extends MOWorldGenBuilding
 	public boolean shouldGenerate(Random random, World world, BlockPos pos)
 	{
 		//deep_ocean biome
-		return world.getBiomeGenForCoords(pos).equals(BiomeGenBase.getBiome(24)) && isFarEnoughFromOthers(world, pos.getX(), pos.getZ(), MIN_DISTANCE_APART);
+		return world.getBiome(pos).equals(Biome.REGISTRY.getObject(new ResourceLocation("minecraft", "deep_ocean"))) && isFarEnoughFromOthers(world, pos.getX(), pos.getZ(), MIN_DISTANCE_APART);
 	}
 
 	@Override
@@ -169,4 +169,5 @@ public class MOWorldGenUnderwaterBase extends MOWorldGenBuilding
 			world.spawnEntityInWorld(mutantScientist);
 		}
 	}
+
 }
