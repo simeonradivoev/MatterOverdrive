@@ -40,12 +40,12 @@ item.tritanium_wrench.name=Tritanium Wrench
 item.tritanium_wrench.details=Safely disassembles and rotates machines
 item.spacetime_equalizer.name=Space-Time Equalizer
 item.spacetime_equalizer.details=Can be worn on the chest to negate gravitational forces
-item.rogue_android_part_head.name=Android Head
-item.rogue_android_part_arms.name=Android Arm
-item.rogue_android_part_legs.name=Android Leg
-item.rogue_android_part_chest.name=Android Torso
-item.rogue_android_part_melee=Melee Android
-item.rogue_android_part_range=Range Android
+item.rogue_android_part.head.name=Android Head
+item.rogue_android_part.arms.name=Android Arm
+item.rogue_android_part.legs.name=Android Leg
+item.rogue_android_part.chest.name=Android Torso
+item.rogue_android_part.melee=Melee Android
+item.rogue_android_part.range=Range Android
 item.forcefield_emitter.name=Force Field Emitter
 item.hc_battery.name=High Capacity Battery
 item.ship_factory.name=Ship Factory
@@ -111,7 +111,7 @@ item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
 item.weapon_module_barrel.fire.name=Incendiary Filter
 item.weapon_module_barrel.explosion.name=Burst Inductive Drum
 item.weapon_module_barrel.heal.name=Regenerative Converter
-item.weapon_module_ricoshet.name=Shot Rebound Module
+item.weapon_module_ricochet.name=Shot Rebound Module
 item.sniper_scope.name=Sniper Scope
 
 ///////////// Buildings ///////////
