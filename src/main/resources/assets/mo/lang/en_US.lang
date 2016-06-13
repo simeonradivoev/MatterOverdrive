@@ -40,12 +40,12 @@ item.tritanium_wrench.name=Tritanium Wrench
 item.tritanium_wrench.details=Safely disassembles and rotates machines
 item.spacetime_equalizer.name=Space-Time Equalizer
 item.spacetime_equalizer.details=Can be worn on the chest to negate gravitational forces
-item.rouge_android_part_head.name=Android Head
-item.rouge_android_part_arms.name=Android Arm
-item.rouge_android_part_legs.name=Android Leg
-item.rouge_android_part_chest.name=Android Torso
-item.rouge_android_part_melee=Melee Android
-item.rouge_android_part_range=Range Android
+item.rogue_android_part_head.name=Android Head
+item.rogue_android_part_arms.name=Android Arm
+item.rogue_android_part_legs.name=Android Leg
+item.rogue_android_part_chest.name=Android Torso
+item.rogue_android_part_melee=Melee Android
+item.rogue_android_part_range=Range Android
 item.forcefield_emitter.name=Force Field Emitter
 item.hc_battery.name=High Capacity Battery
 item.ship_factory.name=Ship Factory
@@ -86,6 +86,7 @@ item.tritanium_hoe.name=Tritanium Hoe
 item.tritanium_sword.name=Tritanium Sword
 item.tritanium_pickaxe.name=Tritanium Pickaxe
 item.tritanium_axe.name=Tritanium Axe
+item.tritanium_shovel.name=Tritanium Shovel
 item.contract.name=Contract
 item.ion_sniper.name=Ion Sniper
 item.plasma_shotgun.name=Plasma Shotgun
@@ -110,6 +111,7 @@ item.weapon_module_barrel.damage.name=Dilithium Focusing Matrix
 item.weapon_module_barrel.fire.name=Incendiary Filter
 item.weapon_module_barrel.explosion.name=Burst Inductive Drum
 item.weapon_module_barrel.heal.name=Regenerative Converter
+item.weapon_module_ricoshet.name=Shot Rebound Module
 item.sniper_scope.name=Sniper Scope
 
 ///////////// Buildings ///////////
@@ -231,7 +233,7 @@ entity.mo.failed_pig.name=Failed Pig
 entity.mo.failed_chicken.name=Failed Chicken
 entity.mo.failed_cow.name=Failed Cow
 entity.mo.failed_sheep.name=Failed Sheep
-entity.mo.mad_scientist.name=Mad Scient
+entity.mo.mad_scientist.name=Mad Scientist
 entity.mo.mad_scientist.junkie.name=Mad Scientist Junkie
 entity.mo.ranged_rogue_android.name=Ranged Rogue Android
 entity.mo.mutant_scientist.name=Mutant Scientist
@@ -608,7 +610,7 @@ alert.starmap.on_build=§3%1$s §rwas built at §3%2$s§r!
 #############################################################################################################
 # Enchantments
 
-enchantment.matteroverdrive.weapon.meta=Overclock
+enchantment.matteroverdrive.weapon.damage=Overclock
 
 ###############################################################################################################
 # Fluids
