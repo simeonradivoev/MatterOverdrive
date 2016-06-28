@@ -761,11 +761,14 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
         while (iterator.hasNext())
         {
             AnomalySuppressor s = iterator.next();
-            if (!s.isValid())
+            boolean isLoaded = worldObj.getChunkFromBlockCoords(s.getX(), s.getZ()).isChunkLoaded;
+            if (!s.isValid() && isLoaded)
             {
                 iterator.remove();
             }
-            s.tick();
+            if(isLoaded) {
+                s.tick();
+            }
             suppression *= s.getAmount();
         }
         return suppression;
