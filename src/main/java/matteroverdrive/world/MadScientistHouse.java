@@ -23,6 +23,7 @@ import matteroverdrive.entity.EntityVillagerMadScientist;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.tile.TileEntityTritaniumCrate;
+import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -159,7 +160,9 @@ public class MadScientistHouse extends StructureVillagePieces.Village
 		this.setBlockState(worldIn, MatterOverdriveBlocks.inscriber.getDefaultState(), 7, 1, 1, structureBoundingBoxIn);
 		this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 1, 0, structureBoundingBoxIn);
 		this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 2, 0, structureBoundingBoxIn);
-		this.placeDoorCurrentPosition(worldIn, structureBoundingBoxIn, randomIn, 1, 1, 0, EnumFacing.NORTH);
+		this.setBlockState(worldIn, Blocks.OAK_DOOR.getDefaultState().withProperty(BlockDoor.FACING, EnumFacing.NORTH), 1, 1, 0, structureBoundingBoxIn);
+		this.setBlockState(worldIn, Blocks.OAK_DOOR.getDefaultState().withProperty(BlockDoor.FACING, EnumFacing.NORTH).withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER), 1, 2, 0, structureBoundingBoxIn);
+
 
 		if (this.getBlockStateFromPos(worldIn, 1, 0, -1, structureBoundingBoxIn).getMaterial() == Material.AIR && this.getBlockStateFromPos(worldIn, 1, -1, -1, structureBoundingBoxIn).getMaterial() != Material.AIR)
 		{

@@ -71,7 +71,8 @@ public class PipeRenderManager
 						RayTraceResult position = changed.calculateIntercept(new Vec3d(0, e.getPlayer().getEyeHeight(), 0), look);
 						if (position != null)
 						{
-							RenderGlobal.drawSelectionBoundingBox(changed);
+//							RenderGlobal.drawSelectionBoundingBox(changed);
+//							TODO: switch pipes to MCMP, this will no longer be needed
 							//MOLog.info(changed.toString());
 						}
 					}

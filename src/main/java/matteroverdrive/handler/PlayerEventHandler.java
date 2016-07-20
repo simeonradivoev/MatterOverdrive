@@ -37,9 +37,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -287,7 +287,7 @@ public class PlayerEventHandler
 	}
 
 	@SubscribeEvent
-	public void onPlayerOpenContainer(PlayerOpenContainerEvent event)
+	public void onPlayerOpenContainer(PlayerContainerEvent event)
 	{
 		if (event.getEntityPlayer() != null && !event.getEntityPlayer().worldObj.isRemote)
 		{
