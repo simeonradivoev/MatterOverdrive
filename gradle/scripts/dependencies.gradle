@@ -1,79 +1,86 @@
 repositories {
-	ivy {
-		name "CoFHLib"
-		artifactPattern "http://addons-origin.cursecdn.com/files/2243/944/[module]-[revision].[ext]"
-	}
-	ivy {
-		name "CoFHCore"
-		artifactPattern 'http://addons-origin.cursecdn.com/files/2244/285/[module]-[revision].[ext]'
-	}
-	ivy {
-		name "ThermalFoundation"
-		artifactPattern "http://addons-origin.cursecdn.com/files/2243/149/[module]-[revision].[ext]"
-	}
-	ivy {
-		name "ThermalExpansion"
-		artifactPattern "http://addons-origin.cursecdn.com/files/2233/797/[module]-[revision].[ext]"
-	}
+	// ivy {
+	// 	name "CoFHLib"
+	// 	artifactPattern "http://addons-origin.cursecdn.com/files/2243/944/[module]-[revision].[ext]"
+	// }
+	// ivy {
+	// 	name "CoFHCore"
+	// 	artifactPattern 'http://addons-origin.cursecdn.com/files/2244/285/[module]-[revision].[ext]'
+	// }
+	// ivy {
+	// 	name "ThermalFoundation"
+	// 	artifactPattern "http://addons-origin.cursecdn.com/files/2243/149/[module]-[revision].[ext]"
+	// }
+	// ivy {
+	// 	name "ThermalExpansion"
+	// 	artifactPattern "http://addons-origin.cursecdn.com/files/2233/797/[module]-[revision].[ext]"
+	// }
 
-	ivy {
-		name "ThermalDynamics"
-		artifactPattern "http://addons-origin.cursecdn.com/files/2244/301/[module]-[revision].[ext]"
-	}
+	// ivy {
+	// 	name "ThermalDynamics"
+	// 	artifactPattern "http://addons-origin.cursecdn.com/files/2244/301/[module]-[revision].[ext]"
+	// }
 
-	ivy {
-		name "ExtraUtilities"
-		artifactPattern "http://addons-origin.cursecdn.com/files/2242/27/[module]-[revision].[ext]"
-	}
+	// ivy {
+	// 	name "ExtraUtilities"
+	// 	artifactPattern "http://addons-origin.cursecdn.com/files/2242/27/[module]-[revision].[ext]"
+	// }
 
-	ivy {
-		name "BuildCraft"
-		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-	}
+	// ivy {
+	// 	name "BuildCraft"
+	// 	artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+	// }
 
 	//maven repos
-	maven {
-		name "ChickenBones"
-		url "http://chickenbones.net/maven/"
-	}
+	// maven {
+	// 	name "ChickenBones"
+	// 	url "http://chickenbones.net/maven/"
+	// }
+
+	// maven {
+	// 	name "Mobius"
+	// 	url "http://mobiusstrip.eu/maven"
+	// }
+
+	// maven {
+	// 	name "tterrag"
+	// 	url "http://maven.tterrag.com"
+	// }
+
+	// maven {
+	// 	name "IC2 and Forestry" // Forestry is required by EnderIO
+	// 	url "http://maven.ic2.player.to"
+	// }
+
+	// maven {
+	// 	name "OpenComputers"
+	// 	url "http://maven.cil.li"
+	// }
+
+	// maven {
+	// 	name "FireBall API Depot"
+	// 	url "http://dl.tsr.me/artifactory/libs-release-local"
+	// }
+
+	// maven  {
+	// 	name = "RX14 Proxy"
+	// 	url = "http://mvn.rx14.co.uk/repo/"
+	// }
+
+	// maven {
+	// 	name = "MM repo"
+	// 	url = "http://maven.k-4u.nl/"
+	// }
 
 	maven {
-		name "Mobius"
-		url "http://mobiusstrip.eu/maven"
-	}
-
-	maven {
-		name "tterrag"
-		url "http://maven.tterrag.com"
-	}
-
-	maven {
-		name "IC2 and Forestry" // Forestry is required by EnderIO
-		url "http://maven.ic2.player.to"
-	}
-
-	maven {
-		name "OpenComputers"
-		url "http://maven.cil.li"
-	}
-
-	maven {
-		name "FireBall API Depot"
-		url "http://dl.tsr.me/artifactory/libs-release-local"
-	}
-
-	maven  {
-		name = "RX14 Proxy"
-		url = "http://mvn.rx14.co.uk/repo/"
-	}
-
-	maven {
-		name = "MM repo"
-		url = "http://maven.k-4u.nl/"
+		name "shadowfacts"
+		url "http://mvn.rx14.co.uk/shadowfacts/"
 	}
 }
 
 dependencies {
+	deobfCompile group: "net.shadowfacts", name: "ShadowMC", version: "1.10.2-3.4.5-SNAPSHOT"
+
 	// Chicken Bones
 	//compile group: 'codechicken', name: 'ForgeMultipart', version: "${config.mc_version}-${config.fmp_version}", classifier: 'dev'
 	//compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.mc_version}-${config.ccl_version}", classifier: 'dev' // Forge http://files.minecraftforge.net/CodeChickenLib/
