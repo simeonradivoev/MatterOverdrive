@@ -41,6 +41,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.annotation.Nonnull;
+
 import static matteroverdrive.util.MOBlockHelper.getAboveSide;
 
 /**
@@ -127,6 +129,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
 		return 4086 * 2;
 	}
 
+	@Nonnull
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{

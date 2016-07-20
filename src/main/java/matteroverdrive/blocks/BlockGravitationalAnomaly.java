@@ -56,16 +56,19 @@ public class BlockGravitationalAnomaly extends MOBlockContainer<TileEntityGravit
 	}
 
 	@Override
+	@Deprecated
 	public boolean isNormalCube(IBlockState blockState)
 	{
 		return false;
 	}
 
 	@Override
-	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end)
+	@Deprecated
+	@SuppressWarnings("deprecation")
+	public RayTraceResult collisionRayTrace(IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Vec3d start, @Nonnull Vec3d end)
 	{
 		//this.setBlockBoundsBasedOnState(worldIn,pos);
-		return super.collisionRayTrace(state, worldIn, pos, start, end);
+		return super.collisionRayTrace(state, world, pos, start, end);
 	}
 
 	@Override
@@ -89,18 +92,21 @@ public class BlockGravitationalAnomaly extends MOBlockContainer<TileEntityGravit
     }*/
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World worldIn, BlockPos pos)
+	@Deprecated
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, @Nonnull World world, @Nonnull BlockPos pos)
 	{
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
+	@Deprecated
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;
@@ -142,7 +148,9 @@ public class BlockGravitationalAnomaly extends MOBlockContainer<TileEntityGravit
 		return false;
 	}
 
+	@Nonnull
 	@Override
+	@Deprecated
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
 		return EnumBlockRenderType.INVISIBLE;

@@ -17,6 +17,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class BlockPipe<TE extends TileEntity> extends MOBlockContainer<TE>
@@ -39,14 +40,17 @@ public abstract class BlockPipe<TE extends TileEntity> extends MOBlockContainer<
 		return 0;
 	}
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, CONNECTED_PROPERTIES.toArray(new IProperty[CONNECTED_PROPERTIES.size()]));
 	}
 
+	@Nonnull
 	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	@Deprecated
+	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		for (EnumFacing facing : EnumFacing.VALUES)
 		{
@@ -56,22 +60,24 @@ public abstract class BlockPipe<TE extends TileEntity> extends MOBlockContainer<
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List list, Entity collidingEntity)
+	@Deprecated
+	@SuppressWarnings("deprecation")
+	public void addCollisionBoxToList(IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull AxisAlignedBB mask, @Nonnull List<AxisAlignedBB> list, Entity collidingEntity)
 	{
-		super.addCollisionBoxToList(state, worldIn, pos, mask, list, collidingEntity);
+		super.addCollisionBoxToList(state, world, pos, mask, list, collidingEntity);
 
-		state = getActualState(state, worldIn, pos);
+		state = getActualState(state, world, pos);
 
 		for (EnumFacing facing : EnumFacing.VALUES)
 		{
-			if (isConnectableSide(facing, worldIn, pos))
+			if (isConnectableSide(facing, world, pos))
 			{
 				Vec3i directionVec = facing.getDirectionVec();
 				AxisAlignedBB axisAlignedBB = new AxisAlignedBB(
 						PIPE_MIN_POS, PIPE_MIN_POS, PIPE_MIN_POS,
 						PIPE_MAX_POS, PIPE_MAX_POS, PIPE_MAX_POS
 				).offset(facing.getFrontOffsetX() * (PIPE_MAX_POS - PIPE_MIN_POS / 2), facing.getFrontOffsetY() * (PIPE_MAX_POS - PIPE_MIN_POS / 2), facing.getFrontOffsetZ() * (PIPE_MAX_POS - PIPE_MIN_POS / 2));
-				super.addCollisionBoxToList(state, worldIn, pos, mask, list, collidingEntity);
+				super.addCollisionBoxToList(state, world, pos, mask, list, collidingEntity);
 			}
 		}
 	}
@@ -165,18 +171,20 @@ public abstract class BlockPipe<TE extends TileEntity> extends MOBlockContainer<
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState blockState)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+	public boolean isBlockSolid(IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side)
 	{
 		return false;
 	}
 
 	@Override
+	@Deprecated
 	public boolean isFullCube(IBlockState blockState)
 	{
 		return false;

@@ -56,13 +56,16 @@ public class BlockBoundingBox extends MOBlockContainer<TileEntityBoundingBox>
 		}
 	}
 
+	@Nonnull
 	@Override
+	@Deprecated
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
 		return EnumBlockRenderType.INVISIBLE;
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;

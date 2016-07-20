@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -27,6 +28,9 @@ public class BlockLogAlien extends BlockLog
 	/**
 	 * Get the MapColor for this Block and the given BlockState
 	 */
+	@Nonnull
+	@Override
+	@Deprecated
 	public MapColor getMapColor(IBlockState state)
 	{
 		switch ((BlockLog.EnumAxis)state.getValue(LOG_AXIS))
@@ -43,15 +47,18 @@ public class BlockLogAlien extends BlockLog
 	 * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
 	 */
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	public void getSubBlocks(@Nonnull Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		list.add(new ItemStack(itemIn, 1, BlockPlanks.EnumType.ACACIA.getMetadata() - 4));
-		list.add(new ItemStack(itemIn, 1, BlockPlanks.EnumType.DARK_OAK.getMetadata() - 4));
+		list.add(new ItemStack(item, 1, BlockPlanks.EnumType.ACACIA.getMetadata() - 4));
+		list.add(new ItemStack(item, 1, BlockPlanks.EnumType.DARK_OAK.getMetadata() - 4));
 	}
 
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
+	@Nonnull
+	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
 		IBlockState iblockstate = this.getDefaultState();
@@ -97,9 +104,11 @@ public class BlockLogAlien extends BlockLog
 		return i;
 	}
 
+	@Nonnull
+	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {LOG_AXIS});
+		return new BlockStateContainer(this, LOG_AXIS);
 	}
 
 	protected ItemStack createStackedBlock(IBlockState state)

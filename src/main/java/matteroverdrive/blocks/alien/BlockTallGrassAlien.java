@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
@@ -69,12 +70,12 @@ public class BlockTallGrassAlien extends BlockBush implements net.minecraftforge
 	/**
 	 * Get the quantity dropped based on the given fortune level
 	 */
-	public int quantityDroppedWithBonus(int fortune, Random random)
+	public int quantityDroppedWithBonus(int fortune, @Nonnull Random random)
 	{
 		return 1 + random.nextInt(fortune * 2 + 1);
 	}
 
-	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack itemStack)
+	public void harvestBlock(@Nonnull World worldIn, EntityPlayer player, @Nonnull BlockPos pos, @Nonnull IBlockState state, TileEntity te, ItemStack itemStack)
 	{
 		super.harvestBlock(worldIn, player, pos, state, te, itemStack);
 	}
@@ -109,17 +110,20 @@ public class BlockTallGrassAlien extends BlockBush implements net.minecraftforge
 	 * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
 	 */
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	public void getSubBlocks(@Nonnull Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		for (int i = 1; i < 3; ++i)
 		{
-			list.add(new ItemStack(itemIn, 1, i));
+			list.add(new ItemStack(item, 1, i));
 		}
 	}
 
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
+	@Nonnull
+	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return this.getDefaultState().withProperty(TYPE, meta);
@@ -133,14 +137,16 @@ public class BlockTallGrassAlien extends BlockBush implements net.minecraftforge
 		return state.getValue(TYPE);
 	}
 
+	@Nonnull
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {TYPE});
+		return new BlockStateContainer(this, TYPE);
 	}
 
 	/**
 	 * Get the OffsetType for this Block. Determines if the model is rendered slightly offset.
 	 */
+	@Nonnull
 	@SideOnly(Side.CLIENT)
 	public Block.EnumOffsetType getOffsetType()
 	{
@@ -161,8 +167,9 @@ public class BlockTallGrassAlien extends BlockBush implements net.minecraftforge
 		return ret;
 	}
 
+	@Nonnull
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, @Nonnull IBlockState state, int fortune)
 	{
 		List<ItemStack> ret = new java.util.ArrayList<ItemStack>();
 		if (RANDOM.nextInt(8) != 0)

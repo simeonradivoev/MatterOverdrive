@@ -240,7 +240,7 @@ public class RenderParticlesHandler implements IWorldLastRenderer, ITextureMapPo
 	public void reg(TextureMap textureMap, ResourceLocation resourceLocation, int frameSize, int speed)
 	{
 		TextureAtlasSpriteParticle spriteParticle = new TextureAtlasSpriteParticle(resourceLocation.toString(), frameSize, speed);
-		textureMap.setTextureEntry(resourceLocation.toString(), spriteParticle);
+		textureMap.setTextureEntry(spriteParticle);
 	}
 
 	public TextureAtlasSprite getSprite(ResourceLocation location)

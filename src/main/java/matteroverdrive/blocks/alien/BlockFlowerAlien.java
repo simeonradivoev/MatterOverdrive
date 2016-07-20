@@ -13,6 +13,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -51,6 +52,9 @@ public class BlockFlowerAlien extends BlockBush
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
+	@Nonnull
+	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return this.getDefaultState().withProperty(TYPE, EnumAlienFlowerType.values()[meta]);
@@ -64,14 +68,18 @@ public class BlockFlowerAlien extends BlockBush
 		return state.getValue(TYPE).getMeta();
 	}
 
+	@Nonnull
+	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {TYPE});
+		return new BlockStateContainer(this, TYPE);
 	}
 
 	/**
 	 * Get the OffsetType for this Block. Determines if the model is rendered slightly offset.
 	 */
+	@Nonnull
+	@Override
 	@SideOnly(Side.CLIENT)
 	public Block.EnumOffsetType getOffsetType()
 	{

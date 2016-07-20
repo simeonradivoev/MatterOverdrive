@@ -44,14 +44,16 @@ public class BlockPylon extends MOBlockContainer<TileEntityMachineDimensionalPyl
 		return getDefaultState();
 	}
 
-
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, TYPE);
 	}
 
+	@Nonnull
 	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return getDefaultState().withProperty(TYPE, MultiblockType.values()[meta]);
@@ -65,6 +67,7 @@ public class BlockPylon extends MOBlockContainer<TileEntityMachineDimensionalPyl
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
@@ -77,6 +80,7 @@ public class BlockPylon extends MOBlockContainer<TileEntityMachineDimensionalPyl
 	}
 
 	@Override
+	@Deprecated
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;

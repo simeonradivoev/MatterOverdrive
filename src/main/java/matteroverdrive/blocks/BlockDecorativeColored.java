@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -37,11 +38,11 @@ public class BlockDecorativeColored extends BlockDecorative
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	public void getSubBlocks(@Nonnull Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		for (EnumDyeColor color : EnumDyeColor.values())
 		{
-			list.add(new ItemStack(itemIn, 1, color.getMetadata()));
+			list.add(new ItemStack(item, 1, color.getMetadata()));
 		}
 	}
 
@@ -57,12 +58,15 @@ public class BlockDecorativeColored extends BlockDecorative
 		return state.getValue(COLOR).getMetadata();
 	}
 
+	@Nonnull
 	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return this.getDefaultState().withProperty(COLOR, EnumDyeColor.byMetadata(meta));
 	}
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
@@ -75,6 +79,9 @@ public class BlockDecorativeColored extends BlockDecorative
 		return state.getValue(COLOR).getMetadata();
 	}
 
+	@Nonnull
+	@Override
+	@Deprecated
 	public MapColor getMapColor(IBlockState state)
 	{
 		return (state.getValue(COLOR)).getMapColor();

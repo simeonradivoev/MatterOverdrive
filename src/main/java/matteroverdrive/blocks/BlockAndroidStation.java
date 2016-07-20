@@ -78,6 +78,7 @@ public class BlockAndroidStation extends MOBlockMachine<TileEntityAndroidStation
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;

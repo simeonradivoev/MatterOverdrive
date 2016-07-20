@@ -91,9 +91,9 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
 		this.petPathfinder.clearPathEntity();
 	}
 
-	private boolean func_181065_a(BlockPos p_181065_1_)
+	private boolean func_181065_a(BlockPos pos)
 	{
-		IBlockState iblockstate = this.theWorld.getBlockState(p_181065_1_);
+		IBlockState iblockstate = this.theWorld.getBlockState(pos);
 		Block block = iblockstate.getBlock();
 		return block == Blocks.AIR ? true : !block.isFullCube(iblockstate);
 	}

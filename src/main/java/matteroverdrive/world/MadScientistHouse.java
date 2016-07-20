@@ -38,6 +38,7 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
@@ -212,6 +213,7 @@ public class MadScientistHouse extends StructureVillagePieces.Village
 	/**
 	 * Returns the villager type to spawn in this component, based on the number of villagers already spawned.
 	 */
+//	TODO: switch to Forge profession
 	@Override
 	protected int chooseProfession(int p_180779_1_, int p_180779_2_)
 	{
@@ -219,7 +221,7 @@ public class MadScientistHouse extends StructureVillagePieces.Village
 	}
 
 	@Override
-	protected void spawnVillagers(World world, StructureBoundingBox structureBoundingBox, int x, int y, int z, int count)
+	protected void spawnVillagers(@Nonnull World world, @Nonnull StructureBoundingBox structureBoundingBox, int x, int y, int z, int count)
 	{
 		if (this.villagersSpawned < count)
 		{

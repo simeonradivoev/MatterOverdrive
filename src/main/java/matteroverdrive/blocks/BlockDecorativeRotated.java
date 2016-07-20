@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -30,10 +31,10 @@ public class BlockDecorativeRotated extends BlockDecorative
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_)
+	public void getSubBlocks(@Nonnull Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		p_149666_3_.add(new ItemStack(p_149666_1_, 1, 0));
-		p_149666_3_.add(new ItemStack(p_149666_1_, 1, 1));
+		list.add(new ItemStack(item, 1, 0));
+		list.add(new ItemStack(item, 1, 1));
 	}
 
 	@Override
@@ -48,12 +49,15 @@ public class BlockDecorativeRotated extends BlockDecorative
 		return getStateFromMeta(meta);
 	}
 
+	@Nonnull
 	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return this.getDefaultState().withProperty(ROTATED, meta == 1 ? true : false);
 	}
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState()
 	{

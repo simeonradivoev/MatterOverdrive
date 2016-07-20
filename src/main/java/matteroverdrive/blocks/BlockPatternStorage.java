@@ -78,6 +78,7 @@ public class BlockPatternStorage extends MOBlockMachine<TileEntityMachinePattern
     }*/
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;

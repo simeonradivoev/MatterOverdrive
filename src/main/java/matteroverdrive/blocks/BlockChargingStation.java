@@ -93,6 +93,7 @@ public class BlockChargingStation extends MOBlockMachine<TileEntityMachineChargi
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;

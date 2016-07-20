@@ -46,6 +46,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 import java.io.IOException;
@@ -176,6 +177,7 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel
 		GlStateManager.scale(0.4, 0.4, 0.4);
 	}
 
+	@Nonnull
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 	{
@@ -200,13 +202,16 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel
 		return false;
 	}
 
+	@Nonnull
 	@Override
 	public TextureAtlasSprite getParticleTexture()
 	{
 		return bakedModel.getParticleTexture();
 	}
 
+	@Nonnull
 	@Override
+	@Deprecated
 	public ItemCameraTransforms getItemCameraTransforms()
 	{
 		return bakedModel.getItemCameraTransforms();
@@ -223,6 +228,7 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel
 		return weaponMetadata;
 	}
 
+	@Nonnull
 	@Override
 	public ItemOverrideList getOverrides()
 	{

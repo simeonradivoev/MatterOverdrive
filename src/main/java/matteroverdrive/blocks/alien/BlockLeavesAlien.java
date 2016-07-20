@@ -23,6 +23,7 @@ import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class BlockLeavesAlien extends BlockLeaves
 	}
 
 	@Override
-	public int getLightValue(IBlockState blockState, IBlockAccess world, BlockPos pos)
+	public int getLightValue(@Nonnull IBlockState blockState, IBlockAccess world, @Nonnull BlockPos pos)
 	{
 		IBlockState block = world.getBlockState(pos);
 		if (block.getBlock() != this)
@@ -85,16 +86,17 @@ public class BlockLeavesAlien extends BlockLeaves
 	/**
 	 * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
 	 */
+	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	public void getSubBlocks(@Nonnull Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		for (EnumType type : EnumType.META_LOOKUP)
 		{
-			list.add(new ItemStack(itemIn, 1, type.getMetadata()));
+			list.add(new ItemStack(item, 1, type.getMetadata()));
 		}
 	}
 
-	protected ItemStack createStackedBlock(IBlockState state)
+	protected ItemStack createStackedBlock(@Nonnull IBlockState state)
 	{
 		return new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(VARIANT).getMetadata());
 	}
@@ -102,6 +104,9 @@ public class BlockLeavesAlien extends BlockLeaves
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
+	@Nonnull
+	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return this.getDefaultState().withProperty(VARIANT, this.getAlienWoodType(meta)).withProperty(DECAYABLE, Boolean.valueOf((meta & 4) == 0)).withProperty(CHECK_DECAY, Boolean.valueOf((meta & 8) > 0));
@@ -133,16 +138,18 @@ public class BlockLeavesAlien extends BlockLeaves
 		return EnumType.byMetadata((meta & 3));
 	}
 
+	@Nonnull
+	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {VARIANT, CHECK_DECAY, DECAYABLE});
+		return new BlockStateContainer(this, VARIANT, CHECK_DECAY, DECAYABLE);
 	}
 
 	@Override
-	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack itemStack)
+	public void harvestBlock(@Nonnull World world, EntityPlayer player, @Nonnull BlockPos pos, @Nonnull IBlockState state, TileEntity te, ItemStack itemStack)
 	{
 		{
-			super.harvestBlock(worldIn, player, pos, state, te, itemStack);
+			super.harvestBlock(world, player, pos, state, te, itemStack);
 		}
 	}
 
@@ -159,13 +166,15 @@ public class BlockLeavesAlien extends BlockLeaves
 		return Blocks.LEAVES2.isOpaqueCube(state);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@Nonnull
 	@Override
+	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
 		return Blocks.LEAVES2.getBlockLayer();
 	}
 
+	@Nonnull
 	@Override
 	public BlockPlanks.EnumType getWoodType(int meta)
 	{

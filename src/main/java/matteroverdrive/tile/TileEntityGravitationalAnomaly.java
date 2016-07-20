@@ -860,6 +860,8 @@ public class TileEntityGravitationalAnomaly extends MOTileEntity implements ISca
 		return (1 - (distance / maxRange));
 	}
 
+	@Override
+	@Deprecated
 	public float getBreakStrength()
 	{
 		return (float)getRealMass() * 4 * suppression;

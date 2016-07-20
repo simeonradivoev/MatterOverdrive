@@ -30,6 +30,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 11/22/2015.
  */
@@ -99,34 +101,43 @@ public abstract class BlockMonitor<TE extends TileEntity> extends MOBlockMachine
     */
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World worldIn, BlockPos pos)
+	@Deprecated
+	@SuppressWarnings("deprecation")
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, @Nonnull World world, @Nonnull BlockPos pos)
 	{
 		//this.setBlockBoundsBasedOnState(worldIn, pos);
-		return super.getCollisionBoundingBox(state, worldIn, pos);
+		return super.getCollisionBoundingBox(state, world, pos);
 	}
 
+	@Nonnull
 	@Override
+	@Deprecated
 	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)
+	@SuppressWarnings("deprecation")
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, @Nonnull World world, @Nonnull BlockPos pos)
 	{
 		//this.setBlockBoundsBasedOnState(worldIn,pos);
-		return super.getSelectedBoundingBox(state, worldIn, pos);
+		return super.getSelectedBoundingBox(state, world, pos);
 	}
 
 	@Override
-	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end)
+	@Deprecated
+	@SuppressWarnings("deprecation")
+	public RayTraceResult collisionRayTrace(IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Vec3d start, @Nonnull Vec3d end)
 	{
 		//this.setBlockBoundsBasedOnState(worldIn,pos);
-		return super.collisionRayTrace(state, worldIn, pos, start, end);
+		return super.collisionRayTrace(state, world, pos, start, end);
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
+	@Deprecated
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;

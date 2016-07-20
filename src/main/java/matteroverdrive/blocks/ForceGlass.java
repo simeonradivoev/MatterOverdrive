@@ -32,6 +32,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
@@ -55,6 +56,7 @@ public class ForceGlass extends BlockCT implements IDismantleable
 		return blockState.getBlock() instanceof ForceGlass;
 	}
 
+	@Nonnull
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
@@ -79,20 +81,23 @@ public class ForceGlass extends BlockCT implements IDismantleable
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
+	@Deprecated
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
+	@Deprecated
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	public boolean shouldSideBeRendered(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side)
 	{
 		/*Block block = world.getBlock(x, y, z);
 		return !(block instanceof ForceGlass || checkEIO(world, block, x, y, z));*/

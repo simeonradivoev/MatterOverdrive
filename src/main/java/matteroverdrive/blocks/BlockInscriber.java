@@ -69,6 +69,7 @@ public class BlockInscriber extends MOBlockMachine<TileEntityInscriber>
     }*/
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
