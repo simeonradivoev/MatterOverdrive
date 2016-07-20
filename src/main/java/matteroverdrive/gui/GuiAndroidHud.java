@@ -202,7 +202,6 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 					renderRadialMenu(event);
 				}
 			}
-			GlStateManager.disableBlend();
 		}
 	}
 
