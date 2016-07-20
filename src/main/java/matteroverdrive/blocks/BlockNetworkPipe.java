@@ -30,6 +30,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 import static matteroverdrive.util.MOBlockHelper.RotationType;
@@ -37,7 +38,7 @@ import static matteroverdrive.util.MOBlockHelper.RotationType;
 /**
  * Created by Simeon on 3/15/2015.
  */
-public class BlockNetworkPipe extends BlockPipe implements IDismantleable
+public class BlockNetworkPipe extends BlockPipe<TileEntityNetworkPipe> implements IDismantleable
 {
 
 	public BlockNetworkPipe(Material material, String name)
@@ -49,7 +50,14 @@ public class BlockNetworkPipe extends BlockPipe implements IDismantleable
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityNetworkPipe> getTileEntityClass()
+	{
+		return TileEntityNetworkPipe.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityNetworkPipe();
 	}

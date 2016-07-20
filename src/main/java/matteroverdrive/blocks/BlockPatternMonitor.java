@@ -20,13 +20,16 @@ package matteroverdrive.blocks;
 
 import matteroverdrive.machines.pattern_monitor.TileEntityMachinePatternMonitor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Simeon on 4/26/2015.
  */
-public class BlockPatternMonitor extends BlockMonitor
+public class BlockPatternMonitor extends BlockMonitor<TileEntityMachinePatternMonitor>
 {
 	public BlockPatternMonitor(Material material, String name)
 	{
@@ -35,7 +38,14 @@ public class BlockPatternMonitor extends BlockMonitor
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachinePatternMonitor> getTileEntityClass()
+	{
+		return TileEntityMachinePatternMonitor.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachinePatternMonitor();
 	}

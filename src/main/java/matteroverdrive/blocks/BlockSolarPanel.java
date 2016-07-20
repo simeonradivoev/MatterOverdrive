@@ -3,13 +3,16 @@ package matteroverdrive.blocks;
 import matteroverdrive.blocks.includes.MOMatterEnergyStorageBlock;
 import matteroverdrive.tile.TileEntityMachineSolarPanel;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Simeon on 4/9/2015.
  */
-public class BlockSolarPanel extends MOMatterEnergyStorageBlock
+public class BlockSolarPanel extends MOMatterEnergyStorageBlock<TileEntityMachineSolarPanel>
 {
 	public BlockSolarPanel(Material material, String name)
 	{
@@ -23,7 +26,14 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachineSolarPanel> getTileEntityClass()
+	{
+		return TileEntityMachineSolarPanel.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState meta)
 	{
 		return new TileEntityMachineSolarPanel();
 	}

@@ -32,10 +32,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 5/12/2015.
  */
-public class BlockGravitationalStabilizer extends MOBlockMachine
+public class BlockGravitationalStabilizer extends MOBlockMachine<TileEntityMachineGravitationalStabilizer>
 {
 	public BlockGravitationalStabilizer(Material material, String name)
 	{
@@ -68,7 +70,14 @@ public class BlockGravitationalStabilizer extends MOBlockMachine
     }*/
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachineGravitationalStabilizer> getTileEntityClass()
+	{
+		return TileEntityMachineGravitationalStabilizer.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachineGravitationalStabilizer();
 

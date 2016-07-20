@@ -45,7 +45,7 @@ import java.util.ArrayList;
 /**
  * Created by Simeon on 4/5/2015.
  */
-public abstract class MOBlockMachine extends MOBlockContainer implements IDismantleable, IConfigSubscriber
+public abstract class MOBlockMachine<TE extends TileEntity> extends MOBlockContainer<TE> implements IDismantleable, IConfigSubscriber
 {
 	public float volume = 1;
 	public boolean hasGui;

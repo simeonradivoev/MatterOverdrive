@@ -26,10 +26,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 3/27/2015.
  */
-public class BlockPatternStorage extends MOBlockMachine
+public class BlockPatternStorage extends MOBlockMachine<TileEntityMachinePatternStorage>
 {
 	public boolean hasVentParticles;
 
@@ -57,7 +59,14 @@ public class BlockPatternStorage extends MOBlockMachine
     }*/
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachinePatternStorage> getTileEntityClass()
+	{
+		return TileEntityMachinePatternStorage.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachinePatternStorage();
 	}

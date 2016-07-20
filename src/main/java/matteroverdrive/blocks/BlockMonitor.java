@@ -21,6 +21,7 @@ package matteroverdrive.blocks;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -32,7 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Created by Simeon on 11/22/2015.
  */
-public abstract class BlockMonitor extends MOBlockMachine
+public abstract class BlockMonitor<TE extends TileEntity> extends MOBlockMachine<TE>
 {
 	protected int depth;
 

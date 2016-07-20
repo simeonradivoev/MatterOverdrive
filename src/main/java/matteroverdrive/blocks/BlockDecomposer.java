@@ -29,7 +29,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockDecomposer extends MOMatterEnergyStorageBlock
+import javax.annotation.Nonnull;
+
+public class BlockDecomposer extends MOMatterEnergyStorageBlock<TileEntityMachineDecomposer>
 {
 	public BlockDecomposer(Material material, String name)
 	{
@@ -54,7 +56,14 @@ public class BlockDecomposer extends MOMatterEnergyStorageBlock
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachineDecomposer> getTileEntityClass()
+	{
+		return TileEntityMachineDecomposer.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachineDecomposer();
 	}

@@ -33,7 +33,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockReplicator extends MOMatterEnergyStorageBlock
+import javax.annotation.Nonnull;
+
+public class BlockReplicator extends MOMatterEnergyStorageBlock<TileEntityMachineReplicator>
 {
 	public float replication_volume;
 	public boolean hasVentParticles;
@@ -49,6 +51,7 @@ public class BlockReplicator extends MOMatterEnergyStorageBlock
 		setHasGui(true);
 	}
 
+	@Nonnull
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
@@ -57,25 +60,33 @@ public class BlockReplicator extends MOMatterEnergyStorageBlock
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
+	public boolean canPlaceTorchOnTop(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	public boolean isSideSolid(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side)
 	{
 		return true;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachineReplicator> getTileEntityClass()
+	{
+		return TileEntityMachineReplicator.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachineReplicator();
 	}

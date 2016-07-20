@@ -18,11 +18,10 @@
 
 package matteroverdrive.blocks;
 
-import matteroverdrive.blocks.includes.MOBlock;
+import matteroverdrive.blocks.includes.MOBlockContainer;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.tile.TileEntityBoundingBox;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -30,10 +29,12 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author shadowfacts
  */
-public class BlockBoundingBox extends MOBlock implements ITileEntityProvider
+public class BlockBoundingBox extends MOBlockContainer<TileEntityBoundingBox>
 {
 
 	public BlockBoundingBox(Material material, String name)
@@ -68,7 +69,14 @@ public class BlockBoundingBox extends MOBlock implements ITileEntityProvider
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityBoundingBox> getTileEntityClass()
+	{
+		return TileEntityBoundingBox.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityBoundingBox();
 	}

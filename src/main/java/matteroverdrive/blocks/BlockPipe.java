@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public abstract class BlockPipe extends MOBlockContainer
+public abstract class BlockPipe<TE extends TileEntity> extends MOBlockContainer<TE>
 {
 	public static final float PIPE_MIN_POS = 0.35f;
 	public static final float PIPE_MAX_POS = 0.65f;

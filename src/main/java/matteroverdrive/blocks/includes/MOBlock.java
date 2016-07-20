@@ -35,6 +35,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 import static matteroverdrive.util.MOBlockHelper.RotationType;
 import static matteroverdrive.util.MOBlockHelper.SIDE_LEFT;
 
@@ -61,6 +63,7 @@ public class MOBlock extends Block
 		rotationType = RotationType.FOUR_WAY;
 	}
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
@@ -71,7 +74,9 @@ public class MOBlock extends Block
 		return super.createBlockState();
 	}
 
+	@Nonnull
 	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
 		if (hasRotation)

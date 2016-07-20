@@ -21,15 +21,18 @@ package matteroverdrive.blocks;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.tile.TileEntityMachineNetworkRouter;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 import static matteroverdrive.util.MOBlockHelper.RotationType;
 
 /**
  * Created by Simeon on 3/11/2015.
  */
-public class BlockNetworkRouter extends MOBlockMachine
+public class BlockNetworkRouter extends MOBlockMachine<TileEntityMachineNetworkRouter>
 {
 
 	public BlockNetworkRouter(Material material, String name)
@@ -58,7 +61,14 @@ public class BlockNetworkRouter extends MOBlockMachine
     }*/
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachineNetworkRouter> getTileEntityClass()
+	{
+		return TileEntityMachineNetworkRouter.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachineNetworkRouter();
 	}

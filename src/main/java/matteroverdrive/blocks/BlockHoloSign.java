@@ -23,8 +23,6 @@ import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.tile.TileEntityHoloSign;
 import matteroverdrive.util.MOInventoryHelper;
 import matteroverdrive.util.MachineHelper;
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,12 +34,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
  * Created by Simeon on 8/15/2015.
  */
-public class BlockHoloSign extends BlockMonitor implements IDismantleable, ITileEntityProvider
+public class BlockHoloSign extends BlockMonitor<TileEntityHoloSign> implements IDismantleable
 {
 
 	public BlockHoloSign(Material material, String name)
@@ -105,7 +104,14 @@ public class BlockHoloSign extends BlockMonitor implements IDismantleable, ITile
     }*/
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityHoloSign> getTileEntityClass()
+	{
+		return TileEntityHoloSign.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityHoloSign();
 	}

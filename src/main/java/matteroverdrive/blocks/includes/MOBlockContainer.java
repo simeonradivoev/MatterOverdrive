@@ -18,14 +18,32 @@
 
 package matteroverdrive.blocks.includes;
 
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
-public abstract class MOBlockContainer extends MOBlock implements ITileEntityProvider
+public abstract class MOBlockContainer<TE extends TileEntity> extends MOBlock
 {
 	public MOBlockContainer(Material material, String name)
 	{
 		super(material, name);
 		this.isBlockContainer = true;
 	}
+
+	public abstract Class<TE> getTileEntityClass();
+
+	@Override
+	public boolean hasTileEntity(IBlockState state)
+	{
+		return true;
+	}
+
+	@SuppressWarnings("unchecked")
+	public TE getTileEntity(IBlockAccess world, BlockPos pos)
+	{
+		return (TE)world.getTileEntity(pos);
+	}
+
 }

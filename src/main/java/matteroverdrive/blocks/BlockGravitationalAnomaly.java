@@ -37,12 +37,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * Created by Simeon on 5/11/2015.
  */
-public class BlockGravitationalAnomaly extends MOBlockContainer implements IScannable, IConfigSubscriber
+public class BlockGravitationalAnomaly extends MOBlockContainer<TileEntityGravitationalAnomaly> implements IScannable, IConfigSubscriber
 {
 	public BlockGravitationalAnomaly(Material material, String name)
 	{
@@ -106,7 +107,14 @@ public class BlockGravitationalAnomaly extends MOBlockContainer implements IScan
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityGravitationalAnomaly> getTileEntityClass()
+	{
+		return TileEntityGravitationalAnomaly.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityGravitationalAnomaly();
 	}

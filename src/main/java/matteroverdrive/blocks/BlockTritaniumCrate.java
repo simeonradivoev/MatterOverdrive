@@ -33,10 +33,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 11/5/2015.
  */
-public class BlockTritaniumCrate extends MOBlockMachine
+public class BlockTritaniumCrate extends MOBlockMachine<TileEntityTritaniumCrate>
 {
 	public BlockTritaniumCrate(Material material, String name)
 	{
@@ -50,12 +52,20 @@ public class BlockTritaniumCrate extends MOBlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	public Class<TileEntityTritaniumCrate> getTileEntityClass()
+	{
+		return TileEntityTritaniumCrate.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityTritaniumCrate();
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;

@@ -12,10 +12,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 6/13/2015.
  */
-public class BlockStarMap extends MOBlockMachine
+public class BlockStarMap extends MOBlockMachine<TileEntityMachineStarMap>
 {
 	public BlockStarMap(Material material, String name)
 	{
@@ -72,12 +74,20 @@ public class BlockStarMap extends MOBlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachineStarMap> getTileEntityClass()
+	{
+		return TileEntityMachineStarMap.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachineStarMap();
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;

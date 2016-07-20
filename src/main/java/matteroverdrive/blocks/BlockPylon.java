@@ -1,9 +1,8 @@
 package matteroverdrive.blocks;
 
 import matteroverdrive.blocks.includes.IMultiBlock;
-import matteroverdrive.blocks.includes.MOBlock;
+import matteroverdrive.blocks.includes.MOBlockContainer;
 import matteroverdrive.machines.dimensional_pylon.TileEntityMachineDimensionalPylon;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -21,10 +20,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 2/4/2016.
  */
-public class BlockPylon extends MOBlock implements ITileEntityProvider, IMultiBlock
+public class BlockPylon extends MOBlockContainer<TileEntityMachineDimensionalPylon> implements IMultiBlock
 {
 	public static final PropertyEnum<MultiblockType> TYPE = PropertyEnum.create("type", MultiblockType.class);
 
@@ -82,7 +83,14 @@ public class BlockPylon extends MOBlock implements ITileEntityProvider, IMultiBl
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta)
+	public Class<TileEntityMachineDimensionalPylon> getTileEntityClass()
+	{
+		return TileEntityMachineDimensionalPylon.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachineDimensionalPylon();
 	}

@@ -21,13 +21,16 @@ package matteroverdrive.blocks;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.tile.TileEntityFusionReactorPart;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Simeon on 10/30/2015.
  */
-public class BlockFusionReactorIO extends MOBlockMachine
+public class BlockFusionReactorIO extends MOBlockMachine<TileEntityFusionReactorPart>
 {
 	public BlockFusionReactorIO(Material material, String name)
 	{
@@ -38,7 +41,14 @@ public class BlockFusionReactorIO extends MOBlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int mea)
+	public Class<TileEntityFusionReactorPart> getTileEntityClass()
+	{
+		return TileEntityFusionReactorPart.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityFusionReactorPart();
 	}

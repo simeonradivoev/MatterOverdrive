@@ -20,8 +20,11 @@ package matteroverdrive.blocks;
 
 import matteroverdrive.tile.pipes.TileEntityHeavyMatterPipe;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Simeon on 8/20/2015.
@@ -34,8 +37,9 @@ public class BlockHeavyMatterPipe extends BlockMatterPipe
 		super(material, name);
 	}
 
+	@Nonnull
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityHeavyMatterPipe();
 	}

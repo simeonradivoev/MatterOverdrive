@@ -25,10 +25,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 11/9/2015.
  */
-public class BlockInscriber extends MOBlockMachine
+public class BlockInscriber extends MOBlockMachine<TileEntityInscriber>
 {
 	public BlockInscriber(Material material, String name)
 	{
@@ -41,7 +43,14 @@ public class BlockInscriber extends MOBlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	public Class<TileEntityInscriber> getTileEntityClass()
+	{
+		return TileEntityInscriber.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityInscriber();
 	}

@@ -7,10 +7,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 5/27/2015.
  */
-public class BlockAndroidStation extends MOBlockMachine
+public class BlockAndroidStation extends MOBlockMachine<TileEntityAndroidStation>
 {
 	public BlockAndroidStation(Material material, String name)
 	{
@@ -63,7 +65,14 @@ public class BlockAndroidStation extends MOBlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityAndroidStation> getTileEntityClass()
+	{
+		return TileEntityAndroidStation.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityAndroidStation();
 	}

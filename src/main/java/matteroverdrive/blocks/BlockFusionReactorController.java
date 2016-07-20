@@ -35,10 +35,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 5/14/2015.
  */
-public class BlockFusionReactorController extends MOBlockMachine
+public class BlockFusionReactorController extends MOBlockMachine<TileEntityMachineFusionReactorController>
 {
 	public BlockFusionReactorController(Material material, String name)
 	{
@@ -70,7 +72,14 @@ public class BlockFusionReactorController extends MOBlockMachine
     }*/
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	public Class<TileEntityMachineFusionReactorController> getTileEntityClass()
+	{
+		return TileEntityMachineFusionReactorController.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachineFusionReactorController();
 	}

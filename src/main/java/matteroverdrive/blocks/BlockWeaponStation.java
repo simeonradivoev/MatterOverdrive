@@ -7,10 +7,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 4/13/2015.
  */
-public class BlockWeaponStation extends MOBlockMachine
+public class BlockWeaponStation extends MOBlockMachine<TileEntityWeaponStation>
 {
 
 	public BlockWeaponStation(Material material, String name)
@@ -53,12 +55,20 @@ public class BlockWeaponStation extends MOBlockMachine
     }*/
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityWeaponStation> getTileEntityClass()
+	{
+		return TileEntityWeaponStation.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityWeaponStation();
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;

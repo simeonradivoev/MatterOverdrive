@@ -29,10 +29,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Simeon on 7/8/2015.
  */
-public class BlockChargingStation extends MOBlockMachine
+public class BlockChargingStation extends MOBlockMachine<TileEntityMachineChargingStation>
 {
 
 	public BlockChargingStation(Material material, String name)
@@ -78,7 +80,14 @@ public class BlockChargingStation extends MOBlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachineChargingStation> getTileEntityClass()
+	{
+		return TileEntityMachineChargingStation.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachineChargingStation();
 	}

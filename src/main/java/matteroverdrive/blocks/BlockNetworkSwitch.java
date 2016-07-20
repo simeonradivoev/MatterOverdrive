@@ -21,15 +21,18 @@ package matteroverdrive.blocks;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.tile.TileEntityMachineNetworkSwitch;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 import static matteroverdrive.util.MOBlockHelper.RotationType;
 
 /**
  * Created by Simeon on 5/1/2015.
  */
-public class BlockNetworkSwitch extends MOBlockMachine
+public class BlockNetworkSwitch extends MOBlockMachine<TileEntityMachineNetworkSwitch>
 {
 	public BlockNetworkSwitch(Material material, String name)
 	{
@@ -64,7 +67,14 @@ public class BlockNetworkSwitch extends MOBlockMachine
     }*/
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachineNetworkSwitch> getTileEntityClass()
+	{
+		return TileEntityMachineNetworkSwitch.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState meta)
 	{
 		return new TileEntityMachineNetworkSwitch();
 	}

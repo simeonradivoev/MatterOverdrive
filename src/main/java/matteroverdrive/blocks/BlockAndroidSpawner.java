@@ -21,13 +21,16 @@ package matteroverdrive.blocks;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.tile.TileEntityAndroidSpawner;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Simeon on 12/10/2015.
  */
-public class BlockAndroidSpawner extends MOBlockMachine
+public class BlockAndroidSpawner extends MOBlockMachine<TileEntityAndroidSpawner>
 {
 	public BlockAndroidSpawner(Material material, String name)
 	{
@@ -37,7 +40,14 @@ public class BlockAndroidSpawner extends MOBlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	public Class<TileEntityAndroidSpawner> getTileEntityClass()
+	{
+		return TileEntityAndroidSpawner.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityAndroidSpawner();
 	}

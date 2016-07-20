@@ -21,13 +21,16 @@ package matteroverdrive.blocks;
 import matteroverdrive.blocks.includes.MOMatterEnergyStorageBlock;
 import matteroverdrive.tile.TileEntityMachineMatterRecycler;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Simeon on 5/15/2015.
  */
-public class BlockMatterRecycler extends MOMatterEnergyStorageBlock
+public class BlockMatterRecycler extends MOMatterEnergyStorageBlock<TileEntityMachineMatterRecycler>
 {
 
 	public BlockMatterRecycler(Material material, String name)
@@ -75,7 +78,14 @@ public class BlockMatterRecycler extends MOMatterEnergyStorageBlock
     }*/
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachineMatterRecycler> getTileEntityClass()
+	{
+		return TileEntityMachineMatterRecycler.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState meta)
 	{
 		return new TileEntityMachineMatterRecycler();
 	}

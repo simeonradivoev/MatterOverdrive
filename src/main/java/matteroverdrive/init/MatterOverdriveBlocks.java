@@ -23,12 +23,12 @@ import matteroverdrive.Reference;
 import matteroverdrive.blocks.*;
 import matteroverdrive.blocks.alien.*;
 import matteroverdrive.blocks.includes.MOBlock;
+import matteroverdrive.blocks.includes.MOBlockContainer;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.blocks.world.DilithiumOre;
 import matteroverdrive.items.includes.MOMachineBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
@@ -150,9 +150,8 @@ public class MatterOverdriveBlocks
 						GameRegistry.register(new ItemBlock(block), block.getRegistryName());
 					}
 
-					if (field.get(null) instanceof ITileEntityProvider)
-					{
-						GameRegistry.registerTileEntity(((ITileEntityProvider)block).createNewTileEntity(null, 0).getClass(), block.getRegistryName().toString());
+					if (block instanceof MOBlockContainer) {
+						GameRegistry.registerTileEntity(((MOBlockContainer)block).getTileEntityClass(), block.getRegistryName().toString());
 					}
 				}
 				catch (IllegalAccessException e)

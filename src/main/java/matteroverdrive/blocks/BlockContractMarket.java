@@ -20,13 +20,16 @@ package matteroverdrive.blocks;
 
 import matteroverdrive.tile.TileEntityMachineContractMarket;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Simeon on 11/22/2015.
  */
-public class BlockContractMarket extends BlockMonitor
+public class BlockContractMarket extends BlockMonitor<TileEntityMachineContractMarket>
 {
 	public BlockContractMarket(Material material, String name)
 	{
@@ -35,7 +38,14 @@ public class BlockContractMarket extends BlockMonitor
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	public Class<TileEntityMachineContractMarket> getTileEntityClass()
+	{
+		return TileEntityMachineContractMarket.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachineContractMarket();
 	}

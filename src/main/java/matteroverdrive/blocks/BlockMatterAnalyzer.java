@@ -21,13 +21,16 @@ package matteroverdrive.blocks;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.machines.analyzer.TileEntityMachineMatterAnalyzer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Simeon on 3/16/2015.
  */
-public class BlockMatterAnalyzer extends MOBlockMachine
+public class BlockMatterAnalyzer extends MOBlockMachine<TileEntityMachineMatterAnalyzer>
 {
 	public static float MACHINE_VOLUME;
 /*    private IIcon iconTop;
@@ -45,7 +48,14 @@ public class BlockMatterAnalyzer extends MOBlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public Class<TileEntityMachineMatterAnalyzer> getTileEntityClass()
+	{
+		return TileEntityMachineMatterAnalyzer.class;
+	}
+
+	@Nonnull
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityMachineMatterAnalyzer();
 	}
