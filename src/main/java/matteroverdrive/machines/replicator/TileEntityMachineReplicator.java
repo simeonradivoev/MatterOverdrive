@@ -401,23 +401,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
 	//endregion
 
-    /*//region Waila
-	@Override
-    @Optional.Method(modid = "Waila")
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        List<String> list = super.getWailaBody(itemStack, currenttip, accessor, config);
-        if (accessor.getTileEntity() instanceof TileEntityMachineReplicator) {
-
-            MatterNetworkTaskReplicatePattern task = ((TileEntityMachineReplicator) accessor.getTileEntity()).getTaskQueue(0).peek();
-            if (task != null) {
-                ItemStack pattern = task.getPattern().toItemStack(false);
-                list.add(EnumChatFormatting.YELLOW + String.format("Replicating %s", pattern.getDisplayName()));
-            }
-        }
-        return list;
-    }
-    //endregion*/
-
 	//region Getters and Setters
 /*    public ItemPattern getInternalPatternStorage()
 	{

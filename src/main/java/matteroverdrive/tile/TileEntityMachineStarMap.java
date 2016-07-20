@@ -49,7 +49,7 @@ import java.util.EnumSet;
 /**
  * Created by Simeon on 6/13/2015.
  */
-public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implements IWailaBodyProvider
+public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy
 {
 	GalacticPosition position;
 	GalacticPosition destination;
@@ -343,22 +343,4 @@ public class TileEntityMachineStarMap extends MOTileEntityMachineEnergy implemen
 		return new int[0];
 	}
 
-/*//	WAILA
-	@Override
-	@Optional.Method(modid = "Waila")
-	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		TileEntity te = accessor.get();
-		if (te instanceof TileEntityMachineStarMap) {
-			TileEntityMachineStarMap starMap = (TileEntityMachineStarMap)te;
-
-			String[] levels = new String[]{"gui.tooltip.page.galaxy", "gui.tooltip.page.quadrant", "gui.tooltip.page.star", "gui.tooltip.page.planet", "gui.tooltip.page.planet_stats"};
-
-			currenttip.add(String.format("%sCurrent Mode: %s%s (%d)", EnumChatFormatting.YELLOW, EnumChatFormatting.WHITE, MOStringHelper.translateToLocal(levels[starMap.zoomLevel]), starMap.zoomLevel));
-
-		} else {
-			throw new RuntimeException("Star Map WAILA provider is being used for something that is not a Star Map: " + te.getClass());
-		}
-
-		return currenttip;
-	}*/
 }

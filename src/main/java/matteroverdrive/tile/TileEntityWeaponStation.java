@@ -186,24 +186,4 @@ public class TileEntityWeaponStation extends MOTileEntityMachine
 		return new int[0];
 	}
 
-//	WAILA
-/*	@Override
-	@Optional.Method(modid = "Waila")
-	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		TileEntity te = accessor.getTileEntity();
-
-		if (te instanceof TileEntityWeaponStation) {
-			TileEntityWeaponStation weaponStation = (TileEntityWeaponStation)te;
-
-			if (weaponStation.getStackInSlot(INPUT_SLOT) != null) {
-				String name = weaponStation.getStackInSlot(INPUT_SLOT).getDisplayName();
-				currenttip.add(EnumChatFormatting.YELLOW + "Current Weapon: " + EnumChatFormatting.WHITE + name);
-			}
-
-		} else {
-			throw new RuntimeException("Weapon Station WAILA provider is being used for something that is not a Weapon Station: " + te.getClass());
-		}
-
-		return currenttip;
-	}*/
 }

@@ -37,10 +37,10 @@ repositories {
 	// 	url "http://chickenbones.net/maven/"
 	// }
 
-	// maven {
-	// 	name "Mobius"
-	// 	url "http://mobiusstrip.eu/maven"
-	// }
+	maven {
+		name "Mobius"
+		url "http://mobiusstrip.eu/maven"
+	}
 
 	// maven {
 	// 	name "tterrag"
@@ -88,7 +88,7 @@ dependencies {
 	//compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.mc_version}-${config.nei_version}", classifier: 'dev' // CB maven
 	
 	// WAILA
-	//compile group: 'mcp.mobius.waila', name: 'Waila', version: "${config.waila_version}_${config.mc_version}", classifier: 'dev'
+	deobfCompile group: 'mcp.mobius.waila', name: 'Waila', version: "1.7.0-B3_1.9.4"
 	
 	// CoFH
 	//compile group: 'cofh', name: 'CoFHLib', version: "[${config.mc_version}]${config.cofh_lib_version}", ext: 'jar'

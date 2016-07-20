@@ -155,8 +155,8 @@ public class RenderHandler
 	private SpaceSkyRenderer spaceSkyRenderer;
 	private WeaponRenderHandler weaponRenderHandler;
 	//region Weapon Module Renderers
-	private final ModuleSniperScopeRender moduleSniperScopeRender = new ModuleSniperScopeRender(weaponRenderHandler);
-	private final ModuleHoloSightsRender moduleHoloSightsRender = new ModuleHoloSightsRender(weaponRenderHandler);
+	private ModuleSniperScopeRender moduleSniperScopeRender;
+	private ModuleHoloSightsRender moduleHoloSightsRender;
 	//endregion
 	//region Weapon Layers
 	private final WeaponLayerAmmoRender weaponLayerAmmoRender = new WeaponLayerAmmoRender();
@@ -221,6 +221,9 @@ public class RenderHandler
 		dimensionalRiftsRender = new DimensionalRiftsRender();
 		spaceSkyRenderer = new SpaceSkyRenderer();
 		weaponRenderHandler = new WeaponRenderHandler();
+
+		moduleSniperScopeRender = new ModuleSniperScopeRender(weaponRenderHandler);
+		moduleHoloSightsRender = new ModuleHoloSightsRender(weaponRenderHandler);
 
 		addCustomRenderer(matterScannerInfoHandler);
 		addCustomRenderer(renderParticlesHandler);

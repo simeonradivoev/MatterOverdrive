@@ -461,31 +461,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		return ((TileEntity)this).getCapability(capability, facing);
 	}
 
-	/*//region WAILA
-	@Override
-	@Optional.Method(modid = "Waila")
-	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		TileEntity te = accessor.getTileEntity();
-
-		if (te instanceof TileEntityMachineTransporter) {
-			TileEntityMachineTransporter transporter = (TileEntityMachineTransporter)te;
-
-			TransportLocation location = transporter.getSelectedLocation();
-
-			currenttip.add(String.format("%sSelected Location: %s%s", EnumChatFormatting.YELLOW, EnumChatFormatting.WHITE, location.name));
-			currenttip.add(String.format("%sDestination Coords: %s X:%d Y:%d Z:%d", EnumChatFormatting.YELLOW, EnumChatFormatting.WHITE, location.x, location.y, location.z));
-
-		} else {
-			throw new RuntimeException("Transporter WAILA provider is being used for something that is not a Transporter: " + te.getClass());
-		}
-
-
-
-		return currenttip;
-	}
-    //endregion
-
-    //region All Computers
+	/*//region All Computers
     //region ComputerCraft
 	@Override
 	@Optional.Method(modid = "ComputerCraft")

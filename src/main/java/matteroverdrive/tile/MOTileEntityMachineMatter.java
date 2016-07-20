@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IWailaBodyProvider
+public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy
 {
 	protected MachineMatterStorage matterStorage;
 
@@ -134,19 +134,4 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 		return super.getCapability(capability, facing);
 	}
 
-	//	WAILA
-	/*@Optional.Method(modid = "Waila")
-	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		TileEntity te = accessor.getTileEntity();
-
-		if (te instanceof MOTileEntityMachineMatter) {
-			MOTileEntityMachineMatter machine = (MOTileEntityMachineMatter)te;
-			currenttip.add(EnumChatFormatting.AQUA + String.format("%s / %s %s",machine.getMatterStored(),machine.getMatterCapacity(), MatterHelper.MATTER_UNIT));
-
-		} else {
-			throw new RuntimeException("MOTileEntityMachineMatter WAILA provider is being used for something that is not a MOTileEntityMachineMatter: " + te.getClass());
-		}
-
-		return currenttip;
-	}*/
 }
