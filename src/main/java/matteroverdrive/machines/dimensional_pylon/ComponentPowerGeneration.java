@@ -3,11 +3,13 @@ package matteroverdrive.machines.dimensional_pylon;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.client.data.Color;
 import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.fx.Lightning;
 import matteroverdrive.init.MatterOverdriveBlocks;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineComponentAbstract;
 import matteroverdrive.machines.MachineNBTCategory;
@@ -93,10 +95,11 @@ public class ComponentPowerGeneration extends MachineComponentAbstract<TileEntit
 		energyGenPerTick = (int)(dimValue * MAX_POWER_GEN_PER_TICK) + (int)(CHARGE_ENERGY_INCREASE * chargePercent);
 		matterDrainPerSec = MathHelper.ceiling_float_int(dimValue * 20) + (int)(CHARGE_MATTER_INCREASE * chargePercent);
 
-		if (machine.getMatterStorage().getMatterStored() >= matterDrainPerSec && machine.getEnergyStorage().getEnergyStored() < machine.getEnergyStorage().getMaxEnergyStored())
+		IMatterHandler storage = machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null);
+		if (storage.getMatterStored() >= matterDrainPerSec && machine.getEnergyStorage().getEnergyStored() < machine.getEnergyStorage().getMaxEnergyStored())
 		{
 			machine.getEnergyStorage().modifyEnergyStored(energyGenPerTick);
-			machine.getMatterStorage().modifyMatterStored(matterDrainPerSec);
+			storage.modifyMatterStored(matterDrainPerSec);
 			machine.UpdateClientPower();
 		}
 	}

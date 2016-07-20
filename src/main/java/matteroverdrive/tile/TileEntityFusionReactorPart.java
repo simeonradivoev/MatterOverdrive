@@ -20,6 +20,7 @@ package matteroverdrive.tile;
 
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.MachineMatterStorage;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.machines.fusionReactorController.TileEntityMachineFusionReactorController;
@@ -75,15 +76,6 @@ public class TileEntityFusionReactorPart extends MOTileEntityMachineMatter imple
 	protected void onMachineEvent(MachineEvent event)
 	{
 
-	}
-
-	public MachineMatterStorage getMatterStorage()
-	{
-		if (fusionReactorController != null)
-		{
-			return fusionReactorController.getMatterStorage();
-		}
-		return null;
 	}
 
 	@Override

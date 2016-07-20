@@ -24,7 +24,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 /**
@@ -49,7 +48,8 @@ public class MatterOverdriveFluids
 		FluidRegistry.registerFluid(moltenTritanium);
 	}
 
-	public static void register(FMLInitializationEvent event)
+	@SuppressWarnings("deprecation")
+	public static void register()
 	{
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(matterPlasma, 32), new ItemStack(MatterOverdriveItems.matterContainerFull), new ItemStack(MatterOverdriveItems.matterContainer));
 	}

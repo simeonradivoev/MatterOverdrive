@@ -1,6 +1,7 @@
 package matteroverdrive.network.packet.client;
 
 import io.netty.buffer.ByteBuf;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.network.packet.TileEntityUpdatePacket;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -23,7 +24,7 @@ public class PacketMatterUpdate extends TileEntityUpdatePacket
 	public PacketMatterUpdate(MOTileEntityMachineMatter entityMachineEnergy)
 	{
 		super(entityMachineEnergy.getPos());
-		matter = entityMachineEnergy.getMatterStored();
+		matter = entityMachineEnergy.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null).getMatterStored();
 	}
 
 	@Override
@@ -50,9 +51,9 @@ public class PacketMatterUpdate extends TileEntityUpdatePacket
 			{
 				TileEntity tileEntity = player.worldObj.getTileEntity(message.pos);
 
-				if (tileEntity != null && tileEntity instanceof MOTileEntityMachineMatter)
+				if (tileEntity != null && tileEntity.hasCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null))
 				{
-					((MOTileEntityMachineMatter)tileEntity).setMatterStored(message.matter);
+					tileEntity.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null).setMatterStored(message.matter);
 				}
 			}
 		}

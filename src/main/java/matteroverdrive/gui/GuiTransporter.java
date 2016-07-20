@@ -20,6 +20,7 @@ package matteroverdrive.gui;
 
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.gui.element.*;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.machines.transporter.TileEntityMachineTransporter;
 import matteroverdrive.util.MOStringHelper;
@@ -48,7 +49,7 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
 	{
 		super(ContainerFactory.createMachineContainer(machine, inventoryPlayer), machine, 225, 220);
 		energy = new MOElementEnergy(this, xSize - 35, 50, machine.getEnergyStorage());
-		matterStored = new ElementMatterStored(this, xSize - 35, 100, machine.getMatterStorage());
+		matterStored = new ElementMatterStored(this, xSize - 35, 100, machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null));
 
 		xCoords = new ElementIntegerField(this, this, 32, 24, 80, 16);
 		xCoords.setName("XCoord");

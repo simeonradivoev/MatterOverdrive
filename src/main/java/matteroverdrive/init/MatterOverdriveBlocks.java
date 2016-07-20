@@ -127,7 +127,7 @@ public class MatterOverdriveBlocks
 		machine_hull.setHarvestLevel("pickaxe", 2);
 	}
 
-	public static void register(FMLInitializationEvent event)
+	public static void register()
 	{
 		for (Field field : MatterOverdriveBlocks.class.getFields())
 		{

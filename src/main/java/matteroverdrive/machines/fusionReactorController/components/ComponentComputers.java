@@ -20,6 +20,7 @@ package matteroverdrive.machines.fusionReactorController.components;
 
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.Inventory;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.machines.MachineComponentAbstract;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
@@ -103,7 +104,7 @@ public class ComponentComputers extends MachineComponentAbstract<TileEntityMachi
 
 	private Object[] computerGetMatterStored(Object[] args)
 	{
-		return new Object[] {machine.getMatterStored()};
+		return new Object[] {machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null).getMatterStored()};
 	}
 	//endregion
 

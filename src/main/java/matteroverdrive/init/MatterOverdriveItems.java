@@ -126,7 +126,7 @@ public class MatterOverdriveItems
 		armorMaterialTritanium.customCraftingMaterial = tritanium_ingot;
 	}
 
-	public static void register(FMLInitializationEvent event)
+	public static void register()
 	{
 		for (Field field : MatterOverdriveItems.class.getFields())
 		{

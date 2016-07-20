@@ -91,7 +91,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 		this.energyStorage.setMaxReceive(ENERGY_STORAGE);
 		this.matterStorage.setCapacity(MATTER_STORAGE);
 		this.matterStorage.setMaxReceive(MATTER_TRANSFER);
-		this.matterStorage.setMaxExtract(MATTER_TRANSFER);
+		this.matterStorage.setMaxExtract(0);
 		playerSlotsMain = true;
 		playerSlotsHotbar = true;
 	}
@@ -467,12 +467,6 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 	public float getProgress()
 	{
 		return taskProcessingComponent.getReplicateProgress();
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return false;
 	}
 
 	public int getTaskReplicateCount()

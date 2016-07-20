@@ -23,7 +23,7 @@ import matteroverdrive.api.transport.IGridNode;
 import matteroverdrive.data.MatterStorage;
 import matteroverdrive.data.transport.FluidPipeNetwork;
 import matteroverdrive.data.transport.IFluidPipe;
-import matteroverdrive.fluids.FluidMatterPlasma;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.util.TimeTracker;
@@ -37,12 +37,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.Random;
 
@@ -89,6 +90,24 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 
 	public void manageTransfer()
 	{
+		if (storage.getMatterStored() > 0 && getNetwork() != null)
+		{
+			for (IFluidPipe pipe : getNetwork().getNodes())
+			{
+				for (EnumFacing direction : EnumFacing.VALUES)
+				{
+					TileEntity handler = pipe.getTile().getWorld().getTileEntity(pipe.getTile().getPos().offset(direction));
+					if (handler != null && handler.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()) && !(handler instanceof IFluidPipe))
+					{
+						storage.extractMatter(handler.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()).fill(new FluidStack(MatterOverdriveFluids.matterPlasma, storage.getMatterStored()), true), false);
+						if (storage.getMatterStored() <= 0)
+						{
+							return;
+						}
+					}
+				}
+			}
+		}
 		/*if (getMatterStored() > 0 && getNetwork() != null)
 		{
             for (IFluidPipe pipe : getNetwork().getFluidHandlers())
@@ -118,10 +137,7 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 					return false;
 				}
 			}
-			if (entity instanceof IFluidHandler)
-			{
-				return ((IFluidHandler)entity).canDrain(direction, MatterOverdriveFluids.matterPlasma) || ((IFluidHandler)entity).canFill(direction, MatterOverdriveFluids.matterPlasma);
-			}
+			return entity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction);
 		}
 		return false;
 	}
@@ -150,29 +166,29 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 
 	}
 
-	@Override
-	public int getMatterStored()
-	{
-		return storage.getMatterStored();
-	}
-
-	@Override
-	public int getMatterCapacity()
-	{
-		return storage.getCapacity();
-	}
-
-	@Override
-	public int receiveMatter(EnumFacing side, int amount, boolean simulate)
-	{
-		return storage.receiveMatter(side, amount, simulate);
-	}
-
-	@Override
-	public int extractMatter(EnumFacing direction, int amount, boolean simulate)
-	{
-		return storage.extractMatter(direction, amount, simulate);
-	}
+//	@Override
+//	public int getMatterStored()
+//	{
+//		return storage.getMatterStored();
+//	}
+//
+//	@Override
+//	public int getCapacity()
+//	{
+//		return storage.getCapacity();
+//	}
+//
+//	@Override
+//	public int receiveMatter(int amount, boolean simulate)
+//	{
+//		return storage.receiveMatter(amount, simulate);
+//	}
+//
+//	@Override
+//	public int extractMatter(int amount, boolean simulate)
+//	{
+//		return storage.extractMatter(amount, simulate);
+//	}
 
 	@Override
 	public void onPlaced(World world, EntityLivingBase entityLiving)
@@ -232,42 +248,6 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 	}
 
 	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		return storage.fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		return storage.drain(resource.amount, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		return storage.drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return fluid instanceof FluidMatterPlasma;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return fluid instanceof FluidMatterPlasma;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from)
-	{
-		return new FluidTankInfo[] {storage.getInfo()};
-	}
-
-	@Override
 	public TileEntity getTile()
 	{
 		return this;
@@ -295,5 +275,25 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 	public boolean canConnectFromSide(IBlockState blockState, EnumFacing side)
 	{
 		return true;
+	}
+
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if (capability == MatterOverdriveCapabilities.MATTER_HANDLER) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Nullable
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if (capability == MatterOverdriveCapabilities.MATTER_HANDLER) {
+			return (T)storage;
+		}
+		return super.getCapability(capability, facing);
 	}
 }

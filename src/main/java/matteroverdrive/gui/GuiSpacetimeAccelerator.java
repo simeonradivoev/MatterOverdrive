@@ -3,6 +3,7 @@ package matteroverdrive.gui;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.gui.element.ElementMatterStored;
 import matteroverdrive.gui.element.MOElementEnergy;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.tile.TileEntityMachineSpacetimeAccelerator;
 import net.minecraft.entity.player.InventoryPlayer;
 
@@ -18,7 +19,7 @@ public class GuiSpacetimeAccelerator extends MOGuiMachine<TileEntityMachineSpace
 	{
 		super(ContainerFactory.createMachineContainer(machine, inventoryPlayer), machine);
 
-		matterStored = new ElementMatterStored(this, 74, 39, machine.getMatterStorage());
+		matterStored = new ElementMatterStored(this, 74, 39, machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null));
 		energy = new MOElementEnergy(this, 100, 39, machine.getEnergyStorage());
 	}
 

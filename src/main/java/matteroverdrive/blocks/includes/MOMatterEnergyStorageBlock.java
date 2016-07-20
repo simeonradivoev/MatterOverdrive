@@ -1,5 +1,6 @@
 package matteroverdrive.blocks.includes;
 
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.tile.MOTileEntityMachineEnergy;
 import matteroverdrive.tile.MOTileEntityMachineMatter;
 import net.minecraft.block.material.Material;
@@ -38,11 +39,9 @@ public abstract class MOMatterEnergyStorageBlock extends MOBlockMachine
 					((MOTileEntityMachineEnergy)entity).setEnergyStored(stack.getTagCompound().getInteger("Energy"));
 				}
 			}
-			if (entity instanceof MOTileEntityMachineMatter)
-			{
-				if (this.keepsMatter)
-				{
-					((MOTileEntityMachineMatter)entity).setMatterStored(stack.getTagCompound().getInteger("Matter"));
+			if (entity.hasCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null)) {
+				if (this.keepsMatter) {
+					entity.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null).setMatterStored(stack.getTagCompound().getInteger("Matter"));
 				}
 			}
 		}

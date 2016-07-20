@@ -53,7 +53,7 @@ public class MatterOverdriveQuests
 	//public static GenericMultiQuest gmo;
 	//public static GenericMultiQuest trade_route;
 
-	public static void init(FMLInitializationEvent event)
+	public static void init()
 	{
 		initMatterOverdriveQuests();
 		initModdedQuests();
@@ -81,7 +81,7 @@ public class MatterOverdriveQuests
 		}, 1, 1, 120).setRandomItem(false).setAutoComplete(true), "to_the_power_of", 0).addQuestRewards(new ItemStackReward(MatterOverdriveItems.tritanium_ingot, 10), new ItemStackReward(MatterOverdriveItems.tritanium_plate, 4));
 	}
 
-	public static void register(FMLInitializationEvent event, Quests quests)
+	public static void register(Quests quests)
 	{
 		registerMatterOverdriveQuests(quests);
 		registerModdedQuests(quests);

@@ -19,7 +19,7 @@
 package matteroverdrive.gui.element;
 
 import matteroverdrive.Reference;
-import matteroverdrive.api.matter.IMatterStorage;
+import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MatterHelper;
 import matteroverdrive.util.RenderUtils;
@@ -33,13 +33,13 @@ public class ElementMatterStored extends MOElementBase
 {
 	public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(Reference.PATH_ELEMENTS + "Matter.png");
 	public static final int DEFAULT_SCALE = 42;
-	protected IMatterStorage storage;
+	protected IMatterHandler storage;
 	// If this is enabled, 1 pixel of energy will always show in the bar as long as it is non-zero.
 	protected boolean alwaysShowMinimum = false;
 	private int drain = 0;
 	private double drainPerTick = 0;
 
-	public ElementMatterStored(MOGuiBase gui, int posX, int posY, IMatterStorage storage)
+	public ElementMatterStored(MOGuiBase gui, int posX, int posY, IMatterHandler storage)
 	{
 
 		super(gui, posX, posY);

@@ -132,13 +132,25 @@ public class MatterOverdrive
 		MatterNetworkRegistry.register();
 		packetPipeline.registerPackets();
 		MatterOverdriveBioticStats.init(event);
-		MatterOverdriveBioticStats.registerAll(configHandler, MatterOverdrive.statRegistry);
+		MatterOverdriveBioticStats.registerAll(configHandler, statRegistry);
 		matterRegistry.preInit(event, configHandler);
 		MinecraftForge.EVENT_BUS.register(matterNetworkHandler);
 		MinecraftForge.EVENT_BUS.register(fluidNetworkHandler);
 		UpdateTabs();
 
 		proxy.preInit(event);
+
+		MatterOverdriveBlocks.register();
+		MatterOverdriveItems.register();
+		MatterOverdriveFluids.register();
+		MatterOverdriveBioticStats.configure();
+		MatterOverdriveDialogs.init(configHandler, dialogRegistry);
+		MatterOverdriveQuests.init();
+		MatterOverdriveQuests.register(quests);
+		MatterOverdriveSounds.register();
+		EntityVillagerMadScientist.registerDialogMessages(dialogRegistry, event.getSide());
+		MatterOverdriveCapabilities.init();
+
 		MatterOverdriveCompat.preInit(event);
 	}
 
@@ -150,16 +162,6 @@ public class MatterOverdrive
 		MinecraftForge.EVENT_BUS.register(entityHandler);
 		configHandler.init();
 		MatterOverdriveCompat.init(event);
-
-		MatterOverdriveBlocks.register(event);
-		MatterOverdriveItems.register(event);
-		MatterOverdriveFluids.register(event);
-		MatterOverdriveBioticStats.configure(event);
-		MatterOverdriveDialogs.init(event, configHandler, dialogRegistry);
-		MatterOverdriveQuests.init(event);
-		MatterOverdriveQuests.register(event, quests);
-		MatterOverdriveSounds.register();
-		EntityVillagerMadScientist.registerDialogMessages(dialogRegistry, event.getSide());
 
 		proxy.init(event);
 

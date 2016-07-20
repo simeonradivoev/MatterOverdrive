@@ -319,7 +319,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 			{
 				info = "POWER " + Math.round((1f - ((float)anomalyDistance / (float)(MAX_GRAVITATIONAL_ANOMALY_DISTANCE + 1))) * 100) + "%";
 				info += "\nCHARGE " + DecimalFormat.getPercentInstance().format((double)getEnergyStored(EnumFacing.DOWN) / (double)getMaxEnergyStored(EnumFacing.DOWN));
-				info += "\nMATTER " + DecimalFormat.getPercentInstance().format((double)getMatterStored() / (double)getMatterCapacity());
+				info += "\nMATTER " + DecimalFormat.getPercentInstance().format((double)matterStorage.getMatterStored() / (double)matterStorage.getCapacity());
 			}
 			else
 			{
@@ -392,7 +392,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 			if (entity instanceof IEnergyReceiver)
 			{
 				int receivedEnergy = ((IEnergyReceiver)entity).receiveEnergy(dir.getOpposite(), energy, false);
-				modifyEnergyStored(-receivedEnergy);
+				energyStorage.modifyEnergyStored(-receivedEnergy);
 			}
 		}
 	}
@@ -412,7 +412,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 			{
 				int maxExtracted = Math.min(energyStorage.getMaxExtract(), energyStorage.getEnergyStored());
 				int extracted = MOEnergyHelper.insertEnergyIntoContainer(this.inventory.getStackInSlot(energySlotID), maxExtracted, false);
-				modifyEnergyStored(extracted);
+				energyStorage.modifyEnergyStored(extracted);
 			}
 		}
 	}
@@ -444,7 +444,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 	{
 		return getEnergyEfficiency() > 0
 				&& getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored()
-				&& getMatterStorage().getMatterStored() > getMatterDrainPerTick();
+				&& matterStorage.getMatterStored() > getMatterDrainPerTick();
 	}
 
 	public float getEnergyEfficiency()
@@ -499,12 +499,6 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 	protected void onMachineEvent(MachineEvent event)
 	{
 
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return false;
 	}
 
 	@Override

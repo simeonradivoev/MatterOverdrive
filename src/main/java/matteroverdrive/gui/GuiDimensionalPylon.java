@@ -1,8 +1,10 @@
 package matteroverdrive.gui;
 
 import matteroverdrive.Reference;
+import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.container.ContainerDimensionalPylon;
 import matteroverdrive.gui.element.ElementDoubleCircleBar;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.machines.dimensional_pylon.TileEntityMachineDimensionalPylon;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MatterHelper;
@@ -40,7 +42,8 @@ public class GuiDimensionalPylon extends MOGuiMachine<TileEntityMachineDimension
 	{
 		super.updateElementInformation();
 
-		powerBar.setProgressRight((float)machine.getMatterStorage().getMatterStored() / (float)machine.getMatterStorage().getCapacity());
+		IMatterHandler storage = machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null);
+		powerBar.setProgressRight((float)storage.getMatterStored() / (float)storage.getCapacity());
 		powerBar.setProgressLeft((float)machine.getEnergyStorage().getEnergyStored() / (float)machine.getEnergyStorage().getMaxEnergyStored());
 	}
 

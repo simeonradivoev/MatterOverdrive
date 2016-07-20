@@ -22,7 +22,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.IUpgrade;
 import matteroverdrive.api.matter.IMatterItem;
 import matteroverdrive.api.matter.IMatterPatternStorage;
-import matteroverdrive.api.matter.IMatterProvider;
+import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.items.MatterScanner;
 import net.minecraft.block.Block;
@@ -35,12 +35,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 
@@ -82,12 +81,11 @@ public class MatterHelper
 	}
 
 
-	public static int Transfer(EnumFacing toDir, int amount, IMatterProvider from, IFluidHandler to)
+	public static int Transfer(int amount, IMatterHandler from, IFluidHandler to)
 	{
-		EnumFacing oposite = toDir.getOpposite();
-		int extract = from.extractMatter(toDir, amount, true);
-		int recived = to.fill(oposite, new FluidStack(MatterOverdriveFluids.matterPlasma, extract), true);
-		from.extractMatter(toDir, recived, false);
+		int extract = from.extractMatter(amount, true);
+		int recived = to.fill(new FluidStack(MatterOverdriveFluids.matterPlasma, extract), true);
+		from.extractMatter(recived, false);
 		return recived;
 	}
 

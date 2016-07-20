@@ -9,6 +9,7 @@ import matteroverdrive.client.render.RenderParticlesHandler;
 import matteroverdrive.data.MachineEnergyStorage;
 import matteroverdrive.fluids.FluidMatterPlasma;
 import matteroverdrive.fx.LightningCircle;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
@@ -32,12 +33,16 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -237,25 +242,25 @@ public class TileEntityMachineDimensionalPylon extends MOTileEntityMachineMatter
 		return super.isActive();
 	}
 
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		if (from == EnumFacing.DOWN)
-		{
-			return fluid instanceof FluidMatterPlasma;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		if (from == EnumFacing.DOWN)
-		{
-			return fluid instanceof FluidMatterPlasma;
-		}
-		return false;
-	}
+//	@Override
+//	public boolean canFill(EnumFacing from, Fluid fluid)
+//	{
+//		if (from == EnumFacing.DOWN)
+//		{
+//			return fluid instanceof FluidMatterPlasma;
+//		}
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean canDrain(EnumFacing from, Fluid fluid)
+//	{
+//		if (from == EnumFacing.DOWN)
+//		{
+//			return fluid instanceof FluidMatterPlasma;
+//		}
+//		return false;
+//	}
 
 	@Override
 	public boolean canConnectEnergy(EnumFacing from)
@@ -309,7 +314,7 @@ public class TileEntityMachineDimensionalPylon extends MOTileEntityMachineMatter
 					{
 						TileEntityMachineDimensionalPylon tileEntityDimensionalPylon = (TileEntityMachineDimensionalPylon)tileEntity;
 						tileEntityDimensionalPylon.addChild(getPos());
-						this.matterStorage = tileEntityDimensionalPylon.getMatterStorage();
+						this.matterStorage = tileEntityDimensionalPylon.matterStorage;
 						this.energyStorage = (MachineEnergyStorage<TileEntityMachineDimensionalPylon>)tileEntityDimensionalPylon.getEnergyStorage();
 					}
 					else
@@ -588,5 +593,27 @@ public class TileEntityMachineDimensionalPylon extends MOTileEntityMachineMatter
 	public int getCharge()
 	{
 		return charge;
+	}
+
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if (facing == EnumFacing.DOWN && (capability == MatterOverdriveCapabilities.MATTER_HANDLER || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY))
+		{
+			return true;
+		}
+		return ((TileEntity)this).hasCapability(capability, facing);
+	}
+
+	@Nonnull
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if (facing == EnumFacing.DOWN && (capability == MatterOverdriveCapabilities.MATTER_HANDLER || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY))
+		{
+			return (T)matterStorage;
+		}
+		return ((TileEntity)this).getCapability(capability, facing);
 	}
 }

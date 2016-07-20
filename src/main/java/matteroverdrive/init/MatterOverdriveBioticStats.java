@@ -85,7 +85,7 @@ public class MatterOverdriveBioticStats
 		oxygen = new BioticstatOxygen("oxygen", 12);
 	}
 
-	public static void configure(FMLInitializationEvent event)
+	public static void configure()
 	{
 		teleport.addReqiredItm(new ItemStack(MatterOverdriveItems.h_compensator));
 		teleport.addToEnabledBlacklist(shield);

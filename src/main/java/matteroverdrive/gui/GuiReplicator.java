@@ -27,6 +27,7 @@ import matteroverdrive.container.MOBaseContainer;
 import matteroverdrive.data.matter_network.ItemPatternMapping;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.gui.pages.PageTasks;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.machines.replicator.TileEntityMachineReplicator;
 import matteroverdrive.matter_network.tasks.MatterNetworkTaskReplicatePattern;
 import matteroverdrive.network.packet.server.task_queue.PacketRemoveTask;
@@ -54,7 +55,7 @@ public class GuiReplicator extends MOGuiNetworkMachine<TileEntityMachineReplicat
 	{
 		super(new ContainerReplicator(inventoryPlayer, entity), entity);
 		name = "replicator";
-		matterElement = new ElementMatterStored(this, 141, 39, machine.getMatterStorage());
+		matterElement = new ElementMatterStored(this, 141, 39, machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null));
 		energyElement = new MOElementEnergy(this, 167, 39, machine.getEnergyStorage());
 		replicate_progress = new ElementDualScaled(this, 32, 52);
 		outputSlot = new ElementInventorySlot(this, this.getContainer().getSlotAt(machine.OUTPUT_SLOT_ID), 70, 52, 22, 22, "big");

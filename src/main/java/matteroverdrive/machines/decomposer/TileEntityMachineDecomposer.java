@@ -19,11 +19,10 @@
 package matteroverdrive.machines.decomposer;
 
 import matteroverdrive.api.inventory.UpgradeTypes;
-import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.MatterSlot;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
-import matteroverdrive.init.MatterOverdriveFluids;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
@@ -37,8 +36,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -117,13 +114,13 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 				{
 					EnumFacing dir = EnumFacing.VALUES[i];
 					TileEntity e = worldObj.getTileEntity(getPos().offset(dir));
-					if (e instanceof IMatterHandler)
+					EnumFacing opposite = dir.getOpposite();
+					if (e != null && e.hasCapability(MatterOverdriveCapabilities.MATTER_HANDLER, opposite))
 					{
-						EnumFacing oposite = dir.getOpposite();
-						int recived = ((IMatterHandler)e).fill(oposite, new FluidStack(MatterOverdriveFluids.matterPlasma, matterStorage.getFluidAmount()), true);
-						if (recived != 0)
+						int received = e.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, opposite).receiveMatter(matterStorage.getFluidAmount(), true);
+						if (received != 0)
 						{
-							matterStorage.setMatterStored(Math.max(0, matterStorage.getMatterStored() - recived));
+							matterStorage.setMatterStored(Math.max(0, matterStorage.getMatterStored() - received));
 							updateClientMatter();
 						}
 					}
@@ -165,7 +162,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 				&& this.getStackInSlot(INPUT_SLOT_ID) != null
 				&& MatterHelper.containsMatter(this.getStackInSlot(INPUT_SLOT_ID))
 				&& isItemValidForSlot(INPUT_SLOT_ID, getStackInSlot(INPUT_SLOT_ID))
-				&& matter <= this.getMatterCapacity() - this.getMatterStored()
+				&& matter <= this.matterStorage.getCapacity() - this.matterStorage.getMatterStored()
 				&& canPutInOutput(matter);
 	}
 
@@ -304,12 +301,6 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 	}
 
 	@Override
-	public int receiveMatter(EnumFacing side, int amount, boolean simulate)
-	{
-		return 0;
-	}
-
-	@Override
 	public boolean isAffectedByUpgrade(UpgradeTypes type)
 	{
 		return upgradeTypes.contains(type);
@@ -324,11 +315,5 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 			return (float)(decomposeTime) / speed;
 		}
 		return 0;
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return false;
 	}
 }

@@ -72,9 +72,9 @@ public class MachineMatterStorage<T extends MOTileEntityMachineMatter> extends M
 	}
 
 	@Override
-	public int receiveMatter(EnumFacing side, int amount, boolean simulate)
+	public int receiveMatter(int amount, boolean simulate)
 	{
-		int received = super.receiveMatter(side, amount, simulate);
+		int received = super.receiveMatter(amount, simulate);
 		if (!simulate && received != 0)
 		{
 			machine.updateClientMatter();

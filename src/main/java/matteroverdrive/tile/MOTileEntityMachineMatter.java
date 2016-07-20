@@ -19,39 +19,38 @@
 package matteroverdrive.tile;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.compat.modules.waila.IWailaBodyProvider;
 import matteroverdrive.data.MachineMatterStorage;
-import matteroverdrive.fluids.FluidMatterPlasma;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.client.PacketMatterUpdate;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IMatterHandler, IWailaBodyProvider, IFluidHandler
+public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnergy implements IWailaBodyProvider
 {
 	protected MachineMatterStorage matterStorage;
 
 	public MOTileEntityMachineMatter(int upgradesCount)
 	{
 		super(upgradesCount);
-		matterStorage = new MachineMatterStorage(this, 32768);
+		matterStorage = new MachineMatterStorage<>(this, 32768);
 	}
 
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories, boolean toDisk)
 	{
 		super.writeCustomNBT(nbt, categories, toDisk);
-		if (categories.contains(MachineNBTCategory.DATA) && getMatterStorage() != null)
+		if (categories.contains(MachineNBTCategory.DATA) && matterStorage != null)
 		{
-			getMatterStorage().writeToNBT(nbt);
+			matterStorage.writeToNBT(nbt);
 		}
 
 	}
@@ -60,129 +59,11 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	public void readCustomNBT(NBTTagCompound nbt, EnumSet<MachineNBTCategory> categories)
 	{
 		super.readCustomNBT(nbt, categories);
-		if (categories.contains(MachineNBTCategory.DATA) && getMatterStorage() != null)
+		if (categories.contains(MachineNBTCategory.DATA) && matterStorage != null)
 		{
-			getMatterStorage().readFromNBT(nbt);
+			matterStorage.readFromNBT(nbt);
 		}
 
-	}
-
-	@Override
-	public int getMatterStored()
-	{
-		if (getMatterStorage() != null)
-		{
-			return this.getMatterStorage().getMatterStored();
-		}
-		return 0;
-	}
-
-	public void setMatterStored(int matter)
-	{
-		if (getMatterStorage() != null)
-		{
-			getMatterStorage().setMatterStored(matter);
-		}
-	}
-
-	@Override
-	public int getMatterCapacity()
-	{
-		if (getMatterStorage() != null)
-		{
-			return getMatterStorage().getCapacity();
-		}
-		return 0;
-	}
-
-	@Override
-	public int receiveMatter(EnumFacing side, int amount, boolean simulate)
-	{
-		if (getMatterStorage() != null)
-		{
-			return getMatterStorage().receiveMatter(side, amount, simulate);
-		}
-		return 0;
-	}
-
-	@Override
-	public int extractMatter(EnumFacing direction, int amount, boolean simulate)
-	{
-		if (getMatterStorage() != null)
-		{
-			return getMatterStorage().extractMatter(direction, amount, simulate);
-		}
-		return 0;
-	}
-
-	protected int modifyEnergyStored(int amount)
-	{
-		int energyModified = energyStorage.modifyEnergyStored(amount);
-		if (energyModified != 0)
-		{
-			UpdateClientPower();
-		}
-		return energyModified;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		if (getMatterStorage() != null)
-		{
-			return getMatterStorage().fill(resource, doFill);
-		}
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		if (getMatterStorage() != null)
-		{
-			return getMatterStorage().drain(resource.amount, doDrain);
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		if (getMatterStorage() != null)
-		{
-			return getMatterStorage().drain(maxDrain, doDrain);
-		}
-		return null;
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return fluid instanceof FluidMatterPlasma;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return fluid instanceof FluidMatterPlasma;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from)
-	{
-		if (getMatterStorage() != null)
-		{
-			return new FluidTankInfo[] {getMatterStorage().getInfo()};
-		}
-		return new FluidTankInfo[0];
-	}
-
-	public MachineMatterStorage getMatterStorage()
-	{
-		return this.matterStorage;
 	}
 
 	public void updateClientMatter()
@@ -198,11 +79,11 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	{
 		super.readFromPlaceItem(itemStack);
 
-		if (itemStack != null && getMatterStorage() != null)
+		if (itemStack != null && matterStorage != null)
 		{
 			if (itemStack.hasTagCompound())
 			{
-				getMatterStorage().readFromNBT(itemStack.getTagCompound());
+				matterStorage.readFromNBT(itemStack.getTagCompound());
 			}
 		}
 	}
@@ -212,16 +93,16 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 	{
 		super.writeToDropItem(itemStack);
 
-		if (itemStack != null && getMatterStorage() != null)
+		if (itemStack != null && matterStorage != null)
 		{
-			if (getMatterStorage().getMatterStored() > 0)
+			if (matterStorage.getMatterStored() > 0)
 			{
 				if (!itemStack.hasTagCompound())
 				{
 					itemStack.setTagCompound(new NBTTagCompound());
 				}
 
-				getMatterStorage().writeToNBT(itemStack.getTagCompound());
+				matterStorage.writeToNBT(itemStack.getTagCompound());
 				itemStack.getTagCompound().setInteger("MaxMatter", matterStorage.getCapacity());
 				itemStack.getTagCompound().setInteger("MatterSend", matterStorage.getMaxExtract());
 				itemStack.getTagCompound().setInteger("MatterReceive", matterStorage.getMaxReceive());
@@ -229,7 +110,31 @@ public abstract class MOTileEntityMachineMatter extends MOTileEntityMachineEnerg
 		}
 	}
 
-//	WAILA
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if (capability == MatterOverdriveCapabilities.MATTER_HANDLER ||
+				capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		{
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Nonnull
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if (capability == MatterOverdriveCapabilities.MATTER_HANDLER ||
+				capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		{
+			return (T)matterStorage;
+		}
+		return super.getCapability(capability, facing);
+	}
+
+	//	WAILA
 	/*@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		TileEntity te = accessor.getTileEntity();

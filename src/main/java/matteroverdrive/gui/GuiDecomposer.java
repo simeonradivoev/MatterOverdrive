@@ -22,6 +22,7 @@ import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.container.ContainerMachine;
 import matteroverdrive.gui.element.*;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.machines.decomposer.TileEntityMachineDecomposer;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -37,7 +38,7 @@ public class GuiDecomposer extends MOGuiMachine<TileEntityMachineDecomposer>
 	{
 		super(ContainerFactory.createMachineContainer(entity, inventoryPlayer), entity);
 		name = "decomposer";
-		matterElement = new ElementMatterStored(this, 74, 39, machine.getMatterStorage());
+		matterElement = new ElementMatterStored(this, 74, 39, machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null));
 		energyElement = new MOElementEnergy(this, 100, 39, machine.getEnergyStorage());
 		decompose_progress = new ElementDualScaled(this, 32, 55);
 		outputSlot = new ElementInventorySlot(this, getContainer().getSlotAt(machine.OUTPUT_SLOT_ID), 129, 55, 22, 22, "big");

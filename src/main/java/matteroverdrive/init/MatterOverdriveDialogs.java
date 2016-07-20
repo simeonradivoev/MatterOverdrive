@@ -24,6 +24,7 @@ import matteroverdrive.data.dialog.*;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -38,7 +39,7 @@ public class MatterOverdriveDialogs
 	public static DialogMessage trade;
 	//public static DialogMessage tradeRouteQuest;
 
-	public static void init(FMLInitializationEvent event, ConfigurationHandler configurationHandler, IDialogRegistry registry)
+	public static void init(ConfigurationHandler configurationHandler, IDialogRegistry registry)
 	{
 		backMessage = new DialogMessageBack(null, MOStringHelper.formatVariations("dialog.generic.back", "question", 3)).setUnlocalized(true);
 		registry.registerMessage(new ResourceLocation(Reference.MOD_ID, "back"), backMessage);
@@ -55,7 +56,7 @@ public class MatterOverdriveDialogs
 		//MatterOverdriveDialogs.tradeRouteQuest.addOption(tradeRouteQuest);
 		//tradeRouteQuest.addOption(backHomeMessage);
 
-		if (event.getSide() == Side.CLIENT)
+		if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
 		{
 			backMessage.setHoloIcon("mini_quit");
 			quitMessage.setHoloIcon("mini_quit");

@@ -2,11 +2,13 @@ package matteroverdrive.machines.replicator;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.api.matter.IMatterHandler;
 import matteroverdrive.api.network.MatterNetworkTaskState;
 import matteroverdrive.blocks.BlockReplicator;
 import matteroverdrive.data.matter_network.ItemPattern;
 import matteroverdrive.handler.GoogleAnalyticsCommon;
 import matteroverdrive.handler.SoundHandler;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.matter_network.components.TaskQueueComponent;
@@ -123,9 +125,9 @@ public class ComponentTaskProcessingReplicator extends TaskQueueComponent<Matter
 				if (machine.failReplicate(MatterHelper.getMatterAmountFromItem(newItem)))
 				{
 					MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_MACHINES, GoogleAnalyticsCommon.EVENT_ACTION_REPLICATION_FAIL, newItem.getUnlocalizedName(), null);
-					int matter = machine.getMatterStorage().getMatterStored();
-					machine.setMatterStored(matter - matterAmount);
-					return;
+					IMatterHandler storage = machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null);
+					int matter = storage.getMatterStored();
+					storage.setMatterStored(matter - matterAmount);
 				}
 			}
 			else
@@ -133,8 +135,9 @@ public class ComponentTaskProcessingReplicator extends TaskQueueComponent<Matter
 				if (machine.putInOutput(newItem))
 				{
 					MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_MACHINES, GoogleAnalyticsCommon.EVENT_ACTION_REPLICATE, newItem.getUnlocalizedName(), null);
-					int matter = machine.getMatterStorage().getMatterStored();
-					machine.setMatterStored(matter - matterAmount);
+					IMatterHandler storage = machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null);
+					int matter = storage.getMatterStored();
+					storage.setMatterStored(matter - matterAmount);
 					MatterNetworkTaskReplicatePattern task = getTaskQueue().peek();
 					task.setAmount(task.getAmount() - 1);
 					if (task.getAmount() <= 0)
@@ -194,7 +197,7 @@ public class ComponentTaskProcessingReplicator extends TaskQueueComponent<Matter
 		{
 			ItemStack item = getTaskQueue().peek().getPattern().toItemStack(false);
 			int matter = MatterHelper.getMatterAmountFromItem(item);
-			return machine.getMatterStored() >= matter && machine.canReplicateIntoOutput(item) && machine.canReplicateIntoSecoundOutput(matter);
+			return machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null).getMatterStored() >= matter && machine.canReplicateIntoOutput(item) && machine.canReplicateIntoSecoundOutput(matter);
 		}
 		return false;
 	}

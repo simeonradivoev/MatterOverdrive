@@ -26,6 +26,7 @@ import matteroverdrive.api.transport.TransportLocation;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.TeleportFlashDriveSlot;
 import matteroverdrive.fx.ReplicatorParticle;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
@@ -39,6 +40,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -46,11 +48,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -395,17 +401,17 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		return 0.5f;
 	}
 
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return from != EnumFacing.UP && super.canFill(from, fluid);
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return from != EnumFacing.UP && super.canDrain(from, fluid);
-	}
+//	@Override
+//	public boolean canFill(EnumFacing from, Fluid fluid)
+//	{
+//		return from != EnumFacing.UP && super.canFill(from, fluid);
+//	}
+//
+//	@Override
+//	public boolean canDrain(EnumFacing from, Fluid fluid)
+//	{
+//		return from != EnumFacing.UP && super.canDrain(from, fluid);
+//	}
 
 	@Override
 	public boolean isAffectedByUpgrade(UpgradeTypes type)
@@ -435,8 +441,27 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		return new int[0];
 	}
 
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if (facing != EnumFacing.UP && (capability == MatterOverdriveCapabilities.MATTER_HANDLER || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)) {
+			return true;
+		}
+		return ((TileEntity)this).hasCapability(capability, facing);
+	}
 
-    /*//region WAILA
+	@Nonnull
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if (facing != EnumFacing.UP && (capability == MatterOverdriveCapabilities.MATTER_HANDLER || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)) {
+			return (T)matterStorage;
+		}
+		return ((TileEntity)this).getCapability(capability, facing);
+	}
+
+	/*//region WAILA
 	@Override
 	@Optional.Method(modid = "Waila")
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
