@@ -57,7 +57,7 @@ public class SecurityProtocol extends MOBaseItem
 	}
 
 	@Override
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		super.addDetails(itemstack, player, infos);
 

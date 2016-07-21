@@ -62,7 +62,7 @@ public class RougeAndroidParts extends BionicPart implements IBionicPart
 		return damage;
 	}
 
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		if (itemstack.getTagCompound() != null)
 		{

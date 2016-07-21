@@ -64,7 +64,7 @@ public class ItemUpgrade extends MOBaseItem implements IUpgrade
 	}
 
 	@Override
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		super.addDetails(itemstack, player, infos);
 		Map<UpgradeTypes, Double> stats = getUpgrades(itemstack);

@@ -19,12 +19,17 @@
 package matteroverdrive.tile;
 
 import matteroverdrive.api.inventory.UpgradeTypes;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.util.MOEnergyHelper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
+import net.minecraftforge.common.capabilities.Capability;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by Simeon on 4/9/2015.
@@ -41,8 +46,8 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
 	{
 		super(2);
 		energyStorage.setCapacity(ENERGY_STORAGE);
-		energyStorage.setMaxExtract(MAX_ENERGY_EXTRACT);
-		energyStorage.setMaxReceive(0);
+		energyStorage.setOutputRate(MAX_ENERGY_EXTRACT);
+		energyStorage.setInputRate(0);
 	}
 
 	@Override
@@ -78,7 +83,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
 					{
 						UpdateClientPower();
 					}
-					energyStorage.setEnergyStored(energy);
+					setEnergyStored(energy);
 				}
 			}
 		}
@@ -114,7 +119,7 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
 				}
 			}
 
-			energyStorage.setEnergyStored(energy);
+			setEnergyStored(energy);
 		}
 	}
 
@@ -201,5 +206,27 @@ public class TileEntityMachineSolarPanel extends MOTileEntityMachineEnergy
 	public int[] getSlotsForFace(EnumFacing side)
 	{
 		return new int[0];
+	}
+
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if (capability == MatterOverdriveCapabilities.TESLA_PRODUCER)
+		{
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Nonnull
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if (capability == MatterOverdriveCapabilities.TESLA_PRODUCER)
+		{
+			return (T)energyStorage;
+		}
+		return super.getCapability(capability, facing);
 	}
 }

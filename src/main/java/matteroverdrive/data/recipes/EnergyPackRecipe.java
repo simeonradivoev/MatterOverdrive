@@ -19,6 +19,7 @@
 package matteroverdrive.data.recipes;
 
 import cofh.api.energy.IEnergyContainerItem;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.Battery;
 import net.minecraft.inventory.InventoryCrafting;
@@ -39,6 +40,7 @@ public class EnergyPackRecipe extends ShapelessRecipes
 		{
 			if (stack != null && stack.getItem() instanceof Battery)
 			{
+
 				((Battery)stack.getItem()).setEnergyStored(stack, ((Battery)stack.getItem()).getMaxEnergyStored(stack));
 				getRecipeOutput().stackSize = ((Battery)stack.getItem()).getEnergyStored(stack) / MatterOverdriveItems.energyPack.getEnergyAmount(getRecipeOutput());
 			}

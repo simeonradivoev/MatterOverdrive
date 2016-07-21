@@ -49,7 +49,7 @@ public abstract class BionicPart extends MOBaseItem implements IBionicPart
 		this.setCreativeTab(MatterOverdrive.tabMatterOverdrive_androidParts);
 	}
 
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		super.addDetails(itemstack, player, infos);
 		Multimap<String, AttributeModifier> multimap = getModifiers(MOPlayerCapabilityProvider.GetAndroidCapability(player), itemstack);

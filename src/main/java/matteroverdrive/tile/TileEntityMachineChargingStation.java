@@ -50,8 +50,8 @@ public class TileEntityMachineChargingStation extends MOTileEntityMachineEnergy 
 	{
 		super(2);
 		energyStorage.setCapacity(ENERGY_CAPACITY);
-		energyStorage.setMaxExtract(ENERGY_TRANSFER);
-		energyStorage.setMaxReceive(ENERGY_TRANSFER);
+		energyStorage.setOutputRate(ENERGY_TRANSFER);
+		energyStorage.setInputRate(ENERGY_TRANSFER);
 		playerSlotsHotbar = true;
 		playerSlotsMain = true;
 	}

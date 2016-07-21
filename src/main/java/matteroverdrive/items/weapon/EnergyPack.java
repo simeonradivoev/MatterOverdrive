@@ -43,7 +43,7 @@ public class EnergyPack extends MOBaseItem implements IEnergyPack
 		return true;
 	}
 
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		super.addDetails(itemstack, player, infos);
 		infos.add(TextFormatting.YELLOW + MOEnergyHelper.formatEnergy(null, getEnergyAmount(itemstack)));

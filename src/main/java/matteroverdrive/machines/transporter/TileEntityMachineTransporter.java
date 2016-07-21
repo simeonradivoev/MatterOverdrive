@@ -90,7 +90,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 	{
 		super(5);
 		energyStorage.setCapacity(ENERGY_STORAGE);
-		energyStorage.setMaxExtract(MAX_ENERGY_EXTRACT);
+		energyStorage.setOutputRate(MAX_ENERGY_EXTRACT);
 		matterStorage.setCapacity(512);
 		locations = new ArrayList<>();
 		selectedLocation = 0;

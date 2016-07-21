@@ -26,16 +26,21 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.MachineEnergyStorage;
 import matteroverdrive.data.inventory.EnergySlot;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.machines.MOTileEntityMachine;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.network.packet.client.PacketPowerUpdate;
 import matteroverdrive.util.MOEnergyHelper;
+import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 /**
@@ -50,7 +55,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 	public MOTileEntityMachineEnergy(int upgradeCount)
 	{
 		super(upgradeCount);
-		this.energyStorage = new MachineEnergyStorage(this, 512);
+		this.energyStorage = new MachineEnergyStorage<>(512, 512, 512, this);
 	}
 
 	@Override
@@ -66,7 +71,8 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 		super.writeCustomNBT(nbt, categories, toDisk);
 		if (categories.contains(MachineNBTCategory.DATA))
 		{
-			energyStorage.writeToNBT(nbt);
+			NBTTagCompound energy = energyStorage.serializeNBT();
+			nbt.setTag("Energy", energy);
 		}
 	}
 
@@ -76,7 +82,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 		super.readCustomNBT(nbt, categories);
 		if (categories.contains(MachineNBTCategory.DATA))
 		{
-			energyStorage.readFromNBT(nbt);
+			energyStorage.deserializeNBT(nbt.getCompoundTag("Energy"));
 		}
 	}
 
@@ -174,9 +180,11 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 		return this.getMaxEnergyStored(dir) - this.getEnergyStored(dir);
 	}
 
-	public void setEnergyStored(int storage)
+	public void setEnergyStored(int stored)
 	{
-		this.energyStorage.setEnergyStored(storage);
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setInteger("TeslaPower", stored);
+		this.energyStorage.deserializeNBT(tag);
 
 	}
 
@@ -194,7 +202,7 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 		{
 			if (itemStack.hasTagCompound())
 			{
-				energyStorage.readFromNBT(itemStack.getTagCompound());
+				energyStorage.deserializeNBT(itemStack.getTagCompound().getCompoundTag("Energy"));
 			}
 		}
 	}
@@ -213,11 +221,32 @@ public abstract class MOTileEntityMachineEnergy extends MOTileEntityMachine impl
 					itemStack.setTagCompound(new NBTTagCompound());
 				}
 
-				energyStorage.writeToNBT(itemStack.getTagCompound());
-				itemStack.getTagCompound().setInteger("MaxEnergy", energyStorage.getMaxEnergyStored());
-				itemStack.getTagCompound().setInteger("PowerSend", energyStorage.getMaxExtract());
-				itemStack.getTagCompound().setInteger("PowerReceive", energyStorage.getMaxReceive());
+				NBTTagCompound energy = energyStorage.serializeNBT();
+				itemStack.getTagCompound().setTag("Energy", energy);
 			}
 		}
 	}
+
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if (capability == MatterOverdriveCapabilities.TESLA_HOLDER || capability == MatterOverdriveCapabilities.TESLA_CONSUMER)
+		{
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Nonnull
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if (capability == MatterOverdriveCapabilities.TESLA_HOLDER || capability == MatterOverdriveCapabilities.TESLA_CONSUMER)
+		{
+			return (T)energyStorage;
+		}
+		return super.getCapability(capability, facing);
+	}
+
 }

@@ -19,11 +19,20 @@
 package matteroverdrive.items.includes;
 
 import cofh.api.energy.IEnergyContainerItem;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.util.MOEnergyHelper;
+import net.darkhax.tesla.api.BaseTeslaContainer;
+import net.darkhax.tesla.api.ITeslaHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static matteroverdrive.util.MOEnergyHelper.setDefaultEnergyTag;
@@ -77,10 +86,10 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	}
 
 	@Override
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack stack, EntityPlayer player, List<String> infos)
 	{
-		this.TagCompountCheck(itemstack);
-		infos.add(TextFormatting.YELLOW + MOEnergyHelper.formatEnergy(getEnergyStored(itemstack), getMaxEnergyStored(itemstack)));
+		ITeslaHolder holder = stack.getCapability(MatterOverdriveCapabilities.TESLA_HOLDER, null);
+		infos.add(TextFormatting.YELLOW + MOEnergyHelper.formatEnergy(holder.getStoredPower(), holder.getCapacity()));
 	}
 
 	@Override
@@ -119,49 +128,26 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	@Override
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate)
 	{
-
-		this.TagCompountCheck(container);
-
-		int energy = container.getTagCompound().getInteger("Energy");
-		int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
-
-		if (!simulate)
-		{
-			energy += energyReceived;
-			container.getTagCompound().setInteger("Energy", energy);
-		}
-		return energyReceived;
+		return (int)container.getCapability(MatterOverdriveCapabilities.TESLA_CONSUMER, null).givePower(maxReceive, simulate);
 	}
 
 	@Override
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate)
 	{
-
-		if (container.getTagCompound() != null && container.getTagCompound().hasKey("Energy"))
-		{
-			int energy = container.getTagCompound().getInteger("Energy");
-			int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
-
-			if (!simulate)
-			{
-				energy -= energyExtracted;
-				container.getTagCompound().setInteger("Energy", energy);
-			}
-			return energyExtracted;
-		}
-		return 0;
+		return (int)container.getCapability(MatterOverdriveCapabilities.TESLA_PRODUCER, null).takePower(maxExtract, simulate);
 	}
 
-	protected void setEnergyStored(ItemStack container, int amount)
+	public void setEnergyStored(ItemStack container, int amount)
 	{
-		setDefaultEnergyTag(container, amount);
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setLong("TeslaPower", amount);
+		((BaseTeslaContainer)container.getCapability(MatterOverdriveCapabilities.TESLA_HOLDER, null)).deserializeNBT(tag);
 	}
 
 	@Override
 	public int getEnergyStored(ItemStack container)
 	{
-		this.TagCompountCheck(container);
-		return container.getTagCompound().getInteger("Energy");
+		return (int)container.getCapability(MatterOverdriveCapabilities.TESLA_HOLDER, null).getStoredPower();
 	}
 
 	@Override
@@ -169,4 +155,50 @@ public class MOItemEnergyContainer extends MOBaseItem implements IEnergyContaine
 	{
 		return capacity;
 	}
+
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
+	{
+		return new TeslaProvider(capacity, maxReceive, maxExtract);
+	}
+
+	public static class TeslaProvider implements ICapabilitySerializable<NBTTagCompound> {
+
+		private BaseTeslaContainer tesla;
+
+		public TeslaProvider(int capacity, int input, int output)
+		{
+			tesla = new BaseTeslaContainer(capacity, input, output);
+		}
+
+		@Override
+		public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+		{
+			return capability == MatterOverdriveCapabilities.TESLA_HOLDER || capability == MatterOverdriveCapabilities.TESLA_PRODUCER || capability == MatterOverdriveCapabilities.TESLA_CONSUMER;
+		}
+
+		@Override
+		@SuppressWarnings("unchecked")
+		public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+		{
+			if (capability == MatterOverdriveCapabilities.TESLA_HOLDER || capability == MatterOverdriveCapabilities.TESLA_PRODUCER || capability == MatterOverdriveCapabilities.TESLA_CONSUMER)
+			{
+				return (T)tesla;
+			}
+			return null;
+		}
+
+		@Override
+		public NBTTagCompound serializeNBT()
+		{
+			return tesla.serializeNBT();
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound tag)
+		{
+			tesla.deserializeNBT(tag);
+		}
+	}
+
 }

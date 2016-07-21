@@ -21,6 +21,8 @@ package matteroverdrive.util;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.handler.ConfigurationHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -28,19 +30,26 @@ import net.minecraft.util.EnumFacing;
 
 public class MOEnergyHelper
 {
-	public static final String ENERGY_UNIT = " RF";
+	public static String ENERGY_UNIT;
 
-	public static String formatEnergy(int energy, int capacity)
+	static {
+		ENERGY_UNIT = " " + MatterOverdrive.configHandler.config.getString("energyUnit", ConfigurationHandler.CATEGORY_CLIENT, "RF", "The unit to display energy in.", new String[]{"RF", "T"});
+		MatterOverdrive.configHandler.subscribe(config -> {
+			ENERGY_UNIT = " " + config.config.getString("energyUnit", ConfigurationHandler.CATEGORY_CLIENT, "RF", "The unit to display energy in.", new String[]{"RF", "T"});
+		});
+	}
+
+	public static String formatEnergy(long energy, long capacity)
 	{
 		return MOStringHelper.formatNumber(energy) + " / " + MOStringHelper.formatNumber(capacity) + ENERGY_UNIT;
 	}
 
-	public static String formatEnergy(int energy)
+	public static String formatEnergy(long energy)
 	{
 		return formatEnergy("Charge: ", energy);
 	}
 
-	public static String formatEnergy(String prefix, int energy)
+	public static String formatEnergy(String prefix, long energy)
 	{
 		return (prefix != null ? prefix : "") + MOStringHelper.formatNumber(energy) + ENERGY_UNIT;
 	}

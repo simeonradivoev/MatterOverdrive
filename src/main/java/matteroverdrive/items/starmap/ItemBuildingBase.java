@@ -50,7 +50,7 @@ public class ItemBuildingBase extends ItemBuildingAbstract implements IPlanetSta
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		super.addDetails(itemstack, player, infos);
 		if (infos.size() >= 2)

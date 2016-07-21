@@ -39,8 +39,8 @@ public class TileEntityMachineSpacetimeAccelerator extends MOTileEntityMachineMa
 		matterStorage.setMaxReceive(16);
 		matterStorage.setMaxExtract(0);
 		energyStorage.setCapacity(512000);
-		energyStorage.setMaxExtract(0);
-		energyStorage.setMaxReceive(512);
+		energyStorage.setOutputRate(0);
+		energyStorage.setInputRate(512);
 		playerSlotsHotbar = true;
 		playerSlotsMain = true;
 	}

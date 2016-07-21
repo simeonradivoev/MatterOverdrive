@@ -24,6 +24,7 @@ import cofh.api.energy.IEnergyReceiver;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.init.MatterOverdriveBlocks;
+import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
 import matteroverdrive.machines.fusionReactorController.components.ComponentComputers;
@@ -45,10 +46,13 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.EnumSet;
 
@@ -93,8 +97,8 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 
 		structureCheckTimer = new TimeTracker();
 		energyStorage.setCapacity(ENERGY_STORAGE);
-		energyStorage.setMaxTransfer(ENERGY_STORAGE);
-		energyStorage.setMaxReceive(0);
+		energyStorage.setOutputRate(ENERGY_STORAGE);
+		energyStorage.setInputRate(0);
 
 		matterStorage.setCapacity(MATTER_STORAGE);
 		matterStorage.setMaxExtract(0);
@@ -410,7 +414,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 		{
 			if (!this.worldObj.isRemote)
 			{
-				int maxExtracted = Math.min(energyStorage.getMaxExtract(), energyStorage.getEnergyStored());
+				int maxExtracted = Math.min((int)energyStorage.getOutputRate(), energyStorage.getEnergyStored());
 				int extracted = MOEnergyHelper.insertEnergyIntoContainer(this.inventory.getStackInSlot(energySlotID), maxExtracted, false);
 				energyStorage.modifyEnergyStored(extracted);
 			}
@@ -505,6 +509,28 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 	public int[] getSlotsForFace(EnumFacing side)
 	{
 		return new int[0];
+	}
+
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if (capability == MatterOverdriveCapabilities.TESLA_PRODUCER)
+		{
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Nonnull
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if (capability == MatterOverdriveCapabilities.TESLA_PRODUCER)
+		{
+			return (T)energyStorage;
+		}
+		return super.getCapability(capability, facing);
 	}
 
 	//region All Computers

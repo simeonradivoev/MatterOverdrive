@@ -39,7 +39,7 @@ public class PortableDecomposer extends MOItemEnergyContainer
 	}
 
 	@Override
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		super.addDetails(itemstack, player, infos);
 		infos.add(String.format("%s/%s %s", DecimalFormat.getIntegerInstance().format(getMatter(itemstack)), getMaxMatter(itemstack), MatterHelper.MATTER_UNIT));

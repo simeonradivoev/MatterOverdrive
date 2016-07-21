@@ -33,13 +33,6 @@ public abstract class MOMatterEnergyStorageBlock<TE extends TileEntity> extends 
 		{
 			TileEntity entity = worldIn.getTileEntity(pos);
 
-			if (entity instanceof MOTileEntityMachineEnergy)
-			{
-				if (this.keepsEnergy)
-				{
-					((MOTileEntityMachineEnergy)entity).setEnergyStored(stack.getTagCompound().getInteger("Energy"));
-				}
-			}
 			if (entity.hasCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null)) {
 				if (this.keepsMatter) {
 					entity.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null).setMatterStored(stack.getTagCompound().getInteger("Matter"));

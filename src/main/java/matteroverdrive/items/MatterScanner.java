@@ -221,7 +221,7 @@ public class MatterScanner extends MOBaseItem implements IBlockScanner
 	}
 
 	@Override
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		if (isLinked(itemstack))
 		{

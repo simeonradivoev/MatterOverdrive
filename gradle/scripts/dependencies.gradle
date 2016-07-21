@@ -76,10 +76,18 @@ repositories {
 		name "shadowfacts"
 		url "http://mvn.rx14.co.uk/shadowfacts/"
 	}
+	maven {
+		name "darkhax"
+		url "http://maven.epoxide.xyz"
+	}
 }
 
 dependencies {
 	deobfCompile group: "net.shadowfacts", name: "ShadowMC", version: "1.10.2-3.4.5-SNAPSHOT"
+
+	deobfCompile group: 'mcp.mobius.waila', name: 'Waila', version: "1.7.0-B3_1.9.4"
+
+	deobfCompile group: "net.darkhax.tesla", name: "Tesla", version: "1.9.4-1.1.0.24"
 
 	// Chicken Bones
 	//compile group: 'codechicken', name: 'ForgeMultipart', version: "${config.mc_version}-${config.fmp_version}", classifier: 'dev'
@@ -88,7 +96,7 @@ dependencies {
 	//compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.mc_version}-${config.nei_version}", classifier: 'dev' // CB maven
 	
 	// WAILA
-	deobfCompile group: 'mcp.mobius.waila', name: 'Waila', version: "1.7.0-B3_1.9.4"
+	
 	
 	// CoFH
 	//compile group: 'cofh', name: 'CoFHLib', version: "[${config.mc_version}]${config.cofh_lib_version}", ext: 'jar'

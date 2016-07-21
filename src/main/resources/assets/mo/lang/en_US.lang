@@ -182,7 +182,7 @@ tile.pattern_storage.config.transfer.energy=Energy Transfer Speed
 
 tile.machine_hull.name=Machine Hull
 tile.solar_panel.name=Solar Panel
-tile.solar_panel.details=Produces RF from Sunlight
+tile.solar_panel.details=Produces energy from Sunlight
 tile.weapon_station.name=Weapon Station
 tile.weapon_station.details=Used to upgrade and charge weapons
 tile.microwave.name=Microwave

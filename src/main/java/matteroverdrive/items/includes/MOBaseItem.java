@@ -44,7 +44,7 @@ public class MOBaseItem extends Item
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List infos, boolean p_77624_4_)
+	public void addInformation(ItemStack itemstack, EntityPlayer player, List<String> infos, boolean p_77624_4_)
 	{
 		if (hasDetails(itemstack))
 		{
@@ -60,7 +60,7 @@ public class MOBaseItem extends Item
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		if (MOStringHelper.hasTranslation(getUnlocalizedName(itemstack) + ".details"))
 		{

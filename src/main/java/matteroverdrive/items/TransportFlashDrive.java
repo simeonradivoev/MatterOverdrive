@@ -46,7 +46,7 @@ public class TransportFlashDrive extends MOBaseItem
 		setMaxStackSize(1);
 	}
 
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		super.addDetails(itemstack, player, infos);
 		if (hasTarget(itemstack))

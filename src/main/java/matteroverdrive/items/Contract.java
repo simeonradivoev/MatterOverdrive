@@ -66,7 +66,7 @@ public class Contract extends MOBaseItem
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		QuestStack questStack = QuestStack.loadFromNBT(itemstack.getTagCompound());
 		if (questStack != null)

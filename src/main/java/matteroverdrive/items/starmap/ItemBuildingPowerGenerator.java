@@ -46,7 +46,7 @@ public class ItemBuildingPowerGenerator extends ItemBuildingAbstract implements 
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		super.addDetails(itemstack, player, infos);
 		infos.add(TextFormatting.GREEN + MOStringHelper.translateToLocal(PlanetStatType.ENERGY_PRODUCTION) + ": +" + POWER_GENERATION);

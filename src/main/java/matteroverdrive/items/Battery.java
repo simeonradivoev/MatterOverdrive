@@ -39,8 +39,9 @@ public class Battery extends MOItemEnergyContainer
 		this.setMaxStackSize(1);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tabs, List list)
+	public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list)
 	{
 		ItemStack unpowered = new ItemStack(item);
 		ItemStack powered = new ItemStack(item);
@@ -50,15 +51,10 @@ public class Battery extends MOItemEnergyContainer
 	}
 
 	@Override
-	public void addDetails(ItemStack itemstack, EntityPlayer player, List infos)
+	public void addDetails(ItemStack itemstack, EntityPlayer player, List<String> infos)
 	{
 		super.addDetails(itemstack, player, infos);
 		infos.add(TextFormatting.GRAY + MOStringHelper.translateToLocal("gui.tooltip.energy.io") + ": " + maxReceive + "/" + maxExtract + MOEnergyHelper.ENERGY_UNIT + "/t");
 	}
 
-	@Override
-	public void setEnergyStored(ItemStack container, int amount)
-	{
-		super.setEnergyStored(container, amount);
-	}
 }

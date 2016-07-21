@@ -136,7 +136,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
 	//region Tooltips
 	@Override
-	public void addDetails(ItemStack weapon, EntityPlayer player, List infos)
+	public void addDetails(ItemStack weapon, EntityPlayer player, List<String> infos)
 	{
 		super.addDetails(weapon, player, infos);
 		String energyInfo = TextFormatting.DARK_RED + "Power Use: " + MOEnergyHelper.formatEnergy(null, getEnergyUse(weapon) * 20) + "/s";
@@ -456,7 +456,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 	}
 
 	@Override
-	protected void setEnergyStored(ItemStack container, int amount)
+	public void setEnergyStored(ItemStack container, int amount)
 	{
 		ItemStack energy_module = WeaponHelper.getModuleAtSlot(Reference.MODULE_BATTERY, container);
 		if (energy_module != null && MOEnergyHelper.isEnergyContainerItem(energy_module))

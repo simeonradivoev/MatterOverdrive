@@ -80,8 +80,8 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 	{
 		super(4);
 		this.energyStorage.setCapacity(ENERGY_CAPACITY);
-		this.energyStorage.setMaxExtract(ENERGY_TRANSFER);
-		this.energyStorage.setMaxReceive(ENERGY_TRANSFER);
+		this.energyStorage.setOutputRate(ENERGY_TRANSFER);
+		this.energyStorage.setInputRate(ENERGY_TRANSFER);
 		playerSlotsHotbar = true;
 		playerSlotsMain = true;
 	}
