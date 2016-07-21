@@ -11,21 +11,22 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.shadowfacts.shadowmc.util.RotationHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class BlockPipe<TE extends TileEntity> extends MOBlockContainer<TE>
 {
-	public static final float PIPE_MIN_POS = 0.35f;
-	public static final float PIPE_MAX_POS = 0.65f;
 
-	public static final ImmutableList<PropertyBool> CONNECTED_PROPERTIES = ImmutableList.of(PropertyBool.create(EnumFacing.DOWN.getName()), PropertyBool.create(EnumFacing.UP.getName()), PropertyBool.create(EnumFacing.SOUTH.getName()), PropertyBool.create(EnumFacing.NORTH.getName()), PropertyBool.create(EnumFacing.WEST.getName()), PropertyBool.create(EnumFacing.EAST.getName()));
+	public static final ImmutableList<PropertyBool> CONNECTED_PROPERTIES = ImmutableList.of(PropertyBool.create(EnumFacing.DOWN.getName()), PropertyBool.create(EnumFacing.UP.getName()), PropertyBool.create(EnumFacing.NORTH.getName()), PropertyBool.create(EnumFacing.SOUTH.getName()), PropertyBool.create(EnumFacing.WEST.getName()), PropertyBool.create(EnumFacing.EAST.getName()));
+
+	private static final AxisAlignedBB CENTER = new AxisAlignedBB(13/32d, 13/32d, 13/32d, 19/32d, 19/32d, 19/32d);
+	private static final AxisAlignedBB DOWN = new AxisAlignedBB(13/32d, 13/64d, 13/32d, 19/32d, 0, 19/32d);
 
 	public BlockPipe(Material material, String name)
 	{
@@ -64,101 +65,24 @@ public abstract class BlockPipe<TE extends TileEntity> extends MOBlockContainer<
 	@SuppressWarnings("deprecation")
 	public void addCollisionBoxToList(IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull AxisAlignedBB mask, @Nonnull List<AxisAlignedBB> list, Entity collidingEntity)
 	{
-		super.addCollisionBoxToList(state, world, pos, mask, list, collidingEntity);
+		AxisAlignedBB center = CENTER.offset(pos);
 
-		state = getActualState(state, world, pos);
+		if (mask.intersectsWith(center)) {
+			list.add(center);
+		}
 
-		for (EnumFacing facing : EnumFacing.VALUES)
+		for (EnumFacing side : EnumFacing.VALUES)
 		{
-			if (isConnectableSide(facing, world, pos))
+			if (isConnectableSide(side, world, pos))
 			{
-				Vec3i directionVec = facing.getDirectionVec();
-				AxisAlignedBB axisAlignedBB = new AxisAlignedBB(
-						PIPE_MIN_POS, PIPE_MIN_POS, PIPE_MIN_POS,
-						PIPE_MAX_POS, PIPE_MAX_POS, PIPE_MAX_POS
-				).offset(facing.getFrontOffsetX() * (PIPE_MAX_POS - PIPE_MIN_POS / 2), facing.getFrontOffsetY() * (PIPE_MAX_POS - PIPE_MIN_POS / 2), facing.getFrontOffsetZ() * (PIPE_MAX_POS - PIPE_MIN_POS / 2));
-				super.addCollisionBoxToList(state, world, pos, mask, list, collidingEntity);
+				AxisAlignedBB sideBox = RotationHelper.rotateFace(DOWN, side).offset(pos);
+				if (mask.intersectsWith(sideBox))
+				{
+					list.add(sideBox);
+				}
 			}
 		}
 	}
-
-    /*@Override
-	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
-    {
-		float size = 0.34375f;
-
-        float xMax = 1 - size;
-        float yMax = 1 - size;
-        float zMax = 1 - size;
-
-        this.setBlockBounds(size, size, size, xMax, yMax, zMax);
-        super.addCollisionBoxesToList(worldIn,pos,state,mask,list,collidingEntity);
-
-        for(int i = 0;i < 6;i++)
-        {
-            EnumFacing dir = EnumFacing.values()[i];
-            if(isConnectableSide(dir,worldIn,pos))
-            {
-	            if(dir != null)
-	            {
-	                float xMinNew = size + size * dir.getFrontOffsetX();
-                    float xMaxNew = xMax + size * dir.getFrontOffsetX();
-                    float yMinNew = size + size * dir.getFrontOffsetY();
-                    float yMaxNew = yMax + size * dir.getFrontOffsetY();
-                    float zMinNew = size + size * dir.getFrontOffsetZ();
-                    float zMaxNew = zMax + size * dir.getFrontOffsetZ();
-
-                    this.setBlockBounds(xMinNew, yMinNew, zMinNew, xMaxNew, yMaxNew, zMaxNew);
-                    super.addCollisionBoxesToList(worldIn,pos,state,mask,list,collidingEntity);
-	            }
-            }
-        }
-    }*/
-
-	// TODO: 3/25/2016 Find how to se block bounds based on state
-	/*@Override
-    public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
-    {
-        float size = 0.34375f;
-
-        float xMin = size;
-        float yMin = size;
-        float zMin = size;
-
-        float xMax = 1 - size;
-        float yMax = 1 - size;
-        float zMax = 1 - size;
-
-        for(int i = 0;i < 6;i++)
-        {
-            EnumFacing dir = EnumFacing.VALUES[i];
-            if(isConnectableSide(dir, world, pos))
-            {
-	            if(dir != null)
-	            {
-	                if (dir.getFrontOffsetX() < 0) {
-	                    xMin = 0;
-	                } else if (dir.getFrontOffsetX() > 0) {
-	                    xMax = 1;
-	                }
-
-	                if (dir.getFrontOffsetY() < 0) {
-	                    yMin = 0;
-	                } else if (dir.getFrontOffsetY() > 0) {
-	                    yMax = 1;
-	                }
-
-	                if (dir.getFrontOffsetZ() < 0) {
-	                    zMin = 0;
-	                } else if (dir.getFrontOffsetZ() > 0) {
-	                    zMax = 1;
-	                }
-	            }
-            }
-        }
-
-        this.setBlockBounds(xMin, yMin, zMin, xMax, yMax, zMax);
-    }*/
 
 	public boolean isConnectableSide(EnumFacing dir, IBlockAccess world, BlockPos pos)
 	{

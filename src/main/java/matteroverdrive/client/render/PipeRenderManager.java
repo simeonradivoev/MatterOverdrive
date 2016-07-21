@@ -42,7 +42,6 @@ public class PipeRenderManager
 				}
 
 				IBlockState blockState = world.getBlockState(blockPos);
-				Vec3d hitFrom = e.getTarget().hitVec;
 				AxisAlignedBB mask = new AxisAlignedBB(blockPos, blockPos.add(1, 1, 1));
 
 				GlStateManager.enableBlend();
@@ -53,16 +52,14 @@ public class PipeRenderManager
 				GlStateManager.depthMask(false);
 				float f = 0.1F;
 				IBlockState state = world.getBlockState(blockPos);
-				Block block = state.getBlock();
 
 				if (state.getMaterial() != Material.AIR && world.getWorldBorder().contains(blockPos))
 				{
-					//block.setBlockBoundsBasedOnState(world, blockPos);
 					double d0 = e.getPlayer().lastTickPosX + (e.getPlayer().posX - e.getPlayer().lastTickPosX) * (double)e.getPartialTicks();
 					double d1 = e.getPlayer().lastTickPosY + (e.getPlayer().posY - e.getPlayer().lastTickPosY) * (double)e.getPartialTicks();
 					double d2 = e.getPlayer().lastTickPosZ + (e.getPlayer().posZ - e.getPlayer().lastTickPosZ) * (double)e.getPartialTicks();
 					List<AxisAlignedBB> bbs = new ArrayList<>();
-					blockState.getBlock().addCollisionBoxToList(state, world, blockPos, mask, bbs, e.getPlayer());
+					blockState.addCollisionBoxToList(world, blockPos, mask, bbs, e.getPlayer());
 					for (AxisAlignedBB bb : bbs)
 					{
 						AxisAlignedBB changed = bb.expand(f, f, f).offset(-d0, -d1, -d2);
@@ -71,9 +68,8 @@ public class PipeRenderManager
 						RayTraceResult position = changed.calculateIntercept(new Vec3d(0, e.getPlayer().getEyeHeight(), 0), look);
 						if (position != null)
 						{
-//							RenderGlobal.drawSelectionBoundingBox(changed);
-//							TODO: switch pipes to MCMP, this will no longer be needed
-							//MOLog.info(changed.toString());
+
+							RenderGlobal.func_189697_a(changed, 0, 0, 0, 0.4f);
 						}
 					}
 				}
@@ -81,9 +77,8 @@ public class PipeRenderManager
 				GlStateManager.depthMask(true);
 				GlStateManager.enableTexture2D();
 				GlStateManager.disableBlend();
-
-				//MOLog.info("SubId: " + e.target.hitInfo);
 			}
 		}
 	}
+
 }
