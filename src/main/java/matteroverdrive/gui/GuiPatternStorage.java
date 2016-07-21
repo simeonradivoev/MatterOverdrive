@@ -41,7 +41,7 @@ public class GuiPatternStorage extends MOGuiMachine<TileEntityMachinePatternStor
 		super(ContainerFactory.createMachineContainer(patternStorage, playerInventory), patternStorage);
 		name = "pattern_storage";
 		energyElement = new MOElementEnergy(this, 176, 39, patternStorage.getEnergyStorage());
-		energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
+		energyElement.setTexture(Reference.TEXTURE_RF_METER, 32, 64);
 	}
 
 	@Override

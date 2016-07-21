@@ -1,6 +1,5 @@
 package matteroverdrive.gui;
 
-import matteroverdrive.Reference;
 import matteroverdrive.container.ContainerSolarPanel;
 import matteroverdrive.gui.element.MOElementEnergy;
 import matteroverdrive.tile.TileEntityMachineSolarPanel;
@@ -18,7 +17,6 @@ public class GuiSolarPanel extends MOGuiMachine<TileEntityMachineSolarPanel>
 		super(new ContainerSolarPanel(inventoryPlayer, solarPanel), solarPanel);
 		name = "solar_panel";
 		energy = new MOElementEnergy(this, 117, 35, solarPanel.getEnergyStorage());
-		energy.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
 	}
 
 	@Override

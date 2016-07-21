@@ -36,7 +36,7 @@ public class GuiChargingStation extends MOGuiMachine<TileEntityMachineChargingSt
 		super(ContainerFactory.createMachineContainer(chargingStation, inventoryPlayer), chargingStation);
 		name = "charging_station";
 		energy = new MOElementEnergy(this, 80, 40, chargingStation.getEnergyStorage());
-		energy.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
+		energy.setTexture(Reference.TEXTURE_RF_METER, 32, 64);
 	}
 
 	@Override

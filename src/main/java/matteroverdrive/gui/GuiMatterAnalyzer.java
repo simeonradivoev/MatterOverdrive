@@ -44,7 +44,7 @@ public class GuiMatterAnalyzer extends MOGuiNetworkMachine<TileEntityMachineMatt
 		super(new ContainerAnalyzer(playerInventory, analyzer), analyzer);
 		name = "matter_analyzer";
 		energyElement = new MOElementEnergy(this, 176, 39, analyzer.getEnergyStorage());
-		energyElement.setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
+		energyElement.setTexture(Reference.TEXTURE_RF_METER, 32, 64);
 		scanProgress = new ElementScanProgress(this, 49, 36);
 	}
 

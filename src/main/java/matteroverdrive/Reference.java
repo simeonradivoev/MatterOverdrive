@@ -62,7 +62,8 @@ public class Reference
 
 	//region GUI Textures
 	public static final String TEXTURE_ARROW_PROGRESS = Reference.PATH_ELEMENTS + "Progress_Arrow_Right.png";
-	public static final String TEXTURE_ENERGY_METER = Reference.PATH_ELEMENTS + "Energy.png";
+	public static final String TEXTURE_RF_METER = Reference.PATH_ELEMENTS + "RF.png";
+	public static final String TEXTURE_TESLA_METER = Reference.PATH_ELEMENTS + "Tesla.png";
 	//endregion
 
 	//region Colors

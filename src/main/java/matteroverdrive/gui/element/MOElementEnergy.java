@@ -18,11 +18,11 @@
 
 package matteroverdrive.gui.element;
 
-import cofh.api.energy.IEnergyStorage;
 import matteroverdrive.Reference;
 import matteroverdrive.gui.MOGuiBase;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.RenderUtils;
+import net.darkhax.tesla.api.ITeslaHolder;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -34,14 +34,21 @@ public class MOElementEnergy extends MOElementBase
 {
 	protected int energyRequired;
 	protected int energyRequiredPerTick;
-	protected IEnergyStorage storage;
+	protected ITeslaHolder storage;
 	protected boolean alwaysShowMinimum = false;
 
-	public MOElementEnergy(MOGuiBase gui, int posX, int posY, IEnergyStorage storage)
+	public MOElementEnergy(MOGuiBase gui, int posX, int posY, ITeslaHolder storage)
 	{
 		super(gui, posX, posY);
 		this.storage = storage;
-		setTexture(Reference.TEXTURE_ENERGY_METER, 32, 64);
+		if (MOEnergyHelper.ENERGY_UNIT.endsWith("RF"))
+		{
+			setTexture(Reference.TEXTURE_RF_METER, 32, 64);
+		}
+		else
+		{
+			setTexture(Reference.TEXTURE_TESLA_METER, 32, 64);
+		}
 		this.sizeX = 16;
 		this.sizeY = 42;
 		this.texW = 32;
@@ -63,13 +70,13 @@ public class MOElementEnergy extends MOElementBase
 	@Override
 	public void addTooltip(List<String> list, int mouseX, int mouseY)
 	{
-		if (this.storage.getMaxEnergyStored() < 0)
+		if (this.storage.getCapacity() < 0)
 		{
 			list.add("Infinite RF");
 		}
 		else
 		{
-			list.add(this.storage.getEnergyStored() + " / " + this.storage.getMaxEnergyStored() + " RF");
+			list.add(this.storage.getStoredPower() + " / " + this.storage.getCapacity() + MOEnergyHelper.ENERGY_UNIT);
 		}
 
 		if (energyRequired > 0)
@@ -104,14 +111,14 @@ public class MOElementEnergy extends MOElementBase
 
 	protected int getScaled()
 	{
-		if (this.storage.getMaxEnergyStored() <= 0)
+		if (this.storage.getCapacity() <= 0)
 		{
 			return this.sizeY;
 		}
 		else
 		{
-			long var1 = (long)this.storage.getEnergyStored() * (long)this.sizeY / (long)this.storage.getMaxEnergyStored();
-			return this.alwaysShowMinimum && this.storage.getEnergyStored() > 0 ? (int)Math.max(1, Math.round((double)var1)) : (int)Math.round((double)var1);
+			long var1 = this.storage.getStoredPower() * (long)this.sizeY / this.storage.getCapacity();
+			return this.alwaysShowMinimum && this.storage.getStoredPower() > 0 ? (int)Math.max(1, Math.round((double)var1)) : (int)Math.round((double)var1);
 		}
 	}
 
