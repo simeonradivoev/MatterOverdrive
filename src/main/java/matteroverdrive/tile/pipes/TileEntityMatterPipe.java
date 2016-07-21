@@ -26,6 +26,7 @@ import matteroverdrive.data.transport.IFluidPipe;
 import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.init.MatterOverdriveFluids;
 import matteroverdrive.machines.MachineNBTCategory;
+import matteroverdrive.network.packet.client.PacketMatterUpdate;
 import matteroverdrive.util.TimeTracker;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -99,7 +100,11 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 					TileEntity handler = pipe.getTile().getWorld().getTileEntity(pipe.getTile().getPos().offset(direction));
 					if (handler != null && handler.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()) && !(handler instanceof IFluidPipe))
 					{
-						storage.extractMatter(handler.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()).fill(new FluidStack(MatterOverdriveFluids.matterPlasma, storage.getMatterStored()), true), false);
+						int amount = storage.extractMatter(handler.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()).fill(new FluidStack(MatterOverdriveFluids.matterPlasma, storage.getMatterStored()), true), false);
+						if (amount != 0)
+						{
+							MatterOverdrive.packetPipeline.sendToAllAround(new PacketMatterUpdate(handler), handler, 64);
+						}
 						if (storage.getMatterStored() <= 0)
 						{
 							return;
@@ -108,21 +113,6 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 				}
 			}
 		}
-		/*if (getMatterStored() > 0 && getNetwork() != null)
-		{
-            for (IFluidPipe pipe : getNetwork().getFluidHandlers())
-            {
-                for (EnumFacing direction : EnumFacing.VALUES)
-                {
-                    TileEntity fluidHandler = pipe.getTile().getWorld().getTileEntity(pipe.getTile().getPos().offset(direction));
-                    if (fluidHandler != null && fluidHandler instanceof IFluidHandler && !(fluidHandler instanceof  IFluidPipe) && getMatterStored() > 0 && ((IFluidHandler)fluidHandler).canFill(EnumFacing.DOWN,MatterOverdriveFluids.matterPlasma))
-                    {
-                        extractMatter(EnumFacing.DOWN,((IFluidHandler)fluidHandler).fill(EnumFacing.DOWN,new FluidStack(MatterOverdriveFluids.matterPlasma,getMatterStored()),true),false);
-                    }
-                }
-
-            }
-        }*/
 	}
 
 	@Override

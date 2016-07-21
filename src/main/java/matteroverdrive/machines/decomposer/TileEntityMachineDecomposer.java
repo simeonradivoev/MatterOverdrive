@@ -110,14 +110,13 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 		{
 			if (time.hasDelayPassed(worldObj, MATTER_EXTRACT_SPEED))
 			{
-				for (int i = 0; i < 6; i++)
+				for (EnumFacing dir : EnumFacing.VALUES)
 				{
-					EnumFacing dir = EnumFacing.VALUES[i];
 					TileEntity e = worldObj.getTileEntity(getPos().offset(dir));
 					EnumFacing opposite = dir.getOpposite();
 					if (e != null && e.hasCapability(MatterOverdriveCapabilities.MATTER_HANDLER, opposite))
 					{
-						int received = e.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, opposite).receiveMatter(matterStorage.getFluidAmount(), true);
+						int received = e.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, opposite).receiveMatter(matterStorage.getFluidAmount(), false);
 						if (received != 0)
 						{
 							matterStorage.setMatterStored(Math.max(0, matterStorage.getMatterStored() - received));

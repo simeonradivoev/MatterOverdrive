@@ -112,13 +112,13 @@ public class MatterStorage extends FluidTank implements IMatterHandler
 	@Override
 	public int receiveMatter(int amount, boolean simulate)
 	{
-		return fill(new FluidStack(MatterOverdriveFluids.matterPlasma, amount), simulate);
+		return fill(new FluidStack(MatterOverdriveFluids.matterPlasma, amount), !simulate);
 	}
 
 	@Override
 	public int extractMatter(int amount, boolean simulate)
 	{
-		FluidStack drained = drain(amount, simulate);
+		FluidStack drained = drain(amount, !simulate);
 		if (drained == null) {
 			return 0;
 		} else {

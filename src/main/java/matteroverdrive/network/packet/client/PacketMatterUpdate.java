@@ -21,10 +21,10 @@ public class PacketMatterUpdate extends TileEntityUpdatePacket
 	{
 	}
 
-	public PacketMatterUpdate(MOTileEntityMachineMatter entityMachineEnergy)
+	public PacketMatterUpdate(TileEntity tileentity)
 	{
-		super(entityMachineEnergy.getPos());
-		matter = entityMachineEnergy.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null).getMatterStored();
+		super(tileentity.getPos());
+		matter = tileentity.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null).getMatterStored();
 	}
 
 	@Override

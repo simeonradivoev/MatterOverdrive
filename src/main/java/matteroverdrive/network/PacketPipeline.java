@@ -147,9 +147,9 @@ public class PacketPipeline
 		dispatcher.sendToAllAround(message, point);
 	}
 
-	public void sendToAllAround(IMessage message, int dimention, double x, double y, double z, double range)
+	public void sendToAllAround(IMessage message, int dimension, double x, double y, double z, double range)
 	{
-		dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(dimention, x, y, z, range));
+		dispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(dimension, x, y, z, range));
 	}
 
 	public void sendToAllAround(IMessage message, EntityPlayer player, double range)
