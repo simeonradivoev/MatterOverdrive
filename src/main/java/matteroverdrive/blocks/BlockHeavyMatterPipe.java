@@ -19,6 +19,7 @@
 package matteroverdrive.blocks;
 
 import matteroverdrive.tile.pipes.TileEntityHeavyMatterPipe;
+import matteroverdrive.tile.pipes.TileEntityMatterPipe;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -35,6 +36,13 @@ public class BlockHeavyMatterPipe extends BlockMatterPipe
 	public BlockHeavyMatterPipe(Material material, String name)
 	{
 		super(material, name);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public Class getTileEntityClass()
+	{
+		return TileEntityHeavyMatterPipe.class;
 	}
 
 	@Nonnull
