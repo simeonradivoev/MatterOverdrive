@@ -100,18 +100,7 @@
     }],
     "inventory": {
       "model": "mo:pipe/pipe_center",
-      "display":
-      {
-        "thirdperson":
-        {
-          "transform": "forge:default-block"
-        },
-        "firstperson": {
-          "transform":{
-            "scale":1.7
-          }
-        }
-      }
+      "transform": "forge:default-block"
     }
   }
 }
