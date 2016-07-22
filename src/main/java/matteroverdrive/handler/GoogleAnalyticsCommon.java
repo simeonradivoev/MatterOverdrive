@@ -4,6 +4,7 @@ import com.brsanthu.googleanalytics.*;
 import matteroverdrive.Reference;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -124,7 +125,7 @@ public class GoogleAnalyticsCommon implements IConfigSubscriber
 	@Override
 	public void onConfigChanged(ConfigurationHandler config)
 	{
-		this.config.setEnabled(config.getBool("google_analytics", ConfigurationHandler.CATEGORY_SERVER, true, "Enable Google Analytics Anonymous Statistics Gathering"));
+		this.config.setEnabled(config.getBool("google_analytics", ConfigurationHandler.CATEGORY_SERVER, !(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"), "Enable Google Analytics Anonymous Statistics Gathering"));
 	}
 
 	public void unload()
