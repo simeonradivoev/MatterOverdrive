@@ -88,7 +88,7 @@ repositories {
 
 dependencies {
 	deobfCompile group: "net.shadowfacts", name: "ShadowMC", version: "1.10.2-3.4.5-SNAPSHOT"
-	deobfCompile group: "net.darkhax.tesla", name: "Tesla", version: "1.9.4-1.1.0.24"
+	deobfCompile group: "net.darkhax.tesla", name: "Tesla", version: "1.10.2-1.2.0.38"
 
 	deobfCompile group: "mezz.jei", name: "jei_1.10.2", version: "3.7.8.234"
 

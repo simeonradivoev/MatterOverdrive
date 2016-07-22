@@ -28,7 +28,7 @@ public class Reference
 	public static final String VERSION = "0.4.3";
 	public static final String VERSION_DATE = "07.04.2016";
 	public static final String GUI_FACTORY_CLASS = "matteroverdrive.gui.GuiConfigFactory";
-	public static final String DEPEDNENCIES = "required-after:Tesla;after:Waila;after:theoneprobe;";
+	public static final String DEPEDNENCIES = "required-after:Tesla@[1.2.0.38,);after:Waila;after:theoneprobe;";
 	public static final String CLIENT_PROXY_CLASS = "matteroverdrive.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "matteroverdrive.proxy.CommonProxy";
 	public static final String CHANNEL_NAME = MOD_ID + "_channel";
