@@ -46,6 +46,7 @@ public class MatterOverdriveCompat
 	{
 		register(CompatExNihilo.class);
 		register(CompatTConstruct.class);
+		register(CompatEnderIO.class);
 	}
 
 	//Add additional modules that need to run ONLY on the Client
