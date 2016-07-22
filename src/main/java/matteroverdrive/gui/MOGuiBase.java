@@ -721,12 +721,22 @@ public abstract class MOGuiBase extends GuiContainer implements IButtonHandler, 
 	{
 		return this.mouseX;
 	}
-	//endregion
-
 	public int getMouseY()
 	{
 		return this.mouseY;
 	}
+
+	public SidePannel getSidePannel()
+	{
+		return sidePannel;
+	}
+
+	public List<MOElementBase> getElements()
+	{
+		return elements;
+	}
+
+	//endregion
 
 	public void bindTexture(ResourceLocation location)
 	{

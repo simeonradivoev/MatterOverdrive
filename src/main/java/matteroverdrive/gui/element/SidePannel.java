@@ -83,7 +83,7 @@ public class SidePannel extends ElementBaseGroup
 		super.drawBackground(mouseX, mouseY, ticks);
 	}
 
-	public boolean IsOpen()
+	public boolean isOpen()
 	{
 		return isOpen;
 	}

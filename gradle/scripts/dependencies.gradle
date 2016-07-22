@@ -80,6 +80,10 @@ repositories {
 		name "darkhax"
 		url "http://maven.epoxide.xyz"
 	}
+	maven {
+		name "progwml6"
+		url "http://dvs1.progwml6.com/files/maven"
+	}
 }
 
 dependencies {
@@ -88,6 +92,8 @@ dependencies {
 	deobfCompile group: 'mcp.mobius.waila', name: 'Waila', version: "1.7.0-B3_1.9.4"
 
 	deobfCompile group: "net.darkhax.tesla", name: "Tesla", version: "1.9.4-1.1.0.24"
+
+	deobfCompile group: "mezz.jei", name: "jei_1.10.2", version: "3.7.8.234"
 
 	// Chicken Bones
 	//compile group: 'codechicken', name: 'ForgeMultipart', version: "${config.mc_version}-${config.fmp_version}", classifier: 'dev'

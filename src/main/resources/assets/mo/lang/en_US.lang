@@ -683,9 +683,12 @@ material.tritanium=Tritanium
 container.tritanium_crate=Tritanium Crate
 rarity.legendary=Legendary
 
+mo.jei.time=%d seconds
+mo.jei.inscriber=Inscriber
+
 
 ###############################################################################################################
-# others
+# quests
 quest.kill_androids.title=They will kill us all!
 quest.kill_androids.info=The are taking over the world! I don't know how exactly they got here, but there numbers are growing by the day. It's seems like there's no end to them. We must fight for if we don't, we will all perish. The fight starts with you $player! We need you to help us kill as many of them as possible, before they get us all.
 quest.kill_androids.objective.0=Kill $killCount/$maxKillCount Rogue Androids.
