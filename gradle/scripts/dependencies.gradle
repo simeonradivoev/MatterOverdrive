@@ -1,42 +1,4 @@
 repositories {
-	// ivy {
-	// 	name "CoFHLib"
-	// 	artifactPattern "http://addons-origin.cursecdn.com/files/2243/944/[module]-[revision].[ext]"
-	// }
-	// ivy {
-	// 	name "CoFHCore"
-	// 	artifactPattern 'http://addons-origin.cursecdn.com/files/2244/285/[module]-[revision].[ext]'
-	// }
-	// ivy {
-	// 	name "ThermalFoundation"
-	// 	artifactPattern "http://addons-origin.cursecdn.com/files/2243/149/[module]-[revision].[ext]"
-	// }
-	// ivy {
-	// 	name "ThermalExpansion"
-	// 	artifactPattern "http://addons-origin.cursecdn.com/files/2233/797/[module]-[revision].[ext]"
-	// }
-
-	// ivy {
-	// 	name "ThermalDynamics"
-	// 	artifactPattern "http://addons-origin.cursecdn.com/files/2244/301/[module]-[revision].[ext]"
-	// }
-
-	// ivy {
-	// 	name "ExtraUtilities"
-	// 	artifactPattern "http://addons-origin.cursecdn.com/files/2242/27/[module]-[revision].[ext]"
-	// }
-
-	// ivy {
-	// 	name "BuildCraft"
-	// 	artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-	// }
-
-	//maven repos
-	// maven {
-	// 	name "ChickenBones"
-	// 	url "http://chickenbones.net/maven/"
-	// }
-
 	maven {
 		name "Mobius"
 		url "http://mobiusstrip.eu/maven"
@@ -46,31 +8,6 @@ repositories {
 		name "tterrag"
 		url "http://maven.tterrag.com"
 	}
-
-	// maven {
-	// 	name "IC2 and Forestry" // Forestry is required by EnderIO
-	// 	url "http://maven.ic2.player.to"
-	// }
-
-	// maven {
-	// 	name "OpenComputers"
-	// 	url "http://maven.cil.li"
-	// }
-
-	// maven {
-	// 	name "FireBall API Depot"
-	// 	url "http://dl.tsr.me/artifactory/libs-release-local"
-	// }
-
-	// maven  {
-	// 	name = "RX14 Proxy"
-	// 	url = "http://mvn.rx14.co.uk/repo/"
-	// }
-
-	// maven {
-	// 	name = "MM repo"
-	// 	url = "http://maven.k-4u.nl/"
-	// }
 
 	maven {
 		name "shadowfacts"
@@ -87,40 +24,14 @@ repositories {
 }
 
 dependencies {
-	deobfCompile group: "net.shadowfacts", name: "ShadowMC", version: "1.10.2-3.4.5-SNAPSHOT"
-	deobfCompile group: "net.darkhax.tesla", name: "Tesla", version: "1.10.2-1.2.0.38"
+	deobfCompile group: "net.shadowfacts", name: "ShadowMC", version: config.mc_version + "-" + config.shadowmc_version
+	deobfCompile group: "net.darkhax.tesla", name: "Tesla", version: config.mc_version + "-" + config.tesla_version
 
-	deobfCompile group: "mezz.jei", name: "jei_1.10.2", version: "3.7.8.234"
+	deobfCompile group: "mezz.jei", name: "jei_" + config.mc_version, version: config.jei_version
 
-	deobfCompile group: 'mcp.mobius.waila', name: 'Waila', version: "1.7.0-B3_1.9.4"
-	deobfCompile group: "mcjty.theoneprobe", name: "TheOneProbe", version: "1.9.4-1.0.9-22"
-
-	// Chicken Bones
-	//compile group: 'codechicken', name: 'ForgeMultipart', version: "${config.mc_version}-${config.fmp_version}", classifier: 'dev'
-	//compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.mc_version}-${config.ccl_version}", classifier: 'dev' // Forge http://files.minecraftforge.net/CodeChickenLib/
-	//compile group: 'codechicken', name: 'CodeChickenCore', version: "${config.mc_version}-${config.ccc_version}", classifier: 'dev' // CB maven
-	//compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.mc_version}-${config.nei_version}", classifier: 'dev' // CB maven
+	deobfCompile group: 'mcp.mobius.waila', name: 'Waila', version: config.waila_version + "_1.9.4"
+	deobfCompile group: "mcjty.theoneprobe", name: "TheOneProbe", version: "1.9.4-" + config.top_version
 	
-	// WAILA
-	
-	
-	// CoFH
-	//compile group: 'cofh', name: 'CoFHLib', version: "[${config.mc_version}]${config.cofh_lib_version}", ext: 'jar'
-	//compile group: 'cofh', name: 'CoFHCore', version: "[${config.mc_version}]${config.cofh_core_version}", ext: 'jar'
-	//compile group: 'cofh', name: 'ThermalFoundation', version: "[${config.mc_version}]${config.cofh_tf_version}", ext: 'jar'
-	//compile group: 'cofh', name: 'ThermalExpansion', version: "[${config.mc_version}]${config.cofh_te_version}", ext: 'jar'
-	//compile group: 'cofh', name: 'ThermalDynamics', version: "[${config.mc_version}]${config.cofh_td_version}", ext: 'jar'
-	
-	// EnderIO
-	//compile group: 'com.enderio.core', name: 'EnderCore', version: "${config.mc_version}-${config.endercore_version}", classifier: 'dev'
-	//compile group: 'com.enderio', name: 'EnderIO', version: "${config.mc_version}-${config.enderio_version}", classifier: 'dev'
-	
-	// Extra Utilities
-	//compile group: 'ExtraUtilities', name: 'extrautilities', version: "${config.xu_version}", ext: 'jar'
-
-	// OpenComputers
-	//compile group: 'li.cil.oc', name: 'OpenComputers', version: "${config.oc_version}", classifier:  'dev'
-
-	// AE2
-	//compile group: "appeng", name: "appliedenergistics2", version: "${config.ae2_version}", classifier: "dev"
+	deobfCompile group: 'com.enderio.core', name: 'EnderCore', version: config.mc_version + "-" + config.endercore_version
+	deobfCompile group: 'com.enderio', name: 'EnderIO', version: config.mc_version + "-" + config.enderio_version
 }
