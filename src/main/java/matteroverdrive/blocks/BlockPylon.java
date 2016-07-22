@@ -127,10 +127,12 @@ public class BlockPylon extends MOBlockContainer<TileEntityMachineDimensionalPyl
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+	@Override
+	@Deprecated
+	@SuppressWarnings("deprecated")
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		IBlockState originalBlockState = worldIn.getBlockState(pos.offset(side.getOpposite()));
+		IBlockState originalBlockState = world.getBlockState(pos.offset(side.getOpposite()));
 		if (originalBlockState.getBlock() == this)
 		{
 			if (originalBlockState.getValue(TYPE) == MultiblockType.DUMMY)
@@ -139,7 +141,7 @@ public class BlockPylon extends MOBlockContainer<TileEntityMachineDimensionalPyl
 			}
 
 		}
-		return super.shouldSideBeRendered(originalBlockState, worldIn, pos, side);
+		return super.shouldSideBeRendered(state, world, pos, side);
 	}
 
 	public enum MultiblockType implements IStringSerializable
