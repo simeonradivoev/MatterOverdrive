@@ -48,7 +48,6 @@ public class GuiInscriber extends MOGuiMachine<TileEntityInscriber>
 		inscribe_progress.setMode(1);
 		inscribe_progress.setSize(24, 16);
 		inscribe_progress.setTexture(Reference.TEXTURE_ARROW_PROGRESS, 48, 16);
-		energyElement.setTexture(Reference.TEXTURE_RF_METER, 32, 64);
 	}
 
 	@Override
