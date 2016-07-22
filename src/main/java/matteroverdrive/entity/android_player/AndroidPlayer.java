@@ -180,11 +180,9 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 		return !entityLivingBase.isInvisible() && Math.abs(relativePosition.yCoord) < 16 && isInRangeToRenderDist(entityLivingBase, 256);
 	}
 
-	@SideOnly(Side.CLIENT)
 	private static boolean isInRangeToRenderDist(EntityLivingBase entity, double distance)
 	{
-		double d1 = entity.getEntityBoundingBox().getAverageEdgeLength();
-		d1 *= 64.0D * Entity.getRenderDistanceWeight();
+		double d1 = entity.getEntityBoundingBox().getAverageEdgeLength() * 64;
 		return distance < d1 * d1;
 	}
 
