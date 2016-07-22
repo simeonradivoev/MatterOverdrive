@@ -18,17 +18,21 @@
 
 package matteroverdrive.blocks;
 
+import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.shadowfacts.shadowmc.util.RotationHelper;
 
 import javax.annotation.Nonnull;
 
@@ -37,8 +41,6 @@ import javax.annotation.Nonnull;
  */
 public abstract class BlockMonitor<TE extends TileEntity> extends MOBlockMachine<TE>
 {
-	protected int depth;
-
 	public BlockMonitor(Material material, String name)
 	{
 		super(material, name);
@@ -46,12 +48,18 @@ public abstract class BlockMonitor<TE extends TileEntity> extends MOBlockMachine
 		setHardness(20.0F);
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);
-		//setBlockBounds(0, 0, 0, 1, 1, 1);
 		lightValue = 10;
-		depth = 5;
 	}
 
-    /*@SideOnly(Side.CLIENT)
+	@Nonnull
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	{
+		EnumFacing dir = state.getValue(MOBlock.PROPERTY_DIRECTION);
+		return RotationHelper.rotateFace(boundingBox, dir);
+	}
+
+	/*@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta)
     {
         if (side == meta)

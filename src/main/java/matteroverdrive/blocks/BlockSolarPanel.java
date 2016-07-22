@@ -5,6 +5,7 @@ import matteroverdrive.tile.TileEntityMachineSolarPanel;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -18,7 +19,7 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock<TileEntityMachin
 	{
 		super(material, name, true, false);
 
-		//this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
+		setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 8/16d, 1));
 		setHardness(20.0F);
 		this.setResistance(5.0f);
 		this.setHarvestLevel("pickaxe", 2);

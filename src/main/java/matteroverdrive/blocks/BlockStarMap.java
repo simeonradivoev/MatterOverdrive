@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -22,8 +23,7 @@ public class BlockStarMap extends MOBlockMachine<TileEntityMachineStarMap>
 	public BlockStarMap(Material material, String name)
 	{
 		super(material, name);
-		// TODO: 3/26/2016 Find how to set block bounds
-		//setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
+		setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 9/16d, 1));
 		setHardness(20.0F);
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);

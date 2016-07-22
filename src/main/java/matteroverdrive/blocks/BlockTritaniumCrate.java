@@ -18,6 +18,7 @@
 
 package matteroverdrive.blocks;
 
+import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.blocks.includes.MOBlockMachine;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.init.MatterOverdriveSounds;
@@ -30,8 +31,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.shadowfacts.shadowmc.util.RotationHelper;
 
 import javax.annotation.Nonnull;
 
@@ -40,15 +44,32 @@ import javax.annotation.Nonnull;
  */
 public class BlockTritaniumCrate extends MOBlockMachine<TileEntityTritaniumCrate>
 {
+
+	private static final AxisAlignedBB BOX_NORTH_SOUTH = new AxisAlignedBB(0, 0, 2/16d, 1, 12/16d, 14/16d);
+	private static final AxisAlignedBB BOX_EAST_WEST = new AxisAlignedBB(2/16d, 0, 0, 14/16d, 12/16d, 1);
+
 	public BlockTritaniumCrate(Material material, String name)
 	{
 		super(material, name);
 		setHardness(20.0F);
 		this.setResistance(9.0f);
-		// TODO: 3/26/2016 Find how to set block bounds
-		//setBlockBounds(0, 0, 0, 1, 12 * (1 / 16f), 1);
 		this.setHarvestLevel("pickaxe", 2);
 		setHasRotation();
+	}
+
+	@Override
+	@Deprecated
+	public boolean isFullCube(IBlockState state)
+	{
+		return false;
+	}
+
+	@Nonnull
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	{
+		EnumFacing dir = state.getValue(MOBlock.PROPERTY_DIRECTION);
+		return dir == EnumFacing.NORTH || dir == EnumFacing.SOUTH ? BOX_NORTH_SOUTH : BOX_EAST_WEST;
 	}
 
 	@Override

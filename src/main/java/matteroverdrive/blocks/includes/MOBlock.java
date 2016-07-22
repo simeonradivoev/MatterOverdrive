@@ -18,6 +18,7 @@
 
 package matteroverdrive.blocks.includes;
 
+import lombok.Setter;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.IMOTileEntity;
@@ -31,6 +32,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -49,6 +51,8 @@ public class MOBlock extends Block
 	private BlockStateContainer blockState;
 	private boolean hasRotation;
 	private int rotationType;
+	@Setter
+	protected AxisAlignedBB boundingBox = FULL_BLOCK_AABB;
 
 	public MOBlock(Material material, String name)
 	{
@@ -61,6 +65,14 @@ public class MOBlock extends Block
 		this.setUnlocalizedName(name);
 		setCreativeTab(MatterOverdrive.tabMatterOverdrive);
 		rotationType = RotationType.FOUR_WAY;
+	}
+
+	@Nonnull
+	@Override
+	@Deprecated
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	{
+		return boundingBox;
 	}
 
 	@Nonnull

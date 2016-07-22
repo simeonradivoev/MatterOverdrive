@@ -6,6 +6,7 @@ import matteroverdrive.tile.TileEntityMachineSpacetimeAccelerator;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -23,7 +24,7 @@ public class BlockSpacetimeAccelerator extends MOBlockMachine<TileEntityMachineS
 		setHardness(20.0F);
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);
-		//setBlockBounds(4f/16f,0,4f/16f,12f/16f,1,12f/16f);
+		setBoundingBox(new AxisAlignedBB(4/16d, 0, 4/16d, 12/16d, 1, 12/16d));
 		setLightLevel(1);
 		setHasGui(true);
 	}

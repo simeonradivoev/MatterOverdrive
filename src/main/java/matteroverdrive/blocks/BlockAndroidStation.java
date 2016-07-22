@@ -5,6 +5,7 @@ import matteroverdrive.tile.TileEntityAndroidStation;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -17,7 +18,7 @@ public class BlockAndroidStation extends MOBlockMachine<TileEntityAndroidStation
 	public BlockAndroidStation(Material material, String name)
 	{
 		super(material, name);
-		//setBlockBounds(0, 0, 0, 1, 9 * (1 / 16f), 1);
+		setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 9/16d, 1));
 		setHardness(20.0F);
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);

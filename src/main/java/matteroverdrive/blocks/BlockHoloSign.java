@@ -30,6 +30,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -46,17 +47,13 @@ public class BlockHoloSign extends BlockMonitor<TileEntityHoloSign> implements I
 	public BlockHoloSign(Material material, String name)
 	{
 		super(material, name);
-		depth = 2;
-		float f = 0.25F;
-		float f1 = 1.0F;
-		// TODO: 3/26/2016 Find how to set block bounds
-		//this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
+		setBoundingBox(new AxisAlignedBB(0, 1, 0, 1, 14/16d, 1));
 		this.isBlockContainer = true;
 		this.setHardness(20f);
 		setHasRotation();
 	}
 
-/*    @Override
+	/*    @Override
 	@SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
