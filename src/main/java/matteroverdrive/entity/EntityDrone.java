@@ -1,7 +1,6 @@
 package matteroverdrive.entity;
 
 
-import com.google.common.base.Optional;
 import matteroverdrive.entity.ai.EntityAIFollowCreator;
 import matteroverdrive.entity.ai.PathNavigateFly;
 import net.minecraft.block.state.IBlockState;
@@ -11,8 +10,9 @@ import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.scoreboard.Team;
@@ -25,6 +25,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -32,7 +35,29 @@ import java.util.UUID;
  */
 public class EntityDrone extends EntityCreature implements IEntityOwnable
 {
-	protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityDrone.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+	protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityDrone.class, new DataSerializer<Optional<UUID>>()
+	{
+		@Override
+		public void write(@Nonnull PacketBuffer buf, @Nonnull Optional<UUID> value)
+		{
+			buf.writeBoolean(value.isPresent());
+			if (value.isPresent()) buf.writeUuid(value.get());
+		}
+
+		@Nonnull
+		@Override
+		public Optional<UUID> read(@Nonnull PacketBuffer buf) throws IOException
+		{
+			return buf.readBoolean() ? Optional.of(buf.readUuid()) : Optional.empty();
+		}
+
+		@Nonnull
+		@Override
+		public DataParameter<Optional<UUID>> createKey(int id)
+		{
+			return new DataParameter<>(id, this);
+		}
+	});
 	private BlockPos targetPos;
 	private EntityLivingBase owner;
 
@@ -50,7 +75,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.dataManager.register(OWNER_UNIQUE_ID, Optional.absent());
+		this.dataManager.register(OWNER_UNIQUE_ID, Optional.empty());
 	}
 
 	@Override
@@ -287,7 +312,8 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
 	@Override
 	public UUID getOwnerId()
 	{
-		return this.dataManager.get(OWNER_UNIQUE_ID).get();
+		Optional<UUID> uuid = this.dataManager.get(OWNER_UNIQUE_ID);
+		return uuid.isPresent() ? uuid.get() : null;
 	}
 
 	public void setOwnerId(UUID ownerUuid)
