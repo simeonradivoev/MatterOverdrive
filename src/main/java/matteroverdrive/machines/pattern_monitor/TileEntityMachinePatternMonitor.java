@@ -37,6 +37,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -107,6 +109,12 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
 	}
 
 	@Override
+	public BlockPos getNodePos()
+	{
+		return getPos();
+	}
+
+	@Override
 	public boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side)
 	{
 		return networkComponent.establishConnectionFromSide(blockState, side);
@@ -128,6 +136,12 @@ public class TileEntityMachinePatternMonitor extends MOTileEntityMachine impleme
 	public void setNetwork(MatterNetwork network)
 	{
 		networkComponent.setNetwork(network);
+	}
+
+	@Override
+	public World getNodeWorld()
+	{
+		return getWorld();
 	}
 
 	@Override

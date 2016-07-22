@@ -114,7 +114,7 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
             for (int i = 0;i < connectionsList.tagCount();i++)
             {
                 BlockPos filterPos = BlockPos.fromLong(((NBTTagLong)connectionsList.get(i)).getLong());
-                if (filterPos.equals(getPos()))
+                if (filterPos.equals(getNodePos()))
                 {
                     return true;
                 }
@@ -137,7 +137,7 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
 	}
 
 	@Override
-	public World getWorld()
+	public World getNodeWorld()
 	{
 		return rootClient.getWorld();
 	}
@@ -150,7 +150,7 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
 
 	//region Getters and Setters
 	@Override
-	public BlockPos getPos()
+	public BlockPos getNodePos()
 	{
 		return rootClient.getPos();
 	}
@@ -179,10 +179,6 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
         return packetQueue;
     }*/
 
-	public World getWorldObj()
-	{
-		return rootClient.getWorld();
-	}
 /*
     @Override
     public int getPacketQueueCount()
@@ -219,7 +215,7 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
 	@Override
 	public void update()
 	{
-		if (!getWorldObj().isRemote)
+		if (!getNodeWorld().isRemote)
 		{
 			manageNetwork();
 		}
@@ -229,7 +225,7 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
 	{
 		if (matterNetwork == null)
 		{
-			if (!tryConnectToNeighborNetworks(getWorldObj()))
+			if (!tryConnectToNeighborNetworks(getNodeWorld()))
 			{
 				MatterNetwork network = MatterOverdrive.matterNetworkHandler.getNetwork(rootClient);
 				network.addNode(rootClient);
@@ -242,10 +238,10 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
 		boolean hasConnected = false;
 		for (EnumFacing side : EnumFacing.VALUES)
 		{
-			if (rootClient.canConnectFromSide(world.getBlockState(getPos()), side))
+			if (rootClient.canConnectFromSide(world.getBlockState(getNodePos()), side))
 			{
-				TileEntity neighborEntity = world.getTileEntity(getPos().offset(side));
-				if (neighborEntity instanceof IMatterNetworkConnection && canConnectToNetworkNode(world.getBlockState(getPos()), (IMatterNetworkConnection)neighborEntity, side))
+				TileEntity neighborEntity = world.getTileEntity(getNodePos().offset(side));
+				if (neighborEntity instanceof IMatterNetworkConnection && canConnectToNetworkNode(world.getBlockState(getNodePos()), (IMatterNetworkConnection)neighborEntity, side))
 				{
 					if (((IMatterNetworkConnection)neighborEntity).getNetwork() != null && ((IMatterNetworkConnection)neighborEntity).getNetwork() != this.matterNetwork)
 					{
@@ -331,11 +327,11 @@ public abstract class MatterNetworkComponentClient<T extends MOTileEntityMachine
 
 	protected void onUnload(MachineEvent.Unload event)
 	{
-		if (!getWorldObj().isRemote)
+		if (!getNodeWorld().isRemote)
 		{
-			if (!getWorldObj().isRemote)
+			if (!getNodeWorld().isRemote)
 			{
-				IBlockState blockState = getWorldObj().getBlockState(getPos());
+				IBlockState blockState = getNodeWorld().getBlockState(getNodePos());
 				if (matterNetwork != null)
 				{
 					matterNetwork.onNodeDestroy(blockState, rootClient);

@@ -14,9 +14,9 @@ public interface IGridNode<T extends IGridNetwork>
 
 	void setNetwork(T network);
 
-	BlockPos getPos();
+	BlockPos getNodePos();
 
-	World getWorld();
+	World getNodeWorld();
 
 	boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction);
 

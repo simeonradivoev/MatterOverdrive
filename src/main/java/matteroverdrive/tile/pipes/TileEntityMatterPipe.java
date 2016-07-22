@@ -256,6 +256,18 @@ public class TileEntityMatterPipe extends TileEntityPipe implements IFluidPipe
 	}
 
 	@Override
+	public BlockPos getNodePos()
+	{
+		return getPos();
+	}
+
+	@Override
+	public World getNodeWorld()
+	{
+		return getWorld();
+	}
+
+	@Override
 	public boolean canConnectToNetworkNode(IBlockState blockState, IGridNode toNode, EnumFacing direction)
 	{
 		return toNode instanceof TileEntityMatterPipe;

@@ -38,10 +38,10 @@ public class ConnectionPathfind<T extends IGridNode>
 
 		for (EnumFacing d : EnumFacing.VALUES)
 		{
-			if (startNode.canConnectFromSide(startNode.getWorld().getBlockState(startNode.getPos()), d))
+			if (startNode.canConnectFromSide(startNode.getNodeWorld().getBlockState(startNode.getNodePos()), d))
 			{
-				BlockPos neighborPos = startNode.getPos().offset(d);
-				TileEntity neighborTile = startNode.getWorld().getTileEntity(neighborPos);
+				BlockPos neighborPos = startNode.getNodePos().offset(d);
+				TileEntity neighborTile = startNode.getNodeWorld().getTileEntity(neighborPos);
 				if (neighborTile instanceof IGridNode && neighborTile != target)
 				{
 					if (isConnectedToSourceRecursive((T)neighborTile))
@@ -59,19 +59,19 @@ public class ConnectionPathfind<T extends IGridNode>
 		this.burned.add(node);
 		for (EnumFacing dir : EnumFacing.VALUES)
 		{
-			if (node.canConnectFromSide(node.getWorld().getBlockState(node.getPos()), dir))
+			if (node.canConnectFromSide(node.getNodeWorld().getBlockState(node.getNodePos()), dir))
 			{
-				neighborPosTmp = node.getPos().offset(dir);
-				if (node.getWorld().isBlockLoaded(neighborPosTmp))
+				neighborPosTmp = node.getNodePos().offset(dir);
+				if (node.getNodeWorld().isBlockLoaded(neighborPosTmp))
 				{
-					neighborTileTmp = node.getWorld().getTileEntity(neighborPosTmp);
+					neighborTileTmp = node.getNodeWorld().getTileEntity(neighborPosTmp);
 					if (nodeTypes.isInstance(neighborTileTmp))
 					{
 						neighborTmp = nodeTypes.cast(neighborTileTmp);
-						neighborTmpState = neighborTmp.getWorld().getBlockState(neighborPosTmp);
+						neighborTmpState = neighborTmp.getNodeWorld().getBlockState(neighborPosTmp);
 						if (neighborTmp == target || !this.burned.contains(neighborTmp))
 						{
-							if (node.canConnectToNetworkNode(node.getWorld().getBlockState(node.getPos()), neighborTmp, dir) && neighborTmp.canConnectToNetworkNode(neighborTmpState, node, dir.getOpposite()))
+							if (node.canConnectToNetworkNode(node.getNodeWorld().getBlockState(node.getNodePos()), neighborTmp, dir) && neighborTmp.canConnectToNetworkNode(neighborTmpState, node, dir.getOpposite()))
 							{
 								if (neighborTmp == target)
 								{

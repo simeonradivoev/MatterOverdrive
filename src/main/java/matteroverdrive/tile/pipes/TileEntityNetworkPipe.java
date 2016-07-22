@@ -218,6 +218,18 @@ public class TileEntityNetworkPipe extends TileEntityPipe implements IMatterNetw
 	}
 
 	@Override
+	public BlockPos getNodePos()
+	{
+		return getPos();
+	}
+
+	@Override
+	public World getNodeWorld()
+	{
+		return getWorld();
+	}
+
+	@Override
 	public boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side)
 	{
 		int connCount = getConnectionsCount();

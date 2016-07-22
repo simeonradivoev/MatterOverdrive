@@ -52,6 +52,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -435,6 +436,12 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 	}
 
 	@Override
+	public BlockPos getNodePos()
+	{
+		return getPos();
+	}
+
+	@Override
 	public boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side)
 	{
 		return networkComponent.establishConnectionFromSide(blockState, side);
@@ -462,6 +469,12 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 	public void setNetwork(MatterNetwork network)
 	{
 		networkComponent.setNetwork(network);
+	}
+
+	@Override
+	public World getNodeWorld()
+	{
+		return getWorld();
 	}
 
 	@Override

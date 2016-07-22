@@ -38,7 +38,8 @@ public interface IMatterNetworkConnection extends IPipe<MatterNetwork>
 	 * Used mainly in Packet filters to filter the machines the packet can reach.
 	 * @return the block position of the Matter Network connection.
 	 */
-	BlockPos getPos();
+	@Override
+	BlockPos getNodePos();
 
 	boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side);
 

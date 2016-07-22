@@ -48,8 +48,10 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -360,6 +362,12 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 	}
 
 	@Override
+	public BlockPos getNodePos()
+	{
+		return getPos();
+	}
+
+	@Override
 	public boolean establishConnectionFromSide(IBlockState blockState, EnumFacing side)
 	{
 		return networkComponent.establishConnectionFromSide(blockState, side);
@@ -381,6 +389,12 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 	public void setNetwork(MatterNetwork network)
 	{
 		networkComponent.setNetwork(network);
+	}
+
+	@Override
+	public World getNodeWorld()
+	{
+		return getWorld();
 	}
 
 	@Override

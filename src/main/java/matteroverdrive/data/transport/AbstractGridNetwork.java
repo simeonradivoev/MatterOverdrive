@@ -41,11 +41,11 @@ public abstract class AbstractGridNetwork<T extends IGridNode> implements IGridN
 			{
 				if (node.canConnectFromSide(blockState, dir))
 				{
-					BlockPos otherNodePos = node.getPos().offset(dir);
-					if (node.getWorld().isBlockLoaded(otherNodePos))
+					BlockPos otherNodePos = node.getNodePos().offset(dir);
+					if (node.getNodeWorld().isBlockLoaded(otherNodePos))
 					{
-						TileEntity otherNodeTile = node.getWorld().getTileEntity(otherNodePos);
-						IBlockState otherNodeBlockState = node.getWorld().getBlockState(otherNodePos);
+						TileEntity otherNodeTile = node.getNodeWorld().getTileEntity(otherNodePos);
+						IBlockState otherNodeBlockState = node.getNodeWorld().getBlockState(otherNodePos);
 						if (nodeTypes.isInstance(otherNodeTile))
 						{
 							T otherNode = nodeTypes.cast(otherNodeTile);
