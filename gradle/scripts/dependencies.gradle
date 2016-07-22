@@ -42,10 +42,10 @@ repositories {
 		url "http://mobiusstrip.eu/maven"
 	}
 
-	// maven {
-	// 	name "tterrag"
-	// 	url "http://maven.tterrag.com"
-	// }
+	maven {
+		name "tterrag"
+		url "http://maven.tterrag.com"
+	}
 
 	// maven {
 	// 	name "IC2 and Forestry" // Forestry is required by EnderIO
@@ -88,12 +88,12 @@ repositories {
 
 dependencies {
 	deobfCompile group: "net.shadowfacts", name: "ShadowMC", version: "1.10.2-3.4.5-SNAPSHOT"
-
-	deobfCompile group: 'mcp.mobius.waila', name: 'Waila', version: "1.7.0-B3_1.9.4"
-
 	deobfCompile group: "net.darkhax.tesla", name: "Tesla", version: "1.9.4-1.1.0.24"
 
 	deobfCompile group: "mezz.jei", name: "jei_1.10.2", version: "3.7.8.234"
+
+	deobfCompile group: 'mcp.mobius.waila', name: 'Waila', version: "1.7.0-B3_1.9.4"
+	deobfCompile group: "mcjty.theoneprobe", name: "TheOneProbe", version: "1.9.4-1.0.9-22"
 
 	// Chicken Bones
 	//compile group: 'codechicken', name: 'ForgeMultipart', version: "${config.mc_version}-${config.fmp_version}", classifier: 'dev'

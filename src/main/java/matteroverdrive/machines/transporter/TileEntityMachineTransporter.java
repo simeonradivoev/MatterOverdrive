@@ -447,7 +447,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		if (facing != EnumFacing.UP && (capability == MatterOverdriveCapabilities.MATTER_HANDLER || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)) {
 			return true;
 		}
-		return ((TileEntity)this).hasCapability(capability, facing);
+		return super.hasCapability(capability, facing);
 	}
 
 	@Nonnull
@@ -458,7 +458,7 @@ public class TileEntityMachineTransporter extends MOTileEntityMachineMatter impl
 		if (facing != EnumFacing.UP && (capability == MatterOverdriveCapabilities.MATTER_HANDLER || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)) {
 			return (T)matterStorage;
 		}
-		return ((TileEntity)this).getCapability(capability, facing);
+		return super.getCapability(capability, facing);
 	}
 
 	/*//region All Computers

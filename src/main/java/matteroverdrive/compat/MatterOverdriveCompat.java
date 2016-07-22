@@ -19,6 +19,7 @@
 package matteroverdrive.compat;
 
 import matteroverdrive.compat.modules.*;
+import matteroverdrive.compat.modules.top.CompatTOP;
 import matteroverdrive.compat.modules.waila.CompatWaila;
 import matteroverdrive.util.MOLog;
 import net.minecraftforge.fml.common.Loader;
@@ -51,6 +52,7 @@ public class MatterOverdriveCompat
 	public static void registerClientModules()
 	{
 		register(CompatWaila.class);
+		register(CompatTOP.class);
 	}
 
 	private static boolean register(Class clazz)

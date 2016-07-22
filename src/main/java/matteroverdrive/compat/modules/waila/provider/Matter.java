@@ -22,9 +22,8 @@ public class Matter implements IWailaBodyProvider
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		TileEntity te = accessor.getTileEntity();
 
-		if (te instanceof MOTileEntityMachineMatter) {
-			MOTileEntityMachineMatter machine = (MOTileEntityMachineMatter)te;
-			IMatterHandler storage = machine.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null);
+		if (te.hasCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null)) {
+			IMatterHandler storage = te.getCapability(MatterOverdriveCapabilities.MATTER_HANDLER, null);
 			currenttip.add(TextFormatting.AQUA + String.format("%s / %s %s", storage.getMatterStored(), storage.getCapacity(), MatterHelper.MATTER_UNIT));
 
 		} else {
