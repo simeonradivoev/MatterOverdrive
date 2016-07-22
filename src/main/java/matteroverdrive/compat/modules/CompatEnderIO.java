@@ -69,7 +69,7 @@ public class CompatEnderIO
 		addSagMillRecipe("DilithiumOre", 3000, MatterOverdriveBlocks.dilithium_ore, MatterOverdriveItems.dilithium_ctystal, 1, MatterOverdriveItems.dilithium_ctystal, 0.25f);
 		addSagMillRecipe("TritaniumOre", 3600, MatterOverdriveBlocks.tritaniumOre, new ItemStack(MatterOverdriveItems.tritanium_dust, 2), 1, Blocks.COBBLESTONE, 0.15f);
 		addSagMillRecipe("TirtaniumIngot", 1000, MatterOverdriveItems.tritanium_ingot, MatterOverdriveItems.tritanium_dust, 1);
-		addSagMillRecipe("TritaniumPlate", 3000, MatterOverdriveItems.tritanium_plate, new ItemStack(MatterOverdriveItems.tritanium_dust, 3), 1);
+		addSagMillRecipe("TritaniumPlate", 3000, MatterOverdriveItems.tritanium_plate, new ItemStack(MatterOverdriveItems.tritanium_dust, 2), 1);
 
 		sb.append("</recipeGroup>");
 		sb.append("</SAGMillRecipes>");
