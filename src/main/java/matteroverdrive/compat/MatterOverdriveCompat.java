@@ -19,7 +19,6 @@
 package matteroverdrive.compat;
 
 import matteroverdrive.compat.modules.*;
-import matteroverdrive.compat.modules.nei.CompatNEI;
 import matteroverdrive.compat.modules.waila.CompatWaila;
 import matteroverdrive.util.MOLog;
 import net.minecraftforge.fml.common.Loader;
@@ -51,7 +50,6 @@ public class MatterOverdriveCompat
 	//Add additional modules that need to run ONLY on the Client
 	public static void registerClientModules()
 	{
-		register(CompatNEI.class);
 		register(CompatWaila.class);
 	}
 
