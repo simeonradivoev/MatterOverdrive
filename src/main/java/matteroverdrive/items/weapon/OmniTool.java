@@ -48,6 +48,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class OmniTool extends EnergyWeapon
@@ -63,8 +64,9 @@ public class OmniTool extends EnergyWeapon
 	public OmniTool(String name)
 	{
 		super(name, 32000, 128, 128, RANGE);
-		setHarvestLevel("pickaxe", 3);
-		setHarvestLevel("axe", 3);
+		setHarvestLevel("pickaxe", 5);
+		setHarvestLevel("axe", 5);
+		setHarvestLevel("shovel", 5);
 		this.bFull3D = true;
 		this.leftClickFire = true;
 	}
@@ -80,28 +82,29 @@ public class OmniTool extends EnergyWeapon
 		return 1;
 	}
 
+	@Nonnull
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack stack, World world, EntityPlayer player, EnumHand hand)
 	{
 		if (hand == EnumHand.OFF_HAND)
 		{
-			return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
+			return ActionResult.newResult(EnumActionResult.PASS, stack);
 		}
-		this.TagCompountCheck(itemStackIn);
+		this.TagCompountCheck(stack);
 
-		if (canDig(itemStackIn, worldIn))
+		if (canDig(stack, world))
 		{
-			playerIn.setActiveHand(hand);
-			if (worldIn.isRemote)
+			player.setActiveHand(hand);
+			if (world.isRemote)
 			{
 				stopMiningLastBlock();
 			}
 		}
-		if (needsRecharge(itemStackIn))
+		if (needsRecharge(stack))
 		{
-			chargeFromEnergyPack(itemStackIn, playerIn);
+			chargeFromEnergyPack(stack, player);
 		}
-		return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 	}
 
 	@Override
@@ -163,13 +166,13 @@ public class OmniTool extends EnergyWeapon
 		}
 	}
 
-	boolean isSameBlock(BlockPos pos)
+	private boolean isSameBlock(BlockPos pos)
 	{
 		return CURRENT_BLOCK != null && CURRENT_BLOCK.equals(pos);
 	}
 
 	@SideOnly(Side.CLIENT)
-	void setLastBlock(BlockPos pos)
+	private void setLastBlock(BlockPos pos)
 	{
 		CURRENT_BLOCK = pos;
 	}
@@ -200,6 +203,7 @@ public class OmniTool extends EnergyWeapon
 		}
 	}
 
+	@Nonnull
 	@Override
 	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
