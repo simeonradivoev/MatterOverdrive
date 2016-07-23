@@ -42,6 +42,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,6 +72,7 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 		renderOthers(renderHandler, event.getPartialTicks());
 		GlStateManager.popMatrix();
 
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.disableBlend();
 		GlStateManager.enableCull();
 	}
