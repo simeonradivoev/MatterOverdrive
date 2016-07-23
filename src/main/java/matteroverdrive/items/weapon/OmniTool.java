@@ -36,6 +36,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -97,7 +98,7 @@ public class OmniTool extends EnergyWeapon
 			player.setActiveHand(hand);
 			if (world.isRemote)
 			{
-				stopMiningLastBlock();
+				stopMiningLastBlock(player, world);
 			}
 		}
 		if (needsRecharge(stack))
@@ -148,7 +149,7 @@ public class OmniTool extends EnergyWeapon
 						}
 						else
 						{
-							stopMiningLastBlock();
+							stopMiningLastBlock((EntityPlayer)player, player.worldObj);
 							setLastBlock(hit.getBlockPos());
 						}
 					}
@@ -178,12 +179,12 @@ public class OmniTool extends EnergyWeapon
 	}
 
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft)
+	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft)
 	{
-		super.onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft);
-		if (worldIn.isRemote)
+		super.onPlayerStoppedUsing(stack, world, entity, timeLeft);
+		if (world.isRemote && entity instanceof EntityPlayer)
 		{
-			stopMiningLastBlock();
+			stopMiningLastBlock((EntityPlayer)entity, world);
 		}
 		else
 		{
@@ -193,13 +194,14 @@ public class OmniTool extends EnergyWeapon
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void stopMiningLastBlock()
+	private void stopMiningLastBlock(EntityPlayer player, World world)
 	{
 		if (CURRENT_BLOCK != null)
 		{
 			BLOCK_DAMAGE = 0;
 			STEP_SOUND_COUNTER = 0.0F;
 			MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(CURRENT_BLOCK, 1, LAST_SIDE));
+			world.sendBlockBreakProgress(player.getEntityId(), CURRENT_BLOCK, -1);
 		}
 	}
 
