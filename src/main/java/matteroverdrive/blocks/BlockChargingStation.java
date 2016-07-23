@@ -58,12 +58,12 @@ public class BlockChargingStation extends MOBlockMachine<TileEntityMachineChargi
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		BlockBoundingBox.createBoundingBox(worldIn, pos.add(0, 1, 0), pos, this);
-		BlockBoundingBox.createBoundingBox(worldIn, pos.add(0, 2, 0), pos, this);
+		BlockBoundingBox.createBoundingBox(world, pos.add(0, 1, 0), pos, this);
+		BlockBoundingBox.createBoundingBox(world, pos.add(0, 2, 0), pos, this);
 
-		return worldIn.getBlockState(pos);
+		return super.onBlockPlaced(world, pos, facing, hitX, hitY, hitZ, meta, placer);
 	}
 
 	@Override
