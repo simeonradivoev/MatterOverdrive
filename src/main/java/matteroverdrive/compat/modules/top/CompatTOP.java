@@ -34,6 +34,10 @@ public class CompatTOP
 			top.registerProvider(new Transporter());
 			top.registerProvider(new WeaponStation());
 
+			top.registerProvider(new BoundingBox());
+
+			StackTitleElement.ID = top.registerElementFactory(StackTitleElement::new);
+
 			return null;
 		}
 

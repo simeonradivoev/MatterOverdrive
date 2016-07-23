@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  * @author shadowfacts
  */
 @JEIPlugin
-public class MOPlugin implements IModPlugin
+public class MOJEIPlugin implements IModPlugin
 {
 
 	@Override
@@ -36,6 +36,8 @@ public class MOPlugin implements IModPlugin
 		registry.addRecipeClickArea(GuiInscriber.class, 32, 55, 24, 16, InscriberRecipeCategory.UID);
 
 		registry.addAdvancedGuiHandlers(new MOAdvancedGuiHandler());
+
+		registry.getJeiHelpers().getItemBlacklist().addItemToBlacklist(new ItemStack(MatterOverdrive.blocks.boundingBox));
 	}
 
 	@Override

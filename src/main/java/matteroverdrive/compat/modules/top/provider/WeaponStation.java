@@ -1,5 +1,6 @@
 package matteroverdrive.compat.modules.top.provider;
 
+import matteroverdrive.compat.modules.top.StackTitleElement;
 import matteroverdrive.tile.TileEntityWeaponStation;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -34,7 +35,7 @@ public class WeaponStation implements IProbeInfoProvider
 			ItemStack stack = machine.getStackInSlot(machine.INPUT_SLOT);
 			if (stack != null)
 			{
-				probeInfo.text(stack.getDisplayName());
+				probeInfo.element(new StackTitleElement(stack));
 			}
 		}
 	}
