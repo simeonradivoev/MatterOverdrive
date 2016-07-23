@@ -18,33 +18,18 @@
 
 package matteroverdrive.items.tools;
 
-import com.google.common.collect.Sets;
 import matteroverdrive.init.MatterOverdriveItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
-
-import java.util.Set;
+import net.minecraft.item.ItemAxe;
 
 /**
  * Created by Simeon on 11/1/2015.
  */
-public class TritaniumAxe extends ItemTool
+public class TritaniumAxe extends ItemAxe
 {
-	private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.PLANKS, Blocks.BOOKSHELF, Blocks.LOG, Blocks.LOG2, Blocks.CHEST, Blocks.PUMPKIN, Blocks.LIT_PUMPKIN, Blocks.MELON_BLOCK, Blocks.LADDER, Blocks.WOODEN_BUTTON, Blocks.WOODEN_PRESSURE_PLATE});
-
 	public TritaniumAxe(String name)
 	{
-		super(MatterOverdriveItems.toolMaterialTritanium, EFFECTIVE_ON);
-		this.setUnlocalizedName(name);
+		super(MatterOverdriveItems.toolMaterialTritanium, MatterOverdriveItems.toolMaterialTritanium.getDamageVsEntity(), -3.1f);
+		setUnlocalizedName(name);
 	}
 
-	public float getStrVsBlock(ItemStack stack, IBlockState state)
-	{
-		Material material = state.getMaterial();
-		return material != Material.WOOD && material != Material.PLANTS && material != Material.VINE ? super.getStrVsBlock(stack, state) : this.efficiencyOnProperMaterial;
-	}
 }

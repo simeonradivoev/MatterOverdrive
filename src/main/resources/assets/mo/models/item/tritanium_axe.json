@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "mo:items/tritanium_sword"
+    "layer0": "mo:items/tritanium_axe"
   }
 }
