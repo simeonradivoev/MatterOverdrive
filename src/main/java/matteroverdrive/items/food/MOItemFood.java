@@ -17,6 +17,7 @@ public class MOItemFood extends ItemFood implements ItemModelProvider
 	public MOItemFood(String name, int amount, float saturation, boolean isWolfFood)
 	{
 		super(amount, saturation, isWolfFood);
+		this.name = name;
 
 		setUnlocalizedName(name);
 		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));

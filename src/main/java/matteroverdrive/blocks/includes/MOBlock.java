@@ -36,6 +36,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.shadowfacts.shadowmc.item.ItemModelProvider;
 
 import javax.annotation.Nonnull;
 
@@ -45,7 +46,7 @@ import static matteroverdrive.util.MOBlockHelper.SIDE_LEFT;
 /**
  * Created by Simeon on 3/24/2015.
  */
-public class MOBlock extends Block
+public class MOBlock extends Block implements ItemModelProvider
 {
 	public static final PropertyDirection PROPERTY_DIRECTION = PropertyDirection.create("facing");
 	private BlockStateContainer blockState;
@@ -65,6 +66,12 @@ public class MOBlock extends Block
 		this.setUnlocalizedName(name);
 		setCreativeTab(MatterOverdrive.tabMatterOverdrive);
 		rotationType = RotationType.FOUR_WAY;
+	}
+
+	@Override
+	public void initItemModel()
+	{
+		MatterOverdrive.proxy.registerItemModel(this, 0, getRegistryName().getResourcePath());
 	}
 
 	@Nonnull
