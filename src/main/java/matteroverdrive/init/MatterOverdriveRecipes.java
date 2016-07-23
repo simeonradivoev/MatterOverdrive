@@ -30,6 +30,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -164,6 +165,8 @@ public class MatterOverdriveRecipes
 		GameRegistry.addRecipe(new ItemStack(MatterOverdrive.items.weapon_module_barrel, 1, 1), " G ", "BFB", " T ", 'T', MatterOverdrive.items.tritanium_plate, 'F', Items.FIRE_CHARGE, 'B', Items.BLAZE_ROD, 'G', Blocks.GLASS);
 		GameRegistry.addRecipe(new ItemStack(MatterOverdrive.items.weapon_module_barrel, 1, 2), " B ", "BRB", "DTD", 'T', MatterOverdrive.items.tritanium_plate, 'R', Items.BLAZE_ROD, 'B', Blocks.TNT, 'G', Blocks.GLASS, 'D', Items.DIAMOND);
 		GameRegistry.addRecipe(new ItemStack(MatterOverdrive.items.weapon_module_barrel, 1, 3), " S ", "SAS", "ETE", 'T', MatterOverdrive.items.tritanium_plate, 'A', Items.GOLDEN_APPLE, 'S', Items.SUGAR, 'G', Blocks.GLASS, 'E', Items.EMERALD);
+
+		RecipeSorter.register("mo:energyPack", EnergyPackRecipe.class, RecipeSorter.Category.SHAPELESS, "");
 	}
 
 	public static void registerInscriberRecipes(FMLInitializationEvent event)
